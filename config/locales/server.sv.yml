@@ -314,6 +314,7 @@ sv:
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
   secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
   create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett befintligt ämne."
+  slow_mode_enabled: "Du publicerade nyligen ett inlägg om det här ämnet, som är i långsamt läge. Vänta så att andra användare får chans att delta."
   just_posted_that: "är för likt det du nyligen publicerade"
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "verkar oklart, är det en fullständig mening?"
@@ -800,43 +801,36 @@ sv:
       title: "Irrelevant"
       description: "Det här inlägget är inte relevant för det nuvarande ämnet, sett till ämnets rubrik och det första inlägget, och borde förmodligen flyttas någon annanstans."
       short_description: "Inte relevant för diskussionen"
-      long_form: "flagga detta som irrelevant"
     spam:
       title: "Skräppost"
       description: "Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet."
       short_description: "Detta är reklam eller vandalism"
-      long_form: "flagga detta som spam"
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Olämpligt"
       description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
-      long_form: "flagga detta som olämpligt"
     notify_user:
       title: "Skicka ett meddelande till @%{username}"
       description: "Jag vill prata med den här personen direkt och privat om inlägget."
       short_description: "Jag vill prata med den här personen direkt och privat om inlägget."
-      long_form: "kontaktad användare"
       email_title: 'Du skrev i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
       description: "Det här inlägget kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan."
       short_description: "Kräver personals uppmärksamhet av annan orsak"
-      long_form: "flaggade det här för granskning av moderatorer"
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bokmärk"
       description: "Bokmärk detta inlägg"
       short_description: "Bokmärk detta inlägg"
-      long_form: "bokmärkte detta inlägg"
     like:
       title: "Gilla"
       description: "Gilla detta inlägg"
       short_description: "Gilla detta inlägg"
-      long_form: "gillade detta"
   draft:
     sequence_conflict_error:
       title: "fel på utkast"
@@ -1292,9 +1286,6 @@ sv:
     queue_size_warning: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
     memory_warning: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
     google_oauth2_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (enable_google_oauth2_logins), men klient-id och klienthemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    facebook_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (enable_facebook_logins), men app-id och appens hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    twitter_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (enable_twitter_logins), men nyckel och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
     s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
@@ -1399,7 +1390,6 @@ sv:
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
-    enforce_second_factor: "Tvingar användare att aktivera tvåfaktorsautentisering. Välj 'alla' för att kräva det för alla användare. Välj 'personal' för att bara kräva det av personal."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     same_site_cookies: "Använd samma webbplatskakor, detta eliminerar alla vektorer för Cross Site Request Forgery på webbläsare som stöds (Löst eller Strikt). Varning: Strikt fungerar bara på webbplatser som tvingar inloggning och använder SSO."
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
@@ -1441,9 +1431,6 @@ sv:
     pending_users_reminder_delay: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) spårningskods-ID, exempelvis UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domännamn, exempelvis: minhemsida.se; se <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Aktivera Google Universal Analytics (analytics.js) korsspårning över domäner. Utgående länkar till dessa domäner kommer att få klient-ID tillagt för dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles kors-spårningsguide över domäner.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
@@ -1545,13 +1532,9 @@ sv:
     enable_facebook_logins: "Aktivera Facebook-autentisering, kräver facebook_app_id och facebook_app_secret. Se <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfigurera Facebook-inloggning för Discourse</a>."
     facebook_app_id: "App-id för Facebook-autentisering och delning, registrerat i <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-hemlighet för Facebook-autentisering, registrerat i <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Aktivera Github-autentisering, kräver github_client_id och github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfigurera GitHub-inloggning för Discourse</a>."
-    github_client_id: "Klient-ID för Github-autentisering, registrerat i <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
-    github_client_secret: "Klienthemlighet för Github-autentisering, registrerad på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
     enable_discord_logins: "Tillåta användare att autentisera genom Discord?"
     discord_client_id: 'Discord Klient-ID (behöver du ett? Gå till <a href="https://discordapp.com/developers/applications/me">utvecklarportalen för Discord</a>)'
     discord_secret: "Discord hemlig nyckel"
-    discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-grupperingar att logga in via Discord. Använd numeriskt ID för grupperingen. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla grupperingar.'
     enable_backups: "Tillåt att administratörer skapar säkerhetskopior av forumet"
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
@@ -1804,8 +1787,6 @@ sv:
     email_editable: "Tillåt att användare ändrar sin e-postadress efter registrering."
     logout_redirect: "Adress som webbläsaren ska omdirigeras till efter utloggning (t.ex.: https://exempel.se/utloggning)"
     allow_uploaded_avatars: "Tillåt att användare laddar upp egna profilbilder."
-    allow_animated_avatars: "Tillåt att användare använder animerade gif-profilbilder. VARNING: kör avatars:refresh rake-kommandot efter att ha ändrat den här inställningen."
-    allow_animated_thumbnails: "Genererar animerade ikoner av animerade gif:ar."
     default_avatars: "URL:er till de avatarer som används som standard för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Hämta Gravatars för användare vid kontoregistrering eller e-postadressbyte."
     digest_topics: "Maximalt antal populära ämnen som visas i e-postsammanfattningen."
@@ -1915,7 +1896,6 @@ sv:
     new_user_notice_tl: "Lägsta förtroendenivå som krävs för se nya användares inläggsnoteringar."
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."
-    review_media_unless_trust_level: "Personalen kommer att granska inlägg från användare med lägre förtroendenivåer om de innehåller inbäddade medier."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
@@ -2142,8 +2122,8 @@ sv:
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar tillåts."
     auto_deleted_by_timer: "Automatiskt borttagen enligt timer."
   login:
-    invalid_second_factor_method: "Den valda tvåfaktormetoden är ogiltig."
-    not_enabled_second_factor_method: "Den valda tvåfaktormetoden är inte aktiverad för ditt konto."
+    invalid_second_factor_method: "Den valda tvåfaktorsmetoden är ogiltig."
+    not_enabled_second_factor_method: "Den valda tvåfaktorsmetoden är inte aktiverad för ditt konto."
     security_key_description: "När du har din fysiska säkerhetsnyckel beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
     security_key_alternative: "Prova ett annat sätt"
     security_key_authenticate: "Autentisera med säkerhetsnyckel"
@@ -3085,8 +3065,8 @@ sv:
 
         Om du har några frågor, [kontakta vår trevliga personal](%{base_url}/about).
     account_second_factor_disabled:
-      title: "Tvåfaktorsautentisering avstängd"
-      subject_template: "[%{email_prefix}] Tvåfaktorsautentisering avstängd"
+      title: "Tvåfaktorsautentisering inaktiverad"
+      subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
       text_body_template: "Tvåfaktorsautentisering har stängts av för ditt konto hos %{site_name}. Du kan nu enbart logga in genom ditt lösenord; en ytterligare autentiseringskod behövs inte längre.\n\nOm du inte valde att stänga av tvåfaktorsautentisering kan någon ha äventyrat ditt konto. \n\nOm du har några frågor, [kontakta din trevliga personal](%{base_url}/about).\n"
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
@@ -3128,7 +3108,7 @@ sv:
     admin_login:
       title: "Administratörsinloggning"
       subject_template: "[%{email_prefix}] Logga in"
-      text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera denna e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
+      text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Konto skapat"
       subject_template: "[%{email_prefix}] Ditt nya konto"
@@ -3141,7 +3121,7 @@ sv:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring, vänligen kontakta en administratör för %{site_name}.
+        Om du inte har begärt denna ändring ber vi dig kontakta en [webbplatsadministratör] (%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Bekräfta den nya e-postadressen"
       subject_template: "[%{email_prefix}] Bekräfta din nya e-postadress"
@@ -3150,7 +3130,7 @@ sv:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring, vänligen kontakta en administratör för %{site_name}.
+        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring ber vi dig kontakta en [webbplatsadministratör](%{base_url}/about).
     confirm_old_email:
       title: "Bekräfta den gamla e-postadressen"
       subject_template: "[%{email_prefix}] Bekräfta din nuvarande e-postadress"
@@ -3300,7 +3280,11 @@ sv:
     latte: "Latte"
     summer: "Sommar"
     dark_rose: "Mörk ros"
-    default_theme_name: "Ljust"
+    wcag: "WCAG ljus"
+    wcag_theme_name: "WCAG ljus"
+    wcag_dark: "WCAG mörk"
+    wcag_dark_theme_name: "WCAG mörk"
+    default_theme_name: "Standard"
     light_theme_name: "Ljust"
     dark_theme_name: "Mörkt"
     neutral_theme_name: "Neutralt"
@@ -3760,8 +3744,8 @@ sv:
     initial_topic_title: Prestandarapporter för webbplatsen
   tags:
     title: "Taggar"
-    staff_tag_disallowed: 'Taggen "%{tag}" kan endast användas av personalen.'
-    staff_tag_remove_disallowed: 'Taggen "%{tag}" kan endast tas bort av personalen.'
+    restricted_tag_disallowed: 'Du kan inte tillämpa taggen "%{tag}".'
+    restricted_tag_remove_disallowed: 'Du kan inte ta bort taggen "%{tag}".'
     minimum_required_tags:
       one: "Du måste välja åtminstone %{count} tagg."
       other: "Du måste välja åtminstone %{count} taggar."
@@ -3881,7 +3865,7 @@ sv:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
       colors:
-        title: "Tema"
+        title: "Färger"
       fonts:
         title: "Typsnitt"
         fields:
@@ -3999,7 +3983,7 @@ sv:
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
       email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
       suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
-      contains_media: "Dessa inlägg inkluderar inbäddade medier. Se `review_media_unless_trust_level`."
+      contains_media: "Detta inlägg omfattar inbäddade medier. Se `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Godkänn..."

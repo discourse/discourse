@@ -45,8 +45,6 @@ uk:
       trigger: "крутити"
       invalid: |-
         Вибачте, комбінація кубиків математично неможлива. :confounded:
-      not_enough_dice: |-
-        У мене лише %{num_of_dice} кості. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), що це таке!
     quote:
       trigger: "цитата"
       "1":

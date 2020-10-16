@@ -210,7 +210,7 @@ ru:
 
       <p>Если вы помните ваш пароль, вы можете <a href="%{base_url}/login">Войти в аккаунт</a>.</p>
 
-      <p>В противном случае <a href="%{base_url}/password-reset">Восстановите пароль</a>.</p>
+      <p>В противном случае <a href="%{base_url}/password-reset">восстановите пароль</a>.</p>
     error_message: "При приёме приглашения произошла ошибка. Пожалуйста, свяжитесь с администратором сайта."
     user_exists: "Нет необходимости приглашать пользователя с адресом <b>%{email}</b>, у него уже есть <a href='%{base_path}/u/%{username}/summary'>аккаунт</a>!"
     confirm_email: "<p>Вы почти закончили! Мы отправили письмо активации на ваш адрес электронной почты. Пожалуйста, следуйте инструкциям в письме для активации учётной записи. </p><p> Если письмо не приходит, проверьте папку со спамом. </p>"
@@ -913,43 +913,36 @@ ru:
       title: "Оффтопик (не по теме)"
       description: "Это сообщение не имеет отношения к теме, судя по её названию и содержанию первого сообщения. Возможно, его стоит перенести."
       short_description: "Не относится к обсуждению"
-      long_form: "отметили это как оффтопик (не по теме)"
     spam:
       title: "Спам"
       description: "Это сообщение является рекламой или просто мусором. Оно не является полезным или не относится к текущей теме."
       short_description: "Это реклама или мусор"
-      long_form: "отметили это как спам"
       email_title: 'Отмечено как спам: "%{title}"'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Неприемлемое сообщение"
       description: 'Это сообщение содержит контент, который разумный человек счёл бы оскорбительным  или нарушающим <a href="%{base_path}/guidelines">принципы нашего сообщества</a>.'
       short_description: 'Нарушение <a href="%{base_path}/guidelines">основных принципов сообщества</a>'
-      long_form: "отметить как неуместное"
     notify_user:
       title: "Отправить пользователю @%{username} личное сообщение"
       description: "Я хочу поговорить с этим человеком напрямую и конкретно об этом сообщении."
       short_description: "Я хочу поговорить с этим человеком напрямую и конкретно об этом сообщении."
-      long_form: "Оповещаемый пользователь"
       email_title: 'Ваше сообщение в теме "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Другая причина"
       description: "Это сообщение требует внимания персонала по иной причине, которая отсутствует в списке выше."
       short_description: "Требует внимания персонала по другой причине"
-      long_form: "отметили это для модерации"
       email_title: 'Сообщение в теме "%{title}" требует модерации'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Добавить в закладки"
       description: "Добавить сообщение в закладки"
       short_description: "Добавить сообщение в закладки"
-      long_form: "добавили сообщение в закладки"
     like:
       title: "Симпатия"
       description: "Мне нравится это сообщение"
       short_description: "Мне нравится"
-      long_form: "понравилось"
   draft:
     sequence_conflict_error:
       title: "Ошибка черновика"
@@ -1514,7 +1507,7 @@ ru:
     email_custom_headers: "Разделённый вертикальной чертой список дополнительных заголовков в почтовых сообщениях"
     email_subject: "Настраиваемый формат темы для стандартных писем. См. тему <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Предоставление пользователям более подробной информации о том, почему они не могут получить доступ к определённой теме. Примечание: Это менее безопасно, поскольку пользователи будут знать, ссылается ли URL-адрес на допустимую тему."
-    enforce_second_factor: "Принудительное включение двухфакторной проверки подлинности. Выберите 'all', чтобы применить его ко всем пользователям. Выберите 'staff', чтобы принудительно использовать её только сотрудниками."
+    enforce_second_factor: "Принудительное включение двухфакторной аутентификации. Выберите 'all', чтобы применить его ко всем пользователям. Выберите 'staff', чтобы принудительно использовать её только сотрудниками."
     force_https: "Принудительное использование протокола HTTPS. ВНИМАНИЕ: НЕ включайте этот параметр, пока не убедитесь, что HTTPS полностью настроен и работает абсолютно везде! Вы проверили настройки сети, доступность учётных записей в социальных сетях, доступность внешних логотипов и зависимостей, чтобы убедиться, что они корректно работают при использовании HTTPS?"
     same_site_cookies: "Использовать одни и те же файлы cookie, они предотвращают <a href='https://ru.wikipedia.org/wiki/Межсайтовая_подделка_запроса' target='_blank'>межсайтовую подделку запроса</a> в поддерживаемых браузерах (Lax или Strict). Предупреждение: Strict будет работать только на сайтах, которые поддерживают принудительный вход в систему и используют SSO."
     summary_score_threshold: "Минимальная оценка сообщения, необходимая для его включения в сводку по теме"
@@ -1556,9 +1549,9 @@ ru:
     pending_users_reminder_delay: "Уведомлять модераторов, если новые пользователи ждут одобрения больше, чем указанное здесь количество часов. Установите значение в -1 для отключения уведомлений."
     persistent_sessions: "Пользователи остаются авторизованными после закрытия веб-браузера"
     maximum_session_age: "Пользователь остаётся в системе в течение указанного здесь количества часов с момента последнего посещения"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, например: UA-12345678-9; больше информации можно узнать на странице: <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_tracking_code: "Идентификатор отслеживания Google Universal Analytics (analytics.js), например: UA-12345678-9; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Доменное имя для Google Universal Analytics (analytics.js), например: mysite.com; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Включить междоменное отслеживание Google Universal Analytics (analytics.js). К исходящим ссылкам на эти домены будет добавлен идентификатор клиента. См. <a href='https://support.google.com/analytics/answer/1034342?hl=ru' target='_blank'>Руководство Google по междоменному отслеживанию</a>."
+    ga_universal_auto_link_domains: "Включить междоменное отслеживание Google Universal Analytics (analytics.js). К исходящим ссылкам на эти домены будет добавлен идентификатор клиента. См. <a href='https://support.google.com/analytics/answer/1034342?hl=ru' target='_blank'>Как настроить междоменное отслеживание</a>"
     gtm_container_id: "Идентификатор менеджера тегов Google, например: GTM-ABCDEF. <br/> Примечание: Сторонние скрипты, загруженные менеджером тегов, могут быть внесены в белый список в при помощи директивы `script-src` политики защиты контента (CSP)."
     enable_escaped_fragments: "Обратитесь к Google Ajax-Crawling API, если веб-сканер не обнаружен. См. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Разрешать модераторам управлять разделами и группами"
@@ -1661,8 +1654,8 @@ ru:
     facebook_app_id: "Идентификатор приложения для аутентификации и обмена Facebook, зарегистрирован на <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Секрет приложения для аутентификации Facebook, зарегистрированный по адресу <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_github_logins: "Включить аутентификацию Github, требуются github_client_id и github_client_secret. См. тему <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "Идентификатор клиента для аутентификации Github, зарегистрированный в <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Секрет клиента для аутентификации Github, зарегистрированный по адресу <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_id: "Идентификатор клиента для аутентификации GitHub, зарегистрированный в <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Секрет клиента для аутентификации GitHub, зарегистрированный по адресу <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Разрешать пользователям проходить аутентификацию с использованием Discord?"
     discord_client_id: 'Discord Client ID (Нужен ID? Посетите <a href="https://discordapp.com/developers/applications/me">портал разработчиков Discord</a>)'
     discord_secret: "Discord Secret Key"
@@ -1919,8 +1912,6 @@ ru:
     email_editable: "Позволять пользователям изменять адрес электронной почты после регистрации."
     logout_redirect: "Адрес страницы для перенаправления после выхода из аккаунта (например: https://example.com/logout)"
     allow_uploaded_avatars: "Разрешать пользователям загружать свои собственные аватары."
-    allow_animated_avatars: "Разрешать пользователям использовать анимированные GIF-картинки в качестве аватара. ВНИМАНИЕ: после изменения данной настройки запустите rake-задачу avatars:refresh."
-    allow_animated_thumbnails: "Генерировать анимированные миниатюры GIF-картинок."
     default_avatars: "URL для аватара, который будет использован по умолчанию для новых пользователей, пока они его не поменяют."
     automatically_download_gravatars: "Скачивать Gravatar пользователя при создании учётной записи или изменении электронного адреса."
     digest_topics: "Максимальное количество популярных тем, отображаемых в Email-дайджесте."
@@ -2296,7 +2287,7 @@ ru:
     auto_deleted_by_timer: "Автоматически удалить по таймеру."
   login:
     invalid_second_factor_method: "Выбранный метод двухфакторной аутентификация недействителен."
-    not_enabled_second_factor_method: "Выбранный метод двухфакторной аутентификации не включен для вашей учетной записи."
+    not_enabled_second_factor_method: "Выбранный метод двухфакторной аутентификации не включен для вашей учётной записи."
     security_key_description: "Когда вы подготовите свой физический ключ безопасности, нажмите кнопку Аутентификация с ключом безопасности ниже."
     security_key_alternative: "Попробуйте другой способ"
     security_key_authenticate: "Аутентификация с ключом безопасности."
@@ -3468,7 +3459,7 @@ ru:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Если вы не запрашивали это изменение, обратитесь к администратору сайта %{site_name}.
+        Если вы не запрашивали это изменение, обратитесь к [администратору сайта](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Подтвердить адрес электронной почты"
       subject_template: "[%{email_prefix}] Подтвердите новый адрес электронной почты"
@@ -3477,7 +3468,7 @@ ru:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Это изменение адреса электронной почты было запрошено администратором сайта. Если вы не запрашивали это изменение, обратитесь к администратору сайта %{site_name}.
+        Это изменение адреса электронной почты было запрошено администратором сайта. Если вы не запрашивали это изменение, обратитесь к [администратору сайта](%{base_url}/about).
     confirm_old_email:
       title: "Подтвердите старый адрес электронной почты"
       subject_template: "%{email_prefix} Подтверждение текущего электронного адреса"
@@ -3649,7 +3640,11 @@ ru:
     latte: "Латте"
     summer: "Летняя"
     dark_rose: "Тёмная роза"
-    default_theme_name: "Светлая"
+    wcag: "WCAG Light"
+    wcag_theme_name: "WCAG Light"
+    wcag_dark: "WCAG Dark"
+    wcag_dark_theme_name: "WCAG Dark"
+    default_theme_name: "Цветовая схема по умолчанию"
     light_theme_name: "Светлая"
     dark_theme_name: "Тёмная"
     neutral_theme_name: "Нейтральная"
@@ -4183,8 +4178,8 @@ ru:
     initial_topic_title: Отчеты активности форума
   tags:
     title: "Теги"
-    staff_tag_disallowed: 'Тег "%{tag}" может быть применён только персоналом.'
-    staff_tag_remove_disallowed: 'Тег "%{tag}" может быть удалён только персоналом.'
+    restricted_tag_disallowed: 'Вы не можете применить тег «%{tag}».'
+    restricted_tag_remove_disallowed: 'Вы не можете удалить тег "%{tag}".'
     minimum_required_tags:
       one: "Вы должны выбрать как минимум %{count} тег"
       few: "Вы должны выбрать как минимум %{count} тега"
@@ -4312,7 +4307,7 @@ ru:
             label: "Город для разрешения споров"
             placeholder: "Глупов, Российская империя"
       colors:
-        title: "Цветовая схема"
+        title: "Цвета"
       fonts:
         title: "Шрифты"
         fields:
@@ -4432,7 +4427,7 @@ ru:
       email_auth_res_enqueue: "Это письмо не прошло DMARC-проверку, скорее всего, оно не от того, кто указан в адресе отправителя. Проверьте заголовки в исходном тексте письма для получения дополнительной информации."
       email_spam: "Это письмо было помечено как спам на основании заголовка, указанного в параметре `email_in_spam_header`."
       suspect_user: "Профайл нового пользователя не содержит информации о прочтённых темах или сообщениях. С большой долей вероятности можно предположить, что это спамер. См. параметр `approve_suspect_users`."
-      contains_media: "Сообщения содержат встроенные медиафайлы. См. параметр `review_media_unless_trust_level`."
+      contains_media: "Сообщение содержит встроенные медиафайлы. См. параметр `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Согласиться..."

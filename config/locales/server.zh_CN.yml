@@ -190,12 +190,6 @@ zh_CN:
     expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found_json: "你的邀请码不正确。请联系工作人员。"
-    not_found_template: |
-      <p>你来自<a href="%{base_url}">%{site_name} </a>的邀请已被兑换。</ p>
-
-      <p>如果你还记得密码，可以<a href="%{base_url}/login">登录</a>。</p>
-
-      <p>否则请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     error_message: "接受邀请时出错。 请联系该网站的管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经拥有账户了！</a>"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
@@ -209,7 +203,6 @@ zh_CN:
     max_rows: "前%{max_bulk_invites}个邀请已经被发出。尝试将文件分割成更小的部分。"
     error: "上传文件的时候出错了。请稍后重试。"
   invite_link:
-    email_taken: "这个电子邮件地址已被注册。如果你已经有一个账户，请登录或重置密码。"
     max_redemptions_limit: "应该在 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此主题：%{group_names}。"
@@ -774,43 +767,36 @@ zh_CN:
       title: "偏离主题"
       description: "该帖子与当前主题的标题和首帖内容所无关，可能需要被移动到其它地方。"
       short_description: "和讨论不相关"
-      long_form: "标记为偏离主题"
     spam:
       title: "垃圾内容"
       description: "该帖子是广告或破坏。帖子没有价值或者与当前主题无关。"
       short_description: "这是广告或者破坏行为"
-      long_form: "标记为垃圾内容"
       email_title: '“%{title}”被标记为垃圾'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不当内容"
       description: '该帖子的内容包含对他人攻击、辱骂的言论或违反了<a href="%{base_path}/guidelines">我们的社区指引</a>。'
       short_description: '违反了<a href="%{base_path}/guidelines">我们的社区指引</a>'
-      long_form: "标记为不当内容"
     notify_user:
       title: "给@%{username}发送一条私信"
       description: "我想亲自与此人私下交流关于该帖子的事情。"
       short_description: "我想亲自与此人私下交流关于该帖子的事情。"
-      long_form: "以发送私信给用户"
       email_title: '你在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他事项"
       description: "这个帖子需要版主的注意，但是原因没有包括在上述选项中。"
       short_description: "需要管理人员注意的其他原因"
-      long_form: "标记为需版主注意"
       email_title: '"%{title}" 主题需要版主的注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "收藏"
       description: "收藏本帖"
       short_description: "收藏该帖子"
-      long_form: "已收藏本帖"
     like:
       title: "赞"
       description: "赞这个帖子"
       short_description: "赞这个帖子"
-      long_form: "赞了这个帖子"
   draft:
     sequence_conflict_error:
       title: "草稿错误"
@@ -1265,10 +1251,6 @@ zh_CN:
     sidekiq_warning: 'Sidekiq未运行。很多任务，例如发送电子邮件，是被Sidekiq异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解Sidekiq</a>。'
     queue_size_warning: "队列中有较多任务，为 %{queue_size} 个。这可能是因为 Sidekiq 进程的问题导致，或者需要更多的 Sidekiq 进程。"
     memory_warning: "你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。"
-    google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但client id和client secret没有设定。到<a href="%{base_path}/admin/site_settings">站点设置</a>更新此设定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
-    facebook_config_warning: '服务器允许使用Facebook帐号登录（enable_facebook_logins），但app id和app secret没有设定。到<a href="%{base_path}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
-    twitter_config_warning: '服务器允许使用Twitter账号登录（enable_twitter_logins），但key和secret没有设定。 到<a href="%{base_path}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
-    github_config_warning: '服务器允许使用GitHub账号登录（enable_github_logins），但client id和secret没有设定。到<a href="%{base_path}/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
     s3_config_warning: '服务器被配置为上传文件到s3，但以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
     s3_backup_config_warning: '服务器被配置为上传备份到S3，但是以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是ImageMagick没有被安装。用你最喜爱的包管理器安装ImageMagick或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
@@ -1372,7 +1354,6 @@ zh_CN:
     email_custom_headers: "以竖线分割的自定义邮件标头列表。"
     email_subject: "标准邮件的自定义主题格式。参见<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "为用户提供关于他们为什么不能访问特定主题的更多细节。注意：这是不安全的，因为用户将知道一个 URL 是否链接到一个有效的主题。"
-    enforce_second_factor: "强制用户启用双重验证。选择“all”以强制所有用户启用。选择“staff”仅强制管理人员。"
     force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！你检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
     same_site_cookies: "使用 Same-site cookies以消除所有跨站请求伪造（CSRF）的攻击面（Lax 或 Strict）。警告：Strict 仅在强制登录并使用 SSO 的站点有效。"
     summary_score_threshold: "一个帖子被加入到“主题摘要”中所需的最小分值"
@@ -1414,9 +1395,9 @@ zh_CN:
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
-    ga_universal_tracking_code: "Google Universal Analytics（analytics.js）跟踪代码ID，例如：UA-12345678-9; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics（analytics.js）域名，例如：mysite.com; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "启用Google Universal Analytics（analytics.js）跨域跟踪。 这些域的传出链接将添加客户端ID。请参阅<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google的跨域跟踪指南。</a>"
+    ga_universal_tracking_code: "Google Universal Analytics(analytics.js) 跟踪代码ID，例如：UA-12345678-9; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics(analytics.js) 域名，例如：mysite.com;参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "启用 Google Universal Analytics(analytics.js) 跨域跟踪。指向这些域的传出链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨域跟踪指南。</a>"
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "允许版主管理分类和群组"
@@ -1518,13 +1499,9 @@ zh_CN:
     enable_facebook_logins: "启用Facebook身份验证，需要facebook_app_id和facebook_app_secret。请参阅<a href='https://meta.discourse.org/t/13394'target='_blank'>配置Facebook登录Discourse</a>。"
     facebook_app_id: "在 <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>注册用于Facebook 认证和分享app id。"
     facebook_app_secret: "用于Facebook身份验证的应用程序secret，在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上注册"
-    enable_github_logins: "启用Github身份验证，需要github_client_id和github_client_secret。请参阅<a href='https://meta.discourse.org/t/13745'target='_blank'>配置GitHub登录Discourse</a>。"
-    github_client_id: "Github身份验证的客户端ID，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>中注册"
-    github_client_secret: "Github身份验证的客户端secret，在<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>上注册"
     enable_discord_logins: "允许用户使用DIscord认证？"
     discord_client_id: 'Discord 客户端 ID（需要申请一个？请访问 <a href="https://discordapp.com/developers/applications/me">Discord 开发者门户</a>)'
     discord_secret: "Discord Secret Key"
-    discord_trusted_guilds: '只允许这些 Discord  公会的成员通过 Discord 登录。使用公会的数字 ID。更多有关信息，请查看<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">这里</a>的说明。留空则允许任意公会。'
     enable_backups: "允许管理员创建论坛备份"
     allow_restore: "允许导入数据，这将能替换所有全站数据！除非你计划导入数据，否则请保持设置为 false"
     maximum_backups: "磁盘保存的最大备份数量。老的备份将自动删除"
@@ -1777,8 +1754,6 @@ zh_CN:
     email_editable: "允许用户在注册后改变他们的邮箱地址。"
     logout_redirect: "注销后将浏览器重定向到（例如：https://example.com/logout）"
     allow_uploaded_avatars: "允许用户上传自定义个人头像。"
-    allow_animated_avatars: "允许用户使用动画个人头像。警告：更改设置后运行 avatars:refresh 这个 rake 任务。"
-    allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
     default_avatars: "在用户更改头像前的默认头像 URL"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示热门主题的最大数量。"
@@ -1804,6 +1779,7 @@ zh_CN:
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任等级"
     anonymous_account_duration_minutes: "为了确保匿名性，每N分钟为各个用户创建一个新的匿名账户。例如：如果设置为600，只要自最后发帖起过去了600分钟，并且用户切换至匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "为匿名用户禁用用户信息卡、用户资料和用户目录。"
+    allow_users_to_hide_profile: "允许用户隐藏其个人资料和状态"
     allow_featured_topic_on_user_profiles: "允许用户在其用户卡片和个人资料上显示一个指向主题的链接。"
     show_inactive_accounts: "允许已登录用户查看不活跃账户。"
     hide_suspension_reasons: "不在用户页面公开显示封禁原因。"
@@ -1887,7 +1863,6 @@ zh_CN:
     new_user_notice_tl: "查看新用户发帖通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
-    review_media_unless_trust_level: "工作人员将会审核信任等级较低的用户所发布含有嵌入多媒体的内容。"
     enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
     show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
@@ -1952,6 +1927,7 @@ zh_CN:
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
+    base_font: "网站标题使用的字体。主题可以通过 `--heading-font-family` CSS 自定义属性来覆盖。"
     heading_font: "网站标题使用的字体。主题可以通过 `--heading-font-family` CSS 自定义属性来覆盖。"
     short_title: "短标题将用于用户主页、启动器或其他可能空间有限的地方。应该控制在12个字符内。"
     dashboard_hidden_reports: "允许从仪表盘中隐藏指定的报告。"
@@ -2094,8 +2070,6 @@ zh_CN:
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     auto_deleted_by_timer: "由计时器自动删除。"
   login:
-    invalid_second_factor_method: "所选的双因素方法无效。"
-    not_enabled_second_factor_method: "你的帐户未启用所选的双重验证方式。"
     security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
@@ -2123,7 +2097,6 @@ zh_CN:
       csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
       request_error: "授权时发生错误。请重试。"
       invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
-    omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
     omniauth_confirm_title: "使用%{provider}登录"
     omniauth_confirm_button: "继续"
     authenticator_error_no_valid_email: "关联%{account}的账户没有优秀的邮件地址。你可能需要用不同的邮件地址配置你的账户。"
@@ -2136,10 +2109,8 @@ zh_CN:
     auth_complete: "验证已经完成。"
     click_to_continue: "点击这里继续。"
     already_logged_in: "喔，看起来你正尝试接受一个本该是给其他用户的邀请。如果你不是%{current_user}，请退出登录再重试。"
-    second_factor_title: "两步验证"
     second_factor_description: "请输入你的APP验证码："
     second_factor_backup_description: "请输入备用码："
-    second_factor_backup_title: "两步验证备用码"
     invalid_second_factor_code: "验证码无效。每个代码只能使用一次。"
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
@@ -3129,15 +3100,6 @@ zh_CN:
         如果你没有试着用%{email}创建账户或者更改邮件，不要担心——你可以安全地忽略这封邮件。
 
         如果你有任何问题，[联系我们友善的工作人员](%{base_url}/about)。
-    account_second_factor_disabled:
-      title: "双重验证已停用"
-      subject_template: "[%{email_prefix}]双重验证已停用"
-      text_body_template: |
-        你在%{site_name}的账户已停用了双重验证。你现在只需使用密码便可以登录；不再需要额外的验证代码
-
-        如果你未选择禁用双重验证，则有可能有人入侵了你的账户
-
-        如果有任何疑问，[联系我们友善的管理人员](%{base_url}/about)。
     digest:
       why: "在你上次于%{last_seen_at}访问后，%{site_link}的新内容摘要。"
       since_last_visit: "自从你上次访问"
@@ -3190,13 +3152,6 @@ zh_CN:
     admin_login:
       title: "管理员登录"
       subject_template: "[%{email_prefix}] 登录"
-      text_body_template: |
-        有人要登录你在[%{site_name}](%{base_url})上的账户。
-
-        如果你没有发出此请求，则可以放心地忽略此电子邮件。
-
-        单击以下链接登录：
-        %{base_url} / session / email-login / %{email_token}
     account_created:
       title: "账户已创建"
       subject_template: "[%{email_prefix}] 你的新账户"
@@ -3211,12 +3166,6 @@ zh_CN:
     confirm_new_email_via_admin:
       title: "确认新邮箱"
       subject_template: "[%{email_prefix}] 确认你的新电子邮箱地址"
-      text_body_template: |
-        点击以下链接确认你在%{site_name}的新电子邮件地址：
-
-        %{base_url}/u/confirm-new-email/%{email_token}
-
-        此电子邮件的更改由网站管理员发送。如果你没有要求此更改，请联系 %{site_name} 管理员。
     confirm_old_email:
       title: "确认旧邮箱"
       subject_template: "[%{email_prefix}] 确认你现在的电子邮箱地址"
@@ -3387,7 +3336,11 @@ zh_CN:
     latte: "棕色"
     summer: "夏季"
     dark_rose: "黑红"
-    default_theme_name: "亮"
+    wcag: "WCAG 亮"
+    wcag_theme_name: "WCAG 亮"
+    wcag_dark: "WCAG 暗"
+    wcag_dark_theme_name: "WCAG 暗"
+    default_theme_name: "默认"
     light_theme_name: "亮"
     dark_theme_name: "暗"
     neutral_theme_name: "平淡"
@@ -4017,8 +3970,8 @@ zh_CN:
     initial_topic_title: 网站性能报告
   tags:
     title: "标签"
-    staff_tag_disallowed: '“%{tag}”只可由管理人员使用。'
-    staff_tag_remove_disallowed: '“%{tag}”只可由管理人员删除。'
+    restricted_tag_disallowed: '你不能添加标签“%{tag}”。'
+    restricted_tag_remove_disallowed: '你不能删除标签“%{tag}”。'
     minimum_required_tags:
       other: "你必须选择至少%{count}个标签"
     upload_row_too_long: "CSV文件每行应该有一个标签。可选地，标签后面可以是逗号，然后是标签组名称。"
@@ -4134,7 +4087,7 @@ zh_CN:
             label: "争议之城"
             placeholder: "旧金山，加利福尼亚"
       colors:
-        title: "主题"
+        title: "颜色"
       fonts:
         title: "字体"
         fields:
@@ -4191,6 +4144,10 @@ zh_CN:
         disabled: "由于禁用了本地登录，因此无法向任何人发送邀请。请继续下一步。"
       finished:
         title: "你的 Discourse 已经准备就绪！"
+        description: |
+          <p>如果你想，可以<b>随时重新运行这个向导</b>，或访问 <a href='%{base_path}/admin' target='_blank'>你的管理部分</a>；在站点菜单中的扳手图标旁边找到它。</p>
+          <p>使用我们强大的主题系统，可以更轻松地自定义你的 Discourse。例如，在 <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>上查看 <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">顶级主题和组件</a> 。</p>
+          <p>祝你愉快，祝你好运 <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建立新社区！</a></p>
   search_logs:
     graph_title: "搜索计数"
   joined: "已加入"
@@ -4247,7 +4204,6 @@ zh_CN:
       email_auth_res_enqueue: "此电子邮件未通过DMARC检查，很可能不是来自其所声称的来源。检查原始电子邮件的标头以获取更多信息。"
       email_spam: "该电子邮件被`email_in_spam_header`中定义的标头标记为垃圾邮件。"
       suspect_user: "这位新用户输入的个人资料信息但没有阅读任何主题或帖子，意味着他可能是垃圾发送者。参见`approve_suspect_users`。"
-      contains_media: "该帖包括嵌入式媒体。参见`review_media_unless_trust_level`。"
     actions:
       agree:
         title: "同意......"

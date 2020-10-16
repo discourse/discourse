@@ -566,39 +566,32 @@ fa_IR:
       title: "موضوعات قدیمی"
       description: "این فرسته بر اساس عنوان و اولین فرسته، ربطی به گفت‌وگوی جاری ندارد و باید به جای دیگری منتقل شود."
       short_description: "به بحث مرتبط نیست"
-      long_form: "این موضوع را به عنوان خارج از موضوع پرچم بزن"
     spam:
       title: "هرزنامه"
       description: "این فرسته تبلیغاتی یا خرابکاری است و برای موضوع جاری مفید یا به آن مرتبط نیست."
       short_description: "این یک تبلیغ یا خرابکاری است"
-      long_form: "پرچم‌گذاری به عنوان هرزنامه"
       email_title: '"%{title}" به عنوان هرزنامه پرچم گذاری شد'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "نامناسب"
-      long_form: "به عنوان نامناسب علامت گذاری شده"
     notify_user:
       title: "فرستادن پیام به @%{username}"
-      long_form: "به کاربر پیام داده شد"
       email_title: 'فرسته‌ی شما در « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
       description: "این فرسته، به یک دلیل دیگر که در بالا ذکر نشده، نیاز به توجه مدیران دارد."
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
-      long_form: "برای توجه مدیران پرچم‌گذاری شد"
       email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "نشانک‌گذاری"
       description: "نشانک‌گذاری این فرسته"
       short_description: "نشانک‌گذاری این فرسته"
-      long_form: "این فرسته را نشانک زد"
     like:
       title: "پسندیدن"
       description: "پسندیدن این فرسته"
       short_description: "پسندیدن این فرسته"
-      long_form: "این مورد پسندیده شد"
   user_activity:
     no_bookmarks:
       others: "نشانه‌گذاری وجود ندارد"
@@ -1164,8 +1157,6 @@ fa_IR:
     delete_all_posts_max: "حداکثر تعداد نوشته‌هایی که می‌تواند یکباره پاک شود با کلید همه نوشته ها را پاک کن. اگر کاربر بییشتر از این نوشته دارد، نوشته نمی تواند یکبار پاک شود و کاربر نمی تواند حذف شود."
     email_editable: "به کاربران اجازه بده بعد از ثبت نام ایمیل خود را عوض کنند. "
     allow_uploaded_avatars: "اجازه بارگذاری تصاویر سفارشی پروفایل به کاربران"
-    allow_animated_avatars: "اجازه استفاده از تصویر متحرک gif در پروفایل. اخطار: تسک avatars:refresh rake را بعد از انجام این تنظیمات اجرا کنید."
-    allow_animated_thumbnails: "تولید تصاویر بند انگشتی متحرک از تصاویر GIF انیمیشن."
     default_avatars: "لینک برای آواتارهایی که کاربران جدید از آن بطور پیش‌فرض می‌توانند استفاده کنند تا زمانی که آواتار را عوض کنند. "
     automatically_download_gravatars: "Gravatar برای کاربران در زمان ایجاد حساب‌کاربری یا تغییر ایمیل، دانلود شود."
     digest_topics: "حداکثر تعداد موضوعات محبوب برای نمایش در ایمیل خلاصه"
@@ -1388,7 +1379,6 @@ fa_IR:
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد،‌ شاید نام‌کاربری و ایمیل قبلا ثبت‌نام شده است. از پیوند بازیابی رمز عبور استفاده کنید."
-    omniauth_error_unknown: "مشکلی در وارد شدن شما به سیستم به وجود آمده‌، لطفا دوباره تلاش کنید."
     omniauth_confirm_button: "ادامه"
     authenticator_error_no_valid_email: "ایمیلی در حساب کاربری %{account} وجود ندارد. باید یک ایمیل به حساب کاربری خود اضافه کنید."
     new_registrations_disabled: "در حال حاضر امکان ثبت نام وجود ندارد."
@@ -1397,7 +1387,6 @@ fa_IR:
     reserved_username: "این نام کاربری مجاز نیست."
     missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
     already_logged_in: "به نظر می‌رسد می‌خواهید دعوت کاربری دیگری را تایید کنید. اگر کاربر %{current_user} نیستید لطفا خارج شده و دوباره وارد سایت شوید."
-    second_factor_title: "احراز هویت دو مرحله ای"
     second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
     second_factor_toggle:
       backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
@@ -2014,7 +2003,6 @@ fa_IR:
     base_theme_name: "پایه"
     light: "روشن"
     dark: "تیره"
-    default_theme_name: "روشن"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
   edit_this_page: "ویرایش این صفحه"
@@ -2247,8 +2235,6 @@ fa_IR:
     initial_topic_title: گزارش عملکرد وب‌سایت
   tags:
     title: "برچسب"
-    staff_tag_disallowed: 'برچسب "%{tag}" فقط توسط کارمندان قابل عمال است.'
-    staff_tag_remove_disallowed: 'برچسب "%{tag}" فقط توسط کارمندان قابل حذف است.'
   rss_by_tag: "موضوعات برچسب خورده %{tag}"
   finish_installation:
     congratulations: "تبریک، دیسکورس را نصب کردید!"
@@ -2316,8 +2302,6 @@ fa_IR:
             label: "پیام‌های خودکار"
       corporate:
         title: "سازمان"
-      colors:
-        title: "قالب"
       fonts:
         fields:
           font_preview:

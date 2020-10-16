@@ -201,7 +201,6 @@ sl:
     topic_admin_menu: "dejanja teme"
     wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo s <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
-    bootstrap_mode_enabled: "Zagonski način je vklopljen za lažji zagon vaše nove strani. Vsi novi uporabniki bodo dobili nivo zaupanja 1 in imeli vklopljene dnevna e-sporočila z povzetki. Ta način se bo samodejno onemogočil ko se bo registriralo %{min_users} uporabnikov."
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
     themes:
       default_description: "Privzeto"
@@ -744,7 +743,6 @@ sl:
         two: "%{count} novi temi v preteklem mesecu."
         few: "%{count} nove teme v preteklem mesecu."
         other: "%{count} novih tem v preteklem mesecu."
-      n_more: "Kategorije (še %{count} več) ..."
     ip_lookup:
       title: Poizvedba IP naslova
       hostname: Ime gostitelja
@@ -841,7 +839,6 @@ sl:
       suspended_notice: "Ta uporabnik je suspendiran do %{date}."
       suspended_permanently: "Ta uporabnik je suspendiran"
       suspended_reason: "Razlog: "
-      github_profile: "Github"
       email_activity_summary: "Povzetek aktivnosti"
       mailing_list_mode:
         label: "E-sporočilo za vsak prispevek"
@@ -929,7 +926,6 @@ sl:
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
       second_factor_backup:
-        title: "Rezervne potrditvene kode za preverjanje v dveh korakih"
         regenerate: "Ponovno ustvari"
         disable: "Onemogoči"
         enable: "Omogoči"
@@ -937,12 +933,10 @@ sl:
         copy_to_clipboard: "Kopiraj v odložišče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         copied_to_clipboard: "Kopirano v odložišče"
-        remaining_codes: "Imate <strong>%{count}</strong> rezervnih potrditvenih kod."
         codes:
           title: "Rezervne potrditvene kode ustvarjene"
           description: "Vsaka od rezervnih potrditvenih kod se lahko uporabi samo enkrat. Shranite jih na varno, ampak dostopno mesto."
       second_factor:
-        title: "Preverjanje v dveh korakih"
         forgot_password: "Ste pozabili geslo?"
         confirm_password_description: "Vnesite geslo za nadaljevanje"
         name: "Polno ime"
@@ -952,10 +946,6 @@ sl:
           Skeniraj to QR kodo v podprti aplikaciji (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) in vnesi vašo potrditveno kodo.
         disable_description: "Vnesite potrditveno kodo iz vaše aplikacije"
         show_key_description: "Vnesite ročno"
-        extended_description: |
-          Preverjanje v dveh korakih omogoči dodatno varnost vašega računa saj za prijavo zahteva dodatno enkratno potrditveno kodo poleg vašega gesla. Potrditvene kode se lahko ustvarijo na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ali <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> napravah.
-        oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
-        enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
         disable: "Onemogoči"
         save: "Shrani"
         edit: "Uredi"
@@ -1040,10 +1030,8 @@ sl:
         title: "Geslo - ponovno"
       auth_tokens:
         title: "Nedavno uporabljene naprave"
-        ip: "IP"
         details: "Podrobnosti"
         log_out_all: "Odjavi vse naprave"
-        active: "aktiven zdaj"
         not_you: "To niste vi?"
         show_all: "Prikaži vse (%{count})"
         show_few: "Prikaži manj"
@@ -1333,8 +1321,6 @@ sl:
       disable: "Prikaži izbrisane prispevke"
     private_message_info:
       title: "Sporočilo"
-      invite: "Povabi druge..."
-      edit: "Dodaj ali odstrani..."
       leave_message: "Ali hočete res zapustiti to sporočilo?"
       remove_allowed_user: "Ali resnično želite odstraniti %{name} s tega sporočila?"
       remove_allowed_group: "Ali resnično želite odstraniti %{name} s tega sporočila?"
@@ -1377,9 +1363,7 @@ sl:
       title: "Prijava"
       username: "Uporabnik"
       password: "Geslo"
-      second_factor_title: "Preverjanje v dveh korakih"
       second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
-      second_factor_backup_title: "Rezervno preverjanje v dveh korakih"
       second_factor_backup_description: "Vnesite eno od rezervnih potrditvenih kod:"
       email_placeholder: "e-naslov ali uporabniško ime"
       caps_lock_warning: "Caps Lock je vključen"
@@ -1396,10 +1380,8 @@ sl:
       awaiting_approval: "Vaš uporabniški račun še ni bil potrjen s strani člana osebja foruma. Ko bo potrjen boste prejeli e-sporočilo."
       requires_invite: "Oprostite, dostop do foruma je mogoč samo preko povabila."
       not_activated: "Ne morete se še prijaviti. Pred časom smo poslali aktivacijsko e-sporočilo na <b>%{sentTo}</b>. Sledite navodilom v e-sporočilu da akitivirate vaš uporabniški račun."
-      not_allowed_from_ip_address: "Ne morete se prijaviti s tega IP naslova."
       admin_not_allowed_from_ip_address: "Ne morete se prijaviti kot administrator iz tega IP naslova."
       resend_activation_email: "Kliknite tukaj za ponovno pošiljanje aktivacijskega e-sporočila."
-      omniauth_disallow_totp: "Vaš račun ima vklopljeno preverjanje v dveh korakih. Prijavite se z vašim geslom."
       resend_title: "Ponovno pošlji aktivacijsko e-sporočilo"
       change_email: "Spremeni e-naslov"
       provide_new_email: "Vpišite nov e-naslov in ponovno vam bomo poslali potrditveno e-sporočilo."
@@ -1461,8 +1443,6 @@ sl:
       enter: "Enter"
     conditional_loading_section:
       loading: Nalagam...
-    category_row:
-      topic_count: "%{count} tem v tej kategoriji"
     select_kit:
       default_header_text: Izberi...
       no_content: Ni zadetkov
@@ -1525,7 +1505,6 @@ sl:
       similar_topics: "Vaša tema je podobna kot..."
       drafts_offline: "osnutki brez povezave"
       edit_conflict: "uredi spor"
-      group_mentioned_limit: "<b>Opozorilo!</b> Omenili ste <a href='%{group_link}'>%{group}</a> ampak ta skupina ima več članov kot je omejitev administratorja na %{max} uporabnika. Nihče ne bo obveščen."
       group_mentioned:
         one: "Z omembo %{group} boste obvestili <a href='%{group_link}'>%{count} osebo</a> – ali ste prepričani?"
         two: "Z omembo %{group}boste obvestili <a href='%{group_link}'>%{count} osebi</a> – ali ste prepričani?"
@@ -1544,7 +1523,6 @@ sl:
         post_length: "Prispevek mora vsebovati vsaj %{min} znakov"
         try_like: "Ste že uporabili %{heart} gumb za všečkanje?"
         category_missing: "Izbrati morate kategorijo"
-        tags_missing: "Izbrati morate vsaj %{count} oznak"
         topic_template_not_modified: "Dodajte podrobnosti in značilnosti v vašo temo tako da uredite predlogo teme."
       save_edit: "Shrani spremembe"
       overwrite_edit: "Prepiši spremembo"
@@ -1751,7 +1729,6 @@ sl:
       full_page_title: "išči teme ali prispevke"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
-      searching: "Iščem ..."
       post_format: "#%{post_number} od %{username}"
       results_page: "Zadetki iskanja za '%{term}'"
       more_results: "Obstaja več zadetkov. Zožite kriterije iskanja."
@@ -1760,7 +1737,6 @@ sl:
       or_search_google: "Ali poskusite iskati z Googlom:"
       search_google: "Poskusite iskati z Googlom:"
       search_google_button: "Google"
-      search_google_title: "Išči po tej spletni strani"
       context:
         user: "Išči prispevke od @%{username}"
         category: "Išči po #%{category} kategoriji"
@@ -1853,7 +1829,6 @@ sl:
         category: "Ni tem v kategoriji %{category} ."
         top: "Ni najboljših tem."
         educate:
-          new: '<p>Tu se prikažejo vaše nove teme.</p><p>Privzeto se teme prikažejo kot nove in bodo imele oznako <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> če so bile ustvarjene v zadnjih 2 dneh.</p><p>Obiščite <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
           unread: '<p>Tu se prikažejo vaše neprebrane teme.</p><p>Privzeto se teme prikažejo kot neprebrane s prikazom števila <span class="badge new-posts badge-notification">1</span> če ste:</p><ul><li>Ustvarili temo</li><li>Odgovorili na temo</li><li>Brali temo več kot 4 minute</li></ul><p>Izrecno nastavili temo kot "Opazujem" ali "Sledim" preko nastavitev obveščanja na dnu teme.</p><p>Pojdite na <a href="%{userPrefsUrl}">nastavitve</a> če želite spremembo.</p>'
       bottom:
         latest: "Ni več najnovejših tem."
@@ -2108,7 +2083,6 @@ sl:
       feature_topic:
         title: "Izpostavi to temo"
         pin: "Naj se ta tema prikaže na vrhu kategorije %{categoryLink} do"
-        confirm_pin: "Trenutno imate %{count} pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno temo v to kategorijo?"
         unpin: "Odpnite to temo iz vrha kategorije %{categoryLink}."
         unpin_until: "Odstrani to temo iz vrha kategorije %{categoryLink} ali počakaj do <strong>%{until}</strong>."
         pin_note: "Uporabniki lahko samostojno odpnejo temo."
@@ -2120,7 +2094,6 @@ sl:
           few: "Trenutno pripete teme v %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Trenutno pripetih tem v %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Ta tema naj se pojavi na vrhu vseh seznamov tem do"
-        confirm_pin_globally: "Trenutno imate %{count} globalno pripetih tem. Preveč pripetih tem je lahko breme za nove in anonimne uporabnike. Ali ste prepričani da želite pripeti še eno globalno temo?"
         unpin_globally: "Odstrani to temo z vrha vseh seznamov tem."
         unpin_globally_until: "Odstrani to temo z vrha seznama vseh tem ali počakaj do <strong>%{until}</strong>."
         global_pin_note: "Uporabniki lahko samostojno odpnejo temo."
@@ -2320,7 +2293,6 @@ sl:
         upload: "Oprostite, pri prenosu datoteke je prišlo do napake. Poskusite ponovno."
         file_too_large: "Datoteka je prevelika (največja velikost je %{max_size_kb}kb). Naložite vašo veliko datoteko na ponudnika v oblaku in objavite povezavo?"
         too_many_uploads: "Oprostite, naenkrat lahko naložite samo eno datoteko."
-        too_many_dragged_and_dropped_files: "Oprostite, naenkrat lahko naložite samo %{max} datotek."
         upload_not_authorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati datotek."
         attachment_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati priponk."
@@ -2573,7 +2545,6 @@ sl:
     flagging:
       title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
-      take_action: "Ukrepaj"
       notify_action: "Opozorilo"
       official_warning: "Uradno opozorilo"
       delete_spammer: "Izbriši spamerja"
@@ -2654,7 +2625,6 @@ sl:
         title: "Ta tema je zasebno sporočilo"
         help: "Ta tema je zasebno sporočilo"
     posts: "Prispevki"
-    posts_long: "%{number} prispevkov v tej temi"
     posts_likes_MF: |
       Ta tema ima {count, plural, one {1 odgovor} two {2 odgovora} other {# odgovorov}} {ratio, select,
         low {z visokim razmerjem med všečki in prispevki}
@@ -2681,7 +2651,6 @@ sl:
       two: "všečka"
       few: "všečki"
       other: "všečkov"
-    likes_long: "%{number} všečkov v tej temi"
     users: "Uporabniki"
     users_lowercase:
       one: "uporabnik"
@@ -2965,8 +2934,6 @@ sl:
         delete: "Izbriši"
         confirm_delete: "Ali ste prepričani, da hočete izbrisati to skupino oznak?"
         everyone_can_use: "Oznake lahko uporablja kdorkoli"
-        usable_only_by_staff: "Oznake so vidne vsem, smao osebje jih lahko nastavi"
-        visible_only_to_staff: "Oznake so vidne samo osebju"
       topics:
         none:
           unread: "Nimate neprebranih tem."
@@ -3395,7 +3362,6 @@ sl:
             post_edit: "urejanje prispevka"
             post_unlocked: "prispevek odklenjen"
             check_personal_message: "preveri zasebno sporočilo"
-            disabled_second_factor: "onemogočite preverjanje v dveh korakih"
             topic_published: "tema objavljena"
             post_approved: "prispevek odobren"
             create_badge: "ustvari značko"
@@ -3556,7 +3522,6 @@ sl:
         private_topics_count: Privatne teme
         posts_read_count: Prebranih prispevkov
         post_count: Ustvarjenih prispevkov
-        second_factor_enabled: Preverjanje v dveh korakih vključena
         topics_entered: Ogledane teme
         flags_given_count: Podeljene prijave
         flags_received_count: Prejete prijave

@@ -166,6 +166,7 @@ pl_PL:
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
       email: "Wyślij e-mailem"
+      url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       private_topic: "przekształcił ten temat w wiadomość prywatną %{when}"
@@ -201,7 +202,11 @@ pl_PL:
     topic_admin_menu: "akcje tematu"
     wizard_required: "Witaj na Twoim na nowym forum Discourse! Zacznijmy od <a href='%{url}' data-auto-route='true'>kreatora ustawień</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
-    bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{min_users} osób dołączy."
+    bootstrap_mode_enabled:
+      one: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoba dołączy."
+      few: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osoby dołączy."
+      many: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
+      other: "Aby ułatwić uruchomienie Twojej strony, jesteś w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają poziom zaufania 1 i będą otrzymywać codzienne wiadomości e-mail z podsumowaniem aktywności na forum. To zostanie automatycznie wyłączone, kiedy %{count} osób dołączy."
     bootstrap_mode_disabled: "Tryb bootstrap zostanie wyłączony w ciągu 24 godzin."
     themes:
       default_description: "Domyślny"
@@ -309,18 +314,26 @@ pl_PL:
       help:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
+        unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie. Masz przypomnienie ustawione na %{reminder_at} dla tego tematu."
     bookmarks:
+      created: "Wpis już dodano do zakładek%{name}"
       not_bookmarked: "dodaj do zakładek"
+      created_with_reminder: "Dodałeś ten wpis do zakładek z przypomnieniem %{date}%{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
+      confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
       confirm_clear: "Czy na pewno chcesz usunąć wszystkie swoje zakładki ustawione w tym temacie?"
       save: "Zapisz"
       no_timezone: 'Nie ustawiłeś jeszcze strefy czasowej. Nie będziesz mógł ustawić przypomnień. Skonfiguruj jeden <a href="%{basePath}/my/preferences/profile">w swoim profilu</a> .'
       invalid_custom_datetime: "Podana data i godzina są nieprawidłowe, spróbuj ponownie."
       list_permission_denied: "Nie masz uprawnień do przeglądania zakładek tego użytkownika."
+      no_user_bookmarks: "Nie masz żadnych wpisów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych wpisów."
       auto_delete_preference:
         label: "Usuń automatycznie"
         never: "Nigdy"
+        when_reminder_sent: "Po wysłaniu przypomnienia"
+        on_owner_reply: "Po odpowiedzi na ten temat"
+      search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
         later_today: "Później dzisiaj"
@@ -337,6 +350,7 @@ pl_PL:
         today_with_time: "dzisiaj o %{time}"
         tomorrow_with_time: "jutro o %{time}"
         at_time: "o %{date_time}"
+        existing_reminder: "Masz ustawione przypomnienie dla tej zakładki, które zostanie wysłane %{at_date_time}"
     copy_codeblock:
       copied: "skopiowane!"
     drafts:
@@ -515,6 +529,7 @@ pl_PL:
         category: "Kategoria"
         orders:
           score: "Wynik"
+          score_asc: "Wynik (odwrotny)"
           created_at: "Utworzony"
           created_at_asc: "Utworzono (odwrotnie)"
         priority:
@@ -615,6 +630,10 @@ pl_PL:
       member_added: "Dodano"
       member_requested: "Poproszono o"
       add_members:
+        title: "Dodaj członków do %{group_name}"
+        description: "Możesz również wkleić listę oddzieloną przecinkami."
+        usernames: "Wprowadź nazwy użytkowników lub adresy e-mail"
+        input_placeholder: "Nazwy użytkowników lub e-maile"
         notify_users: "Powiadom użytkowników"
       requests:
         title: "Prośby"
@@ -639,7 +658,9 @@ pl_PL:
           notification: Powiadomienie
         email:
           title: "Email"
+          status: "Zsynchronizowane %{old_emails} / %{total_emails} wiadomości e-mail za pośrednictwem IMAP."
           credentials:
+            title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl: "Użyj SSL dla SMTP"
@@ -649,12 +670,20 @@ pl_PL:
             username: "Nazwa użytkownika"
             password: "Hasło"
           mailboxes:
+            synchronized: "Zsynchronizowana skrzynka pocztowa"
+            none_found: "Na tym koncie e-mail nie znaleziono żadnych skrzynek pocztowych."
             disabled: "wyłączone"
         membership:
           title: Członkostwo
           access: Dostęp
         categories:
           title: Kategorie
+          long_title: "Domyślne powiadomienia kategorii"
+          description: "Po dodaniu użytkowników do tej grupy ustawienia powiadomień kategorii zostaną ustawione na wartości domyślne. Potem mogą je zmienić."
+          watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nowych wpisów będzie wyświetlana obok tytułów na liście tematów."
+          tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
+          watching_first_post_categories_instructions: "Użytkownicy zostaną powiadomieni o pierwszym postie w każdym nowym temacie w tych kategoriach."
+          regular_categories_instructions: "Jeśli te kategorie są wyciszone, nie zostaną wyciszone dla członków grupy. Użytkownicy zostaną powiadomieni, jeśli zostaną wspomniani lub ktoś na nie odpowie."
         tags:
           title: Tagi
         logs:
@@ -820,7 +849,6 @@ pl_PL:
         few: "%{count} nowe tematy w ostatnim miesiącu."
         many: "%{count} nowe tematy w ostatnim miesiącu."
         other: "%{count} nowych tematów w ostatnim miesiącu."
-      n_more: "Kategorie (%{count} więcej) …"
     ip_lookup:
       title: Wyszukiwanie adresu IP
       hostname: Nazwa hosta
@@ -912,8 +940,12 @@ pl_PL:
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
       color_schemes:
         default_description: "Domyślny"
+        undo: "Przywróć"
+        regular: "Normalny"
         dark: "Tryb ciemny"
         default_dark_scheme: "(domyślny na stronie)"
+      dark_mode: "Tryb ciemny"
+      dark_mode_enable: "Włącz automatyczny schemat kolorów trybu ciemnego"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
@@ -929,7 +961,7 @@ pl_PL:
       suspended_notice: "ten użytkownik jest zawieszony do %{date}."
       suspended_permanently: "Ten użytkownik jest zawieszony"
       suspended_reason: "Powód: "
-      github_profile: "Github"
+      github_profile: "GitHub"
       email_activity_summary: "Podsumowanie aktywności"
       mailing_list_mode:
         label: "Tryb listy mailingowej"
@@ -970,7 +1002,10 @@ pl_PL:
       admin_delete: "Usuń"
       users: "Użytkownicy"
       muted_users: "Uciszeni"
+      muted_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       allowed_pm_users: "Dozwolone"
+      allowed_pm_users_instructions: "Zezwalaj tylko na PM od tych użytkowników."
+      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi osobistych wiadomości"
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
@@ -1022,24 +1057,18 @@ pl_PL:
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
       second_factor_backup:
-        title: "Kod zapasowy weryfikacji dwuskładnikowej"
         regenerate: "Odnów"
         disable: "Wyłącz"
         enable: "Włącz"
         enable_long: "Włącz kody zapasowe"
-        manage: "Zarządzaj kodami zapasowymi. Pozostały Ci kody zapasowe <strong>%{count}</strong> ."
         copy_to_clipboard: "Skopiuj do schowka"
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka"
         copied_to_clipboard: "Skopiowane do schowka"
-        remaining_codes: "Pozostały Ci kody zapasowe <strong>%{count}</strong> ."
         use: "Używaj kodu zapasowego"
-        enable_prerequisites: "Przed wygenerowaniem kodów zapasowych należy włączyć główny drugi czynnik."
         codes:
           title: "Wygenerowano kody zapasowe"
           description: "Każdy z tych kodów zapasowych można użyć tylko raz. Trzymaj je w bezpiecznym, ale dostępnym miejscu."
       second_factor:
-        title: "Dwuskładnikowe uwierzytelnianie"
-        enable: "Zarządzaj autentykacją dwuetapową"
         disable_all: "Wyłącz wszystkie"
         forgot_password: "Zapomniałeś hasła?"
         confirm_password_description: "Potwierdź swoje hasło, aby kontynuować"
@@ -1052,14 +1081,19 @@ pl_PL:
         show_key_description: "Wpisz ręcznie"
         short_description: |
           Chroń swoje konto za pomocą jednorazowych kodów bezpieczeństwa.
+        extended_description: |
+          Uwierzytelnianie dwuskładnikowe zapewnia dodatkowe bezpieczeństwo konta, wymagając jednorazowego tokena oprócz hasła. Tokeny można generować na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>urządzeniach z systemem Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">systemem iOS</a>.
         oauth_enabled_warning: "Pamiętaj, że loginy społecznościowe zostaną wyłączone po włączeniu uwierzytelniania dwuskładnikowego na Twoim koncie."
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
+        disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie metody dwuskładnikowe?"
         save: "Zapisz"
         edit: "Edytuj"
-        edit_title: "Edytuj drugi czynnik"
-        edit_description: "Nazwa drugiego czynnika"
+        edit_title: "Edytuj Authenticator"
+        edit_description: "Nazwa Authenticator"
+        enable_security_key_description: |
+          Po przygotowaniu <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">sprzętowego klucza bezpieczeństwa</a> naciśnij przycisk Zarejestruj poniżej.
         totp:
           title: "Uwierzytelnianie oparte na tokenach"
           add: "Dodaj Authenticator"
@@ -1092,6 +1126,7 @@ pl_PL:
         taken: "Przykro nam, ale ten adres email nie jest dostępny."
         error: "Wystąpił błąd podczas próby zmiany twojego adresu email. Być może ten email jest już zarejestrowany?"
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres email."
+        success_via_admin: "Wysłaliśmy wiadomość e-mail na ten adres. Użytkownik będzie musiał postępować zgodnie z instrukcjami potwierdzenia zawartymi w wiadomości e-mail."
         success_staff: "Wysłaliśmy wiadomość na bieżący adres. Proszę przestrzegać informacji dotyczących potwierdzenia adresu."
       change_avatar:
         title: "Zmień swój awatar"
@@ -1123,6 +1158,7 @@ pl_PL:
         resending_label: "wysyłanie..."
         resent_label: "email wysłany"
         update_email: "Zmień adres email"
+        set_primary: "Ustaw podstawowy adres e-mail"
         destroy: "Usuń e-mail"
         add_email: "Dodaj alternatywny adres email"
         sso_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
@@ -1179,10 +1215,8 @@ pl_PL:
         instructions: "Rejestracja konta wymaga kodu zaproszenia"
       auth_tokens:
         title: "Ostatnio używane urządzenia"
-        ip: "IP"
         details: "Detale"
         log_out_all: "Wyloguj się wszędzie"
-        active: "teraz aktywna"
         not_you: "To nie ty?"
         show_all: "Pokaż wszystko (%{count})"
         show_few: "Pokaż mniej"
@@ -1493,8 +1527,6 @@ pl_PL:
       disable: "Pokaż usunięte wpisy."
     private_message_info:
       title: "Wiadomość"
-      invite: "Zaproś innych"
-      edit: "Dodaj lub usuń"
       leave_message: "Czy naprawdę chcesz zostawić tę wiadomość?"
       remove_allowed_user: "Czy naprawdę chcesz usunąć %{name} z tej dyskusji?"
       remove_allowed_group: "Czy naprawdę chcesz usunąć %{name} z tej wiadomości?"
@@ -1539,10 +1571,8 @@ pl_PL:
       title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
-      second_factor_title: "Dwuskładnikowe uwierzytelnianie"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       second_factor_backup: "Zaloguj się, używając kodu zapasowego"
-      second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
       second_factor: "Zaloguj się przy użyciu aplikacji Authenticator"
       security_key_description: "Po przygotowaniu fizycznego klucza bezpieczeństwa naciśnij przycisk Uwierzytelnij za pomocą klucza bezpieczeństwa poniżej."
@@ -1566,10 +1596,8 @@ pl_PL:
       awaiting_approval: "Twoje konto jeszcze nie zostało zatwierdzone przez osoby z obsługi. Otrzymasz email gdy zostanie zatwierdzone."
       requires_invite: "Przepraszamy, dostęp do tego forum jest tylko za zaproszeniem."
       not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy email aktywujący konto na adres <b>%{sentTo}</b>. W celu aktywacji konta postępuj zgodnie z instrukcjami otrzymanymi w emailu."
-      not_allowed_from_ip_address: "Nie możesz się zalogować z tego adresu IP."
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
-      omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
       resend_title: "Wyślij ponownie Email aktywacyjny"
       change_email: "Zmień Adres Email"
       provide_new_email: "Wprowadź nowy adres Email. Wyślemy na niego mail potwierdzający."
@@ -1635,8 +1663,6 @@ pl_PL:
       enter: "Wejść"
     conditional_loading_section:
       loading: Ładowanie...
-    category_row:
-      topic_count: "%{count} tematów w tej kategorii"
     select_kit:
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
@@ -1653,7 +1679,6 @@ pl_PL:
         few: "Wybierz co najmniej %{count} elementy."
         many: "Wybierz co najmniej %{count} elementów."
         other: "Wybierz co najmniej %{count} elementów."
-      invalid_selection_length: "Zaznaczenie musi zawierać co najmniej %{count} znaków."
     date_time_picker:
       from: Od
       to: Do
@@ -1700,7 +1725,6 @@ pl_PL:
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
       edit_conflict: "edytuj konflikt"
-      group_mentioned_limit: "<b>Ostrzeżenie!</b> Wspomniałeś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{max}. Nikt nie zostanie powiadomiony."
       group_mentioned:
         one: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osobę</a> – czy jesteś pewien?"
         few: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osoby</a> – czy jesteś pewien?"
@@ -1719,7 +1743,6 @@ pl_PL:
         post_length: "Wpis musi zawierać przynajmniej %{min} znaków"
         try_like: "Czy wypróbowałeś przycisk %{heart}?"
         category_missing: "Musisz wybrać kategorię"
-        tags_missing: "Musisz wybrać co najmniej %{count} tagów"
         topic_template_not_modified: "Dodaj szczegóły i szczegóły do swojego tematu, edytując szablon tematu."
       save_edit: "Zapisz zmiany"
       overwrite_edit: "Zastąp edycję"
@@ -1859,7 +1882,6 @@ pl_PL:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nowy temat</span> %{description}"
       membership_request_accepted: "Członkostwo zaakceptowane w „%{group_name}”"
-      membership_request_consolidated: "%{count} otwarte wnioski o członkostwo dla „%{group_name}”"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       group_message_summary:
         one: "masz %{count} wiadomość w skrzynce odbiorczej %{group_name}"
@@ -1935,7 +1957,6 @@ pl_PL:
       full_page_title: "szukaj tematów lub wpisów"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
-      searching: "Szukam…"
       post_format: "#%{post_number} za %{username}"
       results_page: "Wyniki wyszukiwania dla '%{term}'"
       more_results: "Istnieje więcej wyników wyszukiwania. Doprecyzuj kryteria wyszukiwania."
@@ -1944,7 +1965,6 @@ pl_PL:
       or_search_google: "Albo spróbuj wyszukać w Google:"
       search_google: "Spróbuj wyszukać w Google:"
       search_google_button: "Google"
-      search_google_title: "Przeszukaj tę stronę"
       context:
         user: "Szukaj wpisów @%{username}"
         category: "Szukaj w kategorii #%{category}"
@@ -2040,7 +2060,6 @@ pl_PL:
         category: "Nie ma tematów w kategorii %{category}."
         top: "Brak najlepszych tematów."
         educate:
-          new: '<p>Nowe tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nowe i będą oznaczone jako<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nowe</span> jeśli były stworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
           unread: '<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class="badge new-posts badge-notification">1</span> Jeśli:</p><ul><li>Utworzyłeś temat</li><li>Odpowiedziałeś w temacie</li><li>Czytałeś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś śledzenie lub obserwowanie tematu przez kontrolę powiadomień na dole każdego tematu .</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a> by to zmienić.</p>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
@@ -2303,7 +2322,6 @@ pl_PL:
       feature_topic:
         title: "Wyróżnij ten temat"
         pin: "Wyróżnij ten temat przypinając go na górze w kategorii %{categoryLink} do"
-        confirm_pin: "Czy na pewno przypiąć ten temat w tej kategorii? Masz już %{count} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin: "Odepnij ten temat z początku kategorii %{categoryLink}."
         unpin_until: "Odepnij ten temat z początku kategorii %{categoryLink} lub poczekaj do <strong>%{until}</strong>."
         pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
@@ -2315,7 +2333,6 @@ pl_PL:
           many: "Tematy przypięte w %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tematy przypięte w %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list do"
-        confirm_pin_globally: "Czy na pewno chcesz globalnie przypiąć kolejny temat? Masz już %{count} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
         unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
         unpin_globally_until: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list lub poczekaj do <strong>%{until}</strong>."
         global_pin_note: "Każdy użytkownik może samodzielnie usunąć przypięcie dla samego siebie."
@@ -2512,7 +2529,6 @@ pl_PL:
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
-        too_many_dragged_and_dropped_files: "Przepraszamy, możesz przesłać %{max} plików jednocześnie."
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
@@ -2754,7 +2770,6 @@ pl_PL:
     flagging:
       title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Oflaguj wpis"
-      take_action: "Podejmij działanie"
       notify_action: "Wiadomość"
       official_warning: "Oficjalne ostrzeżenie"
       delete_spammer: "Usuń spamera"
@@ -2832,7 +2847,6 @@ pl_PL:
       unlisted:
         help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
     posts: "Wpisy"
-    posts_long: "jest %{number} wpisów w tym temacie"
     original_post: "Oryginalny wpis"
     views: "Odsłony"
     views_lowercase:
@@ -2853,7 +2867,6 @@ pl_PL:
       few: "polubienia"
       many: "polubień"
       other: "polubień"
-    likes_long: "jest %{number} polubień w tym temacie"
     users: "Użytkownicy"
     users_lowercase:
       one: "użytkownik"
@@ -3129,8 +3142,6 @@ pl_PL:
         delete: "Usuń"
         confirm_delete: "Czy na pewno chcesz usunąć ten tag grupy?"
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
-        usable_only_by_staff: "Tagi są widoczne dla zespołu, ale jedynie obsługa serwisu może ich używać"
-        visible_only_to_staff: "Tagi są widoczne jedynie dla zespołu"
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
@@ -3894,7 +3905,6 @@ pl_PL:
             post_edit: "edycja wpisu"
             post_unlocked: "wpis odblokowany"
             check_personal_message: "sprawdź wiadomości prywatne"
-            disabled_second_factor: "wyłącz dwuskładnikowe uwierzytelnienie"
             topic_published: "wątek opublikowany"
             post_approved: "post zatwierdzony"
             post_rejected: "wpis odrzucony"
@@ -4105,7 +4115,6 @@ pl_PL:
         private_topics_count: Prywatne tematy
         posts_read_count: Przeczytane wpisy
         post_count: Napisane wpisy
-        second_factor_enabled: Logowanie dwuskładnikowe włączone
         topics_entered: Widziane tematy
         flags_given_count: Dane flagi
         flags_received_count: Otrzymane flagi

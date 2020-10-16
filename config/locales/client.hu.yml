@@ -158,7 +158,6 @@ hu:
     topic_admin_menu: "témaműveletek"
     wizard_required: "Üdvözöljük az új Discourse-on. Kezdjük a <a href='%{url}' data-auto-route='true'>beállításvarázslóval</a>. ✨"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
-    bootstrap_mode_enabled: "Hogy könnyebbé tegyük az új oldala elindítását, most előkészítési módban van. Minden új felhasználó 1-es szintet kap és be lesz állítva, hogy napi kivonat e-mailt kapjanak. Ez a beállítás automatikusan kikapcsol, ha legalább %{min_users} felhasználó regisztrált."
     bootstrap_mode_disabled: "Az előkészítési mód 24 órán belül kikapcsol."
     themes:
       default_description: "Alapértelmezett"
@@ -695,7 +694,6 @@ hu:
       topic_stat_sentence_month:
         one: "%{count} új téma az elmúlt hónapban."
         other: "%{count} új témák az elmúlt hónapban."
-      n_more: "Kategóriák (%{count} további) ..."
     ip_lookup:
       title: IP-cím keresése
       hostname: Gépnév
@@ -800,7 +798,6 @@ hu:
       suspended_notice: "Ez a felhasználó fel van függesztve eddig: %{date}."
       suspended_permanently: "Ez a felhasználó fel van függesztve."
       suspended_reason: "Ok:"
-      github_profile: "Github"
       email_activity_summary: "Aktivitás Összefoglaló"
       mailing_list_mode:
         label: "Levelezőlista mód"
@@ -891,29 +888,24 @@ hu:
         choose_new: "Új jelszó"
         choose: "Új jelszó"
       second_factor_backup:
-        title: "Kétlépcsős biztonsági mentés kódok"
         regenerate: "Újragenerálás"
         disable: "Kikapcsol"
         enable: "Engedélyez"
         enable_long: "Biztonsági kódok engedélyezése"
-        manage: "Biztonsági kódok kezelése. <strong>%{count}</strong> biztonsági kód maradt."
         copy_to_clipboard: "Vágólapra másolás"
         copy_to_clipboard_error: "Hiba az adat Vágólapra másolása során"
         copied_to_clipboard: "Vágólapra másolva"
         download_backup_codes: "Biztonsági kódok letöltése"
-        remaining_codes: "<strong>%{count}</strong> biztonsági kódja maradt."
         use: "Biztonsági kód használata"
         codes:
           title: "Biztonsági kódok előállítva"
       second_factor:
-        title: "Két-faktoros hitelesítés"
         forgot_password: "Elfelejtetted a jelszavad?"
         confirm_password_description: "Kérlek erősítsd meg a jelszavad a továbbhaladáshoz"
         name: "Név"
         label: "Kód"
         disable_description: "Írd be az azonosító kódodat az alkalmazásból"
         show_key_description: "Manuális beírás"
-        oauth_enabled_warning: "A közösségi bejelentkezések nem lesznek elérhetőek a fét-faktoros azonosítás aktiválása után a fiókhoz."
         disable: "Kikapcsol"
         save: "Mentés"
         edit: "Szerkesztés"
@@ -1002,10 +994,8 @@ hu:
         title: "A jelszó ismét"
       auth_tokens:
         title: "Nemrég használt eszközök"
-        ip: "IP"
         details: "Részletek"
         log_out_all: "Összes kiléptetése"
-        active: "most aktív"
         not_you: "Nem te vagy?"
         show_all: "Összes megjelenítése (%{count})"
         show_few: "Kevesebb megjelenítése"
@@ -1257,7 +1247,6 @@ hu:
       disable: "Törölt bejegyzések mutatása"
     private_message_info:
       title: "Üzenet"
-      invite: "Mások meghívása..."
       leave_message: "Valóban el akarod hagyni a beszélgetést?"
       remove_allowed_user: "Biztosan kitörlöd %{name}-t ebből az üzenetből?"
       remove_allowed_group: "Valóban el akarod távolítani %{name}-t ebből az üzenetből?"
@@ -1292,7 +1281,6 @@ hu:
       title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
-      second_factor_title: "Kétlépcsős azonosítás"
       second_factor_description: "Kérlek írd be az azonosítási kódodat az alkalmazásodból"
       second_factor_backup_description: "Kérlek írd be valamelyik biztonsági kódodat"
       email_placeholder: "e-mail vagy felhasználónév"
@@ -1309,10 +1297,8 @@ hu:
       awaiting_approval: "A felhasználói fiókja még nincs jóváhagyva. A jóváhagyásról elektronikus levélben kap értesítést."
       requires_invite: "Sajnáljuk, de ehhez a fórumhoz csak meghívott személyek férhetnek hozzá."
       not_activated: "Még nem tud bejelentkezni, mert a felhasználói fiókja még nincs aktiválva. Előzőleg küldtünk egy aktiváló e-mailt a(z) <b>%{sentTo}</b> címre. A fiók aktiválásához kövesse az abban az e-mailben található utasításokat."
-      not_allowed_from_ip_address: "Nem jelentkezhetsz be erről az ip címről!"
       admin_not_allowed_from_ip_address: "Nem léphetsz be erről az ip címről adminisztrátorként."
       resend_activation_email: "Kattintson ide az aktiváló e-mail újraküldéséhez."
-      omniauth_disallow_totp: "Be van kapcsolva a kétlépcsős azonosítás a fiókodon. Kérlek jelentkezz be a jelszavaddal"
       resend_title: "Aktiváló e-mail újraküldése"
       change_email: "E-mail-cím módosítása"
       provide_new_email: "Adjon meg egy új címet, és újraküldjük az aktiváló e-mailt."
@@ -1408,7 +1394,6 @@ hu:
       saved_local_draft_tip: "helyi mentés készült"
       similar_topics: "A témaköröd hasonlít a..."
       drafts_offline: "offline piszkozatok"
-      group_mentioned_limit: "<b>Figyelem!</b>Említetted <a href='%{group_link}'>%{group}</a>, azonban ennek a csoportnak több embere van mint amit az adminisztrátor által konfigurált említési határa a %{max} felhasználóknak. Senki nem lesz értesítve."
       group_mentioned:
         one: "Megemlíteni a %{group}, értesíteni fogsz <a href='%{group_link}'>%{count} embert</a>- biztos vagy benne?"
         other: "Megemlíteni a %{group}, értesíteni fogsz <a href='%{group_link}'>%{count} embereket</a> - biztos vagy benne?"
@@ -1421,7 +1406,6 @@ hu:
         title_too_long: "A cím nem lehet hosszabb, mint %{max} katakter."
         post_length: "A bejegyzésnek legalább %{min} karakter hosszúnak kell lennie"
         category_missing: "Ki kéne választanod egy kategóriát"
-        tags_missing: "Kikell választanod legalább %{count}  címkét"
       save_edit: "Módosítások mentése"
       overwrite_edit: "Módosítások mentése"
       reply_original: "Válasz az eredeti témakörre"
@@ -1569,14 +1553,12 @@ hu:
       full_page_title: "Témák vagy bejegyzések keresése"
       no_results: "Nincs eredmény."
       no_more_results: "Nincs több találat."
-      searching: "Keresés ..."
       post_format: "#%{post_number} általa: %{username}"
       results_page: "Keresési eredmény: '%{term}'"
       start_new_topic: "Esetleg kezdj egy új témát?"
       or_search_google: "Vagy helyette próbálj meg a Googlén keresni:"
       search_google: "Helyette próbálj meg a Googlén keresni:"
       search_google_button: "Google"
-      search_google_title: "Keresés az oldalon"
       context:
         user: "Keresés @%{username} bejegyzései között"
         topic: "Keresés ebben a témakörben"
@@ -1638,7 +1620,6 @@ hu:
         category: "Nincsenek témakörök a %{category} kategóriában."
         top: "Nincsenek top témák"
         educate:
-          new: '<p> Itt jelennek meg az új témáid. </p><p> Alapértelmezés szerint a témák újnak számítanak, és <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">új</span> jelzővel szereplenek, ha az elmúlt 2 napban készültek. </p><p> Látogasd meg a <a href="%{userPrefsUrl}">beállításokat,</a> ha ezen változtatni szeretnél. </p>'
           unread: '<p> Az olvasatlan témáid itt jelennek meg. </p><p> Alapértelmezés szerint a témák olvasatlanok és a <span class="badge new-posts badge-notification">1</span> számlálót mutatják, ha te: </p><ul><li> Hoztad létre a témát </li><li> Válaszoltál a témára </li><li> Több mint 4 percig olvastad a témát </li></ul><p> Vagy ha az egyes témák alján található értesítésvezérlés segítségével kifejezetten követettre vagy figyeltre állítottad a témát. </p><p> Látogasd meg a <a href="%{userPrefsUrl}">beállításokat,</a> ha változtatnál ezen. </p>'
       bottom:
         latest: "Nincs több friss téma."
@@ -1830,7 +1811,6 @@ hu:
         title: "Megjelölés"
         success_message: "Sikeresen megjelölted ezt a témát."
       feature_topic:
-        confirm_pin: "Jelenleg %{count} kiemelt témaköröd van. Túl sok kiemelt téma megzavarhatja az új vagy névtelen felhasználókat. Biztosan kiemelsz egy újabb témát ebben a kategóriában?"
         unpin: "Téma eltávolítása a %{categoryLink} kategória elejéről."
         not_pinned: "Nincsenek kiemelt %{categoryLink} témák. "
         already_pinned_globally:
@@ -2094,7 +2074,6 @@ hu:
         email: "Email"
     flagging:
       action: "Bejegyzés megjelölése"
-      take_action: "Művelet megkezdése"
       notify_action: "Üzenet"
       official_warning: "Hivatalos figyelmeztetés"
       delete_spammer: "Spammer törlése"
@@ -2149,7 +2128,6 @@ hu:
       unlisted:
         help: "Ez egy nem listázandó témakör, ezért nem fog megjelenni a témakörök listájában és csak közvetlen hivatkozással érhető el."
     posts: "Bejegyzések:"
-    posts_long: "%{number} darab bejegyzés van a témában"
     original_post: "Eredeti Bejegyzés"
     views: "Megtekintések"
     views_lowercase:
@@ -2161,7 +2139,6 @@ hu:
     likes_lowercase:
       one: "kedvelés"
       other: "kedvelés"
-    likes_long: "%{number} darab kedvelés van a témában"
     users: "Felhasználók"
     users_lowercase:
       one: "felhasználó"
@@ -2359,7 +2336,6 @@ hu:
         new_name: "Új csoport címke"
         save: "Mentés"
         delete: "Törlés"
-        visible_only_to_staff: "Címkék csak a személyzetnek láthatóak"
       topics:
         none:
           unread: "Nincsenek olvasatlan témáid"
@@ -2892,7 +2868,6 @@ hu:
             post_locked: "Bejegyzés lezárva"
             post_edit: "Bejegyzés szerkesztése"
             check_personal_message: "Személyes üzenetek megnézése"
-            disabled_second_factor: "Kétlépcsős azonosítás kikapcsolása"
             topic_published: "Téma közzétéve"
             post_approved: "bejegyzés jóváhagyva"
             post_rejected: "Bejegyzés elutasítva"
@@ -3031,7 +3006,6 @@ hu:
         private_topics_count: Privát témák
         posts_read_count: Elolvasott bejegyzések
         post_count: Létrehozott bejegyzések
-        second_factor_enabled: Kétlépcsős azonosítás aktiválva
         topics_entered: Megtekintett témák
         approve: "Jóváhagy"
         approved_by: "jóváhagyta:"

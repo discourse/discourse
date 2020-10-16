@@ -186,12 +186,6 @@ pt_BR:
   invite:
     not_found: "Seu token de convite é inválido. Entre em <a href='%{base_url}/about'>contato com a staff</a>."
     not_found_json: "Seu token de convite é inválido. Por favor entre em contato com a staff."
-    not_found_template: |
-      <p>Seu convite para <a href="%{base_url}">%{site_name}</a> já foi utilizado.
-
-      <p>Se você lembrar da sua senha, você pode <a href="%{base_url}/login">Fazer Login</a>.</p>
-
-      <p>Caso contrário, por favor <a href="%{base_url}/password-reset">Redefina a sua Senha</a>.</p>
     error_message: "Houve um erro ao aceitar o convite. Por favor entre em contato com o administrador do site."
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, eles <a href='%{base_path}/u/%{username}/summary'>já tem uma conta!</a>"
     confirm_email: "<p>Você está quase pronto! Enviamos um e-mail de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se não chegar, verifique sua pasta de spam.</p>"
@@ -764,43 +758,36 @@ pt_BR:
       title: "Off-Topic"
       description: "Essa mensagem não é relevante para a discussão definida pelo título e primeira mensagem, e deveria ser movida para outro local."
       short_description: "Isso não é relevante à discussão"
-      long_form: "sinalizou isto como off-topic"
     spam:
       title: "Spam"
       description: "Este post é um anúncio ou vandalismo. Não é útil ou relevante para o tópico atual."
       short_description: "Isto é uma propaganda ou vandalismo"
-      long_form: "sinalizado como spam"
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
       description: 'Esta postagem contém conteúdo que uma pessoa razoável consideraria ofensiva, abusiva ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
-      long_form: "sinalizado como inapropriado"
     notify_user:
       title: "Envie ao(à) @ %{nome de usuário} uma mensagem"
       description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
       short_description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
-      long_form: "mensagem privada"
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo mais"
       description: "Esta postagem requer atenção da moderação por outra razão não listada acima."
       short_description: "Requer atenção da equipe por outro motivo"
-      long_form: "sinalizou isto para a atenção da equipe"
       email_title: 'Um post em "%{title}" requer a atenção da equipe'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Adicionar Marcador"
       description: "Adicionar um marcador a esta postagem"
       short_description: "Favoritar esta publicação"
-      long_form: "adicionou um marcador esta postagem"
     like:
       title: "Curtir"
       description: "Curtir esta postagem"
       short_description: "Curtir esta publicação"
-      long_form: "curtiu isto"
   draft:
     sequence_conflict_error:
       title: "erro no rascunho"
@@ -1232,10 +1219,6 @@ pt_BR:
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
     queue_size_warning: "O número de processos na fila é %{queue_size}, o que é alto. Isso pode ser indicação de um problema com o(s) processo(s) do Sidekiq, ou você pode ter que adicionar mais Sidekiq workers."
     memory_warning: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o cadastro e login com o Google OAuth2 (enable_google_oauth2_logins), mas os valores de ID do cliente e segredo do cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Veja este guia para saber mais</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o cadastro e login com o Facebook (enable_facebook_logins), mas os valores de id do aplicativo e de segredo do aplicativo não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia para saber mais</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o cadastro e login com o Twitter (enable_twitter_logins), mas os valores de chave e segredo não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia para saber mais</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o cadastro e login com o GitHub (enable_github_logins), mas o ID do cliente e os valores secretos não estão configurados. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia para saber mais</a>.'
     s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "How to set up image uploads to S3?" para aprender mais</a>.'
     s3_backup_config_warning: 'O servidor está configurado para fazer upload de backups para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "How to set up image uploads to S3?" para aprender mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes favorito ou faça o <a href="https://www.imagemagick.org/script/download.php" target="_blank">download da versão mais recente</a>.'
@@ -1323,7 +1306,6 @@ pt_BR:
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Veja <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    enforce_second_factor: "Forçar usuários a habilitar a autenticação de dois fatores. Selecione 'todos' para aplicar a todos os usuários. Selecione 'staff' para aplicar apenas aos usuários da staff."
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
     same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos os vetores Cross Site Request Forgery nos navegadores suportados (Lax ou Strict). Aviso: o Strict funcionará apenas em sites que forçam o login e usem o SSO."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
@@ -1359,9 +1341,6 @@ pt_BR:
     must_approve_users: "Gerenciadores deverão aprovar novas contas de usuários antes das mesmas serem permitidas o acesso ao site."
     pending_users_reminder_delay: "Notifique os moderadores se novos usuários estiverem aguardando aprovação por mais tempo que muitas horas. Defina como -1 para desativar as notificações."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
-    ga_universal_tracking_code: "ID do código de acompanhamento do Google Universal Analytics (analytics.js), por exemplo: UA-12345678-9; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "O nome de domínio do Google Universal Analytics (analytics.js), por exemplo: mysite.com; consulte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Habilitar o acompanhamento de vários domínios do Google Universal Analytics (analytics.js). Os links de saída para estes domínios terão o ID do cliente adicionado a eles. Veja o <a href='https://support.google.com/analytics/answer/1034342?hl=pt-BR' target='_blank'>Guia de acompanhamento de vários domínios do Google.</a>"
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se não for encontrado um webcrawler. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     allowed_iframes: "Uma lista de prefixos de domínio iframe src que o discurso pode permitir com segurança em postagens"
@@ -1439,9 +1418,6 @@ pt_BR:
     instagram_consumer_secret: "Segredo de consumidor para autenticação via Instagram"
     enable_facebook_logins: "Habilitar a autenticação do Facebook, requer facebook_app_id e facebook_app_secret. Consulte <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "Segredo do aplicativo para autenticação do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Habilitar a autenticação do Github, requer github_client_id e github_client_secret. Veja <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "ID do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Segredo do cliente para autenticação do Github, registrado em <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     discord_secret: "Chave Secreta do Discord"
     enable_backups: "Permitir que administradores criem backups do fórum"
     allow_restore: "Permitir restauração, que pode substituir todos os dados do site! Deixe falsa, a menos que você pretenda restaurar um backup"
@@ -1660,8 +1636,6 @@ pt_BR:
     email_editable: "Permitir que os usuários alterem o seu endereço de e-mail após o registro."
     logout_redirect: "Local para redirecionar o navegador para depois do logout (por exemplo: https://example.com/logout)"
     allow_uploaded_avatars: "Permitir aos usuários carregar fotos em seu perfil personalizado."
-    allow_animated_avatars: "Permitir que os usuários usem GIF animados na foto do perfil. ATENÇÃO: executar os avatares: atualizar tarefa rake após alterar essa configuração."
-    allow_animated_thumbnails: "Gera thumbnails animados a partir de gifs animados."
     default_avatars: "URLs para avatars que serão usadas por padrão para novos usuários até que sejam alteradas por eles."
     automatically_download_gravatars: "Fazer download de Gravatars dos usuários ao criar conta ou mudança de email."
     digest_topics: "O número máximo de tópicos populares a serem exibidos no resumo de e-mail."
@@ -1944,8 +1918,6 @@ pt_BR:
     autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas estão permitidas."
     auto_deleted_by_timer: "Excluído automaticamente pelo temporizador."
   login:
-    invalid_second_factor_method: "O método de autenticação de dois fatores selecionado é inválido."
-    not_enabled_second_factor_method: "O método de autenticação de dois fatores selecionado não está ativado para sua conta."
     security_key_description: "Quando você tiver uma chave física de segurança preparada, pressione o Anti\n\nQuando sua chave de segurança física estiver pronta, pressione o botão \"Autenticar com Chave de Segurança\" abaixo."
     security_key_alternative: "Tente de uma outra forma"
     security_key_authenticate: "Autenticar com Chave de Segurança"
@@ -1970,7 +1942,6 @@ pt_BR:
       generic: "Desculpe, houve um erro ao autorizar sua conta. Por favor, tente novamente."
       csrf_detected: "A autorização levou tempo demais ou você mudou de navegador. Por favor, tente novamente."
       request_error: "Ocorreu um erro ao iniciar a autorização. Por favor, tente novamente."
-    omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
     omniauth_confirm_title: "Efetuar login usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de e-mail associado a%{account} são autorizados. Você pode precisar configurar sua conta com um endereço de e-mail diferente."
@@ -1982,10 +1953,8 @@ pt_BR:
     auth_complete: "A autenticação está completa."
     click_to_continue: "Clique aqui para continuar."
     already_logged_in: "Ops, parece que você está tentando aceitar um convite para outro usuário. Se você não é %{current_user}, por favor, saia e tente novamente."
-    second_factor_title: "Autenticação de dois fatores"
     second_factor_description: "Insira o código de autenticação necessário no seu aplicativo:"
     second_factor_backup_description: "Por favor, insira um dos seus códigos de backup:"
-    second_factor_backup_title: "Código de Backup de Dois Fatores"
     invalid_second_factor_code: "Código de autenticação inválido. Cada código só pode ser usado uma vez."
     second_factor_toggle:
       totp: "Usar um aplicativo autenticador ou chave de segurança"
@@ -2890,15 +2859,6 @@ pt_BR:
         Se você não tentou criar uma conta para %{email} ou altere seu endereço de e-mail, não se preocupe. Você pode ignorar essa mensagem com segurança.
 
         Se você tiver alguma dúvida, [entre em contato com nossa equipe amigável](%{base_url}/sobre).
-    account_second_factor_disabled:
-      title: "Autenticação de dois fatores desativada"
-      subject_template: "[%{email_prefix}] Autenticação de dois fatores desativada"
-      text_body_template: |
-        A autenticação de dois fatores foi desativada na sua conta em %{site_name}. Agora você pode fazer o login apenas com sua senha; um código de autenticação adicional não é mais necessário.
-
-        Se você não optou por desativar a autenticação de dois fatores, alguém pode ter comprometido sua conta.
-
-        Se você tiver alguma dúvida, [entre em contato com nossa equipe amigável](%{base_url}/sobre).
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
@@ -2943,13 +2903,6 @@ pt_BR:
     admin_login:
       title: "Login de administrador"
       subject_template: "[%{email_prefix}] Login"
-      text_body_template: |
-        Alguém pediu para fazer login na sua conta em [%{site_name}](%{base_url}).
-
-        Se você não fez essa solicitação, pode ignorar este e-mail com segurança.
-
-        Clique no link a seguir para fazer login:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta Criada"
       subject_template: "[%{email_prefix}] Sua Nova Conta"
@@ -3104,7 +3057,6 @@ pt_BR:
     latte: "Latte"
     summer: "Verão"
     dark_rose: "Rosa Escura"
-    default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
@@ -3466,8 +3418,8 @@ pt_BR:
     initial_topic_title: Relatórios de performance do Site
   tags:
     title: "Marcações"
-    staff_tag_disallowed: 'A marcação "%{tag}" pode ser aplicada somente pelo pessoal de apoio.'
-    staff_tag_remove_disallowed: 'A marcação "%{tag}" pode ser removida somente pelo pessoal de apoio.'
+    restricted_tag_disallowed: 'Você não pode aplicar a etiqueta "%{tag}".'
+    restricted_tag_remove_disallowed: 'Você não pode remover a etiqueta "%{tag}".'
     minimum_required_tags:
       one: "Você precisa selecionar pelo menos %{count} etiqueta."
       other: "Você precisa selecionar pelo menos %{count} etiquetas."
@@ -3586,8 +3538,6 @@ pt_BR:
           city_for_disputes:
             label: "Cidade para Disputas"
             placeholder: "São Francisco, Califórnia"
-      colors:
-        title: "Tema"
       logos:
         title: "Logotipos"
         fields:

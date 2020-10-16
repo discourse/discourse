@@ -38,8 +38,6 @@ sw:
         Kama unaona hakuna umuhimu, ni sawa tu. Mimi ni roboti. Hautaumiza hisia zangu. :sob:
     dice:
       trigger: "zungusha"
-      not_enough_dice: |-
-        Nina dadu %{num_of_dice}. [Aibu] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), najua!
       results: |-
         > :game_die: %{results}
     quote:

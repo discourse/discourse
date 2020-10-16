@@ -40,8 +40,6 @@ pl_PL:
       trigger: "przewiń"
       invalid: |-
         Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
-      not_enough_dice: |-
-        Mam tylko %{num_of_dice} kości. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
       out_of_range: |-
         Czy wiesz, że [maksymalna ilość ścian](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) na sprawiedliwej kostce do gry to 120?
       results: |-

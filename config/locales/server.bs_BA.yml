@@ -310,16 +310,12 @@ bs_BA:
     off_topic:
       title: "Nije Relevantno"
       description: "Ovaj post iz korjena mjenja tok ove teme i najvjerovatnije bi ga trebalo premjestiti. Ako je ovo prvi post to jest sama tema, onda mu najvjerovatnije nije mjesto ovde."
-      long_form: "opomeni kao ne-relevantno"
     spam:
       title: "Spam"
-      long_form: "opomeni kao spam"
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
-      long_form: "opomeni kao neprikladno"
     notify_user:
-      long_form: "korisnik obavješten"
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -329,12 +325,10 @@ bs_BA:
       title: "Sačuvaj"
       description: "Sačuvaj ovaj post"
       short_description: "Sačuvaj ovaj post"
-      long_form: "sačuvan post"
     like:
       title: "Like"
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
-      long_form: "lajkovao si ovo"
   user_activity:
     no_replies:
       others: "Nema odgovora."
@@ -791,13 +785,11 @@ bs_BA:
     errors: "%{errors}"
     not_available: "Nije dostupno. Probaj %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
-    second_factor_title: "Two Factor Authentication"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
   admin:
     email:
@@ -1025,8 +1017,6 @@ bs_BA:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Izgled"
       homepage:
         fields:
           homepage_style:

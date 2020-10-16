@@ -7,8 +7,6 @@
 hu:
   js:
     presence:
-      replying: "válaszol"
-      editing: "szerkeszt"
       replying_to_topic:
         one: "válaszol"
         other: "válaszol"

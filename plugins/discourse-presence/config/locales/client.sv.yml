@@ -7,8 +7,12 @@
 sv:
   js:
     presence:
-      replying: "svarar"
-      editing: "skriver"
+      replying:
+        one: "svarar"
+        other: "svarar"
+      editing:
+        one: "skriver"
+        other: "skriver"
       replying_to_topic:
         one: "svarar"
         other: "svarar"

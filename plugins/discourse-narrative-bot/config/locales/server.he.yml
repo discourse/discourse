@@ -45,8 +45,6 @@ he:
       trigger: "גלגול"
       invalid: |-
         עוד לא נוסח הכלל במתמטיקה שמאפשר שילוב כזה של קוביות, עמך הסליחה. :confounded:
-      not_enough_dice: |-
-        אני מוגבל ל־%{num_of_dice} קוביות. [מביש](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!
       out_of_range: |-
         ידעת ש[מספר הפאות המרבי](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקובייה הוגנת מתמטית הוא 120?
       results: |-

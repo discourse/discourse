@@ -439,41 +439,34 @@ sw:
       title: "Mada Isiyohusika"
       description: "Mada hii sio muhimu kwenye majadiliano kama kichwa na chapisho la kwanza linavyoongelea, na inabidi ihamishwe kwenda sehemu nyingine."
       short_description: "Haina umuhimu kwenye majadiliano"
-      long_form: "imeripotiwa kama haihusiki "
     spam:
       title: "Barua Taka"
       description: "Hili ni tangazo, au uharibifu. Sio muhimu kwenye mada ya sasa."
       short_description: "Hili ni tangazo au uharibifu"
-      long_form: "ameripoti hii kuwa barua taka"
       email_title: '"%{title}" imeripotiwa kuwa barua taka'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Haifai"
-      long_form: "imeripotiwa kuwa haiko sawa"
     notify_user:
       title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       short_description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
-      long_form: "mtumiaji aliepokea ujumbe"
       email_title: 'Chapisho lako ndani ya "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Kitu Kingine"
       description: "Chapisho hili linahitaji kupitiwa na msaidizi kwa sababu ambayo haijaandikwa juu."
       short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
-      long_form: "imeripotiwa ili ipitiwe na msaidizi"
       email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Alamisha"
       description: "Alamisha chapisho hili"
       short_description: "Alamisha chapisho hili"
-      long_form: "chapisho hili lilialamishwa"
     like:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-      long_form: "ameipenda hii"
   user_activity:
     no_default:
       self: "Bado hauna shughuli."
@@ -1016,7 +1009,6 @@ sw:
     errors: "%{errors}"
     not_available: "Haipatikani. Jaribu %{suggestion}?"
     something_already_taken: "Tatizo limetokea, labda jina la mtumiaji au barua pepe imesajiliwa tayari. Jaribu kiungo cha kusahau nywila."
-    omniauth_error_unknown: "Tatizo limetokea kwenye mfumo wa kuingia, tafadhali jaribu tena."
     omniauth_confirm_button: "Endelea"
     authenticator_error_no_valid_email: "Barua pepe zinazoendana na %{account}haziruhusiwi. Itakubidi usanidi akaunti yako kupitia barua pepe nyingine."
     new_registrations_disabled: "Usajili wa akaunti mpya hauruhusiwi kwa sasa."
@@ -1027,7 +1019,6 @@ sw:
     auth_complete: "Uthibitisho umekamilika."
     click_to_continue: "Bofya hapa kuendelea."
     already_logged_in: "Inaonekana kuwa unajaribu kukubali mualiko kwa ajili ya mtumiaji mwingine. Kama wewe sio %{current_user}, tafadhali toka nje ya akaunti yako alafu jaribu kuingia tena."
-    second_factor_title: "Uthibitisho wa Vipengele Viwili"
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
     second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
   admin:
@@ -1639,15 +1630,6 @@ sw:
         Kama haujajaribu kutengeneza akaunti ya %{email} au kujaribu kubadilisha barua pepe yako, usijali - unaweza kupuuzia ujumbe huu.
 
         Kama una maswali yoyote, [wasiliana na wasaidizi wetu](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "Uthibitisho wa Pili umesitishwa"
-      subject_template: "Uhalalalishaji wa Viwango Viwili umesitishwa [%{email_prefix}]"
-      text_body_template: |
-        Njia mbili za uthibitisho zimesitishwa kwenye akaunti yako iliyopo %{site_name}. Unaweza kutumia nywila tu kuingia; kodi zaidi ya uthibitisho haihitajiki tna.
-
-        Kama haukuchagua usitisho, kuna mtu atakuwa amepenya na kuingia kwenye akaunti yako.
-
-        Kama una swali lolote, [wasiliana na wasaidizi wetu](%{base_url}/kuhusu).
     digest:
       why: "Muhtasari Mfupi wa %{site_link} toka mara ya mwisho ulivyotembelea %{last_seen_at}"
       since_last_visit: "Kutoka mara ya mwisho ulivyotembelea"
@@ -1810,7 +1792,6 @@ sw:
   color_schemes:
     light: "Hafifu"
     dark: "Nyeusi"
-    default_theme_name: "Hafifu"
     light_theme_name: "Hafifu"
     dark_theme_name: "Nyeusi"
   edit_this_page: "Hariri ukurasa huu"
@@ -2090,8 +2071,6 @@ sw:
     initial_topic_title: Ripoti za Utendaji wa Tovuti
   tags:
     title: "Lebo"
-    staff_tag_disallowed: 'lebo ya "%{tag}" inatumiwa na wasaidizi pekee.'
-    staff_tag_remove_disallowed: 'lebo ya "%{tag}" inaweza kuondolewa na wasaidizi tu.'
   rss_by_tag: "Mada zenye lebo %{tag}"
   finish_installation:
     congratulations: "Hongera, umesakinisha Discourse!"
@@ -2158,8 +2137,6 @@ sw:
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       corporate:
         title: "Shirika"
-      colors:
-        title: "Mandhari"
       logos:
         title: "Nembo"
         fields:

@@ -172,7 +172,6 @@ ro:
     topic_admin_menu: "acțiuni subiect"
     wizard_required: "Bine ai venit la noul tău Discourse! Să începem cu <a href='%{url}' data-auto-route='true'>expertul de configurare</a> ✨"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
-    bootstrap_mode_enabled: "Pentru a simplifica lansarea noului dv. site, sunteți în modul bootstrap. Toți utilizatorii noi vor primi nivelul 1 de încredere și vor avea activată primirea zilnică de e-mail-uri rezumat. Această funcționalitate va fi oprită automat după ce se înregistrează primii %{min_users} membri."
     bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore"
     themes:
       default_description: "Implicit"
@@ -856,7 +855,6 @@ ro:
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "
-      github_profile: "Github"
       email_activity_summary: "Sumarul activității"
       mailing_list_mode:
         label: " Mod mailing list"
@@ -949,15 +947,9 @@ ro:
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
         copied_to_clipboard: "Copiat în clipboard"
       second_factor:
-        title: "Autentificare în doi pași"
-        enable: "Gestionează autentificarea în doi pași"
         name: "Nume"
         short_description: |
           Protejează-ți contul cu coduri de securitate de unică folosință.
-        extended_description: |
-          Autentificarea în doi pași adaugă o securitate suplimentară contului tău prin solicitarea unui token unic, în plus față de parola ta. Token-urile pot fi generate la <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> și <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
-        oauth_enabled_warning: "Reține că autentificările cu serviciile sociale vor fi dezactivate o dată ce autentificarea în doi pași a fost activată în contul tău."
-        enforced_notice: "Este necesar să activezi autentificarea în doi pași înainte de a accesa acest site."
         disable: "Dezactivează"
         save: "Salvează"
         edit: "Editează"
@@ -1037,7 +1029,6 @@ ro:
         title: "Confirmă parola"
       auth_tokens:
         title: "Dispozitive folosite recent"
-        ip: "Adresă IP"
         details: "Detalii"
       last_posted: "Ultima postare"
       last_emailed: "Ultimul email"
@@ -1325,7 +1316,6 @@ ro:
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
-      second_factor_title: "Autentificare în doi pași"
       email_placeholder: "email sau nume de utilizator"
       caps_lock_warning: "Tasta Caps Lock este activă"
       error: "Eroare necunoscută"
@@ -1340,10 +1330,8 @@ ro:
       awaiting_approval: "Contul tău nu a fost aprobat încă de un admin . Vei primi un email când se aprobă."
       requires_invite: "Ne pare rău, accesul la forum se face pe bază de invitație."
       not_activated: "Nu te poți loga încă. Am trimis anterior un email de activare pentru <b>%{sentTo}</b>. Urmează instrucțiunile din email pentru a-ți activa contul."
-      not_allowed_from_ip_address: "Nu te poți conecta cu această adresă IP."
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
-      omniauth_disallow_totp: "Contul dvs. are autentificarea în doi pași activată. Vă rugăm să vă autentificați cu parola."
       resend_title: "Retrimite emailul de activare"
       change_email: "Schimbă adresa de email"
       provide_new_email: "Furnizează o nouă adresă de email și îți vom retrimite linkul de confirmare."
@@ -1425,7 +1413,6 @@ ro:
       saved_local_draft_tip: "salvat local"
       similar_topics: "Subiectul tău seamănă cu..."
       drafts_offline: "schiță offline"
-      group_mentioned_limit: "1Atenție!1 Ai menționat 2%{group}2, dar acest grup are mai mulți membri decât limita de %{max} utilizatori configurată de către administrator. Nimeni nu va fi notificat."
       group_mentioned:
         one: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>o persoană</a> – ești sigur?"
         few: "Prin menționarea %{group}, urmează să notifici <a href='%{group_link}'>%{count} persoane</a> – ești sigur?"
@@ -1579,13 +1566,11 @@ ro:
       title: "Caută subiecte, postări, utilizatori sau categorii"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
-      searching: "Se caută..."
       post_format: "#%{post_number} de %{username}"
       results_page: "Caută rezultate pentru '%{term}'"
       start_new_topic: "Creează un nou subiect?"
       or_search_google: "Sau încearcă să cauți cu Google:"
       search_google_button: "Google"
-      search_google_title: "Caută în această pagină"
       context:
         user: "Caută postări după @%{username}"
         category: "Caută în categoria #%{category} "
@@ -1682,7 +1667,6 @@ ro:
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
         educate:
-          new: '<p>Subiectele noi vor apărea aici.</p><p>Implicit, subiectele vor fi considerate noi și vor afișa un indicator că sunt<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">noi</span> dacă au fost create în ultimele 2 zile.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe </a> pentru a schimba această setare.</p>'
           unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge new-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 4 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
       bottom:
         latest: "Nu mai există niciun subiect recent."
@@ -1907,7 +1891,6 @@ ro:
       feature_topic:
         title: "Promovează acest subiect"
         pin: "Pune acest subiect în vârful categoriei %{categoryLink} până"
-        confirm_pin: "Ai deja %{count} subiecte fixate. Prea multe subiecte fixate pot deveni o problemă pentru utilizatorii noi sau anonimi. Ești sigur că vrei să fixezi un alt subiect în această categorie?"
         unpin: "Elimină aceste mesaje din vârful categoriei %{categoryLink}."
         unpin_until: "Elimină acest subiect din vârful categoriei %{categoryLink} sau așteaptă până <strong>%{until}</strong>."
         pin_note: "Utilizatorii pot anula un subiect fixat doar de ei pentru ei înșiși."
@@ -1918,7 +1901,6 @@ ro:
           few: "Număr de subiecte momentan fixate în %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Număr de subiecte momentan fixate în %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Pune acest subiect în vârful listei tuturor subiectelor până"
-        confirm_pin_globally: "Sunt %{count} subiecte fixate la nivel global. Prea multe subiecte fixate pot fi deveni o problemă pentru utilizatorii noi sau anonimi. Ești sigur că vrei să fixezi un nou subiect la nivel global?"
         unpin_globally: "Elimină acest subiect din partea de sus a tuturor listelor de discuţii."
         unpin_globally_until: "Scoate acest subiect din vârful listei tuturor subiectelor și așteaptă până <strong>%{until}</strong>."
         global_pin_note: "Utilizatorii pot anula un subiect fixat doar de ei pentru ei înșiși."
@@ -2267,7 +2249,16 @@ ro:
     flagging:
       title: "Îți mulțumim că ne ajuți să păstrăm o comunitate civilizată!"
       action: "Marcare"
-      take_action: "Acționează"
+      take_action_options:
+        default:
+          title: "Acționează"
+          details: "Se atinge pragul de avertizare imediat, în loc să se aștepte și avertizări din comunitate"
+        suspend:
+          title: "Suspendă Utilizator"
+          details: "Atinge pragul de avertizare și suspendă utilizatorul"
+        silence:
+          title: "Suspendă utilizatorul"
+          details: "Atinge pragul de avertizare și suspendă utilizatorul"
       notify_action: "Mesaj"
       official_warning: "Avertizare oficială"
       delete_spammer: "Șterge spammer"
@@ -2340,7 +2331,6 @@ ro:
       unlisted:
         help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
-    posts_long: "sunt %{number} (de) postări în acest subiect"
     posts_likes_MF: |
       Acest subiect are {count, plural, one {1 răspuns} other {# răspunsuri}} {ratio, select,
       low {cu o rată înaltă de aprecieri pe postare}
@@ -2364,7 +2354,6 @@ ro:
       one: "apreciere"
       few: "aprecieri"
       other: "aprecieri"
-    likes_long: "sunt %{number} (de) aprecieri în acest subiect"
     users: "Utilizatori"
     users_lowercase:
       one: "utilizator"
@@ -2963,6 +2952,10 @@ ro:
           primary:
             name: "primar"
             description: "Majoritatea textului, iconițe și margini."
+          primary-medium:
+            name: "primar-mediu"
+          primary-low-mid:
+            name: "primar-mic-mediu"
           secondary:
             name: "secundar"
             description: "Culoarea principală de fundal și culoarea textului anumitor butoane."
@@ -2981,6 +2974,12 @@ ro:
           highlight:
             name: "punere în evidență"
             description: "Culoarea de fundal a elementelor puse în evidență din pagină, cum ar fi postări și discuții."
+          highlight-high:
+            name: "evidențiază-puternic"
+          highlight-medium:
+            name: "evidențiază-mediu"
+          highlight-low:
+            name: "evidențiază-puternic"
           danger:
             name: "Pericol"
             description: "Evidențiază culoarea pentru acțiuni de tipul ștergerii postărilor și al subiectelor."
@@ -3135,7 +3134,6 @@ ro:
             post_locked: "postare blocată"
             post_unlocked: "postare deblocată"
             check_personal_message: "verifică mesaj personal"
-            disabled_second_factor: "dezactivează Autentificarea în doi pași"
             topic_published: "discuția a fost publicată"
         screened_emails:
           title: "Email-uri filtrate"
@@ -3273,7 +3271,6 @@ ro:
         private_topics_count: Subiecte private
         posts_read_count: Postări citite
         post_count: Postări create
-        second_factor_enabled: Autentificare în doi pași a fost activată
         topics_entered: Subiecte văzute
         flags_given_count: Marcaje de avertizare acordate
         flags_received_count: Marcaje de avertizare primite

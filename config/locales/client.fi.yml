@@ -154,7 +154,6 @@ fi:
     topic_admin_menu: "ketjun työkalut"
     wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
-    bootstrap_mode_enabled: "Jotta uuden palstan vauhtiin saaminen olisi helpompaa, sivusto on aloitustilassa. Kaikki uudet käyttäjät saavat luottamustason 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tila poistetaan automaattisesti, kun %{min_users} käyttäjää on liittynyt."
     bootstrap_mode_disabled: "Aloitustila poistetaan seuraavan 24 tunnin aikana."
     themes:
       default_description: "Oletus"
@@ -722,7 +721,6 @@ fi:
       topic_stat_sentence_month:
         one: "%{count} uusi ketju viimeisimmän kuukauden aikana"
         other: "%{count} uutta ketjua viimeisimmän kuukauden aikana"
-      n_more: "Alueet (%{count} muuta)..."
     ip_lookup:
       title: IP-osoitteen haku
       hostname: Isäntänimi
@@ -827,7 +825,6 @@ fi:
       suspended_notice: "Tämä käyttäjätili on hyllytetty %{date} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy:"
-      github_profile: "GitHub"
       email_activity_summary: "Kooste tapahtumista"
       mailing_list_mode:
         label: "Postituslistatila"
@@ -920,25 +917,19 @@ fi:
         choose_new: "Valitse uusi salasana"
         choose: "Valitse salasana"
       second_factor_backup:
-        title: "Kaksivaiheisen tunnistautumisen koodit"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
         enable: "Ota käyttöön"
         enable_long: "Ota varakoodit käyttöön"
-        manage: "Hallinnoi varakoodeja.. <strong>%{count}</strong> varakoodia on jäljellä."
         copy_to_clipboard: "Kopioi leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         download_backup_codes: "Lataa varakoodit"
-        remaining_codes: "Sinulla on <strong>%{count}</strong> varakoodia jäljellä."
         use: "Käytä varakoodi"
-        enable_prerequisites: "Ensisijainen metodi, kaksivaiheinen tunnistautuminen täytyy ottaa käyttöön ennen varakoodien luomista."
         codes:
           title: "Varakoodit luotiin"
           description: "Jokaista näistä varakoodeista voi käyttää vain kerran. Säilö ne johonkin turvalliseen paikkaan, mistä kuitenkin löydät ne."
       second_factor:
-        title: "Kaksivaiheinen tunnistautuminen"
-        enable: "Hallitse kaksivaiheista tunnistautumista"
         forgot_password: "Unohditko salasanan?"
         confirm_password_description: "Jatka vahvistamalla salasanasi"
         name: "Nimi"
@@ -950,16 +941,10 @@ fi:
         show_key_description: "Syötä manuaalisesti"
         short_description: |
           Suojaa käyttäjätilisi kertakäyttöisillä turvakoodeilla.
-        extended_description: |
-          Kaksivaiheinen tunnistautuminen lisää tilisi tietoturvaa vaatimalla kertakäyttöisen koodin salasanan lisäksi. Koodeja voi luoda <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> ja <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-laitteilla.
-        oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistautuminen on käytössä."
         use: "Käytä Authenticator-sovellusta"
-        enforced_notice: "Kaksivaiheinen tunnistautuminen pitää ottaa käyttöön, jotta voi käyttää sivustoa."
         disable: "Poista käytöstä"
         save: "Tallenna"
         edit: "Muokkaa"
-        edit_title: "Muokkaa kaksivaiheista tunnistautumista"
-        edit_description: "Kaksivaiheisen tunnistautumisen nim"
         enable_security_key_description: |
           Kun <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">tunnistautumislaite</a> on valmiina, paina alla olevaaa rekisteröi-nappia.
         totp:
@@ -1078,10 +1063,8 @@ fi:
         instructions: "Tarvitaan kutsukoodi, jotta voi luoda tunnuksen"
       auth_tokens:
         title: "Viimeksi käytetyt laitteet"
-        ip: "IP"
         details: "Yksityiskohdat"
         log_out_all: "Kirjaudu ulos kaikkialta"
-        active: "aktiivinen nyt"
         not_you: "Et ole sinä?"
         show_all: "Näytä kaikki (%{count})"
         show_few: "Näytä vähemmän"
@@ -1379,8 +1362,6 @@ fi:
       disable: "Näytä poistetut viestit"
     private_message_info:
       title: "Viesti"
-      invite: "Kutsu muita..."
-      edit: "Lisää tai poista..."
       leave_message: "Haluatko varmasti poistua yksityiskeskustelusta?"
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän %{name} tästä keskustelusta?"
       remove_allowed_group: "Haluatko varmasti poistaa käyttäjän %{name} tästä viestiketjusta?"
@@ -1426,10 +1407,8 @@ fi:
       title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
-      second_factor_title: "Kaksivaiheinen tunnistautuminen"
       second_factor_description: "Syötä sovelluksen antama todennuskoodi:"
       second_factor_backup: "Kirjaudu käyttäen varakoodia"
-      second_factor_backup_title: "Varakoodit"
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
       second_factor: "Kirjaudu tunnistautumissovelluksella"
       security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
@@ -1453,10 +1432,8 @@ fi:
       awaiting_approval: "Henkilökunta ei ole vielä hyväksynyt käyttäjätiliäsi. Saat sähköpostiviestin, kun tunnuksesi on hyväksytty."
       requires_invite: "Pahoittelut, tämä palsta on vain kutsutuille käyttäjille."
       not_activated: "Et voi vielä kirjautua sisään. Lähetimme aiemmin vahvistusviestin osoitteeseen <b>%{sentTo}</b>. Seuraa viestin ohjeita ottaaksesi tunnuksen käyttöön."
-      not_allowed_from_ip_address: "Kirjautuminen estetty tästä IP-osoitteesta."
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
-      omniauth_disallow_totp: "Käyttäjätilisi käyttää kaksivaiheista tunnistautumista. Kirjaudu salasanasi avulla."
       resend_title: "Lähetä aktivointisähköposti uudelleen"
       change_email: "Vaihda sähköpostiosoitetta"
       provide_new_email: "Anna uusi osoite niin lähetämme sinulle vahvistamissähköpostin."
@@ -1523,8 +1500,6 @@ fi:
       enter: "Enter"
     conditional_loading_section:
       loading: Ladataan...
-    category_row:
-      topic_count: "%{count} ketjua tällä alueella"
     select_kit:
       default_header_text: Valitse...
       no_content: Ei osumia
@@ -1537,7 +1512,6 @@ fi:
       min_content_not_reached:
         one: "Valitse ainakin %{count} kohde."
         other: "Valitse ainakin %{count} kohdetta."
-      invalid_selection_length: "Täytyy valita ainakin %{count} merkkiä."
     date_time_picker:
       from: Mistä
       to: Vastaanottaja
@@ -1584,7 +1558,6 @@ fi:
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
       edit_conflict: "muokkauskonflikti"
-      group_mentioned_limit: "<b>Varoitus!</b> Mainitsit ryhmän <a href='%{group_link}'>%{group}</a>, mutta ylläpitäjä on määrittänyt mainintojen enimmäismääräksi %{max} käyttäjää, minkä tämän ryhmän jäsenmäärä ylittää. Kukaan ei saa ilmoitusta. "
       group_mentioned:
         one: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjä</a> saa ilmoituksen – oletko varma?"
         other: "Jos mainitset ryhmän %{group}, <a href='%{group_link}'>%{count} käyttäjää</a> saa ilmoituksen – oletko varma?"
@@ -1601,7 +1574,6 @@ fi:
         post_length: "Viestissä täytyy olla vähintään %{min} merkkiä"
         try_like: "Oletko kokeillut %{heart}-nappia?"
         category_missing: "Sinun täytyy valita viestille alue"
-        tags_missing: "Valitse vähintään %{count} tunnistetta"
         topic_template_not_modified: "Lisää tietoa ketjunaloitukseesi muokkaamalla ketjusapluunaa."
       save_edit: "Tallenna"
       overwrite_edit: "Päällekirjoita"
@@ -1736,7 +1708,6 @@ fi:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Uusi ketju</span> %{description}"
       membership_request_accepted: "Hyväksyttiin ryhmään '%{group_name}'"
-      membership_request_consolidated: "%{count} odottavaa jäsenhakemusta ryhmään %{group_name}"
       group_message_summary:
         one: "%{count} viesti ryhmän %{group_name} saapuneissa"
         other: "%{count} viestiä ryhmän %{group_name} saapuneissa"
@@ -1806,7 +1777,6 @@ fi:
       full_page_title: "etsi ketjuja tai viestejä"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
-      searching: "Etsitään ..."
       post_format: "#%{post_number} käyttäjältä %{username}"
       results_page: "Tulokset hakusanalle '%{term}'"
       more_results: "Tuloksia olisi enemmänkin. Rajaa hakuasi."
@@ -1815,7 +1785,6 @@ fi:
       or_search_google: "Tai kokeile Google-hakua:"
       search_google: "Kokeile Google-hakua:"
       search_google_button: "Google"
-      search_google_title: "Hae tältä sivustolta"
       context:
         user: "Etsi @%{username} viestejä"
         category: "Etsi alueelta #%{category}"
@@ -1909,7 +1878,6 @@ fi:
         category: "Alueella %{category} ei ole ketjua."
         top: "Kuumia ketjuja ei ole."
         educate:
-          new: '<p>Sinulle uudet ketjut näytetään tässä.</p><p>Ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
           unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
@@ -2162,7 +2130,6 @@ fi:
       feature_topic:
         title: "Nosta tämä ketju"
         pin: "Kiinnitä tämä ketju alueen %{categoryLink} ylimmäiseksi kunnes"
-        confirm_pin: "Jo %{count} ketjua on kiinnitetty. Liian monta kiinnitettyä ketjua voi olla taakaksi uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittää yhden ketjun lisää tälle alueelle?"
         unpin: "Älä enää pidä tätä ketjua %{categoryLink}-aluen ylimmäisenä."
         unpin_until: "Poista nyt tämän ketjun kiinnitys alueen %{categoryLink} ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -2172,7 +2139,6 @@ fi:
           one: "Kiinnitettyjä ketjuja alueella %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Alueelle %{categoryLink} kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
-        confirm_pin_globally: "Jo %{count} ketjua on kiinnitetty koko palstalle. Liian monta kiinnitettyä ketjua voi olla taakaksi uusille ja kirjautumattomille käyttäjille. Oletko varma, että haluat kiinnittää yhden ketjun lisää koko palstalle?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -2359,7 +2325,6 @@ fi:
         upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
         file_too_large: "Pahoittelut, tiedosto on liian suuri (enimmäiskoko on %{max_size_kb}kb). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja sitten jakaisit linkin?"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
-        too_many_dragged_and_dropped_files: "Pahoittelut, voit ladata korkeintaan %{max} tiedostoa kerrallaan."
         upload_not_authorized: "Pahoittelut, tiedosto jota yrität ladata ei ole sallittu (sallitut laajennukset: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
@@ -2636,7 +2601,6 @@ fi:
     flagging:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa viesti"
-      take_action: "Ryhdy toimiin"
       notify_action: "Viesti"
       official_warning: "Virallinen varoitus"
       delete_spammer: "Poista roskapostittaja"
@@ -2707,7 +2671,6 @@ fi:
         title: "Tämä ketju on yksityiskeskustelu"
         help: "Tämä ketju on yksityiskeskustelu"
     posts: "Viestejä"
-    posts_long: "tässä ketjussa on %{number} viestiä"
     posts_likes_MF: |
       Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}} {ratio, select,
       low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}
@@ -2728,7 +2691,6 @@ fi:
     likes_lowercase:
       one: "tykkäys"
       other: "tykkäykset"
-    likes_long: "tässä ketjussa on %{number} tykkäystä"
     users: "Käyttäjät"
     users_lowercase:
       one: "käyttäjä"
@@ -2809,7 +2771,6 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
         other_periods: "katso kuumat:"
-    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaimesi on liian vanha eikä siksi toimi tällä sivustolla</a>. <a href="https://browsehappy.com">Päivitä selaimesi</a> niin voit katsella nykyaikaisia sisältöjä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -3026,8 +2987,6 @@ fi:
         delete: "Poista"
         confirm_delete: "Oletko varma, että haluat poistaa tämän tunnisteryhmän?"
         everyone_can_use: "Kuka vain voi käyttää tunnisteita"
-        usable_only_by_staff: "Tunnisteet näkyvät kaikille, mutta vain henkilökunta voi käyttää niitä"
-        visible_only_to_staff: "Tunnisteet näkyvät vain henkilökunnalle"
       topics:
         none:
           unread: "Sinulla ei ole lukemattomia ketjuja."
@@ -3804,7 +3763,6 @@ fi:
             post_edit: "viestin muokkaus"
             post_unlocked: "viesti vapautettu"
             check_personal_message: "katso yksityisviesti"
-            disabled_second_factor: "poista kaksivaiheinen tunnistautuminen"
             topic_published: "ketju julkaistu"
             post_approved: "viesti hyväksytty"
             post_rejected: "viesti hylätty"
@@ -4021,7 +3979,6 @@ fi:
         private_topics_count: Yksityisviestit
         posts_read_count: Luettuja viestejä
         post_count: Kirjoitettuja viestejä
-        second_factor_enabled: Kaksivaiheinen tunnistautuminen käytössä
         topics_entered: Katseltuja ketjuja
         flags_given_count: Annettuja lippuja
         flags_received_count: Saatuja lippuja

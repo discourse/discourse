@@ -529,38 +529,31 @@ pt:
       title: "Fora de Contexto"
       description: "Esta mensagem não é relevante para a discussão corrente, conforme definido pelo título e pela primeira mensagem, e provavelmente deverá ser transferida para outro tópico."
       short_description: "Não é relevante para a discussão"
-      long_form: "sinalizou isto como fora de contexto"
     spam:
       title: "Spam"
       short_description: "É um anúncio ou vandalismo"
-      long_form: "sinalizou isto como spam"
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
-      long_form: "sinalizou isto como inapropriado"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
-      long_form: "utilizador com mensagens"
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo Mais"
       description: "Esta mensagem requer a atenção do pessoal por outra razão não listada acima."
       short_description: "Requer a atenção da equipa por outra razão"
-      long_form: "marcou isto para ser alvo da atenção do pessoal"
       email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Adicionar Marcador"
       description: "Adicionar um marcador a esta mensagem"
       short_description: "Adicionar esta publicação aos marcadores"
-      long_form: "adicionou um marcador a esta mensagem"
     like:
       title: "Gostar"
       description: "Gostar desta mensagem"
       short_description: "Gostar desta publicação"
-      long_form: "gostou disto"
   user_activity:
     no_bookmarks:
       others: "Sem marcadores."
@@ -1103,8 +1096,6 @@ pt:
     delete_all_posts_max: "Número máximo de mensagens que podem ser eliminadas de uma única vez com o botão Eliminar Todas as Mensagens. Se um utilizador tem mais mensagens do que este número, estas não podem ser eliminadas de uma única vez e o utilizador não pode ser eliminado."
     email_editable: "Permitir que os utilizadores alterem o seu endereço de email após o registo."
     allow_uploaded_avatars: "Permitir que os utilizadores carreguem fotografias de perfil personalizadas."
-    allow_animated_avatars: "Permitir que os utilizadores utilizem fotografias de perfil com gifs animados. AVISO: executar avatars:atualizar após mudança desta configuração."
-    allow_animated_thumbnails: "Gera miniaturas de imagens ou gifs animados."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
     automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de ''e-mail''."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
@@ -1289,7 +1280,6 @@ pt:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo de errado ocorreu, talvez o nome de utilizador ou o email já estejam registados. Tente a hiperligação Esqueci a minha palavra-passe."
-    omniauth_error_unknown: "Algo ocorreu ao processar o seu início de sessão, por favor tente novamente."
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de email associado com %{account} são permitidos. Talvez precise de configurar a sua conta com um endereço de email diferente."
     new_registrations_disabled: "Neste momento não é permitido novo registo de contas."
@@ -1298,7 +1288,6 @@ pt:
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
     already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
-    second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
   admin:
     email:
@@ -2003,8 +1992,6 @@ pt:
     initial_topic_title: Relatórios de desempenho do sítio
   tags:
     title: "Etiquetas"
-    staff_tag_disallowed: 'A etiqueta "%{tag}" pode ser aplicada pela equipa de apoio apenas.'
-    staff_tag_remove_disallowed: 'A etiqueta "%{tag}" apenas poderá ser removida pela equipa de apoio.'
   rss_by_tag: "Tópicos etiquetados %{tag}"
   finish_installation:
     congratulations: "Felicitações, você instalou o Discourse!"
@@ -2070,8 +2057,6 @@ pt:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
-      colors:
-        title: "Tema"
       logos:
         title: "Logos"
         fields:

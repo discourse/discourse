@@ -557,18 +557,14 @@ cs:
       title: "Off-Topic"
       description: "Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam."
       short_description: "Není relevantní k diskuzi"
-      long_form: "označil příspěvek jako off-topic"
     spam:
       title: "Spam"
-      long_form: "označeno jako spam"
       email_title: '"%{title}" byl označen jako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      long_form: "nahlášeno jako nevhodné"
     notify_user:
       title: "Poslat @%{username} zprávu"
-      long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_moderators:
@@ -578,12 +574,10 @@ cs:
       title: "Založit"
       description: "Přidat záložku k tomuto příspěvku"
       short_description: "Přidat záložku k tomuto příspěvku"
-      long_form: "přidal záložku k tomuto příspěvku"
     like:
       title: "To se mi líbí"
       description: "Tento příspěvek se mi líbí"
       short_description: "Tento příspěvek se mi líbí"
-      long_form: "se líbí"
   user_activity:
     no_bookmarks:
       others: "Žádné záložky."
@@ -907,10 +901,8 @@ cs:
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
-    omniauth_error_unknown: "Nastala chyba při zpracování vašeho přihlášení, prosím zkuste to znovu."
     omniauth_confirm_button: "Pokračovat"
     click_to_continue: "Pro pokračování klikněte zde."
-    second_factor_title: "Dvoufázové přihlašování"
     second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
   admin:
     email:
@@ -1129,8 +1121,6 @@ cs:
             placeholder: "jmeno@priklad.cz"
       corporate:
         title: "Organizace"
-      colors:
-        title: "Téma"
       logos:
         title: "Loga"
         fields:

@@ -151,7 +151,6 @@ nb_NO:
     topic_admin_menu: "handlinger for tråd"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
-    bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere tildeles tillitsnivå 1 og får daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli automatisk slått av når %{min_users} brukere har registrert seg."
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
@@ -606,7 +605,6 @@ nb_NO:
       topic_sentence:
         one: "%{count} emne"
         other: "%{count} emner"
-      n_more: "Kategorier (ytterligere%{count}) ..."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -687,7 +685,6 @@ nb_NO:
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse:"
-      github_profile: "Github"
       email_activity_summary: "Oppsummering av aktivitet"
       mailing_list_mode:
         label: "E-postlistemodus"
@@ -771,7 +768,6 @@ nb_NO:
         choose_new: "Velg et nytt passord"
         choose: "Velg et passord"
       second_factor_backup:
-        title: "Tofaktor reservekoder"
         regenerate: "Regenerer"
         disable: "Deaktiver"
         enable: "Aktiver"
@@ -779,18 +775,15 @@ nb_NO:
         copy_to_clipboard: "Kopier til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering til utklippstavlen"
         copied_to_clipboard: "Kopiert til utklippstavlen"
-        remaining_codes: "Du har <strong>%{count}</strong> reservekoder igjen."
         codes:
           title: "Reservekoder opprettet"
           description: "Hver av reservekodene kan kun brukes en gang. Oppbevar dem et trygt men tilgjengelig sted."
       second_factor:
-        title: "Totrinnsverifisering"
         confirm_password_description: "Bekreft passordet ditt for å fortsette"
         name: "Navn"
         label: "Kode"
         disable_description: "Vennligst oppgi autentiseringskoden fra appen"
         show_key_description: "Skriv inn manuelt"
-        oauth_enabled_warning: "Vær oppmerksom på at sosiale login-metoder deaktiveres når tofaktor autentisering er aktivert på kontoen din."
         disable: "Deaktiver"
         save: "Lagre"
         edit: "Rediger"
@@ -869,7 +862,6 @@ nb_NO:
       password_confirmation:
         title: "Passord igjen"
       auth_tokens:
-        ip: "IP"
         details: "Detaljer"
       last_posted: "Siste innlegg"
       last_emailed: "Sist kontaktet"
@@ -1154,9 +1146,7 @@ nb_NO:
       title: "Logg Inn"
       username: "Bruker"
       password: "Passord"
-      second_factor_title: "Totrinnsverifisering"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
-      second_factor_backup_title: "Tofaktor sikkerhetskode"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
       email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
@@ -1172,10 +1162,8 @@ nb_NO:
       awaiting_approval: "Din konto har ikke blitt godkjent av en moderator ennå. Du vil motta en e-post når den er godkjent."
       requires_invite: "Beklager, tilgang til dette forumet kun ved invitasjon."
       not_activated: "Du kan ikke logge inn ennå. Vi sendte en e-post for aktivering til deg på <b>%{sentTo}</b>. Følg instruksjonene i den e-posten for å aktivere din konto."
-      not_allowed_from_ip_address: "Du kan ikke logge inn fra den IP-adressen."
       admin_not_allowed_from_ip_address: "Du kan ikke logge inn som administrator fra den IP-adressen."
       resend_activation_email: "Klikk her for å sende e-posten for aktivering igjen."
-      omniauth_disallow_totp: "Kontoen din har tofaktor autentisering aktivert. Vennligst logg inn med passordet ditt."
       resend_title: "Send aktivterings-e-post på nytt"
       change_email: "Endre e-postadresse"
       provide_new_email: "Oppgi en ny adresse og vi vil sende din aktiverings-e-post på nytt."
@@ -1277,7 +1265,6 @@ nb_NO:
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt har likheter med…"
       drafts_offline: "utkast offline"
-      group_mentioned_limit: "<b>Warning!</b> Du varslet <a href='%{group_link}'>%{group}</a>, dog har denne gruppen flere medlemmer en administratoren har satt opp som grense for varseling, %{max} brukere. Ingen vil bli varslet."
       group_mentioned:
         one: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} én person</a> – er du sikker?"
         other: "Ved å nevne %{group}, er du i ferd med å henvende deg til <a href='%{group_link}'>%{count} folk</a> – er du sikker?"
@@ -1292,7 +1279,6 @@ nb_NO:
         post_length: "Innlegget må være på minst %{min} tegn"
         try_like: "Har du prøvd %{heart}-knappen?"
         category_missing: "Du må velge en kategori"
-        tags_missing: "Du må velge minst %{count} stikkord"
       save_edit: "Lagre endring"
       reply_original: "Svar på det opprinnelige emnet"
       reply_here: "Svar her"
@@ -1455,7 +1441,6 @@ nb_NO:
       full_page_title: "søk etter emner eller innlegg"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
-      searching: "Søker…"
       post_format: "#%{post_number} av %{username}"
       results_page: "Søkeresultater for \"%{term}\""
       more_results: "Det finnes flere resultater. Begrens søket ditt."
@@ -1464,7 +1449,6 @@ nb_NO:
       or_search_google: "Eller prøv å søke på Google istedenfor:"
       search_google: "Prøv å søke på Google istedenfor:"
       search_google_button: "Google"
-      search_google_title: "Søk på denne siden"
       context:
         user: "Søk i innleggene av @%{username}"
         category: "Søk i kategorien #%{category}"
@@ -1554,7 +1538,6 @@ nb_NO:
         category: "Det finnes ingen %{category}-emner."
         top: "Det finnes ingen populære emner."
         educate:
-          new: '<p>Dine nye emner vil vises her.</p><p>Som forvalg anses emner som nye og viser en<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span>-indikator hvis de be opprettet i løpet av de siste 2 dagene.</p><p>Gå til <a href="%{userPrefsUrl}">innstillinger</a> for å endre dette.</p>'
           unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
@@ -1784,7 +1767,6 @@ nb_NO:
       feature_topic:
         title: "Fremhev denne emnet"
         pin: "La dette emnet vises øverst i %{categoryLink}-kategorien frem til"
-        confirm_pin: "Du har allerede %{count} festede emner. For mange festede emner kan være slitsomt for nye og anonyme brukere. Er du sikker på at du ønsker å feste enda et emne i denne kategorien?"
         unpin: "Fjern dette emnet fra toppen av %{categoryLink}-kategorien."
         unpin_until: "Fjern dette emnet fra toppen av %{categoryLink}-kategorien, eller vent til <strong>%{until}</strong>."
         pin_note: "Brukere kan fjerne festet for emnet individuelt for seg selv."
@@ -1794,7 +1776,6 @@ nb_NO:
           one: "Emner som er festet i %{categoryLink} for øyeblikket: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Emner som er festet i %{categoryLink} for øyeblikket: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "La dette emnet vises øverst i alle listene over emner inntil"
-        confirm_pin_globally: "Du har allerede %{count} globalt festede emner. For mange festede emner kan være slitsomt for nye og anonyme brukere. Er du sikker på at du vil feste enda et emne globalt? "
         unpin_globally: "Fjern dette emnet fra toppen av alle lister over emner."
         unpin_globally_until: "Fjern dette emnet fra toppen av alle lister over emner eller vent til <strong>%{until}</strong>."
         global_pin_note: "Brukere kan fjerne festet for emnet individuelt for seg selv."
@@ -2151,7 +2132,6 @@ nb_NO:
     flagging:
       title: "Takk for at du hjelper å holde forumet ryddig!"
       action: "Rapporter innlegg"
-      take_action: "Ta handling"
       notify_action: "Melding"
       official_warning: "Offisiell advarsel"
       delete_spammer: "Slett spammer"
@@ -2219,7 +2199,6 @@ nb_NO:
       unlisted:
         help: "Dette emnet er ikke synlig; det vil ikke vises i lister over emner, og er kun tilgjengelig via en direkte lenke"
     posts: "Innlegg"
-    posts_long: "det er %{number} innlegg i dette emnet"
     posts_likes_MF: |
       Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
       low {med mange likes i forhold til innlegg}
@@ -2240,7 +2219,6 @@ nb_NO:
     likes_lowercase:
       one: "like"
       other: "likes"
-    likes_long: "det finnes %{number} likes i dette emnet"
     users: "Deltakere"
     users_lowercase:
       one: "bruker"
@@ -2473,8 +2451,6 @@ nb_NO:
         delete: "Slett"
         confirm_delete: "Er du sikker på at du vil slette denne stikkordgruppen?"
         everyone_can_use: "Stikkord kan benyttes av alle"
-        usable_only_by_staff: "Stikkord er synlige for alle, men kun staben kan bruke dem"
-        visible_only_to_staff: "Stikkord er kun synlige for staben"
       topics:
         none:
           unread: "Du har ingen uleste emner."
@@ -3099,7 +3075,6 @@ nb_NO:
             post_edit: "innlegg redigert"
             post_unlocked: "innlegg opplåst"
             check_personal_message: "sjekk personlig melding"
-            disabled_second_factor: "deaktiver totrinnsverifisering"
             topic_published: "emne publisert"
             post_approved: "innlegg godkjent"
             post_rejected: "innlegg avvist"
@@ -3282,7 +3257,6 @@ nb_NO:
         private_topics_count: Private emner
         posts_read_count: Innlegg lest
         post_count: Innlegg skrevet
-        second_factor_enabled: totrinnsverifisering aktivert
         topics_entered: Emner Lest
         flags_given_count: Rapporteringer tildelt
         flags_received_count: Rapporteringer mottatt

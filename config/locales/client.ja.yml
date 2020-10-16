@@ -127,7 +127,6 @@ ja:
         disabled: "このバナー%{when}を削除すると、各ページの最上部に表示しません。"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
-    bootstrap_mode_enabled: "簡単にサイトを立ち上げられるように、ブートストラップモードにしました。\nすべての新規ユーザーはトラストレベル1、毎日のサマリーメールが有効な状態です。この設定は%{min_users}が参加した時に自動的に無効になります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
@@ -693,7 +692,6 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結状態です。"
       suspended_permanently: "このユーザーは凍結されています"
       suspended_reason: "理由: "
-      github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
       mailing_list_mode:
         label: "メーリングリストモード"
@@ -781,25 +779,20 @@ ja:
         choose_new: "新規パスワードを決定"
         choose: "パスワードを決定"
       second_factor_backup:
-        title: "ツーファクターバックアップコード"
         regenerate: "API キーを再生成"
         disable: "利用できません"
         enable: "利用できます"
         enable_long: "バックアップコードを有効にします"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
-        remaining_codes: "<strong>%{count}</strong> 個のバックアップコードが残っています。"
         use: "バックアップコードを使用"
         codes:
           title: "バックアップコードが作られました"
       second_factor:
-        title: "2段階認証"
         confirm_password_description: "続行するにはパスワードを入力してください"
         name: "名前"
         label: "コード"
         show_key_description: "手動入力"
-        oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
-        enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
         disable: "利用できません"
         save: "保存"
         edit: "編集"
@@ -877,10 +870,8 @@ ja:
         title: "もう一度パスワードを入力してください。"
       auth_tokens:
         title: "最近使用した端末"
-        ip: "IP"
         details: "詳細"
         log_out_all: "すべてログアウトする"
-        active: "動作中"
         not_you: "あなたではない？"
         show_all: "すべてを見る(%{count})"
         show_few: "表示件数を少なくする"
@@ -1125,8 +1116,6 @@ ja:
       disable: "削除された投稿を表示する"
     private_message_info:
       title: "メッセージ"
-      invite: "他の人を招待する..."
-      edit: "追加、削除"
       leave_message: "本当にメッセージから離れますか？"
       remove_allowed_user: "このメッセージから %{name} を削除してもよろしいですか？"
       remove_allowed_group: "このメッセージから %{name} を削除してもよろしいですか？"
@@ -1161,8 +1150,6 @@ ja:
       title: "ログイン"
       username: "ユーザ名"
       password: "パスワード"
-      second_factor_title: "２段階認証"
-      second_factor_backup_title: "2段階バックアップ"
       second_factor_backup_description: "バックアップコードを入力: "
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
@@ -1178,10 +1165,8 @@ ja:
       awaiting_approval: "アカウントはまだスタッフに承認されていません。承認され次第メールにてお知らせいたします。"
       requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
       not_activated: "まだログインできません。<b>%{sentTo}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
-      not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
       resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
-      omniauth_disallow_totp: "あなたのアカウントは２段階認証が有効になっています。ログインにはパスワードが必要です。"
       resend_title: "アクティベーションメールの再送"
       change_email: "メールアドレスの変更"
       provide_new_email: "新しいメールアドレスを設定します。このあと、確認のメールを送信します。"
@@ -1294,7 +1279,6 @@ ja:
         post_length: "投稿は%{min}文字以上必要です。"
         try_like: " %{heart} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
-        tags_missing: "少なくとも %{count} つのタグが必要です。"
       save_edit: "編集内容を保存"
       reply_original: "オリジナルトピックへ返信"
       reply_here: "ここに返信"
@@ -1427,7 +1411,6 @@ ja:
       title: "トピック、投稿、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
-      searching: "検索中..."
       post_format: "#%{post_number} %{username}から"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
@@ -1435,7 +1418,6 @@ ja:
       or_search_google: "あるいは、Google検索で試してみてください:"
       search_google: "Google検索で試してみてください:"
       search_google_button: "Google"
-      search_google_title: "サイトを検索"
       context:
         user: "@%{username}の投稿を検索"
         category: "#%{category} から検索する"
@@ -1523,7 +1505,6 @@ ja:
         category: "%{category} トピックはありません。"
         top: "トップトピックはありません。"
         educate:
-          new: '<p>新しいトピックがここに表示されます。</p><p>デフォルトでは新しいトピックがある場合に2日間、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span>が表示されます。</p><p>設定は<a href="%{userPrefsUrl}">プロフィール設定</a>から変更できます。</p>'
           unread: '<p>新しいトピックがここに表示されます。</p><p>未読のトピックがある場合は、<span class="badge new-posts badge-notification">1</span>が表示されます。 もし、</p><ul><li>トピックを作る</li><li>トピックに返信</li><li>トピックを4分以上読む</li></ul><p>などを行った場合、トピックを追跡してそれぞれのトピックの下にある通知の設定を経由してウォッチします。</p><p><a href="%{userPrefsUrl}">プロフィール</a>から変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
@@ -1733,7 +1714,6 @@ ja:
       feature_topic:
         title: "トピックを特集"
         pin: "%{categoryLink} カテゴリのトップに表示する"
-        confirm_pin: "既に %{count} トピックを固定表示しています。固定表示が多すぎると、新規あるいは匿名ユーザの負担になる場合があります。このカテゴリにおいてさらに固定表示設定してもよいですか？"
         unpin: "%{categoryLink} カテゴリのトップからトピックを削除"
         unpin_until: "%{categoryLink} カテゴリのトップからこのトピックを削除するか、<strong>%{until}</strong> まで待つ。"
         pin_note: "ユーザはトピックを個別に固定表示解除することができます。"
@@ -1742,7 +1722,6 @@ ja:
         already_pinned:
           other: "%{categoryLink}で固定表示されているトピック: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "このトピックをすべてのトピックリストのトップに表示する"
-        confirm_pin_globally: "全体で既に %{count} トピックを固定表示しています。固定表示が多すぎると、新規あるいは匿名ユーザの負担になる場合があります。このカテゴリにおいてさらに固定表示設定してもよいですか？"
         unpin_globally: "トピック一覧のトップからこのトピックを削除します"
         unpin_globally_until: "このトピックをすべてのトピックリストのトップから削除するか、<strong>%{until}</strong> まで待つ。"
         global_pin_note: "ユーザはトピックを個別に固定表示解除することができます。"
@@ -2040,7 +2019,6 @@ ja:
     flagging:
       title: "報告していただきありがとうございます。"
       action: "投稿を通報"
-      take_action: "アクションをする"
       notify_action: "メッセージ"
       official_warning: "運営スタッフからの警告"
       delete_spammer: "スパムの削除"
@@ -2102,7 +2080,6 @@ ja:
       unlisted:
         help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
-    posts_long: "このトピックには%{number}個の投稿があります"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
       low {with a high like to post ratio}
@@ -2120,7 +2097,6 @@ ja:
     likes: "いいね！"
     likes_lowercase:
       other: "いいね！"
-    likes_long: "このトピックには%{number}つ「いいね！」がついています"
     users: "ユーザ"
     users_lowercase:
       other: "ユーザ"
@@ -2310,7 +2286,6 @@ ja:
         delete: "削除する"
         confirm_delete: "このタググループを削除してもよろしいですか？"
         everyone_can_use: "全員がタグを使用できます。"
-        usable_only_by_staff: "タグは全員に表示されますが、スタッフのみ使用できます。"
       topics:
         none:
           unread: "未読のトピックはありません。"
@@ -2756,7 +2731,6 @@ ja:
             change_readonly_mode: "閲覧専用モードに変更する"
             backup_download: "バックアップをダウンロード"
             backup_destroy: "バックアップを消去"
-            disabled_second_factor: "2段階認証を無効にする"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -2891,7 +2865,6 @@ ja:
         private_topics_count: プライベートトピックの数
         posts_read_count: 読んだ投稿数
         post_count: 投稿数
-        second_factor_enabled: 2段階認証を有効にする
         topics_entered: 閲覧したトピックの数
         flags_given_count: 通報した数
         flags_received_count: 通報された数

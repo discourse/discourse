@@ -158,7 +158,6 @@ nl:
     topic_admin_menu: "topicacties"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
-    bootstrap_mode_enabled: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{min_users} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
       default_description: "Standaard"
@@ -280,7 +279,7 @@ nl:
         label: "Automatisch verwijderen"
         never: "Nooit"
         when_reminder_sent: "Zodra de herinnering is verzonden"
-        on_owner_reply: "Nadat ik op dit onderwerp antwoord"
+        on_owner_reply: "Nadat ik op dit topic antwoord"
       search_placeholder: "Bladwijzers doorzoeken op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       reminders:
@@ -779,7 +778,6 @@ nl:
       topic_stat_sentence_month:
         one: "%{count} nieuw topic in de afgelopen maand."
         other: "%{count} nieuwe topics in de afgelopen maand."
-      n_more: "Categorieën (nog %{count}) ..."
     ip_lookup:
       title: IP-adres zoeken
       hostname: Hostnaam
@@ -901,7 +899,6 @@ nl:
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
-      github_profile: "Github"
       email_activity_summary: "Activiteitsamenvatting"
       mailing_list_mode:
         label: "Mailinglijstmodus"
@@ -999,25 +996,19 @@ nl:
         choose_new: "Kies een nieuw wachtwoord"
         choose: "Kies een wachtwoord"
       second_factor_backup:
-        title: "Twee-factor-back-upcodes"
         regenerate: "Opnieuw genereren"
         disable: "Uitschakelen"
         enable: "Inschakelen"
         enable_long: "Back-upcodes inschakelen"
-        manage: "Back-upcodes beheren. U hebt <strong>%{count}</strong> back-upcodes over."
         copy_to_clipboard: "Kopiëren naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         download_backup_codes: "Back-upcodes downloaden"
-        remaining_codes: "U hebt <strong>%{count}</strong> back-upcodes over."
         use: "Een back-upcode gebruiken"
-        enable_prerequisites: "U moet een primaire tweede factor inschakelen voordat u back-upcodes genereert."
         codes:
           title: "Back-upcodes gegenereerd"
           description: "Elke back-upcode kan maar één keer worden gebruikt. Bewaar ze op een veilige maar toegankelijke plek."
       second_factor:
-        title: "Twee-factor-authenticatie"
-        enable: "Twee-factor-authenticatie beheren"
         disable_all: "Alle uitschakelen"
         forgot_password: "Wachtwoord vergeten?"
         confirm_password_description: "Bevestig uw wachtwoord om door te gaan"
@@ -1030,17 +1021,10 @@ nl:
         show_key_description: "Voer handmatig in"
         short_description: |
           Bescherm uw account met beveiligingscodes voor eenmalig gebruik.
-        extended_description: |
-          Twee-factor-authenticatie voegt extra beveiliging toe aan uw account door naast uw wachtwoord een eenmalige code te vereisen. Tokens kunnen op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-apparaten worden gegenereerd.
-        oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra twee-factor-authenticatie op uw account is ingeschakeld."
         use: "Authenticator-app gebruiken"
-        enforced_notice: "U dient twee-factor-authenticatie in te schakelen voordat u deze website bezoekt."
         disable: "Uitschakelen"
-        disable_confirm: "Weet u zeker dat u alle twee-factormethoden wilt uitschakelen?"
         save: "Opslaan"
         edit: "Bewerken"
-        edit_title: "Tweede factor bewerken"
-        edit_description: "Naam van tweede factor"
         enable_security_key_description: |
           Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
@@ -1163,10 +1147,8 @@ nl:
         instructions: "Accountregistratie vereist een uitnodigingscode"
       auth_tokens:
         title: "Onlangs gebruikte apparaten"
-        ip: "IP"
         details: "Details"
         log_out_all: "Alles afmelden"
-        active: "nu actief"
         not_you: "Niet u?"
         show_all: "Alles tonen (%{count})"
         show_few: "Minder tonen"
@@ -1466,10 +1448,6 @@ nl:
       disable: "Verwijderde berichten tonen"
     private_message_info:
       title: "Bericht"
-      invite: "Anderen uitnodigen ..."
-      edit: "Toevoegen of verwijderen ..."
-      remove: "Verwijderen ..."
-      add: "Toevoegen ..."
       leave_message: "Weet u zeker dat u dit bericht wilt verlaten?"
       remove_allowed_user: "Wilt u %{name} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u %{name} echt uit dit bericht verwijderen?"
@@ -1515,10 +1493,8 @@ nl:
       title: "Aanmelden"
       username: "Gebruiker"
       password: "Wachtwoord"
-      second_factor_title: "Twee-factor-authenticatie"
       second_factor_description: "Voer de authenticatiecode van uw app in:"
       second_factor_backup: "Aanmelden met een back-upcode"
-      second_factor_backup_title: "Twee-factor-back-up"
       second_factor_backup_description: "Voer een van uw back-upcodes in:"
       second_factor: "Aanmelden met authenticator-app"
       security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
@@ -1542,10 +1518,8 @@ nl:
       awaiting_approval: "Uw account is nog niet door een staflid goedgekeurd. U ontvangt een e-mail zodra dat is gebeurd."
       requires_invite: "Sorry, toegang tot dit forum werkt alleen via uitnodiging."
       not_activated: "U kunt zich nog niet aanmelden. We hebben een activeringsmail naar <b>%{sentTo}</b> gestuurd. Volg de instructies in dat e-mailbericht om uw account te activeren."
-      not_allowed_from_ip_address: "U kunt zich niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "U kunt zich niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activeringsmail opnieuw te versturen."
-      omniauth_disallow_totp: "Uw account heeft twee-factor-authenticatie ingeschakeld. Meld u aan met uw wachtwoord."
       resend_title: "Activeringsmail opnieuw versturen"
       change_email: "E-mailadres wijzigen"
       provide_new_email: "Geef een nieuw adres op en we sturen uw bevestigingsmail opnieuw."
@@ -1613,8 +1587,6 @@ nl:
       enter: "Enter"
     conditional_loading_section:
       loading: Laden...
-    category_row:
-      topic_count: "%{count} topics in deze categorie"
     select_kit:
       default_header_text: Selecteren...
       no_content: Geen overeenkomsten gevonden
@@ -1627,7 +1599,6 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
-      invalid_selection_length: "Selectie moet minstens %{count} tekens bevatten."
       components:
         categories_admin_dropdown:
           title: "Categorieën beheren"
@@ -1677,7 +1648,6 @@ nl:
       similar_topics: "Uw topic lijkt op..."
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
-      group_mentioned_limit: "<b>Waarschuwing!</b> U hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde limiet van %{max} gebruikers voor noemen. Niemand krijgt een melding."
       group_mentioned:
         one: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} personen</a> op de hoogte brengen – weet u dit zeker?"
@@ -1694,7 +1664,6 @@ nl:
         post_length: "Bericht moet minstens %{min} tekens bevatten"
         try_like: "Hebt u de knop %{heart} geprobeerd?"
         category_missing: "U moet een categorie kiezen"
-        tags_missing: "U moet minstens %{count} tags kiezen"
         topic_template_not_modified: "Voeg details en specifieke kenmerken toe aan uw topic door de topicsjabloon te bewerken."
       save_edit: "Bewerking opslaan"
       overwrite_edit: "Bewerking overschrijven"
@@ -1837,7 +1806,6 @@ nl:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nieuw Topic</span> %{description}"
       membership_request_accepted: "Lidmaatschap geaccepteerd in '%{group_name}'"
-      membership_request_consolidated: "%{count} open lidmaatschapsaanvragen voor '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
@@ -1912,7 +1880,6 @@ nl:
       full_page_title: "zoeken naar topics of berichten"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
-      searching: "Zoeken..."
       post_format: "#%{post_number} door %{username}"
       results_page: "Zoekresultaten voor '%{term}'"
       more_results: "Er zijn meer resultaten. Verfijn uw zoekcriteria."
@@ -1921,7 +1888,6 @@ nl:
       or_search_google: "Of probeer in plaats hiervan te zoeken met Google:"
       search_google: "Probeer in plaats hiervan te zoeken met Google:"
       search_google_button: "Google"
-      search_google_title: "Zoeken op deze website"
       context:
         user: "Berichten van @%{username} doorzoeken"
         category: "De categorie #%{category} doorzoeken"
@@ -2030,7 +1996,7 @@ nl:
         category: "Er zijn geen topics in %{category}."
         top: "Er zijn geen toptopics."
         educate:
-          new: '<p>Hier verschijnen uw nieuwe topics.</p><p> Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nieuw</span> als deze de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
+          new: '<p>Hier verschijnen uw nieuwe topics. Standaard worden topics als nieuw beschouwd en verschijnt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> als deze in de afgelopen 2 dagen zijn aangemaakt.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
           unread: '<p>Hier verschijnen uw ongelezen topics.</p><p>Standaard worden topics als ongelezen beschouwd en verschijnt het aantal ongelezen <span class="badge new-posts badge-notification">1</span> als u:</p><ul><li>Het topic hebt aangemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 4 minuten hebt gelezen</li></ul><p>Of als u het topic expliciet op Gevolgd of In de gaten gehouden hebt gezet via de meldingsinstellingen onder elk topic.</p><p>Bezoek uw <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
       bottom:
         latest: "Er zijn geen nieuwste topics meer."
@@ -2286,7 +2252,6 @@ nl:
       feature_topic:
         title: "Dit topic aanbevelen"
         pin: "Dit topic boven in de categorie %{categoryLink} laten verschijnen tot"
-        confirm_pin: "U hebt al %{count} vastgemaakte topics. Te veel vastgemaakte topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet u zeker dat u nog een topic in deze categorie wilt vastmaken?"
         unpin: "Verwijder dit topic uit de bovenkant van de categorie %{categoryLink}."
         unpin_until: "Verwijder dit topic uit de bovenkant van de categorie %{categoryLink} of wacht tot <strong>%{until}</strong>."
         pin_note: "Gebruikers kunnen het topic individueel voor zichzelf losmaken."
@@ -2296,7 +2261,6 @@ nl:
           one: "Momenteel vastgemaakte topics in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Momenteel vastgemaakte topics in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>."
         pin_globally: "Dit topic bovenaan in alle topiclijsten laten verschijnen tot"
-        confirm_pin_globally: "U hebt al %{count} globaal vastgemaakte topics. Te veel vastgemaakte topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet u zeker dat u nog een topic globaal wilt vastmaken?"
         unpin_globally: "Verwijder dit topic uit de bovenkant van alle topiclijsten."
         unpin_globally_until: "Verwijder dit topic uit de bovenkant van alle topiclijsten of wacht tot <strong>%{until}</strong>."
         global_pin_note: "Gebruikers kunnen het topic individueel voor zichzelf losmaken."
@@ -2486,7 +2450,6 @@ nl:
         upload: "Sorry, er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
         file_too_large: "Sorry, dat bestand is te groot (maximale grootte is %{max_size_kb}kb). Misschien kunt u het uploaden naar een cloudopslagdienst, en dan de koppeling plakken?"
         too_many_uploads: "Sorry, u kunt maar één bestand tegelijk uploaden."
-        too_many_dragged_and_dropped_files: "Sorry, u kunt maar %{max} bestanden tegelijk uploaden."
         upload_not_authorized: "Sorry, het bestand dat u probeert te uploaden is niet geautoriseerd (geautoriseerde extensies: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
@@ -2765,7 +2728,17 @@ nl:
     flagging:
       title: "Bedankt voor het beleefd houden van onze gemeenschap!"
       action: "Bericht markeren"
-      take_action: "Actie ondernemen"
+      take_action: "Actie ondernemen..."
+      take_action_options:
+        default:
+          title: "Actie ondernemen"
+          details: "De markeerdrempel direct bereiken, in plaats van op meer markeringen door de gemeenschap te wachten"
+        suspend:
+          title: "Gebruiker schorsen"
+          details: "De markeerdrempel bereiken, en de gebruiker schorsen"
+        silence:
+          title: "Gebruiker dempen"
+          details: "De markeerdrempel bereiken, en de gebruiker dempen"
       notify_action: "Bericht"
       official_warning: "Officiële waarschuwing"
       delete_spammer: "Spammer verwijderen"
@@ -2836,7 +2809,6 @@ nl:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
-    posts_long: "er zijn %{number} berichten in dit topic"
     posts_likes_MF: |
       Dit topic heeft {count, plural, one {1 antwoord} other {# antwoorden}} {ratio, select,
       low {met een hoge verhouding likes per bericht}
@@ -2857,7 +2829,6 @@ nl:
     likes_lowercase:
       one: "like"
       other: "likes"
-    likes_long: "er zijn %{number} likes in dit topic"
     users: "Gebruikers"
     users_lowercase:
       one: "gebruiker"
@@ -2938,7 +2909,6 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken:"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden, en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -3159,8 +3129,8 @@ nl:
         delete: "Verwijderen"
         confirm_delete: "Weet u zeker dat u deze tag-groep wilt verwijderen?"
         everyone_can_use: "Tags kunnen door iedereen worden gebruikt"
-        usable_only_by_staff: "Tags zijn voor iedereen zichtbaar, maar alleen stafleden kunnen ze gebruiken"
-        visible_only_to_staff: "Tags zijn alleen zichtbaar voor stafleden"
+        usable_only_by_groups: "Tags zijn voor iedereen zichtbaar, maar alleen de volgende groepen kunnen ze gebruiken"
+        visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
       topics:
         none:
           unread: "U hebt geen ongelezen topics."
@@ -3747,7 +3717,6 @@ nl:
           color_definitions:
             text: "Kleurdefinities"
             title: "Aangepaste kleurdefinities invoeren (alleen gevorderde gebruikers)"
-            placeholder: "\\r\nGebruik dit stylesheet om aangepaste kleuren aan de lijst van aangepaste CSS-eigenschappen toe te voegen.\\r\n\\r\nVoorbeeld: \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nVoorvoegsels bij eigenschapnamen worden ten sterkste aanbevolen om conflicten met plug-ins en/of kern te vermijden."
           head_tag:
             text: "</head>"
             title: "HTML die voor de </head>-tag wordt ingevoegd"
@@ -3775,6 +3744,10 @@ nl:
           primary:
             name: "primaire"
             description: "Meeste tekst, pictogrammen en randen."
+          primary-medium:
+            name: "primair-gemiddeld"
+          primary-low-mid:
+            name: "primair-laag-mid"
           secondary:
             name: "secundaire"
             description: "De hoofdachtergrondkleur, en tekstkleur van sommige knoppen."
@@ -3793,6 +3766,12 @@ nl:
           highlight:
             name: "markeren"
             description: "De achtergrondkleur van gemarkeerde elementen op de pagina, zoals berichten en topics."
+          highlight-high:
+            name: "markeren-hoog"
+          highlight-medium:
+            name: "markeren-gemiddeld"
+          highlight-low:
+            name: "markeren-laag"
           danger:
             name: "gevaar"
             description: "Markeringskleur voor acties zoals het verwijderen van berichten en topics."
@@ -3979,7 +3958,6 @@ nl:
             post_edit: "bericht bewerken"
             post_unlocked: "bericht ontgrendeld"
             check_personal_message: "persoonlijk bericht controleren"
-            disabled_second_factor: "twee-factor-authenticatie uitschakelen"
             topic_published: "topic gepubliceerd"
             post_approved: "bericht goedgekeurd"
             post_rejected: "bericht afgekeurd"
@@ -4208,7 +4186,6 @@ nl:
         private_topics_count: Privétopics
         posts_read_count: Gelezen berichten
         post_count: Gemaakte berichten
-        second_factor_enabled: Twee-factor-authenticatie ingeschakeld
         topics_entered: Bekeken topics
         flags_given_count: Gegeven markeringen
         flags_received_count: Ontvangen markeringen
