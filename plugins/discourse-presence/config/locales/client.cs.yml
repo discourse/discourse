@@ -4,8 +4,4 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-cs:
-  js:
-    presence:
-      replying: "odpovídá"
-      editing: "upravuje"
+cs: 

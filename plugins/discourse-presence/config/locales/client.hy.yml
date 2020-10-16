@@ -7,8 +7,6 @@
 hy:
   js:
     presence:
-      replying: "պատասխանում է"
-      editing: "խմբագրում է"
       replying_to_topic:
         one: "պատասխանում է"
         other: "պատասխանում են"

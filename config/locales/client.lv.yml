@@ -579,7 +579,6 @@ lv:
       admin_tooltip: "Šis lietotājs ir administrators"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_reason: "Iemesls:"
-      github_profile: "Github"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
         label: "Vēstkopas režīms"
@@ -736,7 +735,6 @@ lv:
       password_confirmation:
         title: "Parole vēlreiz"
       auth_tokens:
-        ip: "IP"
         details: "Detaļas"
       last_posted: "Pēdējais ieraksts"
       last_emailed: "Pēdējais e-pasts"
@@ -977,7 +975,6 @@ lv:
       disable: "Rādīt dzēstos ierakstus"
     private_message_info:
       title: "Ziņa"
-      edit: "Pievienot vai noņemt..."
       remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
     email: "E-pasts"
@@ -1023,7 +1020,6 @@ lv:
       awaiting_approval: "Darbinieki pagaidām nav apstiprinājuši jūsu profilu. Jums nosūtīs e-pastu, kad tas notiks."
       requires_invite: "Atvainojiet, šim forumam var piekļūt tikai ar ielūgumiem."
       not_activated: "Lai ieietu forumā, nepieciešams aktivizēt jūsu profilu. Mēs nosūtījām uz e-pastu %{sentTo} instrukcijas, kā to paveikt."
-      not_allowed_from_ip_address: "Jūs nevarat ieiet no šīs IP adreses."
       admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
       resend_activation_email: "Klikšķiniet šeit, lai saņemtu aktivācijas e-pastu atkārtoti."
       resend_title: "Atkārtoti nosūtīt aktivācijas e-pastu"
@@ -1218,11 +1214,9 @@ lv:
       title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
-      searching: "Meklējam..."
       post_format: "#%{post_number} - %{username}"
       more_results: "Ir vēl vairāk rezultātu. Lūdzu precizējiet meklēšanas kritērijus."
       search_google_button: "Google"
-      search_google_title: "Meklēt šajā vietnē"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"
@@ -1302,7 +1296,6 @@ lv:
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
         educate:
-          new: '<p>Jūsu jaunās tēmas parādās šeit.</p> <p>Pēc noklusējuma tēmas tiek uzskatītas par jaunām un parādīsies <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">jauns</span> indikators, ja tās tika izveidotas pēdējo 2 dienu laikā.</p> <p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
           unread: '<p>Jūsu nelasītās tēmas parādās šeit.</p><p>Pēc noklusējuma tēmas tiek uzskatītas par nelasītām un tiks uzskaitītas <span class="badge new-posts badge-notification">1</span> ja jūs:</p><ul><li>Izveidojāt tēmu</li><li>Atbildējāt tēmā</li><li>Lasījāt tēmu vairāk nekā 4 minūtes</li></ul><p>Vai jūs atzīmējāt Sekot vai Skatī tēmas apakšā.</p><p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
       bottom:
         latest: "Vairāk jaunāko tēmu nav. "
@@ -1525,7 +1518,6 @@ lv:
       feature_topic:
         title: "Novietot šo tēmu augšgalā"
         pin: "Nostiprināt šo tēmu sadaļas %{categoryLink} augšgalā līdz"
-        confirm_pin: "Jums jau ir %{count} piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties piespraust vēl vienu tēmu šajā sadaļā."
         unpin: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala."
         unpin_until: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala vai gaidīt līdz <strong>%{until}</strong>."
         pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
@@ -1536,7 +1528,6 @@ lv:
           one: "Sadaļā %{categoryLink} šobrīd piesprausta %{count} tēma"
           other: "Sadaļā %{categoryLink} šobrīd piespraustas <strong class='badge badge-notification unread'>%{count}</strong> tēmas"
         pin_globally: "Likt šai tēmai parādīties visu tēmu sarakstu augšgalos līdz"
-        confirm_pin_globally: "Jums jau ir %{count} globāli piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties globāli piespraust vēl vienu tēmu."
         unpin_globally: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem."
         unpin_globally_until: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem vai gaidīt līdz <strong>%{until}</strong>."
         global_pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
@@ -1925,7 +1916,6 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
-    posts_long: "šai tēmā ir %{number} ieraksts"
     posts_likes_MF: |
       Šai tēmā ir {count, plural, one {1 atbilde} other {# atbildes}} {ratio, select,
       low {ar nedaudzām atzinībām}
@@ -1949,7 +1939,6 @@ lv:
       zero: "atzinības"
       one: "atzinība"
       other: "atzinības"
-    likes_long: "šajā tēmā ir %{number} atzinības"
     users: "Lietotāji"
     users_lowercase:
       zero: "lietotāji"

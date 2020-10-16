@@ -683,7 +683,6 @@ gl:
       topic_stat_sentence_month:
         one: "%{count} tema novo no último mes"
         other: "%{count} temas novos no último mes"
-      n_more: "Categorías (%{count} máis)..."
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -786,7 +785,6 @@ gl:
       suspended_notice: "Este usuario está suspendido até o %{date}."
       suspended_permanently: "Este usuario está suspendido"
       suspended_reason: "Razón:"
-      github_profile: "Github"
       email_activity_summary: "Resumo da actividade"
       mailing_list_mode:
         label: "Modo de lista de correo"
@@ -874,25 +872,19 @@ gl:
         choose_new: "Elixir un novo contrasinal"
         choose: "Elixir un contrasinal"
       second_factor_backup:
-        title: "Códigos de copia de seguranza de dobre factor"
         regenerate: "Rexenerar"
         disable: "Desactivar"
         enable: "Activar"
         enable_long: "Activar códigos de copia de seguranza"
-        manage: "Xestiona os códigos de copia de seguranza. Quédanche <strong>%{count}</strong> códigos de copia de seguranza."
         copy_to_clipboard: "Copiar ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         download_backup_codes: "Descargar códigos de copia de seguranza"
-        remaining_codes: "Quédanche <strong>%{count}</strong> códigos de copia de seguranza."
         use: "Usar un código de copia de seguranza"
-        enable_prerequisites: "Debes activar un factor secundario principal antes de xerar códigos de copia de seguranza."
         codes:
           title: "Códigos de copia de seguranza xerados"
           description: "Os códigos de copia de seguranza só poden usarse unha vez. Gárdaos nun lugar seguro pero accesible."
       second_factor:
-        title: "Autenticación de dobre factor"
-        enable: "Xestionar autenticación de dobre factor"
         forgot_password: "Esqueciches o contrasinal?"
         confirm_password_description: "Confirma o teu contrasinal para continuar"
         name: "Nome"
@@ -902,16 +894,10 @@ gl:
         show_key_description: "Inserir manualmente"
         short_description: |
           Protexe a túa conta con códigos de seguridade dun só uso.
-        extended_description: |
-          A autenticación de dobre factor reforza a seguridade da túa conta, xa que solicita a introdución dun código dun só uso ademais do contrasinal. Os códigos poden xerarse en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Ten en conta que a activación na túa conta da autenticación de dobre factor suporá a desactivación do inicio de sesión a través de redes sociais."
         use: "Usar aplicación de autenticador"
-        enforced_notice: "Antes de acceder a este sitio debes activar a autenticación de dobre factor."
         disable: "Desactivar"
         save: "Gardar"
         edit: "Editar"
-        edit_title: "Editar factor secundario"
-        edit_description: "Nome de factor secundario"
         totp:
           title: "Autenticadores que usan códigos"
           add: "Engadir autenticador"
@@ -1026,7 +1012,6 @@ gl:
         instructions: "O rexistro da conta require un código de convite"
       auth_tokens:
         title: "Dispositivos usados recentemente"
-        ip: "IP"
         details: "Detalles"
         not_you: "Non es ti?"
         show_all: "Amosar todos (%{count})"
@@ -1297,8 +1282,6 @@ gl:
       disable: "Amosar as publicacións eliminadas"
     private_message_info:
       title: "Mensaxe"
-      invite: "Convidar a outros..."
-      edit: "Engadir ou eliminar..."
       leave_message: "Confirmas o abandono desta mensaxe?"
       remove_allowed_user: "Confirmas a eliminación de %{name} desta mensaxe?"
       remove_allowed_group: "Confirmas a eliminación de %{name} desta mensaxe?"
@@ -1344,10 +1327,8 @@ gl:
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contrasinal"
-      second_factor_title: "Autenticación de dobre factor"
       second_factor_description: "Escribe o código de autenticación da aplicación"
       second_factor_backup: "Iniciar sesión cun código de copia de seguranza"
-      second_factor_backup_title: "Copia de seguranza de dobre factor"
       second_factor_backup_description: "Escribe un dos códigos de copia de seguranza"
       second_factor: "Iniciar sesión cunha aplicación de autenticador"
       security_key_description: "Cando teñas a chave de seguranza preparada, preme no botón Autenticar con chave de seguranza que se mostra a continuación."
@@ -1369,10 +1350,8 @@ gl:
       awaiting_approval: "A túa conta non foi aínda aprobada polos membros do equipo. Enviaráseche unha mensaxe cando así for."
       requires_invite: "Sentímolo pero o acceso a este foro é unicamente por convite."
       not_activated: "Non podes acceder aínda. Antes debemos enviarche unha mensaxe a <b>%{sentTo}</b>. Por favor, sigue as instrucións desta mensaxe para activar a túa conta."
-      not_allowed_from_ip_address: "Non podes acceder desde este enderezo IP."
       admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
       resend_activation_email: "Preme aquí para enviar outro correo de activación."
-      omniauth_disallow_totp: "A túa conta ten activada a autenticación de dobre factor. Inicia sesión co teu contrasinal."
       resend_title: "Reenviar correo electrónico de activación"
       change_email: "Cambiar enderezo de correo electrónico"
       provide_new_email: "Escribe un enderezo novo e reenviarémosche a el o correo electrónico de confirmación."
@@ -1438,8 +1417,6 @@ gl:
       alt: "Alt"
     conditional_loading_section:
       loading: Cargando...
-    category_row:
-      topic_count: "%{count} temas nesta categoría"
     select_kit:
       default_header_text: Seleccionar...
       no_content: Non se atoparon coincidencias
@@ -1452,7 +1429,6 @@ gl:
       min_content_not_reached:
         one: "Selecciona como mínimo %{count} elemento."
         other: "Selecciona como mínimo %{count} elementos."
-      invalid_selection_length: "A selección debe ter como mínimo %{count} caracteres."
     date_time_picker:
       from: De
       to: A
@@ -1504,7 +1480,6 @@ gl:
         post_length: "A publicación debe ter alomenos %{min} caracteres"
         try_like: "Probaches o botón %{heart}?"
         category_missing: "Debes seleccionar unha categoría"
-        tags_missing: "Debes seleccionar como mínimo %{count} etiquetas"
       save_edit: "Gardar a edición"
       reply_original: "Responder no tema orixinal"
       reply_here: "Responder aquí"
@@ -1622,7 +1597,6 @@ gl:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Novo tema</span> %{description}"
       membership_request_accepted: "Aceptouse a túa afiliación a \"%{group_name}\""
-      membership_request_consolidated: "%{count} solicitudes de afiliación abertas para \"%{group_name}\""
       group_message_summary:
         one: "%{count} mensaxe na caixa %{group_name}"
         other: "%{count} mensaxes na caixa %{group_name}"
@@ -1691,7 +1665,6 @@ gl:
       full_page_title: "buscar temas ou publicacións"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
-      searching: "Buscando..."
       post_format: "#%{post_number} de %{username}"
       results_page: "Buscar resultados para '%{term}'"
       more_results: "Hai máis resultados. Restrinxe os criterios da busca."
@@ -1700,7 +1673,6 @@ gl:
       or_search_google: "Ou proba a buscar con Google:"
       search_google: "Proba a buscar con Google:"
       search_google_button: "Google"
-      search_google_title: "Buscar neste sitio"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -1785,7 +1757,6 @@ gl:
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
         educate:
-          new: '<p>Aquí aparecen os teus temas novos.</p><p>De xeito predeterminado, os temas considéranse novos e amosan un indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Podes ir ás <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
           unread: '<p>Os teus temas sen ler aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse sen ler e amosarase o número dos non lidos. <span class="badge new-posts badge-notification">1</span> se ti:</p><ul><li>Creaches o tema</li><li>Respondiches o tema</li><li>Liches o tema durante máis de catro minutos</li></ul><p>Ou estabeleciches o tema para ser Seguido ou Visto no control de notificacións na banda inferior de cada tema.</p><p>Vai ás túas <a href="%{userPrefsUrl}">preferencias</a> se queres cambiar isto.</p>'
       bottom:
         latest: "Non hai máis últimos temas."
@@ -2028,7 +1999,6 @@ gl:
       feature_topic:
         title: "Destacar este tema"
         pin: "Facer que este tema apareza no alto da categoría %{categoryLink} até"
-        confirm_pin: "Xa tes %{count} temas pegados. Demasiados temas pegados pode resultar pesado para usuarios novos e anónimos. Confirmas que queres pegar outro tema nesta categoría?"
         unpin: "Eliminar este tema da banda superior da categoría %{categoryLink}."
         unpin_until: "Retirar este tema do alto da %{categoryLink} ou agardar até <strong>%{until}</strong>."
         pin_note: "Os usuarios poden despegar o tema por si mesmos."
@@ -2038,7 +2008,6 @@ gl:
           one: "Temas pegados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas pegados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Facer que este tema apareza no alto de todas as listas de temas até"
-        confirm_pin_globally: "Xa tes %{count} temas pegados globalmente. Demasiados temas pegados pode resultar pesado para usuarios novos e anónimos. Confirmas que queres pegar outro tema globalmente?"
         unpin_globally: "Eliminar este tema da banda superior de todas as listas de temas."
         unpin_globally_until: "Eliminar este tema do alto de todas as listas de temas ou agardar até <strong>%{until}</strong>."
         global_pin_note: "Os usuarios poden despegar o tema por si mesmos."
@@ -2213,7 +2182,6 @@ gl:
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
         file_too_large: "Sentímolo, pero o ficheiro é demasiado grande (o tamaño máximo é de %{max_size_kb}kb). Por que non probas a subilo á nube e pegas aquí a ligazón?"
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
-        too_many_dragged_and_dropped_files: "Sentímolo pero só podes subir %{max} ficheiros de cada vez."
         upload_not_authorized: "Sentímolo, o ficheiro que tentas subir non está autorizado (extensións permitidas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
@@ -2471,7 +2439,6 @@ gl:
     flagging:
       title: "Grazas por axudar a manter a nosa comunidade."
       action: "Denunciar publicación"
-      take_action: "Tomar medidas"
       notify_action: "Mensaxe"
       delete_spammer: "Eliminar spammer"
       yes_delete_spammer: "Si, eliminar o spammer"
@@ -2533,7 +2500,6 @@ gl:
         title: "Este tema é unha mensaxe privada"
         help: "Este tema é unha mensaxe privada"
     posts: "Publicacións"
-    posts_long: "hai %{number} publicacións neste tema"
     posts_likes_MF: |
       Este tema ten {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
       low {cun alto índice de gústames}
@@ -2554,7 +2520,6 @@ gl:
     likes_lowercase:
       one: "gústame"
       other: "gústames"
-    likes_long: "hai %{number} gústames neste tema"
     users: "Usuarios"
     users_lowercase:
       one: "usuario"
@@ -2823,8 +2788,6 @@ gl:
         delete: "Eliminar"
         confirm_delete: "Confirmas a eliminación deste grupo de etiquetas?"
         everyone_can_use: "Todos poden usar as etiquetas"
-        usable_only_by_staff: "As etiquetas son visíbeis para todos, pero só o equipo pode usalas"
-        visible_only_to_staff: "As etiquetas só son visíbeis para o equipo"
       topics:
         none:
           unread: "Non tes temas sen ler."
@@ -3511,7 +3474,6 @@ gl:
             post_edit: "edición da publicación"
             post_unlocked: "publicación desbloqueada"
             check_personal_message: "comprobar mensaxe privada"
-            disabled_second_factor: "deshabilitar autenticación de dobre factor"
             topic_published: "tema publicado"
             post_approved: "publicación aprobada"
             post_rejected: "publicación rexeitada"
@@ -3700,7 +3662,6 @@ gl:
         private_topics_count: Temas privados
         posts_read_count: Publicacións lidas
         post_count: Publicacións creadas
-        second_factor_enabled: Activada a autenticación de dobre factor
         topics_entered: Temas vistos
         flags_given_count: Denuncias dadas
         flags_received_count: Denuncias recibidas

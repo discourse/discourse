@@ -185,12 +185,6 @@ de:
   invite:
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found_json: "Dein Einladungstoken ist ungültig. Bitte kontaktiere das Team. "
-    not_found_template: |
-      <p>Deine Einladung zu <a href="%{base_url}">%{site_name}</a> wurde bereits zurückgezogen.</p>
-
-      <p>Wenn du dein Passwort noch weißt, kannst du dich <a href="%{base_url}/login">anmelden</a>.</p>
-
-      <p>Ansonsten kannst du <a href="%{base_url}/password-reset">dein Passwort zurücksetzen</a>.</p>
     error_message: "Fehler beim Akzeptieren der Einladung aufgetreten. Bitte kontaktiere den Administrator dieser Seite."
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
@@ -290,6 +284,7 @@ de:
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   secure_upload_not_allowed_in_public_topic: "Entschuldigung, der/die folgende/n sichere Upload(s) konnte nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldigung, du kannst keine PM für ein exisiterendes Thema erstellen."
+  slow_mode_enabled: "Du hast vor Kurzem in diesem Thema, das sich im langsamen Modus befindet, einen Beitrag verfasst. Bitte warte, damit andere Benutzer ebenfalls teilnehmen können."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "scheint unklar, ist das ein ganzer Satz?"
@@ -738,43 +733,36 @@ de:
       title: "Am Thema vorbei"
       description: "Dieser Beitrag hat nichts mit dem Thema zu tun wie es im Titel und ersten Beitrag steht. Deshalb sollte er woanders hin verschoben werden."
       short_description: "Nicht relevant für die Diskussion"
-      long_form: "dies als am Thema vorbei gemeldet"
     spam:
       title: "Reklame"
       description: "Dieser Beitrag stellt Werbung oder Vandalismus dar. Er ist für das aktuelle Thema weder nützlich noch relevant."
       short_description: "Dies ist Werbung oder Vandalismus."
-      long_form: "dies als Spam gemeldet"
       email_title: '"%{title}" wurde als Spam markiert'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Unangemessen"
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
-      long_form: "dies als unangemessen gemeldet"
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
       description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
       short_description: "Ich möchte mit dieser Person direkt und privat über ihren Beitrag reden."
-      long_form: "angeschriebener Benutzer"
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
       description: "Auf diesen Beitrag sollte aus einem oben nicht aufgeführten Grund ein Moderator aufmerksam gemacht werden."
       short_description: "Erfordert aus einem anderen Grund die Aufmerksamkeit des Teams"
-      long_form: "hat dies den Moderatoren gemeldet"
       email_title: 'Ein Beitrag in "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Lesezeichen"
       description: "Lesezeichen auf diesen Beitrag setzen"
       short_description: "Lesezeichen auf diesen Beitrag setzen"
-      long_form: "ein Lesezeichen auf diesen Beitrag gesetzt"
     like:
       title: "Gefällt mir"
       description: "Dieser Beitrag gefällt mir"
       short_description: "Dieser Beitrag gefällt mir"
-      long_form: "hat dies gefallen"
   draft:
     sequence_conflict_error:
       title: "Fehler beim Entwurf"
@@ -1228,10 +1216,6 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von E-Mails, werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
-    google_oauth2_config_warning: 'Der Server ist für Anmeldung und Login mit Google OAuth2 (enable_google_oauth2_logins) konfiguriert, aber die Client-ID und das Client-Gemeheimnis sind nicht gesetzt. Trage diese in den <a href="%{base_path}/admin/site_settings">Einstellung</a> ein. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Eine Anleitung zu diesem Thema findest du hier</a>.'
-    facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="%{base_path}/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     s3_config_warning: 'Der Server ist so eingestellt, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     s3_backup_config_warning: 'Der Server ist so eingestellt, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Seiten-Einstellungen</a> und aktulisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="https://www.imagemagick.org/script/download.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
@@ -1326,7 +1310,7 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
-    enforce_second_factor: "Zwingt die Benutzer, die Zwei-Faktor-Authentifizierung zu aktivieren. Wähle \"alle\", um sie für alle Benutzer zu erzwingen. Wähle \"Team\", um sie nur für Team Benutzer zu erzwingen."
+    enforce_second_factor: "Zwingt die Benutzer, die Zwei-Faktor-Authentifizierung zu aktivieren. Wähle \"all\", um sie für alle Benutzer zu erzwingen. Wähle \"staff\", um sie nur für Teammitglieder zu erzwingen."
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     same_site_cookies: "Verwende Same-Site-Cookies, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern verhindern. Warnung: Strikt wird nur auf Seiten funktionieren, die Login erzwingen und SSO verwenden."
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
@@ -1363,9 +1347,6 @@ de:
     must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
-    ga_universal_tracking_code: "Tracking Code ID von Google Universal Analytics (analytics.js), eg: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; <a href='https://google.com/analytics' target='_blank'>Siehe https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Aktiviere Google Universal Analytics (analytics.js) Cross-Domain-Tracking. Ausgehenden Links zu diesen Domains wird eine Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain-Tracking-Anleitung</a>."
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
@@ -1444,13 +1425,9 @@ de:
     instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
     enable_facebook_logins: "Facebook-Authentifizierung aktivieren, erfordert facebook_api_id und facebook_app_secret. Siehe <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "App-Secret für Facebook-Authentifizierung, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "GitHub-Authentifizierung aktivieren, erfordert github_client_id und github_client_secret. Siehe <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "Client-ID für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Client-Secret für GitHub-Authentifizierung, registriert auf <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Benutzern erlauben, sich mit Discord zu authentifizieren?"
     discord_client_id: 'Discord Client ID (benötigst du eine? besuche<a href="https://discordapp.com/developers/applications/me">das Discord Entwickler Portal</a>)'
     discord_secret: "Discord geheimer Schlüssel"
-    discord_trusted_guilds: 'Das Einloggen per Discord nur Mitgliedern dieser Discord Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen um jede Gilde zuzulassen.'
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung von Sicherungen zulassen, die ALLE vorhandenen Daten überschreiben! Auf 'false' lassen, sofern Sie nicht planen, eine Sicherung wiederherzustellen."
     maximum_backups: "Die maximale Anzahl an Sicherungen, die auf dem Server gespeichert werden. Ältere Sicherungen werden automatisch gelöscht."
@@ -1677,8 +1654,6 @@ de:
     email_editable: "Erlaube Benutzern ihre E-Mail-Adresse nach der Registrierung zu ändern."
     logout_redirect: "Adresse, auf die der Browser nach dem Abmelden weitergeleitet wird (z.B. https://example.com/logout)"
     allow_uploaded_avatars: "Benutzer können eigene Profilbilder hochladen."
-    allow_animated_avatars: "Benutzer können animierte Profilbilder (.gif) hochladen und benutzen. ACHTUNG: Rufe den Befehl `avatars:refresh rake` auf nachdem du diese Option verändert hast."
-    allow_animated_thumbnails: "Generiert animierte Vorschaubilder aus animierten GIFs."
     default_avatars: "URLs zu Bildern, die als Standard-Profilbilder verwendet werden sollen, bis neue Benutzer ihr Profilbild geändert haben."
     automatically_download_gravatars: "Profilbilder von Gravatar herunterladen, wenn ein Benutzer sich registriert oder seine E-Mail-Adresse ändert."
     digest_topics: "Die maximale Anzahl von Top-Beiträgen, die in der E-Mail-Zusammenfassung angezeigt werden sollen."
@@ -1982,7 +1957,8 @@ de:
     autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
     auto_deleted_by_timer: "Automatisch gelöscht durch Timer."
   login:
-    invalid_second_factor_method: "Die gewählte zweite Faktor Methode ist ungültig."
+    invalid_second_factor_method: "Die ausgewählte Methode zur Zwei-Faktor-Authentifizierung ist ungültig."
+    not_enabled_second_factor_method: "Die ausgewählte Methode zur Zwei-Faktor-Authentifizierung ist für dich nicht aktiviert."
     security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
     security_key_alternative: "Versuche einen anderen Weg"
     security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
@@ -2008,7 +1984,6 @@ de:
       csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Bitte noch einmal versuchen."
       request_error: "Ein Fehler ist beim Start der Anmeldung aufgetreten. Bitte noch einmal versuchen."
       invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
-    omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
     authenticator_error_no_valid_email: "E-Mail-Adressen mit %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
@@ -2022,8 +1997,8 @@ de:
     already_logged_in: "Hoppla, es sieht so aus als ob du versuchst die Einladung für einen anderen Benutzer zu akzeptieren. Wenn du nicht %{current_user} bist, melde dich bitte ab und versuch es erneut."
     second_factor_title: "Zwei-Faktor-Authentifizierung"
     second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
-    second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
-    second_factor_backup_title: "Zwei-Faktor-Wiederherstellungs-Code"
+    second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
+    second_factor_backup_title: "Wiederherstellungscode für Zwei-Faktor-Authentifizierung"
     invalid_second_factor_code: "Ungültiger Authentifizierungscode. Jeder Code kann nur einmal benutzt werden."
     invalid_security_key: "Ungültiger Sicherheitsschlüssel."
     second_factor_toggle:
@@ -2892,11 +2867,11 @@ de:
       title: "Zwei-Faktor-Authentifizierung deaktiviert"
       subject_template: "[%{email_prefix}] Zwei-Faktor-Authentifizierung deaktiviert"
       text_body_template: |
-        Zwei-Faktor-Authentifizierung wurde deaktiviert für dein Benutzerkonto bei %{site_name}. Du kannst dich nun allein mit deinem Passwort anmelden; ein zusätzlicher Authentifizierungscode ist nicht länger erforderlich.
+        Die Zwei-Faktor-Authentifizierung deines Benutzerkontos bei %{site_name} wurde deaktiviert. Du kannst dich nun allein mit deinem Passwort anmelden. Ein zusätzlicher Code ist nicht mehr erforderlich.
 
-        Wenn du nicht selbst die Zwei-Faktor-Authentifzierung deaktiviert hat, hat jemand dein Benutzerkonto kompromittiert.
+        Wenn du die Zwei-Faktor-Authentifizierung nicht selbst deaktiviert hast, hat jemand dein Benutzerkonto kompromittiert.
 
-        Wenn du Fragen hast, [kontatiere unser freundliches Team](%{base_url}/about).
+        Wenn du Fragen hast, [wende dich an unser freundliches Team](%{base_url}/about).
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
       since_last_visit: "Seit deinem letzten Besuch"
@@ -2947,12 +2922,6 @@ de:
     admin_login:
       title: "Administrator-Anmeldung"
       subject_template: "[%{email_prefix}] Anmeldung"
-      text_body_template: |
-        Jemand hat versucht sich mit Ihrem Konto auf [%{site_name}] (%{base_url}) anzumelden.
-
-        Wenn Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail ignorieren.
-
-        Klicken Sie auf den folgenden Link, um sich anzumelden: %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto erstellt"
       subject_template: "[%{email_prefix}] Dein neues Konto"
@@ -2988,7 +2957,7 @@ de:
       title: "Konto bestätigen nach Genehmigung"
       subject_template: "Dein Konto bei %{site_name} wurde genehmigt!"
       text_body_template: |
-        Willkommen bei%{site_name}!
+        Willkommen bei %{site_name}!
 
         Ein Team-Mitglied hat dein Benutzerkonto auf %{site_name} genehmigt.
 
@@ -3006,7 +2975,7 @@ de:
       title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"
       text_body_template: |
-        Willkommen auf %{site_name}!
+        Willkommen bei %{site_name}!
 
         Folge diesem Link, um dein neues Konto zu aktivieren:
         %{base_url}/u/activate-account/%{email_token}
@@ -3016,7 +2985,7 @@ de:
       title: "Aktivierungserinnerung"
       subject_template: "[%{email_prefix}] Erinnerung: Bestätige dein neues Konto"
       text_body_template: |
-        Willkommen auf %{site_name}!
+        Willkommen bei %{site_name}!
 
         Dies ist eine freundliche Erinnerung, dein Konto zu aktivieren.
 
@@ -3110,7 +3079,6 @@ de:
     latte: "Latte"
     summer: "Sommer"
     dark_rose: "Dunkelrosa"
-    default_theme_name: "Hell"
     light_theme_name: "Hell"
     dark_theme_name: "Dunkel"
     neutral_theme_name: "Neutral"
@@ -3729,8 +3697,6 @@ de:
     initial_topic_title: Berichte zur Websitegeschwindigkeit
   tags:
     title: "Schlagwörter"
-    staff_tag_disallowed: 'Das Schlagwort "%{tag}" darf nur vom Team verwendet werden.'
-    staff_tag_remove_disallowed: 'Das Schlagwort "%{tag}" darf nur vom Team entfernt werden.'
     minimum_required_tags:
       one: "Du muss mindestens %{count} Schlagwort auswählen."
       other: "Du musst mindestens %{count} Schlagwörter auswählen. "
@@ -3769,7 +3735,7 @@ de:
     title: "Discourse einrichten"
     step:
       locale:
-        title: "Willkommen zu Discourse!"
+        title: "Willkommen bei deinem Discourse!"
         fields:
           default_locale:
             description: "Was ist die Standardsprache für deine Community?"
@@ -3842,8 +3808,6 @@ de:
           city_for_disputes:
             label: "Stadt für Rechtsstreitigkeiten"
             placeholder: "Berlin"
-      colors:
-        title: "Design"
       logos:
         title: "Logos"
         fields:

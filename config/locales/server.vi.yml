@@ -367,36 +367,29 @@ vi:
     off_topic:
       title: "Không-đúng-chủ-đề"
       description: "Bài này không liên quan đến các cuộc thảo luận hiện nay theo quy định của các tiêu đề và bài đầu tiên, và có lẽ nó nên được di chuyển đến những nơi khác."
-      long_form: "đánh dấu không-đúng-chủ-đề"
     spam:
       title: "Spam"
-      long_form: "đánh dấu là spam"
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
-      long_form: "đánh dấu cái này không thích hợp"
     notify_user:
       title: "Gửi tin nhắn cho @%{username}."
-      long_form: "đã nhắn tin cho thành viên"
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Một thứ khác"
       description: "Bài viết này cần được Ban quản trị chú ý. Lý do chưa được liệt kê trong danh sách."
-      long_form: "đã đánh dấu thông báo cho Ban quản trị"
       email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
       title: "Đánh dấu chỉ mục"
       description: "Đánh dấu chỉ mục bài viết này"
       short_description: "Đánh dấu chỉ mục bài viết này"
-      long_form: "đã đánh dấu chỉ mục bài viết này"
     like:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
-      long_form: "đã thích cái này"
   topic_flag_types:
     spam:
       title: "Rác"
@@ -898,8 +891,6 @@ vi:
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
-    allow_animated_avatars: "Cho phép người dùng sử dụng ảnh gif động trong trang hồ sơ. CẢNH BÁO: cần chạy tác vụ avatars:refresh sau khi thay đổi thiết lập này."
-    allow_animated_thumbnails: "Tạo ảnh động thu nhỏ cho ảnh .gif"
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
@@ -1026,7 +1017,6 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error_unknown: "Cố lỗi xảy ra khi bạn đăng nhập, vui lòng thử lại."
     omniauth_confirm_button: "Tiếp tục"
     new_registrations_disabled: "Đăng ký tài khoản mới không được cho phép tại thời điểm này."
     password_too_long: "Mật khẩu giới hạn không quá 200 ký tự."
@@ -1034,7 +1024,6 @@ vi:
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
-    second_factor_title: "Xác minh hai bước"
   admin:
     email:
       sent_test: "đã gửi!"
@@ -1416,8 +1405,6 @@ vi:
       corporate:
         title: "Công ty"
         description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
-      colors:
-        title: "Giao diện"
       homepage:
         fields:
           homepage_style:

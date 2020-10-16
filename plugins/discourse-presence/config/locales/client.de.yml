@@ -7,8 +7,12 @@
 de:
   js:
     presence:
-      replying: "antwortet"
-      editing: "bearbeitet"
+      replying:
+        one: "antwortet"
+        other: "antworten"
+      editing:
+        one: "bearbeitet"
+        other: "bearbeiten"
       replying_to_topic:
         one: "antwortet"
         other: "antworten"

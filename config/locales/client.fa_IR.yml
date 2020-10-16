@@ -158,7 +158,6 @@ fa_IR:
     topic_admin_menu: "اقدامات موضوع"
     wizard_required: "به دیسکورس خوش آمدید! برای شروع نصب <a href='%{url}' data-auto-route='true'>کلیک کنید</a> ✨"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
-    bootstrap_mode_enabled: "برای راه‌اندازی راحت‌تر سایت جدید، حالت خود‌راه‌انداز فعال شده. به تمام کاربران سطح اعتماد 1 اعطا می‌شود و ایمیل خلاصه روزانه به صورت پیشفرض برای ایشان فعال می‌شود. این امکان بصورت خودکار وقتی تعداد کاربران از %{min_users} بیشتر شود، غیر فعال خواهد شد."
     bootstrap_mode_disabled: "حالت خود راه انداز در 24 ساعت آینده غیر‌فعال خواهد شد."
     themes:
       default_description: "پیش‌فرض"
@@ -752,7 +751,6 @@ fa_IR:
       topic_stat_sentence_month:
         one: "%{count} مبحث جدید در ماه گذشته"
         other: "%{count} مبحث جدید در ماه گذشته"
-      n_more: "دسته‌بندی‌ها ( %{count}مورد دیگر)"
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -860,7 +858,6 @@ fa_IR:
       suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
-      github_profile: "Github"
       email_activity_summary: "چکیده‌ی فعالیت"
       mailing_list_mode:
         label: "حالت لیست ایمیل"
@@ -949,24 +946,18 @@ fa_IR:
         choose_new: "یک رمز‌عبور جدید وارد کنید"
         choose: "یک رمز‌عبور وارد کنید"
       second_factor_backup:
-        title: "کدهای پشتیبان دو عامله"
         regenerate: "ایجاد مجدد"
         disable: "ازکاراندازی"
         enable: "فعال کردن"
         enable_long: "کدهای پشتیبان را به کار بگیر"
-        manage: "مدیریت کد‌های پشتیبانی، <strong>%{count}</strong> از کد‌های پشتیبانی شما باقی مانده"
         copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         copied_to_clipboard: "کپی شد"
-        remaining_codes: "شما <strong>%{count}</strong>کد پشتیبان باقی مانده دارید."
         use: "از کد پشتیبان استفاده کنید"
-        enable_prerequisites: "شما باید قبل از ساخت کد‌های پشتیبانی یک تایید هویت دوعاملی اصلی را فعال کنید "
         codes:
           title: "کد پشتیبان تولید شد"
           description: "هر کدام از این کدهای پشتیبان فقط یک بار قابل استفاده است. آن ها را در جای امن و قابل دسترسی نگه دارید."
       second_factor:
-        title: "احراز هویت دو مرحله ای"
-        enable: "مدیریت تایید هوییت دوعاملی"
         disable_all: "غیرفعال کردن همه"
         forgot_password: "فراموشی گذرواژه؟"
         confirm_password_description: "لطفا رمز عبور خود را تایید کنید تا ادامه دهیم."
@@ -979,16 +970,10 @@ fa_IR:
         show_key_description: "دستی وارد کنید"
         short_description: |
           حساب کاربری خود را با کد امنیتی یک بار مصرف محافظت کنید
-        extended_description: |
-          احراز هویت دو عامله امنیت بیشتری به حساب کاربری شما میدهد، چرا که یک توکن یک بار مصرف علاوه بر رمز عبور خود خواهید داشت. توکن ها در ابزارهای <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>اندروید</a> و <a href="https://www.google.com/search?q=authenticator+apps+for+ios">IOS</a> قابل تولید هستند.
-        oauth_enabled_warning: "دقت کنید وقتی احراز هویت دوعامله فعال شود، ورود با حساب شبکه های اجتماعی به حساب کاربری شما از کار میفتد."
         use: "از اپلیکیشن احراز هویت استفاده کنید"
-        enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
         disable: "ازکاراندازی"
         save: "ذخیره"
         edit: "ویرایش"
-        edit_title: "ویرایش تایید دوعاملی"
-        edit_description: "نام تایید دوعاملی"
         totp:
           title: "تایید برپایه توکن"
           default_name: "تایید‌کننده من"
@@ -1088,10 +1073,8 @@ fa_IR:
         title: "کد دعوت"
       auth_tokens:
         title: "ابزارهایی که اخیرا استفاده شدند"
-        ip: "IP"
         details: "جزئیات"
         log_out_all: "از همه خارج شو"
-        active: "الان فعال است"
         not_you: "شما نیستید؟"
         show_all: "نمایش همه (%{count})"
         show_few: "کمتر نشان بده"
@@ -1100,6 +1083,7 @@ fa_IR:
         browser_and_device: "%{browser} در %{device}"
         secure_account: "از حساب کاربری من محافظت کن"
         latest_post: "آخرین بار شما نوشتید ..."
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "آخرین نوشته"
       last_emailed: "آخرین ایمیل فرستاده شده"
       last_seen: "مشاهده"
@@ -1369,8 +1353,6 @@ fa_IR:
       disable: "نشان دادن نوشته‌های حذف شده"
     private_message_info:
       title: "پیام"
-      invite: "فراخواندن دیگران ..."
-      edit: "حذف یا اضافه ... "
       leave_message: "واقعا میخواهید این پیام را ترک کنید؟"
       remove_allowed_user: "آیا واقعا می خواهید اسم %{name} از پیام برداشته شود ؟ "
       remove_allowed_group: "آیا از حذف %{name} از این پیام اطمینان دارید؟"
@@ -1413,10 +1395,8 @@ fa_IR:
       title: "ورود"
       username: "کاربر"
       password: "رمز‌عبور"
-      second_factor_title: "احراز هویت دو مرحله ای"
       second_factor_description: "لطفا کد احراز هویت از اپ را وارد کنید:"
       second_factor_backup: "ورود با استفاده از یک کد پشتیبان"
-      second_factor_backup_title: "پشتیبان دو عامله"
       second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
       security_key_alternative: "روش دیگری را امتحان کنید"
       security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
@@ -1436,10 +1416,8 @@ fa_IR:
       awaiting_approval: "هنوز همکاران حساب کاربری شما را تأیید نکرده‌اند. پس از تأیید، یک ایمیل دریافت خواهید کرد."
       requires_invite: "متأسفیم، دسترسی به این انجمن تنها با دعوت امکان دارد."
       not_activated: "هنوز امکان ورود وجود ندارد. برای شما یک ایمیل فعالسازی به <b>%{sentTo}</b> فرستادیم. برای فعال‌سازی شناسه‌تان لطفاً دستورالعمل ایمیل را دنبال کنید."
-      not_allowed_from_ip_address: "شما نمی توانید با این آدرس آیپی وارد شوید."
       admin_not_allowed_from_ip_address: "شما نمی تواند با این آدرس آیپی وارد بخش مدیریت شوید."
       resend_activation_email: "برای ارسال مجدد ایمیل فعالسازی، اینجا را کلیک کنید."
-      omniauth_disallow_totp: "در حساب کاربری شما، احراز هویت دوعامله فعال است. لطفا با کلمه عبور خود وارد شوید."
       resend_title: "ارسال مجدد ایمیل فعالسازی"
       change_email: "تغییر ایمیل"
       provide_new_email: "یک ایمیل جدید وارد کنید و ما ایمیل فعالسازی را برایتان ارسال می‌کنیم."
@@ -1502,8 +1480,6 @@ fa_IR:
       enter: "وارد شدن "
     conditional_loading_section:
       loading: بارگذاری...
-    category_row:
-      topic_count: "%{count} مبحث در این دسته بندی"
     select_kit:
       default_header_text: انتخاب...
       no_content: چیزی یافت نشد.
@@ -1575,7 +1551,6 @@ fa_IR:
         post_length: "نوشته باید دست‌کم %{min} نویسه داشته باشد"
         try_like: "دکمه‌ی %{heart} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
-        tags_missing: "شما باید حداقل %{count}برچسب انتخاب کنید"
       save_edit: "ذخیره ویرایش"
       overwrite_edit: "بازنویسی ویرایش"
       reply_original: "پاسخ دادن در موضوع اصلی"
@@ -1766,7 +1741,6 @@ fa_IR:
       full_page_title: "جستجوی مبحث یا نوشته"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
-      searching: "در حال جستجو..."
       post_format: "#%{post_number} توسط %{username}"
       results_page: "نتایج جستجو برای '%{term}'"
       more_results: "نتایج بیشتری موجود است. لطفاً معیارهای جست‌وجوی خود را محدودتر کنید."
@@ -1775,7 +1749,6 @@ fa_IR:
       or_search_google: "یا به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
-      search_google_title: "جستجو در سایت"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
@@ -1875,7 +1848,6 @@ fa_IR:
         category: "هیچ موضوعی در %{category} نیست."
         top: "موضوع برتری وجود ندارد."
         educate:
-          new: "<p>موضوعات جدید در اینجا نمایش داده می‌شوند.</p><p>به صورت پیشفرض موضوعات جدید با علامت <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\">جدید</span>نمایش داده می‌شوند\n موضوعاتی که کمتر از 2 روز از ایجادشان گذشته جدید هستند. برای تغییر این مقدار روی گزینه</p><p><a href=\"%{userPrefsUrl}\">تنظیمات</a> کلیک کنید.</p>"
           unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را در <a href="%{userPrefsUrl}">تنظیمات</a></p>برای خود تغییر دهید.'
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
@@ -1951,6 +1923,19 @@ fa_IR:
       jump_reply_up: رفتن به جدید ترین پاسخ
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
+      slow_mode_update:
+        select: "مدت زمان"
+        save: "ذخیره"
+        remove: "غیرفعال"
+        hours: "ساعت"
+        minutes: "دقیقه"
+        seconds: "ثانیه"
+        durations:
+          15_minutes: "۱۵ دقیقه"
+          1_hour: "۱ ساعت"
+          4_hours: "۴ ساعت"
+          1_day: "۱ روز"
+          1_week: "۱ هفته"
       topic_status_update:
         title: "زمانسنج مبحث"
         save: "تنظیم زمان‌سنج"
@@ -2113,7 +2098,6 @@ fa_IR:
       feature_topic:
         title: "این موضوع را برجسته کن"
         pin: "این موضوع را در بالای دسته‌بندی %{categoryLink} نمایش بده تا وقتی که"
-        confirm_pin: "در حال حاضر %{count} موضوع سنجاق‌شده دارید. تعداد زیاد موضوع‌های سنجاق‌شده شاید کاربران جدید یا ناشناس را به زحمت بیندازد. آیا از سنجاق کردن یک موضوع دیگر در این دسته‌بندی اطمینان دارید؟"
         unpin: "این موضوع را از فهرست برترین‌های دسته‌بندی %{categoryLink} حذف کن"
         unpin_until: "این موضوع از برترین‌های دسته‌بندی %{categoryLink} حذف شود یا تا <strong>%{until}</strong>منتظر بمانید."
         pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
@@ -2123,7 +2107,6 @@ fa_IR:
           one: "موضوعاتی که در حال حاضر در %{categoryLink} سنجاق شده اند: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "موضوعاتی که در حال حاضر در %{categoryLink} سنجاق شده اند: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "نمایش این موضوع در بالای فهرست همه موضوعات تا وقتی که"
-        confirm_pin_globally: "شما قبلا این موضوع %{count} را بصورت سراسری سنجاق زده‌اید. تعداد زیاد موضوع های سنجاق شده برای کاربران جدید و ناشناس می تواند سخت باشد. آیا از سنجاق کردن موضوعات به‌صورت سراری اطمینان دارید؟ "
         unpin_globally: "حذف این موضوع از بالای لیست همه‌ی موضوعات."
         unpin_globally_until: "حذف این موضوع از بالای لیست همه مباحث یا صبر کردن تا <strong>%{until}</strong>."
         global_pin_note: "کاربران می توانند موضوع را بصورت جداگانه برای خود از سنجاق در بیاورند"
@@ -2284,7 +2267,6 @@ fa_IR:
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
         file_too_large: "با عرض پوزش، حجم پرونده بسیار بالاست (بالاترین حجم قابل بارگذاری %{max_size_kb} کیلوبایت است). چرا فایل‌های حجیم را در سرویس‌های ابری بارگذاری نمی‌کنید و پیوند آن را اینجا نمی‌چسبانید؟"
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار‌گذاری کنید."
-        too_many_dragged_and_dropped_files: "با عرض پوزش، شما فقط می‌توانید %{max} پرونده به صورت یک‌جا بارگذاری کنید."
         upload_not_authorized: "با عرض پوزش، فایلی که در حال‌ بارگذاری آن هستید مجاز نیست. (پسوند‌های قابل بارگذاری: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
@@ -2521,7 +2503,6 @@ fa_IR:
     flagging:
       title: "تشکر برای کمک به نگه داشتن جامعه ما بصورت مدنی !"
       action: "پرچم‌گذاری نوشته"
-      take_action: "اقدام"
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
@@ -2592,7 +2573,6 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
-    posts_long: "این موضوع %{number} نوشته دارد"
     posts_likes_MF: |
       این موضوع دارای {count, plural, one {1 پاسخ} other {# پاسخ}} است {ratio, select,
       low {و مورد پسند دیگران واقع شده است}
@@ -2613,7 +2593,6 @@ fa_IR:
     likes_lowercase:
       one: "پسند‌ها"
       other: "پسند‌ها"
-    likes_long: "%{number} پسند در این موضوع وجود دارد"
     users: "کاربران"
     users_lowercase:
       one: "کاربران"
@@ -2867,8 +2846,6 @@ fa_IR:
         delete: "حذف"
         confirm_delete: "آیا از حذف گروه برچسب‌ها اطمینان دارید؟"
         everyone_can_use: "برچسب‌ها می‌توانندتوسط همه استفاده شوند"
-        usable_only_by_staff: "برچسب‌ها برای همه قابل مشاهده است اما تنها کارکنان می‌توانند از انها استفاده نمایند"
-        visible_only_to_staff: "برچسب‌ها تنها برای کارکنان قابل مشاهده است"
       topics:
         none:
           unread: "شما موضوع خوانده نشده‌ای ندارید."
@@ -3522,7 +3499,6 @@ fa_IR:
             backup_download: "دانلود نسخه پشتیبان"
             backup_destroy: "حذف نسخه پشتیبان"
             post_edit: "ویرایش نوشته"
-            disabled_second_factor: "غیرفعا‌سازی احراز هویت دو مرحله ای"
             post_approved: "نوشته تایید شده"
             change_name: "تغییر دادن نام"
             approve_user: "کاربر پذیرفته‌شده"
@@ -3667,7 +3643,6 @@ fa_IR:
         private_topics_count: موضوعات خصوصی
         posts_read_count: نوشته‌های خوانده شده
         post_count: نوشته‌های ایجاد شده
-        second_factor_enabled: احراز هویت دو مرحله‌ای فعال شد
         topics_entered: ' موضوعات بازدید شده'
         flags_given_count: پرچم‌های داده شده
         flags_received_count: پرچم‌های دریافت شده

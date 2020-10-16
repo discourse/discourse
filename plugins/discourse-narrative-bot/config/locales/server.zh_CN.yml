@@ -45,8 +45,6 @@ zh_CN:
       trigger: "骰子"
       invalid: |-
         我很抱歉，数学上证明了不可能投出这种色子组合。 :confounded:
-      not_enough_dice: |-
-        我只有 %{num_of_dice} 个色子。我知道，[太不像话了](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)。
       out_of_range: |-
         你知道数学上[面最多](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)的公平色子有 120 面么？
       results: |-

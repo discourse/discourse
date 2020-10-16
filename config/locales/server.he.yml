@@ -205,12 +205,6 @@ he:
     expired: "תוקף אסימון ההזמנה שלך פג. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found: "אסימון ההזמנה שלך שגוי. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found_json: "אסימון ההזמנה שלך שגוי. נא ליצור קשר עם הסגל."
-    not_found_template: |
-      <p>הזמנתך אל <a href="%{base_url}">%{site_name}</a> כבר נפדתה.</p>
-
-      <p>אם ססמתך זכורה לך יש לך אפשרות <a href="%{base_url}/login">להיכנס</a>.</p>
-
-      <p>אם לא נא <a href="%{base_url}/password-reset">לאפס ססמה</a>.</p>
     error_message: "אירעה שגיאה בקבלת ההזמנה. נא ליצור קשר עם הנהלת האתר."
     user_exists: "אין צורך להזמין את <b>%{email}</b>, כבר <a href='%{base_path}/u/%{username}/summary'>קיים חשבון לכתובת זו!</a>"
     confirm_email: "<p>כמעט סיימת! שלחנו הודעת הפעלה לכתובת הדוא״ל שלך. נא לעקוב אחר ההנחיות המופיעות בהודעה כדי להפעיל את החשבון שלך.</p><p>אם ההודעה לא הגיעה אליך כדאי לבדוק בתיקיית הספאם.</p>"
@@ -224,7 +218,6 @@ he:
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
     error: "אירעה שגיאה בשליחת הקובץ. נא לנסות שוב מאוחר יותר."
   invite_link:
-    email_taken: "כתובת דוא״ל זו כבר בשימוש. אם כבר יש לך חשבון נא להיכנס אתו או לאפס את הססמה."
     max_redemptions_limit: "אמור להיות בין 2 לבין %{max_limit}."
   topic_invite:
     failed_to_invite: "לא ניתן להזמין את המשתמש לנושא הזה בהעדר חברות באחת הקבוצות הבאות: %{group_names}"
@@ -892,43 +885,36 @@ he:
       title: "חריגה מהנושא"
       description: "פוסט זה אינו קשור לדיון הנוכחי כפי שהוגדר בכותרת ובמסר הראשוני ולכן כנראה שעליו לעבור למקום אחר."
       short_description: "לא קשור לדיון"
-      long_form: "סומן כחריגה מהנושא"
     spam:
       title: "ספאם"
       description: "פוסט זה הוא פרסומת או השחתה. הוא אינו תורם או קשור לנושא הנוכחי."
       short_description: "זוהי פרסומת או השחתה"
-      long_form: "סומן כספאם"
       email_title: '„%{title}” סומן כספאם'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "לא ראוי"
       description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
-      long_form: "סומן כלא ראוי"
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
       description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
       short_description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
-      long_form: "נשלחה הודעה למשתמש"
       email_title: 'הפוסט שלך תחת „%{title}”'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
       description: "פוסט זה דורש את תשומת לב הסגל מסיבה שאינה מצויינת למעלה."
       short_description: "דורש תשומת לב של הסגל מסיבה אחרת"
-      long_form: "סומן לטיפול על ידי הסגל"
       email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "סימנייה"
       description: "סמנו פוסט זה עם סימנייה"
       short_description: "סמנו פוסט זה"
-      long_form: "פוסט זה סומן עם סימנייה"
     like:
       title: "לייק"
       description: "תנו לייק לפוסט זה"
       short_description: "אהבו פוסט זה"
-      long_form: "נתתי לזה לייק"
   draft:
     sequence_conflict_error:
       title: "שגיאת טיוטה"
@@ -1383,10 +1369,6 @@ he:
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
     queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
     memory_warning: "בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון."
-    google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך Facebook‏ (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך Twitter‏ (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    github_config_warning: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     s3_config_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
     s3_backup_config_warning: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
     image_magick_warning: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
@@ -1493,7 +1475,6 @@ he:
     email_custom_headers: "רשימה מופרדת pipes (הסימון |) של כותרות מייל מותאמות אישית"
     email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
-    enforce_second_factor: "מאלץ משתמשים להפעיל אימות דו־שלבי. יש לבחור ב‚הכול’ כדי לאלץ את כל המשתמשים. יש לבחור ב‚סגל’ כדי לאכוף על חברי סגל בלבד."
     force_https: "הכריחו את אתרכם להשתמש אך ורק ב HTTPS. אזהרה: אל תאפשרו זאת עד שתוודאו ש HTTPS מותקן ועובד ממש בכל המקרים! וידאתם את הגדרות ה CDN שלכם, כל שירותי ההתחברות, וכל הלוגואים / תלויות החיצוניים - כדי לוודא שכולם עובדים גם כן עם HTTPS?"
     same_site_cookies: "שימוש בעוגיות של האתר, הן מבטלות את כל הווקטורים של Cross Site Request Forgery בדפדפנים נתמכים (Lax או Strict). אזהרה: Strict יעבוד רק על אתרים שמכריכים התחברות ומשתמשים ב SSO."
     summary_score_threshold: "הניקוד המינימלי הנדרש כדי שפוסט ייכלל ב\"סיכום נושא זה\""
@@ -1535,9 +1516,9 @@ he:
     pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    ga_universal_tracking_code: "מזהה קוד מעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; ניתן לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "שם המתחם של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות מתחם מטעם Google Universal Analytics (analytics.js). לקישורים יוצאים המקשרים לשמות מתחם אלה יצורף מזהה הלקוח. יש לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>מדריך למעקב חוצה שמות מתחם מבית Google.</a>"
+    ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "שם התחום של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics (analytics.js). לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
@@ -1639,13 +1620,9 @@ he:
     enable_facebook_logins: "הפעלת אימות עם Facebook, דורש facebook_app_id ו־facebook_app_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13394' target='_blank'>הגדרת כניסה עם Facebook ל־Discourse</a>."
     facebook_app_id: "מזהה יישום עבור אימות באמצעות Facebook ושיתוף, נרשם בכתובת <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "סוד יישום לאימות עם Facebook, ניתן להירשם תחת <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "הפעלת אימות עם GitHub, דורש github_client_id ו־github_client_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13745' target='_blank'>הגדרת כניסה עם GitHub ל־Discourse</a>."
-    github_client_id: "מזהה לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "סוד לקוח לאימות מול Github, ניתן להירשם ב־<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "לאפשר למשתמשים לעבור אימות דרך Discord?"
     discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
     discord_secret: "מפתח סודי של Discord"
-    discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "אפשר שחזור, אשר יכול להחליף את כל(!) המידע באתר! הותירו על \"שלילי\" (false) אלא אם כן אתם מתכננים לשחזר גיבוי."
     maximum_backups: "המספר המקסימלי של גיבויים לשמירה על הכונן. גיבויים ישנים יותר ימחקו אוטומטית"
@@ -1898,8 +1875,6 @@ he:
     email_editable: "אפשרו למשתמשים לשנות את כתובת המייל שלהם לאחר ההרשמה."
     logout_redirect: "מיקום להפניית הדפדפן לאחר היציאה מהמערכת (למשל: https://example.com/logout)"
     allow_uploaded_avatars: "אפשרו למשתמשים להעלות תמונות פרופיל משלהם."
-    allow_animated_avatars: "אפשרו למשתמשים להשתמש באנימציית gif בתור תמונת פרופיל. אזהרה: הריצו משימת rake של avatars:refresh לאחר שינוי הגדרה זו."
-    allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "המספר המקסימלי של נושאים פופולאריים להצגה במייל הסיכום."
@@ -2009,7 +1984,6 @@ he:
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
-    review_media_unless_trust_level: "הסגל יסקור פוסטים של משתמשים עם דרגות אמון נמוכות יותר אם הם מכילים מדיה מוטמעת."
     enable_page_publishing: "לאפשר לחברי סגל לפרסם נושאים לכתובות חדשות עם סגנון עצמאי."
     show_published_pages_login_required: "משתמשים אלמוניים יכולים לראות דפים שפורסמו, אפילו כשנדרשת כניסה למערכת."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
@@ -2274,8 +2248,6 @@ he:
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
-    invalid_second_factor_method: "שיטת האימות הדו־שלבי שנבחרה שגויה."
-    not_enabled_second_factor_method: "שיטת האימות הדו־שלבי שנבחרה אינה מופעלת בחשבונך."
     security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
     security_key_alternative: "לנסות דרך אחרת"
     security_key_authenticate: "אימות עם מפתח אבטחה"
@@ -2303,7 +2275,6 @@ he:
       csrf_detected: "זמן ההמתנה לאישור הסתיים או שהחלפת דפדפנים. נא לנסות שוב."
       request_error: "אירעה שגיאה בעת התחלת האישור. נא לנסות שוב."
       invalid_iat: "לא ניתן לאמת את אסימון האישור עקב הפרשים בשעון השרת. נא לנסות שוב."
-    omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסו שנית."
     omniauth_confirm_title: "כניסה עם %{provider}"
     omniauth_confirm_button: "המשך"
     authenticator_error_no_valid_email: "אף אחת מהכתובת שמשויכות אל %{account} אינה מורשית. ייתכן שיהיה עליך להגדיר את החשבון שלך עם כתובת דוא״ל אחרת."
@@ -2316,10 +2287,8 @@ he:
     auth_complete: "אימות הושלם."
     click_to_continue: "יש ללחוץ כאן כדי להמשיך."
     already_logged_in: "אופס, נראה שאתם מנסים לקבל הזמנה שנועדה למשתמש אחר. אם אתם לא %{current_user}, אנא התנתקו ונסו שוב."
-    second_factor_title: "אימות דו־שלבי"
     second_factor_description: "נא להקליד את קוד האימות הנדרש מהיישומון שלך:"
     second_factor_backup_description: "נא להכניס את אחד מהקודים לגיבוי שלך:"
-    second_factor_backup_title: "קוד גיבוי לאימות דו־שלבי"
     invalid_second_factor_code: "קוד האימות שגוי. מותר להשתמש בכל קוד פעם אחת בלבד."
     invalid_security_key: "מפתח אבטחה שגוי."
     missing_second_factor_name: "נא לציין שם."
@@ -3355,15 +3324,6 @@ he:
         אם לא ניסית ליצור חשבון עבור %{email} או לשנות את כתובת הדוא״ל, אל חשש – אפשר להתעלם מההודעה הזו לחלוטין.
 
         אם צצות לך שאלות, ניתן [ליצור קשר עם הסגל הידידותי שלנו](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "אימות דו־שלבי מנוטרל"
-      subject_template: "[%{email_prefix}] אימות דו־שלבי מנוטרל"
-      text_body_template: |
-        אימות דו־שלבי הושבת לחשבונך אצל %{site_name}. מעתה יתאפשר לך להיכנס עם  ססמתך בלבד, לא נדרש אף קוד אימות נוסף.
-
-        אם לא בחרת להשבית אימות דו־שלבי, יתכן שחשבונך הושחת.
-
-        אם צצות לך שאלות, ניתן [ליצור קשר עם הסגל הידידותי שלנו](%{base_url}/about).
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
       since_last_visit: "מאז ביקורכם האחרון"
@@ -3416,13 +3376,6 @@ he:
     admin_login:
       title: "כניסת הנהלה"
       subject_template: "[%{email_prefix}] התחברות"
-      text_body_template: |
-        התקבלה בקשה להיכנס לחשבון שלך אצל [%{site_name}](%{base_url}).
-
-        אם הבקשה הזאת לא בוצעה על ידיך, אפשר להתעלם מההודעה הזאת.
-
-        יש ללחוץ על הקישור הבא כדי להיכנס:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "חשבון נוצר"
       subject_template: "[%{email_prefix}] החשבון החדש שלך"
@@ -3434,21 +3387,9 @@ he:
     confirm_new_email:
       title: "אישור מייל חדש"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל החדשה שלכם"
-      text_body_template: |
-        לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
-
-        ‎%{base_url}/u/confirm-new-email/%{email_token}
-
-        אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
     confirm_new_email_via_admin:
       title: "אישור כתובת דוא״ל חדשה"
       subject_template: "[%{email_prefix}] אישור כתובת הדוא״ל החדשה שלך"
-      text_body_template: |
-        לחיצה על הקישור %{site_name} תאשר את כתובת הדוא״ל החדשה שלך:
-
-        ‎%{base_url}/u/confirm-new-email/%{email_token}
-
-        החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
@@ -3621,7 +3562,11 @@ he:
     latte: "לאטה"
     summer: "קיץ"
     dark_rose: "ורד כהה"
-    default_theme_name: "בהיר"
+    wcag: "נגיש בהיר"
+    wcag_theme_name: "נגיש בהיר"
+    wcag_dark: "נגיש כהה"
+    wcag_dark_theme_name: "נגיש כהה"
+    default_theme_name: "בררת מחדל"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
     neutral_theme_name: "נייטרלי"
@@ -4090,8 +4035,8 @@ he:
     initial_topic_title: דוחות פעילות לאתר
   tags:
     title: "תגיות"
-    staff_tag_disallowed: 'רק הסגל יכול להוסיף את התגית „%{tag}”.'
-    staff_tag_remove_disallowed: 'רק הסגל יכול להסיר את התגית „%{tag}”.'
+    restricted_tag_disallowed: 'לא ניתן להחיל את התגית „%{tag}”.'
+    restricted_tag_remove_disallowed: 'לא ניתן להסיר את התגית „%{tag}”.'
     minimum_required_tags:
       one: "עליך לבחור לפחות בתגית %{count}."
       two: "עליך לבחור לפחות %{count} תגיות."
@@ -4219,7 +4164,7 @@ he:
             label: "עיר המחלוקת"
             placeholder: "סן פרנסיסקו, קליפורניה"
       colors:
-        title: "תמה"
+        title: "צבעים"
       fonts:
         title: "גופנים"
         fields:
@@ -4339,7 +4284,6 @@ he:
       email_auth_res_enqueue: "הודעת דוא״ל זו נפסלה בבדיקת DMARC, כנראה שאינה נשלחה מהנמען שצוין. מוטב להתעמק בכותרות הגולמיות של הודעת הדוא״ל כדי להבין יותר לעומק."
       email_spam: "הודעת דוא״ל זו סומנה כספאם עקב הכותרת שהוגדרה תחת `email_in_spam_header` (כותרת דוא״ל לספאם)."
       suspect_user: "המשתמש החדש הזה מילא פרטי חשבון מבלי לקרוא נושאים או פוסטים, מה שעשוי לרמז על כך שייתכן שמדובר בתוקף ספאם. יש לעיין ב־`approve_suspect_users` (אישור משתמשים חשודים).  "
-      contains_media: "הפוסטים האלו כוללים מדיה מוטמעת. ניתן לעיין ב־`review_media_unless_trust_level` (סקירת מדיה מחוץ לדרגות אמון)."
     actions:
       agree:
         title: "הסכמה…"
@@ -4350,7 +4294,7 @@ he:
         title: "להשאיר את הפוסט מוסתר"
         description: "הבעת הסכמה עם הדגל והשארת הפוסט מוסתר."
       agree_and_suspend:
-        title: "השעה משתמש"
+        title: "השעיית משתמש"
         description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
       agree_and_silence:
         title: "השתקת משתמש"

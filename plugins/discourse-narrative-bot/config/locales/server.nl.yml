@@ -99,6 +99,9 @@ nl:
       cert_title: "Als erkenning voor de succesvolle voltooiing van de handleiding voor nieuwe gebruikers"
       hello:
         title: "Gegroet!"
+      likes:
+        reply: |-
+          Bedankt voor het liken van mijn bericht!
       formatting:
         reply: |-
           Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](http://commonmark.org/help) :nerd:

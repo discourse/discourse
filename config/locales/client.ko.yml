@@ -136,7 +136,6 @@ ko:
     topic_admin_menu: "글 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
-    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{min_users}명의 사용자가 가입하면 자동으로 해제됩니다."
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
@@ -739,7 +738,6 @@ ko:
         other: "지난주 %{count}개의 새 글이 있습니다."
       topic_stat_sentence_month:
         other: "지난달 %{count}개의 새 글이 있습니다."
-      n_more: "카테고리 (%{count}개 더보기) ..."
     ip_lookup:
       title: IP 주소 조회
       hostname: 호스트 이름
@@ -861,7 +859,6 @@ ko:
       suspended_notice: "이 회원은 %{date}까지 접근 금지 되었습니다."
       suspended_permanently: "이 회원은 일시정지 되었습니다."
       suspended_reason: "이유: "
-      github_profile: "Github"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
         label: "메일링 리스트 모드"
@@ -959,25 +956,19 @@ ko:
         choose_new: "새 비밀번호를 입력하세요"
         choose: "비밀번호를 입력하세요"
       second_factor_backup:
-        title: "2 단계 백업 코드"
         regenerate: "재생성"
         disable: "비활성"
         enable: "활성화"
         enable_long: "백업 코드 사용"
-        manage: "백업 코드를 관리합니다. <strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         copy_to_clipboard: "클립 보드에 복사"
         copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
         copied_to_clipboard: "클립보드에 복사됨"
         download_backup_codes: "백업 코드 다운로드"
-        remaining_codes: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         use: "백업 코드 사용"
-        enable_prerequisites: "백업 코드를 생성하기 전에 기본 두 번째 요소를 활성화해야합니다."
         codes:
           title: "생성된 백업 코드"
           description: "이 백업 코드는 한 번만 사용할 수 있습니다. 안전한 곳에 보관하십시오."
       second_factor:
-        title: "2단계 인증"
-        enable: "2단계 인증 관리"
         disable_all: "모두 비활성화"
         forgot_password: "비밀번호를 잊으셨습니까?"
         confirm_password_description: "계속하려면 비밀번호를 입력하세요"
@@ -990,17 +981,10 @@ ko:
         show_key_description: "수동으로 입력"
         short_description: |
           일회용 보안 코드로 계정을 보호하십시오.
-        extended_description: |
-          2단계 인증은 비밀번호 외에 일회용 토큰을 요구하여 계정에 추가 보안을 추가합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 장치에서 생성 할 수 있습니다.
-        oauth_enabled_warning: "계정에서 2단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
         use: "Authenticator 앱 사용"
-        enforced_notice: "이 사이트에 액세스하기 전에 2단계 인증을 활성화해야 합니다."
         disable: "해제"
-        disable_confirm: "두 번째 요소 방법을 모두 비활성화 하시겠습니까?"
         save: "저장"
         edit: "편집"
-        edit_title: "두 번째 요소 편집"
-        edit_description: "두 번째 요인 이름"
         enable_security_key_description: |
           <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">하드웨어 보안 키</a>가 준비되었다면 아래의 등록 버튼을 누르십시오.
         totp:
@@ -1073,6 +1057,7 @@ ko:
         sso_override_instructions: "SSO 제공 업체에서 이메일을 업데이트 할 수 있습니다."
         no_secondary: "보조 이메일이 없습니다"
         instructions: "다른 사용자에게 공개되지 않습니다."
+        admin_note: "참고 : 관리자가 아닌 다른 사용자의 이메일을 변경하는 관리자는 사용자가 원래 이메일 계정에 액세스할 수 없음을 나타내므로 비밀번호 재설정 이메일이 새 주소로 전송됩니다. 사용자의 이메일은 비밀번호 재설정 프로세스를 완료할 때까지 변경되지 않습니다."
         ok: "확인을 위해 이메일을 보내드립니다."
         required: "이메일 주소를 입력하십시오"
         invalid: "유효한 이메일 주소를 입력하십시오."
@@ -1121,10 +1106,8 @@ ko:
         instructions: "계정을 등록하려면 초대 코드가 필요합니다."
       auth_tokens:
         title: "최근에 사용한 장치"
-        ip: "IP"
         details: "세부 정보"
         log_out_all: "모두 로그아웃"
-        active: "지금 사용"
         not_you: "사용자님이 아닌가요?"
         show_all: "모두 보기 (%{count})"
         show_few: "간략히 보기"
@@ -1412,10 +1395,6 @@ ko:
       disable: "삭제된 게시물 표시"
     private_message_info:
       title: "메시지"
-      invite: "다른 사람 초대 ..."
-      edit: "추가 또는 제거 ..."
-      remove: "제거 ..."
-      add: "추가 ..."
       leave_message: "정말 이 메시지를 남기시겠습니까?"
       remove_allowed_user: "%{name}에게서 온 메시지를 삭제할까요?"
       remove_allowed_group: "%{name}에게서 온 메시지를 삭제할까요?"
@@ -1461,10 +1440,8 @@ ko:
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
-      second_factor_title: "2단계 인증"
       second_factor_description: "앱에서 인증 코드를 입력하십시오 :"
       second_factor_backup: "백업 코드를 사용하여 로그인"
-      second_factor_backup_title: "2단계 백업"
       second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
       second_factor: "OTP 앱을 사용하여 로그인"
       security_key_description: "실제 보안 키가 준비되면 아래의 보안 키로 인증 버튼을 누릅니다."
@@ -1488,10 +1465,8 @@ ko:
       awaiting_approval: "사용자님의 계정은 아직 관리자의 승인이 처리되지 않았습니다. 승인되면 이메일이 전송됩니다."
       requires_invite: "죄송합니다. 이 포럼에 대한 접근은 초대를 통해서만 가능합니다."
       not_activated: "아직 로그인 할 수 없습니다. 이전에 활성화 이메일을 <b>%{sentTo}</b>로 보냈습니다. 해당 이메일의 지침에 따라 계정을 활성화하십시오."
-      not_allowed_from_ip_address: "해당 IP 주소에서는 로그인 할 수 없습니다."
       admin_not_allowed_from_ip_address: "해당 IP 주소에서는 관리자로 로그인 할 수 없습니다."
       resend_activation_email: "활성화 이메일을 다시 보내려면 여기를 클릭하십시오."
-      omniauth_disallow_totp: "계정에 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인 하십시오."
       resend_title: "활성화 이메일 다시 보내기"
       change_email: "이메일 주소 변경"
       provide_new_email: "새 주소를 입력하면 확인 이메일이 다시 전송됩니다."
@@ -1559,8 +1534,6 @@ ko:
       enter: "시작하다"
     conditional_loading_section:
       loading: 로드 중...
-    category_row:
-      topic_count: "이 카테고리에는 %{count}개의 글이 있습니다"
     select_kit:
       default_header_text: 선택...
       no_content: 일치하는 항목을 찾을 수 없음
@@ -1571,7 +1544,6 @@ ko:
         other: "%{count}개 항목만 선택할 수 있습니다."
       min_content_not_reached:
         other: "항목을 %{count}개 이상 선택하세요."
-      invalid_selection_length: "선택은 %{count}자 이상이어야 합니다."
       components:
         categories_admin_dropdown:
           title: "카테고리 관리"
@@ -1621,7 +1593,6 @@ ko:
       similar_topics: "작성하려는 내용과 비슷한 글들..."
       drafts_offline: "오프라인 초안"
       edit_conflict: "충돌 편집"
-      group_mentioned_limit: "<b>경고!</b> <a href='%{group_link}'>%{group}을</a> 언급했지만이 그룹에는 관리자가 구성한 언급 한도 %{max} 사용자보다 많은 구성원이 있습니다. 아무도 알림을받지 않습니다."
       group_mentioned:
         other: "%{group}을 언급하면, <a href='%{group_link}'>%{count}명</a>의 회원에게 알림이 전송됩니다. 그렇게 하시겠습니까?"
       cannot_see_mention:
@@ -1637,7 +1608,6 @@ ko:
         post_length: "글은 최소 %{min}글자 이상이어야 합니다."
         try_like: "%{heart} 버튼을 사용해 보셨습니까?"
         category_missing: "카테고리를 선택해주세요."
-        tags_missing: "최소한 %{count}개의 태그를 선택해야합니다."
         topic_template_not_modified: "글 템플릿을 편집하여 글에 세부 정보와 세부 사항을 추가하십시오."
       save_edit: "편집 저장"
       overwrite_edit: "덮어 쓰기 편집"
@@ -1774,7 +1744,6 @@ ko:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>새 글</span> %{description}"
       membership_request_accepted: "'%{group_name}'에 회원 가입"
-      membership_request_consolidated: "'%{group_name}'에 대한 %{count}건의 회원 가입 요청"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
@@ -1847,7 +1816,6 @@ ko:
       full_page_title: "글 또는 댓글 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
-      searching: "검색 중..."
       post_format: "%{username}님의 글 #%{post_number}"
       results_page: "'%{term}'에 대한 검색 결과"
       more_results: "검색 결과가 많습니다. 검색 조건을 좁혀보세요."
@@ -1856,7 +1824,6 @@ ko:
       or_search_google: "혹은 구글에서 검색해볼 수도 있습니다."
       search_google: "대신 구글에서 검색해보세요."
       search_google_button: "구글"
-      search_google_title: "이 사이트에서 검색"
       context:
         user: "@%{username}님의 글 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -1964,7 +1931,6 @@ ko:
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
         educate:
-          new: '<p>새로운 글은 여기에 나타납니다.</p><p>기본적으로 지난 2일 이내에 생성 된 경우 새 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 로 표시됩니다.</p><p>이를 변경하려면 <a href="%{userPrefsUrl}">환경 설정</a> 에서 변경 하십시오.</p>'
           unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>글 만들기</li><li>글에 댓글달기</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
@@ -2212,7 +2178,6 @@ ko:
       feature_topic:
         title: "주요 주제로 설정"
         pin: " %{categoryLink} 카테고리 주제 목록 상단에 고정 until"
-        confirm_pin: "이미 %{count}개의 고정된 주제가 있습니다. 너무 많은 주제가 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 주제를 고정하시겠습니까?"
         unpin: "이 주제를 %{categoryLink} 카테고리 상단에서 제거 합니다."
         unpin_until: "%{categoryLink} 카테고리 주제 목록 상단에서 이 주제를 제거하거나 <strong>%{until}</strong>까지 기다림."
         pin_note: "개별적으로 사용자가 주제 고정을 취소할 수 있습니다."
@@ -2221,7 +2186,6 @@ ko:
         already_pinned:
           other: "%{categoryLink}에 고정된 주제 개수: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "모든 주제 목록 상단 고정 until"
-        confirm_pin_globally: "이미 %{count}개의 주제가 전체 공지로 고정되어 있습니다. 너무 많은 주제가 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 주제를 전체 공지로 고정하겠습니까?"
         unpin_globally: "모든 주제 목록 상단에서 이 주제를 제거"
         unpin_globally_until: "모든 주제 목록 상단에서 이 주제를 제거하거나 <strong>%{until}</strong>까지 기다림."
         global_pin_note: "개별적으로 사용자가 주제 고정을 취소할 수 있습니다."
@@ -2396,7 +2360,6 @@ ko:
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         file_too_large: "해당 파일이 너무 큽니다 (최대 크기는 %{max_size_kb}kb 임). 대용량 파일을 클라우드 공유 서비스에 업로드 한 다음 링크를 붙여 넣어보십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
-        too_many_dragged_and_dropped_files: "죄송합니다. 한 번에 %{max} 파일 만 업로드 할 수 있습니다."
         upload_not_authorized: "죄송합니다. 허가되지 않은 확장자의 파일이 있습니다. (허가된 확장자: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
@@ -2663,7 +2626,13 @@ ko:
     flagging:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "글 신고했습니다"
-      take_action: "조치하기"
+      take_action_options:
+        default:
+          title: "조치하기"
+          details: "더 이상 커뮤니티 플래그를 기다리지 않고 바로 플래그 임계 값에 도달합니다."
+        suspend:
+          title: "사용자 차단"
+          details: "플래그 임계 값에 도달하고 사용자를 차단합니다."
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
@@ -2729,7 +2698,6 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
-    posts_long: "이 주제의 글 수는 %{number}개 입니다."
     posts_likes_MF: |2
 
       이 토픽에는 {ratio, select,
@@ -2752,7 +2720,6 @@ ko:
     likes: "좋아요"
     likes_lowercase:
       other: "좋아요"
-    likes_long: "이 주제에 %{number}개의 '좋아요'가 있습니다."
     users: "사용자"
     users_lowercase:
       other: "사용자"
@@ -2826,7 +2793,6 @@ ko:
         this_week: "주"
         today: "오늘"
         other_periods: "상단 참조 :"
-    browser_update: '안타깝게도 <a href="https://www.discourse.org/faq/#browser">브라우저가 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 여러 내용을 읽고 로그인하여 댓글도 작성해보세요.'
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -3034,8 +3000,6 @@ ko:
         delete: "삭제"
         confirm_delete: "이 태그 그룹을 삭제 하시겠습니까?"
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
-        usable_only_by_staff: "태그는 모든 사람에게 표시되지만 직원 만 사용할 수 있습니다"
-        visible_only_to_staff: "태그는 운영진 에게만 표시됩니다"
       topics:
         none:
           unread: "읽지 않은 토픽이 없습니다."
@@ -3618,7 +3582,6 @@ ko:
           color_definitions:
             text: "색상 정의"
             title: "사용자 색상 정의 입력 (고급 사용자용)"
-            placeholder: "\\r\n이 스타일 시트를 사용하여 CSS 사용자 정의 속성 목록에 사용자 정의 색상을 추가합니다.\\r\n\\r\n예 : \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n플러그인 또는 코어와의 충돌을 피하기 위해 속성 이름에 접두사를 붙이는 것이 좋습니다."
           head_tag:
             text: "</head>"
             title: "</head> 태그 전에 들어갈 HTML"
@@ -3850,7 +3813,6 @@ ko:
             post_edit: "편집 후"
             post_unlocked: "게시물 잠금 해제"
             check_personal_message: "개인 메시지 확인"
-            disabled_second_factor: "Two Factor 인증 사용안함"
             topic_published: "주제가 출판 됨"
             post_approved: "게시물 승인됨"
             post_rejected: "게시물 거부됨"
@@ -4078,7 +4040,6 @@ ko:
         private_topics_count: 비공개 토픽
         posts_read_count: 글 읽은 수
         post_count: 글 수
-        second_factor_enabled: Two Factor 인증 사용
         topics_entered: 읽은 토픽 수
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고

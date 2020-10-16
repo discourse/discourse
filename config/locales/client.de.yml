@@ -157,8 +157,10 @@ de:
     topic_admin_menu: "Themen-Administration"
     wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald die Gesamtanzahl der Benutzer den Wert %{min_users} überschreitet."
-    bootstrap_mode_disabled: "Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
+    bootstrap_mode_enabled:
+      one: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert hat."
+      other: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mehr als %{count} Benutzer registriert haben."
+    bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Seite funktioniert vielleicht nicht, weil Theme/Komponent %{theme} Fehler hat. Deaktiviere es in %{path}."
@@ -778,7 +780,6 @@ de:
       topic_stat_sentence_month:
         one: "%{count} neues Thema im letzten Monat."
         other: "%{count} neue Themen im letzten Monat."
-      n_more: "Kategorien (%{count} weitere) ..."
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -900,7 +901,6 @@ de:
       suspended_notice: "Dieser Benutzer ist bis zum %{date} gesperrt."
       suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
-      github_profile: "GitHub"
       email_activity_summary: "Aktivitäts-Übersicht"
       mailing_list_mode:
         label: "Mailinglisten-Modus"
@@ -997,22 +997,26 @@ de:
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
       second_factor_backup:
-        title: "Zwei-Faktor-Wiederherstellungs-Codes"
+        title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
         regenerate: "Erneuern"
         disable: "Deaktivieren"
         enable: "Aktivieren"
         enable_long: "Wiederherstellungscodes aktivieren"
-        manage: "Verwalte Sicherungscodes. Du hast noch <strong>%{count}</strong> Sicherungscodes."
+        manage:
+          one: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
+          other: "Verwalte deine Wiederherstellungscodes. Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
         copy_to_clipboard: "In Zwischenablage kopieren"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
-        download_backup_codes: "Backup-Codes herunterladen"
-        remaining_codes: "Du hast noch <strong>%{count}</strong> Wiederherstellungscodes übrig."
-        use: "Benutze einen Backup-Code"
-        enable_prerequisites: "Du musst vor dem Generieren von Sicherungscodes einen primären zweiten Faktor aktivieren."
+        download_backup_codes: "Wiederherstellungscodes herunterladen"
+        remaining_codes:
+          one: "Du hast noch <strong>%{count}</strong> verbleibenden Wiederherstellungscode."
+          other: "Du hast noch <strong>%{count}</strong> verbleibende Wiederherstellungscodes."
+        use: "Benutze einen Wiederherstellungscode"
+        enable_prerequisites: "Du musst vor dem Generieren von Wiederherstellungscodes einen primären, zweiten Faktor aktivieren."
         codes:
           title: "Wiederherstellungscodes generiert"
-          description: "Jeder dieser Wiederherstellungscodes kann nur einmal benutzt werden. Bewahre diese an einem sicheren aber verfügbaren Ort auf."
+          description: "Jeder dieser Wiederherstellungscodes kann nur einmal benutzt werden. Bewahre diese an einem sicheren, für dich zugänglichen Ort auf."
       second_factor:
         title: "Zwei-Faktor-Authentifizierung"
         enable: "Zwei-Faktor-Authentifizierung verwalten"
@@ -1029,15 +1033,14 @@ de:
         short_description: |
           Schütze dein Konto mit Einweg-Sicherheitscodes.
         extended_description: |
-          Zwei-Faktor-Authentifizierung (2FA) sichert dein Konto zusätzlich ab, indem sie zusätzlich zu deinem Passwort einen einmalig gültigen Code anfordert. Codes können auf <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> und <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a>-Geräten generiert werden.
-        oauth_enabled_warning: "Beachte bitte, dass soziale Anmelde-Methoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert ist."
+          Zwei-Faktor-Authentifizierung erhöht die Sicherheit deines Kontos, indem zusätzlich zum Passwort ein einmalig gültiger Code erforderlich ist. Codes können auf <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+android" target='_blank'>Android</a> und <a href="https://www.google.de/search?q=authenticator+app+f%C3%BCr+iOS">iOS</a> Geräten generiert werden.
+        oauth_enabled_warning: "Bitte beachte, dass soziale Anmeldemethoden deaktiviert werden, sobald die Zwei-Faktor-Authentifizierung für dein Konto aktiviert wurde."
         use: "Benutze die Authentifizierungs-App"
-        enforced_notice: "Du musst Zwei-Faktor-Authentifizierung aktivieren, bevor du auf diese Seite zugreifen kannst."
+        enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
+        disable_confirm: "Sollen wirklich alle Methoden zur Zwei-Faktor-Authentifizierung deaktiviert werden?"
         save: "Speichern"
         edit: "Bearbeiten"
-        edit_title: "Zweiten Faktor bearbeiten"
-        edit_description: "Name des zweiten Faktors"
         enable_security_key_description: |
           Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> vorbereitet hast, klicke unten auf Registrieren.
         totp:
@@ -1158,10 +1161,8 @@ de:
         instructions: "Zur Registrierung eines Benutzerkontos wird ein Einladungs-Code benötigt."
       auth_tokens:
         title: "Kürzlich benutzte Geräte"
-        ip: "IP"
         details: "Details"
         log_out_all: "Überall abmelden"
-        active: "gerade aktiv"
         not_you: "Das bist nicht du?"
         show_all: "Alle anzeigen (%{count})"
         show_few: "Weniger anzeigen"
@@ -1170,6 +1171,9 @@ de:
         browser_and_device: "%{browser} auf %{device}"
         secure_account: "Mein Konto absichern"
         latest_post: "Dein letzter Beitrag…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP-Adresse: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">gerade aktiv</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Letzter Beitrag"
       last_emailed: "Letzte E-Mail"
       last_seen: "Zuletzt gesehen"
@@ -1461,8 +1465,6 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
-      invite: "Lade andere ein"
-      edit: "Hinzufügen oder Entfernen"
       leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
@@ -1511,8 +1513,8 @@ de:
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
       second_factor_backup: "Anmeldung mit einem Wiederherstellungscode"
-      second_factor_backup_title: "Zwei-Faktor-Wiederherstellung"
-      second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungs-Codes ein:"
+      second_factor_backup_title: "Zwei-Faktor-Backup"
+      second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
       security_key_description: "Wenn Du Deinen physischen Sicherheitsschlüssel vorbereitet hast, klicke unten auf die Schaltfläche \"Mit Sicherheitsschlüssel authentifizieren\"."
       security_key_alternative: "Versuche einen anderen Weg"
@@ -1535,7 +1537,6 @@ de:
       awaiting_approval: "Dein Konto wurde noch nicht von einem Teammitglied genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>%{sentTo}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
-      not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
@@ -1569,7 +1570,7 @@ de:
         title: "mit Discord"
       second_factor_toggle:
         totp: "Benutze stattdessen eine Authentifizierungs-App"
-        backup_code: "Benutze stattdessen einen Backup Code"
+        backup_code: "Benutze stattdessen einen Wiederherstellungscode"
     invites:
       accept_title: "Einladung"
       emoji: "Umschlag Emoji"
@@ -1606,7 +1607,9 @@ de:
     conditional_loading_section:
       loading: Wird geladen…
     category_row:
-      topic_count: "%{count} Themen in dieser Kategorie"
+      topic_count:
+        one: "%{count} Thema in dieser Kategorie"
+        other: "%{count} Themen in dieser Kategorie"
     select_kit:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
@@ -1619,7 +1622,9 @@ de:
       min_content_not_reached:
         one: "Wähle mindestens einen Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
-      invalid_selection_length: "Es müssen wenigstens%{count} Zeichen markiert sein."
+      invalid_selection_length:
+        one: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
+        other: "Die Auswahl muss aus mindestens %{count} Zeichen bestehen."
       components:
         categories_admin_dropdown:
           title: "Kategorien verwalten"
@@ -1669,7 +1674,9 @@ de:
       similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
       edit_conflict: "Konflikt bearbeiten"
-      group_mentioned_limit: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, aber diese Gruppe hat mehr Mitglieder als der Administrator als die maximale Anzahl von %{max} Benutzern eingestellt hat, die gleichzeitig erwähnt werden können. Keiner davon wird benachrichtigt."
+      group_mentioned_limit:
+        one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
+        other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
       group_mentioned:
         one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
@@ -1686,7 +1693,9 @@ de:
         post_length: "Beitrag muss mindestens %{min} Zeichen lang sein"
         try_like: "Hast du schon die %{heart}-Schaltfläche ausprobiert?"
         category_missing: "Du musst eine Kategorie auswählen"
-        tags_missing: "Du musst mindestens %{count} Schlagwörter wählen."
+        tags_missing:
+          one: "Du musst mindestens %{count} Schlagwort wählen."
+          other: "Du musst mindestens %{count} Schlagwörter wählen."
         topic_template_not_modified: "Bitte füge Details und Spezifikationen zu deinem Thema hinzu, indem du die Themenvorlage anpasst."
       save_edit: "Speichern"
       overwrite_edit: "Bearbeitung überschreiben"
@@ -1751,6 +1760,9 @@ de:
       yourself_confirm:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
+      slow_mode:
+        title: "Dieses Thema befindet sich im langsamen Modus."
+        body: "Nach dem Abschicken deines Beitrags musst du %{duration} warten, bevor du einen neuen Beitrag verfassen kannst."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
@@ -1824,7 +1836,9 @@ de:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>New Topic</span> %{description}"
       membership_request_accepted: "Mitgliedschaft akzeptiert in '%{group_name}' "
-      membership_request_consolidated: "%{count} offene Gruppenmitgliedschaftsanfrage/n für die Gruppe '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} offene Mitgliedschaftsanfrage für '%{group_name}'"
+        other: "%{count} offene Mitgliedschaftsanfragen für '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - abgeschlossen"
@@ -1899,7 +1913,6 @@ de:
       full_page_title: "suche nach Themen oder Beiträgen"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
-      searching: "Suche …"
       post_format: "#%{post_number} von %{username}"
       results_page: "Suchergebnisse für '%{term}'"
       more_results: "Es gibt mehr Ergebnisse. Bitte grenze deine Suchkriterien weiter ein."
@@ -1908,7 +1921,6 @@ de:
       or_search_google: "Oder versuche stattdessen mit Google zu suchen:"
       search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
-      search_google_title: "Durchsuche diese Seite"
       context:
         user: "Beiträge von @%{username} durchsuchen"
         category: "Kategorie #%{category} durchsuchen"
@@ -2004,7 +2016,6 @@ de:
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine Top-Themen."
         educate:
-          new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
           unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
@@ -2088,6 +2099,25 @@ de:
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
+      slow_mode_update:
+        title: "Langsamer Modus"
+        select: "Dauer:"
+        description: "Benutzer müssen warten, bevor sie wieder einen Beitrag verfassen können."
+        current: "Die aktuelle Dauer beträgt %{hours} Stunden, %{minutes} Minute und %{seconds} Sekunden."
+        save: "Speichern"
+        remove: "Deaktivieren"
+        hours: "Stunden"
+        minutes: "Minuten"
+        seconds: "Sekunden"
+        durations:
+          15_minutes: "15 Minuten"
+          1_hour: "1 Stunde"
+          4_hours: "4 Stunden"
+          1_day: "1 Tag"
+          1_week: "1 Woche"
+          custom: "Dauer auswählen"
+      slow_mode_notice:
+        duration: "Du musst zwischen dem Verfassen von Beiträgen %{duration} warten."
       topic_status_update:
         title: "Zeitschaltuhren"
         save: "Zeitschaltuhr aktivieren"
@@ -2217,6 +2247,7 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         multi_select: "Beiträge auswählen..."
+        slow_mode: "Aktiviere langsamen Modus"
         timed_update: "Zeitschaltuhren…"
         pin: "Thema anheften..."
         unpin: "Thema loslösen..."
@@ -2257,7 +2288,6 @@ de:
       feature_topic:
         title: "Thema hervorheben"
         pin: "Dieses Thema am Anfang der %{categoryLink} Kategorie anzeigen bis"
-        confirm_pin: "Es gibt bereits %{count} angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema in dieser Kategorie anheften?"
         unpin: "Dieses Thema vom Anfang der %{categoryLink} Kategorie loslösen."
         unpin_until: "Dieses Thema vom Anfang der %{categoryLink} Kategorie loslösen oder bis <strong>%{until}</strong> warten."
         pin_note: "Benutzer können das Thema für sich selbst loslösen."
@@ -2267,7 +2297,9 @@ de:
           one: "Momentan in %{categoryLink} angeheftete Themen: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Momentan in %{categoryLink} angeheftete Themen: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Dieses Thema am Anfang aller Themenlisten anzeigen bis"
-        confirm_pin_globally: "Es gibt bereits %{count} global angeheftete Themen. Zu viele angeheftete Themen könnten neue und unbekannte Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
+        confirm_pin_globally:
+          one: "Es gibt bereits %{count} global angeheftetes Thema. Zu viele angeheftete Themen könnten neue und anonyme Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
+          other: "Es gibt bereits %{count} global angeheftete Themen. Zu viele angeheftete Themen könnten neue und anonyme Benutzer leicht überwältigen. Willst du wirklich noch ein weiteres Thema global anheften?"
         unpin_globally: "Dieses Thema vom Anfang aller Themenlisten loslösen."
         unpin_globally_until: "Dieses Thema vom Anfang aller Themenlisten loslösen oder bis <strong>%{until}</strong> warten."
         global_pin_note: "Benutzer können das Thema für sich selbst loslösen."
@@ -2454,7 +2486,9 @@ de:
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
         file_too_large: "Entschuldigung, die Datei ist zu groß (maximale Größe ist %{max_size_kb}kb). Wie wäre es, die Datei zu einem Cloud Sharing Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
-        too_many_dragged_and_dropped_files: "Entschuldige, du kannst nur %{max} Dateien auf einmal hochladen."
+        too_many_dragged_and_dropped_files:
+          one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
+          other: "Es können leider nur %{count} Dateien gleichzeitig hochgeladen werden."
         upload_not_authorized: "Entschuldigung, die Datei die du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
@@ -2732,7 +2766,6 @@ de:
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
-      take_action: "Reagieren"
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
@@ -2803,7 +2836,6 @@ de:
         title: "Dieses Thema ist eine persönliche Nachricht"
         help: "Dieses Thema ist eine persönliche Nachricht"
     posts: "Beiträge"
-    posts_long: "dieses Thema enthält %{number} Beiträge"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
     original_post: "Original-Beitrag"
@@ -2820,7 +2852,6 @@ de:
     likes_lowercase:
       one: "Like"
       other: "Likes"
-    likes_long: "es gibt %{number} Likes in diesem Thema"
     users: "Benutzer"
     users_lowercase:
       one: "Benutzer"
@@ -3119,8 +3150,6 @@ de:
         delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
         everyone_can_use: "Schlagwörter können von jedem verwendet werden"
-        usable_only_by_staff: "Schlagwörter sind für jeden sichtbar, aber nur das Team kann sie benutzen"
-        visible_only_to_staff: "Schlagwörter sind nur für das Team sichtbar"
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -3665,7 +3694,6 @@ de:
           color_definitions:
             text: "Farbdefinitionen"
             title: "Benutzerdefinierte Farbdefinitionen eingeben (nur für fortgeschrittene Benutzer)"
-            placeholder: "\\r\nVerwende dieses Stylesheet, um der Liste der benutzerdefinierten CSS-Eigenschaften benutzerdefinierte Farben hinzuzufügen.\\r\n\\r\nBeispiel: \\r\n\\r\n: root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nPräfixieren der Eigenschaftsnamen wird dringend empfohlen, um Konflikte mit Plugins und / oder Core zu vermeiden."
           head_tag:
             text: "</head>"
             title: "HTML, das vor dem </head>-Befehl eingefügt wird"

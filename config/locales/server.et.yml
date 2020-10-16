@@ -475,36 +475,29 @@ et:
     off_topic:
       title: "Teemaväline"
       description: "Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada."
-      long_form: "tähistasin selle kui teemavälise"
     spam:
       title: "Spämm"
-      long_form: "tähistasin selle kui spämmi"
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ebasünnis"
-      long_form: "tähistasin selle kui sobimatu"
     notify_user:
       title: "Saada kasutajale @%{username} sõnum"
-      long_form: "saatsin kasutajale sõnumi"
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Miski muu"
       description: "See postitus nõuab meeskonna tähelepanu eelpool loetlemata põhjusel."
-      long_form: "tähistasin selle kui meeskonna tähelepanu vajava"
       email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Järjehoidja"
       description: "Lisa sellele postitusele järjehoidja"
       short_description: "Lisa sellele postitusele järjehoidja"
-      long_form: "lisasin sellele postitusele järjehoidja"
     like:
       title: "Laigi"
       description: "Laigi seda postitust"
       short_description: "Laigi seda postitust"
-      long_form: "laikis seda"
   user_activity:
     no_default:
       others: "Tegevusi pole."
@@ -891,7 +884,6 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1021,8 +1013,6 @@ et:
     submit_button: "Saada kiri"
   tags:
     title: "Sildid"
-    staff_tag_disallowed: 'Sildi "%{tag}" võib lisada ainult meeskonna liige.'
-    staff_tag_remove_disallowed: 'Sildi "%{tag}" võib eemaldada ainult meeskonna liige.'
   rss_by_tag: "%{tag}-ga sildistatud teemad"
   finish_installation:
     congratulations: "Palju õnne, Discourse on paigaldatud!"
@@ -1081,8 +1071,6 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-      colors:
-        title: "Kujundusteema"
       logos:
         title: "Logod"
         fields:
