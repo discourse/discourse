@@ -6,9 +6,11 @@
         {{i18n "topic.slow_mode_notice.duration" duration=durationText}}
       </span>
 
-      {{d-button class="slow-mode-remove"
-                 action=(action "disableSlowMode")
-                 icon="trash-alt"}}
+      {{#if user.canManageTopic}}
+        {{d-button class="slow-mode-remove"
+                  action=(action "disableSlowMode")
+                  icon="trash-alt"}}
+      {{/if}}
     </h3>
   </div>
 {{/if}}
