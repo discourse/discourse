@@ -19,9 +19,8 @@ describe JsLocaleHelper do
 
   JsLocaleHelper.extend StubLoadTranslations
 
-  after do
-    JsLocaleHelper.clear_cache!
-  end
+  before { JsLocaleHelper.clear_cache! }
+  after { JsLocaleHelper.clear_cache! }
 
   describe "#output_locale" do
 
