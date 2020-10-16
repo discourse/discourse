@@ -89,7 +89,7 @@ export default Component.extend({
     return computedLabel;
   },
 
-  click() {
+  click(event) {
     let { action } = this;
 
     if (action) {
@@ -98,9 +98,9 @@ export default Component.extend({
         // There is already a warning in the console.
         this.sendAction("action", this.actionParam);
       } else if (typeof action === "object" && action.value) {
-        action.value(this.actionParam);
+        action.value(this.actionParam, event);
       } else if (typeof this.action === "function") {
-        action(this.actionParam);
+        action(this.actionParam, event);
       }
     }
 
