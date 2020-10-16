@@ -74,6 +74,10 @@ export default Controller.extend(ModalFunctionality, {
     this.setProperties(fromSeconds(seconds));
   },
 
+  _parseValue(value) {
+    return parseInt(value, 10) || 0;
+  },
+
   @action
   setSlowModeDuration(duration) {
     if (duration !== "custom") {
@@ -88,7 +92,13 @@ export default Controller.extend(ModalFunctionality, {
   @action
   enableSlowMode() {
     this.set("saveDisabled", true);
-    const seconds = toSeconds(this.hours, this.minutes, this.seconds);
+
+    const seconds = toSeconds(
+      this._parseValue(this.hours),
+      this._parseValue(this.minutes),
+      this._parseValue(this.seconds)
+    );
+
     Topic.setSlowMode(this.model.id, seconds)
       .catch(popupAjaxError)
       .then(() => {

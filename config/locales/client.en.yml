@@ -2320,7 +2320,6 @@ en:
         title: "Slow Mode"
         select: "Duration:"
         description: "Users will have to wait to be able to post again."
-        current: "Current duration is %{hours} hours, %{minutes} minutes, and %{seconds} seconds."
         save: "Save"
         remove: "Disable"
         hours: "Hours"
