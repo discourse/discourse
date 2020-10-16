@@ -411,6 +411,29 @@ describe PostCreator do
                 locale: :en
               ))
             end
+
+            describe "auto_close_topics_create_linked_topic is enabled" do
+              before do
+                SiteSetting.auto_close_topics_create_linked_topic = true
+              end
+
+              it "enqueues a job to create a new linked topic" do
+                freeze_time
+                post
+
+                post_2 = PostCreator.new(
+                  topic.user,
+                  topic_id: topic.id,
+                  raw: "this is a second post"
+                ).create
+
+                topic.reload
+
+                expect(topic.closed).to eq(true)
+                expect(topic_timer.reload.deleted_at).to eq_time(Time.zone.now)
+                expect(job_enqueued?(job: :create_linked_topic, args: { post_id: post_2.id })).to eq(true)
+              end
+            end
           end
         end
       end

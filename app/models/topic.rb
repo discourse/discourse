@@ -242,6 +242,7 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
+  has_one :linked_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: 'Upload'
   has_many :topic_thumbnails, through: :image_upload

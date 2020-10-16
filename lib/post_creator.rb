@@ -381,6 +381,11 @@ class PostCreator
           locale: SiteSetting.default_locale
         )
       )
+
+      if SiteSetting.auto_close_topics_create_linked_topic?
+        # enqueue a job to create a linked topic
+        Jobs.enqueue_in(5.seconds, :create_linked_topic, post_id: @post.id)
+      end
     end
   end
 
