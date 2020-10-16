@@ -2002,7 +2002,9 @@ en:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>New Topic</span> %{description}"
       membership_request_accepted: "Membership accepted in '%{group_name}'"
-      membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} open membership request for '%{group_name}'"
+        other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
