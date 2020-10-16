@@ -420,7 +420,6 @@ export default {
           name: "Bookmark",
           description: "Bookmark this post",
           short_description: "Bookmark this post",
-          long_form: "bookmarked this post",
           is_flag: false,
           icon: null,
           id: 1,
@@ -431,7 +430,6 @@ export default {
           name: "Like",
           description: "Like this post",
           short_description: "Like this post",
-          long_form: "liked this",
           is_flag: false,
           icon: "heart",
           id: 2,
@@ -443,7 +441,6 @@ export default {
           description:
             "This post is radically off-topic in the current topic, and should probably be moved. If this is a topic, perhaps it does not belong here.",
           short_description: "Not relevant to the discussion",
-          long_form: "flagged this as off-topic",
           is_flag: true,
           icon: null,
           id: 3,
@@ -456,7 +453,6 @@ export default {
             'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.',
           short_description:
             'A violation of <a href="/guidelines">our community guidelines</a>',
-          long_form: "flagged this as inappropriate",
           is_flag: true,
           icon: null,
           id: 4,
@@ -467,7 +463,6 @@ export default {
           name: "Vote",
           description: "Vote for this post",
           short_description: "Vote for this post",
-          long_form: "voted for this post",
           is_flag: false,
           icon: null,
           id: 5,
@@ -479,7 +474,6 @@ export default {
           description:
             "This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.",
           short_description: "This is an advertisement",
-          long_form: "flagged this as spam",
           is_flag: true,
           icon: null,
           id: 8,
@@ -492,7 +486,6 @@ export default {
             "This post contains something I want to talk to this person directly and privately about. Does not cast a flag.",
           short_description:
             "I want to talk to this person directly and privately about their post.",
-          long_form: "notified user",
           is_flag: true,
           icon: null,
           id: 6,
@@ -504,7 +497,6 @@ export default {
           description:
             'This post requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="/tos">TOS</a>, or for another reason not listed above.',
           short_description: "Requires staff attention for another reason",
-          long_form: "notified moderators",
           is_flag: true,
           icon: null,
           id: 7,
@@ -517,7 +509,6 @@ export default {
           name: "Inappropriate",
           description:
             'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.',
-          long_form: "flagged this as inappropriate",
           is_flag: true,
           icon: null,
           id: 4,
@@ -528,7 +519,6 @@ export default {
           name: "Spam",
           description:
             "This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.",
-          long_form: "flagged this as spam",
           is_flag: true,
           icon: null,
           id: 8,
@@ -539,7 +529,6 @@ export default {
           name: "Notify moderators",
           description:
             'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="/tos">TOS</a>, or for another reason not listed above.',
-          long_form: "notified moderators",
           is_flag: true,
           icon: null,
           id: 7,

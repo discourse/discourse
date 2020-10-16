@@ -382,7 +382,7 @@ describe DiscourseNarrativeBot::TrackSelector do
                 new_post = Post.last
 
                 expected_raw = <<~RAW
-                #{I18n.t('discourse_narrative_bot.dice.not_enough_dice', num_of_dice: DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE)}
+                #{I18n.t('discourse_narrative_bot.dice.not_enough_dice', count: DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE)}
 
                 #{I18n.t('discourse_narrative_bot.dice.results', results: '1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1')}
                 RAW

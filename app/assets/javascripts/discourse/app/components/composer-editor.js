@@ -651,7 +651,9 @@ export default Component.extend({
       // Limit the number of simultaneous uploads
       if (max > 0 && data.files.length > max) {
         bootbox.alert(
-          I18n.t("post.errors.too_many_dragged_and_dropped_files", { max })
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            count: max,
+          })
         );
         return false;
       }

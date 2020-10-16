@@ -178,7 +178,9 @@ en:
     wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
-    bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{min_users} users have joined."
+    bootstrap_mode_enabled:
+      one: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} user has joined."
+      other: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email summary emails enabled. This will be automatically turned off when %{count} users have joined."
     bootstrap_mode_disabled: "Bootstrap mode will be disabled within 24 hours."
 
     themes:
@@ -838,7 +840,7 @@ en:
       topic_stat_sentence_month:
         one: "%{count} new topic in the past month."
         other: "%{count} new topics in the past month."
-      n_more: "Categories (%{count} more) ..."
+      n_more: "Categories (%{count} more)..."
 
     ip_lookup:
       title: IP Address Lookup
@@ -963,7 +965,7 @@ en:
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
-      github_profile: "Github"
+      github_profile: "GitHub"
       email_activity_summary: "Activity Summary"
       mailing_list_mode:
         label: "Mailing list mode"
@@ -1067,26 +1069,30 @@ en:
         choose: "Choose a password"
 
       second_factor_backup:
-        title: "Two Factor Backup Codes"
+        title: "Two-Factor Backup Codes"
         regenerate: "Regenerate"
         disable: "Disable"
         enable: "Enable"
         enable_long: "Enable backup codes"
-        manage: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
+        manage:
+          one: "Manage backup codes. You have <strong>%{count}</strong> backup code remaining."
+          other: "Manage backup codes. You have <strong>%{count}</strong> backup codes remaining."
         copy_to_clipboard: "Copy to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         download_backup_codes: "Download backup codes"
-        remaining_codes: "You have <strong>%{count}</strong> backup codes remaining."
+        remaining_codes:
+          one: "You have <strong>%{count}</strong> backup code remaining."
+          other: "You have <strong>%{count}</strong> backup codes remaining."
         use: "Use a backup code"
-        enable_prerequisites: "You must enable a primary second factor before generating backup codes."
+        enable_prerequisites: "You must enable a primary two-factor method before generating backup codes."
         codes:
           title: "Backup Codes Generated"
           description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
 
       second_factor:
-        title: "Two Factor Authentication"
-        enable: "Manage Two Factor Authentication"
+        title: "Two-Factor Authentication"
+        enable: "Manage Two-Factor Authentication"
         disable_all: "Disable All"
         forgot_password: "Forgot password?"
         confirm_password_description: "Please confirm your password to continue"
@@ -1100,16 +1106,16 @@ en:
         short_description: |
           Protect your account with one-time use security codes.
         extended_description: |
-          Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
-        oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
+          Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
+        oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
         use: "Use Authenticator app"
-        enforced_notice: "You are required to enable two factor authentication before accessing this site."
+        enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
-        disable_confirm: "Are you sure you want to disable all second factor methods?"
+        disable_confirm: "Are you sure you want to disable all two-factor methods?"
         save: "Save"
         edit: "Edit"
-        edit_title: "Edit Second Factor"
-        edit_description: "Second Factor Name"
+        edit_title: "Edit Authenticator"
+        edit_description: "Authenticator Name"
         enable_security_key_description: |
           When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
         totp:
@@ -1247,10 +1253,8 @@ en:
 
       auth_tokens:
         title: "Recently Used Devices"
-        ip: "IP"
         details: "Details"
         log_out_all: "Log out all"
-        active: "active now"
         not_you: "Not you?"
         show_all: "Show all (%{count})"
         show_few: "Show fewer"
@@ -1259,6 +1263,9 @@ en:
         browser_and_device: "%{browser} on %{device}"
         secure_account: "Secure my Account"
         latest_post: "You last posted…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">active now</span>'
+        browser_last_seen: "%{browser} | %{date}"
 
       last_posted: "Last Post"
       last_emailed: "Last Emailed"
@@ -1587,10 +1594,10 @@ en:
 
     private_message_info:
       title: "Message"
-      invite: "Invite Others ..."
-      edit: "Add or Remove ..."
-      remove: "Remove ..."
-      add: "Add ..."
+      invite: "Invite Others..."
+      edit: "Add or Remove..."
+      remove: "Remove..."
+      add: "Add..."
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove %{name} from this message?"
       remove_allowed_group: "Do you really want to remove %{name} from this message?"
@@ -1642,10 +1649,10 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
-      second_factor_title: "Two Factor Authentication"
+      second_factor_title: "Two-Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
       second_factor_backup: "Log in using a backup code"
-      second_factor_backup_title: "Two Factor Backup"
+      second_factor_backup_title: "Two-Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
@@ -1669,10 +1676,10 @@ en:
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>%{sentTo}</b>. Please follow the instructions in that email to activate your account."
-      not_allowed_from_ip_address: "You can't login from that IP address."
+      not_allowed_from_ip_address: "You can't log in from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has two factor authentication enabled. Please log in with your password."
+      omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
 
       resend_title: "Resend Activation Email"
       change_email: "Change Email Address"
@@ -1749,7 +1756,9 @@ en:
       loading: Loading...
 
     category_row:
-      topic_count: "%{count} topics in this category"
+      topic_count:
+        one: "%{count} topic in this category"
+        other: "%{count} topics in this category"
 
     select_kit:
       default_header_text: Select...
@@ -1763,7 +1772,9 @@ en:
       min_content_not_reached:
         one: "Select at least %{count} item."
         other: "Select at least %{count} items."
-      invalid_selection_length: "Selection must be at least %{count} characters."
+      invalid_selection_length:
+        one: "Selection must be at least %{count} character."
+        other: "Selection must be at least %{count} characters."
       components:
         categories_admin_dropdown:
           title: "Manage categories"
@@ -1819,7 +1830,9 @@ en:
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
 
-      group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{max} users. Nobody will be notified."
+      group_mentioned_limit:
+        one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
+        other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
       group_mentioned:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
         other: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} people</a> – are you sure?"
@@ -1837,7 +1850,9 @@ en:
         post_length: "Post must be at least %{min} characters"
         try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
-        tags_missing: "You must choose at least %{count} tags"
+        tags_missing:
+          one: "You must choose at least %{count} tag"
+          other: "You must choose at least %{count} tags"
         topic_template_not_modified: "Please add details and specifics to your topic by editing the topic template."
 
       save_edit: "Save Edit"
@@ -1987,7 +2002,9 @@ en:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>New Topic</span> %{description}"
       membership_request_accepted: "Membership accepted in '%{group_name}'"
-      membership_request_consolidated: "%{count} open membership requests for '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} open membership request for '%{group_name}'"
+        other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
@@ -2067,7 +2084,6 @@ en:
       full_page_title: "search topics or posts"
       no_results: "No results found."
       no_more_results: "No more results found."
-      searching: "Searching ..."
       post_format: "#%{post_number} by %{username}"
       results_page: "Search results for '%{term}'"
       more_results: "There are more results. Please narrow your search criteria."
@@ -2076,7 +2092,6 @@ en:
       or_search_google: "Or try searching with Google instead:"
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
-      search_google_title: "Search this site"
 
       context:
         user: "Search posts by @%{username}"
@@ -2479,7 +2494,6 @@ en:
       feature_topic:
         title: "Feature this topic"
         pin: "Make this topic appear at the top of the %{categoryLink} category until"
-        confirm_pin: "You already have %{count} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Users can unpin the topic individually for themselves."
@@ -2489,7 +2503,9 @@ en:
           one: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Topics currently pinned in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Make this topic appear at the top of all topic lists until"
-        confirm_pin_globally: "You already have %{count} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+        confirm_pin_globally:
+          one: "You already have %{count} globally pinned topic. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+          other: "You already have %{count} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Users can unpin the topic individually for themselves."
@@ -2703,7 +2719,9 @@ en:
         upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        too_many_dragged_and_dropped_files: "Sorry, you can only upload %{max} files at a time."
+        too_many_dragged_and_dropped_files:
+          one: "Sorry, you can only upload %{count} file at a time."
+          other: "Sorry, you can only upload %{count} files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
@@ -3083,7 +3101,6 @@ en:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
     posts: "Posts"
-    posts_long: "there are %{number} posts in this topic"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
@@ -3106,7 +3123,6 @@ en:
     likes_lowercase:
       one: "like"
       other: "likes"
-    likes_long: "there are %{number} likes in this topic"
     users: "Users"
     users_lowercase:
       one: "user"
@@ -3191,7 +3207,7 @@ en:
         today: "Today"
         other_periods: "see top:"
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, login, and reply.'
+    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is too old to work on this site</a>. Please <a href="https://browsehappy.com">upgrade your browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"
@@ -4030,7 +4046,17 @@ en:
           color_definitions:
             text: "Color Definitions"
             title: "Enter custom color definitions (advanced users only)"
-            placeholder: "\r\nUse this stylesheet to add custom colors to the list of CSS custom properties.\r\n\r\nExample: \r\n\r\n:root {\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\r\n}\r\n\r\nPrefixing the property names is highly recommended to avoid conflicts with plugins and/or core."
+            placeholder: |2-
+
+              Use this stylesheet to add custom colors to the list of CSS custom properties.
+
+              Example:
+
+              :root {
+                --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:
             text: "</head>"
             title: "HTML that will be inserted before the </head> tag"
@@ -4280,7 +4306,7 @@ en:
             post_edit: "post edit"
             post_unlocked: "post unlocked"
             check_personal_message: "check personal message"
-            disabled_second_factor: "disable Two Factor Authentication"
+            disabled_second_factor: "disable Two-Factor Authentication"
             topic_published: "topic published"
             post_approved: "post approved"
             post_rejected: "post rejected"
@@ -4515,7 +4541,7 @@ en:
         private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
-        second_factor_enabled: Two Factor Authentication Enabled
+        second_factor_enabled: Two-Factor Authentication Enabled
         topics_entered: Topics Viewed
         flags_given_count: Flags Given
         flags_received_count: Flags Received
