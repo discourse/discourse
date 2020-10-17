@@ -1,6 +1,9 @@
-{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories tagId=tagId}}
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories tag=tag additionalTags=additionalTags}}
 
-{{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+{{#unless additionalTags}}
+  {{!-- nav bar doesn't work with tag intersections --}}
+  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+{{/unless}}
 
 {{#if showCategoryAdmin}}
   {{categories-admin-dropdown
@@ -12,15 +15,8 @@
 {{/if}}
 
 {{#if category}}
-  {{#unless tagId}}
-    {{#if showCategoryEdit}}
-      {{d-button
-        class="btn-default edit-category"
-        action=editCategory
-        icon="wrench"
-        label="category.edit"}}
-    {{/if}}
-
+  {{#unless tag}}
+    {{!-- don't show category notification menu on tag pages --}}
     {{#if showCategoryNotifications}}
       {{category-notifications-button
         value=category.notification_level
@@ -31,13 +27,10 @@
   {{/unless}}
 {{/if}}
 
-{{#if tagId}}
-  {{#if showToggleInfo}}
-    {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
-  {{/if}}
-
+{{#if tag}}
   {{#if tagNotification}}
     {{#unless additionalTags}}
+      {{!-- don't show tag notification menu on tag intersections --}}
       {{tag-notifications-button
         onChange=changeTagNotificationLevel
         value=tagNotification.notification_level
@@ -62,3 +55,21 @@
   canCreateTopicOnTag=canCreateTopicOnTag
 }}
 
+{{#if category}}
+  {{#unless tag}}
+    {{!-- don't show category edit button on tag pages --}}
+    {{#if showCategoryEdit}}
+      {{d-button
+        class="btn-default edit-category"
+        action=editCategory
+        icon="wrench"
+        label="category.edit"}}
+    {{/if}}
+  {{/unless}}
+{{/if}}
+
+{{#if tag}}
+  {{#if showToggleInfo}}
+    {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
+  {{/if}}
+{{/if}}

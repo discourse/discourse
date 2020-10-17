@@ -6,6 +6,16 @@
   <div class="list-controls">
     <div class="container">
       <section class="navigation-container tag-navigation">
+
+        {{#if showTagFilter}}
+          {{#if additionalTags}}
+            {{!-- Tag intersections don't work with the tag filter, so show the tag heading instead --}}
+            {{tag-heading tag=tag additionalTags=additionalTags}}
+          {{/if}}
+        {{else}}
+          {{tag-heading tag=tag additionalTags=additionalTags}}
+        {{/if}}
+
         {{d-navigation
           filterMode=filterMode
           canCreateTopic=canCreateTopic
@@ -13,10 +23,11 @@
           createTopic=(route-action "createTopic")
           categories=categories
           category=category
-          tagId=tag.id
+          tag=tag
           noSubcategories=noSubcategories
           showToggleInfo=showToggleInfo
           tagNotification=tagNotification
+          additionalTags=additionalTags
           showInfo=showInfo
           canCreateTopicOnTag=canCreateTopicOnTag
           changeTagNotificationLevel=(action "changeTagNotificationLevel")
