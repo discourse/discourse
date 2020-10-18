@@ -245,7 +245,7 @@ export default Controller.extend(ModalFunctionality, {
       postAction
         .act(this.model, params)
         .then(() => {
-          if (!opts.skipClose) {
+          if (!params.skipClose) {
             this.send("closeModal");
           }
           if (params.message) {
