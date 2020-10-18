@@ -1877,7 +1877,9 @@ en:
           one: "Title can't be more than %{count} character"
           other: "Title can't be more than %{count} characters"
         post_missing: "Post can’t be empty"
-        post_length: "Post must be at least %{min} characters"
+        post_length:
+          one: "Post must be at least %{count} character"
+          other: "Post must be at least %{count} characters"
         try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
         tags_missing:

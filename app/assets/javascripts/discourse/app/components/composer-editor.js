@@ -239,7 +239,9 @@ export default Component.extend({
     if (replyLength < 1) {
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
+      reason = I18n.t("composer.error.post_length", {
+        count: minimumPostLength,
+      });
       const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
