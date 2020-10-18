@@ -44,7 +44,7 @@ export default Component.extend({
       reason = I18n.t("composer.error.title_missing");
     } else if (missingTitleChars > 0) {
       reason = I18n.t("composer.error.title_too_short", {
-        min: minimumTitleLength,
+        count: minimumTitleLength,
       });
     } else if (titleLength > this.siteSettings.max_topic_title_length) {
       reason = I18n.t("composer.error.title_too_long", {
