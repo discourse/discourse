@@ -1873,7 +1873,9 @@ en:
         title_too_short:
           one: "Title must be at least %{count} character"
           other: "Title must be at least %{count} characters"
-        title_too_long: "Title can't be more than %{max} characters"
+        title_too_long:
+          one: "Title can't be more than %{count} character"
+          other: "Title can't be more than %{count} characters"
         post_missing: "Post can’t be empty"
         post_length: "Post must be at least %{min} characters"
         try_like: "Have you tried the %{heart} button?"

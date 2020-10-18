@@ -48,7 +48,7 @@ export default Component.extend({
       });
     } else if (titleLength > this.siteSettings.max_topic_title_length) {
       reason = I18n.t("composer.error.title_too_long", {
-        max: this.siteSettings.max_topic_title_length,
+        count: this.siteSettings.max_topic_title_length,
       });
     }
 
