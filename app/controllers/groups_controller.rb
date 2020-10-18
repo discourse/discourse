@@ -339,7 +339,7 @@ class GroupsController < ApplicationController
     end
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
-        I18n.t("groups.errors.adding_too_many_users", limit: ADD_MEMBERS_LIMIT)
+        I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
