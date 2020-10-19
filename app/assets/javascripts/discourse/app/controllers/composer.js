@@ -546,8 +546,8 @@ export default Controller.extend({
       this.cancelComposer(differentDraftContext);
     },
 
-    save(ignore, event) {
-      this.save(false, { jump: !(event && event.shiftKey) });
+    save() {
+      this.save();
     },
 
     displayEditReason() {
@@ -625,7 +625,7 @@ export default Controller.extend({
 
   disableSubmit: or("model.loading", "isUploading"),
 
-  save(force, options = {}) {
+  save(force) {
     if (this.disableSubmit) {
       return;
     }
@@ -763,8 +763,7 @@ export default Controller.extend({
         this.currentUser.set("any_posts", true);
 
         const post = result.target;
-
-        if (post && !staged && options.jump !== false) {
+        if (post && !staged) {
           DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })
