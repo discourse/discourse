@@ -1186,9 +1186,6 @@ email:
     client: true
     default: true
     hidden: true
-  preserve_email_structure_when_styling:
-    default: true
-    hidden: true
 
 files:
   max_image_size_kb:
