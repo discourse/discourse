@@ -207,13 +207,13 @@
   z-index: z("dropdown");
 }
 
-@media all and (min-width: 400px) {
-  #topic-progress,
-  #topic-progress-expanded {
-    right: 0;
-    left: 0;
-  }
+#topic-progress,
+#topic-progress-expanded {
+  right: 0;
+  left: 0;
+}
 
+@media all and (min-width: 400px) {
   #topic-footer-main-buttons {
     max-width: 70%;
   }

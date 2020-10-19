@@ -320,12 +320,6 @@ createWidget("topic-timeline-container", {
     }
   },
 
-  buildAttributes(attrs) {
-    if (attrs.top) {
-      return { style: `top: ${attrs.top}px` };
-    }
-  },
-
   html(attrs) {
     return this.attach("topic-timeline", attrs);
   },
