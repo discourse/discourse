@@ -13,12 +13,18 @@
     }}
   </div>
 
-  <div class="control-group">
-    {{d-icon "hourglass-end"}}
-    {{input value=hours type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.hours")}}
-    {{input value=minutes type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.minutes")}}
-    {{input value=seconds type="number" class="input-small" placeholder=(i18n "topic.slow_mode_update.seconds")}}
-  </div>
+  {{#if showCustomSelect}}
+    <div class="control-group">
+      <label class="slow-mode-label">{{i18n "topic.slow_mode_update.hours"}}:</label>
+      {{input value=hours type="number" class="input-small"}}
+
+      <label class="slow-mode-label">{{i18n "topic.slow_mode_update.minutes"}}:</label>
+      {{input value=minutes type="number" class="input-small"}}
+
+      <label class="slow-mode-label">{{i18n "topic.slow_mode_update.seconds"}}:</label>
+      {{input value=seconds type="number" class="input-small"}}
+    </div>
+  {{/if}}
 {{/d-modal-body}}
 
 <div class="modal-footer">
