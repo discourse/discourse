@@ -170,6 +170,7 @@ export function acceptance(name, optionsOrCallback) {
   let loggedIn = false;
   let siteChanges;
   let settingChanges;
+  let userChanges;
 
   const setup = {
     beforeEach() {
@@ -185,6 +186,9 @@ export function acceptance(name, optionsOrCallback) {
 
       if (loggedIn) {
         logIn();
+        if (userChanges) {
+          updateCurrentUser(userChanges);
+        }
       }
 
       if (settingChanges) {
@@ -249,8 +253,9 @@ export function acceptance(name, optionsOrCallback) {
   };
 
   const needs = {
-    user() {
+    user(changes) {
       loggedIn = true;
+      userChanges = changes;
     },
     pretender(fn) {
       addPretenderCallback(name, fn);
