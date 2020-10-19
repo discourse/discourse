@@ -14,7 +14,7 @@ export default Mixin.create({
 
   @discourseComputed("period")
   startDate(period) {
-    let fullDay = moment().locale("en").utc().subtract(1, "day");
+    let fullDay = moment().locale("en").utc().endOf("day");
 
     switch (period) {
       case "yearly":
@@ -24,7 +24,7 @@ export default Mixin.create({
         return fullDay.subtract(3, "month").startOf("day");
         break;
       case "weekly":
-        return fullDay.subtract(1, "week").startOf("day");
+        return fullDay.subtract(6, "days").startOf("day");
         break;
       case "monthly":
         return fullDay.subtract(1, "month").startOf("day");
@@ -46,7 +46,7 @@ export default Mixin.create({
 
   @discourseComputed()
   endDate() {
-    return moment().locale("en").utc().subtract(1, "day").endOf("day");
+    return moment().locale("en").utc().endOf("day");
   },
 
   @discourseComputed()

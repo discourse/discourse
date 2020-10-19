@@ -329,6 +329,10 @@ basic:
     default: "helvetica"
     enum: "BaseFontSetting"
     refresh: true
+  heading_font:
+    default: "helvetica"
+    enum: "BaseFontSetting"
+    refresh: true
 
 login:
   invite_only:
@@ -522,7 +526,7 @@ users:
   reserved_usernames:
     type: list
     list_type: compact
-    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|hp"
+    default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
     default: 10
@@ -597,6 +601,9 @@ users:
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
+  allow_users_to_hide_profile:
+    default: true
+    client: true
   hide_user_profiles_from_public:
     default: false
     client: true
@@ -939,7 +946,7 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_unlisted: false
+  embed_unlisted: true
   embed_truncate: true
   embed_support_markdown: false
   allowed_embed_selectors: ""
@@ -1179,9 +1186,6 @@ email:
     client: true
     default: true
     hidden: true
-  preserve_email_structure_when_styling:
-    default: true
-    hidden: true
 
 files:
   max_image_size_kb:
@@ -1301,10 +1305,6 @@ files:
   allow_uploaded_avatars:
     client: true
     default: true
-  allow_animated_avatars:
-    client: true
-    default: false
-  allow_animated_thumbnails: true
   default_avatars:
     default: ""
     type: url_list
@@ -1332,6 +1332,7 @@ files:
     validator: "SelectableAvatarsEnabledValidator"
   selectable_avatars:
     default: ""
+    client: true
     type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:

@@ -782,3 +782,9 @@
 .timezone-input {
   margin-bottom: 0.5em;
 }
+
+.user-invites-page {
+  .invite-error {
+    grid-column: 1 / span 2;
+  }
+}

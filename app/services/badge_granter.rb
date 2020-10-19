@@ -70,17 +70,15 @@ class BadgeGranter
                                        post_id: @post_id,
                                        seq: seq)
 
-      return unless SiteSetting.enable_badges
+        return unless SiteSetting.enable_badges
+
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
-        if SiteSetting.enable_badges?
-          unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
-            notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
-
-            user_badge.update notification_id: notification.id
-          end
+        unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
+          notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
+          user_badge.update!(notification_id: notification.id)
         end
       end
     end

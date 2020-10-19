@@ -397,14 +397,12 @@ lt:
       title: "Ne į temą"
     spam:
       title: "Šlamštas"
-      long_form: "pažymėtas kaip šlamštas"
       email_title: '"%{title}" pažymėta kaip šlamštas'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
     notify_user:
       title: "Siųsti @%{username} žinutę"
-      long_form: "išsiuntėte nariui"
       email_title: 'Jūsų įrašas temote "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -414,12 +412,10 @@ lt:
       title: "Žymės"
       description: "Išsaugoti šį įrašą"
       short_description: "Išsaugoti šį įrašą"
-      long_form: "išsaugojote šį įrašą"
     like:
       title: "Patinka"
       description: "Mėgti šį įrašą"
       short_description: "Mėgti šį įrašą"
-      long_form: "mėgstate"
   user_activity:
     no_default:
       self: "Jūsų dar neturite jokios veklos"
@@ -651,7 +647,6 @@ lt:
     errors: "%{errors}"
     not_available: "Negalimas. Gal pabandykite %{suggestion}?"
     omniauth_confirm_button: "Tęsti"
-    second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
     email:
       sent_test: "išsiųsta!"
@@ -882,7 +877,6 @@ lt:
   color_schemes:
     light: "Šviesi"
     dark: "Tamsi"
-    default_theme_name: "Šviesi"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
   edit_this_page: "Redaguoti šį puslapį"
@@ -1036,10 +1030,6 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Tema"
-      themes_further_reading:
-        title: "Temos"
       logos:
         title: "Logotipas"
         fields:

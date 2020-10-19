@@ -108,7 +108,7 @@ after_initialize do
       private
 
       def fetch_avatar(user)
-        avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
+        avatar_url = UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
@@ -194,6 +194,15 @@ after_initialize do
     return if topic.blank?
 
     first_post = topic.ordered_posts.first
+
+    notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
+    if notification.present?
+      Notification.read(self, notification.id)
+      self.saw_notification_id(notification.id)
+      self.reload
+      self.publish_notifications_state
+    end
+
     PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
     DiscourseNarrativeBot::Store.remove(self.id)
   end

@@ -26,6 +26,10 @@ describe Jobs::ExportUserArchive do
     [data_rows, csv_out]
   end
 
+  def make_component_json
+    JSON.parse(MultiJson.dump(job.public_send(:"#{component}_export")))
+  end
+
   context '#execute' do
     let(:post) { Fabricate(:post, user: user) }
 
@@ -33,6 +37,11 @@ describe Jobs::ExportUserArchive do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.save
+      # force a UserAuthTokenLog entry
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
     end
 
     after do
@@ -143,20 +152,57 @@ describe Jobs::ExportUserArchive do
     end
   end
 
-  context 'user_archive_profile' do
-    let(:component) { 'user_archive_profile' }
+  context 'preferences' do
+    let(:component) { 'preferences' }
 
     before do
       user.user_profile.website = 'https://doe.example.com/john'
       user.user_profile.bio_raw = "I am John Doe\n\nHere I am"
       user.user_profile.save
+      user.user_option.text_size = :smaller
+      user.user_option.automatically_unpin_topics = false
+      user.user_option.save
     end
 
     it 'properly includes the profile fields' do
-      _, csv_out = make_component_csv
+      serializer = job.preferences_export
+      # puts MultiJson.dump(serializer, indent: 4)
+      output = make_component_json
+      payload = output['user']
 
-      expect(csv_out).to match('doe.example.com')
-      expect(csv_out).to match("Doe\n\nHere")
+      expect(payload['website']).to match('doe.example.com')
+      expect(payload['bio_raw']).to match("Doe\n\nHere")
+      expect(payload['user_option']['automatically_unpin_topics']).to eq(false)
+      expect(payload['user_option']['text_size']).to eq('smaller')
+    end
+  end
+
+  context 'auth tokens' do
+    let(:component) { 'auth_tokens' }
+
+    before do
+      Discourse.current_user_provider.new({
+        'HTTP_USER_AGENT' => 'MyWebBrowser',
+        'REQUEST_PATH' => '/some_path/456852',
+      }).log_on_user(user, {}, {})
+    end
+
+    it 'properly includes session records' do
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(1)
+
+      expect(data[0]['user_agent']).to eq('MyWebBrowser')
+    end
+
+    context 'auth token logs' do
+      let(:component) { 'auth_token_logs' }
+      it 'includes details such as the path' do
+        data, csv_out = make_component_csv
+        expect(data.length).to eq(1)
+
+        expect(data[0]['action']).to eq('generate')
+        expect(data[0]['path']).to eq('/some_path/456852')
+      end
     end
   end
 

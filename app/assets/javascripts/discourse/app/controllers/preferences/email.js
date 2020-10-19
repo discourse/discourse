@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { empty, or, alias } from "@ember/object/computed";
+import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { propertyEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
@@ -28,8 +28,6 @@ export default Controller.extend({
   ),
 
   unchanged: propertyEqual("newEmailLower", "oldEmail"),
-
-  currentUserAdmin: alias("currentUser.admin"),
 
   @discourseComputed("newEmail")
   newEmailLower(newEmail) {

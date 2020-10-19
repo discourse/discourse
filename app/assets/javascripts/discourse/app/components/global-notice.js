@@ -120,7 +120,7 @@ export default Component.extend({
           notices.push(
             Notice.create({
               text: I18n.t("bootstrap_mode_enabled", {
-                min_users: this.siteSettings.bootstrap_mode_min_users,
+                count: this.siteSettings.bootstrap_mode_min_users,
               }),
               id: "alert-bootstrap-mode",
             })

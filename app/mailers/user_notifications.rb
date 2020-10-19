@@ -88,7 +88,7 @@ class UserNotifications < ActionMailer::Base
 
   def confirm_new_email(user, opts = {})
     build_user_email_token_by_template(
-      "user_notifications.confirm_new_email",
+      opts[:requested_by_admin] ? "user_notifications.confirm_new_email_via_admin" : "user_notifications.confirm_new_email",
       user,
       opts[:email_token]
     )

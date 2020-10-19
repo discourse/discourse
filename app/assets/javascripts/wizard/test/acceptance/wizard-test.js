@@ -1,8 +1,10 @@
+import { test, module } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
+import { visit } from "@ember/test-helpers";
 
 var wizard;
-QUnit.module("Acceptance: wizard", {
+module("Acceptance: wizard", {
   beforeEach() {
     wizard = startApp();
   },

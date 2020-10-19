@@ -98,11 +98,11 @@ module UserNotificationsHelper
   end
 
   def email_image_url(basename)
-    UrlHelper.absolute("#{Discourse.base_uri}/images/emails/#{basename}")
+    UrlHelper.absolute("#{Discourse.base_path}/images/emails/#{basename}")
   end
 
   def url_for_email(href)
-    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_uri}#{href}")
+    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_path}#{href}")
   rescue URI::Error
     href
   end

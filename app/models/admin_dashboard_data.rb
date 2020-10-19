@@ -200,7 +200,7 @@ class AdminDashboardData
   end
 
   def subfolder_ends_in_slash_check
-    I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_uri =~ /\/$/
+    I18n.t('dashboard.subfolder_ends_in_slash') if Discourse.base_path =~ /\/$/
   end
 
   def pop3_polling_configuration

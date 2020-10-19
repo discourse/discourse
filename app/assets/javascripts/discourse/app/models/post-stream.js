@@ -11,6 +11,7 @@ import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -599,15 +600,25 @@ export default RestModel.extend({
     });
   },
 
+  /* mainly for backwards compatability with plugins, used in quick messages plugin
+   * TODO: remove July 2021
+   * */
+  triggerNewPostInStream(postId, opts) {
+    deprecated(
+      "Please use triggerNewPostsInStream, this method will be removed July 2021"
+    );
+    return this.triggerNewPostsInStream([postId], opts);
+  },
+
   /**
-    Finds and adds a post to the stream by id. Typically this would happen if we receive a message
+    Finds and adds posts to the stream by id. Typically this would happen if we receive a message
     from the message bus indicating there's a new post. We'll only insert it if we currently
     have no filters.
   **/
-  triggerNewPostInStream(postId) {
+  triggerNewPostsInStream(postIds, opts) {
     const resolved = Promise.resolve();
 
-    if (!postId) {
+    if (!postIds || postIds.length === 0) {
       return resolved;
     }
 
@@ -617,27 +628,46 @@ export default RestModel.extend({
     }
 
     const loadedAllPosts = this.loadedAllPosts;
+    this._loadingPostIds = this._loadingPostIds || [];
 
-    if (this.stream.indexOf(postId) === -1) {
-      this.stream.addObject(postId);
-      if (loadedAllPosts) {
-        this.set("loadingLastPost", true);
-        return this.findPostsByIds([postId])
-          .then((posts) => {
-            const ignoredUsers =
-              User.current() && User.current().get("ignored_users");
-            posts.forEach((p) => {
-              if (ignoredUsers && ignoredUsers.includes(p.username)) {
-                this.stream.removeObject(postId);
-                return;
-              }
-              this.appendPost(p);
-            });
-          })
-          .finally(() => {
-            this.set("loadingLastPost", false);
-          });
+    let missingIds = [];
+
+    postIds.forEach((postId) => {
+      if (postId && this.stream.indexOf(postId) === -1) {
+        missingIds.push(postId);
       }
+    });
+
+    if (missingIds.length === 0) {
+      return resolved;
+    }
+
+    if (loadedAllPosts) {
+      missingIds.forEach((postId) => {
+        if (this._loadingPostIds.indexOf(postId) === -1) {
+          this._loadingPostIds.push(postId);
+        }
+      });
+      this.set("loadingLastPost", true);
+      return this.findPostsByIds(this._loadingPostIds, opts)
+        .then((posts) => {
+          this._loadingPostIds = null;
+          const ignoredUsers =
+            User.current() && User.current().get("ignored_users");
+          posts.forEach((p) => {
+            if (ignoredUsers && ignoredUsers.includes(p.username)) {
+              this.stream.removeObject(p.id);
+              return;
+            }
+            this.stream.addObject(p.id);
+            this.appendPost(p);
+          });
+        })
+        .finally(() => {
+          this.set("loadingLastPost", false);
+        });
+    } else {
+      missingIds.forEach((postId) => this.stream.addObject(postId));
     }
 
     return resolved;
@@ -789,11 +819,11 @@ export default RestModel.extend({
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(post) {
     const postId = post.get("id");
-    const index = this.stream.indexOf(postId);
 
     if (this.isMegaTopic) {
       return post.get("post_number");
     } else {
+      const index = this.stream.indexOf(postId);
       return index + 1;
     }
   },
@@ -972,17 +1002,17 @@ export default RestModel.extend({
     });
   },
 
-  findPostsByIds(postIds) {
+  findPostsByIds(postIds, opts) {
     const identityMap = this._identityMap;
     const unloaded = postIds.filter((p) => !identityMap[p]);
 
     // Load our unloaded posts by id
-    return this.loadIntoIdentityMap(unloaded).then(() => {
+    return this.loadIntoIdentityMap(unloaded, opts).then(() => {
       return postIds.map((p) => identityMap[p]).compact();
     });
   },
 
-  loadIntoIdentityMap(postIds) {
+  loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
       return Promise.resolve([]);
     }
@@ -993,7 +1023,15 @@ export default RestModel.extend({
     const data = { post_ids: postIds, include_suggested: includeSuggested };
     const store = this.store;
 
-    return ajax(url, { data }).then((result) => {
+    let headers = {};
+    if (opts && opts.background) {
+      headers["Discourse-Background"] = "true";
+    }
+
+    return ajax(url, {
+      data,
+      headers,
+    }).then((result) => {
       if (result.suggested_topics) {
         this.set("topic.suggested_topics", result.suggested_topics);
       }

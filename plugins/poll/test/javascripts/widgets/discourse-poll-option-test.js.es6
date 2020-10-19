@@ -1,4 +1,4 @@
-import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import { moduleForWidget, widgetTest } from "discourse/tests/helpers/widget-test";
 moduleForWidget("discourse-poll-option");
 
 const template = `{{mount-widget

@@ -395,7 +395,7 @@ module Email
         text, elided_text, text_format = markdown, elided_markdown, Receiver::formats[:markdown]
       end
 
-      if SiteSetting.strip_incoming_email_lines
+      if SiteSetting.strip_incoming_email_lines && text.present?
         in_code = nil
 
         text = text.lines.map! do |line|

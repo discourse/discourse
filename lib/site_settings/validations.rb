@@ -173,6 +173,9 @@ module SiteSettings::Validations
   end
 
   def validate_enforce_second_factor(new_val)
+    if SiteSetting.enable_sso?
+      return validate_error :second_factor_cannot_be_enforced_with_sso_enabled
+    end
     if new_val == "all" && Discourse.enabled_auth_providers.count > 0
       auth_provider_names = Discourse.enabled_auth_providers.map(&:name).join(", ")
       return validate_error(:second_factor_cannot_enforce_with_socials, auth_provider_names: auth_provider_names)

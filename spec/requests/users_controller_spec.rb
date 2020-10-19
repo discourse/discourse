@@ -9,7 +9,7 @@ describe UsersController do
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
 
-      get '/u/hp.json'
+      get '/session/hp.json'
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -584,7 +584,7 @@ describe UsersController do
 
   describe '#create' do
     def honeypot_magic(params)
-      get '/u/hp.json'
+      get '/session/hp.json'
       json = response.parsed_body
       params[:password_confirmation] = json["value"]
       params[:challenge] = json["challenge"].reverse
@@ -1297,6 +1297,8 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns("abc")
         UsersController.any_instance.stubs(:challenge_value).returns("efg")
+        SessionController.any_instance.stubs(:honeypot_value).returns("abc")
+        SessionController.any_instance.stubs(:challenge_value).returns("efg")
       end
 
       let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
@@ -1554,7 +1556,7 @@ describe UsersController do
     it "fails for anonymous users" do
       user = Fabricate(:user)
       get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "works for users who can see invites" do
@@ -1711,7 +1713,7 @@ describe UsersController do
             end
 
             get "/u/#{inviter.username}/invited/pending.json"
-            expect(response.status).to eq(403)
+            expect(response.status).to eq(422)
           end
         end
       end
@@ -1756,6 +1758,21 @@ describe UsersController do
 
             get "/u/#{inviter.username}/invite_links.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context 'when local logins are disabled' do
+          it 'explains why invites are disabled to staff users' do
+            SiteSetting.enable_local_logins = false
+            inviter = sign_in(Fabricate(:admin))
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(200)
+
+            expect(response.parsed_body['error']).to include(I18n.t(
+              'invite.disabled_errors.local_logins_disabled'
+            ))
           end
         end
       end
@@ -2351,7 +2368,7 @@ describe UsersController do
       context 'selectable avatars is enabled' do
 
         before do
-          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars = [avatar1, avatar2]
           SiteSetting.selectable_avatars_enabled = true
         end
 
@@ -2851,12 +2868,24 @@ describe UsersController do
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
 
-    it "returns 404 for a hidden profile" do
-      user = Fabricate(:user)
-      user.user_option.update_column(:hide_profile_and_presence, true)
+    context '`hide_profile_and_presence` user option is checked' do
+      fab!(:user) { Fabricate(:user) }
 
-      get "/u/#{user.username_lower}/summary.json"
-      expect(response.status).to eq(404)
+      before do
+        user.user_option.update_columns(hide_profile_and_presence: true)
+      end
+
+      it "returns 404" do
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns summary info if `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+      end
     end
   end
 
@@ -3336,13 +3365,28 @@ describe UsersController do
       expect(response).to redirect_to '/login'
     end
 
-    it "does not include hidden profiles" do
-      user2.user_option.update(hide_profile_and_presence: true)
-      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body["users"]
+    context '`hide_profile_and_presence` user option is checked' do
+      before do
+        user2.user_option.update_columns(hide_profile_and_presence: true)
+      end
 
-      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+      it "does not include hidden profiles" do
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["users"]
+
+        expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+      end
+
+      it "does include hidden profiles when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["users"]
+
+        expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+      end
     end
   end
 

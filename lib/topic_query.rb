@@ -400,6 +400,12 @@ class TopicQuery
         SELECT cu.category_id FROM category_users cu
         WHERE cu.user_id = :user_id AND cu.notification_level >= :tracking
       )
+      OR topics.category_id IN (
+        SELECT c.id FROM categories c WHERE c.parent_category_id IN (
+          SELECT cd.category_id FROM category_users cd
+          WHERE cd.user_id = :user_id AND cd.notification_level >= :tracking
+        )
+      )
     SQL
 
     if SiteSetting.tagging_enabled
@@ -694,11 +700,10 @@ class TopicQuery
       if options[:no_subcategories]
         result = result.where('categories.id = ?', category_id)
       else
-        result = result.where(<<~SQL, subcategory_ids: Category.subcategory_ids(category_id), category_id: category_id)
-          categories.id in (:subcategory_ids) AND (
-            categories.topic_id <> topics.id OR categories.id = :category_id
-          )
-          SQL
+        result = result.where("categories.id IN (?)", Category.subcategory_ids(category_id))
+        if !SiteSetting.show_category_definitions_in_topic_lists
+          result = result.where("categories.topic_id <> topics.id OR categories.id = ?", category_id)
+        end
       end
       result = result.references(:categories)
 

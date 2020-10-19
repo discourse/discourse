@@ -380,8 +380,13 @@ module Discourse
     SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
   end
 
-  def self.base_uri(default_value = "")
+  def self.base_path(default_value = "")
     ActionController::Base.config.relative_url_root.presence || default_value
+  end
+
+  def self.base_uri(default_value = "")
+    deprecate("Discourse.base_uri is deprecated, use Discourse.base_path instead")
+    base_path(default_value)
   end
 
   def self.base_protocol
@@ -401,7 +406,7 @@ module Discourse
   end
 
   def self.base_url
-    base_url_no_prefix + base_uri
+    base_url_no_prefix + base_path
   end
 
   def self.route_for(uri)
@@ -415,8 +420,8 @@ module Discourse
     return unless uri
 
     path = +(uri.path || "")
-    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
-      path.slice!(Discourse.base_uri)
+    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_path))
+      path.slice!(Discourse.base_path)
       return Rails.application.routes.recognize_path(path)
     end
 
@@ -426,7 +431,6 @@ module Discourse
   end
 
   class << self
-    alias_method :base_path, :base_uri
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 

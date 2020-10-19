@@ -3,7 +3,7 @@ import DateWithZoneHelper from "./date-with-zone-helper";
 const PARIS = "Europe/Paris";
 const SYDNEY = "Australia/Sydney";
 
-QUnit.module("lib:date-with-zone-helper");
+module("lib:date-with-zone-helper");
 
 function buildDateHelper(params = {}) {
   return new DateWithZoneHelper({
@@ -17,7 +17,7 @@ function buildDateHelper(params = {}) {
   });
 }
 
-QUnit.test("#format", (assert) => {
+test("#format", (assert) => {
   let date = buildDateHelper({
     day: 15,
     month: 2,
@@ -28,7 +28,7 @@ QUnit.test("#format", (assert) => {
   assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
-QUnit.test("#repetitionsBetweenDates", (assert) => {
+test("#repetitionsBetweenDates", (assert) => {
   let date;
 
   date = buildDateHelper({
@@ -96,7 +96,7 @@ QUnit.test("#repetitionsBetweenDates", (assert) => {
   );
 });
 
-QUnit.test("#add", (assert) => {
+test("#add", (assert) => {
   let date;
   let futureLocalDate;
 

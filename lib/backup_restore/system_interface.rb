@@ -44,6 +44,8 @@ module BackupRestore
     end
 
     def listen_for_shutdown_signal
+      BackupRestore.clear_shutdown_signal!
+
       Thread.new do
         while BackupRestore.is_operation_running?
           exit if BackupRestore.should_shutdown?
@@ -52,12 +54,16 @@ module BackupRestore
       end
     end
 
-    def pause_sidekiq
+    def pause_sidekiq(reason)
+      return if Sidekiq.paused?
+
       log "Pausing sidekiq..."
-      Sidekiq.pause!
+      Sidekiq.pause!(reason)
     end
 
     def unpause_sidekiq
+      return unless Sidekiq.paused?
+
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
     rescue => ex
@@ -86,6 +92,23 @@ module BackupRestore
       end
     end
 
+    def flush_redis
+      redis = Discourse.redis
+      redis.scan_each(match: "*") do |key|
+        redis.del(key) unless key == SidekiqPauser::PAUSED_KEY
+      end
+    end
+
+    def clear_sidekiq_queues
+      Sidekiq::Queue.all.each do |queue|
+        queue.each { |job| delete_job_if_it_belongs_to_current_site(job) }
+      end
+
+      Sidekiq::RetrySet.new.each { |job| delete_job_if_it_belongs_to_current_site(job) }
+      Sidekiq::ScheduledSet.new.each { |job| delete_job_if_it_belongs_to_current_site(job) }
+      Sidekiq::DeadSet.new.each { |job| delete_job_if_it_belongs_to_current_site(job) }
+    end
+
     protected
 
     def sidekiq_has_running_jobs?
@@ -97,6 +120,10 @@ module BackupRestore
       end
 
       false
+    end
+
+    def delete_job_if_it_belongs_to_current_site(job)
+      job.delete if job.args.first&.fetch("current_site_id", nil) == @current_db
     end
   end
 end

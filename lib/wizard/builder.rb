@@ -181,47 +181,42 @@ class Wizard
           next unless scheme_name.present? && ColorScheme.is_base?(scheme_name)
 
           name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
-          theme = nil
+
           scheme = ColorScheme.find_by(base_scheme_id: scheme_name, via_wizard: true)
-          is_light_theme = (scheme_name == ColorScheme::LIGHT_THEME_ID)
           scheme ||= ColorScheme.create_from_base(name: name, via_wizard: true, base_scheme_id: scheme_name)
 
-          themes = Theme.where(color_scheme_id: scheme.id).order(:id).to_a
-          if is_light_theme
-            themes = (themes || []).concat(Theme.where(color_scheme_id: nil).order(:id).to_a)
-            themes.sort_by(&:id)
+          if default_theme
+            default_theme.color_scheme_id = scheme.id
+            default_theme.save!
+          else
+            theme = Theme.create!(
+              name: name,
+              user_id: @wizard.user.id,
+              color_scheme_id: scheme.id
+            )
+
+            theme.set_default!
           end
-          theme = themes.find(&:default?)
-          theme ||= themes.first
-
-          theme ||= Theme.create!(
-            name: name,
-            user_id: @wizard.user.id,
-            color_scheme_id: scheme.id
-          )
-
-          theme.set_default!
         end
-      end
-
-      @wizard.append_step('themes-further-reading') do |step|
-        step.banner = "further-reading.png"
-        step.add_field(id: 'popular-themes', type: 'component')
       end
 
       @wizard.append_step('fonts') do |step|
-        field = step.add_field(
-          id: 'font_previews',
-          type: 'component',
-          value: SiteSetting.base_font
-        )
+        body_font = step.add_field(id: 'body_font', type: 'dropdown', value: SiteSetting.base_font)
+        heading_font = step.add_field(id: 'heading_font', type: 'dropdown', value: SiteSetting.heading_font)
 
         DiscourseFonts.fonts.each do |font|
-          field.add_choice(font[:key], data: { class: font[:key].tr("_", "-"), name: font[:name] })
+          body_font.add_choice(font[:key], label: font[:name])
+          heading_font.add_choice(font[:key], label: font[:name])
         end
 
+        step.add_field(
+          id: 'font_preview',
+          type: 'component'
+        )
+
         step.on_update do |updater|
-          updater.update_setting(:base_font, updater.fields[:font_previews])
+          updater.update_setting(:base_font, updater.fields[:body_font])
+          updater.update_setting(:heading_font, updater.fields[:heading_font])
         end
       end
 
@@ -281,7 +276,7 @@ class Wizard
 
         EmojiSetSiteSetting.values.each do |set|
           imgs = emoji.map do |e|
-            "<img src='#{Discourse.base_uri}/images/emoji/#{set[:value]}/#{e}.png'>"
+            "<img src='#{Discourse.base_path}/images/emoji/#{set[:value]}/#{e}.png'>"
           end
 
           sets.add_choice(set[:value],

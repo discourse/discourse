@@ -200,7 +200,7 @@ module PrettyText
 
   def self.paths_json
     paths = {
-      baseUri: Discourse::base_uri,
+      baseUri: Discourse.base_path,
       CDN: Rails.configuration.action_controller.asset_host,
     }
 
@@ -490,13 +490,13 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/u/#{UrlHelper.encode_component(name)}"
         when GROUP_MENTIONABLE_TYPE
           element['class'] = 'mention-group notify'
-          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/groups/#{UrlHelper.encode_component(name)}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{UrlHelper.encode_component(name)}"
+          element['href'] = "#{Discourse.base_path}/groups/#{UrlHelper.encode_component(name)}"
         end
       end
     end

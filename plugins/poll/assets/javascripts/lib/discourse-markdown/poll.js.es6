@@ -81,6 +81,29 @@ function invalidPoll(state, tag) {
   token.content = "[/" + tag + "]";
 }
 
+function getTitle(tokens, startToken) {
+  const startIndex = tokens.indexOf(startToken);
+
+  if (startIndex === -1) {
+    return;
+  }
+
+  const pollTokens = tokens.slice(startIndex);
+  const open = pollTokens.findIndex((token) => token.type === "heading_open");
+  const close = pollTokens.findIndex((token) => token.type === "heading_close");
+
+  if (open === -1 || close === -1) {
+    return;
+  }
+
+  const titleTokens = pollTokens.slice(open + 1, close);
+
+  // Remove the heading element
+  tokens.splice(startIndex + open, close - open + 1);
+
+  return titleTokens;
+}
+
 const rule = {
   tag: "poll",
 
@@ -92,7 +115,9 @@ const rule = {
   },
 
   after: function (state, openToken, raw) {
+    const titleTokens = getTitle(state.tokens, openToken);
     let items = getListItems(state.tokens, openToken);
+
     if (!items) {
       return invalidPoll(state, raw);
     }
@@ -139,8 +164,18 @@ const rule = {
 
     token = new state.Token("poll_open", "div", 1);
     token.attrs = [["class", "poll-container"]];
-
     header.push(token);
+
+    if (titleTokens) {
+      token = new state.Token("title_open", "div", 1);
+      token.attrs = [["class", "poll-title"]];
+      header.push(token);
+
+      header.push(...titleTokens);
+
+      token = new state.Token("title_close", "div", -1);
+      header.push(token);
+    }
 
     // generate the options when the type is "number"
     if (attrs["type"] === "number") {
@@ -175,6 +210,7 @@ const rule = {
         token = new state.Token("list_item_close", "li", -1);
         header.push(token);
       }
+
       token = new state.Token("bullet_item_close", "", -1);
       header.push(token);
     }
@@ -240,6 +276,7 @@ export function setup(helper) {
     "div.poll",
     "div.poll-info",
     "div.poll-container",
+    "div.poll-title",
     "div.poll-buttons",
     "div[data-*]",
     "span.info-number",

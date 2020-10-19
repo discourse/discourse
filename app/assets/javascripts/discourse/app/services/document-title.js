@@ -44,6 +44,7 @@ export default Service.extend({
       this.notificationCount = 0;
     }
     this.appEvents.trigger("discourse:focus-changed", session.hasFocus);
+    this._renderFavicon();
     this._renderTitle();
   },
 

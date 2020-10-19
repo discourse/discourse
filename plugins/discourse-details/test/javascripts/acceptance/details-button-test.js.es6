@@ -1,7 +1,7 @@
 import I18n from "I18n";
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import selectKit from "helpers/select-kit-helper";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Details Button", {
   loggedIn: true,

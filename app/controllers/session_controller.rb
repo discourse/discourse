@@ -451,6 +451,17 @@ class SessionController < ApplicationController
     end
   end
 
+  def get_honeypot_value
+    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
+    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+
+    render json: {
+      value: honeypot_value,
+      challenge: challenge_value,
+      expires_in: SecureSession.expiry
+    }
+  end
+
   protected
 
   def check_local_login_allowed(user: nil, check_login_via_email: false)

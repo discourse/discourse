@@ -1,3 +1,4 @@
+import { moduleForComponent } from "ember-qunit";
 import { componentTest } from "wizard/test/helpers/component-test";
 moduleForComponent("invite-list", { integration: true });
 

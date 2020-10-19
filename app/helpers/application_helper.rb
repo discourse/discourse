@@ -300,7 +300,7 @@ module ApplicationHelper
   end
 
   def login_path
-    "#{Discourse::base_uri}/login"
+    "#{Discourse.base_path}/login"
   end
 
   def mobile_view?
@@ -488,7 +488,7 @@ module ApplicationHelper
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
       base_url: Discourse.base_url,
-      base_uri: Discourse::base_uri,
+      base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
       markdown_it_url: script_asset_path('markdown-it-bundle'),

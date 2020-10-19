@@ -490,6 +490,10 @@
   }
 }
 
+.flag-modal .modal-inner-container .select-kit.reviewable-action-dropdown {
+  width: initial;
+}
+
 @media screen and (max-width: 1000px) {
   table.reviewable-scores {
     width: 100%;

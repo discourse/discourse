@@ -90,6 +90,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: $heading-font-family;
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -566,6 +567,8 @@ table {
   }
 
   .control-label {
+    font-family: $heading-font-family;
+
     font-weight: bold;
     font-size: $font-up-2;
     line-height: $line-height-large;

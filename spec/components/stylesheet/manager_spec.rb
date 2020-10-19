@@ -189,13 +189,18 @@ describe Stylesheet::Manager do
       expect(digest1).to_not eq(digest2)
     end
 
-    it "updates digest when setting base font" do
+    it "updates digest when setting fonts" do
       manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
       digest1 = manager.color_scheme_digest
-      SiteSetting.base_font = "nunito"
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
       digest2 = manager.color_scheme_digest
 
       expect(digest1).to_not eq(digest2)
+
+      SiteSetting.heading_font = DiscourseFonts.fonts[4][:key]
+      digest3 = manager.color_scheme_digest
+
+      expect(digest3).to_not eq(digest2)
     end
 
   end

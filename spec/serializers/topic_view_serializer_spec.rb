@@ -212,6 +212,30 @@ describe TopicViewSerializer do
     end
   end
 
+  describe 'tags order' do
+    fab!(:tag1) { Fabricate(:tag, name: 'ctag', topic_count: 5) }
+    fab!(:tag2) { Fabricate(:tag, name: 'btag', topic_count: 9) }
+    fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topic.tags << tag1
+      topic.tags << tag2
+      topic.tags << tag3
+    end
+
+    it 'tags are automatically sorted by tag popularity' do
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(btag ctag atag))
+    end
+
+    it 'tags can be sorted alphabetically' do
+      SiteSetting.tags_sort_alphabetically = true
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(atag btag ctag))
+    end
+  end
+
   context "with flags" do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:other_post) { Fabricate(:post, topic: topic) }

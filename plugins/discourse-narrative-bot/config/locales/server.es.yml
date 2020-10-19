@@ -41,8 +41,6 @@ es:
       trigger: "tirar"
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
-      not_enough_dice: |-
-        Sólo tengo %{num_of_dice} dados. [Vergonzoso](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
       results: |-
@@ -176,11 +174,11 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón me gusta: heart: debajo de esta publicación para avisarme.
+          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón me gusta :heart: debajo de esta publicación para avisarme.
 
           ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópialo y pégalo.
         reply: |-
-          Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié heart_eyes
+          Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
       likes:
@@ -281,7 +279,7 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de `%{search_answer}`** y esto te llevará automáticamente mente al final.
+          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de `%{search_answer}`** y esto te llevará automáticamente al final.
         reply: |-
           ¡Lo encontraste! :tada:
 

@@ -40,7 +40,8 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_globally,
     :pinned_at,
     :pinned_until,
-    :image_url
+    :image_url,
+    :slow_mode_seconds
   )
 
   attributes(
@@ -72,7 +73,8 @@ class TopicViewSerializer < ApplicationSerializer
     :queued_posts_count,
     :show_read_indicator,
     :requested_group_name,
-    :thumbnails
+    :thumbnails,
+    :user_last_posted_at
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -279,5 +281,13 @@ class TopicViewSerializer < ApplicationSerializer
   def thumbnails
     extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
     object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
+  end
+
+  def user_last_posted_at
+    object.topic_user.last_posted_at
+  end
+
+  def include_user_last_posted_at?
+    object.topic.slow_mode_seconds.to_i > 0
   end
 end

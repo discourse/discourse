@@ -123,17 +123,10 @@ lv:
     needs_approval:
       title: "Nepieciešama apstiprināšana"
   post_action_types:
-    off_topic:
-      long_form: "ziņot par šo kā novirzīšanos no tēmas"
     spam:
       title: "Spams"
-      long_form: "ziņot par šo kā spamu"
-    inappropriate:
-      long_form: "ziņot par šo kā nepiedienīgu"
     bookmark:
       title: "Grāmatzīmes"
-    like:
-      long_form: "patika ieraksts"
   topic_flag_types:
     spam:
       title: "Spams"
@@ -366,10 +359,6 @@ lv:
             placeholder: "vards@piemers.com"
       corporate:
         title: "Organizācija"
-      colors:
-        title: "Tēma"
-      themes_further_reading:
-        title: "Dizaini"
       homepage:
         fields:
           homepage_style:

@@ -63,12 +63,14 @@
   border-top: 1px solid var(--primary-low);
   padding: 10px 0;
   max-width: 758px;
-  .topic-timer-heading {
+  .topic-timer-heading,
+  .slow-mode-heading {
     display: flex;
     align-items: center;
     margin: 0px;
   }
-  .topic-timer-remove {
+  .topic-timer-remove,
+  .slow-mode-remove {
     font-size: $font-down-2;
     background: transparent;
     margin-left: auto;

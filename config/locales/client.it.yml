@@ -158,7 +158,6 @@ it:
     topic_admin_menu: "azioni argomento"
     wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via email."
-    bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. A tutti i nuovi utenti verrà assegnato il livello di esperienza 1 e le email riepilogative giornaliere saranno abilitate. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti iscritti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
     themes:
       default_description: "Default"
@@ -612,6 +611,12 @@ it:
         tags:
           title: Etichette
           long_title: "Notifiche predefinite delle Etichette"
+          description: "Quando vengono aggiunti utenti a questo gruppo, le loro impostazioni di notifica delle etichette verranno impostate su questi valori predefiniti, che potranno essere cambiati in seguito."
+          watched_tags_instructions: "Osserva automaticamente tutti gli argomenti con queste etichette. Ai membri del gruppo saranno notificati tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà anche il numero di nuovi messaggi."
+          tracked_tags_instructions: "Segui automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il numero di nuovi messaggi."
+          watching_first_post_tags_instructions: "Gli utenti riceveranno una notifica alla pubblicazione del primo messaggio in ogni nuovo argomento con queste etichette."
+          regular_tags_instructions: "Se queste etichette vengono silenziate, ciò non si applicherà ai membri del gruppo. Agli utenti arriverà una notifica quando verranno menzionati o riceveranno una risposta."
+          muted_tags_instructions: "Gli utenti non riceveranno notifiche su nessun nuovo argomento con queste etichette, e non appariranno in Recenti."
         logs:
           title: "Log"
           when: "Quando"
@@ -622,6 +627,10 @@ it:
           details: "Dettagli"
           from: "Da"
           to: "A"
+      permissions:
+        title: "Autorizzazioni"
+        none: "Non ci sono categorie associate a questo gruppo."
+        description: "I membri di questo gruppo possono accedere a queste categorie"
       public_admission: "Consenti agli utenti di unirsi al gruppo liberamente (richiede che il gruppo abbia visibilità pubblica)"
       public_exit: "Consenti agli utenti di lasciare il gruppo liberamente"
       empty:
@@ -759,6 +768,7 @@ it:
       latest_by: "i più recenti di"
       toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
+      muted: "Categorie silenziate"
       topic_sentence:
         one: "%{count} argomento"
         other: "%{count} argomenti"
@@ -768,7 +778,6 @@ it:
       topic_stat_sentence_month:
         one: "%{count} nuovo argomento nell'ultimo mese."
         other: "%{count} nuovi argomenti nell'ultimo mese."
-      n_more: "Categorie (altre %{count}) ..."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Hostname
@@ -858,7 +867,22 @@ it:
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
+      skip_new_user_tips:
+        not_first_time: "Non è la tua prima volta?"
+        skip_link: "Ignora questi consigli"
       theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
+      color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
+      color_scheme: "Combinazione di colori"
+      color_schemes:
+        default_description: "Predefinito"
+        disable_dark_scheme: "Come di norma"
+        dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
+        undo: "Reimposta"
+        regular: "Abituale"
+        dark: "Modo scuro"
+        default_dark_scheme: "(predefinito del sito)"
+      dark_mode: "Modo scuro"
+      dark_mode_enable: "Attiva lo schema di colori automatico del modo scuro"
       text_size_default_on_all_devices: "Rendi questa dimensione del testo di default su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi personali"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
@@ -874,7 +898,6 @@ it:
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
-      github_profile: "Github"
       email_activity_summary: "Riassunto Attività"
       mailing_list_mode:
         label: "Modalità Mailing list"
@@ -905,6 +928,8 @@ it:
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
+      regular_categories: "Abituale"
+      regular_categories_instructions: "Vedrai queste categorie nelle liste di argomenti \"Recenti\" e \"Popolari\"."
       no_category_access: "Come moderatore hai accesso limitato alla categoria, il salvataggio è disabilitato."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -970,25 +995,20 @@ it:
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
       second_factor_backup:
-        title: "Codici di backup Due Fattori"
         regenerate: "Rigenera"
         disable: "Disabilita"
         enable: "Abilita"
         enable_long: "Abilita codici di backup"
-        manage: "Gestisci i codici di backup. Hai <strong>%{count}</strong> codici di backup rimanenti."
         copy_to_clipboard: "Copia negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia nella Clipboard"
         copied_to_clipboard: "Copiato nella Clipboard"
         download_backup_codes: "Scarica i codici di backup"
-        remaining_codes: "Ti sono rimasti <strong>%{count}</strong> codici di backup."
         use: "Usa un codice di backup"
-        enable_prerequisites: "È necessario abilitare un secondo fattore primario prima di generare codici di backup."
         codes:
           title: "Codici di backup generati"
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
-        title: "Autenticazione a Due Fattori"
-        enable: "Gestione autenticazione a due fattori"
+        disable_all: "Disattiva tutto"
         forgot_password: "Ha dimenticato la password?"
         confirm_password_description: "Per favore conferma la tua password per continuare"
         name: "Nome"
@@ -1000,16 +1020,10 @@ it:
         show_key_description: "Inserisci manualmente"
         short_description: |
           Proteggi il tuo account con un codice di sicurezza usa e getta.
-        extended_description: |
-          L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account attraverso la richiesta di un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
-        oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
         use: "Usa l'app Authenticator"
-        enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
         disable: "Disabilita"
         save: "Salva"
         edit: "Modifica"
-        edit_title: "Modifica secondo fattore"
-        edit_description: "Nome del secondo fattore"
         enable_security_key_description: |
           Quando <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">la chiave di sicurezza hardware</a> è pronta, premi il pulsante Registra di seguito.
         totp:
@@ -1044,7 +1058,6 @@ it:
         taken: "Spiacenti, questa email non è disponibile."
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
-        success_via_admin: "Dal momento che stai cambiando l'email di questo utente, supponiamo che non abbia più accesso al suo indirizzo email originale. Abbiamo inviato una email di reimpostazione della password al nuovo indirizzo email. Tieni presente che l'utente dovrà completare il processo di reimpostazione della password perché il cambio di indirizzo abbia effetto."
         success_staff: "Abbiamo inviato una email al tuo indirizzo corrente. Segui le istruzioni di conferma."
       change_avatar:
         title: "Cambia l'immagine del tuo profilo"
@@ -1132,10 +1145,8 @@ it:
         instructions: "La registrazione dell'account richiede un codice di invito"
       auth_tokens:
         title: "Dispositivi utilizzati di recente"
-        ip: "IP"
         details: "Dettagli"
         log_out_all: "Disconnetti tutti"
-        active: "attivo ora"
         not_you: "Non sei tu?"
         show_all: "Mostra tutti (%{count})"
         show_few: "Mostrane di meno"
@@ -1387,6 +1398,8 @@ it:
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
+    logs_error_rate_notice:
+      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# error/hour} other {# errors/hour}} impostato dal sito."
     learn_more: "per saperne di più..."
     all_time: "totale"
     all_time_desc: "totale argomenti creati"
@@ -1430,8 +1443,6 @@ it:
       disable: "Mostra Messaggi Eliminati"
     private_message_info:
       title: "Messaggio"
-      invite: "Invita altri..."
-      edit: "Aggiungi o rimuovi..."
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Davvero vuoi rimuovere %{name} da questo messaggio?"
       remove_allowed_group: "Vuoi veramente rimuovere %{name} da questo messaggio?"
@@ -1477,10 +1488,8 @@ it:
       title: "Connetti"
       username: "Utente"
       password: "Password"
-      second_factor_title: "Autenticazione a due fattori"
       second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
       second_factor_backup: "Accedi utilizzando un codice di backup"
-      second_factor_backup_title: "Backup Due Fattori"
       second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
       second_factor: "Accedi utilizzando l'app Authenticator"
       security_key_description: "Quando hai preparato la chiave di sicurezza fisica, premi il pulsante Autentica con Chiave di Sicurezza qui sotto."
@@ -1504,10 +1513,8 @@ it:
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
       not_activated: "Non puoi ancora connetterti. Abbiamo inviato un'email di attivazione a <b>%{sentTo}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
-      not_allowed_from_ip_address: "Non puoi connetterti con questo indirizzo IP."
       admin_not_allowed_from_ip_address: "Non puoi connetterti come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
-      omniauth_disallow_totp: "L'autenticazione a due fattori è abilitata per Il tuo account. Per favore, connettiti con la tua password."
       resend_title: "Invia Nuovamente Email Attivazione"
       change_email: "Cambia Indirizzo Email"
       provide_new_email: "Fornisci un nuovo indirizzo e invieremo nuovamente la tua email di conferma."
@@ -1549,6 +1556,7 @@ it:
       accept_invite: "Accetta Invito"
       success: "Il tuo account è stato creato e ora sei connesso."
       name_label: "Nome"
+      password_label: "Password"
       optional_description: "(opzionale)"
     password_reset:
       continue: "Procedi su %{site_name}"
@@ -1574,8 +1582,6 @@ it:
       enter: "Invio"
     conditional_loading_section:
       loading: In caricamento...
-    category_row:
-      topic_count: "%{count} argomenti in questa categoria"
     select_kit:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
@@ -1588,7 +1594,9 @@ it:
       min_content_not_reached:
         one: "Seleziona almeno %{count} elemento."
         other: "Seleziona almeno %{count} elementi."
-      invalid_selection_length: "La selezione deve contenere almeno %{count} caratteri."
+      components:
+        categories_admin_dropdown:
+          title: "Gestisci le categorie"
     date_time_picker:
       from: Da
       to: A
@@ -1635,7 +1643,6 @@ it:
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
       edit_conflict: "modifica conflitto"
-      group_mentioned_limit: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri del limite per le menzioni di %{max} utenti  configurato dagli amministratori . Nessuna notifica verrà inviata. "
       group_mentioned:
         one: "Menzionando %{group}, verrà notificata <a href='%{group_link}'>%{count} persona</a> – sei sicuro?"
         other: "Menzionando %{group}, verranno notificate <a href='%{group_link}'>%{count} persone</a> – sei sicuro?"
@@ -1652,7 +1659,6 @@ it:
         post_length: "Il messaggio deve essere lungo almeno %{min} caratteri"
         try_like: "Hai provato ad usare il pulsante %{heart} ?"
         category_missing: "Devi scegliere una categoria"
-        tags_missing: "Devi scegliere almeno %{count} etichette"
         topic_template_not_modified: "Aggiungi dettagli e specificità al tuo argomento modificando il modello di argomento."
       save_edit: "Salva Modifiche"
       overwrite_edit: "Sovrascrivi modifica"
@@ -1711,6 +1717,8 @@ it:
       abandon: "chiudi il composer e scarta la bozza"
       enter_fullscreen: "Espandi il composer a tutto schermo"
       exit_fullscreen: "Lascia il composer a tutto schermo"
+      show_toolbar: "mostra la barra degli strumenti del Composer"
+      hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
       modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
@@ -1723,6 +1731,7 @@ it:
         draft: Bozza
         edit: Modifica
         reply_to_post:
+          label: Rispondi al messaggio di %{postUsername}
           desc: Rispondi a uno specifico messaggio
         reply_as_new_topic:
           label: Rispondi con un argomento correlato
@@ -1748,6 +1757,8 @@ it:
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
+      reload: "Ricarica"
+      ignore: "Ignora"
     notifications:
       tooltip:
         regular:
@@ -1790,7 +1801,9 @@ it:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nuovo Argomento</span> %{description}"
       membership_request_accepted: "Iscrizione accettata in &quot;%{group_name}&quot;"
-      membership_request_consolidated: "%{count} richieste di iscrizione aperte per &#39;%{group_name}&#39;"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - completato"
       group_message_summary:
         one: "%{count} messaggi in arrivo nella casella %{group_name}"
         other: "%{count} messaggi in arrivo nella casella %{group_name}"
@@ -1829,6 +1842,8 @@ it:
         liked_consolidated: "nuovi \"Mi piace\""
         post_approved: "messaggio approvato"
         membership_request_consolidated: "nuove richieste di iscrizione"
+        reaction: "nuova reazione"
+        votes_released: "Il voto è stato sbloccato"
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -1860,7 +1875,6 @@ it:
       full_page_title: "Cerca negli Argomenti o nei Messaggi"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
-      searching: "Ricerca in corso..."
       post_format: "#%{post_number} da %{username}"
       results_page: "Risultati della ricerca per '%{term}'"
       more_results: "Ci sono più risultati. Restringi i criteri di ricerca."
@@ -1869,7 +1883,6 @@ it:
       or_search_google: "O prova a cercare con Google invece:"
       search_google: "Prova a cercare con Google invece:"
       search_google_button: "Google"
-      search_google_title: "Cerca nel sito"
       context:
         user: "Cerca messaggi di @%{username}"
         category: "Cerca nella categoria #%{category}"
@@ -1914,10 +1927,22 @@ it:
           noreplies: hanno zero risposte
           single_user: contengono un singolo utente
         post:
+          count:
+            label: Messaggi
+          min:
+            placeholder: minimo
+          max:
+            placeholder: massimo
           time:
             label: Pubblicato
             before: prima del
             after: dopo il
+        views:
+          label: Visualizzazioni
+        min_views:
+          placeholder: minimo
+        max_views:
+          placeholder: massimo
     hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
     new_item: "nuovo"
     go_back: "indietro"
@@ -1954,16 +1979,18 @@ it:
         choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
         choose_append_tags: "Scegli nuove etichette da aggiungere a questi argomenti:"
         changed_tags: "Le etichette per quegli argomenti sono state cambiate."
+        remove_tags: "Rimuovi etichette"
       none:
         unread: "Non ci sono argomenti non letti."
         new: "Non ci sono nuovi argomenti."
         read: "Non hai ancora letto nessun argomento."
         posted: "Non hai ancora scritto in nessun argomento."
+        ready_to_create: "Pronto a "
+        latest: "Non hai nuovi messaggi da leggere!"
         bookmarks: "Non hai ancora argomenti nei segnalibri."
         category: "Non ci sono argomenti in %{category}."
         top: "Non ci sono argomenti di punta."
         educate:
-          new: '<p>Qui compaiono i nuovi argomenti.</p><p>Per difetto, gli argomenti vengono considerati nuovi e mostrano l''indicatore <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuovo</span> se sono stati creati negli ultimi 2 giorni.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
           unread: '<p>Qui compaiono gli argomenti che non hai letto.</p><p>Per difetto, gli argomenti sono considerati non letti e ne viene mostrato un conteggio <span class="badge new-posts badge-notification">1</span> se hai:</p><ul><li>Creato l''argomento</li><li>Risposto all''argomento</li><li>Letto l''argomento per più di 4 minuti</li></ul><p>Oppure se hai esplicitamente impostato l''argomento come Seguito o Osservato usando il pannello delle notifiche in fondo ad ogni argomento.</p><p>Puoi cambiare questa configurazione nelle tue <a href="%{userPrefsUrl}">preferenze</a>.</p>'
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
@@ -1972,6 +1999,7 @@ it:
         new: "Non ci sono altri argomenti nuovi."
         unread: "Non ci sono altri argomenti non letti"
         category: "Non ci sono altri argomenti nella categoria %{category}."
+        tag: "Non ci sono altri argomenti con l'etichetta %{tag}."
         top: "Non ci sono altri argomenti di punta."
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     topic:
@@ -2043,7 +2071,9 @@ it:
       read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
+      browse_all_tags: Sfoglia tutte le etichette
       view_latest_topics: visualizza gli argomenti più recenti
+      suggest_create_topic: iniziare una nuova conversazione?
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
@@ -2139,7 +2169,7 @@ it:
           "2_8": "Vedrai un conteggio delle nuove risposte perché stai seguendo questa categoria."
           "2_4": "Vedrai un conteggio delle nuove risposte perché hai pubblicato una risposta in questo argomento."
           "2_2": "Vedrai un conteggio delle nuove risposte perché stai seguendo questo argomento."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Vedrai un conteggio delle nuove risposte perché <a href="%{basePath}/u/%{username}/preferences/notifications">hai letto questo argomento</a>.'
           "1_2": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "1": "Riceverai notifiche se qualcuno menziona il tuo @nome o ti risponde."
           "0_7": "Stai ignorando tutte le notifiche di questa categoria."
@@ -2216,7 +2246,6 @@ it:
       feature_topic:
         title: "Poni argomento in primo piano"
         pin: "Poni questo argomento in cima alla categoria %{categoryLink} fino a"
-        confirm_pin: "Hai già %{count} argomenti puntati. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento in questa categoria?"
         unpin: "Rimuovi questo argomento dalla cima della categoria %{categoryLink}."
         unpin_until: "Rimuovi questo argomento dalla cima della categoria %{categoryLink} o attendi fino a <strong>%{until}</strong>."
         pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
@@ -2226,7 +2255,6 @@ it:
           one: "Argomenti attualmente appuntati in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Poni questo argomento in cima a tutte le liste di argomenti fino a"
-        confirm_pin_globally: "Hai già %{count} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
         unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
         unpin_globally_until: "Rimuovi questo argomento dalla cima di tutte le liste di argomenti o attendi fino a <strong>%{until}</strong>."
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
@@ -2249,6 +2277,7 @@ it:
         success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
         success_group: "Abbiamo invitato il gruppo a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
+        not_allowed: "Spiacenti, l'utente non può essere invitato."
         group_name: "nome gruppo"
       controls: "Impostazioni Argomento"
       invite_reply:
@@ -2415,7 +2444,6 @@ it:
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
-        too_many_dragged_and_dropped_files: "Spiacenti, puoi caricare solo %{max} file contemporaneamente."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
@@ -2694,7 +2722,6 @@ it:
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
-      take_action: "Procedi"
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
@@ -2765,7 +2792,6 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
-    posts_long: "ci sono %{number} messaggi in questo argomento"
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
@@ -2782,7 +2808,6 @@ it:
     likes_lowercase:
       one: "mi piace"
       other: "mi piace"
-    likes_long: "ci sono %{number} \"Mi piace\" in questo argomento"
     users: "Utenti"
     users_lowercase:
       one: "utente"
@@ -2863,7 +2888,6 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti di punta:"
-    browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -2895,6 +2919,8 @@ it:
         profile: "%{shortcut} Profilo"
         messages: "%{shortcut} Messaggi"
         drafts: "%{shortcut} Bozze"
+        next: "%{shortcut} Argomento successivo"
+        previous: "%{shortcut} Argomento precedente"
       navigation:
         title: "Navigazione"
         jump: "%{shortcut} Vai al messaggio n°"
@@ -3043,6 +3069,7 @@ it:
       delete_unused_confirmation_more_tags:
         one: "%{tags} e %{count} altra"
         other: "%{tags} e %{count} altre"
+      delete_no_unused_tags: "Non ci sono etichette inutilizzate."
       delete_unused: "Elimina Etichette Inutilizzate"
       delete_unused_description: "Elimina tutte le etichette che non sono usate in alcun argomento o messaggio personale"
       cancel_delete_unused: "Annulla"
@@ -3081,8 +3108,6 @@ it:
         delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
         everyone_can_use: "Le etichette possono essere usate da tutti"
-        usable_only_by_staff: "Le etichette sono visibili a tutti, ma solo lo staff può usarle"
-        visible_only_to_staff: "Le etichette sono visibili solo allo staff"
       topics:
         none:
           unread: "Non hai argomenti non letti."
@@ -3185,6 +3210,9 @@ it:
           view_table: "tabella"
           view_graph: "grafico"
           refresh_report: "Aggiorna Rapporto"
+          daily: Ogni giorno
+          monthly: Mensile
+          weekly: Settimanale
           dates: "Date (UTC)"
           groups: "Tutti i gruppi"
           disabled: "Il rapporto è disabilitato"
@@ -3234,6 +3262,8 @@ it:
               title: "Chi può vedere questo Gruppo?"
               public: "Chiunque"
               logged_on_users: "Utenti connessi"
+              members: "Proprietari, membri e moderatori del gruppo"
+              staff: "Proprietari e moderatori del gruppo"
               owners: "Proprietari del gruppo"
               description: "Gli amministratori possono vedere tutti i gruppi."
             members_visibility_levels:
@@ -3297,6 +3327,7 @@ it:
         save: Salva
         new_key: Nuova Chiave API
         revoked: Revocata
+        delete: Elimina definitivamente
         not_shown_again: Questa chiave non verrà più visualizzata. Assicurati di prenderne una copia prima di continuare.
         continue: Continua
         use_global_key: Chiave globale (consente tutte le azioni)
@@ -3304,6 +3335,11 @@ it:
           allowed_parameters: Parametri consentiti
           optional_allowed_parameters: Parametri Consentiti (Opzionali)
           any_parameter: (qualsiasi parametro)
+          allowed_urls: URL consentiti
+          descriptions:
+            topics:
+              read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
+              write: Crea un nuovo argomento o pubblica su uno esistente.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3543,6 +3579,7 @@ it:
           is_default: "Il tema è abilitato di default"
           user_selectable: "Il tema può essere selezionato dagli utenti"
           color_scheme: "Tavolozza dei colori"
+          default_light_scheme: "Light (predefinito)"
           color_scheme_select: "Seleziona i colori da usare nel tema"
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
@@ -3640,6 +3677,9 @@ it:
           embedded_scss:
             text: "CSS incorporato"
             title: "Inserisci CSS personalizzato da inviare con la versione incorporata dei commenti"
+          color_definitions:
+            text: "Definizioni dei colori"
+            title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "
@@ -3871,7 +3911,6 @@ it:
             post_edit: "modifica messaggio"
             post_unlocked: "messaggio sbloccato"
             check_personal_message: "controlla messaggio personale"
-            disabled_second_factor: "disabilita Autenticazione a Due Fattori"
             topic_published: "argomento pubblicato"
             post_approved: "messaggio approvato"
             post_rejected: "messaggio respinto"
@@ -4099,7 +4138,6 @@ it:
         private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
         post_count: Messaggi Creati
-        second_factor_enabled: Autenticazione a Due Fattori abilitata
         topics_entered: Argomenti Visti
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
@@ -4225,6 +4263,7 @@ it:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL dell'Immagine Profilo"
+          delete_sso_record: "Elimina record SSO"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."
@@ -4427,6 +4466,7 @@ it:
         title: "Incorporo"
         host: "Host Abilitati"
         class_name: "Nome Classe"
+        allowed_paths: "Lista path permessi"
         edit: "modifica"
         category: "Pubblica nella Categoria"
         add_host: "Aggiungi Host"
@@ -4491,5 +4531,6 @@ it:
           regular: "Utente Normale"
       previews:
         topic_title: "Argomento di discussione"
+        font_title: "Font %{font}"
         share_button: "Condividi"
         reply_button: "Rispondi"

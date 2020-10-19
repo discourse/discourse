@@ -66,7 +66,6 @@ Discourse::Application.routes.draw do
 
     get "site/basic-info" => 'site#basic_info'
     get "site/statistics" => 'site#statistics'
-    get "site/selectable-avatars" => "site#selectable_avatars"
 
     get "srv/status" => "forums#status"
 
@@ -92,17 +91,18 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, only: [:create]
+      resources :groups, only: [:create] do
+        member do
+          put "owners" => "groups#add_owners"
+          delete "owners" => "groups#remove_owner"
+        end
+      end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
           put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
-        end
-        member do
-          put "owners" => "groups#add_owners"
-          delete "owners" => "groups#remove_owner"
         end
       end
 
@@ -358,6 +358,7 @@ Discourse::Application.routes.draw do
     get "session/sso_provider" => "session#sso_provider"
     get "session/current" => "session#current"
     get "session/csrf" => "session#csrf"
+    get "session/hp" => "session#get_honeypot_value"
     get "session/email-login/:token" => "session#email_login_info"
     post "session/email-login/:token" => "session#email_login"
     get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
@@ -406,7 +407,6 @@ Discourse::Application.routes.draw do
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
-      get "#{root_path}/hp" => "users#get_honeypot_value"
       post "#{root_path}/email-login" => "users#email_login"
       get "#{root_path}/admin-login" => "users#admin_login"
       put "#{root_path}/admin-login" => "users#admin_login"
@@ -805,6 +805,7 @@ Discourse::Application.routes.draw do
     put "t/:topic_id/bookmark" => "topics#bookmark", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/tags" => "topics#update_tags", constraints: { topic_id: /\d+/ }
+    put "t/:topic_id/slow_mode" => "topics#set_slow_mode", constraints: { topic_id: /\d+/ }
 
     post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: { topic_id: /\d+/ }
 

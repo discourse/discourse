@@ -45,7 +45,7 @@ class ExtraLocalesController < ApplicationController
   end
 
   def self.url(bundle)
-    "#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+    "#{Discourse.base_path}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
   end
 
   def self.client_overrides_exist?

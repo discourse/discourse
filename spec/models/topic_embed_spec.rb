@@ -41,7 +41,7 @@ describe TopicEmbed do
         expect(TopicEmbed.where(topic_id: post.topic_id)).to be_present
 
         expect(post.topic.category).to eq(embeddable_host.category)
-        expect(post.topic).to be_visible
+        expect(post.topic).not_to be_visible
       end
 
       it "Supports updating the post content" do
@@ -87,6 +87,13 @@ describe TopicEmbed do
         )
         pc.create
         expect(imported_post.topic.reload).to be_visible
+      end
+
+      it "won't be invisible if `embed_unlisted` is set to false" do
+        Jobs.run_immediately!
+        SiteSetting.embed_unlisted = false
+        imported_post = TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+        expect(imported_post.topic).to be_visible
       end
     end
 

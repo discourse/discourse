@@ -121,9 +121,6 @@ th:
   post_action_types:
     spam:
       title: "ขยะ"
-      long_form: "ปักธงไว้ว่าเป็นสแปม"
-    inappropriate:
-      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
     bookmark:
       title: "บุ๊คมาร์ค"
   topic_flag_types:
@@ -404,10 +401,6 @@ th:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
-      colors:
-        title: "ธีม"
-      themes_further_reading:
-        title: "ธีม"
       homepage:
         fields:
           homepage_style:

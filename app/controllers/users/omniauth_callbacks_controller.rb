@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       # Save to redis, with a secret token, then redirect to confirmation screen
       token = SecureRandom.hex
       Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
-      return redirect_to "#{Discourse.base_uri}/associate/#{token}"
+      return redirect_to "#{Discourse.base_path}/associate/#{token}"
     else
       @auth_result = authenticator.after_authenticate(auth)
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
@@ -55,14 +55,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       if parsed && # Valid
          (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
-         !parsed.path.starts_with?("#{Discourse.base_uri}/auth/") # Not /auth URL
+         !parsed.path.starts_with?("#{Discourse.base_path}/auth/") # Not /auth URL
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
     end
 
     if @origin.blank?
-      @origin = Discourse.base_uri("/")
+      @origin = Discourse.base_path("/")
     end
 
     @auth_result.destination_url = @origin
@@ -76,7 +76,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       cookies['_bypass_cache'] = true
       cookies[:authentication_data] = {
         value: @auth_result.to_client_hash.to_json,
-        path: Discourse.base_uri("/")
+        path: Discourse.base_path("/")
       }
       redirect_to @origin
     end

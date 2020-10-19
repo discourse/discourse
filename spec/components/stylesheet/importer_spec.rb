@@ -40,8 +40,23 @@ describe Stylesheet::Importer do
       .to include(":root{--font-family: Helvetica, Arial, sans-serif}")
   end
 
+  it "includes separate body and heading font declarations" do
+    base_font = DiscourseFonts.fonts[2]
+    heading_font = DiscourseFonts.fonts[3]
+
+    SiteSetting.base_font = base_font[:key]
+    SiteSetting.heading_font = heading_font[:key]
+
+    expect(compile_css("desktop"))
+      .to include(":root{--font-family: #{base_font[:stack]}}")
+      .and include(":root{--heading-font-family: #{heading_font[:stack]}}")
+  end
+
   it "includes all fonts in wizard" do
-    expect(compile_css("wizard").scan(/\.font-/).count)
+    expect(compile_css("wizard").scan(/\.body-font-/).count)
+      .to eq(DiscourseFonts.fonts.count)
+
+    expect(compile_css("wizard").scan(/\.heading-font-/).count)
       .to eq(DiscourseFonts.fonts.count)
 
     expect(compile_css("wizard").scan(/@font-face/).count)
@@ -172,6 +187,17 @@ describe Stylesheet::Importer do
       styles = Stylesheet::Importer.import_color_definitions(nil)
       expect(styles).to include(scss)
     end
+  end
 
+  context "#import_wcag_overrides" do
+    it "should do nothing on a regular scheme" do
+      scheme = ColorScheme.create_from_base(name: 'Regular')
+      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("")
+    end
+
+    it "should include WCAG overrides for WCAG based scheme" do
+      scheme = ColorScheme.create_from_base(name: 'WCAG New', base_scheme_id: "WCAG Dark")
+      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("@import \"wcag\";")
+    end
   end
 end

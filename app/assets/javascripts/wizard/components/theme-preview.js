@@ -35,10 +35,10 @@ export default createPreviewComponent(305, 165, {
     };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint({ ctx, colors, font, headingFont, width, height }) {
     const headerHeight = height * 0.3;
 
-    this.drawFullHeader(colors, font);
+    this.drawFullHeader(colors, headingFont, this.logo);
 
     const margin = width * 0.04;
     const avatarSize = height * 0.2;
@@ -57,7 +57,7 @@ export default createPreviewComponent(305, 165, {
 
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${titleFontSize}em '${font}'`;
+    ctx.font = `bold ${titleFontSize}em '${headingFont}'`;
     ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
 
     const bodyFontSize = height / 220.0;

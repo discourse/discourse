@@ -3028,6 +3028,75 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    context 'when logged in as a TL4 user' do
+      it "raises an error if the user can't see the topic" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        pm_topic = Fabricate(:private_message_topic)
+
+        post "/t/#{pm_topic.id}/timer.json", params: {
+          time: '24',
+          status_type: TopicTimer.types[1]
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+    end
+  end
+
+  describe '#set_slow_mode' do
+    context 'when not logged in' do
+      it 'returns a forbidden response' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'logged in as an admin' do
+      it 'allows admins to set the slow mode interval' do
+        sign_in(admin)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        topic.reload
+        expect(response.status).to eq(200)
+        expect(topic.slow_mode_seconds).to eq(3600)
+      end
+    end
+
+    context 'logged in as a regular user' do
+      it 'does nothing if the user is not TL4' do
+        user.update!(trust_level: TrustLevel[3])
+        sign_in(user)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'allows TL4 users to set the slow mode interval' do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        topic.reload
+        expect(response.status).to eq(200)
+        expect(topic.slow_mode_seconds).to eq(3600)
+      end
+    end
   end
 
   describe '#invite' do

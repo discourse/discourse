@@ -1,9 +1,14 @@
 import Controller from "@ember/controller";
 import EmailLog from "admin/models/email-log";
+import EmberObject from "@ember/object";
 
 export default Controller.extend({
   loading: false,
 
+  init() {
+    this._super(...arguments);
+    this.set("filter", EmberObject.create());
+  },
   loadLogs(sourceModel, loadMore) {
     if ((loadMore && this.loading) || this.get("model.allLoaded")) {
       return;
@@ -13,8 +18,14 @@ export default Controller.extend({
 
     sourceModel = sourceModel || EmailLog;
 
+    let args = {};
+    Object.keys(this.filter).forEach((k) => {
+      if (this.filter[k]) {
+        args[k] = this.filter[k];
+      }
+    });
     return sourceModel
-      .findAll(this.filter, loadMore ? this.get("model.length") : null)
+      .findAll(args, loadMore ? this.get("model.length") : null)
       .then((logs) => {
         if (this.model && loadMore && logs.length < 50) {
           this.model.set("allLoaded", true);

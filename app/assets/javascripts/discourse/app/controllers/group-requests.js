@@ -36,7 +36,7 @@ export default Controller.extend({
       return;
     }
 
-    if (!refresh && model.members.length >= model.user_count) {
+    if (!refresh && model.requesters.length >= model.user_count) {
       this.set("application.showFooter", true);
       return;
     }

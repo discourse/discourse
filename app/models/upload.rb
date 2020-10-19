@@ -78,7 +78,6 @@ class Upload < ActiveRecord::Base
   def create_thumbnail!(width, height, opts = nil)
     return unless SiteSetting.create_thumbnails?
     opts ||= {}
-    opts[:allow_animation] = SiteSetting.allow_animated_thumbnails
 
     if get_optimized_image(width, height, opts)
       save(validate: false)
@@ -86,7 +85,9 @@ class Upload < ActiveRecord::Base
   end
 
   # this method attempts to correct old incorrect extensions
-  def get_optimized_image(width, height, opts)
+  def get_optimized_image(width, height, opts = nil)
+    opts ||= {}
+
     if (!extension || extension.length == 0)
       fix_image_extension
     end
@@ -167,6 +168,7 @@ class Upload < ActiveRecord::Base
     # we do not want to exclude topic links that for whatever reason
     # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
+    return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
   rescue ActionController::RoutingError
     false
@@ -460,11 +462,12 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
-#  verified               :boolean
 #  verification_status    :integer          default(1), not null
+#  animated               :boolean
 #
 # Indexes
 #
+#  idx_uploads_on_verification_status       (verification_status)
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))

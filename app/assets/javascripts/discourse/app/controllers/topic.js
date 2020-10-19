@@ -2,7 +2,7 @@ import I18n from "I18n";
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { next, schedule } from "@ember/runloop";
+import { next, schedule, later } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
@@ -29,6 +29,8 @@ import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
 
 let customPostMessageCallbacks = {};
+
+const RETRIES_ON_RATE_LIMIT = 4;
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -65,6 +67,31 @@ export default Controller.extend(bufferedProperty("model"), {
   username_filters: null,
   filter: null,
   quoteState: null,
+
+  init() {
+    this._super(...arguments);
+
+    this._retryInProgress = false;
+    this._retryRateLimited = false;
+    this._newPostsInStream = [];
+
+    this.appEvents.on("post:show-revision", this, "_showRevision");
+    this.appEvents.on("post:created", this, () => {
+      this._removeDeleteOnOwnerReplyBookmarks();
+      this.appEvents.trigger("post-stream:refresh", { force: true });
+    });
+
+    this.setProperties({
+      selectedPostIds: [],
+      quoteState: new QuoteState(),
+    });
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.appEvents.off("post:show-revision", this, "_showRevision");
+  },
 
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
@@ -111,27 +138,6 @@ export default Controller.extend(bufferedProperty("model"), {
   @discourseComputed("model")
   pmPath(topic) {
     return this.currentUser && this.currentUser.pmPath(topic);
-  },
-
-  init() {
-    this._super(...arguments);
-
-    this.appEvents.on("post:show-revision", this, "_showRevision");
-    this.appEvents.on("post:created", this, () => {
-      this._removeDeleteOnOwnerReplyBookmarks();
-      this.appEvents.trigger("post-stream:refresh", { force: true });
-    });
-
-    this.setProperties({
-      selectedPostIds: [],
-      quoteState: new QuoteState(),
-    });
-  },
-
-  willDestroy() {
-    this._super(...arguments);
-
-    this.appEvents.off("post:show-revision", this, "_showRevision");
   },
 
   _showRevision(postNumber, revision) {
@@ -1292,6 +1298,55 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.destroy(this.currentUser);
   },
 
+  retryOnRateLimit(times, promise, topicId) {
+    const currentTopicId = this.get("model.id");
+    topicId = topicId || currentTopicId;
+    if (topicId !== currentTopicId) {
+      // we navigated to another topic, so skip
+      return;
+    }
+
+    if (this._retryRateLimited || times <= 0) {
+      return;
+    }
+
+    if (this._retryInProgress) {
+      later(() => {
+        this.retryOnRateLimit(times, promise, topicId);
+      }, 100);
+      return;
+    }
+
+    this._retryInProgress = true;
+
+    promise()
+      .catch((e) => {
+        const xhr = e.jqXHR;
+        if (
+          xhr &&
+          xhr.status === 429 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.extras &&
+          xhr.responseJSON.extras.wait_seconds
+        ) {
+          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
+          if (waitSeconds < 5) {
+            waitSeconds = 5;
+          }
+
+          this._retryRateLimited = true;
+
+          later(() => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId);
+          }, waitSeconds * 1000);
+        }
+      })
+      .finally(() => {
+        this._retryInProgress = false;
+      });
+  },
+
   subscribe() {
     this.unsubscribe();
 
@@ -1363,7 +1418,23 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            postStream.triggerNewPostInStream(data.id).then(() => refresh());
+            this._newPostsInStream.push(data.id);
+
+            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+              const postIds = this._newPostsInStream;
+              this._newPostsInStream = [];
+
+              return postStream
+                .triggerNewPostsInStream(postIds, { background: true })
+                .then(() => refresh())
+                .catch((e) => {
+                  this._newPostsInStream = postIds.concat(
+                    this._newPostsInStream
+                  );
+                  throw e;
+                });
+            });
+
             if (this.get("currentUser.id") !== data.user_id) {
               this.documentTitle.incrementBackgroundContextCount();
             }

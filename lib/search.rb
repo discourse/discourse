@@ -88,12 +88,18 @@ class Search
       end
     end
 
-    data.gsub!(EmailCook.url_regexp) do |url|
-      uri = URI.parse(url)
-      uri.query = nil
-      uri.to_s
-    rescue URI::Error
-      # Don't fail even if URL turns out to be invalid
+    data.gsub!(/\S+/) do |str|
+      if str =~ /^["]?((https?:\/\/)[\S]+)["]?$/
+        begin
+          uri = URI.parse(Regexp.last_match[1])
+          uri.query = nil
+          str = uri.to_s
+        rescue URI::Error
+          # don't fail if uri does not parse
+        end
+      end
+
+      str
     end
 
     data

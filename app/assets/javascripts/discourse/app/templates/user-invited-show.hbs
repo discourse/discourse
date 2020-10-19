@@ -145,5 +145,9 @@
         {{/if}}
       </section>
     {{/load-more}}
+  {{else}}
+    <div class="alert alert-error invite-error">
+      {{model.error}}
+    </div>
   {{/if}}
 {{/d-section}}
