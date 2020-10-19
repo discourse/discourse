@@ -271,19 +271,11 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
 
-      if SiteSetting.preserve_email_structure_when_styling
-        @fragment.to_html
-      else
-        include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
-      end
+      @fragment.to_html
     end
 
     def to_s
       @fragment.to_s
-    end
-
-    def include_body?
-      @html =~ /<body>/i
     end
 
     def strip_avatars_and_emojis
