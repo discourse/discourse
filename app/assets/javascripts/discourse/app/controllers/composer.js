@@ -28,6 +28,7 @@ import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import { cannotPostAgain } from "discourse/helpers/slow-mode";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -644,6 +645,17 @@ export default Controller.extend({
     if (composer.cantSubmitPost) {
       this.set("lastValidatedAt", Date.now());
       return;
+    }
+
+    const topic = composer.topic;
+
+    if (topic && topic.slow_mode_seconds && topic.user_last_posted_at) {
+      if (cannotPostAgain(topic.slow_mode_seconds, topic.user_last_posted_at)) {
+        const message = I18n.t("composer.slow_mode.error");
+
+        bootbox.alert(message);
+        return;
+      }
     }
 
     composer.set("disableDrafts", true);

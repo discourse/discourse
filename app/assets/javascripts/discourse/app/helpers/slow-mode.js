@@ -28,3 +28,10 @@ export function toSeconds(hours, minutes, seconds) {
 export function durationTextFromSeconds(seconds) {
   return moment.duration(seconds, "seconds").humanize();
 }
+
+export function cannotPostAgain(duration, last_posted_at) {
+  let threshold = new Date(last_posted_at);
+  threshold = new Date(threshold.getTime() + duration * 1000);
+
+  return new Date() < threshold;
+}
