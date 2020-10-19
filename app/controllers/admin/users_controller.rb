@@ -502,14 +502,9 @@ class Admin::UsersController < Admin::AdminController
     raise Discourse::NotFound if target_user.blank?
 
     guardian.ensure_can_merge_users!(@user, target_user)
-    serializer_opts = { root: false, scope: guardian }
 
-    if user = UserMerger.new(@user, target_user, current_user).merge!
-      user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
-      render json: success_json.merge(merged: true, user: user_json)
-    else
-      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
-    end
+    Jobs.enqueue(:merge_user, user_id: @user.id, target_user_id: target_user.id, current_user_id: current_user.id)
+    render json: success_json
   end
 
   def reset_bounce_score
