@@ -70,7 +70,8 @@ addBulkButton("showAppendTagTopics", "append_tags", {
 });
 addBulkButton("removeTags", "remove_tags", {
   icon: "tag",
-  class: "btn-danger",
+  class: "btn-default",
+  enabledSetting: "tagging_enabled",
 });
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
