@@ -85,6 +85,8 @@ class GroupsController < ApplicationController
       type_filters = type_filters - [:my, :owner]
     end
 
+    type_filters.delete(:non_automatic)
+
     # count the total before doing pagination
     total = groups.count
 

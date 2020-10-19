@@ -172,7 +172,7 @@ describe GroupsController do
       expect(body["load_more_groups"]).to eq("/groups?page=1")
       expect(body["total_rows_groups"]).to eq(1)
       expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic, :non_automatic]
       )
     end
 
@@ -288,7 +288,7 @@ describe GroupsController do
         expect(body["total_rows_groups"]).to eq(10)
 
         expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-          described_class::TYPE_FILTERS.keys
+          described_class::TYPE_FILTERS.keys - [:non_automatic]
         )
       end
 
