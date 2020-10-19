@@ -273,13 +273,15 @@ describe TopicView do
       let!(:post) { Fabricate(:post, topic: topic, user: user) }
       let!(:post2) { Fabricate(:post, topic: topic, user: user) }
       let!(:post3) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post4) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post5) { Fabricate(:post, topic: topic, user: user) }
 
       before do
         TopicView.stubs(:chunk_size).returns(2)
       end
 
       it "should return the next page" do
-        expect(TopicView.new(topic.id, user).next_page).to eql(2)
+        expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
       end
     end
 
