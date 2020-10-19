@@ -88,6 +88,7 @@ class Admin::GroupsController < Admin::AdminController
   def add_owners
     group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group
+    guardian.ensure_can_edit_group!(group)
 
     return can_not_modify_automatic if group.automatic
     users = User.where(username: group_params[:usernames].split(","))
@@ -115,6 +116,7 @@ class Admin::GroupsController < Admin::AdminController
   def remove_owner
     group = Group.find_by(id: params.require(:id))
     raise Discourse::NotFound unless group
+    guardian.ensure_can_edit_group!(group)
 
     return can_not_modify_automatic if group.automatic
 
