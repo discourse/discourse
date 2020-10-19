@@ -17,6 +17,7 @@ export default Component.extend({
   translatedLabel: null,
   ariaLabel: null,
   translatedAriaLabel: null,
+  forwardEvent: false,
 
   isLoading: computed({
     set(key, value) {
@@ -98,9 +99,17 @@ export default Component.extend({
         // There is already a warning in the console.
         this.sendAction("action", this.actionParam);
       } else if (typeof action === "object" && action.value) {
-        action.value(this.actionParam, event);
+        if (this.forwardEvent) {
+          action.value(this.actionParam, event);
+        } else {
+          action.value(this.actionParam);
+        }
       } else if (typeof this.action === "function") {
-        action(this.actionParam, event);
+        if (this.forwardEvent) {
+          action(this.actionParam, event);
+        } else {
+          action(this.actionParam);
+        }
       }
     }
 
