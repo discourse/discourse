@@ -598,6 +598,14 @@ blockquote {
   box-sizing: border-box;
 }
 
+.topic-area > .loading-container {
+  // loader needs to be same width as posts
+  width: calc(
+    #{$topic-avatar-width} + #{$topic-body-width} +
+      (#{$topic-body-width-padding} * 2)
+  );
+}
+
 /* hide the reply border above the time gap notices */
 
 .time-gap + .topic-post .topic-body,
