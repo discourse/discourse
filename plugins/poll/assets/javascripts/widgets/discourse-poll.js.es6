@@ -512,18 +512,6 @@ createWidget("discourse-poll-pie-chart", {
       return contents;
     }
 
-    if (attrs.groupableUserFields.length) {
-      const button = this.attach("button", {
-        className: "btn-default poll-show-breakdown",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "far-eye",
-        action: "showBreakdown",
-      });
-
-      contents.push(button);
-    }
-
     const chart = this.attach("discourse-poll-pie-canvas", attrs);
     contents.push(chart);
 
@@ -631,6 +619,18 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
+    }
+
+    if (attrs.groupableUserFields.length) {
+      const button = this.attach("button", {
+        className: "btn-default poll-show-breakdown",
+        label: "poll.group-results.label",
+        title: "poll.group-results.title",
+        icon: "far-eye",
+        action: "showBreakdown",
+      });
+
+      contents.push(button);
     }
 
     if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
