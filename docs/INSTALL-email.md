@@ -16,6 +16,8 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP user name?      [SMTP credentials for your domain under domains tab]
     SMTP password?       [SMTP credentials for your domain under domains tab]
 
+server address for europe is `smtp.eu.mailgun.org`
+
 #### [SendGrid][sg] &mdash; 40k emails on a 30 day trial
 
     SMTP server address? smtp.sendgrid.net
