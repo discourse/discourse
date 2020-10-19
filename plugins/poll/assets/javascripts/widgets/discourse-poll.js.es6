@@ -621,7 +621,7 @@ createWidget("discourse-poll-buttons", {
       }
     }
 
-    if (attrs.groupableUserFields.length) {
+    if (attrs.groupableUserFields.length && poll.voters > 0) {
       const button = this.attach("button", {
         className: "btn-default poll-show-breakdown",
         label: "poll.group-results.label",
