@@ -188,7 +188,7 @@ class Search
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
-      @original_term = PG::Connection.escape_string(@term)
+      @original_term = Search.escape_string(@term)
     end
 
     if @search_pms || @opts[:type_filter] == 'private_messages'
@@ -1100,14 +1100,17 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{term}')"
-    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{self.escape_string(term)}')"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter)
-    term = term.gsub("'", "''")
-    "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
+    "'#{self.escape_string(term)}':*#{weight_filter}"
+  end
+
+  def self.escape_string(term)
+    PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
@@ -1237,7 +1240,7 @@ class Search
 
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt
-      search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
+      search_term = @term.present? ? Search.escape_string(@term) : nil
       ts_config = default_ts_config
 
       default_scope
