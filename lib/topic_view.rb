@@ -66,7 +66,6 @@ class TopicView
     end
 
     @post_number = [@post_number.to_i, 1].max
-    @page = [@page.to_i, 1].max
 
     @include_suggested = options.fetch(:include_suggested) { true }
     @include_related = options.fetch(:include_related) { true }
@@ -78,6 +77,8 @@ class TopicView
       end
 
     @limit ||= @chunk_size
+
+    @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
     setup_filtered_posts
 
@@ -118,15 +119,7 @@ class TopicView
       return topic_embed.embed_url if topic_embed
     end
     path = relative_url.dup
-    path <<
-      if @page > 1
-        "?page=#{@page}"
-      else
-        posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
-        page = ((posts_count - 1) / @limit) + 1
-        page > 1 ? "?page=#{page}" : ""
-      end
-
+    path << ((@page > 1) ? "?page=#{@page}" : "")
     path
   end
 
@@ -639,6 +632,11 @@ class TopicView
   end
 
   private
+
+  def calculate_page
+    posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
+    ((posts_count - 1) / @limit) + 1
+  end
 
   def get_sort_order(post_number)
     sql = <<~SQL
