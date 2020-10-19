@@ -1,20 +1,24 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import Ember from "ember";
 
-acceptance("CustomHTML template", {
-  beforeEach() {
+acceptance("CustomHTML template", function (needs) {
+  needs.hooks.beforeEach(() => {
     Ember.TEMPLATES["top"] = Ember.HTMLBars.compile(
       `<span class='top-span'>TOP</span>`
     );
-  },
-
-  afterEach() {
+  });
+  needs.hooks.afterEach(() => {
     delete Ember.TEMPLATES["top"];
-  },
-});
+  });
 
-test("renders custom template", async (assert) => {
-  await visit("/static/faq");
-  assert.equal(find("span.top-span").text(), "TOP", "it inserted the template");
+  test("renders custom template", async (assert) => {
+    await visit("/static/faq");
+    assert.equal(
+      find("span.top-span").text(),
+      "TOP",
+      "it inserted the template"
+    );
+  });
 });
