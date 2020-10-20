@@ -592,9 +592,6 @@ blockquote {
 }
 
 .gap {
-  width: calc(
-    #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding}
-  );
   box-sizing: border-box;
 }
 
@@ -604,6 +601,10 @@ blockquote {
     #{$topic-avatar-width} + #{$topic-body-width} +
       (#{$topic-body-width-padding} * 2)
   );
+  @media all and (max-width: 790px) {
+    // 16px is the left + right padding on .wrap in common/base/discourse.scss
+    max-width: calc(100vw - 16px);
+  }
 }
 
 /* hide the reply border above the time gap notices */
