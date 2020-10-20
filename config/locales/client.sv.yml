@@ -1637,8 +1637,8 @@ sv:
         one: "Välj minst %{count} föremål."
         other: "Välj minst %{count} föremål."
       invalid_selection_length:
-        one: "Minst %{count} tecken måste ha markerats."
-        other: "Minst %{count} tecken måste ha markerats."
+        one: "Valet måste innehålla minst %{count} tecken."
+        other: "Valet måste innehålla minst %{count} tecken."
       components:
         categories_admin_dropdown:
           title: "Hantera kategorier"
@@ -1779,6 +1779,7 @@ sv:
       slow_mode:
         title: "Detta ämne är i långsamt läge."
         body: "När du har skickat in ett inlägg måste du vänta %{duration} innan du kan göra det igen."
+        error: "Du publicerade nyligen ett inlägg om det här ämnet, som är i långsamt läge. Vänta så att andra användare får en chans att delta."
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara
@@ -2139,19 +2140,14 @@ sv:
         title: "Långsamt läge"
         select: "Varaktighet:"
         description: "Användare måste vänta innan de kan publicera inlägg igen."
-        current: "Nuvarande varaktighet är %{hours} timmar, %{minutes} minuter och %{seconds} sekunder."
         save: "Spara"
         remove: "Inaktivera"
-        hours: "Timmar"
-        minutes: "Minuter"
-        seconds: "Sekunder"
         durations:
           15_minutes: "15 minuter"
           1_hour: "1 timme"
           4_hours: "4 timmar"
           1_day: "1 dag"
           1_week: "1 vecka"
-          custom: "Välj varaktighet"
       slow_mode_notice:
         duration: "Du måste vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:

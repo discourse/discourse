@@ -934,6 +934,7 @@ it:
       read: "Leggi tutto"
       write: "Scrivi tutto"
       one_time_password: "Crea un token di accesso usa e getta"
+      bookmarks_calendar: "Leggi promemoria segnalibri"
     invalid_public_key: "Spiacente, la chiave pubblica non è valida."
     invalid_auth_redirect: "Spiacenti, questo host auth_redirect non è consentito."
     invalid_token: "Token mancante, non valido o scaduto."

@@ -7,7 +7,7 @@
 he:
   site_settings:
     discourse_narrative_bot_enabled: "הפעלת בוט העלילות של Discourse‏ (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "נטרול פוסט קבלת הפנים מאת בוט העלילות של Discourse"
+    disable_discourse_narrative_bot_welcome_post: "השבתת פוסט קבלת הפנים מאת בוט העלילות של Discourse"
     discourse_narrative_bot_ignored_usernames: "שמות משתמשים שבוט העלילות של Discourse צריך להתעלם מהם"
     discourse_narrative_bot_disable_public_replies: "byruk תגובות ציבוריות מאת בוט העלילות של Discourse"
     discourse_narrative_bot_welcome_post_type: "סוג פוסט קבלת הפנים שבוט העלילות של Discourse אמור לשלוח"
@@ -45,6 +45,11 @@ he:
       trigger: "גלגול"
       invalid: |-
         עוד לא נוסח הכלל במתמטיקה שמאפשר שילוב כזה של קוביות, עמך הסליחה. :confounded:
+      not_enough_dice:
+        one: "הוגבלתי לקובייה %{count}. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
+        two: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
+        many: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
+        other: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
       out_of_range: |-
         ידעת ש[מספר הפאות המרבי](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקובייה הוגנת מתמטית הוא 120?
       results: |-

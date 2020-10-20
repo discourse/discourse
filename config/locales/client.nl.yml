@@ -158,6 +158,9 @@ nl:
     topic_admin_menu: "topicacties"
     wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
+    bootstrap_mode_enabled:
+      one: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruiker lid is geworden."
+      other: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
     themes:
       default_description: "Standaard"
@@ -778,6 +781,7 @@ nl:
       topic_stat_sentence_month:
         one: "%{count} nieuw topic in de afgelopen maand."
         other: "%{count} nieuwe topics in de afgelopen maand."
+      n_more: "Categorieën (nog %{count})..."
     ip_lookup:
       title: IP-adres zoeken
       hostname: Hostnaam
@@ -899,6 +903,7 @@ nl:
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
+      github_profile: "GitHub"
       email_activity_summary: "Activiteitsamenvatting"
       mailing_list_mode:
         label: "Mailinglijstmodus"
@@ -996,19 +1001,29 @@ nl:
         choose_new: "Kies een nieuw wachtwoord"
         choose: "Kies een wachtwoord"
       second_factor_backup:
+        title: "Tweefactor-back-upcodes"
         regenerate: "Opnieuw genereren"
         disable: "Uitschakelen"
         enable: "Inschakelen"
         enable_long: "Back-upcodes inschakelen"
+        manage:
+          one: "Back-upcodes beheren. U hebt <strong>%{count}</strong> back-upcode over."
+          other: "Back-upcodes beheren. U hebt <strong>%{count}</strong> back-upcodes over."
         copy_to_clipboard: "Kopiëren naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         download_backup_codes: "Back-upcodes downloaden"
+        remaining_codes:
+          one: "U hebt <strong>%{count}</strong> back-upcode over."
+          other: "U hebt <strong>%{count}</strong> back-upcodes over."
         use: "Een back-upcode gebruiken"
+        enable_prerequisites: "U moet een primaire tweefactormethode inschakelen voordat u back-upcodes genereert."
         codes:
           title: "Back-upcodes gegenereerd"
           description: "Elke back-upcode kan maar één keer worden gebruikt. Bewaar ze op een veilige maar toegankelijke plek."
       second_factor:
+        title: "Tweefactorauthenticatie"
+        enable: "Tweefactorauthenticatie beheren"
         disable_all: "Alle uitschakelen"
         forgot_password: "Wachtwoord vergeten?"
         confirm_password_description: "Bevestig uw wachtwoord om door te gaan"
@@ -1021,10 +1036,17 @@ nl:
         show_key_description: "Voer handmatig in"
         short_description: |
           Bescherm uw account met beveiligingscodes voor eenmalig gebruik.
+        extended_description: |
+          Tweefactorauthenticatie voegt extra beveiliging toe aan uw account door naast uw wachtwoord een eenmalige code te vereisen. Tokens kunnen op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> -apparaten worden gegenereerd.
+        oauth_enabled_warning: "Houd er rekening mee dat sociale aanmeldingen worden uitgeschakeld zodra tweefactorauthenticatie op uw account is ingeschakeld."
         use: "Authenticator-app gebruiken"
+        enforced_notice: "U dient tweefactorauthenticatie in te schakelen voordat u deze website bezoekt."
         disable: "Uitschakelen"
+        disable_confirm: "Weet u zeker dat u alle tweefactormethoden wilt uitschakelen?"
         save: "Opslaan"
         edit: "Bewerken"
+        edit_title: "Authenticator bewerken"
+        edit_description: "Naam van authenticator"
         enable_security_key_description: |
           Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
@@ -1157,6 +1179,9 @@ nl:
         browser_and_device: "%{browser} op %{device}"
         secure_account: "Mijn account beveiligen"
         latest_post: "Uw laatste bericht..."
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">nu actief</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Laatste bericht"
       last_emailed: "Laatst gemaild"
       last_seen: "Gezien"
@@ -1448,6 +1473,10 @@ nl:
       disable: "Verwijderde berichten tonen"
     private_message_info:
       title: "Bericht"
+      invite: "Anderen uitnodigen..."
+      edit: "Toevoegen of verwijderen..."
+      remove: "Verwijderen..."
+      add: "Toevoegen..."
       leave_message: "Weet u zeker dat u dit bericht wilt verlaten?"
       remove_allowed_user: "Wilt u %{name} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u %{name} echt uit dit bericht verwijderen?"
@@ -1493,8 +1522,10 @@ nl:
       title: "Aanmelden"
       username: "Gebruiker"
       password: "Wachtwoord"
+      second_factor_title: "Tweefactorauthenticatie"
       second_factor_description: "Voer de authenticatiecode van uw app in:"
       second_factor_backup: "Aanmelden met een back-upcode"
+      second_factor_backup_title: "Tweefactor-back-up"
       second_factor_backup_description: "Voer een van uw back-upcodes in:"
       second_factor: "Aanmelden met authenticator-app"
       security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
@@ -1518,8 +1549,10 @@ nl:
       awaiting_approval: "Uw account is nog niet door een staflid goedgekeurd. U ontvangt een e-mail zodra dat is gebeurd."
       requires_invite: "Sorry, toegang tot dit forum werkt alleen via uitnodiging."
       not_activated: "U kunt zich nog niet aanmelden. We hebben een activeringsmail naar <b>%{sentTo}</b> gestuurd. Volg de instructies in dat e-mailbericht om uw account te activeren."
+      not_allowed_from_ip_address: "U kunt zich niet aanmelden vanaf dat IP-adres."
       admin_not_allowed_from_ip_address: "U kunt zich niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activeringsmail opnieuw te versturen."
+      omniauth_disallow_totp: "Uw account heeft tweefactorauthenticatie ingeschakeld. Meld u aan met uw wachtwoord."
       resend_title: "Activeringsmail opnieuw versturen"
       change_email: "E-mailadres wijzigen"
       provide_new_email: "Geef een nieuw adres op en we sturen uw bevestigingsmail opnieuw."
@@ -1587,6 +1620,10 @@ nl:
       enter: "Enter"
     conditional_loading_section:
       loading: Laden...
+    category_row:
+      topic_count:
+        one: "%{count} topic in deze categorie"
+        other: "%{count} topics in deze categorie"
     select_kit:
       default_header_text: Selecteren...
       no_content: Geen overeenkomsten gevonden
@@ -1599,6 +1636,9 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
+      invalid_selection_length:
+        one: "Selectie moet minstens %{count} teken bevatten."
+        other: "Selectie moet minstens %{count} tekens bevatten."
       components:
         categories_admin_dropdown:
           title: "Categorieën beheren"
@@ -1648,6 +1688,9 @@ nl:
       similar_topics: "Uw topic lijkt op..."
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
+      group_mentioned_limit:
+        one: "<b>Waarschuwing!</b> U hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde limiet van %{count} gebruiker voor noemen. Niemand krijgt een melding."
+        other: "<b>Waarschuwing!</b> U hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde limiet van %{count} gebruikers voor noemen. Niemand krijgt een melding."
       group_mentioned:
         one: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} persoon</a> op de hoogte brengen – weet u dit zeker?"
         other: "Door %{group} te vermelden, gaat u <a href='%{group_link}'>%{count} personen</a> op de hoogte brengen – weet u dit zeker?"
@@ -1664,6 +1707,9 @@ nl:
         post_length: "Bericht moet minstens %{min} tekens bevatten"
         try_like: "Hebt u de knop %{heart} geprobeerd?"
         category_missing: "U moet een categorie kiezen"
+        tags_missing:
+          one: "U moet minstens %{count} tag kiezen"
+          other: "U moet minstens %{count} tags kiezen"
         topic_template_not_modified: "Voeg details en specifieke kenmerken toe aan uw topic door de topicsjabloon te bewerken."
       save_edit: "Bewerking opslaan"
       overwrite_edit: "Bewerking overschrijven"
@@ -1730,6 +1776,10 @@ nl:
       yourself_confirm:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
+      slow_mode:
+        title: "Dit topic bevindt zich in de langzame modus."
+        body: "Na het plaatsen van een bericht dient u %{duration} te wachten voordat u weer een bericht kunt plaatsen."
+        error: "U hebt onlangs een bericht geplaatst in dit topic, dat zich in de langzame modus bevindt. Wacht nog even, zodat anderen de kans krijgen om deel te nemen."
       admin_options_title: "Optionele stafinstellingen voor dit topic"
       composer_actions:
         reply: Antwoorden
@@ -1806,6 +1856,9 @@ nl:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nieuw Topic</span> %{description}"
       membership_request_accepted: "Lidmaatschap geaccepteerd in '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} open lidmaatschapsaanvraag voor '%{group_name}'"
+        other: "%{count} open lidmaatschapsaanvragen voor '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - voltooid"
@@ -2083,6 +2136,24 @@ nl:
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
       deleted: "Het topic is verwijderd"
+      slow_mode_update:
+        title: "Langzame modus"
+        select: "Tijdsduur:"
+        description: "Gebruikers moeten wachten om opnieuw berichten te kunnen plaatsen."
+        save: "Opslaan"
+        remove: "Uitschakelen"
+        hours: "Uren:"
+        minutes: "Minuten:"
+        seconds: "Seconden:"
+        durations:
+          15_minutes: "15 minuten"
+          1_hour: "1 uur"
+          4_hours: "4 uur"
+          1_day: "1 dag"
+          1_week: "1 week"
+          custom: "Aangepaste tijdsduur"
+      slow_mode_notice:
+        duration: "U dient %{duration} te wachten tussen berichten in dit topic"
       topic_status_update:
         title: "Topictimer"
         save: "Timer instellen"
@@ -2212,6 +2283,7 @@ nl:
         open: "Topic openen"
         close: "Topic sluiten"
         multi_select: "Berichten selecteren..."
+        slow_mode: "Langzame modus instellen"
         timed_update: "Topictimer instellen..."
         pin: "Topic vastmaken..."
         unpin: "Topic losmaken..."
@@ -2261,6 +2333,9 @@ nl:
           one: "Momenteel vastgemaakte topics in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Momenteel vastgemaakte topics in %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>."
         pin_globally: "Dit topic bovenaan in alle topiclijsten laten verschijnen tot"
+        confirm_pin_globally:
+          one: "U hebt al %{count} globaal vastgemaakt topic. Te veel vastgemaakte topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet u zeker dat u nog een topic globaal wilt vastmaken?"
+          other: "U hebt al %{count} globaal vastgemaakte topics. Te veel vastgemaakte topics kunnen storend zijn voor nieuwe en anonieme gebruikers. Weet u zeker dat u nog een topic globaal wilt vastmaken?"
         unpin_globally: "Verwijder dit topic uit de bovenkant van alle topiclijsten."
         unpin_globally_until: "Verwijder dit topic uit de bovenkant van alle topiclijsten of wacht tot <strong>%{until}</strong>."
         global_pin_note: "Gebruikers kunnen het topic individueel voor zichzelf losmaken."
@@ -2450,6 +2525,9 @@ nl:
         upload: "Sorry, er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
         file_too_large: "Sorry, dat bestand is te groot (maximale grootte is %{max_size_kb}kb). Misschien kunt u het uploaden naar een cloudopslagdienst, en dan de koppeling plakken?"
         too_many_uploads: "Sorry, u kunt maar één bestand tegelijk uploaden."
+        too_many_dragged_and_dropped_files:
+          one: "Sorry, u kunt maar %{count} bestand tegelijk uploaden."
+          other: "Sorry, u kunt maar %{count} bestanden tegelijk uploaden."
         upload_not_authorized: "Sorry, het bestand dat u probeert te uploaden is niet geautoriseerd (geautoriseerde extensies: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
@@ -2909,6 +2987,7 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken:"
+    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -3717,6 +3796,17 @@ nl:
           color_definitions:
             text: "Kleurdefinities"
             title: "Aangepaste kleurdefinities invoeren (alleen gevorderde gebruikers)"
+            placeholder: |2-
+
+              Gebruik dit stylesheet om aangepaste kleuren aan de lijst van aangepaste CSS-eigenschappen toe te voegen.
+
+              Voorbeeld:
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              Voorvoegsels bij eigenschapnamen worden ten sterkste aanbevolen om conflicten met plug-ins en/of kern te vermijden.
           head_tag:
             text: "</head>"
             title: "HTML die voor de </head>-tag wordt ingevoegd"
@@ -3958,6 +4048,7 @@ nl:
             post_edit: "bericht bewerken"
             post_unlocked: "bericht ontgrendeld"
             check_personal_message: "persoonlijk bericht controleren"
+            disabled_second_factor: "tweefactorauthenticatie uitschakelen"
             topic_published: "topic gepubliceerd"
             post_approved: "bericht goedgekeurd"
             post_rejected: "bericht afgekeurd"
@@ -4186,6 +4277,7 @@ nl:
         private_topics_count: Privétopics
         posts_read_count: Gelezen berichten
         post_count: Gemaakte berichten
+        second_factor_enabled: Tweefactorauthenticatie ingeschakeld
         topics_entered: Bekeken topics
         flags_given_count: Gegeven markeringen
         flags_received_count: Ontvangen markeringen
