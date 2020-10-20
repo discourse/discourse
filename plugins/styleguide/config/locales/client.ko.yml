@@ -42,6 +42,10 @@ ko:
           title: "카테고리 목록"
         topic_link:
           title: "글 링크"
+        topic_list_item:
+          title: "글 목록 항목"
+        topic_statuses:
+          title: "글 상태"
         topic_list:
           title: "글 목록"
         latest_topic_list:

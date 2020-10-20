@@ -488,36 +488,29 @@ ro:
     off_topic:
       title: "În afara subiectului"
       description: "Această postare nu este relevantă în contextul discuției așa cum este definită prin titlu și prin prima postare din subiect, așa că probabil ar trebui mutată în altă parte."
-      long_form: "marcat cu marcaj de avertizare ca fiind în afara subiectului"
     spam:
       title: "Spam"
-      long_form: "marchează ca spam"
       email_title: '"%{title}" a fost marcat cu marcaj de avertizare spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Necorespunzător"
-      long_form: "marcat ca necorespunzător"
     notify_user:
       title: "Trimite-i un mesaj lui @%{username}"
-      long_form: "utilizator căruia i-a fost trimis mesaj"
       email_title: 'Postarea ta din "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Altceva"
       description: "Această postare necesită atenția echipei pentru un motiv diferit ce nu este menționat anterior."
-      long_form: "marcat cu mesaj de avertizare necesitând atenția echipei"
       email_title: 'O postare din "%{title}" necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Semn de carte"
       description: "Adaugă postarea la semne de carte"
       short_description: "Adaugă postarea la semne de carte"
-      long_form: "postarea a fost adăugată la semne de carte"
     like:
       title: "Apreciere"
       description: "Apreciază această postare"
       short_description: "Apreciază această postare"
-      long_form: "a apreciat asta"
   user_activity:
     no_bookmarks:
       others: "Nu există semne de carte."
@@ -1058,8 +1051,6 @@ ro:
     delete_all_posts_max: "Numărul maxim de postări ce pot fi șterse deodată folosind butonul șterge toate postările. Dacă un utilizator are mai multe postări decât această valoare, postările sale nu pot fi șterse dintr-o dată și utilizatorul nu poate fi șters."
     email_editable: "Permite utilizatorilor să își schimbe adresa de email după înregistrare."
     allow_uploaded_avatars: "Permite utilizatorilor să încarce o poză de profil personalizate."
-    allow_animated_avatars: "Permite utilizatorilor să folosească gif-uri animate în pozele de profil. ATENȚIE: după schimbarea acestei opțiuni trebuie să lansezi un rake task specific, respectiv - avatars:refresh "
-    allow_animated_thumbnails: "Generează thumbnails animate pentru gif-uri animate."
     default_avatars: "URL-urile avatarelor care vor fi folosite implicit pentru noii utilizatori până ce aceștia le vor schimba."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori după crearea contului sau schimbarea email-ului."
     digest_topics: "Numărul maxim de subiecte notorii care să fie afișate în rezumatul pe email."
@@ -1254,7 +1245,6 @@ ro:
     errors: "%{errors}"
     not_available: "Nu este disponibil. Încearcă %{suggestion}?"
     something_already_taken: "Ceva nu a funcționat, poate numele de utilizator sau emailul este deja înregistrat. Încearcă opțiunea parola uitată."
-    omniauth_error_unknown: "Ceva a mers greșit la procesarea autentificării, te rugăm să încerci din nou."
     omniauth_confirm_button: "Continuă"
     authenticator_error_no_valid_email: "Nu este permisă nicio adresă de email asociată cu %{account}. Ar trebui să îți configurezi contul cu o adresă de email diferită."
     new_registrations_disabled: "Înregistrarea de conturi noi nu este momentan permisă."
@@ -1653,6 +1643,10 @@ ro:
     sender_body_blank: "conținutul este gol"
   color_schemes:
     base_theme_name: "Bază"
+    wcag: "WCAG deschis"
+    wcag_theme_name: "WCAG deschis"
+    wcag_dark: "WCAG Închis"
+    wcag_dark_theme_name: "WCAG Închis"
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"
@@ -1905,8 +1899,6 @@ ro:
     initial_topic_title: Rapoarte de performanță website
   tags:
     title: "Etichete"
-    staff_tag_disallowed: 'Eticheta "%{tag}" poate fi pusă doar de un membru al echipei.'
-    staff_tag_remove_disallowed: 'Eticheta "%{tag}" poate fi ștearsă doar de un membru al echipei.'
   rss_by_tag: "Subiecte etichetate %{tag}"
   finish_installation:
     congratulations: "Felicitări, ai instalat Discourse!"
@@ -1972,8 +1964,6 @@ ro:
             label: "Mesaje automate"
       corporate:
         title: "Organizație"
-      colors:
-        title: "Temă"
       logos:
         title: "Logo-uri"
         fields:

@@ -202,7 +202,6 @@ uk:
     topic_admin_menu: "дії теми"
     wizard_required: "Запрошуємо до вашого нового Discourse! Давайте розпочнемо з <a href='%{url}' data-auto-route='true'>майстра налаштування</a> ✨"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
-    bootstrap_mode_enabled: "Задля спрощення запуску вашого нового сайту, ви зараз у режимі початкового завантаження. Усі нові користувачі отримають рівень довіри 1 й увімкнені щоденні підсумки електронною поштою. Це буде автоматично вимкнено, коли приєднається мінімально потрібна кількість користувачів — %{min_users}."
     bootstrap_mode_disabled: "Режим Bootstrap буде вимкнено через 24 години."
     themes:
       default_description: "Промовчання"
@@ -859,7 +858,6 @@ uk:
         few: "%{count} нові теми за минулий місяць."
         many: "%{count} нових тем за минулий місяць."
         other: "%{count} нових тем за минулий місяць."
-      n_more: "Категорії (ще %{count})…"
     ip_lookup:
       title: Пошук IP адреси
       hostname: Ім'я хоста
@@ -981,7 +979,6 @@ uk:
       suspended_notice: "Цього користувача призупинено до %{date}."
       suspended_permanently: "Цей користувач призупинений."
       suspended_reason: "Причина: "
-      github_profile: "Github"
       email_activity_summary: "Зведення активності"
       mailing_list_mode:
         label: "Режим списку розсилки"
@@ -1079,25 +1076,19 @@ uk:
         choose_new: "Вибрати новий пароль"
         choose: "Вибрати пароль"
       second_factor_backup:
-        title: "Двофакторні резервні коди"
         regenerate: "Перегенерувати"
         disable: "Вимкнути"
         enable: "Увімкнути"
         enable_long: "Увімкнути резервні коди"
-        manage: "Керувати резервними кодами. У вас залишилося резервних кодів: <strong>%{count}</strong>."
         copy_to_clipboard: "Скопіювати в буфер"
         copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"
         copied_to_clipboard: "Скопійовано у буфер обміну"
         download_backup_codes: "Завантажити резервні коди"
-        remaining_codes: "У вас залишилося резервних кодів: <strong>%{count}</strong>."
         use: "Використовуйте резервний код"
-        enable_prerequisites: "Ви повинні увімкнути основний другий фактор, перш ніж генерувати резервні коди."
         codes:
           title: "Резервні коди згенеровано"
           description: "Кожен з цих резервних кодів може бути використаний лише раз. Зберігайте їх у безпечному, але доступному місці."
       second_factor:
-        title: "Двофакторна автентифікація"
-        enable: "Керувати двофакторною автентифікацією"
         disable_all: "Вимкнути всі"
         forgot_password: "Забули пароль?"
         confirm_password_description: "Будь ласка, підтвердіть свій пароль для продовження"
@@ -1110,17 +1101,10 @@ uk:
         show_key_description: "Уведіть вручну"
         short_description: |
           Захистіть свій обліковий запис одноразовими кодами безпеки.
-        extended_description: |
-          Двофакторна автентифікація краще захищає ваш обліковий запис, вимагаючи окрім вашого пароля ще й введення одноразового токена. Токени можна генерувати на пристроях з <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> та <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Будь ласка, зверніть увагу, що вхід через соціальні мережі буде вимкнено, як тільки у вашому обліковому записі буде увімкнена двофакторна автентифікація."
         use: "Використовуйте додаток для перевірки автентифікації "
-        enforced_notice: "Ви мусите увімкнути двофакторну автентифікацію, щоб отримати доступ до цього сайту."
         disable: "Вимкнути"
-        disable_confirm: "Ви впевнені, що хочете вимкнути всі методи другого фактора?"
         save: "Зберегти"
         edit: "Редагувати"
-        edit_title: "Редагувати другий фактор"
-        edit_description: "Назва другого фактора"
         enable_security_key_description: |
           Якщо у вас підготовлено <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">фізичний ключ безпеки</a> , натисніть кнопку "Зареєструвати" нижче.
         totp:
@@ -1245,10 +1229,8 @@ uk:
         instructions: "Для реєстрації облікового запису потрібен код запрошення"
       auth_tokens:
         title: "Нещодавно використані пристрої"
-        ip: "IP"
         details: "Деталі"
         log_out_all: "Вийти з усіх пристроїв"
-        active: "активні зараз"
         not_you: "Не ви?"
         show_all: "Показати всі (%{count})"
         show_few: "Показати менше"
@@ -1568,10 +1550,6 @@ uk:
       disable: "Показати видалені дописи"
     private_message_info:
       title: "Повідомлення"
-      invite: "Запросити інших..."
-      edit: "Додати або Видалити..."
-      remove: "Видалити ..."
-      add: "Додати…"
       leave_message: "Ви дійсно хочете залишити це повідомлення?"
       remove_allowed_user: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
       remove_allowed_group: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
@@ -1617,10 +1595,8 @@ uk:
       title: "Увійти"
       username: "Користувач"
       password: "Пароль"
-      second_factor_title: "Двофакторна автентифікація"
       second_factor_description: "Введіть код аутентифікації з вашого додатки:"
       second_factor_backup: "Увійти за допомогою запасного коду"
-      second_factor_backup_title: "Запасний вхід двофакторної аутентифікації"
       second_factor_backup_description: "Введіть запасний код:"
       second_factor: "Увійти за допомогою програми аутентифікації"
       security_key_description: "Коли ви підготуєте свій фізичний ключ безпеки, натисніть кнопку Аутентификация з ключем безпеки нижче."
@@ -1644,10 +1620,8 @@ uk:
       awaiting_approval: "Ваш обліковий запис ще не затверджено членом команди. Коли його буде активовано, Ви отримаєте електронного листа."
       requires_invite: "Даруйте, доступ до цього форуму - лише за запрошеннями."
       not_activated: "Ви ще не можете увійти. Ми вже надіслали Вам листа для активації на скриньку <b>%{sentTo}</b>. Будь ласка, виконайте інструкції в цьому листі, щоб активувати обліковий запис."
-      not_allowed_from_ip_address: "З цієї IP адреси вхід заборонений."
       admin_not_allowed_from_ip_address: "З цієї IP адреси вхід адміністраторів заборонений."
       resend_activation_email: "Натисніть тут, щоб отримати ще один лист з активацією."
-      omniauth_disallow_totp: "У вашого профілю включена двухфакторная аутентифікація. Будь ласка, увійдіть під своїм паролем."
       resend_title: "Надіслати ще раз листа для активації"
       change_email: "Змінити електронну скриньку"
       provide_new_email: "Вкажіть нову адресу електронної пошти, щоб задіяти його та заново вислати лист із кодом активації."
@@ -1715,8 +1689,6 @@ uk:
       enter: "Увійти"
     conditional_loading_section:
       loading: Завантаження...
-    category_row:
-      topic_count: "%{count} тем в цій категорії"
     select_kit:
       default_header_text: Вибрати...
       no_content: Збігів, не знайдено
@@ -1733,7 +1705,6 @@ uk:
         few: "Введіть хоча б %{count} елементів."
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
-      invalid_selection_length: "Вибір повинен містити не менше %{count} символів."
       components:
         categories_admin_dropdown:
           title: "Керування категоріями"
@@ -1783,7 +1754,6 @@ uk:
       similar_topics: "Ваша тема схожа на..."
       drafts_offline: "чернетки в офлайні"
       edit_conflict: "Редагувати конфлікт"
-      group_mentioned_limit: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{max} користувачів. Ніхто не отримає сповіщення."
       group_mentioned:
         one: "Згадуючи групу %{group}, ви тем самим відправите повідомлення <a href='%{group_link}'>%{count}му користувачеві</a> - ви впевнені?"
         few: "Згадуючи групу %{group}, ви тим самим відправите повідомлення <a href='%{group_link}'>%{count} користувачам</a> - ви впевнені?"
@@ -1802,7 +1772,6 @@ uk:
         post_length: "Найменший розмір допису має бути %{min} символів"
         try_like: "Ви пробували натиснути на %{heart} кнопку?"
         category_missing: "Ви повинні обрати категорію"
-        tags_missing: "Ви маєте вибрати хоча б %{count} міток"
         topic_template_not_modified: "Впишіть опис об’єкта в шаблон"
       save_edit: "Зберегти зміни"
       overwrite_edit: "Перезаписати, правити"
@@ -1955,7 +1924,6 @@ uk:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Нова тема</span> %{description}"
       membership_request_accepted: "Запит на вступ прийнятий '%{group_name}'"
-      membership_request_consolidated: "%{count} відкрити запити на членство для &quot;%{group_name}&quot;"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - завершено"
@@ -2034,7 +2002,6 @@ uk:
       full_page_title: "пошук тем або повідомлень"
       no_results: "Нічого не знайдено."
       no_more_results: "Більше нічого не знайдено."
-      searching: "Пошук ..."
       post_format: "#%{post_number} від %{username}"
       results_page: "Результати пошуку для '%{term}'"
       more_results: "Знайдено безліч результатів. Будь ласка, уточніть, критерії пошуку."
@@ -2043,7 +2010,6 @@ uk:
       or_search_google: "Або спробуйте пошукати в Google:"
       search_google: "Спробуйте пошукати в Google:"
       search_google_button: "Google"
-      search_google_title: "Пошук на цьому сайті"
       context:
         user: "Шукати повідомлення від @%{username}"
         category: "Шукати в розділі #%{category}"
@@ -2154,7 +2120,6 @@ uk:
         category: "В категорії %{category} немає тем."
         top: "There are no top topics."
         educate:
-          new: '<p>Ваші нові теми скоро з’являться тут.</p><p>За замовчуванням, нові теми відзначаються іконкою: <span class="badge new-topic badge-notification" style="vertical-align: middle; line-height: inherit;">Нова</span>, якщо вона була створена протягом 2 тижнів.</p><p>Перейдіть в <a href="%{userPrefsUrl}">настройки</a> для того, щоб вибрати період активності нових тем.</p>'
           unread: '<p>Ваші непрочитані теми скоро з’являться тут.</p><p>За замовчуванням теми отримують лічильник <span class="badge new-posts badge-notification">1</span>, якщо:</p><ul><li>Створена тема</li><li>Відповіли на тему</li><li>Тема прочитана після закінчення 4 хвилин, після її створення</li></ul><p>Чи можна задати свої налаштування відстеження нових тем.</p><p>Перейдіть у свої <a href="%{userPrefsUrl}">налаштування</a>.</p>'
       bottom:
         latest: "Більше немає останніх тем."
@@ -2426,7 +2391,6 @@ uk:
       feature_topic:
         title: "Закріпити цю тему"
         pin: "Закріпити цю тему вгорі розділу %{categoryLink} до"
-        confirm_pin: "У вас вже є закріплена тема в розділі (%{count}). Перебір таких тем може виявитися неприємною незручністю для новачків та анонімних читачів. Ви впевнені, що хочете закріпити ще одну тему в цьому розділі?"
         unpin: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink}."
         unpin_until: "Скасувати закріплення цієї теми вгорі розділу %{categoryLink} (станеться автоматично <strong>%{until}</strong>)."
         pin_note: "Користувачі можуть відкріпити тему, кожен сам для себе."
@@ -2438,7 +2402,6 @@ uk:
           many: "Глобально закріплених тем в розділі %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Глобально закріплених тем в розділі %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Закріпити цю тему вгорі всіх розділів та списків тем до"
-        confirm_pin_globally: "У вас вже є глобально закріплені теми (%{count}). Перебір таких тем може виявитися неприємним незручністю для новачків та анонімних читачів. Ви впевнені, що хочете глобально закріпити ще одну тему?"
         unpin_globally: "Скасувати прикріплення цієї теми вгорі всіх розділів та списків тем."
         unpin_globally_until: "Скасувати прикріплення цієї теми вгорі всіх розділів та списків тем (станеться автоматично <strong>%{until}</strong>)."
         global_pin_note: "Користувачі можуть відкріпити тему, кожен сам для себе."
@@ -2658,7 +2621,6 @@ uk:
         upload: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
         file_too_large: "На жаль, цей файл надто великий (максимально допустимий розмір %{max_size_kb} КБ). Чому б не завантажити цей файл в службу хмарного обміну, а потім поділитися посиланням?"
         too_many_uploads: "Даруйте, але Ви можете одночасно завантажувати тільки один файл."
-        too_many_dragged_and_dropped_files: "Вибачте, ви можете завантажити тільки %{max} файл."
         upload_not_authorized: "На жаль, ви не можете завантажити файл даного типу (список дозволених типів файлів: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати зображення."
         attachment_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати прикріплення."
@@ -2953,7 +2915,6 @@ uk:
     flagging:
       title: "Дякую за вашу допомогу в підтримці порядку!"
       action: "Поскаржитися на допис"
-      take_action: "Вжити заходів"
       notify_action: "Повідомлення"
       official_warning: "Офіційне попередження"
       delete_spammer: "Видалити спамера"
@@ -3034,7 +2995,6 @@ uk:
         title: "Ця тема є особистим повідомленням"
         help: "Ця тема є особистим повідомленням"
     posts: "Дописи"
-    posts_long: "тема містить %{number} дописів"
     posts_likes_MF: |
       В цій темі {count, plural, one {1 повідомлення} other {# повідомлень}} {ratio, select,
       low {з високим рейтингом симпатій}
@@ -3061,7 +3021,6 @@ uk:
       few: "симпатій"
       many: "симпатій"
       other: "симпатій"
-    likes_long: "в цій темі %{number} вподобань"
     users: "Користувачі"
     users_lowercase:
       one: "користувач"
@@ -3156,7 +3115,6 @@ uk:
         this_week: "Тиждень"
         today: "Today"
         other_periods: "дивитися TOP:"
-    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер занадто старий для цього сайту</a>. Будь ласка, <a href="https://browsehappy.com">оновіть браузер</a> для повноцінної роботи з сайтом.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -3399,8 +3357,6 @@ uk:
         delete: "Видалити"
         confirm_delete: "Ви впевнені, що хочете вилучити цю групу міток?"
         everyone_can_use: "Мітки може використовувати будь-хто"
-        usable_only_by_staff: "Мітки видимі для всіх, але лише працівники можуть їх використовувати"
-        visible_only_to_staff: "Мітки видимі лише персоналу"
       topics:
         none:
           unread: "У Вас немає непрочитаних тем."
@@ -3995,7 +3951,6 @@ uk:
           color_definitions:
             text: "Визначення кольорів"
             title: "Введіть власні визначення кольорів (лише для досвідчених користувачів)"
-            placeholder: "\\r\nВикористовуйте цю таблицю стилів, щоб додати власні кольори до списку CSS властивостей.\\r\n\\r\nПриклад: \\r\n\\r\n:root {\\r\n  --thetheme-terciary-or-quaternary: # {dark-light-choose ($tertiary, $quaternary)};\\r\n}\\r\n\\r\nДодавайте префікс до імен, щоб уникнути конфліктів з плагінами та / або ядром discourse."
           head_tag:
             text: "</head>"
             title: "HTML-код, який буде вставлений перед міткою </head>"
@@ -4227,7 +4182,6 @@ uk:
             post_edit: "редагувати повідомлення"
             post_unlocked: "повідомлення розморожено"
             check_personal_message: "перевірити приватне повідомлення"
-            disabled_second_factor: "відключити двохфакторну автентифікацію"
             topic_published: "тема опублікована"
             post_approved: "повідомлення затверджено"
             post_rejected: "повідомлення відхилено"
@@ -4458,7 +4412,6 @@ uk:
         private_topics_count: Приватних тем
         posts_read_count: Дописів прочитано
         post_count: Дописів створено
-        second_factor_enabled: Двухфакторная аутентифікація включена
         topics_entered: Тем переглянуто
         flags_given_count: Скарг подано
         flags_received_count: Скарг отримано

@@ -10,10 +10,15 @@ ar:
       title: "دليل الأنماط"
       welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
       categories:
-        organisms: المخلوقات الحيّة
+        atoms: الذرّات (Atoms)
+        molecules: الجزئيات (Molecules)
+        organisms: المخلوقات الحية (Organisms)
       sections:
         typography:
+          title: "أسلوب الطباعة"
           example: "مرحبًا بك في دِسكورس"
+        date_time_inputs:
+          title: "حقول إدخال التاريخ/الوقت"
         font_scale:
           title: "نظام الخطوط"
         colors:
@@ -29,12 +34,14 @@ ar:
           title: "المُنسدلات"
         categories:
           title: "الفئات"
+        bread_crumbs:
+          title: "عناصر التنقّل التفصيلي"
         navigation:
           title: "التنقّل"
         navigation_bar:
           title: "شريط التنقّل"
         navigation_stacked:
-          title: "التنقّل حين يُرصّ"
+          title: "التنقّل الرأسي"
         categories_list:
           title: "قائمة الفئات"
         topic_link:
@@ -49,6 +56,8 @@ ar:
           title: "قائمة المواضيع الحديثة"
         footer_message:
           title: "رسالة التذييل"
+        signup_cta:
+          title: "الدعوة إلى التسجيل"
         topic_timer_info:
           title: "مؤقّتات المواضيع"
         topic_footer_buttons:
@@ -56,14 +65,16 @@ ar:
         topic_notifications:
           title: "إخطارات المواضيع"
         post:
-          title: "المنشور"
+          title: "المشاركة"
         topic_map:
           title: "خريطة الموضوع"
+        suggested_topics:
+          title: "المواضيع المقترحة"
         post_menu:
-          title: "قائمة الموضوع"
+          title: "قائمة المشاركة"
         user_about:
           title: "مربّع ”عن المستخدم“"
         header_icons:
-          title: "أيقونات الترويسات"
+          title: "أيقونات الترويسة"
         spinners:
           title: "المُنزلقات"

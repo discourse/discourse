@@ -7,8 +7,16 @@
 ru:
   js:
     presence:
-      replying: "ответ"
-      editing: "редактирование"
+      replying:
+        one: "отвечает"
+        few: "отвечают"
+        many: "отвечают"
+        other: "отвечают"
+      editing:
+        one: "редактирует"
+        few: "редактируют"
+        many: "редактируют"
+        other: "редактируют"
       replying_to_topic:
         one: "отвечает"
         few: "отвечают"

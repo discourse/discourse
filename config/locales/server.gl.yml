@@ -191,12 +191,6 @@ gl:
   invite:
     not_found: "O teu código de invitación non é válido. <a href='%{base_url}/about'>Contacta co noso equipo</a>."
     not_found_json: "O teu  código de invitación non é válido. Contacta co noso equipo."
-    not_found_template: |
-      <p>A túa invitación a <a href="%{base_url}">%{site_name}</a> xa foi aceptada.</p>
-
-      <p>Se lembras o teu contrasina, podes <a href="%{base_url}/login">iniciar sesión.</p>
-
-      <p>Se non é así, </a>restablece o contrasinal</a>.</p>
     error_message: "Houbo un erro ao aceptar a invitación. Contacta co administrador do sitio."
     user_exists: "Non necesitas invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
     confirm_email: "<p>Xa case está! Enviámosche un correo de activación ao teu enderezo electrónico. Sigue as instrucións para activar a túa conta.</p><p>Se non che chega, comprobar o cartafol de correo lixo.</p>"
@@ -206,7 +200,6 @@ gl:
     max_rows: "As primeiras %{max_bulk_invites} invitacións xa foron enviadas. Tenta dividir o ficheiro en partes máis pequenas."
     error: "Houbo un erro ao cargar o ficheiro. Téntao máis tarde."
   invite_link:
-    email_taken: "Este correo electrónico xa está en uso. Se xa tes unha conta, inicia sesión ou restablece o contrasinal."
     max_redemptions_limit: "debería estar entre 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
@@ -803,43 +796,36 @@ gl:
       title: "Sen relación co tema"
       description: "Esta publicación non é relevante para a discusión actual tal e como se define no título e na súa primeira entrada; probablemente debería moverse a outro lugar."
       short_description: "Non é relevante para a discusión"
-      long_form: "denunciado como sen relación co tema"
     spam:
       title: "Correo lixo"
       description: "Esta publicación é publicidade ou vandalismo. Non é útil nin relevante para o tema."
       short_description: "Isto é publicidade ou vandalismo"
-      long_form: "denunciado como correo lixo"
       email_title: '"%{title}" foi denunciado como correo lixo'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropiado"
       description: 'Esta publicación ten contido que unha persoa razoable podería considerar ofensivo, abusivo ou supor unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>.'
       short_description: 'Unha violación das<a href="%{base_path}/guidelines">directrices da nosa comunidade</a> '
-      long_form: "denunciado como inapropiado"
     notify_user:
       title: "Enviar unha mensaxe a @%{username}"
       description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
       short_description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
-      long_form: "usuario notificado vía mensaxe"
       email_title: 'A túa publicación en "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo máis"
       description: "Esta publicación require a atención dos responsables do sitio por unha razón non listada arriba."
       short_description: "Require a atención do equipo por outro motivo"
-      long_form: "denunciado para ser revisado polo equipo"
       email_title: 'Unha publicación en «%{title}» require a atención dos responsables do sitio'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Marcador"
       description: "Engadir esta publicación aos marcadores"
       short_description: "Engadir esta publicación a marcadores"
-      long_form: "publicación engadida a marcadores"
     like:
       title: "Gústame"
       description: "Gústame esta publicación"
       short_description: "Gústame esta publicación"
-      long_form: "gustoume isto"
   draft:
     sequence_conflict_error:
       title: "erro no borrador"
@@ -1289,10 +1275,6 @@ gl:
     sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, caso do envío de correos electrónicos, están a ser realizadas de forma asíncrona por sidekiq. Asegúrate de que, ao menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprende máis sobre Sidekiq aquí</a>.'
     queue_size_warning: "O número de tarefas na cola é %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou tes que engadir máis traballadores de Sidekiq."
     memory_warning: "O teu servidor estase a executar con menos de 1 GB da memoria total. Recoméndase ao menos unha memoria de 1 GB."
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o rexistro e inicios de sesión mediante Google OAuth2 (enable_google_oauth2_logins), pero os valores ID do cliente e do cliente secreto non foron establecidos. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Revisa esta guía para saber máis</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o rexistro e inicios de sesión mediante Facebook (enable_facebook_logins), pero os valores ID da aplicación e os valores secretos non foron establecidos. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Revisa esta guía para saber máis</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o rexistro e inicios de sesión mediante Twitter (enable_twitter_logins), pero os valores de chave do cliente e os valores secretos non foron establecidos. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Revisa esta guía para saber máis</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o rexistro e inicios de sesión mediante GitHub (enable_github_logins), pero os valores ID do cliente e os valores secretos non foron establecidos. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_config_warning: 'O servidor está configurado para subir ficheiros a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_backup_config_warning: 'O servidor está configurado para subir copias de seguranza a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instálao utilizando o teu administrador de paquetes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descarga a última versión</a>.'
@@ -1393,7 +1375,6 @@ gl:
     email_custom_headers: "Unha listaxe de correos electrónicos personalizados separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Mira <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
-    enforce_second_factor: "Obriga a utilizar a autenticación en dous pasos. Selecciona 'Todos' para aplicalo a todos os usuarios. Selecciona 'Equipo' para aplicalo unicamente aos membros do equipo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: ¡NON actives esta opción a non ser que verifiques completamente a configuración e esta funcione correctamente en todas partes! Comprobaches tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     same_site_cookies: "Utilizar as mesmas cookies do sitio; elas eliminan todos os vectores CSRF (falsificación de petición en sitios cruzados) dos navegadores compatibles (Lax o Strict). Advertencia: Strict só funcionará en sitios que forcen o inicio de sesión e utilicen SSO. "
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída no resumo deste tema."
@@ -1430,9 +1411,6 @@ gl:
     pending_users_reminder_delay: "Notificarlles aos moderadores se hai novos usuarios que estiveran á espera da súa aprobación por máis tempo desta cantidade de horas. Valor -1 para deshabilitar notificacións. "
     persistent_sessions: "Os usuarios permanecerán conectados cando o navegador estea pechado"
     maximum_session_age: "O usuario permanecerá coa sesión iniciada durante n horas desde a última visita."
-    ga_universal_tracking_code: "Código de seguimento de Google Universal Analytics (analytics.js) , ex: UA-12345678-9; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Nome do dominio establecido en Google Universal Analytics (analytics.js), ex: mysite.com; visita <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Habilitar o seguimento multidominio de Google Universal Analytics (analytics.js). As ligazóns saíntes destes dominios terán a ID do cliente agregadas. Revisa <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>A guía de Google para o seguimento multidominio."
     enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún  webcrawler is detected. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir aos moderadores administrar categorías e grupos"
     cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadeiro para activar CORS."
@@ -1515,9 +1493,6 @@ gl:
     enable_instagram_logins: "Habilitar a autención con Instagram require instagram_consumer_key e instagram_consumer_secret"
     enable_facebook_logins: "Habilitar a autenticación con Facebook require facebook_app_id e facebook_app_secret. Revisa <a href='https://meta.discourse.org/t/13394' target='_blank'>a configuración do inicio de sesión mediante Facebook para Discourse</a>."
     facebook_app_secret: "Chave secreta para a autenticación mediante Facebook, rexistrada en <a href='https://developers.facebook.com/apps/' target='_blank'> https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Habilitar a autenticación con GitHub require github_client_id e github_client_secret. Revisa <a href='https://meta.discourse.org/t/13745' target='_blank'>a configuración do inicio de sesión mediante GitHub para Discourse</a>."
-    github_client_id: "ID de cliente para a autenticación mediante Github, rexistrada en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Chave secreta para a autenticación mediante Github, rexistrada en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permitir aos usuarios a autenticación mediante Discord?"
     discord_client_id: 'ID de cliente de Discord (necesitas unha? Visita <a href="https://discordapp.com/developers/applications/me">o portal de programadores de Discord</a>)'
     discord_secret: "Chave secreta de Discord"
@@ -1727,8 +1702,6 @@ gl:
     email_editable: "Permitir aos usuarios cambiar o seu enderezo electrónico despois de se rexistraren."
     logout_redirect: "Localización a onde redirixir o navegador despois de pechar sesión (ex.: https://example.com/logout)"
     allow_uploaded_avatars: "Permitir aos usuarios subir imaxes de perfil personalizadas."
-    allow_animated_avatars: "Permitir aos usuarios utilizar gifs animados como imaxe de perfil. AVISO: executar a tarefa rake avatars:refresh despois de cambiar esta opción."
-    allow_animated_thumbnails: "Xerar miniaturas animadas a partir de gifs animados."
     default_avatars: "URL dos avatares que se utilizarán para os usuarios novos ata que estes os cambien."
     automatically_download_gravatars: "Descargar Gravatars para os usuarios ao crear unha conta ou cambiar de correo electrónico."
     digest_topics: "Número máximo de publicacións destacadas que se mostran no correo electrónico de resumo."
@@ -1950,8 +1923,6 @@ gl:
     autoclosed_disabled_lastpost: "Este tema agora está aberto. Permítense novas respostas."
     auto_deleted_by_timer: "Eliminado automaticamente polo temporizador."
   login:
-    invalid_second_factor_method: "O método de verificación en dous pasos non é válido."
-    not_enabled_second_factor_method: "O método de verificación en dous pasos non está permitido para a túa conta."
     security_key_description: "Cando teñas a chave de seguranza preparada, preme no botón Autenticar con chave de seguranza que se mostra a continuación."
     security_key_alternative: "Tentalo doutro xeito"
     security_key_authenticate: "Autenticar con chave de seguranza"
@@ -1978,7 +1949,6 @@ gl:
       csrf_detected: "Esgotouse o tempo de autorización ou cambiaches de navegador. Téntao de novo."
       request_error: "Produciuse un erro ao iniciar a autorización. Téntao de novo."
       invalid_iat: "Non se puido verificar o token de autorización por mor de diferenzas no horario do servidor. Téntao de novo."
-    omniauth_error_unknown: "Algo foi mal ao procesar o teu inicio de sesión; téntao de novo."
     omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Non hai ningún enderezo electrónico asociado con %{account} que estea permitido. Debes configurar a túa conta cun enderezo electrónico diferente."
@@ -1989,7 +1959,6 @@ gl:
     missing_user_field: "Non completaches todos os campos de usuario"
     auth_complete: "Autenticación completada."
     click_to_continue: "Preme aquí para continuar."
-    second_factor_title: "Autenticación de dobre factor"
     second_factor_description: "Insire o código de autenticación desde a túa aplicación:"
     second_factor_backup_description: "Escribe un dos códigos de copia de seguranza"
     invalid_security_key: "Chave de seguridade non válida."
@@ -2846,15 +2815,6 @@ gl:
         Se non tentaches crear unha conta para %{email} nin pretendiches cambiar o enderezo electrónico, non te preocuupes. Podes ignorar esta mensaxe.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "Autenticación de dobre factor deshabilitada"
-      subject_template: "[%{email_prefix}] Atutenticación de dobre factor deshabilitada"
-      text_body_template: |
-        A autenticación de dobre factor foi deshabilitada na túa conta en %{site_name}. Agora podes iniciar sesión cun único contrasinal; xa non se precisa máis un código adicional de autenticación.
-
-        Se non elixiches desactivar a autenticación de dobre factor, pode que alguén comprometese a seguridade da túa conta.
-
-        Se tes algunha cuestión, [contacta co noso equipo](%{base_url}/about).
     digest:
       why: "Un breve resumo de %{site_link} desde a túa última visita o %{last_seen_at}"
       since_last_visit: "Desde a túa última visita"
@@ -2907,13 +2867,6 @@ gl:
     admin_login:
       title: "Inicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
-      text_body_template: |
-        Alguén solicitou iniciar sesión na túa conta en [%{site_name}](%{base_url}).
-
-        Se non fuches ti, podes tranquilamente ignorar este correo electrónico.
-
-        Preme na seguinte ligazón para iniciar sesión:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta creada"
       subject_template: "[%{email_prefix}] A túa nova conta"
@@ -3100,7 +3053,6 @@ gl:
     shades_of_blue: "Azulado"
     summer: "Verán"
     dark_rose: "Rosa escuro"
-    default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
@@ -3355,8 +3307,6 @@ gl:
     initial_topic_title: Informes sobre o rendemento do sitio web
   tags:
     title: "Etiquetas"
-    staff_tag_disallowed: 'A etiqueta "%{tag}" só pode ser aplicada polo equipo.'
-    staff_tag_remove_disallowed: 'A etiqueta "%{tag}" só pode ser eliminada polo equipo.'
     minimum_required_tags:
       one: "Debes seleccionar ao menos %{count} etiqueta."
       other: "Debes seleccionar ao menos %{count} etiquetas."
@@ -3471,8 +3421,6 @@ gl:
           governing_law:
             label: "Lei que rexe"
             placeholder: "Lei de California"
-      colors:
-        title: "Tema"
       logos:
         title: "Logotipos"
         fields:

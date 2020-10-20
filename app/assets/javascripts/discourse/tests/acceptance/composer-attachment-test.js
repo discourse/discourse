@@ -2,7 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-function setupPretender(server, helper) {
+function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
     return helper.response([
       {
@@ -28,35 +28,29 @@ async function writeInComposer(assert) {
   await fillIn(".d-editor-input", "[test|attachment](upload://asdsad.png)");
 }
 
-acceptance("Composer Attachment", {
-  loggedIn: true,
-  pretend(server, helper) {
-    setupPretender(server, helper);
-  },
+acceptance("Composer Attachment", function (needs) {
+  needs.user();
+  needs.pretender(pretender);
+
+  test("attachments are cooked properly", async (assert) => {
+    await writeInComposer(assert);
+    assert.equal(
+      find(".d-editor-preview:visible").html().trim(),
+      '<p><a class="attachment" href="/uploads/short-url/asdsad.png">test</a></p>'
+    );
+  });
 });
 
-test("attachments are cooked properly", async (assert) => {
-  await writeInComposer(assert);
-  assert.equal(
-    find(".d-editor-preview:visible").html().trim(),
-    '<p><a class="attachment" href="/uploads/short-url/asdsad.png">test</a></p>'
-  );
-});
+acceptance("Composer Attachment - Secure Media Enabled", function (needs) {
+  needs.user();
+  needs.settings({ secure_media: true });
+  needs.pretender(pretender);
 
-acceptance("Composer Attachment - Secure Media Enabled", {
-  loggedIn: true,
-  settings: {
-    secure_media: true,
-  },
-  pretend(server, helper) {
-    setupPretender(server, helper);
-  },
-});
-
-test("attachments are cooked properly when secure media is enabled", async (assert) => {
-  await writeInComposer(assert);
-  assert.equal(
-    find(".d-editor-preview:visible").html().trim(),
-    '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
-  );
+  test("attachments are cooked properly when secure media is enabled", async (assert) => {
+    await writeInComposer(assert);
+    assert.equal(
+      find(".d-editor-preview:visible").html().trim(),
+      '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
+    );
+  });
 });

@@ -165,12 +165,6 @@ zh_TW:
       s3_bucket_reused: "不能把同一個 Amazon bucket 同時使用 ‘s3_upload_bucket’ 及 ‘s3_backup_bucket’。請選擇不同的 bucket 或指定將每個 bucket 設定不同的路徑。"
     conflicting_google_user_id: '此 Google 帳戶 ID 出於安全原因已更改，請聯絡管理人員並將其<br><a href="https://meta.discourse.org/t/76575">指向 https://meta.discourse.org/t/76575 </a>'
   invite:
-    not_found_template: |
-      你的%{site_name}邀請已被兌換<p>
-
-      <p>如果你還記得密碼，請先<a href="%{base_url}/login">登入</a>。
-
-      <p>若忘記密碼，請<a href="%{base_url}/password-reset">重設密碼</a></p>
     error_message: "接受邀請時發生問題，請聯絡網站管理員。"
     user_exists: "無需邀請 <b>%{email}</b>，他 <a href='%{base_path}/u/%{username}/summary'>已經有帳號了</a>！"
     confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\\b匣。"
@@ -663,43 +657,36 @@ zh_TW:
       title: "離題內容"
       description: "此帖與該主題標題和第一帖而言所討論的主題無關，可能需要被移動。"
       short_description: "與討論無關"
-      long_form: "投訴為離題內容"
     spam:
       title: "垃圾內容"
       description: "這篇貼文是廣告或破壞。他與現行主題無關或無用。"
       short_description: "這是廣告或破壞。"
-      long_form: "投訴為垃圾內容"
       email_title: '“%{title}”被標記為垃圾'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不當內容"
       description: '此貼文包含攻擊他人、侮辱或違反<a href="%{base_path}/guidelines">我們社群規範</a>的內容。'
       short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
-      long_form: "投訴為不當內容"
     notify_user:
       title: "給 @%{username} 送出一則訊息"
       description: "我想要針對這位使用者的貼文直接和他們溝通。"
       short_description: "我想要針對這位使用者的貼文直接和他們溝通。"
-      long_form: "傳訊給使用者"
       email_title: '你的貼文在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他"
       description: "這個貼文需要版主的注意，但是原因沒有包括在上述選項中。"
       short_description: "需要管理員注意其他原因"
-      long_form: "標記為需版主注意"
       email_title: '"%{title}" 主題需要版主的注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "書籤"
       description: "將此貼文加上書籤"
       short_description: "將此貼文加入書籤"
-      long_form: "此貼文已加上書籤"
     like:
       title: "讚"
       description: "給此貼文按讚"
       short_description: "喜歡這篇貼文"
-      long_form: "已按讚"
   user_activity:
     no_default:
       self: "您尚未有任何活動紀錄。"
@@ -1116,10 +1103,6 @@ zh_TW:
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
     queue_size_warning: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
     memory_warning: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
-    google_oauth2_config_warning: '伺服器設定為允許使用 Google Oauth2 註冊以及登入 (enable_google_oauth2_logins)，但未設定客戶端 id 和客戶端 secret 值。請至<a href="/admin/site_settings">網站設定</a>裡更改設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">參閱教學指南以了解更多資訊</a>。'
-    facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">參閱設定教學指南，以了解更多資訊</a>。'
-    twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">參閱設定教學指南以了解更多資訊</a>。'
-    github_config_warning: '伺服器允許使用 GitHub 帳號登入 (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">參閱設定教學指南以了解更多資訊</a>。'
     s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">網站設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
     s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給尺寸較大的圖片縮圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
@@ -1205,7 +1188,6 @@ zh_TW:
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    enforce_second_factor: "強制使用者啟用身份驗證。選擇 \"全部\" 將對所有使用者強制實施。選擇 \"工作人員\" 僅對工作人員使用者強制執行。"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     same_site_cookies: "使用同一網站的Cookie，它們消除所有載體上支持的瀏覽器（LAX或嚴格模式）跨站請求偽造。警告：嚴格只會在強制登錄和使用SSO的網站執行。"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
@@ -1238,8 +1220,6 @@ zh_TW:
     must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
     pending_users_reminder_delay: "如果新使用者等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
-    ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追蹤代碼，例如：mysite.com；参考 <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "啟用Google通用Analytics（analytics.js）的跨域追蹤。本網站導向外其他網站時將客戶端 ID添加並追蹤，參閱 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 跨網域追蹤指南</a>。"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
     allowed_iframes: "允許 Discourse 可以在貼文中安全發布含有 iframe 及 src 網域前綴列表"
@@ -1316,9 +1296,6 @@ zh_TW:
     instagram_consumer_secret: "Instagram 驗證的 Consumer secret"
     enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
-    enable_github_logins: "開啟 Github 登入驗證，需要填寫 github_client_id 及 github_client_secret。參閱<a href='https://meta.discourse.org/t/13745' target='_blank'>設定 在Discourse Github 登入官方文件</a>\\b"
-    github_client_id: "Github 帳號驗證的使用者端帳號（Client id），到 <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications </a>來註冊取得 Client id"
-    github_client_secret: "Github 帳號驗證的使用者端密碼（Client secret），到 <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers </a>來註冊取得 Client secret"
     enable_backups: "允許管理員建立備份"
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
@@ -1534,8 +1511,6 @@ zh_TW:
     email_editable: "允許使用者在註冊後改變他們的 EMail"
     logout_redirect: "登出後，將瀏覽器導向到別的網址（例如：https://example.com/logout）"
     allow_uploaded_avatars: "允許使用者上傳自定義個人頭像。"
-    allow_animated_avatars: "允許使用者使用動畫個人頭像。警告：更改設置後運行 avatars:refresh 這個 rake 任務。"
-    allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新使用者將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當使用者註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "郵件摘要中顯示的熱門主題的數目上限。"
@@ -1807,7 +1782,6 @@ zh_TW:
     errors: "%{errors}"
     not_available: "不可用，試試 %{suggestion}？"
     something_already_taken: "出了一些問題，可能此使用者名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
-    omniauth_error_unknown: "在處理你的登入過程中發生了錯誤，請重試。"
     omniauth_confirm_button: "繼續"
     authenticator_error_no_valid_email: "關聯%{account}的賬戶沒有優秀的郵件地址。你可能需要用不同的郵件地址配置你的賬戶。"
     new_registrations_disabled: "現在不允許註冊新的帳戶"
@@ -1818,10 +1792,8 @@ zh_TW:
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
     already_logged_in: "喔，看起來你正嘗試查看給另一個使用者的邀請連結。如果你不是%{current_user}，請退出再重試。"
-    second_factor_title: "兩步驟驗證"
     second_factor_description: "請從您的應用程式中輸入所需的驗證碼："
     second_factor_backup_description: "請輸入一組您的備用碼"
-    second_factor_backup_title: "二步驟備用碼"
     invalid_second_factor_code: "驗證碼無效，每個驗證碼只能使用一次"
     second_factor_toggle:
       backup_code: "請改用備用碼"
@@ -2605,15 +2577,6 @@ zh_TW:
         如果您沒有嘗試為%{email}建立帳號或更改您的電子郵件地址，請不要擔心 - 您可以放心地忽略此消息。
 
         如果您有任何疑問，[聯繫論壇管理員](%{base_url}/about)。
-    account_second_factor_disabled:
-      title: "停用兩步驟驗證"
-      subject_template: "[%{email_prefix}] 停用兩步驟驗證"
-      text_body_template: |
-        您的帳號已在%{site_name}停用了兩步驟驗證。您現在只需使用密碼登入，不再需要其他驗證步驟。
-
-        如果您未選擇停用兩步驟驗證，則可能是某人可能已盜用您的帳戶。
-
-        如果您有任何疑問，[聯繫網站管理員](%{base_url}/about)。
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"
@@ -2787,7 +2750,6 @@ zh_TW:
     latte: "棕色"
     summer: "夏季"
     dark_rose: "暗紅"
-    default_theme_name: "輕亮"
     light_theme_name: "輕亮"
     dark_theme_name: "黑暗"
     neutral_theme_name: "中性"
@@ -3235,8 +3197,6 @@ zh_TW:
     initial_topic_title: 網站效能報表
   tags:
     title: "標籤"
-    staff_tag_disallowed: '“%{tag}”只可由管理人員使用。'
-    staff_tag_remove_disallowed: '“%{tag}”只可由管理人員刪除。'
     minimum_required_tags:
       other: "您必須至少選擇%{count}個標籤"
     upload_row_too_long: "CSV檔案每一行應該有一個標籤，可選，標籤後面可以是逗號，然後是標籤群組名稱。"
@@ -3343,8 +3303,6 @@ zh_TW:
           city_for_disputes:
             label: "爭議"
             placeholder: "舊金山，加洲（California）"
-      colors:
-        title: "主題"
       logos:
         title: "標誌"
         fields:

@@ -7,8 +7,6 @@
 da:
   js:
     presence:
-      replying: "svarer"
-      editing: "redigerer"
       replying_to_topic:
         one: "svar"
         other: "svarer"

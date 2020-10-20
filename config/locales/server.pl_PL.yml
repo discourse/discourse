@@ -201,12 +201,6 @@ pl_PL:
   invite:
     not_found: "Token do zaproszeń jest nieprawidłowy. <a href='%{base_url}/about'>Skontaktuj się z administracją strony</a>."
     not_found_json: "Token do zaproszeń jest nieprawidłowy. Skontaktuj się z administracją strony."
-    not_found_template: |
-      <p>Twoje zaproszenie do <a href="%{base_url}">%{site_name}</a> zostało już wykorzystane.</p>
-
-      <p>Jeśli pamiętasz hasło zaloguj się <a href="%{base_url}/login">Login</a>. </p>
-
-      <p>W przeciwnym przypadku <a href="%{base_url}/password-reset">Zresetuj hasło</a>.</p>
     error_message: "Podczas akceptowania zaproszenia wystąpił błąd. Skontaktuj się z administratorem strony."
     user_exists: "Nie ma potrzeby zapraszania <b>%{email}</b>, <a href='%{base_path}/u/%{username}/summary'>obecnie posiada konto!"
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy email aktywacyjny na Twój adres mailowy. Postępuj zgodnie z instrukcjami w mailu, aby aktywować konto. </p><p>Jeśli email nie przyszedł, sprawdź folder ze spamem.</p>"
@@ -216,7 +210,6 @@ pl_PL:
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
     error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
   invite_link:
-    email_taken: "Ten email jest już wykorzystany. Jeśli masz już konto zaloguj się lub zresetuj hasło."
     max_redemptions_limit: "powinien być między 2, a 1%{max_limit}"
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
@@ -892,43 +885,36 @@ pl_PL:
       title: "Nie na temat"
       description: "Ten wpis jest niezwiązany z obecną dyskusją zdefiniowaną przez tytuł i pierwszy wpis, i powinien zostać przeniesiony gdzieś indziej."
       short_description: "Nie istotne z punktu widzenia dyskusji."
-      long_form: "oflagowano jako nie-na-temat"
     spam:
       title: "Spam"
       description: "Ten wpis jest reklamą lub aktem wandalizmu. Nie jest potrzebny, ani istotny w bieżącym temacie."
       short_description: "To jest reklama lub akty wandalizmu."
-      long_form: "oflagowano jako spam"
       email_title: '%{title}" został oznaczony jako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Niewłaściwe"
       description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
-      long_form: "oflagowano jako niewłaściwe"
     notify_user:
       title: "Wyślij @%{username} wiadomość"
       description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       short_description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
-      long_form: "użytkownik został powiadomiony"
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Coś innego"
       description: "Ten wpis wymaga uwagi moderatora z powodu nie uwzględnionego na liście powyżej."
       short_description: "Wymaga uwagi personelu z innego powodu."
-      long_form: "oznaczony dla uwagi moderatora"
       email_title: 'Wpis "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Zakładka"
       description: "Dodaj ten wpis do zakładek"
       short_description: "Dodaj do zakładek ten wpis"
-      long_form: "dodano ten wpis do zakładek"
     like:
       title: "Polub"
       description: "Polub ten wpis"
       short_description: "Polub ten wpis"
-      long_form: "polubiono to"
   draft:
     sequence_conflict_error:
       title: "błąd wersji roboczej"
@@ -1383,10 +1369,6 @@ pl_PL:
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
     queue_size_warning: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
     memory_warning: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
-    google_oauth2_config_warning: 'Serwer jest skonfigurowany tak, aby umożliwić rejestrację i logowanie za pomocą Google OAuth2 (enable_google_oauth2_logins), ale identyfikator klienta i tajne wartości klienta nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a> .'
-    facebook_config_warning: 'Serwer jest skonfigurowany tak, aby umożliwić rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i tajne wartości aplikacji nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a> .'
-    twitter_config_warning: 'Serwer jest skonfigurowany tak, aby umożliwić rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale klucz i tajne wartości nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a> .'
-    github_config_warning: 'Serwer jest skonfigurowany tak, aby umożliwić rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta i tajne wartości nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a> .'
     s3_config_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
     s3_backup_config_warning: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
     image_magick_warning: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
@@ -1483,7 +1465,6 @@ pl_PL:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
-    enforce_second_factor: "Zmusza użytkowników do włączenia uwierzytelniania drugiego czynnika. Wybierz „wszystkie”, aby wymusić to na wszystkich użytkownikach. Wybierz „personel”, aby wymusić to tylko dla użytkowników personelu."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     same_site_cookies: "Używaj tych samych plików cookies, eliminują one wszystkie wektory Cross Site Request Forgery na wspieranych przeglądarkach (Lax lub Strict). Ostrzeżenie: Przeglądarka Strict działa jedynie na stronach, które wymagają logowania oraz używają SSO."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
@@ -1524,9 +1505,6 @@ pl_PL:
     approve_suspect_users: "Dodaj podejrzanych użytkowników do kolejki recenzji. Podejrzani użytkownicy weszli do biografii / witryny, ale nie czytali."
     pending_users_reminder_delay: "Powiadomić moderatorów jeżeli nowi użytkownicy czekali na zatwierdzenie dłużej niż his mamy godzin. Ustaw -1 aby wyłączyć powiadomienia. "
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
-    ga_universal_tracking_code: "Identyfikator kodu śledzenia Google Universal Analytics (analytics.js), np .: UA-12345678-9; patrz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Nazwa domeny Google Universal Analytics (analytics.js), np .: mysite.com; patrz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach Google Universal Analytics (analytics.js). W linkach wychodzących do tych domen zostanie dodany identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>przewodnik śledzenia między domenami Google.</a>"
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     allowed_iframes: "Lista prefiksów domeny src iframe, które dyskurs może bezpiecznie dopuścić w wpisach"
@@ -1606,13 +1584,9 @@ pl_PL:
     instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
     enable_facebook_logins: "Włącz uwierzytelnianie na Facebooku, wymaga facebook_app_id i facebook_app_secret. Zobacz <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfigurowanie logowania na Facebooku dla dyskursu</a> ."
     facebook_app_secret: "Tajna aplikacja do uwierzytelniania na Facebooku, zarejestrowana na <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Włącz uwierzytelnianie Github, wymaga github_client_id i github_client_secret. Zobacz <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfigurowanie logowania do GitHub dla dyskursu</a> ."
-    github_client_id: "Identyfikator klienta dla uwierzytelnienia Github, zarejestrowany na <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Tajny klucz klienta dla uwierzytelnienia Github, zarejestrowany na <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Zezwolić użytkownikom na uwierzytelnianie przy użyciu Discord?"
     discord_client_id: 'Identyfikator klienta Discord (potrzebujesz jednego? Odwiedź <a href="https://discordapp.com/developers/applications/me">portal dewelopera Discord</a> )'
     discord_secret: "Sekretny klucz Discorda"
-    discord_trusted_guilds: 'Zezwalaj tylko członkom tych gildii Discord na logowanie się za pośrednictwem Discord. Użyj identyfikatora numerycznego gildii. Aby uzyskać więcej informacji, sprawdź instrukcje <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">tutaj</a> . Pozostaw puste, aby zezwolić dowolnej gildii.'
     enable_backups: "Pozwól administratorom tworzyć kopie zapasowe forum"
     allow_restore: "Dopuść przywracanie, które może zamienić WSZYSTKIE dane strony! Zostaw fałsz, chyba że planujesz przywrócić kopię zapasową"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
@@ -1845,8 +1819,6 @@ pl_PL:
     email_editable: "Allow users to change their e-mail address after registration."
     logout_redirect: "Lokalizacja do przekierowania przeglądarki po wylogowaniu (np .: https://example.com/logout)"
     allow_uploaded_avatars: "Zezwól użytkownikom na przesyłanie niestandardowych zdjęć profilowych."
-    allow_animated_avatars: "Zezwól na używanie animowanych plików GIF jako zdjęć profilowych. UWAGA: po zmianie tego ustawienia uruchom zadanie avatars:refresh rake."
-    allow_animated_thumbnails: "Generowanie miniatur animowanych gifów."
     default_avatars: "Adresy URL awatarów wykorzystywanych jako domyślne w przypadku nowych użytkowników do momentu, gdy je zmienią."
     automatically_download_gravatars: "Pobierz Gravatary dla użytkowników podczas tworzenia konta lub zmiany hasła."
     digest_topics: "Maksymalna liczba popularnych tematów wyświetlanych w podsumowaniu mailowym."
@@ -2072,7 +2044,6 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
-    omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
     omniauth_confirm_button: "Kontynuuj"
     authenticator_error_no_valid_email: "Adresy e-mail powiązane z %{account} są niedozwolone. Musisz użyć innego adresu."
     new_registrations_disabled: "Aktualnie nie jest możliwe zarejestrowanie nowego konta."
@@ -2083,9 +2054,7 @@ pl_PL:
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Próbujesz zaakceptować zaproszenie przeznaczone dla innego użytkownika. Jeśli %{current_user} to nie ty, wyloguj się i zaloguj ponownie."
-    second_factor_title: "Dwuskładnikowe uwierzytelnianie"
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
-    second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
     invalid_security_key: "Nieprawidłowy klucz bezpieczeństwa."
     second_factor_toggle:
       backup_code: "Zamiast tego użyj kodu zapasowego"
@@ -2628,8 +2597,6 @@ pl_PL:
     account_exists:
       title: "Konto już istnieje"
       subject_template: "[%{email_prefix}] Konto już istnieje"
-    account_second_factor_disabled:
-      title: "Logowanie dwuskładnikowe wyłączone"
     digest:
       why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"
@@ -2771,7 +2738,6 @@ pl_PL:
     light: "Jasny"
     dark: "Ciemny"
     neutral: "Neutralne"
-    default_theme_name: "Jasny"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
     neutral_theme_name: "Neutralne"
@@ -3161,8 +3127,6 @@ pl_PL:
     initial_topic_title: Testy wydajności witryny.
   tags:
     title: "Etykiety"
-    staff_tag_disallowed: 'Etykieta "%{tag}" może być zatwierdzona przez personel.'
-    staff_tag_remove_disallowed: 'Etykieta "%{tag}" może być usunięta przez personel.'
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś Discourse!"
@@ -3257,8 +3221,6 @@ pl_PL:
           city_for_disputes:
             label: "Miasto dyskusji"
             placeholder: "Kalifornia, San Francisco"
-      colors:
-        title: "Motyw"
       logos:
         title: "Loga"
         fields:

@@ -16,6 +16,51 @@
   }
 }
 
+.container.posts {
+  display: grid;
+  grid-template-areas: "posts timeline";
+  grid-template-columns: auto auto;
+  > .row {
+    grid-area: posts;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .timeline-container {
+    margin-left: unset !important;
+    /* This is a temporary override to ease the transition
+    to the sticky position timeline for themes with custom timeline positioning.
+    Without this those themes would render topics unreadable. */
+  }
+
+  // timeline
+  @media screen and (min-width: 925px) {
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
+    .topic-navigation {
+      grid-area: timeline;
+      align-self: start;
+      @include sticky;
+      top: 6em;
+      margin-left: 1em;
+      z-index: z("timeline");
+    }
+  }
+
+  // progress bar
+  @media screen and (max-width: 924px) {
+    // at 924px viewport width and below the progress bar is visible (see topic-navigation.js)
+    grid-template-areas: "posts posts";
+    .timeline-container:not(.timeline-fullscreen) {
+      display: none; // hiding this because sometimes the JS switch lags and causes layout issues
+    }
+    .timeline-container {
+      .timeline-scroller-content {
+        position: relative;
+      }
+    }
+  }
+}
+
 .progress-back-container {
   z-index: z("dropdown");
   margin-right: 0;

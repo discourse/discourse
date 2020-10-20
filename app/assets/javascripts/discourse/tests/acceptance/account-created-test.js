@@ -3,88 +3,88 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 
-acceptance("Account Created");
+acceptance("Account Created", function () {
+  test("account created - message", async (assert) => {
+    PreloadStore.store("accountCreated", {
+      message: "Hello World",
+    });
+    await visit("/u/account-created");
 
-test("account created - message", async (assert) => {
-  PreloadStore.store("accountCreated", {
-    message: "Hello World",
-  });
-  await visit("/u/account-created");
-
-  assert.ok(exists(".account-created"));
-  assert.equal(
-    find(".account-created .ac-message").text().trim(),
-    "Hello World",
-    "it displays the message"
-  );
-  assert.notOk(exists(".activation-controls"));
-});
-
-test("account created - resend email", async (assert) => {
-  PreloadStore.store("accountCreated", {
-    message: "Hello World",
-    username: "eviltrout",
-    email: "eviltrout@example.com",
-    show_controls: true,
+    assert.ok(exists(".account-created"));
+    assert.equal(
+      find(".account-created .ac-message").text().trim(),
+      "Hello World",
+      "it displays the message"
+    );
+    assert.notOk(exists(".activation-controls"));
   });
 
-  await visit("/u/account-created");
+  test("account created - resend email", async (assert) => {
+    PreloadStore.store("accountCreated", {
+      message: "Hello World",
+      username: "eviltrout",
+      email: "eviltrout@example.com",
+      show_controls: true,
+    });
 
-  assert.ok(exists(".account-created"));
-  assert.equal(
-    find(".account-created .ac-message").text().trim(),
-    "Hello World",
-    "it displays the message"
-  );
+    await visit("/u/account-created");
 
-  await click(".activation-controls .resend");
+    assert.ok(exists(".account-created"));
+    assert.equal(
+      find(".account-created .ac-message").text().trim(),
+      "Hello World",
+      "it displays the message"
+    );
 
-  assert.equal(currentPath(), "account-created.resent");
-  const email = find(".account-created .ac-message b").text();
-  assert.equal(email, "eviltrout@example.com");
-});
+    await click(".activation-controls .resend");
 
-test("account created - update email - cancel", async (assert) => {
-  PreloadStore.store("accountCreated", {
-    message: "Hello World",
-    username: "eviltrout",
-    email: "eviltrout@example.com",
-    show_controls: true,
+    assert.equal(currentPath(), "account-created.resent");
+    const email = find(".account-created .ac-message b").text();
+    assert.equal(email, "eviltrout@example.com");
   });
 
-  await visit("/u/account-created");
+  test("account created - update email - cancel", async (assert) => {
+    PreloadStore.store("accountCreated", {
+      message: "Hello World",
+      username: "eviltrout",
+      email: "eviltrout@example.com",
+      show_controls: true,
+    });
 
-  await click(".activation-controls .edit-email");
+    await visit("/u/account-created");
 
-  assert.equal(currentPath(), "account-created.edit-email");
-  assert.ok(find(".activation-controls .btn-primary:disabled").length);
+    await click(".activation-controls .edit-email");
 
-  await click(".activation-controls .edit-cancel");
+    assert.equal(currentPath(), "account-created.edit-email");
+    assert.ok(find(".activation-controls .btn-primary:disabled").length);
 
-  assert.equal(currentPath(), "account-created.index");
-});
+    await click(".activation-controls .edit-cancel");
 
-test("account created - update email - submit", async (assert) => {
-  PreloadStore.store("accountCreated", {
-    message: "Hello World",
-    username: "eviltrout",
-    email: "eviltrout@example.com",
-    show_controls: true,
+    assert.equal(currentPath(), "account-created.index");
   });
 
-  await visit("/u/account-created");
+  test("account created - update email - submit", async (assert) => {
+    PreloadStore.store("accountCreated", {
+      message: "Hello World",
+      username: "eviltrout",
+      email: "eviltrout@example.com",
+      show_controls: true,
+    });
 
-  await click(".activation-controls .edit-email");
+    await visit("/u/account-created");
 
-  assert.ok(find(".activation-controls .btn-primary:disabled").length);
+    await click(".activation-controls .edit-email");
 
-  await fillIn(".activate-new-email", "newemail@example.com");
+    assert.ok(find(".activation-controls .btn-primary:disabled").length);
 
-  assert.notOk(find(".activation-controls .btn-primary:disabled").length);
+    await fillIn(".activate-new-email", "newemail@example.com");
 
-  await click(".activation-controls .btn-primary");
+    assert.notOk(find(".activation-controls .btn-primary:disabled").length);
 
-  assert.equal(currentPath(), "account-created.resent");
-  const email = find(".account-created .ac-message b").text();
-  assert.equal(email, "newemail@example.com");
+    await click(".activation-controls .btn-primary");
+
+    assert.equal(currentPath(), "account-created.resent");
+    const email = find(".account-created .ac-message b").text();
+    assert.equal(email, "newemail@example.com");
+  });
 });
