@@ -901,6 +901,7 @@ de:
       suspended_notice: "Dieser Benutzer ist bis zum %{date} gesperrt."
       suspended_permanently: "Der Benutzer ist gesperrt."
       suspended_reason: "Grund: "
+      github_profile: "GitHub"
       email_activity_summary: "Aktivitäts-Übersicht"
       mailing_list_mode:
         label: "Mailinglisten-Modus"
@@ -2103,19 +2104,14 @@ de:
         title: "Langsamer Modus"
         select: "Dauer:"
         description: "Benutzer müssen warten, bevor sie wieder einen Beitrag verfassen können."
-        current: "Die aktuelle Dauer beträgt %{hours} Stunden, %{minutes} Minute und %{seconds} Sekunden."
         save: "Speichern"
         remove: "Deaktivieren"
-        hours: "Stunden"
-        minutes: "Minuten"
-        seconds: "Sekunden"
         durations:
           15_minutes: "15 Minuten"
           1_hour: "1 Stunde"
           4_hours: "4 Stunden"
           1_day: "1 Tag"
           1_week: "1 Woche"
-          custom: "Dauer auswählen"
       slow_mode_notice:
         duration: "Du musst zwischen dem Verfassen von Beiträgen %{duration} warten."
       topic_status_update:

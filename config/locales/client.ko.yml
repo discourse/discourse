@@ -136,6 +136,8 @@ ko:
     topic_admin_menu: "글 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    bootstrap_mode_enabled:
+      other: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{count}명의 사용자가 가입하면 자동으로 해제됩니다."
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
@@ -738,6 +740,7 @@ ko:
         other: "지난주 %{count}개의 새 글이 있습니다."
       topic_stat_sentence_month:
         other: "지난달 %{count}개의 새 글이 있습니다."
+      n_more: "카테고리 (%{count}개 더보기)..."
     ip_lookup:
       title: IP 주소 조회
       hostname: 호스트 이름
@@ -859,6 +862,7 @@ ko:
       suspended_notice: "이 회원은 %{date}까지 접근 금지 되었습니다."
       suspended_permanently: "이 회원은 일시정지 되었습니다."
       suspended_reason: "이유: "
+      github_profile: "GitHub"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
         label: "메일링 리스트 모드"
@@ -956,19 +960,26 @@ ko:
         choose_new: "새 비밀번호를 입력하세요"
         choose: "비밀번호를 입력하세요"
       second_factor_backup:
+        title: "2단계 백업 코드"
         regenerate: "재생성"
         disable: "비활성"
         enable: "활성화"
         enable_long: "백업 코드 사용"
+        manage:
+          other: "백업 코드를 관리합니다. <strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         copy_to_clipboard: "클립 보드에 복사"
         copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
         copied_to_clipboard: "클립보드에 복사됨"
         download_backup_codes: "백업 코드 다운로드"
+        remaining_codes:
+          other: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         use: "백업 코드 사용"
         codes:
           title: "생성된 백업 코드"
           description: "이 백업 코드는 한 번만 사용할 수 있습니다. 안전한 곳에 보관하십시오."
       second_factor:
+        title: "2단계 인증"
+        enable: "2단계 인증 관리"
         disable_all: "모두 비활성화"
         forgot_password: "비밀번호를 잊으셨습니까?"
         confirm_password_description: "계속하려면 비밀번호를 입력하세요"
@@ -1116,6 +1127,7 @@ ko:
         browser_and_device: "%{device}의 %{browser}"
         secure_account: "내 계정 보안"
         latest_post: "마지막 작성…"
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "마지막 글"
       last_emailed: "마지막 이메일"
       last_seen: "마지막 접속"
@@ -1395,6 +1407,10 @@ ko:
       disable: "삭제된 게시물 표시"
     private_message_info:
       title: "메시지"
+      invite: "다른 사람 초대..."
+      edit: "추가 또는 제거..."
+      remove: "제거..."
+      add: "추가..."
       leave_message: "정말 이 메시지를 남기시겠습니까?"
       remove_allowed_user: "%{name}에게서 온 메시지를 삭제할까요?"
       remove_allowed_group: "%{name}에게서 온 메시지를 삭제할까요?"
@@ -1440,8 +1456,10 @@ ko:
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
+      second_factor_title: "2단계 인증"
       second_factor_description: "앱에서 인증 코드를 입력하십시오 :"
       second_factor_backup: "백업 코드를 사용하여 로그인"
+      second_factor_backup_title: "2단계 백업"
       second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
       second_factor: "OTP 앱을 사용하여 로그인"
       security_key_description: "실제 보안 키가 준비되면 아래의 보안 키로 인증 버튼을 누릅니다."
@@ -1534,6 +1552,9 @@ ko:
       enter: "시작하다"
     conditional_loading_section:
       loading: 로드 중...
+    category_row:
+      topic_count:
+        other: "이 카테고리에는 %{count}개의 글이 있습니다"
     select_kit:
       default_header_text: 선택...
       no_content: 일치하는 항목을 찾을 수 없음
@@ -1544,6 +1565,8 @@ ko:
         other: "%{count}개 항목만 선택할 수 있습니다."
       min_content_not_reached:
         other: "항목을 %{count}개 이상 선택하세요."
+      invalid_selection_length:
+        other: "선택은 %{count}글자 이상이어야 합니다."
       components:
         categories_admin_dropdown:
           title: "카테고리 관리"
@@ -1608,6 +1631,8 @@ ko:
         post_length: "글은 최소 %{min}글자 이상이어야 합니다."
         try_like: "%{heart} 버튼을 사용해 보셨습니까?"
         category_missing: "카테고리를 선택해주세요."
+        tags_missing:
+          other: "최소한 %{count}개의 태그를 선택해야 합니다."
         topic_template_not_modified: "글 템플릿을 편집하여 글에 세부 정보와 세부 사항을 추가하십시오."
       save_edit: "편집 저장"
       overwrite_edit: "덮어 쓰기 편집"
@@ -1674,6 +1699,9 @@ ko:
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
         body: "지금 이 메시지는 자신에게만 전송됩니다!"
+      slow_mode:
+        title: "이 항목은 느린 모드입니다."
+        body: "글 작성후 다시 글을 작성 하려면 %{duration}을 기다려야합니다."
       admin_options_title: "이 글에 대한 옵션 설정"
       composer_actions:
         reply: 댓글
@@ -2010,6 +2038,18 @@ ko:
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "글이 삭제되었습니다."
+      slow_mode_update:
+        title: "느린 모드"
+        select: "기간:"
+        description: "사용자는 다시 작성 할 수있을 때까지 기다려야합니다."
+        save: "저장"
+        remove: "비활성화"
+        durations:
+          15_minutes: "15분"
+          1_hour: "1시간"
+          4_hours: "4시간"
+          1_day: "1일"
+          1_week: "1주"
       topic_status_update:
         title: "글 타이머"
         save: "타이머 설정"
@@ -2138,6 +2178,7 @@ ko:
         open: "글 열기"
         close: "글 닫기"
         multi_select: "게시물 선택…"
+        slow_mode: "느린 모드 설정"
         timed_update: "글 타이머 설정..."
         pin: "글 고정..."
         unpin: "글 고정 해제..."
@@ -2360,6 +2401,8 @@ ko:
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         file_too_large: "해당 파일이 너무 큽니다 (최대 크기는 %{max_size_kb}kb 임). 대용량 파일을 클라우드 공유 서비스에 업로드 한 다음 링크를 붙여 넣어보십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
+        too_many_dragged_and_dropped_files:
+          other: "죄송합니다. 한 번에 %{count}개의 파일만 업로드 할 수 있습니다."
         upload_not_authorized: "죄송합니다. 허가되지 않은 확장자의 파일이 있습니다. (허가된 확장자: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
@@ -3000,6 +3043,7 @@ ko:
         delete: "삭제"
         confirm_delete: "이 태그 그룹을 삭제 하시겠습니까?"
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
+        usable_only_by_groups: "태그는 모든 사람에게 보이지만 다음 그룹만 태그를 사용할 수 있습니다."
       topics:
         none:
           unread: "읽지 않은 토픽이 없습니다."
@@ -3813,6 +3857,7 @@ ko:
             post_edit: "편집 후"
             post_unlocked: "게시물 잠금 해제"
             check_personal_message: "개인 메시지 확인"
+            disabled_second_factor: "2단계 인증 비활성화"
             topic_published: "주제가 출판 됨"
             post_approved: "게시물 승인됨"
             post_rejected: "게시물 거부됨"
@@ -4040,6 +4085,7 @@ ko:
         private_topics_count: 비공개 토픽
         posts_read_count: 글 읽은 수
         post_count: 글 수
+        second_factor_enabled: 2단계 인증 사용
         topics_entered: 읽은 토픽 수
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고

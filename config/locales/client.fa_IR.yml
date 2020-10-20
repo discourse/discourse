@@ -1927,9 +1927,6 @@ fa_IR:
         select: "مدت زمان"
         save: "ذخیره"
         remove: "غیرفعال"
-        hours: "ساعت"
-        minutes: "دقیقه"
-        seconds: "ثانیه"
         durations:
           15_minutes: "۱۵ دقیقه"
           1_hour: "۱ ساعت"

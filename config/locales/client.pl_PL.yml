@@ -684,8 +684,10 @@ pl_PL:
           tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
           watching_first_post_categories_instructions: "Użytkownicy zostaną powiadomieni o pierwszym postie w każdym nowym temacie w tych kategoriach."
           regular_categories_instructions: "Jeśli te kategorie są wyciszone, nie zostaną wyciszone dla członków grupy. Użytkownicy zostaną powiadomieni, jeśli zostaną wspomniani lub ktoś na nie odpowie."
+          muted_categories_instructions: "Użytkownicy nie będą powiadamiani o nowych tematach w tych kategoriach i nie będą pojawiać się na stronach kategorii ani najnowszych tematów."
         tags:
           title: Tagi
+          long_title: "Znaczniki domyślne powiadomienia"
         logs:
           title: "Logi"
           when: "Kiedy"

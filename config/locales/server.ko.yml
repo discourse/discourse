@@ -182,6 +182,7 @@ ko:
       share_quote_facebook_requirements: "페이스북으로의 공유를 활성화 하려면 페이스북 앱 ID를 설정해야 합니다."
       second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야합니다: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화 된 경우 2FA를 시행 할 수 없습니다."
+      second_factor_cannot_be_enforced_with_sso_enabled: "SSO가 활성화된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용되는 경우 로컬 로그인을 비활성화 할 수 없습니다. 로컬 로그인을 비활성화하기 전에 강제 2FA를 비활성화하십시오."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
     conflicting_google_user_id: '이 계정의 Google 계정 ID가 변경되었습니다. 보안상의 이유로 직원의 개입이 필요합니다. 직원에게 연락하여 <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -1420,6 +1421,7 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
+    external_auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. sso_overrides_email, sso_overrides_username 및 sso_overrides_name과 함께 사용하는 것이 가장 좋습니다.
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
     verbose_sso_logging: "자세한 SSO 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/ logs에 기록</a>"
     enable_sso_provider: "/ session / sso_provider 엔드 포인트에서 Discourse SSO 제공자 프로토콜을 구현하려면 sso_provider_secrets를 설정해야합니다."
@@ -1683,6 +1685,7 @@ ko:
     email_in_authserv_id: "수신 이메일에서 인증 검사를 수행하는 서비스의 식별자입니다. 이를 구성하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 을 참조 <a href='https://meta.discourse.org/t/134358'>하십시오</a> ."
     email_in_spam_header: "스팸을 탐지하는 이메일 헤더입니다."
     enable_imap: "그룹 메시지를 동기화하기 위해 IMAP을 사용하도록 설정합니다."
+    enable_smtp: "그룹 메시지에 대한 알림을 보내기 위해 SMTP를 사용하도록 설정합니다."
     imap_polling_period_mins: "IMAP 계정에서 이메일을 확인하는 간격(분) 입니다."
     email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
     email_site_title: "사이트에서 전송되는 이메일의 보내는 이를 사이트 이름으로 설정. 설정하지 않으면 'title(필수 설정의)'이 된다. 만약 'title'에 보내는 이에 허용되지 않는 글자가 포함되어 있으면 이 설정이 사용된다."
@@ -1760,6 +1763,7 @@ ko:
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
     short_progress_text_threshold: "글타래의 글 개수가 이 값을 넘어서면, 글 프로그래스바는 오직 현재 글 넘버만 보여준다. 만약 글 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야합니다."
+    default_code_lang: "GitHub 코드 블록에 적용된 기본 프로그래밍 언어 구문 강조 표시 (auto, nohighlight, ruby, python 등)"
     warn_reviving_old_topic_age: "이 값보다 오래된 글타래에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
     highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고 : 너무 많은 언어를 포함하면 성능에 영향을 줄 수 있습니다.) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 를 참조하십시오."
@@ -1800,6 +1804,7 @@ ko:
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
     returning_users_days: "사용자가 돌아오는 것으로 간주되기까지 며칠이 경과해야합니다."
     enable_page_publishing: "직원이 자신의 스타일을 사용하여 주제를 새 URL에 게시 할 수 있습니다."
+    show_published_pages_login_required: "익명 사용자는 로그인이 필요한 경우에도 게시된 페이지를 볼 수 있습니다."
     default_email_digest_frequency: "사용자가 기본적으로 요약 이메일을받는 빈도입니다."
     default_include_tl0_in_digests: "기본적으로 새 사용자의 게시물을 요약 이메일에 포함시킵니다. 사용자는 원하는대로이를 변경할 수 있습니다."
     default_email_level: "일반 주제에 대한 기본 이메일 알림 레벨을 설정하십시오."
@@ -1988,6 +1993,7 @@ ko:
     autoclosed_disabled_lastpost: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
     auto_deleted_by_timer: "타이머에 의해 자동삭제됨"
   login:
+    invalid_second_factor_method: "선택한 2단계 방법이 잘못되었습니다."
     security_key_description: "실제 보안 키가 준비되면 아래의 보안 키로 인증 버튼을 누릅니다."
     security_key_alternative: "다른 방법으로 시도"
     security_key_authenticate: "보안 키로 인증"
@@ -2891,6 +2897,7 @@ ko:
     latte: "라떼"
     summer: "여름"
     dark_rose: "다크 로즈"
+    default_theme_name: "기본"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
     neutral_theme_name: "중립국"
@@ -3170,6 +3177,8 @@ ko:
     initial_topic_title: 웹사이트 성능 보고
   tags:
     title: "태그"
+    restricted_tag_disallowed: '"%{tag}"태그를 적용 할 수 없습니다.'
+    restricted_tag_remove_disallowed: '"%{tag}"태그를 제거 할 수 없습니다.'
     minimum_required_tags:
       other: "최소한 %{count}개의 태그를 선택해야합니다."
     upload_row_too_long: "CSV 파일에는 한 줄에 하나의 태그가 있어야합니다. 선택적으로 태그 뒤에 쉼표가 붙은 다음 태그 그룹 이름이 올 수 있습니다."
@@ -3284,6 +3293,8 @@ ko:
           city_for_disputes:
             label: "분쟁의 도시"
             placeholder: "샌프란시스코, 캘리포니아"
+      colors:
+        title: "색상"
       fonts:
         title: "글꼴"
         fields:

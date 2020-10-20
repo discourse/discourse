@@ -136,6 +136,8 @@ zh_CN:
     topic_admin_menu: "管理主题"
     wizard_required: "欢迎来到你的全新的Discourse！让我们跟随<a href='%{url}' data-auto-route='true'>设置向导</a>开始吧✨"
     emails_are_disabled: "所有的出站邮件都已被管理员全局禁用。任何类型的邮件通知都不会被发出。"
+    bootstrap_mode_enabled:
+      other: "为方便你的新站点冷启动，现正处于初始化模式中。所有新用户都将被授予信任等级 1，并为他们启用每日邮件摘要。初始化模式会在达到%{count}个用户时自动关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时内关闭。"
     themes:
       default_description: "默认"
@@ -738,6 +740,7 @@ zh_CN:
         other: "过去一周有%{count}个新主题。"
       topic_stat_sentence_month:
         other: "过去一个月有%{count}个新主题。"
+      n_more: "分类 （还有%{count}个分类）"
     ip_lookup:
       title: IP 地址查询
       hostname: 主机名
@@ -859,6 +862,7 @@ zh_CN:
       suspended_notice: "该用户将被禁止登录，直至 %{date}。"
       suspended_permanently: "该用户被封禁了。"
       suspended_reason: "原因： "
+      github_profile: "GitHub"
       email_activity_summary: "活动摘要"
       mailing_list_mode:
         label: "邮件列表模式"
@@ -956,19 +960,27 @@ zh_CN:
         choose_new: "输入新密码"
         choose: "输入密码"
       second_factor_backup:
+        title: "双重认证备份码"
         regenerate: "重新生成"
         disable: "停用"
         enable: "启用"
         enable_long: "启用备份码"
+        manage:
+          other: "管理备份码。你还剩下<strong>%{count}</strong>个可用的备份码。"
         copy_to_clipboard: "复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
         copied_to_clipboard: "已复制到剪贴板"
         download_backup_codes: "下载备份码"
+        remaining_codes:
+          other: "你还剩下<strong>%{count}</strong>个可用的备份码。"
         use: "使用备份码"
+        enable_prerequisites: "在生成备份码之前你必须选用一个双重验证方式。"
         codes:
           title: "备份码生成"
           description: "每个备份码只能使用一次。请存放于安全可读的地方。"
       second_factor:
+        title: "双重认证"
+        enable: "管理双重认证"
         disable_all: "全部禁用"
         forgot_password: "忘记密码？"
         confirm_password_description: "请确认密码后继续"
@@ -981,10 +993,17 @@ zh_CN:
         show_key_description: "手动输入"
         short_description: |
           使用一次性安全码保护你的账户。
+        extended_description: |
+          双重验证要求你的密码之外的一次性令牌，从而为你的账户增加额外的安全性。可以在<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>和<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>设备上生成令牌。
+        oauth_enabled_warning: "请注意，一旦你的账户启用了双重验证，社交登录将被停用。"
         use: "使用身份验证器应用"
+        enforced_notice: "在访问站点之前，你需要启用双重认证。"
         disable: "停用"
+        disable_confirm: "你确定要停用所有的双重认证措施吗？"
         save: "保存"
         edit: "编辑"
+        edit_title: "添加认证器"
+        edit_description: "认证器名称"
         enable_security_key_description: |
           当你准备好<a href="https://www.google.com/search?q=hardware+security+key" target="_blank">物理安全密钥</a>后，请按下面的“注册”按钮。
         totp:
@@ -1116,6 +1135,9 @@ zh_CN:
         browser_and_device: "%{browser}在%{device}"
         secure_account: "保护我的账户"
         latest_post: "你上次发布了......"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">正在使用</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "最后发帖"
       last_emailed: "最后邮寄"
       last_seen: "最后活动"
@@ -1397,6 +1419,10 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "私信"
+      invite: "邀请其他人"
+      edit: "添加或移除"
+      remove: "移除"
+      add: "添加"
       leave_message: "你真的想要发送消息么？"
       remove_allowed_user: "确定将 %{name} 从本条私信中移除？"
       remove_allowed_group: "确定将 %{name} 从本条私信中移除？"
@@ -1442,8 +1468,10 @@ zh_CN:
       title: "登录"
       username: "用户"
       password: "密码"
+      second_factor_title: "双重认证"
       second_factor_description: "请输入来自 app 的验证码："
       second_factor_backup: "使用备用码登录"
+      second_factor_backup_title: "双重认证备份"
       second_factor_backup_description: "请输入你的备份码："
       second_factor: "使用身份验证器app登录"
       security_key_description: "当你准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
@@ -1467,8 +1495,10 @@ zh_CN:
       awaiting_approval: "你的账户尚未被论坛版主审核。请等待一段时间，当你的账户被审核时会收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
       not_activated: "你还不能登录。我们已经发送了一封邮件至 <b>%{sentTo}</b>，请打开它并完成账户激活。"
+      not_allowed_from_ip_address: "你不能使用当前IP地址登录。"
       admin_not_allowed_from_ip_address: "你不能从这个 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活邮件。"
+      omniauth_disallow_totp: "你的账户已启用双重认证，请使用密码登录。"
       resend_title: "重发激活邮件"
       change_email: "更改邮件地址"
       provide_new_email: "给个新地址！然后我们会再给你发一封确认邮件。"
@@ -1536,6 +1566,9 @@ zh_CN:
       enter: "回车"
     conditional_loading_section:
       loading: 载入中……
+    category_row:
+      topic_count:
+        other: "这个分类下共有%{count}个主题"
     select_kit:
       default_header_text: 选择…
       no_content: 无符合的结果
@@ -1546,6 +1579,8 @@ zh_CN:
         other: "你只能选择 %{count} 条记录。"
       min_content_not_reached:
         other: "选择至少%{count}条。"
+      invalid_selection_length:
+        other: "至少选择%{count}个字符。"
       components:
         categories_admin_dropdown:
           title: "分类管理"
@@ -1595,6 +1630,8 @@ zh_CN:
       similar_topics: "你的主题有点类似于…"
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
+      group_mentioned_limit:
+        other: "<b>警告！</b>你提到了<a href='%{group_link}'> %{group} </a>，但是这个群组的成员数量超过了管理员所设置的可提及最大数量限制%{count}个用户。没有人会收到通知。"
       group_mentioned:
         other: "提及 %{group} 时，你将通知 <a href='%{group_link}'>%{count} 人</a> － 确定吗？"
       cannot_see_mention:
@@ -1610,6 +1647,8 @@ zh_CN:
         post_length: "帖子至少要有%{min} 个字符"
         try_like: "你尝试过使用%{heart}按钮了吗？"
         category_missing: "未选择分类"
+        tags_missing:
+          other: "你至少应选择%{count}个标签"
         topic_template_not_modified: "请通过编辑主题模板来为主题添加详情。"
       save_edit: "保存编辑"
       overwrite_edit: "覆盖编辑"
@@ -1676,6 +1715,10 @@ zh_CN:
       yourself_confirm:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
+      slow_mode:
+        title: "这个主题处于慢速模式"
+        body: "提交一个帖子后，再次发帖前你需要等待%{duration}。"
+        error: "你刚刚在这个主题中发表了内容，现在处于慢状态模式。请等待以便其他用户有机会参与。"
       admin_options_title: "本主题可选设置"
       composer_actions:
         reply: 回复
@@ -1747,6 +1790,8 @@ zh_CN:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>新主题</span> %{description}"
       membership_request_accepted: "接受来自“%{group_name}”的邀请"
+      membership_request_consolidated:
+        other: "%{count}个申请加入“%{group_name}”群组的请求"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}， %{username2}</span> %{description}"
       votes_released: "%{description} -已完成"
@@ -2014,6 +2059,24 @@ zh_CN:
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
       deleted: "此主题已被删除"
+      slow_mode_update:
+        title: "慢速模式"
+        select: "持续时间："
+        description: "用户再次发帖前将需要等待。"
+        save: "保存"
+        remove: "停用"
+        hours: "小时："
+        minutes: "分钟："
+        seconds: "秒："
+        durations:
+          15_minutes: "15分钟"
+          1_hour: "1小时"
+          4_hours: "4小时"
+          1_day: "1天"
+          1_week: "1周"
+          custom: "自定义持续时间"
+      slow_mode_notice:
+        duration: "这个主题下每个发帖之间需要等待%{duration}"
       topic_status_update:
         title: "主题计时器"
         save: "设置计时器"
@@ -2142,6 +2205,7 @@ zh_CN:
         open: "打开主题"
         close: "关闭主题"
         multi_select: "选择帖子…"
+        slow_mode: "设为慢速模式"
         timed_update: "设置主题计时器…"
         pin: "置顶主题…"
         unpin: "取消置顶主题…"
@@ -2190,6 +2254,8 @@ zh_CN:
         already_pinned:
           other: "%{categoryLink}分类的置顶主题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "将主题置于所有主题列表最上方至"
+        confirm_pin_globally:
+          other: "已经有%{count}个全局置顶的主题。太多的置顶主题可能会困扰新用户和匿名访客。确定还要全局置顶主题吗？"
         unpin_globally: "将主题从所有主题列表的最上方移除。"
         unpin_globally_until: "从所有主题列表最上方移除主题或者移除于<strong>%{until}</strong>。"
         global_pin_note: "用户可以自行取消全局置顶。"
@@ -2364,6 +2430,8 @@ zh_CN:
         upload: "抱歉，在上传文件时发生了错误。请重试。"
         file_too_large: "抱歉，该文件太大（最大大小为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接？"
         too_many_uploads: "抱歉，一次只能上传一张图片。"
+        too_many_dragged_and_dropped_files:
+          other: "抱歉，一次只能上传%{count}个文件。"
         upload_not_authorized: "抱歉，你没有上传文件的权限（验证扩展：%{authorized_extensions}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
@@ -2800,6 +2868,7 @@ zh_CN:
         this_week: "周"
         today: "今天"
         other_periods: "查看热门："
+    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">你的浏览器对于本站点来说太过陈旧了</a>。请<a href="https://browsehappy.com">更新你的浏览器</a>以浏览丰富的内容，还可以登录和回帖。'
     permission_types:
       full: "创建 / 回复 / 阅读"
       create_post: "回复 / 阅读"
@@ -3593,6 +3662,18 @@ zh_CN:
           color_definitions:
             text: "颜色配置"
             title: "输入自定义颜色配置（仅限高级用户）"
+            placeholder: |2-
+
+              使用这个样式表将自定义颜色添加到CSS自定义属性。
+
+              例如：
+
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              强烈建议使用前缀为属性命名以避免与插件或核心程序冲突。
           head_tag:
             text: "</head>"
             title: "将在 </head> 标签前插入的 HTML"
@@ -3834,6 +3915,7 @@ zh_CN:
             post_edit: "帖子编辑"
             post_unlocked: "帖子解锁"
             check_personal_message: "检查个人信息"
+            disabled_second_factor: "停用双重认证"
             topic_published: "帖子已发布"
             post_approved: "帖子已审批"
             post_rejected: "帖子已拒绝"
@@ -4061,6 +4143,7 @@ zh_CN:
         private_topics_count: 私有主题数量
         posts_read_count: 已阅帖子数量
         post_count: 发表的帖子数量
+        second_factor_enabled: 双重认证已启用
         topics_entered: 已查看的主题数量
         flags_given_count: 提交标记数量
         flags_received_count: 被他人标记数量
