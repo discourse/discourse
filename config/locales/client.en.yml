@@ -1925,6 +1925,7 @@ en:
       slow_mode:
         title: "This topic is in slow mode."
         body: "After submitting a post, you'll need to wait %{duration} before being able to post again."
+        error: "You recently posted on this topic, which is in slow mode. Please wait so other users can have their chance to participate."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2320,19 +2321,18 @@ en:
         title: "Slow Mode"
         select: "Duration:"
         description: "Users will have to wait to be able to post again."
-        current: "Current duration is %{hours} hours, %{minutes} minutes, and %{seconds} seconds."
         save: "Save"
         remove: "Disable"
-        hours: "Hours"
-        minutes: "Minutes"
-        seconds: "Seconds"
+        hours: "Hours:"
+        minutes: "Minutes:"
+        seconds: "Seconds:"
         durations:
           15_minutes: "15 Minutes"
           1_hour: "1 Hour"
           4_hours: "4 Hours"
           1_day: "1 Day"
           1_week: "1 Week"
-          custom: "Pick Duration"
+          custom: "Custom Duration"
       slow_mode_notice:
         duration: "You need to wait %{duration} between posts in this topic"
       topic_status_update:

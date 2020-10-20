@@ -164,14 +164,6 @@ export default createWidget("topic-admin-menu", {
         });
       }
 
-      this.addActionButton({
-        className: "topic-admin-slow-mode",
-        buttonClass: "popup-menu-btn",
-        action: "showTopicSlowModeUpdate",
-        icon: "hourglass-end",
-        label: "actions.slow_mode",
-      });
-
       if (topic.get("deleted") && details.get("can_recover")) {
         this.addActionButton({
           className: "topic-admin-recover",
@@ -277,6 +269,14 @@ export default createWidget("topic-admin-menu", {
             : "actions.make_private",
         });
       }
+
+      this.addActionButton({
+        className: "topic-admin-slow-mode",
+        buttonClass: "popup-menu-btn",
+        action: "showTopicSlowModeUpdate",
+        icon: "hourglass-end",
+        label: "actions.slow_mode",
+      });
 
       if (this.currentUser.get("staff")) {
         this.addActionButton({
