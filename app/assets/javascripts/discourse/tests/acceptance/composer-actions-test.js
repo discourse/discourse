@@ -356,32 +356,28 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rows().length, 1);
     assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
   });
+});
 
-  acceptance("Composer Actions With New Topic Draft", {
-    loggedIn: true,
-    settings: {
-      enable_whispers: true,
-    },
-    site: {
-      can_tag_topics: true,
-    },
-    beforeEach() {
-      _clearSnapshots();
-    },
-    afterEach() {
-      _clearSnapshots();
-    },
+function stubDraftResponse() {
+  sandbox.stub(Draft, "get").returns(
+    Promise.resolve({
+      draft:
+        '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+      draft_sequence: 0,
+    })
+  );
+}
+
+acceptance("Composer Actions With New Topic Draft", function (needs) {
+  needs.user();
+  needs.settings({
+    enable_whispers: true,
   });
-
-  const stubDraftResponse = () => {
-    sandbox.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-        draft_sequence: 0,
-      })
-    );
-  };
+  needs.site({
+    can_tag_topics: true,
+  });
+  needs.hooks.beforeEach(() => _clearSnapshots());
+  needs.hooks.afterEach(() => _clearSnapshots());
 
   test("shared draft", async (assert) => {
     stubDraftResponse();

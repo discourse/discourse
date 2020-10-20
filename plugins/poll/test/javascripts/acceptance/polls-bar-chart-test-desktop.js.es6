@@ -1,13 +1,13 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 
-acceptance("Rendering polls with bar charts - desktop", {
-  loggedIn: true,
-  settings: { poll_enabled: true },
-  beforeEach() {
+acceptance("Rendering polls with bar charts - desktop", function (needs) {
+  needs.user();
+  needs.settings({ poll_enabled: true });
+  needs.hooks.beforeEach(() => {
     clearPopupMenuOptionsCallback();
-  },
-  pretend(server) {
+  });
+  needs.pretender((server, helper) => {
     server.get("/polls/voters.json", (request) => {
       let body = {};
       if (
@@ -35,78 +35,78 @@ acceptance("Rendering polls with bar charts - desktop", {
           })),
         };
       }
-      return [200, { "Content-Type": "application/json" }, body];
+      return helper.response(body);
     });
-  },
-});
+  });
 
-test("Polls", async (assert) => {
-  await visit("/t/-/15");
+  test("Polls", async (assert) => {
+    await visit("/t/-/15");
 
-  const polls = find(".poll");
+    const polls = find(".poll");
 
-  assert.equal(polls.length, 2, "it should render the polls correctly");
+    assert.equal(polls.length, 2, "it should render the polls correctly");
 
-  assert.equal(
-    find(".info-number", polls[0]).text(),
-    "2",
-    "it should display the right number of votes"
-  );
+    assert.equal(
+      find(".info-number", polls[0]).text(),
+      "2",
+      "it should display the right number of votes"
+    );
 
-  assert.equal(
-    find(".info-number", polls[1]).text(),
-    "3",
-    "it should display the right number of votes"
-  );
-});
+    assert.equal(
+      find(".info-number", polls[1]).text(),
+      "3",
+      "it should display the right number of votes"
+    );
+  });
 
-test("Public poll", async (assert) => {
-  await visit("/t/-/14");
+  test("Public poll", async (assert) => {
+    await visit("/t/-/14");
 
-  const polls = find(".poll");
-  assert.equal(polls.length, 1, "it should render the poll correctly");
+    const polls = find(".poll");
+    assert.equal(polls.length, 1, "it should render the poll correctly");
 
-  await click("button.toggle-results");
+    await click("button.toggle-results");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    25,
-    "it should display the right number of voters"
-  );
+    assert.equal(
+      find(".poll-voters:first li").length,
+      25,
+      "it should display the right number of voters"
+    );
 
-  await click(".poll-voters-toggle-expand:first a");
+    await click(".poll-voters-toggle-expand:first a");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    26,
-    "it should display the right number of voters"
-  );
-});
+    assert.equal(
+      find(".poll-voters:first li").length,
+      26,
+      "it should display the right number of voters"
+    );
+  });
 
-test("Public number poll", async (assert) => {
-  await visit("/t/-/13");
+  test("Public number poll", async (assert) => {
+    await visit("/t/-/13");
 
-  const polls = find(".poll");
-  assert.equal(polls.length, 1, "it should render the poll correctly");
+    const polls = find(".poll");
+    assert.equal(polls.length, 1, "it should render the poll correctly");
 
-  await click("button.toggle-results");
+    await click("button.toggle-results");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    25,
-    "it should display the right number of voters"
-  );
+    assert.equal(
+      find(".poll-voters:first li").length,
+      25,
+      "it should display the right number of voters"
+    );
 
-  assert.notOk(
-    find(".poll-voters:first li:first a").attr("href"),
-    "user URL does not exist"
-  );
+    assert.notOk(
+      find(".poll-voters:first li:first a").attr("href"),
+      "user URL does not exist"
+    );
 
-  await click(".poll-voters-toggle-expand:first a");
+    await click(".poll-voters-toggle-expand:first a");
 
-  assert.equal(
-    find(".poll-voters:first li").length,
-    30,
-    "it should display the right number of voters"
-  );
+    assert.equal(
+      find(".poll-voters:first li").length,
+      30,
+      "it should display the right number of voters"
+    );
+  });
 });

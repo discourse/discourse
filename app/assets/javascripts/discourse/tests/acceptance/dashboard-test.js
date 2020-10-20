@@ -136,13 +136,13 @@ acceptance("Dashboard: dashboard_visible_tabs", function (needs) {
     assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
     assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
   });
+});
 
-  acceptance("Dashboard: dashboard_hidden_reports", {
-    loggedIn: true,
-    settings: {
-      dashboard_visible_tabs: "reports",
-      dashboard_hidden_reports: "posts|dau_by_mau",
-    },
+acceptance("Dashboard: dashboard_hidden_reports", function (needs) {
+  needs.user();
+  needs.settings({
+    dashboard_visible_tabs: "reports",
+    dashboard_hidden_reports: "posts|dau_by_mau",
   });
 
   test("hidden reports", async (assert) => {

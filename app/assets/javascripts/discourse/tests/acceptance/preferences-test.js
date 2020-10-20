@@ -66,184 +66,185 @@ function preferencesPretender(server, helper) {
   });
 }
 
-acceptance("User Preferences", {
-  loggedIn: true,
-  pretend: preferencesPretender,
-});
+acceptance("User Preferences", function (needs) {
+  needs.user();
+  needs.pretender(preferencesPretender);
+  test("update some fields", async (assert) => {
+    await visit("/u/eviltrout/preferences");
 
-test("update some fields", async (assert) => {
-  await visit("/u/eviltrout/preferences");
+    assert.ok($("body.user-preferences-page").length, "has the body class");
+    assert.equal(
+      currentURL(),
+      "/u/eviltrout/preferences/account",
+      "defaults to account tab"
+    );
+    assert.ok(exists(".user-preferences"), "it shows the preferences");
 
-  assert.ok($("body.user-preferences-page").length, "has the body class");
-  assert.equal(
-    currentURL(),
-    "/u/eviltrout/preferences/account",
-    "defaults to account tab"
-  );
-  assert.ok(exists(".user-preferences"), "it shows the preferences");
+    const savePreferences = async () => {
+      assert.ok(!exists(".saved"), "it hasn't been saved yet");
+      await click(".save-changes");
+      assert.ok(exists(".saved"), "it displays the saved message");
+      find(".saved").remove();
+    };
 
-  const savePreferences = async () => {
-    assert.ok(!exists(".saved"), "it hasn't been saved yet");
-    await click(".save-changes");
-    assert.ok(exists(".saved"), "it displays the saved message");
-    find(".saved").remove();
-  };
+    fillIn(".pref-name input[type=text]", "Jon Snow");
+    await savePreferences();
 
-  fillIn(".pref-name input[type=text]", "Jon Snow");
-  await savePreferences();
+    click(".preferences-nav .nav-profile a");
+    fillIn("#edit-location", "Westeros");
+    await savePreferences();
 
-  click(".preferences-nav .nav-profile a");
-  fillIn("#edit-location", "Westeros");
-  await savePreferences();
+    click(".preferences-nav .nav-emails a");
+    click(".pref-activity-summary input[type=checkbox]");
+    await savePreferences();
 
-  click(".preferences-nav .nav-emails a");
-  click(".pref-activity-summary input[type=checkbox]");
-  await savePreferences();
+    click(".preferences-nav .nav-notifications a");
+    await selectKit(
+      ".control-group.notifications .combo-box.duration"
+    ).expand();
+    await selectKit(
+      ".control-group.notifications .combo-box.duration"
+    ).selectRowByValue(1440);
+    await savePreferences();
 
-  click(".preferences-nav .nav-notifications a");
-  await selectKit(".control-group.notifications .combo-box.duration").expand();
-  await selectKit(
-    ".control-group.notifications .combo-box.duration"
-  ).selectRowByValue(1440);
-  await savePreferences();
-
-  click(".preferences-nav .nav-categories a");
-  fillIn(".tracking-controls .category-selector", "faq");
-  await savePreferences();
-
-  assert.ok(
-    !exists(".preferences-nav .nav-tags a"),
-    "tags tab isn't there when tags are disabled"
-  );
-
-  click(".preferences-nav .nav-interface a");
-  click(".control-group.other input[type=checkbox]:first");
-  savePreferences();
-
-  assert.ok(
-    !exists(".preferences-nav .nav-apps a"),
-    "apps tab isn't there when you have no authorized apps"
-  );
-});
-
-test("username", async (assert) => {
-  await visit("/u/eviltrout/preferences/username");
-  assert.ok(exists("#change_username"), "it has the input element");
-});
-
-test("email", async (assert) => {
-  await visit("/u/eviltrout/preferences/email");
-
-  assert.ok(exists("#change-email"), "it has the input element");
-
-  await fillIn("#change-email", "invalidemail");
-
-  assert.equal(
-    find(".tip.bad").text().trim(),
-    I18n.t("user.email.invalid"),
-    "it should display invalid email tip"
-  );
-});
-
-test("email field always shows up", async (assert) => {
-  await visit("/u/eviltrout/preferences/email");
-
-  assert.ok(exists("#change-email"), "it has the input element");
-
-  await fillIn("#change-email", "eviltrout@discourse.org");
-  await click(".user-preferences button.btn-primary");
-
-  await visit("/u/eviltrout/preferences");
-  await visit("/u/eviltrout/preferences/email");
-
-  assert.ok(exists("#change-email"), "it has the input element");
-});
-
-test("connected accounts", async (assert) => {
-  await visit("/u/eviltrout/preferences/account");
-
-  assert.ok(
-    exists(".pref-associated-accounts"),
-    "it has the connected accounts section"
-  );
-  assert.ok(
-    find(".pref-associated-accounts table tr:first td:first")
-      .html()
-      .indexOf("Facebook") > -1,
-    "it lists facebook"
-  );
-
-  await click(".pref-associated-accounts table tr:first td:last button");
-
-  find(".pref-associated-accounts table tr:first td:last button")
-    .html()
-    .indexOf("Connect") > -1;
-});
-
-test("second factor totp", async (assert) => {
-  await visit("/u/eviltrout/preferences/second-factor");
-
-  assert.ok(exists("#password"), "it has a password input");
-
-  await fillIn("#password", "secrets");
-  await click(".user-preferences .btn-primary");
-  assert.notOk(exists("#password"), "it hides the password input");
-
-  await click(".new-totp");
-  assert.ok(exists("#test-qr"), "shows qr code");
-
-  await click(".add-totp");
-
-  assert.ok(
-    find(".alert-error").html().indexOf("provide a name and the code") > -1,
-    "shows name/token missing error message"
-  );
-});
-
-test("second factor security keys", async (assert) => {
-  await visit("/u/eviltrout/preferences/second-factor");
-
-  assert.ok(exists("#password"), "it has a password input");
-
-  await fillIn("#password", "secrets");
-  await click(".user-preferences .btn-primary");
-  assert.notOk(exists("#password"), "it hides the password input");
-
-  await click(".new-security-key");
-  assert.ok(exists("#security-key-name"), "shows security key name input");
-
-  fillIn("#security-key-name", "");
-
-  // The following tests can only run when Webauthn is enabled. This is not
-  // always the case, for example on a browser running on a non-standard port
-  if (typeof PublicKeyCredential !== "undefined") {
-    await click(".add-security-key");
+    click(".preferences-nav .nav-categories a");
+    fillIn(".tracking-controls .category-selector", "faq");
+    await savePreferences();
 
     assert.ok(
-      find(".alert-error").html().indexOf("provide a name") > -1,
-      "shows name missing error message"
+      !exists(".preferences-nav .nav-tags a"),
+      "tags tab isn't there when tags are disabled"
     );
-  }
+
+    click(".preferences-nav .nav-interface a");
+    click(".control-group.other input[type=checkbox]:first");
+    savePreferences();
+
+    assert.ok(
+      !exists(".preferences-nav .nav-apps a"),
+      "apps tab isn't there when you have no authorized apps"
+    );
+  });
+
+  test("username", async (assert) => {
+    await visit("/u/eviltrout/preferences/username");
+    assert.ok(exists("#change_username"), "it has the input element");
+  });
+
+  test("email", async (assert) => {
+    await visit("/u/eviltrout/preferences/email");
+
+    assert.ok(exists("#change-email"), "it has the input element");
+
+    await fillIn("#change-email", "invalidemail");
+
+    assert.equal(
+      find(".tip.bad").text().trim(),
+      I18n.t("user.email.invalid"),
+      "it should display invalid email tip"
+    );
+  });
+
+  test("email field always shows up", async (assert) => {
+    await visit("/u/eviltrout/preferences/email");
+
+    assert.ok(exists("#change-email"), "it has the input element");
+
+    await fillIn("#change-email", "eviltrout@discourse.org");
+    await click(".user-preferences button.btn-primary");
+
+    await visit("/u/eviltrout/preferences");
+    await visit("/u/eviltrout/preferences/email");
+
+    assert.ok(exists("#change-email"), "it has the input element");
+  });
+
+  test("connected accounts", async (assert) => {
+    await visit("/u/eviltrout/preferences/account");
+
+    assert.ok(
+      exists(".pref-associated-accounts"),
+      "it has the connected accounts section"
+    );
+    assert.ok(
+      find(".pref-associated-accounts table tr:first td:first")
+        .html()
+        .indexOf("Facebook") > -1,
+      "it lists facebook"
+    );
+
+    await click(".pref-associated-accounts table tr:first td:last button");
+
+    find(".pref-associated-accounts table tr:first td:last button")
+      .html()
+      .indexOf("Connect") > -1;
+  });
+
+  test("second factor totp", async (assert) => {
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert.ok(exists("#password"), "it has a password input");
+
+    await fillIn("#password", "secrets");
+    await click(".user-preferences .btn-primary");
+    assert.notOk(exists("#password"), "it hides the password input");
+
+    await click(".new-totp");
+    assert.ok(exists("#test-qr"), "shows qr code");
+
+    await click(".add-totp");
+
+    assert.ok(
+      find(".alert-error").html().indexOf("provide a name and the code") > -1,
+      "shows name/token missing error message"
+    );
+  });
+
+  test("second factor security keys", async (assert) => {
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert.ok(exists("#password"), "it has a password input");
+
+    await fillIn("#password", "secrets");
+    await click(".user-preferences .btn-primary");
+    assert.notOk(exists("#password"), "it hides the password input");
+
+    await click(".new-security-key");
+    assert.ok(exists("#security-key-name"), "shows security key name input");
+
+    fillIn("#security-key-name", "");
+
+    // The following tests can only run when Webauthn is enabled. This is not
+    // always the case, for example on a browser running on a non-standard port
+    if (typeof PublicKeyCredential !== "undefined") {
+      await click(".add-security-key");
+
+      assert.ok(
+        find(".alert-error").html().indexOf("provide a name") > -1,
+        "shows name missing error message"
+      );
+    }
+  });
+
+  test("default avatar selector", async (assert) => {
+    await visit("/u/eviltrout/preferences");
+
+    await click(".pref-avatar .btn");
+    assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
+
+    await click(".avatar-selector-refresh-gravatar");
+
+    assert.equal(
+      User.currentProp("gravatar_avatar_upload_id"),
+      6543,
+      "it should set the gravatar_avatar_upload_id property"
+    );
+  });
 });
 
-test("default avatar selector", async (assert) => {
-  await visit("/u/eviltrout/preferences");
-
-  await click(".pref-avatar .btn");
-  assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
-
-  await click(".avatar-selector-refresh-gravatar");
-
-  assert.equal(
-    User.currentProp("gravatar_avatar_upload_id"),
-    6543,
-    "it should set the gravatar_avatar_upload_id property"
-  );
-});
-
-acceptance("Second Factor Backups", {
-  loggedIn: true,
-  pretend(server, helper) {
+acceptance("Second Factor Backups", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
@@ -260,25 +261,28 @@ acceptance("Second Factor Backups", {
     server.get("/u/eviltrout/activity.json", () => {
       return helper.response({});
     });
-  },
-});
-test("second factor backup", async (assert) => {
-  updateCurrentUser({ second_factor_enabled: true });
-  await visit("/u/eviltrout/preferences/second-factor");
-  await click(".edit-2fa-backup");
-  assert.ok(
-    exists(".second-factor-backup-preferences"),
-    "shows the 2fa backup panel"
-  );
-  await click(".second-factor-backup-preferences .btn-primary");
+  });
 
-  assert.ok(exists(".backup-codes-area"), "shows backup codes");
+  test("second factor backup", async (assert) => {
+    updateCurrentUser({ second_factor_enabled: true });
+    await visit("/u/eviltrout/preferences/second-factor");
+    await click(".edit-2fa-backup");
+    assert.ok(
+      exists(".second-factor-backup-preferences"),
+      "shows the 2fa backup panel"
+    );
+    await click(".second-factor-backup-preferences .btn-primary");
+
+    assert.ok(exists(".backup-codes-area"), "shows backup codes");
+  });
 });
 
-acceptance("Avatar selector when selectable avatars is enabled", {
-  loggedIn: true,
-  settings: { selectable_avatars_enabled: true },
-  pretend(server) {
+acceptance("Avatar selector when selectable avatars is enabled", function (
+  needs
+) {
+  needs.user();
+  needs.settings({ selectable_avatars_enabled: true });
+  needs.pretender((server) => {
     server.get("/site/selectable-avatars.json", () => {
       return [
         200,
@@ -286,127 +290,129 @@ acceptance("Avatar selector when selectable avatars is enabled", {
         ["https://www.discourse.org", "https://meta.discourse.org"],
       ];
     });
-  },
+  });
+
+  test("selectable avatars", async (assert) => {
+    await visit("/u/eviltrout/preferences");
+    await click(".pref-avatar .btn");
+    assert.ok(
+      exists(".selectable-avatars", "opens the avatar selection modal")
+    );
+  });
 });
 
-test("selectable avatars", async (assert) => {
-  await visit("/u/eviltrout/preferences");
+acceptance("User Preferences when badges are disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_badges: false });
+  needs.pretender(preferencesPretender);
 
-  await click(".pref-avatar .btn");
+  test("visit my preferences", async (assert) => {
+    await visit("/u/eviltrout/preferences");
+    assert.ok($("body.user-preferences-page").length, "has the body class");
+    assert.equal(
+      currentURL(),
+      "/u/eviltrout/preferences/account",
+      "defaults to account tab"
+    );
+    assert.ok(exists(".user-preferences"), "it shows the preferences");
+  });
 
-  assert.ok(exists(".selectable-avatars", "opens the avatar selection modal"));
-});
+  test("recently connected devices", async (assert) => {
+    await visit("/u/eviltrout/preferences");
 
-acceptance("User Preferences when badges are disabled", {
-  loggedIn: true,
-  settings: { enable_badges: false },
-  pretend: preferencesPretender,
-});
+    assert.equal(
+      find(".auth-tokens > .auth-token:first .auth-token-device").text().trim(),
+      "Linux Computer",
+      "it should display active token first"
+    );
 
-test("visit my preferences", async (assert) => {
-  await visit("/u/eviltrout/preferences");
-  assert.ok($("body.user-preferences-page").length, "has the body class");
-  assert.equal(
-    currentURL(),
-    "/u/eviltrout/preferences/account",
-    "defaults to account tab"
-  );
-  assert.ok(exists(".user-preferences"), "it shows the preferences");
-});
+    assert.equal(
+      find(".pref-auth-tokens > a:first").text().trim(),
+      I18n.t("user.auth_tokens.show_all", { count: 3 }),
+      "it should display two tokens"
+    );
+    assert.ok(
+      find(".pref-auth-tokens .auth-token").length === 2,
+      "it should display two tokens"
+    );
 
-test("recently connected devices", async (assert) => {
-  await visit("/u/eviltrout/preferences");
+    await click(".pref-auth-tokens > a:first");
 
-  assert.equal(
-    find(".auth-tokens > .auth-token:first .auth-token-device").text().trim(),
-    "Linux Computer",
-    "it should display active token first"
-  );
+    assert.ok(
+      find(".pref-auth-tokens .auth-token").length === 3,
+      "it should display three tokens"
+    );
 
-  assert.equal(
-    find(".pref-auth-tokens > a:first").text().trim(),
-    I18n.t("user.auth_tokens.show_all", { count: 3 }),
-    "it should display two tokens"
-  );
-  assert.ok(
-    find(".pref-auth-tokens .auth-token").length === 2,
-    "it should display two tokens"
-  );
+    await click(".auth-token-dropdown:first button");
+    await click("li[data-value='notYou']");
 
-  await click(".pref-auth-tokens > a:first");
+    assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
 
-  assert.ok(
-    find(".pref-auth-tokens .auth-token").length === 3,
-    "it should display three tokens"
-  );
+    await click(".modal-footer .btn-primary");
 
-  await click(".auth-token-dropdown:first button");
-  await click("li[data-value='notYou']");
-
-  assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
-
-  await click(".modal-footer .btn-primary");
-
-  assert.ok(
-    find(".pref-password.highlighted").length === 1,
-    "it should highlight password preferences"
-  );
+    assert.ok(
+      find(".pref-password.highlighted").length === 1,
+      "it should highlight password preferences"
+    );
+  });
 });
 
 acceptance(
   "User can select a topic to feature on profile if site setting in enabled",
-  {
-    loggedIn: true,
-    settings: { allow_featured_topic_on_user_profiles: true },
-
-    pretend(server, helper) {
+  function (needs) {
+    needs.user();
+    needs.settings({ allow_featured_topic_on_user_profiles: true });
+    needs.pretender((server, helper) => {
       server.put("/u/eviltrout/feature-topic", () => {
         return helper.response({
           success: true,
         });
       });
-    },
+    });
+
+    test("setting featured topic on profile", async (assert) => {
+      await visit("/u/eviltrout/preferences/profile");
+
+      assert.ok(
+        !exists(".featured-topic-link"),
+        "no featured topic link to present"
+      );
+      assert.ok(
+        !exists(".clear-feature-topic-on-profile-btn"),
+        "clear button not present"
+      );
+
+      const selectTopicBtn = find(".feature-topic-on-profile-btn:first");
+      assert.ok(exists(selectTopicBtn), "feature topic button is present");
+
+      await click(selectTopicBtn);
+
+      assert.ok(
+        exists(".feature-topic-on-profile"),
+        "topic picker modal is open"
+      );
+
+      const topicRadioBtn = find('input[name="choose_topic_id"]:first');
+      assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
+      await click(topicRadioBtn);
+
+      await click(".save-featured-topic-on-profile");
+
+      assert.ok(
+        exists(".featured-topic-link"),
+        "link to featured topic is present"
+      );
+      assert.ok(
+        exists(".clear-feature-topic-on-profile-btn"),
+        "clear button is present"
+      );
+    });
   }
 );
 
-test("setting featured topic on profile", async (assert) => {
-  await visit("/u/eviltrout/preferences/profile");
-
-  assert.ok(
-    !exists(".featured-topic-link"),
-    "no featured topic link to present"
-  );
-  assert.ok(
-    !exists(".clear-feature-topic-on-profile-btn"),
-    "clear button not present"
-  );
-
-  const selectTopicBtn = find(".feature-topic-on-profile-btn:first");
-  assert.ok(exists(selectTopicBtn), "feature topic button is present");
-
-  await click(selectTopicBtn);
-
-  assert.ok(exists(".feature-topic-on-profile"), "topic picker modal is open");
-
-  const topicRadioBtn = find('input[name="choose_topic_id"]:first');
-  assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
-  await click(topicRadioBtn);
-
-  await click(".save-featured-topic-on-profile");
-
-  assert.ok(
-    exists(".featured-topic-link"),
-    "link to featured topic is present"
-  );
-  assert.ok(
-    exists(".clear-feature-topic-on-profile-btn"),
-    "clear button is present"
-  );
-});
-
-acceptance("Custom User Fields", {
-  loggedIn: true,
-  site: {
+acceptance("Custom User Fields", function (needs) {
+  needs.user();
+  needs.site({
     user_fields: [
       {
         id: 30,
@@ -416,46 +422,50 @@ acceptance("Custom User Fields", {
         required: true,
       },
     ],
-  },
-  pretend: preferencesPretender,
-});
+  });
+  needs.pretender(preferencesPretender);
 
-test("can select an option from a dropdown", async (assert) => {
-  await visit("/u/eviltrout/preferences/profile");
-  assert.ok(exists(".user-field"), "it has at least one user field");
-  await click(".user-field.dropdown");
+  test("can select an option from a dropdown", async (assert) => {
+    await visit("/u/eviltrout/preferences/profile");
+    assert.ok(exists(".user-field"), "it has at least one user field");
+    await click(".user-field.dropdown");
 
-  const field = selectKit(
-    ".user-field-what-kind-of-pet-do-you-have .combo-box"
-  );
-  await field.expand();
-  await field.selectRowByValue("Cat");
-  assert.equal(field.header().value(), "Cat", "it sets the value of the field");
+    const field = selectKit(
+      ".user-field-what-kind-of-pet-do-you-have .combo-box"
+    );
+    await field.expand();
+    await field.selectRowByValue("Cat");
+    assert.equal(
+      field.header().value(),
+      "Cat",
+      "it sets the value of the field"
+    );
+  });
 });
 
 acceptance(
   "User Preferences, selecting bookmarks discovery as user's default homepage",
-  {
-    loggedIn: true,
-    settings: {
+  function (needs) {
+    needs.user();
+    needs.settings({
       top_menu: "categories|latest|top|bookmarks",
-    },
+    });
+
+    test("selecting bookmarks as home directs home to bookmarks", async (assert) => {
+      await visit("/u/eviltrout/preferences/interface");
+      assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
+
+      const field = selectKit(".home .combo-box");
+      await field.expand();
+      await field.selectRowByValue("6");
+      await click(".save-changes");
+      await visit("/");
+      assert.ok(exists(".topic-list"), "The list of topics was rendered");
+      assert.equal(
+        currentPath(),
+        "discovery.bookmarks",
+        "it navigates to bookmarks"
+      );
+    });
   }
 );
-
-test("selecting bookmarks as home directs home to bookmarks", async (assert) => {
-  await visit("/u/eviltrout/preferences/interface");
-  assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
-
-  const field = selectKit(".home .combo-box");
-  await field.expand();
-  await field.selectRowByValue("6");
-  await click(".save-changes");
-  await visit("/");
-  assert.ok(exists(".topic-list"), "The list of topics was rendered");
-  assert.equal(
-    currentPath(),
-    "discovery.bookmarks",
-    "it navigates to bookmarks"
-  );
-});

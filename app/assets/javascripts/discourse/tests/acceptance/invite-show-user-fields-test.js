@@ -3,8 +3,8 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 
-acceptance("Accept Invite - User Fields", {
-  site: {
+acceptance("Accept Invite - User Fields", function (needs) {
+  needs.site({
     user_fields: [
       {
         id: 34,
@@ -25,57 +25,57 @@ acceptance("Accept Invite - User Fields", {
         required: false,
       },
     ],
-  },
-});
-
-test("accept invite with user fields", async (assert) => {
-  PreloadStore.store("invite_info", {
-    invited_by: {
-      id: 123,
-      username: "neil",
-      avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
-      name: "Neil Lalonde",
-      title: "team",
-    },
-    email: "invited@asdf.com",
-    username: "invited",
-    is_invite_link: false,
   });
 
-  await visit("/invites/myvalidinvitetoken");
-  assert.ok(exists(".invites-show"), "shows the accept invite page");
-  assert.ok(exists(".user-field"), "it has at least one user field");
-  assert.ok(
-    exists(".invites-show .btn-primary:disabled"),
-    "submit is disabled"
-  );
+  test("accept invite with user fields", async (assert) => {
+    PreloadStore.store("invite_info", {
+      invited_by: {
+        id: 123,
+        username: "neil",
+        avatar_template: "/user_avatar/localhost/neil/{size}/25_1.png",
+        name: "Neil Lalonde",
+        title: "team",
+      },
+      email: "invited@asdf.com",
+      username: "invited",
+      is_invite_link: false,
+    });
 
-  await fillIn("#new-account-name", "John Doe");
-  await fillIn("#new-account-username", "validname");
-  await fillIn("#new-account-password", "secur3ty4Y0uAndMe");
+    await visit("/invites/myvalidinvitetoken");
+    assert.ok(exists(".invites-show"), "shows the accept invite page");
+    assert.ok(exists(".user-field"), "it has at least one user field");
+    assert.ok(
+      exists(".invites-show .btn-primary:disabled"),
+      "submit is disabled"
+    );
 
-  assert.ok(exists(".username-input .good"), "username is valid");
-  assert.ok(
-    exists(".invites-show .btn-primary:disabled"),
-    "submit is still disabled due to lack of user fields"
-  );
+    await fillIn("#new-account-name", "John Doe");
+    await fillIn("#new-account-username", "validname");
+    await fillIn("#new-account-password", "secur3ty4Y0uAndMe");
 
-  await fillIn(".user-field input[type=text]:first", "Barky");
+    assert.ok(exists(".username-input .good"), "username is valid");
+    assert.ok(
+      exists(".invites-show .btn-primary:disabled"),
+      "submit is still disabled due to lack of user fields"
+    );
 
-  assert.ok(
-    exists(".invites-show .btn-primary:disabled"),
-    "submit is disabled because field is not checked"
-  );
+    await fillIn(".user-field input[type=text]:first", "Barky");
 
-  await click(".user-field input[type=checkbox]");
-  assert.not(
-    exists(".invites-show .btn-primary:disabled"),
-    "submit is enabled because field is checked"
-  );
+    assert.ok(
+      exists(".invites-show .btn-primary:disabled"),
+      "submit is disabled because field is not checked"
+    );
 
-  await click(".user-field input[type=checkbox]");
-  assert.ok(
-    exists(".invites-show .btn-primary:disabled"),
-    "unclicking the checkbox disables the submit"
-  );
+    await click(".user-field input[type=checkbox]");
+    assert.not(
+      exists(".invites-show .btn-primary:disabled"),
+      "submit is enabled because field is checked"
+    );
+
+    await click(".user-field input[type=checkbox]");
+    assert.ok(
+      exists(".invites-show .btn-primary:disabled"),
+      "unclicking the checkbox disables the submit"
+    );
+  });
 });

@@ -146,6 +146,11 @@ export function discourseModule(name, hooks) {
 
 export function addPretenderCallback(name, fn) {
   if (name && fn) {
+    if (_pretenderCallbacks[name]) {
+      // eslint-disable-next-line no-console
+      throw `There is already a pretender callback with module name (${name}).`;
+    }
+
     _pretenderCallbacks[name] = fn;
   }
 }
@@ -159,7 +164,7 @@ export function acceptance(name, optionsOrCallback) {
     callback = optionsOrCallback;
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
-      "The second parameter to `acceptance` should be a function that encloses your tests.",
+      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
       { since: "2.6.0" }
     );
     options = optionsOrCallback;
@@ -168,6 +173,7 @@ export function acceptance(name, optionsOrCallback) {
   addPretenderCallback(name, options.pretend);
 
   let loggedIn = false;
+  let mobileView = false;
   let siteChanges;
   let settingChanges;
   let userChanges;
@@ -180,7 +186,7 @@ export function acceptance(name, optionsOrCallback) {
       HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
-      if (options.mobileView) {
+      if (mobileView) {
         forceMobile();
       }
 
@@ -266,6 +272,9 @@ export function acceptance(name, optionsOrCallback) {
     settings(changes) {
       settingChanges = changes;
     },
+    mobileView() {
+      mobileView = true;
+    },
   };
 
   if (options.loggedIn) {
@@ -276,6 +285,9 @@ export function acceptance(name, optionsOrCallback) {
   }
   if (options.settings) {
     needs.settings(options.settings);
+  }
+  if (options.mobileView) {
+    needs.mobileView();
   }
 
   if (callback) {
