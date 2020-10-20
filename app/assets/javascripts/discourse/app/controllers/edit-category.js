@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
+import DiscourseURL from "discourse/lib/url";
 
 export default Controller.extend({
   selectedTab: "general",
@@ -10,6 +11,7 @@ export default Controller.extend({
   deleting: false,
   panels: null,
   hiddenTooltip: true,
+  createdCategory: false,
 
   @on("init")
   _initPanels() {
@@ -83,10 +85,13 @@ export default Controller.extend({
         .save()
         .then((result) => {
           this.set("saving", false);
-          model.setProperties({
-            slug: result.category.slug,
-            id: result.category.id,
-          });
+          if (!model.id) {
+            model.setProperties({
+              slug: result.category.slug,
+              id: result.category.id,
+              createdCategory: true,
+            });
+          }
         })
         .catch((error) => {
           bootbox.alert(extractError(error));
@@ -120,6 +125,14 @@ export default Controller.extend({
 
     toggleDeleteTooltip() {
       this.toggleProperty("hiddenTooltip");
+    },
+
+    goBack() {
+      if (this.model.createdCategory) {
+        DiscourseURL.redirectTo(this.model.url);
+      } else {
+        DiscourseURL.routeTo(this.model.url);
+      }
     },
   },
 });

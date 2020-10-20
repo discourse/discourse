@@ -2,6 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
+import DiscourseURL from "discourse/lib/url";
 
 acceptance("Category New", function (needs) {
   needs.user();
@@ -20,6 +21,14 @@ acceptance("Category New", function (needs) {
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",
       })
+    );
+
+    await click(".category-back");
+
+    assert.equal(
+      DiscourseURL.redirectedTo,
+      "/c/testing/11",
+      "it full page redirects after a newly created category"
     );
   });
 });

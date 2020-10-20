@@ -8,6 +8,8 @@ div.edit-category {
 
   .edit-category-title {
     grid-area: header;
+    display: flex;
+    justify-content: space-between;
   }
 
   .nav-stacked {

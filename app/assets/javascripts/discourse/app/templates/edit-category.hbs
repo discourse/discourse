@@ -13,7 +13,12 @@
   <div class="edit-category-title">
     <h2>{{title}}</h2>
     {{#if model.id}}
-      <a href={{model.url}} class="back-to-category">{{i18n "category.back"}}</a>
+      {{d-button
+        class="category-back"
+        action=(action "goBack")
+        label="category.back"
+        icon="caret-left"
+      }}
     {{/if}}
   </div>
 
