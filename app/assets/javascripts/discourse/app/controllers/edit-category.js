@@ -2,7 +2,7 @@ import I18n from "I18n";
 import Controller from "@ember/controller";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   selectedTab: "general",
@@ -88,8 +88,10 @@ export default Controller.extend({
             id: result.category.id,
           });
         })
-        .catch(popupAjaxError)
-        .finally(() => this.set("saving", false));
+        .catch((error) => {
+          bootbox.alert(extractError(error));
+          this.set("saving", false);
+        });
     },
 
     deleteCategory() {

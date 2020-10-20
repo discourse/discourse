@@ -327,6 +327,18 @@ export function applyDefaultHandlers(pretender) {
     return response({ category });
   });
 
+  pretender.post("/categories", () => {
+    return response({
+      category: {
+        id: 11,
+        name: "testing",
+        color: "0088CC",
+        text_color: "FFFFFF",
+        slug: "testing",
+      },
+    });
+  });
+
   pretender.get("/draft.json", (request) => {
     if (request.queryParams.draft_key === "new_topic") {
       return response(fixturesByUrl["/draft.json"]);

@@ -46,6 +46,9 @@ acceptance("Category Edit", function (needs) {
 
     assert.ok(visible(".bootbox"));
     assert.equal(find(".bootbox .modal-body").html(), "duplicate email");
+
+    await click(".bootbox .btn-primary");
+    assert.ok(!visible(".bootbox"));
   });
 
   test("Subcategory list settings", async (assert) => {
