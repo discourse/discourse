@@ -21,6 +21,8 @@ export default function () {
 
   this.route("topicBySlugOrId", { path: "/t/:slugOrId", resetNamespace: true });
 
+  this.route("newCategory", { path: "/new-category" });
+
   this.route("discovery", { path: "/", resetNamespace: true }, function () {
     // legacy route
     this.route("topParentCategory", { path: "/c/:slug/l/top" });
@@ -63,6 +65,8 @@ export default function () {
     });
 
     this.route("categories");
+    this.route("editCategory", { path: "/c/:slug/edit" });
+    this.route("editChildCategory", { path: "/c/:parentSlug/:slug/edit" });
 
     // legacy routes
     this.route("parentCategory", { path: "/c/:slug" });

@@ -1,34 +1,28 @@
 import { visit } from "@ember/test-helpers";
-import { skip } from "qunit";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 
 acceptance("Category Edit", {
   loggedIn: true,
   settings: { email_in: true },
-});
-
-test("Can open the category modal", async (assert) => {
-  await visit("/c/bug");
-
-  await click(".edit-category");
-  assert.ok(visible(".d-modal"), "it pops up a modal");
-
-  await click("button.modal-close");
-  assert.ok(!visible(".d-modal"), "it closes the modal");
+  pretend(server, helper) {
+    server.get("/c/bug/find_by_slug.json", () => {
+      return helper.response(CategoryFixtures["/c/1/show.json"]);
+    });
+  },
 });
 
 test("Editing the category", async (assert) => {
   await visit("/c/bug");
 
-  await click(".edit-category");
+  await click("button.edit-category");
+  assert.equal(currentURL(), "/c/bug/edit", "it jumps to the correct screen");
 
-  assert.equal(find(".d-modal .badge-category").text(), "bug");
+  assert.equal(find(".badge-category").text(), "bug");
   await fillIn("input.category-name", "testing");
-  assert.equal(find(".d-modal .badge-category").text(), "testing");
-
+  assert.equal(find(".badge-category").text(), "testing");
   await fillIn("#edit-text-color", "#ff0000");
 
   await click(".edit-category-topic-template");
@@ -40,23 +34,21 @@ test("Editing the category", async (assert) => {
   await searchPriorityChooser.selectRowByValue(1);
 
   await click("#save-category");
-
-  assert.ok(!visible(".d-modal"), "it closes the modal");
   assert.equal(
-    DiscourseURL.redirectedTo,
-    "/c/bug/1",
-    "it does one of the rare full page redirects"
+    currentURL(),
+    "/c/bug/edit",
+    "it stays on the same screen after saving"
   );
 });
 
-skip("Edit the description without loosing progress", async (assert) => {
+test("Edit the description without losing progress", async (assert) => {
   let win = { focus: function () {} };
   let windowOpen = sandbox.stub(window, "open").returns(win);
   sandbox.stub(win, "focus");
 
   await visit("/c/bug");
 
-  await click(".edit-category");
+  await click("button.edit-category");
   await click(".edit-category-description");
   assert.ok(
     windowOpen.calledWith("/t/category-definition-for-bug/2", "_blank"),
@@ -67,12 +59,13 @@ skip("Edit the description without loosing progress", async (assert) => {
 test("Error Saving", async (assert) => {
   await visit("/c/bug");
 
-  await click(".edit-category");
+  await click("button.edit-category");
   await click(".edit-category-settings");
   await fillIn(".email-in", "duplicate@example.com");
   await click("#save-category");
-  assert.ok(visible("#modal-alert"));
-  assert.equal(find("#modal-alert").html(), "duplicate email");
+  assert.throws("Unprocessable Entity");
+
+  assert.equal(find(".bootbox .modal-body").html(), "duplicate email");
 });
 
 test("Subcategory list settings", async (assert) => {
@@ -81,7 +74,7 @@ test("Subcategory list settings", async (assert) => {
   );
 
   await visit("/c/bug");
-  await click(".edit-category");
+  await click("button.edit-category");
   await click(".edit-category-settings a");
 
   assert.ok(

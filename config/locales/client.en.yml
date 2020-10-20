@@ -2885,6 +2885,7 @@ en:
       edit: "Edit"
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
+      back: "Back to category"
       general: "General"
       settings: "Settings"
       topic_template: "Topic Template"

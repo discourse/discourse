@@ -1,0 +1,140 @@
+div.edit-category {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: auto auto auto;
+  grid-row-gap: 1em;
+  grid-column-gap: 1.5em;
+  grid-template-areas: "sidebar header" "sidebar content" "sidebar footer";
+
+  .edit-category-title {
+    grid-area: header;
+  }
+
+  .nav-stacked {
+    grid-area: sidebar;
+    grid-row: 1 / span 3;
+    background: transparent;
+  }
+
+  #list-area & h2 {
+    margin: 0;
+  }
+
+  section.field {
+    margin-bottom: 1em;
+  }
+
+  .edit-category-tab-general {
+    .category-chooser {
+      width: unquote("min(340px, 90%)");
+    }
+  }
+
+  .permission-selector {
+    margin-right: 0.25em;
+  }
+
+  .pending-permission-change-alert {
+    margin-left: auto;
+    max-width: 250px;
+    background: var(--primary-very-high);
+    color: var(--secondary);
+    margin-top: 10px;
+    padding: 5px 10px;
+    position: relative;
+    .arrow-div {
+      border: solid transparent;
+      content: " ";
+      position: absolute;
+      border-bottom-color: var(--primary-very-high);
+      border-width: 7px;
+      top: -13px;
+      left: 200px;
+    }
+  }
+
+  .add-permission {
+    position: relative;
+    top: 0.1em;
+  }
+
+  .edit-category-tab-settings {
+    $category-settings-width: unquote(
+      "min(500px, 90%)"
+    ); // Consistent width makes this all easier to read
+    > section {
+      margin-bottom: 1.5em;
+    }
+
+    input[type="number"] {
+      width: 80px;
+    }
+
+    input[type="text"],
+    .select-kit {
+      width: $category-settings-width;
+    }
+
+    label {
+      max-width: $category-settings-width;
+    }
+  }
+
+  .edit-category-tab-tags {
+    input[type="number"] {
+      width: 80px;
+      min-height: 36px;
+    }
+
+    .select-kit {
+      &.tag-chooser {
+        width: 100%;
+
+        .select-kit-filter,
+        .filter-input {
+          display: flex;
+          flex: 1 0 250px;
+        }
+
+        .mobile-view & {
+          .no-content,
+          .is-loading,
+          &.select-kit.is-expanded .select-kit-collection {
+            width: 95%;
+          }
+        }
+      }
+    }
+  }
+
+  .edit-category-footer {
+    grid-area: footer;
+    display: flex;
+    justify-content: space-between;
+
+    .disable-info {
+      position: relative;
+      .cannot-delete-reason {
+        position: absolute;
+        bottom: 125%;
+        right: 0px;
+        width: 250px;
+        background: var(--primary);
+        color: var(--secondary);
+        text-align: center;
+        border-radius: 2px;
+        padding: 12px 8px;
+
+        &::after {
+          top: 100%;
+          left: 57%;
+          border: solid transparent;
+          content: " ";
+          position: absolute;
+          border-top-color: var(--primary);
+          border-width: 8px;
+        }
+      }
+    }
+  }
+}
