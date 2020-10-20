@@ -1,7 +1,7 @@
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
-import WhiteLister from "pretty-text/white-lister";
+import AllowLister from "pretty-text/allow-lister";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
@@ -49,7 +49,7 @@ export function generateCookFunction(options) {
 }
 
 export function sanitize(text, options) {
-  return textSanitize(text, new WhiteLister(options));
+  return textSanitize(text, new AllowLister(options));
 }
 
 export function sanitizeAsync(text, options) {
