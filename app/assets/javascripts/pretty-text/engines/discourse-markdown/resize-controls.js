@@ -71,7 +71,7 @@ export const priority = 1;
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
-    helper.whiteList([
+    helper.allowList([
       "span.image-wrapper",
       "span.button-wrapper",
       "span[class=scale-btn]",
