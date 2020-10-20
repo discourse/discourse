@@ -5,8 +5,9 @@ import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { action } from "@ember/object";
 
 const PREFIX = "javascripts/single-test/connectors";
-acceptance("Plugin Outlet - Connector Class", {
-  beforeEach() {
+
+acceptance("Plugin Outlet - Connector Class", function (needs) {
+  needs.hooks.beforeEach(() => {
     extraConnectorClass("user-profile-primary/hello", {
       actions: {
         sayHello() {
@@ -57,33 +58,33 @@ acceptance("Plugin Outlet - Connector Class", {
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/dont-render`
     ] = Ember.HTMLBars.compile(`I'm not rendered!`);
-  },
+  });
 
-  afterEach() {
+  needs.hooks.afterEach(() => {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
-  },
-});
+  });
 
-test("Renders a template into the outlet", async (assert) => {
-  await visit("/u/eviltrout");
-  assert.ok(
-    find(".user-profile-primary-outlet.hello").length === 1,
-    "it has class names"
-  );
-  assert.ok(
-    !find(".user-profile-primary-outlet.dont-render").length,
-    "doesn't render"
-  );
+  test("Renders a template into the outlet", async (assert) => {
+    await visit("/u/eviltrout");
+    assert.ok(
+      find(".user-profile-primary-outlet.hello").length === 1,
+      "it has class names"
+    );
+    assert.ok(
+      !find(".user-profile-primary-outlet.dont-render").length,
+      "doesn't render"
+    );
 
-  await click(".say-hello");
-  assert.equal(
-    find(".hello-result").text(),
-    "hello!",
-    "actions delegate properly"
-  );
+    await click(".say-hello");
+    assert.equal(
+      find(".hello-result").text(),
+      "hello!",
+      "actions delegate properly"
+    );
 
-  await click(".say-hi");
-  assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
+    await click(".say-hi");
+    assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
+  });
 });

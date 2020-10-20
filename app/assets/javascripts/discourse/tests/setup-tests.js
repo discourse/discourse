@@ -71,8 +71,8 @@ export default function setupTests(app, container) {
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
     server = createPretender;
-    applyDefaultHandlers(server);
     server.handlers = [];
+    applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
       if (body && typeof body === "object") {

@@ -3,10 +3,10 @@ import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Tag Groups", {
-  loggedIn: true,
-  settings: { tagging_enabled: true },
-  pretend(server, helper) {
+acceptance("Tag Groups", function (needs) {
+  needs.user();
+  needs.settings({ tagging_enabled: true });
+  needs.pretender((server, helper) => {
     server.post("/tag_groups", () => {
       return helper.response({
         tag_group: {
@@ -32,28 +32,25 @@ acceptance("Tag Groups", {
         },
       ]);
     });
-  },
-});
+  });
 
-test("tag groups can be saved and deleted", async (assert) => {
-  const tags = selectKit(".tag-chooser");
+  test("tag groups can be saved and deleted", async (assert) => {
+    const tags = selectKit(".tag-chooser");
 
-  await visit("/tag_groups");
-  await click(".content-list .btn");
+    await visit("/tag_groups");
+    await click(".content-list .btn");
 
-  await fillIn(".tag-group-content h1 input", "test tag group");
-  await tags.expand();
-  await tags.selectRowByValue("monkey");
+    await fillIn(".tag-group-content h1 input", "test tag group");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
 
-  await click(".tag-group-content .btn.btn-default");
+    await click(".tag-group-content .btn.btn-default");
 
-  await click(".tag-chooser .choice:first");
-  assert.ok(!find(".tag-group-content .btn.btn-danger")[0].disabled);
-});
+    await click(".tag-chooser .choice:first");
+    assert.ok(!find(".tag-group-content .btn.btn-danger")[0].disabled);
+  });
 
-QUnit.test(
-  "tag groups can have multiple groups added to them",
-  async (assert) => {
+  test("tag groups can have multiple groups added to them", async (assert) => {
     const tags = selectKit(".tag-chooser");
     const groups = selectKit(".group-chooser");
 
@@ -71,5 +68,5 @@ QUnit.test(
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
     assert.ok(!find(".tag-group-content .btn.btn-default")[0].disabled);
-  }
-);
+  });
+});

@@ -2,9 +2,9 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Group logs", {
-  loggedIn: true,
-  pretend(server, helper) {
+acceptance("Group logs", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
     server.get("/groups/snorlax.json", () => {
       return helper.response({
         group: {
@@ -91,19 +91,19 @@ acceptance("Group logs", {
         });
       }
     });
-  },
-});
+  });
 
-test("Browsing group logs", async (assert) => {
-  await visit("/g/snorlax/manage/logs");
-  assert.ok(
-    find("tr.group-manage-logs-row").length === 2,
-    "it should display the right number of logs"
-  );
+  test("Browsing group logs", async (assert) => {
+    await visit("/g/snorlax/manage/logs");
+    assert.ok(
+      find("tr.group-manage-logs-row").length === 2,
+      "it should display the right number of logs"
+    );
 
-  await click(find(".group-manage-logs-row button")[0]);
-  assert.ok(
-    find("tr.group-manage-logs-row").length === 1,
-    "it should display the right number of logs"
-  );
+    await click(find(".group-manage-logs-row button")[0]);
+    assert.ok(
+      find("tr.group-manage-logs-row").length === 1,
+      "it should display the right number of logs"
+    );
+  });
 });

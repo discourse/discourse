@@ -2,11 +2,12 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Tags intersection", {
-  loggedIn: true,
-  site: { can_tag_topics: true },
-  settings: { tagging_enabled: true },
-  pretend(server, helper) {
+acceptance("Tags intersection", function (needs) {
+  needs.user();
+  needs.site({ can_tag_topics: true });
+  needs.settings({ tagging_enabled: true });
+
+  needs.pretender((server, helper) => {
     server.get("/tag/first/notifications", () => {
       return helper.response({
         tag_notification: { id: "first", notification_level: 1 },
@@ -27,17 +28,17 @@ acceptance("Tags intersection", {
         },
       });
     });
-  },
-});
+  });
 
-test("Populate tags when creating new topic", async (assert) => {
-  await visit("/tags/intersection/first/second");
-  await click("#create-topic");
+  test("Populate tags when creating new topic", async (assert) => {
+    await visit("/tags/intersection/first/second");
+    await click("#create-topic");
 
-  assert.ok(exists(".mini-tag-chooser"), "The tag selector appears");
-  assert.equal(
-    $(".mini-tag-chooser").text().trim(),
-    "first, second",
-    "populates the tags when clicking 'New topic'"
-  );
+    assert.ok(exists(".mini-tag-chooser"), "The tag selector appears");
+    assert.equal(
+      $(".mini-tag-chooser").text().trim(),
+      "first, second",
+      "populates the tags when clicking 'New topic'"
+    );
+  });
 });

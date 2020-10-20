@@ -8,10 +8,10 @@ import {
   waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Search - Full Page", {
-  settings: { tagging_enabled: true },
-  loggedIn: true,
-  pretend(server, helper) {
+acceptance("Search - Full Page", function (needs) {
+  needs.user();
+  needs.settings({ tagging_enabled: true });
+  needs.pretender((server, helper) => {
     server.get("/tags/filter/search", () => {
       return helper.response({ results: [{ text: "monkey", count: 1 }] });
     });
@@ -87,337 +87,337 @@ acceptance("Search - Full Page", {
         ],
       });
     });
-  },
-});
+  });
 
-test("perform various searches", async (assert) => {
-  await visit("/search");
+  test("perform various searches", async (assert) => {
+    await visit("/search");
 
-  assert.ok($("body.search-page").length, "has body class");
-  assert.ok(exists(".search-container"), "has container class");
-  assert.ok(find(".search-query").length > 0);
-  assert.ok(find(".fps-topic").length === 0);
+    assert.ok($("body.search-page").length, "has body class");
+    assert.ok(exists(".search-container"), "has container class");
+    assert.ok(find(".search-query").length > 0);
+    assert.ok(find(".fps-topic").length === 0);
 
-  await fillIn(".search-query", "none");
-  await click(".search-cta");
+    await fillIn(".search-query", "none");
+    await click(".search-cta");
 
-  assert.ok(find(".fps-topic").length === 0, "has no results");
-  assert.ok(find(".no-results-suggestion .google-search-form"));
+    assert.ok(find(".fps-topic").length === 0, "has no results");
+    assert.ok(find(".no-results-suggestion .google-search-form"));
 
-  await fillIn(".search-query", "posts");
-  await click(".search-cta");
+    await fillIn(".search-query", "posts");
+    await click(".search-cta");
 
-  assert.ok(find(".fps-topic").length === 1, "has one post");
-});
+    assert.ok(find(".fps-topic").length === 1, "has one post");
+  });
 
-test("escape search term", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "@<script>prompt(1337)</script>gmail.com");
+  test("escape search term", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "@<script>prompt(1337)</script>gmail.com");
 
-  assert.ok(
-    exists(
-      '.search-advanced-options span:contains("&lt;script&gt;prompt(1337)&lt;/script&gt;gmail.com")'
-    ),
-    "it escapes search term"
-  );
-});
-
-skip("update username through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await fillIn(".search-advanced-options .user-selector", "admin");
-  await click(".search-advanced-options .user-selector");
-  await keyEvent(".search-advanced-options .user-selector", "keydown", 8);
-
-  waitFor(assert, async () => {
-    assert.ok(
-      visible(".search-advanced-options .autocomplete"),
-      '"autocomplete" popup is visible'
-    );
     assert.ok(
       exists(
-        '.search-advanced-options .autocomplete ul li a span.username:contains("admin")'
+        '.search-advanced-options span:contains("&lt;script&gt;prompt(1337)&lt;/script&gt;gmail.com")'
       ),
-      '"autocomplete" popup has an entry for "admin"'
+      "it escapes search term"
+    );
+  });
+
+  skip("update username through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await fillIn(".search-advanced-options .user-selector", "admin");
+    await click(".search-advanced-options .user-selector");
+    await keyEvent(".search-advanced-options .user-selector", "keydown", 8);
+
+    waitFor(assert, async () => {
+      assert.ok(
+        visible(".search-advanced-options .autocomplete"),
+        '"autocomplete" popup is visible'
+      );
+      assert.ok(
+        exists(
+          '.search-advanced-options .autocomplete ul li a span.username:contains("admin")'
+        ),
+        '"autocomplete" popup has an entry for "admin"'
+      );
+
+      await click(".search-advanced-options .autocomplete ul li a:first");
+
+      assert.ok(
+        exists('.search-advanced-options span:contains("admin")'),
+        'has "admin" pre-populated'
+      );
+      assert.equal(
+        find(".search-query").val(),
+        "none @admin",
+        'has updated search term to "none user:admin"'
+      );
+    });
+  });
+
+  test("update category through advanced search ui", async (assert) => {
+    const categoryChooser = selectKit(
+      ".search-advanced-options .category-chooser"
     );
 
-    await click(".search-advanced-options .autocomplete ul li a:first");
+    await visit("/search");
+
+    await fillIn(".search-query", "none");
+
+    await categoryChooser.expand();
+    await categoryChooser.fillInFilter("faq");
+    await categoryChooser.selectRowByValue(4);
 
     assert.ok(
-      exists('.search-advanced-options span:contains("admin")'),
-      'has "admin" pre-populated'
+      exists('.search-advanced-options .badge-category:contains("faq")'),
+      'has "faq" populated'
     );
     assert.equal(
       find(".search-query").val(),
-      "none @admin",
-      'has updated search term to "none user:admin"'
+      "none #faq",
+      'has updated search term to "none #faq"'
     );
   });
-});
 
-test("update category through advanced search ui", async (assert) => {
-  const categoryChooser = selectKit(
-    ".search-advanced-options .category-chooser"
-  );
+  test("update in:title filter through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await click(".search-advanced-options .in-title");
 
-  await visit("/search");
+    assert.ok(
+      exists(".search-advanced-options .in-title:checked"),
+      'has "in title" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none in:title",
+      'has updated search term to "none in:title"'
+    );
 
-  await fillIn(".search-query", "none");
+    await fillIn(".search-query", "none in:titleasd");
 
-  await categoryChooser.expand();
-  await categoryChooser.fillInFilter("faq");
-  await categoryChooser.selectRowByValue(4);
+    assert.not(
+      exists(".search-advanced-options .in-title:checked"),
+      "does not populate title only checkbox"
+    );
+  });
 
-  assert.ok(
-    exists('.search-advanced-options .badge-category:contains("faq")'),
-    'has "faq" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none #faq",
-    'has updated search term to "none #faq"'
-  );
-});
+  test("update in:likes filter through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await click(".search-advanced-options .in-likes");
 
-test("update in:title filter through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-title");
+    assert.ok(
+      exists(".search-advanced-options .in-likes:checked"),
+      'has "I liked" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none in:likes",
+      'has updated search term to "none in:likes"'
+    );
+  });
 
-  assert.ok(
-    exists(".search-advanced-options .in-title:checked"),
-    'has "in title" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none in:title",
-    'has updated search term to "none in:title"'
-  );
+  test("update in:personal filter through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await click(".search-advanced-options .in-private");
 
-  await fillIn(".search-query", "none in:titleasd");
+    assert.ok(
+      exists(".search-advanced-options .in-private:checked"),
+      'has "are in my messages" populated'
+    );
 
-  assert.not(
-    exists(".search-advanced-options .in-title:checked"),
-    "does not populate title only checkbox"
-  );
-});
+    assert.equal(
+      find(".search-query").val(),
+      "none in:personal",
+      'has updated search term to "none in:personal"'
+    );
 
-test("update in:likes filter through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-likes");
+    await fillIn(".search-query", "none in:personal-direct");
 
-  assert.ok(
-    exists(".search-advanced-options .in-likes:checked"),
-    'has "I liked" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none in:likes",
-    'has updated search term to "none in:likes"'
-  );
-});
+    assert.not(
+      exists(".search-advanced-options .in-private:checked"),
+      "does not populate messages checkbox"
+    );
+  });
 
-test("update in:personal filter through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-private");
+  test("update in:seen filter through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await click(".search-advanced-options .in-seen");
 
-  assert.ok(
-    exists(".search-advanced-options .in-private:checked"),
-    'has "are in my messages" populated'
-  );
+    assert.ok(
+      exists(".search-advanced-options .in-seen:checked"),
+      "it should check the right checkbox"
+    );
 
-  assert.equal(
-    find(".search-query").val(),
-    "none in:personal",
-    'has updated search term to "none in:personal"'
-  );
+    assert.equal(
+      find(".search-query").val(),
+      "none in:seen",
+      "it should update the search term"
+    );
 
-  await fillIn(".search-query", "none in:personal-direct");
+    await fillIn(".search-query", "none in:seenasdan");
 
-  assert.not(
-    exists(".search-advanced-options .in-private:checked"),
-    "does not populate messages checkbox"
-  );
-});
+    assert.not(
+      exists(".search-advanced-options .in-seen:checked"),
+      "does not populate seen checkbox"
+    );
+  });
 
-test("update in:seen filter through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await click(".search-advanced-options .in-seen");
+  test("update in filter through advanced search ui", async (assert) => {
+    const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
-  assert.ok(
-    exists(".search-advanced-options .in-seen:checked"),
-    "it should check the right checkbox"
-  );
+    await visit("/search");
 
-  assert.equal(
-    find(".search-query").val(),
-    "none in:seen",
-    "it should update the search term"
-  );
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("bookmarks");
 
-  await fillIn(".search-query", "none in:seenasdan");
+    assert.equal(
+      inSelector.header().label(),
+      "I bookmarked",
+      'has "I bookmarked" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none in:bookmarks",
+      'has updated search term to "none in:bookmarks"'
+    );
+  });
 
-  assert.not(
-    exists(".search-advanced-options .in-seen:checked"),
-    "does not populate seen checkbox"
-  );
-});
+  test("update status through advanced search ui", async (assert) => {
+    const statusSelector = selectKit(
+      ".search-advanced-options .select-kit#status"
+    );
 
-test("update in filter through advanced search ui", async (assert) => {
-  const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    await visit("/search");
 
-  await visit("/search");
+    await fillIn(".search-query", "none");
+    await statusSelector.expand();
+    await statusSelector.selectRowByValue("closed");
 
-  await fillIn(".search-query", "none");
-  await inSelector.expand();
-  await inSelector.selectRowByValue("bookmarks");
+    assert.equal(
+      statusSelector.header().label(),
+      "are closed",
+      'has "are closed" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none status:closed",
+      'has updated search term to "none status:closed"'
+    );
+  });
 
-  assert.equal(
-    inSelector.header().label(),
-    "I bookmarked",
-    'has "I bookmarked" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none in:bookmarks",
-    'has updated search term to "none in:bookmarks"'
-  );
-});
+  test("doesn't update status filter header if wrong value entered through searchbox", async (assert) => {
+    const statusSelector = selectKit(
+      ".search-advanced-options .select-kit#status"
+    );
 
-test("update status through advanced search ui", async (assert) => {
-  const statusSelector = selectKit(
-    ".search-advanced-options .select-kit#status"
-  );
+    await visit("/search");
 
-  await visit("/search");
+    await fillIn(".search-query", "status:none");
 
-  await fillIn(".search-query", "none");
-  await statusSelector.expand();
-  await statusSelector.selectRowByValue("closed");
+    assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
+  });
 
-  assert.equal(
-    statusSelector.header().label(),
-    "are closed",
-    'has "are closed" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none status:closed",
-    'has updated search term to "none status:closed"'
-  );
-});
+  test("doesn't update in filter header if wrong value entered through searchbox", async (assert) => {
+    const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
-test("doesn't update status filter header if wrong value entered through searchbox", async (assert) => {
-  const statusSelector = selectKit(
-    ".search-advanced-options .select-kit#status"
-  );
+    await visit("/search");
 
-  await visit("/search");
+    await fillIn(".search-query", "in:none");
 
-  await fillIn(".search-query", "status:none");
+    assert.equal(inSelector.header().label(), "any", 'has "any" populated');
+  });
 
-  assert.equal(statusSelector.header().label(), "any", 'has "any" populated');
-});
+  test("update post time through advanced search ui", async (assert) => {
+    await visit("/search?expanded=true&q=after:2018-08-22");
 
-test("doesn't update in filter header if wrong value entered through searchbox", async (assert) => {
-  const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    assert.equal(
+      find(".search-query").val(),
+      "after:2018-08-22",
+      "it should update the search term correctly"
+    );
 
-  await visit("/search");
+    await visit("/search");
 
-  await fillIn(".search-query", "in:none");
+    await fillIn(".search-query", "none");
+    await selectDate("#search-post-date .date-picker", "2016-10-05");
 
-  assert.equal(inSelector.header().label(), "any", 'has "any" populated');
-});
+    const postTimeSelector = selectKit(
+      ".search-advanced-options .select-kit#postTime"
+    );
+    await postTimeSelector.expand();
+    await postTimeSelector.selectRowByValue("after");
 
-test("update post time through advanced search ui", async (assert) => {
-  await visit("/search?expanded=true&q=after:2018-08-22");
+    assert.equal(
+      postTimeSelector.header().label(),
+      "after",
+      'has "after" populated'
+    );
 
-  assert.equal(
-    find(".search-query").val(),
-    "after:2018-08-22",
-    "it should update the search term correctly"
-  );
+    assert.equal(
+      find(".search-query").val(),
+      "none after:2016-10-05",
+      'has updated search term to "none after:2016-10-05"'
+    );
+  });
 
-  await visit("/search");
+  test("update min post count through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await fillIn("#search-min-post-count", "5");
 
-  await fillIn(".search-query", "none");
-  await selectDate("#search-post-date .date-picker", "2016-10-05");
+    assert.equal(
+      find(".search-advanced-options #search-min-post-count").val(),
+      "5",
+      'has "5" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none min_posts:5",
+      'has updated search term to "none min_posts:5"'
+    );
+  });
 
-  const postTimeSelector = selectKit(
-    ".search-advanced-options .select-kit#postTime"
-  );
-  await postTimeSelector.expand();
-  await postTimeSelector.selectRowByValue("after");
+  test("update max post count through advanced search ui", async (assert) => {
+    await visit("/search");
+    await fillIn(".search-query", "none");
+    await fillIn("#search-max-post-count", "5");
 
-  assert.equal(
-    postTimeSelector.header().label(),
-    "after",
-    'has "after" populated'
-  );
+    assert.equal(
+      find(".search-advanced-options #search-max-post-count").val(),
+      "5",
+      'has "5" populated'
+    );
+    assert.equal(
+      find(".search-query").val(),
+      "none max_posts:5",
+      'has updated search term to "none max_posts:5"'
+    );
+  });
 
-  assert.equal(
-    find(".search-query").val(),
-    "none after:2016-10-05",
-    'has updated search term to "none after:2016-10-05"'
-  );
-});
+  test("validate advanced search when initially empty", async (assert) => {
+    await visit("/search?expanded=true");
+    await click(".search-advanced-options .in-likes");
 
-test("update min post count through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await fillIn("#search-min-post-count", "5");
+    assert.ok(
+      selectKit(".search-advanced-options .in-likes:checked"),
+      'has "I liked" populated'
+    );
 
-  assert.equal(
-    find(".search-advanced-options #search-min-post-count").val(),
-    "5",
-    'has "5" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none min_posts:5",
-    'has updated search term to "none min_posts:5"'
-  );
-});
+    assert.equal(
+      find(".search-query").val(),
+      "in:likes",
+      'has updated search term to "in:likes"'
+    );
 
-test("update max post count through advanced search ui", async (assert) => {
-  await visit("/search");
-  await fillIn(".search-query", "none");
-  await fillIn("#search-max-post-count", "5");
+    await fillIn(".search-query", "in:likesasdas");
 
-  assert.equal(
-    find(".search-advanced-options #search-max-post-count").val(),
-    "5",
-    'has "5" populated'
-  );
-  assert.equal(
-    find(".search-query").val(),
-    "none max_posts:5",
-    'has updated search term to "none max_posts:5"'
-  );
-});
-
-test("validate advanced search when initially empty", async (assert) => {
-  await visit("/search?expanded=true");
-  await click(".search-advanced-options .in-likes");
-
-  assert.ok(
-    selectKit(".search-advanced-options .in-likes:checked"),
-    'has "I liked" populated'
-  );
-
-  assert.equal(
-    find(".search-query").val(),
-    "in:likes",
-    'has updated search term to "in:likes"'
-  );
-
-  await fillIn(".search-query", "in:likesasdas");
-
-  assert.not(
-    exists(".search-advanced-options .in-likes:checked"),
-    "does not populate the likes checkbox"
-  );
+    assert.not(
+      exists(".search-advanced-options .in-likes:checked"),
+      "does not populate the likes checkbox"
+    );
+  });
 });

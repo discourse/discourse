@@ -8,10 +8,11 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 let _test;
 
-acceptance("Topic footer buttons mobile", {
-  loggedIn: true,
-  mobileView: true,
-  beforeEach() {
+acceptance("Topic footer buttons mobile", function (needs) {
+  needs.user();
+  needs.mobileView();
+
+  needs.hooks.beforeEach(() => {
     I18n.translations[I18n.locale].js.test = {
       title: "My title",
       label: "My Label",
@@ -29,22 +30,22 @@ acceptance("Topic footer buttons mobile", {
         },
       });
     });
-  },
+  });
 
-  afterEach() {
+  needs.hooks.afterEach(() => {
     clearTopicFooterButtons();
     _test = undefined;
-  },
-});
+  });
 
-test("default", async (assert) => {
-  await visit("/t/internationalization-localization/280");
+  test("default", async (assert) => {
+    await visit("/t/internationalization-localization/280");
 
-  assert.equal(_test, null);
+    assert.equal(_test, null);
 
-  const subject = selectKit(".topic-footer-mobile-dropdown");
-  await subject.expand();
-  await subject.selectRowByValue("my-button");
+    const subject = selectKit(".topic-footer-mobile-dropdown");
+    await subject.expand();
+    await subject.selectRowByValue("my-button");
 
-  assert.equal(_test, 2);
+    assert.equal(_test, 2);
+  });
 });

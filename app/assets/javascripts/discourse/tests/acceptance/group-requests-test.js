@@ -1,13 +1,14 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { parsePostData } from "discourse/tests/helpers/create-pretender";
 
-let requests = [];
+acceptance("Group Requests", function (needs) {
+  let requests;
 
-acceptance("Group Requests", {
-  loggedIn: true,
-  pretend(server, helper) {
+  needs.user();
+  needs.hooks.beforeEach(() => (requests = []));
+
+  needs.pretender((server, helper) => {
     server.get("/groups/Macdonald.json", () => {
       return helper.response({
         group: {
@@ -75,53 +76,53 @@ acceptance("Group Requests", {
     });
 
     server.put("/groups/42/handle_membership_request.json", (request) => {
-      const body = parsePostData(request.requestBody);
+      const body = helper.parsePostData(request.requestBody);
       requests.push([body["user_id"], body["accept"]]);
       return helper.success();
     });
-  },
-});
+  });
 
-test("Group Requests", async (assert) => {
-  await visit("/g/Macdonald/requests");
+  test("Group Requests", async (assert) => {
+    await visit("/g/Macdonald/requests");
 
-  assert.equal(find(".group-members tr").length, 2);
-  assert.equal(
-    find(".group-members tr:first-child td:nth-child(1)")
-      .text()
-      .trim()
-      .replace(/\s+/g, " "),
-    "eviltrout Robin Ward"
-  );
-  assert.equal(
-    find(".group-members tr:first-child td:nth-child(3)").text().trim(),
-    "Please accept my membership request."
-  );
-  assert.equal(
-    find(".group-members tr:first-child .btn-primary").text().trim(),
-    "Accept"
-  );
-  assert.equal(
-    find(".group-members tr:first-child .btn-danger").text().trim(),
-    "Deny"
-  );
+    assert.equal(find(".group-members tr").length, 2);
+    assert.equal(
+      find(".group-members tr:first-child td:nth-child(1)")
+        .text()
+        .trim()
+        .replace(/\s+/g, " "),
+      "eviltrout Robin Ward"
+    );
+    assert.equal(
+      find(".group-members tr:first-child td:nth-child(3)").text().trim(),
+      "Please accept my membership request."
+    );
+    assert.equal(
+      find(".group-members tr:first-child .btn-primary").text().trim(),
+      "Accept"
+    );
+    assert.equal(
+      find(".group-members tr:first-child .btn-danger").text().trim(),
+      "Deny"
+    );
 
-  await click(".group-members tr:first-child .btn-primary");
-  assert.ok(
-    find(".group-members tr:first-child td:nth-child(4)")
-      .text()
-      .trim()
-      .indexOf("accepted") === 0
-  );
-  assert.deepEqual(requests, [["19", "true"]]);
+    await click(".group-members tr:first-child .btn-primary");
+    assert.ok(
+      find(".group-members tr:first-child td:nth-child(4)")
+        .text()
+        .trim()
+        .indexOf("accepted") === 0
+    );
+    assert.deepEqual(requests, [["19", "true"]]);
 
-  await click(".group-members tr:last-child .btn-danger");
-  assert.equal(
-    find(".group-members tr:last-child td:nth-child(4)").text().trim(),
-    "denied"
-  );
-  assert.deepEqual(requests, [
-    ["19", "true"],
-    ["20", undefined],
-  ]);
+    await click(".group-members tr:last-child .btn-danger");
+    assert.equal(
+      find(".group-members tr:last-child td:nth-child(4)").text().trim(),
+      "denied"
+    );
+    assert.deepEqual(requests, [
+      ["19", "true"],
+      ["20", undefined],
+    ]);
+  });
 });
