@@ -234,20 +234,6 @@ class OptimizedImage < ActiveRecord::Base
     })
   end
 
-  def self.resize_instructions_animated(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-    resize_method = opts[:scale_image] ? "scale" : "resize-fit"
-
-    %W{
-      gifsicle
-      --colors=#{opts[:colors] || 256}
-      --#{resize_method} #{dimensions}
-      --optimize=3
-      --output #{to}
-      #{from}
-    }
-  end
-
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
@@ -270,19 +256,6 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.crop_instructions_animated(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    %W{
-      gifsicle
-      --crop 0,0+#{dimensions}
-      --colors=#{opts[:colors] || 256}
-      --optimize=3
-      --output #{to}
-      #{from}
-    }
-  end
-
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
@@ -302,10 +275,6 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.downsize_instructions_animated(from, to, dimensions, opts = {})
-    resize_instructions_animated(from, to, dimensions, opts)
-  end
-
   def self.resize(from, to, width, height, opts = {})
     optimize("resize", from, to, "#{width}x#{height}", opts)
   end
@@ -321,10 +290,6 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
-
-    if !!opts[:allow_animation] && (from =~ /\.GIF$/i)
-      method_name += "_animated"
-    end
 
     instructions = self.public_send(method_name.to_sym, from, to, dimensions, opts)
     convert_with(instructions, to, opts)

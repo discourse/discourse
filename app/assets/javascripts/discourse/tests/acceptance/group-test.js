@@ -256,3 +256,33 @@ test("Admin Viewing Group", async (assert) => {
     "it should display the group name"
   );
 });
+
+test("Moderator Viewing Group", async (assert) => {
+  await visit("/g/alternative-group");
+
+  assert.ok(
+    find(".nav-pills li a[title='Manage']").length === 1,
+    "it should show manage group tab if user can_admin_group"
+  );
+
+  await click(".group-members-add.btn");
+
+  assert.ok(
+    find(".group-add-members-modal .group-add-members-make-owner"),
+    "it allows moderators to set group owners"
+  );
+
+  await click(".group-add-members-modal .modal-close");
+
+  const memberDropdown = selectKit(".group-member-dropdown:first");
+  await memberDropdown.expand();
+
+  assert.equal(
+    memberDropdown.rowByIndex(0).name(),
+    I18n.t("groups.members.remove_member")
+  );
+  assert.equal(
+    memberDropdown.rowByIndex(1).name(),
+    I18n.t("groups.members.make_owner")
+  );
+});

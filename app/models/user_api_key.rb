@@ -5,21 +5,7 @@ class UserApiKey < ActiveRecord::Base
     "scopes" # TODO(2020-12-18): remove
   ]
 
-  SCOPES = {
-    read: [:get],
-    write: [:get, :post, :patch, :put, :delete],
-    message_bus: [[:post, 'message_bus']],
-    push: nil,
-    one_time_password: nil,
-    notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
-    session_info: [
-      [:get, 'session#current'],
-      [:get, 'users#topic_tracking_state'],
-      [:get, 'list#unread'],
-      [:get, 'list#new'],
-      [:get, 'list#latest']
-    ]
-  }
+  REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
 
   belongs_to :user
   has_many :scopes, class_name: "UserApiKeyScope", dependent: :destroy
@@ -51,35 +37,7 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def self.available_scopes
-    @available_scopes ||= Set.new(SCOPES.keys.map(&:to_s))
-  end
-
-  def self.allow_permission?(permission, env)
-    verb, action = permission
-    actual_verb = env["REQUEST_METHOD"] || ""
-
-    return false unless actual_verb.downcase == verb.to_s
-    return true unless action
-
-    # not a rails route, special handling
-    return true if action == "message_bus" && env["PATH_INFO"] =~ /^\/message-bus\/.*\/poll/
-
-    params = env['action_dispatch.request.path_parameters']
-
-    return false unless params
-
-    actual_action = "#{params[:controller]}##{params[:action]}"
-    actual_action == action
-  end
-
-  def self.allow_scope?(name, env)
-    if allowed = SCOPES[name.to_sym]
-      good = allowed.any? do |permission|
-        allow_permission?(permission, env)
-      end
-
-      good || allow_permission?([:post, 'user_api_keys#revoke'], env)
-    end
+    @available_scopes ||= Set.new(UserApiKeyScopes.all_scopes.keys.map(&:to_s))
   end
 
   def has_push?
@@ -89,9 +47,7 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def allow?(env)
-    scopes.any? do |s|
-      UserApiKey.allow_scope?(s.name, env)
-    end || is_revoke_self_request?(env)
+    scopes.any? { |s| s.permits?(env) } || is_revoke_self_request?(env)
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
@@ -102,8 +58,12 @@ class UserApiKey < ActiveRecord::Base
 
   private
 
+  def revoke_self_matcher
+    REVOKE_MATCHER.with_allowed_param_values({ "id" => [nil, id.to_s] })
+  end
+
   def is_revoke_self_request?(env)
-    UserApiKey.allow_permission?([:post, 'user_api_keys#revoke'], env) && (env[:id].nil? || env[:id].to_i == id)
+    revoke_self_matcher.match?(env: env)
   end
 end
 

@@ -1770,6 +1770,7 @@ end
 #  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
+#  slow_mode_seconds         :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float

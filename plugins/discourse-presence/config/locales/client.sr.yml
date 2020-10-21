@@ -4,8 +4,4 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-sr:
-  js:
-    presence:
-      replying: "odgovara"
-      editing: "menja"
+sr: 

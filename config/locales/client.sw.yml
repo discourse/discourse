@@ -141,7 +141,6 @@ sw:
         disabled: "aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
     wizard_required: "Karibu Discourse! Tuanze na <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
-    bootstrap_mode_enabled: "Kurahisisha kuweka tovuti yako hewani, upo kwenye halitumizi ya bootsrap. Watumiaji wapya watapewa kiwango cha 1 cha uaminifu na kuwezeshwa kupata barua pepe mara kwa mara. Hii itazimwa kipindi watumiaji %{min_users} wakijiunga."
     bootstrap_mode_disabled: "Halitumizi ya Bootstrap itasitishwa baada ya masaa 24."
     themes:
       default_description: "Halisi"
@@ -605,7 +604,6 @@ sw:
       suspended_notice: "Akaunti imesitishwa mpaka %{tarehe}."
       suspended_permanently: "Mtumiaji amesitishwa."
       suspended_reason: "Sababu:"
-      github_profile: "Github"
       email_activity_summary: "Muhtasari wa Shughuli"
       mailing_list_mode:
         label: "Mfumo wa kutuma barua pepe"
@@ -696,15 +694,12 @@ sw:
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
         copied_to_clipboard: "Nakili"
-        remaining_codes: "Una kodi <strong>%{count}</strong> za backup zimebaki."
       second_factor:
-        title: "Uhalalalishaji wa Viwango Viwili"
         confirm_password_description: "Thibitisha nywila yako kuendelea"
         name: "Jina"
         label: "Kodi"
         disable_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako"
         show_key_description: "Andika kwa mkono"
-        oauth_enabled_warning: "Tafadhali jua kuwa kuingia kupitia mitandao itasitishwa kama uthibitisho wa kiwango cha pili umewezeshwa kwenye akaunti yako."
         disable: "Sitisha"
         save: "hifadhi"
         edit: "Hariri"
@@ -1063,9 +1058,7 @@ sw:
       title: "Ingia"
       username: "Mtumiaji"
       password: "Nywila"
-      second_factor_title: "Uhalalalishaji wa Viwango Viwili"
       second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako:"
-      second_factor_backup_title: "Backup kutumia steji mbili"
       second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
       email_placeholder: "barua pepe au jina la mtumiaji"
       caps_lock_warning: "Caps Lock imewashwa"
@@ -1081,10 +1074,8 @@ sw:
       awaiting_approval: "Akaunti yako bado haijathibitishwa na msaidizi. Utapata ujumbe kwa barua pepe ikipata kibali."
       requires_invite: "Samahani, jumuia hii ni kwa walioalikwa tu."
       not_activated: "Bado hauwezi kuingia. Tumekutumia barua pepe ya uanzisho kwenye <b>%{sentTo}. Tafadhali fuatilia maelezo kwenye barua pepe kuanzisha akaunti yako."
-      not_allowed_from_ip_address: "Hauwezi kuingia kupitia anwani hiyo ya mtandao."
       admin_not_allowed_from_ip_address: "Hauwezi kuingia kama kiongozi kupitia anwani hiyo ya mtandao."
       resend_activation_email: "Bofya hapa kutuma barua pepe ya uanzishaji tena."
-      omniauth_disallow_totp: "Steji mbili za uthibitisho zimewezeshwa kwenye akaunti yako. Samahani ingia kwa kutumia password/nywila yako"
       resend_title: "Tuma Tena Barua Pepe ya Uanzisho"
       change_email: "Badilisha Barua Pepe"
       provide_new_email: "Andika anwani mpya na tutakutumia tena barua pepe ya uthibitisho."
@@ -1188,7 +1179,6 @@ sw:
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       similar_topics: "Mada yako inafanana na..."
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
-      group_mentioned_limit: "<b>Onyo!</b>Umetaja<a href='%{group_link}'>%{kikundi}</a>, lakini kikundi hiki kina watu wengi kuzidi usanidi uliyofanywa na msimamizi ambao una %{kikomo} cha kutaja watumiaji. Hakuna mtu atakayepewa taarifa."
       group_mentioned:
         one: "Kwa kutaja %{group}, utamjulisha <a href='%{group_link}'>mtu mmoja</a> – una uhakika?"
         other: "Kwa kutaja %{group}, utawajulisha <a href='%{group_link}'>%{count} watu</a> – una uhakika?"
@@ -1202,7 +1192,6 @@ sw:
         title_too_long: "Kichwa hakitakiwi kuwa na tarakimu zaidi ya %{max}"
         post_length: "Posti/Chapisho linatakiwa kuwa na tarakimu japo %{min}"
         category_missing: "Ni sharti uchague kategoria"
-        tags_missing: "Unatakiwa kuchagua japo vitambulisho %{count}"
       save_edit: "Hifadhi Uhariri"
       reply_original: "Jibu kwenye Mada ya Kwanza"
       reply_here: "Jibu hapa"
@@ -1362,7 +1351,6 @@ sw:
       full_page_title: "tafuta mada au machapisho"
       no_results: "Hakuna Majibu Yaliyopatikana."
       no_more_results: "Hakuna majibu zaidi yaliyopatikana."
-      searching: "Inatafuta ..."
       post_format: "#%{post_number} za %{username}"
       results_page: "Majibu ya utafiti ya'%{term}'"
       more_results: "Kuna majibu zaidi. Samahani punguza vigezo vya kutafuta"
@@ -1371,7 +1359,6 @@ sw:
       or_search_google: "Au jaribu kutafuta kwa kutumia Google kama njia mbadala:"
       search_google: "Jaribu kutafuta kwa kutumia Google kama njia mbadala:"
       search_google_button: "Google"
-      search_google_title: "Tafuta tovuti hii"
       context:
         user: "Tafuta machapisho kwa kutumia @%{jina la mtumiaji}"
         category: "Tafuta kategoria #%{category} "
@@ -1461,7 +1448,6 @@ sw:
         category: "Hakuna %{category} mada."
         top: "Hakuna mada za juu."
         educate:
-          new: '<p>Mada zako mpya zitatokea hapa.</p><p>Kwa chaguo-msingi, mada ni mpya na zitakuwa na indiketa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">mpya</span>kama zilitengenezwa ndani ya siku 2 zilizopita.</p><p>Tembelea<a href="%{userPrefsUrl}">mipangilio</a>yako kubadilisha hizi.</p>'
           unread: '<p>Mada ambazo haujasoma zitatokea hapa.</p><p>Kwa chaguo-msingi, mada zote zinakuwa hazijasomwa na zitaonyesha jumla ya hizo namba<span class="badge new-posts badge-notification">1</span>Kama uli:</p><ul><li>Tengeneza mada</li><li>Alijibu mada</li><li>Amesoma mada zaidi ya dakika 4</li></ul><p>Au kama uliseti mada iwe inafuatiliwa au kuangaliwa kwa kupitia udhibiti wa taarifa chini ya kila mada. </p><p>Tembelea <a href="%{userPrefsUrl}">mapendekezo</a>yako kubadilisha hii.</p>'
       bottom:
         latest: "Hakuna mada mpya zingine."
@@ -1678,14 +1664,12 @@ sw:
         success_message: "Umeripoti mada hii kwa mafanikio."
       feature_topic:
         pin: "Fanya mada hii ionekane juu ya kategoria %{kiungochakategoria} mpaka"
-        confirm_pin: "Tayari una mada %{count} zilizobandikwa. Ubandikaji wa mada nyingi unaweza kuwasumbua watumiaji wapya au wasiojulikana. Una uhakika unataka kubandika mada nyingine kwenye kategoria hii?"
         unpin: "Ondoa mada hii kutoka kwenye sehemu ya juu ya kategoria %{categoryLink}"
         unpin_until: "Ondoa mada hii kutoka kwenye sehemu ya juu ya kategoria %{categoryLink} au subiri mpaka <strong>%{until}</strong>."
         pin_note: "Watumiaji wanaweza kuondoa mabandiko ya mada wenyewe."
         pin_validation: "Tarehe inahitajika kubandika mada hii."
         not_pinned: "Hakuna mada zilizobandikwa kwenye %{categoryLink}."
         pin_globally: "Fanya mada hii ionekane juu ya orodha ya mada zote mpaka"
-        confirm_pin_globally: "Tayari una mada %{count} zilizobandikwa kwa umma. Ubandikaji wa mada nyingi unaweza kuwasumbua watumiaji wapya au wasiojulikana. Una uhakika unataka kubandika mada nyingine kwa umma?"
         unpin_globally: "Ondoa mada hii kwenye sehemu ya juu ya orodha za mada."
         unpin_globally_until: "Ondoa mada hii kwenye sehemu ya juu ya mada au subiri mpaka <strong>%{until}</strong>."
         global_pin_note: "Watumiaji wanaweza kuondoa mabandiko ya mada wenyewe."
@@ -1995,7 +1979,6 @@ sw:
     flagging:
       title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
-      take_action: "Fanya Kitendo"
       notify_action: "Ujumbe"
       official_warning: "Onyo Rasmi"
       delete_spammer: "Futa Muandishi wa Taka"
@@ -2042,7 +2025,6 @@ sw:
       unlisted:
         help: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa kwenye orodha za mada, na njia pekee ya kuifia ni kupitia kiungo chake"
     posts: "Machapisho"
-    posts_long: "kuna machapisho %{namba} kwenye hii mada"
     posts_likes_MF: |
       Mada hii ina {count, plural, one {jibu 1} other {majibu #}} {ratio, select,
       low {yenye uwiano wa upendo zaidi kuliko chapisho}
@@ -2057,7 +2039,6 @@ sw:
     replies: "Majibu"
     activity: "Kitendo"
     likes: "Upendo"
-    likes_long: "kuna upendo %{namba} ndani ya mada hii"
     users: "Watumiaji"
     users_lowercase:
       one: "Mtumiaji"
@@ -2264,8 +2245,6 @@ sw:
         delete: "Futa"
         confirm_delete: "Una uhakika unataka kufuta kikundi cha lebo hii?"
         everyone_can_use: "Lebo zinaweza kutumiwa na kila mtu"
-        usable_only_by_staff: "Lebo zinaonekana kwa kila mtu, lakini wasaidizi tu wanaweza kuzitumia"
-        visible_only_to_staff: "Lebo zinaonekana kwa wasaidizi tu"
       topics:
         none:
           unread: "Hauna mada ambazo hazijasomwa."
@@ -2833,7 +2812,6 @@ sw:
             post_edit: "uhariri wa chapisho"
             post_unlocked: "chapisho limefunguliwa"
             check_personal_message: "angalia ujumbe binafsi"
-            disabled_second_factor: "zuia uhalalalishaji wa Viwango Viwili"
             topic_published: "mada iliyotolewa"
             post_approved: "Chapisho Limepitishwa"
             post_rejected: "Chapisho Limekataliwa"
@@ -2998,7 +2976,6 @@ sw:
         private_topics_count: Mada Binafsi
         posts_read_count: Machapisho Yaliosomwa
         post_count: Machapisho Yaliotengenezwa
-        second_factor_enabled: Uthibitisho wa Pili Umewezeshwa
         topics_entered: Mada Zilizosomwa
         flags_given_count: Bendera Ulizotoa
         flags_received_count: Bendera Ulizopokea

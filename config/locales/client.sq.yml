@@ -502,7 +502,6 @@ sq:
       admin_tooltip: "Ky anëtar është administrator"
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_reason: "Arsyeja:"
-      github_profile: "Github"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
         individual: "Dërgo një email për çdo postim të ri"
@@ -649,7 +648,6 @@ sq:
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       auth_tokens:
-        ip: "IP"
         details: "Detaje"
       last_posted: "Postimi i fundit"
       last_emailed: "Emaili i Fundit"
@@ -913,7 +911,6 @@ sq:
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
       not_activated: "Nuk mund të identifikoheni akoma. Ju kemi dërguar një email aktivizimi tek <b>%{sentTo}</b>. Ndiqni udhëzimet në atë email për të aktivizuar llogarinë tuaj. "
-      not_allowed_from_ip_address: "Nuk lejohet identifikimi nga kjo adresë IP."
       admin_not_allowed_from_ip_address: "Nuk futesh dot si admin nga kjo adresë IP."
       resend_activation_email: "Klikoni këtu për të dërguar sërish email-in e aktivizimit."
       resend_title: "Dërgo përsëri emailin e aktivizimit"
@@ -1086,10 +1083,8 @@ sq:
       title: "kërko në faqe"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
-      searching: "Duke kërkuar..."
       post_format: "#%{post_number} nga %{username}"
       search_google_button: "Google"
-      search_google_title: "Kërko në këtë faqe"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
@@ -1142,7 +1137,6 @@ sq:
         category: "Nuk ka tema në: %{category}."
         top: "Nuk ka tema popullore."
         educate:
-          new: '<p>Temat e reja shfaqen këtu.</p><p>Automatikisht, temat cilësohen si të reja dhe kanë një shënim <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">i ri</span> nëse janë krijuar gjatë dy ditëve të fundit.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat</a> për t''a ndryshuar këtë parametër.</p>'
           unread: '<p>Temat e palexuara shfaqen këtu.</p><p>Automatikisht, temat klasifikohen si të palexuara dhe kanë etiketa me numër <span class="badge new-posts badge-notification">1</span> nëse ju:</p><ul><li>krijuat temën</li><li>iu përgjigjët temës</li><li>lexuat temën për më shumë se 4 minuta</li></ul><p>Ose nëse keni zgjedhur të Gjurmoni ose Vëzhgoni temën duke klikuar në butonin përkatës në fund të çdo teme.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat tuaja</a> për të bërë ndryshime.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
@@ -1314,7 +1308,6 @@ sq:
       feature_topic:
         title: "Temë në plan të parë"
         pin: "Shfaqe këtë temë në krye të kategorisë %{categoryLink} deri më"
-        confirm_pin: "Ju tashmë keni %{count} tema të përzgjedhura. Shumë tema të përzgjedhura mund të bëhen barrë për përdorues të rinj dhe anonimë. A jeni i sigurtë që dëshironi ta përzgjidhni një temë tjetër në këtë kategori?"
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Përdoruesit mund ta çngjitin këtë temë veçan sipas dëshirës."
@@ -1324,7 +1317,6 @@ sq:
           one: "Temat kryesore të momentit në %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temat kryesore të momentit në %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Shfaqe këtë temë në krye të listës së të gjitha temave deri më"
-        confirm_pin_globally: "Ju tashmë keni %{count} tema të përzgjedhura. Shumë tema të përzgjedhura mund të bëhen barrë për përdorues të rinj dhe anonimë. A jeni i sigurtë që dëshironi ta përzgjidhni një temë tjetër të gjithanëshme?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Përdoruesit mund ta çngjitin këtë temë veçan sipas dëshirës."
@@ -1600,7 +1592,6 @@ sq:
     flagging:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
-      take_action: "Vepro"
       notify_action: "Mesazh"
       official_warning: "Paralajmërim zyrtar"
       delete_spammer: "Elimino Spammer"
@@ -1667,7 +1658,6 @@ sq:
       unlisted:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
-    posts_long: "ka %{number} postime në temë"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
@@ -1685,7 +1675,6 @@ sq:
     likes_lowercase:
       one: "pëlqim"
       other: "pëlqime"
-    likes_long: "ka %{number} pëlqime në këtë temë"
     users: "Përdoruesit"
     users_lowercase:
       one: "përdorues"

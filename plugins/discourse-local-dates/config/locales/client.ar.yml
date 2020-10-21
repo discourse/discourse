@@ -10,7 +10,7 @@ ar:
       relative_dates:
         today: اليوم %{time}
         tomorrow: غدًا %{time}
-        yesterday: البارحة %{time}
+        yesterday: أمس %{time}
       title: أدخِل التاريخ / الوقت
       create:
         form:

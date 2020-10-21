@@ -16,7 +16,7 @@
           id="group-add-members-user-selector"}}
     </div>
 
-    {{#if currentUser.admin}}
+    {{#if model.can_admin_group}}
       <div class="control-group group-add-members-make-owner">
         <label>
           {{input type="checkbox"

@@ -373,7 +373,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 });
 
-export default SiteHeaderComponent;
+export default SiteHeaderComponent.extend({
+  classNames: ["d-header-wrap"],
+});
 
 export function headerHeight() {
   const $header = $("header.d-header");

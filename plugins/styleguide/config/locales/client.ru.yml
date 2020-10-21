@@ -41,6 +41,8 @@ ru:
           title: "Навигация"
         navigation_bar:
           title: "Панель навигации"
+        navigation_stacked:
+          title: "Панель выбора настроек"
         categories_list:
           title: "Список разделов"
         topic_link:
@@ -79,3 +81,5 @@ ru:
           title: "Окно \"О пользователе\""
         header_icons:
           title: "Значки заголовков"
+        spinners:
+          title: "Спиннеры"

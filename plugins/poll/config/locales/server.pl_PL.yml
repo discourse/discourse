@@ -17,6 +17,8 @@ pl_PL:
     invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
     multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Uzyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
+    default_poll_must_have_at_least_1_option: "Ankieta musi mieć co najmniej 1 opcję."
+    named_poll_must_have_at_least_1_option: "Ankieta o nazwie <strong>%{name}</strong> musi mieć co najmniej 1 opcję."
     default_poll_must_have_less_options:
       one: "Ankieta musi posiadać mniej niż %{count} opcję do wyboru."
       few: "Ankieta musi posiadać co najmniej %{count} pozycje."
@@ -29,6 +31,8 @@ pl_PL:
       other: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
     default_poll_must_have_different_options: "Ankieta musi posiadać kilka różnych opcji do wyboru."
     named_poll_must_have_different_options: "Ankieta <strong>%{name}</strong> musi posiadać kilka różnych opcji do wyboru."
+    default_poll_must_not_have_any_empty_options: "Ankieta nie może mieć żadnych pustych opcji."
+    named_poll_must_not_have_any_empty_options: "Ankieta o nazwie <strong>%{name}</strong> nie może mieć żadnych pustych opcji."
     default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
     named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."

@@ -5,7 +5,6 @@
 .d-header {
   left: 0;
   height: 4em;
-  margin-bottom: 15px;
   #site-logo {
     height: 2.667em; // 40px with default 15px font size
   }
@@ -30,10 +29,6 @@
 
 #main {
   position: relative;
-}
-
-#main-outlet {
-  padding-top: 5.8572em;
 }
 
 .search-link .blurb {

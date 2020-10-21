@@ -25,10 +25,10 @@ import QUnit from "qunit";
 import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
-import { setResolver } from "@ember/test-helpers";
+import { setApplication, setResolver } from "@ember/test-helpers";
 
-export default function setupTests(App) {
-  setResolver(buildResolver("discourse").create({ namespace: App }));
+export default function setupTests(app, container) {
+  setResolver(buildResolver("discourse").create({ namespace: app }));
 
   sinon.config = {
     injectIntoThis: false,
@@ -41,17 +41,10 @@ export default function setupTests(App) {
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 
-  document.write(
-    '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
-  );
-  document.write(
-    "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
-  );
-
-  App.rootElement = "#ember-testing";
-  App.setupForTesting();
-  App.SiteSettings = currentSettings();
-  App.start();
+  app.rootElement = "#ember-testing";
+  app.setupForTesting();
+  app.SiteSettings = currentSettings();
+  app.start();
 
   // disable logster error reporting
   if (window.Logster) {
@@ -185,6 +178,7 @@ export default function setupTests(App) {
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
-  setDefaultOwner(App.__container__);
+  setApplication(app);
+  setDefaultOwner(container);
   resetSite();
 }

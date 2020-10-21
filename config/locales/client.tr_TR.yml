@@ -151,7 +151,6 @@ tr_TR:
     topic_admin_menu: "konu eylemleri"
     wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
-    bootstrap_mode_enabled: "Yeni sitenizi daha kolay başlatmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özet güncellemeleri etkinleştirilir. Bu,%{min_users} kullanıcının katıldığı zaman otomatik olarak kapatılacaktır."
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak. "
     themes:
       default_description: "Varsayılan "
@@ -699,7 +698,6 @@ tr_TR:
       topic_stat_sentence_month:
         one: "geçen aydan beri %{count} yeni konu."
         other: "%{count} geçen ay yeni konular."
-      n_more: "Kategoriler (%{count}daha fazla) ..."
     ip_lookup:
       title: IP Adresi Ara
       hostname: Sunucu ismi
@@ -801,7 +799,6 @@ tr_TR:
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar beklemeye alındı. "
       suspended_permanently: "Bu kullanıcı beklemeye alındı."
       suspended_reason: "Sebep:"
-      github_profile: "Github"
       email_activity_summary: "Aktivite özeti"
       mailing_list_mode:
         label: "Gönderi listesi modu"
@@ -887,24 +884,18 @@ tr_TR:
         choose_new: "Yeni bir şifre seç"
         choose: "Şifre seç"
       second_factor_backup:
-        title: "İki Faktörlü Yedekleme Kodu"
         regenerate: "Yeniden oluştur"
         disable: "Devre dışı bırak"
         enable: "Etkinleştir"
         enable_long: "Yedek kodları etkinleştir"
-        manage: "Yedek kodları yönet.  <strong>%{count}</strong> yedek kod kaldı."
         copy_to_clipboard: "Kopyala"
         copy_to_clipboard_error: "Panoya kopyalanırken hata oluştu"
         copied_to_clipboard: "Panoya kopyalandı"
-        remaining_codes: "<strong>%{count}</strong> yedek kodun kaldı "
         use: "Bir yedekleme kodu kullanın"
-        enable_prerequisites: "Yedek kodları oluşturmadan önce birincil ikinci faktörü etkinleştirmelisiniz."
         codes:
           title: "Yedek kod oluşturuldu"
           description: "İlgili yedek kodlar sadece bir kez kullanılabilir. Kodları güvenli ama erişilebilir bir yerde tutmalısın. "
       second_factor:
-        title: "İki Faktörlü Kimlik Doğrulama"
-        enable: "İki Adımlı Kimlik Doğrulamayı Düzenle"
         forgot_password: "Şifrenizi mi unuttunuz?"
         confirm_password_description: "Devam etmek için lütfen şifrenizi onaylayın"
         name: "İsim"
@@ -916,16 +907,10 @@ tr_TR:
         show_key_description: "Manuel olarak gir"
         short_description: |
           Hesabınızı tek kullanımlık güvenlik kodlarıyla koruyun.
-        extended_description: |
-          İki faktörlü kimlik doğrulama, şifrenize ek olarak bir kerelik bir belirteç gerektirerek hesabınıza ekstra güvenlik sağlar. Tokenler <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ve <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> cihazlarda yaratılabilir.
-        oauth_enabled_warning: "Hesabınızda iki faktörlü kimlik doğrulaması etkinleştirildikten sonra sosyal girişlerin devre dışı bırakılacağını lütfen unutmayın."
         use: "Authenticator uygulamasını kullan"
-        enforced_notice: "Bu siteye erişmeden önce iki faktörlü kimlik doğrulamasını etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
         save: "Kaydet"
         edit: "Düzenle"
-        edit_title: "İkinci Faktörü Düzenle"
-        edit_description: "İkinci Faktör Adı"
         totp:
           title: "Token Tabanlı Doğrulayıcılar"
           default_name: "Benim Doğrulayıcım"
@@ -1022,10 +1007,8 @@ tr_TR:
         title: "Şifre tekrarı"
       auth_tokens:
         title: "Son Kullanılan Cihazlar"
-        ip: "IP"
         details: "Detaylar"
         log_out_all: "Hepisini Çıkış Yap"
-        active: "şimdi aktif"
         not_you: "Sen değil?"
         show_all: "Tümünü göster (%{count})"
         show_few: "Daha az göster"
@@ -1302,8 +1285,6 @@ tr_TR:
       disable: "Silinen Gönderileri Göster"
     private_message_info:
       title: "Mesaj"
-      invite: "Başkalarını Davet Et..."
-      edit: "Ekle ya da Kaldır ..."
       leave_message: "Gerçekten bu mesajdan çıkmak mı istiyorsun?"
       remove_allowed_user: "Bu mesajdan %{name} isimli kullanıcıyı çıkarmak istediğine emin misin?"
       remove_allowed_group: "Gerçekten %{name} isimli kullanıcıyı bu mesajdan kaldırmak istiyor musun?"
@@ -1346,10 +1327,8 @@ tr_TR:
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Şifre"
-      second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamadan \"Kimlik Doğrulama Kodu\"nu gir:"
       second_factor_backup: "Bir yedekleme kodu kullanarak giriş yapın"
-      second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
       second_factor: "Authenticator uygulamasını kullanarak giriş yapın"
       security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
@@ -1373,10 +1352,8 @@ tr_TR:
       awaiting_approval: "Hesabın henüz bir görevli tarafından onaylanmadı. Onaylandığında e-posta ile bilgilendirileceksin."
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
       not_activated: "Henüz oturum açamazsın. Hesabını etkinleştirmek için daha önceden <b>%{sentTo}</b> adresine yollanan aktivasyon e-postasındaki açıklamaları okumalısın. "
-      not_allowed_from_ip_address: "Bu IP adresinden giriş yapamazsın. "
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak giriş yapamazsın. "
       resend_activation_email: "Aktivasyon e-postasını tekrar göndermek için buraya tıkla. "
-      omniauth_disallow_totp: "Hesabınızın iki faktör kimlik doğrulaması etkin. Lütfen şifrenizle giriş yapın."
       resend_title: "Aktivasyon e-postasını tekrar gönder"
       change_email: "E-posta adresini değiştir"
       provide_new_email: "Yeni bir adres gir. Onay e-postanı tekrar gönderelim."
@@ -1442,8 +1419,6 @@ tr_TR:
       enter: "Gir"
     conditional_loading_section:
       loading: Yükleniyor...
-    category_row:
-      topic_count: "%{count} bu kategorideki konular"
     select_kit:
       default_header_text: Seç...
       no_content: Hiçbir eşleşme bulunamadı
@@ -1456,7 +1431,6 @@ tr_TR:
       min_content_not_reached:
         one: "En azından %{count} konu seçiniz"
         other: "En azından %{count}konuları seçiniz"
-      invalid_selection_length: "Seçim en az %{count} karakter olmalıdır."
     date_time_picker:
       from: Kimden
       to: Kime
@@ -1503,7 +1477,6 @@ tr_TR:
       similar_topics: "Konun şunlara benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
       edit_conflict: "çakışmayı düzenle"
-      group_mentioned_limit: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a>'den bahsettiniz, ancak bu grubun yönetici tarafından yapılandırılmış olan maksimum %{max} kullanıcıdan bahsetme sınırını aşan daha fazla üyesi var. Kimse haberdar edilmeyecek."
       group_mentioned:
         one: "%{group} hakkında konuşarak <a href='%{group_link}'>%{count} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
         other: "%{group} hakkında konuşarak <a href='%{group_link}'>%{count} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
@@ -1520,7 +1493,6 @@ tr_TR:
         post_length: "Gönderi en az %{min} karakter olmalı"
         try_like: "%{heart} düğmesini denediniz mi?"
         category_missing: "Bir kategori seçmelisin"
-        tags_missing: "En azından %{count} etiket seçmelisin"
         topic_template_not_modified: "Lütfen konu şablonunu düzenleyerek daha fazla ayrıntı ekleyin."
       save_edit: "Değişikliği Kaydet"
       overwrite_edit: "Üzerine Yaz"
@@ -1652,7 +1624,6 @@ tr_TR:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Yeni Konu</span> %{description}"
       membership_request_accepted: "&#39;%{group_name}&#39; üyeliğine kabul edildi"
-      membership_request_consolidated: "%{count} &#39;%{group_name}&#39; için açık üyelik talepleri"
       group_message_summary:
         one: "%{group_name} gelen kutunuzdaki %{count} mesaj var"
         other: "%{group_name} gelen kutunuzda %{count} mesajları"
@@ -1720,7 +1691,6 @@ tr_TR:
       full_page_title: "konu ya da gönderi ara"
       no_results: "Hiçbir sonuç bulunamadı."
       no_more_results: "Başka sonuç yok."
-      searching: "Aranıyor..."
       post_format: "%{username} tarafından #%{post_number}"
       results_page: "'%{term}' için arama sonuçları"
       more_results: "Daha fazla sonuç var. Lütfen arama kriterlerini daralt."
@@ -1729,7 +1699,6 @@ tr_TR:
       or_search_google: "Ya da Google'la aramayı dene:"
       search_google: "Google'la aramayı dene:"
       search_google_button: "Google"
-      search_google_title: "Bu sitede ara"
       context:
         user: "@%{username} kullancısına ait gönderilerde ara"
         category: "#%{category} kategorisini ara"
@@ -1823,7 +1792,6 @@ tr_TR:
         category: "%{category} konusu yok."
         top: "Popüler bir konu yok."
         educate:
-          new: '<p>Yeni konular burada görünecek.</p><p>Öntanımlı olarak son 2 gün içerisinde oluşturulmuş konular yeni olarak nitelendirilir ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> ibaresiyle işaretli olarak gösterilir.</p><p> <a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
           unread: '<p>Okumadığın konular burada görünecek.</p><p>Öntanımlı olarak, konuların okunmamış sayılması ve kaç tane<span class="badge new-posts badge-notification">1</span> okunmamış mesaj olduğunun gösterilmesi için </p><ul><li>Konuyu oluşturmuş olman</li><li>Konuya cevap vermiş olman</li><li>Konuyu 4 dakikadan fazla okumuş olman</li></ul><p>Veya, konuyu her konunun altında bulunan bildirim kontrol alanından Gözleniyor veya Takip Ediliyor olarak seçmen gerekir.</p><p><a href="%{userPrefsUrl}">tercihler</a> sayfanı ziyaret ederek bunu değiştirebilirsin.</p>'
       bottom:
         latest: "Daha fazla güncel konu yok."
@@ -2070,7 +2038,6 @@ tr_TR:
       feature_topic:
         title: "Bu konuyu ön plana çıkar"
         pin: "Şu zamana kadar bu konunun %{categoryLink} kategorisinin başında görünmesini sağla"
-        confirm_pin: "Zaten en yukarıda sabitlenmiş %{count} konun var. Çok fazla konuyu en yukarıda sabitlemek yeni ve anonim kullanıcılarda sorun yaratabilir. Bu kategoride bir konuyu en yukarıda sabitlemek istediğine emin misin?"
         unpin: "Bu konuyu %{categoryLink} kategorisinin en üstünden kaldır."
         unpin_until: "Bu konuyu %{categoryLink} kategorisinin başından kaldır ya da şu zamana kadar bekle: <strong>%{until}</strong>."
         pin_note: "Kullanıcılar kendileri için konunun en yukarıda sabitlenmesini kaldırabilir."
@@ -2080,7 +2047,6 @@ tr_TR:
           one: "Şu an %{categoryLink} kategorisinde başa tutturulan konular: <strong class='badge badge-notification unread'>%{count}</strong>."
           other: "Şu an %{categoryLink} kategorisinde en yukarıda sabitlenen konular: <strong class='badge badge-notification unread'>%{count}</strong>."
         pin_globally: "Şu zamana kadar bu konunun bütün konu listelerinin başında yer almasını sağla"
-        confirm_pin_globally: "Zaten her yerde en yukarıda sabitlenen %{count} konun var. Çok fazla konuyu en yukarıda sabitlemek yeni ve anonim kullanıcılarda sorun yaratabilir. Bir konuyu her yerde en yukarıda sabitlemek istediğine emin misin?"
         unpin_globally: "Bu konuyu tüm konu listelerinin en üstünden kaldır."
         unpin_globally_until: "Bu konuyu bütün konu listelerinin başından kaldır ya da şu zamana kadar bekle: <strong>%{until}</strong>."
         global_pin_note: "Kullanıcılar kendileri için konunun en yukarıda sabitlenmesini kaldırabilir."
@@ -2252,7 +2218,6 @@ tr_TR:
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar dene."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size_kb}kb). Neden paylaşımını bir bulut sağlayıcısına yükleyip bağlantısını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda sadece tek dosya yüklenebilir."
-        too_many_dragged_and_dropped_files: "Üzgünüz, tek seferde sadece %{max} dosya yükleyebilirsin."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığın dosya izinli değil (izinli uzantılar : %{izinli uzantılar})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemez."
@@ -2513,7 +2478,6 @@ tr_TR:
     flagging:
       title: "Topluluğumuzun nezaket kuralları içerisinde kalmasına sağladığın destek için teşekkürler!"
       action: "Gönderiyi Bayrakla İşaretle"
-      take_action: "Harekete Geç"
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
@@ -2584,7 +2548,6 @@ tr_TR:
         title: "Bu konu kişisel bir mesajdır"
         help: "Bu konu kişisel bir mesajdır"
     posts: "Gönderiler"
-    posts_long: "bu konuda %{number} gönderi var"
     posts_likes_MF: |
       Bu konuda {count, plural, one {1 cevap} other {# cevap}} {ratio, select,
       low {ve yüksek beğeni/gönderi oranı}
@@ -2605,7 +2568,6 @@ tr_TR:
     likes_lowercase:
       one: "beğeni"
       other: "beğeni"
-    likes_long: "bu konuda %{number} beğeni var"
     users: "Kullanıcılar"
     users_lowercase:
       one: "kullanıcı"
@@ -2885,8 +2847,6 @@ tr_TR:
         delete: "Sil"
         confirm_delete: "Bu etiket grubunu silmek istediğine emin misin?"
         everyone_can_use: "Etiketler herkes tarafından kullanılabilir"
-        usable_only_by_staff: "Etiketler herkes tarafından görülebilir, ancak yalnızca görevli tarafından kullanabilir"
-        visible_only_to_staff: "Etiketler yalnızca görevli tarafından görülebilir"
       topics:
         none:
           unread: "Okunmamış konun bulunmuyor."
@@ -3655,7 +3615,6 @@ tr_TR:
             post_edit: "gönderi düzenleme"
             post_unlocked: "gönderi kilidi açıldı"
             check_personal_message: "kişisel mesajlara bak"
-            disabled_second_factor: "\"İki Faktör Kimlik Doğrulaması\"nı devre dışı bırak"
             topic_published: "konu yayımlandı"
             post_approved: "gönderi onaylandı"
             post_rejected: "gönderi reddedildi"
@@ -3872,7 +3831,6 @@ tr_TR:
         private_topics_count: Özel Konular
         posts_read_count: Okunan Gönderiler
         post_count: Oluşturulan Gönderiler
-        second_factor_enabled: İki Faktörlü Kimlik Doğrulama etkinleştirildi
         topics_entered: Görüntülenen Konular
         flags_given_count: Verilen Bayraklar
         flags_received_count: Alınan Bayraklar

@@ -41,8 +41,6 @@ bs_BA:
       trigger: "bacaj kockicu"
       invalid: |-
         Žao mi je, matematički nije moguće okrenuti tu kombinaciju na kockici. :confounded:
-      not_enough_dice: |-
-        Posjedujem samo %{num_of_dice} kockice. [Sramežljiv](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Znam!
       out_of_range: |-
         Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod jeste 120?
       results: |-

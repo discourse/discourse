@@ -7,8 +7,12 @@
 nl:
   js:
     presence:
-      replying: "beantwoorden"
-      editing: "bewerken"
+      replying:
+        one: "beantwoordt"
+        other: "beantwoorden"
+      editing:
+        one: "bewerkt"
+        other: "bewerken"
       replying_to_topic:
-        one: "beantwoord"
+        one: "beantwoordt"
         other: "beantwoorden"

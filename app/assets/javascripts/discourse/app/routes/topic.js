@@ -118,6 +118,12 @@ const TopicRoute = DiscourseRoute.extend({
       this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
     },
 
+    showTopicSlowModeUpdate() {
+      const model = this.modelFor("topic");
+
+      showModal("edit-slow-mode", { model });
+    },
+
     showChangeTimestamp() {
       showModal("change-timestamp", {
         model: this.modelFor("topic"),

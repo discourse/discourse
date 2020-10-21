@@ -39,8 +39,6 @@ fa_IR:
       trigger: "تاس"
       invalid: |-
         معذرت میخواهم. از لحاظ ریاضیات غیر ممکن است که این چنین ترکیب تاسی را رو کرد. :confounded:
-      not_enough_dice: |-
-        من فقط %{num_of_dice} تاس دارم. [شرم‌آور](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php) است. خودم میدونم.
       out_of_range: |-
         میدونستی که [بیشترین تعداد وجوه](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) یک تاسی که از لحاظ ریاضی عادلانه باشد، ۱۲۰ وجه است؟
       results: |-

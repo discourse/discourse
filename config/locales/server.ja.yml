@@ -441,40 +441,33 @@ ja:
       title: "関係ない話題"
       description: "この投稿はタイトルと投稿で定義される現在の内容に関連しておらず、どこかに移動させる必要があります"
       short_description: "ディスカッションに関連がない"
-      long_form: "「関係ない話題」として通報"
     spam:
       title: "スパム"
       description: "この投稿は広告、または悪質行為です。 現在のトピックとは関連性がありません。"
       short_description: "営利目的か破壊行為の可能性"
-      long_form: "スパムとして通報する"
       email_title: '"%{title}"はスパムとして通報されています'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不適切"
-      long_form: "不適切として通報する"
     notify_user:
       title: "@%{username}へメッセージを送る"
       description: "この投稿について直接話がしたいです。"
       short_description: "彼らの投稿に対して直接話したいです。"
-      long_form: "メッセージが送られたユーザー"
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "その他"
       description: "この投稿は上記以外の理由でスタッフの注意が必要です。"
       short_description: "その他の理由で管理人による確認が必要"
-      long_form: "スタッフへ知らせるために通報する"
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "ブックマーク"
       description: "この投稿をブックマークする"
       short_description: "この投稿をブックマークする"
-      long_form: "この投稿をブックマーク"
     like:
       title: "いいね！"
       description: "この投稿を「いいね！」する"
       short_description: "この投稿を「いいね！」する"
-      long_form: "「いいね！」する"
   user_activity:
     no_default:
       self: "まだアクティビティーがありません"
@@ -957,8 +950,6 @@ ja:
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
     allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
-    allow_animated_avatars: "プロフィール画像としてアニメgifをアップロードするのを許可。警告: この設定を変更した場合 avatars:refresh rakeタスクを実行すること"
-    allow_animated_thumbnails: "アニメgifからアニメーションサムネイルを生成する"
     default_avatars: "新規ユーザが変更するまで使用されるデフォルトのプロフィール画像URL"
     automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
     detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
@@ -1061,7 +1052,6 @@ ja:
     errors: "%{errors}"
     not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
     omniauth_confirm_button: "続く"
     new_registrations_disabled: "新規登録は現在行えません。"
     password_too_long: "パスワードは200文字までです"
@@ -1071,7 +1061,6 @@ ja:
     auth_complete: "認証が完了しました。"
     click_to_continue: "クリックして続けてください。"
     already_logged_in: "おっと！他の人の招待を受け入れたようです。もし、あなたが%{current_user}出なければ、ログアウトして再び試してください。"
-    second_factor_title: "二段階認証"
     second_factor_backup_description: "バックアップコードを入力: "
   admin:
     email:
@@ -1620,8 +1609,6 @@ ja:
     initial_topic_title: ウェブサイトパフォーマンスレポート
   tags:
     title: "タグ"
-    staff_tag_disallowed: '%{tag}タグは管理人のみが追加可能です'
-    staff_tag_remove_disallowed: '%{tag}タグは管理人のみが削除可能です'
   finish_installation:
     resend_email:
       title: "アクティベーションメールの再送"
@@ -1644,8 +1631,6 @@ ja:
             placeholder: "name@example.com"
       corporate:
         title: "組織"
-      colors:
-        title: "テーマ"
       homepage:
         description: "ホームページへは最新トピックの表示を推薦しますが、カテゴリー（トピックのまとまり）のみの表示も可能です。"
         title: "ホームページ"

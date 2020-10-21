@@ -172,7 +172,7 @@ describe GroupsController do
       expect(body["load_more_groups"]).to eq("/groups?page=1")
       expect(body["total_rows_groups"]).to eq(1)
       expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic, :non_automatic]
       )
     end
 
@@ -288,7 +288,7 @@ describe GroupsController do
         expect(body["total_rows_groups"]).to eq(10)
 
         expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-          described_class::TYPE_FILTERS.keys
+          described_class::TYPE_FILTERS.keys - [:non_automatic]
         )
       end
 
@@ -326,6 +326,16 @@ describe GroupsController do
             expect_type_to_return_right_groups(
               'automatic',
               Group::AUTO_GROUP_IDS.keys - [0]
+            )
+          end
+        end
+
+        describe 'non automatic groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            expect_type_to_return_right_groups(
+              'non_automatic',
+              [group.id, group2.id]
             )
           end
         end

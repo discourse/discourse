@@ -126,6 +126,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
+        @upload.animated = FastImage.animated?(@file)
       end
 
       add_metadata!
@@ -279,7 +280,6 @@ class UploadCreator
         from,
         to,
         scale,
-        allow_animation: allow_animation,
         scale_image: true,
         raise_on_error: true
       )
@@ -351,17 +351,17 @@ class UploadCreator
     case @opts[:type]
     when "avatar"
       width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext)
     when "profile_background"
       max_width = 850 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext)
     when "card_background"
       max_width = 590 * max_pixel_ratio
       width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext)
     when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext)
     end
 
     extract_image_info!
@@ -399,10 +399,6 @@ class UploadCreator
 
   def pixels
     @image_info.size&.reduce(:*).to_i
-  end
-
-  def allow_animation
-    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
   end
 
   def svg_allowlist_xpath
