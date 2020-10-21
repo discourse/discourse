@@ -2,16 +2,10 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
-  needs.pretender((server, helper) => {
-    server.get("/c/bug/find_by_slug.json", () => {
-      return helper.response(CategoryFixtures["/c/1/show.json"]);
-    });
-  });
 
   test("Editing the category", async (assert) => {
     await visit("/c/bug");

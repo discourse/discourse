@@ -316,6 +316,10 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/categories_and_latest.json"])
   );
 
+  pretender.get("/c/bug/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/1/show.json"])
+  );
+
   pretender.put("/categories/:category_id", (request) => {
     const category = parsePostData(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
