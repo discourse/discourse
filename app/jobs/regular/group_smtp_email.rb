@@ -13,7 +13,7 @@ module Jobs
 
       Rails.logger.debug("[IMAP] Sending email for group #{group.name} and post #{post.id}")
       message = GroupSmtpMailer.send_mail(group, email, post)
-      Email::Sender.new(message, :group_smtp).send
+      Email::Sender.new(message, :group_smtp, post.user).send
 
       # Create an incoming email record to avoid importing again from IMAP
       # server.
