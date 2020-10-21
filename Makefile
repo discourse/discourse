@@ -1,6 +1,6 @@
-.PHONY: init run down bash 
+.PHONY: init run down bash
 
-# 
+#
 # d/ is a symbolic link to bin/docker
 #
 
@@ -17,7 +17,7 @@ init:
 		ALTER USER discourse CREATEDB;\
 		ALTER ROLE discourse SUPERUSER'"
 	docker exec -it -u discourse -w /src discourse_dev /bin/bash -c "rake db:create"
-	# d/migrate	
+	# d/migrate
 	# Disable initial migrations to work with the prod database.
 	# Careful with d/migrate: seed is called each db:migrate.
 	# See /lib/tasks/db.rake
