@@ -22,6 +22,7 @@ module Stylesheet
 
         if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
+          file += Stylesheet::Importer.import_wcag_overrides(options[:color_scheme_id])
         end
       end
 

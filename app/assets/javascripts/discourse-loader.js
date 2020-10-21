@@ -146,9 +146,6 @@ var define, requirejs;
       "@ember/object/internals": {
         guidFor: Ember.guidFor,
       },
-      "@ember/test-helpers": {
-        setResolver: window.setResolver,
-      },
       I18n: {
         // eslint-disable-next-line
         default: I18n,

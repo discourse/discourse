@@ -75,6 +75,11 @@ $breakpoints: (
 //
 // --------------------------------------------------
 
+@mixin sticky {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
 // Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
 @mixin user-select($mode) {

@@ -952,7 +952,7 @@ describe Search do
       end
 
       it 'shows staff tags' do
-        create_staff_tags(["#{tag.name}9"])
+        create_staff_only_tags(["#{tag.name}9"])
 
         expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
         expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])

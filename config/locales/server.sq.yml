@@ -347,18 +347,14 @@ sq:
     off_topic:
       title: "Jashtë teme"
       description: "Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër."
-      long_form: "sinjalizoi këtë postim si jashtë teme"
     spam:
       title: "Spam"
-      long_form: "sinjalizoi këtë postim si spam"
       email_title: '"%{title}" u sinjalizua si spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "i papërshtatshëm"
-      long_form: "sinjalizoi këtë postim si të papërshtatshëm"
     notify_user:
       title: "Dërgoji @%{username} një mesazh"
-      long_form: "messaged user"
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -369,12 +365,10 @@ sq:
       title: "Shto tek të preferuarat"
       description: "Shto postimin tek të preferuarat"
       short_description: "Shto postimin tek të preferuarat"
-      long_form: "shtoi postimin tek të preferuarat"
     like:
       title: "Pëlqe"
       description: "Më pëlqen ky postim"
       short_description: "Më pëlqen ky postim"
-      long_form: "pëlqeu këtë"
   topic_flag_types:
     spam:
       title: "Spam"
@@ -798,8 +792,6 @@ sq:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
-    allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
-    allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
@@ -905,7 +897,6 @@ sq:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
@@ -1397,8 +1388,6 @@ sq:
             placeholder: "emri@adresa.com"
       corporate:
         title: "Organizata"
-      colors:
-        title: "Tema"
       homepage:
         fields:
           homepage_style:

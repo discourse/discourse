@@ -81,6 +81,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
+  define_filtered_register :user_api_key_scope_mappings
 
   define_filtered_register :permitted_bulk_action_parameters
 

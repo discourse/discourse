@@ -722,6 +722,32 @@ describe PostCreator do
         expect(topic.word_count).to eq(6)
       end
     end
+
+    context 'when the topic is in slow mode' do
+      before do
+        one_day = 86400
+        topic.update!(slow_mode_seconds: one_day)
+      end
+
+      it 'fails if the user recently posted in this topic' do
+        TopicUser.create!(user: user, topic: topic, last_posted_at: 10.minutes.ago)
+
+        post = creator.create
+
+        expect(post).to be_blank
+        expect(creator.errors.count).to eq 1
+        expect(creator.errors.messages[:base][0]).to match I18n.t(:slow_mode_enabled)
+      end
+
+      it 'creates the topic if the user last post is older than the slow mode interval' do
+        TopicUser.create!(user: user, topic: topic, last_posted_at: 5.days.ago)
+
+        post = creator.create
+
+        expect(post).to be_present
+        expect(creator.errors.count).to be_zero
+      end
+    end
   end
 
   context 'closed topic' do
@@ -1193,6 +1219,19 @@ describe PostCreator do
       )
       topic_user = TopicUser.find_by(user_id: user.id, topic_id: pm.id)
       expect(topic_user.notification_level).to eq(3)
+    end
+
+    it 'sets the last_posted_at timestamp to track the last time the user posted' do
+      topic = Fabricate(:topic)
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "this is a test reply 123 123 ;)"
+      )
+
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: topic.id)
+      expect(topic_user.last_posted_at).to be_present
     end
   end
 

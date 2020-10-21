@@ -91,17 +91,18 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, only: [:create]
+      resources :groups, only: [:create] do
+        member do
+          put "owners" => "groups#add_owners"
+          delete "owners" => "groups#remove_owner"
+        end
+      end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
           put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
-        end
-        member do
-          put "owners" => "groups#add_owners"
-          delete "owners" => "groups#remove_owner"
         end
       end
 
@@ -804,6 +805,7 @@ Discourse::Application.routes.draw do
     put "t/:topic_id/bookmark" => "topics#bookmark", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/tags" => "topics#update_tags", constraints: { topic_id: /\d+/ }
+    put "t/:topic_id/slow_mode" => "topics#set_slow_mode", constraints: { topic_id: /\d+/ }
 
     post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: { topic_id: /\d+/ }
 

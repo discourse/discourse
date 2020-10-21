@@ -45,8 +45,11 @@ ru:
       trigger: "бросить"
       invalid: |-
         Извините, даже математически невозможно выдать эту комбинацию костей. :confounded:
-      not_enough_dice: |-
-        У меня только %{num_of_dice} кости. [Посмотрите](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!
+      not_enough_dice:
+        one: "У меня только %{count} кость. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
+        few: "У меня только %{count} кости. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
+        many: "У меня только %{count} костей. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
+        other: "У меня только %{count} костей. [Посмотрите](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), что это такое!"
       out_of_range: |-
         Знаете ли вы, что [максимальное количество сторон](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) в кубиках может быть 120?
       results: |-
@@ -272,7 +275,7 @@ ru:
         reply: |-
           _Какой-то смертный произнес мое имя!?_ :raised_hand: Я не сомневаюсь, что это были вы! :wave: Что ж, я уже здесь! Спасибо, что не забыли о моей нескромной персоне. :ok_hand:
         not_found: |-
-          Я не вижу свое имя в вашем ответе :frowning: Может быть вы всё же соблаговолите упомянуть меня: `@%{discobot_username}` ?
+          Я не вижу свое имя в вашем ответе :frowning: Может быть вы всё же попробуете упомянуть меня: `@%{discobot_username}` ?
 
           (И да, мое имя пишется как _disco_, так же как и зажигательный танцевальный стиль, популярный в ушедших 70-х. Я обожаю [ночную жизнь!](https://www.youtube.com/watch?v=0bWvh79iTEc) :dancer:)
       flag:

@@ -600,36 +600,29 @@ da:
     off_topic:
       title: "Uden for emnet"
       description: "Dette indlæg er ikke relevant for denne diskussion som defineret af titlen og det første indlæg. Det skal nok flyttes et andet sted hen."
-      long_form: "markerede dette som uden for emnet"
     spam:
       title: "Spam"
-      long_form: "markerede dette som spam"
       email_title: '"%{title}" blev markeret som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
-      long_form: "markerede dette som stødende"
     notify_user:
       title: "Send @%{username} en besked"
-      long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
       description: "Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href=\"%{base_path}/faq\">Den Gode Tone</a>, <a href=\"%{tos_url}\">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor."
-      long_form: "Har flagged dette overfor administrator"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bogmærk"
       description: "Bogmærk dette indlæg"
       short_description: "Bogmærk dette indlæg"
-      long_form: "bogmærkede dette indlæg"
     like:
       title: "Like"
       description: "Du liker dette indlæg"
       short_description: "Du liker dette indlæg"
-      long_form: "like dette"
   user_activity:
     no_default:
       self: "Du har endnu ingen aktivitet."
@@ -1141,7 +1134,6 @@ da:
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
-    omniauth_error_unknown: "Noget gik galt ved behandlingen af dit login, prøv venligst igen."
     omniauth_confirm_button: "Fortsæt"
     authenticator_error_no_valid_email: "Mailadresser, der har tilknytning til %{account}, er ikke tilladt. Du er måske nødt til at bruge en anden mailadresse i forbindelse med din konto."
     new_registrations_disabled: "Det er ikke tilladt at oprette nye brugerkonti på nuværende tidspunkt."
@@ -1150,7 +1142,6 @@ da:
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
     already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
-    second_factor_title: "To-faktor godkendelse"
     second_factor_backup_description: "Indtast en af dine backup koder:"
   admin:
     email:
@@ -1560,7 +1551,6 @@ da:
     base_theme_name: "Base"
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Rediger denne side"
@@ -1701,8 +1691,6 @@ da:
     initial_topic_title: Website præstationsrapport
   tags:
     title: "Tags"
-    staff_tag_disallowed: 'Tagget "%{tag}" kan kun tildeles af personalet.'
-    staff_tag_remove_disallowed: 'Tagget "%{tag}" kan kun fjernes af personalet.'
   rss_by_tag: "Emner tagget %{tag}"
   finish_installation:
     register:
@@ -1747,8 +1735,6 @@ da:
             label: "Hjemmeside"
       corporate:
         title: "Organisation"
-      colors:
-        title: "Tema"
       logos:
         title: "Logoer"
         fields:

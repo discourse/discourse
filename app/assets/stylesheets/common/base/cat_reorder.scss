@@ -4,9 +4,10 @@
       padding-bottom: 0.5em;
     }
   }
-  input {
-    width: 2.333em;
-    padding: 4px;
+  input[type="text"] {
+    max-width: 2.5em;
+    padding: 0.35em;
+    text-align: center;
     @include breakpoint(mobile-extra-large) {
       width: 2em;
     }

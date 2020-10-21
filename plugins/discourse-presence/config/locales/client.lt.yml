@@ -4,8 +4,4 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-lt:
-  js:
-    presence:
-      replying: "atsakoma"
-      editing: "redaguojama"
+lt: 

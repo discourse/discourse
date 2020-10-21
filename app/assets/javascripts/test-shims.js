@@ -17,9 +17,19 @@ define("ember-qunit", () => {
     moduleForComponent: window.moduleForComponent,
   };
 });
+let _app;
 define("@ember/test-helpers", () => {
   return {
     setResolver: window.setResolver,
+    setApplication(app) {
+      _app = app;
+    },
+    getApplication() {
+      return _app;
+    },
+    visit() {
+      return window.visit(...arguments);
+    },
   };
 });
 define("pretender", () => {

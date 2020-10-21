@@ -270,6 +270,14 @@ export default createWidget("topic-admin-menu", {
         });
       }
 
+      this.addActionButton({
+        className: "topic-admin-slow-mode",
+        buttonClass: "popup-menu-btn",
+        action: "showTopicSlowModeUpdate",
+        icon: "hourglass-end",
+        label: "actions.slow_mode",
+      });
+
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           icon: "list",

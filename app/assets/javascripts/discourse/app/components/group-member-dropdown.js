@@ -23,7 +23,7 @@ export default DropdownSelectBoxComponent.extend({
       },
     ];
 
-    if (this.get("currentUser.admin")) {
+    if (this.canAdminGroup) {
       if (this.member.owner) {
         items.push({
           id: "removeOwner",

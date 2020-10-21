@@ -344,6 +344,7 @@ he:
   removed_direct_reply_full_quotes: "הוסר ציטוט של כל הפוסט הקודם אוטומטית."
   secure_upload_not_allowed_in_public_topic: "לא ניתן להשתמש בהעלאות המאובטחות הבאות בנושא ציבורי: %{upload_filenames}, עמך הסליחה."
   create_pm_on_existing_topic: "אין לך אפשרות ליצור הודעה פרטית על נושא קיים, עמך הסליחה."
+  slow_mode_enabled: "נושא זה הוא במצב אטי."
   just_posted_that: "דומה מדי למה שפרסמת לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -892,43 +893,36 @@ he:
       title: "חריגה מהנושא"
       description: "פוסט זה אינו קשור לדיון הנוכחי כפי שהוגדר בכותרת ובמסר הראשוני ולכן כנראה שעליו לעבור למקום אחר."
       short_description: "לא קשור לדיון"
-      long_form: "סומן כחריגה מהנושא"
     spam:
       title: "ספאם"
       description: "פוסט זה הוא פרסומת או השחתה. הוא אינו תורם או קשור לנושא הנוכחי."
       short_description: "זוהי פרסומת או השחתה"
-      long_form: "סומן כספאם"
       email_title: '„%{title}” סומן כספאם'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "לא ראוי"
       description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
-      long_form: "סומן כלא ראוי"
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
       description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
       short_description: "ברצוני לשוחח אישית באופן ישיר עם מפרסם הפוסט הזה."
-      long_form: "נשלחה הודעה למשתמש"
       email_title: 'הפוסט שלך תחת „%{title}”'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
       description: "פוסט זה דורש את תשומת לב הסגל מסיבה שאינה מצויינת למעלה."
       short_description: "דורש תשומת לב של הסגל מסיבה אחרת"
-      long_form: "סומן לטיפול על ידי הסגל"
       email_title: 'פוסט תחת „%{title}” דורש את תשומת לב הסגל'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "סימנייה"
       description: "סמנו פוסט זה עם סימנייה"
       short_description: "סמנו פוסט זה"
-      long_form: "פוסט זה סומן עם סימנייה"
     like:
       title: "לייק"
       description: "תנו לייק לפוסט זה"
       short_description: "אהבו פוסט זה"
-      long_form: "נתתי לזה לייק"
   draft:
     sequence_conflict_error:
       title: "שגיאת טיוטה"
@@ -1039,7 +1033,7 @@ he:
       logging_in_as: כניסה למערכת בתור %{username}
       confirm_button: סיום הכניסה
     no_trust_level: "מצטערים, אין לכם את רמת האמון הנדרשת כדי לגשת ל API של המשתמשים"
-    generic_error: "מצטערים, לא הצלחנו לייצר את מפתחות ה API של המשתמש, ייתכן שיכולת זו מנוטרלת על ידי מנהלי האתר"
+    generic_error: "לא הצלחנו לייצר את מפתחות ה־API של המשתמש, ייתכן שיכולת זו הושבתה על ידי הנהלת האתר, עמך הסליחה"
     scopes:
       message_bus: "עדכונים חיים"
       notifications: "קיראו ונקו התראות"
@@ -1048,6 +1042,7 @@ he:
       read: "קריאה להכל"
       write: "כתיבה להכל"
       one_time_password: "יצירת אסימון כניסה חד־פעמי"
+      bookmarks_calendar: "תזכורת סימון שנקראו"
     invalid_public_key: "המפתח הציבורי שגוי, עמך הסליחה."
     invalid_auth_redirect: "מארח auth_redirect זה אינו מורשה, עמך הסליחה."
     invalid_token: "אסימון חסר, שגוי או פג תוקף."
@@ -1384,8 +1379,8 @@ he:
     queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
     memory_warning: "בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון."
     google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך Facebook‏ (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
-    twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך Twitter‏ (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+    facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
+    twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     github_config_warning: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     s3_config_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
     s3_backup_config_warning: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
@@ -1457,7 +1452,7 @@ he:
     staff_edit_locks_post: "פוסטים יינעלו מפני עריכה אם נערכו על ידי הסגל."
     post_edit_time_limit: "יוצרי פוסטים בדרגת אמון 1 או 0 יכולים לערוך את הפוסטים שלהם עד (n) דקות לאחר הפרסום. 0 כדי לאפשר לערוך לעד.<br data-mce-bogus=\"1\">"
     tl2_post_edit_time_limit: "מחברים בדרגת אמון 2 ומעלה יכולים לערוך את הפוסטים שלהם (n) דקות לאחר פרסומם. 0 ישבית את ההגבלה הזאת."
-    edit_history_visible_to_public: "אפשרו לכולם לראות גרסאות קודמות של פוסט ערוך. כאשר אפשרות זו מנוטרלת, רק חברי צוות יכולים לצפות בהן."
+    edit_history_visible_to_public: "לאפשר לכולם לראות גרסאות קודמות של פוסט ערוך. כאשר אפשרות זו מושבתת, רק חברי סגל יכולים לצפות בהן."
     delete_removed_posts_after: "פוסטים שהוסרו על ידי מחבריהם ימחקו באופן אוטומטי לאחר (n) שעות. אם הגדרה זו מכוונת ל-0, פוסטים ימחקו מיידית."
     max_image_width: "הרוחב המקסימלי של תצוגת תמונה מוקטנת בפוסט"
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפוסט"
@@ -1535,9 +1530,9 @@ he:
     pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    ga_universal_tracking_code: "מזהה קוד מעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; ניתן לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "שם המתחם של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות מתחם מטעם Google Universal Analytics (analytics.js). לקישורים יוצאים המקשרים לשמות מתחם אלה יצורף מזהה הלקוח. יש לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>מדריך למעקב חוצה שמות מתחם מבית Google.</a>"
+    ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "שם התחום של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics (analytics.js). לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
@@ -1575,7 +1570,7 @@ he:
     redirect_users_to_top_page: "כוון באופן אוטומטי משתמשים חדשים וכאלה שנעדרו במשך זמן לראש העמוד."
     top_page_default_timeframe: "ברירת מחדל של פרק זמן להצגה בדף המובילים."
     moderators_view_emails: "לאפשר למפקחים לצפות בכתובות הדוא״ל של המשתמשים"
-    prioritize_username_in_ux: "הציגו שם-משתמש ראשון בדף המשתמש, כרטיס המשתמש ופוסטים (כשמנוטרל השם מופיע קודם)"
+    prioritize_username_in_ux: "שם המשתמש יוצג ראשון בעמוד המשתמש, כרטיס המשתמש והפוסטים (כשהאפשרות מושבתת השם מופיע ראשון)"
     enable_rich_text_paste: "הפעלת המרה אוטומטית מ־HTML ל־Markdown בעת הדבקת טקסט לתוך המחבר. (ניסיוני)"
     send_old_credential_reminder_days: "להזכיר על פרטי גישה ישנים לאחר ימים"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
@@ -1653,14 +1648,14 @@ he:
     backup_frequency: "מספר הימים בין גיבויים."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
-    s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מנוטרלת, לא יפונה מקום לאחר מחיקת העלאות."
+    s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 שיש יותר גיבויים מהמותר."
     enable_s3_inventory: "יצירת דוחות ואימות העלאות באמצעות מאגר של Amazon S3. חשוב: נדרשים פרטי גישה תקפים ל־S3 (מזהה מפתח הגישה ומפתח הגישה הסודי)."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
     backup_location: "מיקום אחסון הגיבויים. חשוב: ל־S3 נדרשים פרטי גישה תקפים שיש להוסיף בהגדרות הקבצים."
     backup_gzip_compression_level_for_uploads: "רמת דחיסת Gzip המשמשת לדחיסת העלאות."
-    include_thumbnails_in_backups: "לכלול תמונות ממוזערות שנוצרו בגיבוי. נטרול הגדרה זו יקטין את הגיבויים אך ידרוש להכין מחדש את כל הפוסטים לאחר שחזור."
+    include_thumbnails_in_backups: "לכלול בגיבוי תמונות ממוזערות שנוצרו. השבתת הגדרה זו יקטין את הגיבויים אך ידרוש להכין מחדש את כל הפוסטים לאחר שחזור."
     active_user_rate_limit_secs: "כל כמה זמן אנחנו מעדכנים את השדה 'last_seen_at', בשניות"
     verbose_localization: "הצגת טיפים מורחבים של לוקליזציה בממשק המשתמש."
     previous_visit_timeout_hours: "כמה זמן ביקור נארך לפני שהוא נחשב הביקור ה״קודם״, בשעות"
@@ -1872,7 +1867,7 @@ he:
     pop3_polling_host: "השרת המארח (Host) למשיכת דוא\"ל דרך POP3."
     pop3_polling_username: "שם המשתמש/ת לחשבון ה-POP3 לתשאול דוא\"ל."
     pop3_polling_password: "הסיסמה לחשבון ה-POP3 למשיכת הדוא\"ל."
-    pop3_polling_delete_from_server: "למחוק הודעות דוא״ל מהשרת. לתשומת לבך: נטרול אפשרות זו מאלצת אותך לפנות את תיבת הדוא״ל באופן ידני"
+    pop3_polling_delete_from_server: "למחוק הודעות דוא״ל מהשרת. לתשומת לבך: השבתת אפשרות זו מאלצת אותך לפנות את תיבת הדוא״ל באופן ידני"
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: 'לאפשר למשתמשים לפרסם נושאים חדשים באמצעות דוא״ל (נדרש תשאול ידני או דרך pop3). יש להגדיר את הכתובות בלשונית ה„הגדרות” שבכל קטגוריה.'
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמשים כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
@@ -1898,8 +1893,6 @@ he:
     email_editable: "אפשרו למשתמשים לשנות את כתובת המייל שלהם לאחר ההרשמה."
     logout_redirect: "מיקום להפניית הדפדפן לאחר היציאה מהמערכת (למשל: https://example.com/logout)"
     allow_uploaded_avatars: "אפשרו למשתמשים להעלות תמונות פרופיל משלהם."
-    allow_animated_avatars: "אפשרו למשתמשים להשתמש באנימציית gif בתור תמונת פרופיל. אזהרה: הריצו משימת rake של avatars:refresh לאחר שינוי הגדרה זו."
-    allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "המספר המקסימלי של נושאים פופולאריים להצגה במייל הסיכום."
@@ -1908,7 +1901,7 @@ he:
     digest_min_excerpt_length: "אורך קטע מינימלי מהפוסט למיילי הסיכום, בתווים."
     suppress_digest_email_after_days: "השתקת מיילים של סיכום למשתמשים שלא נראו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
-    disable_digest_emails: "נטרול הודעות סיכום בדוא״ל לכל המשתמשים."
+    disable_digest_emails: "השבתת הודעות סיכום בדוא״ל לכל המשתמשים."
     apply_custom_styles_to_digest: "תבנית ו־css לדוא״ל בהתאמה אישית חלים על הודעות התקציר שנשלחות בדוא״ל."
     email_accent_bg_color: "צבע ההדגשה לשימוש כרקע של חלק מרכיבי ה־HTML בהודעות דוא״ל. ניתן לכתוב את שם הצבע באנגלית (‚red’) או ערך הקסדצימלי (‚‎#FF0000’)."
     email_accent_fg_color: "צבע הטקסט שמופיע על צבע הרקע של מיילים מסוג HTML. הכניסו שם צבע ('white') או ערך הקסדצימלי ('#FFFFFF')."
@@ -1981,7 +1974,7 @@ he:
     allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
-    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, יש לשלוח הודעה אישית אל המפקחים. 0 לנטרול."
+    notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, תישלח הודעה אישית אל המפקחים. 0 להשבתה."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
     delete_drafts_older_than_n_days: "מחקו טיוטות בנות יותר מ (n) ימים."
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
@@ -2009,7 +2002,7 @@ he:
     new_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות על פוסט של משתמש חדש."
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
-    review_media_unless_trust_level: "הסגל יסקור פוסטים של משתמשים עם דרגות אמון נמוכות יותר אם הם מכילים מדיה מוטמעת."
+    review_media_unless_trust_level: "הסגל יסקור פוסטים של משתמשים עם דרגות אמון נמוכות יותר אם הוטמעה בהם מדיה."
     enable_page_publishing: "לאפשר לחברי סגל לפרסם נושאים לכתובות חדשות עם סגנון עצמאי."
     show_published_pages_login_required: "משתמשים אלמוניים יכולים לראות דפים שפורסמו, אפילו כשנדרשת כניסה למערכת."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
@@ -2136,7 +2129,7 @@ he:
         key: "www.example.com"
         value: "סוד SSO"
   search:
-    extreme_load_error: "האתר נתון תחת עומס קיצוני, החיפוש מנוטרל, נא לנסות שוב בהמשך"
+    extreme_load_error: "האתר נתון תחת עומס קיצוני, החיפוש מושבת, נא לנסות שוב בהמשך"
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
       category: "קטגוריות"
@@ -2319,7 +2312,7 @@ he:
     second_factor_title: "אימות דו־שלבי"
     second_factor_description: "נא להקליד את קוד האימות הנדרש מהיישומון שלך:"
     second_factor_backup_description: "נא להכניס את אחד מהקודים לגיבוי שלך:"
-    second_factor_backup_title: "קוד גיבוי לאימות דו־שלבי"
+    second_factor_backup_title: "קוד כגיבוי לאימות דו־שלבי"
     invalid_second_factor_code: "קוד האימות שגוי. מותר להשתמש בכל קוד פעם אחת בלבד."
     invalid_security_key: "מפתח אבטחה שגוי."
     missing_second_factor_name: "נא לציין שם."
@@ -3083,8 +3076,8 @@ he:
 
         [נא לסקור אותם](%{base_url}/review).
     download_remote_images_disabled:
-      title: "הורדת תמונות מרוחקות מנוטרלת"
-      subject_template: "הורדת תמונות מרחוק מנוטרלת"
+      title: "הורדת תמונות מרוחקות מושבתת"
+      subject_template: "הורדת תמונות מרוחקות מושבתת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     dashboard_problems:
       title: "בעיות בלוח המכוונים"
@@ -3356,10 +3349,10 @@ he:
 
         אם צצות לך שאלות, ניתן [ליצור קשר עם הסגל הידידותי שלנו](%{base_url}/about).
     account_second_factor_disabled:
-      title: "אימות דו־שלבי מנוטרל"
-      subject_template: "[%{email_prefix}] אימות דו־שלבי מנוטרל"
+      title: "אימות דו־שלבי מושבת"
+      subject_template: "[%{email_prefix}] אימות דו־שלבי מושבת"
       text_body_template: |
-        אימות דו־שלבי הושבת לחשבונך אצל %{site_name}. מעתה יתאפשר לך להיכנס עם  ססמתך בלבד, לא נדרש אף קוד אימות נוסף.
+        אימות דו־שלבי הושבת לחשבונך אצל %{site_name}. מעתה יתאפשר לך להיכנס עם ססמתך בלבד, לא נדרש אף קוד אימות נוסף.
 
         אם לא בחרת להשבית אימות דו־שלבי, יתכן שחשבונך הושחת.
 
@@ -3439,7 +3432,7 @@ he:
 
         ‎%{base_url}/u/confirm-new-email/%{email_token}
 
-        אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
+        אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם [הנהלת האתר](%{base_url}/about).
     confirm_new_email_via_admin:
       title: "אישור כתובת דוא״ל חדשה"
       subject_template: "[%{email_prefix}] אישור כתובת הדוא״ל החדשה שלך"
@@ -3448,7 +3441,7 @@ he:
 
         ‎%{base_url}/u/confirm-new-email/%{email_token}
 
-        החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם ההנהלה של %{site_name}.
+        החלפת כתובת הדוא״ל הוגשה על ידי הנהלת האתר. אם לא ביקשת לערוך שינוי שכזה, נא ליצור קשר עם [הנהלת האתר](%{base_url}/about).
     confirm_old_email:
       title: "אישור מייל ישן"
       subject_template: "[%{email_prefix}] אשרו את כתובת המייל הנוכחית שלכם"
@@ -3621,7 +3614,11 @@ he:
     latte: "לאטה"
     summer: "קיץ"
     dark_rose: "ורד כהה"
-    default_theme_name: "בהיר"
+    wcag: "נגיש בהיר"
+    wcag_theme_name: "נגיש בהיר"
+    wcag_dark: "נגיש כהה"
+    wcag_dark_theme_name: "נגיש כהה"
+    default_theme_name: "בררת מחדל"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
     neutral_theme_name: "נייטרלי"
@@ -4090,8 +4087,8 @@ he:
     initial_topic_title: דוחות פעילות לאתר
   tags:
     title: "תגיות"
-    staff_tag_disallowed: 'רק הסגל יכול להוסיף את התגית „%{tag}”.'
-    staff_tag_remove_disallowed: 'רק הסגל יכול להסיר את התגית „%{tag}”.'
+    restricted_tag_disallowed: 'לא ניתן להחיל את התגית „%{tag}”.'
+    restricted_tag_remove_disallowed: 'לא ניתן להסיר את התגית „%{tag}”.'
     minimum_required_tags:
       one: "עליך לבחור לפחות בתגית %{count}."
       two: "עליך לבחור לפחות %{count} תגיות."
@@ -4219,7 +4216,7 @@ he:
             label: "עיר המחלוקת"
             placeholder: "סן פרנסיסקו, קליפורניה"
       colors:
-        title: "תמה"
+        title: "צבעים"
       fonts:
         title: "גופנים"
         fields:
@@ -4273,7 +4270,7 @@ he:
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."
-        disabled: "מאחר שכניסה בשליטה מקומית מנוטרלת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
+        disabled: "מאחר שכניסה בשליטה מקומית מושבתת, אי אפשר לשלוח לכולם הזמנות. נא להמשיך לשלב הבא."
       finished:
         title: "ה־Discourse שלך מוכן!"
         description: |
@@ -4317,7 +4314,7 @@ he:
       medium: "בינונית"
       high: "גבוהה"
     sensitivity:
-      disabled: "מנוטרלת"
+      disabled: "מושבתת"
       low: "נמוכה"
       medium: "בינונית"
       high: "גבוהה"
@@ -4339,7 +4336,7 @@ he:
       email_auth_res_enqueue: "הודעת דוא״ל זו נפסלה בבדיקת DMARC, כנראה שאינה נשלחה מהנמען שצוין. מוטב להתעמק בכותרות הגולמיות של הודעת הדוא״ל כדי להבין יותר לעומק."
       email_spam: "הודעת דוא״ל זו סומנה כספאם עקב הכותרת שהוגדרה תחת `email_in_spam_header` (כותרת דוא״ל לספאם)."
       suspect_user: "המשתמש החדש הזה מילא פרטי חשבון מבלי לקרוא נושאים או פוסטים, מה שעשוי לרמז על כך שייתכן שמדובר בתוקף ספאם. יש לעיין ב־`approve_suspect_users` (אישור משתמשים חשודים).  "
-      contains_media: "הפוסטים האלו כוללים מדיה מוטמעת. ניתן לעיין ב־`review_media_unless_trust_level` (סקירת מדיה מחוץ לדרגות אמון)."
+      contains_media: "הפוסט הזה כולל מדיה מוטמעת. ניתן לעיין ב־`review_media_unless_trust_level` (סקירת מדיה מחוץ לדרגות אמון)."
     actions:
       agree:
         title: "הסכמה…"
@@ -4350,7 +4347,7 @@ he:
         title: "להשאיר את הפוסט מוסתר"
         description: "הבעת הסכמה עם הדגל והשארת הפוסט מוסתר."
       agree_and_suspend:
-        title: "השעה משתמש"
+        title: "השעיית משתמש"
         description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
       agree_and_silence:
         title: "השתקת משתמש"

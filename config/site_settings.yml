@@ -1186,9 +1186,6 @@ email:
     client: true
     default: true
     hidden: true
-  preserve_email_structure_when_styling:
-    default: true
-    hidden: true
 
 files:
   max_image_size_kb:
@@ -1308,10 +1305,6 @@ files:
   allow_uploaded_avatars:
     client: true
     default: true
-  allow_animated_avatars:
-    client: true
-    default: false
-  allow_animated_thumbnails: true
   default_avatars:
     default: ""
     type: url_list

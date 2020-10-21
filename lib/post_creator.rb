@@ -159,6 +159,19 @@ class PostCreator
         return false
       end
 
+      if @topic&.slow_mode_seconds.to_i > 0
+        tu = TopicUser.find_by(user: @user, topic: @topic)
+
+        if tu&.last_posted_at
+          threshold = tu.last_posted_at + @topic.slow_mode_seconds.seconds
+
+          if DateTime.now < threshold
+            errors.add(:base, I18n.t(:slow_mode_enabled))
+            return false
+          end
+        end
+      end
+
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
         errors.add(:base, I18n.t(:topic_not_found))
         return false
@@ -622,7 +635,8 @@ class PostCreator
                       @topic.id,
                       posted: true,
                       last_read_post_number: @post.post_number,
-                      highest_seen_post_number: @post.post_number)
+                      highest_seen_post_number: @post.post_number,
+                      last_posted_at: Time.zone.now)
 
     # assume it took us 5 seconds of reading time to make a post
     PostTiming.record_timing(topic_id: @post.topic_id,

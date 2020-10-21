@@ -40,8 +40,6 @@ tr_TR:
       trigger: "yuvarla"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
-      not_enough_dice: |-
-        Sadece %{num_of_dice} zarım var. [Utanç verici] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), biliyorum!
       out_of_range: |-
         (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) Matematiksel olarak bir zarın en fazla 120 yüzeyi olabildiğini biliyor muydunuz?
       results: |-

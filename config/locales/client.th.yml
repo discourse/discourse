@@ -615,7 +615,6 @@ th:
         other: "%{count}กระทู้ใหม่ในสัปดาห์ที่ผ่านมา"
       topic_stat_sentence_month:
         other: "%{count}กระทู้ใหม่ในเดือนที่ผ่านมา"
-      n_more: "หมวดหมู่ (อีก%{count}) ..."
     ip_lookup:
       title: มองหาที่อยู่ไอพี
       hostname: ชื่อโฮสต์
@@ -716,7 +715,6 @@ th:
       suspended_notice: "ผู้ใช้นี้ถูกระงับจนถึง %{date}"
       suspended_permanently: "ผู้ใช้นี้ถูกระงับชั่วคราว"
       suspended_reason: "เหตุผล:"
-      github_profile: "Github"
       email_activity_summary: "สรุปกิจกรรม"
       mailing_list_mode:
         label: "โหมดจดหมายข่าว"
@@ -893,10 +891,8 @@ th:
         title: "รหัสเชิญ"
       auth_tokens:
         title: "อุปกรณ์ที่ถูกใช้เร็วๆนี้"
-        ip: "ไอพี"
         details: "รายละเอียด"
         log_out_all: "ออกจากระบบทั้งหมด"
-        active: "ใช้งานอยู่ตอนนี้"
         not_you: "ไม่ใช่คุณใช่ไหม"
         show_all: "แสดงทั้งหมด (%{count})"
         show_few: "แสดงน้อยลง"
@@ -1160,8 +1156,6 @@ th:
       disable: "แสดงโพสต์ที่ถูกลบ"
     private_message_info:
       title: "ข้อความ"
-      invite: "เชิญผู้อื่น ..."
-      edit: "เพิ่มหรือลบ ..."
       leave_message: "คุณต้องการละทิ้งข้อความนี้จริงๆใช่หรือไม่"
       remove_allowed_user: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
       remove_allowed_group: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
@@ -1214,7 +1208,6 @@ th:
       awaiting_approval: "บัญชีของคุณยังไม่ได้รับการยืนยันโดยทีมงาน คุณจะได้รับอีเมลแจ้งเมื่อได้รับการยืนยันแล้ว"
       requires_invite: "ขออภัย, สามารถเข้าถึงได้เฉพาะผู้ที่ได้รับเชิญเท่านั้น"
       not_activated: "คุณไม่สามารถเข้าสู่ระบบได้ เราได้ส่งอีเมลยืนยันตัวตนไปหาคุณที่ <b>%{sentTo}</b> กรุณาทำตามขั้นตอนในอีเมลเพื่อยืนยันตัวตนของคุณ"
-      not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยไอพีนี้ได้"
       admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบในสถานะแอดมินด้วยไอพีนี้ได้"
       resend_activation_email: "คลิกที่นี่เพื่อส่งอีเมลยืนยันตัวตนอีกครั้ง"
       resend_title: "ส่งอีเมลยืนยันตัวตนอีกครั้ง"
@@ -1274,8 +1267,6 @@ th:
       enter: "เอ็นเทอร์"
     conditional_loading_section:
       loading: กำลังโหลด...
-    category_row:
-      topic_count: "%{count}กระทู้ในหมวดหมู่นี้"
     select_kit:
       default_header_text: เลือก...
       no_content: ไม่พบผลลัพธ์ที่ตรงกัน
@@ -1286,7 +1277,6 @@ th:
         other: "คุณสามารถเลือกได้ %{count} รายการเท่านั้น"
       min_content_not_reached:
         other: "เลือกอย่างน้อย %{count} รายการ"
-      invalid_selection_length: "การเลือกต้องมีอย่างน้อย %{count} ตัวอักษร"
     date_time_picker:
       from: จาก
       to: ถึง
@@ -1337,7 +1327,6 @@ th:
         post_length: "โพสต์ต้องมีอย่างน้อย %{min} ตัวอักษร"
         try_like: "คุณได้ลองปุ่ม %{heart} แล้วหรือยัง"
         category_missing: "คุณต้องเลือกหมวดหมู่"
-        tags_missing: "คุณต้องเลือกอย่างน้อย %{count} แท็ก"
       save_edit: "บันทึกการแก้ไข"
       reply_original: "ตอบบนกระทู้ต้นฉบับ"
       reply_here: "ตอบที่นี่"
@@ -1507,14 +1496,12 @@ th:
       full_page_title: "ค้นหากระทู้หรือโพสต์"
       no_results: "ไม่มีผลการค้นหา"
       no_more_results: "ไม่มีผลการค้นหาเพิ่มเติมแล้ว"
-      searching: "กำลังค้นหา..."
       post_format: "#%{post_number} โดย %{username}"
       cant_find: "ไม่พบสิ่งที่คุณค้นหาใช่หรือไม่"
       start_new_topic: "ลองเริ่มกระทู้ใหม่ดีไหม"
       or_search_google: "หรือลองค้นหาด้วยกูเกิล:"
       search_google: "ลองค้นหาด้วยกูเกิล:"
       search_google_button: "กูเกิล"
-      search_google_title: "ค้นหาเว็บไซต์นี้"
       context:
         user: "ค้นหาโพสต์โดย @%{username}"
         category: "ค้นหาหมวด #%{category}"
@@ -1809,7 +1796,6 @@ th:
       feature_topic:
         title: "แนะนำกระทู้นี้"
         pin: "ทำให้กระทู้นี้ปรากฏด้านบนสุดของหมวดหมู่ %{categoryLink} จนกระทั่ง"
-        confirm_pin: "คุณมีกระทู้ที่ปักหมุดทั้งหมด %{count} กระทู้ การมีกระทู้ที่ปักหมุดมากๆอาจสร้างปัญหาให้แก่ผู้ใช้ใหม่และผู้ใช้ที่ไม่ระบุชื่อได้ คุณแน่ใจหรือว่าจะปักหมุดกระทู้เพิ่มอีกในหมวดหมู่นี้"
         unpin: "ลบกระทู้นี้ออกจากด้านบนสุดของหมวดหมู่ %{categoryLink}"
         unpin_until: "ลบกระทู้นี้ออกจากด้านบนสุดของหมวดหมู่ %{categoryLink} หรือรอจนกระทั่ง <strong>%{until}</strong>"
         pin_validation: "จำเป็นต้องมีวันที่เพื่อปักหมุดกระทู้นี้"
@@ -1817,7 +1803,6 @@ th:
         already_pinned:
           other: "ตอนนี้กระทู้ถูกปักหมุดใน %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "ทำให้กระทู้นี้ปรากฏด้านบนสุดของรายการกระทู้ทั้งหมดจนกระทั่ง"
-        confirm_pin_globally: "คุณมีกระทู้ที่ปักหมุดทั้งหมด %{count}  กระทู้ การมีกระทู้ที่ปักหมุดมากๆอาจสร้างปัญหาให้แก่ผู้ใช้ใหม่และผู้ใช้ที่ไม่ระบุชื่อได้ คุณแน่ใจหรือว่าจะปักหมุดกระทู้เพิ่มอีกในหมวดหมู่นี้"
         unpin_globally: "ลบกระทู้นี้ออกจากด้านบนสุดของรายการกระทู้ทั้งหมด"
         unpin_globally_until: "ลบกระทู้นี้ออกจากด้านบนสุดของรายการกระทู้ทั้งหมดหรือรอจนกระทั่ง <strong>%{until}</strong>"
         make_banner: "ทำให้กระทู้นี้เป็นแบนเนอร์ที่จะแสดงอยู่ด้านบนสุดของทุกหน้า"
@@ -1960,7 +1945,6 @@ th:
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         upload: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้ง"
         too_many_uploads: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละหนึ่งไฟล์เท่านั้น"
-        too_many_dragged_and_dropped_files: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละ %{max}ไฟล์เท่านั้น"
         image_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดรูปภาพได้"
         attachment_upload_not_allowed_for_new_user: "ขออภัย ผู้ใช้ใหม่ไม่สามารถอัปโหลดไฟล์แนบได้"
         attachment_download_requires_login: "ขออภัย คุณต้องเข้าสู่ระบบเพื่อดาวน์โหลดไฟล์แนบ"
@@ -2181,7 +2165,6 @@ th:
         title: "กระทู้นี้เป็นข้อความส่วนตัว"
         help: "กระทู้นี้เป็นข้อความส่วนตัว"
     posts: "โพสต์"
-    posts_long: "มี %{number} โพสต์ในกระทู้นี้"
     original_post: "โพสต์ต้นฉบับ"
     views: "ดู"
     views_lowercase:
@@ -2193,7 +2176,6 @@ th:
     likes: "ถูกใจ"
     likes_lowercase:
       other: "ถูกใจ"
-    likes_long: "มี %{number}ไลค์ในกระทู้นี้"
     users: "ผู้ใช้"
     users_lowercase:
       other: "ผู้ใช้"
@@ -2415,8 +2397,6 @@ th:
         save: "บันทึก"
         delete: "ลบ"
         everyone_can_use: "ทุกคนสามารถใช้แท็กได้"
-        usable_only_by_staff: "ทุกคนสามารถเห็นแท็กได้ แต่ทีมงานเท่านั้นที่สามารถใช้ได้"
-        visible_only_to_staff: "ทีมงานเท่านั้นที่สามารถมองเห็นแท็ก"
       topics:
         none:
           unread: "คุณไม่มีกระทู้ที่ยังไม่ได้อ่าน"

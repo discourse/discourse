@@ -8,6 +8,6 @@
     "moduleForComponent": "off",
     "testStart": "off",
     "testDone": "off",
-    "sinon": "off"
+    "sinon": "off",
   }
 }

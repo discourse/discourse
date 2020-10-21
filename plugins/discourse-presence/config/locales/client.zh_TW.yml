@@ -4,8 +4,4 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-zh_TW:
-  js:
-    presence:
-      replying: "正在回覆"
-      editing: "正在編輯"
+zh_TW: 

@@ -28,6 +28,7 @@ import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import { cannotPostAgain } from "discourse/helpers/slow-mode";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -546,8 +547,8 @@ export default Controller.extend({
       this.cancelComposer(differentDraftContext);
     },
 
-    save() {
-      this.save();
+    save(ignore, event) {
+      this.save(false, { jump: !(event && event.shiftKey) });
     },
 
     displayEditReason() {
@@ -584,7 +585,7 @@ export default Controller.extend({
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              max: group.max_mentions,
+              count: group.max_mentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
@@ -625,7 +626,7 @@ export default Controller.extend({
 
   disableSubmit: or("model.loading", "isUploading"),
 
-  save(force) {
+  save(force, options = {}) {
     if (this.disableSubmit) {
       return;
     }
@@ -644,6 +645,17 @@ export default Controller.extend({
     if (composer.cantSubmitPost) {
       this.set("lastValidatedAt", Date.now());
       return;
+    }
+
+    const topic = composer.topic;
+
+    if (topic && topic.slow_mode_seconds && topic.user_last_posted_at) {
+      if (cannotPostAgain(topic.slow_mode_seconds, topic.user_last_posted_at)) {
+        const message = I18n.t("composer.slow_mode.error");
+
+        bootbox.alert(message);
+        return;
+      }
     }
 
     composer.set("disableDrafts", true);
@@ -763,7 +775,8 @@ export default Controller.extend({
         this.currentUser.set("any_posts", true);
 
         const post = result.target;
-        if (post && !staged) {
+
+        if (post && !staged && options.jump !== false) {
           DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })

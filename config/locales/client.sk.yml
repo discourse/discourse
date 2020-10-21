@@ -182,7 +182,6 @@ sk:
         disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
     wizard_required: "Vitajte vo vašom novom Discourse! Začnime so <a href='%{url}' data-auto-route='true'>sprievodcom nastavením</a>✨ "
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
-    bootstrap_mode_enabled: "Pre zjednodušenie spustenia Vašej novej stránky sa nachádzate v zavádzacom režime. Všetci noví používatelia budú mať pridelený stupeň dôvery 1 a budú mať zapnutý denný emailový výber aktualít. Toto bude automaticky vypnuté keď celkový počet používateľov presiahne %{min_users}."
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
     themes:
       default_description: "Predvolené"
@@ -589,7 +588,6 @@ sk:
         few: "%{count} témy"
         many: "%{count} tém"
         other: "%{count} tém"
-      n_more: "Kategórie (%{count} viac) ..."
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -671,7 +669,6 @@ sk:
       suspended_notice: "Tento používateľ je suspendovaný do %{date}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
-      github_profile: "Github"
       email_activity_summary: "Zhrnutie aktivít"
       mailing_list_mode:
         label: "Režim mailing listu"
@@ -758,27 +755,22 @@ sk:
         choose_new: "Vyberte si nové heslo"
         choose: "Vyberte si heslo"
       second_factor_backup:
-        title: "Dvoj-faktorové záložné kódy"
         regenerate: "Znovu vygenerovať"
         disable: "Zakázať"
         enable: "Povoliť"
         enable_long: "Povoliť kódy zálohy"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         copied_to_clipboard: "Skopírované do schránky"
-        remaining_codes: "Zostáva vám <strong>%{count}</strong> kódov zálohy."
         codes:
           title: "Záložné kódy vygenerované"
           description: "Každý z týchto záložných kódov sa môže použiť iba raz. Uložte si ich bezpečne, no, aby Vám boli dostupné"
       second_factor:
-        title: "Dvojfaktorová autentifikácia"
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         name: "Meno"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
-        extended_description: |
-          Dvojfaktorové prihlásenie pridáva dodatočné zabezpečenie Vášho účtu prostredníctvom zadávania jednorázových hesiel. Heslá môžu byť generované na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> a<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> zariadeniach.
         disable: "Zakázať"
         save: "Uložiť"
         edit: "Upraviť"
@@ -856,7 +848,6 @@ sk:
       password_confirmation:
         title: "Heslo znova"
       auth_tokens:
-        ip: "IP adresa"
         details: "Detaily"
         log_out_all: "Odhlásiť všetky"
         secure_account: "Zabezpečiť moje konto"
@@ -1106,8 +1097,6 @@ sk:
       disable: "Zobraziť zmazané príspevky"
     private_message_info:
       title: "Správa"
-      invite: "Pozvať ďalších"
-      edit: "Pridať alebo odobrať"
       remove_allowed_user: "Skutočne chcete odstrániť %{name} z tejto správy?"
       remove_allowed_group: "Skutočne chcete odstrániť %{name} z tejto správy?"
     email: "Email"
@@ -1141,7 +1130,6 @@ sk:
       title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
-      second_factor_title: "Dvojfaktorová autentifikácia"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
       email_placeholder: "e-mail alebo používateľské meno"
       caps_lock_warning: "Caps Lock je zapnutý"
@@ -1157,7 +1145,6 @@ sk:
       awaiting_approval: "Váš účet zatiaľ nebol schválený členom tímu. Keď bude schválený, dostanete e-mail."
       requires_invite: "Ľutujeme, ale prístup k tomuto fóru majú iba pozvaní používatelia."
       not_activated: "Systém vás nemôže prihlásiť. Na emailovú adresu <b>%{sentTo}</b> sme vám poslali aktivačný email. Prosím, postupujte podľa inštrukcií na aktiváciu účtu, ktoré sú uvedené v tomto emaile."
-      not_allowed_from_ip_address: "Nie je možné prihlásenie z tejto IP adresy."
       admin_not_allowed_from_ip_address: "Nie je možné prihlásenie ako admin z tejto IP adresy."
       resend_activation_email: "Kliknite sem pre opätovné odoslanie aktivačného emailu."
       resend_title: "Znova poslať aktivačný email."
@@ -1330,11 +1317,9 @@ sk:
       title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
-      searching: "Vyhľadávam....."
       post_format: "#%{post_number} podľa %{username}"
       cant_find: "Nemôžete nájsť to čo hľadáte?"
       search_google_button: "Google"
-      search_google_title: "Prehľadať tieto stránky"
       context:
         user: "Vyhľadávanie podľa @%{username}"
         category: "Vyhľadať kategóriu #%{category}"
@@ -1407,7 +1392,6 @@ sk:
         category: "V kategórii %{category} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
         educate:
-          new: '<p>Tu sa zobrazia Vaše nové témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> ak boli vytvorené za posledné 2 dni.</p><p>Môžete to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
           unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili pozorovanie alebo sledovanie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
@@ -1614,7 +1598,6 @@ sk:
       feature_topic:
         title: "Vyzdvihni túto tému"
         pin: "Zobrazuj túto tému na vrchu %{categoryLink} kategórie do"
-        confirm_pin: "Máte už %{count} pripnutých tém. Príliš veľa pripnutých tém môže byť na príťaž pre nových a anonymných používateľov. Ste si istý že chcete pripnúť ďalšiu tému v tejto kategórii?"
         unpin: "Zruš túto tému z vrcholu kategórie %{categoryLink} . "
         unpin_until: "Zruš túto tému z vrcholu kategórie %{categoryLink} , alebo počkaj do <strong>%{until}</strong>."
         pin_note: "Užívatelia si môžu sami odopnúť tému "
@@ -1626,7 +1609,6 @@ sk:
           many: "Tém pripnutých k %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tém pripnutých k %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Zobrazuj túto tému na vrchu všetkých zoznamov tém do"
-        confirm_pin_globally: "Máte už %{count} globálne pripnutých tém. Príliš veľa pripnutých tém môže byť na príťaž pre nových a anonymných používateľov. Ste si istý že chcete pripnúť ďalšiu globálnu tému?"
         unpin_globally: "Zruš túto tému z vrcholu všetkých zoznamov tém. "
         unpin_globally_until: "Zruš túto tému z vrcholu všetkých zoznamov tém, alebo počkaj do <strong>%{until}</strong>."
         global_pin_note: "Užívatelia si môžu sami odopnúť tému."
@@ -1924,7 +1906,6 @@ sk:
     flagging:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
-      take_action: "Vykonať akciu"
       notify_action: "Správa"
       official_warning: "Oficiálne varovanie"
       delete_spammer: "Zmazať spammera"
@@ -1995,7 +1976,6 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
-    posts_long: "v tejto téme je %{number} príspevkov"
     posts_likes_MF: |2
 
       Táto téma obsahuje {count, plural, one {1 odpoveď} other {# odpovedí}} {ratio, select,
@@ -2022,7 +2002,6 @@ sk:
       few: "\"Páči sa\""
       many: "\"Páči sa\""
       other: "\"Páči sa\""
-    likes_long: "v tejto téme je %{number} \"Páči sa\""
     users: "Používatelia"
     users_lowercase:
       one: "používateľ"

@@ -187,6 +187,17 @@ describe Stylesheet::Importer do
       styles = Stylesheet::Importer.import_color_definitions(nil)
       expect(styles).to include(scss)
     end
+  end
 
+  context "#import_wcag_overrides" do
+    it "should do nothing on a regular scheme" do
+      scheme = ColorScheme.create_from_base(name: 'Regular')
+      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("")
+    end
+
+    it "should include WCAG overrides for WCAG based scheme" do
+      scheme = ColorScheme.create_from_base(name: 'WCAG New', base_scheme_id: "WCAG Dark")
+      expect(Stylesheet::Importer.import_wcag_overrides(scheme.id)).to eq("@import \"wcag\";")
+    end
   end
 end

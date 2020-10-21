@@ -1,3 +1,4 @@
+import { visit } from "@ember/test-helpers";
 import { skip } from "qunit";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
