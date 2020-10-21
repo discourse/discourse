@@ -25,6 +25,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   )
 
   Rack::MiniProfiler.config.snapshot_every_n_requests = GlobalSetting.mini_profiler_snapshots_period
+  Rack::MiniProfiler.config.snapshots_transport_destination_url = GlobalSetting.mini_profiler_snapshots_transport_url
+  Rack::MiniProfiler.config.snapshots_transport_auth_key = GlobalSetting.mini_profiler_snapshots_transport_auth_key
   Rack::MiniProfiler.config.skip_paths = [
     /^\/message-bus/,
     /^\/extra-locales/,

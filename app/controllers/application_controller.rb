@@ -305,7 +305,10 @@ class ApplicationController < ActionController::Base
 
   def set_mp_snapshot_fields
     if defined?(Rack::MiniProfiler)
-      Rack::MiniProfiler.add_snapshot_custom_field("application version", Discourse.git_version)
+      Rack::MiniProfiler.add_snapshot_custom_field("Application version", Discourse.git_version)
+      if Rack::MiniProfiler.snapshots_transporter?
+        Rack::MiniProfiler.add_snapshot_custom_field("Site", Discourse.current_hostname)
+      end
     end
   end
 
