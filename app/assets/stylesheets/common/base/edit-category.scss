@@ -10,6 +10,7 @@ div.edit-category {
     grid-area: header;
     display: flex;
     justify-content: space-between;
+    align-self: start;
   }
 
   .nav-stacked {
@@ -113,6 +114,7 @@ div.edit-category {
     grid-area: footer;
     display: flex;
     justify-content: space-between;
+    align-self: start;
 
     .disable-info {
       position: relative;
