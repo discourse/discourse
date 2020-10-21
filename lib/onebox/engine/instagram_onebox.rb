@@ -15,13 +15,14 @@ module Onebox
       end
 
       def data
-        oembed = get_oembed
-        permalink = clean_url.gsub("/#{oembed.author_name}/", "/")
+        og = get_opengraph
+        author_name = og.description.match(/\(@(\w+)\) on Instagram/)[1]
+        permalink = clean_url.gsub("/#{author_name}/", "/")
 
         { link: permalink,
-          title: "@#{oembed.author_name}",
+          title: "@#{author_name}",
           image: "#{permalink}/media/?size=l",
-          description: Onebox::Helpers.truncate(oembed.title, 250)
+          description: Onebox::Helpers.truncate(og.title, 250)
         }
       end
 
