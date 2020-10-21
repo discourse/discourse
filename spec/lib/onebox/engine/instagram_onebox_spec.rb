@@ -4,11 +4,10 @@ require "spec_helper"
 
 describe Onebox::Engine::InstagramOnebox do
   let(:link) { "https://www.instagram.com/p/CARbvuYDm3Q/" }
-  let(:api_link) { "https://api.instagram.com/oembed/?url=https://www.instagram.com/p/CARbvuYDm3Q" }
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(api_link, response("instagram"))
+    fake(link, response("instagram"))
   end
 
   it "includes title" do
@@ -20,7 +19,7 @@ describe Onebox::Engine::InstagramOnebox do
   end
 
   it "includes description" do
-    expect(html).to include("Photo by Pete McBride @pedromcbride | For the first time in three decades")
+    expect(html).to include("National Geographic on Instagram: “Photo by Pete McBride @pedromcbride")
   end
 
   it 'oneboxes links that include the username' do
