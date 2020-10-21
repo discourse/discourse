@@ -173,7 +173,6 @@ module Discourse
       onpopstate-handler.js
       embed-application.js
       hotjar.js
-      matomo.js
     }
 
     # Precompile all available locales
