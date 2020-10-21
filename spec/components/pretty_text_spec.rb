@@ -966,12 +966,14 @@ describe PrettyText do
       it "replaces secure images with a placeholder, keeping the url in an attribute" do
         url = "/secure-media-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <img src=\"#{url}\">
+        <img src=\"#{url}\" width=\"20\" height=\"20\">
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include('<img')
         expect(md).to include("Redacted")
         expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+        expect(md).to include("data-width=\"20\"")
+        expect(md).to include("data-height=\"20\"")
       end
     end
   end

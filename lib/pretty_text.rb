@@ -409,21 +409,25 @@ module PrettyText
       if Upload.secure_media_url?(a["href"])
         target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
         next if target.to_s.include?("stripped-secure-view-media")
-        target.add_next_sibling secure_media_placeholder(doc, a['href'])
+        width = a.xpath("//*[@width]").attr("width")&.value
+        height = a.xpath("//*[@height]").attr("height")&.value
+        target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
         target.remove
       end
     end
     doc.css('img[src]').each do |img|
       if Upload.secure_media_url?(img['src'])
-        img.add_next_sibling secure_media_placeholder(doc, img['src'])
+        img.add_next_sibling secure_media_placeholder(doc, img['src'], width: img['width'], height: img['height'])
         img.remove
       end
     end
   end
 
-  def self.secure_media_placeholder(doc, url)
+  def self.secure_media_placeholder(doc, url, width: nil, height: nil)
+    data_width = width ? "data-width=#{width}" : ''
+    data_height = height ? "data-height=#{height}" : ''
     <<~HTML
-    <div class="secure-media-notice" data-stripped-secure-media="#{url}">
+    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_width} #{data_height}>
       #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML
