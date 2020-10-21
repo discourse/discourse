@@ -81,10 +81,19 @@ describe PrettyText do
     end
   end
 
-  context 'german quotes' do
-    let(:post) { Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=„America/New_York“]') }
+  context 'special quotes' do
+    it 'converts special quotes to regular quotes' do
+      # german
+      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=„America/New_York“]')
+      excerpt = PrettyText.excerpt(post.cooked, 200)
+      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
 
-    it 'converts german quotes to regular quotes' do
+      # french
+      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=«America/New_York»]')
+      excerpt = PrettyText.excerpt(post.cooked, 200)
+      expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
+
+      post = Fabricate(:post, raw: '[date=2019-10-16 time=14:00:00 format="LLLL" timezone=“America/New_York”]')
       excerpt = PrettyText.excerpt(post.cooked, 200)
       expect(excerpt).to eq('Wednesday, October 16, 2019 6:00 PM (UTC)')
     end
