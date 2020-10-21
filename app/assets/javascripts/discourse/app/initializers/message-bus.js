@@ -5,6 +5,15 @@ import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse-common/config/environment";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
+const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
+
+function updateConnectivityIndicator(stat) {
+  if (stat === "error") {
+    document.documentElement.classList.add(CONNECTIVITY_ERROR_CLASS);
+  } else {
+    document.documentElement.classList.remove(CONNECTIVITY_ERROR_CLASS);
+  }
+}
 
 function ajax(opts) {
   if (opts.complete) {
@@ -12,6 +21,7 @@ function ajax(opts) {
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
+      updateConnectivityIndicator(stat);
     };
   } else {
     opts.complete = handleLogoff;
