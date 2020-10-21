@@ -144,3 +144,6 @@ dist
 copyright
 
 yarn-error.log
+
+# Ignore Clever Cloud file
+.clever.json
