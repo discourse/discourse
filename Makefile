@@ -86,3 +86,49 @@ db_restore:
 	# SET value = false
 	# WHERE name='force_https';
 	# ```
+
+	###> For staging:
+	# UPDATE site_settings
+	# SET value = 'https://staging.forum.inclusion.beta.gouv.fr'
+	# WHERE name='vapid_base_url';
+
+##############################
+########## Components ########
+##############################
+# make new_component GITURL=git@github.com:betagouv/discourse-component-hotjar.git REPONAME=discourse-component-hotjar
+.ONESHELL:
+new_component:
+	# Initialize an empty repo on Github and choose a LICENCE first.
+	git clone $(GITURL)
+	cd $(REPONAME)
+	touch about.json
+	cat > about.json <<-EOF
+	{
+		"name": "My component",
+		"about_url": "about-url",
+		"license_url": "https://github.com/discourse/discourse-matomo-analytics/blob/master/LICENSE",
+		"component": true
+	}
+	EOF
+
+	touch settings.yml
+
+	cat > settings.yml <<-EOF
+	host_url:
+	    type: string
+	    default: ''
+	    description: Host URL without http:// or https://
+	EOF
+
+	mkdir common
+	# 	mkdir desktop
+	# 	mkdir mobile
+	touch common/common.scss
+	touch common/head_tag.html
+	touch common/header.html
+	touch common/after_header.html
+	touch common/body_tag.html
+	touch common/footer.html
+	touch common/embedded.scss
+
+	cd .. && mv $(REPONAME) ..
