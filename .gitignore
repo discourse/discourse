@@ -89,7 +89,7 @@ config/multisite1.yml
 config/fog_credentials.yml
 
 /public/fonts
-# /public/uploads
+/public/uploads
 /public/backups
 /public/stylesheet-cache/*
 
