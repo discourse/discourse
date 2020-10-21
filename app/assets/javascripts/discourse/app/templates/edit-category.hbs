@@ -1,4 +1,4 @@
-<div class="edit-category">
+<div class="edit-category {{if expandedMenu "expanded-menu"}}">
   <ul class="nav nav-stacked">
     {{edit-category-tab panels=panels selectedTab=selectedTab tab="general"}}
     {{edit-category-tab panels=panels selectedTab=selectedTab tab="security"}}
@@ -12,13 +12,17 @@
 
   <div class="edit-category-title">
     <h2>{{title}}</h2>
-    {{#if model.id}}
-      {{d-button
-        class="category-back"
-        action=(action "goBack")
-        label="category.back"
-        icon="caret-left"
-      }}
+    {{#if mobileView}}
+      {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
+    {{else}}
+      {{#if model.id}}
+        {{d-button
+          class="category-back"
+          action=(action "goBack")
+          label="category.back"
+          icon="caret-left"
+        }}
+      {{/if}}
     {{/if}}
   </div>
 

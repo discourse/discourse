@@ -4,6 +4,7 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
+import { alias } from "@ember/object/computed";
 
 export default Controller.extend({
   selectedTab: "general",
@@ -12,6 +13,8 @@ export default Controller.extend({
   panels: null,
   hiddenTooltip: true,
   createdCategory: false,
+  expandedMenu: false,
+  mobileView: alias("site.mobileView"),
 
   @on("init")
   _initPanels() {
@@ -133,6 +136,10 @@ export default Controller.extend({
       } else {
         DiscourseURL.routeTo(this.model.url);
       }
+    },
+
+    toggleMenu() {
+      this.toggleProperty("expandedMenu");
     },
   },
 });
