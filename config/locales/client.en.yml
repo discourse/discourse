@@ -318,6 +318,7 @@ en:
         next_business_day: "Next business day"
         tomorrow: "Tomorrow"
         next_week: "Next week"
+        post_local_date: "Date in post"
         later_this_week: "Later this week"
         start_of_next_business_week: "Monday"
         start_of_next_business_week_alt: "Next Monday"

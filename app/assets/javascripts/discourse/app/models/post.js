@@ -305,6 +305,12 @@ const Post = RestModel.extend({
   },
 
   toggleBookmark() {
+    let postEl = document.querySelector(`[data-post-id="${this.id}"]`);
+    let localDateEl = null;
+    if (postEl) {
+      localDateEl = postEl.querySelector(".discourse-local-date");
+    }
+
     return new Promise((resolve) => {
       let controller = showModal("bookmark", {
         model: {
@@ -313,6 +319,8 @@ const Post = RestModel.extend({
           reminderAt: this.bookmark_reminder_at,
           autoDeletePreference: this.bookmark_auto_delete_preference,
           name: this.bookmark_name,
+          postDetectedLocalDate: localDateEl ? localDateEl.dataset.date : null,
+          postDetectedLocalTime: localDateEl ? localDateEl.dataset.time : null,
         },
         title: this.bookmark_id
           ? "post.bookmarks.edit"
