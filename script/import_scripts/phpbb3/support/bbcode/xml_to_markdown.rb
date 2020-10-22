@@ -279,20 +279,20 @@ module ImportScripts::PhpBB3::BBCode
     end
 
     def hoist_whitespaces!(markdown, text, prefix, postfix)
-      text.lstrip! if markdown.end_with?("\n")
+      text = text.lstrip if markdown.end_with?("\n")
 
       unless prefix.empty?
         if starts_with_whitespace?(text) && !ends_with_whitespace?(markdown)
           prefix = "#{text[0]}#{prefix}"
         end
-        text.lstrip!
+        text = text.lstrip
       end
 
       unless postfix.empty?
         if ends_with_whitespace?(text)
           postfix = "#{postfix}#{text[-1]}"
         end
-        text.rstrip!
+        text = text.rstrip
       end
 
       [text, prefix, postfix]

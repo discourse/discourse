@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require Rails.root.join('script/import_scripts/phpbb3/support/bbcode/xml_to_markdown')
 
