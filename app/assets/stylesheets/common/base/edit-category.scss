@@ -1,3 +1,6 @@
+$category-settings-width: unquote("min(500px, 90%)");
+$number-input-width: 75px;
+
 div.edit-category {
   display: grid;
   grid-template-columns: 1fr 5fr;
@@ -62,15 +65,8 @@ div.edit-category {
   }
 
   .edit-category-tab-settings {
-    $category-settings-width: unquote(
-      "min(500px, 90%)"
-    ); // Consistent width makes this all easier to read
     > section {
       margin-bottom: 1.5em;
-    }
-
-    input[type="number"] {
-      width: 80px;
     }
 
     input[type="text"],
@@ -81,32 +77,34 @@ div.edit-category {
     label {
       max-width: $category-settings-width;
     }
+    input[type="number"] {
+      width: $number-input-width;
+    }
   }
 
   .edit-category-tab-tags {
-    input[type="number"] {
-      width: 80px;
+    #category-min-tags-from-group {
+      width: $number-input-width;
       min-height: 36px;
     }
 
     .select-kit {
       &.tag-chooser {
-        width: 100%;
+        width: $category-settings-width;
 
         .select-kit-filter,
         .filter-input {
-          display: flex;
-          flex: 1 0 250px;
+          min-width: 250px;
         }
 
-        .mobile-view & {
-          .no-content,
-          .is-loading,
-          &.select-kit.is-expanded .select-kit-collection {
-            width: 95%;
-          }
+        .select-kit-body {
+          max-width: 100%;
         }
       }
+    }
+
+    .manage-tag-groups {
+      display: block;
     }
   }
 
