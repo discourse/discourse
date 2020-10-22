@@ -93,6 +93,10 @@ Discourse::Application.configure do
       end
     end
 
+    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
+      ActiveRecord::Base.logger = nil
+    end
+
     if ENV['BULLET']
       Bullet.enable = true
       Bullet.rails_logger = true
