@@ -21,7 +21,7 @@ class OneboxController < ApplicationController
 
     return render(body: nil, status: 404) if Oneboxer.recently_failed?(url)
 
-    hijack do
+    hijack(info: "#{url} topic_id: #{topic_id} user_id: #{user_id}") do
       Oneboxer.preview_onebox!(user_id)
 
       preview = Oneboxer.preview(url,
