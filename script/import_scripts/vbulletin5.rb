@@ -6,14 +6,19 @@ require 'htmlentities'
 
 class ImportScripts::VBulletin < ImportScripts::Base
   BATCH_SIZE = 1000
-  DBPREFIX = "vb_"
   ROOT_NODE = 2
-
-  # CHANGE THESE BEFORE RUNNING THE IMPORTER
-  DATABASE = "yourforum"
   TIMEZONE = "America/Los_Angeles"
-  ATTACHMENT_DIR = '/home/discourse/yourforum/customattachments/'
-  AVATAR_DIR = '/home/discourse/yourforum/avatars/'
+
+  # override these using environment vars
+
+  URL_PREFIX ||= ENV['URL_PREFIX'] || "forum/"
+  DB_PREFIX ||= ENV['DB_PREFIX'] || "vb_"
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "vbulletin"
+  DB_PASS ||= ENV['DB_PASS'] || "password"
+  DB_USER ||= ENV['DB_USER'] || "username"
+  ATTACH_DIR ||= ENV['ATTACH_DIR'] || "/home/discourse/vbulletin/attach"
+  AVATAR_DIR ||= ENV['AVATAR_DIR'] || "/home/discourse/vbulletin/avatars"
 
   def initialize
     super
@@ -25,12 +30,15 @@ class ImportScripts::VBulletin < ImportScripts::Base
     @htmlentities = HTMLEntities.new
 
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      database: DATABASE,
-      password: "password"
+      host: DB_HOST,
+      username: DB_USER,
+      database: DB_NAME,
+      password: DB_PASS
     )
 
+    @forum_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Forum'").first['contenttypeid']
+    @channel_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Channel'").first['contenttypeid']
+    @text_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Text'").first['contenttypeid']
   end
 
   def execute
@@ -40,8 +48,10 @@ class ImportScripts::VBulletin < ImportScripts::Base
     import_topics
     import_posts
     import_attachments
+    import_tags
     close_topics
     post_process_posts
+    create_permalinks
   end
 
   def import_groups
@@ -49,7 +59,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     groups = mysql_query <<-SQL
         SELECT usergroupid, title
-          FROM #{DBPREFIX}usergroup
+          FROM #{DB_PREFIX}usergroup
       ORDER BY usergroupid
     SQL
 
@@ -64,7 +74,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_users
     puts "", "importing users"
 
-    user_count = mysql_query("SELECT COUNT(userid) count FROM #{DBPREFIX}user").first["count"]
+    user_count = mysql_query("SELECT COUNT(userid) count FROM #{DB_PREFIX}user").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
@@ -73,8 +83,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
                  WHEN u.scheme='legacy' THEN REPLACE(token, ' ', ':')
             END AS password,
             IF(ug.title = 'Administrators', 1, 0) AS admin
-            FROM #{DBPREFIX}user u
-            LEFT JOIN #{DBPREFIX}usergroup ug ON ug.usergroupid = u.usergroupid
+            FROM #{DB_PREFIX}user u
+            LEFT JOIN #{DB_PREFIX}usergroup ug ON ug.usergroupid = u.usergroupid
         ORDER BY userid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -101,7 +111,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           post_create_action: proc do |u|
             @old_username_to_new_usernames[user["username"]] = u.username
             import_profile_picture(user, u)
-            import_profile_background(user, u)
+            # import_profile_background(user, u)
           end
         }
       end
@@ -111,7 +121,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_profile_picture(old_user, imported_user)
     query = mysql_query <<-SQL
         SELECT filedata, filename
-          FROM #{DBPREFIX}customavatar
+          FROM #{DB_PREFIX}customavatar
          WHERE userid = #{old_user["userid"]}
       ORDER BY dateline DESC
          LIMIT 1
@@ -148,7 +158,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_profile_background(old_user, imported_user)
     query = mysql_query <<-SQL
         SELECT filedata, filename
-          FROM #{DBPREFIX}customprofilepic
+          FROM #{DB_PREFIX}customprofilepic
          WHERE userid = #{old_user["userid"]}
       ORDER BY dateline DESC
          LIMIT 1
@@ -176,13 +186,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
     puts "", "importing top level categories..."
 
     categories = mysql_query("SELECT nodeid AS forumid, title, description, displayorder, parentid
-	      FROM #{DBPREFIX}node
+	      FROM #{DB_PREFIX}node
           WHERE parentid=#{ROOT_NODE}
         UNION
           SELECT nodeid, title, description, displayorder, parentid
-          FROM #{DBPREFIX}node
-          WHERE contenttypeid = 23
-            AND parentid IN (SELECT nodeid FROM #{DBPREFIX}node WHERE parentid=#{ROOT_NODE})").to_a
+          FROM #{DB_PREFIX}node
+          WHERE contenttypeid = #{@channel_typeid}
+            AND parentid IN (SELECT nodeid FROM #{DB_PREFIX}node WHERE parentid=#{ROOT_NODE})").to_a
 
     top_level_categories = categories.select { |c| c["parentid"] == ROOT_NODE }
 
@@ -224,19 +234,26 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # keep track of closed topics
     @closed_topic_ids = []
 
-    topic_count = mysql_query("select count(nodeid) cnt from #{DBPREFIX}node where parentid in (
-        select nodeid from #{DBPREFIX}node where contenttypeid=23 ) and contenttypeid=22;").first["cnt"]
+    topic_count = mysql_query("SELECT COUNT(nodeid) cnt
+        FROM #{DB_PREFIX}node
+        WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
+        AND (approved = 1 AND showapproved = 1)
+        AND parentid IN (
+        SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};"
+    ).first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
         SELECT t.nodeid AS threadid, t.title, t.parentid AS forumid,t.open,t.userid AS postuserid,t.publishdate AS dateline,
             nv.count views, 1 AS visible, t.sticky,
             CONVERT(CAST(rawtext AS BINARY)USING utf8) AS raw
-        FROM #{DBPREFIX}node t
-        LEFT JOIN #{DBPREFIX}nodeview nv ON nv.nodeid=t.nodeid
-        LEFT JOIN #{DBPREFIX}text txt ON txt.nodeid=t.nodeid
-        WHERE t.parentid in ( select nodeid from #{DBPREFIX}node where contenttypeid=23 )
-          AND t.contenttypeid = 22
+        FROM #{DB_PREFIX}node t
+        LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid=t.nodeid
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid=t.nodeid
+        WHERE t.parentid in ( select nodeid from #{DB_PREFIX}node where contenttypeid=#{@channel_typeid} )
+          AND t.contenttypeid = #{@text_typeid}
+          AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
+          AND t.approved = 1 AND t.showapproved = 1
         ORDER BY t.nodeid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -277,19 +294,19 @@ class ImportScripts::VBulletin < ImportScripts::Base
     rescue
     end
 
-    post_count = mysql_query("SELECT COUNT(nodeid) cnt FROM #{DBPREFIX}node WHERE parentid NOT IN (
-        SELECT nodeid FROM #{DBPREFIX}node WHERE contenttypeid=23 ) AND contenttypeid=22;").first["cnt"]
+    post_count = mysql_query("SELECT COUNT(nodeid) cnt FROM #{DB_PREFIX}node WHERE parentid NOT IN (
+        SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};").first["cnt"]
 
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
         SELECT p.nodeid AS postid, p.userid AS userid, p.parentid AS threadid,
             CONVERT(CAST(rawtext AS BINARY)USING utf8) AS raw, p.publishdate AS dateline,
             1 AS visible, p.parentid AS parentid
-        FROM #{DBPREFIX}node p
-        LEFT JOIN #{DBPREFIX}nodeview nv ON nv.nodeid=p.nodeid
-        LEFT JOIN #{DBPREFIX}text txt ON txt.nodeid=p.nodeid
-        WHERE p.parentid NOT IN ( select nodeid from #{DBPREFIX}node where contenttypeid=23 )
-          AND p.contenttypeid = 22
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid=p.nodeid
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid=p.nodeid
+        WHERE p.parentid NOT IN ( select nodeid from #{DB_PREFIX}node where contenttypeid=#{@channel_typeid} )
+          AND p.contenttypeid = #{@text_typeid}
         ORDER BY postid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -320,86 +337,65 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
   end
 
-  # find the uploaded file information from the db
-  def find_upload(post, attachment_id)
-    sql = "SELECT a.filedataid, a.filename, fd.userid, LENGTH(fd.filedata) AS dbsize, filedata
-             FROM #{DBPREFIX}attach a
-             LEFT JOIN #{DBPREFIX}filedata fd ON fd.filedataid = a.filedataid
-            WHERE a.nodeid = #{attachment_id}"
-    results = mysql_query(sql)
-
-    unless (row = results.first)
-      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
-      return nil
-    end
-
-    filename = File.join(ATTACHMENT_DIR, row['userid'].to_s.split('').join('/'), "#{row['filedataid']}.attach")
-    real_filename = row['filename']
-    real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
-
-    unless File.exists?(filename)
-      if row['dbsize'].to_i == 0
-        puts "Attachment file #{row['filedataid']} doesn't exist"
-        return nil
-      end
-
-      tmpfile = 'attach_' + row['filedataid'].to_s
-      filename = File.join('/tmp/', tmpfile)
-      File.open(filename, 'wb') { |f|
-        #f.write(PG::Connection.unescape_bytea(row['filedata']))
-        f.write(row['filedata'])
-      }
-    end
-
-    upload = create_upload(post.user.id, filename, real_filename)
-
-    if upload.nil? || !upload.valid?
-      puts "Upload not valid :("
-      puts upload.errors.inspect if upload
-      return nil
-    end
-
-    [upload, real_filename]
-  rescue Mysql2::Error => e
-    puts "SQL Error"
-    puts e.message
-    puts sql
-    nil
-  end
-
   def import_attachments
     puts '', 'importing attachments...'
 
+    ext = mysql_query("SELECT GROUP_CONCAT(DISTINCT(extension)) exts FROM #{DB_PREFIX}filedata").first['exts'].split(',')
+    SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + ext).uniq.join("|")
+
+    uploads = mysql_query <<-SQL
+    SELECT n.parentid nodeid, a.filename, fd.userid, LENGTH(fd.filedata) AS dbsize, filedata, fd.filedataid
+      FROM #{DB_PREFIX}attach a
+      LEFT JOIN #{DB_PREFIX}filedata fd ON fd.filedataid = a.filedataid
+      LEFT JOIN #{DB_PREFIX}node n on n.nodeid = a.nodeid
+    SQL
+
     current_count = 0
-    total_count = mysql_query("SELECT COUNT(nodeid) cnt FROM #{DBPREFIX}node WHERE contenttypeid=22 ").first["cnt"]
+    total_count = uploads.count
 
-    success_count = 0
-    fail_count = 0
+    uploads.each do |upload|
+      post_id = PostCustomField.where(name: 'import_id').where(value: upload['nodeid']).first&.post_id
+      post_id = PostCustomField.where(name: 'import_id').where(value: "thread-#{upload['nodeid']}").first&.post_id unless post_id
+      if post_id.nil?
+        puts "Post for #{upload['nodeid']} not found"
+        next
+      end
+      post = Post.find(post_id)
 
-    attachment_regex = /\[attach[^\]]*\]n(\d+)\[\/attach\]/i
+      filename = File.join(ATTACH_DIR, upload['userid'].to_s.split('').join('/'), "#{upload['filedataid']}.attach")
+      real_filename = upload['filename']
+      real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-    Post.find_each do |post|
-      current_count += 1
-      print_status current_count, total_count
-
-      new_raw = post.raw.dup
-      new_raw.gsub!(attachment_regex) do |s|
-        matches = attachment_regex.match(s)
-        attachment_id = matches[1]
-
-        upload, filename = find_upload(post, attachment_id)
-        unless upload
-          fail_count += 1
+      unless File.exists?(filename)
+        # attachments can be on filesystem or in database
+        # try to retrieve from database if the file did not exist on filesystem
+        if upload['dbsize'].to_i == 0
+          puts "Attachment file #{upload['filedataid']} doesn't exist"
           next
         end
-        html_for_upload(upload, filename)
+
+        tmpfile = 'attach_' + upload['filedataid'].to_s
+        filename = File.join('/tmp/', tmpfile)
+        File.open(filename, 'wb') { |f|
+          #f.write(PG::Connection.unescape_bytea(row['filedata']))
+          f.write(upload['filedata'])
+        }
       end
 
-      if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
+      upl_obj = create_upload(post.user.id, filename, real_filename)
+      if upl_obj&.persisted?
+        html = html_for_upload(upl_obj, real_filename)
+        if !post.raw[html]
+          post.raw += "\n\n#{html}\n\n"
+          post.save!
+          PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
+        end
+      else
+        puts "Fail"
+        exit
       end
-
-      success_count += 1
+      current_count += 1
+      print_status(current_count, total_count)
     end
   end
 
@@ -619,6 +615,105 @@ class ImportScripts::VBulletin < ImportScripts::Base
     raw
   end
 
+  def create_permalinks
+    puts "", "creating permalinks..."
+
+    current_count = 0
+    total_count = mysql_query("SELECT COUNT(nodeid) cnt
+        FROM #{DB_PREFIX}node
+        WHERE (unpublishdate = 0 OR unpublishdate IS NULL)
+        AND (approved = 1 AND showapproved = 1)
+        AND parentid IN (
+        SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid=#{@channel_typeid} ) AND contenttypeid=#{@text_typeid};"
+    ).first["cnt"]
+
+    batches(BATCH_SIZE) do |offset|
+      topics = mysql_query <<-SQL
+        SELECT p.urlident p1, f.urlident p2, t.nodeid, t.urlident p3
+        FROM #{DB_PREFIX}node f
+        LEFT JOIN #{DB_PREFIX}node t ON t.parentid = f.nodeid
+        LEFT JOIN #{DB_PREFIX}node p ON p.nodeid = f.parentid
+        WHERE f.contenttypeid = #{@channel_typeid}
+          AND t.contenttypeid = #{@text_typeid}
+          AND t.approved = 1 AND t.showapproved = 1
+          AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
+        ORDER BY t.nodeid
+           LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+
+      break if topics.size < 1
+
+      topics.each do |topic|
+        current_count += 1
+        print_status current_count, total_count
+        disc_topic = topic_lookup_from_imported_post_id("thread-#{topic['nodeid']}")
+
+        Permalink.create(
+          url: "#{URL_PREFIX}#{topic['p1']}/#{topic['p2']}/#{topic['nodeid']}-#{topic['p3']}",
+          topic_id: disc_topic[:topic_id]
+        ) rescue nil
+      end
+    end
+
+    # cats
+    cats = mysql_query <<-SQL
+      SELECT nodeid, urlident
+      FROM #{DB_PREFIX}node
+      WHERE contenttypeid=#{@channel_typeid}
+      AND parentid=#{ROOT_NODE};
+    SQL
+    cats.each do |c|
+      category_id = CategoryCustomField.where(name: 'import_id').where(value: c['nodeid']).first.category_id
+      Permalink.create(url: "#{URL_PREFIX}#{c['urlident']}", category_id: category_id) rescue nil
+    end
+
+    # subcats
+    subcats = mysql_query <<-SQL
+      SELECT n1.nodeid,n2.urlident p1,n1.urlident p2
+      FROM #{DB_PREFIX}node n1
+      LEFT JOIN #{DB_PREFIX}node n2 ON n2.nodeid=n1.parentid
+      WHERE n2.parentid = #{ROOT_NODE}
+      AND n1.contenttypeid=#{@channel_typeid};
+    SQL
+    subcats.each do |sc|
+      category_id = CategoryCustomField.where(name: 'import_id').where(value: sc['nodeid']).first.category_id
+      Permalink.create(url: "#{URL_PREFIX}#{sc['p1']}/#{sc['p2']}", category_id: category_id) rescue nil
+    end
+  end
+
+  def import_tags
+    puts "", "importing tags..."
+
+    SiteSetting.tagging_enabled = true
+    SiteSetting.max_tags_per_topic = 100
+    staff_guardian = Guardian.new(Discourse.system_user)
+
+    records = mysql_query(<<~SQL
+      SELECT nodeid, GROUP_CONCAT(tagtext) tags
+      FROM #{DB_PREFIX}tag t
+      LEFT JOIN #{DB_PREFIX}tagnode tn ON tn.tagid = t.tagid
+      WHERE t.tagid IS NOT NULL
+      AND tn.nodeid IS NOT NULL
+      GROUP BY nodeid
+    SQL
+    ).to_a
+
+    current_count = 0
+    total_count = records.count
+
+    records.each do |rec|
+      current_count += 1
+      print_status current_count, total_count
+      tl = topic_lookup_from_imported_post_id("thread-#{rec['nodeid']}")
+      next if tl.nil?   # topic might have been deleted
+
+      topic = Topic.find(tl[:topic_id])
+      tag_names = rec['tags'].force_encoding("UTF-8").split(',')
+      DiscourseTagging.tag_topic_by_names(topic, staff_guardian, tag_names)
+    end
+  end
+
   def parse_timestamp(timestamp)
     Time.zone.at(@tz.utc_to_local(timestamp))
   end
@@ -626,7 +721,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
   end
-
 end
 
 ImportScripts::VBulletin.new.perform

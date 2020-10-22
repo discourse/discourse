@@ -39,7 +39,7 @@ module ImportScripts::Mbox
 
     private
 
-    METADATA_FILENAME = 'metadata.yml'.freeze
+    METADATA_FILENAME = 'metadata.yml'
     IGNORED_FILE_EXTENSIONS = ['.dbindex', '.dbnames', '.digest', '.subjects', '.yml']
 
     def index_category(directory)

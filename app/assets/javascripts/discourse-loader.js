@@ -1,45 +1,50 @@
 var define, requirejs;
 
-(function() {
-  // In future versions of ember we don't need this
-  var EMBER_MODULES = {};
+(function () {
+  var JS_MODULES = {};
   var ALIASES = {
     "ember-addons/ember-computed-decorators":
-      "discourse-common/utils/decorators"
+      "discourse-common/utils/decorators",
+    "discourse/lib/raw-templates": "discourse-common/lib/raw-templates",
+    "preload-store": "discourse/lib/preload-store",
+    "fixtures/user_fixtures": "discourse/tests/fixtures/user-fixtures",
   };
+  var ALIAS_PREPEND = {
+    fixtures: "discourse/tests/",
+    helpers: "discourse/tests/",
+  };
+
+  // In future versions of ember we don't need this
   if (typeof Ember !== "undefined") {
-    EMBER_MODULES = {
+    JS_MODULES = {
       jquery: { default: $ },
       "@ember/array": {
         default: Ember.Array,
         A: Ember.A,
-        isArray: Ember.isArray
+        isArray: Ember.isArray,
       },
       "@ember/array/proxy": {
-        default: Ember.ArrayProxy
+        default: Ember.ArrayProxy,
       },
       "@ember/component": {
         default: Ember.Component,
-        TextArea: Ember.TextArea,
-        TextField: Ember.TextField
       },
       "@ember/controller": {
         default: Ember.Controller,
-        inject: Ember.inject.controller
+        inject: Ember.inject.controller,
       },
       "@ember/debug": {
-        warn: Ember.warn
+        warn: Ember.warn,
       },
       "@ember/object": {
         action: Ember._action,
         default: Ember.Object,
         get: Ember.get,
         getProperties: Ember.getProperties,
-        guidFor: Ember.guidFor,
         set: Ember.set,
         setProperties: Ember.setProperties,
         computed: Ember.computed,
-        defineProperty: Ember.defineProperty
+        defineProperty: Ember.defineProperty,
       },
       "@ember/object/computed": {
         alias: Ember.computed.alias,
@@ -73,13 +78,14 @@ var define, requirejs;
         sum: Ember.computed.sum,
         union: Ember.computed.union,
         uniq: Ember.computed.uniq,
-        uniqBy: Ember.computed.uniqBy
+        uniqBy: Ember.computed.uniqBy,
       },
       "@ember/object/mixin": { default: Ember.Mixin },
       "@ember/object/proxy": { default: Ember.ObjectProxy },
+      "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
       "@ember/object/evented": {
         default: Ember.Evented,
-        on: Ember.on
+        on: Ember.on,
       },
       "@ember/routing/route": { default: Ember.Route },
       "@ember/routing/router": { default: Ember.Router },
@@ -93,54 +99,63 @@ var define, requirejs;
         run: Ember.run,
         schedule: Ember.run.schedule,
         scheduleOnce: Ember.run.scheduleOnce,
-        throttle: Ember.run.throttle
+        throttle: Ember.run.throttle,
       },
       "@ember/service": {
         default: Ember.Service,
-        inject: Ember.inject.service
+        inject: Ember.inject.service,
       },
       "@ember/utils": {
         isBlank: Ember.isBlank,
         isEmpty: Ember.isEmpty,
         isNone: Ember.isNone,
-        isPresent: Ember.isPresent
+        isPresent: Ember.isPresent,
       },
       rsvp: {
         default: Ember.RSVP,
-        EventTarget: Ember.RSVP.EventTarget,
         Promise: Ember.RSVP.Promise,
         hash: Ember.RSVP.hash,
-        all: Ember.RSVP.all
+        all: Ember.RSVP.all,
       },
       "@ember/string": {
         dasherize: Ember.String.dasherize,
         classify: Ember.String.classify,
         underscore: Ember.String.underscore,
-        camelize: Ember.String.camelize
+        camelize: Ember.String.camelize,
       },
       "@ember/template": {
-        htmlSafe: Ember.String.htmlSafe
+        htmlSafe: Ember.String.htmlSafe,
       },
       "@ember/application": {
         default: Ember.Application,
         setOwner: Ember.setOwner,
-        getOwner: Ember.getOwner
+        getOwner: Ember.getOwner,
       },
       "@ember/component/helper": {
-        default: Ember.Helper
+        default: Ember.Helper,
+      },
+      "@ember/component/text-field": {
+        default: Ember.TextField,
+      },
+      "@ember/component/text-area": {
+        default: Ember.TextArea,
       },
       "@ember/error": {
-        default: Ember.error
+        default: Ember.error,
       },
       "@ember/object/internals": {
-        guidFor: Ember.guidFor
-      }
+        guidFor: Ember.guidFor,
+      },
+      I18n: {
+        // eslint-disable-next-line
+        default: I18n,
+      },
     };
   }
 
   var _isArray;
   if (!Array.isArray) {
-    _isArray = function(x) {
+    _isArray = function (x) {
       return Object.prototype.toString.call(x) === "[object Array]";
     };
   } else {
@@ -190,18 +205,18 @@ var define, requirejs;
     this._require = undefined;
   }
 
-  Module.prototype.makeRequire = function() {
+  Module.prototype.makeRequire = function () {
     var name = transformForAliases(this.name);
 
     return (
       this._require ||
-      (this._require = function(dep) {
+      (this._require = function (dep) {
         return requirejs(resolve(dep, name));
       })
     );
   };
 
-  define = function(name, deps, callback) {
+  define = function (name, deps, callback) {
     if (arguments.length < 2) {
       unsupportedModule(arguments.length);
     }
@@ -223,7 +238,7 @@ var define, requirejs;
     this.name = path;
   }
 
-  define.alias = function(path) {
+  define.alias = function (path) {
     return new Alias(path);
   };
 
@@ -252,12 +267,20 @@ var define, requirejs;
 
     return {
       deps: reified,
-      module: module
+      module: module,
     };
   }
 
   function requireFrom(name, origin) {
     name = transformForAliases(name);
+
+    if (name === "discourse") {
+      // eslint-disable-next-line no-console
+      console.log(
+        "discourse has been moved to `discourse/app` - please update your code"
+      );
+      name = "discourse/app";
+    }
 
     if (name === "discourse/models/input-validation") {
       // eslint-disable-next-line no-console
@@ -267,7 +290,7 @@ var define, requirejs;
       name = "@ember/object";
     }
 
-    var mod = EMBER_MODULES[name] || registry[name];
+    var mod = JS_MODULES[name] || registry[name];
     if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
@@ -282,16 +305,22 @@ var define, requirejs;
 
   function transformForAliases(name) {
     var alias = ALIASES[name];
-    if (!alias) return name;
-
+    if (!alias) {
+      var segment = name.split("/")[0];
+      var prepend = ALIAS_PREPEND[segment];
+      if (!prepend) {
+        return name;
+      }
+      alias = prepend + name;
+    }
     deprecatedModule(name, alias);
     return alias;
   }
 
-  requirejs = require = function(name) {
+  requirejs = require = function (name) {
     name = transformForAliases(name);
-    if (EMBER_MODULES[name]) {
-      return EMBER_MODULES[name];
+    if (JS_MODULES[name]) {
+      return JS_MODULES[name];
     }
 
     var mod = registry[name];
@@ -315,12 +344,12 @@ var define, requirejs;
     seen[name] = {}; // placeholder for run-time cycles
 
     tryFinally(
-      function() {
+      function () {
         reified = reify(mod, name, seen[name]);
         module = mod.callback.apply(this, reified.deps);
         loaded = true;
       },
-      function() {
+      function () {
         if (!loaded) {
           mod.state = FAILED;
         }
@@ -374,7 +403,7 @@ var define, requirejs;
   }
 
   requirejs.entries = requirejs._eak_seen = registry;
-  requirejs.clear = function() {
+  requirejs.clear = function () {
     requirejs.entries = requirejs._eak_seen = registry = {};
     seen = {};
   };

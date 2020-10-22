@@ -2,6 +2,7 @@
 
 class BadgesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :show]
+  after_action :add_noindex_header
 
   def index
     raise Discourse::NotFound unless SiteSetting.enable_badges

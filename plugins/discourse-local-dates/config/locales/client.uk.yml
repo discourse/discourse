@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 uk:
   js:
@@ -20,7 +19,7 @@ uk:
           insert: Вставити
           advanced_mode: Розширений режим
           simple_mode: Простий режим
-          format_description: "Формат, який використовується для відображення дати користувачеві. Використовуйте \"\\T\\Z\", щоб відобразити часовий пояс користувача словами (Європа/Париж)"
+          format_description: "Формат, що використовується для відображення дати користувачеві. Використовуйте Z для відображення зміщення та zz для назви часового поясу."
           timezones_title: Часові пояси показати
           timezones_description: Часові пояси будуть використовуватися для відображення дат у попередньому та резервному режимі.
           recurring_title: Повторення

@@ -90,6 +90,7 @@ class NotificationEmailer
       user = notification.user
       return unless user.active? || user.staged?
       return if SiteSetting.must_approve_users? && !user.approved? && !user.staged?
+      return if user.staged? && (type == :user_linked || type == :user_quoted)
 
       return unless EMAILABLE_POST_TYPES.include?(post_type)
 

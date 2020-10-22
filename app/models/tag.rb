@@ -5,22 +5,29 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
 
   RESERVED_TAGS = [
-    'c'
+    'none',
+    'constructor' # prevents issues with javascript's constructor of objects
   ]
 
   validates :name,
     presence: true,
-    uniqueness: { case_sensitive: false },
-    exclusion: { in: RESERVED_TAGS }
+    uniqueness: { case_sensitive: false }
 
   validate :target_tag_validator, if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
+  validate :name_validator
 
   scope :where_name, ->(name) do
     name = Array(name).map(&:downcase)
     where("lower(tags.name) IN (?)", name)
   end
 
-  scope :unused, -> { where(topic_count: 0, pm_topic_count: 0) }
+  # tags that have never been used and don't belong to a tag group
+  scope :unused, -> do
+    where(topic_count: 0, pm_topic_count: 0)
+      .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
+      .where("tgm.tag_id IS NULL")
+  end
+
   scope :base_tags, -> { where(target_tag_id: nil) }
 
   has_many :tag_users, dependent: :destroy # notification settings
@@ -28,6 +35,7 @@ class Tag < ActiveRecord::Base
   has_many :topic_tags, dependent: :destroy
   has_many :topics, through: :topic_tags
 
+  has_many :category_tag_stats, dependent: :destroy
   has_many :category_tags, dependent: :destroy
   has_many :categories, through: :category_tags
 
@@ -178,6 +186,14 @@ class Tag < ActiveRecord::Base
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true
+    end
+  end
+
+  private
+
+  def name_validator
+    if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
+      errors.add(:name, :invalid)
     end
   end
 end

@@ -51,14 +51,6 @@ class Middleware::RequestTracker
     @app = app
   end
 
-  def self.log_request_on_site(data, host)
-    RailsMultisite::ConnectionManagement.with_hostname(host) do
-      unless Discourse.pg_readonly_mode?
-        log_request(data)
-      end
-    end
-  end
-
   def self.log_request(data)
     status = data[:status]
     track_view = data[:track_view]
@@ -135,7 +127,6 @@ class Middleware::RequestTracker
 
     # we got to skip this on error ... its just logging
     data = self.class.get_data(env, result, info) rescue nil
-    host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
       if result && (headers = result[1])
@@ -146,7 +137,7 @@ class Middleware::RequestTracker
         @@detailed_request_loggers.each { |logger| logger.call(env, data) }
       end
 
-      log_later(data, host)
+      log_later(data)
     end
 
   end
@@ -154,7 +145,11 @@ class Middleware::RequestTracker
   def self.populate_request_queue_seconds!(env)
     if !env['REQUEST_QUEUE_SECONDS']
       if queue_start = env['HTTP_X_REQUEST_START']
-        queue_start = queue_start.split("t=")[1].to_f
+        queue_start = if queue_start.start_with?("t=")
+          queue_start.split("t=")[1].to_f
+        else
+          queue_start.to_f / 1000.0
+        end
         queue_time = (Time.now.to_f - queue_start)
         env['REQUEST_QUEUE_SECONDS'] = queue_time
       end
@@ -296,10 +291,11 @@ class Middleware::RequestTracker
     end
   end
 
-  def log_later(data, host)
-    Scheduler::Defer.later("Track view", _db = nil) do
-      self.class.log_request_on_site(data, host)
+  def log_later(data)
+    Scheduler::Defer.later("Track view") do
+      unless Discourse.pg_readonly_mode?
+        self.class.log_request(data)
+      end
     end
   end
-
 end

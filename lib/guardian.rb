@@ -93,6 +93,15 @@ class Guardian
     @user.moderator?
   end
 
+  def is_category_group_moderator?(category)
+    @is_category_group_moderator ||= begin
+      SiteSetting.enable_category_group_moderation? &&
+        category.present? &&
+        category.reviewable_by_group_id.present? &&
+        GroupUser.where(group_id: category.reviewable_by_group_id, user_id: @user.id).exists?
+    end
+  end
+
   def is_silenced?
     @user.silenced?
   end
@@ -161,11 +170,12 @@ class Guardian
   end
 
   def can_moderate?(obj)
-    obj && authenticated? && !is_silenced? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
+    obj && authenticated? && !is_silenced? && (
+      is_staff? ||
+      (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4]) && can_see_topic?(obj))
+    )
   end
-  alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
-  alias :can_close? :can_moderate?
 
   def can_tag?(topic)
     return false if topic.blank?
@@ -199,6 +209,7 @@ class Guardian
     return false if group.blank?
     return true if is_admin? || group.members_visibility_level == Group.visibility_levels[:public]
     return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:staff]
+    return true if is_staff? && group.members_visibility_level == Group.visibility_levels[:members]
     return true if authenticated? && group.members_visibility_level == Group.visibility_levels[:logged_on_users]
     return false if user.blank?
 
@@ -215,6 +226,7 @@ class Guardian
     return false if groups.blank?
     return true if is_admin? || groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }
     return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:staff] }
+    return true if is_staff? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:members] }
     return true if authenticated? && groups.all? { |g| g.visibility_level == Group.visibility_levels[:logged_on_users] }
     return false if user.blank?
 
@@ -319,7 +331,7 @@ class Guardian
   # Support sites that have to approve users
   def can_access_forum?
     return true unless SiteSetting.must_approve_users?
-    return false unless @user
+    return false if anonymous?
 
     # Staff can't lock themselves out of a site
     return true if is_staff?
@@ -383,6 +395,10 @@ class Guardian
     user.admin?
   end
 
+  def can_send_invite_links?(user)
+    user.staff?
+  end
+
   def can_send_multiple_invites?(user)
     user.staff?
   end
@@ -442,7 +458,7 @@ class Guardian
   end
 
   def can_export_entity?(entity)
-    return false unless @user
+    return false if anonymous?
     return true if is_admin?
     return entity != 'user_list' if is_moderator?
 
@@ -471,8 +487,26 @@ class Guardian
     @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
   end
 
+  def allowed_theme_repo_import?(repo)
+    return false if !@user.admin?
+
+    allowed_repos = GlobalSetting.allowed_theme_repos
+    if !allowed_repos.blank?
+      urls = allowed_repos.split(",").map(&:strip)
+      return urls.include?(repo)
+    end
+
+    true
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
+
+    if allowed_theme_ids = GlobalSetting.allowed_theme_ids
+      if (theme_ids - allowed_theme_ids).present?
+        return false
+      end
+    end
 
     if include_preview && is_staff? && (theme_ids - Theme.theme_ids).blank?
       return true
@@ -483,6 +517,18 @@ class Guardian
 
     Theme.user_theme_ids.include?(parent) &&
       (components - Theme.components_for(parent)).empty?
+  end
+
+  def can_publish_page?(topic)
+    return false unless SiteSetting.enable_page_publishing?
+    return false if topic.blank?
+    return false if topic.private_message?
+    return false unless can_see_topic?(topic)
+    is_staff?
+  end
+
+  def can_see_about_stats?
+    true
   end
 
   def auth_token

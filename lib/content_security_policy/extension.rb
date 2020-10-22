@@ -42,13 +42,42 @@ class ContentSecurityPolicy
     def find_theme_extensions(theme_ids)
       extensions = []
 
-      Theme.where(id: Theme.transform_ids(theme_ids)).find_each do |theme|
+      resolved_ids = Theme.transform_ids(theme_ids)
+
+      Theme.where(id: resolved_ids).find_each do |theme|
         theme.cached_settings.each do |setting, value|
           extensions << build_theme_extension(value.split("|")) if setting.to_s == THEME_SETTING
         end
       end
 
       extensions << build_theme_extension(ThemeModifierHelper.new(theme_ids: theme_ids).csp_extensions)
+
+      html_fields = ThemeField.where(
+        theme_id: resolved_ids,
+        target_id: ThemeField.basic_targets.map { |target| Theme.targets[target.to_sym] },
+        name: ThemeField.html_fields
+      )
+
+      auto_script_src_extension = { script_src: [] }
+      html_fields.each(&:ensure_baked!)
+      doc = html_fields.map(&:value_baked).join("\n")
+
+      Nokogiri::HTML5.fragment(doc).css('script[src]').each do |node|
+        src = node['src']
+        uri = URI(src)
+
+        next if GlobalSetting.cdn_url && src.starts_with?(GlobalSetting.cdn_url) # Ignore CDN urls (theme-javascripts)
+        next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
+        next if uri.path.nil? # Ignore raw hosts
+
+        uri_string = uri.to_s.sub(/^\/\//, '') # Protocol-less CSP should not have // at beginning of URL
+
+        auto_script_src_extension[:script_src] << uri_string
+      rescue URI::Error
+        # Ignore invalid URI
+      end
+
+      extensions << auto_script_src_extension
 
       extensions
     end

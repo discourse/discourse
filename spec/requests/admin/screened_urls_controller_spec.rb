@@ -16,7 +16,7 @@ describe Admin::ScreenedUrlsController do
       Fabricate(:screened_url)
       get "/admin/logs/screened_urls.json"
       expect(response.status).to eq(200)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json.size).to eq(1)
     end
   end

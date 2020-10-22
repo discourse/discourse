@@ -3,10 +3,22 @@
 require 'rails_helper'
 
 describe SearchController do
+  fab!(:awesome_topic) do
+    topic = Fabricate(:topic)
+    tag = Fabricate(:tag)
+    topic.tags << tag
+    Fabricate(:tag, target_tag_id: tag.id)
+    topic
+  end
 
   fab!(:awesome_post) do
     SearchIndexer.enable
-    Fabricate(:post, raw: 'this is my really awesome post')
+    Fabricate(:post, topic: awesome_topic, raw: 'this is my really awesome post')
+  end
+
+  fab!(:awesome_post_2) do
+    SearchIndexer.enable
+    Fabricate(:post, raw: 'this is my really awesome post 2')
   end
 
   fab!(:user) do
@@ -26,11 +38,11 @@ describe SearchController do
     before do
       # TODO be a bit more strategic here instead of junking
       # all of redis
-      Discourse.redis.flushall
+      Discourse.redis.flushdb
     end
 
     after do
-      Discourse.redis.flushall
+      Discourse.redis.flushdb
     end
 
     context "when overloaded" do
@@ -53,7 +65,7 @@ describe SearchController do
         get "/search/query.json", headers: {
           "HTTP_X_REQUEST_START" => "t=#{start_time.to_f}"
         }, params: {
-          term: "hi there", include_blurb: true
+          term: "hi there"
         }
 
         expect(response.status).to eq(409)
@@ -68,7 +80,7 @@ describe SearchController do
 
         expect(response.status).to eq(200)
 
-        data = JSON.parse(response.body)
+        data = response.parsed_body
 
         expect(data["posts"]).to be_empty
         expect(data["grouped_search_result"]["error"]).not_to be_empty
@@ -80,24 +92,64 @@ describe SearchController do
       term = "hello\0hello"
 
       get "/search/query.json", params: {
-        term: term, include_blurb: true
+        term: term
       }
 
       expect(response.status).to eq(400)
     end
 
     it "can search correctly" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      awesome_post_3 = Fabricate(:post,
+        topic: Fabricate(:topic, title: 'this is an awesome title')
+      )
+
       get "/search/query.json", params: {
-        term: 'awesome', include_blurb: true
+        term: 'awesome'
       }
 
       expect(response.status).to eq(200)
 
-      data = JSON.parse(response.body)
+      data = response.parsed_body
 
+      expect(data['posts'].length).to eq(3)
+
+      expect(data['posts'][0]['id']).to eq(awesome_post_3.id)
+      expect(data['posts'][0]['blurb']).to eq(awesome_post_3.raw)
+      expect(data['posts'][0]['topic_title_headline']).to eq(
+        "This is an <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> title"
+      )
+      expect(data['topics'][0]['id']).to eq(awesome_post_3.topic_id)
+
+      expect(data['posts'][1]['id']).to eq(awesome_post_2.id)
+      expect(data['posts'][1]['blurb']).to eq(
+        "#{Search::GroupedSearchResults::OMISSION}this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post#{Search::GroupedSearchResults::OMISSION}"
+      )
+      expect(data['topics'][1]['id']).to eq(awesome_post_2.topic_id)
+
+      expect(data['posts'][2]['id']).to eq(awesome_post.id)
+      expect(data['posts'][2]['blurb']).to eq(
+        "this is my really <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">awesome</span> post"
+      )
+      expect(data['topics'][2]['id']).to eq(awesome_post.topic_id)
+    end
+
+    it "can search correctly with advanced search filters" do
+      awesome_post.update!(
+        raw: "#{"a" * Search::GroupedSearchResults::BLURB_LENGTH} elephant"
+      )
+
+      get "/search/query.json", params: { term: 'order:views elephant' }
+
+      expect(response.status).to eq(200)
+
+      data = response.parsed_body
+
+      expect(data.dig("grouped_search_result", "term")).to eq('order:views elephant')
       expect(data['posts'].length).to eq(1)
       expect(data['posts'][0]['id']).to eq(awesome_post.id)
-      expect(data['posts'][0]['blurb']).to eq(awesome_post.raw)
+      expect(data['posts'][0]['blurb']).to include('elephant')
       expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
     end
 
@@ -108,7 +160,7 @@ describe SearchController do
       }
 
       expect(response.status).to eq(200)
-      data = JSON.parse(response.body)
+      data = response.parsed_body
 
       expect(data['posts'][0]['id']).to eq(user_post.id)
       expect(data['users']).to be_blank
@@ -118,7 +170,7 @@ describe SearchController do
       }
 
       expect(response.status).to eq(200)
-      data = JSON.parse(response.body)
+      data = response.parsed_body
 
       expect(data['posts']).to be_blank
       expect(data['users'][0]['id']).to eq(user.id)
@@ -135,13 +187,12 @@ describe SearchController do
         }
 
         expect(response.status).to eq(200)
-        data = JSON.parse(response.body)
+        data = response.parsed_body
 
         expect(data['topics'][0]['id']).to eq(awesome_post.topic_id)
       end
 
       it "should return the right result" do
-
         get "/search/query.json", params: {
           term: user_post.topic_id,
           type_filter: 'topic',
@@ -149,7 +200,7 @@ describe SearchController do
         }
 
         expect(response.status).to eq(200)
-        data = JSON.parse(response.body)
+        data = response.parsed_body
 
         expect(data['topics'][0]['id']).to eq(user_post.topic_id)
       end
@@ -164,7 +215,7 @@ describe SearchController do
       expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'wookie')).to be_present
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       search_log_id = json['grouped_search_result']['search_log_id']
       expect(search_log_id).to be_present
 
@@ -178,6 +229,81 @@ describe SearchController do
       get "/search/query.json", params: { term: 'wookie' }
       expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'wookie')).to be_blank
+    end
+
+    context 'rate limited' do
+      it 'rate limits anon searches per user' do
+        SiteSetting.rate_limit_search_anon_user = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search/query.json", params: {
+              term: 'wookie'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+      end
+
+      it 'rate limits anon searches globally' do
+        SiteSetting.rate_limit_search_anon_global = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search/query.json", params: {
+              term: 'wookie'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+      end
+
+      context "and a logged in user" do
+        before { sign_in(user) }
+
+        it 'rate limits logged in searches' do
+          SiteSetting.rate_limit_search_user = 3
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          3.times do
+            get "/search/query.json", params: {
+                  term: 'wookie'
+                }
+
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            expect(json["grouped_search_result"]["error"]).to eq(nil)
+          end
+
+          get "/search/query.json", params: {
+                term: 'wookie'
+              }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        end
+      end
     end
   end
 
@@ -216,6 +342,147 @@ describe SearchController do
       get "/search.json", params: { q: 'bantha' }
       expect(response.status).to eq(200)
       expect(SearchLog.where(term: 'bantha')).to be_blank
+    end
+
+    context 'rate limited' do
+      it 'rate limits anon searches per user' do
+        SiteSetting.rate_limit_search_anon_user = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search.json", params: {
+              q: 'bantha'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+
+      end
+
+      it 'rate limits anon searches globally' do
+        SiteSetting.rate_limit_search_anon_global = 2
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        2.times do
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(nil)
+        end
+
+        get "/search.json", params: {
+              q: 'bantha'
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+
+      end
+
+      context "and a logged in user" do
+        before { sign_in(user) }
+
+        it 'rate limits searches' do
+          SiteSetting.rate_limit_search_user = 3
+          RateLimiter.enable
+          RateLimiter.clear_all!
+
+          3.times do
+            get "/search.json", params: {
+                  q: 'bantha'
+                }
+
+            expect(response.status).to eq(200)
+            json = response.parsed_body
+            expect(json["grouped_search_result"]["error"]).to eq(nil)
+          end
+
+          get "/search.json", params: {
+                q: 'bantha'
+              }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["grouped_search_result"]["error"]).to eq(I18n.t("rate_limiter.slow_down"))
+        end
+      end
+    end
+  end
+
+  context "search priority" do
+    fab!(:low_priority_category) do
+      Fabricate(
+        :category,
+        search_priority: Searchable::PRIORITIES[:very_low]
+      )
+    end
+    fab!(:high_priority_category) do
+      Fabricate(
+        :category,
+        search_priority: Searchable::PRIORITIES[:high]
+      )
+    end
+    fab!(:very_high_priority_category) do
+      Fabricate(
+        :category,
+        search_priority: Searchable::PRIORITIES[:very_high]
+      )
+    end
+    fab!(:low_priority_topic) { Fabricate(:topic, category: low_priority_category) }
+    fab!(:high_priority_topic) { Fabricate(:topic, category: high_priority_category) }
+    fab!(:very_high_priority_topic) { Fabricate(:topic, category: very_high_priority_category) }
+    fab!(:low_priority_post) do
+      SearchIndexer.enable
+      Fabricate(:post, topic: low_priority_topic, raw: "This is a Low Priority Post")
+    end
+    fab!(:hight_priority_post) do
+      SearchIndexer.enable
+      Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+    end
+    fab!(:old_very_hight_priority_post) do
+      SearchIndexer.enable
+      Fabricate(:old_post, topic: very_high_priority_topic, raw: "This is a Old but Very High Priority Post")
+    end
+
+    it "sort posts with search priority when search term is empty" do
+      get "/search.json", params: { q: 'status:open' }
+      expect(response.status).to eq(200)
+      data = response.parsed_body
+      post1 = data["posts"].find { |e| e["id"] == old_very_hight_priority_post.id }
+      post2 = data["posts"].find { |e| e["id"] == low_priority_post.id }
+      expect(data["posts"][0]["id"]).to eq(old_very_hight_priority_post.id)
+      expect(post1["id"]).to be > post2["id"]
+    end
+
+    it "sort posts with search priority when no order query" do
+      get "/search.json", params: { q: 'status:open Priority Post' }
+      expect(response.status).to eq(200)
+      data = response.parsed_body
+      expect(data["posts"][0]["id"]).to eq(old_very_hight_priority_post.id)
+      expect(data["posts"][1]["id"]).to eq(hight_priority_post.id)
+      expect(data["posts"][2]["id"]).to eq(low_priority_post.id)
+    end
+
+    it "doesn't sort posts with search piority when query with order" do
+      get "/search.json", params: { q: 'status:open order:latest Priority Post' }
+      expect(response.status).to eq(200)
+      data = response.parsed_body
+      expect(data["posts"][0]["id"]).to eq(hight_priority_post.id)
+      expect(data["posts"][1]["id"]).to eq(low_priority_post.id)
+      expect(data["posts"][2]["id"]).to eq(old_very_hight_priority_post.id)
     end
   end
 
@@ -290,13 +557,14 @@ describe SearchController do
         ip_address: '127.0.0.1'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 12345,
         search_result_type: 'topic'
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to be_present
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 
@@ -349,13 +617,14 @@ describe SearchController do
         ip_address: '192.168.0.19'
       )
 
-      post "/search/click", params: {
+      post "/search/click.json", params: {
         search_log_id: search_log_id,
         search_result_id: 22222,
         search_result_type: 'topic'
       }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to be_present
       expect(SearchLog.find(search_log_id).search_result_id).to be_blank
     end
 

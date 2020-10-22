@@ -1,11 +1,10 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sv:
   site_settings:
-    presence_enabled: "Visa användare som just nu svarar på nuvarande ämnet, eller redigerar nuvarande inlägg?"
-    presence_max_users_shown: "Maximalt antal användare visade."
+    presence_enabled: "Vill du visa användarna som just nu svarar på aktuellt ämne, eller redigerar aktuellt inlägg?"
+    presence_max_users_shown: "Maximalt antal användare visas."

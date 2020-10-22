@@ -45,7 +45,13 @@ describe Jobs::ToggleTopicClosed do
     end
 
     describe 'when category has auto close configured' do
-      fab!(:category) { Fabricate(:category, auto_close_hours: 5) }
+      fab!(:category) do
+        Fabricate(:category,
+          auto_close_based_on_last_post: true,
+          auto_close_hours: 5
+        )
+      end
+
       fab!(:topic) { Fabricate(:topic, category: category, closed: true) }
 
       it "should restore the category's auto close timer" do
@@ -72,29 +78,74 @@ describe Jobs::ToggleTopicClosed do
     end
   end
 
-  describe 'when trying to close a topic that has been deleted' do
-    it 'should not do anything' do
-      topic.trash!
+  describe 'when trying to close a topic that has already been closed' do
+    it 'should delete the topic timer' do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
 
-      Topic.any_instance.expects(:update_status).never
+      topic.update!(closed: true)
 
-      described_class.new.execute(
-        topic_timer_id: topic.public_topic_timer.id,
-        state: true
-      )
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
     end
   end
 
-  describe 'when user is not authorized to close topics' do
+  describe 'when trying to close a topic that has been deleted' do
+    it 'should delete the topic timer' do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      topic.trash!
+
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+    end
+  end
+
+  describe 'when user is no longer authorized to close topics' do
+    fab!(:user) { Fabricate(:user) }
+
     fab!(:topic) do
-      Fabricate(:topic_timer, execute_at: 2.hours.from_now).topic
+      Fabricate(:topic_timer, user: user).topic
     end
 
-    it 'should not do anything' do
-      described_class.new.execute(
-        topic_timer_id: topic.public_topic_timer.id,
-        state: false
+    it 'should destroy the topic timer' do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { TopicTimer.exists?(topic_id: topic.id) }.from(true).to(false)
+
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "should reconfigure topic timer if category's topics are set to autoclose" do
+      category = Fabricate(:category,
+        auto_close_based_on_last_post: true,
+        auto_close_hours: 5
       )
+
+      topic = Fabricate(:topic, category: category)
+      topic.public_topic_timer.update!(user: user)
+
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      expect do
+        described_class.new.execute(
+          topic_timer_id: topic.public_topic_timer.id,
+          state: true
+        )
+      end.to change { topic.reload.public_topic_timer.user }.from(user).to(Discourse.system_user)
+        .and change { topic.public_topic_timer.id }
 
       expect(topic.reload.closed).to eq(false)
     end

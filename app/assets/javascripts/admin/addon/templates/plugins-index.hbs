@@ -1,0 +1,65 @@
+{{#if model.length}}
+  <h3>{{i18n "admin.plugins.installed"}}</h3>
+
+  <table class="admin-plugins grid">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{i18n "admin.plugins.name"}}</th>
+        <th>{{i18n "admin.plugins.version"}}</th>
+        <th>{{i18n "admin.plugins.enabled"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each model as |plugin|}}
+        <tr>
+          <td>
+            {{#if plugin.is_official}}
+              {{d-icon "check-circle"
+                  title="admin.plugins.official"
+                  class="admin-plugins-official-badge"}}
+            {{/if}}
+          </td>
+
+          <td class="plugin-name">
+            {{#if plugin.url}}
+              <a href={{plugin.url}} rel="noopener noreferrer" target="_blank">{{plugin.name}}</a>
+            {{else}}
+              {{plugin.name}}
+            {{/if}}
+          </td>
+          <td class="version">
+            <div class="label">{{i18n "admin.plugins.version"}}</div>
+            {{plugin.version}}
+          </td>
+          <td class="col-enabled">
+            <div class="label">{{i18n "admin.plugins.enabled"}}</div>
+            {{#if plugin.enabled_setting}}
+              {{#if plugin.enabled}}
+                {{i18n "admin.plugins.is_enabled"}}
+              {{else}}
+                {{i18n "admin.plugins.not_enabled"}}
+              {{/if}}
+            {{else}}
+              {{i18n "admin.plugins.is_enabled"}}
+            {{/if}}
+          </td>
+          <td class="settings">
+            {{#if currentUser.admin}}
+              {{#if plugin.has_settings}}
+                {{d-button class="btn-default" action=(route-action "showSettings") actionParam=plugin icon="cog" label="admin.plugins.change_settings_short"}}
+              {{/if}}
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>{{i18n "admin.plugins.none_installed"}}</p>
+{{/if}}
+
+<p class="admin-plugins-howto"><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
+
+{{plugin-outlet name="admin-below-plugins-index" args=(hash model=model)}}

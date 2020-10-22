@@ -5,7 +5,6 @@
 .d-header {
   left: 0;
   height: 4em;
-  margin-bottom: 15px;
   #site-logo {
     height: 2.667em; // 40px with default 15px font size
   }
@@ -32,17 +31,13 @@
   position: relative;
 }
 
-#main-outlet {
-  padding-top: 5.8572em;
-}
-
 .search-link .blurb {
-  color: dark-light-choose($primary-high, $secondary-medium);
+  color: var(--secondary-medium);
   display: block;
   word-wrap: break-word;
   font-size: $font-down-2;
   line-height: $line-height-large;
   .search-highlight {
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: var(--primary-high-or-secondary-low);
   }
 }

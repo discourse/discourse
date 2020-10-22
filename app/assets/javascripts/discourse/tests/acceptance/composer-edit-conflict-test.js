@@ -1,0 +1,55 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import I18n from "I18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+acceptance("Composer - Edit conflict", function (needs) {
+  needs.user();
+
+  let lastBody;
+  needs.pretender((server, helper) => {
+    server.post("/draft.json", (request) => {
+      lastBody = request.requestBody;
+      return helper.response({ success: true });
+    });
+  });
+
+  test("Edit a post that causes an edit conflict", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:eq(0) button.edit");
+    await fillIn(".d-editor-input", "this will 409");
+    await click("#reply-control button.create");
+    assert.equal(
+      find("#reply-control button.create").text().trim(),
+      I18n.t("composer.overwrite_edit"),
+      "it shows the overwrite button"
+    );
+    assert.ok(
+      find("#draft-status .d-icon-user-edit"),
+      "error icon should be there"
+    );
+    await click(".modal .btn-primary");
+  });
+
+  test("Should not send originalText when posting a new reply", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:eq(0) button.reply");
+    await fillIn(
+      ".d-editor-input",
+      "hello world hello world hello world hello world hello world"
+    );
+    assert.ok(lastBody.indexOf("originalText") === -1);
+  });
+
+  test("Should send originalText when editing a reply", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:eq(0) button.edit");
+    await fillIn(
+      ".d-editor-input",
+      "hello world hello world hello world hello world hello world"
+    );
+    assert.ok(lastBody.indexOf("originalText") > -1);
+  });
+});

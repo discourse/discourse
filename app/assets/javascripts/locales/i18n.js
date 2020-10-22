@@ -1,5 +1,3 @@
-/*global I18n:true */
-
 // Instantiate the object
 var I18n = I18n || {};
 
@@ -197,12 +195,10 @@ I18n.toNumber = function(number, options) {
       .toFixed(options.precision)
       .toString(),
     parts = string.split(this.SEPARATOR),
-    precision,
     buffer = [],
     formattedNumber;
 
   number = parts[0];
-  precision = parts[1];
 
   while (number.length > 0) {
     buffer.unshift(number.substr(Math.max(0, number.length - 3), 3));
@@ -325,7 +321,7 @@ I18n.enableVerboseLocalization = function() {
     if (!current) {
       current = keys[scope] = ++counter;
       var message = "Translation #" + current + ": " + scope;
-      if (!_.isEmpty(value)) {
+      if (value && Object.keys(value).length > 0) {
         message += ", parameters: " + JSON.stringify(value);
       }
       // eslint-disable-next-line no-console

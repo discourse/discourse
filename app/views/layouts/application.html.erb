@@ -19,12 +19,13 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
+    <%= preload_script 'browser-detect' %>
+
     <%= preload_script "locales/#{I18n.locale}" %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>
     <%= preload_script "ember_jquery" %>
-    <%= preload_script "preload-store" %>
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
@@ -44,7 +45,7 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
-    <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="manifest" href="<%= Discourse.base_path %>/manifest.webmanifest" crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
@@ -58,8 +59,8 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && cookies[:authentication_data] %>
-      <meta id="data-authentication" data-authentication-data="<%= cookies.delete(:authentication_data) %>">
+    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_path("/"))) %>
+      <meta id="data-authentication" data-authentication-data="<%= data %>">
     <%- end %>
   </head>
 
@@ -67,11 +68,11 @@
     <%= render_google_tag_manager_body_code %>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
       <%= render partial: 'header' %>
-      <div id="main-outlet" class="wrap">
+      <div id="main-outlet" class="wrap" role="main">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
-        <footer>
+        <footer class="noscript-footer-nav">
           <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
             <a href='<%= path "/" %>'><%= t 'home_title' %></a>
             <%= link_to t('js.filters.categories.title'), path("/categories") %>
@@ -83,7 +84,7 @@
       </div>
 
       <footer id='noscript-footer'>
-        <p style="text-align:center;"><%= t 'powered_by_html' %></p>
+        <p><%= t 'powered_by_html' %></p>
       </footer>
     </noscript>
 
@@ -108,7 +109,7 @@
     <% end %>
 
     <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
-    <%= preload_script "preload-application-data" %>
+    <%= preload_script "start-discourse" %>
 
     <%= yield :data %>
 
@@ -119,8 +120,4 @@
     <%- end %>
     <%= build_plugin_html 'server:before-body-close' %>
   </body>
-
-  <%= preload_script "hotjar" %>
-  <%= preload_script "matomo" %>
-
 </html>

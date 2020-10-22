@@ -11,14 +11,14 @@ module DiscourseNarrativeBot
       begin: {
         init: {
           next_state: :tutorial_bookmark,
-          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions", base_uri: Discourse.base_uri) },
+          next_instructions: Proc.new { I18n.t("#{I18N_KEY}.bookmark.instructions", base_uri: Discourse.base_path) },
           action: :say_hello
         }
       },
 
       tutorial_bookmark: {
         next_state: :tutorial_onebox,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.onebox.instructions", base_uri: Discourse.base_path) },
 
         bookmark: {
           action: :reply_to_bookmark
@@ -32,7 +32,7 @@ module DiscourseNarrativeBot
 
       tutorial_onebox: {
         next_state: :tutorial_emoji,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.emoji.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_onebox
@@ -44,8 +44,8 @@ module DiscourseNarrativeBot
         next_state: :tutorial_mention,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.mention.instructions",
-            discobot_username: self.discobot_user.username,
-            base_uri: Discourse.base_uri)
+            discobot_username: self.discobot_username,
+            base_uri: Discourse.base_path)
         },
         reply: {
           action: :reply_to_emoji
@@ -55,7 +55,7 @@ module DiscourseNarrativeBot
       tutorial_mention: {
         prerequisite: Proc.new { SiteSetting.enable_mentions },
         next_state: :tutorial_formatting,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.formatting.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_mention
@@ -64,7 +64,7 @@ module DiscourseNarrativeBot
 
       tutorial_formatting: {
         next_state: :tutorial_quote,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.quoting.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_formatting
@@ -73,33 +73,49 @@ module DiscourseNarrativeBot
 
       tutorial_quote: {
         next_state: :tutorial_images,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.images.instructions", base_uri: Discourse.base_path) },
 
         reply: {
           action: :reply_to_quote
         }
       },
 
+      # Note: tutorial_images and tutorial_likes are mutually exclusive.
+      #       The prerequisites should ensure only one of them is called.
       tutorial_images: {
+        prerequisite: Proc.new { @user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
+        next_state: :tutorial_likes,
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.likes.instructions", base_uri: Discourse.base_path) },
+        reply: {
+          action: :reply_to_image
+        },
+        like: {
+          action: :track_images_like
+        }
+      },
+
+      tutorial_likes: {
+        prerequisite: Proc.new { !@user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
         next_state: :tutorial_flag,
         next_instructions: Proc.new {
           I18n.t("#{I18N_KEY}.flag.instructions",
             guidelines_url: url_helpers(:guidelines_url),
             about_url: url_helpers(:about_index_url),
-            base_uri: Discourse.base_uri)
-        },
-        reply: {
-          action: :reply_to_image
+            base_uri: Discourse.base_path)
         },
         like: {
-          action: :track_like
+          action: :reply_to_likes
+        },
+        reply: {
+          next_state: :tutorial_likes,
+          action: :missing_likes_like
         }
       },
 
       tutorial_flag: {
         prerequisite: Proc.new { SiteSetting.allow_flagging_staff },
         next_state: :tutorial_search,
-        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_uri) },
+        next_instructions: Proc.new { I18n.t("#{I18N_KEY}.search.instructions", base_uri: Discourse.base_path) },
         flag: {
           action: :reply_to_flag
         },
@@ -116,6 +132,10 @@ module DiscourseNarrativeBot
         }
       }
     }
+
+    def self.badge_name
+      BADGE_NAME
+    end
 
     def self.search_answer
       ':herb:'
@@ -233,8 +253,10 @@ module DiscourseNarrativeBot
       return unless valid_topic?(@post.topic_id)
       return unless @post.user_id == self.discobot_user.id
 
+      profile_page_url = url_helpers(:user_url, username: @user.username)
+      bookmark_url = "#{profile_page_url}/activity/bookmarks"
       raw = <<~RAW
-        #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(profile_page_url: url_helpers(:user_url, username: @user.username)))}
+        #{I18n.t("#{I18N_KEY}.bookmark.reply", i18n_post_args(bookmark_url: bookmark_url))}
 
         #{instance_eval(&@next_instructions)}
       RAW
@@ -272,11 +294,11 @@ module DiscourseNarrativeBot
       end
     end
 
-    def track_like
+    def track_images_like
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      post_liked = PostAction.find_by(
+      post_liked = PostAction.exists?(
         post_action_type_id: PostActionType.types[:like],
         post_id: @data[:last_post_id],
         user_id: @user.id
@@ -320,7 +342,7 @@ module DiscourseNarrativeBot
 
       cooked = @post.post_analyzer.cook(@post.raw, {})
 
-      if Nokogiri::HTML.fragment(cooked).css("img").size > 0
+      if Nokogiri::HTML5.fragment(cooked).css("img").size > 0
         set_state_data(:post_id, @post.id)
 
         if get_state_data(:liked)
@@ -356,11 +378,50 @@ module DiscourseNarrativeBot
       transition ? reply : false
     end
 
+    def missing_likes_like
+      return unless valid_topic?(@post.topic_id)
+      return if @post.user_id == self.discobot_user.id
+
+      fake_delay
+      enqueue_timeout_job(@user)
+
+      last_post = Post.find_by(id: @data[:last_post_id])
+      reply_to(@post, I18n.t("#{I18N_KEY}.likes.not_found", i18n_post_args(url: last_post.url)))
+      false
+    end
+
+    def reply_to_likes
+      post_topic_id = @post.topic_id
+      return unless valid_topic?(post_topic_id)
+
+      post_liked = PostAction.exists?(
+        post_action_type_id: PostActionType.types[:like],
+        post_id: @data[:last_post_id],
+        user_id: @user.id
+      )
+
+      if post_liked
+        raw = <<~RAW
+          #{I18n.t("#{I18N_KEY}.likes.reply", i18n_post_args)}
+
+          #{instance_eval(&@next_instructions)}
+        RAW
+
+        fake_delay
+
+        reply = reply_to(@post, raw)
+        enqueue_timeout_job(@user)
+        return reply
+      end
+
+      false
+    end
+
     def reply_to_formatting
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      if Nokogiri::HTML.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css("b", "strong", "em", "i", ".bbcode-i", ".bbcode-b").size > 0
         raw = <<~RAW
           #{I18n.t("#{I18N_KEY}.formatting.reply", i18n_post_args)}
 
@@ -384,7 +445,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".quote").size > 0
         raw = <<~RAW
@@ -410,7 +471,7 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      doc = Nokogiri::HTML.fragment(@post.cooked)
+      doc = Nokogiri::HTML5.fragment(@post.cooked)
 
       if doc.css(".emoji").size > 0
         raw = <<~RAW
@@ -456,7 +517,7 @@ module DiscourseNarrativeBot
             "#{I18N_KEY}.mention.not_found",
             i18n_post_args(
               username: @user.username,
-              discobot_username: self.discobot_user.username
+              discobot_username: self.discobot_username
             )
           ))
         end
@@ -468,7 +529,14 @@ module DiscourseNarrativeBot
 
     def missing_flag
       return unless valid_topic?(@post.topic_id)
-      return if @post.user_id == -2
+
+      # Remove any incorrect flags so that they can try again
+      if @post.user_id == -2
+        @post.post_actions
+          .where(user_id: @user.id)
+          .where("post_action_type_id IN (?)", (PostActionType.flag_types.values - [PostActionType.types[:inappropriate]]))
+          .destroy_all
+      end
 
       fake_delay
       reply_to(@post, I18n.t("#{I18N_KEY}.flag.not_found", i18n_post_args)) unless @data[:attempted]
@@ -520,7 +588,7 @@ module DiscourseNarrativeBot
             username: @user.username,
             base_url: Discourse.base_url,
             certificate: certificate,
-            discobot_username: self.discobot_user.username,
+            discobot_username: self.discobot_username,
             advanced_trigger: AdvancedUserNarrative.reset_trigger
           )
         ),

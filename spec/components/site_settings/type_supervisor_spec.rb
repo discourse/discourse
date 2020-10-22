@@ -88,6 +88,9 @@ describe SiteSettings::TypeSupervisor do
       it "'color' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:color]).to eq(22)
       end
+      it "'simple_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:simple_list]).to eq(23)
+      end
     end
   end
 

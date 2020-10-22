@@ -1,0 +1,9 @@
+{{tag-chooser
+  tags=selectedTags
+  onChange=(action "changeSelectedTags")
+  options=(hash
+    allowAny=false
+  )
+}}
+<div class="desc">{{html-safe setting.description}}</div>
+{{setting-validation-message message=validationMessage}}

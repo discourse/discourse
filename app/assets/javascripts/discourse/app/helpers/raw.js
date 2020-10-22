@@ -1,0 +1,37 @@
+import { registerUnbound, helperContext } from "discourse-common/lib/helpers";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { htmlSafe } from "@ember/template";
+
+function renderRaw(ctx, template, templateName, params) {
+  params = jQuery.extend({}, params);
+  params.parent = params.parent || ctx;
+
+  let context = helperContext();
+  if (!params.view) {
+    const module = `discourse/raw-views/${templateName}`;
+    if (requirejs.entries[module]) {
+      const viewClass = requirejs(module, null, null, true);
+      if (viewClass && viewClass.default) {
+        params.view = viewClass.default.create(params, context);
+      }
+    }
+
+    if (!params.view) {
+      params = jQuery.extend({}, params, context);
+    }
+  }
+
+  return htmlSafe(template(params));
+}
+
+registerUnbound("raw", function (templateName, params) {
+  templateName = templateName.replace(".", "/");
+
+  const template = findRawTemplate(templateName);
+  if (!template) {
+    // eslint-disable-next-line no-console
+    console.warn("Could not find raw template: " + templateName);
+    return;
+  }
+  return renderRaw(this, template, templateName, params);
+});

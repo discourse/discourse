@@ -48,6 +48,16 @@ describe TopicList do
     end
   end
 
+  describe '#load_topics' do
+    it 'loads additional data for serialization' do
+      category_user = CategoryUser.create!(user: user, category: topic.category)
+
+      topic = topic_list.load_topics.first
+
+      expect(topic.category_user_data).to eq(category_user)
+    end
+  end
+
   describe '#top_tags' do
     it 'should return the right tags' do
       tag = Fabricate(:tag, topics: [topic])

@@ -16,6 +16,52 @@
   }
 }
 
+.container.posts {
+  display: grid;
+  grid-template-areas: "posts timeline";
+  grid-template-columns: auto auto;
+  > .row {
+    grid-area: posts;
+    max-width: calc(
+      100vw - 16px
+    ); // 16px is the left + right padding on .wrap in common/base/discourse.scss
+  }
+
+  .timeline-container {
+    margin-left: unset !important;
+    /* This is a temporary override to ease the transition
+    to the sticky position timeline for themes with custom timeline positioning.
+    Without this those themes would render topics unreadable. */
+  }
+
+  // timeline
+  @media screen and (min-width: 925px) {
+    // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
+    .topic-navigation {
+      grid-area: timeline;
+      align-self: start;
+      @include sticky;
+      top: 6em;
+      margin-left: 1em;
+      z-index: z("timeline");
+    }
+  }
+
+  // progress bar
+  @media screen and (max-width: 924px) {
+    // at 924px viewport width and below the progress bar is visible (see topic-navigation.js)
+    grid-template-areas: "posts posts";
+    .timeline-container:not(.timeline-fullscreen) {
+      display: none; // hiding this because sometimes the JS switch lags and causes layout issues
+    }
+    .timeline-container {
+      .timeline-scroller-content {
+        position: relative;
+      }
+    }
+  }
+}
+
 .progress-back-container {
   z-index: z("dropdown");
   margin-right: 0;
@@ -70,8 +116,11 @@
   .topic-statuses {
     line-height: 1.2em;
     margin-right: 0.15em;
+    &:empty {
+      margin-right: 0;
+    }
     .d-icon {
-      color: $primary-medium;
+      color: var(--primary-medium);
     }
   }
 }
@@ -125,11 +174,14 @@ a.badge-category {
         margin-left: 0;
       }
     }
+    .select-kit .category-row {
+      max-width: unset;
+    }
   }
 }
 
 .private-message-glyph {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+  color: var(--primary-low-mid-or-secondary-high);
 }
 
 .private-message-glyph-wrapper {
@@ -175,7 +227,7 @@ a.badge-category {
   justify-content: space-between;
 
   padding: 0.5em;
-  background-color: $highlight-medium;
+  background-color: var(--highlight-medium);
   margin-top: 1em;
   max-width: 757px;
 }
@@ -224,13 +276,13 @@ a.badge-category {
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
     li:last-of-type {
       margin-bottom: 1em;
     }
   }
   .expand-links {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
   .track-link {
     display: flex;
@@ -245,7 +297,7 @@ a.badge-category {
     li {
       margin-bottom: 0.5em;
       a[href] {
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: var(--primary-med-or-secondary-med);
       }
       .clicks {
         margin-left: 0.5em;
@@ -259,14 +311,14 @@ a.badge-category {
   }
   a.reply-new {
     .d-icon {
-      background: $secondary;
+      background: var(--secondary);
       border-radius: 20px;
       transition: all linear 0.15s;
     }
     &:hover {
-      color: $tertiary;
+      color: var(--tertiary);
       .d-icon {
-        background: $tertiary-low;
+        background: var(--tertiary-low);
       }
     }
   }
@@ -275,7 +327,7 @@ a.badge-category {
 a.topic-featured-link {
   display: inline-block;
   text-transform: lowercase;
-  color: dark-light-choose($primary-medium, $secondary-medium);
+  color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
   .d-icon {
     margin-right: 3px;
@@ -293,5 +345,25 @@ a.topic-featured-link {
         max-height: unset;
       }
     }
+  }
+}
+
+.published-page-notice {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1em;
+  max-width: calc(
+    #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
+      2}
+  );
+  align-items: center;
+
+  .is-public {
+    padding: 0.25em 0.5em;
+    font-size: $font-down-2;
+    background: var(--tertiary);
+    color: var(--secondary);
+    border-radius: 3px;
+    text-transform: lowercase;
   }
 }

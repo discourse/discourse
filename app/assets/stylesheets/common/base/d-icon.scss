@@ -2,10 +2,10 @@
 .d-icon.d-icon-d-muted,
 .d-icon.d-icon-d-watching-first,
 .d-icon.d-icon-d-watching-first-post {
-  color: $primary-high;
+  color: var(--primary-high);
 }
 
 .d-icon.d-icon-d-tracking,
 .d-icon.d-icon-d-watching {
-  color: $tertiary;
+  color: var(--tertiary);
 }

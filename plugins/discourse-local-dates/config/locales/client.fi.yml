@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fi:
   js:
@@ -20,7 +19,6 @@ fi:
           insert: Lisää
           advanced_mode: Lisäasetukset
           simple_mode: Piilota lisäasetukset
-          format_description: "Missä formaatissa aika näytetään käyttäjälle. Näytä käyttäjän aikavyöhyke sanallisesti (esim. Europe/Paris) lisäämällä \"\\T\\Z\"."
           timezones_title: Näytettävät aikavyöhykkeet
           timezones_description: Aikavyöhykkeitä käytetään esikatselussa sekä varana virhetilanteissa.
           recurring_title: Toistuvuus

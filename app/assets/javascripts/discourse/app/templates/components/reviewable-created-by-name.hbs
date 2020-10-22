@@ -1,0 +1,15 @@
+<div class="names">
+  <span class="username">
+    {{#if user}}
+      {{#user-link user=user}}{{user.username}}{{/user-link}}
+      {{#if user.silenced}}
+        {{d-icon "ban" title="user.silenced_tooltip"}}
+      {{/if}}
+    {{else}}
+      {{i18n "review.deleted_user"}}
+    {{/if}}
+  </span>
+  {{plugin-outlet name="after-reviewable-post-user"
+      tagName=""
+      args=(hash user=user)}}
+</div>

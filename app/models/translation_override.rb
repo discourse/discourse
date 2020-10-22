@@ -3,14 +3,16 @@
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
-  # Whitelist i18n interpolation keys that can be included when customizing translations
-  CUSTOM_INTERPOLATION_KEYS_WHITELIST = {
+  # Allowlist i18n interpolation keys that can be included when customizing translations
+  ALLOWED_CUSTOM_INTERPOLATION_KEYS = {
     "user_notifications.user_" => %w{
       topic_title_url_encoded
       site_title_url_encoded
       context
     }
   }
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'CUSTOM_INTERPOLATION_KEYS_WHITELIST', 'TranslationOverride::ALLOWED_CUSTOM_INTERPOLATION_KEYS'
 
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value
@@ -28,38 +30,58 @@ class TranslationOverride < ActiveRecord::Base
 
     translation_override = find_or_initialize_by(params)
     params.merge!(data) if translation_override.new_record?
-    i18n_changed([key]) if translation_override.update(data)
+    i18n_changed(locale, [key]) if translation_override.update(data)
     translation_override
   end
 
-  def self.revert!(locale, *keys)
+  def self.revert!(locale, keys)
+    keys = Array.wrap(keys)
     TranslationOverride.where(locale: locale, translation_key: keys).delete_all
-    i18n_changed(keys)
+    i18n_changed(locale, keys)
   end
 
-  def self.i18n_changed(keys)
+  def self.reload_all_overrides!
+    reload_locale!
+
+    overrides = TranslationOverride.pluck(:locale, :translation_key)
+    overrides = overrides.group_by(&:first).map { |k, a| [k, a.map(&:last)] }
+    overrides.each do |locale, keys|
+      clear_cached_keys!(locale, keys)
+    end
+  end
+
+  def self.reload_locale!
     I18n.reload!
     ExtraLocalesController.clear_cache!
     MessageBus.publish('/i18n-flush', refresh: true)
-
-    keys.flatten.each do |key|
-      return if expire_cache(key)
-    end
   end
 
-  def self.expire_cache(key)
+  def self.clear_cached_keys!(locale, keys)
+    should_clear_anon_cache = false
+    keys.each do |key|
+      should_clear_anon_cache |= expire_cache(locale, key)
+    end
+    Site.clear_anon_cache! if should_clear_anon_cache
+  end
+
+  def self.i18n_changed(locale, keys)
+    reload_locale!
+    clear_cached_keys!(locale, keys)
+  end
+
+  def self.expire_cache(locale, key)
     if key.starts_with?('post_action_types.')
-      ApplicationSerializer.expire_cache_fragment!("post_action_types_#{I18n.locale}")
+      ApplicationSerializer.expire_cache_fragment!("post_action_types_#{locale}")
     elsif key.starts_with?('topic_flag_types.')
-      ApplicationSerializer.expire_cache_fragment!("post_action_flag_types_#{I18n.locale}")
+      ApplicationSerializer.expire_cache_fragment!("post_action_flag_types_#{locale}")
     else
       return false
     end
-
-    Site.clear_anon_cache!
     true
   end
 
+  private_class_method :reload_locale!
+  private_class_method :clear_cached_keys!
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
@@ -78,7 +100,7 @@ class TranslationOverride < ActiveRecord::Base
 
       custom_interpolation_keys = []
 
-      CUSTOM_INTERPOLATION_KEYS_WHITELIST.select do |key, value|
+      ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |key, value|
         if transformed_key.start_with?(key)
           custom_interpolation_keys = value
         end

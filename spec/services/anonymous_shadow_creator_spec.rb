@@ -56,7 +56,7 @@ describe AnonymousShadowCreator do
       expect(shadow.trust_level).to eq(1)
       expect(shadow.username).to eq("anonymous")
 
-      expect(shadow.created_at).not_to eq(user.created_at)
+      expect(shadow.created_at).not_to eq_time(user.created_at)
 
       p = create_post
 
@@ -73,8 +73,8 @@ describe AnonymousShadowCreator do
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end
 
-    it "works when there is an email whitelist" do
-      SiteSetting.email_domains_whitelist = "wayne.com"
+    it "works when there is an email allowlist" do
+      SiteSetting.allowed_email_domains = "wayne.com"
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end

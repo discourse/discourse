@@ -2,8 +2,6 @@
 require 'rails_helper'
 
 describe ContentSecurityPolicy do
-  before { ContentSecurityPolicy.base_url = nil }
-
   after do
     DiscoursePluginRegistry.reset!
   end
@@ -35,11 +33,14 @@ describe ContentSecurityPolicy do
   end
 
   describe 'worker-src' do
-    it 'always has self and blob' do
+    it 'has expected values' do
       worker_srcs = parse(policy)['worker-src']
       expect(worker_srcs).to eq(%w[
         'self'
-        blob:
+        http://test.localhost/assets/
+        http://test.localhost/brotli_asset/
+        http://test.localhost/javascripts/
+        http://test.localhost/plugins/
       ])
     end
   end
@@ -48,7 +49,6 @@ describe ContentSecurityPolicy do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
       expect(script_srcs).to include(*%w[
-        'report-sample'
         http://test.localhost/logs/
         http://test.localhost/sidekiq/
         http://test.localhost/mini-profiler-resources/
@@ -63,7 +63,13 @@ describe ContentSecurityPolicy do
       ])
     end
 
-    it 'whitelists Google Analytics and Tag Manager when integrated' do
+    it 'includes "report-sample" when report collection is enabled' do
+      SiteSetting.content_security_policy_collect_reports = true
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include("'report-sample'")
+    end
+
+    it 'allowlists Google Analytics and Tag Manager when integrated' do
       SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
@@ -72,7 +78,7 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
-    it 'whitelists CDN assets when integrated' do
+    it 'allowlists CDN assets when integrated' do
       set_cdn_url('https://cdn.com')
 
       script_srcs = parse(policy)['script-src']
@@ -97,6 +103,35 @@ describe ContentSecurityPolicy do
         https://cdn.com/plugins/
         https://cdn.com/theme-javascripts/
         http://test.localhost/extra-locales/
+      ])
+    end
+
+    it 'adds subfolder to CDN assets' do
+      set_cdn_url('https://cdn.com')
+      set_subfolder('/forum')
+
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://cdn.com/forum/assets/
+        https://cdn.com/forum/brotli_asset/
+        https://cdn.com/forum/highlight-js/
+        https://cdn.com/forum/javascripts/
+        https://cdn.com/forum/plugins/
+        https://cdn.com/forum/theme-javascripts/
+        http://test.localhost/forum/extra-locales/
+      ])
+
+      global_setting(:s3_cdn_url, 'https://s3-cdn.com')
+
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://s3-cdn.com/assets/
+        https://s3-cdn.com/brotli_asset/
+        https://cdn.com/forum/highlight-js/
+        https://cdn.com/forum/javascripts/
+        https://cdn.com/forum/plugins/
+        https://cdn.com/forum/theme-javascripts/
+        http://test.localhost/forum/extra-locales/
       ])
     end
   end
@@ -179,6 +214,29 @@ describe ContentSecurityPolicy do
 
       expect(parse(theme_policy)['script-src']).to_not include('https://from-theme-flag.script')
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme-flag.worker')
+    end
+
+    it 'is extended automatically when themes reference external scripts' do
+      policy # call this first to make sure further actions clear the cache
+
+      theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
+        <script src='https://example.com/myscript.js'></script>
+        <script src='//example2.com/protocol-less-script.js'></script>
+        <script src='domain-only.com'></script>
+        <script>console.log('inline script')</script>
+      SCRIPT
+
+      theme.set_field(target: :desktop, name: "header", value: "")
+      theme.save!
+
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
+      expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
+      expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://example.com/myscript.js')
     end
   end
 

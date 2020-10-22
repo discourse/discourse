@@ -69,6 +69,7 @@ To get your environment setup, follow the community setup guide for your operati
 1. If you're on macOS, try the [macOS development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-macos-for-development/15772).
 1. If you're on Ubuntu, try the [Ubuntu development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-ubuntu-for-development/14727).
 1. If you're on Windows, try the [Windows 10 development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-windows-10-for-development/75149).
+1. If you want to use Docker, you may want to [read the Makefile](Makefile) now.
 
 If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md), which is aimed primarily at Ubuntu and macOS environments.
 
@@ -99,12 +100,13 @@ Discourse supports the **latest, stable releases** of all major browsers and pla
 - [Ember.js](https://github.com/emberjs/ember.js) &mdash; Our front end is an Ember.js app that communicates with the Rails API.
 - [PostgreSQL](https://www.postgresql.org/) &mdash; Our main data store is in Postgres.
 - [Redis](https://redis.io/) &mdash; We use Redis as a cache and for transient data.
+- [BrowserStack](https://www.browserstack.com/) &mdash; We use BrowserStack to test on real devices and browsers.
 
 Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https://github.com/discourse/discourse/blob/master/Gemfile).
 
 ## Contributing
 
-[![Build Status](https://api.travis-ci.org/discourse/discourse.svg?branch=master)](https://travis-ci.org/discourse/discourse)
+[![Build Status](https://github.com/discourse/discourse/workflows/CI/badge.svg)](https://github.com/discourse/discourse/actions)
 
 Discourse is **100% free** and **open source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!
@@ -127,7 +129,6 @@ We take security very seriously at Discourse; all our code is 100% open source a
 ## The Discourse Team
 
 The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/AUTHORS.md). For a complete list of the many individuals that contributed to the design and implementation of Discourse, please refer to [the official Discourse blog](https://blog.discourse.org/2013/02/the-discourse-team/) and [GitHub's list of contributors](https://github.com/discourse/discourse/contributors).
-
 
 ## Copyright / License
 

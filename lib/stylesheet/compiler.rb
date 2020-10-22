@@ -19,6 +19,11 @@ module Stylesheet
         filename = "#{asset}.scss"
         path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
         file = File.read path
+
+        if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
+          file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
+          file += Stylesheet::Importer.import_wcag_overrides(options[:color_scheme_id])
+        end
       end
 
       compile(file, filename, options)
@@ -37,6 +42,7 @@ module Stylesheet
                                  theme_id: options[:theme_id],
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
+                                 color_scheme_id: options[:color_scheme_id],
                                  load_paths: [Stylesheet::Common::ASSET_ROOT])
 
       result = engine.render

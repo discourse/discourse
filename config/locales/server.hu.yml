@@ -1,32 +1,44 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hu:
   dates:
     short_date_no_year: "MMM D."
     short_date: "YYYY. MMM D."
-    long_date: "YYYY. MMMM D. h:mma"
+    long_date: "YYYY. MMMM D. H:mm"
   datetime_formats: &datetime_formats
     formats:
-      short: "%Y-%m-%d"
+      short: "%Y.%m.%d."
       short_no_year: "%B %-d."
       date_only: "%Y. %B %-d."
       long: "%Y. %B %-d. %H:%M"
       no_day: "%Y. %B"
   date:
-    month_names: [~, január, február, március, április, május, június, július, augusztus, szeptember, október, november, december]
+    month_names:
+    - null
+    - január
+    - február
+    - március
+    - április
+    - május
+    - június
+    - július
+    - augusztus
+    - szeptember
+    - október
+    - november
+    - december
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "de."
     pm: "du."
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Témák"
-  posts: "Bejegyzések"
+  posts: "bejegyzések"
   loading: "Betöltés"
   powered_by_html: 'A motorháztető alatt: <a href="https://www.discourse.org">Discourse</a>, a megtekintése JavaScript engedélyezésével ajánlott'
   sign_up: "Regisztráció"
@@ -45,10 +57,11 @@ hu:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
       generic: Hiba történt a téma importálásákor
-      about_json: "Importálási hiba: az about.json nem létezik vagy érvénytelen"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
+      modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
       unpack_failed: "A fájl kibontása sikertelen"
+      file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
@@ -57,7 +70,6 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_not_a_number: "A(z) „%{name}” típus beállítása nem támogatott. A támogatott típusok: „integer”, „bool”, „list” és „enum”."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -88,7 +100,7 @@ hu:
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "%{max} karakterre korlátozva; megadott karakterek száma: %{length}."
@@ -97,23 +109,23 @@ hu:
       accepted: elfogadottnak kell lennie
       blank: nem lehet üres
       present: üresnek kell lennie
-      confirmation: "nem egyezik: %{attribute}"
+      confirmation: ! "nem egyezik: %{attribute}"
       empty: nem lehet üres
-      equal_to: "meg kell egyeznie ezzel: %{count}"
+      equal_to: 'meg kell egyeznie ezzel: %{count}'
       even: páros számnak kell lennie
       exclusion: foglalt
-      greater_than: "nagyobbnak kell lennie, mint %{count} "
-      greater_than_or_equal_to: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
+      greater_than: nagyobbnak kell lennie, mint %{count}
+      greater_than_or_equal_to: nagyobb vagy egyenlőnek kell lennie, mint %{count}
       has_already_been_used: "már használatban van"
       inclusion: nincs benne a listában
       invalid: érvénytelen
       contains_censored_words: "tartalmazza a következő nem engedélyezett szavakat: %{censored_words}"
-      less_than: "kevesebbnek kell lenni, mint %{count}"
-      less_than_or_equal_to: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
+      less_than: kevesebbnek kell lenni, mint %{count}
+      less_than_or_equal_to: kisebb vagy egyenlőnek kell lennie, mint %{count}
       not_a_number: ez nem szám
       not_an_integer: egész számnak kell lennie
       odd: páratlan számnak kell lennie
-      record_invalid: "Érvényesítés sikertelen: %{errors}"
+      record_invalid: ! "Érvényesítés sikertelen: %{errors}"
       max_emojis: "nem lehet több mint %{max_emojis_count} emodzsi"
       emojis_disabled: "nem tartalmazhat emodzsit"
       restrict_dependent_destroy:
@@ -130,24 +142,15 @@ hu:
         other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
       other_than: "nem lehet %{count}"
     template:
-      body: "Problémák vannak az alábbi mezőkkel:"
+      body: ! "Problémák vannak az alábbi mezőkkel:"
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltésekor."
     site_settings:
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
-  activemodel:
-    errors:
-      <<: *errors
   invite:
     not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
-    not_found_template: |
-      <p>A(z) <a href="%{base_url}">%{site_name}</a> meghívóját már felhasználta.</p>
-
-      <p>Ha emlékszik a jelszóra, akkor <a href="%{base_url}/login">bejelentkezhet</a>.</p>
-
-      <p>Egyébként <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
     error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
   backup:
@@ -198,11 +201,6 @@ hu:
   too_many_mentions_newuser:
     one: "Sajnáljuk, de az új felhasználók csak egy felhasználót említhetnek meg."
     other: "Sajnáljuk, de az új felhasználók csak %{count} felhasználót említhetnek meg."
-  no_images_allowed_trust: "Sajnáljuk, de nem tud képeket rakni egy bejegyzésbe"
-  no_images_allowed: "Sajnáljuk, de az új felhasználók nem tehetnek képeket egy bejegyzésbe."
-  too_many_images:
-    one: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
-    other: "Sajnáljuk, de az új felhasználók csak %{count} képet rakhatnak a bejegyzéseikbe."
   no_attachments_allowed: "Sajnáljuk, de az új felhasználók nem adhatnak mellékleteket egy bejegyzéshez."
   too_many_attachments:
     one: "Sajnáljuk, de az új felhasználók csak egy mellékletet adhatnak egy bejegyzéshez."
@@ -222,9 +220,6 @@ hu:
   topics_in_category: "Témák a(z) „%{category}” kategóriában"
   rss_posts_in_topic: "A(z) „%{topic}” RSS hírcsatornája"
   rss_topics_in_category: "A(z) „%{category}” témáinak RSS hírcsatornája"
-  author_wrote: "%{author} írta:"
-  num_posts: "Bejegyzések:"
-  num_participants: "Résztvevők:"
   read_full_topic: "Teljes téma elolvasása"
   private_message_abbrev: "Üzenet"
   rss_description:
@@ -245,6 +240,12 @@ hu:
   too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
+  bookmarks:
+    reminders:
+      later_today: "A mai nap folyamán"
+      tomorrow: "Holnap"
+      next_week: "Jövő héten"
+      next_month: "Jövő hónapban"
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthat egy automata csoportot"
@@ -262,19 +263,10 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
-    view_hidden_topic_request_reason: "Szeretnék csatlakozni a(z) „%{group_name}” csoporthoz, hogy elérjem [ezt a témát](%{topic_url})"
   education:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    get_a_room: |
-      ### Biztasson mindenkit, hogy csatlakozzanak a beszélgetéshez
-
-      %{count} alkalommal válaszoz @%{reply_username} felhasználónak ebben a témában.
-
-      A jó beszélgetések számos hangot és perspektívát tartalmaznak. Be tud valaki mást is vonni?
-
-      És ne feledje, ha nem nyilvánosan szeretné folytatni a párbeszédet ezzel a felhasználóval, akkor [személyes üzenetet is küldhet neki](%{base_path}/u/%{reply_username}).
   activerecord:
     attributes:
       category:
@@ -287,7 +279,6 @@ hu:
       user_profile:
         bio_raw: "Bemutatkozás"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -314,6 +305,7 @@ hu:
           attributes:
             name:
               taken: már egy másik emodzsi is használja
+      <<: *errors
   vip_category_name: "Társalgó"
   vip_category_description: "A kategória csak 3-as, vagy magasabb bizalmi szinttel rendelkező tagok számára érhető el."
   meta_category_name: "Visszajelzés"
@@ -321,7 +313,7 @@ hu:
   staff_category_name: "Stáb"
   staff_category_description: "Privát kategória a stáb számára. Ezeket a témákat csak az adminisztrátorok és moderátorok látják."
   lounge_welcome:
-    title: "Üdv a társalgóban"
+    title: "Üdvözöljük a társalgóban"
   category:
     topic_prefix: "A(z) %{category} kategóriáról"
     errors:
@@ -467,15 +459,12 @@ hu:
   post_action_types:
     off_topic:
       title: "Nem a témához tartozó"
-      long_form: "megjelölve nem a témához tartozóként"
     spam:
       title: "Szemét"
-      long_form: "megjelölve szemétként"
       email_title: 'A(z) „%{title}” szemétnek lett jelölve'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
-      long_form: "megjelölve nem ideillőként"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -486,12 +475,10 @@ hu:
       title: "Könyvjelző"
       description: "Bejegyzés könyvjelzőzése"
       short_description: "Bejegyzés könyvjelzőzése"
-      long_form: "a bejegyzés könyvjelzőzve"
     like:
       title: "Kedvelés"
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
-      long_form: "kedvelve"
   user_activity:
     no_default:
       self: "Még nincsenek tevékenységek."
@@ -539,7 +526,7 @@ hu:
     read_write: "olvasható/írható"
     otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
     otp_confirmation:
-      confirm_title: "Tovább a(z) %{site_name} oldalra"
+      confirm_title: Tovább a(z) %{site_name} oldalra
   reports:
     default:
       labels:
@@ -706,18 +693,18 @@ hu:
     http_2xx_reqs:
       title: "Állapot 2xx (OK)"
       xaxis: "Nap"
-      yaxis: "Sikeres kérések (Állapot 2xx)"
+      yaxis: "Sikeres kérések (Állapot: 2xx)"
     http_3xx_reqs:
       title: "HTTP 3xx (Átirányítás)"
       xaxis: "Nap"
     http_4xx_reqs:
       title: "HTTP 4xx (Kliensoldali hiba)"
       xaxis: "Nap"
-      yaxis: "Kliensoldali hibák (Állapot 4xx)"
+      yaxis: "Kliensoldali hibák (Állapot: 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (Kiszolgálóhiba)"
       xaxis: "Nap"
-      yaxis: "Kiszolgálóhibák (Állapot 5xx)"
+      yaxis: "Kiszolgálóhibák (Állapot: 5xx)"
     http_total_reqs:
       title: "Összes"
       xaxis: "Nap"
@@ -755,10 +742,9 @@ hu:
     memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
   site_settings:
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
-    moderators_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
-    block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
@@ -784,6 +770,7 @@ hu:
       category: "Kategóriák"
       topic: "Eredmények"
       user: "Felhasználók"
+    results_page: "Találatok erre: „%{term}”"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -791,6 +778,10 @@ hu:
   redirected_to_top_reasons:
     new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
     not_seen_in_a_month: "Üdv újra itt! Régóta nem láttuk. Ezek a legnépszerűbb témakörök, amióta távol volt."
+  publish_page:
+    slug_errors:
+      blank: "nem lehet üres"
+      invalid: "érvénytelen karaktereket tartalmaz"
   topic_statuses:
     autoclosed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
     autoclosed_disabled_lastpost: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
@@ -803,15 +794,14 @@ hu:
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
     errors: "%{errors}"
+    not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
-    omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
     password_too_long: "A jelszavak legfeljebb 200 karakter hosszúak lehetnek."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes felhasználói mezőt"
     click_to_continue: "Kattintson ide a folytatáshoz."
-    second_factor_title: "Kétfaktoros hitelesítés"
     second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
   admin:
     email:
@@ -1019,7 +1009,6 @@ hu:
       why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
       new_topics: "Új téma"
-      unread_messages: "Olvasatlan üzenet"
       unread_notifications: "Olvasatlan értesítés"
       liked_received: "Kapott kedvelés"
       new_users: "Új felhasználó"
@@ -1062,7 +1051,6 @@ hu:
     latte: "Tejeskávé"
     summer: "Nyár"
     dark_rose: "Sötét rózsa"
-    default_theme_name: "Világos"
     light_theme_name: "Világos"
     dark_theme_name: "Sötét"
     neutral_theme_name: "Semleges"
@@ -1087,7 +1075,7 @@ hu:
       name: Szerkesztő
       description: Első bejegyzés szerkesztése
     wiki_editor:
-      name: "Wikiszerkesztő "
+      name: Wikiszerkesztő
       description: Első wikiszerkesztés
     basic_user:
       name: Alapvető
@@ -1102,10 +1090,10 @@ hu:
       description: Kedvelést kapott
     autobiographer:
       name: Életrajzíró
-      description: "Kitöltötte a <a href=\"%{base_uri}/my/preferences/profile\">profilinformációit</a>"
+      description: Kitöltötte a <a href="%{base_uri}/my/preferences/profile">profilinformációit</a>
     anniversary:
       name: Évforduló
-      description: "Egy éve aktív tag, legalább egyszer bejegyzést tett közzé"
+      description: Egy éve aktív tag, legalább egyszer bejegyzést tett közzé
     nice_post:
       name: Szép válasz
       description: 10 kedvelést kapott egy válaszra
@@ -1183,8 +1171,6 @@ hu:
     submit_button: "E-mail küldése"
   tags:
     title: "Címkék"
-    staff_tag_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai állíthatják be.'
-    staff_tag_remove_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai távolíthatják el.'
     forbidden:
       in_this_category: 'A(z) „%{tag_name}” címke nem használható ebben a kategóriában'
       restricted_to:
@@ -1232,10 +1218,6 @@ hu:
           company_name:
             label: "Cégnév"
             placeholder: "Példa szervezet"
-      colors:
-        title: "Téma"
-      themes_further_reading:
-        title: "Témák"
       logos:
         title: "Logók"
         fields:
@@ -1260,7 +1242,7 @@ hu:
               categories_and_latest_topics:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
-                label: "Kategóriák és top témák"
+                label: "Kategóriák és legnépszerűbb témák"
       emoji:
         title: "Emodzsi"
       invites:
@@ -1270,6 +1252,11 @@ hu:
   joined: "Csatlakozott"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      group_mentioned: '%{username} megemlített téged "%{topic}" - %{site_title} témakörben'
+      quoted: '%{username} idézett itt: "%{topic}" - %{site_title}'
+      replied: '%{username} válaszolt neked itt: "%{topic}" - %{site_title}'
+      posted: '%{username} hozzászólt itt: "%{topic}" - %{site_title}'
       confirm_title: "Értesítések bekapcsolva – %{site_title}"
       confirm_body: "Siker! Értesítések engedélyezve."
       custom: "Értesítés %{username} felhasználótól itt: %{site_title}"
@@ -1335,3 +1322,6 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  activemodel:
+    errors:
+      <<: *errors

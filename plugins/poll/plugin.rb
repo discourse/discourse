@@ -8,6 +8,7 @@
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
+register_asset "stylesheets/common/poll-breakdown.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
@@ -62,11 +63,12 @@ after_initialize do
           end
 
           # user must be allowed to post in topic
-          if !Guardian.new(user).can_create_post?(post.topic)
+          guardian = Guardian.new(user)
+          if !guardian.can_create_post?(post.topic)
             raise StandardError.new I18n.t("poll.user_cant_post_in_topic")
           end
 
-          poll = Poll.includes(poll_options: :poll_votes).find_by(post_id: post_id, name: poll_name)
+          poll = Poll.includes(:poll_options).find_by(post_id: post_id, name: poll_name)
 
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) unless poll
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll.is_closed?
@@ -89,17 +91,17 @@ after_initialize do
             obj << option.id if options.include?(option.digest)
           end
 
+          old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
+            if option.poll_votes.where(user_id: user.id).exists?
+              obj << option.id
+            end
+          end
+
           # remove non-selected votes
           PollVote
             .where(poll: poll, user: user)
             .where.not(poll_option_id: new_option_ids)
             .delete_all
-
-          old_option_ids = poll.poll_options.each_with_object([]) do |option, obj|
-            if option.poll_votes.any? { |v| v.user_id == user.id }
-              obj << option.id
-            end
-          end
 
           # create missing votes
           (new_option_ids - old_option_ids).each do |option_id|
@@ -108,7 +110,7 @@ after_initialize do
 
           poll.reload
 
-          serialized_poll = PollSerializer.new(poll, root: false).as_json
+          serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
           payload = { post_id: post_id, polls: [serialized_poll] }
 
           post.publish_message!("/polls/#{post.topic_id}", payload)
@@ -120,6 +122,7 @@ after_initialize do
       def toggle_status(post_id, poll_name, status, user, raise_errors = true)
         Poll.transaction do
           post = Post.find_by(id: post_id)
+          guardian = Guardian.new(user)
 
           # post must not be deleted
           if post.nil? || post.trashed?
@@ -149,7 +152,7 @@ after_initialize do
           poll.status = status
           poll.save!
 
-          serialized_poll = PollSerializer.new(poll, root: false).as_json
+          serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
           payload = { post_id: post_id, polls: [serialized_poll] }
 
           post.publish_message!("/polls/#{post.topic_id}", payload)
@@ -326,6 +329,7 @@ after_initialize do
           type: poll["type"].presence || "regular",
           status: poll["status"].presence || "open",
           visibility: poll["public"] == "true" ? "everyone" : "secret",
+          title: poll["title"],
           results: poll["results"].presence || "always",
           min: poll["min"],
           max: poll["max"],
@@ -348,7 +352,7 @@ after_initialize do
         # in the validators instead of cooking twice
         cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)
 
-        Nokogiri::HTML(cooked).css("div.poll").map do |p|
+        Nokogiri::HTML5(cooked).css("div.poll").map do |p|
           poll = { "options" => [], "name" => DiscoursePoll::DEFAULT_POLL_NAME }
 
           # attributes
@@ -362,6 +366,12 @@ after_initialize do
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
             option_id = o.attributes[DATA_PREFIX + "option-id"].value.to_s
             poll["options"] << { "id" => option_id, "html" => o.inner_html.strip }
+          end
+
+          # title
+          title_element = p.css(".poll-title").first
+          if title_element
+            poll["title"] = title_element.inner_html.strip
           end
 
           poll
@@ -449,28 +459,30 @@ after_initialize do
     mount ::DiscoursePoll::Engine, at: "/polls"
   end
 
-  Post.class_eval do
-    attr_accessor :extracted_polls
+  reloadable_patch do
+    Post.class_eval do
+      attr_accessor :extracted_polls
 
-    has_many :polls, dependent: :destroy
+      has_many :polls, dependent: :destroy
 
-    after_save do
-      polls = self.extracted_polls
-      next if polls.blank? || !polls.is_a?(Hash)
-      post = self
+      after_save do
+        polls = self.extracted_polls
+        next if polls.blank? || !polls.is_a?(Hash)
+        post = self
 
-      Poll.transaction do
-        polls.values.each do |poll|
-          DiscoursePoll::Poll.create!(post.id, poll)
+        Poll.transaction do
+          polls.values.each do |poll|
+            DiscoursePoll::Poll.create!(post.id, poll)
+          end
+          post.custom_fields[DiscoursePoll::HAS_POLLS] = true
+          post.save_custom_fields(true)
         end
-        post.custom_fields[DiscoursePoll::HAS_POLLS] = true
-        post.save_custom_fields(true)
       end
     end
-  end
 
-  User.class_eval do
-    has_many :poll_votes, dependent: :delete_all
+    User.class_eval do
+      has_many :poll_votes, dependent: :delete_all
+    end
   end
 
   validate(:post, :validate_polls) do |force = nil|
@@ -542,11 +554,12 @@ after_initialize do
     end
   end
 
-  on(:post_created) do |post|
+  on(:post_created) do |post, _opts, user|
+    guardian = Guardian.new(user)
     DiscoursePoll::Poll.schedule_jobs(post)
 
     unless post.is_first_post?
-      polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false).as_json
+      polls = ActiveModel::ArraySerializer.new(post.polls, each_serializer: PollSerializer, root: false, scope: guardian).as_json
       post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
     end
   end
@@ -557,7 +570,7 @@ after_initialize do
 
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
 
-  topic_view_post_custom_fields_whitelister { [DiscoursePoll::HAS_POLLS] }
+  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   add_to_class(:topic_view, :polls) do
     @polls ||= begin
@@ -569,7 +582,6 @@ after_initialize do
 
       if post_with_polls.present?
         Poll
-          .includes(poll_options: :poll_votes, poll_votes: :poll_option)
           .where(post_id: post_with_polls)
           .each do |p|
             polls[p.post_id] ||= []
@@ -585,7 +597,7 @@ after_initialize do
     @preloaded_polls ||= if @topic_view.present?
       @topic_view.polls[object.id]
     else
-      Poll.includes(poll_options: :poll_votes).where(post: object)
+      Poll.includes(:poll_options).where(post: object)
     end
   end
 
@@ -594,7 +606,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :polls, false) do
-    preloaded_polls.map { |p| PollSerializer.new(p, root: false) }
+    preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
   end
 
   add_to_serializer(:post, :include_polls?) do
@@ -603,11 +615,12 @@ after_initialize do
 
   add_to_serializer(:post, :polls_votes, false) do
     preloaded_polls.map do |poll|
-      user_poll_votes = poll.poll_votes.each_with_object([]) do |vote, obj|
-        if vote.user_id == scope.user.id
-          obj << vote.poll_option.digest
-        end
-      end
+      user_poll_votes =
+        poll
+          .poll_votes
+          .where(user_id: scope.user.id)
+          .joins(:poll_option)
+          .pluck("poll_options.digest")
 
       [poll.name, user_poll_votes]
     end.to_h

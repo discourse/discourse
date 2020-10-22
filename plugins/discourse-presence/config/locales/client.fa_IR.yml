@@ -1,12 +1,12 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fa_IR:
   js:
     presence:
-      replying: "در حال نوشتن پاسخ"
-      editing: "در حال ویرایش"
+      replying_to_topic:
+        one: "پاسخ دادن"
+        other: "پاسخ دادن"

@@ -84,6 +84,20 @@ describe ImportExport::Importer do
         .and change { User.count }.by(2)
     end
 
+    it 'groups' do
+      data = import_data.dup
+      data[:categories] = nil
+      data[:topics] = nil
+      data[:users] = nil
+
+      expect {
+        import(data)
+      }.to change { Category.count }.by(0)
+        .and change { Group.count }.by(2)
+        .and change { Topic.count }.by(0)
+        .and change { User.count }.by(0)
+    end
+
     it 'all' do
       expect {
         import(import_data)

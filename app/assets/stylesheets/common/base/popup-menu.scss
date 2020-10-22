@@ -1,0 +1,59 @@
+.popup-menu {
+  background-color: var(--secondary);
+  width: 14em;
+  border: 1px solid var(--primary-low);
+  z-index: z("dropdown");
+  box-shadow: shadow("card");
+
+  ul {
+    margin: 0;
+    list-style: none;
+
+    li {
+      border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
+
+      &:last-child {
+        border: none;
+      }
+    }
+  }
+
+  .btn {
+    text-align: left;
+    background: none;
+    width: 100%;
+    padding: 0.75em;
+    border-radius: 0;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover {
+      color: var(--primary);
+      background: var(--tertiary-low);
+
+      .d-icon {
+        color: var(--primary-medium);
+      }
+    }
+
+    &.popup-menu-btn-danger {
+      .d-icon {
+        color: var(--danger);
+      }
+
+      .d-button-label {
+        color: var(--primary);
+      }
+
+      &:hover {
+        .d-icon,
+        .d-button-label {
+          color: var(--danger);
+        }
+        background: var(--danger-low);
+      }
+    }
+  }
+}

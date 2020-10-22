@@ -1,0 +1,11 @@
+{{list-setting
+  value=settingValue
+  settingName=setting.setting
+  allowAny=allowAny
+  choices=settingChoices
+  onChange=(action "onChangeListSetting")
+  onChangeChoices=(action "onChangeChoices")
+}}
+
+{{setting-validation-message message=validationMessage}}
+<div class="desc">{{html-safe setting.description}}</div>

@@ -5,15 +5,16 @@ require 'rails_helper'
 describe CategoriesController do
   let(:admin) { Fabricate(:admin) }
   let!(:category) { Fabricate(:category, user: admin) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'index' do
 
     it 'web crawler view has correct urls for subfolder install' do
       set_subfolder "/forum"
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML(response.body)
+      html = Nokogiri::HTML5(response.body)
       expect(html.css('body.crawler')).to be_present
-      expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
+      expect(html.css("a[href=\"/forum/c/#{category.slug}/#{category.id}\"]")).to be_present
     end
 
     it "properly preloads topic list" do
@@ -46,11 +47,31 @@ describe CategoriesController do
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
-      perm = Permalink.create!(url: "category/something", category_id: category.id)
+      _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
       expect(response.status).to eq(301)
       expect(response.body).to include(category.slug)
+    end
+
+    it 'returns the right response for a normal user' do
+      sign_in(user)
+
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'hello')
+
+      get "/categories.json"
+
+      expect(response.status).to eq(200)
+
+      category_list = response.parsed_body["category_list"]
+
+      expect(category_list["categories"].map { |c| c["id"] }).to contain_exactly(
+        SiteSetting.get(:uncategorized_category_id), category.id
+      )
+
+      expect(category_list["draft_sequence"]).to eq(0)
+      expect(category_list["draft_key"]).to eq(Draft::NEW_TOPIC)
+      expect(category_list["draft"]).to eq('hello')
     end
   end
 
@@ -99,16 +120,6 @@ describe CategoriesController do
         expect(response.status).to eq(400)
       end
 
-      it "raises an exception when the color is missing" do
-        post "/categories.json", params: { name: "hello", text_color: "fff" }
-        expect(response.status).to eq(400)
-      end
-
-      it "raises an exception when the text color is missing" do
-        post "/categories.json", params: { name: "hello", color: "ff0" }
-        expect(response.status).to eq(400)
-      end
-
       describe "failure" do
         it "returns errors on a duplicate category name" do
           category = Fabricate(:category, user: admin)
@@ -129,13 +140,13 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(422)
-          expect(JSON.parse(response.body)['errors']).to be_present
+          expect(response.parsed_body['errors']).to be_present
         end
       end
 
       describe "success" do
         it "works" do
-          SiteSetting.enable_category_group_review = true
+          SiteSetting.enable_category_group_moderation = true
 
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
@@ -156,7 +167,7 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(200)
-          cat_json = ::JSON.parse(response.body)['category']
+          cat_json = response.parsed_body['category']
           expect(cat_json).to be_present
           expect(cat_json['reviewable_by_group_name']).to eq(group.name)
           expect(cat_json['name']).to eq('hello')
@@ -218,11 +229,15 @@ describe CategoriesController do
 
       it "deletes the record" do
         sign_in(admin)
+
+        id = Fabricate(:topic_timer, category: category).id
+
         expect do
           delete "/categories/#{category.slug}.json"
         end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
+        expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
   end
@@ -289,27 +304,6 @@ describe CategoriesController do
         expect(response).to be_forbidden
       end
 
-      it "requires a name" do
-        put "/categories/#{category.slug}.json", params: {
-          color: 'fff',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a color" do
-        put "/categories/#{category.slug}.json", params: {
-          name: 'asdf',
-          text_color: '0ff',
-        }
-        expect(response.status).to eq(400)
-      end
-
-      it "requires a text color" do
-        put "/categories/#{category.slug}.json", params: { name: 'asdf', color: 'fff' }
-        expect(response.status).to eq(400)
-      end
-
       it "returns errors on a duplicate category name" do
         other_category = Fabricate(:category, name: "Other", user: admin)
         put "/categories/#{category.id}.json", params: {
@@ -320,8 +314,19 @@ describe CategoriesController do
         expect(response.status).to eq(422)
       end
 
+      it "returns errors when there is a name conflict while moving a category into another" do
+        parent_category = Fabricate(:category, name: "Parent", user: admin)
+        other_category = Fabricate(:category, name: category.name, user: admin, parent_category: parent_category, slug: "a-different-slug")
+
+        put "/categories/#{category.id}.json", params: {
+          parent_category_id: parent_category.id,
+        }
+
+        expect(response.status).to eq(422)
+      end
+
       it "returns 422 if email_in address is already in use for other category" do
-        other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
+        _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
 
         put "/categories/#{category.id}.json", params: {
           name: "Email",
@@ -448,8 +453,9 @@ describe CategoriesController do
       end
 
       it 'rejects blank' do
-        put "/category/#{category.id}/slug.json", params: { slug: nil }
+        put "/category/#{category.id}/slug.json", params: { slug: '   ' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug can't be blank"])
       end
 
       it 'accepts valid custom slug' do
@@ -476,8 +482,9 @@ describe CategoriesController do
       end
 
       it 'rejects invalid custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: '  ' }
+        put "/category/#{category.id}/slug.json", params: { slug: '.' }
         expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["Slug is invalid"])
       end
     end
   end
@@ -491,21 +498,32 @@ describe CategoriesController do
       SiteSetting.categories_topics = 5
 
       get '/categories_and_latest.json'
-      expect(JSON.parse(response.body)['topic_list']['topics'].size).to eq(5)
+      expect(response.parsed_body['topic_list']['topics'].size).to eq(5)
     end
 
     it 'works when SiteSetting.categories_topics is null' do
       SiteSetting.categories_topics = 0
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
-      expect(json['category_list']['categories'].size).to eq(2) # 'Uncategorized' and category
-      expect(json['topic_list']['topics'].size).to eq(5)
+      json = response.parsed_body
+
+      category_list = json['category_list']
+      topic_list = json['topic_list']
+
+      expect(category_list['categories'].size).to eq(2) # 'Uncategorized' and category
+      expect(category_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(category_list['draft_sequence']).to eq(nil)
+      expect(category_list['draft']).to eq(nil)
+
+      expect(topic_list['topics'].size).to eq(5)
+      expect(topic_list['draft_key']).to eq(Draft::NEW_TOPIC)
+      expect(topic_list['draft_sequence']).to eq(nil)
+      expect(topic_list['draft']).to eq(nil)
 
       Fabricate(:category, parent_category: category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(2)
       expect(json['topic_list']['topics'].size).to eq(5)
 
@@ -513,7 +531,7 @@ describe CategoriesController do
       Fabricate(:category)
 
       get '/categories_and_latest.json'
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json['category_list']['categories'].size).to eq(4)
       expect(json['topic_list']['topics'].size).to eq(6)
     end

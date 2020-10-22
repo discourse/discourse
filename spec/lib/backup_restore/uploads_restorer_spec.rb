@@ -73,9 +73,7 @@ describe BackupRestore::UploadsRestorer do
   def uploads_path(database)
     path = File.join("uploads", database)
 
-    if Discourse.is_parallel_test?
-      path = File.join(path, ENV['TEST_ENV_NUMBER'].presence || '1')
-    end
+    path = File.join(path, "test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}")
 
     "/#{path}/"
   end
@@ -371,10 +369,7 @@ describe BackupRestore::UploadsRestorer do
 
     context "currently stored on S3" do
       before do
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-        SiteSetting.enable_s3_uploads = true
+        setup_s3
       end
 
       let!(:store_class) { FileStore::S3Store }

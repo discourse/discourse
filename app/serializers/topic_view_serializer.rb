@@ -40,7 +40,8 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_globally,
     :pinned_at,
     :pinned_until,
-    :image_url
+    :image_url,
+    :slow_mode_seconds
   )
 
   attributes(
@@ -61,20 +62,25 @@ class TopicViewSerializer < ApplicationSerializer
     :is_warning,
     :chunk_size,
     :bookmarked,
+    :bookmark_reminder_at,
     :message_archived,
     :topic_timer,
-    :private_topic_timer,
     :unicode_title,
     :message_bus_last_id,
     :participant_count,
     :destination_category_id,
     :pm_with_non_human_user,
     :queued_posts_count,
-    :show_read_indicator
+    :show_read_indicator,
+    :requested_group_name,
+    :thumbnails,
+    :user_last_posted_at
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
+
+  has_one :published_page, embed: :objects
 
   def details
     object
@@ -182,24 +188,19 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def bookmarked
-    if SiteSetting.enable_bookmarks_with_reminders?
-      object.has_bookmarks?
-    else
-      object.topic_user&.bookmarked
-    end
+    object.has_bookmarks?
+  end
+
+  def include_bookmark_reminder_at?
+    bookmarked
+  end
+
+  def bookmark_reminder_at
+    object.first_post_bookmark_reminder_at
   end
 
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
-  end
-
-  def include_private_topic_timer?
-    scope.user
-  end
-
-  def private_topic_timer
-    timer = object.topic.private_topic_timer(scope.user)
-    TopicTimerSerializer.new(timer, root: false)
   end
 
   def include_featured_link?
@@ -254,5 +255,39 @@ class TopicViewSerializer < ApplicationSerializer
 
   def show_read_indicator
     object.show_read_indicator?
+  end
+
+  def requested_group_name
+    if scope&.user
+      group = Group
+        .joins('JOIN group_users ON groups.id = group_users.group_id')
+        .find_by(
+          id: object.topic.custom_fields['requested_group_id'].to_i,
+          group_users: { user_id: scope.user.id, owner: true }
+        )
+
+      group.name if group
+    end
+  end
+
+  def include_requested_group_name?
+    object.personal_message
+  end
+
+  def include_published_page?
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+  end
+
+  def thumbnails
+    extra_sizes = ThemeModifierHelper.new(request: scope.request).topic_thumbnail_sizes
+    object.topic.thumbnail_info(enqueue_if_missing: true, extra_sizes: extra_sizes)
+  end
+
+  def user_last_posted_at
+    object.topic_user.last_posted_at
+  end
+
+  def include_user_last_posted_at?
+    object.topic.slow_mode_seconds.to_i > 0
   end
 end

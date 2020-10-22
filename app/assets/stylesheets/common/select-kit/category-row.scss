@@ -1,13 +1,16 @@
 .select-kit {
   .category-row {
+    max-width: 345px;
     .category-status {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       max-width: 100%;
       -webkit-box-flex: 0;
       -ms-flex: 1 1 auto;
       flex: 1 1 auto;
+    }
+    .category-desc p {
+      margin: 0;
     }
     .category-status {
       .badge-wrapper.box {

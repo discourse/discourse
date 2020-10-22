@@ -1,0 +1,10 @@
+{{list-setting
+  value=settingValue
+  choices=groupChoices
+  settingName="name"
+  nameProperty=nameProperty
+  valueProperty=valueProperty
+  onChange=(action "onChangeGroupListSetting")
+}}
+{{setting-validation-message message=validationMessage}}
+<div class="desc">{{html-safe setting.description}}</div>

@@ -186,7 +186,7 @@ def login
   get("https://myaccount.google.com/?utm_source=sign_in_no_continue")
 
   begin
-    wait_for_url { |url| url.start_with?("https://myaccount.google.com") }
+    wait_for_url { |url| url.start_with?("https://accounts.google.com") }
   rescue Selenium::WebDriver::Error::TimeoutError
     exit_with_error("Failed to login. Please check the content of your cookies.txt".red.bold)
   end

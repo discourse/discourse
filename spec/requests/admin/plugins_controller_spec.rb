@@ -16,7 +16,7 @@ describe Admin::PluginsController do
     it 'should return JSON' do
       get "/admin/plugins.json"
       expect(response.status).to eq(200)
-      expect(::JSON.parse(response.body).has_key?('plugins')).to eq(true)
+      expect(response.parsed_body.has_key?('plugins')).to eq(true)
     end
   end
 end

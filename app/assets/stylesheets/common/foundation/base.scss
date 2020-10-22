@@ -6,13 +6,17 @@
 // --------------------------------------------------
 
 html {
-  color: $primary;
+  color: var(--primary);
   font-family: $base-font-family;
   font-size: $base-font-size;
   line-height: $line-height-large;
-  background-color: $secondary;
+  background-color: var(--secondary);
   overflow-y: scroll;
   direction: ltr;
+
+  &.text-size-smallest {
+    font-size: $base-font-size-smallest;
+  }
 
   &.text-size-smaller {
     font-size: $base-font-size-smaller;
@@ -31,17 +35,17 @@ html {
 // --------------------------------------------------
 
 a {
-  color: $tertiary;
+  color: var(--tertiary);
   text-decoration: none;
   cursor: pointer;
   &:visited {
-    color: $tertiary;
+    color: var(--tertiary);
   }
   &:hover {
-    color: $tertiary;
+    color: var(--tertiary);
   }
   &:active {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }
 
@@ -53,7 +57,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 0;
 }
 
@@ -103,7 +107,11 @@ fieldset {
 
 pre code {
   overflow: auto;
+  -moz-tab-size: 4;
   tab-size: 4;
+  &.lang-markdown {
+    white-space: pre-wrap;
+  }
 }
 
 // TODO figure out a clean place to put stuff like this
@@ -123,12 +131,16 @@ pre code {
 // Tables
 // --------------------------------------------------
 
+table {
+  border-collapse: collapse;
+}
+
 tbody {
-  border-top: 3px solid $primary-low;
+  border-top: 3px solid var(--primary-low);
 }
 
 tr {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
   &.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
@@ -137,4 +149,14 @@ tr {
 // https://en.wikipedia.org/wiki/Ruby_character
 ruby > rt {
   font-size: 72%; // ~10px with 14px base
+}
+
+// Buttons (was in normalized)
+// --------------------------------------------------
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
 }

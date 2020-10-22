@@ -23,30 +23,46 @@ module DiscourseTagging
         end
       end
 
+      # tags currently on the topic
       old_tag_names = topic.tags.pluck(:name) || []
+      # tags we're trying to add to the topic
       new_tag_names = tag_names - old_tag_names
+      # tag names being removed from the topic
       removed_tag_names = old_tag_names - tag_names
 
-      # Protect staff-only tags
-      unless guardian.is_staff?
-        all_staff_tags = DiscourseTagging.staff_tag_names
-        hidden_tags = DiscourseTagging.hidden_tag_names
+      # tag names which are visible, but not usable, by *some users*
+      readonly_tags = DiscourseTagging.readonly_tag_names(guardian)
+      # tags names which are not visibile or usuable by *some users*
+      hidden_tags = DiscourseTagging.hidden_tag_names(guardian)
 
-        staff_tags = new_tag_names & all_staff_tags
-        staff_tags += new_tag_names & hidden_tags
-        if staff_tags.present?
-          topic.errors.add(:base, I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" ")))
-          return false
-        end
+      # tag names which ARE permitted by *this user*
+      permitted_tags = DiscourseTagging.permitted_tag_names(guardian)
 
-        staff_tags = removed_tag_names & all_staff_tags
-        if staff_tags.present?
-          topic.errors.add(:base, I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" ")))
-          return false
-        end
-
-        tag_names += removed_tag_names & hidden_tags
+      # If this user has explicit permission to use certain tags,
+      # we need to ensure those tags are removed from the list of
+      # restricted tags
+      if permitted_tags.present?
+        readonly_tags = readonly_tags - permitted_tags
+        hidden_tags = hidden_tags - permitted_tags
       end
+
+      # visible, but not usable, tags this user is trying to use
+      disallowed_tags = new_tag_names & readonly_tags
+      # hidden tags this user is trying to use
+      disallowed_tags += new_tag_names & hidden_tags
+
+      if disallowed_tags.present?
+        topic.errors.add(:base, I18n.t("tags.restricted_tag_disallowed", tag: disallowed_tags.join(" ")))
+        return false
+      end
+
+      removed_readonly_tags = removed_tag_names & readonly_tags
+      if removed_readonly_tags.present?
+        topic.errors.add(:base, I18n.t("tags.restricted_tag_remove_disallowed", tag: removed_readonly_tags.join(" ")))
+        return false
+      end
+
+      tag_names += removed_tag_names & hidden_tags
 
       category = topic.category
       tag_names = tag_names + old_tag_names if append
@@ -78,7 +94,7 @@ module DiscourseTagging
         parent_tags_map = DB.query("
           SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
-      INNER JOIN tag_group_memberships tgm
+          INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
              AND tgm.tag_id IN (?)
@@ -112,8 +128,9 @@ module DiscourseTagging
         topic.tags = []
       end
       topic.tags_changed = true
+      return true
     end
-    true
+    false
   end
 
   def self.validate_min_required_tags_for_category(guardian, topic, category, tags = [])
@@ -181,8 +198,7 @@ module DiscourseTagging
       INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
       INNER JOIN tag_group_permissions tgp
-      ON tg.id = tgp.tag_group_id
-      AND tgp.group_id = #{Group::AUTO_GROUPS[:everyone]}
+      ON tg.id = tgp.tag_group_id /*and_group_ids*/
       AND tgp.permission_type = #{TagGroupPermission.permission_types[:full]}
     )
   SQL
@@ -216,6 +232,8 @@ module DiscourseTagging
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
     if (opts[:for_input] || opts[:for_topic]) && filter_for_non_staff
       sql << ", #{PERMITTED_TAGS_SQL} "
+      builder_params[:group_ids] = permitted_group_ids(guardian)
+      sql.gsub!("/*and_group_ids*/", "AND group_id IN (:group_ids)")
     end
 
     outer_join = category.nil? || category.allow_global_tags || !category_has_restricted_tags
@@ -295,12 +313,23 @@ module DiscourseTagging
     end
 
     if filter_for_non_staff
-      # remove hidden tags
-      builder.where(<<~SQL, Group::AUTO_GROUPS[:everyone])
+      group_ids = permitted_group_ids(guardian)
+
+      builder.where(<<~SQL, group_ids, group_ids)
         id NOT IN (
-          SELECT tag_id
-            FROM tag_group_memberships tgm
-           WHERE tag_group_id NOT IN (SELECT tag_group_id FROM tag_group_permissions WHERE group_id = ?)
+          (SELECT tgm.tag_id
+           FROM tag_group_permissions tgp
+           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
+           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
+           WHERE tgp.group_id NOT IN (?))
+
+          EXCEPT
+
+          (SELECT tgm.tag_id
+           FROM tag_group_permissions tgp
+           INNER JOIN tag_groups tg ON tgp.tag_group_id = tg.id
+           INNER JOIN tag_group_memberships tgm ON tg.id = tgm.tag_group_id
+           WHERE tgp.group_id IN (?))
         )
       SQL
     end
@@ -347,16 +376,52 @@ module DiscourseTagging
     guardian&.is_staff? ? [] : hidden_tags_query.pluck(:name)
   end
 
+  # most restrictive level of tag groups
   def self.hidden_tags_query
-    Tag.joins(:tag_groups)
+    query = Tag.joins(:tag_groups)
       .where('tag_groups.id NOT IN (
         SELECT tag_group_id
         FROM tag_group_permissions
         WHERE group_id = ?)',
         Group::AUTO_GROUPS[:everyone]
       )
+
+    query
   end
 
+  def self.permitted_group_ids(guardian = nil)
+    group_ids = [Group::AUTO_GROUPS[:everyone]]
+
+    if guardian.authenticated?
+      group_ids.concat(guardian.user.groups.pluck(:id))
+    end
+
+    group_ids
+  end
+
+  # read-only tags for this user
+  def self.readonly_tag_names(guardian = nil)
+    return [] if guardian&.is_staff?
+
+    query = Tag.joins(tag_groups: :tag_group_permissions)
+      .where('tag_group_permissions.permission_type = ?',
+        TagGroupPermission.permission_types[:readonly])
+
+    query.pluck(:name)
+  end
+
+  # explicit permissions to use these tags
+  def self.permitted_tag_names(guardian = nil)
+    query = Tag.joins(tag_groups: :tag_group_permissions)
+      .where('tag_group_permissions.group_id IN (?) AND tag_group_permissions.permission_type = ?',
+        permitted_group_ids(guardian),
+        TagGroupPermission.permission_types[:full]
+      )
+
+    query.pluck(:name).uniq
+  end
+
+  # middle level of tag group restrictions
   def self.staff_tag_names
     tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY)
 
@@ -423,7 +488,9 @@ module DiscourseTagging
       target_tag.synonyms << Tag.create(name: name)
     end
     successful = existing.select { |t| !t.errors.present? }
-    TopicTag.where(tag_id: successful.map(&:id)).update_all(tag_id: target_tag.id)
+    synonyms_ids = successful.map(&:id)
+    TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
+    TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
     Scheduler::Defer.later "Update tag topic counts" do
       Tag.ensure_consistency!
     end

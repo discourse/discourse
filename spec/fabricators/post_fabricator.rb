@@ -10,7 +10,7 @@ end
 Fabricator(:post_with_long_raw_content, from: :post) do
   raw 'This is a sample post with semi-long raw content. The raw content is also more than
       two hundred characters to satisfy any test conditions that require content longer
-      than the typical test post raw content.'
+      than the typical test post raw content. It really is some long content, folks.'
 end
 
 Fabricator(:post_with_youtube, from: :post) do
@@ -20,7 +20,7 @@ end
 
 Fabricator(:old_post, from: :post) do
   topic { |attrs| Fabricate(:topic, user: attrs[:user], created_at: (DateTime.now - 100)) }
-  created_at (DateTime.now - 100)
+  created_at { 100.days.ago }
 end
 
 Fabricator(:moderator_post, from: :post) do
@@ -56,7 +56,7 @@ HTML
 end
 
 Fabricator(:post_with_uploaded_image, from: :post) do
-  raw "<img src=\"/#{Discourse.store.upload_path}/original/2X/3456789012345678.png\" width=\"1500\" height=\"2000\">"
+  raw { "<img src=\"#{Fabricate(:image_upload)}\" width=\"1500\" height=\"2000\">" }
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do

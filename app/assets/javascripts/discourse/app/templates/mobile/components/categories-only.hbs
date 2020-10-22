@@ -1,0 +1,25 @@
+{{#if categories}}
+  {{#if filteredCategories}}
+    <div class="category-list {{if showTopics "with-topics"}}">
+      {{#each filteredCategories as |c|}}
+        {{parent-category-row category=c showTopics=showTopics}}
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if mutedCategories}}
+    <div class="muted-categories">
+      <a href class="muted-categories-link" {{action "toggleShowMuted"}}>
+        <h3 class="muted-categories-heading">{{i18n "categories.muted"}}</h3>
+        {{#if mutedToggleIcon}}
+          {{d-icon mutedToggleIcon}}
+        {{/if}}
+      </a>
+      <div class="category-list {{if showTopics "with-topics"}} {{unless showMutedCategories "hidden"}}">
+        {{#each mutedCategories as |c|}}
+          {{parent-category-row category=c showTopics=showTopics listType="muted"}}
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+{{/if}}

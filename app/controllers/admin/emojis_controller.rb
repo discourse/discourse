@@ -9,6 +9,7 @@ class Admin::EmojisController < Admin::AdminController
   def create
     file = params[:file] || params[:files].first
     name = params[:name] || File.basename(file.original_filename, ".*")
+    group = params[:group] ? params[:group].downcase : nil
 
     hijack do
       # fix the name
@@ -26,11 +27,11 @@ class Admin::EmojisController < Admin::AdminController
 
       data =
         if upload.persisted?
-          custom_emoji = CustomEmoji.new(name: name, upload: upload)
+          custom_emoji = CustomEmoji.new(name: name, upload: upload, group: group)
 
           if custom_emoji.save
             Emoji.clear_cache
-            { name: custom_emoji.name, url: custom_emoji.upload.url }
+            { name: custom_emoji.name, url: custom_emoji.upload.url, group: group }
           else
             good = false
             failed_json.merge(errors: custom_emoji.errors.full_messages)

@@ -4,37 +4,40 @@ require 'rails_helper'
 
 describe UserApiKey do
   context "#allow?" do
+    def request_env(method, path, **path_parameters)
+      ActionDispatch::TestRequest.create.tap do |request|
+        request.request_method = method
+        request.path = path
+        request.path_parameters = path_parameters
+      end.env
+    end
+
     it "can look up permissions correctly" do
-      key = UserApiKey.new(scopes: ['message_bus', 'notifications'])
+      key = UserApiKey.new(scopes: ['message_bus', 'notifications'].map { |name| UserApiKeyScope.new(name: name) })
 
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(false)
-      expect(key.allow?("PATH_INFO" => "/message-bus/1234/poll", "REQUEST_METHOD" => "POST")).to eq(true)
+      expect(key.allow?(request_env("GET", "/random"))).to eq(false)
+      expect(key.allow?(request_env("POST", "/message-bus/1234/poll"))).to eq(true)
 
-      expect(key.allow?("action_dispatch.request.path_parameters" => { controller: "notifications", action: "mark_read" },
-                        "PATH_INFO" => "/xyz", "REQUEST_METHOD" => "PUT")).to eq(true)
+      expect(key.allow?(request_env("PUT", "/xyz", controller: "notifications", action: "mark_read"))).to eq(true)
 
-      expect(key.allow?("action_dispatch.request.path_parameters" => { controller: "user_api_keys", action: "revoke" },
-                        "PATH_INFO" => "/xyz", "REQUEST_METHOD" => "POST")).to eq(true)
-
+      expect(key.allow?(request_env("POST", "/xyz", controller: "user_api_keys", action: "revoke"))).to eq(true)
     end
 
     it "can allow all correct scopes to write" do
+      key = UserApiKey.new(scopes: ["write"].map { |name| UserApiKeyScope.new(name: name) })
 
-      key = UserApiKey.new(scopes: ["write"])
-
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(true)
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PATCH")).to eq(true)
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "DELETE")).to eq(true)
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "POST")).to eq(true)
+      expect(key.allow?(request_env("GET", "/random"))).to eq(true)
+      expect(key.allow?(request_env("PUT", "/random"))).to eq(true)
+      expect(key.allow?(request_env("PATCH", "/random"))).to eq(true)
+      expect(key.allow?(request_env("DELETE", "/random"))).to eq(true)
+      expect(key.allow?(request_env("POST", "/random"))).to eq(true)
     end
 
     it "can allow blanket read" do
+      key = UserApiKey.new(scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) })
 
-      key = UserApiKey.new(scopes: ["read"])
-
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
-      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(false)
+      expect(key.allow?(request_env("GET", "/random"))).to eq(true)
+      expect(key.allow?(request_env("PUT", "/random"))).to eq(false)
     end
   end
 end

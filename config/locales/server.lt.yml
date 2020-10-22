@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 lt:
   dates:
@@ -17,12 +16,25 @@ lt:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, Sausis, Vasaris, Kovas, Balandis, Gegužis, Birželis, Liepa, Rugpjūtis, Rugsėjis, Spalis, Lapkritis, Gruodis]
+    month_names:
+    - null
+    - Sausis
+    - Vasaris
+    - Kovas
+    - Balandis
+    - Gegužis
+    - Birželis
+    - Liepa
+    - Rugpjūtis
+    - Rugsėjis
+    - Spalis
+    - Lapkritis
+    - Gruodis
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "ryte"
     pm: "vakare"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Temos"
   posts: "žinutės"
@@ -62,7 +74,7 @@ lt:
         no_message_id_error: "Taip atsitinka, kai laiške nėra antraštės \"Message-Id\"."
       unrecognized_error: "Nenustatyta klaida"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
       taken: "jau užimtas"
@@ -70,22 +82,19 @@ lt:
       blank: negali būti tuščia
       present: privalo būti tuščia
       empty: negali būti tuščia
-      equal_to: "privalo buti lygus %{count}"
+      equal_to: privalo buti lygus %{count}
       exclusion: yra rezervuotas
-      greater_than: "turi būti didesnis nei %{count}"
-      greater_than_or_equal_to: "turi būti didesnis arba lygus %{count}"
+      greater_than: turi būti didesnis nei %{count}
+      greater_than_or_equal_to: turi būti didesnis arba lygus %{count}
       has_already_been_used: "jau yra naudojamas"
       inclusion: yra neitrauktas i sąrasą
       invalid: netinkamas
       not_a_number: nera skaičius
       not_an_integer: privalo buti integruotas
-      record_invalid: "Patvirtinimas nepavyko: %{errors}"
+      record_invalid: ! "Patvirtinimas nepavyko: %{errors}"
       max_emojis: "negali turėti daugiau nei %{max_emojis_count}emoji"
     embed:
       load_from_remote: "Klaida ikeliant įrašą"
-  activemodel:
-    errors:
-      <<: *errors
   backup:
     not_enough_space_on_disk: "Diske neužtenka vietos įkelti šiai atsarginei kopijai."
   not_logged_in: "Norint tęsti, jums reikia būti prisijungusiam."
@@ -113,8 +122,6 @@ lt:
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
   no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
-  no_images_allowed_trust: "Atsiprašome, jūs negalite lkelti nuotraukų į šį įrašą"
-  no_images_allowed: "Apgailestaujame, tačiau nauji nariai negali skelbti paveikslėlių pranešimuose."
   no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
   no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
@@ -126,9 +133,6 @@ lt:
   home_title: "Pradinis"
   topics_in_category: "Temos kategorijoje '%{category}'"
   rss_posts_in_topic: "RSS iš '%{topic}'"
-  author_wrote: "%{author} parašė:"
-  num_posts: "Pranešimai:"
-  num_participants: "Dalyviai:"
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
@@ -150,6 +154,12 @@ lt:
     badge: "%{display_name} ženklelis puslapyje %{site_title}"
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
+  bookmarks:
+    reminders:
+      later_today: "Šiandien vėliau"
+      tomorrow: "Rytoj"
+      next_week: "Kitą savaitę"
+      next_month: "Kitą mėnesį"
   groups:
     default_names:
       everyone: "visi"
@@ -180,7 +190,6 @@ lt:
       user_profile:
         bio_raw: "Apie mane"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -199,6 +208,7 @@ lt:
           attributes:
             hex:
               invalid: "netinkama spalva"
+      <<: *errors
   vip_category_name: "Šaukykla"
   vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
   meta_category_name: "Puslapio atsiliepimai"
@@ -387,14 +397,12 @@ lt:
       title: "Ne į temą"
     spam:
       title: "Šlamštas"
-      long_form: "pažymėtas kaip šlamštas"
       email_title: '"%{title}" pažymėta kaip šlamštas'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
     notify_user:
-      title: "Siųsti @{{username}} žinutę"
-      long_form: "išsiuntėte nariui"
+      title: "Siųsti @%{username} žinutę"
       email_title: 'Jūsų įrašas temote "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -404,12 +412,10 @@ lt:
       title: "Žymės"
       description: "Išsaugoti šį įrašą"
       short_description: "Išsaugoti šį įrašą"
-      long_form: "išsaugojote šį įrašą"
     like:
       title: "Patinka"
       description: "Mėgti šį įrašą"
       short_description: "Mėgti šį įrašą"
-      long_form: "mėgstate"
   user_activity:
     no_default:
       self: "Jūsų dar neturite jokios veklos"
@@ -445,7 +451,7 @@ lt:
   user_api_key:
     read: "skaityti"
     otp_confirmation:
-      confirm_title: "Tęsti į %{site_name}"
+      confirm_title: Tęsti į %{site_name}
     scopes:
       message_bus: "Tiesioginiai atnaujinimai"
       read: "Skaityti viską"
@@ -626,15 +632,21 @@ lt:
   site_settings:
     enable_emoji: "Įgalinti Emoji"
   search:
+    within_post: "#%{post_number} nuo %{username}"
     types:
       category: "Kategorijos"
       topic: "Rezultatai"
       user: "Vartotojai"
+    results_page: "Paieškos rezultatai ir '%{term}'"
+  publish_page:
+    slug_errors:
+      blank: "negali būti tuščia"
+      invalid: "turi neleistinų simbolių"
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    not_available: "Negalimas. Gal pabandykite %{suggestion}?"
     omniauth_confirm_button: "Tęsti"
-    second_factor_title: "Dviejų veiksmų autentifikavimas"
   admin:
     email:
       sent_test: "išsiųsta!"
@@ -865,7 +877,6 @@ lt:
   color_schemes:
     light: "Šviesi"
     dark: "Tamsi"
-    default_theme_name: "Šviesi"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
   edit_this_page: "Redaguoti šį puslapį"
@@ -898,10 +909,10 @@ lt:
       description: Gavote patikimą
     autobiographer:
       name: Autobiografas
-      description: "Užpildėte <a href=\"%{base_uri}/my/preferences/profile\">profilio</a> informaciją"
+      description: Užpildėte <a href="%{base_uri}/my/preferences/profile">profilio</a> informaciją
     anniversary:
       name: Jubiliejus
-      description: "Aktyvus narys metus laiko, skelbė pranešimą bent vieną kartą"
+      description: Aktyvus narys metus laiko, skelbė pranešimą bent vieną kartą
     nice_post:
       name: Gražus atsakymas
     good_post:
@@ -948,18 +959,18 @@ lt:
       description: Citavai įrašą
     read_guidelines:
       name: Susipažinęs su gairėmis
-      description: "Skaitė <a href=\"%{base_uri}/guidelines\">bendruomenės taisykles ir instrukcijas</a>"
+      description: Skaitė <a href="%{base_uri}/guidelines">bendruomenės taisykles ir instrukcijas</a>
     reader:
       name: Skaitytojas
     popular_link:
       name: Populiari nuoroda
-      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 50 kartų"
+      description: Įkėlei nuorodą, kurią paspaudė mažiausiai 50 kartų
     hot_link:
       name: Karšta Nuoroda
-      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 300 kartų"
+      description: Įkėlei nuorodą, kurią paspaudė mažiausiai 300 kartų
     famous_link:
       name: Įžymi Nuoroda
-      description: "Įkėlei nuorodą, kurią paspaudė mažiausiai 1000 kartų"
+      description: Įkėlei nuorodą, kurią paspaudė mažiausiai 1000 kartų
     respected:
       name: Gerbiamas
     out_of_love:
@@ -1019,10 +1030,6 @@ lt:
             label: "Interneto svetainė"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Tema"
-      themes_further_reading:
-        title: "Temos"
       logos:
         title: "Logotipas"
         fields:
@@ -1054,6 +1061,12 @@ lt:
   joined: "Prisijungė"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
+      quoted: '%{username} pacitavo tave "%{topic}" - %{site_title}'
+      replied: '%{username} atsakė tau "%{topic}" - %{site_title}'
+      posted: '%{username} paskelbė "%{topic}" - %{site_title}'
+      linked: '%{username} panaudojo tavo įrašą "%{topic}" - %{site_title}'
       confirm_title: "Pranešimai įgalinti - %{site_title} svetainėje"
       confirm_body: "Pavyko! Pranešimai buvo įgalinti."
   staff_action_logs:
@@ -1089,3 +1102,6 @@ lt:
         title: "Atmesti"
       delete_user:
         title: "Ištrinti vartotoją"
+  activemodel:
+    errors:
+      <<: *errors

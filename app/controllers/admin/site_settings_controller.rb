@@ -16,11 +16,15 @@ class Admin::SiteSettingsController < Admin::AdminController
     value.strip! if value.is_a?(String)
     raise_access_hidden_setting(id)
 
-    if SiteSetting.type_supervisor.get_type(id) == :upload
-      value = Upload.find_by(url: value) || ''
+    if SiteSetting.type_supervisor.get_type(id) == :uploaded_image_list
+      value = Upload.get_from_urls(value.split("|")).to_a
     end
 
-    update_existing_users = params[:updateExistingUsers].present?
+    if SiteSetting.type_supervisor.get_type(id) == :upload
+      value = Upload.get_from_url(value) || ""
+    end
+
+    update_existing_users = params[:update_existing_user].present?
     previous_value = SiteSetting.send(id) || "" if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
@@ -37,12 +41,10 @@ class Admin::SiteSettingsController < Admin::AdminController
           new_value = UserOption.title_count_modes[new_value.to_sym]
         end
 
-        UserOption.where(user_option => previous_value).update_all(user_option => new_value)
+        attrs = { user_option => new_value }
+        attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
 
-        if id == "default_email_digest_frequency"
-          disable_digests = new_value == 0
-          UserOption.where(user_option => 0, email_digests: !disable_digests).update_all(email_digests: disable_digests)
-        end
+        UserOption.where(user_option => previous_value).update_all(attrs)
       elsif id.start_with?("default_categories_")
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
@@ -56,14 +58,23 @@ class Admin::SiteSettingsController < Admin::AdminController
           notification_level = NotificationLevels.all[:muted]
         when "default_categories_watching_first_post"
           notification_level = NotificationLevels.all[:watching_first_post]
+        when "default_categories_regular"
+          notification_level = NotificationLevels.all[:regular]
         end
 
-        CategoryUser.where(category_id: (previous_category_ids - new_category_ids), notification_level: notification_level).delete_all
+        categories_to_unwatch = previous_category_ids - new_category_ids
+        CategoryUser.where(category_id: categories_to_unwatch, notification_level: notification_level).delete_all
+        TopicUser
+          .joins(:topic)
+          .where(notification_level: TopicUser.notification_levels[:watching],
+                 notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
+                 topics: { category_id: categories_to_unwatch })
+          .update_all(notification_level: TopicUser.notification_levels[:regular])
 
         (new_category_ids - previous_category_ids).each do |category_id|
           skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             category_users = []
             users.each { |user| category_users << { category_id: category_id, user_id: user.id, notification_level: notification_level } }
             CategoryUser.insert_all!(category_users)
@@ -90,7 +101,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         (new_tag_ids - previous_tag_ids).each do |tag_id|
           skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
 
-          User.where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
+          User.real.where(staged: false).where.not(id: skip_user_ids).select(:id).find_in_batches do |users|
             tag_users = []
             users.each { |user| tag_users << { tag_id: tag_id, user_id: user.id, notification_level: notification_level, created_at: now, updated_at: now } }
             TagUser.insert_all!(tag_users)
@@ -133,12 +144,16 @@ class Admin::SiteSettingsController < Admin::AdminController
         notification_level = NotificationLevels.all[:muted]
       when "default_categories_watching_first_post"
         notification_level = NotificationLevels.all[:watching_first_post]
+      when "default_categories_regular"
+        notification_level = NotificationLevels.all[:regular]
       end
 
       user_ids = CategoryUser.where(category_id: previous_category_ids - new_category_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
+        .real
         .joins("CROSS JOIN categories c")
         .joins("LEFT JOIN category_users cu ON users.id = cu.user_id AND c.id = cu.category_id")
+        .where(staged: false)
         .where("c.id IN (?) AND cu.notification_level IS NULL", new_category_ids - previous_category_ids)
         .distinct
         .pluck("users.id")
@@ -161,8 +176,10 @@ class Admin::SiteSettingsController < Admin::AdminController
 
       user_ids = TagUser.where(tag_id: previous_tag_ids - new_tag_ids, notification_level: notification_level).distinct.pluck(:user_id)
       user_ids += User
+        .real
         .joins("CROSS JOIN tags t")
         .joins("LEFT JOIN tag_users tu ON users.id = tu.user_id AND t.id = tu.tag_id")
+        .where(staged: false)
         .where("t.id IN (?) AND tu.notification_level IS NULL", new_tag_ids - previous_tag_ids)
         .distinct
         .pluck("users.id")
@@ -192,6 +209,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_other_auto_track_topics_after_msecs: "auto_track_topics_after_msecs",
       default_other_notification_level_when_replying: "notification_level_when_replying",
       default_other_like_notification_frequency: "like_notification_frequency",
+      default_other_skip_new_user_tips: "skip_new_user_tips",
       default_email_digest_frequency: "digest_after_minutes",
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",

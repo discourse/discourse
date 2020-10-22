@@ -20,7 +20,7 @@ describe Jobs::AutomaticGroupMembership do
     user6 = Fabricate(:user, email: "sso2@wat.com")
     user6.create_single_sign_on_record(external_id: 456, external_email: "sso2@wat.com", last_payload: "")
 
-    group = Fabricate(:group, automatic_membership_email_domains: "wat.com", automatic_membership_retroactive: true)
+    group = Fabricate(:group, automatic_membership_email_domains: "wat.com")
 
     begin
       automatic = nil

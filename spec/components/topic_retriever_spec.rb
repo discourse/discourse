@@ -8,6 +8,11 @@ describe TopicRetriever do
   let(:author_username) { "eviltrout" }
   let(:topic_retriever) { TopicRetriever.new(embed_url, author_username: author_username) }
 
+  it "can initialize without optional parameters" do
+    t = TopicRetriever.new(embed_url)
+    expect(t).to be_present
+  end
+
   describe "#retrieve" do
     context "when host is invalid" do
       before do

@@ -1,0 +1,12 @@
+<section class="field">
+  {{#unless category.isUncategorizedCategory}}
+    <section class="field-item">
+      <label>{{i18n "category.name"}}</label>
+      {{text-field value=category.name placeholderKey="category.name_placeholder" maxlength="50" class="category-name"}}
+    </section>
+  {{/unless}}
+  <section class="field-item">
+    <label>{{i18n "category.slug"}}</label>
+    {{text-field value=category.slug placeholderKey="category.slug_placeholder" maxlength="255"}}
+  </section>
+</section>

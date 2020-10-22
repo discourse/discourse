@@ -7,11 +7,11 @@ module SuggestedTopicsMixin
   end
 
   def include_related_messages?
-    object.next_page.nil? && object.related_messages&.topics.present?
+    object.next_page.nil? && object.related_messages&.topics
   end
 
   def include_suggested_topics?
-    object.next_page.nil? && object.suggested_topics&.topics.present?
+    object.next_page.nil? && object.suggested_topics&.topics
   end
 
   def related_messages

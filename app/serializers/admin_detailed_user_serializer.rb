@@ -18,6 +18,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_all_posts,
              :can_be_deleted,
              :can_be_anonymized,
+             :can_be_merged,
              :full_suspend_reason,
              :suspended_till,
              :silence_reason,
@@ -30,6 +31,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_view_action_logs,
              :second_factor_enabled,
              :can_disable_second_factor,
+             :can_delete_sso_record,
              :api_key_count
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
@@ -43,7 +45,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def can_disable_second_factor
-    object&.id != scope.user.id
+    scope.is_admin? && (object&.id != scope.user.id)
   end
 
   def can_revoke_admin
@@ -72,6 +74,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def can_be_anonymized
     scope.can_anonymize_user?(object)
+  end
+
+  def can_be_merged
+    scope.can_merge_user?(object)
   end
 
   def topic_count
@@ -120,5 +126,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def api_key_count
     object.api_keys.active.count
+  end
+
+  def can_delete_sso_record
+    scope.can_delete_sso_record?(object)
   end
 end

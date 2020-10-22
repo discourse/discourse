@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 tr_TR:
   js:
@@ -26,18 +25,6 @@ tr_TR:
           title: "Sonuçlar oylama <strong>kapatıldıktan</strong> sonra gösterilecektir."
         staff:
           title: "Sonuçlar yalnızca <strong>moderatöre</strong> gösterilir."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "En az <strong>%{count}</strong> seçeneği seçin"
-            other: "En az <strong>%{count}</strong> seçecek seçiniz"
-          up_to_max_options:
-            one: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
-            other: "<strong>%{count}</strong> seçeneğe kadar seçebilirsiniz"
-          x_options:
-            one: "<strong>%{count}</strong> seçenek seçiniz"
-            other: "<strong>%{count}</strong> seçenek seçiniz"
-          between_min_and_max_options: "<strong>%{min}</strong> ve <strong>%{max}</strong> arasında seçenek seçiniz"
       cast-votes:
         title: "Oyunuzu kullanın"
         label: "Şimdi oylayın!"
@@ -50,9 +37,6 @@ tr_TR:
       group-results:
         title: "Kullanıcı alanına göre oyları gruplandır"
         label: "Dökümü göster"
-      ungroup-results:
-        title: "Tüm oyları birleştir"
-        label: "Sorunu gizle"
       export-results:
         title: "Anket sonuçlarını dışa aktarma"
         label: "Dışa Aktar"

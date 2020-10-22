@@ -6,9 +6,11 @@ class Emoji
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
+  DEFAULT_GROUP ||= "default"
+
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable
+  attr_accessor :name, :url, :tonable, :group
 
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
@@ -71,7 +73,7 @@ class Emoji
 
   def self.url_for(name)
     name = name.delete_prefix(':').delete_suffix(':').gsub(/(.+):t([1-6])/, '\1/\2')
-    "#{Discourse.base_uri}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
+    "#{Discourse.base_path}/images/emoji/#{SiteSetting.emoji_set}/#{name}.png?v=#{EMOJI_VERSION}"
   end
 
   def self.cache_key(name)
@@ -104,15 +106,19 @@ class Emoji
         result << Emoji.new.tap do |e|
           e.name = emoji.name
           e.url = emoji.upload&.url
+          e.group = emoji.group || DEFAULT_GROUP
         end
       end
     end
 
-    Plugin::CustomEmoji.emojis.each do |name, url|
-      result << Emoji.new.tap do |e|
-        e.name = name
-        url = (Discourse.base_uri + url) if url[/^\/[^\/]/]
-        e.url = url
+    Plugin::CustomEmoji.emojis.each do |group, emojis|
+      emojis.each do |name, url|
+        result << Emoji.new.tap do |e|
+          e.name = name
+          url = (Discourse.base_path + url) if url[/^\/[^\/]/]
+          e.url = url
+          e.group = group || DEFAULT_GROUP
+        end
       end
     end
 
@@ -120,7 +126,7 @@ class Emoji
   end
 
   def self.load_translations
-    db["translations"].merge(Plugin::CustomEmoji.translations)
+    db["translations"]
   end
 
   def self.base_directory
@@ -129,14 +135,14 @@ class Emoji
 
   def self.base_url
     db = RailsMultisite::ConnectionManagement.current_db
-    "#{Discourse.base_uri}/uploads/#{db}/_emoji"
+    "#{Discourse.base_path}/uploads/#{db}/_emoji"
   end
 
   def self.replacement_code(code)
     code
-      .split('-'.freeze)
+      .split('-')
       .map!(&:hex)
-      .pack("U*".freeze)
+      .pack("U*")
   end
 
   def self.unicode_replacements
@@ -160,7 +166,7 @@ class Emoji
         replacements[code] = name
         if is_tonable_emojis.include?(name)
           fitzpatrick_scales.each_with_index do |scale, index|
-            toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
+            toned_code = code.codepoints.insert(1, scale).pack("U*")
             replacements[toned_code] = "#{name}:t#{index + 2}"
           end
         end

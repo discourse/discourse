@@ -235,7 +235,7 @@ describe HasCustomFields do
 
     it "supports bulk retrieval with a list of ids" do
       item1 = CustomFieldsTestItem.new
-      item1.custom_fields = { "a" => ["b", "c", "d"], 'not_whitelisted' => 'secret' }
+      item1.custom_fields = { "a" => ["b", "c", "d"], 'not_allowlisted' => 'secret' }
       item1.save
 
       item2 = CustomFieldsTestItem.new
@@ -245,7 +245,7 @@ describe HasCustomFields do
       fields = CustomFieldsTestItem.custom_fields_for_ids([item1.id, item2.id], ['a', 'e'])
       expect(fields).to be_present
       expect(fields[item1.id]['a']).to match_array(['b', 'c', 'd'])
-      expect(fields[item1.id]['not_whitelisted']).to be_blank
+      expect(fields[item1.id]['not_allowlisted']).to be_blank
       expect(fields[item2.id]['e']).to eq('hallo')
     end
 
@@ -336,6 +336,32 @@ describe HasCustomFields do
         test_item.reload
         expect(test_item.custom_fields['hello']).to eq('world')
         expect(test_item.custom_fields['abc']).to eq('ghi')
+      end
+
+      it 'allows using string and symbol indices interchangeably' do
+        test_item = CustomFieldsTestItem.new
+
+        test_item.custom_fields["bob"] = "marley"
+        test_item.custom_fields["jack"] = "black"
+
+         # In memory
+         expect(test_item.custom_fields[:bob]).to eq('marley')
+         expect(test_item.custom_fields[:jack]).to eq('black')
+
+         # Persisted
+         test_item.save
+         test_item.reload
+         expect(test_item.custom_fields[:bob]).to eq('marley')
+         expect(test_item.custom_fields[:jack]).to eq('black')
+
+         # Update via string index again
+         test_item.custom_fields['bob'] = 'the builder'
+
+         expect(test_item.custom_fields[:bob]).to eq('the builder')
+         test_item.save
+         test_item.reload
+
+         expect(test_item.custom_fields[:bob]).to eq('the builder')
       end
     end
   end

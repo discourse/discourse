@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 he:
   js:
@@ -33,21 +32,21 @@ he:
       multiple:
         help:
           at_least_min_options:
-            one: "נא לבחור באפשרות <strong>אחת</strong> לפחות"
-            two: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
-            many: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
-            other: "נא לבחור ב־<strong>%{count}</strong> אפשרויות לפחות"
+            one: "יש לבחור באפשרות <strong>%{count}</strong> לפחות."
+            two: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
+            many: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
+            other: "יש לבחור <strong>%{count}</strong> אפשרויות לפחות."
           up_to_max_options:
-            one: "נא לבחור עד אפשרות <strong>אחת</strong>."
-            two: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
-            many: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
-            other: "נא לבחור עד <strong>%{count}</strong> אפשרויות"
+            one: "יש לבחור אפשרות <strong>%{count}</strong> לכל היותר."
+            two: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
+            many: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
+            other: "יש לבחור עד <strong>%{count}</strong> אפשרויות."
           x_options:
-            one: "נא לבחור באפשרות אחת"
-            two: "נא לבחור <strong>%{count}</strong> אפשרויות"
-            many: "נא לבחור <strong>%{count}</strong> אפשרויות"
-            other: "נא לבחור <strong>%{count}</strong> אפשרויות"
-          between_min_and_max_options: "נא לבחור בין <strong>%{min}</strong> ל־<strong>%{max}</strong> אפשרויות"
+            one: "יש לבחור באפשרות <strong>%{count}</strong>."
+            two: "יש לבחור <strong>%{count}</strong> אפשרויות."
+            many: "יש לבחור <strong>%{count}</strong> אפשרויות."
+            other: "יש לבחור <strong>%{count}</strong> אפשרויות."
+          between_min_and_max_options: "נא לבחור בין <strong>%{min}</strong> ל־<strong>%{max}</strong> אפשרויות."
       cast-votes:
         title: "להצביע"
         label: "להצביע עכשיו!"
@@ -60,9 +59,6 @@ he:
       group-results:
         title: "קיבוץ הצבעות לפי משתמש"
         label: "הצגת פילוח"
-      ungroup-results:
-        title: "שקלול כל ההצבעות"
-        label: "הסתרת הפילוח"
       export-results:
         title: "ייצוא תוצאות הסקר"
         label: "ייצוא"
@@ -77,6 +73,12 @@ he:
       automatic_close:
         closes_in: "נסגר בעוד <strong>%{timeLeft}</strong>."
         age: "נסגר ב־<strong>%{age}</strong>"
+      breakdown:
+        title: "תוצאות הסקר"
+        votes: "%{count} הצבעות"
+        breakdown: "פילוח"
+        percentage: "אחוזים"
+        count: "ספירה"
       error_while_toggling_status: " חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
       error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
@@ -103,12 +105,16 @@ he:
           label: קבוצות מורשות
         poll_chart_type:
           label: סוג תרשים
+          bar: עמודות
+          pie: עוגה
         poll_config:
           max: מרבי
           min: מזערי
           step: צעד
         poll_public:
           label: להציג מי המצביעים
+        poll_title:
+          label: כותרת (רשות)
         poll_options:
           label: נא למלא אפשרות בחירה אחת בכל שורה
         automatic_close:

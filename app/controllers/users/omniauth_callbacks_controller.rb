@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       # Save to redis, with a secret token, then redirect to confirmation screen
       token = SecureRandom.hex
       Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
-      return redirect_to Discourse.base_uri("/associate/#{token}")
+      return redirect_to "#{Discourse.base_path}/associate/#{token}"
     else
       @auth_result = authenticator.after_authenticate(auth)
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
@@ -55,14 +55,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       if parsed && # Valid
          (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
-         !parsed.path.starts_with?(Discourse.base_uri("/auth/")) # Not /auth URL
+         !parsed.path.starts_with?("#{Discourse.base_path}/auth/") # Not /auth URL
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
     end
 
     if @origin.blank?
-      @origin = Discourse.base_uri("/")
+      @origin = Discourse.base_path("/")
     end
 
     @auth_result.destination_url = @origin
@@ -74,7 +74,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
       cookies['_bypass_cache'] = true
-      cookies[:authentication_data] = @auth_result.to_client_hash.to_json
+      cookies[:authentication_data] = {
+        value: @auth_result.to_client_hash.to_json,
+        path: Discourse.base_path("/")
+      }
       redirect_to @origin
     end
   end
@@ -113,8 +116,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     # automatically activate/unstage any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
-      user.unstage
-      user.save
+      user.unstage!
 
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
@@ -135,6 +137,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
       @auth_result.admin_not_allowed_from_ip_address = true
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
+      user.save! if @auth_result.apply_user_attributes!
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere

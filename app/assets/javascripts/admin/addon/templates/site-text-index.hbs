@@ -1,0 +1,38 @@
+<div class="search-area">
+  <p>{{i18n "admin.site_text.description"}}</p>
+
+  {{text-field value=q
+               placeholderKey="admin.site_text.search"
+               class="no-blur site-text-search"
+               autofocus="true"
+               key-up=(action "search")}}
+
+  <div class="reseed">
+    {{d-button action=(route-action "showReseedModal")
+               class="btn-default"
+               label="admin.reseed.action.label"
+               title="admin.reseed.action.title"
+               icon="sync"}}
+  </div>
+
+  <p class="filter-options">
+    <label>
+      {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
+      {{i18n "admin.site_text.show_overriden"}}
+    </label>
+  </p>
+</div>
+
+{{#conditional-loading-spinner condition=searching}}
+  {{#if siteTexts.extras.recommended}}
+    <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
+  {{/if}}
+
+  {{#each siteTexts as |siteText|}}
+    {{site-text-summary siteText=siteText editAction=(action "edit") term=q searchRegex=siteTexts.extras.regex}}
+  {{/each}}
+
+  {{#if siteTexts.extras.has_more}}
+    <p class="warning">{{i18n "admin.site_text.more_than_50_results"}}</p>
+  {{/if}}
+{{/conditional-loading-spinner}}

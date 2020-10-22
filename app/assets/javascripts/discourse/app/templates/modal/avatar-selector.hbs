@@ -1,0 +1,56 @@
+{{#d-modal-body title="user.change_avatar.title" class="avatar-selector"}}
+  {{#if siteSettings.selectable_avatars_enabled}}
+    <div class="selectable-avatars">
+      {{#each selectableAvatars as |avatar|}}
+        <a href class="selectable-avatar" {{action "selectAvatar" avatar}}>
+          {{bound-avatar-template avatar "huge"}}
+        </a>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="avatar-choice">
+      {{radio-button id="system-avatar" name="avatar" value="system" selection=selected}}
+      <label class="radio" for="system-avatar">{{bound-avatar-template user.system_avatar_template "large"}} {{html-safe (i18n "user.change_avatar.letter_based")}}</label>
+    </div>
+    <div class="avatar-choice">
+      {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
+      <label class="radio" for="gravatar">{{bound-avatar-template user.gravatar_avatar_template "large"}} <span>{{html-safe (i18n "user.change_avatar.gravatar" gravatarName=gravatarName gravatarBaseUrl=gravatarBaseUrl gravatarLoginUrl=gravatarLoginUrl)}} {{user.email}}</span></label>
+
+      {{d-button action=(action "refreshGravatar")
+                 translatedTitle=(i18n "user.change_avatar.refresh_gravatar_title" gravatarName=gravatarName)
+                 disabled=gravatarRefreshDisabled
+                 icon="sync"
+                 class="btn-default avatar-selector-refresh-gravatar"}}
+
+      {{#if gravatarFailed}}
+        <p class="error">{{I18n "user.change_avatar.gravatar_failed" gravatarName=gravatarName}}</p>
+      {{/if}}
+    </div>
+    {{#if allowAvatarUpload}}
+      <div class="avatar-choice">
+        {{radio-button id="uploaded-avatar" name="avatar" value="uploaded" selection=selected}}
+        <label class="radio" for="uploaded-avatar">
+          {{#if user.custom_avatar_template}}
+            {{bound-avatar-template user.custom_avatar_template "large"}}
+            {{i18n "user.change_avatar.uploaded_avatar"}}
+          {{else}}
+            {{i18n "user.change_avatar.uploaded_avatar_empty"}}
+          {{/if}}
+        </label>
+        {{avatar-uploader user_id=user.id
+                          uploadedAvatarTemplate=user.custom_avatar_template
+                          uploadedAvatarId=user.custom_avatar_upload_id
+                          uploading=uploading
+                          class="avatar-uploader"
+                          done=(action "uploadComplete")}}
+      </div>
+    {{/if}}
+  {{/if}}
+{{/d-modal-body}}
+
+{{#unless siteSettings.selectable_avatars_enabled}}
+  <div class="modal-footer">
+    {{d-button action=(action "saveAvatarSelection") class="btn-primary" disabled=uploading label="save"}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  </div>
+{{/unless}}

@@ -11,8 +11,8 @@ describe Site do
     expected = Theme.where('id = :default OR user_selectable',
                     default: SiteSetting.default_theme_id)
       .order(:name)
-      .pluck(:id, :name)
-      .map { |id, n| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id } }
+      .pluck(:id, :name, :color_scheme_id)
+      .map { |id, n, cs| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id, "color_scheme_id" => cs } }
 
     expect(parsed["user_themes"]).to eq(expected)
   end

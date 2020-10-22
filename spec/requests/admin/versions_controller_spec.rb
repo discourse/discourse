@@ -25,13 +25,13 @@ describe Admin::VersionsController do
       it 'should return the currently available version' do
         get "/admin/version_check.json"
         expect(response.status).to eq(200)
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json['latest_version']).to eq('1.2.33')
       end
 
       it "should return the installed version" do
         get "/admin/version_check.json"
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(response.status).to eq(200)
         expect(json['installed_version']).to eq(Discourse::VERSION::STRING)
       end

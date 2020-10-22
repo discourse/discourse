@@ -63,6 +63,13 @@ class UserNotifications < ActionMailer::Base
                 new_email: opts[:new_email])
   end
 
+  def notify_old_email_add(user, opts = {})
+    build_email(user.email,
+                template: "user_notifications.notify_old_email_add",
+                locale: user_locale(user),
+                new_email: opts[:new_email])
+  end
+
   def confirm_old_email(user, opts = {})
     build_user_email_token_by_template(
       "user_notifications.confirm_old_email",
@@ -71,9 +78,17 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def confirm_old_email_add(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.confirm_old_email_add",
+      user,
+      opts[:email_token]
+    )
+  end
+
   def confirm_new_email(user, opts = {})
     build_user_email_token_by_template(
-      "user_notifications.confirm_new_email",
+      opts[:requested_by_admin] ? "user_notifications.confirm_new_email_via_admin" : "user_notifications.confirm_new_email",
       user,
       opts[:email_token]
     )
@@ -159,14 +174,6 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
-  def short_date(dt)
-    if dt.year == Time.now.year
-      I18n.l(dt, format: :short_no_year)
-    else
-      I18n.l(dt, format: :date_only)
-    end
-  end
-
   def digest(user, opts = {})
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
@@ -213,18 +220,18 @@ class UserNotifications < ActionMailer::Base
                    value: new_topics_count,
                    href: "#{Discourse.base_url}/new" }]
 
-      value = user.unread_notifications
+      # totalling unread notifications (which are low-priority only) and unread
+      # PMs and bookmark reminder notifications, so the total is both unread low
+      # and high priority PMs
+      value = user.unread_notifications + user.unread_high_priority_notifications
       @counts << { label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
-
-      value = user.unread_private_messages
-      @counts << { label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages" } if value > 0
 
       if @counts.size < 3
         value = user.unread_notifications_of_type(Notification.types[:liked])
         @counts << { label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications" } if value > 0
       end
 
-      if @counts.size < 3 && user.user_option.digest_after_minutes >= 1440
+      if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
         value = summary_new_users_count(min_date)
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end
@@ -349,24 +356,11 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = +"#{post.with_secure_media? ? strip_secure_urls(post.raw) : post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
     result
-  end
-
-  def strip_secure_urls(raw)
-    urls = Set.new
-    raw.scan(URI.regexp(%w{http https})) { urls << $& }
-
-    urls.each do |url|
-      if (url.start_with?(Discourse.store.s3_upload_host) && FileHelper.is_supported_media?(url))
-        raw = raw.sub(url, "<p class='secure-media-notice'>#{I18n.t("emails.secure_media_placeholder")}</p>")
-      end
-    end
-
-    raw
   end
 
   def self.get_context_posts(post, topic_user, user)

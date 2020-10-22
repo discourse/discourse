@@ -3,11 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
-  let(:discobot_user) { ::DiscourseNarrativeBot::Base.new.discobot_user }
-  let(:first_post) { Fabricate(:post, user: discobot_user) }
-  let(:user) { Fabricate(:user) }
+  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:discobot_user) { narrative_bot.discobot_user }
+  fab!(:discobot_username) { narrative_bot.discobot_username }
+  fab!(:first_post) { Fabricate(:post, user: discobot_user) }
+  fab!(:user) { Fabricate(:user) }
 
-  let(:topic) do
+  fab!(:topic) do
     Fabricate(:private_message_topic, first_post: first_post,
                                       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: discobot_user),
@@ -16,12 +18,12 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     )
   end
 
-  let(:post) { Fabricate(:post, topic: topic, user: user) }
-  let(:narrative) { described_class.new }
-  let(:other_topic) { Fabricate(:topic) }
-  let(:other_post) { Fabricate(:post, topic: other_topic) }
-  let(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
-  let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+  fab!(:narrative) { described_class.new }
+  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_post) { Fabricate(:post, topic: other_topic) }
+  fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
+  fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
     Jobs.run_immediately!
@@ -175,7 +177,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         describe 'when reply contains the skip trigger' do
           it 'should create the right reply' do
-            post.update!(raw: "@#{discobot_user.username} #{skip_trigger.upcase}")
+            post.update!(raw: "@#{discobot_username} #{skip_trigger.upcase}")
             described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
             DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -725,9 +727,18 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
                                                "topic_id" => topic.id,
                                                "track" => described_class.to_s)
 
-        expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME).exists?)
+        expect(user.badges.where(name: DiscourseNarrativeBot::AdvancedUserNarrative.badge_name).exists?)
           .to eq(true)
       end
     end
+  end
+
+  it 'invites to advanced training when user is promoted to TL2' do
+    recipient = Fabricate(:user)
+    expect {
+      DiscourseEvent.trigger(:system_message_sent, post: Post.last, message_type: 'tl2_promotion_message')
+    }.to change { Topic.count }
+    expect(Topic.last.title).to eq(I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"))
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq([DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id])
   end
 end

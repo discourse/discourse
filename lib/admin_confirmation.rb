@@ -43,7 +43,7 @@ class AdminConfirmation
   end
 
   def self.exists_for?(user_id)
-    Discourse.redis.exists "admin-confirmation:#{user_id}"
+    Discourse.redis.exists? "admin-confirmation:#{user_id}"
   end
 
   def self.find_by_code(token)

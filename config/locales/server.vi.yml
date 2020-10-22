@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 vi:
   dates:
@@ -16,12 +15,25 @@ vi:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
   date:
-    month_names: [~, Tháng Một, Tháng Hai, Tháng Ba, Tháng Tư, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai]
+    month_names:
+    - null
+    - Tháng Một
+    - Tháng Hai
+    - Tháng Ba
+    - Tháng Tư
+    - Tháng Năm
+    - Tháng Sáu
+    - Tháng Bảy
+    - Tháng Tám
+    - Tháng Chín
+    - Tháng Mười
+    - Tháng Mười Một
+    - Tháng Mười Hai
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "sa"
     pm: "ch"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Chủ đề"
   posts: "bài viết"
@@ -31,6 +43,7 @@ vi:
   submit: "Gửi đi"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
+  remove_posts_deleted_by_author: "Đã bị xóa bởi tác giả"
   themes:
     import_error:
       git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
@@ -49,7 +62,7 @@ vi:
         topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "cho phép tối đa %{max} ký tự; bạn đã nhập %{length}."
       invalid_boolean: "Giá trị logic không hợp lệ"
@@ -57,22 +70,22 @@ vi:
       accepted: phải được chấp nhận
       blank: không được để trống
       present: phải để trống
-      confirmation: "%{attribute} không khớp"
+      confirmation: ! "%{attribute} không khớp"
       empty: không thể để trống
-      equal_to: "phải bằng %{count}"
+      equal_to: phải bằng %{count}
       even: phải là số chẵn
       exclusion: được dành riêng
-      greater_than: "phải lớn hơn %{count}"
-      greater_than_or_equal_to: "phải lớn hơn hoặc bằng %{count}"
+      greater_than: phải lớn hơn %{count}
+      greater_than_or_equal_to: phải lớn hơn hoặc bằng %{count}
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
-      less_than: "phải nhỏ hơn %{count}"
-      less_than_or_equal_to: "phải nhỏ hơn hoặc bằng %{count}"
+      less_than: phải nhỏ hơn %{count}
+      less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
       not_a_number: không phải là số
       not_an_integer: phải là một số nguyên
       odd: phải là số lẻ
-      record_invalid: "Xác nhận thất bại: %{errors}"
+      record_invalid: ! "Xác nhận thất bại: %{errors}"
       restrict_dependent_destroy:
         one: "Không thể xóa bản ghi bởi vì một bản ghi %{record} phụ thuộc đang tồn tại"
         many: "Không thể xóa bản ghi bởi vì %{record} phụ thuộc tồn tại"
@@ -84,17 +97,14 @@ vi:
         other: độ dài không hợp lệ (nên đặt %{count} ký tự)
       other_than: "phải khác %{count}"
     template:
-      body: "Đã có vấn đề với những trường sau:"
+      body: ! "Đã có vấn đề với những trường sau:"
       header:
-        other: "%{count} lỗi đã ngăn cản không thể lưu %{model} này"
+        other: ! "%{count} lỗi đã ngăn cản không thể lưu %{model} này"
     embed:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   topic_invite:
     user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   backup:
@@ -127,9 +137,6 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một bài viết."
-  no_images_allowed: "Xin lỗi, thành viên mới chưa được chèn hình ảnh vào bài viết."
-  too_many_images:
-    other: "Xin lỗi, thành viên mới chỉ có thể chèn %{count} hình ảnh trong một bài viết."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong bài viết."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một bài viết."
@@ -148,9 +155,6 @@ vi:
   topics_in_category: "Các chủ đề ở chuyên '%{category}'"
   rss_posts_in_topic: "Nguồn cấp dữ liệu RSS của '%{topic}'"
   rss_topics_in_category: "Nguồn cấp dữ liệu RSS của các chủ đề trong chuyên mục '%{category}'"
-  author_wrote: "%{author} đã viết:"
-  num_posts: "Bài đã đăng:"
-  num_participants: "Người tham gia:"
   read_full_topic: "Đọc toàn bộ chủ đề"
   private_message_abbrev: "Tin nhắn"
   rss_description:
@@ -168,11 +172,9 @@ vi:
   bookmarks:
     reminders:
       at_desktop: "Lần sau tôi ở máy tính để bàn của tôi"
-      later_today: "Sau ngày hôm nay <br/> {{date}}"
-      next_business_day: "Ngày làm việc tiếp theo <br/> {{date}}"
-      tomorrow: "Ngày mai <br/> {{date}}"
-      next_week: "Tuần tới <br/> {{date}}"
-      next_month: "Tháng tiếp theo <br/> {{date}}"
+      tomorrow: "Ngày mai"
+      next_week: "Tuần tới"
+      next_month: "Tháng t"
       custom: "Ngày giờ tùy chỉnh"
   groups:
     errors:
@@ -228,7 +230,6 @@ vi:
       user_profile:
         bio_raw: "GIới thiệu bản thân"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -247,6 +248,7 @@ vi:
           attributes:
             hex:
               invalid: "không phải là một màu không hợp lệ"
+      <<: *errors
   vip_category_name: "Phòng khách"
   vip_category_description: "Một chuyên mục chỉ dành cho thành viên có mức tin tưởng 3 hoặc cao hơn"
   meta_category_name: "Phản hồi"
@@ -365,36 +367,29 @@ vi:
     off_topic:
       title: "Không-đúng-chủ-đề"
       description: "Bài này không liên quan đến các cuộc thảo luận hiện nay theo quy định của các tiêu đề và bài đầu tiên, và có lẽ nó nên được di chuyển đến những nơi khác."
-      long_form: "đánh dấu không-đúng-chủ-đề"
     spam:
       title: "Spam"
-      long_form: "đánh dấu là spam"
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
-      long_form: "đánh dấu cái này không thích hợp"
     notify_user:
-      title: "Gửi tin nhắn cho @{{username}}."
-      long_form: "đã nhắn tin cho thành viên"
+      title: "Gửi tin nhắn cho @%{username}."
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Một thứ khác"
       description: "Bài viết này cần được Ban quản trị chú ý. Lý do chưa được liệt kê trong danh sách."
-      long_form: "đã đánh dấu thông báo cho Ban quản trị"
       email_title: 'Một bài viết trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
-      title: "Đánh dấu chỉ mục \x1C"
+      title: "Đánh dấu chỉ mục"
       description: "Đánh dấu chỉ mục bài viết này"
       short_description: "Đánh dấu chỉ mục bài viết này"
-      long_form: "đã đánh dấu chỉ mục bài viết này"
     like:
       title: "Thích"
       description: "Thích bài viết này"
       short_description: "Thích bài viết này"
-      long_form: "đã thích cái này"
   topic_flag_types:
     spam:
       title: "Rác"
@@ -431,7 +426,7 @@ vi:
       every_six_months: "mỗi sáu tháng"
   user_api_key:
     otp_confirmation:
-      confirm_title: "Tiếp tục tới %{site_name}"
+      confirm_title: Tiếp tục tới %{site_name}
       confirm_button: Kết thúc đăng nhập
     scopes:
       one_time_password: "Tạo mã token đăng nhập một lần"
@@ -457,7 +452,7 @@ vi:
       title: "Hoạt động của người điều hành"
       labels:
         moderator: Điều hành
-      description: "Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo và sửa đổi."
+      description: Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo và sửa đổi.
     flags_status:
       title: "Tình trạng cờ"
       labels:
@@ -676,7 +671,6 @@ vi:
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Tự động ẩn bất kỳ bài viết ở ẩn hơn 30 ngày."
     allow_user_locale: "Cho phép thành viên chọn ngôn ngữ của riêng trong thiết lập giao diện."
-    set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
     min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
@@ -710,8 +704,6 @@ vi:
     email_custom_headers: "Danh sách xác định email header tùy chỉnh"
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
-    summary_posts_required: "Số bài viết tối thiểu trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
-    summary_likes_required: "Số lượt thích trong một chủ đề trước khi 'Tóm tắt chủ đề này' được kích hoạt"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
     enable_long_polling: "Message Bus sử dụng để thông báo có thể sử dụng vòng gọi dài"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
@@ -726,9 +718,7 @@ vi:
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
-    moderators_create_categories: "Cho phép điều hành viên tạo danh mục mới"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
-    use_admin_ip_whitelist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Xác định các mục nào hiển thị trên menu bài viết, và theo thứ tự nào. Ví dụ like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
@@ -745,8 +735,6 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
-    email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với tên miền email khác trong danh sách sẽ không được phép đăng ký!"
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
     new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
@@ -757,9 +745,6 @@ vi:
     enable_sso: "Cho phép dùng single sign on bằng trang ngoài (CẢNH BÁO: ĐỊA CHỈ EMAIL CỦA NGƯỜI DÙNG PHẢI ĐƯỢC CHỨNG THỰC BỞI TRANG NGOÀI!)"
     sso_url: "URL đầu cuối của Single Sign On (phải kèm theo http:// hoặc https://)"
     sso_secret: "Chuỗi bảo mật đã được sử dụng để chứng thực thông tin SSO, chắc chắn nó có ít nhất 10 ký tự."
-    sso_overrides_email: "Ghi đè email cục bộ với email trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do sự bình thường hóa các email cục bộ)"
-    sso_overrides_username: "Ghi đè tên tài khoản cục bộ với tài khoản trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ. (LƯU Ý: sự khác biệt có thể xảy ra do yêu cầu độ dài tên tài khoản khác nhau)"
-    sso_overrides_name: "Ghi đè tên thành viên cục bộ với tên thành viên trang ngoài từ SSO cho tất cả các lần đăng nhập, và ngăn chặn những thay đổi cục bộ."
     sso_not_approved_url: "Chuyển những tài khoản SSO chưa duyệt tới URL này"
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
@@ -772,7 +757,6 @@ vi:
     maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
-    s3_disable_cleanup: "Vô hiệu hóa việc loại bỏ các bản sao lưu từ S3 khi lấy ra tại địa phương."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
     active_user_rate_limit_secs: "Tần số cập nhật trường 'last_seen_at, tính theo giây"
@@ -835,7 +819,6 @@ vi:
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
     min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
-    newuser_max_images: "Bao nhiêu hình tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
     newuser_max_replies_per_topic: "Số lượng tối đa trả lời mà thành viên có thể thực hiện trong một chủ đề cho đến khi có ai đó gửi trả lời."
@@ -871,8 +854,6 @@ vi:
     faq_url: "Nếu bạn có một địa chỉ FAQ muốn sử dụng, điền URL đầy đủ ở đây."
     tos_url: "Nếu bạn có một địa chỉ Quy Định Sử Dụng muốn sử dụng, điền URL đầy đủ ở đây."
     privacy_policy_url: "Nếu bạn có một địa chỉ Quyền Riêng Tư muốn sử dụng, điền URL đầy đủ ở đây."
-    white_listed_spam_host_domains: "Danh sách tên miền sẽ được miễn trừ khỏi kiểm tra spam. Thành viên mới sẽ không bị giới hạn khi tạo bài viết có chứa liên kết từ các tên miền này."
-    staff_like_weight: "Trọng số cộng thêm khi BQT like là bao nhiêu."
     topic_view_duration_hours: "Đếm lượt xem chủ đề mới một lần cho mỗi IP/User trong N giờ"
     user_profile_view_duration_hours: "Đếm lượt xem hồ sơ mới một lần cho mỗi IP/User trong N giờ"
     levenshtein_distance_spammer_emails: "Khi phù hợp với thư rác, số ký tự khác biệt vẫn sẽ cho phép khả năng chính xác mờ."
@@ -910,8 +891,6 @@ vi:
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
-    allow_animated_avatars: "Cho phép người dùng sử dụng ảnh gif động trong trang hồ sơ. CẢNH BÁO: cần chạy tác vụ avatars:refresh sau khi thay đổi thiết lập này."
-    allow_animated_thumbnails: "Tạo ảnh động thu nhỏ cho ảnh .gif"
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
@@ -936,7 +915,6 @@ vi:
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
-    default_code_lang: "Highlight cú pháp ngôn ngữ lập trình mặc định áp dụng cho đoạn mã GitHub (lang-auto, ruby, python...)"
     warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
     autohighlight_all_code: "Highlight code bắt buộc đối với các đoạn mã thực thi ngay cả khi họ không chỉ định ngôn ngữ rõ ràng."
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
@@ -946,7 +924,6 @@ vi:
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
     bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     prevent_anons_from_downloading_files: "Cấm khách truy cập tải các tập tin đính kèm. CẢNH BÁO: việc này sẽ chặn những hình ảnh không thuộc giao diện trang hoạt động"
-    secure_media: 'Giới hạn truy cập để tải lên phương tiện truyền thông (hình ảnh, video, âm thanh). Nếu "yêu cầu đăng nhập" được bật, chỉ Thành viên đã đăng nhập mới có thể truy cập tải lên phương tiện. Nếu không, quyền truy cập sẽ chỉ bị giới hạn đối với các phương tiện tải lên trong các tin nhắn riêng tư. Lưu ý: Tải lên S3 phải được bật trước khi bật cài đặt này.'
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
@@ -1008,6 +985,10 @@ vi:
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
     not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
+  publish_page:
+    slug_errors:
+      blank: "không được để trống"
+      invalid: "chứa các kí tự không hợp lệ"
   topic_statuses:
     autoclosed_enabled_days:
       other: "Chủ đề này sẽ được tự động đóng sau %{count} ngày, sẽ không được gửi trả lời."
@@ -1036,7 +1017,6 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error_unknown: "Cố lỗi xảy ra khi bạn đăng nhập, vui lòng thử lại."
     omniauth_confirm_button: "Tiếp tục"
     new_registrations_disabled: "Đăng ký tài khoản mới không được cho phép tại thời điểm này."
     password_too_long: "Mật khẩu giới hạn không quá 200 ký tự."
@@ -1044,7 +1024,6 @@ vi:
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
-    second_factor_title: "Xác minh hai bước"
   admin:
     email:
       sent_test: "đã gửi!"
@@ -1267,7 +1246,7 @@ vi:
       name: Tự truyện
     anniversary:
       name: Ngày kỷ niệm
-      description: "Thành viên hoạt động trong một năm, gửi bài ít nhất một lần"
+      description: Thành viên hoạt động trong một năm, gửi bài ít nhất một lần
     nice_post:
       name: Trả Lời Hay
       description: Nhận được 10 like cho một trả lời
@@ -1378,7 +1357,6 @@ vi:
       name: Thích nhiều hơn
     crazy_in_love:
       name: Thích nhiệt tình
-      description: Sử dụng 50 like một ngày trong 20 ngày
     thank_you:
       name: Cám ơn bạn
       description: Nhận được 20 like và đã like 10 lần
@@ -1427,8 +1405,6 @@ vi:
       corporate:
         title: "Công ty"
         description: "Thông tin này sẽ được nhập vào <a href='%{base_path}/tos' target='blank'>Điều khoản dịch vụ</a> của bạn, đây là một chủ đề bạn có thể chỉnh sửa trong danh mục Nhân viên. Nếu bạn không có một công ty, hãy bỏ qua bước này ngay bây giờ."
-      colors:
-        title: "Giao diện"
       homepage:
         fields:
           homepage_style:
@@ -1444,6 +1420,14 @@ vi:
       emoji:
         title: "Emoji"
   joined: "Đã tham gia"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
+      quoted: '%{username} trích lời bạn trong "%{topic}" - %{site_title}'
+      replied: '%{username} trả lời cho bạn trong "%{topic}" - %{site_title}'
+      posted: '%{username} gửi bài trong "%{topic}" - %{site_title}'
+      linked: '%{username} liên quan đến bài viết của bạn từ "%{topic}" - %{site_title}'
   reviewables:
     priorities:
       medium: "Trung bình"
@@ -1471,3 +1455,6 @@ vi:
         title: "Từ chối"
       delete_user:
         title: "Xóa tài khoản"
+  activemodel:
+    errors:
+      <<: *errors

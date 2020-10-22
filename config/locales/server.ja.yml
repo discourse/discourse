@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ja:
   dates:
@@ -17,12 +16,25 @@ ja:
       date_only: "%B%-d、%Y"
       long: "%B%-d、%Y、%I:%M%P"
   date:
-    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    month_names:
+    - null
+    - 1月
+    - 2月
+    - 3月
+    - 4月
+    - 5月
+    - 6月
+    - 7月
+    - 8月
+    - 9月
+    - 10月
+    - 11月
+    - 12月
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "午前"
     pm: "午後"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -44,7 +56,6 @@ ja:
       unrecognized_extension: "ファイルの拡張子が認識できません。: %{extension}"
     import_error:
       generic: テーマをインポートするときにエラーが起こりました
-      about_json: "重要なエラー: about.json が存在しないか無効です"
       about_json_values: "about.jsonは無効な値があります: %{errors}"
       git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
@@ -55,7 +66,6 @@ ja:
       no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
     settings_errors:
       invalid_yaml: "入力されたYAMLは不正です"
-      data_type_not_a_number: "%{name}型の設定はサポートされていません。サポートされている型は `integer`、`bool`、`list`、`enum`です。"
       name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
       default_value_missing: "設定%{name}はデフォルト値を持っていません"
       default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
@@ -78,7 +88,7 @@ ja:
         bounced_email_error: "Eメールは返送されたEメールレポートです。"
       unrecognized_error: "認識されていないエラー"
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>%{message}"
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
@@ -87,23 +97,23 @@ ja:
       accepted: に同意する必要があります
       blank: を入力してください
       present: は入力しないでください
-      confirmation: "と%{attribute}の入力が一致しません"
+      confirmation: ! "と%{attribute}の入力が一致しません"
       empty: 本文が入力されていません
-      equal_to: "は%{count}にしてください"
+      equal_to: は%{count}にしてください
       even: は偶数にしてください
       exclusion: はすでに使われています
-      greater_than: "は%{count}より大きい値にしてください"
-      greater_than_or_equal_to: "は%{count}以上の値にしてください"
+      greater_than: は%{count}より大きい値にしてください
+      greater_than_or_equal_to: は%{count}以上の値にしてください
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
       is_invalid: "文章に不適切な文字、または文字列があるようです。\n文章をもう一度確認してやり直してください。"
-      less_than: "は%{count}より小さい値にしてください"
-      less_than_or_equal_to: "は%{count}以下の値にしてください"
+      less_than: は%{count}より小さい値にしてください
+      less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
-      record_invalid: "検証に失敗しました： %{errors}"
+      record_invalid: ! "検証に失敗しました： %{errors}"
       emojis_disabled: "絵文字を持っていません"
       ip_address_already_screened: "すでに存在するルールを含んでいます"
       restrict_dependent_destroy:
@@ -117,17 +127,14 @@ ja:
         other: は%{count}文字で入力してください
       other_than: "は%{count}以外の値にしてください"
     template:
-      body: "次のフィールドに問題があります:"
+      body: ! "次のフィールドに問題があります:"
       header:
-        other: "%{model} の保存中に%{count} 個のエラーが発生しました"
+        other: ! "%{model} の保存中に%{count} 個のエラーが発生しました"
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       default_categories_already_selected: "他のリストで使われているカテゴリーは選択できません。"
       s3_upload_bucket_is_required: "'s3_upload_bucket'がない場合、S3にアップロードを有効にすることはできません。"
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "アップロードファイルはcsv形式である必要があります。"
     error: "アップロードファイルにエラーが発生しました。時間が経ってから再度お試しください。"
@@ -169,10 +176,6 @@ ja:
     created: "作成者"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
   no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
-  no_images_allowed_trust: "ごめんなさい、ポストに画像を添付することができません"
-  no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
-  too_many_images:
-    other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個の画像しか貼り付けられません。"
   no_attachments_allowed: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
   too_many_attachments:
     other: "ごめんなさい、新しいユーザーは一つのポストにつき%{count}個のファイルしか貼り付けられません。"
@@ -194,9 +197,6 @@ ja:
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
-  author_wrote: "%{author} の投稿:"
-  num_posts: "投稿:"
-  num_participants: "参加者:"
   read_full_topic: "完全なトピックを読む"
   private_message_abbrev: "メッセージ"
   rss_description:
@@ -217,6 +217,12 @@ ja:
     tag: "タグされたトピック"
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
+  bookmarks:
+    reminders:
+      later_today: "今日中"
+      tomorrow: "明日"
+      next_week: "来週"
+      next_month: "来月"
   groups:
     errors:
       invalid_incoming_email: "%{email}のメール認証に失敗しました\U0001F62D"
@@ -265,7 +271,6 @@ ja:
       user_profile:
         bio_raw: "自己紹介"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -286,6 +291,7 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
+      <<: *errors
   uncategorized_category_name: "その他"
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
@@ -435,40 +441,33 @@ ja:
       title: "関係ない話題"
       description: "この投稿はタイトルと投稿で定義される現在の内容に関連しておらず、どこかに移動させる必要があります"
       short_description: "ディスカッションに関連がない"
-      long_form: "「関係ない話題」として通報"
     spam:
       title: "スパム"
       description: "この投稿は広告、または悪質行為です。 現在のトピックとは関連性がありません。"
       short_description: "営利目的か破壊行為の可能性"
-      long_form: "スパムとして通報する"
       email_title: '"%{title}"はスパムとして通報されています'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不適切"
-      long_form: "不適切として通報する"
     notify_user:
-      title: "@{{username}}へメッセージを送る"
+      title: "@%{username}へメッセージを送る"
       description: "この投稿について直接話がしたいです。"
       short_description: "彼らの投稿に対して直接話したいです。"
-      long_form: "メッセージが送られたユーザー"
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "その他"
       description: "この投稿は上記以外の理由でスタッフの注意が必要です。"
       short_description: "その他の理由で管理人による確認が必要"
-      long_form: "スタッフへ知らせるために通報する"
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "ブックマーク"
       description: "この投稿をブックマークする"
       short_description: "この投稿をブックマークする"
-      long_form: "この投稿をブックマーク"
     like:
       title: "いいね！"
       description: "この投稿を「いいね！」する"
       short_description: "この投稿を「いいね！」する"
-      long_form: "「いいね！」する"
   user_activity:
     no_default:
       self: "まだアクティビティーがありません"
@@ -540,7 +539,7 @@ ja:
     read_write: "既読/書く"
     description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
     otp_confirmation:
-      confirm_title: "%{site_name}へ"
+      confirm_title: '%{site_name}へ'
     no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
     generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
     scopes:
@@ -796,8 +795,6 @@ ja:
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインはSPF、DKIM、逆引きPTRレコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
     summary_score_threshold: "'トピックサマリー'に投稿が含まれるために必要な最低スコア"
-    summary_posts_required: "'トピックサマリー'が有効になるために必要な最小投稿数"
-    summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
@@ -812,7 +809,6 @@ ja:
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
     must_approve_users: "ユーザがサイトにアクセスするには、スタッフの承認が必要"
-    moderators_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
     top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
@@ -829,8 +825,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
     enable_badges: "バッジ機能を有効にする"
-    email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
-    email_domains_whitelist: "ユーザー登録に必要なパイプ区切りのメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
@@ -839,9 +833,6 @@ ja:
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
     enable_sso: "外部サイトを経由したシングルサインオンを有効にします(警告：ユーザーのメールアドレスは必ず外部サイトで認証されなければなりません)"
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
-    sso_overrides_email: "ログインする度にSSOペイロードから取得した外部サイトのメールアドレスでローカルのメールアドレスを上書きし、ローカルでの変更を防ぐ(警告: 不一致が原因でローカルのメールアドレスの正規化が発生する可能性があります)"
-    sso_overrides_username: "ログインする度に、SSOペイロードから取得した外部サイトのユーザ名でローカルのユーザ名を上書きすし、ローカルでの変更を防ぐ(警告: 不一致が原因でユーザ名の長さ/要件に違いがでる可能性があります)"
-    sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
@@ -898,7 +889,6 @@ ja:
     min_trust_to_create_topic: "新規にトピックを作成するために必要な最低トラストレベル。"
     min_trust_to_edit_wiki_post: "ポストをwikiにするために必要な最低トラストレベル"
     newuser_max_links: "新しいユーザが投稿内に貼れるリンクの数"
-    newuser_max_images: "新しいユーザが投稿内にアップロードできる画像の数"
     newuser_max_attachments: "新しいユーザが投稿内に添付できるファイルの数"
     newuser_max_mentions_per_post: "新しいユーザが投稿内で @name で通知できる最大の数"
     newuser_max_replies_per_topic: "新しいユーザが１つのトピックで誰かがそれに回答するまでに回答できる最大の数"
@@ -933,8 +923,6 @@ ja:
     faq_url: "FAQが他のサイトにある場合、URLをここに指定します。"
     tos_url: "他のサイトに利用規約を掲載している場合は、URLをここに指定してください。"
     privacy_policy_url: "他のサイトにプライバシーポリシーを掲載している場合は、URLをここに指定してください。"
-    white_listed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
-    staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
     max_new_accounts_per_registration_ip: "もし既にトラストレベル0のユーザーがそのIPから(N)個作成されていたら、そのIPから登録できないようにする(スタッフメンバー、トラストレベル2以上は除く)"
     min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
@@ -962,8 +950,6 @@ ja:
     delete_all_posts_max: "すべてのポストを削除ボタンで一度に削除可能な最大ポスト数。ユーザがここで指定した以上のポストを投稿していた場合は、一度に全ポストを削除することができません。またユーザも削除されません。"
     email_editable: "登録後、ユーザによるメールアドレスの変更を許可する。"
     allow_uploaded_avatars: "プロフィール画像のアップロードを許可"
-    allow_animated_avatars: "プロフィール画像としてアニメgifをアップロードするのを許可。警告: この設定を変更した場合 avatars:refresh rakeタスクを実行すること"
-    allow_animated_thumbnails: "アニメgifからアニメーションサムネイルを生成する"
     default_avatars: "新規ユーザが変更するまで使用されるデフォルトのプロフィール画像URL"
     automatically_download_gravatars: "アカウントの生成時、メールアドレスの変更時にGravatarをダウンロード"
     detect_custom_avatars: "ユーザがプロフィール画像をアップロードしたか確認する"
@@ -982,7 +968,6 @@ ja:
     display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
     show_time_gap_days: "２つの投稿の作成日が離れていた場合、time gapをトピックに表示する。"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
-    default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
     warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
     autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
     embed_truncate: "embedされた投稿をtruncateする"
@@ -1030,6 +1015,10 @@ ja:
   move_posts:
     existing_topic_moderator_post:
       other: "%{count}つのポストが存在するトピックに統合されました：%{topic_link}"
+  publish_page:
+    slug_errors:
+      blank: "を入力してください"
+      invalid: "は不正な文字を含んでいます"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "このメッセージは%{count}つの返信に達した時に自動的に閉じます。"
@@ -1063,7 +1052,6 @@ ja:
     errors: "%{errors}"
     not_available: "それは利用できません。\"%{suggestion}\" はどうですか？"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
     omniauth_confirm_button: "続く"
     new_registrations_disabled: "新規登録は現在行えません。"
     password_too_long: "パスワードは200文字までです"
@@ -1073,7 +1061,6 @@ ja:
     auth_complete: "認証が完了しました。"
     click_to_continue: "クリックして続けてください。"
     already_logged_in: "おっと！他の人の招待を受け入れたようです。もし、あなたが%{current_user}出なければ、ログアウトして再び試してください。"
-    second_factor_title: "二段階認証"
     second_factor_backup_description: "バックアップコードを入力: "
   admin:
     email:
@@ -1254,7 +1241,6 @@ ja:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       since_last_visit: "最後の訪問"
       new_topics: "新しいトピック"
-      unread_messages: "未読メッセージ"
       unread_notifications: "未読通知"
       liked_received: "いいねを受領"
       new_users: "新しいユーザー"
@@ -1296,6 +1282,8 @@ ja:
       subject_template: "[%{email_prefix}]新しいメールアドレスを確認してください"
     confirm_old_email:
       title: "古いメールの確認"
+      subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
+    confirm_old_email_add:
       subject_template: "[%{email_prefix}]現在のメールアドレスの確認"
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
@@ -1460,7 +1448,7 @@ ja:
       name: リーダー
     welcome:
       name: ようこそ
-      description: 「いいね！」を受けました
+      description: '「いいね！」を受けました'
     autobiographer:
       name: あなたはだれ？
     anniversary:
@@ -1527,7 +1515,7 @@ ja:
         このバッジは、あなたが初めて返信で投稿を引用したときに付与されます。あなたの返信に、前の投稿の関連部分を引用すると、その話題について一緒に話し合うことができます。 引用する最も簡単な方法は、投稿の1つのセクションをハイライト表示し、任意の返信ボタンを押すことです。 たくさん引用してください！
     read_guidelines:
       name: ガイドラインを読む
-      description: "<a href=\"%{base_uri}/guidelines\">コミュニティーガイドライン</a>を読む"
+      description: <a href="%{base_uri}/guidelines">コミュニティーガイドライン</a>を読む
     reader:
       name: 読者
       description: トピックの100以上の全ての返信を読む
@@ -1569,7 +1557,6 @@ ja:
       name: より多くの愛
     crazy_in_love:
       name: 愛
-      description: 50いいね！を20日間
     thank_you:
       name: ありがとう
       description: 20ものいいね！を受け取り10ものいいね！を与えました。
@@ -1604,8 +1591,9 @@ ja:
         このバッジは初めてメール :e-mail: 経由で返信した人に付与されます
     new_user_of_the_month:
       name: "一ヶ月の新規ユーザー"
-      description: ! "最初の一ヶ月間の功績\U0001F44C"
-      long_description: "このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381\n"
+      description: 最初の一ヶ月間の功績\U0001F44C
+      long_description: |
+        このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381
     enthusiast:
       name: 熱狂者
     aficionado:
@@ -1621,8 +1609,6 @@ ja:
     initial_topic_title: ウェブサイトパフォーマンスレポート
   tags:
     title: "タグ"
-    staff_tag_disallowed: '%{tag}タグは管理人のみが追加可能です'
-    staff_tag_remove_disallowed: '%{tag}タグは管理人のみが削除可能です'
   finish_installation:
     resend_email:
       title: "アクティベーションメールの再送"
@@ -1645,8 +1631,6 @@ ja:
             placeholder: "name@example.com"
       corporate:
         title: "組織"
-      colors:
-        title: "テーマ"
       homepage:
         description: "ホームページへは最新トピックの表示を推薦しますが、カテゴリー（トピックのまとまり）のみの表示も可能です。"
         title: "ホームページ"
@@ -1668,6 +1652,12 @@ ja:
   joined: "参加日"
   discourse_push_notifications:
     popup:
+      mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      group_mentioned: '"%{topic}"で%{username} にメンションされました - %{site_title}'
+      quoted: '"%{topic}"で%{username}が引用しました - %{site_title}'
+      replied: '%{username}が"%{topic}"へ返信しました - %{site_title}'
+      posted: '%{username} が投稿しました "%{topic}" - %{site_title}'
+      linked: '"%{topic}"にあるあなたの投稿に%{username}がリンクしました - %{site_title}'
       confirm_body: "成功！通知を可能にしました！"
   reviewables:
     priorities:
@@ -1697,3 +1687,6 @@ ja:
         title: "リジェクト"
       delete_user:
         title: "削除されたユーザー"
+  activemodel:
+    errors:
+      <<: *errors

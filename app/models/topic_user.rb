@@ -22,6 +22,10 @@ class TopicUser < ActiveRecord::Base
     level(topic_id, :watching)
   }
 
+  def topic_bookmarks
+    Bookmark.where(topic: topic, user: user)
+  end
+
   # Class methods
   class << self
 
@@ -369,13 +373,11 @@ class TopicUser < ActiveRecord::Base
     action_type = opts[:post_action_type]
 
     action_type_name = "liked" if action_type == :like
-    action_type_name = "bookmarked" if action_type == :bookmark
 
     raise ArgumentError, "action_type" if action_type && !action_type_name
 
     unless action_type_name
       update_post_action_cache(opts.merge(post_action_type: :like))
-      update_post_action_cache(opts.merge(post_action_type: :bookmark))
       return
     end
 
@@ -493,6 +495,7 @@ end
 #  posted                   :boolean          default(FALSE), not null
 #  last_read_post_number    :integer
 #  highest_seen_post_number :integer
+#  last_posted_at          :datetime
 #  last_visited_at          :datetime
 #  first_visited_at         :datetime
 #  notification_level       :integer          default(1), not null

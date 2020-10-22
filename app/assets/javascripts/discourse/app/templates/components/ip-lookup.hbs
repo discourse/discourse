@@ -1,0 +1,94 @@
+{{#if ip}}
+  {{d-button
+    class="btn-default"
+    action=(action "lookup")
+    icon="globe"
+    label="admin.user.ip_lookup"}}
+{{/if}}
+{{#if show}}
+  <div class="location-box">
+    <a href class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
+    {{#if copied}}
+      {{d-button class="btn-hover pull-right" icon="copy" label="ip_lookup.copied"}}
+    {{else}}
+      {{d-button action=(action "copy") class="pull-right no-text" icon="copy"}}
+    {{/if}}
+    <h4>{{i18n "ip_lookup.title"}}</h4>
+    <p class="powered-by">{{html-safe (i18n "ip_lookup.powered_by")}}</p>
+    <dl>
+      {{#if location}}
+        {{#if location.hostname}}
+          <dt>{{i18n "ip_lookup.hostname"}}</dt>
+          <dd>{{location.hostname}}</dd>
+        {{/if}}
+
+        <dt>{{i18n "ip_lookup.location"}}</dt>
+        <dd>
+          {{#if location.location}}
+            <a href="https://maps.google.com/maps?q={{location.latitude}},{{location.longitude}}" rel="noopener noreferrer" target="_blank">
+              {{location.location}}
+            </a>
+          {{else}}
+            {{i18n "ip_lookup.location_not_found"}}
+          {{/if}}
+        </dd>
+
+        {{#if location.organization}}
+          <dt>{{i18n "ip_lookup.organisation"}}</dt>
+          <dd>{{location.organization}}</dd>
+        {{/if}}
+      {{else}}
+        {{loading-spinner size="small"}}
+      {{/if}}
+
+      <dt>
+        {{i18n "ip_lookup.other_accounts"}}
+        <strong>{{totalOthersWithSameIP}}</strong>
+        {{#if other_accounts.length}}
+          {{#d-button
+            class="btn-danger pull-right"
+            action=(action "deleteOtherAccounts")
+            icon="exclamation-triangle"
+          }}
+            {{i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete}}
+          {{/d-button}}
+        {{/if}}
+      </dt>
+
+      {{#conditional-loading-spinner size="small" condition=otherAccountsLoading}}
+        {{#if other_accounts.length}}
+          <dd class="other-accounts">
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>{{i18n "ip_lookup.username"}}</th>
+                  <th>{{i18n "ip_lookup.trust_level"}}</th>
+                  <th>{{i18n "ip_lookup.read_time"}}</th>
+                  <th>{{i18n "ip_lookup.topics_entered"}}</th>
+                  <th>{{i18n "ip_lookup.post_count"}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each other_accounts as |a|}}
+                  <tr>
+                    <td>
+                      {{#link-to "adminUser" a}}
+                        {{avatar a usernamePath="user.username" imageSize="small"}}
+                        &nbsp;
+                        <span>{{a.username}}</span>
+                      {{/link-to}}
+                    </td>
+                    <td>{{a.trustLevel.id}}</td>
+                    <td>{{a.time_read}}</td>
+                    <td>{{a.topics_entered}}</td>
+                    <td>{{a.post_count}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </dd>
+        {{/if}}
+      {{/conditional-loading-spinner}}
+    </dl>
+  </div>
+{{/if}}

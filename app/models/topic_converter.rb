@@ -82,6 +82,10 @@ class TopicConverter
     existing_allowed_users = @topic.topic_allowed_users.pluck(:user_id)
     users_to_allow = posters << @user.id
 
+    if (users_to_allow | existing_allowed_users).length > SiteSetting.max_allowed_message_recipients
+      users_to_allow = [@user.id]
+    end
+
     (users_to_allow - existing_allowed_users).uniq.each do |user_id|
       @topic.topic_allowed_users.build(user_id: user_id)
     end

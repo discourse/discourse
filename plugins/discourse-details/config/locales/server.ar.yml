@@ -1,10 +1,11 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ar:
   site_settings:
-    details_enabled: 'فعل خاصية التفاصيل. إذا غيرت هذا ، فيجب عليك إعادة بث جميع المشاركات باستخدام: "rake posts:rebake".'
+    details_enabled: 'فعّل ميزة التفاصيل. إن غيّرت هذا فيمكنك إعادة خبز (rebake) كلّ المشاركات بالأمر: ”rake posts:rebake“.'
+  details:
+    excerpt_details: "(انقر لتفاصيل أكثر)"

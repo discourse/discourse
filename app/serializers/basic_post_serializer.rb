@@ -40,34 +40,7 @@ class BasicPostSerializer < ApplicationSerializer
         I18n.t('flagging.user_must_edit')
       end
     else
-      cooked = object.filter_quotes(@parent_post)
-
-      if scope&.user
-
-        # PERF: this should not run on every post, only specific ones
-        # also, why is this in basic post serializer?
-        requested_group_id = post_custom_fields['requested_group_id'].to_i
-
-        if requested_group_id > 0
-          group = Group
-            .joins('JOIN group_users ON groups.id = group_users.group_id')
-            .find_by(
-              id: object.custom_fields['requested_group_id'].to_i,
-              group_users: { user_id: scope.user.id, owner: true }
-            )
-
-          if group
-            cooked << <<~EOF
-              <hr />
-              <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
-                #{I18n.t('groups.request_membership_pm.handle')}
-              </a>
-            EOF
-          end
-        end
-      end
-
-      cooked
+      object.filter_quotes(@parent_post)
     end
   end
 

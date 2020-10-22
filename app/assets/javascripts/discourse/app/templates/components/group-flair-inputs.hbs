@@ -1,0 +1,72 @@
+<div class="control-group">
+  <label class="control-label" for="flair_url">{{i18n "groups.flair_url"}}</label>
+
+  <div class="radios">
+    <label class="radio-label" for="avatar-flair">
+      {{radio-button name="avatar-flair" value="icon" selection=model.flair_type}}
+      <b>{{i18n "groups.flair_type.icon"}}</b>
+    </label>
+
+    <label class="radio-label" for="avatar-flair">
+      {{radio-button name="avatar-flair" value="image" selection=model.flair_type}}
+      <b>{{i18n "groups.flair_type.image"}}</b>
+    </label>
+  </div>
+
+  {{#if flairPreviewIcon}}
+    {{icon-picker
+      name="icon"
+      value=model.flair_icon
+      options=(hash maximum=1)
+      onChange=(action (mut model.flair_icon))
+    }}
+  {{else if flairPreviewImage}}
+    {{image-uploader
+      imageUrl=flairImageUrl
+      onUploadDone=(action "setFlairImage")
+      onUploadDeleted=(action "removeFlairImage")
+      type="group_flair"
+      class="no-repeat contain-image"}}
+    <div class="control-instructions">
+      {{i18n "groups.flair_upload_description"}}
+    </div>
+  {{/if}}
+</div>
+
+<div class="control-group">
+  <label class="control-label" for="flair_bg_color">{{i18n "groups.flair_bg_color"}}</label>
+
+  {{text-field name="flair_bg_color"
+      class="group-flair-bg-color input-xxlarge"
+      value=model.flair_bg_color
+      placeholderKey="groups.flair_bg_color_placeholder"}}
+</div>
+
+{{#if flairPreviewIcon}}
+  <div class="control-group">
+    <label class="control-label" for="flair_color">{{i18n "groups.flair_color"}}</label>
+
+    {{text-field name="flair_color"
+        class="group-flair-color input-xxlarge"
+        value=model.flair_color
+        placeholderKey="groups.flair_color_placeholder"}}
+  </div>
+{{/if}}
+
+<div class="control-group">
+  <label class="control-label">{{flairPreviewLabel}}</label>
+
+  <div class="avatar-flair-preview">
+    <div class="avatar-wrapper">
+      <img width="45" height="45" src={{demoAvatarUrl}} class="avatar actor" alt="" role="presentation">
+    </div>
+
+    {{#if flairPreviewImage}}
+      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
+    {{else if flairPreviewIcon}}
+      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}} role="presentation">
+        {{d-icon flairPreviewIconUrl}}
+      </div>
+    {{/if}}
+  </div>
+</div>

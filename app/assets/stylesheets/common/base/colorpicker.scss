@@ -28,7 +28,7 @@
     .colorpicker {
       position: relative;
       margin: 0 0.125em 0.25em;
-      border: 1px solid $primary-medium;
+      border: 1px solid var(--primary-medium);
       width: 1.25em;
       height: 1.2em;
       padding: 0;

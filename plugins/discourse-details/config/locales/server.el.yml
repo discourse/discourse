@@ -1,8 +1,11 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
-el: {}
+el:
+  site_settings:
+    details_enabled: 'Ενεργοποιήστε τη λειτουργία λεπτομερειών. Εάν το αλλάξετε αυτό, πρέπει να κάνετε rebake όλες τις αναρτήσεις με: «rake posts: rebake».'
+  details:
+    excerpt_details: "(κλικ για περισσότερες λεπτομέρειες)"

@@ -1,0 +1,12 @@
+{{raw "topic-status" topic=topic}}
+<a href={{topic.lastUnreadUrl}} class="title">{{html-safe topic.fancyTitle}}</a>
+{{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+
+{{#if latestTopicOnly}}
+  <div class="last-user-info">
+    {{i18n "categories.latest_by"}} <a href={{html-safe topic.lastPosterUrl}}>{{topic.last_poster.username}}</a>
+    <a href={{topic.lastPostUrl}}>{{format-age topic.last_posted_at}}</a>
+  </div>
+{{else}}
+  <a href={{topic.lastPostUrl}} class="last-posted-at">{{format-age topic.last_posted_at}}</a>
+{{/if}}

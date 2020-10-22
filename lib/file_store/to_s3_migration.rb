@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'aws-sdk-s3'
+
 module FileStore
   ToS3MigrationError = Class.new(RuntimeError)
 
   class ToS3Migration
+    MISSING_UPLOADS_RAKE_TASK_NAME ||= 'posts:missing_uploads'
+
     def initialize(s3_options:, dry_run: false, migrate_to_multisite: false, skip_etag_verify: false)
 
       @s3_bucket = s3_options[:bucket]
@@ -17,7 +21,7 @@ module FileStore
     def self.s3_options_from_site_settings
       {
         client_options: S3Helper.s3_options(SiteSetting),
-        bucket: SiteSetting.s3_upload_bucket
+        bucket: SiteSetting.Upload.s3_upload_bucket
       }
     end
 
@@ -83,8 +87,8 @@ module FileStore
         success = false
       end
 
-      Discourse::Application.load_tasks
-      Rake::Task['posts:missing_uploads']
+      Discourse::Application.load_tasks unless Rake::Task.task_defined?(MISSING_UPLOADS_RAKE_TASK_NAME)
+      Rake::Task[MISSING_UPLOADS_RAKE_TASK_NAME]
       count = DB.query_single(<<~SQL, Post::MISSING_UPLOADS, Post::MISSING_UPLOADS_IGNORED).first
         SELECT COUNT(1)
         FROM posts p
@@ -220,13 +224,19 @@ module FileStore
           upload = Upload.find_by(url: "/#{file}")
 
           if upload&.original_filename
-            options[:content_disposition] =
-              %Q{attachment; filename="#{upload.original_filename}"}
+            options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+              disposition: "attachment", filename: upload.original_filename
+            )
           end
 
           if upload&.secure
             options[:acl] = "private"
           end
+        elsif !FileHelper.is_inline_image?(name)
+          upload = Upload.find_by(url: "/#{file}")
+          options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(
+            disposition: "attachment", filename: upload&.original_filename || name
+          )
         end
 
         etag ||= Digest::MD5.file(path).hexdigest

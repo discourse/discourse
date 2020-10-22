@@ -15,6 +15,8 @@ Discourse::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  config.action_controller.asset_host = GlobalSetting.cdn_url
+
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -39,6 +41,10 @@ Discourse::Application.configure do
 
   config.log_level = ENV['DISCOURSE_DEV_LOG_LEVEL'] if ENV['DISCOURSE_DEV_LOG_LEVEL']
 
+  if ENV['RAILS_VERBOSE_QUERY_LOGS'] == "1"
+    config.active_record.verbose_query_logs = true
+  end
+
   if defined?(BetterErrors)
     BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
 
@@ -48,7 +54,10 @@ Discourse::Application.configure do
     end
   end
 
-  config.load_mini_profiler = true
+  if !ENV["DISABLE_MINI_PROFILER"]
+    config.load_mini_profiler = true
+  end
+
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
     config.hosts.concat(hosts.split(","))
   end
@@ -74,6 +83,20 @@ Discourse::Application.configure do
   end
 
   config.after_initialize do
+    if ENV["RAILS_COLORIZE_LOGGING"] == "1"
+      config.colorize_logging = true
+    end
+
+    if ENV["RAILS_VERBOSE_QUERY_LOGS"] == "1"
+      ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
+        line =~ /lib\/freedom_patches/
+      end
+    end
+
+    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
+      ActiveRecord::Base.logger = nil
+    end
+
     if ENV['BULLET']
       Bullet.enable = true
       Bullet.rails_logger = true

@@ -1,0 +1,97 @@
+<div class="backup-options">
+  {{#if localBackupStorage}}
+    {{resumable-upload
+      target="/admin/backups/upload"
+      success=(route-action "uploadSuccess")
+      error=(route-action "uploadError")
+      uploadText=uploadLabel
+      title="admin.backups.upload.title"
+      class="btn-default"}}
+  {{else}}
+    {{backup-uploader done=(route-action "remoteUploadSuccess")}}
+  {{/if}}
+
+  {{#if site.isReadOnly}}
+    {{d-button
+      class="btn-default"
+      icon="far-eye"
+      action=(action "toggleReadOnlyMode")
+      disabled=status.isOperationRunning
+      title="admin.backups.read_only.disable.title"
+      label="admin.backups.read_only.disable.label"}}
+  {{else}}
+    {{d-button
+      class="btn-default"
+      icon="far-eye"
+      action=(action "toggleReadOnlyMode")
+      disabled=status.isOperationRunning
+      title="admin.backups.read_only.enable.title"
+      label="admin.backups.read_only.enable.label"}}
+  {{/if}}
+  <div class="backup-message">
+    {{#if status.restoreDisabled}}
+      <a href="site_settings/category/all_results?filter=allow_restore">{{d-icon "info-circle"}} {{i18n "admin.backups.operations.restore.is_disabled"}}</a>
+    {{/if}}
+  </div>
+</div>
+<table class="grid">
+  <thead>
+    <th width="55%">{{i18n "admin.backups.columns.filename"}}</th>
+    <th width="10%">{{i18n "admin.backups.columns.size"}}</th>
+    <th></th>
+  </thead>
+  <tbody>
+    {{#each model as |backup|}}
+      <tr>
+        <td class="backup-filename">{{backup.filename}}</td>
+        <td class="backup-size">{{human-size backup.size}}</td>
+        <td class="backup-controls">
+          <div>
+            {{d-button class="btn-default download"
+               action=(action "download")
+               actionParam=backup
+               icon="download"
+               title="admin.backups.operations.download.title"
+               label="admin.backups.operations.download.label"}}
+            {{#if status.isOperationRunning}}
+              {{d-button
+                icon="far-trash-alt"
+                action=(route-action "destroyBackup")
+                actionParam=backup class="btn-danger"
+                disabled="true"
+                title="admin.backups.operations.is_running"}}
+              {{d-button
+                icon="play"
+                action=(route-action "startRestore")
+                actionParam=backup disabled=status.restoreDisabled
+                class="btn-default"
+                title=restoreTitle
+                label="admin.backups.operations.restore.label"}}
+            {{else}}
+              {{d-button
+                icon="far-trash-alt"
+                action=(route-action "destroyBackup")
+                actionParam=backup
+                class="btn-danger"
+                title="admin.backups.operations.destroy.title"}}
+              {{d-button
+                icon="play"
+                action=(route-action "startRestore")
+                actionParam=backup
+                disabled=status.restoreDisabled
+                class="btn-default btn-restore"
+                title=restoreTitle
+                label="admin.backups.operations.restore.label"}}
+            {{/if}}
+          </div>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td>{{i18n "admin.backups.none"}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

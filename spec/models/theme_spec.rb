@@ -7,6 +7,10 @@ describe Theme do
     Theme.clear_cache!
   end
 
+  before do
+    I18n.locale = :en
+  end
+
   fab! :user do
     Fabricate(:user)
   end
@@ -288,7 +292,7 @@ HTML
       expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
     end
 
-    it "converts errors to a script type that is not evaluated" do
+    it "wraps constants calls in a readOnlyError function" do
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
@@ -298,8 +302,8 @@ HTML
 
       baked, javascript_cache = transpile(html)
       expect(baked).to include(javascript_cache.url)
-      expect(javascript_cache.content).to include('Theme Transpilation Error')
-      expect(javascript_cache.content).to include('read-only')
+      expect(javascript_cache.content).to include('var x = 1;')
+      expect(javascript_cache.content).to include('x = (_readOnlyError("x"), 2);')
     end
   end
 
@@ -376,16 +380,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });
@@ -412,16 +421,21 @@ HTML
       (function () {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
           var __theme_name__ = "awesome theme\\\"";
+
           var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
           var themePrefix = function themePrefix(key) {
-            return 'theme_translations.#{theme.id}.' + key;
+            return "theme_translations.#{theme.id}.".concat(key);
           };
 
           Discourse._registerPluginCode('1.0', function (api) {
             try {
-              alert(settings.name);var a = function a() {};
+              alert(settings.name);
+
+              var a = function a() {};
             } catch (err) {
               var rescue = require("discourse/lib/utilities").rescueThemeError;
+
               rescue(__theme_name__, err, api);
             }
           });
@@ -657,8 +671,8 @@ HTML
     end
 
     it "can create a hash of overridden values" do
-      en_translation = ThemeField.create!(theme_id: theme.id, name: "en_US", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
-        en_US:
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
           group_of_translations:
             translation1: en test1
       YAML
@@ -668,7 +682,7 @@ HTML
       theme.update_translation("group_of_translations.translation1", "overriddentest2")
       theme.reload
       expect(theme.translation_override_hash).to eq(
-        "en_US" => {
+        "en" => {
           "group_of_translations" => {
             "translation1" => "overriddentest1"
           }
@@ -712,7 +726,7 @@ HTML
       first_common_value = Theme.lookup_field(child.id, :desktop, "header")
       first_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
 
-      stub_const(ThemeField, :COMPILER_VERSION, "SOME_NEW_HASH") do
+      Theme.stubs(:compiler_version).returns("SOME_NEW_HASH") do
         second_common_value = Theme.lookup_field(child.id, :desktop, "header")
         second_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
 
@@ -725,6 +739,19 @@ HTML
         expect(new_common_compiler_version).to eq("SOME_NEW_HASH")
         expect(new_extra_js_compiler_version).to eq("SOME_NEW_HASH")
       end
+    end
+
+    it 'recompiles when the hostname changes' do
+      theme.set_field(target: :settings, name: :yaml, value: "name: bob")
+      theme_field = theme.set_field(target: :common, name: :after_header, value: '<script>console.log("hello world");</script>')
+      theme.save!
+
+      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=#{Discourse.current_hostname}")
+
+      SiteSetting.force_hostname = "someotherhostname.com"
+      Theme.clear_cache!
+
+      expect(Theme.lookup_field(theme.id, :common, :after_header)).to include("_ws=someotherhostname.com")
     end
   end
 end

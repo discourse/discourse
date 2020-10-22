@@ -4,5 +4,6 @@ plugins:
     client: true
   presence_max_users_shown:
     default: 5
+    client: true
     min: 1
     max: 50

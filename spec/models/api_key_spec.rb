@@ -79,4 +79,75 @@ describe ApiKey do
     expect(used_recently.revoked_at).to eq(nil)
   end
 
+  describe 'API Key scope mappings' do
+    it 'maps api_key permissions' do
+      api_key_mappings = ApiKeyScope.scope_mappings[:topics]
+
+      assert_responds_to(api_key_mappings.dig(:write, :actions))
+      assert_responds_to(api_key_mappings.dig(:read, :actions))
+      assert_responds_to(api_key_mappings.dig(:read_lists, :actions))
+    end
+
+    def assert_responds_to(mappings)
+      mappings.each do |m|
+        controller, method = m.split('#')
+        controller_name = "#{controller.capitalize}Controller"
+        expect(controller_name.constantize.method_defined?(method)).to eq(true)
+      end
+    end
+  end
+
+  describe "#request_allowed?" do
+    let(:request) {
+      ActionDispatch::TestRequest.create.tap do |request|
+        request.path_parameters = { controller: "topics", action: "show", topic_id: "3" }
+        request.remote_addr = "133.45.67.99"
+      end
+    }
+
+    let(:env) { request.env }
+
+    let(:scope) do
+      ApiKeyScope.new(resource: 'topics', action: 'read', allowed_parameters: { topic_id: '3' })
+    end
+
+    let(:key) { ApiKey.new(api_key_scopes: [scope]) }
+
+    it 'allows the request if there are no allowed IPs' do
+      key.allowed_ips = nil
+      key.api_key_scopes = []
+      expect(key.request_allowed?(env)).to eq(true)
+    end
+
+    it 'rejects the request if the IP is not allowed' do
+      key.allowed_ips = %w[115.65.76.87]
+      expect(key.request_allowed?(env)).to eq(false)
+    end
+
+    it 'allow the request if there are not allowed params' do
+      scope.allowed_parameters = nil
+      expect(key.request_allowed?(env)).to eq(true)
+    end
+
+    it 'rejects the request when params are different' do
+      request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
+      expect(key.request_allowed?(env)).to eq(false)
+    end
+
+    it 'accepts the request if one of the parameters match' do
+      request.path_parameters = { controller: "topics", action: "show", topic_id: "4" }
+      scope.allowed_parameters = { topic_id: %w[3 4] }
+      expect(key.request_allowed?(env)).to eq(true)
+    end
+
+    it 'allow the request when the scope has an alias' do
+      request.path_parameters = { controller: "topics", action: "show", id: "3" }
+      expect(key.request_allowed?(env)).to eq(true)
+    end
+
+    it 'rejects the request when the main parameter and the alias are both used' do
+      request.path_parameters = { controller: "topics", action: "show", topic_id: "3", id: "3" }
+      expect(key.request_allowed?(env)).to eq(false)
+    end
+  end
 end

@@ -72,6 +72,46 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_muted' do
+    let(:user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:post) do
+      create_post(user: user)
+    end
+
+    it 'can correctly publish muted' do
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+
+      muted_message = messages.find { |message| message.data["message_type"] == "muted" }
+
+      expect(muted_message.data["topic_id"]).to eq(topic.id)
+      expect(muted_message.data["message_type"]).to eq(described_class::MUTED_MESSAGE_TYPE)
+    end
+
+    it 'should not publish any message when notification level is not muted' do
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+
+      expect(muted_messages).to eq([])
+    end
+
+    it 'should not publish any message when the user was not seen in the last 7 days' do
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
+      post.user.update(last_seen_at: 8.days.ago)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_muted(topic)
+      end
+      muted_messages = messages.select { |message| message.data["message_type"] == "muted" }
+      expect(muted_messages).to eq([])
+    end
+  end
+
   describe '#publish_private_message' do
     fab!(:admin) { Fabricate(:admin) }
 
@@ -256,23 +296,26 @@ describe TopicTrackingState do
 
   describe '#publish_read_private_message' do
     fab!(:group) { Fabricate(:group) }
-    let(:read_topic_key) { "/private-messages/unread-indicator/#{@group_message.id}" }
-    let(:read_post_key) { "/topic/#{@group_message.id}" }
+    let(:read_topic_key) { "/private-messages/unread-indicator/#{group_message.id}" }
+    let(:read_post_key) { "/topic/#{group_message.id}" }
     let(:latest_post_number) { 3 }
-
-    before do
-      group.add(user)
-      @group_message = Fabricate(:private_message_topic,
+    let(:group_message) { Fabricate(:private_message_topic,
         allowed_groups: [group],
         topic_allowed_users: [Fabricate.build(:topic_allowed_user, user: user)],
         highest_post_number: latest_post_number
       )
-      @post = Fabricate(:post, topic: @group_message, post_number: latest_post_number)
+    }
+    let!(:post) {
+      Fabricate(:post, topic: group_message, post_number: latest_post_number)
+    }
+
+    before do
+      group.add(user)
     end
 
     it 'does not trigger a read count update if no allowed groups have the option enabled' do
       messages = MessageBus.track_publish(read_post_key) do
-        TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+        TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
       end
 
       expect(messages).to be_empty
@@ -283,37 +326,37 @@ describe TopicTrackingState do
 
       it 'publishes a message to hide the unread indicator' do
         message = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
         end.first
 
-        expect(message.data['topic_id']).to eq @group_message.id
+        expect(message.data['topic_id']).to eq group_message.id
         expect(message.data['show_indicator']).to eq false
       end
 
       it 'publishes a message to show the unread indicator when a non-member creates a new post' do
-        allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
+        allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
         message = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_write(@group_message.id, latest_post_number, allowed_user.id)
+          TopicTrackingState.publish_read_indicator_on_write(group_message.id, latest_post_number, allowed_user.id)
         end.first
 
-        expect(message.data['topic_id']).to eq @group_message.id
+        expect(message.data['topic_id']).to eq group_message.id
         expect(message.data['show_indicator']).to eq true
       end
 
       it 'does not publish the unread indicator if the message is not the last one' do
         not_last_post_number = latest_post_number - 1
-        Fabricate(:post, topic: @group_message, post_number: not_last_post_number)
+        Fabricate(:post, topic: group_message, post_number: not_last_post_number)
         messages = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, not_last_post_number, user.id)
+          TopicTrackingState.publish_read_indicator_on_read(group_message.id, not_last_post_number, user.id)
         end
 
         expect(messages).to be_empty
       end
 
       it 'does not publish the read indicator if the user is not a group member' do
-        allowed_user = Fabricate(:topic_allowed_user, topic: @group_message)
+        allowed_user = Fabricate(:topic_allowed_user, topic: group_message)
         messages = MessageBus.track_publish(read_topic_key) do
-          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, allowed_user.user_id)
+          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, allowed_user.user_id)
         end
 
         expect(messages).to be_empty
@@ -321,7 +364,7 @@ describe TopicTrackingState do
 
       it 'publish a read count update to every client' do
         message = MessageBus.track_publish(read_post_key) do
-          TopicTrackingState.publish_read_indicator_on_read(@group_message.id, latest_post_number, user.id)
+          TopicTrackingState.publish_read_indicator_on_read(group_message.id, latest_post_number, user.id)
         end.first
 
         expect(message.data[:type]).to eq :read
@@ -406,6 +449,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to only_muted" do
@@ -435,6 +483,11 @@ describe TopicTrackingState do
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(0)
+
+      TopicTag.where(topic_id: topic.id).delete_all
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
     end
 
     it "remove_muted_tags_from_latest is set to never" do
@@ -506,6 +559,49 @@ describe TopicTrackingState do
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(3)
 
+  end
+
+  context "tag support" do
+    after do
+      # this is a bit of an odd hook, but this is a global change
+      # used by plugins that leverage tagging heavily and need
+      # tag information in topic tracking state
+      TopicTrackingState.include_tags_in_report = false
+    end
+
+    it "correctly handles tags" do
+      SiteSetting.tagging_enabled = true
+
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+
+      DiscourseTagging.tag_topic_by_names(
+        post.topic,
+        Guardian.new(Discourse.system_user),
+        ['bananas', 'apples']
+      )
+
+      TopicTrackingState.include_tags_in_report = true
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.tags).to contain_exactly("apples", "bananas")
+
+      TopicTrackingState.include_tags_in_report = false
+      SiteSetting.show_filter_by_tag = true
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.tags).to contain_exactly("apples", "bananas")
+
+      SiteSetting.show_filter_by_tag = false
+
+      report = TopicTrackingState.report(user)
+      expect(report.length).to eq(1)
+      row = report[0]
+      expect(row.respond_to? :tags).to eq(false)
+    end
   end
 
   it "correctly gets the tracking state" do

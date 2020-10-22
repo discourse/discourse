@@ -21,7 +21,16 @@ class AboutSerializer < ApplicationSerializer
              :title,
              :locale,
              :version,
-             :https
+             :https,
+             :can_see_about_stats
+
+  def can_see_about_stats
+    scope.can_see_about_stats?
+  end
+
+  def include_stats?
+    can_see_about_stats
+  end
 
   def stats
     object.class.fetch_cached_stats || Jobs::AboutStats.new.execute({})

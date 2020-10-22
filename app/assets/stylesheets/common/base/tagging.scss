@@ -6,7 +6,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
 }
 
 #list-area .tags-list h3 {
@@ -61,11 +61,9 @@
   }
 }
 
-$tag-color: $primary-medium;
-
 .discourse-tag-count {
   font-size: $font-down-1;
-  color: $tag-color;
+  color: var(--primary-medium);
   line-height: $line-height-small;
   vertical-align: middle;
 }
@@ -79,15 +77,15 @@ $tag-color: $primary-medium;
 
 .discourse-tag {
   margin: 0;
-  color: $tag-color;
+  color: var(--primary-medium);
 
   &:visited,
   &:hover {
-    color: $tag-color;
+    color: var(--primary-medium);
   }
 
   .extra-info-wrapper & {
-    color: $header-primary_high !important;
+    color: var(--header_primary-high) !important;
   }
 
   &.large {
@@ -95,12 +93,12 @@ $tag-color: $primary-medium;
   }
 
   &.box {
-    background-color: $primary-low;
-    color: $primary-high;
+    background-color: var(--primary-low);
+    color: var(--primary-high);
     padding: 2px 8px;
     .extra-info-wrapper & {
-      background-color: $header_primary-low;
-      color: $header_primary-medium;
+      background-color: var(--header_primary-low);
+      color: var(--header_primary-medium);
     }
   }
 
@@ -108,7 +106,7 @@ $tag-color: $primary-medium;
   &.simple:visited,
   &.simple:hover {
     margin-right: 0;
-    color: $primary-high;
+    color: var(--primary-high);
   }
 
   &.bullet {
@@ -116,7 +114,7 @@ $tag-color: $primary-medium;
     display: inline-flex;
     align-items: center;
     &:before {
-      background: $primary-low-mid;
+      background: var(--primary-low-mid);
       margin-right: 5px;
       position: relative;
       width: 9px;
@@ -132,8 +130,9 @@ $tag-color: $primary-medium;
 }
 
 .discourse-tags,
-.list-tags {
-  .discourse-tag.simple:not(:last-child):after {
+.list-tags,
+.search-category {
+  .discourse-tag.simple:not(:last-of-type):after {
     content: ", ";
     margin-left: 1px;
   }
@@ -180,7 +179,7 @@ $tag-color: $primary-medium;
 }
 
 header .discourse-tag {
-  color: $tag-color;
+  color: var(--primary-medium);
 }
 
 .list-tags {
@@ -209,13 +208,14 @@ header .discourse-tag {
 }
 
 .autocomplete {
-  .d-icon-tag {
-    color: dark-light-choose($primary, $primary-low-mid);
-    padding-right: 5px;
+  a {
+    color: var(--primary-medium);
   }
 
-  a {
-    color: $tag-color;
+  .d-icon-tag {
+    padding-right: 5px;
+    vertical-align: middle;
+    height: 0.9em;
   }
 }
 
@@ -256,6 +256,10 @@ header .discourse-tag {
     h1 input {
       width: 100%;
     }
+    .group-access-control {
+      margin-left: 44px;
+      margin-bottom: 10px;
+    }
   }
   .group-tags-list .tag-chooser {
     width: 100%;
@@ -274,7 +278,7 @@ header .discourse-tag {
 section.tag-info {
   margin: 1em 0;
   padding: 2em;
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
 
   .field {
     margin: 0 0 0.5em;
@@ -306,7 +310,7 @@ section.tag-info {
     border: none;
     @include clearfix;
     a {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-left: 0.25em;
     }
   }

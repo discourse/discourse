@@ -41,6 +41,15 @@ describe Wizard::Builder do
     expect(invites_step.disabled).to be_truthy
   end
 
+  context 'fonts step' do
+    let(:fonts_step) { wizard.steps.find { |s| s.id == 'fonts' } }
+    let(:field) { fonts_step.fields.first }
+
+    it 'should set the right font' do
+      expect(field.choices.size).to eq(DiscourseFonts.fonts.size)
+    end
+  end
+
   context 'logos step' do
     let(:logos_step) { wizard.steps.find { |s| s.id == 'logos' } }
 
@@ -176,14 +185,26 @@ describe Wizard::Builder do
       end
     end
 
-    describe "when the default theme has been override" do
+    describe "when the default theme has been overridden by a theme without a color scheme" do
       before do
         theme.set_default!
       end
 
       it 'should set the right default values' do
         expect(field.required).to eq(false)
-        expect(field.value).to eq(nil)
+        expect(field.value).to eq("Light")
+      end
+    end
+
+    describe "when the default theme has been overridden by a theme with a color scheme" do
+      before do
+        theme.update(color_scheme_id: ColorScheme.find_by_name("Dark").id)
+        theme.set_default!
+      end
+
+      it 'should set the right default values' do
+        expect(field.required).to eq(false)
+        expect(field.value).to eq("Dark")
       end
     end
   end

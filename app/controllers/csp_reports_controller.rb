@@ -6,7 +6,7 @@ class CspReportsController < ApplicationController
     raise Discourse::NotFound unless report_collection_enabled?
 
     Logster.add_to_env(request.env, 'CSP Report', report)
-    Rails.logger.warn("CSP Violation: '#{report['blocked-uri']}'")
+    Rails.logger.warn("CSP Violation: '#{report['blocked-uri']}' \n\n#{report['script-sample']}")
 
     head :ok
   end

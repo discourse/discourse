@@ -56,19 +56,21 @@ class OptimizedImage < ActiveRecord::Base
 
     return thumbnail if thumbnail
 
+    # create the thumbnail otherwise
+    original_path = Discourse.store.path_for(upload)
+
+    if original_path.blank?
+      # download is protected with a DistributedMutex
+      external_copy = Discourse.store.download(upload) rescue nil
+      original_path = external_copy.try(:path)
+    end
+
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
-
-      # create the thumbnail otherwise
-      original_path = Discourse.store.path_for(upload)
-      if original_path.blank?
-        external_copy = Discourse.store.download(upload) rescue nil
-        original_path = external_copy.try(:path)
-      end
 
       if original_path.blank?
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
@@ -154,9 +156,7 @@ class OptimizedImage < ActiveRecord::Base
     if size = read_attribute(:filesize)
       size
     else
-      # we may have a bad optimized image so just skip for now
-      # and do not break here
-      size = calculate_filesize rescue nil
+      size = calculate_filesize
 
       write_attribute(:filesize, size)
       if !new_record?
@@ -234,19 +234,6 @@ class OptimizedImage < ActiveRecord::Base
     })
   end
 
-  def self.resize_instructions_animated(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    %W{
-      gifsicle
-      --colors=#{opts[:colors] || 256}
-      --resize-fit #{dimensions}
-      --optimize=3
-      --output #{to}
-      #{from}
-    }
-  end
-
   def self.crop_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
@@ -269,19 +256,6 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.crop_instructions_animated(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    %W{
-      gifsicle
-      --crop 0,0+#{dimensions}
-      --colors=#{opts[:colors] || 256}
-      --optimize=3
-      --output #{to}
-      #{from}
-    }
-  end
-
   def self.downsize_instructions(from, to, dimensions, opts = {})
     ensure_safe_paths!(from, to)
 
@@ -301,10 +275,6 @@ class OptimizedImage < ActiveRecord::Base
     }
   end
 
-  def self.downsize_instructions_animated(from, to, dimensions, opts = {})
-    resize_instructions_animated(from, to, dimensions, opts)
-  end
-
   def self.resize(from, to, width, height, opts = {})
     optimize("resize", from, to, "#{width}x#{height}", opts)
   end
@@ -320,10 +290,6 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
-
-    if !!opts[:allow_animation] && (from =~ /\.GIF$/i)
-      method_name += "_animated"
-    end
 
     instructions = self.public_send(method_name.to_sym, from, to, dimensions, opts)
     convert_with(instructions, to, opts)
@@ -359,16 +325,18 @@ end
 #
 # Table name: optimized_images
 #
-#  id        :integer          not null, primary key
-#  sha1      :string(40)       not null
-#  extension :string(10)       not null
-#  width     :integer          not null
-#  height    :integer          not null
-#  upload_id :integer          not null
-#  url       :string           not null
-#  filesize  :integer
-#  etag      :string
-#  version   :integer
+#  id         :integer          not null, primary key
+#  sha1       :string(40)       not null
+#  extension  :string(10)       not null
+#  width      :integer          not null
+#  height     :integer          not null
+#  upload_id  :integer          not null
+#  url        :string           not null
+#  filesize   :integer
+#  etag       :string
+#  version    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

@@ -4,23 +4,6 @@ require 'rails_helper'
 
 describe RemoteTheme do
   context '#import_remote' do
-    def setup_git_repo(files)
-      dir = Dir.tmpdir
-      repo_dir = "#{dir}/#{SecureRandom.hex}"
-      `mkdir #{repo_dir}`
-      `cd #{repo_dir} && git init . `
-      `cd #{repo_dir} && git config user.email 'someone@cool.com'`
-      `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && git config commit.gpgsign 'false'`
-      files.each do |name, data|
-        FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
-        File.write("#{repo_dir}/#{name}", data)
-        `cd #{repo_dir} && git add #{name}`
-      end
-      `cd #{repo_dir} && git commit -am 'first commit'`
-      repo_dir
-    end
-
     def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
@@ -60,6 +43,7 @@ describe RemoteTheme do
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
+        "common/color_definitions.scss" => ":root{--color-var: red}",
         "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
         "locales/en.yml" => "sometranslations"
@@ -90,12 +74,14 @@ describe RemoteTheme do
 
       expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
 
-      expect(@theme.theme_fields.length).to eq(9)
+      expect(@theme.theme_fields.length).to eq(10)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
+
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
+      expect(mapped["0-color_definitions"]).to eq(":root{--color-var: red}")
 
       expect(mapped["0-font"]).to eq("")
 
@@ -103,7 +89,7 @@ describe RemoteTheme do
 
       expect(mapped["4-en"]).to eq("sometranslations")
 
-      expect(mapped.length).to eq(9)
+      expect(mapped.length).to eq(10)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
@@ -242,6 +228,13 @@ describe RemoteTheme do
       remote.update!(local_version: "new version", commits_behind: 0)
       expect(described_class.out_of_date_themes).to eq([])
     end
+
+    it "ignores disabled out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      theme.update!(enabled: false)
+      expect(described_class.out_of_date_themes).to eq([])
+    end
+
   end
 
   context ".unreachable_themes" do

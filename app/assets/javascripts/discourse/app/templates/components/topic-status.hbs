@@ -1,0 +1,32 @@
+{{~#if topicClosedArchived~}}
+  <span title={{closedArchivedTitle}} class="topic-status">{{closedArchivedIcon}}</span>
+{{~/if~}}
+{{~#if closedIcon~}}
+  <span title={{closedTitle}} class="topic-status">{{closedIcon}}</span>
+{{~/if~}}
+{{~#if archivedIcon~}}
+  <span title={{archivedTitle}} class="topic-status">{{archivedIcon}}</span>
+{{~/if~}}
+{{~#if topicPrivateMessage~}}
+  <span title={{privateMessageTitle}} class="topic-status">{{privateMessageIcon}}</span>
+{{~/if~}}
+{{~#if topicWarning~}}
+  <span title={{warningTitle}} class="topic-status topic-status-warning">{{warningIcon}}</span>
+{{~/if~}}
+{{~#if topicPinned~}}
+  {{~#if canAct~}}
+    <a href="" title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</a>
+  {{~else~}}
+    <span title={{pinnedTitle}} class="topic-status">{{pinnedIcon}}</span>
+  {{~/if~}}
+{{~/if~}}
+{{~#if topicUnpinned~}}
+  {{~#if canAct~}}
+    <a href="" title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</a>
+  {{~else~}}
+    <span title={{unpinnedTitle}} class="topic-status">{{unpinnedIcon}}</span>
+  {{~/if~}}
+{{~/if~}}
+{{~#if topicInvisible~}}
+  <span title={{invisibleTitle}} class="topic-status">{{invisibleIcon}}</span>
+{{~/if~}}

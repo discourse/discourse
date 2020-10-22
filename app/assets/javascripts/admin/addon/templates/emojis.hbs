@@ -1,0 +1,49 @@
+<div class="admin-emojis">
+  <h1>{{i18n "admin.emoji.title"}}</h1>
+
+  <p class="desc">{{i18n "admin.emoji.help"}}</p>
+
+  {{emoji-uploader
+    emojiGroups=emojiGroups
+    done=(action "emojiUploaded")
+  }}
+
+  <hr>
+
+  {{#if sortedEmojis}}
+    <table id="custom_emoji">
+      <thead>
+        <tr>
+          <th>{{i18n "admin.emoji.image"}}</th>
+          <th>{{i18n "admin.emoji.name"}}</th>
+          <th>
+            {{combo-box
+              value=filter
+              content=sortingGroups
+              nameProperty=null
+              valueProperty=null
+              onChange=(action "filterGroups")
+            }}
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each sortedEmojis as |e|}}
+          <tr>
+            <th><img class="emoji emoji-custom" src={{e.url}} title={{e.name}} alt={{i18n "admin.emoji.alt"}}></th>
+            <th>:{{e.name}}:</th>
+            <th>{{e.group}}</th>
+            <th>
+              {{d-button
+                action=(action "destroyEmoji" e)
+                class="btn-danger"
+                icon="far-trash-alt"
+              }}
+            </th>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</div>

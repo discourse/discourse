@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sk:
   dates:
@@ -16,12 +15,25 @@ sk:
       short_no_year: "%B %-d"
       date_only: "%Y, %B %-d"
   date:
-    month_names: [~, Január, Február, Marec, Apríl, Máj, Jún, Júl, August, September, Október, November, December]
+    month_names:
+    - null
+    - Január
+    - Február
+    - Marec
+    - Apríl
+    - Máj
+    - Jún
+    - Júl
+    - August
+    - September
+    - Október
+    - November
+    - December
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "DIscourse"
   topics: "Témy"
   posts: "príspevky"
@@ -41,7 +53,6 @@ sk:
       git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
-      data_type_not_a_number: "Hodnota nastavenia typu `%{name}` nie je podporovaná. Podporované typy sú `integer`, `bool`, `list` a `enum`"
   emails:
     incoming:
       default_subject: "Táto téma musí mať názov"
@@ -59,7 +70,7 @@ sk:
         bounced_email_error: "Email report bol odoslaný emailom"
       unrecognized_error: "Chyba nebola rozpoznaná."
   errors: &errors
-    format: "%{attribute} %{message}"
+    format: ! "%{attribute} %{message}"
     messages:
       too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
@@ -67,24 +78,24 @@ sk:
       accepted: sa musí akceptovať
       blank: nesmie byť prázdne
       present: musí byť prázdne
-      confirmation: "sa nerovná %{attribute}"
+      confirmation: ! "sa nerovná %{attribute}"
       empty: nesmie byť prázdne
-      equal_to: "sa musí rovnať %{count}"
+      equal_to: sa musí rovnať %{count}
       even: musí byť párne
       exclusion: je rezervované
-      greater_than: "musí byť viac ako %{count}"
-      greater_than_or_equal_to: "musí byť väčšie alebo rovné %{count}"
+      greater_than: musí byť viac ako %{count}
+      greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
       is_invalid: "je to nejasné, je to kompletná veta?"
       contains_censored_words: "obsahuje nasledujúce cenzúrované slová %{censored_words}"
-      less_than: "musí byť menej ako %{count}"
-      less_than_or_equal_to: "musí byť menej alebo rovné %{count}"
+      less_than: musí byť menej ako %{count}
+      less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
       odd: musí byť nepárne
-      record_invalid: "Validácia zlyhala s chybami: %{errors}"
+      record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       restrict_dependent_destroy:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
@@ -105,20 +116,17 @@ sk:
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
     template:
-      body: "Nastal problém s nasledujúcimi položkami:"
+      body: ! "Nastal problém s nasledujúcimi položkami:"
       header:
         one: "Uloženie %{model} zlyhalo kôli chybe"
-        few: "Uloženie %{model} zlyhalo kôli %{count} chybám"
-        many: "Uloženie %{model} zlyhalo kôli %{count} chybám "
-        other: "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        few: ! "Uloženie %{model} zlyhalo kôli %{count} chybám"
+        many: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
+        other: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -164,13 +172,6 @@ sk:
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     many: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-  no_images_allowed_trust: "Ľutujeme, do príspevku nemôžete vložiť obrázok"
-  no_images_allowed: "Ľutujeme, noví používatelia nemôžu vkladať obrázky do príspevkov."
-  too_many_images:
-    one: "Ľutujeme, noví používatelia môžu vložiť maximálne jeden obrázok do príspevku."
-    few: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázky do príspevku."
-    many: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
-    other: "Ľutujeme, noví používatelia môžu vložiť maximálne %{count} obrázkov do príspevku."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
@@ -196,9 +197,6 @@ sk:
   topics_in_category: " '%{category}' tém v tejto kategórii"
   rss_posts_in_topic: "RSS kanál témy '%{topic}'"
   rss_topics_in_category: "RSS kanál tém v kategórii '%{category}'"
-  author_wrote: "%{author} napísal:"
-  num_posts: "Príspevky:"
-  num_participants: "Prispievatelia:"
   read_full_topic: "Čítať celý príspevok"
   private_message_abbrev: "Správa"
   rss_description:
@@ -216,6 +214,11 @@ sk:
     tag: "Oštítkované témy"
   too_late_to_edit: "Tento príspevok bol vytvorený príliš dávno. Už nemôže byť upravovaný či zmazaný"
   excerpt_image: "Obrázok"
+  bookmarks:
+    reminders:
+      tomorrow: "Zajtra"
+      next_week: "Budúci týždeň"
+      next_month: "Budúci mesiac"
   groups:
     errors:
       can_not_modify_automatic: "Nemôžete upraviť automatickú skupinu"
@@ -282,7 +285,6 @@ sk:
       user_profile:
         bio_raw: "O mne"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -309,6 +311,7 @@ sk:
           attributes:
             word:
               too_many: "Príliš veľa slov k tej akcii"
+      <<: *errors
   vip_category_name: "Salón"
   vip_category_description: "Kategória výhradne pre členov so stupňom dôvery 3 a vyšším"
   meta_category_name: "Podnety pre tvorcov stránky"
@@ -506,36 +509,29 @@ sk:
     off_topic:
       title: "Mimo témy"
       description: "Tento príspevok nesúvisí s danou témou popísanou v názve a prvom príspevku a pravdepodobne by mal byť presunutý niekam inam"
-      long_form: "toto je označené ako \"Mimo témy\""
     spam:
       title: "Spam"
-      long_form: "označiť toto ako spam"
       email_title: '"%{title}" bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      long_form: "toto označ ako nevhodné"
     notify_user:
-      title: "Poslať @{{username}} správu"
-      long_form: "úživateľovi bola zaslaná správa"
+      title: "Poslať @%{username} správu"
       email_title: 'Váš príspevok v "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Niečo iné"
       description: "Tento príspevok vyžaduje pozornosť obsluhy z iného dôvodu ako je uvedené vyššie."
-      long_form: "označené do pozornosti obsluhy"
       email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Záložka"
       description: "Vytvor záložku na tento príspevok"
       short_description: "Vytvor záložku na tento príspevok"
-      long_form: "záložka na tento príspevok bola vytvorená "
     like:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-      long_form: "páčilo sa"
   user_activity:
     no_default:
       others: "Žiadna aktivita"
@@ -577,13 +573,14 @@ sk:
       every_hour: "každú hodinu"
       daily: "denne"
       weekly: "týždenne"
+      every_month: "každý mesiac"
   user_api_key:
     title: "Autorizovať prístup aplikácie"
     authorize: "Autorizovať"
     read: "čítať"
     read_write: "čítať/zapisovať"
     otp_confirmation:
-      confirm_title: "Pokračujte na %{site_name}"
+      confirm_title: Pokračujte na %{site_name}
     no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
     generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
   reports:
@@ -816,8 +813,6 @@ sk:
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
-    summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
-    summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -832,9 +827,7 @@ sk:
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
-    moderators_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
-    use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
     post_menu: "Určuje, ktoré položky sa objavia v menu príspevku a v akom poradí. Napríklad páči sa mi|upraviť|označiť|vymazať|zdieľať|záložka|odpovedať"
     post_menu_hidden_items: "Položky vo východzích nastaveniach menu schované pri príspevkovom menu, dokiaľ neni kliknuté na rozbaľovaciu elipsu."
@@ -851,8 +844,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
-    email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
-    email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
     log_out_strict: "Pri odhlasovaní odhlásiť VŠETKY sessiony používateľa, na všetkých zariadeniach."
     new_version_emails: "Poslať email na kontaktnú emailovú adresu ak je zistená nová verzia Discourse."
     invite_expiry_days: "Ako dlho je platná pozvánka pre používateľa, v dňoch"
@@ -862,15 +853,11 @@ sk:
     block_common_passwords: "Nepovoliť heslá, ktoré sú v zozname 10 000 najbežnejších hesiel."
     enable_sso: "Povolit prihlasovanie pomocou externej stránky (VAROVANIE: POUŽÍVATEĽSKÉ EAMILOVÉ ADRESY *MUSIA* BYŤ OVERENÉ EXTERNOU STRÁNKOU)"
     sso_secret: "Tajný text, použitý na kryptografické overenie SSO informácie, uistite sa, že má 10 alebo viac znakov"
-    sso_overrides_email: "Nahrádzať lokálne emaily pomocou emailov z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu normálizácie lokálnych emailov sa môžu objaviť nezrovnalosti)"
-    sso_overrides_username: "Nahrádzať lokálne použivateľské mená pomocou použivateľských mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám. (VAROVANIE: z dôvodu rozdielov v požiadavkách na používateľské meno a jeho dĺžku sa môžu objaviť nezrovnalosti)"
-    sso_overrides_name: "Nahrádzať lokálne plné mená pomocou plných mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám."
     sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
-    readonly_mode_during_backup: "Zapnúť režim len na čítanie počas vytvárania zálohy"
     allow_restore: "Umožniť obnovu, ktorá nahradí VŠETKY data na stránkach! Ponechajte prázdne okrem prípadu ak chcete obnoviť zo zálohy."
     maximum_backups: "Maximálny počet záloh udržiavaných na disku. Staršie zálohy budu automaticky vymazané"
     automatic_backups_enabled: "Spustiť automatické zálohy podľa nastavenia intervalu záloh"
@@ -926,7 +913,6 @@ sk:
     min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
     newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
-    newuser_max_images: "Koľko obrázkov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
     newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
     newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať do jednej témy pokiaľ na ne niekto neodpovie."
@@ -962,8 +948,6 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
-    white_listed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
-    staff_like_weight: "Koľkonásobne viac sa má dať zamestnaneckým páči sa mi."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
@@ -997,8 +981,6 @@ sk:
     delete_all_posts_max: "Maximálny počet príspevkov, ktoré môžu byť vymazané naraz pomocou tlačítka Vymaž všetky príspevky. Ak má používateľ viac ako uvedený počet, príspevky nemôžu byť vymazané naraz a používateľ nemôže byť vymazaný."
     email_editable: "Povoliť užívateľom zmenu ich emailovej adresy po registrácii."
     allow_uploaded_avatars: "Povoliť používateľom nahranie profilovej fotky."
-    allow_animated_avatars: "Umožniť používateľom, použiť ako profilový obrázok animovaný gif. VAROVANE: na zmenu tohoto nastavenia spustite rake task avatars:refresh."
-    allow_animated_thumbnails: "Generovať animované náhľady anomovaných gifov."
     default_avatars: "URL na avatara, ktorý bude štandardne použitý pre nových používateľov pokiaľ si ho nezmenia."
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
@@ -1022,7 +1004,6 @@ sk:
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
-    default_code_lang: "Vysvietenie syntaxe pre štandardné programovacie jazyky, aplikované na GitHub bloky kódu (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
     autohighlight_all_code: "Zapnúť vysvietenie syntaxe kódu na všetky formátované bloky kódu, i keď nie je explicitne zadaný jazyk."
     embed_truncate: "Orezať vkladané príspevky."
@@ -1083,6 +1064,10 @@ sk:
   redirected_to_top_reasons:
     new_user: "Vitajte v našej komunite! Toto sú najpopulárnejšie z posledných tém."
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
+  publish_page:
+    slug_errors:
+      blank: "nesmie byť prázdne"
+      invalid: "obsahuje neplatné znaky"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovede."
@@ -1139,14 +1124,12 @@ sk:
     errors: "%{errors}"
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
-    omniauth_error_unknown: "Niečo sa pokazilo počas prihlasovania, prosím skúste sa prihlásiť znova."
     omniauth_confirm_button: "Pokračovať"
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     reserved_username: "Toto užívateľské meno nie je povolené."
     missing_user_field: "Nevyplnili ste všetky užívateľké polia."
-    second_factor_title: "Dvojfaktorová autentifikácia"
     second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
   admin:
     email:
@@ -1455,7 +1438,7 @@ sk:
       name: Autobiograf
     anniversary:
       name: Výročie
-      description: "Aktívny člen, napísal aspoň jeden príspevok za rok"
+      description: Aktívny člen, napísal aspoň jeden príspevok za rok
     nice_topic:
       name: Pekná téma
     good_topic:
@@ -1473,7 +1456,7 @@ sk:
       description: Zdieľaný príspevok s 1000 jedinečnými návštevami
     first_like:
       name: Prvé "Páči sa mi"
-      description: "Príspevok, ktorý sa páčil"
+      description: Príspevok, ktorý sa páčil
       long_description: |
         Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart: talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
     first_flag:
@@ -1495,7 +1478,7 @@ sk:
     first_quote:
       name: Prvý citát
     read_guidelines:
-      name: "Prečítať pravidlá "
+      name: Prečítať pravidlá
     reader:
       name: Čitateľ
     popular_link:
@@ -1537,8 +1520,6 @@ sk:
             placeholder: "meno@príklad.com"
       corporate:
         title: "Organizácia"
-      colors:
-        title: "Téma"
       homepage:
         fields:
           homepage_style:
@@ -1552,6 +1533,14 @@ sk:
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
+      group_mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
+      quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
+      replied: '%{username} vám odpovedal v "%{topic}" - %{site_title}'
+      posted: '%{username} prispel v "%{topic}" - %{site_title}'
+      linked: '%{username} odkázal na váš príspevok z "%{topic}" - %{site_title}'
   reviewables:
     sensitivity:
       disabled: "Vypnuté"
@@ -1577,3 +1566,6 @@ sk:
         title: "Zamietnuť"
       delete_user:
         title: "Odstrániť používateľa"
+  activemodel:
+    errors:
+      <<: *errors

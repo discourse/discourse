@@ -14,6 +14,7 @@ RSpec.describe UploadSerializer do
     expect(json_data['height']).to eql upload.height
     expect(json_data['thumbnail_width']).to eql upload.thumbnail_width
     expect(json_data['thumbnail_height']).to eql upload.thumbnail_height
+    expect(json_data['short_path']).to eql upload.short_path
   end
 
   context "when the upload is secure" do
@@ -21,14 +22,14 @@ RSpec.describe UploadSerializer do
 
     context "when secure media is disabled" do
       it "just returns the normal URL, otherwise S3 errors are encountered" do
-        json_data = JSON.load(subject.to_json)
-        expect(json_data['url']).to eq(upload.url)
+        UrlHelper.expects(:cook_url).with(upload.url, secure: false)
+        subject.to_json
       end
     end
 
     context "when secure media is enabled" do
       before do
-        enable_s3_uploads
+        setup_s3
         SiteSetting.secure_media = true
       end
 
@@ -37,19 +38,5 @@ RSpec.describe UploadSerializer do
         subject.to_json
       end
     end
-  end
-
-  def enable_s3_uploads
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "s3-access-key-id"
-    SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-    SiteSetting.s3_region = 'us-west-1'
-    SiteSetting.enable_s3_uploads = true
-
-    store = FileStore::S3Store.new
-    s3_helper = store.instance_variable_get(:@s3_helper)
-    client = Aws::S3::Client.new(stub_responses: true)
-    s3_helper.stubs(:s3_client).returns(client)
-    Discourse.stubs(:store).returns(store)
   end
 end

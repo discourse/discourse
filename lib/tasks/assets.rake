@@ -50,14 +50,14 @@ task 'assets:precompile:css' => 'environment' do
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"
 
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      # Heroku precompiles assets before db migration, so tables may not exist.
-      # css will get precompiled during first request instead in that case.
+      next if ENV["PRECOMPILE_SHARED_MULTISITE_CSS"] == "1" && db != "default"
 
+      # css will get precompiled during first request if tables do not exist.
       if ActiveRecord::Base.connection.table_exists?(Theme.table_name)
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
           Stylesheet::Manager.precompile_css
-        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError => e
+        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e
           STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
         end
@@ -65,6 +65,14 @@ task 'assets:precompile:css' => 'environment' do
     end
 
     STDERR.puts "Done compiling CSS: #{Time.zone.now}"
+  end
+end
+
+task 'assets:flush_sw' => 'environment' do
+  begin
+    # Pending due to test failures.
+  rescue
+    STDERR.puts "Warning: unable to flush service worker script"
   end
 end
 

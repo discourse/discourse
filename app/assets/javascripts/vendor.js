@@ -1,5 +1,4 @@
 //= require logster
-//= require ./discourse-objects
 
 //= require template_include.js
 //= require i18n-patches
@@ -14,10 +13,8 @@
 //= require favcount.js
 //= require jquery.ba-resize.js
 //= require jquery.color.js
-//= require jquery.cookie.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
-//= require jquery.putcursoratend.js
 //= require jquery.tagsinput.js
 //= require jquery.sortable.js
 //= require lodash.js
@@ -29,5 +26,5 @@
 //= require jquery.autoellipsis-1.0.10
 //= require virtual-dom
 //= require virtual-dom-amd
-//= require highlight.js
 //= require intersection-observer
+//= require discourse-shims

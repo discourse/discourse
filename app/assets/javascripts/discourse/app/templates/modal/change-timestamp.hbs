@@ -1,0 +1,28 @@
+{{#d-modal-body class="change-timestamp"}}
+  <p>
+    {{i18n "topic.change_timestamp.instructions"}}
+  </p>
+
+  <p class="alert alert-error {{unless validTimestamp "hidden"}}">
+    {{i18n "topic.change_timestamp.invalid_timestamp"}}
+  </p>
+
+  <form>
+    {{date-picker-past
+      value=(readonly date)
+      containerId="date-container"
+      onSelect=(action (mut date))}}
+
+    {{input type="time" value=time}}
+  </form>
+
+  <div id="date-container"></div>
+{{/d-modal-body}}
+
+<div class="modal-footer change-timestamp-footer">
+  {{d-button
+    class="btn-primary"
+    disabled=buttonDisabled
+    action=(action "changeTimestamp")
+    translatedLabel=buttonTitle}}
+</div>

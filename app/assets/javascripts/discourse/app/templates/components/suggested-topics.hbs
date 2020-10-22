@@ -1,0 +1,22 @@
+<div id="suggested-topics" class="suggested-topics"
+    role="complementary" aria-labelledby="suggested-topics-title">
+  <h3 id="suggested-topics-title" class="suggested-topics-title">
+    {{i18n suggestedTitleLabel}}
+  </h3>
+
+  <div class="topics">
+    {{#if topic.isPrivateMessage}}
+      {{basic-topic-list
+        hideCategory="true"
+        showPosters="true"
+        topics=topic.suggestedTopics
+      }}
+    {{else}}
+      {{basic-topic-list topics=topic.suggestedTopics}}
+    {{/if}}
+  </div>
+
+  <h3 class="suggested-topics-message">
+    {{html-safe browseMoreMessage}}
+  </h3>
+</div>

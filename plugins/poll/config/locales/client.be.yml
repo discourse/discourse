@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 be:
   js:
@@ -19,18 +18,6 @@ be:
         many: "галасоў"
         other: "галасоў"
       average_rating: "Сярэдні рэйтынг: <strong>%{average}strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Абярыце хаця б <strong>%{count}</strong> варыянт адказу"
-            few: "Абярыце хаця б <strong>%{count}</strong> варыянтаў адказаў"
-            many: "Абярыце хаця б <strong>%{count}</strong> варыянтаў адказаў"
-            other: "Абярыце хаця б <strong>%{count}</strong> варыянтаў адказаў"
-          up_to_max_options:
-            one: "Абярыце ня больш за <strong>%{count}</strong> варыянта адказу"
-            few: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
-            many: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
-            other: "Абярыце ня больш за <strong>%{count}</strong> варыянтаў адказаў"
       export-results:
         label: "экспарт"
       close:

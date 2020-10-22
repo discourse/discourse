@@ -1,0 +1,44 @@
+<div class="inner-wrapper">
+  {{plugin-outlet name="admin-customize-themes-list-item" connectorTagName="span" args=(hash theme=theme)}}
+
+  <div class="info">
+    <span class="name">
+      {{theme.name}}
+    </span>
+
+    <span class="icons">
+      {{#if theme.selected}}
+        {{d-icon "caret-right"}}
+      {{else}}
+        {{#if theme.default}}
+          {{d-icon "check" class="default-indicator" title="admin.customize.theme.default_theme_tooltip"}}
+        {{/if}}
+        {{#if theme.isPendingUpdates}}
+          {{d-icon "sync" title="admin.customize.theme.updates_available_tooltip" class="light-grey-icon"}}
+        {{/if}}
+        {{#if theme.isBroken}}
+          {{d-icon "exclamation-circle" class="broken-indicator" title="admin.customize.theme.broken_theme_tooltip"}}
+        {{/if}}
+        {{#unless theme.enabled}}
+          {{d-icon "ban" class="light-grey-icon" title="admin.customize.theme.disabled_component_tooltip"}}
+        {{/unless}}
+      {{/if}}
+    </span>
+  </div>
+
+  {{#if displayComponents}}
+    <div class="components-list">
+      <span class="components">{{html-safe childrenString}}</span>
+
+      {{#if displayHasMore}}
+        <a href {{action "toggleChildrenExpanded"}} class="others-count">
+          {{#if childrenExpanded}}
+            {{i18n "admin.customize.theme.collapse"}}
+          {{else}}
+            {{i18n "admin.customize.theme.and_x_more" count=moreCount}}
+          {{/if}}
+        </a>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

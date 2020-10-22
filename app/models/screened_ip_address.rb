@@ -75,7 +75,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     exists_for_ip_address_and_action?(ip_address, actions[:block])
   end
 
-  def self.is_whitelisted?(ip_address)
+  def self.is_allowed?(ip_address)
     exists_for_ip_address_and_action?(ip_address, actions[:do_nothing])
   end
 
@@ -87,7 +87,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.block_admin_login?(user, ip_address)
-    return false unless SiteSetting.use_admin_ip_whitelist
+    return false unless SiteSetting.use_admin_ip_allowlist
     return false if user.nil?
     return false if !user.admin?
     return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0

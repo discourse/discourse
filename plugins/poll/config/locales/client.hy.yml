@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hy:
   js:
@@ -22,18 +21,6 @@ hy:
           title: "Արդյունքները կցուցադրվեն ըստ <strong>քվեի</strong>:"
         closed:
           title: "Արդյունքները կցուցադրվեն <strong>փակվելուց</strong> անմիջապես հետո:"
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Ընտրեք առնվազն <strong>%{count}</strong> տարբերակ"
-            other: "Ընտրեք առնվազն <strong>%{count}</strong> տարբերակ"
-          up_to_max_options:
-            one: "Ընտրեք մինչև <strong>%{count}</strong> տարբերակ"
-            other: "Ընտրեք մինչև <strong>%{count}</strong> տարբերակ"
-          x_options:
-            one: "Ընտրեք <strong>%{count}</strong> տարբերակ"
-            other: "Ընտրեք <strong>%{count}</strong> տարբերակ"
-          between_min_and_max_options: "Ընտրեք <strong>%{min}</strong> և <strong>%{max}</strong> տարբերակների միջև"
       cast-votes:
         title: "Քվեարկեք"
         label: "Քվեարկեք հիմա !"

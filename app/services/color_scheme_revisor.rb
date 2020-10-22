@@ -13,8 +13,8 @@ class ColorSchemeRevisor
 
   def revise
     ColorScheme.transaction do
-
-      @color_scheme.name = @params[:name]    if @params.has_key?(:name)
+      @color_scheme.name = @params[:name] if @params.has_key?(:name)
+      @color_scheme.user_selectable = @params[:user_selectable] if @params.has_key?(:user_selectable)
       @color_scheme.base_scheme_id = @params[:base_scheme_id] if @params.has_key?(:base_scheme_id)
       has_colors = @params[:colors]
 
@@ -31,6 +31,7 @@ class ColorSchemeRevisor
 
       if has_colors ||
          @color_scheme.saved_change_to_name? ||
+         @color_scheme.will_save_change_to_user_selectable? ||
          @color_scheme.saved_change_to_base_scheme_id?
 
         @color_scheme.save

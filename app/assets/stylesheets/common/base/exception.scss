@@ -15,10 +15,11 @@
   .desc {
     margin-top: 16px;
     .d-icon-check-circle {
-      color: $success;
+      color: var(--success);
     }
   }
   .buttons {
+    align-items: center;
     display: inline-flex;
     margin-top: 15px;
 

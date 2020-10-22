@@ -1,0 +1,16 @@
+{{date-time-input
+  date=from
+  onChange=(action "onChangeRanges" (hash prop="from"))
+  showTime=showFromTime
+  class="from"
+}}
+
+{{date-time-input
+  date=to
+  relativeDate=from
+  onChange=(action "onChangeRanges" (hash prop="to"))
+  timeFirst=toTimeFirst
+  showTime=showToTime
+  clearable=clearable
+  class="to"
+}}

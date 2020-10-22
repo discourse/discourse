@@ -8,6 +8,26 @@ describe Draft do
     Fabricate(:user)
   end
 
+  fab!(:post) do
+    Fabricate(:post)
+  end
+
+  context 'system user' do
+    it "can not set drafts" do
+      # fake a sequence
+      DraftSequence.create!(user_id: Discourse.system_user.id, draft_key: "abc", sequence: 10)
+
+      seq = Draft.set(Discourse.system_user, "abc", 0, { reply: 'hi' }.to_json)
+      expect(seq).to eq(0)
+
+      draft = Draft.get(Discourse.system_user, "abc", 0)
+      expect(draft).to eq(nil)
+
+      draft = Draft.get(Discourse.system_user, "abc", 1)
+      expect(draft).to eq(nil)
+    end
+  end
+
   context 'backup_drafts_to_pm_length' do
     it "correctly backs up drafts to a personal message" do
       SiteSetting.backup_drafts_to_pm_length = 1
@@ -17,13 +37,13 @@ describe Draft do
         random_key: "random"
       }
 
-      Draft.set(user, "xyz", 0, draft.to_json)
+      seq = Draft.set(user, "xyz", 0, draft.to_json)
       draft["reply"] = "test" * 100
 
       half_grace = (SiteSetting.editing_grace_period / 2 + 1).seconds
 
       freeze_time half_grace.from_now
-      Draft.set(user, "xyz", 0, draft.to_json)
+      seq = Draft.set(user, "xyz", seq, draft.to_json)
 
       draft_post = BackupDraftPost.find_by(user_id: user.id, key: "xyz").post
 
@@ -33,7 +53,7 @@ describe Draft do
 
       # this should trigger a post revision as 10 minutes have passed
       draft["reply"] = "hello"
-      Draft.set(user, "xyz", 0, draft.to_json)
+      Draft.set(user, "xyz", seq, draft.to_json)
 
       draft_topic = BackupDraftTopic.find_by(user_id: user.id)
       expect(draft_topic.topic.posts_count).to eq(2)
@@ -54,9 +74,16 @@ describe Draft do
   end
 
   it "should overwrite draft data correctly" do
-    Draft.set(user, "test", 0, "data")
-    Draft.set(user, "test", 0, "new data")
-    expect(Draft.get(user, "test", 0)).to eq "new data"
+    seq = Draft.set(user, "test", 0, "data")
+    seq = Draft.set(user, "test", seq, "new data")
+    expect(Draft.get(user, "test", seq)).to eq "new data"
+  end
+
+  it "should increase the sequence on every save" do
+    seq = Draft.set(user, "test", 0, "data")
+    expect(seq).to eq(0)
+    seq = Draft.set(user, "test", 0, "data")
+    expect(seq).to eq(1)
   end
 
   it "should clear drafts on request" do
@@ -110,8 +137,16 @@ describe Draft do
     expect(Draft.get(user, "test", 1)).to eq "hello"
   end
 
+  it "should disregard draft sequence if force_save is true" do
+    Draft.set(user, "test", 0, "data")
+    DraftSequence.next!(user, "test")
+    Draft.set(user, "test", 1, "hello")
+
+    seq = Draft.set(user, "test", 0, "foo", nil, force_save: true)
+    expect(seq).to eq(2)
+  end
+
   it 'can cleanup old drafts' do
-    user = Fabricate(:user)
     key = Draft::NEW_TOPIC
 
     Draft.set(user, key, 0, 'draft')
@@ -164,39 +199,35 @@ describe Draft do
     it "should include the right draft username in the stream" do
       Draft.set(user, "topic_#{public_topic.id}", 0, '{"reply":"hey"}')
       draft_row = stream.first
-      expect(draft_row.draft_username).to eq(user.username)
+      expect(draft_row.user.username).to eq(user.username)
     end
 
   end
 
   context 'key expiry' do
     it 'nukes new topic draft after a topic is created' do
-      u = Fabricate(:user)
-      Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')
-      _t = Fabricate(:topic, user: u)
-      s = DraftSequence.current(u, Draft::NEW_TOPIC)
-      expect(Draft.get(u, Draft::NEW_TOPIC, s)).to eq nil
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'my draft')
+      _t = Fabricate(:topic, user: user)
+      s = DraftSequence.current(user, Draft::NEW_TOPIC)
+      expect(Draft.get(user, Draft::NEW_TOPIC, s)).to eq nil
       expect(Draft.count).to eq 0
     end
 
     it 'nukes new pm draft after a pm is created' do
-      u = Fabricate(:user)
-      Draft.set(u, Draft::NEW_PRIVATE_MESSAGE, 0, 'my draft')
-      t = Fabricate(:topic, user: u, archetype: Archetype.private_message, category_id: nil)
+      Draft.set(user, Draft::NEW_PRIVATE_MESSAGE, 0, 'my draft')
+      t = Fabricate(:topic, user: user, archetype: Archetype.private_message, category_id: nil)
       s = DraftSequence.current(t.user, Draft::NEW_PRIVATE_MESSAGE)
-      expect(Draft.get(u, Draft::NEW_PRIVATE_MESSAGE, s)).to eq nil
+      expect(Draft.get(user, Draft::NEW_PRIVATE_MESSAGE, s)).to eq nil
     end
 
     it 'does not nuke new topic draft after a pm is created' do
-      u = Fabricate(:user)
-      Draft.set(u, Draft::NEW_TOPIC, 0, 'my draft')
-      t = Fabricate(:topic, user: u, archetype: Archetype.private_message, category_id: nil)
+      Draft.set(user, Draft::NEW_TOPIC, 0, 'my draft')
+      t = Fabricate(:topic, user: user, archetype: Archetype.private_message, category_id: nil)
       s = DraftSequence.current(t.user, Draft::NEW_TOPIC)
-      expect(Draft.get(u, Draft::NEW_TOPIC, s)).to eq 'my draft'
+      expect(Draft.get(user, Draft::NEW_TOPIC, s)).to eq 'my draft'
     end
 
     it 'nukes the post draft when a post is created' do
-      user = Fabricate(:user)
       topic = Fabricate(:topic)
 
       Draft.set(user, topic.draft_key, 0, 'hello')
@@ -207,23 +238,20 @@ describe Draft do
     end
 
     it 'nukes the post draft when a post is revised' do
-      p = Fabricate(:post)
-      Draft.set(p.user, p.topic.draft_key, 0, 'hello')
-      p.revise(p.user, raw: 'another test')
-      s = DraftSequence.current(p.user, p.topic.draft_key)
-      expect(Draft.get(p.user, p.topic.draft_key, s)).to eq nil
+      Draft.set(post.user, post.topic.draft_key, 0, 'hello')
+      post.revise(post.user, raw: 'another test')
+      s = DraftSequence.current(post.user, post.topic.draft_key)
+      expect(Draft.get(post.user, post.topic.draft_key, s)).to eq nil
     end
 
     it 'increases revision each time you set' do
-      u = User.first
-      Draft.set(u, 'new_topic', 0, 'hello')
-      Draft.set(u, 'new_topic', 0, 'goodbye')
+      Draft.set(user, 'new_topic', 0, 'hello')
+      Draft.set(user, 'new_topic', 0, 'goodbye')
 
-      expect(Draft.find_by(user_id: u.id, draft_key: 'new_topic').revisions).to eq(2)
+      expect(Draft.find_by(user_id: user.id, draft_key: 'new_topic').revisions).to eq(2)
     end
 
     it 'handles owner switching gracefully' do
-      user = Fabricate(:user)
       draft_seq = Draft.set(user, 'new_topic', 0, 'hello', _owner = 'ABCDEF')
       expect(draft_seq).to eq(0)
 
@@ -231,7 +259,22 @@ describe Draft do
       expect(draft_seq).to eq(1)
 
       draft_seq = Draft.set(user, 'new_topic', 1, 'hello world', _owner = 'HIJKL')
-      expect(draft_seq).to eq(1)
+      expect(draft_seq).to eq(2)
     end
+
+    it 'can correctly preload drafts' do
+      Draft.set(user, "#{Draft::EXISTING_TOPIC}#{post.topic_id}", 0, { raw: 'hello', postId: post.id }.to_json)
+
+      drafts = Draft.where(user_id: user.id).to_a
+
+      Draft.preload_data(drafts, user)
+
+      expect(drafts[0].topic_preloaded?).to eq(true)
+      expect(drafts[0].topic.id).to eq(post.topic_id)
+
+      expect(drafts[0].post_preloaded?).to eq(true)
+      expect(drafts[0].post.id).to eq(post.id)
+    end
+
   end
 end

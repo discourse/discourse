@@ -7,7 +7,7 @@ module Jobs
   class ProcessPost < ::Jobs::Base
 
     def execute(args)
-      DistributedMutex.synchronize("process_post_#{args[:post_id]}") do
+      DistributedMutex.synchronize("process_post_#{args[:post_id]}", validity: 10.minutes) do
         post = Post.find_by(id: args[:post_id])
         # two levels of deletion
         return unless post.present? && post.topic.present?
@@ -23,7 +23,7 @@ module Jobs
         end
 
         cp = CookedPostProcessor.new(post, args)
-        cp.post_process(bypass_bump: args[:bypass_bump], new_post: args[:new_post])
+        cp.post_process(new_post: args[:new_post])
 
         # If we changed the document, save it
         cooked = cp.html
@@ -41,10 +41,15 @@ module Jobs
         end
 
         if !post.user&.staff? && !post.user&.staged?
-          s = post.cooked
+          s = post.raw
           s << " #{post.topic.title}" if post.post_number == 1
           if !args[:bypass_bump] && WordWatcher.new(s).should_flag?
-            PostActionCreator.create(Discourse.system_user, post, :inappropriate)
+            PostActionCreator.create(
+              Discourse.system_user,
+              post,
+              :inappropriate,
+              reason: :watched_word
+            )
           end
         end
       end

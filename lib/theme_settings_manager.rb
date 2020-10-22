@@ -167,4 +167,7 @@ class ThemeSettingsManager
       @opts[:choices]
     end
   end
+
+  class Upload < self
+  end
 end

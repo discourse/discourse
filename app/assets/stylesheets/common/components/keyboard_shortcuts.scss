@@ -5,13 +5,14 @@
 
 .topic-list tr.selected td:first-child,
 .topic-list-item.selected td:first-child,
-.latest-topic-list-item.selected {
-  box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
+.latest-topic-list-item.selected,
+.search-results .fps-result.selected {
+  box-shadow: inset 3px 0 0 var(--danger); // needs to be inset for Edge
 }
 
 .featured-topic.selected,
 .topic-post.selected {
-  box-shadow: -3px 0 0 $danger;
+  box-shadow: -3px 0 0 var(--danger);
 }
 
 .latest .featured-topic {
@@ -50,11 +51,11 @@
     }
 
     span {
-      background: #f2f2f2;
+      background: var(--primary-very-low);
       border-radius: 3px;
       display: inline-flex;
       margin: 0 6px;
-      padding: 1px 0 5px;
+      padding: 2px 1px 4px;
     }
 
     span:first-child {
@@ -62,19 +63,8 @@
     }
 
     kbd {
-      align-items: center;
-      box-sizing: border-box;
-      color: dark-light-choose(#333, #aaa);
-      display: inline-flex;
       font-family: $base-font-family;
       font-weight: bold;
-      height: 24px;
-      justify-content: center;
-      margin: 0 3px;
-      min-width: 24px;
-      padding: 0 6px;
-      vertical-align: bottom;
-      white-space: nowrap;
     }
   }
 }

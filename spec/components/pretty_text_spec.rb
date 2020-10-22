@@ -36,7 +36,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -184,7 +184,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -206,7 +206,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -227,7 +227,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -254,7 +254,7 @@ describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img alt width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
+          <img alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -425,7 +425,7 @@ describe PrettyText do
     end
 
     it "can handle mentions inside a hyperlink" do
-      expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="nofollow noopener">link @inner</a></p>'
+      expect(PrettyText.cook("[link @inner](http://site.com)")).to match_html '<p><a href="http://site.com" rel="noopener nofollow ugc">link @inner</a></p>'
     end
 
     it "can handle a list of mentions" do
@@ -508,47 +508,61 @@ describe PrettyText do
         ['apple', 'banana'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
         expect(PrettyText.cook("# banana")).not_to include('banana')
       ensure
-        Discourse.redis.flushall
+        Discourse.redis.flushdb
       end
     end
   end
 
-  describe "rel nofollow" do
+  describe "rel attributes" do
     before do
       SiteSetting.add_rel_nofollow_to_user_content = true
       SiteSetting.exclude_rel_nofollow_domains = "foo.com|bar.com"
     end
 
     it "should inject nofollow in all user provided links" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener/)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/noopener nofollow ugc/)
     end
 
     it "should not inject nofollow in all local links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should not inject nofollow in all subdomain links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should inject nofollow in all non subdomain links" do
-      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow/)
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla')}/test.html'>cnn</a>")).to match(/nofollow ugc/)
     end
 
     it "should not inject nofollow for foo.com" do
-      expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should inject nofollow for afoo.com" do
-      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow/)
+      expect(PrettyText.cook("<a href='http://afoo.com/test.html'>cnn</a>")).to match(/nofollow ugc/)
     end
 
     it "should not inject nofollow for bar.foo.com" do
-      expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow ugc/).to eq(true)
     end
 
     it "should not inject nofollow if omit_nofollow option is given" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).to eq(true)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow ugc/).to eq(true)
+    end
+
+    it 'adds the noopener attribute even if omit_nofollow option is given' do
+      raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
+      expect(
+        PrettyText.cook(raw_html, omit_nofollow: true)
+      ).to match(/noopener/)
+    end
+
+    it 'adds the noopener attribute even if omit_nofollow option is given' do
+      raw_html = '<a href="https://www.mysite.com/" target="_blank">Check out my site!</a>'
+      expect(
+        PrettyText.cook(raw_html, omit_nofollow: false)
+      ).to match(/noopener nofollow ugc/)
     end
   end
 
@@ -724,7 +738,7 @@ describe PrettyText do
       more stuff
       RAW
       post = Fabricate(:post, raw: raw)
-      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"nofollow noopener\">site</a>")
+      expect(post.excerpt).to eq("hello <a href=\"https://site.com\" rel=\"noopener nofollow ugc\">site</a>")
     end
 
     it "handles span excerpt at the beginning of a post" do
@@ -762,7 +776,7 @@ describe PrettyText do
 
     context 'option to preserve onebox source' do
       it "should return the right excerpt" do
-        onebox = "<aside class=\"onebox whitelistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
+        onebox = "<aside class=\"onebox allowlistedgeneric\">\n  <header class=\"source\">\n    <a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>\n  </header>\n  <article class=\"onebox-body\">\n    <img src=\"https://cdn-enterprise.discourse.org/meta/user_avatar/meta.discourse.org/gerhard/200/70381_1.png\" width=\"\" height=\"\" class=\"thumbnail\">\n\n<h3><a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">Infrequent translation updates in stable branch</a></h3>\n\n<p>Well, there's an Italian translation for \"New Topic\" in beta, it's been there since November 2014 and it works here on meta.     Do you have any plugins installed? Try disabling them. I'm quite confident that it's either a plugin or a site...</p>\n\n  </article>\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n  <div style=\"clear: both\"></div>\n</aside>\n\n\n"
         expected = "<a href=\"https://meta.discourse.org/t/infrequent-translation-updates-in-stable-branch/31213/9\">meta.discourse.org</a>"
 
         expect(PrettyText.excerpt(onebox, 100, keep_onebox_source: true))
@@ -828,7 +842,7 @@ describe PrettyText do
 
   describe "strip_image_wrapping" do
     def strip_image_wrapping(html)
-      doc = Nokogiri::HTML.fragment(html)
+      doc = Nokogiri::HTML5.fragment(html)
       described_class.strip_image_wrapping(doc)
       doc.to_html
     end
@@ -888,11 +902,8 @@ describe PrettyText do
 
     describe "#strip_secure_media" do
       before do
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        setup_s3
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
       end
@@ -927,6 +938,40 @@ describe PrettyText do
         expect(md).not_to include('<video')
         expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
         expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
+      end
+
+      it "replaces secure media within a link with a placeholder, keeping the url in an attribute" do
+        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+      end
+
+      it "does not create nested redactions from double processing because of the view media link" do
+        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        md = PrettyText.format_for_email(md, post)
+
+        expect(md.scan(/stripped-secure-view-media/).length).to eq(1)
+        expect(md.scan(/Redacted/).length).to eq(1)
+      end
+
+      it "replaces secure images with a placeholder, keeping the url in an attribute" do
+        url = "/secure-media-uploads/original/1X/testimage.png"
+        html = <<~HTML
+        <img src=\"#{url}\">
+        HTML
+        md = PrettyText.format_for_email(html, post)
+        expect(md).not_to include('<img')
+        expect(md).to include("Redacted")
+        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
       end
     end
   end
@@ -1040,6 +1085,27 @@ describe PrettyText do
     end
   end
 
+  describe "custom emoji translation" do
+    before do
+      PrettyText.reset_translations
+
+      SiteSetting.enable_emoji = true
+      SiteSetting.enable_emoji_shortcuts = true
+
+      plugin = Plugin::Instance.new
+      plugin.translate_emoji "0:)", "otter"
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+      PrettyText.reset_translations
+    end
+
+    it "sets the custom translation" do
+      expect(PrettyText.cook("hello 0:)")).to match(/otter/)
+    end
+  end
+
   it "replaces skin toned emoji" do
     expect(PrettyText.cook("hello 👱🏿‍♀️")).to eq("<p>hello <img src=\"/images/emoji/twitter/blonde_woman/6.png?v=#{Emoji::EMOJI_VERSION}\" title=\":blonde_woman:t6:\" class=\"emoji\" alt=\":blonde_woman:t6:\"></p>")
     expect(PrettyText.cook("hello 👩‍🎤")).to eq("<p>hello <img src=\"/images/emoji/twitter/woman_singer.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_singer:\" class=\"emoji\" alt=\":woman_singer:\"></p>")
@@ -1054,7 +1120,7 @@ describe PrettyText do
   it "supports href schemes" do
     SiteSetting.allowed_href_schemes = "macappstore|steam"
     cooked = cook("[Steam URL Scheme](steam://store/452530)")
-    expected = '<p><a href="steam://store/452530" rel="nofollow noopener">Steam URL Scheme</a></p>'
+    expected = '<p><a href="steam://store/452530" rel="noopener nofollow ugc">Steam URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
   end
 
@@ -1068,7 +1134,7 @@ describe PrettyText do
   it 'allows only tel URL scheme to start with a plus character' do
     SiteSetting.allowed_href_schemes = "tel|steam"
     cooked = cook("[Tel URL Scheme](tel://+452530579785)")
-    expected = '<p><a href="tel://+452530579785" rel="nofollow noopener">Tel URL Scheme</a></p>'
+    expected = '<p><a href="tel://+452530579785" rel="noopener nofollow ugc">Tel URL Scheme</a></p>'
     expect(cooked).to eq(n expected)
 
     cooked2 = cook("[Steam URL Scheme](steam://+store/452530)")
@@ -1085,9 +1151,9 @@ describe PrettyText do
 
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
-      "<a class=\"hashtag\" href=\"#{category2.url_with_id}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
       "<a class=\"hashtag\" href=\"http://test.localhost/tag/known\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"#{category.url_with_id}\">#<span>testing</span></a>"
+      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
     ].each do |element|
 
       expect(cooked).to include(element)
@@ -1096,7 +1162,7 @@ describe PrettyText do
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
 
     html = <<~HTML
-      <p><a href="http://example.com" rel="nofollow noopener"><code>a</code> #known::tag here</a></p>
+      <p><a href="http://example.com" rel="noopener nofollow ugc"><code>a</code> #known::tag here</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1122,7 +1188,7 @@ describe PrettyText do
   it "can handle mixed lists" do
     # known bug in old md engine
     cooked = PrettyText.cook("* a\n\n1. b")
-    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul><ol>\n<li>b</li>\n</ol>")
+    expect(cooked).to match_html("<ul>\n<li>a</li>\n</ul>\n<ol>\n<li>b</li>\n</ol>")
   end
 
   it "can handle traditional vs non traditional newlines" do
@@ -1166,7 +1232,7 @@ HTML
   end
 
   describe "censoring" do
-    after(:all) { Discourse.redis.flushall }
+    after(:all) { Discourse.redis.flushdb }
 
     def expect_cooked_match(raw, expected_cooked)
       expect(PrettyText.cook(raw)).to eq(expected_cooked)
@@ -1196,7 +1262,7 @@ HTML
 
       it "won't break links by censoring them." do
         expect_cooked_match("The link still works. [whiz](http://www.whiz.com)",
-                            '<p>The link still works. <a href="http://www.whiz.com" rel="nofollow noopener">■■■■</a></p>')
+                            '<p>The link still works. <a href="http://www.whiz.com" rel="noopener nofollow ugc">■■■■</a></p>')
       end
 
       it "escapes regexp characters" do
@@ -1342,13 +1408,13 @@ HTML
 
   it "supports img bbcode" do
     cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
-    html = "<p><img src=\"http://www.image/test.png\" alt></p>"
+    html = "<p><img src=\"http://www.image/test.png\" alt=\"\"></p>"
     expect(cooked).to eq(html)
   end
 
   it "provides safety for img bbcode" do
     cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt></p>'
+    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt=""></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1360,19 +1426,19 @@ HTML
 
   it "supports url bbcode" do
     cooked = PrettyText.cook "[url]http://sam.com[/url]"
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener">http://sam.com</a></p>'
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="noopener nofollow ugc">http://sam.com</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports nesting tags in url" do
     cooked = PrettyText.cook("[url=http://sam.com][b]I am sam[/b][/url]")
-    html = '<p><a href="http://sam.com" data-bbcode="true" rel="nofollow noopener"><span class="bbcode-b">I am sam</span></a></p>'
+    html = '<p><a href="http://sam.com" data-bbcode="true" rel="noopener nofollow ugc"><span class="bbcode-b">I am sam</span></a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports query params in bbcode url" do
     cooked = PrettyText.cook("[url=https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse]BBcode link[/url]")
-    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="nofollow noopener">BBcode link</a></p>'
+    html = '<p><a href="https://www.amazon.com/Camcorder-Hausbell-302S-Control-Infrared/dp/B01KLOA1PI/?tag=discourse" data-bbcode="true" rel="noopener nofollow ugc">BBcode link</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1390,13 +1456,13 @@ HTML
 
   it "support special handling for space in urls" do
     cooked = PrettyText.cook "http://testing.com?a%20b"
-    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?a%20b</a></p>'
+    html = '<p><a href="http://testing.com?a%20b" class="onebox" target="_blank" rel="noopener nofollow ugc">http://testing.com?a%20b</a></p>'
     expect(cooked).to eq(html)
   end
 
   it "supports onebox for decoded urls" do
     cooked = PrettyText.cook "http://testing.com?a%50b"
-    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="nofollow noopener">http://testing.com?aPb</a></p>'
+    html = '<p><a href="http://testing.com?a%50b" class="onebox" target="_blank" rel="noopener nofollow ugc">http://testing.com?aPb</a></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1433,10 +1499,10 @@ HTML
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
-        <img src="http://png.com/my.png" alt><br>
-        <img src="http://png.com/my.png" alt width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt=""><br>
+        <img src="http://png.com/my.png" alt="" width="220" height="100"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt title="some title" width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt="" title="some title" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1452,11 +1518,11 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt width="150" height="68"><br>
-        <img src="http://png.com/my.png" alt width="110" height="50"></p>
+        <p><img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt="" width="150" height="68"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1533,7 +1599,7 @@ HTML
 
   end
 
-  it "can properly whitelist iframes" do
+  it "can properly allowlist iframes" do
     SiteSetting.allowed_iframes = "https://bob.com/a|http://silly.com?EMBED="
     raw = <<~IFRAMES
       <iframe src='https://www.google.com/maps/Embed?testing'></iframe>
@@ -1558,7 +1624,7 @@ HTML
     cooked = PrettyText.cook(md)
 
     html = <<~HTML
-      <p><a href="http://www.cnn.com" rel="nofollow noopener">www.cnn.com</a> test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+      <p><a href="http://www.cnn.com" rel="noopener nofollow ugc">www.cnn.com</a> test.it <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1568,7 +1634,7 @@ HTML
 
     cooked = PrettyText.cook(md)
     html = <<~HTML
-    <p>www.cnn.com <a href="http://test.it" rel="nofollow noopener">test.it</a> <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+    <p>www.cnn.com <a href="http://test.it" rel="noopener nofollow ugc">test.it</a> <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1578,7 +1644,7 @@ HTML
 
     cooked = PrettyText.cook(md)
     html = <<~HTML
-      <p>www.cnn.com test.it <a href="http://test.com" rel="nofollow noopener">http://test.com</a> <a href="https://test.ab" rel="nofollow noopener">https://test.ab</a> <a href="https://a" rel="nofollow noopener">https://a</a></p>
+      <p>www.cnn.com test.it <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)
@@ -1598,12 +1664,12 @@ HTML
     expect(cooked).to include("data-theme-a")
   end
 
-  it "whitelists lang attribute" do
+  it "allowlists lang attribute" do
     cooked = PrettyText.cook("<p lang='fr'>tester</p><div lang='fr'>tester</div><span lang='fr'>tester</span>")
     expect(cooked).to eq("<p lang=\"fr\">tester</p><div lang=\"fr\">tester</div><span lang=\"fr\">tester</span>")
   end
 
-  it "whitelists ruby tags" do
+  it "allowlists ruby tags" do
     # read all about ruby chars at: https://en.wikipedia.org/wiki/Ruby_character
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
@@ -1642,17 +1708,20 @@ HTML
     end
 
     it "wraps the [wrap] tag in block" do
+      # can interfere with parsing
+      SiteSetting.enable_markdown_typographer = true
+
       md = <<~MD
-        [wrap=toc]
-        taco
+        [wrap=toc id="a” aa='b"' bb="f'"]
+        taco1
         [/wrap]
       MD
 
       cooked = PrettyText.cook(md)
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc">
-        <p>taco</p>
+        <div class="d-wrap" data-wrap="toc" data-id="a" data-aa="b&amp;quot;" data-bb="f'">
+        <p>taco1</p>
         </div>
       HTML
 
@@ -1675,10 +1744,10 @@ HTML
     end
 
     it "adds attributes as data-attributes" do
-      cooked = PrettyText.cook("[wrap=toc name=\"pepper bell\" id=1]taco[/wrap]")
+      cooked = PrettyText.cook("[wrap=toc name=\"single quote's\" id='1\"2']taco[/wrap]")
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-name="pepper bell" data-id="1">
+        <div class="d-wrap" data-wrap="toc" data-name="single quote's" data-id="1&amp;quot;2">
         <p>taco</p>
         </div>
       HTML

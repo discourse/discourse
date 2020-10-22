@@ -34,6 +34,8 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   attributes :email,
+             :secondary_emails,
+             :unconfirmed_emails,
              :last_posted_at,
              :last_seen_at,
              :created_at,
@@ -60,7 +62,8 @@ class UserCardSerializer < BasicUserSerializer
              :primary_group_flair_url,
              :primary_group_flair_bg_color,
              :primary_group_flair_color,
-             :featured_topic
+             :featured_topic,
+             :timezone
 
   untrusted_attributes :bio_excerpt,
                        :website,
@@ -76,6 +79,9 @@ class UserCardSerializer < BasicUserSerializer
     (object.id && object.id == scope.user.try(:id)) ||
       (scope.is_staff? && object.staged?)
   end
+
+  alias_method :include_secondary_emails?, :include_email?
+  alias_method :include_unconfirmed_emails?, :include_email?
 
   def bio_excerpt
     object.user_profile.bio_excerpt(350, keep_newlines: true, keep_emoji_images: true)
@@ -194,6 +200,14 @@ class UserCardSerializer < BasicUserSerializer
     object.user_profile.featured_topic
   end
 
+  def include_timezone?
+    SiteSetting.display_local_time_in_user_card?
+  end
+
+  def timezone
+    object.user_option.timezone
+  end
+
   def card_background_upload_url
     object.card_background_upload&.url
   end
@@ -202,6 +216,6 @@ class UserCardSerializer < BasicUserSerializer
 
   def custom_field_keys
     # Can be extended by other serializers
-    User.whitelisted_user_custom_fields(scope)
+    User.allowed_user_custom_fields(scope)
   end
 end

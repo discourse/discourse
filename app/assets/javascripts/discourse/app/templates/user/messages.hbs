@@ -1,0 +1,109 @@
+{{#d-section class="user-secondary-navigation" pageClass="user-messages"}}
+  {{#unless site.mobileView}}
+    {{#if showNewPM}}
+      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
+    {{/if}}
+  {{/unless}}
+
+  {{#mobile-nav class="messages-nav" desktopClass="nav-stacked action-list" currentPath=currentPath}}
+    <li class="noGlyph">
+      {{#link-to "userPrivateMessages.index" model}}
+        {{i18n "user.messages.inbox"}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
+      {{#link-to "userPrivateMessages.sent" model}}
+        {{i18n "user.messages.sent"}}
+      {{/link-to}}
+    </li>
+    <li class="noGlyph">
+      {{#link-to "userPrivateMessages.archive" model}}
+        {{i18n "user.messages.archive"}}
+      {{/link-to}}
+    </li>
+    {{plugin-outlet name="user-messages-nav" connectorTagName="li" args=(hash model=model)}}
+    {{#each model.groups as |group|}}
+      {{#if group.has_messages}}
+        <li>
+          {{#link-to "userPrivateMessages.group" group.name}}
+            {{d-icon "users"}}
+            {{capitalize-string group.name}}
+          {{/link-to}}
+        </li>
+        <li class="archive">
+          {{#link-to "userPrivateMessages.groupArchive" group.name}}
+            {{i18n "user.messages.archive"}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+    {{/each}}
+
+    {{#if pmTaggingEnabled}}
+      <li class="noGlyph">
+        {{#link-to "userPrivateMessages.tags" model}}
+          {{i18n "user.messages.tags"}}
+        {{/link-to}}
+      </li>
+      {{#if tagId}}
+        <li class="archive">
+          {{#link-to "userPrivateMessages.tagsShow" tagId}}
+            {{tagId}}
+          {{/link-to}}
+        </li>
+      {{/if}}
+    {{/if}}
+  {{/mobile-nav}}
+{{/d-section}}
+
+<section class="user-content">
+  <div class="list-actions">
+    {{#unless site.mobileView}}
+      {{#if showToggleBulkSelect}}
+        {{d-button
+          class="btn-default bulk-select"
+          action=(action "toggleBulkSelect")
+          title="user.messages.bulk_select"
+          icon="list"}}
+      {{/if}}
+    {{/unless}}
+
+    {{#if site.mobileView}}
+      {{#if showNewPM}}
+        {{d-button
+          class="btn-primary new-private-message"
+          action=(route-action "composePrivateMessage")
+          icon="envelope"
+          label="user.new_private_message"}}
+      {{/if}}
+    {{/if}}
+
+    {{#if canArchive}}
+      {{d-button
+        class="btn-default btn-archive"
+        action=(action "archive")
+        label="user.messages.move_to_archive"}}
+    {{/if}}
+
+    {{#if canMoveToInbox}}
+      {{d-button
+        class="btn-default btn-to-inbox"
+        action=(action "toInbox")
+        label="user.messages.move_to_inbox"}}
+    {{/if}}
+
+    {{#if bulkSelectEnabled}}
+      {{d-button
+        class="btn-default btn-select-all"
+        action=(action "selectAll")
+        label="user.messages.select_all"}}
+    {{/if}}
+
+    {{#if isGroup}}
+      {{group-notifications-button
+        value=group.group_user.notification_level
+        onChange=(action "changeGroupNotificationLevel")
+      }}
+    {{/if}}
+  </div>
+  {{outlet}}
+</section>

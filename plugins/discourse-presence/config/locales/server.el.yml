@@ -1,10 +1,10 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 el:
   site_settings:
-    presence_enabled: "Εμφάνιση των χρηστών που απαντάνε αυτή τη στιγμή στο νήμα ή επεξεργάζονται την τρέχουσα ανάρτηση;"
+    presence_enabled: "Εμφάνιση των χρηστών που απαντούν επί του παρόντος στο τρέχον θέμα ή επεξεργάζονται την τρέχουσα ανάρτηση;"
+    presence_max_users_shown: "Μέγιστος αριθμός χρηστών που εμφανίζονται."

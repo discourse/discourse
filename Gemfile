@@ -18,15 +18,17 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  gem 'actionmailer', '6.0.1'
-  gem 'actionpack', '6.0.1'
-  gem 'actionview', '6.0.1'
-  gem 'activemodel', '6.0.1'
-  gem 'activerecord', '6.0.1'
-  gem 'activesupport', '6.0.1'
-  gem 'railties', '6.0.1'
+  gem 'actionmailer', '6.0.3.3'
+  gem 'actionpack', '6.0.3.3'
+  gem 'actionview', '6.0.3.3'
+  gem 'activemodel', '6.0.3.3'
+  gem 'activerecord', '6.0.3.3'
+  gem 'activesupport', '6.0.3.3'
+  gem 'railties', '6.0.3.3'
   gem 'sprockets-rails'
 end
+
+gem 'json'
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # This is a desired upgrade we should get to.
@@ -64,9 +66,10 @@ gem 'http_accept_language', require: false
 
 # Ember related gems need to be pinned cause they control client side
 # behavior, we will push these versions up when upgrading ember
-gem 'ember-rails', '0.18.5'
+gem 'discourse-ember-rails', '0.18.6', require: 'ember-rails'
 gem 'discourse-ember-source', '~> 3.12.2'
 gem 'ember-handlebars-template', '0.8.0'
+gem 'discourse-fonts'
 
 gem 'barber'
 
@@ -74,10 +77,9 @@ gem 'message_bus'
 
 gem 'rails_multisite'
 
-gem 'fast_xs', platform: :mri
+gem 'fast_xs', platform: :ruby
 
-# may move to xorcist post: https://github.com/fny/xorcist/issues/4
-gem 'fast_xor', platform: :mri
+gem 'xorcist'
 
 gem 'fastimage'
 
@@ -110,27 +112,22 @@ gem 'oj'
 gem 'pg'
 gem 'mini_sql'
 gem 'pry-rails', require: false
+gem 'pry-byebug', require: false
 gem 'r2', require: false
 gem 'rake'
 
 gem 'thor', require: false
 gem 'diffy', require: false
 gem 'rinku'
-gem 'sanitize'
 gem 'sidekiq'
 gem 'mini_scheduler'
 
 gem 'execjs', require: false
 gem 'mini_racer'
 
-# TODO: determine why highline is being held back and upgrade to latest
-gem 'highline', '~> 1.7.0', require: false
+gem 'highline', require: false
 
-# TODO: Upgrading breaks Sidekiq Web
-# This is a bit of a hornets nest cause in an ideal world we much prefer
-# if Sidekiq reused session and CSRF mitigation with Discourse on the
-# _forum_session cookie instead of a rack.session cookie
-gem 'rack', '2.0.8'
+gem 'rack'
 
 gem 'rack-protection' # security
 gem 'cbor', require: false
@@ -158,33 +155,25 @@ group :test, :development do
   gem 'listen', require: false
   gem 'certified', require: false
   gem 'fabrication', require: false
-
-  # TODO: upgrading to 1.10.1 cause it breaks our test suite.
-  # We want our test suite fixed though to support this upgrade.
-  gem 'mocha', '1.8.0', require: false
+  gem 'mocha', require: false
 
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
 
-  # TODO determine if we can update this to 0.10, API changes happened
-  # we would like to upgrade it if possible
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-
-  # TODO once 4.0.0 is released upgrade to it, at time of writing 3.9.0 is latest
-  gem 'rspec-rails', '4.0.0.beta2', require: false
+  gem 'rspec-rails'
 
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
-  gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem 'rubocop', require: false
   gem "rubocop-discourse", require: false
   gem 'parallel_tests'
+
+  gem 'rswag-specs'
 end
 
 group :development do
   gem 'ruby-prof', require: false, platform: :mri
   gem 'bullet', require: !!ENV['BULLET']
-  gem 'better_errors', platform: :mri
+  gem 'better_errors', platform: :mri, require: !!ENV['BETTER_ERRORS']
   gem 'binding_of_caller'
   gem 'yaml-lint'
   gem 'annotate'
@@ -193,7 +182,7 @@ end
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
 # ActiveRecord, this may change in the future
-gem 'fast_blank', platform: :mri
+gem 'fast_blank', platform: :ruby
 
 # this provides a very efficient lru cache
 gem 'lru_redux'
@@ -205,9 +194,9 @@ gem 'htmlentities', require: false
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
-gem 'rack-mini-profiler', require: false
+gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
-gem 'unicorn', require: false, platform: :mri
+gem 'unicorn', require: false, platform: :ruby
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
@@ -231,6 +220,7 @@ gem 'sassc', '2.0.1', require: false
 gem "sassc-rails"
 
 gem 'rotp', require: false
+
 gem 'rqrcode'
 
 gem 'rubyzip', require: false
@@ -238,7 +228,7 @@ gem 'rubyzip', require: false
 gem 'sshkey', require: false
 
 gem 'rchardet', require: false
-gem 'lz4-ruby', require: false, platform: :mri
+gem 'lz4-ruby', require: false, platform: :ruby
 
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
@@ -255,3 +245,5 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+gem 'rails_failover', require: false

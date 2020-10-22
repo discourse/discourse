@@ -1,0 +1,121 @@
+<p>{{i18n "admin.logs.screened_ips.description"}}</p>
+
+<div class="screened-ip-controls">
+  <div class="filter-screened-ip-address">
+    {{text-field
+      value=filter
+      class="ip-address-input"
+      placeholderKey="admin.logs.screened_ips.form.filter"
+      autocorrect="off"
+      autocapitalize="off"}}
+    {{d-button
+      class="btn-default"
+      action=(action "rollUp")
+      title="admin.logs.screened_ips.roll_up.title"
+      label="admin.logs.screened_ips.roll_up.text"}}
+    {{d-button
+      class="btn-default"
+      action=(action "exportScreenedIpList")
+      icon="download"
+      title="admin.export_csv.button_title.screened_ip"
+      label="admin.export_csv.button_text"}}
+  </div>
+
+  {{screened-ip-address-form action=(action "recordAdded")}}
+</div>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+    <table class="admin-logs-table screened-ip-addresses grid">
+      <thead class="heading-container">
+        <th class="col heading first ip_address">{{i18n "admin.logs.ip_address"}}</th>
+        <th class="col heading action">{{i18n "admin.logs.action"}}</th>
+        <th class="col heading match_count">{{i18n "admin.logs.match_count"}}</th>
+        <th class="col heading created_at">{{i18n "admin.logs.created_at"}}</th>
+        <th class="col heading last_match_at">{{i18n "admin.logs.last_match_at"}}</th>
+        <th class="col heading actions"></th>
+      </thead>
+      <tbody>
+        {{#each model as |item|}}
+          <tr class="admin-list-item">
+            <td class="col first ip_address">
+              {{#if item.editing}}
+                {{text-field value=item.ip_address autofocus="autofocus"}}
+              {{else}}
+                <a href {{action "edit" item}} class="inline-editable-field">
+                  {{#if item.isRange}}
+                    <strong>{{item.ip_address}}</strong>
+                  {{else}}
+                    {{item.ip_address}}
+                  {{/if}}
+                </a>
+              {{/if}}
+            </td>
+            <td class="col action">
+              {{#if item.isBlocked}}
+                {{d-icon "ban"}}
+              {{else}}
+                {{d-icon "check"}}
+              {{/if}}
+              {{item.actionName}}
+            </td>
+            <td class="col match_count">
+              <div class="label">{{i18n "admin.logs.match_count"}}</div>
+              {{item.match_count}}
+            </td>
+            <td class="col created_at">
+              <div class="label">{{i18n "admin.logs.created_at"}}</div>
+              {{age-with-tooltip item.created_at}}
+            </td>
+            <td class="col last_match_at">
+              {{#if item.last_match_at}}
+                <div class="label">
+                  {{i18n "admin.logs.last_match_at"}}
+                  {{age-with-tooltip item.last_match_at}}
+                </div>
+              {{/if}}
+            </td>
+            <td class="col actions">
+              {{#if item.editing}}
+                {{d-button
+                  class="btn-default"
+                  action=(action "save")
+                  actionParam=item
+                  label="admin.logs.save"}}
+                <a href {{action "cancel" item}}>{{i18n "cancel"}}</a>
+              {{else}}
+                {{d-button
+                  class="btn-default btn-danger"
+                  action=(action "destroy")
+                  actionParam=item
+                  icon="far-trash-alt"}}
+                {{d-button
+                  class="btn-default"
+                  action=(action "edit")
+                  actionParam=item
+                  icon="pencil-alt"}}
+                {{#if item.isBlocked}}
+                  {{d-button
+                    class="btn-default"
+                    action=(action "allow")
+                    actionParam=item
+                    icon="check"
+                    label="admin.logs.screened_ips.actions.do_nothing"}}
+                {{else}}
+                  {{d-button
+                    class="btn-default"
+                    action=(action "block")
+                    actionParam=item
+                    icon="ban"
+                    label="admin.logs.screened_ips.actions.block"}}
+                {{/if}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    {{i18n "search.no_results"}}
+  {{/if}}
+{{/conditional-loading-spinner}}

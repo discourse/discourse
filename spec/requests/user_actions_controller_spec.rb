@@ -10,15 +10,6 @@ describe UserActionsController do
       expect(response.status).to eq(400)
     end
 
-    it "returns a 404 for a user with a hidden profile" do
-      UserActionManager.enable
-      post = Fabricate(:post)
-      post.user.user_option.update_column(:hide_profile_and_presence, true)
-
-      get "/user_actions.json", params: { username: post.user.username }
-      expect(response.code).to eq("404")
-    end
-
     it 'renders list correctly' do
       UserActionManager.enable
       post = create_post
@@ -26,7 +17,7 @@ describe UserActionsController do
       get "/user_actions.json", params: { username: post.user.username }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
       actions = parsed["user_actions"]
       expect(actions.length).to eq(1)
       action = actions[0]
@@ -50,7 +41,7 @@ describe UserActionsController do
 
       expect(response.status).to eq(200)
 
-      response_body = JSON.parse(response.body)
+      response_body = response.parsed_body
 
       expect(response_body["user_actions"].count).to eq(1)
 
@@ -68,7 +59,7 @@ describe UserActionsController do
       }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.self"))
     end
@@ -83,9 +74,29 @@ describe UserActionsController do
       }
 
       expect(response.status).to eq(200)
-      parsed = JSON.parse(response.body)
+      parsed = response.parsed_body
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
+    end
+
+    context 'hidden profiles' do
+      fab!(:post) { Fabricate(:post) }
+
+      before do
+        UserActionManager.enable
+        post.user.user_option.update_column(:hide_profile_and_presence, true)
+      end
+
+      it "returns a 404" do
+        get "/user_actions.json", params: { username: post.user.username }
+        expect(response.code).to eq("404")
+      end
+
+      it "succeeds when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+        get "/user_actions.json", params: { username: post.user.username }
+        expect(response.code).to eq("200")
+      end
     end
 
   end

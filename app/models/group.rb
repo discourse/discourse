@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
+require 'net/imap'
+
 class Group < ActiveRecord::Base
+  # TODO(2021-05-26): remove
+  self.ignored_columns = %w{
+    automatic_membership_retroactive
+    flair_url
+  }
+
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook
@@ -21,6 +29,10 @@ class Group < ActiveRecord::Base
   has_many :group_histories, dependent: :destroy
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
+  has_many :group_category_notification_defaults, dependent: :destroy
+  has_many :group_tag_notification_defaults, dependent: :destroy
+
+  belongs_to :flair_upload, class_name: 'Upload'
 
   has_and_belongs_to_many :web_hooks
 
@@ -41,14 +53,15 @@ class Group < ActiveRecord::Base
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
+  after_commit :set_default_notifications, on: [:create, :update]
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+    Discourse.cache.delete("group_imap_mailboxes_#{self.id}")
   end
 
   def remove_review_groups
-    Category.where(review_group_id: self.id).update_all(review_group_id: nil)
     Category.where(review_group_id: self.id).update_all(review_group_id: nil)
   end
 
@@ -57,7 +70,6 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
@@ -84,6 +96,8 @@ class Group < ActiveRecord::Base
     everyone: 99
   }
 
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+
   def self.visibility_levels
     @visibility_levels = Enum.new(
       public: 0,
@@ -97,6 +111,8 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
+  scope :with_imap_configured, -> { where.not(imap_mailbox_name: '') }
+
   scope :visible_groups, Proc.new { |user, order, opts|
     groups = self.order(order || "name ASC")
 
@@ -105,44 +121,37 @@ class Group < ActiveRecord::Base
     end
 
     if !user&.admin
-      sql = <<~SQL
-        groups.id IN (
-          SELECT id
-            FROM groups
-           WHERE visibility_level = :public
+      is_staff = !!user&.staff?
 
-          UNION ALL
+      if user.blank?
+        sql = "groups.visibility_level = :public"
+      elsif is_staff
+        sql = "groups.visibility_level IN (:public, :logged_on_users, :members, :staff)"
+      else
+        sql = <<~SQL
+          groups.id IN (
+            SELECT id
+              FROM groups
+            WHERE visibility_level IN (:public, :logged_on_users)
 
-          SELECT id
-            FROM groups
-           WHERE visibility_level = :logged_on_users
-             AND :user_id IS NOT NULL
+            UNION ALL
 
-          UNION ALL
+            SELECT g.id
+              FROM groups g
+              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+            WHERE g.visibility_level = :members
 
-          SELECT g.id
-            FROM groups g
-            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
-           WHERE g.visibility_level = :members
+            UNION ALL
 
-          UNION ALL
+            SELECT g.id
+              FROM groups g
+              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+            WHERE g.visibility_level IN (:staff, :owners)
+          )
+        SQL
+      end
 
-          SELECT g.id
-            FROM groups g
-       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-           WHERE g.visibility_level = :staff
-             AND (gu.id IS NOT NULL OR :is_staff)
-
-          UNION ALL
-
-          SELECT g.id
-            FROM groups g
-            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-           WHERE g.visibility_level = :owners
-        )
-      SQL
-
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
       groups = groups.where(sql, params)
     end
 
@@ -157,44 +166,37 @@ class Group < ActiveRecord::Base
     end
 
     if !user&.admin
-      sql = <<~SQL
-        groups.id IN (
-          SELECT id
-            FROM groups
-           WHERE members_visibility_level = :public
+      is_staff = !!user&.staff?
 
-          UNION ALL
+      if user.blank?
+        sql = "groups.members_visibility_level = :public"
+      elsif is_staff
+        sql = "groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)"
+      else
+        sql = <<~SQL
+          groups.id IN (
+            SELECT id
+              FROM groups
+            WHERE members_visibility_level IN (:public, :logged_on_users)
 
-          SELECT id
-            FROM groups
-           WHERE members_visibility_level = :logged_on_users
-             AND :user_id IS NOT NULL
+            UNION ALL
 
-          UNION ALL
+            SELECT g.id
+              FROM groups g
+              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
+            WHERE g.members_visibility_level = :members
 
-          SELECT g.id
-            FROM groups g
-            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id
-           WHERE g.members_visibility_level = :members
+            UNION ALL
 
-          UNION ALL
+            SELECT g.id
+              FROM groups g
+              JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
+            WHERE g.members_visibility_level IN (:staff, :owners)
+          )
+        SQL
+      end
 
-          SELECT g.id
-            FROM groups g
-       LEFT JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-           WHERE g.members_visibility_level = :staff
-             AND (gu.id IS NOT NULL OR :is_staff)
-
-          UNION ALL
-
-          SELECT g.id
-            FROM groups g
-            JOIN group_users gu ON gu.group_id = g.id AND gu.user_id = :user_id AND gu.owner
-           WHERE g.members_visibility_level = :owners
-        )
-      SQL
-
-      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: !!user&.staff?)
+      params = Group.visibility_levels.to_h.merge(user_id: user&.id, is_staff: is_staff)
       groups = groups.where(sql, params)
     end
 
@@ -261,19 +263,9 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.plugin_editable_group_custom_fields
-    @plugin_editable_group_custom_fields ||= {}
-  end
-
   def self.register_plugin_editable_group_custom_field(custom_field_name, plugin)
-    plugin_editable_group_custom_fields[custom_field_name] = plugin
-  end
-
-  def self.editable_group_custom_fields
-    plugin_editable_group_custom_fields.reduce([]) do |fields, (k, v)|
-      next(fields) unless v.enabled?
-      fields << k
-    end.uniq
+    Discourse.deprecate("Editable group custom fields should be registered using the plugin API", since: "v2.4.0.beta4", drop_from: "v2.5.0")
+    DiscoursePluginRegistry.register_editable_group_custom_field(custom_field_name, plugin)
   end
 
   def downcase_incoming_email
@@ -378,6 +370,13 @@ class Group < ActiveRecord::Base
         end
 
       topic.notifier.public_send(action, user_id)
+    end
+  end
+
+  def self.set_category_and_tag_default_notification_levels!(user, group_name)
+    if group = lookup_group(group_name)
+      GroupUser.set_category_notifications(group, user)
+      GroupUser.set_tag_notifications(group, user)
     end
   end
 
@@ -536,7 +535,7 @@ class Group < ActiveRecord::Base
 
   def self.lookup_groups(group_ids: [], group_names: [])
     if group_ids.present?
-      group_ids = group_ids.split(",")
+      group_ids = group_ids.split(",") if group_ids.is_a?(String)
       group_ids.map!(&:to_i)
       groups = Group.where(id: group_ids) if group_ids.present?
     end
@@ -617,16 +616,15 @@ class Group < ActiveRecord::Base
   PUBLISH_CATEGORIES_LIMIT = 10
 
   def add(user, notify: false, automatic: false)
-    self.users.push(user) unless self.users.include?(user)
+    return self if self.users.include?(user)
+
+    self.users.push(user)
 
     if notify
       Notification.create!(
         notification_type: Notification.types[:membership_request_accepted],
         user_id: user.id,
-        data: {
-          group_id: id,
-          group_name: name
-        }.to_json
+        data: { group_id: id, group_name: name }.to_json
       )
     end
 
@@ -746,6 +744,95 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def flair_type
+    return :icon if flair_icon.present?
+    return :image if flair_upload_id.present?
+  end
+
+  def flair_url
+    flair_icon.presence || flair_upload&.short_path
+  end
+
+  [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
+    define_method("#{level}_category_ids=") do |category_ids|
+      @category_notifications ||= {}
+      @category_notifications[level] = category_ids
+    end
+
+    define_method("#{level}_tags=") do |tag_names|
+      @tag_notifications ||= {}
+      @tag_notifications[level] = tag_names
+    end
+  end
+
+  def set_default_notifications
+    if @category_notifications
+      @category_notifications.each do |level, category_ids|
+        GroupCategoryNotificationDefault.batch_set(self, level, category_ids)
+      end
+    end
+
+    if @tag_notifications
+      @tag_notifications.each do |level, tag_names|
+        GroupTagNotificationDefault.batch_set(self, level, tag_names)
+      end
+    end
+  end
+
+  def imap_mailboxes
+    return [] if self.imap_server.blank? ||
+                 self.email_username.blank? ||
+                 self.email_password.blank? ||
+                 !SiteSetting.enable_imap
+
+    Discourse.cache.fetch("group_imap_mailboxes_#{self.id}", expires_in: 30.minutes) do
+      Rails.logger.info("[IMAP] Refreshing mailboxes list for group #{self.name}")
+      mailboxes = []
+
+      begin
+        imap_provider = Imap::Providers::Detector.init_with_detected_provider(
+          self.imap_config
+        )
+        imap_provider.connect!
+        mailboxes = imap_provider.list_mailboxes
+        imap_provider.disconnect!
+
+        update_columns(imap_last_error: nil)
+      rescue => ex
+        Rails.logger.warn("[IMAP] Mailbox refresh failed for group #{self.name} with error: #{ex}")
+        update_columns(imap_last_error: ex.message)
+      end
+
+      mailboxes
+    end
+  end
+
+  def imap_config
+    {
+      server: self.imap_server,
+      port: self.imap_port,
+      ssl: self.imap_ssl,
+      username: self.email_username,
+      password: self.email_password
+    }
+  end
+
+  def email_username_regex
+    user, domain = email_username.split('@')
+    if user.present? && domain.present?
+      /^#{Regexp.escape(user)}(\+[^@]*)?@#{Regexp.escape(domain)}$/i
+    end
+  end
+
+  def notify_added_to_group(user, owner: false)
+    SystemMessage.create_from_system_user(
+      user,
+      owner ? :user_added_to_group_as_owner : :user_added_to_group_as_member,
+      group_name: self.full_name.presence || self.name,
+      group_path: "/g/#{self.name}"
+    )
+  end
+
   protected
 
   def name_format_validator
@@ -770,12 +857,10 @@ class Group < ActiveRecord::Base
   def automatic_membership_email_domains_format_validator
     return if self.automatic_membership_email_domains.blank?
 
-    domains = self.automatic_membership_email_domains.split("|")
-    domains.each do |domain|
-      domain.sub!(/^https?:\/\//, '')
-      domain.sub!(/\/.*$/, '')
-      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+    domains = Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
+      self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain))
     end
+
     self.automatic_membership_email_domains = domains.join("|")
   end
 
@@ -791,7 +876,7 @@ class Group < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    if self.automatic_membership_retroactive
+    if self.automatic_membership_email_domains.present?
       Jobs.enqueue(:automatic_group_membership, group_id: self.id)
     end
   end
@@ -842,6 +927,32 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.automatic_membership_users(domains, group_id = nil)
+    pattern = "@(#{domains.gsub('.', '\.')})$"
+
+    users = User.joins(:user_emails).where("user_emails.email ~* ?", pattern).activated.where(staged: false)
+    users = users.where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id) if group_id.present?
+
+    users
+  end
+
+  def self.get_valid_email_domains(value)
+    valid_domains = []
+
+    value.split("|").each do |domain|
+      domain.sub!(/^https?:\/\//, '')
+      domain.sub!(/\/.*$/, '')
+
+      if domain =~ Group::VALID_DOMAIN_REGEX
+        valid_domains << domain
+      else
+        yield domain if block_given?
+      end
+    end
+
+    valid_domains
+  end
+
   private
 
   def validate_grant_trust_level
@@ -887,13 +998,11 @@ end
 #  automatic                          :boolean          default(FALSE), not null
 #  user_count                         :integer          default(0), not null
 #  automatic_membership_email_domains :text
-#  automatic_membership_retroactive   :boolean          default(FALSE)
 #  primary_group                      :boolean          default(FALSE), not null
 #  title                              :string
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
-#  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
 #  bio_raw                            :text
@@ -904,11 +1013,27 @@ end
 #  visibility_level                   :integer          default(0), not null
 #  public_exit                        :boolean          default(FALSE), not null
 #  public_admission                   :boolean          default(FALSE), not null
-#  publish_read_state                 :boolean          default(FALSE), not null
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  smtp_server                        :string
+#  smtp_port                          :integer
+#  smtp_ssl                           :boolean
+#  imap_server                        :string
+#  imap_port                          :integer
+#  imap_ssl                           :boolean
+#  imap_mailbox_name                  :string           default(""), not null
+#  imap_uid_validity                  :integer          default(0), not null
+#  imap_last_uid                      :integer          default(0), not null
+#  email_username                     :string
+#  email_password                     :string
+#  publish_read_state                 :boolean          default(FALSE), not null
 #  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
+#  imap_last_error                    :text
+#  imap_old_emails                    :integer
+#  imap_new_emails                    :integer
 #
 # Indexes
 #

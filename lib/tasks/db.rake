@@ -66,8 +66,151 @@ task 'db:rollback' => ['environment', 'set_locale'] do |_, args|
   Rake::Task['db:_dump'].invoke
 end
 
+# our optimized version of multisite migrate, we have many sites and we have seeds
+# this ensures we can run migrations concurrently to save huge amounts of time
+Rake::Task['multisite:migrate'].clear
+
+class StdOutDemux
+  def initialize(stdout)
+    @stdout = stdout
+    @data = {}
+  end
+
+  def write(data)
+    (@data[Thread.current] ||= +"") << data
+  end
+
+  def close
+    finish_chunk
+  end
+
+  def finish_chunk
+    data = @data[Thread.current]
+    if data
+      @stdout.write(data)
+      @data.delete Thread.current
+    end
+  end
+
+  def flush
+    # Do nothing
+  end
+end
+
+class SeedHelper
+  def self.paths
+    DiscoursePluginRegistry.seed_paths
+  end
+
+  def self.filter
+    # Allows a plugin to exclude any specified seed data files from running
+    DiscoursePluginRegistry.seedfu_filter.any? ?
+      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/ : nil
+  end
+end
+
+task 'multisite:migrate' => ['db:load_config', 'environment', 'set_locale'] do |_, args|
+  if ENV["RAILS_ENV"] != "production"
+    raise "Multisite migrate is only supported in production"
+  end
+
+  # TODO: Switch to processes for concurrent migrations because Rails migration
+  # is not thread safe by default.
+  concurrency = 1
+
+  puts "Multisite migrator is running using #{concurrency} threads"
+  puts
+
+  exceptions = Queue.new
+
+  old_stdout = $stdout
+  $stdout = StdOutDemux.new($stdout)
+
+  SeedFu.quiet = true
+
+  def execute_concurently(concurrency, exceptions)
+    queue = Queue.new
+
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      queue << db
+    end
+
+    concurrency.times { queue << :done }
+
+    (1..concurrency).map do
+      Thread.new {
+        while true
+          db = queue.pop
+          break if db == :done
+
+          RailsMultisite::ConnectionManagement.with_connection(db) do
+            begin
+              yield(db) if block_given?
+            rescue => e
+              exceptions << [db, e]
+            ensure
+              begin
+                $stdout.finish_chunk
+              rescue => ex
+                STDERR.puts ex.inspect
+                STDERR.puts ex.backtrace
+              end
+            end
+          end
+        end
+      }
+    end.each(&:join)
+  end
+
+  def check_exceptions(exceptions)
+    if exceptions.length > 0
+      STDERR.puts
+      STDERR.puts "-" * 80
+      STDERR.puts "#{exceptions.length} migrations failed!"
+      while !exceptions.empty?
+        db, e = exceptions.pop
+        STDERR.puts
+        STDERR.puts "Failed to migrate #{db}"
+        STDERR.puts e.inspect
+        STDERR.puts e.backtrace
+        STDERR.puts
+      end
+      exit 1
+    end
+  end
+
+  execute_concurently(concurrency, exceptions) do |db|
+    puts "Migrating #{db}"
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+  end
+
+  check_exceptions(exceptions)
+
+  SeedFu.seed(SeedHelper.paths, /001_refresh/)
+
+  execute_concurently(concurrency, exceptions) do |db|
+    puts "Seeding #{db}"
+    SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
+
+    if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
+      SiteIconManager.ensure_optimized!
+    end
+  end
+
+  $stdout = old_stdout
+  check_exceptions(exceptions)
+
+  Rake::Task['db:_dump'].invoke
+end
+
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
+  migrations = ActiveRecord::Base.connection.migration_context.migrations
+  now_timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S').to_i
+  epoch_timestamp = Time.at(0).utc.strftime('%Y%m%d%H%M%S').to_i
+
+  raise "Migration #{migrations.last.version} is timestamped in the future" if migrations.last.version > now_timestamp
+  raise "Migration #{migrations.first.version} is timestamped before the epoch" if migrations.first.version < epoch_timestamp
 
   ActiveRecord::Tasks::DatabaseTasks.migrate
 
@@ -75,13 +218,11 @@ task 'db:migrate' => ['load_config', 'environment', 'set_locale'] do |_, args|
     Rake::Task['db:_dump'].invoke
   end
 
-  SeedFu.seed(DiscoursePluginRegistry.seed_paths)
+  SeedFu.quiet = true
+  SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
 
   if !Discourse.skip_post_deployment_migrations? && ENV['SKIP_OPTIMIZE_ICONS'] != '1'
-    puts
-    print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
-    puts "Done"
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?

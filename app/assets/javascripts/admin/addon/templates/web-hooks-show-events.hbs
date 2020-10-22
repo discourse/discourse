@@ -1,0 +1,39 @@
+<div class="web-hook-direction">
+  {{#link-to "adminWebHooks" tagName="button" classNames="btn"}}
+    {{d-icon "list"}} {{i18n "admin.web_hooks.events.go_list"}}
+  {{/link-to}}
+  {{d-button icon="paper-plane" label="admin.web_hooks.events.ping" action=(action "ping") disabled=pingDisabled}}
+  {{#link-to "adminWebHooks.show" model.extras.web_hook_id tagName="button" classNames="btn"}}
+    {{d-icon "far-edit"}} {{i18n "admin.web_hooks.events.go_details"}}
+  {{/link-to}}
+</div>
+
+<div class="web-hook-events-listing">
+  {{#if model}}
+    {{#load-more selector=".web-hook-events li" action=(action "loadMore")}}
+      <div class="web-hook-events content-list">
+        <div class="heading-container">
+          <div class="col heading first status">{{i18n "admin.web_hooks.events.status"}}</div>
+          <div class="col heading event-id">{{i18n "admin.web_hooks.events.event_id"}}</div>
+          <div class="col heading timestamp">{{i18n "admin.web_hooks.events.timestamp"}}</div>
+          <div class="col heading completion">{{i18n "admin.web_hooks.events.completion"}}</div>
+          <div class="col heading actions">{{i18n "admin.web_hooks.events.actions"}}</div>
+          <div class="clearfix"></div>
+        </div>
+        {{#if hasIncoming}}
+          <a href tabindex="0" {{action "showInserted"}} class="alert alert-info clickable">
+            {{count-i18n key="admin.web_hooks.events.incoming" count=incomingCount}}
+          </a>
+        {{/if}}
+        <ul>
+          {{#each model as |webHookEvent|}}
+            {{admin-web-hook-event model=webHookEvent}}
+          {{/each}}
+        </ul>
+      </div>
+      {{conditional-loading-spinner condition=model.loadingMore}}
+    {{/load-more}}
+  {{else}}
+    <p>{{i18n "admin.web_hooks.events.none"}}</p>
+  {{/if}}
+</div>

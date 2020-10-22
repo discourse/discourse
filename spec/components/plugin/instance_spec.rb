@@ -11,8 +11,8 @@ describe Plugin::Instance do
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      expect(plugins.count).to eq(3)
-      plugin = plugins[2]
+      expect(plugins.count).to eq(4)
+      plugin = plugins[3]
 
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
@@ -502,21 +502,6 @@ describe Plugin::Instance do
     end
   end
 
-  describe '#enabled_site_setting_filter' do
-    describe 'when filter is blank' do
-      it 'should return the right value' do
-        expect(Plugin::Instance.new.enabled_site_setting_filter).to eq(nil)
-      end
-    end
-
-    it 'should set the right value' do
-      instance = Plugin::Instance.new
-      instance.enabled_site_setting_filter('test')
-
-      expect(instance.enabled_site_setting_filter).to eq('test')
-    end
-  end
-
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
@@ -536,6 +521,76 @@ describe Plugin::Instance do
       Plugin::Instance.new.extend_list_method Reviewable, :types, [new_element]
 
       expect(Reviewable.types).to match_array(current_list << new_element)
+    end
+  end
+
+  describe '#register_emoji' do
+    before do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    after do
+      Plugin::CustomEmoji.clear_cache
+    end
+
+    it 'allows to register an emoji' do
+      Plugin::Instance.new.register_emoji("foo", "/foo/bar.png")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("foo")
+      expect(custom_emoji.url).to eq("/foo/bar.png")
+      expect(custom_emoji.group).to eq(Emoji::DEFAULT_GROUP)
+    end
+
+    it 'allows to register an emoji with a group' do
+      Plugin::Instance.new.register_emoji("bar", "/baz/bar.png", "baz")
+
+      custom_emoji = Emoji.custom.first
+
+      expect(custom_emoji.name).to eq("bar")
+      expect(custom_emoji.url).to eq("/baz/bar.png")
+      expect(custom_emoji.group).to eq("baz")
+    end
+  end
+
+  describe '#replace_flags' do
+    after do
+      PostActionType.replace_flag_settings(nil)
+      ReviewableScore.reload_types
+    end
+
+    let(:original_flags) { PostActionType.flag_settings }
+
+    it 'adds a new flag' do
+      highest_flag_id = ReviewableScore.types.values.max
+      flag_name = :new_flag
+
+      subject.replace_flags(settings: original_flags) do |settings, next_flag_id|
+        settings.add(
+          next_flag_id,
+          flag_name
+        )
+      end
+
+      expect(PostActionType.flag_settings.flag_types.keys).to include(flag_name)
+      expect(PostActionType.flag_settings.flag_types.values.max).to eq(highest_flag_id + 1)
+    end
+
+    it 'adds a new score type after adding a new flag' do
+      highest_flag_id = ReviewableScore.types.values.max
+      new_score_type = :new_score_type
+
+      subject.replace_flags(settings: original_flags, score_type_names: [new_score_type]) do |settings, next_flag_id|
+        settings.add(
+          next_flag_id,
+          :new_flag
+        )
+      end
+
+      expect(PostActionType.flag_settings.flag_types.values.max).to eq(highest_flag_id + 1)
+      expect(ReviewableScore.types.keys).to include(new_score_type)
+      expect(ReviewableScore.types.values.max).to eq(highest_flag_id + 2)
     end
   end
 end

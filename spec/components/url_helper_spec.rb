@@ -139,17 +139,32 @@ describe UrlHelper do
     end
   end
 
+  describe "#rails_route_from_url" do
+    it "recognizes a user path" do
+      result = UrlHelper.rails_route_from_url('http://example.com/u/john_smith')
+      expect(result[:controller]).to eq("users")
+      expect(result[:action]).to eq("show")
+      expect(result[:username]).to eq("john_smith")
+    end
+
+    it "recognizes a user path with unicode characters in the username" do
+      result = UrlHelper.rails_route_from_url('http://example.com/u/björn_ulvaeus')
+      expect(result[:controller]).to eq("users")
+      expect(result[:action]).to eq("show")
+      expect(result[:username].force_encoding('UTF-8')).to eq("björn_ulvaeus")
+    end
+  end
+
   describe "#cook_url" do
-    let(:url) { "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
+    let(:url) { "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg" }
 
     before do
-      FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
-      Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
-      SiteSetting.enable_s3_uploads = true
+      setup_s3
       SiteSetting.s3_upload_bucket = "s3bucket"
-      SiteSetting.s3_access_key_id = "s3_access_key_id"
-      SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       SiteSetting.login_required = true
+      Rails.configuration.action_controller.asset_host = "https://test.some-cdn.com/dev"
+
+      FileStore::S3Store.any_instance.stubs(:has_been_uploaded?).returns(true)
     end
 
     def cooked
@@ -171,7 +186,7 @@ describe UrlHelper do
 
       it "returns the local_cdn_url" do
         expect(cooked).to eq(
-          "//s3bucket.s3.dualstack.us-east-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
+          "//s3bucket.s3.dualstack.us-west-1.amazonaws.com/dev/original/3X/2/e/2e6f2ef81b6910ea592cd6d21ee897cd51cf72e4.jpeg"
         )
       end
     end
@@ -181,4 +196,19 @@ describe UrlHelper do
     end
   end
 
+  describe "rails_route_from_url" do
+    it "returns a rails route from the path" do
+      expect(described_class.rails_route_from_url("/u")).to eq({ controller: "users", action: "index" })
+    end
+
+    it "does not raise for invalid URLs" do
+      url = "http://URL:%20https://google.com"
+      expect(described_class.rails_route_from_url(url)).to eq(nil)
+    end
+
+    it "does not raise for invalid mailtos" do
+      url = "mailto:eviltrout%2540example.com"
+      expect(described_class.rails_route_from_url(url)).to eq(nil)
+    end
+  end
 end

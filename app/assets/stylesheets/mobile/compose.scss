@@ -26,9 +26,10 @@
 
   body.ios-safari-composer-hacks &.open {
     height: calc(var(--composer-vh, 1vh) * 100);
-    .reply-area {
-      padding-bottom: 0px;
-    }
+  }
+
+  .keyboard-visible body.ios-safari-composer-hacks &.open .reply-area {
+    padding-bottom: 0px;
   }
 
   .reply-to {
@@ -56,13 +57,13 @@
   }
 
   .toggler {
-    margin-left: -5px;
     .d-icon-chevron-down {
       vertical-align: text-top;
     }
   }
 
   &.draft {
+    z-index: z("footer-nav") + 1;
     padding-bottom: env(safe-area-inset-bottom);
 
     .toggle-toolbar,
@@ -81,9 +82,6 @@
 
   .category-input {
     margin-bottom: 5px;
-    .category-chooser {
-      width: 100% !important;
-    }
   }
 
   .submit-panel {
@@ -97,7 +95,7 @@
       }
       .cancel {
         font-size: 1.4em;
-        color: $primary-low-mid;
+        color: var(--primary-low-mid);
         margin-left: 0.6em;
         padding: 3px 6px;
       }
@@ -124,6 +122,16 @@
   }
 
   &.show-preview {
+    .submit-panel {
+      padding-top: 10px;
+      z-index: z("fullscreen") + 1;
+      background-color: var(--secondary);
+      .cancel,
+      .mobile-file-upload,
+      .mobile-preview {
+        display: none;
+      }
+    }
     .d-editor-preview-wrapper {
       position: fixed;
       z-index: z("fullscreen");
@@ -131,7 +139,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: $secondary;
+      background-color: var(--secondary);
+      border-bottom: 40px solid var(--secondary);
       max-width: 100%;
       margin: 0;
       padding: 10px;
@@ -139,12 +148,6 @@
       .d-editor-preview {
         margin-bottom: 40px;
       }
-    }
-    .btn.hide-preview {
-      position: fixed;
-      right: 5px;
-      bottom: 5px;
-      z-index: z("fullscreen") + 1;
     }
   }
 
@@ -181,39 +184,24 @@
   }
 
   .with-tags {
-    .category-input {
-      flex: 1 0 0px;
-      margin: 0;
-      width: 45%;
-      margin-bottom: 5px;
-    }
-
     .mini-tag-chooser {
-      width: 50%;
-      flex: 1 0 0px;
-      margin-left: 5px;
-      margin-bottom: 5px;
       z-index: z("base");
     }
 
     .selected-name {
-      overflow: hidden;
       .name {
-        @include ellipsis;
         font-size: $font-down-1;
         .badge-wrapper {
           font-size: $font-0;
         }
       }
     }
-
-    .title-and-category .select-kit {
-      min-width: unset;
-    }
   }
 
-  .title-input,
-  .category-input,
+  .user-selector {
+    flex-wrap: wrap;
+  }
+
   .users-input,
   .add-warning {
     width: 100%;

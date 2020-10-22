@@ -1,0 +1,38 @@
+{{#unless selectKit.isHidden}}
+  {{component selectKit.options.headerComponent
+    tabindex=tabindex
+    value=value
+    selectedContent=selectedContent
+    selectKit=selectKit
+  }}
+
+  {{#select-kit/select-kit-body selectKit=selectKit}}
+    {{component selectKit.options.filterComponent selectKit=selectKit}}
+
+    {{#if selectKit.isLoading}}
+      <span class="is-loading">
+        {{#if site}}
+          {{loading-spinner size="small"}}
+        {{/if}}
+      </span>
+    {{else}}
+      {{#if selectKit.filter}}
+        {{#if selectKit.hasNoContent}}
+          <span class="no-content">
+            {{i18n "select_kit.no_content"}}
+          </span>
+        {{/if}}
+      {{/if}}
+
+      {{#each collections as |collection|}}
+        {{component (component-for-collection collection.identifier selectKit)
+          collection=collection
+          selectKit=selectKit
+          value=value
+        }}
+      {{/each}}
+    {{/if}}
+  {{/select-kit/select-kit-body}}
+
+  <div class="select-kit-wrapper"></div>
+{{/unless}}

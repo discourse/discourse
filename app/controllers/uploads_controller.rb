@@ -3,12 +3,14 @@
 require "mini_mime"
 
 class UploadsController < ApplicationController
-  requires_login except: [:show, :show_short]
+  requires_login except: [:show, :show_short, :show_secure]
 
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
   before_action :is_asset_path, only: [:show, :show_short, :show_secure]
+
+  SECURE_REDIRECT_GRACE_SECONDS = 5
 
   def create
     # capture current user for block later on
@@ -109,7 +111,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
+        redirect_to Discourse.store.url_for(upload, force_download: force_download?)
       end
     else
       render_404
@@ -130,6 +132,7 @@ class UploadsController < ApplicationController
     upload = Upload.find_by(sha1: sha1)
     return render_404 if upload.blank?
 
+    return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
     return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
 
     # we don't want to 404 here if secure media gets disabled
@@ -146,15 +149,25 @@ class UploadsController < ApplicationController
   def handle_secure_upload_request(upload, path_with_ext = nil)
     if upload.access_control_post_id.present?
       raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
+    else
+      return render_404 if current_user.nil?
     end
+
+    # defaults to public: false, so only cached by the client browser
+    cache_seconds = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS - SECURE_REDIRECT_GRACE_SECONDS
+    expires_in cache_seconds.seconds
 
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
     if path_with_ext.blank?
-      return redirect_to Discourse.store.url_for(upload)
+      return redirect_to Discourse.store.url_for(upload, force_download: force_download?)
     end
 
-    redirect_to Discourse.store.signed_url_for_path(path_with_ext)
+    redirect_to Discourse.store.signed_url_for_path(
+      path_with_ext,
+      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+      force_download: force_download?
+    )
   end
 
   def metadata
@@ -171,6 +184,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def force_download?
+    params[:dl] == "1"
+  end
 
   def xhr_not_allowed
     raise Discourse::InvalidParameters.new("XHR not allowed")
@@ -241,7 +258,7 @@ class UploadsController < ApplicationController
       content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type
     }
 
-    if !FileHelper.is_supported_image?(upload.original_filename)
+    if !FileHelper.is_inline_image?(upload.original_filename)
       opts[:disposition] = "attachment"
     elsif params[:inline]
       opts[:disposition] = "inline"

@@ -1,0 +1,74 @@
+<table class="table">
+  <thead>
+    <tr>
+      {{#if model.computedLabels}}
+        {{#each model.computedLabels as |label|}}
+          {{admin-report-table-header
+            showSortingUI=showSortingUI
+            currentSortDirection=sortDirection
+            currentSortLabel=sortLabel
+            label=label
+            sortByLabel=(action "sortByLabel" label)}}
+        {{/each}}
+      {{else}}
+        {{#each model.data as |data|}}
+          <th>{{data.x}}</th>
+        {{/each}}
+      {{/if}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each paginatedData as |data|}}
+      {{admin-report-table-row data=data labels=model.computedLabels options=options}}
+    {{/each}}
+
+    {{#if showTotalForSample}}
+      <tr class="total-row">
+        <td colspan={{totalsForSample.length}}>
+          {{i18n "admin.dashboard.reports.totals_for_sample"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        {{#each totalsForSample as |total|}}
+          <td class="admin-report-table-cell {{total.type}} {{total.property}}">
+            {{total.formatedValue}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/if}}
+
+    {{#if showTotal}}
+      <tr class="total-row">
+        <td colspan="2">
+          {{i18n "admin.dashboard.reports.total"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number model.total}}</td>
+      </tr>
+    {{/if}}
+
+    {{#if showAverage}}
+      <tr class="total-row">
+        <td colspan="2">
+          {{i18n "admin.dashboard.reports.average_for_sample"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number averageForSample}}</td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {{#each pages as |pageState|}}
+    {{d-button
+      translatedLabel=pageState.page
+      action=(action "changePage")
+      actionParam=pageState.index
+      class=pageState.class}}
+  {{/each}}
+</div>

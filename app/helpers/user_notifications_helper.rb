@@ -13,7 +13,7 @@ module UserNotificationsHelper
   end
 
   def correct_top_margin(html, desired)
-    fragment = Nokogiri::HTML.fragment(html)
+    fragment = Nokogiri::HTML5.fragment(html)
     if para = fragment.css("p:first").first
       para["style"] = "margin-top: #{desired};"
     end
@@ -32,7 +32,7 @@ module UserNotificationsHelper
   end
 
   def first_paragraphs_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri::HTML5(html)
 
     result = +""
     length = 0
@@ -98,11 +98,11 @@ module UserNotificationsHelper
   end
 
   def email_image_url(basename)
-    UrlHelper.absolute("#{Discourse.base_uri}/images/emails/#{basename}")
+    UrlHelper.absolute("#{Discourse.base_path}/images/emails/#{basename}")
   end
 
   def url_for_email(href)
-    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_uri}#{href}")
+    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_path}#{href}")
   rescue URI::Error
     href
   end

@@ -1,0 +1,39 @@
+{{#if errorHtml}}
+  {{html-safe errorHtml}}
+{{else}}
+  <div class="container">
+    {{discourse-banner user=currentUser banner=site.banner}}
+    {{category-read-only-banner category=category readOnly=navigationCategory.cannotCreateTopicOnCategory}}
+  </div>
+
+  <div class="list-controls">
+    <div class="container">
+      {{outlet "navigation-bar"}}
+    </div>
+  </div>
+
+  {{conditional-loading-spinner condition=loading}}
+
+  {{plugin-outlet name="discovery-above"}}
+
+  <div class="container list-container {{if loading "hidden"}}">
+    <div class="row">
+      <div class="full-width">
+        <div id="header-list-area">
+          {{outlet "header-list-container"}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="full-width">
+        <div id="list-area">
+          {{plugin-outlet name="discovery-list-container-top"
+                          args=(hash category=category listLoading=loading)}}
+          {{outlet "list-container"}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{plugin-outlet name="discovery-below"}}
+{{/if}}

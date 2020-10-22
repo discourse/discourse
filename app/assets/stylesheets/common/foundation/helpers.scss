@@ -22,7 +22,7 @@
 
 .hide,
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .invisible {
@@ -75,11 +75,4 @@
 
 .clickable {
   cursor: pointer;
-}
-
-// Buttons
-// ---------------------------------------------------
-.disable-no-hover:hover {
-  background: dark-light-choose($primary-low, $secondary-medium);
-  color: $primary;
 }

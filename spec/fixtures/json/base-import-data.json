@@ -1,0 +1,57 @@
+{
+   "bookmarks":[
+      {
+         "post_id":10,
+         "user_id":20
+      },
+      {
+         "post_id":11,
+         "user_id":20
+      },
+      {
+         "post_id":12,
+         "user_id":20
+      },
+      {
+         "post_id":13,
+         "user_id":20
+      },
+      {
+         "post_id":14,
+         "user_id":20
+      }
+   ],
+   "posts":[
+      {
+         "user_id":20,
+         "id":10,
+         "raw":"This is test post 1"
+      },
+      {
+         "user_id":20,
+         "id":11,
+         "raw":"This is test post 2"
+      },
+      {
+         "user_id":20,
+         "id":12,
+         "raw":"This is test post 3"
+      },
+      {
+         "user_id":20,
+         "id":13,
+         "raw":"This is test post 4"
+      },
+      {
+         "user_id":20,
+         "id":14,
+         "raw":"This is test post 5"
+      }
+   ],
+   "users":[
+      {
+         "id":20,
+         "email":"testimportuser@test.com"
+      }
+   ]
+}

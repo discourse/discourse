@@ -74,8 +74,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     # ensure it's not staged anymore
-    user.unstage
-    user.save
+    user.unstage!
 
     change_external_attributes_and_override(sso_record, user)
 
@@ -101,6 +100,10 @@ class DiscourseSingleSignOn < SingleSignOn
     user.user_avatar.save! if user.user_avatar
     user.save!
 
+    if @email_changed && user.active
+      user.set_automatic_groups
+    end
+
     # The user might require approval
     user.create_reviewable
 
@@ -111,6 +114,11 @@ class DiscourseSingleSignOn < SingleSignOn
 
     if website
       user.user_profile.website = website
+      user.user_profile.save!
+    end
+
+    if location
+      user.user_profile.location = location
       user.user_profile.save!
     end
 
@@ -252,9 +260,12 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
+    @email_changed = false
+
     if SiteSetting.sso_overrides_email && user.email != Email.downcase(email)
       user.email = email
       user.active = false if require_activation
+      @email_changed = true
     end
 
     if SiteSetting.sso_overrides_username? && username.present?

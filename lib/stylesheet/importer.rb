@@ -40,13 +40,77 @@ module Stylesheet
         end
       end
 
+      register_import "font" do
+        body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+        heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+        contents = +""
+
+        if body_font.present?
+          contents << <<~EOF
+            #{font_css(body_font)}
+
+            :root {
+              --font-family: #{body_font[:stack]};
+            }
+          EOF
+        end
+
+        if heading_font.present?
+          contents << <<~EOF
+            #{font_css(heading_font)}
+
+            :root {
+              --heading-font-family: #{heading_font[:stack]};
+            }
+          EOF
+        end
+
+        Import.new("font.scss", source: contents)
+      end
+
+      register_import "wizard_fonts" do
+        contents = +""
+
+        DiscourseFonts.fonts.each do |font|
+          if font[:key] == "system"
+            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+            # uses same technique as https://github.com/jonathantneal/system-font-css
+            font[:variants] = [
+              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+            ]
+          end
+
+          contents << font_css(font)
+          contents << <<~EOF
+            .body-font-#{font[:key].tr("_", "-")} {
+              font-family: #{font[:stack]};
+            }
+            .heading-font-#{font[:key].tr("_", "-")} h2 {
+              font-family: #{font[:stack]};
+            }
+          EOF
+        end
+
+        Import.new("wizard_fonts.scss", source: contents)
+      end
+
       register_import "plugins_variables" do
         import_files(DiscoursePluginRegistry.sass_variables)
       end
 
       register_import "theme_colors" do
         contents = +""
-        colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        if @color_scheme_id
+          colors = begin
+            ColorScheme.find(@color_scheme_id).resolved_colors
+          rescue
+            ColorScheme.base_colors
+          end
+        else
+          colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
+        end
+
         colors.each do |n, hex|
           contents << "$#{n}: ##{hex} !default;\n"
         end
@@ -106,10 +170,40 @@ module Stylesheet
 
     register_imports!
 
+    def self.import_color_definitions(theme_id)
+      contents = +""
+      DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
+        contents << "// Color definitions from #{name}\n\n"
+        contents << File.read(path.to_s)
+        contents << "\n\n"
+      end
+
+      theme_id ||= SiteSetting.default_theme_id
+      resolved_ids = Theme.transform_ids([theme_id])
+
+      if resolved_ids
+        contents << " @import \"theme_variables\";"
+        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
+          contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
+          contents << row.value
+        end
+      end
+      contents
+    end
+
+    def self.import_wcag_overrides(color_scheme_id)
+      if color_scheme_id && ColorScheme.find_by_id(color_scheme_id)&.is_wcag?
+        return "@import \"wcag\";"
+      end
+      ""
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
       @theme_field = options[:theme_field]
+      @color_scheme_id = options[:color_scheme_id]
+
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
         @theme_id = @theme.id || -1
@@ -192,7 +286,27 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      full_slug = category.full_slug.split("-")[0..-2].join("-")
+      "body.category-#{category.slug}, body.category-#{full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+    end
+
+    def font_css(font)
+      contents = +""
+
+      if font[:variants].present?
+        font[:variants].each do |variant|
+          src = variant[:src] ? variant[:src] : "asset-url(\"/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
+          contents << <<~EOF
+            @font-face {
+              font-family: #{font[:name]};
+              src: #{src};
+              font-weight: #{variant[:weight]};
+            }
+          EOF
+        end
+      end
+
+      contents
     end
 
     def to_scss_variable(name, value)

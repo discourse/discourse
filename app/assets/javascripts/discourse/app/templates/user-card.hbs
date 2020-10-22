@@ -1,0 +1,16 @@
+{{#if site.mobileView}}
+  <div class="card-cloak hidden"></div>
+{{/if}}
+
+{{user-card-contents
+  topic=topic.model
+  showUser=(action "showUser")
+  togglePosts=(action "togglePosts")
+  composePrivateMessage=(route-action "composePrivateMessage")
+  createNewMessageViaParams=(route-action "createNewMessageViaParams")}}
+
+{{group-card-contents
+  topic=topic.model
+  showUser=(action "showUser")
+  showGroup=(action "showGroup")
+  createNewMessageViaParams=(route-action "createNewMessageViaParams")}}

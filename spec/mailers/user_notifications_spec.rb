@@ -78,7 +78,33 @@ describe UserNotifications do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
+  end
 
+  describe ".confirm_new_email" do
+    let(:opts) do
+      { requested_by_admin: requested_by_admin, email_token: token }
+    end
+    let(:token) { "test123" }
+
+    context "when requested by admin" do
+      let(:requested_by_admin) { true }
+
+      it "uses the requested by admin template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
+
+    context "when not requested by admin" do
+      let(:requested_by_admin) { false }
+
+      it "uses the normal template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).not_to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
   end
 
   describe '.email_login' do
@@ -174,6 +200,23 @@ describe UserNotifications do
         expect(html).to_not include post.raw
       end
 
+      it "excludes shared drafts" do
+        cat = Fabricate(:category)
+        SiteSetting.shared_drafts_category = cat.id
+        topic = Fabricate(:topic, title: "This is a draft", category_id: cat.id, created_at: 1.hour.ago)
+        post = Fabricate(
+          :post,
+          topic: topic,
+          score: 100.0,
+          post_number: 2,
+          raw: "secret draft content",
+          created_at: 1.hour.ago
+        )
+        html = subject.html_part.body.to_s
+        expect(html).to_not include topic.title
+        expect(html).to_not include post.raw
+      end
+
       it "excludes whispers and other post types that don't belong" do
         t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?", created_at: 1.hour.ago)
         whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper], created_at: 1.hour.ago)
@@ -236,6 +279,14 @@ describe UserNotifications do
         expect(html).to include(topic_url)
         expect(text).to include(topic_url)
       end
+
+      it "applies lang/xml:lang html attributes" do
+        SiteSetting.default_locale = "pl_PL"
+        html = subject.html_part.to_s
+
+        expect(html).to match(' lang="pl-PL"')
+        expect(html).to match(' xml:lang="pl-PL"')
+      end
     end
 
   end
@@ -252,6 +303,8 @@ describe UserNotifications do
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
     it 'generates a correct email' do
+
+      SiteSetting.default_email_in_reply_to = true
 
       # Fabricator is not fabricating this ...
       SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
@@ -672,50 +725,6 @@ describe UserNotifications do
     expect(mail.body.to_s).to match(I18n.t("user_notifications.reached_limit", count: 2))
   end
 
-  describe "secure media" do
-    let(:video_upload) { Fabricate(:upload, extension: "mov") }
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post) }
-
-    before do
-      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
-      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.secure_media = true
-      SiteSetting.login_required = true
-
-      video_upload.update!(url: "#{SiteSetting.s3_cdn_url}/#{Discourse.store.get_path_for_upload(video_upload)}")
-      user.email_logs.create!(
-        email_type: 'blah',
-        to_address: user.email,
-        user_id: user.id
-      )
-    end
-
-    it "replaces secure audio/video with placeholder" do
-      reply = Fabricate(:post, topic_id: post.topic_id, raw: "Video: #{video_upload.url}")
-
-      notification = Fabricate(
-        :notification,
-        topic_id: post.topic_id,
-        post_number: reply.post_number,
-        user: post.user,
-        data: { original_username: 'bob' }.to_json
-      )
-
-      mail = UserNotifications.user_replied(
-        user,
-        post: reply,
-        notification_type: notification.notification_type,
-        notification_data_hash: notification.data_hash
-      )
-
-      expect(mail.body.to_s).to match(I18n.t("emails.secure_media_placeholder"))
-    end
-  end
-
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
     mailer = UserNotifications.public_send(
@@ -968,7 +977,7 @@ describe UserNotifications do
   end
 
   # notification emails derived from templates are translated into the user's locale
-  shared_examples "notification derived from template" do
+  shared_context "notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }
     let(:mail_type) { mail_type }
     let(:notification) { Fabricate(:notification, user: user) }

@@ -27,23 +27,22 @@
   h1 {
     font-size: $font-up-4;
     line-height: $line-height-medium;
-    overflow: hidden;
+    overflow-wrap: break-word;
     width: 100%;
     a {
-      color: $primary;
+      color: var(--primary);
     }
   }
 
   .remove-featured-link {
     float: right;
     text-transform: lowercase;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
     font-size: 0.857rem;
   }
 }
 
-.topic-error,
-.topic-notice {
+.topic-error {
   padding: 18px;
   width: 60%;
   margin-left: auto;
@@ -52,8 +51,7 @@
   text-align: center;
   line-height: $line-height-medium;
 
-  .topic-retry,
-  .topic-join-group {
+  .topic-retry {
     display: block;
     margin-top: 28px;
     margin-left: auto;
@@ -62,15 +60,17 @@
 }
 
 .topic-status-info {
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 10px 0;
   max-width: 758px;
-  .topic-timer-heading {
+  .topic-timer-heading,
+  .slow-mode-heading {
     display: flex;
     align-items: center;
     margin: 0px;
   }
-  .topic-timer-remove {
+  .topic-timer-remove,
+  .slow-mode-remove {
     font-size: $font-down-2;
     background: transparent;
     margin-left: auto;
@@ -79,19 +79,37 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 1em;
+  right: 2em;
   bottom: 0;
+  left: 0;
+  margin: 0 auto;
+  max-width: $reply-area-max-width;
+  display: flex;
+  justify-content: flex-end;
   z-index: z("timeline");
+  // max-width + bottom + left/right makes this element take up the whole width
+  // albeit as a transparent row, but we disable pointer-events to allow user to
+  // interact with visible elements at bottom of viewport
+  pointer-events: none;
+  > * {
+    // and then we reset for its children
+    pointer-events: auto;
+  }
   &.docked {
     position: absolute;
     bottom: -70px;
   }
+  html.rtl & {
+    justify-content: flex-start;
+    right: 0;
+    left: 2em;
+  }
 }
 
 #topic-progress-expanded {
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   padding: 5px;
-  background: $secondary;
+  background: var(--secondary);
 
   position: relative;
   left: 340px;
@@ -136,9 +154,9 @@
   &.hidden {
     display: none;
   }
-  background-color: $secondary;
-  color: $tertiary;
-  border: 1px solid $tertiary-low;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
   border-bottom: none;
   width: 145px;
   height: 34px;
@@ -173,14 +191,14 @@
     bottom: 0;
     width: 0;
     max-width: 145px;
-    border-right: 1px solid $tertiary-low;
-    background-color: $tertiary-low;
+    border-right: 1px solid var(--tertiary-low);
+    background-color: var(--tertiary-low);
     transition: width 0.75s;
   }
 }
 
 #topic-filter {
-  background-color: $highlight-medium;
+  background-color: var(--highlight-medium);
   padding: 8px;
   bottom: 0;
   position: fixed;
@@ -189,21 +207,13 @@
   z-index: z("dropdown");
 }
 
+#topic-progress,
+#topic-progress-expanded {
+  right: 0;
+  left: 0;
+}
+
 @media all and (min-width: 400px) {
-  #topic-progress,
-  #topic-progress-expanded {
-    right: 0;
-    left: 0;
-  }
-
-  #topic-progress-wrapper {
-    right: 19vw;
-  }
-
-  #topic-progress-wrapper.docked {
-    right: 19vw;
-  }
-
   #topic-footer-main-buttons {
     max-width: 70%;
   }

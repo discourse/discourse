@@ -1,15 +1,16 @@
+import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializeDetails(api) {
-  api.decorateCooked($elem => $("details", $elem).details(), {
-    id: "discourse-details"
+  api.decorateCooked(($elem) => $("details", $elem), {
+    id: "discourse-details",
   });
 
   api.addToolbarPopupMenuOptionsCallback(() => {
     return {
       action: "insertDetails",
       icon: "caret-right",
-      label: "details.title"
+      label: "details.title",
     };
   });
 
@@ -22,8 +23,8 @@ function initializeDetails(api) {
           "details_text",
           { multiline: false }
         );
-      }
-    }
+      },
+    },
   });
 }
 
@@ -32,5 +33,5 @@ export default {
 
   initialize() {
     withPluginApi("0.8.7", initializeDetails);
-  }
+  },
 };

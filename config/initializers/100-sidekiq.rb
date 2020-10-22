@@ -3,8 +3,9 @@
 # Ensure that scheduled jobs are loaded before mini_scheduler is configured.
 if Rails.env == "development"
   require "jobs/base"
+
   Dir.glob("#{Rails.root}/app/jobs/scheduled/*.rb") do |f|
-    load(f)
+    require(f)
   end
 end
 
@@ -70,7 +71,12 @@ if Sidekiq.server?
     scheduler_hostname = ENV["UNICORN_SCHEDULER_HOSTNAME"]
 
     if !scheduler_hostname || scheduler_hostname.split(',').include?(Discourse.os_hostname)
-      MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
+      begin
+        MiniScheduler.start(workers: GlobalSetting.mini_scheduler_workers)
+      rescue MiniScheduler::DistributedMutex::Timeout
+        sleep 5
+        retry
+      end
     end
   end
 end

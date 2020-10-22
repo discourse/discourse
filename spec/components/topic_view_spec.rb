@@ -244,8 +244,28 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        expect(TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size)
-          .canonical_path).to eql("/1234?page=10")
+        5.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=3")
+      end
+
+      it "generates canonical path correctly by skipping whisper posts" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2)
+          .canonical_path).to eql("/1234?page=2")
+      end
+
+      it "generates canonical path correctly for mega topics" do
+        2.times { |i| Fabricate(:post, post_number: i + 1, topic: topic) }
+        2.times { |i| Fabricate(:whisper, post_number: i + 3, topic: topic) }
+        Fabricate(:post, post_number: 5, topic: topic)
+
+        expect(TopicView.new(1234, user, post_number: 5, limit: 2, is_mega_topic: true)
+          .canonical_path).to eql("/1234?page=3")
       end
     end
 
@@ -253,21 +273,25 @@ describe TopicView do
       let!(:post) { Fabricate(:post, topic: topic, user: user) }
       let!(:post2) { Fabricate(:post, topic: topic, user: user) }
       let!(:post3) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post4) { Fabricate(:post, topic: topic, user: user) }
+      let!(:post5) { Fabricate(:post, topic: topic, user: user) }
 
       before do
         TopicView.stubs(:chunk_size).returns(2)
       end
 
       it "should return the next page" do
-        expect(TopicView.new(topic.id, user).next_page).to eql(2)
+        expect(TopicView.new(topic.id, user, { post_number: post.post_number }).next_page).to eql(3)
       end
     end
 
     context '.post_counts_by_user' do
       it 'returns the two posters with their appropriate counts' do
         Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper])
+        # Should not be counted
+        Fabricate(:post, topic: topic, user: evil_trout, post_type: Post.types[:whisper], action_code: 'assign')
 
-        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
+        expect(TopicView.new(topic.id, admin).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 2]])
 
         expect(TopicView.new(topic.id, first_poster).post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [evil_trout.id, 1]])
       end
@@ -311,6 +335,37 @@ describe TopicView do
         PostTiming.process_timings(evil_trout, topic.id, 1, [[1, 1000]])
         expect(TopicView.new(topic.id, evil_trout).read?(1)).to eq(true)
         expect(TopicView.new(topic.id, evil_trout).topic_user).to be_present
+      end
+    end
+
+    context "#user_post_bookmarks" do
+      let!(:user) { Fabricate(:user) }
+      let!(:bookmark1) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic), user: user) }
+      let!(:bookmark3) { Fabricate(:bookmark, post: Fabricate(:post, topic: topic)) }
+
+      it "returns all the bookmarks in the topic for a user" do
+        expect(TopicView.new(topic.id, user).user_post_bookmarks.pluck(:id)).to match_array(
+          [bookmark1.id, bookmark2.id]
+        )
+      end
+    end
+
+    context "#first_post_bookmark_reminder_at" do
+      let!(:user) { Fabricate(:user) }
+      let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, post: topic.first_post, user: user) }
+
+      it "gets the first post bookmark reminder at for the user" do
+        expect(TopicView.new(topic.id, user).first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+      end
+
+      context "when the topic is deleted" do
+        it "gets the first post bookmark reminder at for the user" do
+          topic_view = TopicView.new(topic, user)
+          PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
+          topic.reload
+          expect(topic_view.first_post_bookmark_reminder_at).to eq_time(bookmark1.reminder_at)
+        end
       end
     end
 
@@ -708,9 +763,12 @@ describe TopicView do
   end
 
   describe '#image_url' do
-    let!(:post1) { Fabricate(:post, topic: topic) }
-    let!(:post2) { Fabricate(:post, topic: topic) }
-    let!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_url, "post3_image.png") }.reload }
+    fab!(:op_upload) { Fabricate(:image_upload) }
+    fab!(:post3_upload) { Fabricate(:image_upload) }
+
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+    fab!(:post3) { Fabricate(:post, topic: topic).tap { |p| p.update_column(:image_upload_id, post3_upload.id) }.reload }
 
     def topic_view_for_post(post_number)
       TopicView.new(topic.id, evil_trout, post_number: post_number)
@@ -718,14 +776,14 @@ describe TopicView do
 
     context "when op has an image" do
       before do
-        topic.update_column(:image_url, "op_image.png")
-        post1.update_column(:image_url, "op_image.png")
+        topic.update_column(:image_upload_id, op_upload.id)
+        post1.update_column(:image_upload_id, op_upload.id)
       end
 
       it "uses the topic image as a fallback when posts have no image" do
-        expect(topic_view_for_post(1).image_url).to eq("op_image.png")
-        expect(topic_view_for_post(2).image_url).to eq("op_image.png")
-        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+        expect(topic_view_for_post(1).image_url).to end_with(op_upload.url)
+        expect(topic_view_for_post(2).image_url).to end_with(op_upload.url)
+        expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
     end
 
@@ -733,7 +791,7 @@ describe TopicView do
       it "returns nil when posts have no image" do
         expect(topic_view_for_post(1).image_url).to eq(nil)
         expect(topic_view_for_post(2).image_url).to eq(nil)
-        expect(topic_view_for_post(3).image_url).to eq("post3_image.png")
+        expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
     end
   end

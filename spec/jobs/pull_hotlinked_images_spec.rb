@@ -8,12 +8,16 @@ describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
+  let(:encoded_image_url) { "https://example.com/אלחוט-.jpg" }
   let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
   let(:large_png) { Base64.decode64("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") }
   let(:upload_path) { Discourse.store.upload_path }
 
   before do
+    Jobs.run_immediately!
+
     stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
+    stub_request(:get, encoded_image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:get, broken_image_url).to_return(status: 404)
     stub_request(:get, large_image_url).to_return(body: large_png, headers: { "Content-Type" => "image/png" })
 
@@ -58,7 +62,51 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
-    it 'replaces images in an anchor tag with weird indentation' do
+    it 'removes downloaded images when they are no longer needed' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post.rebake!
+      post.reload
+      expect(post.post_uploads.count).to eq(1)
+
+      post.update(raw: "Post with no images")
+      post.rebake!
+      post.reload
+      expect(post.post_uploads.count).to eq(0)
+    end
+
+    it 'replaces images again after edit' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+
+      expect do
+        post.rebake!
+      end.to change { Upload.count }.by(1)
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+
+      # Post raw is updated back to the old value (e.g. by wordpress integration)
+      post.update(raw: "<img src='#{image_url}'>")
+
+      expect do
+        post.rebake!
+      end.to change { Upload.count }.by(0) # We alread have the upload
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+    end
+
+    it 'replaces encoded image urls' do
+      post = Fabricate(:post, raw: "<img src='#{encoded_image_url}'>")
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(1)
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+    end
+
+    xit 'replaces images in an anchor tag with weird indentation' do
+      # Skipped pending https://meta.discourse.org/t/152801
+      # This spec was previously passing, even though the resulting markdown was invalid
+      # Now the spec has been improved, and shows the issue
+
       stub_request(:get, "http://test.localhost/uploads/short-url/z2QSs1KJWoj51uYhDjb6ifCzxH6.gif")
         .to_return(status: 200, body: "")
 
@@ -138,7 +186,9 @@ describe Jobs::PullHotlinkedImages do
 
     context "when secure media enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
-        enable_secure_media
+        setup_s3
+        SiteSetting.secure_media = true
+
         upload = Fabricate(:secure_upload_s3, secure: true)
         stub_s3(upload)
         url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -151,7 +201,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload original_sha1 is missing" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -170,7 +222,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload access_control_post is different to the current post" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:secure_upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -179,11 +233,13 @@ describe Jobs::PullHotlinkedImages do
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
+          FastImage.expects(:size).returns([100, 100]).at_least_once
 
-          # without this we get an infinite hang...
-          Post.any_instance.stubs(:trigger_post_process)
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
+
+          expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+            .to change { Upload.count }.by(0)
         end
       end
     end
@@ -209,6 +265,16 @@ describe Jobs::PullHotlinkedImages do
       ![abcde](#{Upload.last.short_url} 'some test')
       ![](#{Upload.last.short_url} 'some test')
       MD
+    end
+
+    it 'works when invalid url in post'  do
+      post = Fabricate(:post, raw: <<~MD)
+      ![some test](#{image_url})
+      ![some test 2]("#{image_url})
+      MD
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
     end
 
     it 'replaces bbcode images' do
@@ -240,7 +306,6 @@ describe Jobs::PullHotlinkedImages do
       let(:api_url) { "https://en.wikipedia.org/w/api.php?action=query&titles=#{media}&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url&iiurlwidth=500&format=json" }
 
       before do
-        Jobs.run_later!
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
 
@@ -262,13 +327,25 @@ describe Jobs::PullHotlinkedImages do
 
       it 'replaces image src' do
         post = Fabricate(:post, raw: "#{url}")
-
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-        Jobs::ProcessPost.new.execute(post_id: post.id)
+        post.rebake!
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
+        expect(post.post_uploads.count).to eq(1)
+      end
+
+      it 'associates uploads correctly' do
+        post = Fabricate(:post, raw: "#{url}")
+        post.rebake!
+        post.reload
+
+        expect(post.post_uploads.count).to eq(1)
+
+        post.update(raw: "no onebox")
+        post.rebake!
+        post.reload
+
+        expect(post.post_uploads.count).to eq(0)
       end
 
       it 'all combinations' do
@@ -280,8 +357,7 @@ describe Jobs::PullHotlinkedImages do
         BODY
 
         2.times do
-          Jobs::ProcessPost.new.execute(post_id: post.id)
-          Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+          post.rebake!
         end
 
         post.reload
@@ -325,7 +401,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when secure media enabled" do
         it 'should return false for secure-media-upload url' do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -339,6 +417,30 @@ describe Jobs::PullHotlinkedImages do
       end
     end
 
+    it "returns false for emoji" do
+      src = Emoji.url_for("testemoji.png")
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for emoji when app and S3 CDNs configured" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+      set_cdn_url "https://mydomain.cdn/test"
+
+      src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for plugin assets" do
+      src = UrlHelper.cook_url("/plugins/discourse-amazing-plugin/myasset.png")
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
+    it "returns false for local non-uploaded files" do
+      src = UrlHelper.cook_url("/mycustomroute.png")
+      expect(subject.should_download_image?(src)).to eq(false)
+    end
+
     context "when download_remote_images_to_local? is false" do
       before do
         SiteSetting.download_remote_images_to_local = false
@@ -347,11 +449,6 @@ describe Jobs::PullHotlinkedImages do
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
         expect(subject.should_download_image?(src)).to eq(true)
-      end
-
-      it "returns false for emoji" do
-        src = Emoji.url_for("testemoji.png")
-        expect(subject.should_download_image?(src)).to eq(false)
       end
 
       it 'returns false for valid remote URLs' do
@@ -411,22 +508,8 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
-    SiteSetting.secure_media = true
-  end
-
   def stub_s3(upload)
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    stub_request(
-      :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-    )
+    stub_upload(upload)
     stub_request(:get, "https:" + upload.url).to_return(status: 200, body: file_from_fixtures("smallest.png"))
-    # stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
   end
 end
