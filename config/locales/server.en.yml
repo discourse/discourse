@@ -1758,6 +1758,8 @@ en:
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
+    recompress_original_jpg_quality: "Quality of uploaded image files (1 is lowest quality, 99 is best quality, 100 to disable)."
+    image_preview_jpg_quality: "Quality of resized image files (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
