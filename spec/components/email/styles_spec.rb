@@ -212,7 +212,7 @@ describe Email::Styles do
     fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
 
     def strip_and_inline
-      html = "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\"></a>"
+      html = "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>"
 
       # strip out the secure media
       styler = Email::Styles.new(html)
@@ -230,6 +230,7 @@ describe Email::Styles do
       strip_and_inline
       expect(@frag.to_s).to include("cid:email/test.png")
       expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+      expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
     end
 
     it "does not inline anything if the upload cannot be found" do
