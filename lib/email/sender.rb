@@ -388,12 +388,7 @@ module Email
     end
 
     def set_reply_key(post_id, user_id)
-      can_reply_to_email = user_id.present? &&
-                           post_id.present? &&
-                           header_value(
-                             Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER
-                           ).present?
-      return if !can_reply_to_email
+      return if !user_id || !post_id || !header_value(Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER).present?
 
       # use safe variant here cause we tend to see concurrency issue
       reply_key = PostReplyKey.find_or_create_by_safe!(
