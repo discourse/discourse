@@ -1691,7 +1691,6 @@ en:
       sent_activation_email_again_generic: "We sent another activation email. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
-      forgot: "I don't recall my account details"
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
