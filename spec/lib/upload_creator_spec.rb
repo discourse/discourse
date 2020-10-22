@@ -176,7 +176,7 @@ RSpec.describe UploadCreator do
 
       it 'should alter the image quality' do
         SiteSetting.png_to_jpg_quality = 75
-        SiteSetting.recompress_original_jpg_quality = 50
+        SiteSetting.recompress_original_jpg_quality = 40
         SiteSetting.image_preview_jpg_quality = 10
 
         upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
