@@ -401,7 +401,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
-    stackprof (0.2.15)
+    stackprof (0.2.16)
     test-prof (0.12.2)
     thor (1.0.1)
     thread_safe (0.3.6)
