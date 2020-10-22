@@ -625,7 +625,7 @@ describe Guardian do
     end
 
     describe "private messages" do
-      SiteSetting.min_trust_level_to_allow_invite = 2
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
@@ -650,9 +650,11 @@ describe Guardian do
       context "when private messages are enabled" do
         before do
           SiteSetting.enable_personal_messages = true
+          SiteSetting.min_trust_level_to_allow_invite = 2
         end
 
         it "returns true if user has sufficient trust level" do
+          user.trust_level = 2
           expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
         end
 
