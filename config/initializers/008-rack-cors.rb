@@ -34,6 +34,8 @@ class Discourse::Cors
     origin = nil
 
     if cors_origins
+      cors_origins = cors_origins.map { |x| x.chomp('/') }
+
       if origin = env['HTTP_ORIGIN']
         origin = nil unless cors_origins.include?(origin)
       end
