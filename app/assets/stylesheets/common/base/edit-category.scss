@@ -36,32 +36,55 @@ div.edit-category {
     }
   }
 
-  .permission-selector {
-    margin-right: 0.25em;
-  }
-
-  .pending-permission-change-alert {
-    margin-left: auto;
-    max-width: 250px;
-    background: var(--primary-very-high);
-    color: var(--secondary);
-    margin-top: 10px;
-    padding: 5px 10px;
-    position: relative;
-    .arrow-div {
-      border: solid transparent;
-      content: " ";
-      position: absolute;
-      border-bottom-color: var(--primary-very-high);
-      border-width: 7px;
-      top: -13px;
-      left: 200px;
+  .edit-category-tab-security {
+    .permission-selector {
+      margin-right: 0.25em;
     }
-  }
 
-  .add-permission {
-    position: relative;
-    top: 0.1em;
+    .pending-permission-change-alert {
+      margin-left: auto;
+      max-width: 250px;
+      background: var(--primary-very-high);
+      color: var(--secondary);
+      margin-top: 10px;
+      padding: 5px 10px;
+      position: relative;
+      .arrow-div {
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-bottom-color: var(--primary-very-high);
+        border-width: 7px;
+        top: -13px;
+        left: 200px;
+      }
+    }
+
+    .add-permission {
+      position: relative;
+      top: 0.1em;
+    }
+
+    .permission-list {
+      list-style: none;
+      margin: 0 0 30px;
+      padding: 0;
+      .name {
+        margin-right: 20px;
+        display: inline-block;
+        min-width: 100px;
+      }
+      .permission {
+        margin-left: 20px;
+      }
+      .d-icon-times-circle {
+        margin-left: 5px;
+        color: var(--danger);
+      }
+      li {
+        margin-bottom: 10px;
+      }
+    }
   }
 
   .edit-category-tab-settings {
