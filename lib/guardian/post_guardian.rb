@@ -131,7 +131,8 @@ module PostGuardian
       (
         SiteSetting.trusted_users_can_edit_others? &&
         @user.has_trust_level?(TrustLevel[4])
-      )
+      ) ||
+      is_category_group_moderator?(post.topic.category)
     )
 
     if post.topic&.archived? || post.user_deleted || post.deleted_at
