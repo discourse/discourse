@@ -32,6 +32,12 @@ const SELECT_KIT_OPTIONS = Mixin.create({
   selectKitOptions: EMPTY_OBJECT,
 });
 
+function isDocumentRTL() {
+  return (
+    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
+  );
+}
+
 export default Component.extend(
   SELECT_KIT_OPTIONS,
   PluginApiMixin,
@@ -268,7 +274,7 @@ export default Component.extend(
       clearOnClick: false,
       closeOnChange: true,
       limitMatches: null,
-      placement: "bottom-start",
+      placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
       placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
