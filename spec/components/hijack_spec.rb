@@ -116,7 +116,7 @@ describe Hijack do
     expect(headers).to eq(expected)
   end
 
-  it "removes trialing slash in cors origin" do
+  it "removes trailing slash in cors origin" do
     SiteSetting.cors_origins = "https://www.rainbows.com/"
 
     app = lambda do |env|
