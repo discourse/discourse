@@ -11,6 +11,9 @@ database:
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
 
 import:
+  # Set this if you import multiple phpBB forums into a single Discourse forum.
+  site_name:
+
   # WARNING: Do not activate this option unless you know what you are doing.
   # It will probably break the BBCode to Markdown conversion and slows down your import.
   use_bbcode_to_md: false

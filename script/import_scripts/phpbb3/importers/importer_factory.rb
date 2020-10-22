@@ -32,7 +32,7 @@ module ImportScripts::PhpBB3
     end
 
     def category_importer
-      CategoryImporter.new(@lookup, text_processor, permalink_importer)
+      CategoryImporter.new(@lookup, text_processor, permalink_importer, @settings)
     end
 
     def post_importer
@@ -44,7 +44,7 @@ module ImportScripts::PhpBB3
     end
 
     def bookmark_importer
-      BookmarkImporter.new
+      BookmarkImporter.new(@settings)
     end
 
     def permalink_importer
@@ -62,7 +62,7 @@ module ImportScripts::PhpBB3
     end
 
     def poll_importer
-      PollImporter.new(@lookup, @database, text_processor)
+      PollImporter.new(@lookup, @database, text_processor, @settings)
     end
 
     def text_processor

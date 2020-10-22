@@ -12,14 +12,14 @@ module ImportScripts::PhpBB3
     end
 
     def map_users_to_import_ids(rows)
-      rows.map { |row| row[:user_id] }
+      rows.map { |row| @settings.prefix(row[:user_id]) }
     end
 
     def map_user(row)
       is_active_user = row[:user_inactive_reason] != Constants::INACTIVE_REGISTER
 
       {
-        id: row[:user_id],
+        id: @settings.prefix(row[:user_id]),
         email: row[:user_email],
         username: row[:username],
         password: @settings.import_passwords ? row[:user_password] : nil,
@@ -45,14 +45,14 @@ module ImportScripts::PhpBB3
     end
 
     def map_anonymous_users_to_import_ids(rows)
-      rows.map { |row| row[:post_username] }
+      rows.map { |row| @settings.prefix(row[:post_username]) }
     end
 
     def map_anonymous_user(row)
       username = row[:post_username]
 
       {
-        id: username,
+        id: @settings.prefix(username),
         email: "anonymous_#{SecureRandom.hex}@no-email.invalid",
         username: username,
         name: @settings.username_as_name ? username : '',

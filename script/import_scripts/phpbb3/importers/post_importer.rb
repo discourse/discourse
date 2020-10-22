@@ -18,22 +18,22 @@ module ImportScripts::PhpBB3
     end
 
     def map_to_import_ids(rows)
-      rows.map { |row| row[:post_id] }
+      rows.map { |row| @settings.prefix(row[:post_id]) }
     end
 
     def map_post(row)
-      imported_user_id = row[:post_username].blank? ? row[:poster_id] : row[:post_username]
+      imported_user_id = @settings.prefix(row[:post_username].blank? ? row[:poster_id] : row[:post_username])
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || -1
       is_first_post = row[:post_id] == row[:topic_first_post_id]
 
       attachments = import_attachments(row, user_id)
 
       mapped = {
-        id: row[:post_id],
+        id: @settings.prefix(row[:post_id]),
         user_id: user_id,
         created_at: Time.zone.at(row[:post_time]),
         raw: @text_processor.process_post(row[:post_text], attachments),
-        import_topic_id: row[:topic_id]
+        import_topic_id: @settings.prefix(row[:topic_id])
       }
 
       if is_first_post
@@ -54,14 +54,14 @@ module ImportScripts::PhpBB3
     def map_first_post(row, mapped)
       poll_data = add_poll(row, mapped) if @settings.import_polls
 
-      mapped[:category] = @lookup.category_id_from_imported_category_id(row[:forum_id])
+      mapped[:category] = @lookup.category_id_from_imported_category_id(@settings.prefix(row[:forum_id]))
       mapped[:title] = CGI.unescapeHTML(row[:topic_title]).strip[0...255]
       mapped[:pinned_at] = mapped[:created_at] unless row[:topic_type] == Constants::POST_NORMAL
       mapped[:pinned_globally] = row[:topic_type] == Constants::POST_GLOBAL
       mapped[:views] = row[:topic_views]
       mapped[:post_create_action] = proc do |post|
-        @permalink_importer.create_for_topic(post.topic, row[:topic_id])
-        @permalink_importer.create_for_post(post, row[:post_id])
+        @permalink_importer.create_for_topic(post.topic, row[:topic_id]) # skip @settings.prefix because ID is used in permalink generation
+        @permalink_importer.create_for_post(post, row[:post_id]) # skip @settings.prefix because ID is used in permalink generation
         @poll_importer.update_poll(row[:topic_id], post, poll_data) if poll_data
         TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
       end
@@ -70,16 +70,16 @@ module ImportScripts::PhpBB3
     end
 
     def map_other_post(row, mapped)
-      parent = @lookup.topic_lookup_from_imported_post_id(row[:topic_first_post_id])
+      parent = @lookup.topic_lookup_from_imported_post_id(@settings.prefix(row[:topic_first_post_id]))
 
       if parent.blank?
-        puts "Parent post #{row[:topic_first_post_id]} doesn't exist. Skipping #{row[:post_id]}: #{row[:topic_title][0..40]}"
+        puts "Parent post #{@settings.prefix(row[:topic_first_post_id])} doesn't exist. Skipping #{@settings.prefix(row[:post_id])}: #{row[:topic_title][0..40]}"
         return nil
       end
 
       mapped[:topic_id] = parent[:topic_id]
       mapped[:post_create_action] = proc do |post|
-        @permalink_importer.create_for_post(post, row[:post_id])
+        @permalink_importer.create_for_post(post, row[:post_id]) # skip @settings.prefix because ID is used in permalink generation
         TopicViewItem.add(post.topic_id, row[:poster_ip], post.user_id, post.created_at, true)
       end
 

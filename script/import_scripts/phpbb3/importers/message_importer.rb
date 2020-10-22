@@ -20,7 +20,7 @@ module ImportScripts::PhpBB3
     end
 
     def map_message(row)
-      user_id = @lookup.user_id_from_imported_user_id(row[:author_id]) || Discourse.system_user.id
+      user_id = @lookup.user_id_from_imported_user_id(@settings.prefix(row[:author_id])) || Discourse.system_user.id
       attachments = import_attachments(row, user_id)
 
       mapped = {
@@ -84,7 +84,7 @@ module ImportScripts::PhpBB3
       import_user_ids = get_recipient_user_ids(row[:to_address])
 
       import_user_ids.map! do |import_user_id|
-        @lookup.find_user_by_import_id(import_user_id).try(:username)
+        @lookup.find_user_by_import_id(@settings.prefix(import_user_id)).try(:username)
       end.compact
     end
 
@@ -93,7 +93,7 @@ module ImportScripts::PhpBB3
     end
 
     def get_import_id(msg_id)
-      "pm:#{msg_id}"
+      @settings.prefix("pm:#{msg_id}")
     end
 
     # Creates a sorted array consisting of the message's author and recipients.

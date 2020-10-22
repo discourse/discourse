@@ -34,6 +34,9 @@ module ImportScripts::PhpBB3
 
     def initialize(yaml)
       import_settings = yaml['import']
+
+      @site_name = import_settings['site_name']
+
       @import_anonymous_users = import_settings['anonymous_users']
       @import_attachments = import_settings['attachments']
       @import_private_messages = import_settings['private_messages']
@@ -57,6 +60,10 @@ module ImportScripts::PhpBB3
       @emojis = import_settings.fetch('emojis', [])
 
       @database = DatabaseSettings.new(yaml['database'])
+    end
+
+    def prefix(val)
+      @site_name.present? ? "#{@site_name}:#{val}" : val
     end
   end
 
