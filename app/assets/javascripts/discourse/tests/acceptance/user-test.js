@@ -1,16 +1,16 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
 
 acceptance("User Routes", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout%2F..%2F..%2F.json", () =>
+      helper.response(400, {})
+    );
+  });
   test("Invalid usernames", async (assert) => {
-    pretender.get("/u/eviltrout%2F..%2F..%2F.json", () => {
-      return [400, { "Content-Type": "application/json" }, {}];
-    });
-
     await visit("/u/eviltrout%2F..%2F..%2F/summary");
 
     assert.equal(currentPath(), "exception-unknown");
