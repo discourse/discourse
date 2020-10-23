@@ -23,11 +23,23 @@ acceptance("Category New", function (needs) {
       })
     );
 
-    await click(".category-back");
+    await click(".edit-category-security a");
+    assert.ok(
+      find("button.edit-permission"),
+      "it can switch to the security tab"
+    );
 
-    assert.equal(
-      DiscourseURL.redirectedTo,
-      "/c/testing/11",
+    await click(".edit-category-settings a");
+    assert.ok(
+      find("#category-search-priority"),
+      "it can switch to the settings tab"
+    );
+
+    sandbox.stub(DiscourseURL, "redirectTo");
+
+    await click(".category-back");
+    assert.ok(
+      DiscourseURL.redirectTo.calledWith("/c/testing/11"),
       "it full page redirects after a newly created category"
     );
   });

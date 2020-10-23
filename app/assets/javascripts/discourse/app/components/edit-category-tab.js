@@ -3,10 +3,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
+import getURL from "discourse-common/lib/get-url";
+import { empty } from "@ember/object/computed";
+import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
+  newCategory: empty("params.slug"),
 
   @discourseComputed("tab")
   tabClassName(tab) {
@@ -32,6 +36,16 @@ export default Component.extend({
   @discourseComputed("params.slug", "params.parentSlug")
   fullSlug(slug, parentSlug) {
     const slugPart = parentSlug && slug ? `${parentSlug}/${slug}` : slug;
-    return `/c/${slugPart}/edit/${this.tab}`;
+    return getURL(`/c/${slugPart}/edit/${this.tab}`);
+  },
+
+  actions: {
+    select: function () {
+      if (this.newCategory) {
+        this.set("selectedTab", this.tab);
+      } else {
+        DiscourseURL.routeTo(this.fullSlug);
+      }
+    },
   },
 });

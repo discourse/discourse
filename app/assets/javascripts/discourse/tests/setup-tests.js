@@ -12,7 +12,6 @@ import createPretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { flushMap } from "discourse/models/store";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import DiscourseURL from "discourse/lib/url";
 import {
   resetSite,
   applyPretender,
@@ -129,11 +128,6 @@ export default function setupTests(app, container) {
       capabilities: {},
       site,
     });
-
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
 
     PreloadStore.reset();
 
