@@ -67,6 +67,18 @@ export default function setupTests(app, container) {
       return server;
     },
   });
+  Object.defineProperty(window, "sandbox", {
+    get() {
+      deprecated(
+        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return window.sinon;
+    },
+  });
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
@@ -125,17 +137,16 @@ export default function setupTests(app, container) {
 
     PreloadStore.reset();
 
-    window.sandbox = sinon;
-    window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
-    window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
-    window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
+    window.sinon.stub(ScrollingDOMMethods, "screenNotFull");
+    window.sinon.stub(ScrollingDOMMethods, "bindOnScroll");
+    window.sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
-    window.sandbox.restore();
+    window.sinon.restore();
 
     // Destroy any modals
     $(".modal-backdrop").remove();

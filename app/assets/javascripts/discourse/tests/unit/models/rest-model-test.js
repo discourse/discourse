@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test, module } from "qunit";
 module("rest-model");
 
@@ -25,8 +26,8 @@ test("update", async (assert) => {
   assert.equal(widget.get("name"), "Trout Lure");
   assert.ok(!widget.get("isSaving"), "it is not saving");
 
-  const spyBeforeUpdate = sandbox.spy(widget, "beforeUpdate");
-  const spyAfterUpdate = sandbox.spy(widget, "afterUpdate");
+  const spyBeforeUpdate = sinon.spy(widget, "beforeUpdate");
+  const spyAfterUpdate = sinon.spy(widget, "afterUpdate");
   const promise = widget.update({ name: "new name" });
   assert.ok(widget.get("isSaving"), "it is saving");
   assert.ok(spyBeforeUpdate.calledOn(widget));
@@ -66,8 +67,8 @@ test("save new", async (assert) => {
   assert.ok(!widget.get("isCreated"), "it is not created");
   assert.ok(!widget.get("isSaving"), "it is not saving");
 
-  const spyBeforeCreate = sandbox.spy(widget, "beforeCreate");
-  const spyAfterCreate = sandbox.spy(widget, "afterCreate");
+  const spyBeforeCreate = sinon.spy(widget, "beforeCreate");
+  const spyAfterCreate = sinon.spy(widget, "afterCreate");
   const promise = widget.save({ name: "Evil Widget" });
   assert.ok(widget.get("isSaving"), "it is not saving");
   assert.ok(spyBeforeCreate.calledOn(widget));

@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { module, skip } from "qunit";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";
@@ -10,11 +11,11 @@ module("lib:click-track-edit-history", {
     logIn();
 
     let win = { focus: function () {} };
-    sandbox.stub(window, "open").returns(win);
-    sandbox.stub(win, "focus");
+    sinon.stub(window, "open").returns(win);
+    sinon.stub(win, "focus");
 
-    sandbox.stub(DiscourseURL, "routeTo");
-    sandbox.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "redirectTo");
 
     sessionStorage.clear();
 
@@ -61,7 +62,7 @@ function generateClickEventOn(selector) {
 
 skip("tracks internal URLs", async (assert) => {
   assert.expect(2);
-  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+  sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
   pretender.post("/clicks/track", (request) => {

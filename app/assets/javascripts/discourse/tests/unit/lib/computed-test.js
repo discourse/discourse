@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test } from "qunit";
 import I18n from "I18n";
 import EmberObject from "@ember/object";
@@ -15,7 +16,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("lib:computed", {
   beforeEach() {
-    sandbox.stub(I18n, "t").callsFake(function (scope) {
+    sinon.stub(I18n, "t").callsFake(function (scope) {
       return "%@ translated: " + scope;
     });
   },

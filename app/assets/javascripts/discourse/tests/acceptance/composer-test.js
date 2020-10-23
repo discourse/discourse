@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { visit, currentURL } from "@ember/test-helpers";
 import { skip } from "qunit";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -8,6 +8,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import Draft from "discourse/models/draft";
 import { Promise } from "rsvp";
+import sinon from "sinon";
 
 acceptance("Composer", function (needs) {
   needs.user();
@@ -633,7 +634,7 @@ acceptance("Composer", function (needs) {
 
       const longText = "a".repeat(256);
 
-      sandbox.stub(Draft, "get").returns(
+      sinon.stub(Draft, "get").returns(
         Promise.resolve({
           draft: null,
           draft_sequence: 0,
@@ -672,14 +673,14 @@ acceptance("Composer", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
-    sandbox.restore();
+    sinon.restore();
   });
 
   test("Loading draft also replaces the recipients", async (assert) => {
     try {
       toggleCheckDraftPopup(true);
 
-      sandbox.stub(Draft, "get").returns(
+      sinon.stub(Draft, "get").returns(
         Promise.resolve({
           draft:
             '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',

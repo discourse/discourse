@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import {

@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
@@ -16,7 +17,7 @@ componentTest("support a placeholder", {
   template: `{{text-field placeholderKey="placeholder.i18n.key"}}`,
 
   beforeEach() {
-    sandbox.stub(I18n, "t").returnsArg(0);
+    sinon.stub(I18n, "t").returnsArg(0);
   },
 
   test(assert) {

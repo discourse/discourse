@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 import {
@@ -68,7 +69,7 @@ widgetTest("notifications", {
       )
     );
 
-    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    const routeToStub = sinon.stub(DiscourseURL, "routeTo");
     await click(".user-notifications-link");
     assert.ok(
       routeToStub.calledWith(find(".user-notifications-link")[0].href),
@@ -131,7 +132,7 @@ widgetTest("private messages - enabled", {
       "should correctly render emoji in message title"
     );
 
-    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    const routeToStub = sinon.stub(DiscourseURL, "routeTo");
     await click(".user-pms-link");
     assert.ok(
       routeToStub.calledWith(userPmsLink.href),
@@ -159,7 +160,7 @@ widgetTest("bookmarks", {
       "should correctly render emoji in bookmark title"
     );
 
-    const routeToStub = sandbox.stub(DiscourseURL, "routeTo");
+    const routeToStub = sinon.stub(DiscourseURL, "routeTo");
     await click(".user-bookmarks-link");
     assert.ok(
       routeToStub.calledWith(find(".user-bookmarks-link")[0].href),
