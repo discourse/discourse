@@ -7,6 +7,12 @@ import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
 import layout from "select-kit/templates/components/category-row";
 
+function htmlToText(encodedString) {
+  const elem = document.createElement("textarea");
+  elem.innerHTML = encodedString;
+  return elem.value;
+}
+
 export default SelectKitRowComponent.extend({
   layout,
   classNames: ["category-row"],
@@ -33,7 +39,9 @@ export default SelectKitRowComponent.extend({
     "description",
     "categoryName",
     function () {
-      return this.descriptionText || this.description || this.categoryName;
+      return htmlToText(
+        this.descriptionText || this.description || this.categoryName
+      );
     }
   ),
 
