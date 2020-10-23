@@ -1,31 +1,21 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("Can open the category modal", async (assert) => {
-    await visit("/c/bug");
-
-    await click(".edit-category");
-    assert.ok(visible(".d-modal"), "it pops up a modal");
-
-    await click("button.modal-close");
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-  });
-
   test("Editing the category", async (assert) => {
     await visit("/c/bug");
 
-    await click(".edit-category");
+    await click("button.edit-category");
+    assert.equal(currentURL(), "/c/bug/edit", "it jumps to the correct screen");
 
-    assert.equal(find(".d-modal .badge-category").text(), "bug");
+    assert.equal(find(".badge-category").text(), "bug");
     await fillIn("input.category-name", "testing");
-    assert.equal(find(".d-modal .badge-category").text(), "testing");
+    assert.equal(find(".badge-category").text(), "testing");
 
     await fillIn("#edit-text-color", "#ff0000");
 
@@ -38,24 +28,21 @@ acceptance("Category Edit", function (needs) {
     await searchPriorityChooser.selectRowByValue(1);
 
     await click("#save-category");
-
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-    assert.equal(
-      DiscourseURL.redirectedTo,
-      "/c/bug/1",
-      "it does one of the rare full page redirects"
-    );
+    assert.equal(currentURL(), "/c/bug/edit", "it stays on the edit screen");
   });
 
   test("Error Saving", async (assert) => {
     await visit("/c/bug");
-
-    await click(".edit-category");
+    await click("button.edit-category");
     await click(".edit-category-settings");
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
-    assert.ok(visible("#modal-alert"));
-    assert.equal(find("#modal-alert").html(), "duplicate email");
+
+    assert.ok(visible(".bootbox"));
+    assert.equal(find(".bootbox .modal-body").html(), "duplicate email");
+
+    await click(".bootbox .btn-primary");
+    assert.ok(!visible(".bootbox"));
   });
 
   test("Subcategory list settings", async (assert) => {
@@ -64,7 +51,7 @@ acceptance("Category Edit", function (needs) {
     );
 
     await visit("/c/bug");
-    await click(".edit-category");
+    await click("button.edit-category");
     await click(".edit-category-settings a");
 
     assert.ok(

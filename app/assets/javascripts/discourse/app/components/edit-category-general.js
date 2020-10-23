@@ -106,9 +106,13 @@ export default buildCategoryPanel("general", {
     return Category.list().filterBy("parent_category_id", categoryId);
   },
 
-  @discourseComputed("category.isUncategorizedCategory", "category.id")
-  showDescription(isUncategorizedCategory, categoryId) {
-    return !isUncategorizedCategory && categoryId;
+  @discourseComputed(
+    "category.isUncategorizedCategory",
+    "category.id",
+    "category.topic_url"
+  )
+  showDescription(isUncategorizedCategory, categoryId, topicUrl) {
+    return !isUncategorizedCategory && categoryId && topicUrl;
   },
 
   @action

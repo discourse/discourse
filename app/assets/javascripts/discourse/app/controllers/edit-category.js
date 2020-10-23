@@ -1,22 +1,20 @@
 import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import DiscourseURL from "discourse/lib/url";
-import { extractError } from "discourse/lib/ajax-error";
-import discourseComputed, {
-  on,
-  observes,
-} from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
+import { extractError } from "discourse/lib/ajax-error";
+import DiscourseURL from "discourse/lib/url";
+import { readOnly } from "@ember/object/computed";
 
-export default Controller.extend(ModalFunctionality, {
-  selectedTab: null,
+export default Controller.extend({
+  selectedTab: "general",
   saving: false,
   deleting: false,
   panels: null,
   hiddenTooltip: true,
+  createdCategory: false,
+  expandedMenu: false,
+  mobileView: readOnly("site.mobileView"),
 
   @on("init")
   _initPanels() {
@@ -24,36 +22,6 @@ export default Controller.extend(ModalFunctionality, {
       panels: [],
       validators: [],
     });
-  },
-
-  onShow() {
-    this.changeSize();
-    this.titleChanged();
-    this.set("hiddenTooltip", true);
-  },
-
-  @observes("model.description")
-  changeSize() {
-    if (!isEmpty(this.get("model.description"))) {
-      this.set("modal.modalClass", "edit-category-modal full");
-    } else {
-      this.set("modal.modalClass", "edit-category-modal small");
-    }
-  },
-
-  @discourseComputed("model.{id,name}")
-  title(model) {
-    if (model.id) {
-      return I18n.t("category.edit_dialog_title", {
-        categoryName: model.name,
-      });
-    }
-    return I18n.t("category.create");
-  },
-
-  @observes("title")
-  titleChanged() {
-    this.set("modal.title", this.title);
   },
 
   @discourseComputed("saving", "model.name", "model.color", "deleting")
@@ -89,6 +57,15 @@ export default Controller.extend(ModalFunctionality, {
     return id ? "category.save" : "category.create";
   },
 
+  @discourseComputed("model.id", "model.name")
+  title(id, name) {
+    return id
+      ? I18n.t("category.edit_dialog_title", {
+          categoryName: name,
+        })
+      : I18n.t("category.create");
+  },
+
   actions: {
     registerValidator(validator) {
       this.validators.push(validator);
@@ -111,23 +88,22 @@ export default Controller.extend(ModalFunctionality, {
         .save()
         .then((result) => {
           this.set("saving", false);
-          this.send("closeModal");
-          model.setProperties({
-            slug: result.category.slug,
-            id: result.category.id,
-          });
-          DiscourseURL.redirectTo(`/c/${Category.slugFor(model)}/${model.id}`);
+          if (!model.id) {
+            model.setProperties({
+              slug: result.category.slug,
+              id: result.category.id,
+              createdCategory: true,
+            });
+          }
         })
         .catch((error) => {
-          this.flash(extractError(error), "error");
+          bootbox.alert(extractError(error));
           this.set("saving", false);
         });
     },
 
     deleteCategory() {
       this.set("deleting", true);
-
-      this.send("hideModal");
       bootbox.confirm(
         I18n.t("category.delete_confirm"),
         I18n.t("no_value"),
@@ -136,19 +112,14 @@ export default Controller.extend(ModalFunctionality, {
           if (result) {
             this.model.destroy().then(
               () => {
-                // success
-                this.send("closeModal");
-                DiscourseURL.redirectTo("/categories");
+                this.transitionToRoute("discovery.categories");
               },
-              (error) => {
-                this.flash(extractError(error), "error");
-                this.send("reopenModal");
+              () => {
                 this.displayErrors([I18n.t("category.delete_error")]);
                 this.set("deleting", false);
               }
             );
           } else {
-            this.send("reopenModal");
             this.set("deleting", false);
           }
         }
@@ -157,6 +128,18 @@ export default Controller.extend(ModalFunctionality, {
 
     toggleDeleteTooltip() {
       this.toggleProperty("hiddenTooltip");
+    },
+
+    goBack() {
+      if (this.model.createdCategory) {
+        DiscourseURL.redirectTo(this.model.url);
+      } else {
+        DiscourseURL.routeTo(this.model.url);
+      }
+    },
+
+    toggleMenu() {
+      this.toggleProperty("expandedMenu");
     },
   },
 });
