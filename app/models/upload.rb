@@ -270,9 +270,9 @@ class Upload < ActiveRecord::Base
   end
 
   def target_image_quality(local_path, test_quality)
-    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i rescue nil
+    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i rescue 0
 
-    if @file_quality.nil? || @file_quality == 0 || @file_quality > test_quality
+    if @file_quality == 0 || @file_quality > test_quality
       test_quality
     end
   end
