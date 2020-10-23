@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User's bookmarks", function (needs) {
   needs.user();
@@ -23,15 +24,11 @@ acceptance("User's bookmarks - reminder", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    let listResponse = JSON.parse(
-      JSON.stringify(userFixtures["/u/eviltrout/bookmarks.json"])
-    );
-    listResponse.user_bookmark_list.bookmarks[0].reminder_at =
-      "2028-01-01T08:00";
-
-    server.get("/u/eviltrout/bookmarks.json", () =>
-      helper.response(listResponse)
-    );
+    server.get("/u/eviltrout/bookmarks.json", () => {
+      let json = cloneJSON(userFixtures["/u/eviltrout/bookmarks.json"]);
+      json.user_bookmark_list.bookmarks[0].reminder_at = "2028-01-01T08:00";
+      return helper.response(json);
+    });
   });
 
   test("removing a bookmark with a reminder shows a confirmation", async (assert) => {
