@@ -1,6 +1,6 @@
+import sinon from "sinon";
 import I18n from "I18n";
 import LocalDateBuilder from "./local-date-builder";
-import sinon from "sinon";
 
 const UTC = "Etc/UTC";
 const SYDNEY = "Australia/Sydney";
@@ -11,16 +11,14 @@ const LONDON = "Europe/London";
 
 module("lib:local-date-builder");
 
-const sandbox = sinon.createSandbox();
-
 function freezeTime({ date, timezone }, cb) {
   date = date || "2020-01-22 10:34";
   const newTimezone = timezone || PARIS;
   const previousZone = moment.tz.guess();
   const now = moment.tz(date, newTimezone).valueOf();
 
-  sandbox.useFakeTimers(now);
-  sandbox.stub(moment.tz, "guess");
+  sinon.useFakeTimers(now);
+  sinon.stub(moment.tz, "guess");
   moment.tz.guess.returns(newTimezone);
   moment.tz.setDefault(newTimezone);
 
@@ -28,7 +26,7 @@ function freezeTime({ date, timezone }, cb) {
 
   moment.tz.guess.returns(previousZone);
   moment.tz.setDefault(previousZone);
-  sandbox.restore();
+  sinon.restore();
 }
 
 QUnit.assert.buildsCorrectDate = function (options, expected, message) {

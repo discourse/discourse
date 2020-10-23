@@ -40,6 +40,7 @@ import Site from "discourse/models/site";
 import createStore from "discourse/tests/helpers/create-store";
 import { getApplication } from "@ember/test-helpers";
 import deprecated from "discourse-common/lib/deprecated";
+import sinon from "sinon";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -61,7 +62,7 @@ export function loggedInUser() {
 
 export function fakeTime(timeString, timezone = null, advanceTime = false) {
   let now = moment.tz(timeString, timezone);
-  return sandbox.useFakeTimers({
+  return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
   });

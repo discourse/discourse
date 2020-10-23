@@ -10,6 +10,7 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import Draft from "discourse/models/draft";
 import { Promise } from "rsvp";
+import sinon from "sinon";
 
 acceptance("Composer Actions", function (needs) {
   needs.user();
@@ -110,7 +111,7 @@ acceptance("Composer Actions", function (needs) {
   });
 
   test("replying to post - reply_as_new_topic", async (assert) => {
-    sandbox
+    sinon
       .stub(Draft, "get")
       .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
     const composerActions = selectKit(".composer-actions");
@@ -137,7 +138,7 @@ acceptance("Composer Actions", function (needs) {
       I18n.t("topic.create_long")
     );
     assert.ok(find(".d-editor-input").val().includes(quote));
-    sandbox.restore();
+    sinon.restore();
   });
 
   test("reply_as_new_topic without a new_topic draft", async (assert) => {
@@ -359,7 +360,7 @@ acceptance("Composer Actions", function (needs) {
 });
 
 function stubDraftResponse() {
-  sandbox.stub(Draft, "get").returns(
+  sinon.stub(Draft, "get").returns(
     Promise.resolve({
       draft:
         '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
@@ -418,7 +419,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     } finally {
       toggleCheckDraftPopup(false);
     }
-    sandbox.restore();
+    sinon.restore();
   });
 
   test("reply_as_new_topic with new_topic draft", async (assert) => {
@@ -433,6 +434,6 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
     await click(".modal-footer .btn.btn-default");
-    sandbox.restore();
+    sinon.restore();
   });
 });

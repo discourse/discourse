@@ -4,6 +4,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
+import sinon from "sinon";
 
 acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
@@ -34,7 +35,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function (needs) {
     KeyboardShortcutInitializer.initialize(this.container);
   });
   test("a plugin can add a keyboard shortcut with an option", async (assert) => {
-    let spy = sandbox.spy(KeyboardShortcuts, "_bindToPath");
+    let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {}, {
         anonymous: true,

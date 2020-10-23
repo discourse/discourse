@@ -30,6 +30,9 @@ define("@ember/test-helpers", () => {
     visit() {
       return window.visit(...arguments);
     },
+    currentURL() {
+      return window.currentURL(...arguments);
+    },
   };
 });
 define("pretender", () => {

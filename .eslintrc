@@ -9,5 +9,6 @@
     "testStart": "off",
     "testDone": "off",
     "sinon": "off",
+    "currentURL": "off",
   }
 }

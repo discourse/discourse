@@ -2,6 +2,7 @@ import { test } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import Site from "discourse/models/site";
+import sinon from "sinon";
 
 discourseModule("lib:category-link");
 
@@ -71,7 +72,7 @@ test("allowUncategorized", (assert) => {
     id: 345,
   });
 
-  sandbox
+  sinon
     .stub(Site, "currentProp")
     .withArgs("uncategorized_category_id")
     .returns(345);

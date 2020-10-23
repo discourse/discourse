@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { skip } from "qunit";
 import { test, module } from "qunit";
 import { later } from "@ember/runloop";
@@ -12,11 +13,11 @@ module("lib:click-track", {
     logIn();
 
     let win = { focus: function () {} };
-    sandbox.stub(window, "open").returns(win);
-    sandbox.stub(win, "focus");
+    sinon.stub(window, "open").returns(win);
+    sinon.stub(win, "focus");
 
-    sandbox.stub(DiscourseURL, "routeTo");
-    sandbox.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "redirectTo");
 
     sessionStorage.clear();
 
@@ -55,7 +56,7 @@ function generateClickEventOn(selector) {
 
 skip("tracks internal URLs", async (assert) => {
   assert.expect(2);
-  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+  sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   const done = assert.async();
   pretender.post("/clicks/track", (request) => {
@@ -74,7 +75,7 @@ test("does not track elements with no href", async (assert) => {
 });
 
 test("does not track attachments", async (assert) => {
-  sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+  sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   pretender.post("/clicks/track", () => assert.ok(false));
 
@@ -184,12 +185,12 @@ function badgeClickCount(assert, id, expected) {
 }
 
 test("does not update badge clicks on my own link", async (assert) => {
-  sandbox.stub(User, "currentProp").withArgs("id").returns(314);
+  sinon.stub(User, "currentProp").withArgs("id").returns(314);
   badgeClickCount(assert, "with-badge", 1);
 });
 
 test("does not update badge clicks in my own post", async (assert) => {
-  sandbox.stub(User, "currentProp").withArgs("id").returns(3141);
+  sinon.stub(User, "currentProp").withArgs("id").returns(3141);
   badgeClickCount(assert, "with-badge-but-not-mine", 1);
 });
 

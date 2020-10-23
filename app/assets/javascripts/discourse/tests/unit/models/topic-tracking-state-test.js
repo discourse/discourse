@@ -175,7 +175,7 @@ test("subscribe to category", function (assert) {
     }),
     categoryList = [darth, luke];
 
-  sandbox.stub(Category, "list").returns(categoryList);
+  sinon.stub(Category, "list").returns(categoryList);
 
   const state = TopicTrackingState.create();
 
@@ -242,7 +242,7 @@ test("getSubCategoryIds", (assert) => {
     slug: "baz",
     parent_category_id: bar.id,
   });
-  sandbox.stub(Category, "list").returns([foo, bar, baz]);
+  sinon.stub(Category, "list").returns([foo, bar, baz]);
 
   const state = TopicTrackingState.create();
   assert.deepEqual(Array.from(state.getSubCategoryIds(1)), [1, 2, 3]);
@@ -270,7 +270,7 @@ test("countNew", (assert) => {
     id: 4,
     slug: "qux",
   });
-  sandbox.stub(Category, "list").returns([foo, bar, baz, qux]);
+  sinon.stub(Category, "list").returns([foo, bar, baz, qux]);
 
   let currentUser = User.create({
     username: "chuck",

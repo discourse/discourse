@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test } from "qunit";
 import I18n from "I18n";
 import {
@@ -31,7 +32,7 @@ test("validateUploadedFiles", function (assert) {
 });
 
 test("uploading one file", function (assert) {
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
@@ -41,7 +42,7 @@ test("uploading one file", function (assert) {
 
 test("new user cannot upload images", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 0;
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles([{ name: "image.png" }], {
@@ -61,7 +62,7 @@ test("new user cannot upload images", function (assert) {
 test("new user can upload images if allowed", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 1;
   this.siteSettings.default_trust_level = 0;
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.ok(
     validateUploadedFiles([{ name: "image.png" }], {
@@ -73,7 +74,7 @@ test("new user can upload images if allowed", function (assert) {
 
 test("TL1 can upload images", function (assert) {
   this.siteSettings.newuser_max_embedded_media = 0;
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.ok(
     validateUploadedFiles([{ name: "image.png" }], {
@@ -85,7 +86,7 @@ test("TL1 can upload images", function (assert) {
 
 test("new user cannot upload attachments", function (assert) {
   this.siteSettings.newuser_max_attachments = 0;
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles([{ name: "roman.txt" }], {
@@ -101,7 +102,7 @@ test("new user cannot upload attachments", function (assert) {
 });
 
 test("ensures an authorized upload", function (assert) {
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
   assert.not(
     validateUploadedFiles([{ name: "unauthorized.html" }], {
       siteSettings: this.siteSettings,
@@ -118,7 +119,7 @@ test("ensures an authorized upload", function (assert) {
 
 test("skipping validation works", function (assert) {
   const files = [{ name: "backup.tar.gz" }];
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   assert.not(
     validateUploadedFiles(files, {
@@ -137,7 +138,7 @@ test("skipping validation works", function (assert) {
 test("staff can upload anything in PM", function (assert) {
   const files = [{ name: "some.docx" }];
   this.siteSettings.authorized_extensions = "jpeg";
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   let user = User.create({ moderator: true });
   assert.not(
@@ -171,7 +172,7 @@ const dummyBlob = function () {
 };
 
 test("allows valid uploads to go through", function (assert) {
-  sandbox.stub(bootbox, "alert");
+  sinon.stub(bootbox, "alert");
 
   let user = User.create({ trust_level: 1 });
 
@@ -303,7 +304,7 @@ test("getUploadMarkdown - replaces GUID in image alt text on iOS", (assert) => {
     "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
   );
 
-  sandbox.stub(Utilities, "isAppleDevice").returns(true);
+  sinon.stub(Utilities, "isAppleDevice").returns(true);
   assert.equal(
     testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
     "![image|100x200](/uploads/123/abcdef.ext)"

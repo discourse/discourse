@@ -4,6 +4,7 @@ import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
+import sinon from "sinon";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -114,7 +115,7 @@ acceptance("Topic Discovery", function (needs) {
   test("Using period chooser when query params are present", async (assert) => {
     await visit("/top?f=foo&d=bar");
 
-    sandbox.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "routeTo");
 
     const periodChooser = selectKit(".period-chooser");
 

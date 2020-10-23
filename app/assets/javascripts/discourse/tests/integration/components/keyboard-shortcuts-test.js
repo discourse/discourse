@@ -1,16 +1,17 @@
 import { test, module } from "qunit";
 import DiscourseURL from "discourse/lib/url";
-
-var testMouseTrap;
+import sinon from "sinon";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+
+let testMouseTrap;
 
 module("lib:keyboard-shortcuts", {
   beforeEach() {
-    var _bindings = {};
+    let _bindings = {};
 
     testMouseTrap = {
       bind: function (bindings, callback) {
-        var registerBinding = function (binding) {
+        let registerBinding = function (binding) {
           _bindings[binding] = callback;
         }.bind(this);
 
@@ -26,7 +27,7 @@ module("lib:keyboard-shortcuts", {
       },
     };
 
-    sandbox.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "routeTo");
 
     $("#qunit-fixture").html(
       [
@@ -69,10 +70,10 @@ module("lib:keyboard-shortcuts", {
   },
 });
 
-var pathBindings = KeyboardShortcuts.PATH_BINDINGS || {};
+let pathBindings = KeyboardShortcuts.PATH_BINDINGS || {};
 Object.keys(pathBindings).forEach((path) => {
   const binding = pathBindings[path];
-  var testName = binding + " goes to " + path;
+  let testName = binding + " goes to " + path;
 
   test(testName, function (assert) {
     KeyboardShortcuts.bindEvents();
@@ -82,12 +83,12 @@ Object.keys(pathBindings).forEach((path) => {
   });
 });
 
-var clickBindings = KeyboardShortcuts.CLICK_BINDINGS || {};
+let clickBindings = KeyboardShortcuts.CLICK_BINDINGS || {};
 Object.keys(clickBindings).forEach((selector) => {
   const binding = clickBindings[selector];
-  var bindings = binding.split(",");
+  let bindings = binding.split(",");
 
-  var testName = binding + " clicks on " + selector;
+  let testName = binding + " clicks on " + selector;
 
   test(testName, function (assert) {
     KeyboardShortcuts.bindEvents();
@@ -101,13 +102,13 @@ Object.keys(clickBindings).forEach((selector) => {
   });
 });
 
-var functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS || {};
+let functionBindings = KeyboardShortcuts.FUNCTION_BINDINGS || {};
 Object.keys(functionBindings).forEach((func) => {
   const binding = functionBindings[func];
-  var testName = binding + " calls " + func;
+  let testName = binding + " calls " + func;
 
   test(testName, function (assert) {
-    sandbox.stub(KeyboardShortcuts, func, function () {
+    sinon.stub(KeyboardShortcuts, func, function () {
       assert.ok(true, func + " is called when " + binding + " is triggered");
     });
     KeyboardShortcuts.bindEvents();
@@ -117,22 +118,22 @@ Object.keys(functionBindings).forEach((func) => {
 });
 
 test("selectDown calls _moveSelection with 1", (assert) => {
-  var stub = sandbox.stub(KeyboardShortcuts, "_moveSelection");
+  let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
 
   KeyboardShortcuts.selectDown();
   assert.ok(stub.calledWith(1), "_moveSelection is called with 1");
 });
 
 test("selectUp calls _moveSelection with -1", (assert) => {
-  var stub = sandbox.stub(KeyboardShortcuts, "_moveSelection");
+  let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
 
   KeyboardShortcuts.selectUp();
   assert.ok(stub.calledWith(-1), "_moveSelection is called with -1");
 });
 
 test("goBack calls history.back", (assert) => {
-  var called = false;
-  sandbox.stub(history, "back").callsFake(function () {
+  let called = false;
+  sinon.stub(history, "back").callsFake(function () {
     called = true;
   });
 
@@ -141,14 +142,14 @@ test("goBack calls history.back", (assert) => {
 });
 
 test("nextSection calls _changeSection with 1", (assert) => {
-  var spy = sandbox.spy(KeyboardShortcuts, "_changeSection");
+  let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
   KeyboardShortcuts.nextSection();
   assert.ok(spy.calledWith(1), "_changeSection is called with 1");
 });
 
 test("prevSection calls _changeSection with -1", (assert) => {
-  var spy = sandbox.spy(KeyboardShortcuts, "_changeSection");
+  let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
   KeyboardShortcuts.prevSection();
   assert.ok(spy.calledWith(-1), "_changeSection is called with -1");

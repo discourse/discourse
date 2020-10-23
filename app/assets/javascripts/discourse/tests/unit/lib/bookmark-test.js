@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test, module } from "qunit";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -8,7 +9,7 @@ module("lib:bookmark", {
   },
 
   afterEach() {
-    sandbox.restore();
+    sinon.restore();
   },
 });
 
