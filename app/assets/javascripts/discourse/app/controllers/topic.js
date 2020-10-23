@@ -1299,13 +1299,17 @@ export default Controller.extend(bufferedProperty("model"), {
       this.model.views >
       this.siteSettings.min_topic_view_amount_for_delete_confirmation
     ) {
-      showModal("delete-topic-confirm", {
-        model: this.model,
-        title: "topic.actions.delete",
-      });
+      this.deleteTopicModal();
     } else {
       this.model.destroy(this.currentUser);
     }
+  },
+
+  deleteTopicModal() {
+    showModal("delete-topic-confirm", {
+      model: this.model,
+      title: "topic.actions.delete",
+    });
   },
 
   retryOnRateLimit(times, promise, topicId) {
