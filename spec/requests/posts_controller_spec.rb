@@ -448,21 +448,6 @@ describe PostsController do
         expect(UserHistory.where(action: UserHistory.actions[:post_edit]).count).to eq(1)
       end
 
-      it "can not update other posts within the primary category topic" do
-        second_post = Fabricate(:post, user: user, topic: topic)
-
-        put "/posts/#{second_post.id}.json", params: update_params
-        expect(response.status).to eq(403)
-      end
-
-      it "can not update other first posts of topics in the same category" do
-        second_topic_in_category = Fabricate(:topic, category: category)
-        post_in_second_topic = Fabricate(:post, user: user, topic: second_topic_in_category)
-
-        put "/posts/#{post_in_second_topic.id}.json", params: update_params
-        expect(response.status).to eq(403)
-      end
-
       it "can not update category descriptions in other categories" do
         second_category = Fabricate(:category)
         topic.update!(category: second_category)

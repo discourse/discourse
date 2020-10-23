@@ -1388,7 +1388,7 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
+      it 'returns false as a TL4 user if trusted_users_can_edit_others is false' do
         SiteSetting.trusted_users_can_edit_others = false
         expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
       end
@@ -1436,6 +1436,24 @@ describe Guardian do
         post.user.trust_level = 1
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      context 'category group moderation is enabled' do
+        fab!(:cat_mod_user) { Fabricate(:user) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          GroupUser.create!(group_id: group.id, user_id: cat_mod_user.id)
+          post.topic.category.update!(reviewable_by_group_id: group.id)
+        end
+
+        it 'returns true as a category group moderator user' do
+          expect(Guardian.new(cat_mod_user).can_edit?(post)).to eq(true)
+        end
+
+        it 'returns false for a regular user' do
+          expect(Guardian.new(another_user).can_edit?(post)).to eq(false)
+        end
       end
 
       describe 'post edit time limits' do
