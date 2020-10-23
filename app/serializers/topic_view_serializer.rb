@@ -288,6 +288,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_user_last_posted_at?
-    object.topic.slow_mode_seconds.to_i > 0
+    has_topic_user? && object.topic.slow_mode_seconds.to_i > 0
   end
 end
