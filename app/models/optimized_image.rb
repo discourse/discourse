@@ -85,6 +85,9 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
+        target_quality = upload.target_image_quality(original_path, SiteSetting.image_preview_jpg_quality)
+        opts = opts.merge(quality: target_quality) if target_quality
+
         if upload.extension == "svg"
           FileUtils.cp(original_path, temp_path)
           resized = true
@@ -218,6 +221,10 @@ class OptimizedImage < ActiveRecord::Base
       instructions << "-colors" << opts[:colors].to_s
     end
 
+    if opts[:quality]
+      instructions << "-quality" << opts[:quality].to_s
+    end
+
     # NOTE: ORDER is important!
     instructions.concat(%W{
       -auto-orient
@@ -228,7 +235,6 @@ class OptimizedImage < ActiveRecord::Base
       -interpolate catrom
       -unsharp 2x0.5+0.7+0
       -interlace none
-      -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
       #{to}
     })
@@ -240,7 +246,7 @@ class OptimizedImage < ActiveRecord::Base
     from = prepend_decoder!(from, to, opts)
     to = prepend_decoder!(to, to, opts)
 
-    %W{
+    instructions = %W{
       convert
       #{from}[0]
       -auto-orient
@@ -250,10 +256,14 @@ class OptimizedImage < ActiveRecord::Base
       -crop #{dimensions}+0+0
       -unsharp 2x0.5+0.7+0
       -interlace none
-      -quality 98
       -profile #{File.join(Rails.root, 'vendor', 'data', 'RT_sRGB.icm')}
-      #{to}
     }
+
+    if opts[:quality]
+      instructions << "-quality" << opts[:quality].to_s
+    end
+
+    instructions << to
   end
 
   def self.downsize_instructions(from, to, dimensions, opts = {})
