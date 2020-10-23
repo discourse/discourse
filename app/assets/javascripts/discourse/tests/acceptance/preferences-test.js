@@ -282,14 +282,13 @@ acceptance("Avatar selector when selectable avatars is enabled", function (
 ) {
   needs.user();
   needs.settings({ selectable_avatars_enabled: true });
-  needs.pretender((server) => {
-    server.get("/site/selectable-avatars.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        ["https://www.discourse.org", "https://meta.discourse.org"],
-      ];
-    });
+  needs.pretender((server, helper) => {
+    server.get("/site/selectable-avatars.json", () =>
+      helper.response([
+        "https://www.discourse.org",
+        "https://meta.discourse.org",
+      ])
+    );
   });
 
   test("selectable avatars", async (assert) => {
