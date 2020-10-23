@@ -65,8 +65,10 @@ export default function () {
     });
 
     this.route("categories");
-    this.route("editCategory", { path: "/c/:slug/edit" });
-    this.route("editChildCategory", { path: "/c/:parentSlug/:slug/edit" });
+    this.route("editCategory", { path: "/c/:slug/edit/:tab" });
+    this.route("editChildCategory", {
+      path: "/c/:parentSlug/:slug/edit/:tab",
+    });
 
     // legacy routes
     this.route("parentCategory", { path: "/c/:slug" });

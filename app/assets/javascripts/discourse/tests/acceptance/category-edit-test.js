@@ -11,7 +11,11 @@ acceptance("Category Edit", function (needs) {
     await visit("/c/bug");
 
     await click("button.edit-category");
-    assert.equal(currentURL(), "/c/bug/edit", "it jumps to the correct screen");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it jumps to the correct screen"
+    );
 
     assert.equal(find(".badge-category").text(), "bug");
     await fillIn("input.category-name", "testing");
@@ -28,13 +32,15 @@ acceptance("Category Edit", function (needs) {
     await searchPriorityChooser.selectRowByValue(1);
 
     await click("#save-category");
-    assert.equal(currentURL(), "/c/bug/edit", "it stays on the edit screen");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it stays on the edit screen"
+    );
   });
 
   test("Error Saving", async (assert) => {
-    await visit("/c/bug");
-    await click("button.edit-category");
-    await click(".edit-category-settings");
+    await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
 
@@ -50,9 +56,7 @@ acceptance("Category Edit", function (needs) {
       ".edit-category-tab-general .category-chooser"
     );
 
-    await visit("/c/bug");
-    await click("button.edit-category");
-    await click(".edit-category-settings a");
+    await visit("/c/bug/edit/settings");
 
     assert.ok(
       !visible(".subcategory-list-style-field"),

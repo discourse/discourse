@@ -4,10 +4,10 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
-import { readOnly } from "@ember/object/computed";
+import { readOnly, alias } from "@ember/object/computed";
 
 export default Controller.extend({
-  selectedTab: "general",
+  selectedTab: alias("model.params.tab"),
   saving: false,
   deleting: false,
   panels: null,

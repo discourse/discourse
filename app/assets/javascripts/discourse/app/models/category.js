@@ -485,6 +485,16 @@ Category.reopenClass({
     return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
+  reloadCategoryWithPermissions(params, store, site) {
+    return this.reloadBySlug(params.slug, params.parentSlug).then((result) => {
+      const record = store.createRecord("category", result.category);
+      record.setupGroupsAndPermissions();
+      record.set("params", params);
+      site.updateCategory(record);
+      return record;
+    });
+  },
+
   search(term, opts) {
     var limit = 5;
 

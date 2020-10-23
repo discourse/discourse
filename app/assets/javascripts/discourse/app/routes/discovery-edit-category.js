@@ -4,12 +4,17 @@ import Category from "discourse/models/category";
 
 export default DiscourseRoute.extend({
   model(params) {
-    return Category.reloadBySlugPath(params.slug).then((result) => {
-      const record = this.store.createRecord("category", result.category);
-      record.setupGroupsAndPermissions();
-      this.site.updateCategory(record);
-      return record;
-    });
+    // don't reload model when switching tabs
+    if (this.currentModel) {
+      this.currentModel.set("params", params);
+      return this.currentModel;
+    }
+
+    return Category.reloadCategoryWithPermissions(
+      params,
+      this.store,
+      this.site
+    );
   },
 
   titleToken() {

@@ -29,19 +29,9 @@ export default Component.extend({
     this.panels.addObject(this.tabClassName);
   },
 
-  _resetModalScrollState() {
-    const $modalBody = $(this.element)
-      .parents("#discourse-modal")
-      .find(".modal-body");
-    if ($modalBody.length === 1) {
-      $modalBody.scrollTop(0);
-    }
-  },
-
-  actions: {
-    select: function () {
-      this.set("selectedTab", this.tab);
-      this._resetModalScrollState();
-    },
+  @discourseComputed("params.slug", "params.parentSlug")
+  fullSlug(slug, parentSlug) {
+    const slugPart = parentSlug && slug ? `${parentSlug}/${slug}` : slug;
+    return `/c/${slugPart}/edit/${this.tab}`;
   },
 });
