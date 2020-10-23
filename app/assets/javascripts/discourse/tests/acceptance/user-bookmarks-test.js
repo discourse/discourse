@@ -3,7 +3,6 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { deepMerge } from "discourse-common/lib/object";
 
 acceptance("User's bookmarks", function (needs) {
   needs.user();
@@ -24,9 +23,8 @@ acceptance("User's bookmarks - reminder", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    let listResponse = deepMerge(
-      {},
-      userFixtures["/u/eviltrout/bookmarks.json"]
+    let listResponse = JSON.parse(
+      JSON.stringify(userFixtures["/u/eviltrout/bookmarks.json"])
     );
     listResponse.user_bookmark_list.bookmarks[0].reminder_at =
       "2028-01-01T08:00";
