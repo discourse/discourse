@@ -161,7 +161,13 @@ RSpec.describe Admin::UsersController do
       }
 
       expect(response.status).to eq(409)
-      expect(response.parsed_body["message"]).to eq("User was already suspended by #{admin.username} just now.")
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_suspended",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
     end
 
     it "requires suspend_until and reason" do
@@ -777,7 +783,13 @@ RSpec.describe Admin::UsersController do
       }
 
       expect(response.status).to eq(409)
-      expect(response.parsed_body["message"]).to eq("User was already silenced by #{admin.username} just now.")
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_silenced",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
     end
   end
 

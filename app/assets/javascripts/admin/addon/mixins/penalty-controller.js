@@ -7,6 +7,7 @@ import { Promise } from "rsvp";
 import bootbox from "bootbox";
 
 export default Mixin.create(ModalFunctionality, {
+  errorMessage: null,
   reason: null,
   message: null,
   postEdit: null,
@@ -18,6 +19,7 @@ export default Mixin.create(ModalFunctionality, {
 
   resetModal() {
     this.setProperties({
+      errorMessage: null,
       reason: null,
       message: null,
       loadingUser: true,

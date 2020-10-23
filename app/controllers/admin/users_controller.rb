@@ -96,7 +96,7 @@ class Admin::UsersController < Admin::AdminController
 
     if @user.suspended?
       suspend_record = @user.suspend_record
-      message = I18n.t("user.suspended",
+      message = I18n.t("user.already_suspended",
         staff: suspend_record.acting_user.username,
         time_ago: FreedomPatches::Rails4.time_ago_in_words(suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
       )
@@ -327,7 +327,7 @@ class Admin::UsersController < Admin::AdminController
 
     if @user.silenced?
       silenced_record = @user.silenced_record
-      message = I18n.t("user.silenced",
+      message = I18n.t("user.already_silenced",
         staff: silenced_record.acting_user.username,
         time_ago: FreedomPatches::Rails4.time_ago_in_words(silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
       )
