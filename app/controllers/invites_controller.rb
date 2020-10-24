@@ -254,7 +254,7 @@ class InvitesController < ApplicationController
 
   def ensure_not_logged_in
     if current_user
-      flash[:error] = I18n.t("login.already_logged_in", current_user: current_user.username)
+      flash[:error] = I18n.t("login.already_logged_in")
       render layout: 'no_ember'
       false
     end
