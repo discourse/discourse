@@ -1149,7 +1149,7 @@ email:
     max: 36500
   blocked_attachment_content_types:
     type: list
-    default: "pkcs7|x-vcard"
+    default: "pkcs7|x-vcard|pgp-keys|pgp-signature"
     list_type: compact
   blocked_attachment_filenames:
     type: list
