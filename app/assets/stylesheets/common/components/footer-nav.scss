@@ -83,7 +83,21 @@ body.footer-nav-ipad {
     z-index: z("ipad-header-nav") + 1;
   }
 
-  &.docked .d-header {
-    margin-top: $footer-nav-height;
+  &.docked .d-header-wrap {
+    top: $footer-nav-height;
+  }
+
+  @media only screen and (orientation: landscape) {
+    $status-bar-padding: 12px;
+
+    padding-top: $footer-nav-height + $status-bar-padding;
+
+    .footer-nav {
+      padding-top: $status-bar-padding;
+    }
+
+    &.docked .d-header-wrap {
+      top: $footer-nav-height + $status-bar-padding;
+    }
   }
 }
