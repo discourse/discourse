@@ -9,6 +9,7 @@ import {
   setTextareaSelection,
   getTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
+import { fillIn, click } from "@ember/test-helpers";
 
 moduleForComponent("d-editor", { integration: true });
 

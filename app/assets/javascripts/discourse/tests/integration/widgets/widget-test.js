@@ -8,6 +8,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { Promise } from "rsvp";
 import hbs from "discourse/widgets/hbs-compiler";
+import { click } from "@ember/test-helpers";
 
 moduleForWidget("base");
 

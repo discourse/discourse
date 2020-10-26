@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";

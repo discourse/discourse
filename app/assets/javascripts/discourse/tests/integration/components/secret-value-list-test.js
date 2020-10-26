@@ -1,6 +1,8 @@
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
+import { fillIn, click } from "@ember/test-helpers";
+
 moduleForComponent("secret-value-list", { integration: true });
 
 componentTest("adding a value", {
