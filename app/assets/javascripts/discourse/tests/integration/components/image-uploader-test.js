@@ -1,5 +1,7 @@
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
+import { click } from "@ember/test-helpers";
+
 moduleForComponent("image-uploader", { integration: true });
 
 componentTest("with image", {

@@ -1,5 +1,7 @@
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
+import { click, fillIn } from "@ember/test-helpers";
+
 moduleForComponent("simple-list", { integration: true });
 
 componentTest("adding a value", {

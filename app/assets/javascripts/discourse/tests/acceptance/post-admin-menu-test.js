@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { visit, click } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 

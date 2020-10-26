@@ -1,5 +1,6 @@
 import { moduleForComponent } from "ember-qunit";
 import { isEmpty } from "@ember/utils";
+import { click, fillIn } from "@ember/test-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (find(selector).hasClass("is-expanded")) {

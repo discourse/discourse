@@ -4,6 +4,7 @@ import {
   moduleForWidget,
   widgetTest,
 } from "discourse/tests/helpers/widget-test";
+import { click } from "@ember/test-helpers";
 
 moduleForWidget("post");
 

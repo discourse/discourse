@@ -1,6 +1,7 @@
 import { moduleForComponent } from "ember-qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";
+import { click } from "@ember/test-helpers";
 
 moduleForComponent("select-kit/combo-box", {
   integration: true,

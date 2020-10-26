@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import User from "discourse/models/user";
+import { click } from "@ember/test-helpers";
 
 acceptance("User Card - Show Local Time", function (needs) {
   needs.user();

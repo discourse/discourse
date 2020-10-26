@@ -1,6 +1,7 @@
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { click } from "@ember/test-helpers";
 
 moduleForComponent("admin-report", {
   integration: true,

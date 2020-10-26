@@ -1,6 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 
 acceptance("User Drafts", function (needs) {
   needs.user();
