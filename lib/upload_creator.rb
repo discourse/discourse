@@ -178,10 +178,11 @@ class UploadCreator
   end
 
   def animated?(file)
+    OptimizedImage.ensure_safe_paths!(file.path)
+
     # TODO - find out why:
     #   FastImage.animated?(@file)
     # doesn't seem to identify all animated gifs
-
     @frame_count ||= begin
       command = [
         "identify",
