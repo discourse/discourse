@@ -1392,8 +1392,8 @@ en:
         generate_link: "Copy Invite Link"
         link_generated: "Invite link generated successfully!"
         valid_for: "Invite link is only valid for this email address: %{email}"
-        single_user: "Single User"
-        multiple_user: "Multiple Users"
+        single_user: "Invite by email"
+        multiple_user: "Invite by link"
         invite_link:
           title: "Invite Link"
           success: "Invite link generated successfully!"
