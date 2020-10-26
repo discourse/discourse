@@ -355,7 +355,12 @@ class TopicView
   end
 
   def first_post_bookmark_reminder_at
-    @topic.first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
+    @first_post_bookmark_reminder_at ||= \
+      begin
+        first_post = @topic.posts.with_deleted.find_by(post_number: 1)
+        return if !first_post
+        first_post.bookmarks.where(user: @user).pluck_first(:reminder_at)
+      end
   end
 
   MAX_PARTICIPANTS = 24
