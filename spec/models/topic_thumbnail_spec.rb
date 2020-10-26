@@ -12,7 +12,7 @@ describe "TopicThumbnail" do
   before do
     SiteSetting.create_thumbnails = true
 
-    ImageSizer.stubs(:resize).returns([49, 49])
+    Topic.stubs(:thumbnail_sizes).returns([[49, 49]])
 
     topic.generate_thumbnails!(extra_sizes: nil)
 
