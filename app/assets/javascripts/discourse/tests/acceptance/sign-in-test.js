@@ -150,10 +150,15 @@ acceptance("Signing In", function () {
       "the username validation is bad"
     );
     await click(".modal-footer .btn-primary");
-    assert.ok(
-      exists("#new-account-username:focus"),
-      "username field is focused"
-    );
+
+    // We can skip the focus test if the browser doesn't have focus. For example, running a full
+    // QUnit suite in a window you are not paying attention to.
+    if (document && document.hasFocus) {
+      assert.ok(
+        exists("#new-account-username:focus"),
+        "username field is focused"
+      );
+    }
 
     await fillIn("#new-account-username", "goodtuna");
     assert.ok(
