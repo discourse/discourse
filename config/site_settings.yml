@@ -1547,7 +1547,7 @@ security:
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
-    default: "bingbot"
+    default: ""
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
