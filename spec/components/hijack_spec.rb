@@ -117,7 +117,8 @@ describe Hijack do
   end
 
   it "removes trailing slash in cors origin" do
-    SiteSetting.cors_origins = "https://www.rainbows.com/"
+    GlobalSetting.stubs(:enable_cors).returns(true)
+    GlobalSetting.stubs(:cors_origin).returns("https://www.rainbows.com/")
 
     app = lambda do |env|
       tester = Hijack::Tester.new(env)
