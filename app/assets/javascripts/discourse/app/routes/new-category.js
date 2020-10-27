@@ -24,12 +24,8 @@ export default DiscourseRoute.extend({
   },
 
   renderTemplate() {
-    this.currentModel.params = {
-      tab: "general",
-    };
-
-    this.render("edit-category-tab", {
-      controller: "edit-category-tab",
+    this.render("edit-category-tabs", {
+      controller: "edit-category-tabs",
       model: this.currentModel,
     });
   },

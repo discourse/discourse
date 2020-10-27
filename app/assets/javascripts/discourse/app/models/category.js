@@ -489,7 +489,6 @@ Category.reopenClass({
     return this.reloadBySlug(params.slug, params.parentSlug).then((result) => {
       const record = store.createRecord("category", result.category);
       record.setupGroupsAndPermissions();
-      record.set("params", params);
       site.updateCategory(record);
       return record;
     });

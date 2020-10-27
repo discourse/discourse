@@ -29,6 +29,15 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._addToCollection);
   },
 
+  willDestroy() {
+    this._super(...arguments);
+
+    this.setProperties({
+      selectedTab: "general",
+      params: {},
+    });
+  },
+
   _addToCollection: function () {
     this.panels.addObject(this.tabClassName);
   },
@@ -41,9 +50,9 @@ export default Component.extend({
 
   actions: {
     select: function () {
-      if (this.newCategory) {
-        this.set("selectedTab", this.tab);
-      } else {
+      this.set("selectedTab", this.tab);
+
+      if (!this.newCategory) {
         DiscourseURL.routeTo(this.fullSlug);
       }
     },

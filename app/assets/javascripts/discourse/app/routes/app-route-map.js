@@ -23,13 +23,13 @@ export default function () {
 
   this.route("newCategory", { path: "/new-category" });
   this.route("editCategory", { path: "/c/:slug/edit" }, function () {
-    this.route("tab", { path: "/:tab" });
+    this.route("tabs", { path: "/:tab" });
   });
   this.route(
     "editChildCategory",
     { path: "/c/:parentSlug/:slug/edit" },
     function () {
-      this.route("tab", { path: "/:tab" });
+      this.route("tabs", { path: "/:tab" });
     }
   );
 
