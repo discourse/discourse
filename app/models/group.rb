@@ -817,6 +817,11 @@ class Group < ActiveRecord::Base
     }
   end
 
+  def imap_enabled?
+    return false if !SiteSetting.enable_imap
+    imap_config.values.compact.length == imap_config.keys.length
+  end
+
   def email_username_regex
     user, domain = email_username.split('@')
     if user.present? && domain.present?
