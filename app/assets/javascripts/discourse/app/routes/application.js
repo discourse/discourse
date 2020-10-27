@@ -203,7 +203,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit/general`);
+      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
     },
 
     checkEmail(user) {

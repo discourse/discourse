@@ -28,8 +28,8 @@ export default DiscourseRoute.extend({
       tab: "general",
     };
 
-    this.render("edit-category", {
-      controller: "edit-category",
+    this.render("edit-category-tab", {
+      controller: "edit-category-tab",
       model: this.currentModel,
     });
   },

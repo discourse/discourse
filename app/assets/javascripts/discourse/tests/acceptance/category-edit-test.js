@@ -55,6 +55,15 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
+  test("Index Route", async (assert) => {
+    await visit("/c/bug/edit");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it redirects to the general tab"
+    );
+  });
+
   test("Error Saving", async (assert) => {
     await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");

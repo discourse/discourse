@@ -22,6 +22,16 @@ export default function () {
   this.route("topicBySlugOrId", { path: "/t/:slugOrId", resetNamespace: true });
 
   this.route("newCategory", { path: "/new-category" });
+  this.route("editCategory", { path: "/c/:slug/edit" }, function () {
+    this.route("tab", { path: "/:tab" });
+  });
+  this.route(
+    "editChildCategory",
+    { path: "/c/:parentSlug/:slug/edit" },
+    function () {
+      this.route("tab", { path: "/:tab" });
+    }
+  );
 
   this.route("discovery", { path: "/", resetNamespace: true }, function () {
     // legacy route
@@ -65,10 +75,6 @@ export default function () {
     });
 
     this.route("categories");
-    this.route("editCategory", { path: "/c/:slug/edit/:tab" });
-    this.route("editChildCategory", {
-      path: "/c/:parentSlug/:slug/edit/:tab",
-    });
 
     // legacy routes
     this.route("parentCategory", { path: "/c/:slug" });
