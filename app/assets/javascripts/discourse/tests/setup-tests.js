@@ -6,10 +6,7 @@ import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
 import { createHelperContext } from "discourse-common/lib/helpers";
 import { buildResolver } from "discourse-common/resolver";
-import createPretender, {
-  pretenderHelpers,
-  applyDefaultHandlers,
-} from "discourse/tests/helpers/create-pretender";
+import { applyDefaultHandlers } from "discourse/tests/helpers/create-pretender";
 import { flushMap } from "discourse/models/store";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import DiscourseURL from "discourse/lib/url";
@@ -26,6 +23,7 @@ import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
 import { setApplication, setResolver } from "@ember/test-helpers";
+import Pretender from "pretender";
 
 export default function setupTests(app, container) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -82,8 +80,8 @@ export default function setupTests(app, container) {
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
-    server = createPretender;
-    server.handlers = [];
+
+    server = new Pretender();
     applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
@@ -116,7 +114,7 @@ export default function setupTests(app, container) {
     server.checkPassthrough = (request) =>
       request.requestHeaders["Discourse-Script"];
 
-    applyPretender(ctx.module, server, pretenderHelpers());
+    applyPretender(ctx.module, server);
 
     setupURL(null, "http://localhost:3000", "");
     setupS3CDN(null, null);
@@ -158,6 +156,7 @@ export default function setupTests(app, container) {
     clearAppEventsCache(getOwner(this));
 
     MessageBus.unsubscribe("*");
+    server.shutdown();
     server = null;
     window.Mousetrap.reset();
   });

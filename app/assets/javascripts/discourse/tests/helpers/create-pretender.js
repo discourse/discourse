@@ -1,5 +1,4 @@
 import User from "discourse/models/user";
-import Pretender from "pretender";
 
 export function parsePostData(query) {
   const result = {};
@@ -38,8 +37,6 @@ const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 
 export let fixturesByUrl;
-
-export default new Pretender();
 
 export function pretenderHelpers() {
   return { parsePostData, response, success };

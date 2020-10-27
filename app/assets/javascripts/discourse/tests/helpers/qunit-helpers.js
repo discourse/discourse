@@ -38,6 +38,7 @@ import QUnit, { module } from "qunit";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import Site from "discourse/models/site";
 import createStore from "discourse/tests/helpers/create-store";
+import { pretenderHelpers } from "discourse/tests/helpers/create-pretender";
 import { getApplication } from "@ember/test-helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
@@ -107,10 +108,12 @@ export function resetSite(siteSettings, extras) {
   return Site.resetCurrent(Site.create(siteAttrs));
 }
 
-export function applyPretender(name, server, helper) {
+const helpers = pretenderHelpers();
+
+export function applyPretender(name, server) {
   const cb = _pretenderCallbacks[name];
   if (cb) {
-    cb(server, helper);
+    cb(server, helpers);
   }
 }
 
