@@ -17,6 +17,7 @@ end
 #
 # Indexes
 #
+#  idx_recent_regular_post_search_data                       (search_data) WHERE ((NOT private_message) AND (post_id >= 0)) USING gin
 #  idx_search_post                                           (search_data) USING gin
 #  index_post_search_data_on_post_id_and_version_and_locale  (post_id,version,locale)
 #
