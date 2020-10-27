@@ -374,3 +374,24 @@ export async function selectDate(selector, date) {
     resolve();
   });
 }
+
+export function invisible(selector) {
+  const $items = find(selector + ":visible");
+  return (
+    $items.length === 0 ||
+    $items.css("opacity") !== "1" ||
+    $items.css("visibility") === "hidden"
+  );
+}
+
+export function visible(selector) {
+  return find(selector + ":visible").length > 0;
+}
+
+export function count(selector) {
+  return find(selector).length;
+}
+
+export function exists(selector) {
+  return count(selector) > 0;
+}

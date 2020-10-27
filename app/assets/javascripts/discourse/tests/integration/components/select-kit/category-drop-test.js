@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";

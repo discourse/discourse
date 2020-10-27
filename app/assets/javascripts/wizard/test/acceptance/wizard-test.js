@@ -14,6 +14,10 @@ module("Acceptance: wizard", {
   },
 });
 
+function exists(selector) {
+  return document.querySelector(selector) !== null;
+}
+
 test("Wizard starts", async (assert) => {
   await visit("/");
   assert.ok(exists(".wizard-column-contents"));

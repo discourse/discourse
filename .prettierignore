@@ -20,7 +20,6 @@ public/
 vendor/
 app/assets/javascripts/discourse/tests/test_helper.js
 app/assets/javascripts/discourse/tests/fixtures
-app/assets/javascripts/discourse/tests/helpers/assertions.js
 node_modules/
 dist/
 **/*.rb
