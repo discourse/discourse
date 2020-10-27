@@ -1,10 +1,14 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
-import { skip } from "qunit";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import I18n from "I18n";
 import { run } from "@ember/runloop";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  invisible,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import Draft from "discourse/models/draft";
 import { Promise } from "rsvp";

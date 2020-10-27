@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";

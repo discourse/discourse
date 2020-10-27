@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 
 acceptance("Category Banners", function (needs) {

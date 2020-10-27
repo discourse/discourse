@@ -4,6 +4,7 @@ import I18n from "I18n";
 import {
   acceptance,
   updateCurrentUser,
+  count,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group Members - Anonymous", function () {

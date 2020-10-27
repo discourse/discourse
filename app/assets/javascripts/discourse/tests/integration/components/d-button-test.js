@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";

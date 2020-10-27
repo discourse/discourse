@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
