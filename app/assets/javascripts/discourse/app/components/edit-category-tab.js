@@ -29,7 +29,7 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._addToCollection);
   },
 
-  willDestroy() {
+  willDestroyElement() {
     this._super(...arguments);
 
     this.setProperties({
