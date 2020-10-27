@@ -25,6 +25,18 @@ fi:
           title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
         staff:
           title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille. "
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Valitse ainakin <strong>%{count}</strong> vaihtoehto."
+            other: "Valitse ainakin <strong>%{count}</strong> vaihtoehtoa."
+          up_to_max_options:
+            one: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
+            other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
+          x_options:
+            one: "Valitse <strong>%{count}</strong> vaihtoehto."
+            other: "Valitse <strong>%{count}</strong> vaihtoehtoa."
+          between_min_and_max_options: "Valitse vähintään <strong>%{min}</strong> ja enintään <strong>%{max}</strong> vaihtoehtoa."
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
@@ -51,6 +63,12 @@ fi:
       automatic_close:
         closes_in: "Sulkeutuu <strong>%{timeLeft}</strong> kuluttua"
         age: "Sulkeutui <strong>%{age}</strong>"
+      breakdown:
+        title: "Äänestystulokset"
+        votes: "%{count} ääntä"
+        breakdown: "Erittely"
+        percentage: "Prosenttiosuus"
+        count: "Määrä"
       error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Pahoittelut, äänestäneiden näyttämisessä tapahtui virhe."
@@ -77,12 +95,16 @@ fi:
           label: Sallitut ryhmät
         poll_chart_type:
           label: Kuvaajan tyyppi
+          bar: Pylväs
+          pie: Ympyrä
         poll_config:
           max: Enint.
           min: Väh.
           step: Askelväli
         poll_public:
           label: Näytä äänestäneet
+        poll_title:
+          label: Otsikko (ei-pakollinen)
         poll_options:
           label: Syötä yksi äänestysvaihtoehto riviä kohden
         automatic_close:

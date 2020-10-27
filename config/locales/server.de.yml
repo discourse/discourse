@@ -1993,7 +1993,6 @@ de:
     missing_user_field: "Du hast nicht alle Benutzerangaben ausgefüllt"
     auth_complete: "Authentifizierung ist abgeschlossen."
     click_to_continue: "Klicke hier um fortzufahren."
-    already_logged_in: "Hoppla, es sieht so aus als ob du versuchst die Einladung für einen anderen Benutzer zu akzeptieren. Wenn du nicht %{current_user} bist, melde dich bitte ab und versuch es erneut."
     second_factor_title: "Zwei-Faktor-Authentifizierung"
     second_factor_description: "Bitte gib den erforderlichen Authentifizierungscode aus deiner App ein:"
     second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"

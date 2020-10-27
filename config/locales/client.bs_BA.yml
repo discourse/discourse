@@ -1296,8 +1296,6 @@ bs_BA:
         generate_link: "Kopiraj link za pozivnicu"
         link_generated: "Link pozivnice je uspješno generisan!"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
-        single_user: "Jedan korisnik"
-        multiple_user: "Više korisnika"
         invite_link:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
@@ -1554,7 +1552,6 @@ bs_BA:
       sent_activation_email_again_generic: "Poslali smo još jean e-mail za aktivaciju. Može potrajati nekoliko minuta da stigne; obavezno proverite svoj spam folder."
       to_continue: "Molimo prijavite se"
       preferences: "Morate biti ulogovani kako bi mjenjali vaše postavke"
-      forgot: "Ne sjećam se svojih detalja korisničkog imena"
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
@@ -2581,7 +2578,6 @@ bs_BA:
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
-      manage_tag_groups_link: "Upravljajte grupama oznaka ovdje."
       allow_global_tags_label: "Takođe dozvolite druge oznake"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       delete: "Delete Category"

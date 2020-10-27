@@ -773,6 +773,7 @@ es:
       topic_stat_sentence_month:
         one: "%{count} nuevo tema en el último mes."
         other: "%{count} temas nuevos en el último mes."
+      n_more: "Categorías (%{count} más)..."
     ip_lookup:
       title: Búsqueda de dirección IP
       hostname: Nombre del host
@@ -892,6 +893,7 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Causa: "
+      github_profile: "GitHub"
       email_activity_summary: "Resumen de actividad"
       mailing_list_mode:
         label: "Modo lista de correo"
@@ -1050,6 +1052,7 @@ es:
         taken: "Lo sentimos, ese correo electrónico no está disponible."
         error: "Ha ocurrido un error al cambiar tu correo electrónico. ¿Tal vez esa dirección ya se encuentra en uso?"
         success: "Te hemos enviado un correo electrónico a esa dirección. Por favor, sigue las instrucciones de confirmación."
+        success_via_admin: "Te hemos enviado un correo electrónico a esa dirección. Por favor, sigue las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Por favor, sigue las instrucciones de confirmación."
       change_avatar:
         title: "Cambiar tu imagen de perfil"
@@ -1147,6 +1150,9 @@ es:
         browser_and_device: "%{browser} en %{device}"
         secure_account: "Asegurar mi cuenta"
         latest_post: "Publicaste por última vez..."
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">activo ahora mismo</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Última publicación"
       last_emailed: "Último correo electrónico enviado"
       last_seen: "Visto por última vez"
@@ -1262,8 +1268,6 @@ es:
         generate_link: "Copiar enlace de invitación"
         link_generated: "¡Enlace de invitación generado satisfactoriamente!"
         valid_for: "El enlace de invitación solo es válido para esta dirección de correo electrónico: %{email}"
-        single_user: "Un usuario"
-        multiple_user: "Varios usuarios"
         invite_link:
           title: "Enlace de invitación"
           success: "¡Enlace de invitación generado satisfactoriamente!"
@@ -1438,6 +1442,10 @@ es:
       disable: "Mostrar publicaciones eliminadas"
     private_message_info:
       title: "Mensaje"
+      invite: "Invitar a más gente..."
+      edit: "Añadir o quitar..."
+      remove: "Quitar..."
+      add: "Añadir..."
       leave_message: "¿Estás seguro de que quieres abandonar este mensaje?"
       remove_allowed_user: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
       remove_allowed_group: "¿Estás seguro de que quieres eliminar a %{name} de este mensaje?"
@@ -1508,6 +1516,7 @@ es:
       awaiting_approval: "Tu cuenta todavía no ha sido aprobada por un miembro del staff. Recibirás un correo electrónico cuando sea aprobada."
       requires_invite: "Lo sentimos, solo se puede acceder a este foro mediante invitación."
       not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un correo electrónico de activación a la dirección <b>%{sentTo}</b>. Por favor, sigue las instrucciones que allí se encuentran para activar tu cuenta."
+      not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el correo electrónico de activación nuevamente."
       resend_title: "Volver a enviar el correo electrónico de activación"
@@ -1518,7 +1527,6 @@ es:
       sent_activation_email_again_generic: "Te hemos enviado otro correo  electrónico de activación. Podría tardar algunos minutos en llegar. Asegúrate de revisar la carpeta de correo no deseado."
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes iniciar sesión para poder cambiar tus preferencias de usuario."
-      forgot: "No me acuerdo de los detalles de mi cuenta."
       not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por correo electrónico cuando todo esté listo para que inicies sesión."
       google_oauth2:
         name: "Google"
@@ -1720,6 +1728,10 @@ es:
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
+      slow_mode:
+        title: "Este tema está en modo lento."
+        body: "Cuando respondas, tendrás que esperar %{duration} antes de volver a publicar aquí."
+        error: "Has respondido hace poco en este tema, que está en modo lento. Por favor, espera para que los demás puedan participar también."
       admin_options_title: "Configuración opcional del administrador para este tema"
       composer_actions:
         reply: Responder
@@ -1796,6 +1808,9 @@ es:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nuevo tema</span> %{description}"
       membership_request_accepted: "Membresía aceptada en «%{group_name}»"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username} y %{username2}</span> %{description}"
+      votes_released: "%{description} - completado"
       group_message_summary:
         one: "%{count} mensaje en tu bandeja de %{group_name}"
         other: "%{count} mensajes en tu bandeja de %{group_name} "
@@ -1971,6 +1986,7 @@ es:
         choose_new_tags: "Elige etiquetas nuevas para estos temas:"
         choose_append_tags: "Elegir etiquetas nuevas para agregar a estos temas:"
         changed_tags: "Las etiquetas de esos temas fueron cambiadas."
+        remove_tags: "Quitar etiquetas"
       none:
         unread: "No tienes temas no leídos."
         new: "No tienes temas nuevos."
@@ -2067,6 +2083,24 @@ es:
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
+      slow_mode_update:
+        title: "Modo lento"
+        select: "Duración:"
+        description: "Los usuarios tendrán que esperar esta cantidad de tiempo antes de poder volver a responder."
+        save: "Guardar"
+        remove: "Desactivar"
+        hours: "Horas:"
+        minutes: "Minutos:"
+        seconds: "Segundos:"
+        durations:
+          15_minutes: "15 minutos"
+          1_hour: "1 hora"
+          4_hours: "4 horas"
+          1_day: "1 día"
+          1_week: "1 semana"
+          custom: "Otra duración"
+      slow_mode_notice:
+        duration: "Debes esperar %{duration} entre respuestas a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -2196,6 +2230,7 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         multi_select: "Seleccionar publicaciones..."
+        slow_mode: "Ajustar modo lento"
         timed_update: "Configurar temporizador de temas..."
         pin: "Destacar tema..."
         unpin: "Dejar de destacar..."
@@ -2592,7 +2627,6 @@ es:
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificados solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
-      manage_tag_groups_link: "Gestiona los grupos de etiquetas aquí."
       allow_global_tags_label: "Permitir también otras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
       required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
@@ -2712,6 +2746,14 @@ es:
     flagging:
       title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
       action: "Reportar publicación"
+      take_action: "Tomar medidas..."
+      take_action_options:
+        default:
+          title: "Tomar medidas"
+        suspend:
+          title: "Suspender usuario"
+        silence:
+          title: "Silenciar usuario"
       notify_action: "Mensaje"
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
@@ -3102,6 +3144,7 @@ es:
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
         everyone_can_use: "Todos pueden utilizar las etiquetas"
+        visible_only_to_groups: "Las etiquetas sólo son visibles para los siguientes grupos"
       topics:
         none:
           unread: "No tienes temas sin leer."
@@ -3256,6 +3299,7 @@ es:
               title: "¿Quién puede ver este grupo?"
               public: "Todos"
               logged_on_users: "Usuarios que hayan iniciado sesión"
+              members: "Propietarios y miembros del grupo y moderadores"
               staff: "Propietarios y moderadores de grupos"
               owners: "Propietarios del grupo"
               description: "Los administradores pueden ver todos los grupos."

@@ -920,7 +920,6 @@ sq:
       sent_activation_email_again: "Ju dërguam një email aktivizimi të ri tek adresa %{currentEmail}. Emaili mund të vonohet disa minuta, verifikoni edhe dosjen \"spam\". "
       to_continue: "Ju lutemi, Identifikohuni"
       preferences: "Duhet të identifikoheni për të ndryshuar preferencat e profilit."
-      forgot: "Nuk i mbaj mend detajet e llogarisë"
       not_approved: "Llogaria juaj nuk është aprovuar ende. Do t'ju dërgojmë një email kur të aprovohet. "
       google_oauth2:
         name: "Google"

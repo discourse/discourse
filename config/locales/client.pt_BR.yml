@@ -1229,7 +1229,6 @@ pt_BR:
         generate_link: "Copiar Link do Convite"
         link_generated: "Link do convite gerado com sucesso!"
         valid_for: "Link do convite é válido apenas para este endereço de e-mail: %{email}"
-        single_user: "Único Usuário"
         invite_link:
           success: "Link do convite gerado com sucesso!"
         bulk_invite:
@@ -1479,7 +1478,6 @@ pt_BR:
       sent_activation_email_again_generic: "Nós enviamos mais um e-mail de ativação. Pode ser que demore alguns minutos para chegar; tenha certeza de verificar sua caixa de spam."
       to_continue: "Por Favor, Entre"
       preferences: "Você precisa estar logado para mudar suas preferências de usuário."
-      forgot: "Não me recordo dos detalhes da minha conta"
       not_approved: "Sua conta ainda não foi aprovada. Você será notificado por e-mail quando tudo estiver pronto para você entrar."
       google_oauth2:
         name: "Google"
@@ -1675,6 +1673,8 @@ pt_BR:
       yourself_confirm:
         title: "Você se esqueceu de adicionar destinatários?"
         body: "No momento esta mensagem está sendo enviada apenas para você mesmo!"
+      slow_mode:
+        error: "Você publicou recentemente neste tópico, que está em modo lento. Por favor espere para que outros usuários possam ter a chance de participar."
       admin_options_title: "Configurações opcionais da staff para este tópico"
       composer_actions:
         reply: Responder
@@ -2089,7 +2089,7 @@ pt_BR:
           "2_8": "Você verá uma contagem de novas respostas porque está acompanhando esta categoria."
           "2_4": "Você verá uma contagem de novas respostas porque postou uma resposta a este tópico."
           "2_2": "Você verá uma contagem de novas respostas porque está acompanhando este tópico."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Você verá uma contagem de novas respostas, porque você <a href="%{basePath}/u/%{username}/preferences/notifications">leu esse tópico</a>.'
           "1_2": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "1": "Você será notificado se alguém mencionar o seu @nome ou responder à sua mensagem."
           "0_7": "Você está ignorando todas as notificações nesta categoria."
@@ -2517,7 +2517,6 @@ pt_BR:
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "As etiquetas e grupos de etiquetas especificadas acima estarão disponíveis apenas nesta categoria e em outras categorias que também as especificarem. Elas não estarão disponíveis para uso em outras categorias."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
-      manage_tag_groups_link: "Gerencie grupos de etiquetas aqui."
       allow_global_tags_label: "Permitir também outras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
       required_tag_group_description: "Exija que novos tópicos tenham etiquetas de um grupo de etiquetas:"

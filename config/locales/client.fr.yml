@@ -287,6 +287,7 @@ fr:
         next_business_day: "Prochain jour ouvré"
         tomorrow: "Demain"
         next_week: "Semaine prochaine"
+        post_local_date: "Date venant du message"
         later_this_week: "Plus tard cette semaine"
         start_of_next_business_week: "Lundi"
         start_of_next_business_week_alt: "Lundi prochain"
@@ -603,6 +604,8 @@ fr:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
           description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
+          watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
+          tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
         tags:
           title: Étiquettes
           long_title: "Notifications par défaut des étiquettes"
@@ -1246,8 +1249,6 @@ fr:
         generate_link: "Copier le lien d'invitation"
         link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
-        single_user: "Un utilisateur"
-        multiple_user: "Plusieurs utilisateurs"
         invite_link:
           title: "Lien d'invitation"
           success: "Lien d'invitation généré avec succés !"
@@ -1502,7 +1503,6 @@ fr:
       sent_activation_email_again_generic: "Nous avons envoyé un autre courriel d'activation. Il se peut que cela prenne quelques minutes pour arriver ; vérifier aussi votre spam."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
-      forgot: "J'ai oublié les détails de mon compte"
       not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
@@ -2551,7 +2551,6 @@ fr:
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
       tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés au dessus ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes d'étiquettes autorisées"
-      manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
       tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
       required_tag_group_description: "Exiger que les nouveaux sujets aient des étiquettes d'un groupe d’étiquettes :"

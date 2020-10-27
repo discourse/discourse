@@ -1167,7 +1167,6 @@ pt:
       sent_activation_email_again_generic: "Enviámos outro email de ativação. Pode demorar alguns minutos até que chegue; certifique-se de que verifica a sua pasta de spam."
       to_continue: "Por favor, inicie a sessão"
       preferences: "Necessita de ter a sessão iniciada para alterar as suas preferências de utilizador."
-      forgot: "Eu não me lembro dos detalhes da minha conta"
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"

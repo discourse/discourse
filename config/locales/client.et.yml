@@ -1066,7 +1066,6 @@ et:
       sent_activation_email_again: "Saatsime sulle aktiveerimise meili aadressile <b>%{currentEmail}</b>. Selle kohalejõudmine võib võtta mõne minuti; kontrolli kindlasti ka spämmikausta."
       to_continue: "Palun logi sisse"
       preferences: "Oma kasutajaeelistuste muutmiseks pead olema sisse logitud."
-      forgot: "Ma ei mäleta oma konto üksikasju"
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
       google_oauth2:
         name: "Google"

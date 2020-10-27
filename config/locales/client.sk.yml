@@ -1153,7 +1153,6 @@ sk:
       sent_activation_email_again: "Odoslali sme vám ďalší aktivačný email na <b>%{currentEmail}</b>. Môže trvať niekoľko minút kým príde; pre istotu si skontrolujte spamový priečinok."
       to_continue: "Prosím, prihláste sa"
       preferences: "Na zmenu používateľských nastavení musíte byť prihlásený."
-      forgot: "Nepamätám si detaily môjho účtu"
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
       google_oauth2:
         name: "Google"

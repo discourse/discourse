@@ -1691,25 +1691,25 @@ ar:
       name: كاتب سيرة ذاتية
     anniversary:
       name: الذكرى السنوية
-      description: انت الأن عضو بالمجتمع من سنة كاملة و نشرت علي الاقل مرة واحدة.
+      description: عضو نشط لسنة كاملة، ونشرت شيئًا مرة على الأقلّ
     nice_post:
-      name: رد رائع
-      description: تلقيت 10 أعجابات على الرد
+      name: ردّ رائع
+      description: استلمت 10 إعجابات على أحد ردودك
     good_post:
-      name: رد ممتاز
-      description: تلقيت 25 إعجابا على الرد
+      name: ردّ ممتاز
+      description: استلمت 25 إعجابًا على أحد ردودك
     great_post:
-      name: رد عظيم
-      description: تلقيت 50 إعجابا على الرد
+      name: ردّ عظيم
+      description: استلمت 50 إعجابًا على أحد ردودك
     nice_topic:
       name: موضوع رائع
-      description: تلقيت 10 إعجابات على الموضوع
+      description: استلمت 10 إعجابات على أحد مواضيعك
     good_topic:
       name: موضوع ممتاز
-      description: تلقيت 25 اعجابا على الموضوع
+      description: استلمت 25 إعجابًا على أحد مواضيعك
     great_topic:
       name: موضوع عظيم
-      description: تلقيت 50 إعجابا على الموضوع
+      description: استلمت 50 إعجابًا على أحد مواضيعك
     nice_share:
       name: مشاركة رائعة
       description: لقد شاركت المنشور مع 25 زائر مختلف
@@ -1722,10 +1722,8 @@ ar:
       name: مشاركة عظيمة
       description: لقد شاركت المنشور مع 1000 زائر مختلف
     first_like:
-      name: أول إعجاب
-      description: لقد اعجبت بمنشور
-      long_description: |
-        تُمنح هذة الشارة عند اول مرة تعجب بمنشور :heart: . الاعجاب بالمنشورات هو اسلوب ممتاز لكي تخبر رفاقك اعضاء المجتمع ان ما نشروة شئ مفيد او مثير او مرح. انشر الحب بالمجتمع!
+      name: أوّل إعجاب
+      description: أعجبتك مشاركة
     first_flag:
       name: أول بلاغ
       description: لقد ابلغت عن منشور

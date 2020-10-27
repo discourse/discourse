@@ -12,6 +12,7 @@ pl_PL:
     discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
     discourse_narrative_bot_welcome_post_type: "Rodzaj powitalnego posta, który bot Discourse Narrative powinien przesłać"
     discourse_narrative_bot_welcome_post_delay: "Odczekaj (n) sekund, zanim wyślesz powitanie bota Discourse Narrative"
+    discourse_narrative_bot_skip_tutorials: "Samouczki Discourse Narrative Bot do pominięcia"
   badges:
     certified:
       name: Certyfikowany
@@ -87,8 +88,8 @@ pl_PL:
       answers:
         "1": "Jest to pewne"
         "2": "Jest to zdecydowane, więc"
-        "3": "Bez zająknięcia"
-        "4": "Tak zdecydowanie"
+        "3": "Bez wątpliwości"
+        "4": "Tak, zdecydowanie"
         "5": "Możesz na tym polegać"
         "6": "Tak jak ja to widzę, tak"
         "7": "Najpewniej"

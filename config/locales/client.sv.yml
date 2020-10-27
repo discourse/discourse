@@ -290,6 +290,7 @@ sv:
         next_business_day: "Nästa vardag"
         tomorrow: "Imorgon"
         next_week: "Nästa vecka"
+        post_local_date: "Datum i inlägget"
         later_this_week: "Senare denna vecka"
         start_of_next_business_week: "Måndag"
         start_of_next_business_week_alt: "Nästa måndag"
@@ -1297,8 +1298,6 @@ sv:
         generate_link: "Kopiera inbjudningslänken"
         link_generated: "Länk för inbjudan framgångsrikt skapad!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
-        single_user: "Enstaka användare"
-        multiple_user: "Flera användare"
         invite_link:
           title: "Inbjudningslänk"
           success: "Länk för inbjudan framgångsrikt skapad!"
@@ -1561,7 +1560,6 @@ sv:
       sent_activation_email_again_generic: "Vi skickade ett nytt aktiveringsmeddelande. Det kan ta några minuter innan det kommer; kontrollera din skräppostmapp."
       to_continue: "Logga in"
       preferences: "Du måste logga in för att ändra dina användarinställningar."
-      forgot: "Jag kommer inte ihåg mina kontouppgifter"
       not_approved: "Ditt konto har inte godkänts än. Du kommer att aviseras via e-post när det är klart att logga in."
       google_oauth2:
         name: "Google"
@@ -2142,12 +2140,16 @@ sv:
         description: "Användare måste vänta innan de kan publicera inlägg igen."
         save: "Spara"
         remove: "Inaktivera"
+        hours: "Timmar:"
+        minutes: "Minuter:"
+        seconds: "Sekunder:"
         durations:
           15_minutes: "15 minuter"
           1_hour: "1 timme"
           4_hours: "4 timmar"
           1_day: "1 dag"
           1_week: "1 vecka"
+          custom: "Anpassad varaktighet"
       slow_mode_notice:
         duration: "Du måste vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:
@@ -2673,6 +2675,7 @@ sv:
       edit: "Redigera"
       edit_dialog_title: "Ändra: %{categoryName}"
       view: "Visa ämnen i kategori"
+      back: "Tillbaka till kategorin"
       general: "Allmänt"
       settings: "Inställningar"
       topic_template: "Ämnesmall"
@@ -2682,7 +2685,7 @@ sv:
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
       tags_tab_description: "Taggar och tagg-grupper som specificerats ovan kommer enbart att vara tillgängliga för denna kategori samt andra kategorier som också har specificerat dem. De kommer inte att vara tillgängliga i övriga kategorier."
       tag_groups_placeholder: "(Valfri) lista över tillåtna grupptaggar"
-      manage_tag_groups_link: "Hantera tagg-grupper här."
+      manage_tag_groups_link: "Hantera tagg-grupper"
       allow_global_tags_label: "Tillåt även andra taggar"
       tag_group_selector_placeholder: "(Valfri) tagg-grupp"
       required_tag_group_description: "Kräv att nya ämnen har taggar från en tagg-grupp:"

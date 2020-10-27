@@ -1018,7 +1018,6 @@ sw:
     missing_user_field: "Haujajaza sehemu zote za mtumiaji"
     auth_complete: "Uthibitisho umekamilika."
     click_to_continue: "Bofya hapa kuendelea."
-    already_logged_in: "Inaonekana kuwa unajaribu kukubali mualiko kwa ajili ya mtumiaji mwingine. Kama wewe sio %{current_user}, tafadhali toka nje ya akaunti yako alafu jaribu kuingia tena."
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
     second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
   admin:

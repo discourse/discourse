@@ -1171,7 +1171,6 @@ nb_NO:
       sent_activation_email_again: "Vi sendte deg en ny aktiverings-e-post på <b>%{currentEmail}</b>. Det kan ta noen minutter før den kommer frem; ikke glem å sjekke søppelpostmappen."
       to_continue: "Logg inn"
       preferences: "Du må være innlogget for å endre brukerinnstillinger."
-      forgot: "I husker ikke mine kontodetaljer"
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
       google_oauth2:
         name: "Google"

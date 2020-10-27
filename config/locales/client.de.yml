@@ -1290,8 +1290,6 @@ de:
         generate_link: "Einladungslink kopieren"
         link_generated: "Der Einladungslink wurde erfolgreich generiert!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
-        single_user: "Einzelbenutzer"
-        multiple_user: "Mehrere Benutzer"
         invite_link:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
@@ -1549,7 +1547,6 @@ de:
       sent_activation_email_again_generic: "Wir haben eine weitere Aktivierungsmail verschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; schaue auch im Spam-Ordner nach."
       to_continue: "Melde dich bitte an"
       preferences: "Du musst angemeldet sein, um deine Benutzereinstellungen bearbeiten zu können."
-      forgot: "Ich kann mich nicht an meine Zugangsdaten erinnern"
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
       google_oauth2:
         name: "Google"
@@ -2643,7 +2640,6 @@ de:
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tags_tab_description: "Die oben spezifizierten Tags und Tag-Gruppen werden nur in dieser Kategorie und anderen Kategorien, für die sie ebenfalls spezifiziert sind, verfügbar sein. Darüber hinaus werden sie nicht in weiteren Kategorien verwendbar sein."
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
-      manage_tag_groups_link: "Verwalte hier die Schlagwort-Gruppen."
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
       tag_group_selector_placeholder: "(Optional) Tag Gruppe"
       required_tag_group_description: "Neue Themen müssen Tags von einer Tag Gruppe haben:"

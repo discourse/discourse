@@ -553,6 +553,7 @@ fa_IR:
       member_requested: "درخواست شده در"
       add_members:
         input_placeholder: "نام‌کاربری یا ایمیل"
+        notify_users: "اطلاع رسانی به کاربران"
       requests:
         title: "درخواست ها"
         reason: "دلیل"
@@ -858,6 +859,7 @@ fa_IR:
       suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
+      github_profile: "GitHub"
       email_activity_summary: "چکیده‌ی فعالیت"
       mailing_list_mode:
         label: "حالت لیست ایمیل"
@@ -888,6 +890,7 @@ fa_IR:
       muted_categories: "بی‌صدا"
       muted_categories_instructions: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       muted_categories_instructions_dont_hide: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید."
+      regular_categories: "عادی"
       no_category_access: "به عنوان یک مدیر دسترسی محدودی به این دسته بندی دارید، ذخیره سازی غیر فعال است."
       delete_account: "حساب‌کاربری من را پاک کن"
       delete_account_confirm: "آیا مطمئنید که می‌خواهید شناسه‌تان را برای همیشه پاک کنید؟ برگشتی در کار نیست!"
@@ -897,6 +900,7 @@ fa_IR:
       admin_delete: "پاک کردن"
       users: "کاربران"
       muted_users: "بی‌صدا"
+      allowed_pm_users: "مجاز"
       ignored_users: "صرف نظر شده"
       tracked_topics_link: "نمایش"
       automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم."
@@ -1426,7 +1430,6 @@ fa_IR:
       sent_activation_email_again_generic: "یک ایمیل فعالسازی دیگر فرستادیم. رسیدن آن ممکن است چند دقیقه طول بکشد؛ لطفا پوشه‌ی اسپم را هم چک کنید."
       to_continue: "لطفا وارد شوید"
       preferences: "شما باید وارد شوید تا بتوانید تنظیمات کاربری خود را تغییر بدهید."
-      forgot: "من اطلاعات حساب کاربری خود را به یاد نمی‌آورم"
       not_approved: "حساب کاربری شما هنوز تایید نشده. بعد از تایید با ایمیل به شما اطلاع داده خواهد شد."
       google_oauth2:
         name: "گوگل"
@@ -2391,6 +2394,7 @@ fa_IR:
       edit: "ویرایش"
       edit_dialog_title: "ویرایش: %{categoryName}"
       view: "نمایش موضوعات در دسته‌بندی"
+      back: "بازگشت به دسته‌بندی"
       general: "عمومی"
       settings: "تنظیمات"
       topic_template: "قالب موضوع"
@@ -2398,7 +2402,6 @@ fa_IR:
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
       tag_groups_placeholder: "(اختیاری) لیست برچسب‌های قابل استفاده‌ی گروه"
-      manage_tag_groups_link: "مدیریت گروه‌های برچسب اینجا"
       allow_global_tags_label: "اجازه‌ی برچسب‌های دیگر را هم بده"
       topic_featured_link_allowed: "اجازه‌ی لینک‌های برجسته در این دسته‌بندی"
       delete: "حذف دسته‌بندی"
