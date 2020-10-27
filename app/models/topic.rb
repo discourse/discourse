@@ -1770,7 +1770,6 @@ end
 #  archetype                 :string           default("regular"), not null
 #  featured_user4_id         :integer
 #  notify_moderators_count   :integer          default(0), not null
-#  slow_mode_seconds         :integer          default(0), not null
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
@@ -1788,13 +1787,14 @@ end
 #  featured_link             :string
 #  reviewable_score          :float            default(0.0), not null
 #  image_upload_id           :bigint
+#  slow_mode_seconds         :integer          default(0), not null
 #
 # Indexes
 #
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
-#  index_topics_on_bumped_at               (bumped_at)
+#  index_forum_threads_on_bumped_at        (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
@@ -1802,5 +1802,6 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_timestamps_private      (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
 #  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #
