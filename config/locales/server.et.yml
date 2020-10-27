@@ -796,7 +796,6 @@ et:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     not_available: "Pole saadaval. Proovime %{suggestion}?"
     omniauth_confirm_button: "Jätka"
-    already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:
       sent_test: "saadetud!"

@@ -1791,7 +1791,6 @@ zh_TW:
     missing_user_field: "你還沒有填寫完所有使用者字段"
     auth_complete: "已完成認證。"
     click_to_continue: "點擊此處繼續。"
-    already_logged_in: "喔，看起來你正嘗試查看給另一個使用者的邀請連結。如果你不是%{current_user}，請退出再重試。"
     second_factor_description: "請從您的應用程式中輸入所需的驗證碼："
     second_factor_backup_description: "請輸入一組您的備用碼"
     invalid_second_factor_code: "驗證碼無效，每個驗證碼只能使用一次"

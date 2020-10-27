@@ -1194,7 +1194,6 @@ cs:
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>%{currentEmail}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       to_continue: "Přihlaš se, prosím"
       preferences: "Pro to, aby jsi mohl měnit své uživatelské nastavení, se musíš přihlásit."
-      forgot: "Nevybavuju si podrobnosti svého účtu"
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"

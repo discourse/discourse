@@ -1142,7 +1142,6 @@ lt:
       sent_activation_email_again: "Mes jums išsiunteme dar vieną el. laišką su aktyvacijos instrucijomis į <b>%{currentEmail}</b>. Prašome palaukti, gali užtrukti kelias minutes."
       to_continue: "Prašome prisijungti"
       preferences: "Turite būti prisijungęs, kad keistumete paskyros nustatymus."
-      forgot: "Negaliu atsiminti paskyros duomenų."
       google_oauth2:
         name: "Google"
         title: "per Google"

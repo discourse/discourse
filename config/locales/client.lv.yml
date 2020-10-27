@@ -1029,7 +1029,6 @@ lv:
       sent_activation_email_again: "Mēs nosūtijām vēl vienu aktivācijas epastu uz <b>%{currentEmail}</b>. Tas var pienākt dažu minūšu laikā; atcerieties pārbaudīt jūsu surogātpasta mapi."
       to_continue: "Lūdzu ieejiet"
       preferences: "Jums ir jāieiet, lai izmainītu savus iestatījumus."
-      forgot: "Es nevaru atcerēties sava konta informāciju."
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"

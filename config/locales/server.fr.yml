@@ -2081,7 +2081,6 @@ fr:
     missing_user_field: "Vous n'avez pas renseigné l'ensemble des champs utilisateur"
     auth_complete: "Authentification terminée."
     click_to_continue: "Cliquez ici pour continuer."
-    already_logged_in: "Oups, on dirait que vous essayez d'accepter une invitation d'un autre utilisateur. Si vous n'êtes pas %{current_user}, veuillez vous déconnecter et réessayer."
     second_factor_description: "Veuillez saisir le code d'authentification requise de votre app :"
     second_factor_backup_description: "Veuillez entrer un de vos codes de secours :"
     invalid_second_factor_code: "Code d'authentification invalide. Chaque code ne peut être utilisé qu'une fois."

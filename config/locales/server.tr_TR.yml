@@ -2000,7 +2000,6 @@ tr_TR:
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
     auth_complete: "Kimlik doğrulama işlemi tamamlandı."
     click_to_continue: "Devam etmek için buraya tıklayın."
-    already_logged_in: "Hata! Başka bir kullanıcı için daveti kabul etmeye çalıştığınız anlaşılıyor. %{current_user} değilseniz, lütfen çıkış yapın ve tekrar deneyin."
     second_factor_description: "Lütfen uygulamanıza gerekli kimlik doğrulama kodunu girin:"
     second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
     invalid_second_factor_code: "Geçersiz kimlik doğrulama kodu. Her kod yalnızca bir kez kullanılabilir."

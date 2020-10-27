@@ -1175,7 +1175,6 @@ ja:
       sent_activation_email_again_generic: "アクティベーションメールを送りました。届くのに少し時間がかかるかもしれません。スパムフォルダーも確認してください。"
       to_continue: "ログインしてください"
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
-      forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
       google_oauth2:
         name: "Google"

@@ -1360,7 +1360,6 @@ gl:
       sent_activation_email_again_generic: "Enviamos outro correo electrónico de activación. Pode tardar uns minutos en chegar; asegúrate de revisar o cartafol do spam."
       to_continue: "Por favor, inicia sesión"
       preferences: "Precisas iniciar sesión para cambiar as túas preferencias de usuario."
-      forgot: "Non lembro os detalles da miña conta"
       not_approved: "A túa conta non foi aínda aprobada. Notificaráseche por correo electrónico cando poidas iniciar a sesión."
       google_oauth2:
         name: "Google"
@@ -2327,7 +2326,6 @@ gl:
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
       tags_tab_description: "As etiquetas e os grupos de etiquetas anteriores só estarán dispoñíbeis nesta categoría e outras que as inclúan. Non poderán usarse noutras categorías."
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
-      manage_tag_groups_link: "Xestiona aquí os grupos de etiquetas."
       allow_global_tags_label: "Permitir tamén outras etiquetas"
       tag_group_selector_placeholder: "Grupo de etiquetas (opcional)"
       required_tag_group_description: "Requirir que os novos temas teñan etiquetas dun grupo de etiquetas:"

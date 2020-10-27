@@ -1252,7 +1252,6 @@ ro:
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
     missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
-    already_logged_in: "Oops, se pare că încerci să accepți o invitație de la un alt utilizator. Dacă nu ești %{current_user}, te rugăm ieși și intră din nou."
   admin:
     email:
       sent_test: "trimis!"

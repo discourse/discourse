@@ -1977,7 +1977,6 @@ ca:
     missing_user_field: "No heu completat tots els camps d'usuari"
     auth_complete: "S'ha completat l'autenticació."
     click_to_continue: "Feu clic aquí per a continuar."
-    already_logged_in: "Ui, sembla que intenteu acceptar una invitació per a un altre usuari. Si no sou %{current_user}, tanqueu la sessió i torneu-ho a provar."
     second_factor_description: "Introduïu el codi d'autenticació necessari de la vostra aplicació:"
     second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
     invalid_second_factor_code: "Codi d'autenticació no vàlid. Cada codi només es pot utilitzar una vegada."

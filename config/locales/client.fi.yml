@@ -119,6 +119,10 @@ fi:
       topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. viesti"
       close: "sulje"
+      twitter: "Jaa Twitterissä"
+      facebook: "Jaa Facebookissa"
+      email: "Lähetä sähköpostitse"
+      url: "Kopioi ja jaa URL"
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"
       private_topic: "muutti ketjun yksityiskeskusteluksi %{when}"
@@ -259,7 +263,9 @@ fi:
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
         unbookmark_with_reminder: "Poista kaikki kirjanmerkkisi ja muistutuksesi tästä ketjusta klikkaamalla. Olet asettanut muistutuksen tästä ketjusta ajankohtaan %{reminder_at}."
     bookmarks:
+      created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
+      created_with_reminder: "Olet kirjanmerkinnyt tämän viestin muistutuksen kera %{date}. %{name}"
       remove: "Poista kirjanmerkki"
       delete: "Poista kirjanmerkki"
       confirm_delete: "Oletko varma, että haluat poistaa tämän kirjanmerkin? Muistutus poistetaan myös."
@@ -268,6 +274,13 @@ fi:
       no_timezone: 'Et ole valinnut aikavyöhykettä, joten et voi asettaa muistutuksia. Aseta se  <a href="%{basePath}/my/preferences/profile">profiilisivullasi</a>.'
       invalid_custom_datetime: "Antamasi päivämäärä ja kellonaika ei kelpaa, yritä uudelleen."
       list_permission_denied: "Et voi nähdä tämän käyttäjän kirjanmerkkejä."
+      no_user_bookmarks: "Kirjanmerkeissäsi ei ole mitään. Kirjanmerkitsemällä viestin löydät sen myöhemmin helposti."
+      auto_delete_preference:
+        label: "Poista automaattisesti"
+        never: "Ei koskaan"
+        when_reminder_sent: "Kun muistutus on lähetetty"
+        on_owner_reply: "Kun olen vastannut tähän ketjuun"
+      search_placeholder: "Etsi kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       reminders:
         later_today: "Myöhemmin tänään"
@@ -275,6 +288,7 @@ fi:
         tomorrow: "Huomenna"
         next_week: "Ensi viikolla"
         later_this_week: "Myöhemmin tällä viikolla"
+        start_of_next_business_week: "Maanantaina"
         start_of_next_business_week_alt: "Ensi maanantaina"
         next_month: "Ensi kuussa"
         custom: "Valitse päivämäärä ja kellonaika"
@@ -283,6 +297,7 @@ fi:
         today_with_time: "tänään klo %{time}"
         tomorrow_with_time: "huomenna klo %{time}"
         at_time: "%{date_time}"
+        existing_reminder: "Olet pyytänyt muistutuksen tästä kirjanmerkistä, joka lähetetään %{at_date_time}"
     copy_codeblock:
       copied: "kopioitiin!"
     drafts:
@@ -506,6 +521,7 @@ fi:
       sent_by_user: "Lähettäjä <a href='%{userUrl}'>%{user}</a>"
       sent_by_you: "Lähettäjä <a href='%{userUrl}'>sinä</a>"
     directory:
+      username: "Käyttäjätunnus"
       filter_name: "suodata tunnuksen perusteella"
       title: "Käyttäjät"
       likes_given: "Annetut"
@@ -536,6 +552,12 @@ fi:
     groups:
       member_added: "Lisättiin"
       member_requested: "Pyyntö ryhmässä"
+      add_members:
+        title: "Lisää jäseniä ryhmään %{group_name}"
+        description: "Voit myös liittää pilkuin erotellun luettelon."
+        usernames: "Anna käyttäjätunnukset tai sähköpostiosoitteet"
+        input_placeholder: "Käyttäjätunnukset tai sähköpostit"
+        notify_users: "Ilmoita käyttäjille"
       requests:
         title: "Pyynnöt"
         reason: "Syy"
@@ -565,6 +587,15 @@ fi:
         membership:
           title: Jäsenyys
           access: Pääsy
+        categories:
+          title: Alueet
+          long_title: "Alueen oletusilmoitustaso"
+          description: "Kun käyttäjä lisätään tähän ryhmään, hänen ilmoitustasoasetuksensa asetetaan automaattisesti näiden oletusarvojen mukaisiksi. Hän voi muokata arvoja jälkikäteen."
+          watched_categories_instructions: "Tarkkaile kaikkia ketjuja näillä alueilla. Ryhmän jäsenet saavat ilmoituksen kaikista uusista viesteistä ja ketjunaloituksista, ja uusien viestien määrät myös näkyvät ketjujen yhteydessä."
+          tracked_categories_instructions: "Seuraa kaikkia ketjuja näillä alueilla. Uusien viestien määrät näkyvät ketjujen yhteydessä."
+          watching_first_post_categories_instructions: "Käyttäjät saavat ilmoituksen näiden alueiden ketjujen ensimmäisistä viesteistä."
+          regular_categories_instructions: "Jos nämä alueet on vaimennettu, vaimennus perutaan ryhmän jäseniltä. Käyttäjälle ilmoitetaan, jos hänet mainitaan tai joku vastaa hänelle."
+          muted_categories_instructions: "Käyttäjille ei ilmoiteta millään lailla näiden alueiden uusista ketjuista, eikä niitä näytetä Alueet- eikä Tuoreimmat-listauksissa."
         logs:
           title: "Lokit"
           when: "Milloin"
@@ -712,6 +743,7 @@ fi:
       latest_by: "tuorein"
       toggle_ordering: "vaihda järjestystä"
       subcategories: "Tytäralueet"
+      muted: "Vaimennetut alueet"
       topic_sentence:
         one: "%{count} ketju"
         other: "%{count} ketjua"
@@ -721,6 +753,7 @@ fi:
       topic_stat_sentence_month:
         one: "%{count} uusi ketju viimeisimmän kuukauden aikana"
         other: "%{count} uutta ketjua viimeisimmän kuukauden aikana"
+      n_more: "Alueet (%{count} muuta)..."
     ip_lookup:
       title: IP-osoitteen haku
       hostname: Isäntänimi
@@ -809,6 +842,10 @@ fi:
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
       dynamic_favicon: "Näytä määriä selainkuvakkeessa"
+      skip_new_user_tips:
+        description: "Ohita uuden käyttäjän aloittamisvinkit ja -ansiomerkit"
+        not_first_time: "Ei ole ensikertasi?"
+        skip_link: "Ohita nämä vinkit"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
       allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
@@ -917,19 +954,30 @@ fi:
         choose_new: "Valitse uusi salasana"
         choose: "Valitse salasana"
       second_factor_backup:
+        title: "Kaksivaiheisen tunnistautumisen varakoodit"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
         enable: "Ota käyttöön"
         enable_long: "Ota varakoodit käyttöön"
+        manage:
+          one: "Hallinnoi varakoodeja. Sinulla on <strong>%{count}</strong> varakoodi jäljellä."
+          other: "Hallinnoi varakoodeja. Sinulla on <strong>%{count}</strong> varakoodia jäljellä."
         copy_to_clipboard: "Kopioi leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         download_backup_codes: "Lataa varakoodit"
+        remaining_codes:
+          one: "Sinulla on <strong>%{count}</strong> varakoodi jäljellä."
+          other: "Sinulla on <strong>%{count}</strong> varakoodia jäljellä."
         use: "Käytä varakoodi"
+        enable_prerequisites: "Täytyy ottaa käyttöön ensisijainen kaksivaiheinen tapa, jotta voi luoda varakoodeja."
         codes:
           title: "Varakoodit luotiin"
           description: "Jokaista näistä varakoodeista voi käyttää vain kerran. Säilö ne johonkin turvalliseen paikkaan, mistä kuitenkin löydät ne."
       second_factor:
+        title: "Kaksivaiheinen tunnistautuminen"
+        enable: "Hallinnoi kaksivaiheista tunnistautumista"
+        disable_all: "Poista kaikki käytöstä"
         forgot_password: "Unohditko salasanan?"
         confirm_password_description: "Jatka vahvistamalla salasanasi"
         name: "Nimi"
@@ -941,17 +989,24 @@ fi:
         show_key_description: "Syötä manuaalisesti"
         short_description: |
           Suojaa käyttäjätilisi kertakäyttöisillä turvakoodeilla.
+        extended_description: |
+          Kaksivaiheinen tunnistautuminen lisää tilisi tietoturvaa vaatimalla kertakäyttöisen koodin salasanasi lisäksi. Koodeja voi luoda <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> ja <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-laitteilla.
+        oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistautuminen on käytössä."
         use: "Käytä Authenticator-sovellusta"
+        enforced_notice: "Kaksivaiheinen tunnistautuminen täytyy ottaa käyttöön, jotta voi käyttää sivustoa."
         disable: "Poista käytöstä"
+        disable_confirm: "Oletko varma, että haluat ottaa kaikki kaksivaiheiset tunnistautumismuodot käytöstä?"
         save: "Tallenna"
         edit: "Muokkaa"
+        edit_title: "Muokkaa todentajaa"
+        edit_description: "Todentajan nimi"
         enable_security_key_description: |
           Kun <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">tunnistautumislaite</a> on valmiina, paina alla olevaaa rekisteröi-nappia.
         totp:
           title: "Välineeseen perustuvat tunnistautumiset"
-          add: "Uusi tunnistautumissovellus"
-          default_name: "Tunnistautumissovellukseni"
-          name_and_code_required_error: "Anna nimi sekä tunnistautumissovelluksesta löytyvä koodi."
+          add: "Lisää todentaja"
+          default_name: "Oma todentajani"
+          name_and_code_required_error: "Anna nimi sekä todentajasovelluksesta löytyvä koodi."
         security_key:
           register: "Rekisteröidy"
           title: "Turva-avaimet"
@@ -969,14 +1024,14 @@ fi:
       change_username:
         title: "Vaihda käyttäjätunnus"
         confirm: "Oletko aivan varma että haluat vaihtaa käyttäjänimesi?"
-        taken: "Pahoittelut, tuo nimi on jo käytössä."
+        taken: "Tuo nimi on valitettavasti jo käytössä."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       add_email:
         title: "Lisää sähköpostiosoite"
         add: "lisää"
       change_email:
         title: "Vaihda sähköposti"
-        taken: "Pahoittelut, tämä sähköpostiosoite ei ole saatavilla."
+        taken: "Tämä sähköpostiosoite ei valitettavasti ole saatavilla."
         error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä sama sähköpostiosoite on jo käytössä?"
         success: "Annettuun osoitteeseen on lähetetty viesti. Seuraa sen ohjeita sähköpostiosoitteen varmentamiseksi."
         success_staff: "Lähetimme sähköpostia nykyiseen osoitteeseesi. Noudata vahvistusohjeita."
@@ -1003,7 +1058,7 @@ fi:
         title: "Sähköposti"
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
-        primary_label: "ensisijainen väri"
+        primary_label: "ensisijainen"
         unconfirmed_label: "vahvistamaton"
         resend_label: "lähetä vahvistussähköposti uudelleen"
         resending_label: "lähetetään..."
@@ -1186,8 +1241,6 @@ fi:
         generate_link: "Kopioi kutsulinkki"
         link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
-        single_user: "Yksittäinen käyttäjä"
-        multiple_user: "Useita käyttäjiä"
         invite_link:
           title: "Kutsulinkki"
           success: "Kutsulinkki luotiin onnistuneesti!"
@@ -1198,7 +1251,7 @@ fi:
           none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
           text: "Massakutsu"
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
-          error: "Pahoittelut, tiedoston tulee olla CSV-muodossa."
+          error: "Tiedoston tulee olla CSV-muodossa."
           confirmation_message: "Olet lähettämässä kutsun kaikkiin sähköpostiosoitteisiin, jotka lähettämässäsi tiedostossa on."
       password:
         title: "Salasana"
@@ -1410,7 +1463,7 @@ fi:
       second_factor_description: "Syötä sovelluksen antama todennuskoodi:"
       second_factor_backup: "Kirjaudu käyttäen varakoodia"
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
-      second_factor: "Kirjaudu tunnistautumissovelluksella"
+      second_factor: "Kirjaudu todentajasovelluksella"
       security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
       security_key_alternative: "Kokeile muuta tapaa"
       security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
@@ -1430,7 +1483,7 @@ fi:
       authenticating: "Autentikoidaan..."
       awaiting_activation: "Tilisi odottaa aktivointia; unohdin salasanani -linkin kautta voit pyytää uuden aktivointisähköpostin."
       awaiting_approval: "Henkilökunta ei ole vielä hyväksynyt käyttäjätiliäsi. Saat sähköpostiviestin, kun tunnuksesi on hyväksytty."
-      requires_invite: "Pahoittelut, tämä palsta on vain kutsutuille käyttäjille."
+      requires_invite: "Tämä palsta on valitettavasti vain kutsutuille käyttäjille."
       not_activated: "Et voi vielä kirjautua sisään. Lähetimme aiemmin vahvistusviestin osoitteeseen <b>%{sentTo}</b>. Seuraa viestin ohjeita ottaaksesi tunnuksen käyttöön."
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
@@ -1442,7 +1495,6 @@ fi:
       sent_activation_email_again_generic: "Lähetimme uuden aktivointisähköpostin. Sen saapumisessa voi kestää joitakin minuutteja; tarkistathan myös roskapostikansiosi."
       to_continue: "Ole hyvä ja kirjaudu sisään"
       preferences: "Sinun täytyy olla kirjautuneena sisään muokataksesi tilisi asetuksia"
-      forgot: "En muista käyttäjätilini tietoja"
       not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
       google_oauth2:
         name: "Google"
@@ -1463,7 +1515,7 @@ fi:
         name: "Discord"
         title: "Discordilla"
       second_factor_toggle:
-        totp: "Käytä todennussovellusta tämän sijaan"
+        totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varmuuskoodia tämän sijaan"
     invites:
       accept_title: "Kutsu"
@@ -1634,7 +1686,7 @@ fi:
       exit_fullscreen: "poistu koko ruudun kirjoitustilasta"
       modal_ok: "OK"
       modal_cancel: "Peruuta"
-      cant_send_pm: "Et voi lähettää viestiä käyttäjälle %{username}."
+      cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
         body: "Olet lähettämässä viestiä vain itsellesi!"
@@ -1869,15 +1921,18 @@ fi:
         choose_new_tags: "Valitse tunnisteet näille ketjuille:"
         choose_append_tags: "Valitse ketjuille lisättävät uudet tunnisteet:"
         changed_tags: "Ketjujen tunnisteet muutettiin."
+        remove_tags: "Poista tunnisteita"
       none:
         unread: "Sinulla ei ole ketjuja lukematta."
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
         posted: "Et ole kirjoittanut vielä yhteenkään ketjuun."
+        latest: "Olet ajan tasalla!"
         bookmarks: "Et ole vielä merkinnyt kirjanmerkkejä."
         category: "Alueella %{category} ei ole ketjua."
         top: "Kuumia ketjuja ei ole."
         educate:
+          new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena, ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
           unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
@@ -1886,6 +1941,7 @@ fi:
         new: "Uusia ketjuja ei ole enempää."
         unread: "Ketjuja ei ole enempää lukematta."
         category: "Alueen %{category} ketjuja ei ole enempää."
+        tag: "Tunnisteella %{tag} merkittyjä ketjuja ei ole enempää."
         top: "Kuumia ketjuja ei ole enempää."
         bookmarks: "Merkattuja ketjuja ei ole enempää."
     topic:
@@ -1927,14 +1983,14 @@ fi:
       title: "Aihe"
       invalid_access:
         title: "Tämä ketju on yksityinen"
-        description: "Pahoittelut, sinulla ei ole pääsyä tähän ketjuun!"
+        description: "Sinulla ei valitettavasti ole pääsyä tähän ketjuun!"
         login_required: "Sinun täytyy kirjautua sisään nähdäksesi tämän ketjun."
       server_error:
         title: "Ketjun lataaminen epäonnistui"
-        description: "Pahoittelut, ketjun lataaminen epäonnistui. Kyse saattaa olla yhteysongelmasta. Kokeile sivun lataamista uudestaan ja jos ongelma jatkuu, ota yhteyttä."
+        description: "Ketjun lataaminen valitettavasti epäonnistui. Kyse saattaa olla yhteysongelmasta. Kokeile sivun lataamista uudestaan ja jos ongelma jatkuu, ota yhteyttä."
       not_found:
         title: "Ketjua ei löytynyt"
-        description: "Pahoittelut, ketjua ei löytynyt. Ehkäpä valvoja on siirtänyt sen muualle?"
+        description: "Ketjua ei valitettavasti löytynyt. Ehkäpä valvoja on siirtänyt sen muualle?"
       total_unread_posts:
         one: "sinulla on %{count} lukematon viesti tässä ketjussa"
         other: "sinulla on %{count} lukematonta viestiä tässä ketjussa"
@@ -1957,10 +2013,30 @@ fi:
       read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 ketju</a>, jossa on viestejä } other { <a href='{basePath}/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Selaa keskustelualueita
+      browse_all_tags: Selaa kaikkia tunnisteita
       view_latest_topics: tuoreimpia ketjuja
+      suggest_create_topic: aloita uusi keskustelu?
       jump_reply_up: hyppää aiempaan vastaukseen
       jump_reply_down: hyppää myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
+      slow_mode_update:
+        title: "Hidas tila"
+        select: "Kesto:"
+        description: "Käyttäjän on odotettava ennen kuin voi lähettää toisen viestin."
+        save: "Tallenna"
+        remove: "Poista käytöstä"
+        hours: "Tuntia:"
+        minutes: "Minuuttia:"
+        seconds: "Sekuntia:"
+        durations:
+          15_minutes: "15 minuuttia"
+          1_hour: "1 tunti"
+          4_hours: "4 tuntia"
+          1_day: "1 päivä"
+          1_week: "1 viikko"
+          custom: "Valitse kesto"
+      slow_mode_notice:
+        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"
@@ -2053,7 +2129,7 @@ fi:
           "2_8": "Näet uusien vastausten määrän, koska olet asettanut tämän alueen seurantaan."
           "2_4": "Näet uusien vastausten määrän, koska olet kirjoittanut ketjuun."
           "2_2": "Näet uusien vastausten määrän, koska olet asettanut ketjun seurantaan."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Näet uusien vastausten määrän, koska <a href="%{basePath}/u/%{username}/preferences/notifications"> luit tätä ketjua</a>.'
           "1_2": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "1": "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
           "0_7": "Et saa mitään ilmoituksia tältä alueelta."
@@ -2090,6 +2166,7 @@ fi:
         open: "Avaa ketju"
         close: "Sulje ketju"
         multi_select: "Valitse viestejä..."
+        slow_mode: "Ota Hidas tila käyttöön"
         timed_update: "Aseta ajastin ketjulle..."
         pin: "Kiinnitä ketju..."
         unpin: "Poista ketjun kiinnitys..."
@@ -2139,6 +2216,9 @@ fi:
           one: "Kiinnitettyjä ketjuja alueella %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Alueelle %{categoryLink} kiinnitettyjä ketjuja: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Kiinnitä tämä ketju kaikkien alueiden ylimmäiseksi, kunnes"
+        confirm_pin_globally:
+          one: "Olet jo kiinnittänyt %{count} ketjun koko palstalle. Liian suuri kiinnitettyjen ketjujen määrä voi häiritä uusia sekä anonyymejä käyttäjiä. Oletko varma, että haluat kiinnittää yhden ketjun lisää koko palstalle?"
+          other: "Olet jo kiinnittänyt %{count} ketjua koko palstalle. Liian suuri kiinnitettyjen ketjujen määrä voi häiritä uusia sekä anonyymejä käyttäjiä. Oletko varma, että haluat kiinnittää yhden ketjun lisää koko palstalle?"
         unpin_globally: "Älä enää pidä tätä ketjua kaikkien alueiden ylimmäisenä."
         unpin_globally_until: "Poista nyt tämän ketjun kiinnitys kaikkien alueiden ylimmäisenä, tai odota kunnes <strong>%{until}</strong>."
         global_pin_note: "Käyttäjät voivat poistaa ketjun kiinnityksen itseltään."
@@ -2160,7 +2240,8 @@ fi:
         action: "Kutsu"
         success: "Käyttäjä on kutsuttu osallistumaan tähän yksityiseen keskusteluun."
         success_group: "Ryhmä on kutsuttu osallistumaan tähän yksityiseen keskusteluun."
-        error: "Pahoittelut, kutsuttaessa tapahtui virhe."
+        error: "Kutsuttaessa käyttäjää tapahtui valitettavasti virhe."
+        not_allowed: "Tätä käyttäjää ei valitettavasti voi kutsua."
         group_name: "ryhmän nimi"
       controls: "Ketjun hallinta"
       invite_reply:
@@ -2177,7 +2258,7 @@ fi:
         email_placeholder: "nimi@esimerkki.fi"
         success_email: "Olemme lähettäneet kutsun osoitteeseen <b>%{emailOrUsername}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
-        error: "Pahoittelut, emme onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
+        error: "Emme valitettavasti onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
         success_existing_email: "On jo olemassa käyttäjä sähköpostiosoitteella <b>%{emailOrUsername}</b>. Hänet kutsuttiin osallistumaan tähän ketjuun."
       login_reply: "Kirjaudu sisään vastataksesi"
       filters:
@@ -2237,7 +2318,7 @@ fi:
         publish_url: "Sivusi julkaistiin osoitteessa:"
         topic_published: "Ketjusi julkaistiin osoitteessa;"
         preview_url: "Sivusi julkaistaan osoitteessa:"
-        invalid_slug: "Pahoittelut, et voi julkaista tätä sivua."
+        invalid_slug: "Et voi valitettavasti julkaista tätä sivua."
         unpublish: "Peru julkaisu"
         unpublished: "Sivusi julkaisu peruttiin, sille ei ole enää pääsyä."
         publishing_settings: "Julkaisuasetukset"
@@ -2320,15 +2401,15 @@ fi:
         one: "Sinä ja yksi toinen tykkäsi tästä viestistä"
         other: "Sinä ja %{count} muuta tykkäsi tästä viestistä"
       errors:
-        create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
-        edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
-        upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
-        file_too_large: "Pahoittelut, tiedosto on liian suuri (enimmäiskoko on %{max_size_kb}kb). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja sitten jakaisit linkin?"
-        too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
-        upload_not_authorized: "Pahoittelut, tiedosto jota yrität ladata ei ole sallittu (sallitut laajennukset: %{authorized_extensions})."
-        image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
-        attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
-        attachment_download_requires_login: "Pahoittelut, sinun täytyy kirjautua sisään voidaksesi ladata liitetiedostoja."
+        create: "Viestin luonti valitettavasti epäonnistui. Ole hyvä ja yritä uudelleen."
+        edit: "Viestin muokkaus valitettavasti epäonnistui. Ole hyvä ja yritä uudelleen."
+        upload: "Tiedoston lähetys valitettavasti epäonnistui. Ole hyvä ja yritä uudelleen."
+        file_too_large: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size_kb}kb). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja sitten jakaisit linkin?"
+        too_many_uploads: "Voit valitettavasti ladata vain yhden tiedoston kerrallaan."
+        upload_not_authorized: "Tiedosto jota yrität ladata ei valitettavasti ole sallittu (sallitut laajennukset: %{authorized_extensions})."
+        image_upload_not_allowed_for_new_user: "Uudet käyttäjät eivät valitettavasti saa ladata kuvia."
+        attachment_upload_not_allowed_for_new_user: "Uudet käyttäjät valitettavasti eivät saa ladata liitteitä."
+        attachment_download_requires_login: "Sinun täytyy valitettavasti kirjautua sisään, jotta voit ladata liitetiedostoja itsellesi."
       abandon_edit:
         confirm: "Haluatko varmasti hylätä tekemäsi muutokset?"
         no_value: "Ei, säilytän"
@@ -2355,7 +2436,7 @@ fi:
         undo_like: "peru tykkäys"
         edit: "muokkaa viestiä"
         edit_action: "Muokkaa"
-        edit_anonymous: "Pahoittelut, sinun täytyy ensin kirjautua sisään voidaksesi muokata tätä viestiä."
+        edit_anonymous: "Sinun täytyy ensin kirjautua sisään, jotta voit muokata tätä viestiä."
         flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
         delete: "poista tämä viesti"
         undelete: "peru viestin poistaminen"
@@ -2483,7 +2564,6 @@ fi:
       tags_placeholder: "(Ei-pakollinen) lista sallituista tunnisteista"
       tags_tab_description: "Yllä määritellyt tunnisteet ja tunnisteryhmät ovat käytössä vain tällä alueella sekä muilla alueilla, jotka samalla tapaa ovat ne määritelleet. Muilla alueilla ne eivät ole käytettävissä."
       tag_groups_placeholder: "(Ei-pakollinen) lista sallituista tunnisteryhmistä"
-      manage_tag_groups_link: "Hallitse tunnisteryhmiä tästä."
       allow_global_tags_label: "Salli myös muut tunnisteet"
       tag_group_selector_placeholder: "(Ei-pakollinen) tunnisteryhmä"
       required_tag_group_description: "Edellytä, että uudella ketjulla on tunnisteita tunnisteryhmästä:"
@@ -2610,7 +2690,7 @@ fi:
       hidden_email_address: "(piilotettu)"
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi; ei tarvetta odottaa muiden käyttäjien liputuksia."
-      cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
+      cant: "Et valitettavasti voi liputtaa tätä viestiä tällä hetkellä."
       notify_staff: "Ilmoita henkilökunnalle yksityisesti"
       formatted_name:
         off_topic: "Se eksyy aiheesta"
@@ -3069,10 +3149,10 @@ fi:
         reports_tab: "Raportit"
         report_filter_any: "mikä tahansa"
         disabled: Pois käytöstä
-        timeout_error: Kyselyssä kestää liian kauan. Valitse lyhyempi ajanjakso.
-        exception_error: Pahoittelut, kyselyä tehtäessä tapahtui virhe
+        timeout_error: Kyselyssä valitettavasti kestää liian kauan. Valitse lyhyempi ajanjakso.
+        exception_error: Kyselyä tehtäessä tapahtui valitettavasti virhe
         too_many_requests: Olet tehnyt näin liian monta kertaa. Odota ennen kuin yrität uudelleen.
-        not_found_error: Pahoittelut, raporttia ei ole olemassa
+        not_found_error: Raporttia ei valitettavasti ole olemassa
         filter_reports: Suodata raportteja
         reports:
           trend_title: "%{percent} muutos. Nyt %{current}, viime jaksossa %{prev}."
@@ -3876,13 +3956,13 @@ fi:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
         not_found: "Käyttäjää ei löydy."
-        invalid: "Pahoittelut, et voi esiintyä tuona käyttäjänä."
+        invalid: "Et voi valitettavasti esiintyä tuona käyttäjänä."
       users:
         title: "Käyttäjät"
         create: "Lisää ylläpitäjä"
         last_emailed: "Viimeksi lähetetty sähköpostia"
-        not_found: "Pahoittelut, tuota käyttäjänimeä ei löydy järjestelmästä."
-        id_not_found: "Pahoittelut, tuota käyttäjätunnusta ei löydy järjestelmästä."
+        not_found: "Tuota käyttäjänimeä ei valitettavasti löydy järjestelmästä."
+        id_not_found: "Tuota käyttäjätunnusta ei valitettavasti löydy järjestelmästä."
         active: "Aktivoitu"
         show_emails: "Näytä sähköpostit"
         hide_emails: "Piilota sähköpostit"
@@ -4349,7 +4429,7 @@ fi:
       step: "%{current}/%{total}"
       upload: "Lataa"
       uploading: "Ladataan..."
-      upload_error: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
+      upload_error: "Tiedoston lähetys valitettavasti epäonnistui. Ole hyvä ja yritä uudelleen."
       quit: "Ehkä myöhemmin"
       staff_count:
         one: "Henkilökuntalaisia on %{count} (eli sinä)"
