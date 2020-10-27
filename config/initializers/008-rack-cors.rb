@@ -6,7 +6,7 @@ class Discourse::Cors
   def initialize(app, options = nil)
     @app = app
     if GlobalSetting.enable_cors && GlobalSetting.cors_origin.present?
-      @global_origins = GlobalSetting.cors_origin.split(',').map(&:strip)
+      @global_origins = GlobalSetting.cors_origin.split(',').map { |x| x.strip.chomp('/') }
     end
   end
 
@@ -34,8 +34,6 @@ class Discourse::Cors
     origin = nil
 
     if cors_origins
-      cors_origins = cors_origins.map { |x| x.chomp('/') }
-
       if origin = env['HTTP_ORIGIN']
         origin = nil unless cors_origins.include?(origin)
       end

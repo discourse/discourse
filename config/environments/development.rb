@@ -28,6 +28,10 @@ Discourse::Application.configure do
 
   config.assets.debug = false
 
+  config.public_file_server.headers = {
+    'Access-Control-Allow-Origin' => '*'
+  }
+
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
   config.watchable_dirs['lib'] = [:rb]
