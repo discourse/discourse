@@ -4,15 +4,13 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { Promise } from "rsvp";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 
 module("lib:link-mentions");
 
-test("linkSeenMentions replaces users and groups", async (assert) => {
-  pretender.get("/u/is_local_username", () => [
-    200,
-    { "Content-Type": "application/json" },
-    {
+addPretenderCallback("lib:link-mentions", (server, helper) => {
+  server.get("/u/is_local_username", () =>
+    helper.response({
       valid: ["valid_user"],
       valid_groups: ["valid_group"],
       mentionable_groups: [
@@ -23,9 +21,11 @@ test("linkSeenMentions replaces users and groups", async (assert) => {
       ],
       cannot_see: [],
       max_users_notified_per_group_mention: 100,
-    },
-  ]);
+    })
+  );
+});
 
+test("linkSeenMentions replaces users and groups", async (assert) => {
   await fetchUnseenMentions([
     "valid_user",
     "mentionable_group",

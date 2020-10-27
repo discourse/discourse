@@ -1,6 +1,6 @@
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 import { resetCache } from "pretty-text/upload-short-url";
 
 moduleForComponent("cook-text", { integration: true });
@@ -14,24 +14,20 @@ componentTest("renders markdown", {
   },
 });
 
+addPretenderCallback("cook-text", (server, helper) => {
+  server.post("/uploads/lookup-urls", () =>
+    helper.response([
+      {
+        short_url: "upload://a.png",
+        url: "/images/avatar.png",
+        short_path: "/images/d-logo-sketch.png",
+      },
+    ])
+  );
+});
+
 componentTest("resolves short URLs", {
   template: `{{cook-text "![an image](upload://a.png)" class="post-body"}}`,
-
-  beforeEach() {
-    pretender.post("/uploads/lookup-urls", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        [
-          {
-            short_url: "upload://a.png",
-            url: "/images/avatar.png",
-            short_path: "/images/d-logo-sketch.png",
-          },
-        ],
-      ];
-    });
-  },
 
   afterEach() {
     resetCache();

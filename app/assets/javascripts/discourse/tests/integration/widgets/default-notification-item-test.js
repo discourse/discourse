@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -35,7 +35,7 @@ widgetTest("sets notification as read on middle click", {
   },
   async test(assert) {
     let requests = 0;
-    pretender.put("/notifications/mark-read", (request) => {
+    window.server.put("/notifications/mark-read", (request) => {
       ++requests;
 
       assert.equal(

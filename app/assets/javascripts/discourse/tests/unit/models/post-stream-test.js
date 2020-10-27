@@ -5,7 +5,7 @@ import Post from "discourse/models/post";
 import createStore from "discourse/tests/helpers/create-store";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 
 module("model:post-stream");
 
@@ -753,6 +753,10 @@ test("loadedAllPosts when the id changes", (assert) => {
   );
 });
 
+addPretenderCallback("model:post-stream", (server, helper) => {
+  server.get("/posts/4", () => helper.response({ id: 4, post_number: 4 }));
+});
+
 test("triggerRecoveredPost", async (assert) => {
   const postStream = buildStream(4567);
   const store = postStream.store;
@@ -761,14 +765,6 @@ test("triggerRecoveredPost", async (assert) => {
     postStream.appendPost(
       store.createRecord("post", { id: id, post_number: id })
     );
-  });
-
-  const response = (object) => {
-    return [200, { "Content-Type": "application/json" }, object];
-  };
-
-  pretender.get("/posts/4", () => {
-    return response({ id: 4, post_number: 4 });
   });
 
   assert.equal(

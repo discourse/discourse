@@ -6,7 +6,6 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
   const response = (object) => {
@@ -61,8 +60,8 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
       },
     ];
   }
-  // prettier-ignore
-  pretender.post("/uploads/lookup-urls", () => {
+
+  window.server.post("/uploads/lookup-urls", () => {
     return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
   });
 

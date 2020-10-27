@@ -3,7 +3,6 @@ import { test, module } from "qunit";
 import User from "discourse/models/user";
 import Group from "discourse/models/group";
 import * as ajaxlib from "discourse/lib/ajax";
-import pretender from "discourse/tests/helpers/create-pretender";
 
 module("model:user");
 
@@ -77,7 +76,7 @@ test("resolvedTimezone", (assert) => {
   let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sinon.stub(moment.tz, "guess").returns("America/Chicago");
 
-  pretender.put("/u/chuck.json", () => {
+  window.server.put("/u/chuck.json", () => {
     return [200, { "Content-Type": "application/json" }, {}];
   });
 

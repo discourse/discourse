@@ -6,7 +6,7 @@ import Topic from "discourse/models/topic";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
 import { Promise } from "rsvp";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [
@@ -511,11 +511,11 @@ test("topVisibleChanged", function (assert) {
   );
 });
 
-test("deletePost - no modal is shown if post does not have replies", function (assert) {
-  pretender.get("/posts/2/reply-ids.json", () => {
-    return [200, { "Content-Type": "application/json" }, []];
-  });
+addPretenderCallback("controller:topic", (server, helper) => {
+  server.get("/posts/2/reply-ids.json", () => helper.response([]));
+});
 
+test("deletePost - no modal is shown if post does not have replies", function (assert) {
   let destroyed;
   const post = EmberObject.create({
     id: 2,

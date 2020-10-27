@@ -3,28 +3,12 @@ import componentTest from "discourse/tests/helpers/component-test";
 import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
 import Site from "discourse/models/site";
 import { set } from "@ember/object";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 
 testSelectKitModule("tag-drop", {
   beforeEach() {
     const site = Site.current();
     set(site, "top_tags", ["jeff", "neil", "arpit", "régis"]);
-
-    const response = (object) => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
-
-    pretender.get("/tags/filter/search", (params) => {
-      if (params.queryParams.q === "rég") {
-        return response({
-          results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }],
-        });
-      } else if (params.queryParams.q === "dav") {
-        return response({
-          results: [{ id: "David", text: "David", count: 2, pm_count: 0 }],
-        });
-      }
-    });
   },
 });
 
@@ -55,6 +39,20 @@ function template(options = []) {
     }}
   `;
 }
+
+addPretenderCallback("select-kit/tag-drop", (server, helper) => {
+  server.get("/tags/filter/search", (params) => {
+    if (params.queryParams.q === "rég") {
+      return helper.response({
+        results: [{ id: "régis", text: "régis", count: 2, pm_count: 0 }],
+      });
+    } else if (params.queryParams.q === "dav") {
+      return helper.response({
+        results: [{ id: "David", text: "David", count: 2, pm_count: 0 }],
+      });
+    }
+  });
+});
 
 componentTest("default", {
   template: template(["tagId=tagId"]),

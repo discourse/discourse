@@ -1,6 +1,6 @@
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { response } from "discourse/tests/helpers/create-pretender";
 import { click } from "@ember/test-helpers";
 
 moduleForComponent("admin-report", {
@@ -129,23 +129,19 @@ componentTest("exception", {
 });
 
 componentTest("rate limited", {
+  template: "{{admin-report dataSourceName='signups_rate_limited'}}",
+
   beforeEach() {
-    pretender.get("/admin/reports/bulk", () => {
-      return [
-        429,
-        { "Content-Type": "application/json" },
-        {
-          errors: [
-            "You’ve performed this action too many times. Please wait 10 seconds before trying again.",
-          ],
-          error_type: "rate_limit",
-          extras: { wait_seconds: 10 },
-        },
-      ];
+    window.server.get("/admin/reports/bulk", () => {
+      return response(429, {
+        errors: [
+          "You’ve performed this action too many times. Please wait 10 seconds before trying again.",
+        ],
+        error_type: "rate_limit",
+        extras: { wait_seconds: 10 },
+      });
     });
   },
-
-  template: "{{admin-report dataSourceName='signups_rate_limited'}}",
 
   test(assert) {
     assert.ok(

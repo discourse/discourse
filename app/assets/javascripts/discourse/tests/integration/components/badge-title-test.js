@@ -2,10 +2,14 @@ import { moduleForComponent } from "ember-qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";
 import EmberObject from "@ember/object";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 
 moduleForComponent("badge-title", { integration: true });
+
+addPretenderCallback("badge-title", (server, helper) => {
+  server.put("/u/eviltrout/preferences/badge_title", () => helper.response({}));
+});
 
 componentTest("badge title", {
   template:
@@ -27,11 +31,6 @@ componentTest("badge title", {
   },
 
   async test(assert) {
-    pretender.put("/u/eviltrout/preferences/badge_title", () => [
-      200,
-      { "Content-Type": "application/json" },
-      {},
-    ]);
     await this.subject.expand();
     await this.subject.selectRowByValue(42);
     await click(".btn");

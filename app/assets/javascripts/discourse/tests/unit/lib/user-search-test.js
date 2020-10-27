@@ -1,89 +1,85 @@
 import { test, module } from "qunit";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 
-module("lib:user-search", {
-  beforeEach() {
-    const response = (object) => {
-      return [200, { "Content-Type": "application/json" }, object];
-    };
+module("lib:user-search");
 
-    pretender.get("/u/search/users", (request) => {
-      // special responder for per category search
-      const categoryMatch = request.url.match(/category_id=([0-9]+)/);
-      if (categoryMatch) {
-        if (categoryMatch[1] === "3") {
-          return response({});
-        }
-        return response({
-          users: [
-            {
-              username: `category_${categoryMatch[1]}`,
-              name: "category user",
-              avatar_template:
-                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
-            },
-          ],
-        });
+addPretenderCallback("lib:user-search", (server, helper) => {
+  server.get("/u/search/users", (request) => {
+    // special responder for per category search
+    const categoryMatch = request.url.match(/category_id=([0-9]+)/);
+    if (categoryMatch) {
+      if (categoryMatch[1] === "3") {
+        return helper.response({});
       }
-
-      if (request.url.match(/no-results/)) {
-        return response({ users: [] });
-      }
-
-      return response({
+      return helper.response({
         users: [
           {
-            username: "TeaMoe",
-            name: "TeaMoe",
+            username: `category_${categoryMatch[1]}`,
+            name: "category user",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
-          {
-            username: "TeamOneJ",
-            name: "J Cobb",
-            avatar_template:
-              "https://avatars.discourse.org/v3/letter/t/3d9bf3/{size}.png",
-          },
-          {
-            username: "kudos",
-            name: "Team Blogeto.com",
-            avatar_template:
-              "/user_avatar/meta.discourse.org/kudos/{size}/62185_1.png",
-          },
-          {
-            username: "RosieLinda",
-            name: "Linda Teaman",
-            avatar_template:
-              "https://avatars.discourse.org/v3/letter/r/bc8723/{size}.png",
-          },
-          {
-            username: "legalatom",
-            name: "Team LegalAtom",
-            avatar_template:
-              "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png",
-          },
-          {
-            username: "dzsat_team",
-            name: "Dz Sat Dz Sat",
-            avatar_template:
-              "https://avatars.discourse.org/v3/letter/d/eb9ed0/{size}.png",
-          },
-        ],
-        groups: [
-          {
-            name: "bob",
-            usernames: [],
-          },
-          {
-            name: "team",
-            usernames: [],
-          },
         ],
       });
+    }
+
+    if (request.url.match(/no-results/)) {
+      return helper.response({ users: [] });
+    }
+
+    return helper.response({
+      users: [
+        {
+          username: "TeaMoe",
+          name: "TeaMoe",
+          avatar_template:
+            "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+        },
+        {
+          username: "TeamOneJ",
+          name: "J Cobb",
+          avatar_template:
+            "https://avatars.discourse.org/v3/letter/t/3d9bf3/{size}.png",
+        },
+        {
+          username: "kudos",
+          name: "Team Blogeto.com",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/kudos/{size}/62185_1.png",
+        },
+        {
+          username: "RosieLinda",
+          name: "Linda Teaman",
+          avatar_template:
+            "https://avatars.discourse.org/v3/letter/r/bc8723/{size}.png",
+        },
+        {
+          username: "legalatom",
+          name: "Team LegalAtom",
+          avatar_template:
+            "https://avatars.discourse.org/v3/letter/l/a9a28c/{size}.png",
+        },
+        {
+          username: "dzsat_team",
+          name: "Dz Sat Dz Sat",
+          avatar_template:
+            "https://avatars.discourse.org/v3/letter/d/eb9ed0/{size}.png",
+        },
+      ],
+      groups: [
+        {
+          name: "bob",
+          usernames: [],
+        },
+        {
+          name: "team",
+          usernames: [],
+        },
+      ],
     });
-  },
+  });
 });
 
 test("it flushes cache when switching categories", async (assert) => {
