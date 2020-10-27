@@ -347,12 +347,20 @@ createWidget("discourse-poll-container", {
     const options = poll.get("options");
 
     if (attrs.showResults) {
+      const contents = [];
+
+      if (attrs.titleHTML) {
+        contents.push(new RawHtml({ html: attrs.titleHTML }));
+      }
+
       const type = poll.get("type") === "number" ? "number" : "standard";
       const resultsWidget =
         type === "number" || attrs.poll.chart_type !== PIE_CHART_TYPE
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
-      return this.attach(resultsWidget, attrs);
+      contents.push(this.attach(resultsWidget, attrs));
+
+      return contents;
     } else if (options) {
       const contents = [];
 
@@ -495,6 +503,7 @@ createWidget("discourse-poll-pie-canvas", {
 
 createWidget("discourse-poll-pie-chart", {
   tagName: "div.poll-results-chart",
+
   html(attrs) {
     const contents = [];
 
@@ -502,20 +511,6 @@ createWidget("discourse-poll-pie-chart", {
       clearPieChart(attrs.id);
       return contents;
     }
-
-    if (attrs.groupableUserFields.length) {
-      const button = this.attach("button", {
-        className: "btn-default poll-show-breakdown",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "far-eye",
-        action: "showBreakdown",
-      });
-
-      contents.push(button);
-    }
-
-    contents.push(new RawHtml({ html: attrs.titleHTML }));
 
     const chart = this.attach("discourse-poll-pie-canvas", attrs);
     contents.push(chart);
@@ -624,6 +619,18 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
+    }
+
+    if (attrs.groupableUserFields.length && poll.voters > 0) {
+      const button = this.attach("button", {
+        className: "btn-default poll-show-breakdown",
+        label: "poll.group-results.label",
+        title: "poll.group-results.title",
+        icon: "far-eye",
+        action: "showBreakdown",
+      });
+
+      contents.push(button);
     }
 
     if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
