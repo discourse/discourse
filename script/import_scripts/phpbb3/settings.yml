@@ -14,6 +14,9 @@ import:
   # Set this if you import multiple phpBB forums into a single Discourse forum.
   site_name:
 
+  # Category and tag mappings
+  category_mapping:
+
   # WARNING: Do not activate this option unless you know what you are doing.
   # It will probably break the BBCode to Markdown conversion and slows down your import.
   use_bbcode_to_md: false

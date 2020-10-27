@@ -14,6 +14,12 @@ module ImportScripts::PhpBB3
     end
 
     def map_category(row)
+      return if @settings.category_mapping[row[:forum_id]]
+
+      if row[:parent_id] && @settings.category_mapping[row[:parent_id]]
+        puts "parent category (#{row[:parent_id]}) was mapped, but children was not (#{row[:forum_id]})"
+      end
+
       {
         id: @settings.prefix(row[:forum_id]),
         name: CGI.unescapeHTML(row[:forum_name]),

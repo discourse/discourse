@@ -51,8 +51,6 @@ module ImportScripts::PhpBB3
       @permalink_importer ||= PermalinkImporter.new(@settings.permalinks)
     end
 
-    protected
-
     def attachment_importer
       AttachmentImporter.new(@database, @uploader, @settings, @phpbb_config)
     end
