@@ -3,8 +3,11 @@ export function scrollTopFor(y) {
 }
 
 export function minimumOffset() {
-  const header = document.querySelector("header.d-header");
-  return header ? header.offsetHeight : 0;
+  const header = document.querySelector("header.d-header"),
+    iPadNav = document.querySelector(".footer-nav-ipad .footer-nav"),
+    iPadNavHeight = iPadNav ? iPadNav.offsetHeight : 0;
+
+  return header ? header.offsetHeight + iPadNavHeight : 0;
 }
 
 export default function offsetCalculator() {
