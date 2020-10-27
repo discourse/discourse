@@ -153,7 +153,7 @@ module Email
       # please, don't send us automatic responses...
       result['X-Auto-Response-Suppress'] = 'All'
 
-      if allow_reply_by_email?
+      if allow_reply_by_email? && !@opts[:use_from_address_for_reply_to]
         result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
         result['Reply-To'] = reply_by_email_address
       else
