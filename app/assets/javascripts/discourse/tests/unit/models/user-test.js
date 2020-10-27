@@ -71,7 +71,7 @@ test("canMangeGroup", (assert) => {
   );
 });
 
-test("resolvedTimezone", (assert) => {
+test("resolvedTimezone", async (assert) => {
   const tz = "Australia/Brisbane";
   let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sinon.stub(moment.tz, "guess").returns("America/Chicago");
