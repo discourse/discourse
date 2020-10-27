@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
