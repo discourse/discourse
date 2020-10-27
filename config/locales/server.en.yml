@@ -64,7 +64,7 @@ en:
     compile_error:
       unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
-      generic: An error occured while importing that theme
+      generic: An error occurred while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
@@ -2106,7 +2106,7 @@ en:
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
-    embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
+    embed_set_canonical_url: "Set the canonical URL for embedded topics to the embedded content's URL."
     embed_truncate: "Truncate the embedded posts."
     embed_unlisted: "Imported topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
@@ -3867,7 +3867,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
-    optimize_failure_message: "An error occured while optimizing the uploaded image."
+    optimize_failure_message: "An error occurred while optimizing the uploaded image."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
