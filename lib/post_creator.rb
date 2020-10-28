@@ -159,7 +159,7 @@ class PostCreator
         return false
       end
 
-      if @topic&.slow_mode_seconds.to_i > 0
+      if guardian.affected_by_slow_mode?(@topic)
         tu = TopicUser.find_by(user: @user, topic: @topic)
 
         if tu&.last_posted_at
