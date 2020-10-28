@@ -48,6 +48,7 @@ if (cdnUrls.length > 0) {
 
       if (request.url.includes("avatar") || request.url.includes("emoji")) {
         var url = new URL(request.url);
+        // Using this temporary query param to force browsers to redownload images from server.
         url.searchParams.append('refresh', 'true');
         return new Request(url.href, request);
       }
