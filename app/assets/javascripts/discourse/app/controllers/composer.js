@@ -648,9 +648,19 @@ export default Controller.extend({
     }
 
     const topic = composer.topic;
+    const slowModePost =
+      topic && topic.slow_mode_seconds && topic.user_last_posted_at;
+    const notEditing = this.get("model.action") !== "edit";
 
-    if (topic && topic.slow_mode_seconds && topic.user_last_posted_at) {
-      if (cannotPostAgain(topic.slow_mode_seconds, topic.user_last_posted_at)) {
+    // Editing a topic in slow mode is directly handled by the backend.
+    if (slowModePost && notEditing) {
+      if (
+        cannotPostAgain(
+          this.currentUser,
+          topic.slow_mode_seconds,
+          topic.user_last_posted_at
+        )
+      ) {
         const message = I18n.t("composer.slow_mode.error");
 
         bootbox.alert(message);

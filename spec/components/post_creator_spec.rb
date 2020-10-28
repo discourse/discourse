@@ -747,6 +747,17 @@ describe PostCreator do
         expect(post).to be_present
         expect(creator.errors.count).to be_zero
       end
+
+      it 'creates the topic if the user is a staff member' do
+        admin = Fabricate(:admin)
+        post_creator = PostCreator.new(admin, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4)
+        TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
+
+        post = post_creator.create
+
+        expect(post).to be_present
+        expect(post_creator.errors.count).to be_zero
+      end
     end
   end
 
