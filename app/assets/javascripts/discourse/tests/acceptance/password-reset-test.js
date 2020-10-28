@@ -4,6 +4,8 @@ import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
+import DiscourseURL from "discourse/lib/url";
+import sinon from "sinon";
 
 acceptance("Password Reset", function (needs) {
   needs.pretender((server, helper) => {
@@ -84,8 +86,9 @@ acceptance("Password Reset", function (needs) {
     );
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
+    sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button");
-    assert.ok(!exists(".password-reset form"), "form is gone");
+    assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
   test("Password Reset Page With Second Factor", async (assert) => {
@@ -116,8 +119,12 @@ acceptance("Password Reset", function (needs) {
     assert.ok(exists("#new-account-password"), "shows the input");
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
-    await click(".password-reset form button");
 
-    assert.ok(!exists(".password-reset form"), "form is gone");
+    sinon.stub(DiscourseURL, "redirectTo");
+    await click(".password-reset form button");
+    assert.ok(
+      DiscourseURL.redirectTo.calledWith("/"),
+      "it redirects after submitting form"
+    );
   });
 });

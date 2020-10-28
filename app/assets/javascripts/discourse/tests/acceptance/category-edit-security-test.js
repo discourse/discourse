@@ -7,10 +7,7 @@ acceptance("Category Edit - security", function (needs) {
   needs.user();
 
   test("default", async (assert) => {
-    await visit("/c/bug");
-
-    await click(".edit-category");
-    await click("li.edit-category-security a");
+    await visit("/c/bug/edit/security");
 
     const $permissionListItems = find(".permission-list li");
 
@@ -24,10 +21,8 @@ acceptance("Category Edit - security", function (needs) {
   test("removing a permission", async (assert) => {
     const availableGroups = selectKit(".available-groups");
 
-    await visit("/c/bug");
+    await visit("/c/bug/edit/security");
 
-    await click(".edit-category");
-    await click("li.edit-category-security a");
     await click(".edit-category-tab-security .edit-permission");
     await availableGroups.expand();
 
@@ -51,10 +46,8 @@ acceptance("Category Edit - security", function (needs) {
     const availableGroups = selectKit(".available-groups");
     const permissionSelector = selectKit(".permission-selector");
 
-    await visit("/c/bug");
+    await visit("/c/bug/edit/security");
 
-    await click(".edit-category");
-    await click("li.edit-category-security a");
     await click(".edit-category-tab-security .edit-permission");
     await availableGroups.expand();
     await availableGroups.selectRowByValue("staff");
@@ -76,10 +69,8 @@ acceptance("Category Edit - security", function (needs) {
   test("adding a previously removed permission", async (assert) => {
     const availableGroups = selectKit(".available-groups");
 
-    await visit("/c/bug");
+    await visit("/c/bug/edit/security");
 
-    await click(".edit-category");
-    await click("li.edit-category-security a");
     await click(".edit-category-tab-security .edit-permission");
     await click(
       ".edit-category-tab-security .permission-list li:first-of-type .remove-permission"

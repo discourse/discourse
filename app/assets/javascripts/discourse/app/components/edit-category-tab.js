@@ -3,10 +3,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { propertyEqual } from "discourse/lib/computed";
+import getURL from "discourse-common/lib/get-url";
+import { empty } from "@ember/object/computed";
+import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
+  newCategory: empty("params.slug"),
 
   @discourseComputed("tab")
   tabClassName(tab) {
@@ -25,23 +29,32 @@ export default Component.extend({
     scheduleOnce("afterRender", this, this._addToCollection);
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.setProperties({
+      selectedTab: "general",
+      params: {},
+    });
+  },
+
   _addToCollection: function () {
     this.panels.addObject(this.tabClassName);
   },
 
-  _resetModalScrollState() {
-    const $modalBody = $(this.element)
-      .parents("#discourse-modal")
-      .find(".modal-body");
-    if ($modalBody.length === 1) {
-      $modalBody.scrollTop(0);
-    }
+  @discourseComputed("params.slug", "params.parentSlug")
+  fullSlug(slug, parentSlug) {
+    const slugPart = parentSlug && slug ? `${parentSlug}/${slug}` : slug;
+    return getURL(`/c/${slugPart}/edit/${this.tab}`);
   },
 
   actions: {
     select: function () {
       this.set("selectedTab", this.tab);
-      this._resetModalScrollState();
+
+      if (!this.newCategory) {
+        DiscourseURL.routeTo(this.fullSlug);
+      }
     },
   },
 });
