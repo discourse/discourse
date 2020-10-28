@@ -1060,7 +1060,6 @@ ja:
     missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
     auth_complete: "認証が完了しました。"
     click_to_continue: "クリックして続けてください。"
-    already_logged_in: "おっと！他の人の招待を受け入れたようです。もし、あなたが%{current_user}出なければ、ログアウトして再び試してください。"
     second_factor_backup_description: "バックアップコードを入力: "
   admin:
     email:

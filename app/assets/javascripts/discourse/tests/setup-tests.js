@@ -12,10 +12,10 @@ import createPretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { flushMap } from "discourse/models/store";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import DiscourseURL from "discourse/lib/url";
 import {
   resetSite,
   applyPretender,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
@@ -79,6 +79,18 @@ export default function setupTests(app, container) {
       return window.sinon;
     },
   });
+  Object.defineProperty(window, "exists", {
+    get() {
+      deprecated(
+        "Accessing the global function `exists` is deprecated. Import it instead.",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return exists;
+    },
+  });
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
@@ -129,11 +141,6 @@ export default function setupTests(app, container) {
       capabilities: {},
       site,
     });
-
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
 
     PreloadStore.reset();
 

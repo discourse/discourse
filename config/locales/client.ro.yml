@@ -1339,7 +1339,6 @@ ro:
       sent_activation_email_again: "Am trimis un alt email de activare pentru tine la <b>%{currentEmail}</b>. Poate dura câteva minute până ajunge; vezi și în secțiunea de spam a mailului."
       to_continue: "Te rog să te autentifici."
       preferences: "Trebuie să fii autentificat pentru a schimba preferințele."
-      forgot: "Nu îmi amintesc detaliile contului meu."
       not_approved: "Contul tău încă nu a fost aprobat. Vei primi notificarea prin email când ești gata de logare."
       google_oauth2:
         name: "Google"

@@ -1287,7 +1287,6 @@ pt:
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
-    already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
   admin:
     email:

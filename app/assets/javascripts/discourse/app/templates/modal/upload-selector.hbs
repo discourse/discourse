@@ -34,5 +34,6 @@
 
 <div class="modal-footer">
   {{d-button action=(action "upload") class="btn-primary" icon=uploadIcon label="upload"}}
+  {{plugin-outlet name="upload-actions"}}
   {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

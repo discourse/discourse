@@ -339,7 +339,7 @@ export function setup(helper) {
     );
   });
 
-  helper.whiteList([
+  helper.allowList([
     "img[class=emoji]",
     "img[class=emoji emoji-custom]",
     "img[class=emoji emoji-custom only-emoji]",

@@ -1083,7 +1083,6 @@ sw:
       sent_activation_email_again: "Tumekutumia barua pepe nyingine ya uanzishaji kwenye <b>%{currentEmail}</b>. Inaweza kuchukua dakika chache kufika; angalia pia folda la barua taka."
       to_continue: "Tafadhali Ingia"
       preferences: "Unahitaji uwe umeingia kubadilisha mapendekezo ya mtumiaji."
-      forgot: "Sikumbuki taarifa zangu za akaunti"
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"

@@ -1,12 +1,12 @@
 <div class="edit-category {{if expandedMenu "expanded-menu"}}">
   <ul class="nav nav-stacked">
-    {{edit-category-tab panels=panels selectedTab=selectedTab tab="general"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab tab="security"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab tab="settings"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab tab="images"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab tab="topic-template"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="general"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="security"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="settings"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="images"}}
+    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="topic-template"}}
     {{#if siteSettings.tagging_enabled}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab tab="tags"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="tags"}}
     {{/if}}
   </ul>
 

@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership", () => {

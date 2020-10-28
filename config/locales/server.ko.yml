@@ -292,6 +292,7 @@ ko:
   removed_direct_reply_full_quotes: "이전 전체 게시물의 인용을 자동으로 제거했습니다."
   secure_upload_not_allowed_in_public_topic: "죄송합니다, 공개 보안 주제로는 %{upload_filenames}을 (를) 사용할 수 없습니다."
   create_pm_on_existing_topic: "기존 주제에 대해 PM을 만들 수 없습니다."
+  slow_mode_enabled: "이 항목은 느린 모드입니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
   is_invalid: "문장이 불분명합니다."
@@ -836,8 +837,8 @@ ko:
     banner:
       title: "배너 글타래"
       message:
-        make: "이 글타래는 배너에 올라왔습니다. 사용자가 내리기 전까지 모든 페이지의 상단에 표시됩니다."
-        remove: "이 글타래는 배너에서 내려왔습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
+        make: "이 글은 이제 배너입니다. 사용자가 닫을 때까지 모든 페이지의 상단에 나타납니다."
+        remove: "이 글은 더 이상 배너가 아닙니다. 더 이상 모든 페이지의 상단에 나타나지 않습니다."
   unsubscribed:
     title: "이메일 환경 설정이 업데이트되었습니다!"
     description: "<b>%{email}</b> 에 대한 이메일 환경 설정이 업데이트되었습니다. 이메일 설정을 변경하려면 <a href='%{url}'>사용자 기본</a> 설정을 <a href='%{url}'>방문하십시오</a> ."
@@ -889,6 +890,7 @@ ko:
       read: "모두 읽기"
       write: "모두 쓰기"
       one_time_password: "일회성 로그인 토큰 생성"
+      bookmarks_calendar: "북마크 알림 읽기"
     invalid_public_key: "공개 키가 유효하지 않습니다."
     invalid_auth_redirect: "죄송합니다.이 auth_redirect 호스트는 허용되지 않습니다."
     invalid_token: "토큰이 없거나 유효하지 않거나 만료되었습니다."
@@ -1323,6 +1325,7 @@ ko:
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
     email_subject: "표준 이메일에 대한 사용자 정의 가능한 주제 형식. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801을</a> 참조 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>하십시오.</a>"
     detailed_404: "특정 주제에 액세스 할 수없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고 : URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
+    enforce_second_factor: "사용자가 2단계 인증을 사용하도록합니다. 모든 사용자에게 적용하려면 '모두'를 선택하십시오. 관리자에게만 적용하려면 '관리자'를 선택하십시오."
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
     same_site_cookies: "동일 사이트 쿠키를 사용합니다. 지원되는 브라우저에서 사이트 간 요청 위조의 가능성이 있는 모든 매개체를 (관대 또는 엄격하게) 제거합니다. 경고: 엄격한 통제는 로그인을 강제하거나 SSO를 사용하는 경우에만 적용됩니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
@@ -1370,7 +1373,7 @@ ko:
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_allowlist: "관리자는 선별 된 IP 목록(관리자> 로그> 선별된 IP)에 있는 IP에서만 로그인 할 수 있습니다."
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안되는 개인 IP 블록 목록"
-    allowed_iframes: "담론이 게시물에서 안전하게 허용 할 수있는 iframe src 도메인 접두사 목록"
+    allowed_iframes: "Discourse가 안전한 게시물로 허용 할 수있는 iframe src 도메인 접두사 목록"
     slow_down_crawler_user_agents: "Crawls-delay 지시문을 사용하여 robots.txt에서 속도를 제한해야하는 웹 크롤러의 사용자 에이전트"
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면이 비율이 모든 크롤러에 적용됩니다 (요청 사이의 지연 시간 (초))."
     content_security_policy: "콘텐츠 보안 정책 사용"
@@ -1563,6 +1566,7 @@ ko:
     min_trust_to_post_embedded_media: "게시물에 미디어 항목을 삽입하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_profile_background: "프로필 배경을 업로드하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_user_card_background: "사용자 카드 배경을 업로드하는데 필요한 최소 회원 레벨"
+    min_trust_level_to_allow_invite: "사용자를 초대하는 데 필요한 최소 회원 등급"
     allowed_link_domains: "링크를 삽입 할 수 있는 레벨이 아닌 사용자가 연결할 수 있는 도메인"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_embedded_media: "새 사용자가 게시물에 추가 할 수있는 미디어 항목 수입니다."
@@ -1640,7 +1644,7 @@ ko:
     alternative_reply_by_email_addresses: "수신된 이메일에 대한 답장메일의 대체 템플릿 목록. 예: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "수신 이메일에 텍스트 대신 HTML을 사용하십시오."
     strip_incoming_email_lines: "수신 이메일의 각 줄에서 앞뒤 공백을 제거하십시오."
-    disable_emails: "담론이 모든 종류의 이메일을 보내지 못하게합니다. 모든 사용자의 이메일을 비활성화하려면 &#39;예&#39;를 선택하십시오. 비 직원 사용자 만 이메일을 사용하지 않으려면 &#39;비 직원&#39;을 선택하십시오."
+    disable_emails: "Discourse가 어떤 종류의 이메일도 보내지 못하도록합니다. 모든 사용자에 대해 이메일을 비활성화하려면 '예'를 선택하십시오. 관리자가 아닌 사용자에게만 이메일을 사용하지 않으려면 '비 관리자'을 선택합니다."
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
     short_email_length: "짦은 이메일 바이트 길이"
     display_name_on_email_from: "이메일 보낸사람 필드에 전체 이름을 표시"
@@ -1661,7 +1665,7 @@ ko:
     reset_bounce_score_after_days: "X 일 이후 반송 스코어 자동 초기화."
     blocked_attachment_content_types: "콘텐츠 유형에 따라 첨부 파일을 차단하는데 사용되는 키워드 목록입니다."
     blocked_attachment_filenames: "파일 이름을 기준으로 첨부 파일을 차단하는데 사용되는 키워드 목록입니다."
-    forwarded_emails_behaviour: "전달 된 이메일을 담론으로 처리하는 방법"
+    forwarded_emails_behaviour: "Discourse로 전달 된 이메일을 처리하는 방법"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
     private_email: "이메일 제목이나 이메일 본문에 게시물이나 주제의 컨텐츠를 포함하지 마십시오. 참고 : 다이제스트 이메일도 비활성화합니다."
     email_total_attachment_size_limit_kb: "발신 이메일에 첨부 된 파일의 최대 총 크기입니다. 첨부 파일 전송을 비활성화하려면 0으로 설정하십시오."
@@ -1911,6 +1915,7 @@ ko:
       max_username_length_exists: "가장 긴 사용자 이름 (%{username}) 아래에서 최대 사용자 이름 길이를 설정할 수 없습니다."
       max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
       invalid_hex_value: "색상 값은 6 자리 16 진수 코드 여야합니다."
+      empty_selectable_avatars: "이 설정을 활성화하기 전에 먼저 두 개 이상의 선택 가능한 아바타를 업로드해야합니다."
       category_search_priority:
         very_low_weight_invalid: "가중치를 &#39;category_search_priority_low_weight&#39;보다 크게 설정할 수 없습니다."
         low_weight_invalid: "가중치를 &#39;category_search_priority_very_low_weight&#39;보다 1보다 크거나 작게 설정할 수 없습니다."
@@ -1974,23 +1979,23 @@ ko:
       invalid: "사용할 수 없는 문자를 포함하고 있습니다."
   topic_statuses:
     autoclosed_enabled_days:
-      other: "이 글타래는 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: "이 글은 %{count}일 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_enabled_hours:
-      other: "이 글타래는 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: "이 글은 %{count}시간 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_enabled_minutes:
-      other: "이 글타래는 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: "이 글은 %{count}분 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_days:
-      other: "이 글타래는 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: "이 글은 마지막 댓글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_hours:
       other: "마지막 댓글로부터 %{count} 시간이 지나 글타래가 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_minutes:
-      other: "이 글타래는 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+      other: "이 글은 마지막 댓글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_disabled_days:
       other: "이 글은 %{count}일 후 자동으로 열렸습니다."
     autoclosed_disabled_hours:
       other: "이 글은 %{count}시간 후 자동으로 열렸습니다."
-    autoclosed_disabled: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
-    autoclosed_disabled_lastpost: "이 글타래는 이제 열렸습니다. 새로운 답글을 허용합니다."
+    autoclosed_disabled: "이제 이 항목이 열립니다. 새 댓글이 허용됩니다."
+    autoclosed_disabled_lastpost: "이제 이 항목이 열립니다. 새로운 댓글이 허용됩니다."
     auto_deleted_by_timer: "타이머에 의해 자동삭제됨"
   login:
     invalid_second_factor_method: "선택한 2단계 방법이 잘못되었습니다."
@@ -2021,6 +2026,7 @@ ko:
       csrf_detected: "인증 시간이 초과되었거나 브라우저를 전환했습니다. 다시 시도하십시오."
       request_error: "권한 부여를 시작할 때 오류가 발생했습니다. 다시 시도하십시오."
       invalid_iat: "서버 시계 차이로 인해 권한 토큰을 확인할 수 없습니다. 다시 시도하십시오."
+    omniauth_error_unknown: "로그인을 처리하는 중에 문제가 발생했습니다. 다시 시도하십시오."
     omniauth_confirm_title: "%{provider}을 사용하여 로그인"
     omniauth_confirm_button: "계속"
     authenticator_error_no_valid_email: "%{account}와 관련된 이메일 주소는 허용되지 않습니다. 다른 이메일 주소로 계정을 구성해야 할 수도 있습니다."
@@ -2032,9 +2038,11 @@ ko:
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
     auth_complete: "인증이 완료되었습니다."
     click_to_continue: "계속하려면 여기를 클릭하십시오."
-    already_logged_in: "다른 사용자의 초대를 수락하려는 것 같습니다. %{current_user}이 아닌 경우 로그 아웃 한 후 다시 시도하십시오."
+    already_logged_in: "죄송합니다! 이 초대는 기존 계정이 없는 신규 사용자를 위한 것입니다."
+    second_factor_title: "2단계 인증"
     second_factor_description: "앱에서 필요한 인증 코드를 입력하십시오 :"
     second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
+    second_factor_backup_title: "2단계 백업 코드"
     invalid_second_factor_code: "인증 코드가 잘못되었습니다. 각 코드는 한 번만 사용할 수 있습니다."
     invalid_security_key: "잘못된 보안 키."
     missing_second_factor_name: "이름을 알려주십시오."
@@ -2412,6 +2420,10 @@ ko:
       title: "대기중인 사용자 알림"
       subject_template:
         other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
+      text_body_template: |
+        이 포럼에서 활동하기위해 승인 (또는 거부)을 기다리고있는 신규 사용자가 있습니다.
+
+        [확인하세요](%{base_url}/review).
     download_remote_images_disabled:
       title: "해제된 원격 이미지 다운로드하기"
       subject_template: "외부에서 이미지 다운로드 못함"
@@ -2662,6 +2674,9 @@ ko:
          %{email}의 계정을 만들지 않았거나 이메일 주소를 변경하지 않았다면 걱정하지 마십시오. 이 메시지를 무시해도됩니다.
 
         궁금한 점이 있으면 [관리자에게 문의](%{base_url}/about)하세요.
+    account_second_factor_disabled:
+      title: "2단계 인증 사용 안 함"
+      subject_template: "[%{email_prefix}] 2단계 인증 사용 안 함"
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       since_last_visit: "마지막 방문 후 경과시간"
@@ -2725,9 +2740,21 @@ ko:
     confirm_new_email:
       title: "새 이메일 확인"
       subject_template: "[%{email_prefix}] 새 이메일 주소 확인"
+      text_body_template: |
+        다음 링크를 클릭하여 %{site_name}의 새 이메일 주소를 확인하십시오.
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        이 변경을 요청하지 않은 경우 [사이트 관리자](%{base_url}/about)에게 문의하십시오.
     confirm_new_email_via_admin:
       title: "새 이메일 확인"
       subject_template: "[%{email_prefix}] 새 이메일 주소 확인"
+      text_body_template: |
+        다음 링크를 클릭하여 %{site_name}의 새 이메일 주소를 확인하십시오.
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        이 이메일 변경은 사이트 관리자가 요청했습니다. 변경을 요청하지 않으셨다면 [사이트 관리자](%{base_url}/about)에게 문의하시기 바랍니다.
     confirm_old_email:
       title: "오래된 이메일 확인"
       subject_template: "[%{email_prefix}] 현재 이메일 주소 확인"
@@ -3173,7 +3200,7 @@ ko:
     email_input: "관리자 이메일"
     submit_button: "이메일 보내기"
   performance_report:
-    initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
+    initial_post_raw: 이 항목에는 사이트에 대한 일일 성과 보고서가 포함되어 있습니다.
     initial_topic_title: 웹사이트 성능 보고
   tags:
     title: "태그"
@@ -3279,7 +3306,7 @@ ko:
             description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
           site_contact:
             label: "자동화된 메시지"
-            description: "플래그 경고 및 백업 완료 알림과 같은 모든 자동 담론 개인 메시지가이 사용자로부터 전송됩니다."
+            description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
       corporate:
         title: "소속"
         description: "이 정보는 <a href='%{base_path}/tos' target='blank'>서비스 약관에</a> 입력되며 직원 카테고리에서 편집 할 수있는 주제입니다. 회사가없는 경우 지금은이 단계를 건너 뛰십시오."

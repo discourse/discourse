@@ -1390,7 +1390,6 @@ sl:
       sent_activation_email_again_generic: "Poslali smo vam novo aktivacijsko sporočilo. Lahko traja nekaj minut, da ga boste prejeli - drugače preverite mapo z neželeno pošto."
       to_continue: "Prijavite se"
       preferences: "Za spremembo nastavitev morate biti prijavljeni."
-      forgot: "Ne spominjam se podatkov o svojem računu"
       not_approved: "Vaš uporabniški račun še ni bil potrjen. Ko bo pripravljen za prijavo boste obveščeni preko e-sporočila."
       google_oauth2:
         name: "Google"
@@ -2435,7 +2434,6 @@ sl:
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
-      manage_tag_groups_link: "Upravljaj skupine oznak tukaj."
       allow_global_tags_label: "Dovoli tudi druge oznake"
       topic_featured_link_allowed: "Dovoli najboljše povezave v tej kategoriji"
       delete: "Izbriši kategorijo"

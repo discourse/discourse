@@ -1,6 +1,11 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  invisible,
+  count,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Groups", function () {
   test("Browsing Groups", async (assert) => {

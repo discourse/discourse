@@ -1331,7 +1331,6 @@ da:
       sent_activation_email_again_generic: "Vi har sendt en anden aktiveringsemail. Det kan tage et par minutter, før det ankommer; husk at checke din spam-mappe."
       to_continue: "Log venligst ind"
       preferences: "Du skal være logget ind for at ændre præferencer."
-      forgot: "Jeg kan ikke huske min kontos detaljer"
       not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google_oauth2:
         name: "Google"
@@ -2298,7 +2297,6 @@ da:
       tags_allowed_tag_groups: "Begræns disse tag grupper til denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
-      manage_tag_groups_link: "Administrer tag grupper her."
       allow_global_tags_label: "Tillad også andre tags"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"

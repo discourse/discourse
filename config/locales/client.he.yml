@@ -340,6 +340,7 @@ he:
         next_business_day: "יום העסקים הבא"
         tomorrow: "מחר"
         next_week: "בשבוע הבא"
+        post_local_date: "תאריך בפוסט"
         later_this_week: "בהמשך השבוע"
         start_of_next_business_week: "יום שני"
         start_of_next_business_week_alt: "יום שני הבא"
@@ -1387,8 +1388,6 @@ he:
         generate_link: "העתקת קישור הזמנה"
         link_generated: "קישור הזמנה יוצר בהצלחה!"
         valid_for: "קישור ההזמנה תקף רק לכתובת דוא״ל זו: %{email}"
-        single_user: "משתמש בודד"
-        multiple_user: "מגוון משתמשים"
         invite_link:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
@@ -1669,7 +1668,6 @@ he:
       sent_activation_email_again_generic: "שלחנו הודעת הפעלה נוספת בדוא״ל. ייתכן שיהיה עליך להמתין מספר דקות להגעתה. מוטב לבדוק גם את תיקיית הספאם שלך."
       to_continue: "נא להיכנס"
       preferences: "כדי לשנות את העדפות המשתמש ראשית יש להיכנס למערכת."
-      forgot: "אין לי את פרטי החשבון שלי"
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
       google_oauth2:
         name: "Google"
@@ -2172,8 +2170,8 @@ he:
           two: "בחרת ב־<b>%{count}</b> נושאים."
           many: "בחרת ב־<b>%{count}</b> נושאים."
           other: "בחרת ב־<b>%{count}</b> נושאים."
-        change_tags: "החלפת תגים"
-        append_tags: "הוספת תגים"
+        change_tags: "החלפת תגיות"
+        append_tags: "הוספת תגיות"
         choose_new_tags: "בחירה בתגיות חדשות לנושאים אלו:"
         choose_append_tags: "בחירה בתגיות חדשות שיתווספו לנושאים אלו:"
         changed_tags: "התגיות של נושאים אלו השתנו."
@@ -2885,6 +2883,7 @@ he:
       edit: "עריכה"
       edit_dialog_title: "עריכה: %{categoryName}"
       view: "הצגת נושאים בקטגוריה"
+      back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
       topic_template: "תבנית נושא"
@@ -2894,7 +2893,7 @@ he:
       tags_placeholder: "(רשות) רשימת תגיות מותרות"
       tags_tab_description: "תגיות וקבוצות תגיות שצוינו להלן תהיינה זמינות בקטגוריה זו ובקטגוריות נוספות שמציינות אותן. הן לא תהיינה זמינות בקטגוריות אחרות."
       tag_groups_placeholder: "(רשות) רשימת קבוצות תגיות"
-      manage_tag_groups_link: "ניהול קבוצות תגיות מכאן."
+      manage_tag_groups_link: "ניהול קבוצות תגיות"
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
       tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
       required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
@@ -3413,7 +3412,7 @@ he:
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
       sort_by_name: "שם"
-      manage_groups: "ניהול קבוצות תגים"
+      manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
       upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
@@ -4822,7 +4821,7 @@ he:
         enabled: הפעלת עיטור
         icon: סמליל
         image: תמונה
-        icon_help: "נא להכניס שם של סמל מתוך FontAwesome (קידומת ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים)"
+        icon_help: "נא למלא שם של סמל מתוך Font Awesome (קידומת ‚far-‎’ לסמלים רגילים ו־‚fab-‎’ לסמלים ממותגים)"
         image_help: "נא להקליד את כתובת התמונה (דורסת את שדה הסמל אם שניהם מוגדרים)"
         query: שאילתת עיטור (SQL)
         target_posts: השאילתה מוכוונת פוסטים

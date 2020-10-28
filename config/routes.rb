@@ -682,8 +682,8 @@ Discourse::Application.routes.draw do
 
     get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
-    get "c/:category_slug/edit" => "categories#find_by_slug", constraints: { format: 'html' }
-    get "c/:parent_category_slug/:category_slug/edit" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "c/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "c/:parent_category_slug/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
     get "/new-category" => "categories#show", constraints: { format: 'html' }
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss

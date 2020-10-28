@@ -136,6 +136,8 @@ vi:
     topic_admin_menu: "hành động cho chủ đề"
     wizard_required: "Chào mừng bạn đến với Discourse! Hãy bắt đầu với <a href='%{url}' data-auto-route='true'>hướng dẫn cài đặt</a> ✨"
     emails_are_disabled: "Ban quản trị đã tắt mọi email gửi đi. Sẽ không có bất kỳ thông báo nào qua email được gửi đi."
+    bootstrap_mode_enabled:
+      other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
     bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
     themes:
       default_description: "Mặc định"
@@ -518,6 +520,8 @@ vi:
       member_requested: "Yêu cầu tại"
       add_members:
         title: "Thêm thành viên vào %{group_name}"
+        description: "Bạn cũng có thể dán vào danh sách được phân tách bằng dấu phẩy."
+        usernames: "Nhập tên người dùng hoặc địa chỉ email"
         input_placeholder: "Tên người dùng hoặc email"
         notify_users: "Thông báo cho người dùng"
       requests:
@@ -545,14 +549,40 @@ vi:
           title: "Email"
           status: "Đồng bộ %{old_emails} / %{total_emails} email qua IMAP."
           credentials:
+            title: "Thông tin đăng nhập"
+            smtp_server: "Máy chủ SMTP"
+            smtp_port: "Cổng SMTP"
+            smtp_ssl: "Sử dụng SSL cho SMTP"
+            imap_server: "Máy chủ IMAP"
+            imap_port: "Cổng IMAP"
+            imap_ssl: "Sử dụng SSL cho IMAP"
             username: "Tên đăng nhập"
             password: "Mật khẩu"
+          mailboxes:
+            synchronized: "Hộp thư được đồng bộ hóa"
+            none_found: "Không tìm thấy hộp thư nào trong tài khoản email này."
+            disabled: "vô hiệu hóa"
         membership:
           title: Thành viên
           access: Truy cập
+        categories:
+          title: Danh mục
+          long_title: "Thông báo mặc định của danh mục"
+          description: "Khi người dùng được thêm vào nhóm này, cài đặt thông báo danh mục của họ sẽ được đặt thành các giá trị mặc định này. Sau đó, họ có thể thay đổi chúng."
+          watched_categories_instructions: "Tự động xem tất cả các chủ đề trong các danh mục này. Các thành viên trong nhóm sẽ được thông báo về tất cả các bài đăng và chủ đề mới, và một số bài đăng mới cũng sẽ xuất hiện bên cạnh chủ đề."
+          tracked_categories_instructions: "Tự động theo dõi tất cả các chủ đề trong các danh mục này. Một số bài viết mới sẽ xuất hiện bên cạnh chủ đề."
+          watching_first_post_categories_instructions: "Người dùng sẽ được thông báo về bài đăng đầu tiên trong mỗi chủ đề mới trong các danh mục này."
+          regular_categories_instructions: "Nếu các danh mục này bị ẩn, chúng sẽ được hiển thị đối với các thành viên trong nhóm. Người dùng sẽ được thông báo nếu họ được đề cập hoặc ai đó trả lời họ."
+          muted_categories_instructions: "Người dùng sẽ không được thông báo về bất kỳ điều gì về các chủ đề mới trong các danh mục này và chúng sẽ không xuất hiện trên các trang danh mục hoặc chủ đề mới nhất."
         tags:
           title: Thẻ
           long_title: "Thẻ thông báo mặc định"
+          description: "Khi người dùng được thêm vào nhóm này, cài đặt thông báo thẻ của họ sẽ được đặt thành các giá trị mặc định này. Sau đó, họ có thể thay đổi chúng."
+          watched_tags_instructions: "Tự động xem tất cả các chủ đề có các thẻ này. Các thành viên trong nhóm sẽ được thông báo về tất cả các bài đăng và chủ đề mới, và một số bài đăng mới cũng sẽ xuất hiện bên cạnh chủ đề."
+          tracked_tags_instructions: "Tự động theo dõi tất cả các chủ đề với các thẻ này. Một số bài viết mới sẽ xuất hiện bên cạnh chủ đề."
+          watching_first_post_tags_instructions: "Người dùng sẽ được thông báo về bài đăng đầu tiên trong mỗi chủ đề mới với các thẻ này."
+          regular_tags_instructions: "Nếu các thẻ này bị tắt tiếng, chúng sẽ được hiển thị đối với các thành viên trong nhóm. Người dùng sẽ được thông báo nếu họ được đề cập hoặc ai đó trả lời họ."
+          muted_tags_instructions: "Người dùng sẽ không được thông báo bất kỳ điều gì về các chủ đề mới với các thẻ này và chúng sẽ không xuất hiện trong thời gian gần nhất."
         logs:
           title: "Log"
           when: "Khi"
@@ -566,6 +596,7 @@ vi:
       permissions:
         title: "Quyền"
         none: "Không có danh mục nào được liên kết với nhóm này."
+        description: "Các thành viên của nhóm này có thể truy cập các danh mục này"
       public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
@@ -582,6 +613,7 @@ vi:
       request: "Yêu cầu"
       message: "Tin nh"
       confirm_leave: "Bạn có chắc muốn rời khỏi nhóm này?"
+      allow_membership_requests: "Cho phép người dùng gửi yêu cầu thành viên đến chủ sở hữu nhóm (Yêu cầu nhóm hiển thị công khai)"
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:
         submit: "Gửi yêu c"
@@ -659,6 +691,7 @@ vi:
           title: "Im lặng"
           description: "Bạn sẽ không được thông báo về bất kì tin nhắn nào trong nhóm này nữa."
       flair_url: "Ảnh đại diện"
+      flair_upload_description: "Sử dụng hình ảnh vuông không nhỏ hơn 20px x 20px."
       flair_bg_color: "Màu nền ảnh đại diện"
       flair_bg_color_placeholder: "(Tuỳ chọn) Giá trị mã màu Hexa"
       flair_color: "Màu ảnh đại diện"
@@ -751,6 +784,7 @@ vi:
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời lượng:"
         ignore_duration_save: "Bỏ qua"
+        ignore_duration_note: "Xin lưu ý rằng tất cả các lượt bỏ qua sẽ tự động bị xóa sau khi hết thời hạn bỏ qua."
         ignore_duration_time_frame_required: "Vui lòng chọn khung thời gian"
         ignore_no_users: "Bạn không có thành viên bị chặn nào."
         ignore_option: "Đã bỏ qua"
@@ -759,6 +793,7 @@ vi:
         mute_option: "Im lặng"
         mute_option_title: "Bạn sẽ không nhận được bất kỳ thông báo nào liên quan đến người dùng này."
         normal_option: "Bình thường"
+        normal_option_title: "Bạn sẽ được thông báo nếu người dùng này trả lời bạn, trích dẫn bạn hoặc đề cập đến bạn."
       activity_stream: "Hoạt động"
       preferences: "Tùy chỉnh"
       feature_topic_on_profile:
@@ -769,6 +804,8 @@ vi:
         clear:
           title: "Xóa"
           warning: "Bạn có chắc chắn muốn xóa chủ đề nổi bật của mình không?"
+      use_current_timezone: "Sử dụng múi giờ hiện tại"
+      profile_hidden: "Hồ sơ công khai của người dùng này bị ẩn."
       expand_profile: "Mở"
       collapse_profile: "Thu gọn"
       bookmarks: "Theo dõi"
@@ -779,6 +816,7 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
+        label: "Thông báo Trực tiếp"
         not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
         perm_default: "Mở thông báo"
         perm_denied_btn: "Không có quyền"
@@ -786,12 +824,29 @@ vi:
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
+        consent_prompt: "Bạn có muốn thông báo trực tiếp khi mọi người trả lời bài đăng của bạn không?"
       dismiss: "Hủy bỏ"
       dismiss_notifications: "Bỏ qua tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       first_notification: "Thông báo đầu tiên của bạn! Chọn để bắt đầu"
       dynamic_favicon: "Hiển thị đếm  trên icon trình duyệt"
+      skip_new_user_tips:
+        description: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới"
+        not_first_time: "Không phải lần đầu tiên sao?"
+        skip_link: "Bỏ qua những mẹo này"
       theme_default_on_all_devices: "Đặt giao diện này là mặc định trên tất cả các thiết bị của tôi"
+      color_scheme_default_on_all_devices: "Đặt (các) bảng màu mặc định trên tất cả các thiết bị của tôi"
+      color_scheme: "Sơ đồ màu"
+      color_schemes:
+        default_description: "Mặc định"
+        disable_dark_scheme: "Giống như thông thường"
+        dark_instructions: "Bạn có thể xem trước bảng màu ở chế độ tối bằng cách chuyển sang chế độ tối của thiết bị."
+        undo: "Cài lại"
+        regular: "Thường xuyên"
+        dark: "Chế độ tối"
+        default_dark_scheme: "(trang web mặc định)"
+      dark_mode: "Chế độ tối"
+      dark_mode_enable: "Bật bảng màu chế độ tối tự động"
       external_links_in_new_tab: "Mở tất cả liên kết bên ngoài trong thẻ mới"
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       change: "thay đổi"
@@ -1279,7 +1334,6 @@ vi:
       sent_activation_email_again: "Chúng tôi gửi email kích hoạt tới cho bạn ở <b>%{currentEmail}</b>. Nó sẽ mất vài phút để đến; bạn nhớ check cả hồm thư spam nhe. "
       to_continue: "Vui lòng đăng nhập"
       preferences: "Bạn cần phải đăng nhập để thay đổi cài đặt tài khoản."
-      forgot: "Tôi không thể nhớ lại chi tiết tài khoản của tôi."
       not_approved: "Tài khoản của bạn chưa được kiểm duyệt. Bạn sẽ nhận được email thông báo khi bạn được phép đăng nhập."
       google_oauth2:
         name: "Goole"

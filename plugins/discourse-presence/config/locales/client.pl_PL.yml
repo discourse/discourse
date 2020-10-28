@@ -9,6 +9,6 @@ pl_PL:
     presence:
       replying_to_topic:
         one: "odpowiada"
-        few: "odpowiadają"
+        few: "odpowiada"
         many: "odpowiadają"
         other: "odpowiadają"

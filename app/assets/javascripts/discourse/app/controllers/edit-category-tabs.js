@@ -15,6 +15,7 @@ export default Controller.extend({
   createdCategory: false,
   expandedMenu: false,
   mobileView: readOnly("site.mobileView"),
+  parentParams: null,
 
   @on("init")
   _initPanels() {

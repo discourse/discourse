@@ -1178,7 +1178,6 @@ ca:
         generate_link: "Copia l'enllaç d'invitació"
         link_generated: "Enllaç d'invitació generat emb èxit!"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
-        single_user: "Usuari únic"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         bulk_invite:
@@ -1418,7 +1417,6 @@ ca:
       sent_activation_email_again_generic: "S'ha enviat un altre correu d'activació. Pot trigar uns quants minuts a arribar; comproveu la carpeta de correu brossa."
       to_continue: "Inicieu la sessió"
       preferences: "Cal que inicieu la sessió per a canviar les preferències d'usuari."
-      forgot: "No recordo els detalls del meu compte"
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
@@ -2401,7 +2399,6 @@ ca:
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
-      manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
       tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
       required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"

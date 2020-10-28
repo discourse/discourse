@@ -1,6 +1,7 @@
-import WhiteLister from "pretty-text/white-lister";
+import AllowLister from "pretty-text/allow-lister";
 import { sanitize } from "pretty-text/sanitizer";
 import guid from "pretty-text/guid";
+import deprecated from "discourse-common/lib/deprecated";
 
 export const ATTACHMENT_CSS_CLASS = "attachment";
 
@@ -23,11 +24,19 @@ function createHelper(
   optionCallbacks,
   pluginCallbacks,
   getOptions,
-  whiteListed
+  allowListed
 ) {
   let helper = {};
   helper.markdownIt = true;
-  helper.whiteList = (info) => whiteListed.push([featureName, info]);
+  helper.allowList = (info) => allowListed.push([featureName, info]);
+  helper.whiteList = (info) => {
+    deprecated("`whiteList` has been replaced with `allowList`", {
+      since: "2.6.0.beta.4",
+      dropFrom: "2.7.0",
+    });
+    helper.allowList(info);
+  };
+
   helper.registerInline = deprecate(featureName, "registerInline");
   helper.replaceBlock = deprecate(featureName, "replaceBlock");
   helper.addPreProcessor = deprecate(featureName, "addPreProcessor");
@@ -296,7 +305,7 @@ export function setup(opts, siteSettings, state) {
 
   const check = /discourse-markdown\/|markdown-it\//;
   let features = [];
-  let whiteListed = [];
+  let allowListed = [];
 
   Object.keys(require._eak_seen).forEach((entry) => {
     if (check.test(entry)) {
@@ -319,13 +328,13 @@ export function setup(opts, siteSettings, state) {
           optionCallbacks,
           pluginCallbacks,
           getOptions,
-          whiteListed
+          allowListed
         )
       );
     });
 
-  Object.entries(state.whiteListed || {}).forEach((entry) => {
-    whiteListed.push(entry);
+  Object.entries(state.allowListed || {}).forEach((entry) => {
+    allowListed.push(entry);
   });
 
   optionCallbacks.forEach(([, callback]) => {
@@ -393,14 +402,14 @@ export function setup(opts, siteSettings, state) {
   opts.setup = true;
 
   if (!opts.discourse.sanitizer || !opts.sanitizer) {
-    const whiteLister = new WhiteLister(opts.discourse);
+    const allowLister = new AllowLister(opts.discourse);
 
-    whiteListed.forEach(([feature, info]) => {
-      whiteLister.whiteListFeature(feature, info);
+    allowListed.forEach(([feature, info]) => {
+      allowLister.allowListFeature(feature, info);
     });
 
     opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
-      ? (a) => sanitize(a, whiteLister)
+      ? (a) => sanitize(a, allowLister)
       : (a) => a;
   }
 }

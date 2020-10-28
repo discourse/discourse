@@ -495,7 +495,6 @@ end
 #  posted                   :boolean          default(FALSE), not null
 #  last_read_post_number    :integer
 #  highest_seen_post_number :integer
-#  last_posted_at          :datetime
 #  last_visited_at          :datetime
 #  first_visited_at         :datetime
 #  notification_level       :integer          default(1), not null
@@ -507,9 +506,10 @@ end
 #  last_emailed_post_number :integer
 #  liked                    :boolean          default(FALSE)
 #  bookmarked               :boolean          default(FALSE)
+#  last_posted_at           :datetime
 #
 # Indexes
 #
-#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_topic_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
+#  index_forum_thread_users_on_forum_thread_id_and_user_id  (topic_id,user_id) UNIQUE
+#  index_topic_users_on_user_id_and_topic_id                (user_id,topic_id) UNIQUE
 #

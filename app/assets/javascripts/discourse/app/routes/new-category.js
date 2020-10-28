@@ -24,8 +24,8 @@ export default DiscourseRoute.extend({
   },
 
   renderTemplate() {
-    this.render("edit-category", {
-      controller: "edit-category",
+    this.render("edit-category-tabs", {
+      controller: "edit-category-tabs",
       model: this.currentModel,
     });
   },

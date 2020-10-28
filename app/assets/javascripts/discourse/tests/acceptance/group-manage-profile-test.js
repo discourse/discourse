@@ -3,6 +3,7 @@ import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
+  count,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Managing Group Profile", function () {

@@ -1023,7 +1023,6 @@ vi:
     email_too_long: "Email bạn cung cấp quá dài. Địa chỉ email phải không quá 254 ký tự, và tên miền phải không quá 253 ký tự."
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
-    already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
   admin:
     email:
       sent_test: "đã gửi!"

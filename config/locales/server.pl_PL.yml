@@ -648,10 +648,10 @@ pl_PL:
     image_placeholder:
       broken: "Ten obraz jest uszkodzony"
     has_likes:
-      one: "%{count}polubienie"
-      few: "%{count}polubienia"
-      many: "%{count}polubień"
-      other: "%{count}polubień"
+      one: "%{count} polubienie"
+      few: "%{count} polubienia"
+      many: "%{count} polubień"
+      other: "%{count} polubień"
   rate_limiter:
     slow_down: "Wykonałeś tę akcję zbyt wiele razy, spróbuj ponownie później."
     too_many_requests: "Wykonałeś tę akcję zbyt wiele razy, spróbuj ponownie za %{time_left}."
@@ -800,8 +800,8 @@ pl_PL:
   password_reset:
     no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
     choose_new: "Wprowadź nowe hasło"
-    choose: "Wprowadź hasło "
-    update: "Zmień hasło"
+    choose: "Wprowadź hasło"
+    update: "Aktualizuj hasło"
     save: "Ustaw hasło"
     title: "Zresetuj hasło"
     success: "Twoje hasło zostało pomyślnie zmienione, zalogowano."
@@ -858,13 +858,13 @@ pl_PL:
       old_email: "Stary adres e-mail: %{email}"
       new_email: "Nowy adres e-mail: %{email}"
       almost_done_title: "Potwierdzanie nowego adresu e-mail"
-      almost_done_description: "Wysłaliśmy e-maila na nowy adres, by potwierdzić tę zmianę!"
+      almost_done_description: "Wysłaliśmy e-maila na nowy adres, aby potwierdzić tę zmianę!"
   associated_accounts:
     revoke_failed: "Nie udało się unieważnić konta za pomocą %{provider_name}."
     connected: "(połączony)"
   activation:
     action: "Kliknij, by aktywować swoje konto."
-    already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
+    already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
     please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
     continue_button: "Przejdź do %{site_name}"
     welcome_to: "Witamy na forum %{site_name}!"
@@ -874,7 +874,7 @@ pl_PL:
     admin_confirm:
       title: "Potwierdź konto administratora"
       description: "Czy na pewno chcesz, aby <b>%{target_username} (%{target_email})</b> był administratorem?"
-      grant: "Przynaj prawa Admina"
+      grant: "Przyznaj uprawnienia administratora"
       complete: "<b>%{target_username}</b> jest teraz administratorem."
       back_to: "Wróć do %{title}"
   reviewable_score_types:
@@ -884,10 +884,10 @@ pl_PL:
     off_topic:
       title: "Nie na temat"
       description: "Ten wpis jest niezwiązany z obecną dyskusją zdefiniowaną przez tytuł i pierwszy wpis, i powinien zostać przeniesiony gdzieś indziej."
-      short_description: "Nie istotne z punktu widzenia dyskusji."
+      short_description: "Nieistotne z punktu widzenia dyskusji."
     spam:
       title: "Spam"
-      description: "Ten wpis jest reklamą lub aktem wandalizmu. Nie jest potrzebny, ani istotny w bieżącym temacie."
+      description: "Ten wpis jest reklamą lub aktem wandalizmu. Nie jest ani potrzebny, ani istotny w bieżącym temacie."
       short_description: "To jest reklama lub akty wandalizmu."
       email_title: '%{title}" został oznaczony jako spam'
       email_body: "%{link}\n\n%{message}"
@@ -896,7 +896,7 @@ pl_PL:
       description: 'Ten wpis zawiera treści, które rozsądna osoba uznałaby za agresywne, obrażliwe lub sprzeczne z <a href="%{base_path}/guidelines">wytycznymi naszej społeczności</a>.'
       short_description: 'Naruszenie <a href="%{base_path}/guidelines">wytycznych naszej społeczności</a>.'
     notify_user:
-      title: "Wyślij @%{username} wiadomość"
+      title: "Wyślij wiadomość do @%{username}"
       description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       short_description: "Chcę bezpośrednio porozmawiać z tą osobą o jej wpisie."
       email_title: 'Twój wpis w "%{title}"'
@@ -910,7 +910,7 @@ pl_PL:
     bookmark:
       title: "Zakładka"
       description: "Dodaj ten wpis do zakładek"
-      short_description: "Dodaj do zakładek ten wpis"
+      short_description: "Dodaj ten wpis do zakładek"
     like:
       title: "Polub"
       description: "Polub ten wpis"
@@ -1522,6 +1522,7 @@ pl_PL:
     site_contact_group_name: "Prawidłowa nazwa grupy, do której zostaną zaproszone wszystkie automatyczne wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
     send_tl1_welcome_message: "Wyślij wiadomość powitalną do nowych użytkowników poziomu zaufania 1."
+    send_tl2_promotion_message: "Wyślij nowym użytkownikom poziomu zaufania 2 wiadomość o promocji."
     suppress_reply_directly_below: "Nie pokazuj rozwijanej liczby odpowiedzi przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio pod tym wpisem."
     suppress_reply_directly_above: "Nie pokazuj rozwijanego \"w odpowiedzi na\" przy wpisie, gdy jest tylko jedna odpowiedź bezpośrednio nad tym wpisem."
     remove_full_quote: "Automatycznie usuwaj pełne cytaty z bezpośrednich odpowiedzi."
@@ -1549,11 +1550,13 @@ pl_PL:
     min_username_length: "Minimalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy krótsze niż ta, twój serwis się uszkodzi!"
     max_username_length: "Maksymalna długość nazwy użytkownika w znakach. OSTRZEŻENIE: jeśli jacykolwiek istniejący użytkownicy lub grupy mają nazwy dłuższe niż ta, twój serwis się uszkodzi!"
     unicode_usernames: "Pozwól, aby nazwy użytkowników i nazwy grup zawierały litery i cyfry Unicode."
+    allowed_unicode_username_characters: "Wyrażenie regularne pozwalające na używanie tylko niektórych znaków Unicode w nazwach użytkowników. Litery i cyfry ASCII będą zawsze dozwolone i nie trzeba ich umieszczać na liście dopuszczeń."
     reserved_usernames: "Nazwy użytkowników, które są niedostępne przy rejestracji. Symbol dzikiej karty * może zostać użyty, aby dopasować do argumentu zero lub więcej razy."
     min_password_length: "Minimalna długość hasła."
     min_admin_password_length: "Minimalna długość hasła dla Admina."
     password_unique_characters: "Minimalna ilość różnych znaków, które muszą być w haśle."
     block_common_passwords: "Nie zezwalaj na hasła znajdujące się w grupie 10 000 najpopularniejszych haseł."
+    external_auth_immediately: "Automatycznie przekieruj do zewnętrznego systemu logowania bez interakcji użytkownika. To staje się skuteczne tylko wtedy, gdy login_required ma wartość true i istnieje tylko jedna zewnętrzna metoda uwierzytelniania"
     enable_sso: "Włącz pojedyncze logowanie przez zewnętrzną stronę (UWAGA: ADRESY E-MAIL UŻYTKOWNIKÓW *MUSZĄ* BYĆ ZATWIERDZONE PRZEZ ZEWNĘTRZNĄ STRONĘ!)"
     verbose_sso_logging: "Rejestruj pełną diagnostykę związaną z jednokrotnym logowaniem do <a href='%{base_path}/logs' target='_blank'>/ logs</a>"
     enable_sso_provider: "Wdrożenie protokołu dostawcy SSO Discourse w punkcie końcowym / session / sso_provider, wymaga ustawienia sso_provider_secrets"
@@ -1651,6 +1654,8 @@ pl_PL:
     selectable_avatars: "Lista awatarów, z których mogą wybierać użytkownicy."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
     png_to_jpg_quality: "Jakość skonwertowanego pliku JPG (1 to najniższa jakość, 99 to najlepsza jakość, 100 aby dezaktywować)."
+    recompress_original_jpg_quality: "Jakość przesłanych plików graficznych (1 to najniższa jakość, 99 to najlepsza jakość, 100 bez zmian)."
+    image_preview_jpg_quality: "Jakość plików graficznych o zmienionym rozmiarze (1 to najniższa jakość, 99 to najlepsza jakość, 100 bez zmian)."
     allow_staff_to_upload_any_file_in_pm: "Pozwól personelowi przesyłać pliki w wiadomościach."
     strip_image_metadata: "Pasek metadanych obrazu."
     min_ratio_to_crop: "Współczynnik stosowany do przycinania wysokich zdjęć. Wpisz wynik szerokości / wysokości."
@@ -2044,18 +2049,25 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
+    omniauth_confirm_title: "Zaloguj się za pomocą %{provider}"
     omniauth_confirm_button: "Kontynuuj"
     authenticator_error_no_valid_email: "Adresy e-mail powiązane z %{account} są niedozwolone. Musisz użyć innego adresu."
     new_registrations_disabled: "Aktualnie nie jest możliwe zarejestrowanie nowego konta."
     password_too_long: "Hasła są ograniczone do 200 znaków."
     email_too_long: "Podałeś zbyt długi adres email. Nazwa skrzynki pocztowej nie może być dłuższa niż 254 znaki, a nazwa domeny nie może zawierać więcej niż 253 znaki."
+    wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
-    already_logged_in: "Próbujesz zaakceptować zaproszenie przeznaczone dla innego użytkownika. Jeśli %{current_user} to nie ty, wyloguj się i zaloguj ponownie."
+    second_factor_title: "Uwierzytelnianie dwuskładnikowe"
+    second_factor_description: "Podaj wymagany kod uwierzytelniający ze swojej aplikacji:"
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
+    second_factor_backup_title: "Kod zapasowy weryfikacji dwuskładnikowej"
+    invalid_second_factor_code: "Nieprawidłowy kod uwierzytelniający. Każdego kodu można użyć tylko raz."
     invalid_security_key: "Nieprawidłowy klucz bezpieczeństwa."
+    missing_second_factor_name: "Proszę podać nazwę."
+    missing_second_factor_code: "Proszę podać kod."
     second_factor_toggle:
       backup_code: "Zamiast tego użyj kodu zapasowego"
   admin:
@@ -2070,6 +2082,7 @@ pl_PL:
     username:
       short: "musi zawierać co najmniej %{min} znaków"
       long: "nie może zawierać więcej niż %{max} znaków"
+      too_long: "jest za długa"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
       must_begin_with_alphanumeric_or_underscore: "musi zaczynać się literą, cyfrą lub znakiem podkreślenia"
@@ -2168,6 +2181,8 @@ pl_PL:
     post_hidden:
       title: "Ukryty wpis"
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
+    post_hidden_again:
+      title: "Post ukryty ponownie"
     welcome_user:
       title: "Witaj Użytkowniku"
       subject_template: "Witaj na %{site_name}!"
@@ -2612,6 +2627,7 @@ pl_PL:
       subject_template: "[%{email_prefix}] Podsumowanie"
       your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
+      from: "%{site_name}"
       preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
     forgot_password:
       title: "Zapomniane hasło"
@@ -2625,6 +2641,7 @@ pl_PL:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Zaloguj za pomocą linku"
+      subject_template: "[%{email_prefix}] Zaloguj się przez link"
     set_password:
       title: "Ustaw hasło"
       subject_template: "[%{site_name}] Ustaw hasło"
@@ -2649,6 +2666,15 @@ pl_PL:
     confirm_new_email:
       title: "Potwierdź Nowy Email"
       subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
+    confirm_new_email_via_admin:
+      title: "Potwierdź nowy e-mail"
+      subject_template: "[%{email_prefix}] Potwierdź swój nowy adres email"
+      text_body_template: |
+        Potwierdź swój nowy adres e-mail dla %{site_name} klikając na poniższy link:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ta zmiana e-mail została zgłoszona przez administratora witryny. Jeśli nie prosiłeś o tę zmianę, skontaktuj się z [administratorem witryny](%{base_url}/about).
     confirm_old_email:
       title: "Potwierdź stary email"
       subject_template: "[%{site_name}] Potwierdź aktualny adres email"
@@ -2678,6 +2704,10 @@ pl_PL:
         Jeśli powyższy link nie działa, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
     activation_reminder:
       title: "Przypomnienie o aktywacji"
+    suspicious_login:
+      subject_template: "[%{site_name}] Nowe logowanie z %{location}"
+  page_forbidden:
+    title: "Ups! Ta strona jest prywatna."
   page_not_found:
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
@@ -2738,9 +2768,15 @@ pl_PL:
     light: "Jasny"
     dark: "Ciemny"
     neutral: "Neutralne"
+    default_theme_name: "Domyślny"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
     neutral_theme_name: "Neutralne"
+    grey_amber_theme_name: "Szary bursztyn"
+    shades_of_blue_theme_name: "Odcienie niebieskiego"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Lato"
+    dark_rose_theme_name: "Ciemna róża"
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"
@@ -3120,6 +3156,8 @@ pl_PL:
     badge_title_metadata: "%{display_name} odznaka na %{site_title}"
   admin_login:
     success: "Email wysłany"
+    errors:
+      invalid_token: "Nieprawidłowy token."
     email_input: "Email administratora. "
     submit_button: "Wyślij Email. "
   performance_report:
@@ -3127,6 +3165,9 @@ pl_PL:
     initial_topic_title: Testy wydajności witryny.
   tags:
     title: "Etykiety"
+    restricted_tag_disallowed: 'Nie można zastosować tagu "%{tag}”.'
+    restricted_tag_remove_disallowed: 'Nie możesz usunąć tagu „%{tag}”.'
+    invalid_target_tag: "nie może być synonimem synonimu"
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś Discourse!"
@@ -3221,6 +3262,13 @@ pl_PL:
           city_for_disputes:
             label: "Miasto dyskusji"
             placeholder: "Kalifornia, San Francisco"
+      colors:
+        title: "Kolory"
+      fonts:
+        title: "Czcionki"
+        fields:
+          font_preview:
+            label: "Podgląd"
       logos:
         title: "Loga"
         fields:
@@ -3231,6 +3279,8 @@ pl_PL:
       icons:
         title: "Ikony"
         fields:
+          favicon:
+            label: "Ikona przeglądarki"
           large_icon:
             label: "Duża ikona"
       homepage:
@@ -3265,12 +3315,16 @@ pl_PL:
       quoted: '%{username} cytuje cie w "%{topic}" - %{site_title}'
       replied: '%{username} odpowiada na twój wpis w "%{topic}" - %{site_title}'
       posted: '%{username} pisze w "%{topic}" - %{site_title}'
+      private_message: '%{username} wysłał Ci prywatną wiadomość w "%{topic}” - %{site_title}'
       linked: '%{username} linkuje do twojego wpisu z "%{topic}" - %{site_title}'
       watching_first_post: '%{username} utworzył nowy temat „%{topic}” - %{site_title}'
       confirm_title: "Powiadomienia włączone - %{site_title}"
       confirm_body: "Powodzenie! Powiadomienia zostały włączone."
       custom: "Powiadomienie od %{username} na %{site_title}"
   staff_action_logs:
+    not_found: "nie znaleziono"
+    unknown: "nieznane"
+    user_merged: "%{username} został scalony z tym kontem"
     api_key:
       revoked: Unieważniono
   reviewables:
@@ -3293,8 +3347,15 @@ pl_PL:
         title: "Zawieś użytkownika"
       agree_and_silence:
         title: "Wycisz użytkownika"
+      agree_and_restore:
+        description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
+      agree_and_hide:
+        title: "Ukryj post"
+        description: "Ukryj ten post i automatycznie wyślij użytkownikowi wiadomość z wezwaniem do jego edycji."
       delete_spammer:
         title: "Usuń spamera"
+        description: "Usuń użytkownika oraz wszystkie jego posty i tematy."
+        confirm: "Czy na pewno chcesz usunąć wszystkie posty i tematy tego użytkownika oraz zablokować jego adresy IP i e-mail?"
       delete_single:
         title: "Usuń"
       delete:
@@ -3305,14 +3366,32 @@ pl_PL:
         title: "Ignoruj"
       approve:
         title: "Zatwierdź"
+      approve_post:
+        title: "Zatwierdź post"
+      reject_post:
+        title: "Odrzuć post"
+      approve_user:
+        title: "Zatwierdź użytkownika"
       reject_user:
+        title: "Usuń użytkownika..."
         delete:
           title: "Usuń użytkownika"
+          description: "Użytkownik zostanie usunięty z forum."
+        block:
+          title: "Usuń i zablokuj użytkownika"
+          description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
       reject:
         title: "Odrzuć"
       delete_user:
         title: "Usuń użytkownika"
         reason: "Skasowano z poziomu kolejki moderacji"
+  notification_level:
+    ignore_error: "Przepraszamy, nie możesz zignorować tego użytkownika."
+    mute_error: "Przepraszamy, nie możesz wyciszyć tego użytkownika."
+  discord:
+    not_in_allowed_guild: "Uwierzytelnianie nie powiodło się. Nie jesteś członkiem dozwolonej gildii Discord."
+  old_keys_reminder:
+    title: "Przypomnienie o starych poświadczeniach"
   activemodel:
     errors:
       <<: *errors

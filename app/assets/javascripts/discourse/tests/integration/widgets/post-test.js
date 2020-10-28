@@ -309,10 +309,14 @@ widgetTest(
       this.set("args", {
         canDeleteTopic: false,
         showFlagDelete: true,
+        canFlag: true,
       });
     },
 
-    test(assert) {
+    async test(assert) {
+      await click(".show-more-actions");
+
+      assert.equal(find("button.create-flag").length, 1, `button is displayed`);
       assert.equal(find("button.delete").length, 1, `button is displayed`);
       assert.equal(
         find("button.delete").attr("title"),
@@ -350,10 +354,11 @@ widgetTest("delete post button", {
   template:
     '{{mount-widget widget="post" args=args deletePost=(action "deletePost")}}',
   beforeEach() {
-    this.set("args", { canDelete: true });
+    this.set("args", { canDelete: true, canFlag: true });
     this.on("deletePost", () => (this.deletePostCalled = true));
   },
   async test(assert) {
+    await click(".show-more-actions");
     await click("button.delete");
     assert.ok(this.deletePostCalled, "it triggered the delete action");
   },
@@ -366,6 +371,29 @@ widgetTest(`delete post button - can't delete`, {
   },
   test(assert) {
     assert.equal(find("button.delete").length, 0, `button is not displayed`);
+  },
+});
+
+widgetTest(`delete post button - can't delete, can't flag`, {
+  template: '{{mount-widget widget="post" args=args}}',
+  beforeEach() {
+    this.set("args", {
+      canDeleteTopic: false,
+      showFlagDelete: false,
+      canFlag: false,
+    });
+  },
+  test(assert) {
+    assert.equal(
+      find("button.delete").length,
+      0,
+      `delete button is not displayed`
+    );
+    assert.equal(
+      find("button.create-flag").length,
+      0,
+      `flag button is not displayed`
+    );
   },
 });
 

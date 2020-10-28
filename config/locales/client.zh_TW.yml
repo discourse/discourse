@@ -236,6 +236,7 @@ zh_TW:
         later_today: "今日稍晚"
         tomorrow: "明天"
         next_week: "下週"
+        post_local_date: "張貼日期"
         later_this_week: "本週稍晚"
         next_month: "下個月"
     drafts:
@@ -1214,7 +1215,6 @@ zh_TW:
       sent_activation_email_again_generic: "啟用帳號的電子郵件已寄出 ，你可能幾分鐘後才會收到，如果一直沒收到，請檢查垃圾郵件資料夾。"
       to_continue: "請登入"
       preferences: "需要登入後更改設置"
-      forgot: "我不記得帳號詳情了"
       not_approved: "您的帳號尚未通過審核。一旦您的帳號通過審核，就會傳送電子郵件通知您。"
       google_oauth2:
         name: "Google"
@@ -2114,7 +2114,6 @@ zh_TW:
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
-      manage_tag_groups_link: "在此處管理標籤群組。"
       allow_global_tags_label: "也允許其他標籤（Tags）"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
       delete: "刪除分類"
