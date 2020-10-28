@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
+import sinon from "sinon";
 
 acceptance("Category New", function (needs) {
   needs.user();
@@ -35,7 +36,7 @@ acceptance("Category New", function (needs) {
       "it can switch to the settings tab"
     );
 
-    sandbox.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "redirectTo");
 
     await click(".category-back");
     assert.ok(

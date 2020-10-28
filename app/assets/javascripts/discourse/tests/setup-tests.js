@@ -25,7 +25,6 @@ import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
 import { setApplication, setResolver } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
 
 export default function setupTests(app, container) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -129,11 +128,6 @@ export default function setupTests(app, container) {
       capabilities: {},
       site,
     });
-
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
 
     PreloadStore.reset();
 

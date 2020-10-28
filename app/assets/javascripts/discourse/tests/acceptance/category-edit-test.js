@@ -3,6 +3,7 @@ import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
+import sinon from "sinon";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -46,7 +47,7 @@ acceptance("Category Edit", function (needs) {
       "it stays on the edit screen"
     );
 
-    sandbox.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "routeTo");
 
     await click(".edit-category-security a");
     assert.ok(
