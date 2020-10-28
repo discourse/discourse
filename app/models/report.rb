@@ -13,6 +13,8 @@ class Report
                 :prev_start_date, :prev_end_date, :dates_filtering, :error,
                 :primary_color, :secondary_color, :filters, :available_filters
 
+  include Reports::UsersByType
+
   def self.default_days
     30
   end
@@ -382,7 +384,6 @@ require_relative "reports/suspicious_logins"
 require_relative "reports/new_contributors"
 require_relative "reports/users_by_trust_level"
 require_relative "reports/staff_logins"
-require_relative "reports/users_by_type"
 require_relative "reports/user_flagging_ratio"
 require_relative "reports/post_edits"
 require_relative "reports/daily_engaged_users"
