@@ -486,12 +486,22 @@ Category.reopenClass({
   },
 
   reloadCategoryWithPermissions(params, store, site) {
-    return this.reloadBySlug(params.slug, params.parentSlug).then((result) => {
-      const record = store.createRecord("category", result.category);
-      record.setupGroupsAndPermissions();
-      site.updateCategory(record);
-      return record;
-    });
+    if (params.slug && params.slug.match(/^\d+-category/)) {
+      const id = parseInt(params.slug, 10);
+      return this.reloadById(id).then((result) =>
+        this._includePermissions(result.category, store, site)
+      );
+    }
+    return this.reloadBySlug(params.slug, params.parentSlug).then((result) =>
+      this._includePermissions(result.category, store, site)
+    );
+  },
+
+  _includePermissions(category, store, site) {
+    const record = store.createRecord("category", category);
+    record.setupGroupsAndPermissions();
+    site.updateCategory(record);
+    return record;
   },
 
   search(term, opts) {

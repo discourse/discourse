@@ -65,6 +65,16 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
+  test("Slugless Route", async (assert) => {
+    await visit("/c/1-category/edit");
+    assert.equal(
+      currentURL(),
+      "/c/1-category/edit/general",
+      "it goes to the general tab"
+    );
+    assert.equal(find("input.category-name").val(), "bug");
+  });
+
   test("Error Saving", async (assert) => {
     await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
