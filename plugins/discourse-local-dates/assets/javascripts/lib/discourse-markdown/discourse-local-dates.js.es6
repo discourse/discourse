@@ -138,7 +138,7 @@ function closeBuffer(buffer, state, text) {
 }
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "span.discourse-local-date",
     "span[data-*]",
     "span[aria-label]",

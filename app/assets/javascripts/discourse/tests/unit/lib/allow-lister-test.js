@@ -1,36 +1,36 @@
 import { test, module } from "qunit";
-import WhiteLister from "pretty-text/white-lister";
+import AllowLister from "pretty-text/allow-lister";
 
-module("lib:whiteLister");
+module("lib:allowLister");
 
-test("whiteLister", (assert) => {
-  const whiteLister = new WhiteLister();
+test("allowLister", (assert) => {
+  const allowLister = new AllowLister();
 
   assert.ok(
-    Object.keys(whiteLister.getWhiteList().tagList).length > 1,
+    Object.keys(allowLister.getAllowList().tagList).length > 1,
     "should have some defaults"
   );
 
-  whiteLister.disable("default");
+  allowLister.disable("default");
 
   assert.ok(
-    Object.keys(whiteLister.getWhiteList().tagList).length === 0,
+    Object.keys(allowLister.getAllowList().tagList).length === 0,
     "should have no defaults if disabled"
   );
 
-  whiteLister.whiteListFeature("test", [
+  allowLister.allowListFeature("test", [
     "custom.foo",
     "custom.baz",
     "custom[data-*]",
     "custom[rel=nofollow]",
   ]);
 
-  whiteLister.whiteListFeature("test", ["custom[rel=test]"]);
+  allowLister.allowListFeature("test", ["custom[rel=test]"]);
 
-  whiteLister.enable("test");
+  allowLister.enable("test");
 
   assert.deepEqual(
-    whiteLister.getWhiteList(),
+    allowLister.getAllowList(),
     {
       tagList: {
         custom: [],
@@ -46,10 +46,10 @@ test("whiteLister", (assert) => {
     "Expecting a correct white list"
   );
 
-  whiteLister.disable("test");
+  allowLister.disable("test");
 
   assert.deepEqual(
-    whiteLister.getWhiteList(),
+    allowLister.getAllowList(),
     {
       tagList: {},
       attrList: {},
