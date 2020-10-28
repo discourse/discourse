@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -35,7 +36,7 @@ acceptance("Login with email", function (needs) {
     await click(".login-with-email-button");
 
     assert.equal(
-      find(".alert-error").html(),
+      queryAll(".alert-error").html(),
       I18n.t("email_login.complete_username_not_found", {
         username: "someuser",
       }),
@@ -46,7 +47,7 @@ acceptance("Login with email", function (needs) {
     await click(".login-with-email-button");
 
     assert.equal(
-      find(".alert-error").html(),
+      queryAll(".alert-error").html(),
       I18n.t("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),
@@ -60,7 +61,7 @@ acceptance("Login with email", function (needs) {
     await click(".login-with-email-button");
 
     assert.equal(
-      find(".alert-success").html().trim(),
+      queryAll(".alert-success").html().trim(),
       I18n.t("email_login.complete_username_found", { username: "someuser" }),
       "it should display a success message for a valid username"
     );
@@ -71,7 +72,7 @@ acceptance("Login with email", function (needs) {
     await click(".login-with-email-button");
 
     assert.equal(
-      find(".alert-success").html().trim(),
+      queryAll(".alert-success").html().trim(),
       I18n.t("email_login.complete_email_found", {
         email: "someuser@gmail.com",
       }),

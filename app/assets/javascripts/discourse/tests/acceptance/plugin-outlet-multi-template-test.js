@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -27,20 +28,20 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
   test("Renders a template into the outlet", async (assert) => {
     await visit("/u/eviltrout");
     assert.ok(
-      find(".user-profile-primary-outlet.hello").length === 1,
+      queryAll(".user-profile-primary-outlet.hello").length === 1,
       "it has class names"
     );
     assert.ok(
-      find(".user-profile-primary-outlet.goodbye").length === 1,
+      queryAll(".user-profile-primary-outlet.goodbye").length === 1,
       "it has class names"
     );
     assert.equal(
-      find(".hello-span").text(),
+      queryAll(".hello-span").text(),
       "Hello",
       "it renders into the outlet"
     );
     assert.equal(
-      find(".bye-span").text(),
+      queryAll(".bye-span").text(),
       "Goodbye",
       "it renders into the outlet"
     );

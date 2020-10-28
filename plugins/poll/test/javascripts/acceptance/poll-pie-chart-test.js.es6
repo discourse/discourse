@@ -1,4 +1,5 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with pie charts", function (needs) {
   needs.user();
@@ -10,16 +11,16 @@ acceptance("Rendering polls with pie charts", function (needs) {
   test("Displays the pie chart", async (assert) => {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    const poll = find(".poll")[0];
+    const poll = queryAll(".poll")[0];
 
     assert.equal(
-      find(".info-number", poll)[0].innerHTML,
+      queryAll(".info-number", poll)[0].innerHTML,
       "2",
       "it should display the right number of voters"
     );
 
     assert.equal(
-      find(".info-number", poll)[1].innerHTML,
+      queryAll(".info-number", poll)[1].innerHTML,
       "5",
       "it should display the right number of votes"
     );
@@ -31,7 +32,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
     );
 
     assert.equal(
-      find(".poll-results-chart", poll).length,
+      queryAll(".poll-results-chart", poll).length,
       1,
       "Renders the chart div instead of bar container"
     );

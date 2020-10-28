@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -32,9 +33,9 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.equal(find(".text pre").text(), "Hello, this is a test!");
+    assert.equal(queryAll(".text pre").text(), "Hello, this is a test!");
     assert.equal(
-      find(".elided pre").text(),
+      queryAll(".elided pre").text(),
       "---\n\nThis part should be elided."
     );
   });

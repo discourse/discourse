@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
@@ -17,7 +18,7 @@ componentTest("pasting a list of usernames", {
   },
 
   test(assert) {
-    let element = find(".test-selector")[0];
+    let element = queryAll(".test-selector")[0];
 
     assert.equal(this.get("usernames"), "evil,trout");
     paste(element, "zip,zap,zoom");
@@ -48,7 +49,7 @@ componentTest("excluding usernames", {
   },
 
   test(assert) {
-    let element = find(".test-selector")[0];
+    let element = queryAll(".test-selector")[0];
     paste(element, "roman,penar,jeff,robin");
     assert.equal(this.get("usernames"), "mark,roman,penar");
   },

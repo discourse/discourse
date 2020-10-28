@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -27,7 +28,7 @@ widgetTest("duplicate links", {
   },
   test(assert) {
     assert.equal(
-      find(".post-links a.track-link").length,
+      queryAll(".post-links a.track-link").length,
       1,
       "it hides the dupe link"
     );
@@ -51,8 +52,8 @@ widgetTest("collapsed links", {
     });
   },
   async test(assert) {
-    assert.ok(find(".expand-links").length === 1, "collapsed by default");
+    assert.ok(queryAll(".expand-links").length === 1, "collapsed by default");
     await click("a.expand-links");
-    assert.equal(find(".post-links a.track-link").length, 7);
+    assert.equal(queryAll(".post-links a.track-link").length, 7);
   },
 });

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -25,7 +26,7 @@ acceptance("Invite Accept", function (needs) {
     assert.ok(exists("#new-account-email"), "shows the email input");
     assert.ok(exists("#new-account-username"), "shows the username input");
     assert.equal(
-      find("#new-account-username").val(),
+      queryAll("#new-account-username").val(),
       "invited",
       "username is prefilled"
     );

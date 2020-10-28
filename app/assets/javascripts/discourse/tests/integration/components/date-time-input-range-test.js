@@ -1,22 +1,23 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
 moduleForComponent("date-time-input-range", { integration: true });
 
 function fromDateInput() {
-  return find(".from.d-date-time-input .date-picker")[0];
+  return queryAll(".from.d-date-time-input .date-picker")[0];
 }
 
 function fromTimeInput() {
-  return find(".from.d-date-time-input .d-time-input .combo-box-header")[0];
+  return queryAll(".from.d-date-time-input .d-time-input .combo-box-header")[0];
 }
 
 function toDateInput() {
-  return find(".to.d-date-time-input .date-picker")[0];
+  return queryAll(".to.d-date-time-input .date-picker")[0];
 }
 
 function toTimeInput() {
-  return find(".to.d-date-time-input .d-time-input .combo-box-header")[0];
+  return queryAll(".to.d-date-time-input .d-time-input .combo-box-header")[0];
 }
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");

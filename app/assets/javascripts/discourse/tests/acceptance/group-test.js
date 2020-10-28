@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -35,18 +36,18 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
-    assert.ok(find(".topic-list"), "it shows the topic list");
+    assert.ok(queryAll(".topic-list"), "it shows the topic list");
     assert.equal(count(".topic-list-item"), 2, "it lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
     assert.ok(count(".user-stream-item") > 0, "it lists stream items");
     assert.ok(
-      find(".nav-pills li a[title='Edit Group']").length === 0,
+      queryAll(".nav-pills li a[title='Edit Group']").length === 0,
       "it should not show messages tab if user is not admin"
     );
     assert.ok(
-      find(".nav-pills li a[title='Logs']").length === 0,
+      queryAll(".nav-pills li a[title='Logs']").length === 0,
       "it should not show Logs tab if user is not admin"
     );
     assert.ok(count(".user-stream-item") > 0, "it lists stream items");
@@ -69,7 +70,7 @@ acceptance("Group - Anonymous", function (needs) {
     await groupDropdown.expand();
 
     assert.equal(
-      find(".group-dropdown-filter").length,
+      queryAll(".group-dropdown-filter").length,
       0,
       "it should not display the default header"
     );
@@ -189,19 +190,19 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.equal(
-      find(".modal-header").text().trim(),
+      queryAll(".modal-header").text().trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
     assert.equal(
-      find(".request-group-membership-form textarea").val(),
+      queryAll(".request-group-membership-form textarea").val(),
       "Please add me"
     );
 
     await click(".modal-footer .btn-primary");
 
     assert.equal(
-      find(".fancy-title").text().trim(),
+      queryAll(".fancy-title").text().trim(),
       "Internationalization / localization"
     );
 
@@ -211,7 +212,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.ok(count("#reply-control") === 1, "it opens the composer");
     assert.equal(
-      find(".ac-wrap .item").text(),
+      queryAll(".ac-wrap .item").text(),
       "discourse",
       "it prefills the group name"
     );
@@ -222,7 +223,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
-      find(".alert").text().trim(),
+      queryAll(".alert").text().trim(),
       I18n.t("choose_topic.none_found"),
       "it should display the right alert"
     );
@@ -233,7 +234,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".nav-pills li a[title='Messages']");
 
     assert.equal(
-      find(".topic-list-item .link-top-line").text().trim(),
+      queryAll(".topic-list-item .link-top-line").text().trim(),
       "This is a private message 1",
       "it should display the list of group topics"
     );
@@ -243,7 +244,7 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/discourse");
 
     assert.ok(
-      find(".nav-pills li a[title='Manage']").length === 1,
+      queryAll(".nav-pills li a[title='Manage']").length === 1,
       "it should show manage group tab if user is admin"
     );
 
@@ -253,7 +254,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it displays show group message button"
     );
     assert.equal(
-      find(".group-info-name").text(),
+      queryAll(".group-info-name").text(),
       "Awesome Team",
       "it should display the group name"
     );
@@ -263,14 +264,14 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/alternative-group");
 
     assert.ok(
-      find(".nav-pills li a[title='Manage']").length === 1,
+      queryAll(".nav-pills li a[title='Manage']").length === 1,
       "it should show manage group tab if user can_admin_group"
     );
 
     await click(".group-members-add.btn");
 
     assert.ok(
-      find(".group-add-members-modal .group-add-members-make-owner"),
+      queryAll(".group-add-members-modal .group-add-members-make-owner"),
       "it allows moderators to set group owners"
     );
 

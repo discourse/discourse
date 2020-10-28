@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -30,29 +31,32 @@ acceptance("Modal", function (needs) {
     await visit("/");
 
     assert.ok(
-      find(".d-modal:visible").length === 0,
+      queryAll(".d-modal:visible").length === 0,
       "there is no modal at first"
     );
 
     await click(".login-button");
-    assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
+    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
 
     let controller = controllerFor("modal");
     assert.equal(controller.name, "login");
 
     await click(".modal-outer-container");
     assert.ok(
-      find(".d-modal:visible").length === 0,
+      queryAll(".d-modal:visible").length === 0,
       "modal should disappear when you click outside"
     );
     assert.equal(controller.name, null);
 
     await click(".login-button");
-    assert.ok(find(".d-modal:visible").length === 1, "modal should reappear");
+    assert.ok(
+      queryAll(".d-modal:visible").length === 1,
+      "modal should reappear"
+    );
 
     await keyEvent("#main-outlet", "keyup", 27);
     assert.ok(
-      find(".d-modal:visible").length === 0,
+      queryAll(".d-modal:visible").length === 0,
       "ESC should close the modal"
     );
 
@@ -62,16 +66,16 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("not-dismissable", {}));
 
-    assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
+    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
 
     await click(".modal-outer-container");
     assert.ok(
-      find(".d-modal:visible").length === 1,
+      queryAll(".d-modal:visible").length === 1,
       "modal should not disappear when you click outside"
     );
     await keyEvent("#main-outlet", "keyup", 27);
     assert.ok(
-      find(".d-modal:visible").length === 1,
+      queryAll(".d-modal:visible").length === 1,
       "ESC should not close the modal"
     );
   });
@@ -87,7 +91,7 @@ acceptance("Modal", function (needs) {
     run(() => showModal("test-raw-title-panels", { panels }));
 
     assert.equal(
-      find(".d-modal .modal-tab:first-child").text().trim(),
+      queryAll(".d-modal .modal-tab:first-child").text().trim(),
       "Test 1",
       "it should display the raw title"
     );
@@ -103,7 +107,7 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("test-title", { title: "test_title" }));
     assert.equal(
-      find(".d-modal .title").text().trim(),
+      queryAll(".d-modal .title").text().trim(),
       "Test title",
       "it should display the title"
     );
@@ -112,7 +116,7 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("test-title-with-body", { title: "test_title" }));
     assert.equal(
-      find(".d-modal .title").text().trim(),
+      queryAll(".d-modal .title").text().trim(),
       "Test title",
       "it should display the title when used with d-modal-body"
     );
@@ -121,7 +125,7 @@ acceptance("Modal", function (needs) {
 
     run(() => showModal("test-title"));
     assert.ok(
-      find(".d-modal .title").length === 0,
+      queryAll(".d-modal .title").length === 0,
       "it should not re-use the previous title"
     );
   });
@@ -138,17 +142,17 @@ acceptance("Modal Keyboard Events", function (needs) {
     await keyEvent(".d-modal", "keyup", 13);
 
     assert.ok(
-      find("#modal-alert:visible").length === 1,
+      queryAll("#modal-alert:visible").length === 1,
       "hitting Enter triggers modal action"
     );
     assert.ok(
-      find(".d-modal:visible").length === 1,
+      queryAll(".d-modal:visible").length === 1,
       "hitting Enter does not dismiss modal due to alert error"
     );
 
     await keyEvent("#main-outlet", "keyup", 27);
     assert.ok(
-      find(".d-modal:visible").length === 0,
+      queryAll(".d-modal:visible").length === 0,
       "ESC should close the modal"
     );
 
@@ -158,7 +162,7 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     await keyEvent(".d-modal", "keyup", 13);
     assert.ok(
-      find(".d-modal:visible").length === 0,
+      queryAll(".d-modal:visible").length === 0,
       "modal should disappear on hitting Enter"
     );
   });

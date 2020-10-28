@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -154,7 +155,7 @@ acceptance("Bookmarking", function (needs) {
 
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
     assert.ok(
-      find(".bootbox.modal")
+      queryAll(".bootbox.modal")
         .text()
         .includes(I18n.t("bookmarks.confirm_delete")),
       "it shows delete confirmation message"
@@ -188,17 +189,17 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.equal(
-      find("#bookmark-name").val(),
+      queryAll("#bookmark-name").val(),
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.equal(
-      find("#bookmark-custom-date > input").val(),
+      queryAll("#bookmark-custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      find("#bookmark-custom-time").val(),
+      queryAll("#bookmark-custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
     );

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -21,7 +22,7 @@ async function writeInComposer(assert) {
   await fillIn(".d-editor-input", "[test](upload://abcdefg.png)");
 
   assert.equal(
-    find(".d-editor-preview:visible").html().trim(),
+    queryAll(".d-editor-preview:visible").html().trim(),
     '<p><a href="/404">test</a></p>'
   );
 
@@ -35,7 +36,7 @@ acceptance("Composer Attachment", function (needs) {
   test("attachments are cooked properly", async (assert) => {
     await writeInComposer(assert);
     assert.equal(
-      find(".d-editor-preview:visible").html().trim(),
+      queryAll(".d-editor-preview:visible").html().trim(),
       '<p><a class="attachment" href="/uploads/short-url/asdsad.png">test</a></p>'
     );
   });
@@ -49,7 +50,7 @@ acceptance("Composer Attachment - Secure Media Enabled", function (needs) {
   test("attachments are cooked properly when secure media is enabled", async (assert) => {
     await writeInComposer(assert);
     assert.equal(
-      find(".d-editor-preview:visible").html().trim(),
+      queryAll(".d-editor-preview:visible").html().trim(),
       '<p><a class="attachment" href="/secure-media-uploads/default/3X/1/asjdiasjdiasida.png">test</a></p>'
     );
   });

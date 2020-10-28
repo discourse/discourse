@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -18,7 +19,7 @@ acceptance("Admin - Watched Words", function (needs) {
     await fillIn(".admin-controls .controls input[type=text]", "li");
 
     assert.equal(
-      find(".watched-words-list .watched-word").length,
+      queryAll(".watched-words-list .watched-word").length,
       1,
       "When filtering, show words even if checkbox is unchecked."
     );
@@ -52,7 +53,7 @@ acceptance("Admin - Watched Words", function (needs) {
     await click(".watched-word-form button");
 
     let found = [];
-    $.each(find(".watched-words-list .watched-word"), (index, elem) => {
+    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
       if ($(elem).text().trim() === "poutine") {
         found.push(true);
       }
@@ -66,7 +67,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
     let word = null;
 
-    $.each(find(".watched-words-list .watched-word"), (index, elem) => {
+    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
       if ($(elem).text().trim() === "anise") {
         word = elem;
       }
@@ -74,6 +75,6 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await click("#" + $(word).attr("id"));
 
-    assert.equal(find(".watched-words-list .watched-word").length, 2);
+    assert.equal(queryAll(".watched-words-list .watched-word").length, 2);
   });
 });

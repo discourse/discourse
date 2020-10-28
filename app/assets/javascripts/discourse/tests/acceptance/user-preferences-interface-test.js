@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -18,7 +19,7 @@ acceptance("User Preferences - Interface", function (needs) {
       assert.ok(!exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
-      find(".saved").remove();
+      queryAll(".saved").remove();
     };
 
     await visit("/u/eviltrout/preferences/interface");
@@ -132,7 +133,7 @@ acceptance(
         assert.ok(!exists(".saved"), "it hasn't been saved yet");
         await click(".save-changes");
         assert.ok(exists(".saved"), "it displays the saved message");
-        find(".saved").remove();
+        queryAll(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");

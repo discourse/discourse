@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -23,7 +24,7 @@ acceptance("Group Members - Anonymous", function () {
     );
 
     assert.equal(
-      find(".group-username-filter").attr("placeholder"),
+      queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
       "it should display the right filter placehodler"
     );
@@ -40,7 +41,7 @@ acceptance("Group Members", function (needs) {
     await click(".group-members-add");
 
     assert.equal(
-      find("#group-add-members-user-selector").length,
+      queryAll("#group-add-members-user-selector").length,
       1,
       "it should display the add members modal"
     );
@@ -55,7 +56,7 @@ acceptance("Group Members", function (needs) {
     );
 
     assert.equal(
-      find(".group-username-filter").attr("placeholder"),
+      queryAll(".group-username-filter").attr("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
       "it should display the right filter placehodler"
     );

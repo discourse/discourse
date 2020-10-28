@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -21,7 +22,7 @@ acceptance("Forgot password", function (needs) {
     await click("#forgot-password-link");
 
     assert.equal(
-      find(".forgot-password-reset").attr("disabled"),
+      queryAll(".forgot-password-reset").attr("disabled"),
       "disabled",
       "it should disable the button until the field is filled"
     );
@@ -30,7 +31,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.equal(
-      find(".alert-error").html().trim(),
+      queryAll(".alert-error").html().trim(),
       I18n.t("forgot_password.complete_username_not_found", {
         username: "someuser",
       }),
@@ -41,7 +42,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.equal(
-      find(".alert-error").html().trim(),
+      queryAll(".alert-error").html().trim(),
       I18n.t("forgot_password.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),
@@ -55,12 +56,12 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.notOk(
-      exists(find(".alert-error")),
+      exists(queryAll(".alert-error")),
       "it should remove the flash error when succeeding"
     );
 
     assert.equal(
-      find(".modal-body").html().trim(),
+      queryAll(".modal-body").html().trim(),
       I18n.t("forgot_password.complete_username_found", {
         username: "someuser",
       }),
@@ -74,7 +75,7 @@ acceptance("Forgot password", function (needs) {
     await click(".forgot-password-reset");
 
     assert.equal(
-      find(".modal-body").html().trim(),
+      queryAll(".modal-body").html().trim(),
       I18n.t("forgot_password.complete_email_found", {
         email: "someuser@gmail.com",
       }),

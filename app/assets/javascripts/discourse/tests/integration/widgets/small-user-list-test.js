@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -16,8 +17,8 @@ widgetTest("renders avatars and support for unknown", {
     });
   },
   async test(assert) {
-    assert.ok(find("[data-user-card=eviltrout]").length === 1);
-    assert.ok(find("[data-user-card=someone]").length === 0);
-    assert.ok(find(".unknown").length, "includes unkown user");
+    assert.ok(queryAll("[data-user-card=eviltrout]").length === 1);
+    assert.ok(queryAll("[data-user-card=someone]").length === 0);
+    assert.ok(queryAll(".unknown").length, "includes unkown user");
   },
 });

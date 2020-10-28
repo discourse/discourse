@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -11,7 +12,7 @@ acceptance("User's bookmarks", function (needs) {
 
   test("removing a bookmark with no reminder does not show a confirmation", async (assert) => {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(find(".bookmark-list-item").length > 0);
+    assert.ok(queryAll(".bookmark-list-item").length > 0);
 
     const dropdown = selectKit(".bookmark-actions-dropdown:eq(0)");
     await dropdown.expand();
@@ -59,6 +60,6 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
 
   test("listing users bookmarks - no bookmarks", async (assert) => {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.equal(find(".alert.alert-info").text(), "no bookmarks");
+    assert.equal(queryAll(".alert.alert-info").text(), "no bookmarks");
   });
 });

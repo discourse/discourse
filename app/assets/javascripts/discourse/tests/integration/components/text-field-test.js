@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
@@ -10,7 +11,7 @@ componentTest("renders correctly with no properties set", {
   template: `{{text-field}}`,
 
   test(assert) {
-    assert.ok(find("input[type=text]").length);
+    assert.ok(queryAll("input[type=text]").length);
   },
 });
 
@@ -22,8 +23,8 @@ componentTest("support a placeholder", {
   },
 
   test(assert) {
-    assert.ok(find("input[type=text]").length);
-    assert.equal(find("input").prop("placeholder"), "placeholder.i18n.key");
+    assert.ok(queryAll("input[type=text]").length);
+    assert.equal(queryAll("input").prop("placeholder"), "placeholder.i18n.key");
   },
 });
 
@@ -34,7 +35,7 @@ componentTest("sets the dir attribute to ltr for Hebrew text", {
   },
 
   test(assert) {
-    assert.equal(find("input").attr("dir"), "rtl");
+    assert.equal(queryAll("input").attr("dir"), "rtl");
   },
 });
 
@@ -45,7 +46,7 @@ componentTest("sets the dir attribute to ltr for English text", {
   },
 
   test(assert) {
-    assert.equal(find("input").attr("dir"), "ltr");
+    assert.equal(queryAll("input").attr("dir"), "ltr");
   },
 });
 

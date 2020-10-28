@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -32,7 +33,7 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       ":grinning:",
       "it adds the emoji code in the editor when selected"
     );
@@ -47,7 +48,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and a leading whitespace when there is text"
     );
@@ -57,7 +58,7 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and no leading whitespace when user already entered whitespace"
     );
@@ -109,14 +110,15 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').length,
+      queryAll('.section[data-section="recent"] .section-group img.emoji')
+        .length,
       2,
       "it has multiple recent emojis"
     );
 
     assert.equal(
       /grinning/.test(
-        find(".section.recent .section-group img.emoji").first().attr("src")
+        queryAll(".section.recent .section-group img.emoji").first().attr("src")
       ),
       true,
       "it puts the last used emoji in first"

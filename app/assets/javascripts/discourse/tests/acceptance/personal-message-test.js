@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -20,7 +21,7 @@ acceptance("Personal Message", function (needs) {
     await visit("/t/pm-for-testing/12");
 
     assert.equal(
-      find("#suggested-topics .suggested-topics-title").text().trim(),
+      queryAll("#suggested-topics .suggested-topics-title").text().trim(),
       I18n.t("suggested_topics.pm_title")
     );
   });

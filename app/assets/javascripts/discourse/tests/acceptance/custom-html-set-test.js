@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -16,7 +17,7 @@ acceptance("CustomHTML set", function () {
 
     await visit("/static/faq");
     assert.equal(
-      find("span.custom-html-test").text(),
+      queryAll("span.custom-html-test").text(),
       "HTML",
       "it inserted the markup"
     );
@@ -29,7 +30,7 @@ acceptance("CustomHTML set", function () {
 
     await visit("/static/faq");
     assert.equal(
-      find("span.cookie").text(),
+      queryAll("span.cookie").text(),
       "monster",
       "it inserted the markup"
     );

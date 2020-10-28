@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -29,8 +30,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.ok(find("#reply-title").val(), "this is the title");
-    assert.ok(find(".d-editor-input").val(), "this is the reply");
+    assert.ok(queryAll("#reply-title").val(), "this is the title");
+    assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
   });
 
   test("replying to post", async (assert) => {
@@ -60,9 +61,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+    assert.equal(queryAll(".users-input .item:eq(0)").text(), "codinghorror");
     assert.ok(
-      find(".d-editor-input").val().indexOf("Continuing the discussion") >= 0
+      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
+        0
     );
   });
 
@@ -80,15 +82,15 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.equal(
-      find(".action-title .topic-link").text().trim(),
+      queryAll(".action-title .topic-link").text().trim(),
       "Internationalization / localization"
     );
     assert.equal(
-      find(".action-title .topic-link").attr("href"),
+      queryAll(".action-title .topic-link").attr("href"),
       "/t/internationalization-localization/280"
     );
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "test replying to topic when initially replied to post"
     );
   });
@@ -107,7 +109,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("toggle_whisper");
 
     assert.ok(
-      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1
+      queryAll(".composer-fields .whisper .d-icon-far-eye-slash").length === 1
     );
   });
 
@@ -135,10 +137,10 @@ acceptance("Composer Actions", function (needs) {
 
     assert.equal(categoryChooserReplyArea.header().name(), "faq");
     assert.equal(
-      find(".action-title").text().trim(),
+      queryAll(".action-title").text().trim(),
       I18n.t("topic.create_long")
     );
-    assert.ok(find(".d-editor-input").val().includes(quote));
+    assert.ok(queryAll(".d-editor-input").val().includes(quote));
     sinon.restore();
   });
 
@@ -148,7 +150,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.equal(exists(find(".bootbox")), false);
+    assert.equal(exists(queryAll(".bootbox")), false);
   });
 
   test("reply_as_new_group_message", async (assert) => {
@@ -159,7 +161,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_group_message");
 
     const items = [];
-    find(".users-input .item").each((_, item) =>
+    queryAll(".users-input .item").each((_, item) =>
       items.push(item.textContent.trim())
     );
 
@@ -193,10 +195,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_topic");
 
     assert.equal(
-      find(".action-title").text().trim(),
+      queryAll(".action-title").text().trim(),
       "Internationalization / localization"
     );
-    assert.equal(find(".d-editor-input").val(), quote);
+    assert.equal(queryAll(".d-editor-input").val(), quote);
 
     await composerActions.expand();
 
@@ -213,12 +215,12 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.ok(exists(find(".action-title img.avatar")));
+    assert.ok(exists(queryAll(".action-title img.avatar")));
     assert.equal(
-      find(".action-title .user-link").text().trim(),
+      queryAll(".action-title .user-link").text().trim(),
       "codinghorror"
     );
-    assert.equal(find(".d-editor-input").val(), quote);
+    assert.equal(queryAll(".d-editor-input").val(), quote);
     assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
     assert.equal(
       composerActions.rowByIndex(1).value(),
@@ -233,10 +235,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
 
     assert.equal(
-      find(".action-title").text().trim(),
+      queryAll(".action-title").text().trim(),
       I18n.t("topic.create_long")
     );
-    assert.ok(find(".d-editor-input").val().includes(quote));
+    assert.ok(queryAll(".d-editor-input").val().includes(quote));
     assert.equal(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.equal(
       composerActions.rowByIndex(1).value(),
@@ -250,11 +252,12 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
 
     assert.equal(
-      find(".action-title").text().trim(),
+      queryAll(".action-title").text().trim(),
       I18n.t("topic.private_message")
     );
     assert.ok(
-      find(".d-editor-input").val().indexOf("Continuing the discussion") === 0
+      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") ===
+        0
     );
     assert.equal(composerActions.rowByIndex(0).value(), "reply_as_new_topic");
     assert.equal(composerActions.rowByIndex(1).value(), "reply_to_post");
@@ -269,7 +272,7 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
 
     assert.ok(
-      find(".composer-fields .no-bump").length === 0,
+      queryAll(".composer-fields .no-bump").length === 0,
       "no-bump text is not visible"
     );
 
@@ -277,7 +280,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("toggle_topic_bump");
 
     assert.ok(
-      find(".composer-fields .no-bump").length === 1,
+      queryAll(".composer-fields .no-bump").length === 1,
       "no-bump icon is visible"
     );
 
@@ -285,7 +288,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("toggle_topic_bump");
 
     assert.ok(
-      find(".composer-fields .no-bump").length === 0,
+      queryAll(".composer-fields .no-bump").length === 0,
       "no-bump icon is not visible"
     );
   });
@@ -341,9 +344,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(find(".users-input .item:eq(0)").text(), "uwe_keim");
+    assert.equal(queryAll(".users-input .item:eq(0)").text(), "uwe_keim");
     assert.ok(
-      find(".d-editor-input").val().indexOf("Continuing the discussion") >= 0
+      queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
+        0
     );
   });
 
@@ -406,16 +410,16 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
       assert.equal(
-        find("#reply-title").val(),
+        queryAll("#reply-title").val(),
         "This is the new text for the title using 'quotes'"
       );
 
       assert.equal(
-        find("#reply-control .btn-primary.create .d-button-label").text(),
+        queryAll("#reply-control .btn-primary.create .d-button-label").text(),
         I18n.t("composer.create_shared_draft")
       );
 
-      assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+      assert.ok(queryAll("#reply-control.composing-shared-draft").length === 1);
       await click(".modal-footer .btn.btn-default");
     } finally {
       toggleCheckDraftPopup(false);
@@ -431,7 +435,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     stubDraftResponse();
     await composerActions.selectRowByValue("reply_as_new_topic");
     assert.equal(
-      find(".bootbox .modal-body").text(),
+      queryAll(".bootbox .modal-body").text(),
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
     await click(".modal-footer .btn.btn-default");

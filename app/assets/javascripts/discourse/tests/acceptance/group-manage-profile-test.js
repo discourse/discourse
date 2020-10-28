@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -24,19 +25,19 @@ acceptance("Managing Group Profile", function (needs) {
     await visit("/g/discourse/manage/profile");
 
     assert.ok(
-      find(".group-flair-inputs").length === 1,
+      queryAll(".group-flair-inputs").length === 1,
       "it should display avatar flair inputs"
     );
     assert.ok(
-      find(".group-form-bio").length === 1,
+      queryAll(".group-form-bio").length === 1,
       "it should display group bio input"
     );
     assert.ok(
-      find(".group-form-name").length === 1,
+      queryAll(".group-form-name").length === 1,
       "it should display group name input"
     );
     assert.ok(
-      find(".group-form-full-name").length === 1,
+      queryAll(".group-form-full-name").length === 1,
       "it should display group full name input"
     );
   });
@@ -51,7 +52,7 @@ acceptance("Managing Group Profile", function (needs) {
     await visit("/g/discourse/manage/profile");
 
     assert.equal(
-      find(".group-form-name").length,
+      queryAll(".group-form-name").length,
       0,
       "it should not display group name input"
     );

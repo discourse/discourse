@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -44,8 +45,12 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
   test("Calls the plugin callback with the rendered outlet", async (assert) => {
     await visit("/");
 
-    const fooConnector = find(".discovery-list-container-top-outlet.foo ")[0];
-    const barConnector = find(".discovery-list-container-top-outlet.bar ")[0];
+    const fooConnector = queryAll(
+      ".discovery-list-container-top-outlet.foo "
+    )[0];
+    const barConnector = queryAll(
+      ".discovery-list-container-top-outlet.bar "
+    )[0];
 
     assert.ok(exists(fooConnector));
     assert.equal(fooConnector.style.backgroundColor, "yellow");

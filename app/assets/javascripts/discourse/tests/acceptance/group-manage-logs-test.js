@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -96,13 +97,13 @@ acceptance("Group logs", function (needs) {
   test("Browsing group logs", async (assert) => {
     await visit("/g/snorlax/manage/logs");
     assert.ok(
-      find("tr.group-manage-logs-row").length === 2,
+      queryAll("tr.group-manage-logs-row").length === 2,
       "it should display the right number of logs"
     );
 
-    await click(find(".group-manage-logs-row button")[0]);
+    await click(queryAll(".group-manage-logs-row button")[0]);
     assert.ok(
-      find("tr.group-manage-logs-row").length === 1,
+      queryAll("tr.group-manage-logs-row").length === 1,
       "it should display the right number of logs"
     );
   });

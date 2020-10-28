@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit, fillIn, click } from "@ember/test-helpers";
 import { skip, test } from "qunit";
@@ -95,19 +96,19 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.ok($("body.search-page").length, "has body class");
     assert.ok(exists(".search-container"), "has container class");
-    assert.ok(find(".search-query").length > 0);
-    assert.ok(find(".fps-topic").length === 0);
+    assert.ok(queryAll(".search-query").length > 0);
+    assert.ok(queryAll(".fps-topic").length === 0);
 
     await fillIn(".search-query", "none");
     await click(".search-cta");
 
-    assert.ok(find(".fps-topic").length === 0, "has no results");
-    assert.ok(find(".no-results-suggestion .google-search-form"));
+    assert.ok(queryAll(".fps-topic").length === 0, "has no results");
+    assert.ok(queryAll(".no-results-suggestion .google-search-form"));
 
     await fillIn(".search-query", "posts");
     await click(".search-cta");
 
-    assert.ok(find(".fps-topic").length === 1, "has one post");
+    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
   });
 
   test("escape search term", async (assert) => {
@@ -148,7 +149,7 @@ acceptance("Search - Full Page", function (needs) {
         'has "admin" pre-populated'
       );
       assert.equal(
-        find(".search-query").val(),
+        queryAll(".search-query").val(),
         "none @admin",
         'has updated search term to "none user:admin"'
       );
@@ -173,7 +174,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "faq" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none #faq",
       'has updated search term to "none #faq"'
     );
@@ -189,7 +190,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "in title" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none in:title",
       'has updated search term to "none in:title"'
     );
@@ -212,7 +213,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "I liked" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none in:likes",
       'has updated search term to "none in:likes"'
     );
@@ -229,7 +230,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none in:personal",
       'has updated search term to "none in:personal"'
     );
@@ -253,7 +254,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none in:seen",
       "it should update the search term"
     );
@@ -281,7 +282,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "I bookmarked" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none in:bookmarks",
       'has updated search term to "none in:bookmarks"'
     );
@@ -304,7 +305,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "are closed" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none status:closed",
       'has updated search term to "none status:closed"'
     );
@@ -336,7 +337,7 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search?expanded=true&q=after:2018-08-22");
 
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "after:2018-08-22",
       "it should update the search term correctly"
     );
@@ -359,7 +360,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none after:2016-10-05",
       'has updated search term to "none after:2016-10-05"'
     );
@@ -371,12 +372,12 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn("#search-min-post-count", "5");
 
     assert.equal(
-      find(".search-advanced-options #search-min-post-count").val(),
+      queryAll(".search-advanced-options #search-min-post-count").val(),
       "5",
       'has "5" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none min_posts:5",
       'has updated search term to "none min_posts:5"'
     );
@@ -388,12 +389,12 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn("#search-max-post-count", "5");
 
     assert.equal(
-      find(".search-advanced-options #search-max-post-count").val(),
+      queryAll(".search-advanced-options #search-max-post-count").val(),
       "5",
       'has "5" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "none max_posts:5",
       'has updated search term to "none max_posts:5"'
     );
@@ -409,7 +410,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     assert.equal(
-      find(".search-query").val(),
+      queryAll(".search-query").val(),
       "in:likes",
       'has updated search term to "in:likes"'
     );

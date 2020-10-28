@@ -375,8 +375,12 @@ export async function selectDate(selector, date) {
   });
 }
 
+export function queryAll() {
+  return window.find(...arguments);
+}
+
 export function invisible(selector) {
-  const $items = find(selector + ":visible");
+  const $items = queryAll(selector + ":visible");
   return (
     $items.length === 0 ||
     $items.css("opacity") !== "1" ||
@@ -385,11 +389,11 @@ export function invisible(selector) {
 }
 
 export function visible(selector) {
-  return find(selector + ":visible").length > 0;
+  return queryAll(selector + ":visible").length > 0;
 }
 
 export function count(selector) {
-  return find(selector).length;
+  return queryAll(selector).length;
 }
 
 export function exists(selector) {
