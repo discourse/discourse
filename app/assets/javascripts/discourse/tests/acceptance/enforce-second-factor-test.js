@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -23,7 +24,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/summary");
 
     assert.equal(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it will not transition from second-factor preferences"
     );
@@ -32,7 +33,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("a.admin-link");
 
     assert.equal(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it stays at second-factor preferences"
     );
@@ -47,7 +48,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/summary");
 
     assert.equal(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it will not transition from second-factor preferences"
     );
@@ -56,7 +57,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("a.about-link");
 
     assert.equal(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it stays at second-factor preferences"
     );
@@ -72,7 +73,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/summary");
 
     assert.notEqual(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it will transition from second-factor preferences"
     );
@@ -81,7 +82,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await click("a.about-link");
 
     assert.notEqual(
-      find(".control-label").text(),
+      queryAll(".control-label").text(),
       "Password",
       "it is possible to navigate to other pages"
     );

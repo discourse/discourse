@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -19,9 +20,9 @@ acceptance("Category Edit", function (needs) {
       "it jumps to the correct screen"
     );
 
-    assert.equal(find(".badge-category").text(), "bug");
+    assert.equal(queryAll(".badge-category").text(), "bug");
     await fillIn("input.category-name", "testing");
-    assert.equal(find(".badge-category").text(), "testing");
+    assert.equal(queryAll(".badge-category").text(), "testing");
 
     await fillIn("#edit-text-color", "#ff0000");
 
@@ -72,7 +73,7 @@ acceptance("Category Edit", function (needs) {
       "/c/1-category/edit/general",
       "it goes to the general tab"
     );
-    assert.equal(find("input.category-name").val(), "bug");
+    assert.equal(queryAll("input.category-name").val(), "bug");
   });
 
   test("Error Saving", async (assert) => {
@@ -81,7 +82,7 @@ acceptance("Category Edit", function (needs) {
     await click("#save-category");
 
     assert.ok(visible(".bootbox"));
-    assert.equal(find(".bootbox .modal-body").html(), "duplicate email");
+    assert.equal(queryAll(".bootbox .modal-body").html(), "duplicate email");
 
     await click(".bootbox .btn-primary");
     assert.ok(!visible(".bootbox"));

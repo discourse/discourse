@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -112,7 +113,7 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".perform-silence");
-    assert.equal(find(".bootbox.modal:visible").length, 0);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 0);
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async (assert) => {
@@ -127,16 +128,16 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.equal(find(".bootbox.modal:visible").length, 1);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
 
     await click(".modal-footer .btn-default");
-    assert.equal(find(".bootbox.modal:visible").length, 0);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 0);
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.equal(find(".bootbox.modal:visible").length, 1);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
 
     await click(".modal-footer .btn-primary");
-    assert.equal(find(".bootbox.modal:visible").length, 0);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 0);
   });
 });

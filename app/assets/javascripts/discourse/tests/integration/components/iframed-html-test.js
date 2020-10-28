@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
@@ -7,7 +8,7 @@ componentTest("appends the html into the iframe", {
   template: `{{iframed-html html="<h1 id='find-me'>hello</h1>" className='this-is-an-iframe'}}`,
 
   async test(assert) {
-    const iframe = find("iframe.this-is-an-iframe");
+    const iframe = queryAll("iframe.this-is-an-iframe");
     assert.equal(iframe.length, 1, "inserts an iframe");
 
     assert.ok(

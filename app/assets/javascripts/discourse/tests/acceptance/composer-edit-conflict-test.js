@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -21,12 +22,12 @@ acceptance("Composer - Edit conflict", function (needs) {
     await fillIn(".d-editor-input", "this will 409");
     await click("#reply-control button.create");
     assert.equal(
-      find("#reply-control button.create").text().trim(),
+      queryAll("#reply-control button.create").text().trim(),
       I18n.t("composer.overwrite_edit"),
       "it shows the overwrite button"
     );
     assert.ok(
-      find("#draft-status .d-icon-user-edit"),
+      queryAll("#draft-status .d-icon-user-edit"),
       "error icon should be there"
     );
     await click(".modal .btn-primary");

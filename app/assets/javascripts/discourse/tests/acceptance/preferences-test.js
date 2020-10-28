@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit, currentURL, click, fillIn } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -85,7 +86,7 @@ acceptance("User Preferences", function (needs) {
       assert.ok(!exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
-      find(".saved").remove();
+      queryAll(".saved").remove();
     };
 
     fillIn(".pref-name input[type=text]", "Jon Snow");
@@ -140,7 +141,7 @@ acceptance("User Preferences", function (needs) {
     await fillIn("#change-email", "invalidemail");
 
     assert.equal(
-      find(".tip.bad").text().trim(),
+      queryAll(".tip.bad").text().trim(),
       I18n.t("user.email.invalid"),
       "it should display invalid email tip"
     );
@@ -168,7 +169,7 @@ acceptance("User Preferences", function (needs) {
       "it has the connected accounts section"
     );
     assert.ok(
-      find(".pref-associated-accounts table tr:first td:first")
+      queryAll(".pref-associated-accounts table tr:first td:first")
         .html()
         .indexOf("Facebook") > -1,
       "it lists facebook"
@@ -176,7 +177,7 @@ acceptance("User Preferences", function (needs) {
 
     await click(".pref-associated-accounts table tr:first td:last button");
 
-    find(".pref-associated-accounts table tr:first td:last button")
+    queryAll(".pref-associated-accounts table tr:first td:last button")
       .html()
       .indexOf("Connect") > -1;
   });
@@ -196,7 +197,8 @@ acceptance("User Preferences", function (needs) {
     await click(".add-totp");
 
     assert.ok(
-      find(".alert-error").html().indexOf("provide a name and the code") > -1,
+      queryAll(".alert-error").html().indexOf("provide a name and the code") >
+        -1,
       "shows name/token missing error message"
     );
   });
@@ -221,7 +223,7 @@ acceptance("User Preferences", function (needs) {
       await click(".add-security-key");
 
       assert.ok(
-        find(".alert-error").html().indexOf("provide a name") > -1,
+        queryAll(".alert-error").html().indexOf("provide a name") > -1,
         "shows name missing error message"
       );
     }
@@ -321,37 +323,39 @@ acceptance("User Preferences when badges are disabled", function (needs) {
     await visit("/u/eviltrout/preferences");
 
     assert.equal(
-      find(".auth-tokens > .auth-token:first .auth-token-device").text().trim(),
+      queryAll(".auth-tokens > .auth-token:first .auth-token-device")
+        .text()
+        .trim(),
       "Linux Computer",
       "it should display active token first"
     );
 
     assert.equal(
-      find(".pref-auth-tokens > a:first").text().trim(),
+      queryAll(".pref-auth-tokens > a:first").text().trim(),
       I18n.t("user.auth_tokens.show_all", { count: 3 }),
       "it should display two tokens"
     );
     assert.ok(
-      find(".pref-auth-tokens .auth-token").length === 2,
+      queryAll(".pref-auth-tokens .auth-token").length === 2,
       "it should display two tokens"
     );
 
     await click(".pref-auth-tokens > a:first");
 
     assert.ok(
-      find(".pref-auth-tokens .auth-token").length === 3,
+      queryAll(".pref-auth-tokens .auth-token").length === 3,
       "it should display three tokens"
     );
 
     await click(".auth-token-dropdown:first button");
     await click("li[data-value='notYou']");
 
-    assert.ok(find(".d-modal:visible").length === 1, "modal should appear");
+    assert.ok(queryAll(".d-modal:visible").length === 1, "modal should appear");
 
     await click(".modal-footer .btn-primary");
 
     assert.ok(
-      find(".pref-password.highlighted").length === 1,
+      queryAll(".pref-password.highlighted").length === 1,
       "it should highlight password preferences"
     );
   });
@@ -382,7 +386,7 @@ acceptance(
         "clear button not present"
       );
 
-      const selectTopicBtn = find(".feature-topic-on-profile-btn:first");
+      const selectTopicBtn = queryAll(".feature-topic-on-profile-btn:first");
       assert.ok(exists(selectTopicBtn), "feature topic button is present");
 
       await click(selectTopicBtn);
@@ -392,7 +396,7 @@ acceptance(
         "topic picker modal is open"
       );
 
-      const topicRadioBtn = find('input[name="choose_topic_id"]:first');
+      const topicRadioBtn = queryAll('input[name="choose_topic_id"]:first');
       assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
       await click(topicRadioBtn);
 

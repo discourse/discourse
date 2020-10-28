@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 
@@ -16,7 +17,7 @@ componentTest("highlighting code", {
 
   test(assert) {
     assert.equal(
-      find("code.ruby.hljs .hljs-function .hljs-keyword").text().trim(),
+      queryAll("code.ruby.hljs .hljs-function .hljs-keyword").text().trim(),
       "def"
     );
   },
@@ -32,6 +33,6 @@ componentTest("large code blocks are not highlighted", {
   },
 
   test(assert) {
-    assert.equal(find("code").text().trim(), LONG_CODE_BLOCK.trim());
+    assert.equal(queryAll("code").text().trim(), LONG_CODE_BLOCK.trim());
   },
 });

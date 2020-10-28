@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -34,20 +35,20 @@ acceptance("Share and Invite modal - desktop", function (needs) {
     );
 
     assert.equal(
-      find(".share-and-invite.modal .modal-panel.share .title").text(),
+      queryAll(".share-and-invite.modal .modal-panel.share .title").text(),
       "Topic: Internationalization / localization",
       "it shows the topic title"
     );
 
     assert.ok(
-      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      queryAll(".share-and-invite.modal .modal-panel.share .topic-share-url")
         .val()
         .includes("/t/internationalization-localization/280?u=eviltrout"),
       "it shows the topic sharing url"
     );
 
     assert.ok(
-      find(".share-and-invite.modal .social-link").length > 1,
+      queryAll(".share-and-invite.modal .social-link").length > 1,
       "it shows social sources"
     );
 
@@ -84,7 +85,7 @@ acceptance("Share url with badges disabled - desktop", function (needs) {
     await click("#topic-footer-button-share-and-invite");
 
     assert.notOk(
-      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      queryAll(".share-and-invite.modal .modal-panel.share .topic-share-url")
         .val()
         .includes("?u=eviltrout"),
       "it doesn't add the username param when badges are disabled"

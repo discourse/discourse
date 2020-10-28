@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -24,7 +25,7 @@ widgetTest("add extra button", {
   },
   async test(assert) {
     assert.ok(
-      find(".actions .extra-buttons .hot-coffee").length === 1,
+      queryAll(".actions .extra-buttons .hot-coffee").length === 1,
       "It renders extra button"
     );
   },
@@ -40,7 +41,7 @@ widgetTest("remove extra button", {
   },
   async test(assert) {
     assert.ok(
-      find(".actions .extra-buttons .hot-coffee").length === 0,
+      queryAll(".actions .extra-buttons .hot-coffee").length === 0,
       "It doesn't removes coffee button"
     );
   },

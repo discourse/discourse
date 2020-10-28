@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -38,7 +39,7 @@ acceptance("User Routes", function (needs) {
     await visit("/u/eviltrout/notifications");
     assert.ok($("body.user-notifications-page").length, "has the body class");
 
-    const $links = find(".item.notification a");
+    const $links = queryAll(".item.notification a");
 
     assert.ok(
       $links[1].href.includes(

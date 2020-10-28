@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
@@ -9,11 +10,15 @@ componentTest("icon only button", {
 
   test(assert) {
     assert.ok(
-      find("button.btn.btn-icon.no-text").length,
+      queryAll("button.btn.btn-icon.no-text").length,
       "it has all the classes"
     );
-    assert.ok(find("button .d-icon.d-icon-plus").length, "it has the icon");
-    assert.equal(find("button").attr("tabindex"), "3", "it has the tabindex");
+    assert.ok(queryAll("button .d-icon.d-icon-plus").length, "it has the icon");
+    assert.equal(
+      queryAll("button").attr("tabindex"),
+      "3",
+      "it has the tabindex"
+    );
   },
 });
 
@@ -22,11 +27,14 @@ componentTest("icon and text button", {
 
   test(assert) {
     assert.ok(
-      find("button.btn.btn-icon-text").length,
+      queryAll("button.btn.btn-icon-text").length,
       "it has all the classes"
     );
-    assert.ok(find("button .d-icon.d-icon-plus").length, "it has the icon");
-    assert.ok(find("button span.d-button-label").length, "it has the label");
+    assert.ok(queryAll("button .d-icon.d-icon-plus").length, "it has the icon");
+    assert.ok(
+      queryAll("button span.d-button-label").length,
+      "it has the label"
+    );
   },
 });
 
@@ -34,8 +42,11 @@ componentTest("text only button", {
   template: '{{d-button label="topic.create"}}',
 
   test(assert) {
-    assert.ok(find("button.btn.btn-text").length, "it has all the classes");
-    assert.ok(find("button span.d-button-label").length, "it has the label");
+    assert.ok(queryAll("button.btn.btn-text").length, "it has all the classes");
+    assert.ok(
+      queryAll("button span.d-button-label").length,
+      "it has the label"
+    );
   },
 });
 
@@ -52,7 +63,7 @@ componentTest("link-styled button", {
 
   test(assert) {
     assert.ok(
-      find("button.btn-link:not(.btn)").length,
+      queryAll("button.btn-link:not(.btn)").length,
       "it has the right classes"
     );
   },
@@ -67,22 +78,22 @@ componentTest("isLoading button", {
 
   test(assert) {
     assert.ok(
-      find("button.is-loading .loading-icon").length,
+      queryAll("button.is-loading .loading-icon").length,
       "it has a spinner showing"
     );
     assert.ok(
-      find("button[disabled]").length,
+      queryAll("button[disabled]").length,
       "while loading the button is disabled"
     );
 
     this.set("isLoading", false);
 
     assert.notOk(
-      find("button .loading-icon").length,
+      queryAll("button .loading-icon").length,
       "it doesn't have a spinner showing"
     );
     assert.ok(
-      find("button:not([disabled])").length,
+      queryAll("button:not([disabled])").length,
       "while not loading the button is enabled"
     );
   },
@@ -96,11 +107,14 @@ componentTest("disabled button", {
   },
 
   test(assert) {
-    assert.ok(find("button[disabled]").length, "the button is disabled");
+    assert.ok(queryAll("button[disabled]").length, "the button is disabled");
 
     this.set("disabled", false);
 
-    assert.ok(find("button:not([disabled])").length, "the button is enabled");
+    assert.ok(
+      queryAll("button:not([disabled])").length,
+      "the button is enabled"
+    );
   },
 });
 
@@ -116,7 +130,7 @@ componentTest("aria-label", {
     this.set("ariaLabel", "test.fooAriaLabel");
 
     assert.equal(
-      find("button")[0].getAttribute("aria-label"),
+      queryAll("button")[0].getAttribute("aria-label"),
       I18n.t("test.fooAriaLabel")
     );
 
@@ -125,7 +139,7 @@ componentTest("aria-label", {
       translatedAriaLabel: "bar",
     });
 
-    assert.equal(find("button")[0].getAttribute("aria-label"), "bar");
+    assert.equal(queryAll("button")[0].getAttribute("aria-label"), "bar");
   },
 });
 
@@ -139,7 +153,7 @@ componentTest("title", {
   test(assert) {
     this.set("title", "test.fooTitle");
     assert.equal(
-      find("button")[0].getAttribute("title"),
+      queryAll("button")[0].getAttribute("title"),
       I18n.t("test.fooTitle")
     );
 
@@ -148,7 +162,7 @@ componentTest("title", {
       translatedTitle: "bar",
     });
 
-    assert.equal(find("button")[0].getAttribute("title"), "bar");
+    assert.equal(queryAll("button")[0].getAttribute("title"), "bar");
   },
 });
 
@@ -163,7 +177,7 @@ componentTest("label", {
     this.set("label", "test.fooLabel");
 
     assert.equal(
-      find("button .d-button-label").text(),
+      queryAll("button .d-button-label").text(),
       I18n.t("test.fooLabel")
     );
 
@@ -172,6 +186,6 @@ componentTest("label", {
       translatedLabel: "bar",
     });
 
-    assert.equal(find("button .d-button-label").text(), "bar");
+    assert.equal(queryAll("button .d-button-label").text(), "bar");
   },
 });

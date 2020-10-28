@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -24,7 +25,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-primary");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "This is a link to [Google](https://google.com)",
       "adds link with url and text, prepends 'https://'"
     );
@@ -42,7 +43,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-danger");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "Reset textarea contents.",
       "doesn’t insert anything after cancelling"
     );
@@ -52,7 +53,7 @@ acceptance("Composer - Hyperlink", function (needs) {
       "modal dismissed after cancelling"
     );
 
-    const textarea = find("#reply-control .d-editor-input")[0];
+    const textarea = queryAll("#reply-control .d-editor-input")[0];
     textarea.selectionStart = 0;
     textarea.selectionEnd = 6;
     await click(".d-editor button.link");
@@ -61,7 +62,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     await click(".modal-footer button.btn-primary");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "[Reset](https://somelink.com) textarea contents.",
       "adds link to a selected text"
     );
@@ -92,7 +93,7 @@ acceptance("Composer - Hyperlink", function (needs) {
     );
 
     assert.ok(
-      find(".link-url").val().includes("http"),
+      queryAll(".link-url").val().includes("http"),
       "replaces link url field with internal link"
     );
   });

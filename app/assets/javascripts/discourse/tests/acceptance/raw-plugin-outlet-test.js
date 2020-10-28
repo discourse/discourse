@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -23,9 +24,9 @@ acceptance("Raw Plugin Outlet", function (needs) {
   });
   test("Renders the raw plugin outlet", async (assert) => {
     await visit("/");
-    assert.ok(find(".topic-lala").length > 0, "it renders the outlet");
+    assert.ok(queryAll(".topic-lala").length > 0, "it renders the outlet");
     assert.equal(
-      find(".topic-lala:eq(0)").text(),
+      queryAll(".topic-lala:eq(0)").text(),
       "11557",
       "it has the topic id"
     );

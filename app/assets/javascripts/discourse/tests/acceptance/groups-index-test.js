@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -17,12 +18,12 @@ acceptance("Groups", function () {
 
     assert.equal(count(".group-box"), 2, "it displays visible groups");
     assert.equal(
-      find(".group-index-join").length,
+      queryAll(".group-index-join").length,
       1,
       "it shows button to join group"
     );
     assert.equal(
-      find(".group-index-request").length,
+      queryAll(".group-index-request").length,
       1,
       "it shows button to request for group membership"
     );
@@ -42,7 +43,7 @@ acceptance("Groups", function () {
     await click("a[href='/g/discourse/members']");
 
     assert.equal(
-      find(".group-info-name").text().trim(),
+      queryAll(".group-info-name").text().trim(),
       "Awesome Team",
       "it displays the group page"
     );

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -23,11 +24,11 @@ widgetTest("basics", {
   },
 
   test(assert) {
-    assert.ok(find(".title").length === 1);
+    assert.ok(queryAll(".title").length === 1);
 
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), bigLogo);
-    assert.equal(find("#site-logo").attr("alt"), title);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+    assert.equal(queryAll("#site-logo").attr("alt"), title);
   },
 });
 
@@ -41,10 +42,10 @@ widgetTest("basics - minimized", {
   },
 
   test(assert) {
-    assert.ok(find("img.logo-small").length === 1);
-    assert.equal(find("img.logo-small").attr("src"), smallLogo);
-    assert.equal(find("img.logo-small").attr("alt"), title);
-    assert.equal(find("img.logo-small").attr("width"), 36);
+    assert.ok(queryAll("img.logo-small").length === 1);
+    assert.equal(queryAll("img.logo-small").attr("src"), smallLogo);
+    assert.equal(queryAll("img.logo-small").attr("alt"), title);
+    assert.equal(queryAll("img.logo-small").attr("width"), 36);
   },
 });
 
@@ -58,8 +59,8 @@ widgetTest("no logo", {
   },
 
   test(assert) {
-    assert.ok(find("h1#site-text-logo.text-logo").length === 1);
-    assert.equal(find("#site-text-logo").text(), title);
+    assert.ok(queryAll("h1#site-text-logo.text-logo").length === 1);
+    assert.equal(queryAll("#site-text-logo").text(), title);
   },
 });
 
@@ -73,7 +74,7 @@ widgetTest("no logo - minimized", {
   },
 
   test(assert) {
-    assert.ok(find(".d-icon-home").length === 1);
+    assert.ok(queryAll(".d-icon-home").length === 1);
   },
 });
 
@@ -86,8 +87,8 @@ widgetTest("mobile logo", {
   },
 
   test(assert) {
-    assert.ok(find("img#site-logo.logo-mobile").length === 1);
-    assert.equal(find("#site-logo").attr("src"), mobileLogo);
+    assert.ok(queryAll("img#site-logo.logo-mobile").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
   },
 });
 
@@ -99,8 +100,8 @@ widgetTest("mobile without logo", {
   },
 
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), bigLogo);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
   },
 });
 
@@ -116,16 +117,16 @@ widgetTest("logo with dark mode alternative", {
   },
 
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), bigLogo);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
 
     assert.equal(
-      find("picture source").attr("media"),
+      queryAll("picture source").attr("media"),
       prefersDark,
       "includes dark mode media attribute"
     );
     assert.equal(
-      find("picture source").attr("srcset"),
+      queryAll("picture source").attr("srcset"),
       darkLogo,
       "includes dark mode alternative logo source"
     );
@@ -147,15 +148,15 @@ widgetTest("mobile logo with dark mode alternative", {
   },
 
   test(assert) {
-    assert.equal(find("#site-logo").attr("src"), mobileLogo);
+    assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
 
     assert.equal(
-      find("picture source").attr("media"),
+      queryAll("picture source").attr("media"),
       prefersDark,
       "includes dark mode media attribute"
     );
     assert.equal(
-      find("picture source").attr("srcset"),
+      queryAll("picture source").attr("srcset"),
       darkLogo,
       "includes dark mode alternative logo source"
     );
@@ -174,10 +175,10 @@ widgetTest("dark mode enabled but no dark logo set", {
   },
 
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), bigLogo);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
     assert.ok(
-      find("picture").length === 0,
+      queryAll("picture").length === 0,
       "does not include alternative logo"
     );
   },
@@ -191,10 +192,10 @@ widgetTest("dark logo set but no dark mode", {
   },
 
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), bigLogo);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
     assert.ok(
-      find("picture").length === 0,
+      queryAll("picture").length === 0,
       "does not include alternative logo"
     );
   },
@@ -211,10 +212,14 @@ widgetTest("dark color scheme and dark logo set", {
     Session.currentProp("defaultColorSchemeIsDark", null);
   },
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
-    assert.equal(find("#site-logo").attr("src"), darkLogo, "uses dark logo");
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+    assert.equal(
+      queryAll("#site-logo").attr("src"),
+      darkLogo,
+      "uses dark logo"
+    );
     assert.ok(
-      find("picture").length === 0,
+      queryAll("picture").length === 0,
       "does not add dark mode alternative"
     );
   },
@@ -231,9 +236,9 @@ widgetTest("dark color scheme and dark logo not set", {
     Session.currentProp("defaultColorSchemeIsDark", null);
   },
   test(assert) {
-    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
     assert.equal(
-      find("#site-logo").attr("src"),
+      queryAll("#site-logo").attr("src"),
       bigLogo,
       "uses regular logo on dark scheme if no dark logo"
     );

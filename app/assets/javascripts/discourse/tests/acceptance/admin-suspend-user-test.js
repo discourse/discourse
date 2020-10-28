@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click, fillIn } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -28,38 +29,38 @@ acceptance("Admin - Suspend User", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(find(".suspend-user-modal:visible").length, 1);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
 
     await click(".d-modal-cancel");
 
-    assert.equal(find(".suspend-user-modal:visible").length, 0);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
   });
 
   test("suspend a user - cancel with input", async (assert) => {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.equal(find(".suspend-user-modal:visible").length, 1);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
 
     await fillIn(".suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     await click(".d-modal-cancel");
 
-    assert.equal(find(".bootbox.modal:visible").length, 1);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
 
     await click(".modal-footer .btn-default");
-    assert.equal(find(".suspend-user-modal:visible").length, 1);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
     assert.equal(
-      find(".suspend-message")[0].value,
+      queryAll(".suspend-message")[0].value,
       "this is an email reason why"
     );
 
     await click(".d-modal-cancel");
-    assert.equal(find(".bootbox.modal:visible").length, 1);
-    assert.equal(find(".suspend-user-modal:visible").length, 0);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 1);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
     await click(".modal-footer .btn-primary");
-    assert.equal(find(".bootbox.modal:visible").length, 0);
+    assert.equal(queryAll(".bootbox.modal:visible").length, 0);
   });
 
   test("suspend, then unsuspend a user", async (assert) => {
@@ -74,7 +75,7 @@ acceptance("Admin - Suspend User", function (needs) {
     await click(".suspend-user");
 
     assert.equal(
-      find(".perform-suspend[disabled]").length,
+      queryAll(".perform-suspend[disabled]").length,
       1,
       "disabled by default"
     );
@@ -86,14 +87,14 @@ acceptance("Admin - Suspend User", function (needs) {
     await fillIn(".suspend-message", "this is an email reason why");
 
     assert.equal(
-      find(".perform-suspend[disabled]").length,
+      queryAll(".perform-suspend[disabled]").length,
       0,
       "no longer disabled"
     );
 
     await click(".perform-suspend");
 
-    assert.equal(find(".suspend-user-modal:visible").length, 0);
+    assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
     assert.ok(exists(".suspension-info"));
 
     await click(".unsuspend-user");

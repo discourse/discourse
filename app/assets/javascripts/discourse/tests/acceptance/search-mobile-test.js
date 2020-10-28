@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -21,24 +22,24 @@ acceptance("Search - Mobile", function (needs) {
     await click(".search-advanced-title");
 
     assert.ok(
-      find(".search-advanced-filters").length === 1,
+      queryAll(".search-advanced-filters").length === 1,
       "it should expand advanced search filters"
     );
 
     await fillIn(".search-query", "posts");
     await click(".search-cta");
 
-    assert.ok(find(".fps-topic").length === 1, "has one post");
+    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
 
     assert.ok(
-      find(".search-advanced-filters").length === 0,
+      queryAll(".search-advanced-filters").length === 0,
       "it should collapse advanced search filters"
     );
 
     await click("#search-button");
 
     assert.equal(
-      find("input.full-page-search").val(),
+      queryAll("input.full-page-search").val(),
       "posts",
       "it does not reset input when hitting search icon again"
     );

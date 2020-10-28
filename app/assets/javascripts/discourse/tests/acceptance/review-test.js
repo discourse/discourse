@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click, fillIn } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -11,18 +12,18 @@ acceptance("Review", function (needs) {
   test("It returns a list of reviewable items", async (assert) => {
     await visit("/review");
 
-    assert.ok(find(".reviewable-item").length, "has a list of items");
-    assert.ok(find(user).length);
+    assert.ok(queryAll(".reviewable-item").length, "has a list of items");
+    assert.ok(queryAll(user).length);
     assert.ok(
-      find(`${user}.reviewable-user`).length,
+      queryAll(`${user}.reviewable-user`).length,
       "applies a class for the type"
     );
     assert.ok(
-      find(`${user} .reviewable-action.approve`).length,
+      queryAll(`${user} .reviewable-action.approve`).length,
       "creates a button for approve"
     );
     assert.ok(
-      find(`${user} .reviewable-action.reject`).length,
+      queryAll(`${user} .reviewable-action.reject`).length,
       "creates a button for reject"
     );
   });
@@ -30,7 +31,7 @@ acceptance("Review", function (needs) {
   test("Grouped by topic", async (assert) => {
     await visit("/review/topics");
     assert.ok(
-      find(".reviewable-topic").length,
+      queryAll(".reviewable-topic").length,
       "it has a list of reviewable topics"
     );
   });
@@ -38,37 +39,44 @@ acceptance("Review", function (needs) {
   test("Settings", async (assert) => {
     await visit("/review/settings");
 
-    assert.ok(find(".reviewable-score-type").length, "has a list of bonuses");
+    assert.ok(
+      queryAll(".reviewable-score-type").length,
+      "has a list of bonuses"
+    );
 
     const field = selectKit(".reviewable-score-type:eq(0) .field .combo-box");
     await field.expand();
     await field.selectRowByValue("5");
     await click(".save-settings");
 
-    assert.ok(find(".reviewable-settings .saved").length, "it saved");
+    assert.ok(queryAll(".reviewable-settings .saved").length, "it saved");
   });
 
   test("Flag related", async (assert) => {
     await visit("/review");
 
     assert.ok(
-      find(".reviewable-flagged-post .post-contents .username a[href]").length,
+      queryAll(".reviewable-flagged-post .post-contents .username a[href]")
+        .length,
       "it has a link to the user"
     );
 
     assert.equal(
-      find(".reviewable-flagged-post .post-body").html().trim(),
+      queryAll(".reviewable-flagged-post .post-body").html().trim(),
       "<b>cooked content</b>"
     );
 
-    assert.equal(find(".reviewable-flagged-post .reviewable-score").length, 2);
+    assert.equal(
+      queryAll(".reviewable-flagged-post .reviewable-score").length,
+      2
+    );
   });
 
   test("Flag related", async (assert) => {
     await visit("/review/1");
 
     assert.ok(
-      find(".reviewable-flagged-post").length,
+      queryAll(".reviewable-flagged-post").length,
       "it shows the flagged post"
     );
   });
@@ -76,29 +84,36 @@ acceptance("Review", function (needs) {
   test("Clicking the buttons triggers actions", async (assert) => {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
-    assert.equal(find(user).length, 0, "it removes the reviewable on success");
+    assert.equal(
+      queryAll(user).length,
+      0,
+      "it removes the reviewable on success"
+    );
   });
 
   test("Editing a reviewable", async (assert) => {
     const topic = ".reviewable-item[data-reviewable-id=4321]";
     await visit("/review");
-    assert.ok(find(`${topic} .reviewable-action.approve`).length);
-    assert.ok(!find(`${topic} .category-name`).length);
-    assert.equal(find(`${topic} .discourse-tag:eq(0)`).text(), "hello");
-    assert.equal(find(`${topic} .discourse-tag:eq(1)`).text(), "world");
+    assert.ok(queryAll(`${topic} .reviewable-action.approve`).length);
+    assert.ok(!queryAll(`${topic} .category-name`).length);
+    assert.equal(queryAll(`${topic} .discourse-tag:eq(0)`).text(), "hello");
+    assert.equal(queryAll(`${topic} .discourse-tag:eq(1)`).text(), "world");
 
-    assert.equal(find(`${topic} .post-body`).text().trim(), "existing body");
+    assert.equal(
+      queryAll(`${topic} .post-body`).text().trim(),
+      "existing body"
+    );
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
     assert.ok(
-      find(`${topic} .reviewable-action.approve`).length,
+      queryAll(`${topic} .reviewable-action.approve`).length,
       "saving without changes is a cancel"
     );
     await click(`${topic} .reviewable-action.edit`);
 
     assert.equal(
-      find(`${topic} .reviewable-action.approve`).length,
+      queryAll(`${topic} .reviewable-action.approve`).length,
       0,
       "when editing actions are disabled"
     );
@@ -106,7 +121,7 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
     assert.equal(
-      find(`${topic} .post-body`).text().trim(),
+      queryAll(`${topic} .post-body`).text().trim(),
       "existing body",
       "cancelling does not update the value"
     );
@@ -124,11 +139,14 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.save-edit`);
 
-    assert.equal(find(`${topic} .discourse-tag:eq(0)`).text(), "hello");
-    assert.equal(find(`${topic} .discourse-tag:eq(1)`).text(), "world");
-    assert.equal(find(`${topic} .discourse-tag:eq(2)`).text(), "monkey");
+    assert.equal(queryAll(`${topic} .discourse-tag:eq(0)`).text(), "hello");
+    assert.equal(queryAll(`${topic} .discourse-tag:eq(1)`).text(), "world");
+    assert.equal(queryAll(`${topic} .discourse-tag:eq(2)`).text(), "monkey");
 
-    assert.equal(find(`${topic} .post-body`).text().trim(), "new raw contents");
-    assert.equal(find(`${topic} .category-name`).text().trim(), "support");
+    assert.equal(
+      queryAll(`${topic} .post-body`).text().trim(),
+      "new raw contents"
+    );
+    assert.equal(queryAll(`${topic} .category-name`).text().trim(), "support");
   });
 });

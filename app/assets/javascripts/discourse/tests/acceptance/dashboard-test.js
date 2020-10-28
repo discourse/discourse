@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -78,14 +79,16 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.equal(
-      find(".dashboard .reports-index.section .reports-list .report").length,
+      queryAll(".dashboard .reports-index.section .reports-list .report")
+        .length,
       1
     );
 
     await fillIn(".dashboard .filter-reports-input", "flags");
 
     assert.equal(
-      find(".dashboard .reports-index.section .reports-list .report").length,
+      queryAll(".dashboard .reports-index.section .reports-list .report")
+        .length,
       0
     );
 
@@ -93,7 +96,8 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.equal(
-      find(".dashboard .reports-index.section .reports-list .report").length,
+      queryAll(".dashboard .reports-index.section .reports-list .report")
+        .length,
       1,
       "navigating back and forth resets filter"
     );
@@ -101,7 +105,8 @@ acceptance("Dashboard", function (needs) {
     await fillIn(".dashboard .filter-reports-input", "activities");
 
     assert.equal(
-      find(".dashboard .reports-index.section .reports-list .report").length,
+      queryAll(".dashboard .reports-index.section .reports-list .report")
+        .length,
       1,
       "filter is case insensitive"
     );

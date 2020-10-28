@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -18,6 +19,9 @@ acceptance("Opening the hamburger menu with some reviewables", function (
     await visit("/");
     await click(".hamburger-dropdown");
 
-    assert.equal(find(".review .badge-notification.reviewables").text(), "3");
+    assert.equal(
+      queryAll(".review .badge-notification.reviewables").text(),
+      "3"
+    );
   });
 });

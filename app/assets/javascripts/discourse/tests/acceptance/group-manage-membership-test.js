@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -15,37 +16,37 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/alternative-group/manage/membership");
 
     assert.ok(
-      find('label[for="automatic_membership"]').length === 1,
+      queryAll('label[for="automatic_membership"]').length === 1,
       "it should display automatic membership label"
     );
 
     assert.ok(
-      find(".groups-form-primary-group").length === 1,
+      queryAll(".groups-form-primary-group").length === 1,
       "it should display set as primary group checkbox"
     );
 
     assert.ok(
-      find(".groups-form-grant-trust-level").length === 1,
+      queryAll(".groups-form-grant-trust-level").length === 1,
       "it should display grant trust level selector"
     );
 
     assert.ok(
-      find(".group-form-public-admission").length === 1,
+      queryAll(".group-form-public-admission").length === 1,
       "it should display group public admission input"
     );
 
     assert.ok(
-      find(".group-form-public-exit").length === 1,
+      queryAll(".group-form-public-exit").length === 1,
       "it should display group public exit input"
     );
 
     assert.ok(
-      find(".group-form-allow-membership-requests").length === 1,
+      queryAll(".group-form-allow-membership-requests").length === 1,
       "it should display group allow_membership_request input"
     );
 
     assert.ok(
-      find(".group-form-allow-membership-requests[disabled]").length === 1,
+      queryAll(".group-form-allow-membership-requests[disabled]").length === 1,
       "it should disable group allow_membership_request input"
     );
 
@@ -53,17 +54,17 @@ acceptance("Managing Group Membership", function (needs) {
     await click(".group-form-allow-membership-requests");
 
     assert.ok(
-      find(".group-form-public-admission[disabled]").length === 1,
+      queryAll(".group-form-public-admission[disabled]").length === 1,
       "it should disable group public admission input"
     );
 
     assert.ok(
-      find(".group-form-public-exit[disabled]").length === 0,
+      queryAll(".group-form-public-exit[disabled]").length === 0,
       "it should not disable group public exit input"
     );
 
     assert.equal(
-      find(".group-form-membership-request-template").length,
+      queryAll(".group-form-membership-request-template").length,
       1,
       "it should display the membership request template field"
     );
@@ -84,42 +85,42 @@ acceptance("Managing Group Membership", function (needs) {
     await visit("/g/discourse/manage/membership");
 
     assert.ok(
-      find('label[for="automatic_membership"]').length === 0,
+      queryAll('label[for="automatic_membership"]').length === 0,
       "it should not display automatic membership label"
     );
 
     assert.ok(
-      find(".groups-form-automatic-membership-retroactive").length === 0,
+      queryAll(".groups-form-automatic-membership-retroactive").length === 0,
       "it should not display automatic membership retroactive checkbox"
     );
 
     assert.ok(
-      find(".groups-form-primary-group").length === 0,
+      queryAll(".groups-form-primary-group").length === 0,
       "it should not display set as primary group checkbox"
     );
 
     assert.ok(
-      find(".groups-form-grant-trust-level").length === 0,
+      queryAll(".groups-form-grant-trust-level").length === 0,
       "it should not display grant trust level selector"
     );
 
     assert.ok(
-      find(".group-form-public-admission").length === 1,
+      queryAll(".group-form-public-admission").length === 1,
       "it should display group public admission input"
     );
 
     assert.ok(
-      find(".group-form-public-exit").length === 1,
+      queryAll(".group-form-public-exit").length === 1,
       "it should display group public exit input"
     );
 
     assert.ok(
-      find(".group-form-allow-membership-requests").length === 1,
+      queryAll(".group-form-allow-membership-requests").length === 1,
       "it should display group allow_membership_request input"
     );
 
     assert.ok(
-      find(".group-form-allow-membership-requests[disabled]").length === 1,
+      queryAll(".group-form-allow-membership-requests[disabled]").length === 1,
       "it should disable group allow_membership_request input"
     );
   });

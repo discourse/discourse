@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 import { click } from "@ember/test-helpers";
@@ -10,19 +11,19 @@ componentTest("with image", {
 
   async test(assert) {
     assert.equal(
-      find(".d-icon-far-image").length,
+      queryAll(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      find(".d-icon-far-trash-alt").length,
+      queryAll(".d-icon-far-trash-alt").length,
       1,
       "it displays the trash icon"
     );
 
     assert.equal(
-      find(".placeholder-overlay").length,
+      queryAll(".placeholder-overlay").length,
       0,
       "it does not display the placeholder image"
     );
@@ -42,19 +43,19 @@ componentTest("without image", {
 
   test(assert) {
     assert.equal(
-      find(".d-icon-far-image").length,
+      queryAll(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      find(".d-icon-far-trash-alt").length,
+      queryAll(".d-icon-far-trash-alt").length,
       0,
       "it does not display trash icon"
     );
 
     assert.equal(
-      find(".image-uploader-lightbox-btn").length,
+      queryAll(".image-uploader-lightbox-btn").length,
       0,
       "it does not display the button to open image lightbox"
     );
@@ -66,25 +67,25 @@ componentTest("with placeholder", {
 
   test(assert) {
     assert.equal(
-      find(".d-icon-far-image").length,
+      queryAll(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      find(".d-icon-far-trash-alt").length,
+      queryAll(".d-icon-far-trash-alt").length,
       0,
       "it does not display trash icon"
     );
 
     assert.equal(
-      find(".image-uploader-lightbox-btn").length,
+      queryAll(".image-uploader-lightbox-btn").length,
       0,
       "it does not display the button to open image lightbox"
     );
 
     assert.equal(
-      find(".placeholder-overlay").length,
+      queryAll(".placeholder-overlay").length,
       1,
       "it displays the placeholder image"
     );

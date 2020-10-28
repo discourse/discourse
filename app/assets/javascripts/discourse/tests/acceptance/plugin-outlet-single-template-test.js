@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -19,11 +20,11 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
   test("Renders a template into the outlet", async (assert) => {
     await visit("/u/eviltrout");
     assert.ok(
-      find(".user-profile-primary-outlet.hello").length === 1,
+      queryAll(".user-profile-primary-outlet.hello").length === 1,
       "it has class names"
     );
     assert.equal(
-      find(".hello-username").text(),
+      queryAll(".hello-username").text(),
       "eviltrout",
       "it renders into the outlet"
     );

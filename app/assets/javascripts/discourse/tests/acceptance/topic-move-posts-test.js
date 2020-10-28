@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -13,7 +14,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_11 .select-below");
 
     assert.equal(
-      find(".selected-posts .move-to-topic").text().trim(),
+      queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -21,28 +22,28 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      find(".choose-topic-modal .title")
+      queryAll(".choose-topic-modal .title")
         .html()
         .includes(I18n.t("topic.move_to.title")),
       "it opens move to modal"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.split_topic.radio_label")),
       "it shows an option to move to new topic"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.merge_topic.radio_label")),
       "it shows an option to move to existing topic"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.move_to_new_message.radio_label")),
       "it shows an option to move to new message"
@@ -57,28 +58,28 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      find(".choose-topic-modal .title")
+      queryAll(".choose-topic-modal .title")
         .html()
         .includes(I18n.t("topic.move_to.title")),
       "it opens move to modal"
     );
 
     assert.not(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.split_topic.radio_label")),
       "it does not show an option to move to new topic"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.merge_topic.radio_label")),
       "it shows an option to move to existing topic"
     );
 
     assert.not(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.move_to_new_message.radio_label")),
       "it does not show an option to move to new message"
@@ -92,7 +93,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_1 .select-post");
 
     assert.equal(
-      find(".selected-posts .move-to-topic").text().trim(),
+      queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -100,21 +101,21 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      find(".choose-topic-modal .title")
+      queryAll(".choose-topic-modal .title")
         .html()
         .includes(I18n.t("topic.move_to.title")),
       "it opens move to modal"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.move_to_new_message.radio_label")),
       "it shows an option to move to new message"
     );
 
     assert.ok(
-      find(".choose-topic-modal .radios")
+      queryAll(".choose-topic-modal .radios")
         .html()
         .includes(I18n.t("topic.move_to_existing_message.radio_label")),
       "it shows an option to move to existing message"
@@ -128,7 +129,7 @@ acceptance("Topic move posts", function (needs) {
     await click("#post_2 .select-below");
 
     assert.equal(
-      find(".selected-posts .move-to-topic").text().trim(),
+      queryAll(".selected-posts .move-to-topic").text().trim(),
       I18n.t("topic.move_to.action"),
       "it should show the move to button"
     );
@@ -136,7 +137,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
 
     assert.ok(
-      find(".choose-topic-modal .title")
+      queryAll(".choose-topic-modal .title")
         .html()
         .includes(I18n.t("topic.move_to.title")),
       "it opens move to modal"

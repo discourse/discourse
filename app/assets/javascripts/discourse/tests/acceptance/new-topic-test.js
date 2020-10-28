@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -21,12 +22,12 @@ acceptance("New Topic - Authenticated", function (needs) {
 
     assert.ok(exists(".composer-fields"), "it opens composer");
     assert.equal(
-      find("#reply-title").val().trim(),
+      queryAll("#reply-title").val().trim(),
       "topic title",
       "it pre-fills topic title"
     );
     assert.equal(
-      find(".d-editor-input").val().trim(),
+      queryAll(".d-editor-input").val().trim(),
       "topic body",
       "it pre-fills topic body"
     );

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -31,7 +32,7 @@ category vs tag: #bug vs #bug::tag`
     );
 
     assert.equal(
-      find(".d-editor-preview:visible").html().trim(),
+      queryAll(".d-editor-preview:visible").html().trim(),
       `<p>this is a category hashtag <a href="/c/bugs" class="hashtag">#<span>bug</span></a></p>
 <p>this is a tag hashtag <a href="/tag/monkey" class="hashtag">#<span>monkey</span></a></p>
 <p>category vs tag: <a href="/c/bugs" class="hashtag">#<span>bug</span></a> vs <a href="/tag/bug" class="hashtag">#<span>bug</span></a></p>`

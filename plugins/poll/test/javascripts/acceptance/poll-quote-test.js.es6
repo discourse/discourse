@@ -1,5 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();
@@ -678,6 +679,6 @@ acceptance("Poll quote", function (needs) {
   test("Quoted polls", async (assert) => {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
-    assert.equal(find(".poll").length, 2);
+    assert.equal(queryAll(".poll").length, 2);
   });
 });

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -22,7 +23,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".users-list .sortable:nth-child(1)");
 
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes("eviltrout"),
       "list should be sorted by username"
@@ -31,7 +32,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".users-list .sortable:nth-child(1)");
 
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes("discobot"),
       "list should be sorted ascending by username"
@@ -46,7 +47,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".show-emails");
 
     assert.equal(
-      find(".users-list .user:nth-child(1) .email").text(),
+      queryAll(".users-list .user:nth-child(1) .email").text(),
       "<small>eviltrout@example.com</small>",
       "shows the emails"
     );
@@ -54,7 +55,7 @@ acceptance("Admin - Users List", function (needs) {
     await click(".hide-emails");
 
     assert.equal(
-      find(".users-list .user:nth-child(1) .email").text(),
+      queryAll(".users-list .user:nth-child(1) .email").text(),
       "",
       "hides the emails"
     );
@@ -68,36 +69,36 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.equal(find(".admin-title h2").text(), activeTitle);
+    assert.equal(queryAll(".admin-title h2").text(), activeTitle);
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes(activeUser)
     );
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.equal(find(".admin-title h2").text(), suspectTitle);
+    assert.equal(queryAll(".admin-title h2").text(), suspectTitle);
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes(suspectUser)
     );
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.equal(find(".admin-title h2").text(), suspectTitle);
+    assert.equal(queryAll(".admin-title h2").text(), suspectTitle);
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes(suspectUser)
     );
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.equal(find(".admin-title h2").text(), activeTitle);
+    assert.equal(queryAll(".admin-title h2").text(), activeTitle);
     assert.ok(
-      find(".users-list .user:nth-child(1) .username")
+      queryAll(".users-list .user:nth-child(1) .username")
         .text()
         .includes(activeUser)
     );

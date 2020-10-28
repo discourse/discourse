@@ -1,5 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with bar charts - mobile", function (needs) {
   needs.user();
@@ -24,26 +25,26 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
   test("Public number poll", async (assert) => {
     await visit("/t/-/13");
 
-    const polls = find(".poll");
+    const polls = queryAll(".poll");
     assert.equal(polls.length, 1, "it should render the poll correctly");
 
     await click("button.toggle-results");
 
     assert.equal(
-      find(".poll-voters:first li").length,
+      queryAll(".poll-voters:first li").length,
       25,
       "it should display the right number of voters"
     );
 
     assert.notOk(
-      find(".poll-voters:first li:first a").attr("href"),
+      queryAll(".poll-voters:first li:first a").attr("href"),
       "user URL does not exist"
     );
 
     await click(".poll-voters-toggle-expand:first a");
 
     assert.equal(
-      find(".poll-voters:first li").length,
+      queryAll(".poll-voters:first li").length,
       35,
       "it should display the right number of voters"
     );

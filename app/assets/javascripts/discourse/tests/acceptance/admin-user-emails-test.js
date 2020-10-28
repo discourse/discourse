@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -5,13 +6,13 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 function assertNoSecondary(assert) {
   assert.equal(
-    find(".display-row.email .value a").text(),
+    queryAll(".display-row.email .value a").text(),
     "eviltrout@example.com",
     "it should display the primary email"
   );
 
   assert.equal(
-    find(".display-row.secondary-emails .value").text().trim(),
+    queryAll(".display-row.secondary-emails .value").text().trim(),
     I18n.t("user.email.no_secondary"),
     "it should not display secondary emails"
   );
@@ -19,13 +20,13 @@ function assertNoSecondary(assert) {
 
 function assertMultipleSecondary(assert, firstEmail, secondEmail) {
   assert.equal(
-    find(".display-row.secondary-emails .value li:first-of-type a").text(),
+    queryAll(".display-row.secondary-emails .value li:first-of-type a").text(),
     firstEmail,
     "it should display the first secondary email"
   );
 
   assert.equal(
-    find(".display-row.secondary-emails .value li:last-of-type a").text(),
+    queryAll(".display-row.secondary-emails .value li:last-of-type a").text(),
     secondEmail,
     "it should display the second secondary email"
   );
@@ -44,7 +45,7 @@ acceptance("Admin - User Emails", function (needs) {
     await visit("/admin/users/3/markvanlan");
 
     assert.equal(
-      find(".display-row.email .value a").text(),
+      queryAll(".display-row.email .value a").text(),
       "markvanlan@example.com",
       "it should display the user's primary email"
     );

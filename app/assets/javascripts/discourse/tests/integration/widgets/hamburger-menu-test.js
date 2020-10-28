@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -20,8 +21,8 @@ widgetTest("prioritize faq", {
   },
 
   test(assert) {
-    assert.ok(find(".faq-priority").length);
-    assert.ok(!find(".faq-link").length);
+    assert.ok(queryAll(".faq-priority").length);
+    assert.ok(!queryAll(".faq-link").length);
   },
 });
 
@@ -34,8 +35,8 @@ widgetTest("prioritize faq - user has read", {
   },
 
   test(assert) {
-    assert.ok(!find(".faq-priority").length);
-    assert.ok(find(".faq-link").length);
+    assert.ok(!queryAll(".faq-priority").length);
+    assert.ok(queryAll(".faq-link").length);
   },
 });
 
@@ -47,7 +48,7 @@ widgetTest("staff menu - not staff", {
   },
 
   test(assert) {
-    assert.ok(!find(".admin-link").length);
+    assert.ok(!queryAll(".admin-link").length);
   },
 });
 
@@ -59,9 +60,9 @@ widgetTest("staff menu - moderator", {
   },
 
   test(assert) {
-    assert.ok(find(".admin-link").length);
-    assert.ok(find(".review").length);
-    assert.ok(!find(".settings-link").length);
+    assert.ok(queryAll(".admin-link").length);
+    assert.ok(queryAll(".review").length);
+    assert.ok(!queryAll(".settings-link").length);
   },
 });
 
@@ -73,7 +74,7 @@ widgetTest("staff menu - admin", {
   },
 
   test(assert) {
-    assert.ok(find(".settings-link").length);
+    assert.ok(queryAll(".settings-link").length);
   },
 });
 
@@ -81,8 +82,8 @@ widgetTest("logged in links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(find(".new-topics-link").length);
-    assert.ok(find(".unread-topics-link").length);
+    assert.ok(queryAll(".new-topics-link").length);
+    assert.ok(queryAll(".unread-topics-link").length);
   },
 });
 
@@ -91,13 +92,13 @@ widgetTest("general links", {
   anonymous: true,
 
   test(assert) {
-    assert.ok(find("li[class='']").length === 0);
-    assert.ok(find(".latest-topics-link").length);
-    assert.ok(!find(".new-topics-link").length);
-    assert.ok(!find(".unread-topics-link").length);
-    assert.ok(find(".top-topics-link").length);
-    assert.ok(find(".badge-link").length);
-    assert.ok(find(".category-link").length > 0);
+    assert.ok(queryAll("li[class='']").length === 0);
+    assert.ok(queryAll(".latest-topics-link").length);
+    assert.ok(!queryAll(".new-topics-link").length);
+    assert.ok(!queryAll(".unread-topics-link").length);
+    assert.ok(queryAll(".top-topics-link").length);
+    assert.ok(queryAll(".badge-link").length);
+    assert.ok(queryAll(".category-link").length > 0);
   },
 });
 
@@ -112,9 +113,9 @@ widgetTest("top categories - anonymous", {
   },
 
   test(assert) {
-    assert.equal(find(".category-link").length, 8);
+    assert.equal(queryAll(".category-link").length, 8);
     assert.equal(
-      find(".category-link .category-name").text(),
+      queryAll(".category-link .category-name").text(),
       this.site
         .get("categoriesByCount")
         .slice(0, 8)
@@ -134,9 +135,9 @@ widgetTest("top categories - allow_uncategorized_topics", {
   },
 
   test(assert) {
-    assert.equal(find(".category-link").length, 8);
+    assert.equal(queryAll(".category-link").length, 8);
     assert.equal(
-      find(".category-link .category-name").text(),
+      queryAll(".category-link .category-name").text(),
       this.site
         .get("categoriesByCount")
         .filter((c) => c.name !== "uncategorized")
@@ -186,7 +187,7 @@ widgetTest("top categories", {
   },
 
   test(assert) {
-    assert.equal(find(".category-link").length, maxCategoriesToDisplay);
+    assert.equal(queryAll(".category-link").length, maxCategoriesToDisplay);
 
     categoriesByCount = categoriesByCount.filter(
       (c) => !mutedCategoryIds.includes(c.id)
@@ -200,7 +201,7 @@ widgetTest("top categories", {
       .slice(0, maxCategoriesToDisplay);
 
     assert.equal(
-      find(".category-link .category-name").text(),
+      queryAll(".category-link .category-name").text(),
       ids.map((i) => categoriesByCount.find((c) => c.id === i).name).join("")
     );
   },
@@ -214,7 +215,7 @@ widgetTest("badges link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!find(".badge-link").length);
+    assert.ok(!queryAll(".badge-link").length);
   },
 });
 
@@ -222,7 +223,7 @@ widgetTest("badges link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(find(".badge-link").length);
+    assert.ok(queryAll(".badge-link").length);
   },
 });
 
@@ -230,7 +231,7 @@ widgetTest("user directory link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(find(".user-directory-link").length);
+    assert.ok(queryAll(".user-directory-link").length);
   },
 });
 
@@ -242,7 +243,7 @@ widgetTest("user directory link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!find(".user-directory-link").length);
+    assert.ok(!queryAll(".user-directory-link").length);
   },
 });
 
@@ -250,7 +251,7 @@ widgetTest("general links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(find(".about-link").length);
-    assert.ok(find(".keyboard-shortcuts-link").length);
+    assert.ok(queryAll(".about-link").length);
+    assert.ok(queryAll(".keyboard-shortcuts-link").length);
   },
 });

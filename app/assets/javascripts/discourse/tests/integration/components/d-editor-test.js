@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import { next } from "@ember/runloop";
@@ -17,12 +18,12 @@ componentTest("preview updates with markdown", {
   template: "{{d-editor value=value}}",
 
   async test(assert) {
-    assert.ok(find(".d-editor-button-bar").length);
+    assert.ok(queryAll(".d-editor-button-bar").length);
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.equal(this.value, "hello **world**");
     assert.equal(
-      find(".d-editor-preview").html().trim(),
+      queryAll(".d-editor-preview").html().trim(),
       "<p>hello <strong>world</strong></p>"
     );
   },
@@ -33,7 +34,7 @@ componentTest("preview sanitizes HTML", {
 
   async test(assert) {
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.equal(find(".d-editor-preview").html().trim(), '<p>"&gt;</p>');
+    assert.equal(queryAll(".d-editor-preview").html().trim(), '<p>"&gt;</p>');
   },
 });
 
@@ -45,10 +46,16 @@ componentTest("updating the value refreshes the preview", {
   },
 
   async test(assert) {
-    assert.equal(find(".d-editor-preview").html().trim(), "<p>evil trout</p>");
+    assert.equal(
+      queryAll(".d-editor-preview").html().trim(),
+      "<p>evil trout</p>"
+    );
 
     await this.set("value", "zogstrip");
-    assert.equal(find(".d-editor-preview").html().trim(), "<p>zogstrip</p>");
+    assert.equal(
+      queryAll(".d-editor-preview").html().trim(),
+      "<p>zogstrip</p>"
+    );
   },
 });
 
@@ -65,7 +72,7 @@ function testCase(title, testFunc) {
       this.set("value", "hello world.");
     },
     test(assert) {
-      const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+      const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
     },
   });
@@ -78,7 +85,7 @@ function composerTestCase(title, testFunc) {
       this.set("value", "hello world.");
     },
     test(assert) {
-      const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+      const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
     },
   });
@@ -211,7 +218,7 @@ function xyz(x, y, z) {
   },
 
   async test(assert) {
-    const textarea = find("textarea.d-editor-input")[0];
+    const textarea = queryAll("textarea.d-editor-input")[0];
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -236,7 +243,7 @@ componentTest("code button", {
   },
 
   async test(assert) {
-    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
 
     await click("button.code");
     assert.equal(this.value, `    ${I18n.t("composer.code_text")}`);
@@ -318,7 +325,7 @@ componentTest("code fences", {
   },
 
   async test(assert) {
-    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
 
     await click("button.code");
     assert.equal(
@@ -430,7 +437,7 @@ componentTest("quote button - empty lines", {
     this.set("value", "one\n\ntwo\n\nthree");
   },
   async test(assert) {
-    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
 
     textarea.selectionStart = 0;
 
@@ -451,7 +458,7 @@ componentTest("quote button - selecting empty lines", {
     this.set("value", "one\n\n\n\ntwo");
   },
   async test(assert) {
-    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
 
     textarea.selectionStart = 6;
     textarea.selectionEnd = 10;
@@ -584,7 +591,7 @@ componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
   },
 
   async test(assert) {
-    const textarea = find("textarea.d-editor-input");
+    const textarea = queryAll("textarea.d-editor-input");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
   },
@@ -598,7 +605,7 @@ componentTest("clicking the toggle-direction changes dir from ltr to rtl", {
   },
 
   async test(assert) {
-    const textarea = find("textarea.d-editor-input");
+    const textarea = queryAll("textarea.d-editor-input");
     textarea.attr("dir", "ltr");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
@@ -645,7 +652,7 @@ componentTest("emoji", {
   },
 
   async test(assert) {
-    jumpEnd(find("textarea.d-editor-input")[0]);
+    jumpEnd(queryAll("textarea.d-editor-input")[0]);
     await click("button.emoji");
 
     await click(

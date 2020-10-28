@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
@@ -29,36 +30,40 @@ componentTest("current tab is themes", {
 
   test(assert) {
     assert.equal(
-      find(".themes-tab").hasClass("active"),
+      queryAll(".themes-tab").hasClass("active"),
       true,
       "themes tab is active"
     );
     assert.equal(
-      find(".components-tab").hasClass("active"),
+      queryAll(".components-tab").hasClass("active"),
       false,
       "components tab is not active"
     );
 
     assert.equal(
-      find(".inactive-indicator").index(),
+      queryAll(".inactive-indicator").index(),
       -1,
       "there is no inactive themes separator when all themes are inactive"
     );
-    assert.equal(find(".themes-list-item").length, 5, "displays all themes");
+    assert.equal(
+      queryAll(".themes-list-item").length,
+      5,
+      "displays all themes"
+    );
 
     [2, 3].forEach((num) => this.themes[num].set("user_selectable", true));
     this.themes[4].set("default", true);
     this.set("themes", this.themes);
     const names = [4, 2, 3, 0, 1].map((num) => this.themes[num].get("name")); // default theme always on top, followed by user-selectable ones and then the rest
     assert.deepEqual(
-      Array.from(find(".themes-list-item").find(".name")).map((node) =>
+      Array.from(queryAll(".themes-list-item .name")).map((node) =>
         node.innerText.trim()
       ),
       names,
       "sorts themes correctly"
     );
     assert.equal(
-      find(".inactive-indicator").index(),
+      queryAll(".inactive-indicator").index(),
       3,
       "the separator is in the right location"
     );
@@ -66,19 +71,19 @@ componentTest("current tab is themes", {
     this.themes.forEach((theme) => theme.set("user_selectable", true));
     this.set("themes", this.themes);
     assert.equal(
-      find(".inactive-indicator").index(),
+      queryAll(".inactive-indicator").index(),
       -1,
       "there is no inactive themes separator when all themes are user-selectable"
     );
 
     this.set("themes", []);
     assert.equal(
-      find(".themes-list-item").length,
+      queryAll(".themes-list-item").length,
       1,
       "shows one entry with a message when there is nothing to display"
     );
     assert.equal(
-      find(".themes-list-item span.empty").text().trim(),
+      queryAll(".themes-list-item span.empty").text().trim(),
       I18n.t("admin.customize.theme.empty"),
       "displays the right message"
     );
@@ -109,35 +114,35 @@ componentTest("current tab is components", {
 
   test(assert) {
     assert.equal(
-      find(".components-tab").hasClass("active"),
+      queryAll(".components-tab").hasClass("active"),
       true,
       "components tab is active"
     );
     assert.equal(
-      find(".themes-tab").hasClass("active"),
+      queryAll(".themes-tab").hasClass("active"),
       false,
       "themes tab is not active"
     );
 
     assert.equal(
-      find(".inactive-indicator").index(),
+      queryAll(".inactive-indicator").index(),
       -1,
       "there is no separator"
     );
     assert.equal(
-      find(".themes-list-item").length,
+      queryAll(".themes-list-item").length,
       5,
       "displays all components"
     );
 
     this.set("components", []);
     assert.equal(
-      find(".themes-list-item").length,
+      queryAll(".themes-list-item").length,
       1,
       "shows one entry with a message when there is nothing to display"
     );
     assert.equal(
-      find(".themes-list-item span.empty").text().trim(),
+      queryAll(".themes-list-item span.empty").text().trim(),
       I18n.t("admin.customize.theme.empty"),
       "displays the right message"
     );

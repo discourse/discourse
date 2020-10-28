@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -9,7 +10,7 @@ acceptance("Notifications filter", function (needs) {
   test("Notifications filter true", async (assert) => {
     await visit("/u/eviltrout/notifications");
 
-    assert.ok(find(".large-notification").length >= 0);
+    assert.ok(queryAll(".large-notification").length >= 0);
   });
 
   test("Notifications filter read", async (assert) => {
@@ -19,7 +20,7 @@ acceptance("Notifications filter", function (needs) {
     await dropdown.expand();
     await dropdown.selectRowByValue("read");
 
-    assert.ok(find(".large-notification").length >= 0);
+    assert.ok(queryAll(".large-notification").length >= 0);
   });
 
   test("Notifications filter unread", async (assert) => {
@@ -29,6 +30,6 @@ acceptance("Notifications filter", function (needs) {
     await dropdown.expand();
     await dropdown.selectRowByValue("unread");
 
-    assert.ok(find(".large-notification").length >= 0);
+    assert.ok(queryAll(".large-notification").length >= 0);
   });
 });

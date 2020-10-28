@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 import { click } from "@ember/test-helpers";
@@ -5,7 +6,7 @@ import { click } from "@ember/test-helpers";
 moduleForComponent("date-input", { integration: true });
 
 function dateInput() {
-  return find(".date-picker");
+  return queryAll(".date-picker");
 }
 
 function setDate(date) {

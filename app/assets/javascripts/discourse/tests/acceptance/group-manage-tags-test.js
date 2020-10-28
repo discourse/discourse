@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -24,7 +25,7 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
     await visit("/g/discourse/manage/tags");
 
     assert.ok(
-      find(".groups-notifications-form .tag-chooser").length === 5,
+      queryAll(".groups-notifications-form .tag-chooser").length === 5,
       "it should display tag inputs"
     );
   });
@@ -35,7 +36,7 @@ acceptance("Managing Group Tag Notification Defaults", function (needs) {
     await visit("/g/discourse/manage/tags");
 
     assert.ok(
-      find(".groups-notifications-form .tag-chooser").length === 5,
+      queryAll(".groups-notifications-form .tag-chooser").length === 5,
       "it should display tag inputs"
     );
   });

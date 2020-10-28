@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
@@ -23,7 +24,7 @@ acceptance("Managing Group Category Notification Defaults", function (needs) {
     await visit("/g/discourse/manage/categories");
 
     assert.ok(
-      find(".groups-notifications-form .category-selector").length === 5,
+      queryAll(".groups-notifications-form .category-selector").length === 5,
       "it should display category inputs"
     );
   });
@@ -34,7 +35,7 @@ acceptance("Managing Group Category Notification Defaults", function (needs) {
     await visit("/g/discourse/manage/categories");
 
     assert.ok(
-      find(".groups-notifications-form .category-selector").length === 5,
+      queryAll(".groups-notifications-form .category-selector").length === 5,
       "it should display category inputs"
     );
   });

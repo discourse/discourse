@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -30,7 +31,7 @@ acceptance("Admin - Site Texts", function (needs) {
   test("edit and revert a site text by key", async (assert) => {
     await visit("/admin/customize/site_texts/site.test");
 
-    assert.equal(find(".title h3").text(), "site.test");
+    assert.equal(queryAll(".title h3").text(), "site.test");
     assert.ok(!exists(".saved"));
     assert.ok(!exists(".revert-site-text"));
 

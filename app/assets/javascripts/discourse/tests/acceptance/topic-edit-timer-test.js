@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
 import { test } from "qunit";
@@ -54,7 +55,9 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), "next_week");
 
     const regex = /will automatically close in/g;
-    const html = find(".future-date-input .topic-status-info").html().trim();
+    const html = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex.test(html));
   });
 
@@ -73,7 +76,9 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), "next_week");
 
     const regex1 = /will automatically close in/g;
-    const html1 = find(".future-date-input .topic-status-info").html().trim();
+    const html1 = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex1.test(html1));
 
     await futureDateInputSelector.expand();
@@ -90,7 +95,9 @@ acceptance("Topic - Edit timer", function (needs) {
     );
 
     const regex2 = /will automatically close in/g;
-    const html2 = find(".future-date-input .topic-status-info").html().trim();
+    const html2 = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex2.test(html2));
 
     await futureDateInputSelector.expand();
@@ -110,7 +117,9 @@ acceptance("Topic - Edit timer", function (needs) {
     );
 
     const regex3 = /This topic will close.*after the last reply/g;
-    const html3 = find(".future-date-input .topic-status-info").html().trim();
+    const html3 = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex3.test(html3));
   });
 
@@ -139,7 +148,9 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), "next_week");
 
     const regex1 = /will automatically open in/g;
-    const html1 = find(".future-date-input .topic-status-info").html().trim();
+    const html1 = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex1.test(html1));
 
     await futureDateInputSelector.expand();
@@ -157,7 +168,9 @@ acceptance("Topic - Edit timer", function (needs) {
     );
 
     const regex2 = /will automatically open in/g;
-    const html2 = find(".future-date-input .topic-status-info").html().trim();
+    const html2 = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex2.test(html2));
   });
 
@@ -193,7 +206,9 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), "next_week");
 
     const regex = /will be published to #dev/g;
-    const text = find(".future-date-input .topic-status-info").text().trim();
+    const text = queryAll(".future-date-input .topic-status-info")
+      .text()
+      .trim();
     assert.ok(regex.test(text));
   });
 
@@ -236,7 +251,9 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), "two_weeks");
 
     const regex = /will be automatically deleted/g;
-    const html = find(".future-date-input .topic-status-info").html().trim();
+    const html = queryAll(".future-date-input .topic-status-info")
+      .html()
+      .trim();
     assert.ok(regex.test(html));
   });
 
@@ -251,11 +268,13 @@ acceptance("Topic - Edit timer", function (needs) {
     await futureDateInputSelector.selectRowByValue("next_week");
     await click(".modal-footer button.btn-primary");
 
-    const removeTimerButton = find(".topic-status-info .topic-timer-remove");
+    const removeTimerButton = queryAll(
+      ".topic-status-info .topic-timer-remove"
+    );
     assert.equal(removeTimerButton.attr("title"), "remove timer");
 
     await click(".topic-status-info .topic-timer-remove");
-    const topicStatusInfo = find(".topic-status-info .topic-timer-remove");
+    const topicStatusInfo = queryAll(".topic-status-info .topic-timer-remove");
     assert.equal(topicStatusInfo.length, 0);
   });
 });

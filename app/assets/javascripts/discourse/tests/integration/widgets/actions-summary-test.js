@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -16,11 +17,11 @@ widgetTest("post deleted", {
   },
   test(assert) {
     assert.ok(
-      find(".post-action .d-icon-far-trash-alt").length === 1,
+      queryAll(".post-action .d-icon-far-trash-alt").length === 1,
       "it has the deleted icon"
     );
     assert.ok(
-      find(".avatar[title=eviltrout]").length === 1,
+      queryAll(".avatar[title=eviltrout]").length === 1,
       "it has the deleted by avatar"
     );
   },

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -37,7 +38,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click(".show-help");
 
     assert.equal(
-      find(".full-page-search").val(),
+      queryAll(".full-page-search").val(),
       "dev",
       "it shows the search term"
     );
@@ -102,7 +103,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     const highlighted = [];
 
-    find("#post_7 span.highlighted").map((_, span) => {
+    queryAll("#post_7 span.highlighted").map((_, span) => {
       highlighted.push(span.innerText);
     });
 
@@ -188,7 +189,7 @@ acceptance("Search - with tagging enabled", function (needs) {
     await fillIn("#search-term", "dev");
     await keyEvent("#search-term", "keyup", 16);
 
-    const tags = find(".search-menu .results ul li:eq(0) .discourse-tags")
+    const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
       .text()
       .trim();
 

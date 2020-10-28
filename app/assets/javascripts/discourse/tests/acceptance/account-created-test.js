@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click, fillIn } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -13,7 +14,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.equal(
-      find(".account-created .ac-message").text().trim(),
+      queryAll(".account-created .ac-message").text().trim(),
       "Hello World",
       "it displays the message"
     );
@@ -32,7 +33,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.equal(
-      find(".account-created .ac-message").text().trim(),
+      queryAll(".account-created .ac-message").text().trim(),
       "Hello World",
       "it displays the message"
     );
@@ -40,7 +41,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .resend");
 
     assert.equal(currentPath(), "account-created.resent");
-    const email = find(".account-created .ac-message b").text();
+    const email = queryAll(".account-created .ac-message b").text();
     assert.equal(email, "eviltrout@example.com");
   });
 
@@ -57,7 +58,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .edit-email");
 
     assert.equal(currentPath(), "account-created.edit-email");
-    assert.ok(find(".activation-controls .btn-primary:disabled").length);
+    assert.ok(queryAll(".activation-controls .btn-primary:disabled").length);
 
     await click(".activation-controls .edit-cancel");
 
@@ -76,16 +77,16 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .edit-email");
 
-    assert.ok(find(".activation-controls .btn-primary:disabled").length);
+    assert.ok(queryAll(".activation-controls .btn-primary:disabled").length);
 
     await fillIn(".activate-new-email", "newemail@example.com");
 
-    assert.notOk(find(".activation-controls .btn-primary:disabled").length);
+    assert.notOk(queryAll(".activation-controls .btn-primary:disabled").length);
 
     await click(".activation-controls .btn-primary");
 
     assert.equal(currentPath(), "account-created.resent");
-    const email = find(".account-created .ac-message b").text();
+    const email = queryAll(".account-created .ac-message b").text();
     assert.equal(email, "newemail@example.com");
   });
 });

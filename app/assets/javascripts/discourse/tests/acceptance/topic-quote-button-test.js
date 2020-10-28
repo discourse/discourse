@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -26,7 +27,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     selectText("#post_5 blockquote");
     assert.ok(exists(".insert-quote"), "it shows the quote button");
     assert.equal(
-      find(".quote-sharing").length,
+      queryAll(".quote-sharing").length,
       0,
       "it does not show quote sharing"
     );
@@ -60,7 +61,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 blockquote");
 
-    assert.ok(find(".quote-sharing"), "it shows the quote sharing options");
+    assert.ok(queryAll(".quote-sharing"), "it shows the quote sharing options");
     assert.ok(
       exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
       "it includes the twitter share button"
@@ -70,7 +71,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       "it includes the email share button"
     );
     assert.equal(
-      find(".insert-quote").length,
+      queryAll(".insert-quote").length,
       0,
       "it does not show the quote button"
     );
@@ -88,7 +89,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
       "it includes the twitter share button"
     );
     assert.equal(
-      find(".quote-share-label").length,
+      queryAll(".quote-share-label").length,
       0,
       "it does not show the Share label"
     );
@@ -101,13 +102,13 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     selectText("#post_5 blockquote");
 
     assert.equal(
-      find(".quote-sharing").length,
+      queryAll(".quote-sharing").length,
       0,
       "it does not show quote sharing"
     );
 
     assert.equal(
-      find(".insert-quote").length,
+      queryAll(".insert-quote").length,
       0,
       "it does not show the quote button"
     );
