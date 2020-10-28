@@ -17,6 +17,7 @@ module Middleware
       allowed_hostnames = RailsMultisite::ConnectionManagement.current_db_hostnames
       requested_hostname = env[Rack::HTTP_HOST]
 
+      env[Discourse::REQUESTED_HOSTNAME] = requested_hostname
       env[Rack::HTTP_HOST] = allowed_hostnames.find { |h| h == requested_hostname } || Discourse.current_hostname
 
       @app.call(env)
