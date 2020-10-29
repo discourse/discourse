@@ -142,7 +142,7 @@ basic:
   ga_universal_tracking_code:
     client: true
     default: ""
-    regex: "^UA-\\d+-\\d+$"
+    regex: "^(UA|G)-[\\w-]+"
   ga_universal_domain_name:
     client: true
     default: "auto"
