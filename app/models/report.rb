@@ -32,7 +32,7 @@ class Report
   include Reports::StaffLogins
   include Reports::DailyEngagedUsers
   include Reports::UserToUserPrivateMessagesWithReplies
-  include Reports::VisitsMobile
+  include Reports::MobileVisits
   include Reports::TopReferrers
   include Reports::WebCrawlers
   include Reports::ModeratorsActivity
@@ -45,6 +45,7 @@ class Report
   include Reports::UsersByTrustLevel
   include Reports::ModeratorWarningPrivateMessages
   include Reports::ProfileViews
+  include Reports::TopUploads
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
                 :end_date, :labels, :prev_period, :facets, :limit, :average,
