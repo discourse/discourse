@@ -802,14 +802,17 @@ class PostsController < ApplicationController
   end
 
   def find_post_using(finder)
-    # Include deleted posts if the user is staff
-    finder = finder.with_deleted if current_user.try(:staff?)
-    post = finder.first
+    # A deleted post can be seen by staff or a category group moderator for the topic.
+    # But we must find the deleted post to determine which category it belongs to, so
+    # we must find.with_deleted
+    post = finder.with_deleted.first
     raise Discourse::NotFound unless post
 
-    # load deleted topic
-    post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
+    post.topic = Topic.with_deleted.find(post.topic_id)
     raise Discourse::NotFound unless post.topic
+
+    has_elevated_permissions = current_user.try(:staff?) || guardian.is_category_group_moderator?(post.topic.category)
+    raise Discourse::NotFound if (post.deleted_at.present? || post.topic.deleted_at.present?) && !has_elevated_permissions
 
     guardian.ensure_can_see!(post)
     post

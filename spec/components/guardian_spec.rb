@@ -847,12 +847,32 @@ describe Guardian do
         expect(Guardian.new(admin).can_banner_topic?(nil)).to be_falsey
         expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
       end
+
+      it 'respects category group moderator settings' do
+        group_user = Fabricate(:group_user)
+        user_gm = group_user.user
+        group = group_user.group
+        SiteSetting.enable_category_group_moderation = true
+
+        topic = Fabricate(:topic)
+
+        expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
+
+        topic.trash!(admin)
+        topic.reload
+
+        expect(Guardian.new(user_gm).can_see?(topic)).to be_falsey
+
+        topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+        expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
+      end
     end
 
     describe 'a Post' do
+      fab!(:post) { Fabricate(:post) }
       fab!(:another_admin) { Fabricate(:admin) }
+
       it 'correctly handles post visibility' do
-        post = Fabricate(:post)
         topic = post.topic
 
         expect(Guardian.new(user).can_see?(post)).to be_truthy
@@ -870,8 +890,25 @@ describe Guardian do
         expect(Guardian.new(admin).can_see?(post)).to be_truthy
       end
 
+      it 'respects category group moderator settings' do
+        group_user = Fabricate(:group_user)
+        user_gm = group_user.user
+        group = group_user.group
+        SiteSetting.enable_category_group_moderation = true
+
+        expect(Guardian.new(user_gm).can_see?(post)).to be_truthy
+
+        post.trash!(another_admin)
+        post.reload
+
+        expect(Guardian.new(user_gm).can_see?(post)).to be_falsey
+
+        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+        expect(Guardian.new(user_gm).can_see?(post)).to be_truthy
+      end
+
       it 'respects whispers' do
-        regular_post = Fabricate.build(:post)
+        regular_post = post
         whisper_post = Fabricate.build(:post, post_type: Post.types[:whisper])
 
         anon_guardian = Guardian.new
@@ -1192,6 +1229,29 @@ describe Guardian do
 
           expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_truthy
         end
+      end
+    end
+
+    context 'category group moderation is enabled' do
+      fab!(:group_user) { Fabricate(:group_user) }
+
+      before do
+        topic.save!
+        post.save!
+
+        SiteSetting.enable_category_group_moderation = true
+        PostDestroyer.new(moderator, topic.first_post).destroy
+        topic.reload
+      end
+
+      it "returns false if user is not a member of the appropriate group" do
+        expect(Guardian.new(group_user.user).can_recover_topic?(topic)).to be_falsey
+      end
+
+      it "returns true if user is a member of the appropriate group" do
+        topic.category.update!(reviewable_by_group_id: group_user.group.id)
+
+        expect(Guardian.new(group_user.user).can_recover_topic?(topic)).to be_truthy
       end
     end
   end
@@ -1979,6 +2039,25 @@ describe Guardian do
         topic.update!(posts_count: 1, created_at: 48.hours.ago)
         expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
       end
+
+      context 'category group moderation is enabled' do
+        fab!(:group_user) { Fabricate(:group_user) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+        end
+
+        it "returns false if user is not a member of the appropriate group" do
+          expect(Guardian.new(group_user.user).can_delete?(topic)).to be_falsey
+        end
+
+        it "returns true if user is a member of the appropriate group" do
+          topic.category.update!(reviewable_by_group_id: group_user.group.id)
+
+          expect(Guardian.new(group_user.user).can_delete?(topic)).to be_truthy
+        end
+      end
+
     end
 
     context 'a Post' do

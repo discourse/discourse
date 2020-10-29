@@ -212,7 +212,7 @@ module PostGuardian
     return true if is_admin?
     return false unless can_see_topic?(post.topic)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
-    return false if !is_moderator? && post.deleted_at.present?
+    return false if !(is_moderator? || is_category_group_moderator?(post.topic.category)) && post.deleted_at.present?
 
     true
   end
@@ -261,8 +261,8 @@ module PostGuardian
     is_staff?
   end
 
-  def can_see_deleted_posts?
-    is_staff?
+  def can_see_deleted_posts?(category = nil)
+    is_staff? || is_category_group_moderator?(category)
   end
 
   def can_view_raw_email?(post)
