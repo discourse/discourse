@@ -10,7 +10,7 @@ acceptance("Managing Group Interaction Settings", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("As an admin", async (assert) => {
+  test("As an admin", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: true,
@@ -50,7 +50,7 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     );
   });
 
-  test("As a group owner", async (assert) => {
+  test("As a group owner", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: false,

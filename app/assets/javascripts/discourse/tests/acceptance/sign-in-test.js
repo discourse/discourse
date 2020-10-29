@@ -5,7 +5,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
-  test("sign in", async (assert) => {
+  test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");
     assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -29,7 +29,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  test("sign in - not activated", async (assert) => {
+  test("sign in - not activated", async function (assert) {
     await visit("/");
     await click("header .login-button");
     assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -51,7 +51,7 @@ acceptance("Signing In", function () {
     assert.ok(!exists(".modal-body small"), "it escapes the email address");
   });
 
-  test("sign in - not activated - edit email", async (assert) => {
+  test("sign in - not activated - edit email", async function (assert) {
     await visit("/");
     await click("header .login-button");
     assert.ok(exists(".login-modal"), "it shows the login modal");
@@ -72,7 +72,7 @@ acceptance("Signing In", function () {
     assert.equal(queryAll(".modal-body b").text(), "different@example.com");
   });
 
-  test("second factor", async (assert) => {
+  test("second factor", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -105,7 +105,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  test("security key", async (assert) => {
+  test("security key", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -131,7 +131,7 @@ acceptance("Signing In", function () {
     assert.not(exists("#login-button:visible"), "hides the login button");
   });
 
-  test("create account", async (assert) => {
+  test("create account", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
 
@@ -170,7 +170,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  test("second factor backup - valid token", async (assert) => {
+  test("second factor backup - valid token", async function (assert) {
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "eviltrout");
@@ -186,7 +186,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  test("second factor backup - invalid token", async (assert) => {
+  test("second factor backup - invalid token", async function (assert) {
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "eviltrout");

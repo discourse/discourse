@@ -6,7 +6,7 @@ import { acceptance, invisible } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Login Required", function (needs) {
   needs.settings({ login_required: true });
 
-  test("redirect", async (assert) => {
+  test("redirect", async function (assert) {
     await visit("/latest");
     assert.equal(currentPath(), "login", "it redirects them to login");
 

@@ -4,7 +4,7 @@ import Setting from "admin/mixins/setting-object";
 
 module("mixin:setting-object");
 
-test("flat array", (assert) => {
+test("flat array", function (assert) {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -15,7 +15,7 @@ test("flat array", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, null);
 });
 
-test("object", (assert) => {
+test("object", function (assert) {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -26,7 +26,7 @@ test("object", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, "name");
 });
 
-test("no values", (assert) => {
+test("no values", function (assert) {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({
@@ -37,7 +37,7 @@ test("no values", (assert) => {
   assert.equal(fooSettingInstance.computedNameProperty, null);
 });
 
-test("value/name properties defined", (assert) => {
+test("value/name properties defined", function (assert) {
   const FooSetting = EmberObject.extend(Setting);
 
   const fooSettingInstance = FooSetting.create({

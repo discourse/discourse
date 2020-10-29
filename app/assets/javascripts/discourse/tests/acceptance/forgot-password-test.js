@@ -16,7 +16,7 @@ acceptance("Forgot password", function (needs) {
     });
   });
 
-  test("requesting password reset", async (assert) => {
+  test("requesting password reset", async function (assert) {
     await visit("/");
     await click("header .login-button");
     await click("#forgot-password-link");

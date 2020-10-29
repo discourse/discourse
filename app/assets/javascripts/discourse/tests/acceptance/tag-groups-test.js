@@ -35,7 +35,7 @@ acceptance("Tag Groups", function (needs) {
     });
   });
 
-  test("tag groups can be saved and deleted", async (assert) => {
+  test("tag groups can be saved and deleted", async function (assert) {
     const tags = selectKit(".tag-chooser");
 
     await visit("/tag_groups");
@@ -51,7 +51,7 @@ acceptance("Tag Groups", function (needs) {
     assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
   });
 
-  test("tag groups can have multiple groups added to them", async (assert) => {
+  test("tag groups can have multiple groups added to them", async function (assert) {
     const tags = selectKit(".tag-chooser");
     const groups = selectKit(".group-chooser");
 

@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
 
-  test("search", async (assert) => {
+  test("search", async function (assert) {
     await visit("/");
 
     await click("#search-button");

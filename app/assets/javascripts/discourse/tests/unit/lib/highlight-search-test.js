@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 
 module("lib:highlight-search");
 
-test("highlighting text", (assert) => {
+test("highlighting text", function (assert) {
   fixture().html(
     `
     <p>This is some text to highlight</p>
@@ -26,7 +26,7 @@ test("highlighting text", (assert) => {
   );
 });
 
-test("highlighting unicode text", (assert) => {
+test("highlighting unicode text", function (assert) {
   fixture().html(
     `
     <p>This is some தமிழ் & русский text to highlight</p>

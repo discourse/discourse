@@ -25,7 +25,7 @@ acceptance("Admin - Suspend User", function (needs) {
     );
   });
 
-  test("suspend a user - cancel", async (assert) => {
+  test("suspend a user - cancel", async function (assert) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
@@ -36,7 +36,7 @@ acceptance("Admin - Suspend User", function (needs) {
     assert.equal(queryAll(".suspend-user-modal:visible").length, 0);
   });
 
-  test("suspend a user - cancel with input", async (assert) => {
+  test("suspend a user - cancel with input", async function (assert) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
@@ -63,7 +63,7 @@ acceptance("Admin - Suspend User", function (needs) {
     assert.equal(queryAll(".bootbox.modal:visible").length, 0);
   });
 
-  test("suspend, then unsuspend a user", async (assert) => {
+  test("suspend, then unsuspend a user", async function (assert) {
     const suspendUntilCombobox = selectKit(".suspend-until .combobox");
 
     await visit("/admin/flags/active");

@@ -37,7 +37,7 @@ acceptance("Category Banners", function (needs) {
     ],
   });
 
-  test("Does not display category banners when not set", async (assert) => {
+  test("Does not display category banners when not set", async function (assert) {
     await visit("/c/test-read-only-without-banner");
 
     await click("#create-topic");
@@ -48,7 +48,7 @@ acceptance("Category Banners", function (needs) {
     );
   });
 
-  test("Displays category banners when set", async (assert) => {
+  test("Displays category banners when set", async function (assert) {
     await visit("/c/test-read-only-with-banner");
 
     await click("#create-topic");
@@ -85,7 +85,7 @@ acceptance("Anonymous Category Banners", function (needs) {
     ],
   });
 
-  test("Does not display category banners when set", async (assert) => {
+  test("Does not display category banners when set", async function (assert) {
     await visit("/c/test-read-only-with-banner");
     assert.ok(
       !visible(".category-read-only-banner"),

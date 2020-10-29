@@ -21,7 +21,7 @@ const buildStream = function (id, stream) {
 
 const participant = { username: "eviltrout" };
 
-test("create", (assert) => {
+test("create", function (assert) {
   const store = createStore();
   assert.ok(
     store.createRecord("postStream"),
@@ -29,7 +29,7 @@ test("create", (assert) => {
   );
 });
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   const postStream = buildStream(1234);
   assert.blank(
     postStream.get("posts"),
@@ -39,7 +39,7 @@ test("defaults", (assert) => {
   assert.present(postStream.get("topic"));
 });
 
-test("appending posts", (assert) => {
+test("appending posts", function (assert) {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = postStream.store;
 
@@ -110,7 +110,7 @@ test("appending posts", (assert) => {
   );
 });
 
-test("closestPostNumberFor", (assert) => {
+test("closestPostNumberFor", function (assert) {
   const postStream = buildStream(1231);
   const store = postStream.store;
 
@@ -144,7 +144,7 @@ test("closestPostNumberFor", (assert) => {
   );
 });
 
-test("closestDaysAgoFor", (assert) => {
+test("closestDaysAgoFor", function (assert) {
   const postStream = buildStream(1231);
   postStream.set("timelineLookup", [
     [1, 10],
@@ -167,14 +167,14 @@ test("closestDaysAgoFor", (assert) => {
   assert.equal(postStream.closestDaysAgoFor(1), undefined);
 });
 
-test("closestDaysAgoFor - empty", (assert) => {
+test("closestDaysAgoFor - empty", function (assert) {
   const postStream = buildStream(1231);
   postStream.set("timelineLookup", []);
 
   assert.equal(postStream.closestDaysAgoFor(1), null);
 });
 
-test("updateFromJson", (assert) => {
+test("updateFromJson", function (assert) {
   const postStream = buildStream(1231);
 
   postStream.updateFromJson({
@@ -189,7 +189,7 @@ test("updateFromJson", (assert) => {
   assert.equal(postStream.get("extra_property"), 12);
 });
 
-test("removePosts", (assert) => {
+test("removePosts", function (assert) {
   const postStream = buildStream(10000001, [1, 2, 3]);
   const store = postStream.store;
 
@@ -210,7 +210,7 @@ test("removePosts", (assert) => {
   assert.deepEqual(postStream.get("stream"), [2]);
 });
 
-test("cancelFilter", (assert) => {
+test("cancelFilter", function (assert) {
   const postStream = buildStream(1235);
 
   sinon.stub(postStream, "refresh").returns(Promise.resolve());
@@ -227,7 +227,7 @@ test("cancelFilter", (assert) => {
   );
 });
 
-test("findPostIdForPostNumber", (assert) => {
+test("findPostIdForPostNumber", function (assert) {
   const postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
   postStream.set("gaps", { before: { 60: [55, 58] } });
 
@@ -249,7 +249,7 @@ test("findPostIdForPostNumber", (assert) => {
   assert.equal(postStream.findPostIdForPostNumber(8), 60, "it respects gaps");
 });
 
-test("fillGapBefore", (assert) => {
+test("fillGapBefore", function (assert) {
   const postStream = buildStream(1234, [60]);
   sinon.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
   let post = postStream.store.createRecord("post", { id: 60, post_number: 60 });
@@ -266,7 +266,7 @@ test("fillGapBefore", (assert) => {
   );
 });
 
-test("toggleParticipant", (assert) => {
+test("toggleParticipant", function (assert) {
   const postStream = buildStream(1236);
   sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -289,7 +289,7 @@ test("toggleParticipant", (assert) => {
   );
 });
 
-test("streamFilters", (assert) => {
+test("streamFilters", function (assert) {
   const postStream = buildStream(1237);
   sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -318,7 +318,7 @@ test("streamFilters", (assert) => {
   );
 });
 
-test("loading", (assert) => {
+test("loading", function (assert) {
   let postStream = buildStream(1234);
   assert.ok(!postStream.get("loading"), "we're not loading by default");
 
@@ -334,7 +334,7 @@ test("loading", (assert) => {
   assert.ok(postStream.get("loading"), "we're loading if loading a filter");
 });
 
-test("nextWindow", (assert) => {
+test("nextWindow", function (assert) {
   const postStream = buildStream(1234, [
     1,
     2,
@@ -376,7 +376,7 @@ test("nextWindow", (assert) => {
   );
 });
 
-test("previousWindow", (assert) => {
+test("previousWindow", function (assert) {
   const postStream = buildStream(1234, [
     1,
     2,
@@ -418,7 +418,7 @@ test("previousWindow", (assert) => {
   );
 });
 
-test("storePost", (assert) => {
+test("storePost", function (assert) {
   const postStream = buildStream(1234),
     store = postStream.store,
     post = store.createRecord("post", {
@@ -466,7 +466,7 @@ test("storePost", (assert) => {
   assert.equal(stored, postWithoutId, "it returns the same post back");
 });
 
-test("identity map", async (assert) => {
+test("identity map", async function (assert) {
   const postStream = buildStream(1234);
   const store = postStream.store;
 
@@ -492,12 +492,12 @@ test("identity map", async (assert) => {
   assert.equal(result.objectAt(2), p3);
 });
 
-test("loadIntoIdentityMap with no data", async (assert) => {
+test("loadIntoIdentityMap with no data", async function (assert) {
   const result = await buildStream(1234).loadIntoIdentityMap([]);
   assert.equal(result.length, 0, "requesting no posts produces no posts");
 });
 
-test("loadIntoIdentityMap with post ids", async (assert) => {
+test("loadIntoIdentityMap with post ids", async function (assert) {
   const postStream = buildStream(1234);
   await postStream.loadIntoIdentityMap([10]);
 
@@ -507,7 +507,7 @@ test("loadIntoIdentityMap with post ids", async (assert) => {
   );
 });
 
-test("appendMore for megatopic", async (assert) => {
+test("appendMore for megatopic", async function (assert) {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 1, post_number: 1 });
@@ -530,7 +530,7 @@ test("appendMore for megatopic", async (assert) => {
   );
 });
 
-test("prependMore for megatopic", async (assert) => {
+test("prependMore for megatopic", async function (assert) {
   const postStream = buildStream(1234);
   const store = createStore();
   const post = store.createRecord("post", { id: 6, post_number: 6 });
@@ -553,7 +553,7 @@ test("prependMore for megatopic", async (assert) => {
   );
 });
 
-test("staging and undoing a new post", (assert) => {
+test("staging and undoing a new post", function (assert) {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
@@ -654,7 +654,7 @@ test("staging and undoing a new post", (assert) => {
   );
 });
 
-test("staging and committing a post", (assert) => {
+test("staging and committing a post", function (assert) {
   const postStream = buildStream(10101, [1]);
   const store = postStream.store;
 
@@ -733,7 +733,7 @@ test("staging and committing a post", (assert) => {
   );
 });
 
-test("loadedAllPosts when the id changes", (assert) => {
+test("loadedAllPosts when the id changes", function (assert) {
   // This can happen in a race condition between staging a post and it coming through on the
   // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
   const postStream = buildStream(10101, [1, 2]);
@@ -753,7 +753,7 @@ test("loadedAllPosts when the id changes", (assert) => {
   );
 });
 
-test("triggerRecoveredPost", async (assert) => {
+test("triggerRecoveredPost", async function (assert) {
   const postStream = buildStream(4567);
   const store = postStream.store;
 
@@ -786,7 +786,7 @@ test("triggerRecoveredPost", async (assert) => {
   );
 });
 
-test("comitting and triggerNewPostsInStream race condition", (assert) => {
+test("comitting and triggerNewPostsInStream race condition", function (assert) {
   const postStream = buildStream(4964);
   const store = postStream.store;
 
@@ -820,7 +820,7 @@ test("comitting and triggerNewPostsInStream race condition", (assert) => {
   );
 });
 
-test("triggerNewPostInStream for ignored posts", async (assert) => {
+test("triggerNewPostInStream for ignored posts", async function (assert) {
   const postStream = buildStream(280, [1]);
   const store = postStream.store;
   User.resetCurrent(
@@ -878,7 +878,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
   );
 });
 
-test("postsWithPlaceholders", async (assert) => {
+test("postsWithPlaceholders", async function (assert) {
   const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const postsWithPlaceholders = postStream.get("postsWithPlaceholders");
   const store = postStream.store;
@@ -927,7 +927,7 @@ test("postsWithPlaceholders", async (assert) => {
   assert.equal(testProxy.objectAt(3), p4);
 });
 
-test("filteredPostsCount", (assert) => {
+test("filteredPostsCount", function (assert) {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("filteredPostsCount"), 3);
@@ -939,7 +939,7 @@ test("filteredPostsCount", (assert) => {
   assert.equal(postStream.get("filteredPostsCount"), 4);
 });
 
-test("firstPostId", (assert) => {
+test("firstPostId", function (assert) {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("firstPostId"), 1);
@@ -952,7 +952,7 @@ test("firstPostId", (assert) => {
   assert.equal(postStream.get("firstPostId"), 2);
 });
 
-test("lastPostId", (assert) => {
+test("lastPostId", function (assert) {
   const postStream = buildStream(4567, [1, 3, 4]);
 
   assert.equal(postStream.get("lastPostId"), 4);
@@ -965,7 +965,7 @@ test("lastPostId", (assert) => {
   assert.equal(postStream.get("lastPostId"), 2);
 });
 
-test("progressIndexOfPostId", (assert) => {
+test("progressIndexOfPostId", function (assert) {
   const postStream = buildStream(4567, [1, 3, 4]);
   const store = createStore();
   const post = store.createRecord("post", { id: 1, post_number: 5 });

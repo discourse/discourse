@@ -12,19 +12,19 @@ import {
 
 module("lib:get-url");
 
-test("isAbsoluteURL", (assert) => {
+test("isAbsoluteURL", function (assert) {
   setupURL(null, "https://example.com", "/forum");
   assert.ok(isAbsoluteURL("https://example.com/test/thing"));
   assert.ok(!isAbsoluteURL("http://example.com/test/thing"));
   assert.ok(!isAbsoluteURL("https://discourse.org/test/thing"));
 });
 
-test("getAbsoluteURL", (assert) => {
+test("getAbsoluteURL", function (assert) {
   setupURL(null, "https://example.com", "/forum");
   assert.equal(getAbsoluteURL("/cool/path"), "https://example.com/cool/path");
 });
 
-test("withoutPrefix", (assert) => {
+test("withoutPrefix", function (assert) {
   setPrefix("/eviltrout");
   assert.equal(withoutPrefix("/eviltrout/hello"), "/hello");
   assert.equal(withoutPrefix("/eviltrout/"), "/");
@@ -41,7 +41,7 @@ test("withoutPrefix", (assert) => {
   assert.equal(withoutPrefix("/"), "/");
 });
 
-test("getURL with empty paths", (assert) => {
+test("getURL with empty paths", function (assert) {
   setupURL(null, "https://example.com", "/");
   assert.equal(getURL("/"), "/");
   assert.equal(getURL(""), "");
@@ -53,7 +53,7 @@ test("getURL with empty paths", (assert) => {
   assert.equal(getURL(""), "");
 });
 
-test("getURL on subfolder install", (assert) => {
+test("getURL on subfolder install", function (assert) {
   setupURL(null, "", "/forum");
   assert.equal(getURL("/"), "/forum/", "root url has subfolder");
   assert.equal(
@@ -81,7 +81,7 @@ test("getURL on subfolder install", (assert) => {
   );
 });
 
-test("getURLWithCDN on subfolder install with S3", (assert) => {
+test("getURLWithCDN on subfolder install with S3", function (assert) {
   setupURL(null, "", "/forum");
   setupS3CDN(
     "//test.s3-us-west-1.amazonaws.com/site",

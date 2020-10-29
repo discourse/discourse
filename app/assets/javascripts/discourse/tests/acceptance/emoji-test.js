@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Emoji", function (needs) {
   needs.user();
 
-  test("emoji is cooked properly", async (assert) => {
+  test("emoji is cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -18,7 +18,7 @@ acceptance("Emoji", function (needs) {
     );
   });
 
-  test("skin toned emoji is cooked properly", async (assert) => {
+  test("skin toned emoji is cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 

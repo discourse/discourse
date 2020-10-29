@@ -8,7 +8,7 @@ import PreloadStore from "discourse/lib/preload-store";
 acceptance("Invite Accept", function (needs) {
   needs.settings({ full_name_required: true });
 
-  test("Invite Acceptance Page", async (assert) => {
+  test("Invite Acceptance Page", async function (assert) {
     PreloadStore.store("invite_info", {
       invited_by: {
         id: 123,

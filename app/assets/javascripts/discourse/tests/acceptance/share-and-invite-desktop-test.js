@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Share and Invite modal - desktop", function (needs) {
   needs.user();
 
-  test("Topic footer button", async (assert) => {
+  test("Topic footer button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -69,7 +69,7 @@ acceptance("Share and Invite modal - desktop", function (needs) {
     );
   });
 
-  test("Post date link", async (assert) => {
+  test("Post date link", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#post_2 .post-info.post-date a");
 
@@ -80,7 +80,7 @@ acceptance("Share and Invite modal - desktop", function (needs) {
 acceptance("Share url with badges disabled - desktop", function (needs) {
   needs.user();
   needs.settings({ enable_badges: false });
-  test("topic footer button - badges disabled - desktop", async (assert) => {
+  test("topic footer button - badges disabled - desktop", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-share-and-invite");
 

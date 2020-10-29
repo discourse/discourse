@@ -3,7 +3,7 @@ import Group from "discourse/models/group";
 
 module("model:group");
 
-test("displayName", (assert) => {
+test("displayName", function (assert) {
   const group = Group.create({ name: "test", display_name: "donkey" });
 
   assert.equal(

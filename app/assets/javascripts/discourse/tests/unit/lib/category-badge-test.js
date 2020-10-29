@@ -8,11 +8,11 @@ discourseModule("lib:category-link");
 
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 
-test("categoryBadge without a category", (assert) => {
+test("categoryBadge without a category", function (assert) {
   assert.blank(categoryBadgeHTML(), "it returns no HTML");
 });
 
-test("Regular categoryBadge", (assert) => {
+test("Regular categoryBadge", function (assert) {
   const store = createStore();
   const category = store.createRecord("category", {
     name: "hello",
@@ -39,7 +39,7 @@ test("Regular categoryBadge", (assert) => {
   );
 });
 
-test("undefined color", (assert) => {
+test("undefined color", function (assert) {
   const store = createStore();
   const noColor = store.createRecord("category", { name: "hello", id: 123 });
   const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
@@ -50,7 +50,7 @@ test("undefined color", (assert) => {
   );
 });
 
-test("topic count", (assert) => {
+test("topic count", function (assert) {
   const store = createStore();
   const category = store.createRecord("category", { name: "hello", id: 123 });
 
@@ -65,7 +65,7 @@ test("topic count", (assert) => {
   );
 });
 
-test("allowUncategorized", (assert) => {
+test("allowUncategorized", function (assert) {
   const store = createStore();
   const uncategorized = store.createRecord("category", {
     name: "uncategorized",

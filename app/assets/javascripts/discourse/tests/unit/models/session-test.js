@@ -3,7 +3,7 @@ import Session from "discourse/models/session";
 
 module("model:session");
 
-test("highestSeenByTopic", (assert) => {
+test("highestSeenByTopic", function (assert) {
   const session = Session.current();
   assert.deepEqual(
     session.get("highestSeenByTopic"),

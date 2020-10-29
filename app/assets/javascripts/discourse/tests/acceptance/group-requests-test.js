@@ -83,7 +83,7 @@ acceptance("Group Requests", function (needs) {
     });
   });
 
-  test("Group Requests", async (assert) => {
+  test("Group Requests", async function (assert) {
     await visit("/g/Macdonald/requests");
 
     assert.equal(queryAll(".group-members tr").length, 2);

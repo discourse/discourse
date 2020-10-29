@@ -22,7 +22,7 @@ acceptance("Raw Plugin Outlet", function (needs) {
   needs.hooks.afterEach(() => {
     removeRawTemplate(CONNECTOR);
   });
-  test("Renders the raw plugin outlet", async (assert) => {
+  test("Renders the raw plugin outlet", async function (assert) {
     await visit("/");
     assert.ok(queryAll(".topic-lala").length > 0, "it renders the outlet");
     assert.equal(

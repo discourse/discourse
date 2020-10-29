@@ -3,7 +3,7 @@ import toMarkdown from "discourse/lib/to-markdown";
 
 module("lib:to-markdown");
 
-test("converts styles between normal words", (assert) => {
+test("converts styles between normal words", function (assert) {
   const html = `Line with <s>styles</s> <b><i>between</i></b> words.`;
   const markdown = `Line with ~~styles~~ ***between*** words.`;
   assert.equal(toMarkdown(html), markdown);
@@ -12,7 +12,7 @@ test("converts styles between normal words", (assert) => {
   assert.equal(toMarkdown("A <b>bold</b>, word"), "A **bold**, word");
 });
 
-test("converts inline nested styles", (assert) => {
+test("converts inline nested styles", function (assert) {
   let html = `<em>Italicised line with <strong>some random</strong> <b>bold</b> words.</em>`;
   let markdown = `*Italicised line with **some random** **bold** words.*`;
   assert.equal(toMarkdown(html), markdown);
@@ -24,7 +24,7 @@ test("converts inline nested styles", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts a link", (assert) => {
+test("converts a link", function (assert) {
   let html = `<a href="https://discourse.org">Discourse</a>`;
   let markdown = `[Discourse](https://discourse.org)`;
   assert.equal(toMarkdown(html), markdown);
@@ -34,7 +34,7 @@ test("converts a link", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("put raw URL instead of converting the link", (assert) => {
+test("put raw URL instead of converting the link", function (assert) {
   let url = "https://discourse.org";
   const html = () => `<a href="${url}">${url}</a>`;
 
@@ -44,11 +44,11 @@ test("put raw URL instead of converting the link", (assert) => {
   assert.equal(toMarkdown(html()), url);
 });
 
-test("skip empty link", (assert) => {
+test("skip empty link", function (assert) {
   assert.equal(toMarkdown(`<a href="https://example.com"></a>`), "");
 });
 
-test("converts heading tags", (assert) => {
+test("converts heading tags", function (assert) {
   const html = `
   <h1>Heading 1</h1>
   <h2>Heading 2</h2>
@@ -71,7 +71,7 @@ test("converts heading tags", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts ul list tag", (assert) => {
+test("converts ul list tag", function (assert) {
   let html = `
   <ul>
     <li>Item 1</li>
@@ -103,7 +103,7 @@ test("converts ul list tag", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("stripes unwanted inline tags", (assert) => {
+test("stripes unwanted inline tags", function (assert) {
   const html = `
   <p>Lorem ipsum <span>dolor sit amet, consectetur</span> <strike>elit.</strike></p>
   <p>Ut minim veniam, <label>quis nostrud</label> laboris <nisi> ut aliquip ex ea</nisi> commodo.</p>
@@ -112,7 +112,7 @@ test("stripes unwanted inline tags", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts table tags", (assert) => {
+test("converts table tags", function (assert) {
   let html = `<address>Discourse Avenue</address><b>laboris</b>
   <table>
     <thead> <tr><th>Heading 1</th><th>Head 2</th></tr> </thead>
@@ -134,7 +134,7 @@ test("converts table tags", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("replace pipes with spaces if table format not supported", (assert) => {
+test("replace pipes with spaces if table format not supported", function (assert) {
   let html = `<table>
     <thead> <tr><th>Headi<br><br>ng 1</th><th>Head 2</th></tr> </thead>
       <tbody>
@@ -160,7 +160,7 @@ test("replace pipes with spaces if table format not supported", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts img tag", (assert) => {
+test("converts img tag", function (assert) {
   const url = "https://example.com/image.png";
   const base62SHA1 = "q16M6GR110R47Z9p9Dk3PMXOJoE";
   let html = `<img src="${url}" width="100" height="50">`;
@@ -197,7 +197,7 @@ test("converts img tag", (assert) => {
   assert.equal(toMarkdown(html), `![description](${url})`);
 });
 
-test("supporting html tags by keeping them", (assert) => {
+test("supporting html tags by keeping them", function (assert) {
   let html =
     "Lorem <del>ipsum dolor</del> sit <big>amet, <ins>consectetur</ins></big>";
   let output = html;
@@ -221,7 +221,7 @@ test("supporting html tags by keeping them", (assert) => {
   assert.equal(toMarkdown(html), output);
 });
 
-test("converts code tags", (assert) => {
+test("converts code tags", function (assert) {
   let html = `Lorem ipsum dolor sit amet,
   <pre><code>var helloWorld = () => {
   alert('    hello \t\t world    ');
@@ -243,7 +243,7 @@ helloWorld();</code>consectetur.`;
   assert.equal(toMarkdown(html), output);
 });
 
-test("converts blockquote tag", (assert) => {
+test("converts blockquote tag", function (assert) {
   let html = "<blockquote>Lorem ipsum</blockquote>";
   let output = "> Lorem ipsum";
   assert.equal(toMarkdown(html), output);
@@ -259,7 +259,7 @@ test("converts blockquote tag", (assert) => {
   assert.equal(toMarkdown(html), output);
 });
 
-test("converts ol list tag", (assert) => {
+test("converts ol list tag", function (assert) {
   const html = `Testing
   <ol>
     <li>Item 1</li>
@@ -277,7 +277,7 @@ test("converts ol list tag", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts list tag from word", (assert) => {
+test("converts list tag from word", function (assert) {
   const html = `Sample<!--StartFragment-->
   <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l0 level1 lfo1'>
     <![if !supportLists]>
@@ -324,7 +324,7 @@ test("converts list tag from word", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("keeps mention/hash class", (assert) => {
+test("keeps mention/hash class", function (assert) {
   const html = `
     <p>User mention: <a class="mention" href="/u/discourse">@discourse</a></p>
     <p>Group mention: <a class="mention-group" href="/groups/discourse">@discourse-group</a></p>
@@ -337,7 +337,7 @@ test("keeps mention/hash class", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("keeps emoji and removes click count", (assert) => {
+test("keeps emoji and removes click count", function (assert) {
   const html = `
     <p>
       A <a href="http://example.com">link</a><span class="badge badge-notification clicks" title="1 click">1</span> with click count
@@ -350,7 +350,7 @@ test("keeps emoji and removes click count", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("keeps emoji syntax for custom emoji", (assert) => {
+test("keeps emoji syntax for custom emoji", function (assert) {
   const html = `
     <p>
       <img class="emoji emoji-custom" title=":custom_emoji:" src="https://d11a6trkgmumsb.cloudfront.net/images/emoji/custom_emoji" alt=":custom_emoji:" />
@@ -362,7 +362,7 @@ test("keeps emoji syntax for custom emoji", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts image lightboxes to markdown", (assert) => {
+test("converts image lightboxes to markdown", function (assert) {
   let html = `
   <a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"><div class="meta">
   <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
@@ -386,7 +386,7 @@ test("converts image lightboxes to markdown", (assert) => {
   assert.equal(toMarkdown(html), markdown);
 });
 
-test("converts quotes to markdown", (assert) => {
+test("converts quotes to markdown", function (assert) {
   let html = `
   <p>there is a quote below</p>
   <aside class="quote no-group" data-username="foo" data-post="1" data-topic="2">
@@ -413,7 +413,7 @@ there is a quote above
   assert.equal(toMarkdown(html), markdown.trim());
 });
 
-test("strips base64 image URLs", (assert) => {
+test("strips base64 image URLs", function (assert) {
   const html =
     '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAPAAA/+4AJkFkb2JlAGTAAAAAAQMAFQQDBgoNAAABywAAAgsAAAJpAAACyf/bAIQABgQEBAUEBgUFBgkGBQYJCwgGBggLDAoKCwoKDBAMDAwMDAwQDA4PEA8ODBMTFBQTExwbGxscHx8fHx8fHx8fHwEHBwcNDA0YEBAYGhURFRofHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8f/8IAEQgAEAAQAwERAAIRAQMRAf/EAJQAAQEBAAAAAAAAAAAAAAAAAAMFBwEAAwEAAAAAAAAAAAAAAAAAAAEDAhAAAQUBAQAAAAAAAAAAAAAAAgABAwQFESARAAIBAwIHAAAAAAAAAAAAAAERAgAhMRIDQWGRocEiIxIBAAAAAAAAAAAAAAAAAAAAIBMBAAMAAQQDAQAAAAAAAAAAAQARITHwQVGBYXGR4f/aAAwDAQACEQMRAAAB0UlMciEJn//aAAgBAQABBQK5bGtFn6pWi2K12wWTRkjb/9oACAECAAEFAvH/2gAIAQMAAQUCIuIJOqRndRiv/9oACAECAgY/Ah//2gAIAQMCBj8CH//aAAgBAQEGPwLWQzwHepfNbcUNfM4tUIbA9QL4AvnxTlAxacpWJReOlf/aAAgBAQMBPyHZDveuCyu4B4lz2lDKto2ca5uclPK0aoq32x8xgTSLeSgbyzT65n//2gAIAQIDAT8hlQjP/9oACAEDAwE/IaE9GcZFJ//aAAwDAQACEQMRAAAQ5F//2gAIAQEDAT8Q1oowKccI3KTdAWkPLw2ssIrwKYUzuJoUJsIHOCoG23ISlja+rU9QvCx//9oACAECAwE/EAuNIiKf/9oACAEDAwE/ECujJzHf7iwHOv5NhK+8efH50z//2Q==" />';
   assert.equal(toMarkdown(html), "[image]");

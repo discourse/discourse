@@ -92,7 +92,7 @@ module("lib:pretty-text/upload-short-url", {
   },
 });
 
-test("resolveAllShortUrls", async (assert) => {
+test("resolveAllShortUrls", async function (assert) {
   stubUrls();
   let lookup;
 
@@ -143,7 +143,7 @@ test("resolveAllShortUrls", async (assert) => {
   });
 });
 
-test("resolveAllShortUrls - href + src replaced correctly", async (assert) => {
+test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
   stubUrls();
   await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
 
@@ -166,7 +166,7 @@ test("resolveAllShortUrls - href + src replaced correctly", async (assert) => {
   );
 });
 
-test("resolveAllShortUrls - url with full origin replaced correctly", async (assert) => {
+test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
   stubUrls();
   await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
   let video = fixture().find("video").eq(1);
@@ -177,7 +177,7 @@ test("resolveAllShortUrls - url with full origin replaced correctly", async (ass
   );
 });
 
-test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async (assert) => {
+test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async function (assert) {
   stubUrls(
     null,
     [
@@ -198,7 +198,7 @@ test("resolveAllShortUrls - when secure media is enabled use the attachment full
   );
 });
 
-test("resolveAllShortUrls - scoped", async (assert) => {
+test("resolveAllShortUrls - scoped", async function (assert) {
   stubUrls();
   let lookup;
 

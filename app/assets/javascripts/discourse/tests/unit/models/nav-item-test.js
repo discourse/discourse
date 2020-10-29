@@ -17,7 +17,7 @@ module("NavItem", {
   },
 });
 
-test("href", (assert) => {
+test("href", function (assert) {
   assert.expect(2);
 
   function href(text, expected, label) {
@@ -28,7 +28,7 @@ test("href", (assert) => {
   href("categories", "/categories", "categories");
 });
 
-test("count", (assert) => {
+test("count", function (assert) {
   const navItem = createStore().createRecord("nav-item", { name: "new" });
 
   assert.equal(navItem.get("count"), 0, "it has no count by default");

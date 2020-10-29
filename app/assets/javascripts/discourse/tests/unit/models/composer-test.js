@@ -29,7 +29,7 @@ function openComposer(opts) {
   return composer;
 }
 
-test("replyLength", (assert) => {
+test("replyLength", function (assert) {
   const replyLength = function (val, expectedLength) {
     const composer = createComposer({ reply: val });
     assert.equal(composer.get("replyLength"), expectedLength);
@@ -133,7 +133,7 @@ test("missingTitleCharacters", function (assert) {
   );
 });
 
-test("replyDirty", (assert) => {
+test("replyDirty", function (assert) {
   const composer = createComposer();
   assert.ok(!composer.get("replyDirty"), "by default it's false");
 
@@ -150,7 +150,7 @@ test("replyDirty", (assert) => {
   assert.ok(composer.get("replyDirty"), "it's true when the reply changes");
 });
 
-test("appendText", (assert) => {
+test("appendText", function (assert) {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -183,7 +183,7 @@ test("appendText", (assert) => {
   assert.equal(composer.get("reply"), "c\n\nab");
 });
 
-test("prependText", (assert) => {
+test("prependText", function (assert) {
   const composer = createComposer();
 
   assert.blank(composer.get("reply"), "the reply is blank by default");
@@ -236,7 +236,7 @@ test("Title length for private messages", function (assert) {
   assert.ok(composer.get("titleLengthValid"), "in the range is okay");
 });
 
-test("Post length for private messages with non human users", (assert) => {
+test("Post length for private messages with non human users", function (assert) {
   const composer = createComposer({
     topic: EmberObject.create({ pm_with_non_human_user: true }),
   });
@@ -244,7 +244,7 @@ test("Post length for private messages with non human users", (assert) => {
   assert.equal(composer.get("minimumPostLength"), 1);
 });
 
-test("editingFirstPost", (assert) => {
+test("editingFirstPost", function (assert) {
   const composer = createComposer();
   assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
@@ -262,7 +262,7 @@ test("editingFirstPost", (assert) => {
   );
 });
 
-test("clearState", (assert) => {
+test("clearState", function (assert) {
   const composer = createComposer({
     originalText: "asdf",
     reply: "asdf2",
@@ -301,7 +301,7 @@ test("initial category when uncategorized is not allowed", function (assert) {
   );
 });
 
-test("open with a quote", (assert) => {
+test("open with a quote", function (assert) {
   const quote =
     '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
   const newComposer = function () {
@@ -397,7 +397,7 @@ test("allows featured link before choosing a category", function (assert) {
   assert.ok(composer.get("canEditTopicFeaturedLink"), "can paste link");
 });
 
-test("targetRecipientsArray contains types", (assert) => {
+test("targetRecipientsArray contains types", function (assert) {
   let composer = createComposer({
     targetRecipients: "test,codinghorror,staff,foo@bar.com",
   });

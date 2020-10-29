@@ -30,7 +30,7 @@ acceptance("Admin - Site Settings", function (needs) {
     updatedTitle = null;
   });
 
-  test("upload site setting", async (assert) => {
+  test("upload site setting", async function (assert) {
     await visit("/admin/site_settings");
 
     assert.ok(
@@ -41,7 +41,7 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
   });
 
-  test("changing value updates dirty state", async (assert) => {
+  test("changing value updates dirty state", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", " title ");
     assert.equal(count(".row.setting"), 1, "filter returns 1 site setting");
@@ -88,7 +88,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
   });
 
-  test("always shows filtered site settings if a filter is set", async (assert) => {
+  test("always shows filtered site settings if a filter is set", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", "title");
     assert.equal(count(".row.setting"), 1);
@@ -102,7 +102,7 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.equal(count(".row.setting"), 1);
   });
 
-  test("filter settings by plugin name", async (assert) => {
+  test("filter settings by plugin name", async function (assert) {
     await visit("/admin/site_settings");
 
     await fillIn("#setting-filter", "plugin:discourse-logo");
@@ -113,7 +113,7 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.equal(count(".row.setting"), 0);
   });
 
-  test("category name is preserved", async (assert) => {
+  test("category name is preserved", async function (assert) {
     await visit("admin/site_settings/category/basic?filter=menu");
     assert.equal(
       currentURL(),
@@ -121,7 +121,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
   });
 
-  test("shows all_results if current category has none", async (assert) => {
+  test("shows all_results if current category has none", async function (assert) {
     await visit("admin/site_settings");
 
     await click(".admin-nav .basic a");

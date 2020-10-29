@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Composer - Hyperlink", function (needs) {
   needs.user();
 
-  test("add a hyperlink to a reply", async (assert) => {
+  test("add a hyperlink to a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:first-child button.reply");
     await fillIn(".d-editor-input", "This is a link to ");

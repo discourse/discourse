@@ -33,7 +33,7 @@ acceptance("Composer Attachment", function (needs) {
   needs.user();
   needs.pretender(pretender);
 
-  test("attachments are cooked properly", async (assert) => {
+  test("attachments are cooked properly", async function (assert) {
     await writeInComposer(assert);
     assert.equal(
       queryAll(".d-editor-preview:visible").html().trim(),
@@ -47,7 +47,7 @@ acceptance("Composer Attachment - Secure Media Enabled", function (needs) {
   needs.settings({ secure_media: true });
   needs.pretender(pretender);
 
-  test("attachments are cooked properly when secure media is enabled", async (assert) => {
+  test("attachments are cooked properly when secure media is enabled", async function (assert) {
     await writeInComposer(assert);
     assert.equal(
       queryAll(".d-editor-preview:visible").html().trim(),

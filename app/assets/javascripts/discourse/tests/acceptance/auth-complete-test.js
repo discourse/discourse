@@ -20,7 +20,7 @@ acceptance("Auth Complete", function (needs) {
       .removeChild(document.getElementById("data-authentication"));
   });
 
-  test("when login not required", async (assert) => {
+  test("when login not required", async function (assert) {
     await visit("/");
 
     assert.equal(currentPath(), "discovery.latest", "it stays on the homepage");

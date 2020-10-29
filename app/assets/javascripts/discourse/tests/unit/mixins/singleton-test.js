@@ -4,7 +4,7 @@ import Singleton from "discourse/mixins/singleton";
 
 module("mixin:singleton");
 
-test("current", (assert) => {
+test("current", function (assert) {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
@@ -22,7 +22,7 @@ test("current", (assert) => {
   );
 });
 
-test("currentProp reading", (assert) => {
+test("currentProp reading", function (assert) {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
   var current = DummyModel.current();
@@ -39,7 +39,7 @@ test("currentProp reading", (assert) => {
   );
 });
 
-test("currentProp writing", (assert) => {
+test("currentProp writing", function (assert) {
   var DummyModel = EmberObject.extend({});
   DummyModel.reopenClass(Singleton);
 
@@ -66,7 +66,7 @@ test("currentProp writing", (assert) => {
   );
 });
 
-test("createCurrent", (assert) => {
+test("createCurrent", function (assert) {
   var Shoe = EmberObject.extend({});
   Shoe.reopenClass(Singleton, {
     createCurrent: function () {
@@ -81,7 +81,7 @@ test("createCurrent", (assert) => {
   );
 });
 
-test("createCurrent that returns null", (assert) => {
+test("createCurrent that returns null", function (assert) {
   var Missing = EmberObject.extend({});
   Missing.reopenClass(Singleton, {
     createCurrent: function () {

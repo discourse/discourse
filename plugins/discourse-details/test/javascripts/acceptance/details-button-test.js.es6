@@ -7,7 +7,7 @@ acceptance("Details Button", function (needs) {
   needs.user();
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
-  test("details button", async (assert) => {
+  test("details button", async function (assert) {
     const popupMenu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/");
@@ -107,7 +107,7 @@ acceptance("Details Button", function (needs) {
     );
   });
 
-  test("details button surrounds all selected text in a single details block", async (assert) => {
+  test("details button surrounds all selected text in a single details block", async function (assert) {
     const multilineInput = "first line\n\nsecond line\n\nthird line";
     const popupMenu = selectKit(".toolbar-popup-menu-options");
 

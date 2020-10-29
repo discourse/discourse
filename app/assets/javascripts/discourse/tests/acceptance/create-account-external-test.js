@@ -21,7 +21,7 @@ acceptance("Create Account - external auth", function (needs) {
       .removeChild(document.getElementById("data-authentication"));
   });
 
-  test("when skip is disabled (default)", async (assert) => {
+  test("when skip is disabled (default)", async function (assert) {
     await visit("/");
 
     assert.ok(

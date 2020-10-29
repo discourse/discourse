@@ -28,7 +28,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
     ],
   });
 
-  test("accept invite with user fields", async (assert) => {
+  test("accept invite with user fields", async function (assert) {
     PreloadStore.store("invite_info", {
       invited_by: {
         id: 123,

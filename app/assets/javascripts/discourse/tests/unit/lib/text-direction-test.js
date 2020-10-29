@@ -3,7 +3,7 @@ import { isRTL, isLTR } from "discourse/lib/text-direction";
 
 module("lib:text-direction");
 
-test("isRTL", (assert) => {
+test("isRTL", function (assert) {
   // Hebrew
   assert.equal(isRTL("זה מבחן"), true);
 
@@ -17,7 +17,7 @@ test("isRTL", (assert) => {
   assert.equal(isRTL(""), false);
 });
 
-test("isLTR", (assert) => {
+test("isLTR", function (assert) {
   assert.equal(isLTR("This is a test"), true);
   assert.equal(isLTR("זה מבחן"), false);
 });

@@ -18,13 +18,13 @@ var buildPost = function (args) {
   );
 };
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   var post = Post.create({ id: 1 });
   assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
   assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
 });
 
-test("new_user", (assert) => {
+test("new_user", function (assert) {
   var post = Post.create({ trust_level: 0 });
   assert.ok(post.get("new_user"), "post is from a new user");
 
@@ -32,7 +32,7 @@ test("new_user", (assert) => {
   assert.ok(!post.get("new_user"), "post is no longer from a new user");
 });
 
-test("firstPost", (assert) => {
+test("firstPost", function (assert) {
   var post = Post.create({ post_number: 1 });
   assert.ok(post.get("firstPost"), "it's the first post");
 
@@ -40,7 +40,7 @@ test("firstPost", (assert) => {
   assert.ok(!post.get("firstPost"), "post is no longer the first post");
 });
 
-test("updateFromPost", (assert) => {
+test("updateFromPost", function (assert) {
   var post = Post.create({
     post_number: 1,
     raw: "hello world",
@@ -58,7 +58,7 @@ test("updateFromPost", (assert) => {
   assert.equal(post.get("raw"), "different raw", "raw field updated");
 });
 
-test("destroy by staff", async (assert) => {
+test("destroy by staff", async function (assert) {
   let user = User.create({ username: "staff", moderator: true });
   let post = buildPost({ user: user });
 
@@ -83,7 +83,7 @@ test("destroy by staff", async (assert) => {
   );
 });
 
-test("destroy by non-staff", async (assert) => {
+test("destroy by non-staff", async function (assert) {
   const originalCooked = "this is the original cooked value";
   const user = User.create({ username: "evil trout" });
   const post = buildPost({ user: user, cooked: originalCooked });

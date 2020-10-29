@@ -13,29 +13,29 @@ acceptance("User Routes", function (needs) {
       helper.response(400, {})
     );
   });
-  test("Invalid usernames", async (assert) => {
+  test("Invalid usernames", async function (assert) {
     await visit("/u/eviltrout%2F..%2F..%2F/summary");
 
     assert.equal(currentPath(), "exception-unknown");
   });
 
-  test("Unicode usernames", async (assert) => {
+  test("Unicode usernames", async function (assert) {
     await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
 
     assert.equal(currentPath(), "user.summary");
   });
 
-  test("Invites", async (assert) => {
+  test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
     assert.ok($("body.user-invites-page").length, "has the body class");
   });
 
-  test("Messages", async (assert) => {
+  test("Messages", async function (assert) {
     await visit("/u/eviltrout/messages");
     assert.ok($("body.user-messages-page").length, "has the body class");
   });
 
-  test("Notifications", async (assert) => {
+  test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
     assert.ok($("body.user-notifications-page").length, "has the body class");
 
@@ -48,7 +48,7 @@ acceptance("User Routes", function (needs) {
     );
   });
 
-  test("Root URL - Viewing Self", async (assert) => {
+  test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-activity-page").length, "has the body class");
     assert.equal(
@@ -59,7 +59,7 @@ acceptance("User Routes", function (needs) {
     assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
   });
 
-  test("Viewing Summary", async (assert) => {
+  test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");
 
     assert.ok(exists(".replies-section li a"), "replies");
@@ -75,7 +75,7 @@ acceptance("User Routes", function (needs) {
     );
   });
 
-  test("Viewing Drafts", async (assert) => {
+  test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(exists(".user-stream"), "has drafts stream");
     assert.ok(

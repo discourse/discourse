@@ -3,7 +3,7 @@ module("service:store");
 
 import createStore from "discourse/tests/helpers/create-store";
 
-test("createRecord", (assert) => {
+test("createRecord", function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
@@ -12,7 +12,7 @@ test("createRecord", (assert) => {
   assert.equal(widget.get("id"), 111);
 });
 
-test("createRecord without an `id`", (assert) => {
+test("createRecord without an `id`", function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
@@ -20,7 +20,7 @@ test("createRecord without an `id`", (assert) => {
   assert.ok(!widget.get("id"), "there is no id");
 });
 
-test("createRecord doesn't modify the input `id` field", (assert) => {
+test("createRecord doesn't modify the input `id` field", function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 1, name: "hello" });
 
@@ -32,7 +32,7 @@ test("createRecord doesn't modify the input `id` field", (assert) => {
   assert.equal(obj.id, 1, "it does not remove the id from the input");
 });
 
-test("createRecord without attributes", (assert) => {
+test("createRecord without attributes", function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -40,7 +40,7 @@ test("createRecord without attributes", (assert) => {
   assert.ok(widget.get("isNew"), "it is a new record");
 });
 
-test("createRecord with a record as attributes returns that record from the map", (assert) => {
+test("createRecord with a record as attributes returns that record from the map", function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget", { id: 33 });
   const secondWidget = store.createRecord("widget", { id: 33 });
@@ -48,7 +48,7 @@ test("createRecord with a record as attributes returns that record from the map"
   assert.equal(widget, secondWidget, "they should be the same");
 });
 
-test("find", async (assert) => {
+test("find", async function (assert) {
   const store = createStore();
 
   const widget = await store.find("widget", 123);
@@ -63,19 +63,19 @@ test("find", async (assert) => {
   assert.equal(widget.get("extras.hello"), "world", "extra attributes are set");
 });
 
-test("find with object id", async (assert) => {
+test("find with object id", async function (assert) {
   const store = createStore();
   const widget = await store.find("widget", { id: 123 });
   assert.equal(widget.get("firstObject.name"), "Trout Lure");
 });
 
-test("find with query param", async (assert) => {
+test("find with query param", async function (assert) {
   const store = createStore();
   const widget = await store.find("widget", { name: "Trout Lure" });
   assert.equal(widget.get("firstObject.id"), 123);
 });
 
-test("findStale with no stale results", async (assert) => {
+test("findStale with no stale results", async function (assert) {
   const store = createStore();
   const stale = store.findStale("widget", { name: "Trout Lure" });
 
@@ -89,20 +89,20 @@ test("findStale with no stale results", async (assert) => {
   );
 });
 
-test("update", async (assert) => {
+test("update", async function (assert) {
   const store = createStore();
   const result = await store.update("widget", 123, { name: "hello" });
   assert.ok(result);
 });
 
-test("update with a multi world name", async (assert) => {
+test("update with a multi world name", async function (assert) {
   const store = createStore();
   const result = await store.update("cool-thing", 123, { name: "hello" });
   assert.ok(result);
   assert.equal(result.payload.name, "hello");
 });
 
-test("findAll", async (assert) => {
+test("findAll", async function (assert) {
   const store = createStore();
   const result = await store.findAll("widget");
   assert.equal(result.get("length"), 2);
@@ -112,21 +112,21 @@ test("findAll", async (assert) => {
   assert.equal(widget.get("name"), "Evil Repellant");
 });
 
-test("destroyRecord", async (assert) => {
+test("destroyRecord", async function (assert) {
   const store = createStore();
   const widget = await store.find("widget", 123);
 
   assert.ok(await store.destroyRecord("widget", widget));
 });
 
-test("destroyRecord when new", async (assert) => {
+test("destroyRecord when new", async function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget", { name: "hello" });
 
   assert.ok(await store.destroyRecord("widget", widget));
 });
 
-test("find embedded", async (assert) => {
+test("find embedded", async function (assert) {
   const store = createStore();
   const fruit = await store.find("fruit", 1);
   assert.ok(fruit.get("farmer"), "it has the embedded object");
@@ -139,7 +139,7 @@ test("find embedded", async (assert) => {
   assert.ok(fruit.get("category"), "categories are found automatically");
 });
 
-test("embedded records can be cleared", async (assert) => {
+test("embedded records can be cleared", async function (assert) {
   const store = createStore();
   let fruit = await store.find("fruit", 4);
   fruit.set("farmer", { dummy: "object" });
@@ -148,7 +148,7 @@ test("embedded records can be cleared", async (assert) => {
   assert.ok(!fruit.get("farmer"));
 });
 
-test("meta types", async (assert) => {
+test("meta types", async function (assert) {
   const store = createStore();
   const barn = await store.find("barn", 1);
   assert.equal(
@@ -158,7 +158,7 @@ test("meta types", async (assert) => {
   );
 });
 
-test("findAll embedded", async (assert) => {
+test("findAll embedded", async function (assert) {
   const store = createStore();
   const fruits = await store.findAll("fruit");
   assert.equal(fruits.objectAt(0).get("farmer.name"), "Old MacDonald");
@@ -181,7 +181,7 @@ test("findAll embedded", async (assert) => {
   assert.equal(fruits.objectAt(2).get("farmer.name"), "Luke Skywalker");
 });
 
-test("custom primaryKey", async (assert) => {
+test("custom primaryKey", async function (assert) {
   const store = createStore();
   const cats = await store.findAll("cat");
   assert.equal(cats.objectAt(0).name, "souna");

@@ -20,7 +20,7 @@ acceptance("Redirect to Top", function (needs) {
   });
   needs.user();
 
-  test("redirects categories to weekly top", async (assert) => {
+  test("redirects categories to weekly top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {
@@ -37,7 +37,7 @@ acceptance("Redirect to Top", function (needs) {
     );
   });
 
-  test("redirects latest to monthly top", async (assert) => {
+  test("redirects latest to monthly top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {
@@ -50,7 +50,7 @@ acceptance("Redirect to Top", function (needs) {
     assert.equal(currentPath(), "discovery.topMonthly", "it works for latest");
   });
 
-  test("redirects root to All top", async (assert) => {
+  test("redirects root to All top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {

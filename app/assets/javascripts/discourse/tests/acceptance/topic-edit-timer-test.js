@@ -25,7 +25,7 @@ acceptance("Topic - Edit timer", function (needs) {
     );
   });
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     updateCurrentUser({ moderator: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -40,7 +40,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(futureDateInputSelector.header().value(), null);
   });
 
-  test("autoclose - specific time", async (assert) => {
+  test("autoclose - specific time", async function (assert) {
     updateCurrentUser({ moderator: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -61,7 +61,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex.test(html));
   });
 
-  skip("autoclose", async (assert) => {
+  skip("autoclose", async function (assert) {
     updateCurrentUser({ moderator: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 
@@ -123,7 +123,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex3.test(html3));
   });
 
-  test("close temporarily", async (assert) => {
+  test("close temporarily", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -174,7 +174,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex2.test(html2));
   });
 
-  test("schedule", async (assert) => {
+  test("schedule", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const categoryChooser = selectKit(".modal-body .category-chooser");
@@ -212,7 +212,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex.test(text));
   });
 
-  test("TL4 can't auto-delete", async (assert) => {
+  test("TL4 can't auto-delete", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
 
     await visit("/t/internationalization-localization");
@@ -226,7 +226,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(!timerType.rowByValue("delete").exists());
   });
 
-  test("auto delete", async (assert) => {
+  test("auto delete", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const futureDateInputSelector = selectKit(".future-date-input-selector");
@@ -257,7 +257,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.ok(regex.test(html));
   });
 
-  test("Inline delete timer", async (assert) => {
+  test("Inline delete timer", async function (assert) {
     updateCurrentUser({ moderator: true });
     const futureDateInputSelector = selectKit(".future-date-input-selector");
 

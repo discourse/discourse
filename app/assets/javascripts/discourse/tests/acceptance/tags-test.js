@@ -10,7 +10,7 @@ import {
 acceptance("Tags", function (needs) {
   needs.user();
 
-  test("list the tags", async (assert) => {
+  test("list the tags", async function (assert) {
     await visit("/tags");
 
     assert.ok($("body.tags-page").length, "has the body class");
@@ -85,7 +85,7 @@ acceptance("Tags listed by group", function (needs) {
     );
   });
 
-  test("list the tags in groups", async (assert) => {
+  test("list the tags in groups", async function (assert) {
     await visit("/tags");
     assert.equal(
       $(".tag-list").length,
@@ -126,7 +126,7 @@ acceptance("Tags listed by group", function (needs) {
     );
   });
 
-  test("new topic button is not available for staff-only tags", async (assert) => {
+  test("new topic button is not available for staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
@@ -225,7 +225,7 @@ acceptance("Tag info", function (needs) {
     );
   });
 
-  test("tag info can show synonyms", async (assert) => {
+  test("tag info can show synonyms", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/planters");
@@ -250,7 +250,7 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#delete-tag"), "can't delete tag");
   });
 
-  test("admin can manage tags", async (assert) => {
+  test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/planters");

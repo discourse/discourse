@@ -3,7 +3,7 @@ import { test, module } from "qunit";
 
 module("lib:breakString", {});
 
-test("breakString", (assert) => {
+test("breakString", function (assert) {
   var b = function (s, hint) {
     return new BreakString(s).break(hint);
   };

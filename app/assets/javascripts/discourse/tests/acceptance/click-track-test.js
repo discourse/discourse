@@ -12,7 +12,7 @@ acceptance("Click Track", function (needs) {
     });
   });
 
-  test("Do not track mentions", async (assert) => {
+  test("Do not track mentions", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(
       queryAll(".user-card.show").length === 0,

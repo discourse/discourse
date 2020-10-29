@@ -9,7 +9,7 @@ acceptance("Review", function (needs) {
 
   const user = ".reviewable-item[data-reviewable-id=1234]";
 
-  test("It returns a list of reviewable items", async (assert) => {
+  test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
 
     assert.ok(queryAll(".reviewable-item").length, "has a list of items");
@@ -28,7 +28,7 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Grouped by topic", async (assert) => {
+  test("Grouped by topic", async function (assert) {
     await visit("/review/topics");
     assert.ok(
       queryAll(".reviewable-topic").length,
@@ -36,7 +36,7 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Settings", async (assert) => {
+  test("Settings", async function (assert) {
     await visit("/review/settings");
 
     assert.ok(
@@ -52,7 +52,7 @@ acceptance("Review", function (needs) {
     assert.ok(queryAll(".reviewable-settings .saved").length, "it saved");
   });
 
-  test("Flag related", async (assert) => {
+  test("Flag related", async function (assert) {
     await visit("/review");
 
     assert.ok(
@@ -72,7 +72,7 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Flag related", async (assert) => {
+  test("Flag related", async function (assert) {
     await visit("/review/1");
 
     assert.ok(
@@ -81,7 +81,7 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Clicking the buttons triggers actions", async (assert) => {
+  test("Clicking the buttons triggers actions", async function (assert) {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
     assert.equal(
@@ -91,7 +91,7 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Editing a reviewable", async (assert) => {
+  test("Editing a reviewable", async function (assert) {
     const topic = ".reviewable-item[data-reviewable-id=4321]";
     await visit("/review");
     assert.ok(queryAll(`${topic} .reviewable-action.approve`).length);

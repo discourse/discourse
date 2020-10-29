@@ -5,7 +5,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Message - Anonymous", function () {
-  test("accessing new-message route when logged out", async (assert) => {
+  test("accessing new-message route when logged out", async function (assert) {
     await visit(
       "/new-message?username=charlie&title=message%20title&body=message%20body"
     );
@@ -17,7 +17,7 @@ acceptance("New Message - Anonymous", function () {
 acceptance("New Message - Authenticated", function (needs) {
   needs.user();
 
-  test("accessing new-message route when logged in", async (assert) => {
+  test("accessing new-message route when logged in", async function (assert) {
     await visit(
       "/new-message?username=charlie&title=message%20title&body=message%20body"
     );

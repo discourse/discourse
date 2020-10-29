@@ -9,7 +9,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group Members - Anonymous", function () {
-  test("Viewing Members as anon user", async (assert) => {
+  test("Viewing Members as anon user", async function (assert) {
     await visit("/g/discourse");
 
     assert.ok(
@@ -34,7 +34,7 @@ acceptance("Group Members - Anonymous", function () {
 acceptance("Group Members", function (needs) {
   needs.user();
 
-  test("Viewing Members as a group owner", async (assert) => {
+  test("Viewing Members as a group owner", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/g/discourse");
@@ -47,7 +47,7 @@ acceptance("Group Members", function (needs) {
     );
   });
 
-  test("Viewing Members as an admin user", async (assert) => {
+  test("Viewing Members as an admin user", async function (assert) {
     await visit("/g/discourse");
 
     assert.ok(

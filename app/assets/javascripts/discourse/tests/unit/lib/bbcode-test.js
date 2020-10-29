@@ -3,7 +3,7 @@ import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-bl
 
 module("lib:pretty-text:bbcode");
 
-test("block with multiple quoted attributes", (assert) => {
+test("block with multiple quoted attributes", function (assert) {
   const parsed = parseBBCodeTag('[test one="foo" two="bar bar"]', 0, 30);
 
   assert.equal(parsed.tag, "test");

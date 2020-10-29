@@ -56,7 +56,7 @@ QUnit.assert.cookedPara = function (input, expected, message) {
   QUnit.assert.cooked(input, `<p>${expected}</p>`, message);
 };
 
-skip("Pending Engine fixes and spec fixes", (assert) => {
+skip("Pending Engine fixes and spec fixes", function (assert) {
   assert.cooked(
     "Derpy: http://derp.com?_test_=1",
     '<p>Derpy: <a href=https://derp.com?_test_=1"http://derp.com?_test_=1">http://derp.com?_test_=1</a></p>',
@@ -70,7 +70,7 @@ skip("Pending Engine fixes and spec fixes", (assert) => {
   );
 });
 
-test("buildOptions", (assert) => {
+test("buildOptions", function (assert) {
   assert.ok(
     buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features
       .emoji,
@@ -83,7 +83,7 @@ test("buildOptions", (assert) => {
   );
 });
 
-test("basic cooking", (assert) => {
+test("basic cooking", function (assert) {
   assert.cooked("hello", "<p>hello</p>", "surrounds text with paragraphs");
   assert.cooked("**evil**", "<p><strong>evil</strong></p>", "it bolds text.");
   assert.cooked("__bold__", "<p><strong>bold</strong></p>", "it bolds text.");
@@ -121,7 +121,7 @@ test("basic cooking", (assert) => {
   );
 });
 
-test("Nested bold and italics", (assert) => {
+test("Nested bold and italics", function (assert) {
   assert.cooked(
     "*this is italic **with some bold** inside*",
     "<p><em>this is italic <strong>with some bold</strong> inside</em></p>",
@@ -129,7 +129,7 @@ test("Nested bold and italics", (assert) => {
   );
 });
 
-test("Traditional Line Breaks", (assert) => {
+test("Traditional Line Breaks", function (assert) {
   const input = "1\n2\n3";
   assert.cooked(
     input,
@@ -143,14 +143,14 @@ test("Traditional Line Breaks", (assert) => {
   );
 });
 
-test("Unbalanced underscores", (assert) => {
+test("Unbalanced underscores", function (assert) {
   assert.cooked(
     "[evil_trout][1] hello_\n\n[1]: http://eviltrout.com",
     '<p><a href="http://eviltrout.com">evil_trout</a> hello_</p>'
   );
 });
 
-test("Line Breaks", (assert) => {
+test("Line Breaks", function (assert) {
   assert.cooked(
     "[] first choice\n[] second choice",
     "<p>[] first choice<br>\n[] second choice</p>",
@@ -174,7 +174,7 @@ test("Line Breaks", (assert) => {
   );
 });
 
-test("Paragraphs for HTML", (assert) => {
+test("Paragraphs for HTML", function (assert) {
   assert.cooked(
     "<div>hello world</div>",
     "<div>hello world</div>",
@@ -197,7 +197,7 @@ test("Paragraphs for HTML", (assert) => {
   );
 });
 
-test("Links", (assert) => {
+test("Links", function (assert) {
   assert.cooked(
     "EvilTrout: http://eviltrout.com",
     '<p>EvilTrout: <a href="http://eviltrout.com">http://eviltrout.com</a></p>',
@@ -346,7 +346,7 @@ test("Links", (assert) => {
   );
 });
 
-test("simple quotes", (assert) => {
+test("simple quotes", function (assert) {
   assert.cooked(
     "> nice!",
     "<blockquote>\n<p>nice!</p>\n</blockquote>",
@@ -395,7 +395,7 @@ eviltrout</p>
   );
 });
 
-test("Quotes", (assert) => {
+test("Quotes", function (assert) {
   assert.cookedOptions(
     '[quote="eviltrout, post: 1"]\na quote\n\nsecond line\n\nthird line\n[/quote]',
     { topicId: 2 },
@@ -456,7 +456,7 @@ test("Quotes", (assert) => {
   );
 });
 
-test("Mentions", (assert) => {
+test("Mentions", function (assert) {
   assert.cooked(
     "Hello @sam",
     '<p>Hello <span class="mention">@sam</span></p>',
@@ -597,7 +597,7 @@ test("Mentions", (assert) => {
   );
 });
 
-test("Mentions - Unicode usernames enabled", (assert) => {
+test("Mentions - Unicode usernames enabled", function (assert) {
   assert.cookedOptions(
     "Hello @狮子",
     { siteSettings: { unicode_usernames: true } },
@@ -620,7 +620,7 @@ test("Mentions - Unicode usernames enabled", (assert) => {
   );
 });
 
-test("Mentions - disabled", (assert) => {
+test("Mentions - disabled", function (assert) {
   assert.cookedOptions(
     "@eviltrout",
     { siteSettings: { enable_mentions: false } },
@@ -628,7 +628,7 @@ test("Mentions - disabled", (assert) => {
   );
 });
 
-test("Category hashtags", (assert) => {
+test("Category hashtags", function (assert) {
   const alwaysTrue = {
     categoryHashtagLookup: function () {
       return ["http://test.discourse.org/category-hashtag", "category-hashtag"];
@@ -692,7 +692,7 @@ test("Category hashtags", (assert) => {
   );
 });
 
-test("Heading", (assert) => {
+test("Heading", function (assert) {
   assert.cooked(
     "**Bold**\n----------",
     "<h2><strong>Bold</strong></h2>",
@@ -700,7 +700,7 @@ test("Heading", (assert) => {
   );
 });
 
-test("bold and italics", (assert) => {
+test("bold and italics", function (assert) {
   assert.cooked(
     'a "**hello**"',
     "<p>a &quot;<strong>hello</strong>&quot;</p>",
@@ -738,7 +738,7 @@ test("bold and italics", (assert) => {
   );
 });
 
-test("Escaping", (assert) => {
+test("Escaping", function (assert) {
   assert.cooked(
     "*\\*laughs\\**",
     "<p><em>*laughs*</em></p>",
@@ -751,7 +751,7 @@ test("Escaping", (assert) => {
   );
 });
 
-test("New Lines", (assert) => {
+test("New Lines", function (assert) {
   // historically we would not continue inline em or b across lines,
   // however commonmark gives us no switch to do so and we would be very non compliant.
   // turning softbreaks into a newline is just a renderer option, not a parser switch.
@@ -767,7 +767,7 @@ test("New Lines", (assert) => {
   );
 });
 
-test("Oneboxing", (assert) => {
+test("Oneboxing", function (assert) {
   function matches(input, regexp) {
     return new PrettyText(defaultOpts).cook(input).match(regexp);
   }
@@ -813,7 +813,7 @@ test("Oneboxing", (assert) => {
   );
 });
 
-test("links with full urls", (assert) => {
+test("links with full urls", function (assert) {
   assert.cooked(
     "[http://eviltrout.com][1] is a url\n\n[1]: http://eviltrout.com",
     '<p><a href="http://eviltrout.com">http://eviltrout.com</a> is a url</p>',
@@ -821,7 +821,7 @@ test("links with full urls", (assert) => {
   );
 });
 
-test("Code Blocks", (assert) => {
+test("Code Blocks", function (assert) {
   assert.cooked(
     "<pre>\nhello\n</pre>\n",
     "<pre>\nhello\n</pre>",
@@ -943,7 +943,7 @@ test("Code Blocks", (assert) => {
   );
 });
 
-test("URLs in BBCode tags", (assert) => {
+test("URLs in BBCode tags", function (assert) {
   assert.cooked(
     "[img]http://eviltrout.com/eviltrout.png[/img][img]http://samsaffron.com/samsaffron.png[/img]",
     '<p><img src="http://eviltrout.com/eviltrout.png" alt/><img src="http://samsaffron.com/samsaffron.png" alt/></p>',
@@ -963,7 +963,7 @@ test("URLs in BBCode tags", (assert) => {
   );
 });
 
-test("images", (assert) => {
+test("images", function (assert) {
   assert.cooked(
     "[![folksy logo](http://folksy.com/images/folksy-colour.png)](http://folksy.com/)",
     '<p><a href="http://folksy.com/"><img src="http://folksy.com/images/folksy-colour.png" alt="folksy logo"/></a></p>',
@@ -977,7 +977,7 @@ test("images", (assert) => {
   );
 });
 
-test("attachment", (assert) => {
+test("attachment", function (assert) {
   assert.cooked(
     "[test.pdf|attachment](upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf)",
     `<p><a class="attachment" href="/404" data-orig-href="upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf">test.pdf</a></p>`,
@@ -985,7 +985,7 @@ test("attachment", (assert) => {
   );
 });
 
-test("attachment - mapped url - secure media disabled", (assert) => {
+test("attachment - mapped url - secure media disabled", function (assert) {
   function lookupUploadUrls() {
     let cache = {};
     cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
@@ -1007,7 +1007,7 @@ test("attachment - mapped url - secure media disabled", (assert) => {
   );
 });
 
-test("attachment - mapped url - secure media enabled", (assert) => {
+test("attachment - mapped url - secure media enabled", function (assert) {
   function lookupUploadUrls() {
     let cache = {};
     cache["upload://o8iobpLcW3WSFvVH7YQmyGlKmGM.pdf"] = {
@@ -1029,7 +1029,7 @@ test("attachment - mapped url - secure media enabled", (assert) => {
   );
 });
 
-test("video", (assert) => {
+test("video", function (assert) {
   assert.cooked(
     "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
     `<p><div class="video-container">
@@ -1042,7 +1042,7 @@ test("video", (assert) => {
   );
 });
 
-test("video - mapped url - secure media enabled", (assert) => {
+test("video - mapped url - secure media enabled", function (assert) {
   function lookupUploadUrls() {
     let cache = {};
     cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4"] = {
@@ -1068,7 +1068,7 @@ test("video - mapped url - secure media enabled", (assert) => {
   );
 });
 
-test("audio", (assert) => {
+test("audio", function (assert) {
   assert.cooked(
     "![young americans|audio](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3)",
     `<p><audio preload="metadata" controls>
@@ -1079,7 +1079,7 @@ test("audio", (assert) => {
   );
 });
 
-test("audio - mapped url - secure media enabled", (assert) => {
+test("audio - mapped url - secure media enabled", function (assert) {
   function lookupUploadUrls() {
     let cache = {};
     cache["upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp3"] = {
@@ -1103,7 +1103,7 @@ test("audio - mapped url - secure media enabled", (assert) => {
   );
 });
 
-test("censoring", (assert) => {
+test("censoring", function (assert) {
   assert.cookedOptions(
     "Pleased to meet you, but pleeeease call me later, xyz123",
     {
@@ -1115,7 +1115,7 @@ test("censoring", (assert) => {
   // More tests in pretty_text_spec.rb
 });
 
-test("code blocks/spans hoisting", (assert) => {
+test("code blocks/spans hoisting", function (assert) {
   assert.cooked(
     "```\n\n    some code\n```",
     '<pre><code class="lang-auto">\n    some code\n</code></pre>',
@@ -1129,7 +1129,7 @@ test("code blocks/spans hoisting", (assert) => {
   );
 });
 
-test("basic bbcode", (assert) => {
+test("basic bbcode", function (assert) {
   assert.cookedPara(
     "[b]strong[/b]",
     '<span class="bbcode-b">strong</span>',
@@ -1177,7 +1177,7 @@ test("basic bbcode", (assert) => {
   );
 });
 
-test("urls", (assert) => {
+test("urls", function (assert) {
   assert.cookedPara(
     "[url]not a url[/url]",
     "not a url",
@@ -1204,7 +1204,7 @@ test("urls", (assert) => {
     "supports [url] with an embedded [img]"
   );
 });
-test("invalid bbcode", (assert) => {
+test("invalid bbcode", function (assert) {
   assert.cooked(
     "[code]I am not closed\n\nThis text exists.",
     "<p>[code]I am not closed</p>\n<p>This text exists.</p>",
@@ -1212,7 +1212,7 @@ test("invalid bbcode", (assert) => {
   );
 });
 
-test("code", (assert) => {
+test("code", function (assert) {
   assert.cooked(
     "[code]\nx++\n[/code]",
     '<pre><code class="lang-auto">x++</code></pre>',
@@ -1235,7 +1235,7 @@ test("code", (assert) => {
   );
 });
 
-test("tags with arguments", (assert) => {
+test("tags with arguments", function (assert) {
   assert.cookedPara(
     "[url=http://bettercallsaul.com]better call![/url]",
     '<a href="http://bettercallsaul.com" data-bbcode="true">better call!</a>',
@@ -1258,7 +1258,7 @@ test("tags with arguments", (assert) => {
   );
 });
 
-test("quotes", (assert) => {
+test("quotes", function (assert) {
   const post = Post.create({
     cooked: "<p><b>lorem</b> ipsum</p>",
     username: "eviltrout",
@@ -1318,7 +1318,7 @@ test("quotes", (assert) => {
   );
 });
 
-test("quoting a quote", (assert) => {
+test("quoting a quote", function (assert) {
   const post = Post.create({
     cooked: new PrettyText(defaultOpts).cook(
       '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
@@ -1340,7 +1340,7 @@ test("quoting a quote", (assert) => {
   );
 });
 
-test("quote formatting", (assert) => {
+test("quote formatting", function (assert) {
   assert.cooked(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\n[sam]\n[/quote]',
     `<aside class=\"quote no-group\" data-username=\"EvilTrout\" data-post=\"123\" data-topic=\"456\" data-full=\"true\">
@@ -1443,7 +1443,7 @@ var bar = 'bar';
   );
 });
 
-test("quotes with trailing formatting", (assert) => {
+test("quotes with trailing formatting", function (assert) {
   const result = new PrettyText(defaultOpts).cook(
     '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
   );
@@ -1462,7 +1462,7 @@ test("quotes with trailing formatting", (assert) => {
   );
 });
 
-test("enable/disable features", (assert) => {
+test("enable/disable features", function (assert) {
   assert.cookedOptions("|a|\n--\n|a|", { features: { table: false } }, "");
   assert.cooked(
     "|a|\n--\n|a|",
@@ -1483,7 +1483,7 @@ test("enable/disable features", (assert) => {
   );
 });
 
-test("emoji", (assert) => {
+test("emoji", function (assert) {
   assert.cooked(
     ":smile:",
     `<p><img src="/images/emoji/emoji_one/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:"></p>`
@@ -1498,7 +1498,7 @@ test("emoji", (assert) => {
   );
 });
 
-test("emoji - enable_inline_emoji_translation", (assert) => {
+test("emoji - enable_inline_emoji_translation", function (assert) {
   assert.cookedOptions(
     "test:smile:test",
     { siteSettings: { enable_inline_emoji_translation: false } },
@@ -1512,7 +1512,7 @@ test("emoji - enable_inline_emoji_translation", (assert) => {
   );
 });
 
-test("emoji - emojiSet", (assert) => {
+test("emoji - emojiSet", function (assert) {
   assert.cookedOptions(
     ":smile:",
     { siteSettings: { emoji_set: "twitter" } },
@@ -1520,7 +1520,7 @@ test("emoji - emojiSet", (assert) => {
   );
 });
 
-test("emoji - registerEmoji", (assert) => {
+test("emoji - registerEmoji", function (assert) {
   registerEmoji("foo", "/images/d-logo-sketch.png");
 
   assert.cookedOptions(
@@ -1538,7 +1538,7 @@ test("emoji - registerEmoji", (assert) => {
   );
 });
 
-test("extractDataAttribute", (assert) => {
+test("extractDataAttribute", function (assert) {
   assert.deepEqual(extractDataAttribute("foo="), ["data-foo", ""]);
   assert.deepEqual(extractDataAttribute("foo=bar"), ["data-foo", "bar"]);
 
@@ -1546,7 +1546,7 @@ test("extractDataAttribute", (assert) => {
   assert.notOk(extractDataAttribute("https://discourse.org/?q=hello"));
 });
 
-test("video - display placeholder when previewing", (assert) => {
+test("video - display placeholder when previewing", function (assert) {
   assert.cookedOptions(
     `![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)`,
     { previewing: true },

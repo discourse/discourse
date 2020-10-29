@@ -5,7 +5,7 @@ import I18n from "I18n";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Group - Anonymous", function () {
-  test("As an anon user", async (assert) => {
+  test("As an anon user", async function (assert) {
     await visit("/g");
 
     assert.equal(
@@ -18,7 +18,7 @@ acceptance("New Group - Anonymous", function () {
 
 acceptance("New Group - Authenticated", function (needs) {
   needs.user();
-  test("Creating a new group", async (assert) => {
+  test("Creating a new group", async function (assert) {
     await visit("/g");
     await click(".groups-header-new");
 

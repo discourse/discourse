@@ -39,7 +39,7 @@ acceptance("Admin - User Index", function (needs) {
     });
   });
 
-  test("can edit username", async (assert) => {
+  test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
     assert.equal(queryAll(".display-row.username .value").text().trim(), "sam");
@@ -60,7 +60,7 @@ acceptance("Admin - User Index", function (needs) {
     );
   });
 
-  test("will clear unsaved groups when switching user", async (assert) => {
+  test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
     assert.equal(

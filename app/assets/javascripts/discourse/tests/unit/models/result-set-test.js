@@ -4,7 +4,7 @@ module("result-set");
 import ResultSet from "discourse/models/result-set";
 import createStore from "discourse/tests/helpers/create-store";
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   const resultSet = ResultSet.create({ content: [] });
   assert.equal(resultSet.get("length"), 0);
   assert.equal(resultSet.get("totalRows"), 0);
@@ -14,7 +14,7 @@ test("defaults", (assert) => {
   assert.ok(!resultSet.get("refreshing"));
 });
 
-test("pagination support", async (assert) => {
+test("pagination support", async function (assert) {
   const store = createStore();
   const resultSet = await store.findAll("widget");
   assert.equal(resultSet.get("length"), 2);
@@ -33,7 +33,7 @@ test("pagination support", async (assert) => {
   assert.ok(!resultSet.get("canLoadMore"));
 });
 
-test("refresh support", async (assert) => {
+test("refresh support", async function (assert) {
   const store = createStore();
   const resultSet = await store.findAll("widget");
   assert.equal(

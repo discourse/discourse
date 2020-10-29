@@ -193,7 +193,7 @@ test("allows valid uploads to go through", function (assert) {
   assert.not(bootbox.alert.calledOnce);
 });
 
-test("isImage", (assert) => {
+test("isImage", function (assert) {
   ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
     var image = "image." + extension;
     assert.ok(isImage(image), image + " is recognized as an image");
@@ -271,7 +271,7 @@ function testUploadMarkdown(filename, opts = {}) {
   );
 }
 
-test("getUploadMarkdown", (assert) => {
+test("getUploadMarkdown", function (assert) {
   assert.equal(
     testUploadMarkdown("lolcat.gif"),
     "![lolcat|100x200](/uploads/123/abcdef.ext)"
@@ -298,7 +298,7 @@ test("getUploadMarkdown", (assert) => {
   );
 });
 
-test("getUploadMarkdown - replaces GUID in image alt text on iOS", (assert) => {
+test("getUploadMarkdown - replaces GUID in image alt text on iOS", function (assert) {
   assert.equal(
     testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
     "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"

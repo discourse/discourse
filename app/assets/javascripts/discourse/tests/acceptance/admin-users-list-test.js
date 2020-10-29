@@ -8,14 +8,14 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Users List", function (needs) {
   needs.user();
 
-  test("lists users", async (assert) => {
+  test("lists users", async function (assert) {
     await visit("/admin/users/list/active");
 
     assert.ok(exists(".users-list .user"));
     assert.ok(!exists(".user:eq(0) .email small"), "escapes email");
   });
 
-  test("sorts users", async (assert) => {
+  test("sorts users", async function (assert) {
     await visit("/admin/users/list/active");
 
     assert.ok(exists(".users-list .user"));
@@ -39,7 +39,7 @@ acceptance("Admin - Users List", function (needs) {
     );
   });
 
-  test("toggles email visibility", async (assert) => {
+  test("toggles email visibility", async function (assert) {
     await visit("/admin/users/list/active");
 
     assert.ok(exists(".users-list .user"));
@@ -61,7 +61,7 @@ acceptance("Admin - Users List", function (needs) {
     );
   });
 
-  test("switching tabs", async (assert) => {
+  test("switching tabs", async function (assert) {
     const activeUser = "eviltrout";
     const suspectUser = "sam";
     const activeTitle = I18n.t("admin.users.titles.active");

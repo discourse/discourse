@@ -22,7 +22,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     share_quote_buttons: "twitter|email",
   });
 
-  test("Does not show the quote share buttons by default", async (assert) => {
+  test("Does not show the quote share buttons by default", async function (assert) {
     await visit("/t/internationalization-localization/280");
     selectText("#post_5 blockquote");
     assert.ok(exists(".insert-quote"), "it shows the quote button");

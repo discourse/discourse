@@ -6,7 +6,7 @@ import User from "discourse/models/user";
 
 module("model:user-drafts");
 
-test("stream", (assert) => {
+test("stream", function (assert) {
   const user = User.create({ id: 1, username: "eviltrout" });
   const stream = user.get("userDraftsStream");
   assert.present(stream, "a user has a drafts stream by default");
@@ -14,7 +14,7 @@ test("stream", (assert) => {
   assert.blank(stream.get("content"), "no content by default");
 });
 
-test("draft", (assert) => {
+test("draft", function (assert) {
   const drafts = [
     UserDraft.create({
       draft_key: "topic_1",

@@ -4,11 +4,11 @@ import Site from "discourse/models/site";
 
 module("model:site");
 
-test("create", (assert) => {
+test("create", function (assert) {
   assert.ok(Site.create(), "it can create with no parameters");
 });
 
-test("instance", (assert) => {
+test("instance", function (assert) {
   const site = Site.current();
 
   assert.present(site, "We have a current site singleton");
@@ -26,7 +26,7 @@ test("instance", (assert) => {
   );
 });
 
-test("create categories", (assert) => {
+test("create categories", function (assert) {
   const store = createStore();
   const site = store.createRecord("site", {
     categories: [

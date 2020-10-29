@@ -5,7 +5,7 @@ import Category from "discourse/models/category";
 
 module("model:category");
 
-test("slugFor", (assert) => {
+test("slugFor", function (assert) {
   const store = createStore();
 
   const slugFor = function (cat, val, text) {
@@ -60,7 +60,7 @@ test("slugFor", (assert) => {
   );
 });
 
-test("findBySlug", (assert) => {
+test("findBySlug", function (assert) {
   assert.expect(6);
 
   const store = createStore();
@@ -124,7 +124,7 @@ test("findBySlug", (assert) => {
   sinon.restore();
 });
 
-test("findSingleBySlug", (assert) => {
+test("findSingleBySlug", function (assert) {
   assert.expect(6);
 
   const store = createStore();
@@ -186,7 +186,7 @@ test("findSingleBySlug", (assert) => {
   );
 });
 
-test("findBySlugPathWithID", (assert) => {
+test("findBySlugPathWithID", function (assert) {
   const store = createStore();
 
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
@@ -210,7 +210,7 @@ test("findBySlugPathWithID", (assert) => {
   assert.deepEqual(Category.findBySlugPathWithID("foo/baz/3"), baz);
 });
 
-test("search with category name", (assert) => {
+test("search with category name", function (assert) {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,
@@ -299,7 +299,7 @@ test("search with category name", (assert) => {
   sinon.restore();
 });
 
-test("search with category slug", (assert) => {
+test("search with category slug", function (assert) {
   const store = createStore(),
     category1 = store.createRecord("category", {
       id: 1,

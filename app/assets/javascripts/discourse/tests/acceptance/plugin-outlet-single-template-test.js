@@ -17,7 +17,7 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
     delete Ember.TEMPLATES[CONNECTOR];
   });
 
-  test("Renders a template into the outlet", async (assert) => {
+  test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok(
       queryAll(".user-profile-primary-outlet.hello").length === 1,

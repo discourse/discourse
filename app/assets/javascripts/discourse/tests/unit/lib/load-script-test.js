@@ -5,7 +5,7 @@ import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public-js-versio
 
 module("lib:load-script");
 
-skip("load with a script tag, and callbacks are only executed after script is loaded", async (assert) => {
+skip("load with a script tag, and callbacks are only executed after script is loaded", async function (assert) {
   assert.ok(
     typeof window.ace === "undefined",
     "ensures ace is not previously loaded"
@@ -20,7 +20,7 @@ skip("load with a script tag, and callbacks are only executed after script is lo
   );
 });
 
-test("works when a value is not present", (assert) => {
+test("works when a value is not present", function (assert) {
   assert.equal(
     cacheBuster("/javascripts/my-script.js"),
     "/javascripts/my-script.js"
@@ -31,7 +31,7 @@ test("works when a value is not present", (assert) => {
   );
 });
 
-test("generates URLs with version number in the query params", (assert) => {
+test("generates URLs with version number in the query params", function (assert) {
   assert.equal(
     cacheBuster("/javascripts/pikaday.js"),
     `/javascripts/${jsVersions["pikaday.js"]}`

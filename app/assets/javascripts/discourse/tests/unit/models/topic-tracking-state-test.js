@@ -229,7 +229,7 @@ test("subscribe to category", function (assert) {
   );
 });
 
-test("getSubCategoryIds", (assert) => {
+test("getSubCategoryIds", function (assert) {
   const store = createStore();
   const foo = store.createRecord("category", { id: 1, slug: "foo" });
   const bar = store.createRecord("category", {
@@ -250,7 +250,7 @@ test("getSubCategoryIds", (assert) => {
   assert.deepEqual(Array.from(state.getSubCategoryIds(3)), [3]);
 });
 
-test("countNew", (assert) => {
+test("countNew", function (assert) {
   const store = createStore();
   const foo = store.createRecord("category", {
     id: 1,

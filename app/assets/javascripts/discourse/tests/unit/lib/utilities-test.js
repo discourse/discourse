@@ -22,7 +22,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("lib:utilities");
 
-test("escapeExpression", (assert) => {
+test("escapeExpression", function (assert) {
   assert.equal(escapeExpression(">"), "&gt;", "escapes unsafe characters");
 
   assert.equal(
@@ -38,7 +38,7 @@ test("escapeExpression", (assert) => {
   );
 });
 
-test("emailValid", (assert) => {
+test("emailValid", function (assert) {
   assert.ok(
     emailValid("Bob@example.com"),
     "allows upper case in the first part of emails"
@@ -49,7 +49,7 @@ test("emailValid", (assert) => {
   );
 });
 
-test("extractDomainFromUrl", (assert) => {
+test("extractDomainFromUrl", function (assert) {
   assert.equal(
     extractDomainFromUrl("http://meta.discourse.org:443/random"),
     "meta.discourse.org",
@@ -72,7 +72,7 @@ test("extractDomainFromUrl", (assert) => {
   );
 });
 
-test("avatarUrl", (assert) => {
+test("avatarUrl", function (assert) {
   var rawSize = getRawSize;
   assert.blank(avatarUrl("", "tiny"), "no template returns blank");
   assert.equal(
@@ -95,7 +95,7 @@ var setDevicePixelRatio = function (value) {
   }
 };
 
-test("avatarImg", (assert) => {
+test("avatarImg", function (assert) {
   var oldRatio = window.devicePixelRatio;
   setDevicePixelRatio(2);
 
@@ -165,7 +165,7 @@ test("setDefaultHomepage", function (assert) {
   assert.equal(defaultHomepage(), "top");
 });
 
-test("caretRowCol", (assert) => {
+test("caretRowCol", function (assert) {
   var textarea = document.createElement("textarea");
   const content = document.createTextNode("01234\n56789\n012345");
   textarea.appendChild(content);
@@ -196,7 +196,7 @@ test("caretRowCol", (assert) => {
   document.body.removeChild(textarea);
 });
 
-test("toAsciiPrintable", (assert) => {
+test("toAsciiPrintable", function (assert) {
   const accentedString = "Créme_Brûlée!";
   const unicodeString = "談話";
 
@@ -219,7 +219,7 @@ test("toAsciiPrintable", (assert) => {
   );
 });
 
-test("slugify", (assert) => {
+test("slugify", function (assert) {
   const asciiString = "--- 0__( Some-cool Discourse Site! )__0 --- ";
   const accentedString = "Créme_Brûlée!";
   const unicodeString = "談話";
@@ -239,7 +239,7 @@ test("slugify", (assert) => {
   assert.equal(slugify(unicodeString), "", "it removes unicode characters");
 });
 
-test("fillMissingDates", (assert) => {
+test("fillMissingDates", function (assert) {
   const startDate = "2017-11-12"; // YYYY-MM-DD
   const endDate = "2017-12-12"; // YYYY-MM-DD
   const data =
@@ -252,7 +252,7 @@ test("fillMissingDates", (assert) => {
   );
 });
 
-test("inCodeBlock", (assert) => {
+test("inCodeBlock", function (assert) {
   const text =
     "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
   for (let i = 0; i < text.length; ++i) {
@@ -264,7 +264,7 @@ test("inCodeBlock", (assert) => {
   }
 });
 
-skip("inCodeBlock - runs fast", (assert) => {
+skip("inCodeBlock - runs fast", function (assert) {
   const phrase = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
   const text = `${phrase}\n\n\`\`\`\n${phrase}\n\`\`\`\n\n${phrase}\n\n\`${phrase}\n${phrase}\n\n${phrase}\n\n[code]\n${phrase}\n[/code]\n\n${phrase}\n\n    ${phrase}\n\n\`${phrase}\`\n\n${phrase}`;
 

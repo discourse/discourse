@@ -676,7 +676,7 @@ acceptance("Poll quote", function (needs) {
     });
   });
 
-  test("Quoted polls", async (assert) => {
+  test("Quoted polls", async function (assert) {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
     assert.equal(queryAll(".poll").length, 2);

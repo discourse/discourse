@@ -9,7 +9,7 @@ import sinon from "sinon";
 acceptance("Category New", function (needs) {
   needs.user();
 
-  test("Creating a new category", async (assert) => {
+  test("Creating a new category", async function (assert) {
     await visit("/new-category");
     assert.ok(queryAll(".badge-category"));
 

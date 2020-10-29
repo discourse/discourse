@@ -8,7 +8,7 @@ module("preload-store", {
   },
 });
 
-test("get", (assert) => {
+test("get", function (assert) {
   assert.blank(PreloadStore.get("joker"), "returns blank for a missing key");
   assert.equal(
     PreloadStore.get("bane"),
@@ -17,30 +17,30 @@ test("get", (assert) => {
   );
 });
 
-test("remove", (assert) => {
+test("remove", function (assert) {
   PreloadStore.remove("bane");
   assert.blank(PreloadStore.get("bane"), "removes the value if the key exists");
 });
 
-test("getAndRemove returns a promise that resolves to null", async (assert) => {
+test("getAndRemove returns a promise that resolves to null", async function (assert) {
   assert.blank(await PreloadStore.getAndRemove("joker"));
 });
 
-test("getAndRemove returns a promise that resolves to the result of the finder", async (assert) => {
+test("getAndRemove returns a promise that resolves to the result of the finder", async function (assert) {
   const finder = () => "batdance";
   const result = await PreloadStore.getAndRemove("joker", finder);
 
   assert.equal(result, "batdance");
 });
 
-test("getAndRemove returns a promise that resolves to the result of the finder's promise", async (assert) => {
+test("getAndRemove returns a promise that resolves to the result of the finder's promise", async function (assert) {
   const finder = () => Promise.resolve("hahahah");
   const result = await PreloadStore.getAndRemove("joker", finder);
 
   assert.equal(result, "hahahah");
 });
 
-test("returns a promise that rejects with the result of the finder's rejected promise", async (assert) => {
+test("returns a promise that rejects with the result of the finder's rejected promise", async function (assert) {
   const finder = () => Promise.reject("error");
 
   await PreloadStore.getAndRemove("joker", finder).catch((result) => {
@@ -48,7 +48,7 @@ test("returns a promise that rejects with the result of the finder's rejected pr
   });
 });
 
-test("returns a promise that resolves to 'evil'", async (assert) => {
+test("returns a promise that resolves to 'evil'", async function (assert) {
   const result = await PreloadStore.getAndRemove("bane");
   assert.equal(result, "evil");
 });

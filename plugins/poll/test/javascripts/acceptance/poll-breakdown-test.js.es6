@@ -58,7 +58,7 @@ acceptance("Poll breakdown", function (needs) {
     );
   });
 
-  test("Displaying the poll breakdown modal", async (assert) => {
+  test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
     assert.equal(
@@ -87,7 +87,7 @@ acceptance("Poll breakdown", function (needs) {
     );
   });
 
-  test("Changing the display mode from percentage to count", async (assert) => {
+  test("Changing the display mode from percentage to count", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
     await click(".poll-show-breakdown:first");
 

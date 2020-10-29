@@ -14,7 +14,7 @@ acceptance("CustomHTML template", function (needs) {
     delete Ember.TEMPLATES["top"];
   });
 
-  test("renders custom template", async (assert) => {
+  test("renders custom template", async function (assert) {
     await visit("/static/faq");
     assert.equal(
       queryAll("span.top-span").text(),

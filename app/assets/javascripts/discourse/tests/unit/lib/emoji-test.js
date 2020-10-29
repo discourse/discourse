@@ -131,7 +131,7 @@ test("emojiUnescape", function (assert) {
   );
 });
 
-test("Emoji search", (assert) => {
+test("Emoji search", function (assert) {
   // able to find an alias
   assert.equal(emojiSearch("+1").length, 1);
 
