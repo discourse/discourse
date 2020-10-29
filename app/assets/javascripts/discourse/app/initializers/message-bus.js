@@ -64,8 +64,9 @@ export default {
     messageBus.baseUrl =
       siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
 
+    messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
+
     if (messageBus.baseUrl !== "/") {
-      // zepto compatible, 1 param only
       messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         opts.headers["X-Shared-Session-Key"] = $(
@@ -90,7 +91,6 @@ export default {
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;
-      messageBus.enableLongPolling = true;
     }
   },
 };

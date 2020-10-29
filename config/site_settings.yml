@@ -1724,6 +1724,9 @@ developer:
   enable_long_polling:
     client: true
     default: true
+  enable_chunked_encoding:
+    client: true
+    default: true
   long_polling_interval:
     default: 25000
     max: 25000
