@@ -244,7 +244,8 @@ module Email
       stripped_media.each do |div|
         url = div['data-stripped-secure-media']
         filename = File.basename(url)
-        sha1 = filename.gsub(File.extname(filename), "")
+        filename_bare = filename.gsub(File.extname(filename), "")
+        sha1 = filename_bare.include?('_') ? filename_bare.partition('_').first : filename_bare
         upload_shas[url] = sha1
       end
       uploads = Upload.select(:original_filename, :sha1).where(sha1: upload_shas.values)
@@ -258,8 +259,17 @@ module Email
         if attachments[original_filename]
           url = attachments[original_filename].url
 
+          # refer to the onebox styles above...not ideal to copy this but we do not already
+          # have this calculated at the redaction stage, redaction must occur before we kill
+          # all the classes and replace with styles
+          style = if div['data-oneboxed']
+            "width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
+          else
+            calculate_width_and_height_style(div)
+          end
+
           div.add_next_sibling(
-            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"#{calculate_width_and_height_style(div)}\" />"
+            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"#{style}\" />"
           )
           div.remove
         end
