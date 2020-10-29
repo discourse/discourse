@@ -199,6 +199,7 @@ en:
       second_factor_cannot_be_enforced_with_sso_enabled: "You cannot enforce 2FA if SSO is enabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
+      cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
 
   activemodel:

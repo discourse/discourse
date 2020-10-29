@@ -195,6 +195,16 @@ describe SiteSettings::Validations do
       end
     end
 
+    describe "#validate_cors_origins" do
+      let(:error_message) { I18n.t("errors.site_settings.cors_origins_should_not_have_trailing_slash") }
+
+      context "when the new value has trailing slash" do
+        it "should raise an error" do
+          expect { subject.validate_cors_origins("https://www.rainbows.com/") }.to raise_error(Discourse::InvalidParameters, error_message)
+        end
+      end
+    end
+
     describe "#validate_secure_media" do
       let(:error_message) { I18n.t("errors.site_settings.secure_media_requirements") }
 

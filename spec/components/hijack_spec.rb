@@ -116,6 +116,43 @@ describe Hijack do
     expect(headers).to eq(expected)
   end
 
+  it "removes trailing slash in cors origin" do
+    GlobalSetting.stubs(:enable_cors).returns(true)
+    GlobalSetting.stubs(:cors_origin).returns("https://www.rainbows.com/")
+
+    app = lambda do |env|
+      tester = Hijack::Tester.new(env)
+      tester.hijack_test do
+        render body: "hello", status: 201
+      end
+
+      expect(tester.io.string).to include("Access-Control-Allow-Origin: https://www.rainbows.com")
+    end
+
+    env = {}
+    middleware = Discourse::Cors.new(app)
+    middleware.call(env)
+
+    # it can do pre-flight
+    env = {
+      'REQUEST_METHOD' => 'OPTIONS',
+      'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'GET'
+    }
+
+    status, headers, _body = middleware.call(env)
+
+    expect(status).to eq(200)
+
+    expected = {
+      "Access-Control-Allow-Origin" => "https://www.rainbows.com",
+      "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
+      "Access-Control-Allow-Credentials" => "true",
+      "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE"
+    }
+
+    expect(headers).to eq(expected)
+  end
+
   it "handles transfers headers" do
     tester.response.headers["Hello-World"] = "sam"
     tester.hijack_test do

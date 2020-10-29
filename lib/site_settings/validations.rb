@@ -191,6 +191,12 @@ module SiteSettings::Validations
     validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
   end
 
+  def validate_cors_origins(new_val)
+    return if new_val.blank?
+    return unless new_val.split('|').any?(/\/$/)
+    validate_error :cors_origins_should_not_have_trailing_slash
+  end
+
   private
 
   def validate_bucket_setting(setting_name, upload_bucket, backup_bucket)
