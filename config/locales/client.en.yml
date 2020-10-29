@@ -2321,9 +2321,9 @@ en:
 
       slow_mode_update:
         title: "Slow Mode"
-        select: "Duration:"
-        description: "Users will have to wait to be able to post again."
-        save: "Save"
+        select: "Users may only post in this topic once every:"
+        description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
+        save: "Enable"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"
