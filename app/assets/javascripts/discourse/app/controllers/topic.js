@@ -1296,8 +1296,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
   deleteTopic() {
     if (
-      this.model.views >
-      this.siteSettings.min_topic_view_amount_for_delete_confirmation
+      this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {
       this.deleteTopicModal();
     } else {

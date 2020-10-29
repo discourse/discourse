@@ -700,7 +700,7 @@ posting:
       ja: 3
       zh_CN: 3
       zh_TW: 3
-  min_topic_view_amount_for_delete_confirmation:
+  min_topic_views_for_delete_confirm:
     client: true
     default: 5000
   min_topic_title_length:

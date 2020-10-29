@@ -73,7 +73,7 @@ test("deleteTopic", function (assert) {
   const controller = this.subject({
     model,
     siteSettings: {
-      min_topic_view_amount_for_delete_confirmation: 5,
+      min_topic_views_for_delete_confirm: 5,
     },
     deleteTopicModal: () => {
       modalDisplayed = true;

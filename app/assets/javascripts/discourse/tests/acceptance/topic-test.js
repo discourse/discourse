@@ -217,7 +217,7 @@ acceptance("Topic", function (needs) {
   });
 
   test("Deleting a popular topic displays confirmation modal", async function (assert) {
-    this.siteSettings.min_topic_view_amount_for_delete_confirmation = 10;
+    this.siteSettings.min_topic_views_for_delete_confirm = 10;
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".widget-button.delete");
