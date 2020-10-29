@@ -1425,6 +1425,7 @@ en:
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
+    min_topic_views_for_delete_confirm: "Minimum amount of views a topic must have for a confirmation popup to appear when it gets deleted"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"

@@ -4,7 +4,7 @@ import { test } from "qunit";
 import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 function selectText(selector) {
@@ -207,6 +207,35 @@ acceptance("Topic", function (needs) {
       find("#suggested-topics .suggested-topics-title").text().trim(),
       I18n.t("suggested_topics.title")
     );
+  });
+
+  test("Deleting a topic", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".widget-button.delete");
+    await click(".toggle-admin-menu");
+    assert.ok(exists(".topic-admin-recover"), "it shows the recover button");
+  });
+
+  test("Deleting a popular topic displays confirmation modal", async function (assert) {
+    this.siteSettings.min_topic_views_for_delete_confirm = 10;
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".widget-button.delete");
+    assert.ok(
+      visible(".delete-topic-confirm-modal"),
+      "it shows the delete confirmation modal"
+    );
+
+    await click(".delete-topic-confirm-modal .btn-primary");
+    assert.ok(
+      !visible(".delete-topic-confirm-modal"),
+      "it hides the delete confirmation modal"
+    );
+    await click(".widget-button.delete");
+    await click(".delete-topic-confirm-modal .btn-danger");
+    await click(".toggle-admin-menu");
+    assert.ok(exists(".topic-admin-recover"), "it shows the recover button");
   });
 
   test("Group category moderator posts", async (assert) => {
