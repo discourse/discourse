@@ -336,7 +336,6 @@ describe SearchController do
     end
 
     it "returns a 400 error if the page parameter is invalid" do
-      # get "/search.json?page[xawesome'%22%3C/a\]=1&"
       get "/search.json?page=xawesome%27\"</a\&"
       expect(response.status).to eq(400)
     end
