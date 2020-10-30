@@ -18,6 +18,7 @@ module Jobs
       badges
       bookmarks
       category_preferences
+      queued_posts
       visits
     )
 
@@ -29,6 +30,7 @@ module Jobs
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
+      queued_posts: ['id', 'verdict', 'category_id', 'topic_id', 'post_raw', 'other_json'],
       visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
 
@@ -265,6 +267,25 @@ module Jobs
       end
     end
 
+    def queued_posts_export
+      return enum_for(:queued_posts_export) unless block_given?
+
+      # Most Reviewable fields staff-private, but post content needs to be exported.
+      ReviewableQueuedPost
+        .where(created_by: @current_user.id)
+        .each do |rev|
+
+        yield [
+          rev.id,
+          Reviewable.statuses[rev.status],
+          rev.category_id,
+          rev.topic_id,
+          rev.payload['raw'],
+          MultiJson.dump(rev.payload.slice(*queued_posts_payload_permitted_keys)),
+        ]
+      end
+    end
+
     def visits_export
       return enum_for(:visits_export) unless block_given?
 
@@ -352,6 +373,23 @@ module Jobs
       end
 
       user_archive_profile
+    end
+
+    def queued_posts_payload_permitted_keys
+      # Generated with:
+      #
+      # SELECT distinct json_object_keys(payload) from reviewables
+      # where type = 'ReviewableQueuedPost' and (payload->'old_queued_post_id') IS NULL
+      #
+      # except raw, created_topic_id, created_post_id
+      %w{
+        composer_open_duration_msecs
+        is_poll
+        reply_to_post_number
+        tags
+        title
+        typing_duration_msecs
+      }
     end
 
     def notify_user(upload, export_title)

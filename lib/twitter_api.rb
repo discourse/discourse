@@ -54,7 +54,7 @@ class TwitterApi
                 <div class='tweet-images'>
                   <div class='aspect-image-full-size' style='--aspect-ratio:#{width}/#{height};'>
                     <video class='tweet-video' #{attributes}
-                      width='#{width}' 
+                      width='#{width}'
                       height='#{height}'
                       poster='#{m['media_url_https']}'>
                       <source src='#{url}' type="video/mp4">

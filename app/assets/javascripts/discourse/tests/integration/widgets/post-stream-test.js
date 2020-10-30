@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -65,55 +66,55 @@ postStreamTest("basics", {
   },
 
   test(assert) {
-    assert.equal(find(".post-stream").length, 1);
-    assert.equal(find(".topic-post").length, 6, "renders all posts");
+    assert.equal(queryAll(".post-stream").length, 1);
+    assert.equal(queryAll(".topic-post").length, 6, "renders all posts");
 
     // look for special class bindings
     assert.equal(
-      find(".topic-post:eq(0).topic-owner").length,
+      queryAll(".topic-post:eq(0).topic-owner").length,
       1,
       "it applies the topic owner class"
     );
     assert.equal(
-      find(".topic-post:eq(0).group-trout").length,
+      queryAll(".topic-post:eq(0).group-trout").length,
       1,
       "it applies the primary group class"
     );
     assert.equal(
-      find(".topic-post:eq(0).regular").length,
+      queryAll(".topic-post:eq(0).regular").length,
       1,
       "it applies the regular class"
     );
     assert.equal(
-      find(".topic-post:eq(1).moderator").length,
+      queryAll(".topic-post:eq(1).moderator").length,
       1,
       "it applies the moderator class"
     );
     assert.equal(
-      find(".topic-post:eq(2).post-hidden").length,
+      queryAll(".topic-post:eq(2).post-hidden").length,
       1,
       "it applies the hidden class"
     );
     assert.equal(
-      find(".topic-post:eq(3).whisper").length,
+      queryAll(".topic-post:eq(3).whisper").length,
       1,
       "it applies the whisper class"
     );
     assert.equal(
-      find(".topic-post:eq(4).wiki").length,
+      queryAll(".topic-post:eq(4).wiki").length,
       1,
       "it applies the wiki class"
     );
 
     // it renders an article for the body with appropriate attributes
-    assert.equal(find("article#post_2").length, 1);
-    assert.equal(find("article[data-user-id=123]").length, 1);
-    assert.equal(find("article[data-post-id=3]").length, 1);
-    assert.equal(find("article#post_5.via-email").length, 1);
-    assert.equal(find("article#post_6.is-auto-generated").length, 1);
+    assert.equal(queryAll("article#post_2").length, 1);
+    assert.equal(queryAll("article[data-user-id=123]").length, 1);
+    assert.equal(queryAll("article[data-post-id=3]").length, 1);
+    assert.equal(queryAll("article#post_5.via-email").length, 1);
+    assert.equal(queryAll("article#post_6.is-auto-generated").length, 1);
 
     assert.equal(
-      find("article:eq(0) .main-avatar").length,
+      queryAll("article:eq(0) .main-avatar").length,
       1,
       "renders the main avatar"
     );
@@ -136,12 +137,12 @@ postStreamTest("deleted posts", {
 
   test(assert) {
     assert.equal(
-      find(".topic-post.deleted").length,
+      queryAll(".topic-post.deleted").length,
       1,
       "it applies the deleted class"
     );
     assert.equal(
-      find(".deleted-user-avatar").length,
+      queryAll(".deleted-user-avatar").length,
       1,
       "it has the trash avatar"
     );

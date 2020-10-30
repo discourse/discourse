@@ -44,8 +44,9 @@ en:
       trigger: "roll"
       invalid: |-
         I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
-      not_enough_dice: |-
-        I only have %{num_of_dice} dice. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
+      not_enough_dice:
+        one: "I only have %{count} die. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
+        other: "I only have %{count} dice. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!"
       out_of_range: |-
         Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair die is 120?
       results: |-
@@ -198,7 +199,7 @@ en:
         not_found: |-
           Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Try uploading that one next, or pasting the link in on a line by itself!
 

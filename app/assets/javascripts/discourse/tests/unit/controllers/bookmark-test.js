@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { moduleFor } from "ember-qunit";
 import { test } from "qunit";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -20,7 +21,7 @@ moduleFor("controller:bookmark", {
   },
 
   afterEach() {
-    sandbox.restore();
+    sinon.restore();
   },
 });
 
@@ -223,7 +224,7 @@ test("loadLastUsedCustomReminderDatetime does not fills the custom reminder date
 
 test("user timezone updates when the modal is shown", function (assert) {
   User.current().changeTimezone(null);
-  let stub = sandbox.stub(moment.tz, "guess").returns("Europe/Moscow");
+  let stub = sinon.stub(moment.tz, "guess").returns("Europe/Moscow");
   BookmarkController.onShow();
   assert.equal(BookmarkController.userHasTimezoneSet, true);
   assert.equal(

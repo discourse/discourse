@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
@@ -13,7 +14,11 @@ componentTest("default theme", {
 
   test(assert) {
     assert.expect(1);
-    assert.equal(find(".d-icon-check").length, 1, "shows default theme icon");
+    assert.equal(
+      queryAll(".d-icon-check").length,
+      1,
+      "shows default theme icon"
+    );
   },
 });
 
@@ -28,7 +33,11 @@ componentTest("pending updates", {
 
   test(assert) {
     assert.expect(1);
-    assert.equal(find(".d-icon-sync").length, 1, "shows pending update icon");
+    assert.equal(
+      queryAll(".d-icon-sync").length,
+      1,
+      "shows pending update icon"
+    );
   },
 });
 
@@ -47,7 +56,7 @@ componentTest("broken theme", {
   test(assert) {
     assert.expect(1);
     assert.equal(
-      find(".d-icon-exclamation-circle").length,
+      queryAll(".d-icon-exclamation-circle").length,
       1,
       "shows broken theme icon"
     );
@@ -75,7 +84,7 @@ componentTest("with children", {
   test(assert) {
     assert.expect(2);
     assert.deepEqual(
-      find(".components")
+      queryAll(".components")
         .text()
         .trim()
         .split(",")
@@ -88,7 +97,7 @@ componentTest("with children", {
       "lists the first 4 children"
     );
     assert.deepEqual(
-      find(".others-count").text().trim(),
+      queryAll(".others-count").text().trim(),
       I18n.t("admin.customize.theme.and_x_more", { count: 1 }),
       "shows count of remaining children"
     );

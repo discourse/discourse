@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test, module } from "qunit";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
@@ -212,7 +213,7 @@ test("removePosts", (assert) => {
 test("cancelFilter", (assert) => {
   const postStream = buildStream(1235);
 
-  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
+  sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
   postStream.set("summary", true);
   postStream.cancelFilter();
@@ -250,7 +251,7 @@ test("findPostIdForPostNumber", (assert) => {
 
 test("fillGapBefore", (assert) => {
   const postStream = buildStream(1234, [60]);
-  sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
+  sinon.stub(postStream, "findPostsByIds").returns(Promise.resolve([]));
   let post = postStream.store.createRecord("post", { id: 60, post_number: 60 });
   postStream.set("gaps", {
     before: { 60: [51, 52, 53, 54, 55, 56, 57, 58, 59] },
@@ -267,7 +268,7 @@ test("fillGapBefore", (assert) => {
 
 test("toggleParticipant", (assert) => {
   const postStream = buildStream(1236);
-  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
+  sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.equal(
     postStream.get("userFilters.length"),
@@ -290,7 +291,7 @@ test("toggleParticipant", (assert) => {
 
 test("streamFilters", (assert) => {
   const postStream = buildStream(1237);
-  sandbox.stub(postStream, "refresh").returns(Promise.resolve());
+  sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
   assert.deepEqual(
     postStream.get("streamFilters"),
@@ -807,7 +808,7 @@ test("comitting and triggerNewPostsInStream race condition", (assert) => {
   );
   stagedPost.set("id", 123);
 
-  sandbox.stub(postStream, "appendMore");
+  sinon.stub(postStream, "appendMore");
   postStream.triggerNewPostsInStream([123]);
   assert.equal(postStream.get("filteredPostsCount"), 1, "it added the post");
 
@@ -845,7 +846,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
     username: "ignoreduser",
   });
 
-  var stub = sandbox
+  let stub = sinon
     .stub(postStream, "findPostsByIds")
     .returns(Promise.resolve([post2]));
 
@@ -862,7 +863,7 @@ test("triggerNewPostInStream for ignored posts", async (assert) => {
   );
 
   stub.restore();
-  sandbox.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
+  sinon.stub(postStream, "findPostsByIds").returns(Promise.resolve([post3]));
 
   await postStream.triggerNewPostsInStream([102]);
   assert.equal(

@@ -4,6 +4,7 @@ import {
   moduleForWidget,
   widgetTest,
 } from "discourse/tests/helpers/widget-test";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 let requests = 0;
 
@@ -99,16 +100,17 @@ widgetTest("can vote", {
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(requests, 1);
-    assert.equal(find(".chosen").length, 1);
-    assert.equal(find(".chosen").text(), "100%yes");
-    assert.equal(find(".toggle-results").text(), "Show vote");
+    assert.equal(queryAll(".chosen").length, 1);
+    assert.equal(queryAll(".chosen").text(), "100%yes");
+    assert.equal(queryAll(".toggle-results").text(), "Show vote");
 
     await click(".toggle-results");
     assert.equal(
-      find("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']").length,
+      queryAll("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']")
+        .length,
       1
     );
-    assert.equal(find(".toggle-results").text(), "Show results");
+    assert.equal(queryAll(".toggle-results").text(), "Show results");
   },
 });
 
@@ -146,10 +148,10 @@ widgetTest("cannot vote if not member of the right group", {
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(
-      find(".poll-container .alert").text(),
+      queryAll(".poll-container .alert").text(),
       I18n.t("poll.results.groups.title", { groups: "foo" })
     );
     assert.equal(requests, 0);
-    assert.equal(find(".chosen").length, 0);
+    assert.equal(queryAll(".chosen").length, 0);
   },
 });

@@ -48,7 +48,6 @@ id:
     compile_error:
       unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
-      generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"
       file_too_big: "Berkas yang tidak dikompresi terlalu besar."
     settings_errors:
@@ -311,10 +310,7 @@ id:
     off_topic:
       title: "Diluar topik"
     spam:
-      long_form: "menandai sebagai spam"
       email_body: "%{link}\n\n%{message}"
-    inappropriate:
-      long_form: "menandai sebagai tidak pantas"
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
       email_body: "%{link}\n\n%{message}"
@@ -627,8 +623,6 @@ id:
                 label: "Pribadi"
       corporate:
         title: "Organisasi"
-      colors:
-        title: "Tema"
       homepage:
         fields:
           homepage_style:

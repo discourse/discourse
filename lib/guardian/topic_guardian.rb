@@ -219,4 +219,8 @@ module TopicGuardian
     can_perform_action_available_to_group_moderators?(topic)
   end
 
+  def affected_by_slow_mode?(topic)
+    topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
+  end
+
 end

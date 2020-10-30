@@ -41,7 +41,7 @@ export function setup(helper) {
       .concat(["auto", "nohighlight"]);
   });
 
-  helper.whiteList({
+  helper.allowList({
     custom(tag, name, value) {
       if (tag === "code" && name === "class") {
         const m = /^lang\-(.+)$/.exec(value);

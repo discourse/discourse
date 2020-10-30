@@ -1,6 +1,9 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
+import { fillIn, click } from "@ember/test-helpers";
+
 moduleForComponent("secret-value-list", { integration: true });
 
 componentTest("adding a value", {
@@ -13,7 +16,7 @@ componentTest("adding a value", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 2,
+      queryAll(".values .value").length === 2,
       "it doesn't add the value to the list if secret is missing"
     );
 
@@ -22,7 +25,7 @@ componentTest("adding a value", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 2,
+      queryAll(".values .value").length === 2,
       "it doesn't add the value to the list if key is missing"
     );
 
@@ -31,7 +34,7 @@ componentTest("adding a value", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
@@ -52,7 +55,7 @@ componentTest("adding an invalid value", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 0,
+      queryAll(".values .value").length === 0,
       "it doesn't add the value to the list of values"
     );
 
@@ -63,7 +66,7 @@ componentTest("adding an invalid value", {
     );
 
     assert.ok(
-      find(".validation-error")
+      queryAll(".validation-error")
         .html()
         .indexOf(I18n.t("admin.site_settings.secret_list.invalid_input")) > -1,
       "it shows validation error"
@@ -80,7 +83,7 @@ componentTest("removing a value", {
     await click(".values .value[data-index='0'] .remove-value-btn");
 
     assert.ok(
-      find(".values .value").length === 1,
+      queryAll(".values .value").length === 1,
       "it removes the value from the list of values"
     );
 

@@ -477,6 +477,17 @@ describe Guardian do
     let(:user) { Fabricate.build(:user) }
     let(:moderator) { Fabricate.build(:moderator) }
 
+    it 'returns true if user has sufficient trust level' do
+      SiteSetting.min_trust_level_to_allow_invite = 2
+      expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
+      expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
+    end
+
+    it 'returns false if user trust level does not have sufficient trust level' do
+      SiteSetting.min_trust_level_to_allow_invite = 2
+      expect(Guardian.new(trust_level_1).can_invite_to_forum?).to be_falsey
+    end
+
     it "doesn't allow anonymous users to invite" do
       expect(Guardian.new.can_invite_to_forum?).to be_falsey
     end
@@ -532,6 +543,10 @@ describe Guardian do
   describe 'can_invite_to?' do
 
     describe "regular topics" do
+      before do
+        SiteSetting.min_trust_level_to_allow_invite = 2
+        user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+      end
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic) { Fabricate(:topic) }
       fab!(:private_topic) { Fabricate(:topic, category: category) }
@@ -544,7 +559,7 @@ describe Guardian do
         expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(nil)).to be_falsey
         expect(Guardian.new(moderator).can_invite_to?(topic)).to be_truthy
-        expect(Guardian.new(user).can_invite_to?(topic)).to be_falsey
+        expect(Guardian.new(trust_level_1).can_invite_to?(topic)).to be_falsey
 
         SiteSetting.max_invites_per_day = 0
 
@@ -611,6 +626,7 @@ describe Guardian do
 
     describe "private messages" do
       fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       context "when private messages are disabled" do
@@ -627,6 +643,23 @@ describe Guardian do
 
         it "doesn't allow a regular user to invite" do
           expect(Guardian.new(admin).can_invite_to?(pm)).to be_truthy
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
+        end
+      end
+
+      context "when private messages are enabled" do
+        before do
+          SiteSetting.enable_personal_messages = true
+          SiteSetting.min_trust_level_to_allow_invite = 2
+        end
+
+        it "returns true if user has sufficient trust level" do
+          user.trust_level = 2
+          expect(Guardian.new(user).can_invite_to?(pm)).to be_truthy
+        end
+
+        it "returns false if user has sufficient trust level" do
+          user.trust_level = 1
           expect(Guardian.new(user).can_invite_to?(pm)).to be_falsey
         end
       end
@@ -1355,7 +1388,7 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it 'returns false as a TL4 user if trusted_users_can_edit_others is true' do
+      it 'returns false as a TL4 user if trusted_users_can_edit_others is false' do
         SiteSetting.trusted_users_can_edit_others = false
         expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
       end
@@ -1403,6 +1436,24 @@ describe Guardian do
         post.user.trust_level = 1
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      context 'category group moderation is enabled' do
+        fab!(:cat_mod_user) { Fabricate(:user) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          GroupUser.create!(group_id: group.id, user_id: cat_mod_user.id)
+          post.topic.category.update!(reviewable_by_group_id: group.id)
+        end
+
+        it 'returns true as a category group moderator user' do
+          expect(Guardian.new(cat_mod_user).can_edit?(post)).to eq(true)
+        end
+
+        it 'returns false for a regular user' do
+          expect(Guardian.new(another_user).can_edit?(post)).to eq(false)
+        end
       end
 
       describe 'post edit time limits' do

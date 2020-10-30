@@ -194,3 +194,29 @@ componentTest("filter works with non english characters", {
     assert.equal(this.subject.rowByIndex(0).name(), "chữ Quốc ngữ");
   },
 });
+
+componentTest("decodes entities in row title", {
+  template: `
+    {{category-chooser
+      value=value
+      content=content
+    }}
+  `,
+
+  beforeEach() {
+    const store = createStore();
+    const catWithEntities = store.createRecord("category", {
+      id: 1,
+      name: "cat-with-entities",
+      description: "baz &quot;bar ‘foo’",
+    });
+
+    this.set("content", [catWithEntities]);
+  },
+
+  async test(assert) {
+    await this.subject.expand();
+
+    assert.equal(this.subject.rowByIndex(0).el()[0].title, 'baz "bar ‘foo’');
+  },
+});

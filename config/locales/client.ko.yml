@@ -136,7 +136,8 @@ ko:
     topic_admin_menu: "글 관리"
     wizard_required: "새로운 Discourse에 오신것을 환영합니다! <a href='%{url}' data-auto-route='true'>설치 마법사</a>로 시작합니다 ✨"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화 되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
-    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{min_users}명의 사용자가 가입하면 자동으로 해제됩니다."
+    bootstrap_mode_enabled:
+      other: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 회원 레벨 1이 부여되고 이메일로 매일 요약 전송이 활성화됩니다. %{count}명의 사용자가 가입하면 자동으로 해제됩니다."
     bootstrap_mode_disabled: "Bootstrap 모드가 24시간 이내에 해제됩니다."
     themes:
       default_description: "기본"
@@ -264,6 +265,7 @@ ko:
         next_business_day: "다음 영업일"
         tomorrow: "내일"
         next_week: "다음 주"
+        post_local_date: "게시물의 날짜"
         later_this_week: "이번 주말"
         start_of_next_business_week: "월요일"
         start_of_next_business_week_alt: "다음주 월요일"
@@ -295,6 +297,7 @@ ko:
       other: "%{count}개의 새로운 글 보기"
     preview: "미리보기"
     cancel: "취소"
+    deleting: "삭제 중..."
     save: "변경사항 저장"
     saving: "저장하는 중..."
     saved: "저장되었습니다!"
@@ -739,7 +742,7 @@ ko:
         other: "지난주 %{count}개의 새 글이 있습니다."
       topic_stat_sentence_month:
         other: "지난달 %{count}개의 새 글이 있습니다."
-      n_more: "카테고리 (%{count}개 더보기) ..."
+      n_more: "카테고리 (%{count}개 더보기)..."
     ip_lookup:
       title: IP 주소 조회
       hostname: 호스트 이름
@@ -824,8 +827,8 @@ ko:
         enable: "알림 활성화"
         each_browser_note: "참고: 사용하는 모든 브라우저에서 이 설정을 변경해야 합니다."
         consent_prompt: "내 글에 댓글이 달리면 실시간으로 알림을 받으시겠습니까?"
-      dismiss: "해지"
-      dismiss_notifications: "모두 해지"
+      dismiss: "읽음"
+      dismiss_notifications: "모두 읽음"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       first_notification: "첫 번째 알림! 시작하려면 선택하세요."
       dynamic_favicon: "브라우저 아이콘에 수 표시"
@@ -861,7 +864,7 @@ ko:
       suspended_notice: "이 회원은 %{date}까지 접근 금지 되었습니다."
       suspended_permanently: "이 회원은 일시정지 되었습니다."
       suspended_reason: "이유: "
-      github_profile: "Github"
+      github_profile: "GitHub"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
         label: "메일링 리스트 모드"
@@ -959,19 +962,21 @@ ko:
         choose_new: "새 비밀번호를 입력하세요"
         choose: "비밀번호를 입력하세요"
       second_factor_backup:
-        title: "2 단계 백업 코드"
+        title: "2단계 백업 코드"
         regenerate: "재생성"
         disable: "비활성"
         enable: "활성화"
         enable_long: "백업 코드 사용"
-        manage: "백업 코드를 관리합니다. <strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
+        manage:
+          other: "백업 코드를 관리합니다. <strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         copy_to_clipboard: "클립 보드에 복사"
         copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
         copied_to_clipboard: "클립보드에 복사됨"
         download_backup_codes: "백업 코드 다운로드"
-        remaining_codes: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
+        remaining_codes:
+          other: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         use: "백업 코드 사용"
-        enable_prerequisites: "백업 코드를 생성하기 전에 기본 두 번째 요소를 활성화해야합니다."
+        enable_prerequisites: "백업 코드를 생성하기 전에 기본 2단계 방법을 활성화해야 합니다."
         codes:
           title: "생성된 백업 코드"
           description: "이 백업 코드는 한 번만 사용할 수 있습니다. 안전한 곳에 보관하십시오."
@@ -991,16 +996,16 @@ ko:
         short_description: |
           일회용 보안 코드로 계정을 보호하십시오.
         extended_description: |
-          2단계 인증은 비밀번호 외에 일회용 토큰을 요구하여 계정에 추가 보안을 추가합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 장치에서 생성 할 수 있습니다.
+          이중 인증은 암호 외에 일회성 토큰을 요구하여 계정에 보안을 강화합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>안드로이드</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 장치에서 생성 될 수 있습니다.
         oauth_enabled_warning: "계정에서 2단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
         use: "Authenticator 앱 사용"
-        enforced_notice: "이 사이트에 액세스하기 전에 2단계 인증을 활성화해야 합니다."
+        enforced_notice: "이 사이트에 접근하려면 2단계 인증을 활성화해야합니다."
         disable: "해제"
-        disable_confirm: "두 번째 요소 방법을 모두 비활성화 하시겠습니까?"
+        disable_confirm: "모든 2단계 인증을 비활성화 하시겠습니까?"
         save: "저장"
         edit: "편집"
-        edit_title: "두 번째 요소 편집"
-        edit_description: "두 번째 요인 이름"
+        edit_title: "인증자 편집"
+        edit_description: "인증자 명칭"
         enable_security_key_description: |
           <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">하드웨어 보안 키</a>가 준비되었다면 아래의 등록 버튼을 누르십시오.
         totp:
@@ -1073,6 +1078,7 @@ ko:
         sso_override_instructions: "SSO 제공 업체에서 이메일을 업데이트 할 수 있습니다."
         no_secondary: "보조 이메일이 없습니다"
         instructions: "다른 사용자에게 공개되지 않습니다."
+        admin_note: "참고 : 관리자가 아닌 다른 사용자의 이메일을 변경하는 관리자는 사용자가 원래 이메일 계정에 액세스할 수 없음을 나타내므로 비밀번호 재설정 이메일이 새 주소로 전송됩니다. 사용자의 이메일은 비밀번호 재설정 프로세스를 완료할 때까지 변경되지 않습니다."
         ok: "확인을 위해 이메일을 보내드립니다."
         required: "이메일 주소를 입력하십시오"
         invalid: "유효한 이메일 주소를 입력하십시오."
@@ -1121,10 +1127,8 @@ ko:
         instructions: "계정을 등록하려면 초대 코드가 필요합니다."
       auth_tokens:
         title: "최근에 사용한 장치"
-        ip: "IP"
         details: "세부 정보"
         log_out_all: "모두 로그아웃"
-        active: "지금 사용"
         not_you: "사용자님이 아닌가요?"
         show_all: "모두 보기 (%{count})"
         show_few: "간략히 보기"
@@ -1133,6 +1137,9 @@ ko:
         browser_and_device: "%{device}의 %{browser}"
         secure_account: "내 계정 보안"
         latest_post: "마지막 작성…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">현재 사용</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "마지막 글"
       last_emailed: "마지막 이메일"
       last_seen: "마지막 접속"
@@ -1247,8 +1254,8 @@ ko:
         generate_link: "초대 링크 복사"
         link_generated: "초대 링크가 성공적으로 생성되었습니다!"
         valid_for: "초대 링크는 다음 이메일 주소에만 유효합니다: %{email}"
-        single_user: "단일 사용자"
-        multiple_user: "여러 사용자"
+        single_user: "이메일로 초대"
+        multiple_user: "링크로 초대"
         invite_link:
           title: "초대 링크"
           success: "초대 링크가 성공적으로 생성되었습니다!"
@@ -1412,10 +1419,10 @@ ko:
       disable: "삭제된 게시물 표시"
     private_message_info:
       title: "메시지"
-      invite: "다른 사람 초대 ..."
-      edit: "추가 또는 제거 ..."
-      remove: "제거 ..."
-      add: "추가 ..."
+      invite: "다른 사람 초대..."
+      edit: "추가 또는 제거..."
+      remove: "제거..."
+      add: "추가..."
       leave_message: "정말 이 메시지를 남기시겠습니까?"
       remove_allowed_user: "%{name}에게서 온 메시지를 삭제할까요?"
       remove_allowed_group: "%{name}에게서 온 메시지를 삭제할까요?"
@@ -1488,10 +1495,10 @@ ko:
       awaiting_approval: "사용자님의 계정은 아직 관리자의 승인이 처리되지 않았습니다. 승인되면 이메일이 전송됩니다."
       requires_invite: "죄송합니다. 이 포럼에 대한 접근은 초대를 통해서만 가능합니다."
       not_activated: "아직 로그인 할 수 없습니다. 이전에 활성화 이메일을 <b>%{sentTo}</b>로 보냈습니다. 해당 이메일의 지침에 따라 계정을 활성화하십시오."
-      not_allowed_from_ip_address: "해당 IP 주소에서는 로그인 할 수 없습니다."
+      not_allowed_from_ip_address: "해당 IP 주소로는 로그인 할 수 없습니다."
       admin_not_allowed_from_ip_address: "해당 IP 주소에서는 관리자로 로그인 할 수 없습니다."
       resend_activation_email: "활성화 이메일을 다시 보내려면 여기를 클릭하십시오."
-      omniauth_disallow_totp: "계정에 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인 하십시오."
+      omniauth_disallow_totp: "계정의 2단계 인증이 활성화되어 있습니다. 비밀번호로 로그인하세요."
       resend_title: "활성화 이메일 다시 보내기"
       change_email: "이메일 주소 변경"
       provide_new_email: "새 주소를 입력하면 확인 이메일이 다시 전송됩니다."
@@ -1500,7 +1507,6 @@ ko:
       sent_activation_email_again_generic: "다른 활성화 이메일을 보냈습니다. 도착하는 데 몇 분이 걸릴 수 있습니다. 스팸 폴더를 확인하십시오."
       to_continue: "로그인 해주세요"
       preferences: "사용자 기본 설정을 변경하려면 로그인해야 합니다."
-      forgot: "내 계정 정보가 기억 나지 않습니다."
       not_approved: "계정이 아직 승인되지 않았습니다. 승인 되면 이메일로 알림을 받게 됩니다."
       google_oauth2:
         name: "구글"
@@ -1560,7 +1566,8 @@ ko:
     conditional_loading_section:
       loading: 로드 중...
     category_row:
-      topic_count: "이 카테고리에는 %{count}개의 글이 있습니다"
+      topic_count:
+        other: "이 카테고리에는 %{count}개의 글이 있습니다"
     select_kit:
       default_header_text: 선택...
       no_content: 일치하는 항목을 찾을 수 없음
@@ -1571,7 +1578,8 @@ ko:
         other: "%{count}개 항목만 선택할 수 있습니다."
       min_content_not_reached:
         other: "항목을 %{count}개 이상 선택하세요."
-      invalid_selection_length: "선택은 %{count}자 이상이어야 합니다."
+      invalid_selection_length:
+        other: "선택은 %{count}글자 이상이어야 합니다."
       components:
         categories_admin_dropdown:
           title: "카테고리 관리"
@@ -1621,7 +1629,6 @@ ko:
       similar_topics: "작성하려는 내용과 비슷한 글들..."
       drafts_offline: "오프라인 초안"
       edit_conflict: "충돌 편집"
-      group_mentioned_limit: "<b>경고!</b> <a href='%{group_link}'>%{group}을</a> 언급했지만이 그룹에는 관리자가 구성한 언급 한도 %{max} 사용자보다 많은 구성원이 있습니다. 아무도 알림을받지 않습니다."
       group_mentioned:
         other: "%{group}을 언급하면, <a href='%{group_link}'>%{count}명</a>의 회원에게 알림이 전송됩니다. 그렇게 하시겠습니까?"
       cannot_see_mention:
@@ -1637,7 +1644,8 @@ ko:
         post_length: "글은 최소 %{min}글자 이상이어야 합니다."
         try_like: "%{heart} 버튼을 사용해 보셨습니까?"
         category_missing: "카테고리를 선택해주세요."
-        tags_missing: "최소한 %{count}개의 태그를 선택해야합니다."
+        tags_missing:
+          other: "최소한 %{count}개의 태그를 선택해야 합니다."
         topic_template_not_modified: "글 템플릿을 편집하여 글에 세부 정보와 세부 사항을 추가하십시오."
       save_edit: "편집 저장"
       overwrite_edit: "덮어 쓰기 편집"
@@ -1704,6 +1712,10 @@ ko:
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
         body: "지금 이 메시지는 자신에게만 전송됩니다!"
+      slow_mode:
+        title: "이 항목은 느린 모드입니다."
+        body: "글 작성후 다시 글을 작성 하려면 %{duration}을 기다려야합니다."
+        error: "저속 모드에서 최근 이 글을 게시했습니다. 다른 사용자가 참여할 수 있도록 잠시 기다려 주십시오."
       admin_options_title: "이 글에 대한 옵션 설정"
       composer_actions:
         reply: 댓글
@@ -1774,7 +1786,6 @@ ko:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>새 글</span> %{description}"
       membership_request_accepted: "'%{group_name}'에 회원 가입"
-      membership_request_consolidated: "'%{group_name}'에 대한 %{count}건의 회원 가입 요청"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - 완료됨"
@@ -1847,7 +1858,6 @@ ko:
       full_page_title: "글 또는 댓글 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
-      searching: "검색 중..."
       post_format: "%{username}님의 글 #%{post_number}"
       results_page: "'%{term}'에 대한 검색 결과"
       more_results: "검색 결과가 많습니다. 검색 조건을 좁혀보세요."
@@ -1856,7 +1866,6 @@ ko:
       or_search_google: "혹은 구글에서 검색해볼 수도 있습니다."
       search_google: "대신 구글에서 검색해보세요."
       search_google_button: "구글"
-      search_google_title: "이 사이트에서 검색"
       context:
         user: "@%{username}님의 글 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -1932,9 +1941,9 @@ ko:
         relist_topics: "목록에서 글 다시 보이기"
         reset_read: "읽기 초기화"
         delete: "글 삭제"
-        dismiss: "해지"
-        dismiss_read: "읽지 않은 모든 항목 닫기"
-        dismiss_button: "해지..."
+        dismiss: "읽음"
+        dismiss_read: "읽지 않은 항목 모두 읽음"
+        dismiss_button: "읽음..."
         dismiss_tooltip: "새 게시물만 닫거나 글 팔로우 중지"
         also_dismiss_topics: "이 글 팔로우를 중지하여 다시 읽지 않은 것으로 표시되지 않도록합니다."
         dismiss_new: "새글 제거"
@@ -1964,7 +1973,7 @@ ko:
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
         educate:
-          new: '<p>새로운 글은 여기에 나타납니다.</p><p>기본적으로 지난 2일 이내에 생성 된 경우 새 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 로 표시됩니다.</p><p>이를 변경하려면 <a href="%{userPrefsUrl}">환경 설정</a> 에서 변경 하십시오.</p>'
+          new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 글은 새로운 글로 간주되며 지난 2일 이내에 작성 된 경우 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이것은 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 가능합니다.</p>'
           unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>글 만들기</li><li>글에 댓글달기</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
@@ -2044,6 +2053,22 @@ ko:
       jump_reply_up: 이전 답글로 이동
       jump_reply_down: 이후 답글로 이동
       deleted: "글이 삭제되었습니다."
+      slow_mode_update:
+        title: "느린 모드"
+        save: "활성화"
+        remove: "비활성화"
+        hours: "시간:"
+        minutes: "분:"
+        seconds: "초:"
+        durations:
+          15_minutes: "15분"
+          1_hour: "1시간"
+          4_hours: "4시간"
+          1_day: "1일"
+          1_week: "1주"
+          custom: "사용자 지정 기간"
+      slow_mode_notice:
+        duration: "이 글에 댓글을 작성하려면 %{duration}을 기다려야합니다."
       topic_status_update:
         title: "글 타이머"
         save: "타이머 설정"
@@ -2081,26 +2106,26 @@ ko:
         title: "임시로 닫기"
       auto_close:
         title: "글 자동 잠금"
-        label: "토픽이 자동으로 열린 후 지난 시간:"
+        label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하십시오."
         based_on_last_post: "글의 마지막 게시물이 이보다 오래 될 때까지 닫지 마십시오."
       auto_delete:
-        title: "자동 삭제 글"
+        title: "글 자동 삭제"
       auto_bump:
         title: "자동 끌어올림 글"
       reminder:
         title: "알림"
       auto_delete_replies:
-        title: "답글 자동 삭제"
+        title: "댓글 자동 삭제"
       status_update_notice:
-        auto_open: "이 글은 %{timeLeft}후에 자동으로 열립니다."
+        auto_open: "이 글은 %{timeLeft}에 자동으로 열립니다."
         auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
         auto_close_based_on_last_post: "이 글은 마지막 댓글이 달린 %{duration} 후 닫힙니다."
-        auto_delete: "이 글은 %{timeLeft}후에 자동으로 삭제됩니다."
+        auto_delete: "이 글은 %{timeLeft}에 자동으로 삭제됩니다."
         auto_bump: "이 글은 %{timeLeft}에 자동으로 끌어올려 집니다."
         auto_reminder: "%{timeLeft}후에 이 글을 다시 알려드리겠습니다."
-        auto_delete_replies: "이 글에 대한 댓글은 %{duration}후에 자동으로 삭제됩니다."
+        auto_delete_replies: "이 글에 대한 댓글은 %{duration}에 자동으로 삭제됩니다."
       auto_close_title: "자동 닫기 설정"
       auto_close_immediate:
         other: "글의 마지막 게시물은 이미 %{count}시간이 지났으므로 해당 글은 즉시 닫힙니다."
@@ -2172,6 +2197,7 @@ ko:
         open: "글 열기"
         close: "글 닫기"
         multi_select: "게시물 선택…"
+        slow_mode: "느린 모드 설정"
         timed_update: "글 타이머 설정..."
         pin: "글 고정..."
         unpin: "글 고정 해제..."
@@ -2212,7 +2238,6 @@ ko:
       feature_topic:
         title: "주요 주제로 설정"
         pin: " %{categoryLink} 카테고리 주제 목록 상단에 고정 until"
-        confirm_pin: "이미 %{count}개의 고정된 주제가 있습니다. 너무 많은 주제가 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 주제를 고정하시겠습니까?"
         unpin: "이 주제를 %{categoryLink} 카테고리 상단에서 제거 합니다."
         unpin_until: "%{categoryLink} 카테고리 주제 목록 상단에서 이 주제를 제거하거나 <strong>%{until}</strong>까지 기다림."
         pin_note: "개별적으로 사용자가 주제 고정을 취소할 수 있습니다."
@@ -2221,7 +2246,6 @@ ko:
         already_pinned:
           other: "%{categoryLink}에 고정된 주제 개수: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "모든 주제 목록 상단 고정 until"
-        confirm_pin_globally: "이미 %{count}개의 주제가 전체 공지로 고정되어 있습니다. 너무 많은 주제가 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 주제를 전체 공지로 고정하겠습니까?"
         unpin_globally: "모든 주제 목록 상단에서 이 주제를 제거"
         unpin_globally_until: "모든 주제 목록 상단에서 이 주제를 제거하거나 <strong>%{until}</strong>까지 기다림."
         global_pin_note: "개별적으로 사용자가 주제 고정을 취소할 수 있습니다."
@@ -2396,7 +2420,8 @@ ko:
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         file_too_large: "해당 파일이 너무 큽니다 (최대 크기는 %{max_size_kb}kb 임). 대용량 파일을 클라우드 공유 서비스에 업로드 한 다음 링크를 붙여 넣어보십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
-        too_many_dragged_and_dropped_files: "죄송합니다. 한 번에 %{max} 파일 만 업로드 할 수 있습니다."
+        too_many_dragged_and_dropped_files:
+          other: "죄송합니다. 한 번에 %{count}개의 파일만 업로드 할 수 있습니다."
         upload_not_authorized: "죄송합니다. 허가되지 않은 확장자의 파일이 있습니다. (허가된 확장자: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
@@ -2452,6 +2477,10 @@ ko:
         unlock_post_description: "작성자가 글을 수정하도록 허용"
         delete_topic_disallowed_modal: "이 주제를 삭제할 권한이 없습니다. 실제로 삭제하려면 추론과 함께 중재자주의 플래그를 제출하십시오."
         delete_topic_disallowed: "이 글을 삭제할 수있는 권한이 없습니다"
+        delete_topic_confirm_modal: "이 글은 현재 조회수가 %{minViews}회 이상이며 인기 검색 대상 일 수 있습니다. 이 주제를 개선하기 위해 편집하는 대신 완전히 삭제 하시겠습니까?"
+        delete_topic_confirm_modal_yes: "예, 이 글을 삭제합니다."
+        delete_topic_confirm_modal_no: "아니요, 이 글을 유지합니다."
+        delete_topic_error: "이 항목을 삭제하는 동안 오류가 발생했습니다."
         delete_topic: "글 삭제"
         add_post_notice: "직원 공지 사항 추가"
         remove_post_notice: "직원 통지 제거"
@@ -2534,6 +2563,7 @@ ko:
       edit: "수정"
       edit_dialog_title: "편집 : %{categoryName}"
       view: "카테고리 안의 주제 보기"
+      back: "카테고리로 돌아 가기"
       general: "일반"
       settings: "설정"
       topic_template: "주제 템플릿"
@@ -2543,7 +2573,7 @@ ko:
       tags_placeholder: "(선택사항) 허용된 태그 목록"
       tags_tab_description: "위에 지정된 태그 및 태그 그룹은 현재 카테고리 및 태그가 지정된 카테고리에서만 사용할 수 있습니다. 그외 카테고리에서는 사용할 수 없습니다."
       tag_groups_placeholder: "(선택사항) 허용된 태그 그룹 목록"
-      manage_tag_groups_link: "여기에서 태그 그룹을 관리합니다."
+      manage_tag_groups_link: "태그 그룹 관리"
       allow_global_tags_label: "다른 태그도 허용"
       tag_group_selector_placeholder: "(선택 사항) 태그 그룹"
       required_tag_group_description: "새 글은 태그 그룹의 태그를 포함:"
@@ -2554,7 +2584,7 @@ ko:
       create: "새 카테고리"
       create_long: "새 카테고리 만들기"
       save: "카테고리 저장"
-      slug: "카테고리 Slug"
+      slug: "카테고리 영문 고유명"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
@@ -2585,31 +2615,31 @@ ko:
       email_in_disabled: "이메일로 새 주제 작성하기 기능이 비활성화되어 있습니다. 사이트 설정에서 '이메일로 새 주제 작성하기'를 활성화 해주세요."
       email_in_disabled_click: '"email in" 활성화'
       mailinglist_mirror: "카테고리는 메일 링리스트를 반영"
-      show_subcategory_list: "하위 카테고리 목록을 토픽위에 표시하기."
-      read_only_banner: "사용자가이 카테고리에서 글을 작성 할 수 없는 경우의 배너 텍스트 :"
-      num_featured_topics: "이 카테고리 페이지에 표시되는 토픽의 수:"
+      show_subcategory_list: "이 카테고리의 글 위에 하위 카테고리 목록을 표시합니다."
+      read_only_banner: "사용자가이 카테고리에서 글을 작성 할 수 없는 경우의 배너 텍스트:"
+      num_featured_topics: "카테고리 페이지에 표시되는 글 수:"
       subcategory_num_featured_topics: "상위 카테고리 페이지에 표시되는 주요 글 수:"
-      all_topics_wiki: "기본적으로 새로운 토픽 위키 만들기"
+      all_topics_wiki: "기본으로 새로운 글 위키 만들기"
       subcategory_list_style: "하위 카테고리 목록 스타일:"
-      sort_order: "다음 기준으로 토픽 목록 정렬:"
-      default_view: "기본 토픽 목록:"
+      sort_order: "글 목록 정렬 기준:"
+      default_view: "글 기본 목록:"
       default_top_period: "기본 Top 기간:"
       default_list_filter: "목록 기본 필터:"
       allow_badges_label: "배지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
       reviewable_by_group: "이 카테고리의 콘텐츠는 관리자 외에도 다음과 같은 방법으로 검토할 수 있습니다."
       review_group_name: "그룹명"
-      require_topic_approval: "모든 새로운 주제에 대한 중재자 승인 필요"
-      require_reply_approval: "모든 새 답글에 대한 중재자 승인 필요"
+      require_topic_approval: "모든 새 글에 대한 관리자 승인 필요"
+      require_reply_approval: "모든 새 댓글의 관리자 승인 필요"
       this_year: "올해"
-      position: "카테고리 페이지에서의 위치 :"
+      position: "카테고리 정렬 순서:"
       default_position: "기본 위치"
       position_disabled: "카테고리는 활동량에 따라서 표시됩니다. 목록 내의 카테고리 순서를 지정하하려면"
       position_disabled_click: '"카테고리 위치 고정" 설정을 활성화 시키십시요.'
-      minimum_required_tags: "주제에 필요한 최소 태그 수 :"
+      minimum_required_tags: "글 작성에 필요한 최소 태그 수:"
       parent: "상위 카테고리"
-      num_auto_bump_daily: "매일 자동으로 충돌하는 공개 주제 수 :"
-      navigate_to_first_post_after_read: "주제를 읽은 후 첫 번째 게시물로 이동"
+      num_auto_bump_daily: "열린 글 중 매일 자동으로 끌어올릴 수:"
+      navigate_to_first_post_after_read: "글을 읽은 후 첫 번째 게시물로 이동"
       notifications:
         watching:
           title: "주시 중"
@@ -2663,7 +2693,14 @@ ko:
     flagging:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "글 신고했습니다"
-      take_action: "조치하기"
+      take_action: "조치 수행..."
+      take_action_options:
+        default:
+          title: "조치하기"
+          details: "더 이상 커뮤니티 플래그를 기다리지 않고 바로 플래그 임계 값에 도달합니다."
+        suspend:
+          title: "사용자 차단"
+          details: "플래그 임계 값에 도달하고 사용자를 차단합니다."
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
@@ -2729,7 +2766,6 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
-    posts_long: "이 주제의 글 수는 %{number}개 입니다."
     posts_likes_MF: |2
 
       이 토픽에는 {ratio, select,
@@ -2752,7 +2788,6 @@ ko:
     likes: "좋아요"
     likes_lowercase:
       other: "좋아요"
-    likes_long: "이 주제에 %{number}개의 '좋아요'가 있습니다."
     users: "사용자"
     users_lowercase:
       other: "사용자"
@@ -2826,7 +2861,7 @@ ko:
         this_week: "주"
         today: "오늘"
         other_periods: "상단 참조 :"
-    browser_update: '안타깝게도 <a href="https://www.discourse.org/faq/#browser">브라우저가 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 여러 내용을 읽고 로그인하여 댓글도 작성해보세요.'
+    browser_update: '안타깝게도 <a href="https://www.discourse.org/faq/#browser">브라우저가 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 여러 내용을 읽고 댓글도 작성해보세요.'
     permission_types:
       full: "생성 / 답글 / 보기"
       create_post: "답글 / 보기"
@@ -3034,8 +3069,8 @@ ko:
         delete: "삭제"
         confirm_delete: "이 태그 그룹을 삭제 하시겠습니까?"
         everyone_can_use: "모든 사람이 태그를 사용할 수 있습니다"
-        usable_only_by_staff: "태그는 모든 사람에게 표시되지만 직원 만 사용할 수 있습니다"
-        visible_only_to_staff: "태그는 운영진 에게만 표시됩니다"
+        usable_only_by_groups: "태그는 모든 사람에게 보이지만 다음 그룹만 태그를 사용할 수 있습니다."
+        visible_only_to_groups: "태그는 다음 그룹에만 표시됩니다."
       topics:
         none:
           unread: "읽지 않은 토픽이 없습니다."
@@ -3055,7 +3090,7 @@ ko:
       back: "이전"
       forward: "앞으로"
       share: "공유"
-      dismiss: "해지"
+      dismiss: "읽음"
     safe_mode:
       enabled: "안전모드가 활성화 되었습니다. 안전모드를 종료하려면 이 웹브라우저창을 닫아야 합니다."
     image_removed: "(이미지 제거됨)"
@@ -3074,7 +3109,7 @@ ko:
       dashboard:
         title: "대시보드"
         last_updated: "대시 보드 업데이트 :"
-        discourse_last_updated: "담론 업데이트 :"
+        discourse_last_updated: "Discourse 업데이트:"
         version: "버전"
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
@@ -3097,7 +3132,7 @@ ko:
         private_messages_title: "메시지"
         mobile_title: "모바일"
         space_used: "사용 된 %{usedSize}"
-        space_used_and_free: "%{usedSize} (%{freeSize} 무료)"
+        space_used_and_free: "%{usedSize} (%{freeSize} 여유)"
         uploads: "업로드된 파일"
         backups: "백업"
         backup_count:
@@ -3110,7 +3145,7 @@ ko:
         show_traffic_report: "자세한 트래픽 리포트 보기"
         community_health: 커뮤니티 현황
         moderators_activity: 중재자 활동
-        whats_new_in_discourse: 담론의 새로운 기능
+        whats_new_in_discourse: Discourse의 새로운 기능은 무엇입니까?
         activity_metrics: 활동 지표
         all_reports: "모든 보고서"
         general_tab: "일반"
@@ -3618,7 +3653,6 @@ ko:
           color_definitions:
             text: "색상 정의"
             title: "사용자 색상 정의 입력 (고급 사용자용)"
-            placeholder: "\\r\n이 스타일 시트를 사용하여 CSS 사용자 정의 속성 목록에 사용자 정의 색상을 추가합니다.\\r\n\\r\n예 : \\r\n\\r\n:root {\\r\n  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\n플러그인 또는 코어와의 충돌을 피하기 위해 속성 이름에 접두사를 붙이는 것이 좋습니다."
           head_tag:
             text: "</head>"
             title: "</head> 태그 전에 들어갈 HTML"
@@ -3642,7 +3676,7 @@ ko:
           undo: "실행 복귀"
           undo_title: "마지막 저장 상태로 색상 변경상태를 되돌리기"
           revert: "되돌리기"
-          revert_title: "이 색상을 담론의 기본 색상 팔레트로 재설정하십시오."
+          revert_title: "이 색상을 Discourse의 기본 색상 팔레트로 재설정합니다."
           primary:
             name: "주요"
             description: "대부분의 글, 아이콘 및 테두리"
@@ -3693,7 +3727,7 @@ ko:
         preview_digest: "요약 미리보기"
         advanced_test:
           title: "고급 테스트"
-          desc: "담론이 수신 된 이메일을 처리하는 방법을 참조하십시오. 이메일을 올바르게 처리하려면 전체 원본 이메일 메시지 아래에 붙여 넣으십시오."
+          desc: "Discourse가 수신 된 이메일을 처리하는 방법을 확인하십시오. 이메일을 올바르게 처리하려면 전체 원본 이메일 메시지 아래에 붙여 넣으십시오."
           email: "원본 메시지"
           run: "테스트 실행"
           text: "선택된 텍스트 본문"
@@ -3850,7 +3884,7 @@ ko:
             post_edit: "편집 후"
             post_unlocked: "게시물 잠금 해제"
             check_personal_message: "개인 메시지 확인"
-            disabled_second_factor: "Two Factor 인증 사용안함"
+            disabled_second_factor: "2단계 인증 비활성화"
             topic_published: "주제가 출판 됨"
             post_approved: "게시물 승인됨"
             post_rejected: "게시물 거부됨"
@@ -4078,7 +4112,7 @@ ko:
         private_topics_count: 비공개 토픽
         posts_read_count: 글 읽은 수
         post_count: 글 수
-        second_factor_enabled: Two Factor 인증 사용
+        second_factor_enabled: 2단계 인증 사용
         topics_entered: 읽은 토픽 수
         flags_given_count: 작성한 신고
         flags_received_count: 받은 신고

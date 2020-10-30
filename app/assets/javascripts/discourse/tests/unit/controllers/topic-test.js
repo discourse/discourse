@@ -62,6 +62,34 @@ test("editTopic", function (assert) {
   );
 });
 
+test("deleteTopic", function (assert) {
+  const model = Topic.create();
+  let destroyed = false;
+  let modalDisplayed = false;
+  model.destroy = () => {
+    destroyed = true;
+    return Promise.resolve();
+  };
+  const controller = this.subject({
+    model,
+    siteSettings: {
+      min_topic_views_for_delete_confirm: 5,
+    },
+    deleteTopicModal: () => {
+      modalDisplayed = true;
+    },
+  });
+
+  model.set("views", 10000);
+  controller.send("deleteTopic");
+  assert.not(destroyed, "don't destroy popular topic");
+  assert.ok(modalDisplayed, "display confirmation modal for popular topic");
+
+  model.set("views", 3);
+  controller.send("deleteTopic");
+  assert.ok(destroyed, "destroy not popular topic");
+});
+
 test("toggleMultiSelect", function (assert) {
   const model = Topic.create();
   const controller = this.subject({ model });

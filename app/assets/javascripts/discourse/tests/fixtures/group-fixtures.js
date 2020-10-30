@@ -1295,5 +1295,33 @@ export default {
     extras: {
       visible_group_names: ["alternative-group"]
     }
+  },
+  "/groups/alternative-group/members.json": {
+    owners: [],
+    members: [
+      {
+        id: 2770,
+        username: "awesomerobot",
+        uploaded_avatar_id: 33872,
+        avatar_template:
+          "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
+        name: "",
+        last_seen_at: "2015-01-23T15:53:17.844Z"
+      },
+      {
+        id: 32,
+        username: "codinghorror",
+        uploaded_avatar_id: 5297,
+        avatar_template:
+          "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
+        name: "Jeff Atwood",
+        last_seen_at: "2015-01-23T06:05:25.457Z"
+      },
+    ],
+    meta: {
+      total: 2,
+      limit: 50,
+      offset: 0
+    }
   }
 };

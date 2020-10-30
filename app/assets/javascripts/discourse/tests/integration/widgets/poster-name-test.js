@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -16,12 +17,12 @@ widgetTest("basic rendering", {
     });
   },
   test(assert) {
-    assert.ok(find(".names").length);
-    assert.ok(find("span.username").length);
-    assert.ok(find("a[data-user-card=eviltrout]").length);
-    assert.equal(find(".username a").text(), "eviltrout");
-    assert.equal(find(".full-name a").text(), "Robin Ward");
-    assert.equal(find(".user-title").text(), "Trout Master");
+    assert.ok(queryAll(".names").length);
+    assert.ok(queryAll("span.username").length);
+    assert.ok(queryAll("a[data-user-card=eviltrout]").length);
+    assert.equal(queryAll(".username a").text(), "eviltrout");
+    assert.equal(queryAll(".full-name a").text(), "Robin Ward");
+    assert.equal(queryAll(".user-title").text(), "Trout Master");
   },
 });
 
@@ -39,12 +40,12 @@ widgetTest("extra classes and glyphs", {
     });
   },
   test(assert) {
-    assert.ok(find("span.staff").length);
-    assert.ok(find("span.admin").length);
-    assert.ok(find("span.moderator").length);
-    assert.ok(find(".d-icon-shield-alt").length);
-    assert.ok(find("span.new-user").length);
-    assert.ok(find("span.fish").length);
+    assert.ok(queryAll("span.staff").length);
+    assert.ok(queryAll("span.admin").length);
+    assert.ok(queryAll("span.moderator").length);
+    assert.ok(queryAll(".d-icon-shield-alt").length);
+    assert.ok(queryAll("span.new-user").length);
+    assert.ok(queryAll("span.fish").length);
   },
 });
 
@@ -55,7 +56,7 @@ widgetTest("disable display name on posts", {
     this.set("args", { username: "eviltrout", name: "Robin Ward" });
   },
   test(assert) {
-    assert.equal(find(".full-name").length, 0);
+    assert.equal(queryAll(".full-name").length, 0);
   },
 });
 
@@ -67,6 +68,6 @@ widgetTest("doesn't render a name if it's similar to the username", {
     this.set("args", { username: "eviltrout", name: "evil-trout" });
   },
   test(assert) {
-    assert.equal(find(".second").length, 0);
+    assert.equal(queryAll(".second").length, 0);
   },
 });

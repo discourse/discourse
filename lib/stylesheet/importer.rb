@@ -191,6 +191,13 @@ module Stylesheet
       contents
     end
 
+    def self.import_wcag_overrides(color_scheme_id)
+      if color_scheme_id && ColorScheme.find_by_id(color_scheme_id)&.is_wcag?
+        return "@import \"wcag\";"
+      end
+      ""
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]

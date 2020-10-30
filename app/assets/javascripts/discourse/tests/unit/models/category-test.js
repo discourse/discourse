@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import Category from "discourse/models/category";
@@ -87,7 +88,7 @@ test("findBySlug", (assert) => {
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
-  sandbox.stub(Category, "list").returns(categoryList);
+  sinon.stub(Category, "list").returns(categoryList);
 
   assert.deepEqual(
     Category.findBySlug("darth"),
@@ -120,7 +121,7 @@ test("findBySlug", (assert) => {
     "we can find a category with english slug whose parent slug is CJK"
   );
 
-  sandbox.restore();
+  sinon.restore();
 });
 
 test("findSingleBySlug", (assert) => {
@@ -151,7 +152,7 @@ test("findSingleBySlug", (assert) => {
     }),
     categoryList = [darth, luke, hurricane, newsFeed, time, bah];
 
-  sandbox.stub(Category, "list").returns(categoryList);
+  sinon.stub(Category, "list").returns(categoryList);
 
   assert.deepEqual(
     Category.findSingleBySlug("darth"),
@@ -201,7 +202,7 @@ test("findBySlugPathWithID", (assert) => {
   });
 
   const categoryList = [foo, bar, baz];
-  sandbox.stub(Category, "list").returns(categoryList);
+  sinon.stub(Category, "list").returns(categoryList);
 
   assert.deepEqual(Category.findBySlugPathWithID("foo"), foo);
   assert.deepEqual(Category.findBySlugPathWithID("foo/bar"), bar);
@@ -222,7 +223,7 @@ test("search with category name", (assert) => {
       slug: "another-different-slug",
     });
 
-  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+  sinon.stub(Category, "listByActivity").returns([category1, category2]);
 
   assert.deepEqual(
     Category.search("term", { limit: 0 }),
@@ -254,7 +255,7 @@ test("search with category name", (assert) => {
     "orders matching begin with and then contains"
   );
 
-  sandbox.restore();
+  sinon.restore();
 
   const child_category1 = store.createRecord("category", {
       id: 3,
@@ -267,7 +268,7 @@ test("search with category name", (assert) => {
       read_restricted: true,
     });
 
-  sandbox
+  sinon
     .stub(Category, "listByActivity")
     .returns([read_restricted_category, category1, child_category1, category2]);
 
@@ -295,7 +296,7 @@ test("search with category name", (assert) => {
     "prioritize non read_restricted with limit"
   );
 
-  sandbox.restore();
+  sinon.restore();
 });
 
 test("search with category slug", (assert) => {
@@ -311,7 +312,7 @@ test("search with category slug", (assert) => {
       slug: "another-different-slug",
     });
 
-  sandbox.stub(Category, "listByActivity").returns([category1, category2]);
+  sinon.stub(Category, "listByActivity").returns([category1, category2]);
 
   assert.deepEqual(
     Category.search("different-slug"),

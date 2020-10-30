@@ -9,10 +9,10 @@ class CorrectPostsSchema < ActiveRecord::Migration[6.0]
   # This should be done in a transaction
   def up
     result = DB.query <<~SQL
-      SELECT character_maximum_length 
-      FROM information_schema.columns 
+      SELECT character_maximum_length
+      FROM information_schema.columns
       WHERE table_schema='public'
-      AND table_name = 'posts' 
+      AND table_name = 'posts'
       AND column_name IN ('action_code', 'edit_reason')
     SQL
 

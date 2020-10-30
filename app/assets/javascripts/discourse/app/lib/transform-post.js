@@ -258,6 +258,7 @@ export default function transformPost(
     postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
+      postAtts.canFlag &&
       currentUser &&
       !currentUser.staff;
   } else {

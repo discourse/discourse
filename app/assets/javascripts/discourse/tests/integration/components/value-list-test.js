@@ -1,6 +1,9 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";
+import { click } from "@ember/test-helpers";
+
 moduleForComponent("value-list", { integration: true });
 
 componentTest("adding a value", {
@@ -18,7 +21,7 @@ componentTest("adding a value", {
     await selectKit().keyboard("enter");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
@@ -41,7 +44,7 @@ componentTest("removing a value", {
     await click(".values .value[data-index='0'] .remove-value-btn");
 
     assert.ok(
-      find(".values .value").length === 1,
+      queryAll(".values .value").length === 1,
       "it removes the value from the list of values"
     );
 
@@ -50,7 +53,7 @@ componentTest("removing a value", {
     await selectKit().expand();
 
     assert.ok(
-      find(".select-kit-collection li.select-kit-row span.name")[0]
+      queryAll(".select-kit-collection li.select-kit-row span.name")[0]
         .innerText === "vinkas",
       "it adds the removed value to choices"
     );
@@ -72,7 +75,7 @@ componentTest("selecting a value", {
     await selectKit().selectRowByValue("maja");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
@@ -99,7 +102,7 @@ componentTest("array support", {
     await selectKit().keyboard("enter");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
@@ -126,7 +129,7 @@ componentTest("delimiter support", {
     await selectKit().keyboard("enter");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 

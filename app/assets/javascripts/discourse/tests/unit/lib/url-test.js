@@ -1,3 +1,4 @@
+import sinon from "sinon";
 import { test, module } from "qunit";
 import DiscourseURL, { userPath, prefixProtocol } from "discourse/lib/url";
 import { setPrefix } from "discourse-common/lib/get-url";
@@ -7,7 +8,7 @@ import User from "discourse/models/user";
 module("lib:url");
 
 test("isInternal with a HTTP url", (assert) => {
-  sandbox.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
+  sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
   assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
   assert.ok(DiscourseURL.isInternal("/test"), "relative URLs are internal");
@@ -34,7 +35,7 @@ test("isInternal with a HTTP url", (assert) => {
 });
 
 test("isInternal with a HTTPS url", (assert) => {
-  sandbox.stub(DiscourseURL, "origin").returns("https://eviltrout.com");
+  sinon.stub(DiscourseURL, "origin").returns("https://eviltrout.com");
   assert.ok(
     DiscourseURL.isInternal("http://eviltrout.com/monocle"),
     "HTTPS urls match HTTP urls"
@@ -42,7 +43,7 @@ test("isInternal with a HTTPS url", (assert) => {
 });
 
 test("isInternal on subfolder install", (assert) => {
-  sandbox.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
+  sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
   assert.not(
     DiscourseURL.isInternal("http://eviltrout.com"),
     "the host root is not internal"
@@ -73,7 +74,7 @@ test("routeTo with prefix", async (assert) => {
   logIn();
   const user = User.current();
 
-  sandbox.stub(DiscourseURL, "handleURL");
+  sinon.stub(DiscourseURL, "handleURL");
   DiscourseURL.routeTo("/my/messages");
   assert.ok(
     DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),

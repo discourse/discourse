@@ -347,11 +347,19 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           height = winHeight - menuTop;
         }
 
+        const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
+          heightProp = isIPadApp ? "max-height" : "height",
+          iPadOffset = 10;
+
+        if (isIPadApp) {
+          height = winHeight - menuTop - iPadOffset;
+        }
+
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");
         }
-        if (style.top !== menuTop + "px" || style.height !== height) {
-          $panel.css({ top: menuTop + "px", height });
+        if (style.top !== menuTop + "px" || style[heightProp] !== height) {
+          $panel.css({ top: menuTop + "px", [heightProp]: height });
           $(".header-cloak").css({ top: menuTop + "px" });
         }
         $("body").removeClass("drop-down-mode");
@@ -373,7 +381,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 });
 
-export default SiteHeaderComponent;
+export default SiteHeaderComponent.extend({
+  classNames: ["d-header-wrap"],
+});
 
 export function headerHeight() {
   const $header = $("header.d-header");

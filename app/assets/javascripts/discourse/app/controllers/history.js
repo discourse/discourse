@@ -268,7 +268,7 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       const opts = {
         features: { editHistory: true, historyOneboxes: true },
-        whiteListed: {
+        allowListed: {
           editHistory: { custom: (tag, attr) => attr === "class" },
           historyOneboxes: ["header", "article", "div[style]"],
         },

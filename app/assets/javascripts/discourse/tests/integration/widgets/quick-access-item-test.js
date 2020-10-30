@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -15,7 +16,7 @@ widgetTest("content attribute is escaped", {
   },
 
   test(assert) {
-    const contentDiv = find(CONTENT_DIV_SELECTOR)[0];
+    const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
     assert.equal(contentDiv.innerText, "<b>bold</b>");
   },
 });
@@ -28,7 +29,7 @@ widgetTest("escapedContent attribute is not escaped", {
   },
 
   test(assert) {
-    const contentDiv = find(CONTENT_DIV_SELECTOR)[0];
+    const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
     assert.equal(contentDiv.innerText, '"quote"');
   },
 });

@@ -51,6 +51,7 @@ export default DiscourseRoute.extend({
             userInvitedShow: this.controllerFor("user-invited-show"),
           },
         });
+        panels.reverse();
       }
 
       showModal("share-and-invite", {

@@ -42,8 +42,6 @@ ca:
       trigger: "tira"
       invalid: |-
         Ho sento, és matemàticament impossible fer aquesta combinació de daus. :confounded:
-      not_enough_dice: |-
-        Només tinc %{num_of_dice} daus. [Vergonyós] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ho sé!
       out_of_range: |-
         ¿Sabíeu que [el nombre màxim de cares](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per a un dau matemàtic és 120?
       results: |-

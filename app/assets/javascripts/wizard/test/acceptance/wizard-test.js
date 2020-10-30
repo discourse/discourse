@@ -1,6 +1,7 @@
 import { test, module } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
+import { visit } from "@ember/test-helpers";
 
 var wizard;
 module("Acceptance: wizard", {
@@ -12,6 +13,10 @@ module("Acceptance: wizard", {
     run(wizard, "destroy");
   },
 });
+
+function exists(selector) {
+  return document.querySelector(selector) !== null;
+}
 
 test("Wizard starts", async (assert) => {
   await visit("/");

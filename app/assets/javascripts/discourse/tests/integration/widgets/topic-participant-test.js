@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,

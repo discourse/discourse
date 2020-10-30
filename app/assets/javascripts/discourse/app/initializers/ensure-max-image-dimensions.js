@@ -22,7 +22,7 @@ export default {
     const style = "max-width:" + width + "px;" + "max-height:" + height + "px;";
 
     $(
-      '<style id="image-sizing-hack">#reply-control .d-editor-preview img:not(.thumbnail), .cooked img:not(.thumbnail) {' +
+      '<style id="image-sizing-hack">#reply-control .d-editor-preview img:not(.thumbnail):not(.ytp-thumbnail-image), .cooked img:not(.thumbnail):not(.ytp-thumbnail-image) {' +
         style +
         "}</style>"
     ).appendTo("head");

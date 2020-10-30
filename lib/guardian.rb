@@ -353,7 +353,7 @@ class Guardian
     !SiteSetting.enable_sso &&
     SiteSetting.enable_local_logins &&
     (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
+      (!SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) ||
       is_staff?
     ) &&
     (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
@@ -383,7 +383,7 @@ class Guardian
       end
     end
 
-    user.has_trust_level?(TrustLevel[2])
+    user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
   end
 
   def can_invite_via_email?(object)

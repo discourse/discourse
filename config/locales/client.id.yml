@@ -130,7 +130,6 @@ id:
     topic_admin_menu: "tindakan topik"
     wizard_required: "Selamat datang di Discourse baru Anda! Mari kita mulai dengan <a href='%{url}' data-auto-route='true'>wizard pengaturan</a> ✨"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
-    bootstrap_mode_enabled: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{min_users} sudah ikut."
     bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
@@ -629,7 +628,6 @@ id:
         other: "%{count} topik baru dalam seminggu terakhir."
       topic_stat_sentence_month:
         other: "%{count} topik baru dalam sebulan terakhir."
-      n_more: "Kategori (%{count} lagi) ..."
     ip_lookup:
       title: Pencarian Alamat IP
       hostname: nama host
@@ -721,7 +719,6 @@ id:
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
-      github_profile: "Github"
       email_activity_summary: "Jumlah aktifitas"
       mailing_list_mode:
         label: "mode milis"
@@ -879,7 +876,6 @@ id:
         title: "Kata Sandi Lagi"
       auth_tokens:
         title: "Perangkat yang Baru Digunakan"
-        ip: "IP"
         details: "Detil"
         log_out_all: "Logout semua"
         not_you: "Bukan Anda?"
@@ -1083,7 +1079,6 @@ id:
       disable: "Tunjukkan Tulisan yang Dihapus"
     private_message_info:
       title: "Pesan"
-      edit: "Tambah atau Hapus ..."
       leave_message: "Apakah Anda yakin ingin meninggalkan pesan ini?"
       remove_allowed_user: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
       remove_allowed_group: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
@@ -1171,8 +1166,6 @@ id:
       enter: "Enter"
     conditional_loading_section:
       loading: Diproses...
-    category_row:
-      topic_count: "%{count} topik dalam kategori ini"
     select_kit:
       default_header_text: Pilih...
       no_content: Tidak ditemukan yang cocok
@@ -1203,7 +1196,6 @@ id:
         post_length: "Tulisan setidaknya harus %{min} karakter"
         try_like: "Sudahkah Anda mencoba tombol %{heart}?"
         category_missing: "Anda harus memilih kategori"
-        tags_missing: "Anda harus memilih setidaknya %{count} label"
       save_edit: "Simpah Ubahan"
       reply_original: "Balas pada Topik Asal"
       reply_here: "Balas Disini"

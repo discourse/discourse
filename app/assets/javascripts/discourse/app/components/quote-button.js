@@ -254,7 +254,7 @@ export default Component.extend({
     return getAbsoluteURL(postUrl(topic.slug, topic.id, quoteState.postId));
   },
 
-  @discourseComputed("topic.details.can_create_post", "composer.visible")
+  @discourseComputed("topic.details.can_create_post", "composerVisible")
   embedQuoteButton(canCreatePost, composerOpened) {
     return (
       (canCreatePost || composerOpened) &&

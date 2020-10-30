@@ -12,10 +12,10 @@ import createPretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { flushMap } from "discourse/models/store";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import DiscourseURL from "discourse/lib/url";
 import {
   resetSite,
   applyPretender,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
@@ -25,10 +25,10 @@ import QUnit from "qunit";
 import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
-import { setResolver } from "@ember/test-helpers";
+import { setApplication, setResolver } from "@ember/test-helpers";
 
-export default function setupTests(App) {
-  setResolver(buildResolver("discourse").create({ namespace: App }));
+export default function setupTests(app, container) {
+  setResolver(buildResolver("discourse").create({ namespace: app }));
 
   sinon.config = {
     injectIntoThis: false,
@@ -41,18 +41,10 @@ export default function setupTests(App) {
   // Stop the message bus so we don't get ajax calls
   MessageBus.stop();
 
-  document.write(
-    '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
-  );
-  document.write(
-    "<style>#ember-testing-container { position: absolute; background: white; bottom: 0; right: 0; width: 640px; height: 384px; overflow: auto; z-index: 9999; border: 1px solid #ccc; } #ember-testing { zoom: 50%; }</style>"
-  );
-
-  App.rootElement = "#ember-testing";
-  App.setupForTesting();
-  App.injectTestHelpers();
-  App.SiteSettings = currentSettings();
-  App.start();
+  app.rootElement = "#ember-testing";
+  app.setupForTesting();
+  app.SiteSettings = currentSettings();
+  app.start();
 
   // disable logster error reporting
   if (window.Logster) {
@@ -75,12 +67,36 @@ export default function setupTests(App) {
       return server;
     },
   });
+  Object.defineProperty(window, "sandbox", {
+    get() {
+      deprecated(
+        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return window.sinon;
+    },
+  });
+  Object.defineProperty(window, "exists", {
+    get() {
+      deprecated(
+        "Accessing the global function `exists` is deprecated. Import it instead.",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return exists;
+    },
+  });
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
     server = createPretender;
-    applyDefaultHandlers(server);
     server.handlers = [];
+    applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
       if (body && typeof body === "object") {
@@ -126,24 +142,18 @@ export default function setupTests(App) {
       site,
     });
 
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
-
     PreloadStore.reset();
 
-    window.sandbox = sinon;
-    window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
-    window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
-    window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
+    window.sinon.stub(ScrollingDOMMethods, "screenNotFull");
+    window.sinon.stub(ScrollingDOMMethods, "bindOnScroll");
+    window.sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
-    window.sandbox.restore();
+    window.sinon.restore();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
@@ -186,6 +196,7 @@ export default function setupTests(App) {
 
   // forces 0 as duration for all jquery animations
   jQuery.fx.off = true;
-  setDefaultOwner(App.__container__);
+  setApplication(app);
+  setDefaultOwner(container);
   resetSite();
 }

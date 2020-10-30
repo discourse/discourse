@@ -142,7 +142,7 @@ basic:
   ga_universal_tracking_code:
     client: true
     default: ""
-    regex: "^UA-\\d+-\\d+$"
+    regex: "^(UA|G)-[\\w-]+"
   ga_universal_domain_name:
     client: true
     default: "auto"
@@ -385,15 +385,6 @@ login:
   twitter_consumer_secret:
     default: ""
     regex: "^[\\w+-]+$"
-    secret: true
-  enable_instagram_logins:
-    default: false
-  instagram_consumer_key:
-    default: ""
-    regex: "^[a-z0-9]+$"
-  instagram_consumer_secret:
-    default: ""
-    regex: "^[a-z0-9]+$"
     secret: true
   enable_facebook_logins:
     default: false
@@ -700,6 +691,9 @@ posting:
       ja: 3
       zh_CN: 3
       zh_TW: 3
+  min_topic_views_for_delete_confirm:
+    client: true
+    default: 5000
   min_topic_title_length:
     client: true
     default: 15
@@ -1149,7 +1143,7 @@ email:
     max: 36500
   blocked_attachment_content_types:
     type: list
-    default: "pkcs7|x-vcard"
+    default: "pkcs7|x-vcard|pgp-keys|pgp-signature"
     list_type: compact
   blocked_attachment_filenames:
     type: list
@@ -1184,9 +1178,6 @@ email:
     max: 36500
   enable_secondary_emails:
     client: true
-    default: true
-    hidden: true
-  preserve_email_structure_when_styling:
     default: true
     hidden: true
 
@@ -1308,10 +1299,6 @@ files:
   allow_uploaded_avatars:
     client: true
     default: true
-  allow_animated_avatars:
-    client: true
-    default: false
-  allow_animated_thumbnails: true
   default_avatars:
     default: ""
     type: url_list
@@ -1344,6 +1331,14 @@ files:
   allow_all_attachments_for_group_messages: false
   png_to_jpg_quality:
     default: 95
+    min: 1
+    max: 100
+  recompress_original_jpg_quality:
+    default: 90
+    min: 1
+    max: 100
+  image_preview_jpg_quality:
+    default: 90
     min: 1
     max: 100
   allow_staff_to_upload_any_file_in_pm:
@@ -1409,6 +1404,9 @@ trust:
   min_trust_level_to_allow_user_card_background:
     default: 0
     client: true
+    enum: "TrustLevelSetting"
+  min_trust_level_to_allow_invite:
+    default: 2
     enum: "TrustLevelSetting"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
@@ -1543,7 +1541,7 @@ security:
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
-    default: "bingbot"
+    default: ""
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
@@ -1715,6 +1713,9 @@ developer:
     hidden: true
     default: ""
   enable_long_polling:
+    client: true
+    default: true
+  enable_chunked_encoding:
     client: true
     default: true
   long_polling_interval:

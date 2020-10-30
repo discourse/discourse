@@ -43,8 +43,6 @@ ko:
       trigger: "굴리기"
       invalid: |-
         미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
-      not_enough_dice: |-
-        난 주사위 %{num_of_dice} 개밖에 안 남았어. [으으,](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), 그래, 나도 알아 안다고!
       out_of_range: |-
         수학적으로 공평하면서도 [가장 큰 수](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)를 가진 주사위의 면 수가 120이라는 거 아니?
       results: |-
@@ -174,12 +172,6 @@ ko:
           멋진 사진이네. 내가 얼마나 좋아하는 지:heart_eyes: 알려주고 싶어서 좋아요:heart:를 눌렀단다.
         like_not_found: |-
           [내글에](%{url})좋아요:heart: 안 눌러 줄거니? :crying_cat_face:
-        not_found: |-
-          니가 그림을 안올린 거 같아서 니가 좋아할 거 같은 사진을 올려봤어.
-
-          `%{image_url}`
-
-          다음엔 니가 한번 업로드 해봐. 사진 링크만 있는 한 줄을 남겨도 돼!
       likes:
         instructions: |-
           다음은 유니콘 사진입니다.

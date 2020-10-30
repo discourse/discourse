@@ -1545,3 +1545,13 @@ test("extractDataAttribute", (assert) => {
   assert.notOk(extractDataAttribute("foo?=bar"));
   assert.notOk(extractDataAttribute("https://discourse.org/?q=hello"));
 });
+
+test("video - display placeholder when previewing", (assert) => {
+  assert.cookedOptions(
+    `![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)`,
+    { previewing: true },
+    `<p><div class=\"onebox-placeholder-container\">
+        <span class=\"placeholder-icon video\"></span>
+      </div></p>`
+  );
+});

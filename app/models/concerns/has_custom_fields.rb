@@ -165,7 +165,7 @@ module HasCustomFields
         @preloaded[key]
       else
         # for now you can not mix preload an non preload, it better just to fail
-        raise StandardError, "Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries."
+        raise StandardError, "Attempted to access the non preloaded custom field '#{key}'. This is disallowed to prevent N+1 queries."
       end
     end
   end

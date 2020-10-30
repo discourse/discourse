@@ -7,8 +7,6 @@
 uk:
   js:
     presence:
-      replying: "відповідаючи"
-      editing: "редагуючи"
       replying_to_topic:
         one: "відповідаючи"
         few: "відповідаючи"

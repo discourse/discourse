@@ -91,17 +91,18 @@ Discourse::Application.routes.draw do
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
 
-      resources :groups, only: [:create]
+      resources :groups, only: [:create] do
+        member do
+          put "owners" => "groups#add_owners"
+          delete "owners" => "groups#remove_owner"
+        end
+      end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
           get 'bulk'
           get 'bulk-complete' => 'groups#bulk'
           put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
-        end
-        member do
-          put "owners" => "groups#add_owners"
-          delete "owners" => "groups#remove_owner"
         end
       end
 
@@ -681,6 +682,9 @@ Discourse::Application.routes.draw do
 
     get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
+    get "c/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "c/:parent_category_slug/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "/new-category" => "categories#show", constraints: { format: 'html' }
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
     scope path: 'c/*category_slug_path_with_id' do
@@ -804,6 +808,7 @@ Discourse::Application.routes.draw do
     put "t/:topic_id/bookmark" => "topics#bookmark", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: { topic_id: /\d+/ }
     put "t/:topic_id/tags" => "topics#update_tags", constraints: { topic_id: /\d+/ }
+    put "t/:topic_id/slow_mode" => "topics#set_slow_mode", constraints: { topic_id: /\d+/ }
 
     post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: { topic_id: /\d+/ }
 

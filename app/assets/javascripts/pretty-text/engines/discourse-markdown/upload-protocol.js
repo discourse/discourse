@@ -91,10 +91,10 @@ function rule(state) {
 export function setup(helper) {
   const opts = helper.getOptions();
   if (opts.previewing) {
-    helper.whiteList(["img.resizable"]);
+    helper.allowList(["img.resizable"]);
   }
 
-  helper.whiteList([
+  helper.allowList([
     "img[data-orig-src]",
     "img[data-base62-sha1]",
     "a[data-orig-href]",

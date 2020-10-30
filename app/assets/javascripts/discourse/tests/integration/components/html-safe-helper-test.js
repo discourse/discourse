@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 moduleForComponent("html-safe-helper", { integration: true });

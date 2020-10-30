@@ -8,7 +8,6 @@ export default Component.extend({
   classNameBindings: ["isLoading"],
   appendReason: true,
   showFullTitle: true,
-  placement: "bottom-start",
   notificationLevel: null,
   topic: null,
   showCaret: true,

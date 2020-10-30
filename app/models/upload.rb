@@ -78,7 +78,6 @@ class Upload < ActiveRecord::Base
   def create_thumbnail!(width, height, opts = nil)
     return unless SiteSetting.create_thumbnails?
     opts ||= {}
-    opts[:allow_animation] = SiteSetting.allow_animated_thumbnails
 
     if get_optimized_image(width, height, opts)
       save(validate: false)
@@ -86,7 +85,9 @@ class Upload < ActiveRecord::Base
   end
 
   # this method attempts to correct old incorrect extensions
-  def get_optimized_image(width, height, opts)
+  def get_optimized_image(width, height, opts = nil)
+    opts ||= {}
+
     if (!extension || extension.length == 0)
       fix_image_extension
     end
@@ -266,6 +267,14 @@ class Upload < ActiveRecord::Base
 
   def thumbnail_height
     get_dimension(:thumbnail_height)
+  end
+
+  def target_image_quality(local_path, test_quality)
+    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i rescue 0
+
+    if @file_quality == 0 || @file_quality > test_quality
+      test_quality
+    end
   end
 
   def self.sha1_from_short_path(path)
@@ -461,11 +470,12 @@ end
 #  secure                 :boolean          default(FALSE), not null
 #  access_control_post_id :bigint
 #  original_sha1          :string
-#  verified               :boolean
 #  verification_status    :integer          default(1), not null
+#  animated               :boolean
 #
 # Indexes
 #
+#  idx_uploads_on_verification_status       (verification_status)
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))

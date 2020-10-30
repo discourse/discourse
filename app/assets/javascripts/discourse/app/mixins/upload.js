@@ -73,7 +73,7 @@ export default Mixin.create({
       if (maxFiles > 0 && data.files.length > maxFiles) {
         bootbox.alert(
           I18n.t("post.errors.too_many_dragged_and_dropped_files", {
-            max: maxFiles,
+            count: maxFiles,
           })
         );
         return false;

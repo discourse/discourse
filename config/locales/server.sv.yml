@@ -190,6 +190,7 @@ sv:
       second_factor_cannot_be_enforced_with_sso_enabled: "Du kan inte genomdriva 2FA om SSO har aktiverats."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
+      cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
@@ -314,6 +315,7 @@ sv:
   removed_direct_reply_full_quotes: "Automatiskt borttaget citat av hela det föregående inlägget."
   secure_upload_not_allowed_in_public_topic: "Tyvärr kan följande säkra uppladdning(ar) inte användas i ett offentligt ämne: %{upload_filenames}."
   create_pm_on_existing_topic: "Tyvärr kan du inte skapa ett PM för ett befintligt ämne."
+  slow_mode_enabled: "Detta ämne är i långsamt läge."
   just_posted_that: "är för likt det du nyligen publicerade"
   invalid_characters: "innehåller otillåtna tecken"
   is_invalid: "verkar oklart, är det en fullständig mening?"
@@ -352,6 +354,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
+  cannot_edit_on_slow_mode: "Ämnet är i långsamt läge och det inlägget kan inte längre redigeras."
   excerpt_image: "bild"
   bookmarks:
     errors:
@@ -800,43 +803,36 @@ sv:
       title: "Irrelevant"
       description: "Det här inlägget är inte relevant för det nuvarande ämnet, sett till ämnets rubrik och det första inlägget, och borde förmodligen flyttas någon annanstans."
       short_description: "Inte relevant för diskussionen"
-      long_form: "flagga detta som irrelevant"
     spam:
       title: "Skräppost"
       description: "Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet."
       short_description: "Detta är reklam eller vandalism"
-      long_form: "flagga detta som spam"
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Olämpligt"
       description: 'Detta inläggs innehåll omfattar saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>.'
       short_description: 'En överträdelse av <a href="%{base_path}/guidelines">vårt forums riktlinjer</a>'
-      long_form: "flagga detta som olämpligt"
     notify_user:
       title: "Skicka ett meddelande till @%{username}"
       description: "Jag vill prata med den här personen direkt och privat om inlägget."
       short_description: "Jag vill prata med den här personen direkt och privat om inlägget."
-      long_form: "kontaktad användare"
       email_title: 'Du skrev i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
       description: "Det här inlägget kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan."
       short_description: "Kräver personals uppmärksamhet av annan orsak"
-      long_form: "flaggade det här för granskning av moderatorer"
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bokmärk"
       description: "Bokmärk detta inlägg"
       short_description: "Bokmärk detta inlägg"
-      long_form: "bokmärkte detta inlägg"
     like:
       title: "Gilla"
       description: "Gilla detta inlägg"
       short_description: "Gilla detta inlägg"
-      long_form: "gillade detta"
   draft:
     sequence_conflict_error:
       title: "fel på utkast"
@@ -956,6 +952,7 @@ sv:
       read: "Läs alla"
       write: "Skriv alla"
       one_time_password: "Skapa ett engångsinloggningsbevis"
+      bookmarks_calendar: "Läs påminnelser om bokmärken"
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."
@@ -1327,6 +1324,7 @@ sv:
     max_post_length: "Högsta tillåtna längd på inlägg uttryckt i tecken"
     topic_featured_link_enabled: "Tillåt att lägga upp en länk med ämnen."
     show_topic_featured_link_in_digest: "Visa den aktuella länken i det sammanfattade e-postmeddelandet."
+    min_topic_views_for_delete_confirm: "Minsta antal visningar som ett ämne måste ha för att ett bekräftelsefönster ska visas när det tas bort"
     min_topic_title_length: "Lägsta tillåtna längd på ämnesrubrik uttryckt i tecken"
     max_topic_title_length: "Högsta tillåtna längd på ämnesrubrik uttryckt i tecken"
     min_personal_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande uttryckt i tecken"
@@ -1410,6 +1408,7 @@ sv:
     enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_long_polling: "Meddelande-buss som används för avisering kan använda long polling"
+    enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
     polling_interval: "När long polling inte har aktiverats, hur ofta bör inloggade klienter polla i millisekunder"
@@ -1441,9 +1440,9 @@ sv:
     pending_users_reminder_delay: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) spårningskods-ID, exempelvis UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domännamn, exempelvis: minhemsida.se; se <a href='https://google.com/analytics' target='_blank'>http://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Aktivera Google Universal Analytics (analytics.js) korsspårning över domäner. Utgående länkar till dessa domäner kommer att få klient-ID tillagt för dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles kors-spårningsguide över domäner.</a>"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) spårningskod-ID, t.ex.: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domännamn, t.ex.: mysite.com; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Aktivera Google Universal Analytics (analytics.js) spårning över flera domäner. Klient-id läggs till i utgående länkar till dessa domäner. Se <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles guide för spårning över flera domäner.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
@@ -1539,19 +1538,16 @@ sv:
     enable_twitter_logins: "Aktivera Twitter-autentisering, kräver twitter_consumer_key och twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurera Twitter-inloggning (och formaterade inbäddningar) för Discourse</a>."
     twitter_consumer_key: "Konsumentnyckel för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Konsumenthemlighet för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Tillåt Instagramautentisering, kräver instagram_consumer_key och instagram_consumer_secret"
-    instagram_consumer_key: "Konsumentnyckel för Instagram-autentisering"
-    instagram_consumer_secret: "Konsumenthemlighet för Instagram-autentisering"
     enable_facebook_logins: "Aktivera Facebook-autentisering, kräver facebook_app_id och facebook_app_secret. Se <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfigurera Facebook-inloggning för Discourse</a>."
     facebook_app_id: "App-id för Facebook-autentisering och delning, registrerat i <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-hemlighet för Facebook-autentisering, registrerat i <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Aktivera Github-autentisering, kräver github_client_id och github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfigurera GitHub-inloggning för Discourse</a>."
-    github_client_id: "Klient-ID för Github-autentisering, registrerat i <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
-    github_client_secret: "Klienthemlighet för Github-autentisering, registrerad på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
+    enable_github_logins: "Aktivera GitHub-autentisering, kräver github_client_id och github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfigurera GitHub-inloggning för Discourse</a>."
+    github_client_id: "Klient-ID för GitHub-autentisering, registrerat i <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
+    github_client_secret: "Klienthemlighet för GitHub-autentisering, registrerad på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/applications</a>"
     enable_discord_logins: "Tillåta användare att autentisera genom Discord?"
     discord_client_id: 'Discord Klient-ID (behöver du ett? Gå till <a href="https://discordapp.com/developers/applications/me">utvecklarportalen för Discord</a>)'
     discord_secret: "Discord hemlig nyckel"
-    discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-grupperingar att logga in via Discord. Använd numeriskt ID för grupperingen. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla grupperingar.'
+    discord_trusted_guilds: 'Tillåt bara medlemmar i dessa Discord-sällskap att logga in via Discord. Använd numeriskt ID för sällskapet. För mer information, se instruktionerna <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">här</a>. Lämna tomt för att tilllåta alla sällskap.'
     enable_backups: "Tillåt att administratörer skapar säkerhetskopior av forumet"
     allow_restore: "Tillåt återställning, vilket kan ersätta ALL data på webbplatsen! Lämna avbockad om du inte planerar att återställa en säkerhetskopia"
     maximum_backups: "Högsta antal säkerhetskopior att spara på disken. Äldre säkerhetskopior raderas automatiskt"
@@ -1618,6 +1614,8 @@ sv:
     selectable_avatars: "Lista på avatarer som användare kan välja från"
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
     png_to_jpg_quality: "Den konverterade JPG-filens kvalitet (1 för den lägsta kvaliten, 99 för den bästa kvaliten, 100 för att inaktivera)."
+    recompress_original_jpg_quality: "Kvaliten på uppladdade bildfiler (1 är lägsta kvalitet, 99 är bästa kvalitet, 100 för att inaktivera)."
+    image_preview_jpg_quality: "Kvaliteten på storleksändrade bildfiler (1 är lägsta kvalitet, 99 är bästa kvalitet, 100 för att inaktivera)."
     allow_staff_to_upload_any_file_in_pm: "Låt personalen ladda upp alla filer i PM."
     strip_image_metadata: "Radera metadata för bild."
     min_ratio_to_crop: "Förhållandet används för att beskära höga bilder. Ange resultatet av bredd/höjd."
@@ -1661,6 +1659,7 @@ sv:
     min_trust_to_post_embedded_media: "Lägsta förtroendenivå som krävs för att bädda in medieobjekt i ett inlägg"
     min_trust_level_to_allow_profile_background: "Lägsta förtroendenivå som krävs för att ladda upp en profilbakgrund"
     min_trust_level_to_allow_user_card_background: "Lägsta förtroendenivå som krävs för att ladda upp en bakgrund på användarkort"
+    min_trust_level_to_allow_invite: "Lägsta förtroendenivå som krävs för att bjuda in användare"
     allowed_link_domains: "Domäner som användare kan länka till även om de inte har tillräcklig förtroendenivå för att kunna publicera länkar"
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_embedded_media: "Hur många inbäddade media objekt en ny användare kan lägga till i ett inlägg."
@@ -1804,8 +1803,6 @@ sv:
     email_editable: "Tillåt att användare ändrar sin e-postadress efter registrering."
     logout_redirect: "Adress som webbläsaren ska omdirigeras till efter utloggning (t.ex.: https://exempel.se/utloggning)"
     allow_uploaded_avatars: "Tillåt att användare laddar upp egna profilbilder."
-    allow_animated_avatars: "Tillåt att användare använder animerade gif-profilbilder. VARNING: kör avatars:refresh rake-kommandot efter att ha ändrat den här inställningen."
-    allow_animated_thumbnails: "Genererar animerade ikoner av animerade gif:ar."
     default_avatars: "URL:er till de avatarer som används som standard för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Hämta Gravatars för användare vid kontoregistrering eller e-postadressbyte."
     digest_topics: "Maximalt antal populära ämnen som visas i e-postsammanfattningen."
@@ -2142,8 +2139,8 @@ sv:
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar tillåts."
     auto_deleted_by_timer: "Automatiskt borttagen enligt timer."
   login:
-    invalid_second_factor_method: "Den valda tvåfaktormetoden är ogiltig."
-    not_enabled_second_factor_method: "Den valda tvåfaktormetoden är inte aktiverad för ditt konto."
+    invalid_second_factor_method: "Den valda tvåfaktorsmetoden är ogiltig."
+    not_enabled_second_factor_method: "Den valda tvåfaktorsmetoden är inte aktiverad för ditt konto."
     security_key_description: "När du har din fysiska säkerhetsnyckel beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
     security_key_alternative: "Prova ett annat sätt"
     security_key_authenticate: "Autentisera med säkerhetsnyckel"
@@ -2183,7 +2180,7 @@ sv:
     missing_user_field: "Du har inte fyllt i alla användarfält"
     auth_complete: "Autentisering är färdig."
     click_to_continue: "Klicka här för att fortsätta."
-    already_logged_in: "Hoppsan, det ser ut som att du försöker godkänna en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}."
+    already_logged_in: "Tyvärr är denna inbjudan avsedd för nya användare, som inte redan har ett befintligt konto."
     second_factor_title: "Tvåfaktorsautentisering"
     second_factor_description: "Ange den obligatoriska autentiseringskoden från din app:"
     second_factor_backup_description: "Ange en av dina reservkoder:"
@@ -3085,8 +3082,8 @@ sv:
 
         Om du har några frågor, [kontakta vår trevliga personal](%{base_url}/about).
     account_second_factor_disabled:
-      title: "Tvåfaktorsautentisering avstängd"
-      subject_template: "[%{email_prefix}] Tvåfaktorsautentisering avstängd"
+      title: "Tvåfaktorsautentisering inaktiverad"
+      subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
       text_body_template: "Tvåfaktorsautentisering har stängts av för ditt konto hos %{site_name}. Du kan nu enbart logga in genom ditt lösenord; en ytterligare autentiseringskod behövs inte längre.\n\nOm du inte valde att stänga av tvåfaktorsautentisering kan någon ha äventyrat ditt konto. \n\nOm du har några frågor, [kontakta din trevliga personal](%{base_url}/about).\n"
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
@@ -3128,7 +3125,7 @@ sv:
     admin_login:
       title: "Administratörsinloggning"
       subject_template: "[%{email_prefix}] Logga in"
-      text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera denna e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
+      text_body_template: "Någon bad om att få logga in på ditt konto hos [%{site_name}](%{base_url}). \n\nOm det inte var på din begäran kan du utan vidare ignorera detta e-postmeddelande. \n\nKlicka på följande länk för att logga in: \n%{base_url}/session/email-login/%{email_token}\n"
     account_created:
       title: "Konto skapat"
       subject_template: "[%{email_prefix}] Ditt nya konto"
@@ -3141,7 +3138,7 @@ sv:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring, vänligen kontakta en administratör för %{site_name}.
+        Om du inte har begärt denna ändring ber vi dig kontakta en [webbplatsadministratör] (%{base_url}/about).
     confirm_new_email_via_admin:
       title: "Bekräfta den nya e-postadressen"
       subject_template: "[%{email_prefix}] Bekräfta din nya e-postadress"
@@ -3150,7 +3147,7 @@ sv:
 
         %{base_url}/u/confirm-new-email/%{email_token}
 
-        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring, vänligen kontakta en administratör för %{site_name}.
+        Denna e-poständring begärdes av en webbplatsadministratör. Om du inte har begärt denna ändring ber vi dig kontakta en [webbplatsadministratör](%{base_url}/about).
     confirm_old_email:
       title: "Bekräfta den gamla e-postadressen"
       subject_template: "[%{email_prefix}] Bekräfta din nuvarande e-postadress"
@@ -3300,7 +3297,11 @@ sv:
     latte: "Latte"
     summer: "Sommar"
     dark_rose: "Mörk ros"
-    default_theme_name: "Ljust"
+    wcag: "WCAG ljus"
+    wcag_theme_name: "WCAG ljus"
+    wcag_dark: "WCAG mörk"
+    wcag_dark_theme_name: "WCAG mörk"
+    default_theme_name: "Standard"
     light_theme_name: "Ljust"
     dark_theme_name: "Mörkt"
     neutral_theme_name: "Neutralt"
@@ -3760,8 +3761,8 @@ sv:
     initial_topic_title: Prestandarapporter för webbplatsen
   tags:
     title: "Taggar"
-    staff_tag_disallowed: 'Taggen "%{tag}" kan endast användas av personalen.'
-    staff_tag_remove_disallowed: 'Taggen "%{tag}" kan endast tas bort av personalen.'
+    restricted_tag_disallowed: 'Du kan inte tillämpa taggen "%{tag}".'
+    restricted_tag_remove_disallowed: 'Du kan inte ta bort taggen "%{tag}".'
     minimum_required_tags:
       one: "Du måste välja åtminstone %{count} tagg."
       other: "Du måste välja åtminstone %{count} taggar."
@@ -3881,7 +3882,7 @@ sv:
             label: "Domstol vid tvist"
             placeholder: "San Francisco, Kalifornien"
       colors:
-        title: "Tema"
+        title: "Färger"
       fonts:
         title: "Typsnitt"
         fields:
@@ -3999,7 +4000,7 @@ sv:
       email_auth_res_enqueue: "Det här e-postmeddelandet underkändes i en DMARC-kontroll och kommer sannolikt inte från den som det verkar komma från. Mer information finns i rubrikerna för e-postmeddelandets rådata."
       email_spam: "Det här e-postmeddelandet flaggades som skräppost av rubriken som definierats i `email_in_spam_header."
       suspect_user: "Denna nya användare angav profilinformation utan att ha läst några ämnen eller inlägg, vilket mycket sannolikt betyder att det kan röra sig om en skräppostare. Se `approve_suspect_users`."
-      contains_media: "Dessa inlägg inkluderar inbäddade medier. Se `review_media_unless_trust_level`."
+      contains_media: "Detta inlägg omfattar inbäddade medier. Se `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Godkänn..."

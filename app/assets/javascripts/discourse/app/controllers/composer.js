@@ -28,6 +28,10 @@ import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -546,8 +550,8 @@ export default Controller.extend({
       this.cancelComposer(differentDraftContext);
     },
 
-    save() {
-      this.save();
+    save(ignore, event) {
+      this.save(false, { jump: !(event && event.shiftKey) });
     },
 
     displayEditReason() {
@@ -584,7 +588,7 @@ export default Controller.extend({
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              max: group.max_mentions,
+              count: group.max_mentions,
               group_link: groupLink,
             });
           } else if (group.user_count > 0) {
@@ -625,7 +629,7 @@ export default Controller.extend({
 
   disableSubmit: or("model.loading", "isUploading"),
 
-  save(force) {
+  save(force, options = {}) {
     if (this.disableSubmit) {
       return;
     }
@@ -644,6 +648,32 @@ export default Controller.extend({
     if (composer.cantSubmitPost) {
       this.set("lastValidatedAt", Date.now());
       return;
+    }
+
+    const topic = composer.topic;
+    const slowModePost =
+      topic && topic.slow_mode_seconds && topic.user_last_posted_at;
+    const notEditing = this.get("model.action") !== "edit";
+
+    // Editing a topic in slow mode is directly handled by the backend.
+    if (slowModePost && notEditing) {
+      if (
+        cannotPostAgain(
+          this.currentUser,
+          topic.slow_mode_seconds,
+          topic.user_last_posted_at
+        )
+      ) {
+        const message = I18n.t("composer.slow_mode.error", {
+          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+        });
+
+        bootbox.alert(message);
+        return;
+      } else {
+        // Edge case where the user tries to post again immediately.
+        topic.set("user_last_posted_at", new Date().toISOString());
+      }
     }
 
     composer.set("disableDrafts", true);
@@ -763,7 +793,8 @@ export default Controller.extend({
         this.currentUser.set("any_posts", true);
 
         const post = result.target;
-        if (post && !staged) {
+
+        if (post && !staged && options.jump !== false) {
           DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })

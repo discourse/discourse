@@ -6,6 +6,8 @@
 #
 module Email
   class Styles
+    MAX_IMAGE_DIMENSION = 400
+
     @@plugin_callbacks = []
 
     attr_accessor :fragment
@@ -220,7 +222,7 @@ module Email
       onebox_styles
       plugin_styles
 
-      style('.post-excerpt img', "max-width: 50%; max-height: 400px;")
+      style('.post-excerpt img', "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
 
       format_custom
     end
@@ -257,7 +259,7 @@ module Email
           url = attachments[original_filename].url
 
           div.add_next_sibling(
-            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"max-width: 50%; max-height: 400px;\" />"
+            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"#{calculate_width_and_height_style(div)}\" />"
           )
           div.remove
         end
@@ -271,19 +273,11 @@ module Email
       strip_classes_and_ids
       replace_relative_urls
 
-      if SiteSetting.preserve_email_structure_when_styling
-        @fragment.to_html
-      else
-        include_body? ? @fragment.at("body").to_html : @fragment.at("body").children.to_html
-      end
+      @fragment.to_html
     end
 
     def to_s
       @fragment.to_s
-    end
-
-    def include_body?
-      @html =~ /<body>/i
     end
 
     def strip_avatars_and_emojis
@@ -325,6 +319,16 @@ module Email
         if href.start_with?("\/\/#{host}")
           element['href'] = "#{scheme}:#{href}"
         end
+      end
+    end
+
+    def calculate_width_and_height_style(div)
+      width = div['data-width']
+      height = div['data-height']
+      if width.present? && height.present? && height.to_i < MAX_IMAGE_DIMENSION && width.to_i < MAX_IMAGE_DIMENSION
+        "width: #{width}px; height: #{height}px;"
+      else
+        "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;"
       end
     end
 

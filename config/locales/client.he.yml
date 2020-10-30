@@ -202,7 +202,11 @@ he:
     topic_admin_menu: "פעולות על נושא"
     wizard_required: "ברוך בואך ל־Discourse החדש שלך! נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא״ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא״ל, מכל סוג שהוא, לא תשלח."
-    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר הצטרפות של למעלה מ־%{min_users} משתמשים."
+    bootstrap_mode_enabled:
+      one: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרף משתמש %{count}."
+      two: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
+      many: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
+      other: "כדי להקל על הקמת האתר החדש שלך, כרגע המערכת במצב אתחול ראשוני. לכל המשתמשים החדשים תוענק דרגת האמון 1 ויישלח אליהם תמצות יומי בדוא״ל. אפשרות זו תכבה אוטומטית לאחר שהצטרפו %{count} משתמשים."
     bootstrap_mode_disabled: "מצב Bootstrap יבוטל תוך 24 שעות."
     themes:
       default_description: "בררת מחדל"
@@ -336,6 +340,7 @@ he:
         next_business_day: "יום העסקים הבא"
         tomorrow: "מחר"
         next_week: "בשבוע הבא"
+        post_local_date: "תאריך בפוסט"
         later_this_week: "בהמשך השבוע"
         start_of_next_business_week: "יום שני"
         start_of_next_business_week_alt: "יום שני הבא"
@@ -376,6 +381,7 @@ he:
       other: "הצגת %{count} נושאים חדשים"
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
+    deleting: "מתבצעת מחיקה…"
     save: "שמירת השינויים"
     saving: "בהליכי שמירה..."
     saved: "נשמר!"
@@ -1014,7 +1020,7 @@ he:
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר בנוגע לנושאים בקטגוריות האלו."
       regular_categories: "רגילות"
       regular_categories_instructions: "הקטגוריות האלו תופענה תחת רשימות הנושאים „אחרונים” ו־„מובילים”."
-      no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מנוטרלת."
+      no_category_access: "בתור פיקוח יש לך גישה מוגבלת לקטגוריות, שמירה מושבתת."
       delete_account: "מחיקת החשבון שלי"
       delete_account_confirm: "להסיר את החשבון? לא ניתן לבטל פעולה זו!"
       deleted_yourself: "החשבון שלך נמחק בהצלחה."
@@ -1079,24 +1085,32 @@ he:
         choose_new: "בחרו סיסמה חדשה"
         choose: "בחרו סיסמה"
       second_factor_backup:
-        title: "קודי גיבוי ב2 גורמים"
+        title: "קודים כגיבוי לאימות דו־שלבי"
         regenerate: "חדש"
         disable: "בטל"
         enable: "הפעל"
         enable_long: "הפעל קודי גיבוי"
-        manage: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+        manage:
+          one: "ניהול קודים כגיבוי. נותר לרשותך קוד <strong>%{count}</strong> כגיבוי."
+          two: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          many: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          other: "ניהול קודים כגיבוי. נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
         copy_to_clipboard: "העתקה ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
         copied_to_clipboard: "הועתק ללוח"
         download_backup_codes: "הורדת קודים לגיבוי"
-        remaining_codes: "יש לך <strong>%{count}</strong> קודי גיבוי נותרים"
+        remaining_codes:
+          one: "נותר לרשותך קוד <strong>%{count}</strong> כגיבוי."
+          two: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          many: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
+          other: "נותרו לרשותך <strong>%{count}</strong> קודים כגיבוי."
         use: "להשתמש בקוד גיבוי"
-        enable_prerequisites: "עליך להפעיל אימות דו־שלבי עיקרי בטרם יצירת קודים כגיבוי."
+        enable_prerequisites: "עליך להפעיל שיטת אימות דו־שלבי עיקרית בטרם יצירת קודים כגיבוי."
         codes:
           title: "קודי גיבוי נוצרו"
           description: "בכל אחד מהקודים האלו המיועדים לשחזור ניתן להשתמש רק פעם אחת. מוטב לשמור עליהם במקום בטוח אך נגיש."
       second_factor:
-        title: "אימות ב2 גורמים"
+        title: "אימות דו־שלבי"
         enable: "ניהול אימות דו־שלבי"
         disable_all: "להשבית הכול"
         forgot_password: "שכחת את הססמה?"
@@ -1111,16 +1125,16 @@ he:
         short_description: |
           הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
         extended_description: |
-          אימות ב2 גורמים מחזק את אבטחת המשתמש שלך על ידי אסימון אבטחה חד-פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשיריAndroid</a> ו<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות ינוטרלו לאחר הפעלת אימות בשני שלבים בחשבונך."
+          אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לססמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
         disable: "בטל"
         disable_confirm: "להשבית את כל שיטות האימות הדו־שלבי?"
         save: "שמירה"
         edit: "עריכה"
-        edit_title: "עריכת אימות דו־שלבי"
-        edit_description: "שם אימות דו־שלבי"
+        edit_title: "עריכת מאמת"
+        edit_description: "שם המאמת"
         enable_security_key_description: |
           כאשר <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">מפתח האבטחה החומרתי</a> שלך מוכן, יש ללחוץ על כפתור הרישום שלהלן.
         totp:
@@ -1245,10 +1259,8 @@ he:
         instructions: "רישום חשבון דורש קוד הזמנה"
       auth_tokens:
         title: "מכשירים שהיו בשימוש לאחרונה"
-        ip: "IP"
         details: "פרטים"
         log_out_all: "להוציא את כולם"
-        active: "פעיל עכשיו"
         not_you: "לא אתה?"
         show_all: "הצג הכל (%{count})"
         show_few: "הצג פחות"
@@ -1257,6 +1269,9 @@ he:
         browser_and_device: "%{browser} ב%{device}"
         secure_account: "אבטח את החשבון שלי"
         latest_post: "פרסמת לאחרונה..."
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">פעיל כעת</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "פוסט אחרון"
       last_emailed: "נשלח לאחרונה בדואר אלקטרוני"
       last_seen: "נראה"
@@ -1374,8 +1389,8 @@ he:
         generate_link: "העתקת קישור הזמנה"
         link_generated: "קישור הזמנה יוצר בהצלחה!"
         valid_for: "קישור ההזמנה תקף רק לכתובת דוא״ל זו: %{email}"
-        single_user: "משתמש בודד"
-        multiple_user: "מגוון משתמשים"
+        single_user: "הזמנה בדוא״ל"
+        multiple_user: "הזמנה באמצעות קישור"
         invite_link:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
@@ -1510,8 +1525,8 @@ he:
     home: "בית"
     read_only_mode:
       enabled: "אתר זה נמצא במצב קריאה בלבד. אנא המשיכו לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע אינם מאופשרים."
-      login_disabled: "הכניסה מנוטרלת בזמן שהאתר במצב קריאה בלבד."
-      logout_disabled: "היציאה מנוטרלת בזמן שהאתר במצב של קריאה בלבד."
+      login_disabled: "הכניסה מושבתת בזמן שהאתר במצב קריאה בלבד."
+      logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
     too_few_topics_and_posts_notice_MF: >-
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{currentPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא<strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
     too_few_topics_notice_MF: >-
@@ -1568,7 +1583,7 @@ he:
       disable: "הצגת פוסטים שנמחקו"
     private_message_info:
       title: "הודעה"
-      invite: "הזמינו אחרים..."
+      invite: "להזמין אחרים…"
       edit: "הוספה או הסרה…"
       remove: "הסרה…"
       add: "הוספה…"
@@ -1617,10 +1632,10 @@ he:
       title: "כניסה"
       username: "משתמש"
       password: "סיסמה"
-      second_factor_title: "אימות ב2 גורמים"
+      second_factor_title: "אימות דו־שלבי"
       second_factor_description: "נא למלא את קוד האישור מהיישומון שלך:"
       second_factor_backup: "כניסה עם קוד גיבוי"
-      second_factor_backup_title: "גיבוי דו־שלבי"
+      second_factor_backup_title: "גיבוי אימות דו־שלבי"
       second_factor_backup_description: "נא להקליד אחד מהקודים לגיבוי שלך:"
       second_factor: "כניסה עם יישומון אימות"
       security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
@@ -1632,7 +1647,7 @@ he:
       email_placeholder: "דואר אלקטרוני או שם משתמש/ת"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
-      cookies_error: "כנראה שהעוגיות בדפדפן שלך מנוטרלות. אין אפשרות להיכנס מבלי להפעיל אותן."
+      cookies_error: "כנראה שהעוגיות בדפדפן שלך מושבתות. אין אפשרות להיכנס מבלי להפעיל אותן."
       rate_limit: "נא להמתין בטרם ביצוע ניסיון כניסה חוזר."
       blank_username: "נא למלא כתובת דוא״ל או שם משתמש."
       blank_username_or_password: "נא למלא את כתובת הדוא״ל או את שם המשתמש שלך וססמה."
@@ -1647,7 +1662,7 @@ he:
       not_allowed_from_ip_address: "הכניסה מכתובת IP זו אסורה."
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
-      omniauth_disallow_totp: "בחשבון שלך מופעל אימות ב2 גורמים. אנא התחבר עם הסיסמה שלך."
+      omniauth_disallow_totp: "בחשבון שלך מופעל אימות דו־שלבי. נא להיכנס עם הססמה שלך."
       resend_title: "שליחה מחדש של הודעת הפעלה בדוא״ל"
       change_email: "שינוי כתובת דוא״ל"
       provide_new_email: "נא לספק כתובת חדשה ואנו נשלח מחדש בדוא״ל את הודעת האישור שלך."
@@ -1656,7 +1671,6 @@ he:
       sent_activation_email_again_generic: "שלחנו הודעת הפעלה נוספת בדוא״ל. ייתכן שיהיה עליך להמתין מספר דקות להגעתה. מוטב לבדוק גם את תיקיית הספאם שלך."
       to_continue: "נא להיכנס"
       preferences: "כדי לשנות את העדפות המשתמש ראשית יש להיכנס למערכת."
-      forgot: "אין לי את פרטי החשבון שלי"
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
       google_oauth2:
         name: "Google"
@@ -1716,7 +1730,11 @@ he:
     conditional_loading_section:
       loading: בטעינה…
     category_row:
-      topic_count: "%{count} נושאים בקטגוריה הזו"
+      topic_count:
+        one: "נושא %{count} בקטגוריה הזו"
+        two: "%{count} נושאים בקטגוריה הזו"
+        many: "%{count} נושאים בקטגוריה הזו"
+        other: "%{count} נושאים בקטגוריה הזו"
     select_kit:
       default_header_text: בחירה…
       no_content: לא נמצאו התאמות
@@ -1733,7 +1751,11 @@ he:
         two: "נא לבחור ב־%{count} פריטים לפחות."
         many: "נא לבחור ב־%{count} פריטים לפחות."
         other: "נא לבחור ב־%{count} פריטים לפחות."
-      invalid_selection_length: "אורך הבחירה חייב להיות %{count} תווים לפחות."
+      invalid_selection_length:
+        one: "אורך הבחירה חייב להיות תו %{count} לפחות."
+        two: "אורך הבחירה חייב להיות %{count} תווים לפחות."
+        many: "אורך הבחירה חייב להיות %{count} תווים לפחות."
+        other: "אורך הבחירה חייב להיות %{count} תווים לפחות."
       components:
         categories_admin_dropdown:
           title: "ניהול קטגוריות"
@@ -1783,7 +1805,11 @@ he:
       similar_topics: "הנושא שלך דומה ל..."
       drafts_offline: "טיוטות מנותקות"
       edit_conflict: "עריכת סתירה"
-      group_mentioned_limit: "<b>זהירות!</b> ציינת <a href='%{group_link}'>%{group}</a>, אך לקבוצה זו יש יותר חברים משהוגדר למנהל המערכת הגבלה של עד %{max} משתמשים. אף אחד לא יקבל הודעה"
+      group_mentioned_limit:
+        one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
+        two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
+        many: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
+        other: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
       group_mentioned:
         one: "על ידי אזכור %{group}, אתם עומדים ליידע <a href='%{group_link}'>אדם אחד</a> – אתם בטוחים?"
         two: "על ידי אזכור %{group}, אתם עומדים ליידע <a href='%{group_link}'>%{count} אנשים</a> – אתם בטוחים?"
@@ -1802,7 +1828,11 @@ he:
         post_length: "על הפוסט להיות באורך %{min} תווים לפחות"
         try_like: "האם ניסית את כפתור ה-%{heart}?"
         category_missing: "עליך לבחור קטגוריה."
-        tags_missing: "עליך לפחות לפחות %{count} תגיות"
+        tags_missing:
+          one: "עליך לבחור בתגית %{count} לפחות"
+          two: "עליך לבחור ב־%{count} תגיות לפחות"
+          many: "עליך לבחור ב־%{count} תגיות לפחות"
+          other: "עליך לבחור ב־%{count} תגיות לפחות"
         topic_template_not_modified: "נא להוסיף פרטים ותיאורים מדויקים לנושא שלך על ידי עריכת תבנית הנושא."
       save_edit: "שמירת עריכה"
       overwrite_edit: "שכתוב על עריכה"
@@ -1869,6 +1899,10 @@ he:
       yourself_confirm:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
+      slow_mode:
+        title: "נושא זה הוא במצב אטי."
+        body: "לאחר הגשת הפוסט, יהיה עליך להמתין %{duration} בטרם פרסום פוסט נוסף."
+        error: "פרסמת לאחרונה בנושא הזה, שנמצא במצב אטי. נא להמתין כדי לאפשר למשתמשים אחרים לקחת חלק."
       admin_options_title: "אפשרויות סגל כרשות לנושא זה"
       composer_actions:
         reply: השב
@@ -1955,7 +1989,11 @@ he:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>נושא חדש</span> %{description}"
       membership_request_accepted: "התקבלת לחברות בקבוצה ‚%{group_name}’"
-      membership_request_consolidated: "%{count} בקשות חברות פתוחות מול ‚%{group_name}’"
+      membership_request_consolidated:
+        one: "בקשת חברות %{count} לקבוצה ‚%{group_name}’ ממתינה"
+        two: "%{count} בקשות חברות לקבוצה ‚%{group_name}’ ממתינות"
+        many: "%{count} בקשות חברות לקבוצה ‚%{group_name}’ ממתינות"
+        other: "%{count} בקשות חברות לקבוצה ‚%{group_name}’ ממתינות"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - הסתיים"
@@ -2034,7 +2072,6 @@ he:
       full_page_title: "חפש נושאים או פוסטים"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
-      searching: "מחפש ..."
       post_format: "#%{post_number} מאת %{username}"
       results_page: "חפש תוצאות עבור '%{term}'"
       more_results: "יש עוד תוצאות. אנא צמצם את קריטריוני החיפוש."
@@ -2043,7 +2080,6 @@ he:
       or_search_google: "או שתנסו חיפוש בעזרת גוגל במקום."
       search_google: "נסה לחפש באמצעות גוגל במקום:"
       search_google_button: "גוגל"
-      search_google_title: "חפש אתר זה"
       context:
         user: "חיפוש פוסטים לפי @%{username}"
         category: "חפשו את הקטגוריה #%{category}"
@@ -2137,12 +2173,17 @@ he:
           two: "בחרת ב־<b>%{count}</b> נושאים."
           many: "בחרת ב־<b>%{count}</b> נושאים."
           other: "בחרת ב־<b>%{count}</b> נושאים."
-        change_tags: "החלפת תגים"
-        append_tags: "הוספת תגים"
+        change_tags: "החלפת תגיות"
+        append_tags: "הוספת תגיות"
         choose_new_tags: "בחירה בתגיות חדשות לנושאים אלו:"
         choose_append_tags: "בחירה בתגיות חדשות שיתווספו לנושאים אלו:"
         changed_tags: "התגיות של נושאים אלו השתנו."
         remove_tags: "הסרת תגיות"
+        progress:
+          one: "התקדמות: נושא <strong>%{count}</strong>"
+          two: "התקדמות: <strong>%{count}</strong> נושאים"
+          many: "התקדמות: <strong>%{count}</strong> נושאים"
+          other: "התקדמות: <strong>%{count}</strong> נושאים"
       none:
         unread: "אין לך נושאים שלא נקראו."
         new: "אין לך נושאים חדשים."
@@ -2154,7 +2195,7 @@ he:
         category: "אין נושאים בקטגוריה %{category}."
         top: "אין נושאים מובילים."
         educate:
-          new: '<p>הנושאים החדשים שלך יופיעו כאן.</p><p>כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">חדש</span> אם הם נוצרו ביומיים האחרונים </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
+          new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
           unread: '<p>הנושאים שלא קראת יופיעו כאן.</p><p>כבררת מחדל, נושאים ייחשבו שטרם קראת אותם ויציגו את המונה <span class="badge new-posts badge-notification">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך מנגנון ההתראות המופיע בתחתית כל נושא.</p><p>ניתן לבקר ב בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
       bottom:
         latest: "אין עוד נושאים אחרונים."
@@ -2255,6 +2296,24 @@ he:
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
       deleted: "הנושא הזה נמחק"
+      slow_mode_update:
+        title: "מצב אטי"
+        select: "משתמשים יכולים לפרסם לנושא הזה רק פעם אחת בכל:"
+        description: "כדי לקדם דיון מתחשב במהלך דיונים מהירים או וכחניים, משתמשים חייבים להמתין בטרם פרסום פעם נוספת לנושא הזה."
+        save: "הפעלה"
+        remove: "השבתה"
+        hours: "שעות:"
+        minutes: "דקות:"
+        seconds: "שניות:"
+        durations:
+          15_minutes: "רבע שעה"
+          1_hour: "שעה"
+          4_hours: "4 שעות"
+          1_day: "יום"
+          1_week: "שבוע"
+          custom: "משך מותאם אישית"
+      slow_mode_notice:
+        duration: "עליך להמתין %{duration} בין פוסטים בנושא הזה"
       topic_status_update:
         title: "שעון עצר לנושא"
         save: "קביעת שעון עצר"
@@ -2386,6 +2445,7 @@ he:
         open: "פתח נושא"
         close: "סגור נושא"
         multi_select: "בחרו פוסטים..."
+        slow_mode: "הגדרת מצב אטי"
         timed_update: "קביעת שעון עצר לנושא..."
         pin: "נעץ נושא..."
         unpin: "שחרר נעיצת נושא..."
@@ -2426,7 +2486,6 @@ he:
       feature_topic:
         title: "המליצו על נושא זה"
         pin: "גרמו לנושא זה להופיע בראש קטגוריה %{categoryLink} עד"
-        confirm_pin: "יש לך כבר %{count} נושאים נעוצים. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. אתה בטוח שאתה רוצה לנעוץ נושא נוסף בקטגוריה זו? "
         unpin: "הסרת נושא זה מראש הקטגוריה %{categoryLink}."
         unpin_until: "גרמו לנושא זה להופיע בראש הקטגוריה %{categoryLink} או המתינו עד <strong>%{until}</strong>."
         pin_note: "משתמשים יכולים לבטל עצמאית את נעיצת הנושא עבורם בלבד."
@@ -2438,7 +2497,11 @@ he:
           many: "נושאים שנעוצים כרגע בקטגוריה %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "נושאים שנעוצים כרגע בקטגוריה %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "להציב את הנושא הזה בראש כל רשימות הנושאים עד"
-        confirm_pin_globally: "יש לך כבר %{count} נושאים נעוצים באופן גלובלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. אתה בטוח שאתה רוצה לנעוץ נושא גלובלי נוסף?"
+        confirm_pin_globally:
+          one: "כבר נעצת נושא %{count} באופן גלובלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. לנעוץ נושא גלובלי נוסף?"
+          two: "כבר נעצת %{count} נושאים באופן גלובלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. לנעוץ נושא גלובלי נוסף?"
+          many: "כבר נעצת %{count} נושאים באופן גלובלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. לנעוץ נושא גלובלי נוסף?"
+          other: "כבר נעצת %{count} נושאים באופן גלובלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אלמוניים. לנעוץ נושא גלובלי נוסף?"
         unpin_globally: "הסרת נושא זה מראש כל רשימות הנושאים."
         unpin_globally_until: "להסיר נושא זה מראש כל רשימות הנושאים או להמתין עד <strong>%{until}</strong>."
         global_pin_note: "משתמשים יכולים לבטל עצמאית את נעיצת הנושא באופן פרטני."
@@ -2658,7 +2721,11 @@ he:
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
-        too_many_dragged_and_dropped_files: "אפשר להעלות עד %{max} קבצים בכל פעם, עמך הסליחה."
+        too_many_dragged_and_dropped_files:
+          one: "אפשר להעלות עד קובץ %{count} בכל פעם, עמך הסליחה."
+          two: "אפשר להעלות עד %{count} קבצים בכל פעם, עמך הסליחה."
+          many: "אפשר להעלות עד %{count} קבצים בכל פעם, עמך הסליחה."
+          other: "אפשר להעלות עד %{count} קבצים בכל פעם, עמך הסליחה."
         upload_not_authorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
@@ -2724,6 +2791,10 @@ he:
         unlock_post_description: "לאפשר למפרסם לערוך את הפוסט הזה"
         delete_topic_disallowed_modal: "אין לך הרשאות למחוק את הנושא הזה. כדי למחוק אותו לצמיתות, יש לסמן אותו בדגל כדי שיקבל את תשומת לב הפיקוח לרבות סיבת הסימון."
         delete_topic_disallowed: "אין לך הרשאה למחוק את הנושא הזה"
+        delete_topic_confirm_modal: "לנושא זה יש למעלה מ־%{minViews} צפיות והוא עשוי להיות יעד חיפוש נפוץ. למחוק את הנושא הזה לחלוטין במקום לערוך ולשפר אותו?"
+        delete_topic_confirm_modal_yes: "כן, למחוק את הנושא הזה"
+        delete_topic_confirm_modal_no: "לא, להשאיר את הנושא הזה"
+        delete_topic_error: "אירעה שגיאה בעת מחיקת הנושא"
         delete_topic: "מחיקת נושא"
         add_post_notice: "הוספת התראת סגל"
         remove_post_notice: "הסרת התראת סגל"
@@ -2824,6 +2895,7 @@ he:
       edit: "עריכה"
       edit_dialog_title: "עריכה: %{categoryName}"
       view: "הצגת נושאים בקטגוריה"
+      back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
       topic_template: "תבנית נושא"
@@ -2833,7 +2905,7 @@ he:
       tags_placeholder: "(רשות) רשימת תגיות מותרות"
       tags_tab_description: "תגיות וקבוצות תגיות שצוינו להלן תהיינה זמינות בקטגוריה זו ובקטגוריות נוספות שמציינות אותן. הן לא תהיינה זמינות בקטגוריות אחרות."
       tag_groups_placeholder: "(רשות) רשימת קבוצות תגיות"
-      manage_tag_groups_link: "ניהול קבוצות תגיות מכאן."
+      manage_tag_groups_link: "ניהול קבוצות תגיות"
       allow_global_tags_label: "לאפשר גם תגיות אחרות"
       tag_group_selector_placeholder: "(רשות) קבוצת תגיות"
       required_tag_group_description: "לדרוש שלנושאים חדשים יהיו תגיות מקבוצת תגיות:"
@@ -2953,7 +3025,17 @@ he:
     flagging:
       title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
       action: "דגלו פוסט"
-      take_action: "ניקטו פעולה"
+      take_action: "נקיטת פעולה…"
+      take_action_options:
+        default:
+          title: "נקיטת פעולה"
+          details: "להגיע באופן מיידי למספר הדגלים הדרוש, במקום להמתין לדגלים נוספים מן הקהילה"
+        suspend:
+          title: "השעיית משתמש"
+          details: "להגיע למספר הדגלים הדרוש ולהשעות את המשתמש"
+        silence:
+          title: "השתקת משתמש"
+          details: "להגיע למספר הדגלים הדרוש להשתיק את המשתמש"
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
@@ -3034,7 +3116,6 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
     posts: "פוסטים"
-    posts_long: "יש %{number} פוסטים בנושא הזה"
     posts_likes_MF: |
       לנושא זה יש {count, plural, one {תגובה 1} other {# תגובות}} {ration, select,
       low {עם יחס גבוה של לייקים לפוסט}
@@ -3061,7 +3142,6 @@ he:
       two: "לייקים"
       many: "לייקים"
       other: "לייקים"
-    likes_long: "יש %{number} לייקים לנושא הזה"
     users: "משתמשים"
     users_lowercase:
       one: "משתמש"
@@ -3344,7 +3424,7 @@ he:
       sort_by: "סידור לפי:"
       sort_by_count: "ספירה"
       sort_by_name: "שם"
-      manage_groups: "ניהול קבוצות תגים"
+      manage_groups: "ניהול קבוצות תגיות"
       manage_groups_description: "הגדרת קבוצות לארגון תגיות"
       upload: "העלאת תגיות"
       upload_description: "ניתן להעלות קובץ csv כדי ליצור כמות גדולה של תגיות בבת אחת"
@@ -3399,8 +3479,8 @@ he:
         delete: "מחיקה"
         confirm_delete: "להסיר את קבוצת התגיות הזו?"
         everyone_can_use: "ניתן להשתמש בתגיות בכל מקום"
-        usable_only_by_staff: "התגיות גלויות לכולם אך רק חברי סגל יכולים להשתמש בהן"
-        visible_only_to_staff: "התגיות גלויות בפני הסגל בלבד"
+        usable_only_by_groups: "התגיות גלויות לכולם אך רק הקבוצות הבאות יכולות להשתמש בהן"
+        visible_only_to_groups: "התגיות גלויות לקבוצות הבאות בלבד"
       topics:
         none:
           unread: "אין לך נושאים שלא נקראו."
@@ -3413,6 +3493,7 @@ he:
     invite:
       custom_message: "ניתן להעניק להזמנה שלך מגע אישי יותר על ידי כתיבת <a href>הודעה אישית</a>."
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
+      approval_not_required: "המשתמש יאושר אוטומטית עם קבלת ההזמנה הזאת."
       custom_message_template_forum: "היי, זה פורום מומלץ, כדאי להצטרף אליו!"
       custom_message_template_topic: "היי, חשבתי שהנושא הזה יעניין אותך!"
     forced_anonymous: "עקב עומס חריג, הודעה זו מוצגת באופן זמני לכולם כפי שתופיע בפני משתמשים שלא נכנסו למערכת."
@@ -3510,14 +3591,14 @@ he:
           weekly: שבועי
           dates: "תאריכים (UTC)"
           groups: "כל הקבוצות"
-          disabled: "דוח זה מנוטרל"
+          disabled: "דוח זה מושבת"
           totals_for_sample: "סיכומים לדוגמה"
           average_for_sample: "ממוצע לדגימה"
           total: "סך הכול מאז ומתמיד"
           no_data: "אין נתונים להצגה."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
-            disabled: 'דוח מגמות חיפושים מנוטרל. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
+            disabled: 'דוח מגמות חיפושים מושבת. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
           filters:
             file_extension:
               label: סיומת קובץ
@@ -3714,7 +3795,7 @@ he:
           inactive: "לא פעיל"
           failed: "נכשל"
           successful: "הצליח"
-          disabled: "מנוטרלת"
+          disabled: "מושבתת"
         events:
           none: "אין אירועים קשורים."
           redeliver: "שליחה מחדש"
@@ -3995,7 +4076,17 @@ he:
           color_definitions:
             text: "ערכות צבע"
             title: "למלא ערכות צבע מותאמות אישית (משתמשים מתקדמים בלבד)"
-            placeholder: "\\r\nיש להשתמש בגיליון סגנון זה כדי להוסיף צבעים מותאמים אישית לרשימת מאפייני ה־CSS בהתאמה אישית.\\r\n\\r\nדוגמה: \\r\n\\r\n‎:root {\\r\n  ‎--mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\\r\n}\\r\n\\r\nמומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה."
+            placeholder: |2-
+
+              יש להשתמש בגיליון סגנון זה כדי להוסיף צבעים מותאמים אישית לרשימת מאפייני ה־CSS בהתאמה אישית.
+
+              דוגמה:
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              מומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה.
           head_tag:
             text: "</head>"
             title: "HTML שיוכנס לפני התג </head>"
@@ -4023,6 +4114,10 @@ he:
           primary:
             name: "ראשי"
             description: "רוב הטקסט, הייקונים והמסגרות."
+          primary-medium:
+            name: "עיקרי-בינוני"
+          primary-low-mid:
+            name: "עיקרי-נמוך-בינוני"
           secondary:
             name: "משני"
             description: "צבע הרקע העיקי, וצבע הטקסט של חלק מהכפתורים."
@@ -4041,6 +4136,12 @@ he:
           highlight:
             name: "הדגשה"
             description: "צבע הרקע של אלמנטים מודגשים בעמוד, כמו פוסטים ונושאים."
+          highlight-high:
+            name: "מודגש-גבוה"
+          highlight-medium:
+            name: "מודגש-בינוני"
+          highlight-low:
+            name: "מודגש-נמוך"
           danger:
             name: "זהירות"
             description: "צבע הדגשה של פעולות כמו מחיקת פוסטים ונושאים."
@@ -4247,7 +4348,7 @@ he:
             embeddable_host_update: "עדכון מארח להטמעה"
             embeddable_host_destroy: "השמדת מארח להטמעה"
             change_theme_setting: "שנוי הגדרות ערכת עיצוב"
-            disable_theme_component: "נטרול רכיב בערכת עיצוב"
+            disable_theme_component: "השבתת רכיב בערכת עיצוב"
             enable_theme_component: "הפעלת רכיב בערכת עיצוב"
             revoke_title: "כותרת השלילה"
             change_title: "שינוי הכותרת"
@@ -4527,7 +4628,7 @@ he:
         activate: "הפעלת חשבון"
         activate_failed: "הייתה בעיה בהפעלת המשתמש."
         deactivate_account: "נטרל חשבון"
-        deactivate_failed: "הייתה בעיה בנטרול חשבון המשתמש."
+        deactivate_failed: "הייתה בעיה בהשבתת חשבון המשתמש."
         unsilence_failed: "אירעה תקלה בעת ביטול השתקת המשתמש."
         silence_failed: "אירעה תקלה בעת השתקת המשתמש."
         silence_confirm: "להשתיק את המשתמש הזה? לא תהיה לו אפשרות ליצור נושאים או פוסטים חדשים."
@@ -4537,7 +4638,7 @@ he:
           label: "איפוס"
           title: "איפוס ניקוד-החזר"
         visit_profile: "בקרו <a href='%{url}'>בדף ההעדפות של משתמש/ת זה/זו</a> כדי לערוך את הפרופיל שלהם"
-        deactivate_explanation: "חשבון משתמש מנוטרל נדרש לוודא דואר אלקטרוני מחדש."
+        deactivate_explanation: "חשבון משתמש מושבת נדרש לאמת דוא״ל מחדש."
         suspended_explanation: "משתמש מושעה לא יכול להיכנס."
         silence_explanation: "משתמש מושתק לא יכול לפרסם או לפתוח נושאים."
         staged_explanation: "משתמש מבוים יכול לפרסם לנושאים מסוימים רק דרך דוא״ל."
@@ -4546,7 +4647,7 @@ he:
           some: "מספר החזרות התקבלו לאחרונה מהדוא״ל הזה."
           threshold_reached: "התקבלו יותר מדי החזרות מהדוא״ל הזה."
         trust_level_change_failed: "הייתה בעיה בשינוי דרגת האמון של המשתמש."
-        suspend_modal_title: "השעה משתמש"
+        suspend_modal_title: "השעיית משתמש"
         confirm_cancel_penalty: "להתעלם מהעונש?"
         trust_level_2_users: "משתמשים בדרגת אמון 2"
         trust_level_3_requirements: "דרישות דרגת אמון 3"
@@ -4733,7 +4834,7 @@ he:
         enabled: הפעלת עיטור
         icon: סמליל
         image: תמונה
-        icon_help: "נא להכניס שם של סמל מתוך FontAwesome (קידומת ‚far-‎’ לסמלים רגילים וב־‚fab-‎’ לסמלים ממותגים)"
+        icon_help: "נא למלא שם של סמל מתוך Font Awesome (קידומת ‚far-‎’ לסמלים רגילים ו־‚fab-‎’ לסמלים ממותגים)"
         image_help: "נא להקליד את כתובת התמונה (דורסת את שדה הסמל אם שניהם מוגדרים)"
         query: שאילתת עיטור (SQL)
         target_posts: השאילתה מוכוונת פוסטים

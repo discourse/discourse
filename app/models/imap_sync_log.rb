@@ -42,8 +42,8 @@ end
 # Table name: imap_sync_logs
 #
 #  id         :bigint           not null, primary key
-#  level      :integer
-#  message    :string
+#  level      :integer          not null
+#  message    :string           not null
 #  group_id   :bigint
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

@@ -7,8 +7,6 @@
 he:
   js:
     presence:
-      replying: "תגובה"
-      editing: "עריכה"
       replying_to_topic:
         one: "תגובה"
         two: "תגובה"

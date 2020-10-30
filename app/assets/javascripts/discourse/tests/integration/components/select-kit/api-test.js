@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import componentTest from "discourse/tests/helpers/component-test";
 import selectKit, {
   testSelectKitModule,
@@ -101,7 +102,7 @@ componentTest("modifySelectKit(identifier).onChange", {
 
     withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").onChange((component, value, item) => {
-        find("#test").text(item.name);
+        queryAll("#test").text(item.name);
       });
     });
   },
@@ -110,6 +111,6 @@ componentTest("modifySelectKit(identifier).onChange", {
     await this.comboBox.expand();
     await this.comboBox.selectRowByIndex(0);
 
-    assert.equal(find("#test").text(), "foo");
+    assert.equal(queryAll("#test").text(), "foo");
   },
 });

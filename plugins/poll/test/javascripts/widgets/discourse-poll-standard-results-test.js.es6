@@ -1,5 +1,9 @@
 import EmberObject from "@ember/object";
-import { moduleForWidget, widgetTest } from "discourse/tests/helpers/widget-test";
+import {
+  moduleForWidget,
+  widgetTest,
+} from "discourse/tests/helpers/widget-test";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 moduleForWidget("discourse-poll-standard-results");
 
@@ -21,8 +25,8 @@ widgetTest("options in descending order", {
   },
 
   test(assert) {
-    assert.equal(find(".option .percentage:eq(0)").text(), "56%");
-    assert.equal(find(".option .percentage:eq(1)").text(), "44%");
+    assert.equal(queryAll(".option .percentage:eq(0)").text(), "56%");
+    assert.equal(queryAll(".option .percentage:eq(1)").text(), "44%");
   },
 });
 
@@ -40,8 +44,8 @@ widgetTest("options in ascending order", {
   },
 
   test(assert) {
-    assert.equal(find(".option .percentage:eq(0)").text(), "56%");
-    assert.equal(find(".option .percentage:eq(1)").text(), "44%");
+    assert.equal(queryAll(".option .percentage:eq(0)").text(), "56%");
+    assert.equal(queryAll(".option .percentage:eq(1)").text(), "44%");
   },
 });
 
@@ -67,12 +71,12 @@ widgetTest("multiple options in descending order", {
   },
 
   test(assert) {
-    assert.equal(find(".option .percentage:eq(0)").text(), "41%");
-    assert.equal(find(".option .percentage:eq(1)").text(), "33%");
-    assert.equal(find(".option .percentage:eq(2)").text(), "16%");
-    assert.equal(find(".option .percentage:eq(3)").text(), "8%");
-    assert.equal(find(".option span:nth-child(2):eq(3)").text(), "a");
-    assert.equal(find(".option .percentage:eq(4)").text(), "8%");
-    assert.equal(find(".option span:nth-child(2):eq(4)").text(), "b");
+    assert.equal(queryAll(".option .percentage:eq(0)").text(), "41%");
+    assert.equal(queryAll(".option .percentage:eq(1)").text(), "33%");
+    assert.equal(queryAll(".option .percentage:eq(2)").text(), "16%");
+    assert.equal(queryAll(".option .percentage:eq(3)").text(), "8%");
+    assert.equal(queryAll(".option span:nth-child(2):eq(3)").text(), "a");
+    assert.equal(queryAll(".option .percentage:eq(4)").text(), "8%");
+    assert.equal(queryAll(".option span:nth-child(2):eq(4)").text(), "b");
   },
 });
