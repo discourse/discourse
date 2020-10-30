@@ -39,9 +39,11 @@ export default SelectKitRowComponent.extend({
     "description",
     "categoryName",
     function () {
-      return htmlToText(
-        this.descriptionText || this.description || this.categoryName
-      );
+      if (this.category) {
+        return htmlToText(
+          this.descriptionText || this.description || this.categoryName
+        );
+      }
     }
   ),
 
