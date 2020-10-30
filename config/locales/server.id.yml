@@ -48,7 +48,6 @@ id:
     compile_error:
       unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
-      generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"
       file_too_big: "Berkas yang tidak dikompresi terlalu besar."
     settings_errors:

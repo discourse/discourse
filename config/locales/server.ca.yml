@@ -56,7 +56,6 @@ ca:
     compile_error:
       unrecognized_extension: "Extensió de fitxer no reconeguda: %{extension}"
     import_error:
-      generic: Hi ha hagut un error important l'aparença.
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
       unpack_failed: "Error en desempaquetar el fitxer"
@@ -1411,9 +1410,6 @@ ca:
     enable_twitter_logins: "Activa l'autenticació de Twitter, requereix twitter_consumer_key i twitter_consumer_secret. Consulteu <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuració de l'inici de sessió de Twitter (i incrustacions riques) per a Discourse</a>."
     twitter_consumer_key: "Clau del consumidor per a l'autenticació de Twitter, registrada en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret del consumidor per a l'autenticació de Twitter, registrat en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
-    instagram_consumer_key: "Clau de consum per a l'autenticació amb Instagram"
-    instagram_consumer_secret: "Secret de consum per a l'autenticació amb Instagram"
     enable_facebook_logins: "Activa l'autenticació de Facebook. Requereix facebook_app_id i facebook_app_secret. Vegeu <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuració de l'inici de sessió Facebook per a Discourse</a> ."
     facebook_app_secret: "Secret d'aplicació per a l'autenticació de Facebook, registrada en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "S'ha de permetre als usuaris autenticar-se mitjançant Discord?"

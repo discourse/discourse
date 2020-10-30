@@ -56,7 +56,6 @@ pl_PL:
     compile_error:
       unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
     import_error:
-      generic: Podczas importowania motywu wystąpił błąd.
       about_json: "Błąd importu: about.json nie istnieje lub jest nieprawidłowy. Czy to na pewno szablon Discourse?"
       about_json_values: "Plik about.json zawiera niepoprawne wartości: %{errors}"
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
@@ -197,6 +196,7 @@ pl_PL:
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
+      cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     not_found: "Token do zaproszeń jest nieprawidłowy. <a href='%{base_url}/about'>Skontaktuj się z administracją strony</a>."
@@ -210,6 +210,7 @@ pl_PL:
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
     error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
   invite_link:
+    email_taken: "Ten email jest już wykorzystany. Jeśli masz już konto zaloguj się lub zresetuj hasło."
     max_redemptions_limit: "powinien być między 2, a 1%{max_limit}"
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
@@ -366,6 +367,7 @@ pl_PL:
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   edit_conflict: "Ten wpis został zmieniony przez innego użytkownika i Twoje zmiany nie zostaną zapisane."
   revert_version_same: "Obecna wersja jest taka sama jak w wersja, którą próbujesz przywrócić."
+  cannot_edit_on_slow_mode: "Temat jest w trybie spowolnionym i ten post nie może być już edytowany."
   excerpt_image: "zdjęcie"
   bookmarks:
     errors:
@@ -1130,7 +1132,7 @@ pl_PL:
       title: "DAU / MAU"
       xaxis: "Dzień"
       yaxis: "DAU / MAU"
-      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca% wskazujący „lepkość” społeczności. Celuj na&gt; 30%."
+      description: "Liczba członków zalogowanych w ostatnim dniu podzielona przez liczbę członków zalogowanych w ostatnim miesiącu - zwraca % wskazujący 'lepkość' społeczności. Celuj na >30%."
     daily_engaged_users:
       title: "Zaangażowani użytkownicy dziennie"
       xaxis: "Dzień"
@@ -1219,7 +1221,7 @@ pl_PL:
       yaxis: "Liczba wiadomości"
       description: "Liczba ostrzeżeń wysłanych osobistymi wiadomościami od moderatorów."
     notify_moderators_private_messages:
-      title: "Powiadomienia moderatorów"
+      title: "Powiadom moderatorów"
       xaxis: "Dzień"
       yaxis: "Liczba wiadomości"
       description: "Liczba razy moderatorzy byli prywatnie powiadamiani przez flagę."
@@ -1394,6 +1396,7 @@ pl_PL:
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
     default_locale: "Domyślny język tego wystąpienia dyskursu. Tekst kategorii i tematów generowanych przez system można zastąpić w opcji <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Dostosuj / Tekst</a> ."
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych ustawieniach"
+    set_locale_from_accept_language_header: "ustaw język interfejsu dla anonimowych użytkowników na podstawie nagłówków języka z ich przeglądarki"
     support_mixed_text_direction: "Obsługa mieszanych wskazówek tekstowych od lewej do prawej i od prawej do lewej."
     min_post_length: "Minimalna długość wpisu w znakach"
     min_first_post_length: "Minimalna długość treści (liczba znaków) pierwszego wpisu w temacie "
@@ -1401,6 +1404,7 @@ pl_PL:
     max_post_length: "Maksymalna długość wpisu, w znakach"
     topic_featured_link_enabled: "Włącz dodawanie linków w tematach."
     show_topic_featured_link_in_digest: "Pokazuj polecany link tematu w podsumowaniu mailowym."
+    min_topic_views_for_delete_confirm: "Minimalna liczba wyświetleń, które musi mieć wątek aby pojawił się po usunięciu okna potwierdzającego"
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
     min_personal_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
@@ -1465,6 +1469,7 @@ pl_PL:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
+    enforce_second_factor: "Wymusza na użytkownikach włączenie uwierzytelniania dwuskładnikowego. Wybierz opcję 'wszystkie', aby wymusić na wszystkich użytkownikach. Wybierz 'personel', aby wymusić tylko użytkownikach z personelu."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     same_site_cookies: "Używaj tych samych plików cookies, eliminują one wszystkie wektory Cross Site Request Forgery na wspieranych przeglądarkach (Lax lub Strict). Ostrzeżenie: Przeglądarka Strict działa jedynie na stronach, które wymagają logowania oraz używają SSO."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
@@ -1475,6 +1480,7 @@ pl_PL:
     enable_personal_messages: "Zezwalaj użytkownikom o poziomie zaufania 1 (możliwe do zmiany przez min trust level to send messages) na tworzenie wiadomości i odpowiadanie na nie. Zwróć uwagę, że administracja zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_long_polling: "Message bus used for notification can use long polling"
+    enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś to w origin pull) np.: http://origin.site.com"
     long_polling_interval: "Okres czasu jaki serwer powinien odczekać przed odpowiedzią klientowi kiedy nie ma danych do przesłania (tylko do zalogowanych użytkowników)"
     polling_interval: "Kiedy nie long polling, jak często zalogowani klienci powinni poll w milisekundach"
@@ -1582,9 +1588,6 @@ pl_PL:
     enable_twitter_logins: "Włącz uwierzytelnianie na Twitterze, wymaga twitter_consumer_key i twitter_consumer_secret. Zobacz <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurowanie logowania na Twitterze (i bogatych osadzeń) dla dyskursu</a> ."
     twitter_consumer_key: "Klucz klienta do uwierzytelnienia na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Sekret klienta dotyczący uwierzytelniania na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>stronie https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Włącz uwierzytelnienie za pomocą Instagramu, wymaga instagram_consumer_key i instagram_consumer_secret."
-    instagram_consumer_key: "Klucz konsumenta dla uwierzytelnienia Instragram"
-    instagram_consumer_secret: "Sekret konsumenta dla uwierzytelnienia Instragram"
     enable_facebook_logins: "Włącz uwierzytelnianie na Facebooku, wymaga facebook_app_id i facebook_app_secret. Zobacz <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfigurowanie logowania na Facebooku dla dyskursu</a> ."
     facebook_app_secret: "Tajna aplikacja do uwierzytelniania na Facebooku, zarejestrowana na <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Zezwolić użytkownikom na uwierzytelnianie przy użyciu Discord?"
@@ -1863,6 +1866,7 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
+    default_code_lang: "Domyślne podświetlanie składni języka programowania zastosowane do bloków kodu GitHub (auto, nohighlight, ruby, python itp.)"
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     embed_truncate: "Okrój osadzone wpisy."
@@ -2049,6 +2053,7 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
+    omniauth_error_unknown: "Coś poszło nie tak podczas przetwarzania logowania, spróbuj ponownie."
     omniauth_confirm_title: "Zaloguj się za pomocą %{provider}"
     omniauth_confirm_button: "Kontynuuj"
     authenticator_error_no_valid_email: "Adresy e-mail powiązane z %{account} są niedozwolone. Musisz użyć innego adresu."
@@ -2060,6 +2065,7 @@ pl_PL:
     missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
+    already_logged_in: "Przepraszamy! To zaproszenie jest przeznaczone dla nowych użytkowników, którzy nie mają jeszcze istniejącego konta."
     second_factor_title: "Uwierzytelnianie dwuskładnikowe"
     second_factor_description: "Podaj wymagany kod uwierzytelniający ze swojej aplikacji:"
     second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
@@ -2612,6 +2618,8 @@ pl_PL:
     account_exists:
       title: "Konto już istnieje"
       subject_template: "[%{email_prefix}] Konto już istnieje"
+    account_second_factor_disabled:
+      title: "Uwierzytelnianie dwuskładnikowe wyłączone"
     digest:
       why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"

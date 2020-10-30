@@ -57,7 +57,7 @@ pl_PL:
         title: "Wróć do oddanych głosów"
         label: "Pokaż głos"
       group-results:
-        title: "Grupuj głosy polami użytkownika"
+        title: "Grupuj głosy według pól użytkownika"
         label: "Pokaż podsumowanie"
       export-results:
         title: "Eksportuj wyniki ankiety"
@@ -82,9 +82,9 @@ pl_PL:
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
-      error_while_exporting_results: "Przepraszamy, wystąpił błąd poczas eksportowania wyników ankiety."
+      error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
-        title: Utwórz ankietę
+        title: Zbuduj ankietę
         insert: Wstaw ankietę
         help:
           options_count: Wpisz co najmniej 1 opcję

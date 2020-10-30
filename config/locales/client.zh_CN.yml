@@ -297,6 +297,7 @@ zh_CN:
       other: "有 %{count} 个新主题"
     preview: "预览"
     cancel: "取消"
+    deleting: "删除中..."
     save: "保存更改"
     saving: "保存中…"
     saved: "已保存！"
@@ -1968,6 +1969,8 @@ zh_CN:
         choose_append_tags: "为这些主题添加新标签："
         changed_tags: "主题的标签被修改"
         remove_tags: "移除标签"
+        progress:
+          other: "进度： <strong>%{count}</strong> 主题"
       none:
         unread: "你没有未读主题。"
         new: "你没有近期主题可读。"
@@ -2061,9 +2064,6 @@ zh_CN:
       deleted: "此主题已被删除"
       slow_mode_update:
         title: "慢速模式"
-        select: "持续时间："
-        description: "用户再次发帖前将需要等待。"
-        save: "保存"
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
@@ -2491,6 +2491,10 @@ zh_CN:
         unlock_post_description: "允许发布者编辑帖子"
         delete_topic_disallowed_modal: "你无权删除该贴。如果你真想删除，向版主提交原因并标记。"
         delete_topic_disallowed: "你无权删除此主题"
+        delete_topic_confirm_modal: "这个话题目前有超过 %{minViews} 个浏览，可能是一个受欢迎的搜索目标。 你确定要完全删除该主题，而不是对其进行编辑以改善它吗？"
+        delete_topic_confirm_modal_yes: "是，删除此主题"
+        delete_topic_confirm_modal_no: "不，保留这个话题"
+        delete_topic_error: "删除此主题时发生错误"
         delete_topic: "删除主题"
         add_post_notice: "添加管理人员通知"
         remove_post_notice: "移除管理人员通知"
@@ -3093,6 +3097,7 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
+      approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"

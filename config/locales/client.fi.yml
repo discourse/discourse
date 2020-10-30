@@ -2021,9 +2021,6 @@ fi:
       deleted: "Tämä ketju on poistettu"
       slow_mode_update:
         title: "Hidas tila"
-        select: "Kesto:"
-        description: "Käyttäjän on odotettava ennen kuin voi lähettää toisen viestin."
-        save: "Tallenna"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
         minutes: "Minuuttia:"

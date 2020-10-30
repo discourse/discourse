@@ -56,7 +56,6 @@ it:
     compile_error:
       unrecognized_extension: "Estensione del file non riconosciuta: %{extension}"
     import_error:
-      generic: Errore durante l'importazione del tema
       about_json: "Errore di importazione: about.json non esiste o non è valido. Sei sicuro che questo sia un tema di Discourse?"
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
@@ -185,6 +184,7 @@ it:
       second_factor_cannot_be_enforced_with_sso_enabled: "Non si può applicare 2FA se SSO è attivato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
+      cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
@@ -205,6 +205,7 @@ it:
   topic_invite:
     failed_to_invite: "L'utente non può essere invitato in questo argomento senza essere membro di uno dei seguenti gruppi: %{group_names}."
     user_exists: "Spiacenti, l'utente è stato già invitato. Puoi invitare un utente ad uno stesso argomento solo una volta ."
+    not_allowed: "Siamo spiacenti, questo utente non può essere invitato."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -274,6 +275,8 @@ it:
   too_many_mentions_newuser:
     one: "Spiacenti, i nuovi utenti possono menzionare al massimo un utente in un messaggio."
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
+  no_embedded_media_allowed_trust: "Siamo spiacenti, non puoi incorporare elementi multimediali in un messaggio."
+  no_embedded_media_allowed: "Siamo spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
   no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
   too_many_attachments:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
@@ -294,6 +297,7 @@ it:
   removed_direct_reply_full_quotes: "La citazione dell'intero messaggio precedente è stata rimossa automaticamente."
   secure_upload_not_allowed_in_public_topic: "Siamo spiacenti, i seguenti caricamenti sicuri non possono essere utilizzati in un argomento pubblico: %{upload_filenames}."
   create_pm_on_existing_topic: "Spiacenti, non puoi creare un PM su un argomento esistente."
+  slow_mode_enabled: "Questo argomento è in modalità lenta."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   invalid_characters: "contiene caratteri non validi"
   is_invalid: "sembra poco chiaro, è una frase completa?"
@@ -332,6 +336,7 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   edit_conflict: "Il messaggio è stato modificato da un altro utente e le tue modifiche non possono più essere salvate."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
+  cannot_edit_on_slow_mode: "Il topic è in modalità lenta e quel post non può più essere modificato."
   excerpt_image: "immagine"
   bookmarks:
     errors:
@@ -364,6 +369,7 @@ it:
       email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
       cant_allow_membership_requests: "Non è possibile permettere le richieste di adesione in un gruppo senza proprietari."
       already_requested_membership: "Hai già richiesto di iscriverti a questo gruppo."
+      adding_too_many_users: "È possibile aggiungere un massimo di %{limit} utenti contemporaneamente"
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -422,6 +428,7 @@ it:
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte individuali.
     dominating_topic: |
       ### Consenti ad altri di partecipare alla conversazione Questo argomento è chiaramente importante per te: hai pubblicato più di %{percent}% delle risposte. Potrebbe essere ancora meglio se dessi ad altre persone lo spazio per condividere anche i loro punti di vista. Puoi invitarli?
+    get_a_room: "### Incoraggia tutti a partecipare alla conversazione\n\nHai risposto %{count} volte a @%{reply_username} in questo particolare argomento! \n\nUna grande discussione vede protagoniste molte voci e punti di vista. Ti va di coinvolgere qualcun altro? \n\nE non dimenticare, se desideri continuare la tua conversazione in privato con questo particolare utente, [invia un messaggio personale](%{base_path}/u/%{reply_username}).\n"
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
 
@@ -1476,9 +1483,6 @@ it:
     enable_twitter_logins: "Abilita l'autenticazione di Twitter, richiede twitter_consumer_key e twitter_consumer_secret. Vedi <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurare l'accesso a Twitter (e rich embedding) per Discourse</a> ."
     twitter_consumer_key: "Consumer Key per l'autenticazione Twitter, registrata su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer secret per l'autenticazione Twitter, registrato su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Abilita l'autenticazione con Instagram, richiede la instagram_consumer_key e la instagram_consumer_secret"
-    instagram_consumer_key: "La consumer key per autenticazione Instagram"
-    instagram_consumer_secret: "La consumer secret per l'autenticazione Instagram"
     enable_facebook_logins: "Abilita l'autenticazione di Facebook, richiede facebook_app_id e facebook_app_secret. Vedi <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurazione dell'accesso a Facebook per Discourse</a> ."
     facebook_app_secret: "App secret per l'autenticazione di Facebook, registrato su <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Consentire agli utenti di autenticarsi utilizzando Discord?"
@@ -1907,6 +1911,8 @@ it:
       topic: "Risultati"
       user: "Utenti"
     results_page: "Risultati della ricerca per '%{term}'"
+    audio: "[audio]"
+    video: "[video]"
   sso:
     login_error: "Errore Login"
     not_found: "Impossibile trovare il tuo account. Si prega di contattare l'amministratore del sito."
@@ -2002,6 +2008,7 @@ it:
     security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
     security_key_no_matching_credential_error: "Non è stato possibile trovare credenziali corrispondenti nella chiave di sicurezza fornita."
     security_key_support_missing_error: "Il tuo dispositivo o browser attuale non supporta l&#39;uso di chiavi di sicurezza. Si prega di utilizzare un altro metodo."
+    security_key_invalid: "Si è verificato un errore durante la convalida della chiave di sicurezza."
     not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via mail quando potrai collegarti."
     incorrect_username_email_or_password: "Nome utente, email o password errati"
     incorrect_password: "Password errata"
@@ -2030,9 +2037,13 @@ it:
     missing_user_field: "Non hai inserito tutti i campi utente"
     auth_complete: "L'autenticazione è completa"
     click_to_continue: "Clicca qui per continuare."
+    second_factor_title: "Autenticazione a due fattori"
     second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
     second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
     invalid_second_factor_code: "Codice di autenticazione non valido Ogni codice può essere utilizzato solo una volta."
+    invalid_security_key: "Chiave di sicurezza non valida."
+    missing_second_factor_name: "Si prega di fornire un nome."
+    missing_second_factor_code: "Si prega di fornire un codice."
     second_factor_toggle:
       backup_code: "Utilizza un codice di backup"
   admin:
@@ -2310,6 +2321,16 @@ it:
       title: "Invito di Massa Fallito"
       subject_template: "Invito di massa processato con errori"
       text_body_template: "È stato elaborato il tuo file di invito massivo per utenti, %{sent} inviti inviati con %{failed}errori. \n\nEcco il registro:\n\n``` text\n%{logs}\n```\n"
+    user_added_to_group_as_owner:
+      title: "Aggiunto al gruppo come proprietario"
+      subject_template: "Sei stato aggiunto come proprietario del gruppo %{group_name}"
+      text_body_template: |
+        Sei stato aggiunto come proprietario del gruppo [%{group_name}] (%{base_url}%{group_path}).
+    user_added_to_group_as_member:
+      title: "Aggiunto al gruppo come membro"
+      subject_template: "Sei stato aggiunto come membro del gruppo %{group_name}"
+      text_body_template: |
+        Sei stato aggiunto come membro del gruppo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Esportazione CSV Riuscita"
       subject_template: "[%{export_title}] Esportazione dati completata"
@@ -2863,6 +2884,10 @@ it:
         Se non hai cercato di creare un account per %{email} o di cambiare il tuo indirizzo email, non ti preoccupare – puoi tranquillamente ignorare questo messaggio.
 
         Se hai delle domande, [contatta il nostro amichevole staff](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Autenticazione a due fattori disabilitata"
+      subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
+      text_body_template: "L'autenticazione a due fattori è stata disabilitata per il tuo account su %{site_name}. Ora puoi accedere solo con la tua password; non è più richiesto un codice di autenticazione aggiuntivo. \n\nSe non hai disabilitato tu l'autenticazione a due fattori, qualcuno potrebbe aver compromesso il tuo account. \n\nSe hai domande, [contatta il nostro staff](%{base_url}/about).\n"
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       since_last_visit: "Dalla tua ultima visita"

@@ -54,7 +54,6 @@ zh_TW:
     bad_color_scheme: "無法更新佈景主題，無效的調色盤"
     other_error: "更新佈景主題時發生了錯誤"
     import_error:
-      generic: 匯入佈景主題時發生了錯誤
       about_json_values: "about.json 含有無效的數值：%{errors}"
       git: "複製 git 版本庫時發生錯誤，存取被拒或找不到該版本庫"
       unpack_failed: "解壓縮檔案失敗"
@@ -1291,9 +1290,6 @@ zh_TW:
     enable_twitter_logins: "啟用Twitter身份驗證，需要twitter_consumer_key和twitter_consumer_secret。 請參閱<a href='https://meta.discourse.org/t/13395' target='_blank'>使用Discourse設置Twitter登入（和其他豐富功能）</a>。"
     twitter_consumer_key: "Twitter身份驗證的使用者密鑰，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上取得"
     twitter_consumer_secret: "Twitter身份驗證的密鑰，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上取得"
-    enable_instagram_logins: "啟用 Instagram 驗證，需要 instagram_consumer_key 和 instagram_consumer_secret"
-    instagram_consumer_key: "Instagram 驗證的 Consumer key"
-    instagram_consumer_secret: "Instagram 驗證的 Consumer secret"
     enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
     enable_backups: "允許管理員建立備份"

@@ -2085,9 +2085,6 @@ es:
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
-        select: "Duración:"
-        description: "Los usuarios tendrán que esperar esta cantidad de tiempo antes de poder volver a responder."
-        save: "Guardar"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"

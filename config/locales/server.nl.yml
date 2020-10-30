@@ -56,7 +56,6 @@ nl:
     compile_error:
       unrecognized_extension: "Niet-herkende bestandsextensie: %{extension}"
     import_error:
-      generic: Er is een fout opgetreden bij het importeren van dat thema
       about_json: "Belangrijke fout: about.json bestaat niet, of is ongeldig. Weet u zeker dat dit een Discourse-thema is?"
       about_json_values: "about.json bevat ongeldige waarden: %{errors}"
       modifier_values: "about.json-modificatoren bevatten ongeldige waarden: %{errors}"
@@ -187,6 +186,7 @@ nl:
       second_factor_cannot_be_enforced_with_disabled_local_login: "U kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       local_login_cannot_be_disabled_if_second_factor_enforced: "U kunt geen lokale aanmelding uitschakelen als 2FA is afgedwongen. Schakel afgedwongen 2FA uit voordat u lokale aanmeldingen uitschakelt."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
+      cors_origins_should_not_have_trailing_slash: "U dient geen schuine streep (/) toe te voegen aan CORS-domeinen."
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is stafinterventie vereist. Neem contact op met een staflid en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     expired: "Uw uitnodigingstoken is verlopen. <a href='%{base_url}/about'>Neem contact op</a> met een staflid."
@@ -348,6 +348,7 @@ nl:
   too_late_to_edit: "Dat bericht is te lang geleden geschreven. Het kan niet meer worden gewijzigd of verwijderd."
   edit_conflict: "Dat bericht is door een andere gebruiker bewerkt, en uw wijzigingen kunnen niet meer worden opgeslagen."
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
+  cannot_edit_on_slow_mode: "Het topic bevindt zich in langzame modus, en dat bericht kan niet meer worden bewerkt."
   excerpt_image: "afbeelding"
   bookmarks:
     errors:
@@ -1322,6 +1323,7 @@ nl:
     max_post_length: "Maximaal toegestane lengte van een bericht in tekens"
     topic_featured_link_enabled: "Plaatsing van een koppeling met topics toestaan"
     show_topic_featured_link_in_digest: "Koppeling naar aanbevolen topics in de samenvattingsmail tonen"
+    min_topic_views_for_delete_confirm: "Minimale aantal weergaven dat een topic moet hebben om een bevestigingspop-up te laten verschijnen wanneer het wordt verwijderd"
     min_topic_title_length: "Minimaal toegestane lengte van een topictitel in tekens"
     max_topic_title_length: "Maximaal toegestane lengte van een topictitel in tekens"
     min_personal_message_title_length: "Minimaal toegestane titellengte voor een bericht in tekens"
@@ -1399,6 +1401,7 @@ nl:
     enable_personal_messages: "Gebruikers met vertrouwensniveau 1 (instelbaar via het minimale niveau om berichten te verzenden) toestaan om berichten aan te maken en op berichten te antwoorden. Houd er rekening mee dat stafleden altijd berichten kunnen verzenden."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
     enable_long_polling: "Gebruikte 'message bus' voor melding kan 'long polling' gebruiken"
+    enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
     long_polling_base_url: "Basis-URL voor 'long polling' (als een CDN dynamische inhoud aanbiedt, zorg er dan voor dat dit op 'origin pull' is ingesteld), zoals http://origin.site.com"
     long_polling_interval: "De hoeveelheid tijd die de server hoort te wachten voordat op clients wordt gereageerd als er geen gegevens te verzenden zijn (alleen aangemelde gebruikers)"
     polling_interval: "Als geen 'long polling' wordt toegepast, hoe vaak aangemelde clients moeten pollen in milliseconden"
@@ -1517,9 +1520,6 @@ nl:
     enable_twitter_logins: "Twitter-authenticatie inschakelen, vereist twitter_consumer_key en twitter_consumer_secret. Zie <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Consumentsleutel voor Twitter-authenticatie, geregistreerd bij <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumentgeheim voor Twitter-authenticatie, geregistreerd bij <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Instagram-authenticatie inschakelen; vereist instagram_consumer_key en instagram_consumer_secret."
-    instagram_consumer_key: "Consumentsleutel voor Instagram-authenticatie"
-    instagram_consumer_secret: "Consumentgeheim voor Instagram-authenticatie"
     enable_facebook_logins: "Facebook-authenticatie inschakelen, vereist facebook_app_id en facebook_app_secret. Zie <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_id: "App-ID voor Facebook-authenticatie en delen, geregistreerd bij <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App-geheim voor Facebook-authenticatie, geregistreerd bij <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
@@ -1594,6 +1594,8 @@ nl:
     selectable_avatars: "Lijst van avatars waaruit gebruikers kunnen kiezen."
     allow_all_attachments_for_group_messages: "Alle e-mailbijlagen voor groepsberichten toestaan."
     png_to_jpg_quality: "Kwaliteit van het geconverteerde JPG-bestand (1 is laagste kwaliteit, 99 is beste kwaliteit, 100 om uit te schakelen)."
+    recompress_original_jpg_quality: "Kwaliteit van geüploade afbeeldingsbestanden (1 is laagste kwaliteit, 99 is beste kwaliteit, 100 om uit te schakelen)."
+    image_preview_jpg_quality: "Kwaliteit van verkleinde afbeeldingsbestanden (1 is laagste kwaliteit, 99 is beste kwaliteit, 100 om uit te schakelen)."
     allow_staff_to_upload_any_file_in_pm: "Stafleden mogen alle bestanden uploaden in PM's."
     strip_image_metadata: "Metagegevens uit afbeeldingen verwijderen."
     min_ratio_to_crop: "Gebruikte verhouding voor het bijsnijden van hoge afbeeldingen. Voer het resultaat van breedte / hoogte in."
@@ -1842,7 +1844,6 @@ nl:
     show_copy_button_on_codeblocks: "Een knop voor codeblokken toevoegen om de inhoud van de blokken naar het klembord van de gebruiker te kopiëren. Deze functie wordt niet ondersteund in Internet Explorer."
     embed_any_origin: "Inbedbare inhoud toestaan, ongeacht oorsprong. Dit is vereist voor mobiele apps met statische HTML."
     embed_topics_list: "HTML-inbedding van topiclijsten ondersteunen"
-    embed_set_canonical_url: "De canonieke URL voor ingebedde topics naar de URL van de ingebedde inhoud instellen."
     embed_truncate: "De ingebedde berichten inkorten."
     embed_unlisted: "Geïmporteerde topics zijn onzichtbaar totdat een gebruiker antwoordt."
     embed_support_markdown: "Markdown-opmaak voor ingebedde berichten ondersteunen."
@@ -2614,7 +2615,6 @@ nl:
     file_missing: "Sorry, u moet een bestand opgeven om te uploaden."
     empty: "Sorry, maar het bestand dat u hebt opgegeven is leeg."
     png_to_jpg_conversion_failure_message: "Er is een fout opgetreden bij het converteren van PNG naar JPG."
-    optimize_failure_message: "Er is een fout opgetreden bij het optimaliseren van de geüploade afbeelding."
     attachments:
       too_large: "Sorry, het bestand dat u probeert te uploaden is te groot (maximumgrootte is %{max_size_kb}%KB)."
     images:

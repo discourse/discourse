@@ -200,6 +200,7 @@ ru:
       second_factor_cannot_be_enforced_with_sso_enabled: "Вы не можете применить двухфакторную аутентификацию, если используется технология единого входа (SSO)."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Вы не можете отключить локальный вход в систему, если применяется двухфакторная аутентификация. Отключите её перед отключением возможности локального входа."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Вы не можете включить загрузку S3, потому что загрузка S3 уже включена глобально, и включение этого уровня сайта может вызвать критические проблемы с загрузками"
+      cors_origins_should_not_have_trailing_slash: "Не следует добавлять завершающую косую черту (/) к источникам кросс-доменных запросов (CORS)."
     conflicting_google_user_id: 'Идентификатор учётной записи Google для этой учётной записи изменился; по соображениям безопасности требуется вмешательство персонала. Пожалуйста, свяжитесь с персоналом и укажите <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     expired: "Срок действия токена приглашения истек. Пожалуйста, <a href='%{base_url}/about'>свяжитесь с персоналом</a>."
@@ -387,6 +388,7 @@ ru:
   too_late_to_edit: "Это сообщение нельзя изменить или удалить, поскольку оно было создано очень давно."
   edit_conflict: "Этот пост был отредактирован другим пользователем и ваши изменения не могут быть сохранены."
   revert_version_same: "Текущая версия такая же, как та, на которую вы хотите вернуться."
+  cannot_edit_on_slow_mode: "Тема находится в замедленном режиме, и это сообщение больше нельзя редактировать."
   excerpt_image: "изображение"
   bookmarks:
     errors:
@@ -1437,6 +1439,7 @@ ru:
     max_post_length: "Максимально допустимое количество символов в одном сообщении"
     topic_featured_link_enabled: "Разрешать публиковать ссылку на избранную тему."
     show_topic_featured_link_in_digest: "Публиковать ссылку на избранную тему в Email-дайджесте."
+    min_topic_views_for_delete_confirm: "Минимальное количество просмотров темы, при котором появляется всплывающее окно с запросом подтверждения при её удалении"
     min_topic_title_length: "Минимально допустимое количество символов в названии темы"
     max_topic_title_length: "Максимально допустимое количество символов в названии темы"
     min_personal_message_title_length: "Минимально допустимое количество символов в заголовке личного сообщения"
@@ -1520,6 +1523,7 @@ ru:
     enable_personal_messages: "Разрешать пользователям уровня доверия 1 (настраивается через минимальный уровень доверия для отправки сообщений) создавать сообщения и отвечать на них. Обратите внимание, что сотрудники всегда могут отправлять сообщения, несмотря на настроенный уровень доверия."
     enable_system_message_replies: "Позволять пользователям отвечать на системные сообщения, даже если личные сообщения отключены"
     enable_long_polling: "Использовать механизм long polling для уведомлений о событиях"
+    enable_chunked_encoding: "Разрешить фрагментацию сообщений (chunked encoding) на сервере. Эта функция работает в большинстве случаев, однако некоторые прокси могут буферизировать контент, вызывая задержку ответов"
     long_polling_base_url: "Базовый URL, используемый для long polling (при использовании CDN для раздачи динамического контента установите в этом параметре адрес origin pull), например: http://origin.site.com"
     long_polling_interval: "Время, которое ожидает сервер до ответа клиентам, когда нет данных для отправки (только для пользователей, вошедших на сайт)"
     polling_interval: "Если не используется long polling, как часто следует вошедшим клиентам опрашивать сервер, в миллисекундах"
@@ -1557,7 +1561,7 @@ ru:
     gtm_container_id: "Идентификатор менеджера тегов Google, например: GTM-ABCDEF. <br/> Примечание: Сторонние скрипты, загруженные менеджером тегов, могут быть внесены в белый список в при помощи директивы `script-src` политики защиты контента (CSP)."
     enable_escaped_fragments: "Обратитесь к Google Ajax-Crawling API, если веб-сканер не обнаружен. См. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Разрешать модераторам управлять разделами и группами"
-    cors_origins: "Разрешённые источники для cross-origin requests (CORS). Каждый источник должен содержать http:// или https://. Для включения CORS переменная окружения DISCOURSE_ENABLE_CORS должна быть установлена в значение 'true'."
+    cors_origins: "Разрешённые источники для кросс-доменных запросов (CORS). Каждый источник должен содержать http:// или https://. Для включения CORS переменная окружения DISCOURSE_ENABLE_CORS должна быть установлена в значение 'true'."
     use_admin_ip_allowlist: "Администраторы могут войти в систему только в том случае, если их IP-адрес указан в белом списке (Админка > Логи > IP-адреса)."
     blocked_ip_blocks: "Список локальных диапазонов IP-адресов, которые никогда не должны сканироваться Discourse"
     allowed_internal_hosts: "Список внутренних хостов, которые Discourse может безопасно сканировать для преобразования ссылок в умные вставки и для других целей"
@@ -1649,9 +1653,6 @@ ru:
     enable_twitter_logins: "Включить аутентификацию Twitter, требуются twitter_consumer_key и twitter_consumer_secret. См. тему <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Ключ пользователя для аутентификации в Twitter, зарегистрированный в <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Секретный номер для проверки подлинности Twitter, зарегистрированный в <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Включить аутентификацию в Instagram, требуется instagram_consumer_key и instagram_consumer_secret"
-    instagram_consumer_key: "Ключ пользователя для аутентификации в Instagram"
-    instagram_consumer_secret: "Потребительский секрет аутентификации в Instagram"
     enable_facebook_logins: "Включите аутентификацию Facebook, требуются facebook_app_id и facebook_app_secret. См. <a href='https://meta.discourse.org/t/13394' target='_blank'>Настройка входа в Facebook для Discourse</a>."
     facebook_app_id: "Идентификатор приложения для аутентификации и обмена Facebook, зарегистрирован на <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Секрет приложения для аутентификации Facebook, зарегистрированный по адресу <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
@@ -2332,6 +2333,7 @@ ru:
     missing_user_field: "Вы не заполнили все поля пользователя"
     auth_complete: "Проверка подлинности завершена."
     click_to_continue: "Нажмите здесь для продолжения."
+    already_logged_in: "Извините! Это приглашение предназначено для новых пользователей, у которых ещё нет существующей учётной записи."
     second_factor_title: "Двухфакторная аутентификация"
     second_factor_description: "Пожалуйста, введите код аутентификации из вашего приложения:"
     second_factor_backup_description: "Пожалуйста, введите один из резервных кодов:"
@@ -3596,7 +3598,7 @@ ru:
     file_missing: "Вы должны указать файл для загрузки."
     empty: "Извините, но указанный вами файл пуст."
     png_to_jpg_conversion_failure_message: "Произошла ошибка при конвертации из PNG в JPG."
-    optimize_failure_message: "Произошла ошибка при оптимизации загруженного изображения."
+    optimize_failure_message: "При оптимизации загруженного изображения произошла ошибка."
     attachments:
       too_large: "Файл, который вы пытаетесь загрузить, слишком большой (максимальный разрешённый размер %{max_size_kb}%kb)."
     images:

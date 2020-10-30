@@ -56,7 +56,6 @@ tr_TR:
     compile_error:
       unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
-      generic: Bu temayı içe aktarırken bir hata oluştu
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       unpack_failed: "Dosya çözülemedi"
@@ -1428,9 +1427,6 @@ tr_TR:
     enable_twitter_logins: "Twitter kimlik doğrulamasını etkinleştir, twitter_consumer_key ve twitter_consumer_secret gerektirir. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse için Twitter girişini (ve zengin yerleştirmeleri) yapılandırma sayfasına göz atın</a> ."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer key'"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer secret'"
-    enable_instagram_logins: "Instagram doğrulamasını etkinleştir, instagram_consumer_key ve instagram_consumer_secret gereklidir"
-    instagram_consumer_key: "Instagram kimlik doğrulaması için 'consumer key'"
-    instagram_consumer_secret: "'consumer secret' Instagram kimlik doğrulaması"
     enable_facebook_logins: "Facebook kimlik doğrulamasını etkinleştir, facebook_app_id ve facebook_app_secret gerektirir. Bkz. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse için Facebook oturumunu yapılandırma</a> ."
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps adresinde</a> kayıtlı Facebook kimlik doğrulaması için uygulama sırrı"
     enable_discord_logins: "Kullanıcıların Discord kullanarak kimlik doğrulamasına izin verilsin mi?"

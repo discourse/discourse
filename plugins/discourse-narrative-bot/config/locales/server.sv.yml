@@ -191,7 +191,7 @@ sv:
         not_found: |-
           Det verkar som du inte laddade upp någon bild så jag har valt en bild som jag är _säker_ på att du kommer att gilla.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Försök nu att ladda upp denna, eller klistra in länken på en egen rad!
       likes:

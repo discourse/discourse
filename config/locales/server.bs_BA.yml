@@ -56,7 +56,6 @@ bs_BA:
     compile_error:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
-      generic: Došlo je do pogreške prilikom uvoza te teme
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"

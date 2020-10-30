@@ -54,7 +54,6 @@ hy:
     bad_color_scheme: "Անհնար է թարմացնել թեման, անվավեր գունապնակ"
     other_error: "Թեման թարմացնելիս ինչ-որ բան այնպես չէ ընթացել"
     import_error:
-      generic: Այդ թեման ներմուծելիս տեղի է ունեցել սխալ
       about_json_values: "about.json -ը պարունակում է անվավեր արժեքներ. %{errors}"
       git: "git ռեպոզիտորիայի կլոնավորման սխալ, հասանելիությունը մերժված է, կամ ռեպոզիտորիան գտնված չէ"
       unpack_failed: "Ֆայլի բացումը ձախողվեց"
@@ -1260,9 +1259,6 @@ hy:
     enable_twitter_logins: "Միացնել Twitter նույնականացումը, պահանջում է requires twitter_consumer_key և twitter_consumer_secret: Այցելեք <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter մուտքի (և rich զետեղումների) կարգավորում Discourse -ի համար</a>:"
     twitter_consumer_key: "Twitter նույնականացման համարսՍպառողի key, որը գրանցված է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Հաճախորդի գաղտնի արժեքը Twitter-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Միացնել Instagram նույնականացումը, պահանջում է instagram_consumer_key և instagram_consumer_secret"
-    instagram_consumer_key: "Հաճախորդի բանալին Instagram-ով վավերականացման համար"
-    instagram_consumer_secret: "Սպառողի գաղտնի արժեքի Instagram նույնականացում"
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"

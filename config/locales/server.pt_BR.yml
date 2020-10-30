@@ -56,7 +56,6 @@ pt_BR:
     compile_error:
       unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
-      generic: Ocorreu um erro ao importar esse tema
       about_json: "Erro de importação: about.json não existe ou é inválido. Tem certeza de que esse é um tema para Discourse?"
       about_json_values: "about.json contém valores inválidos: %{errors}"
       modifier_values: "about.json contém valores inválidos: %{errors}"
@@ -1413,9 +1412,6 @@ pt_BR:
     enable_twitter_logins: "Habilitar a autenticação do Twitter, requer twitter_consumer_key e twitter_consumer_secret. Consulte <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Chave do consumidor para autenticação do Twitter, registrada em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Segredo do consumidor para autenticação do Twitter, registrado em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Habilitar autenticação via Instagram. Requer instagram_consumer_key e instagram_consumer_secret"
-    instagram_consumer_key: "Chave de consumidor para autenticação via Instagram"
-    instagram_consumer_secret: "Segredo de consumidor para autenticação via Instagram"
     enable_facebook_logins: "Habilitar a autenticação do Facebook, requer facebook_app_id e facebook_app_secret. Consulte <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "Segredo do aplicativo para autenticação do Facebook, registrado em <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     discord_secret: "Chave Secreta do Discord"

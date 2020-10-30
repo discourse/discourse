@@ -325,6 +325,7 @@ sv:
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
     cancel: "avbryt"
+    deleting: "Raderar..."
     save: "Spara ändringar"
     saving: "Sparar..."
     saved: "Sparat!"
@@ -1298,6 +1299,8 @@ sv:
         generate_link: "Kopiera inbjudningslänken"
         link_generated: "Länk för inbjudan framgångsrikt skapad!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
+        single_user: "Bjud in via e-post"
+        multiple_user: "Bjud in via länk"
         invite_link:
           title: "Inbjudningslänk"
           success: "Länk för inbjudan framgångsrikt skapad!"
@@ -2036,6 +2039,9 @@ sv:
         choose_append_tags: "Välj nya taggar att lägga till för dessa ämnen:"
         changed_tags: "Taggarna för de här ämnena ändrades."
         remove_tags: "Ta bort taggar"
+        progress:
+          one: "Förlopp: <strong>%{count}</strong> ämne"
+          other: "Förlopp: <strong>%{count}</strong> ämnen"
       none:
         unread: "Du har inga olästa ämnen."
         new: "Du har inga nya ämnen."
@@ -2136,9 +2142,9 @@ sv:
       deleted: "Ämnet har raderats"
       slow_mode_update:
         title: "Långsamt läge"
-        select: "Varaktighet:"
-        description: "Användare måste vänta innan de kan publicera inlägg igen."
-        save: "Spara"
+        select: "Användare får bara publicera i detta ämne en gång varje:"
+        description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
+        save: "Aktivera"
         remove: "Inaktivera"
         hours: "Timmar:"
         minutes: "Minuter:"
@@ -2587,6 +2593,10 @@ sv:
         unlock_post_description: "tillåt att postaren redigerar inlägget"
         delete_topic_disallowed_modal: "Du har inte behörighet att radera detta ämne. Om du verkligen vill radera det, skapa en flagga för att uppmärksamma moderatorn tillsammans med orsak."
         delete_topic_disallowed: "du har inte behörighet att radera detta ämne"
+        delete_topic_confirm_modal: "Detta ämne har för närvarande över %{minViews} visningar och kan vara ett populärt sökmål. Är du säker på att du vill ta bort det här ämnet helt, istället för att redigera det för att förbättra det?"
+        delete_topic_confirm_modal_yes: "Ja, ta bort det här ämnet"
+        delete_topic_confirm_modal_no: "Nej, behåll detta ämne"
+        delete_topic_error: "Ett fel inträffade när det här ämnet togs bort"
         delete_topic: "ta bort ämne"
         add_post_notice: "Lägg till personalnotering"
         remove_post_notice: "Ta bort personalnotering"
@@ -3221,6 +3231,7 @@ sv:
     invite:
       custom_message: "Gör din inbjudan lite personligare genom att skriva ett <a href>anpassat meddelande</a>."
       custom_message_placeholder: "Skriv ditt personliga meddelande"
+      approval_not_required: "Användaren godkänns automatiskt så snart han/hon godkänner denna inbjudan."
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
     forced_anonymous: "På grund av extrem belastning, visas detta för samtliga precis som en utloggad användare skulle se det."

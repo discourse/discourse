@@ -56,7 +56,6 @@ ko:
     compile_error:
       unrecognized_extension: "인식 할 수없는 파일 확장자 : %{extension}"
     import_error:
-      generic: 해당 테마를 가져 오는 중 오류가 발생했습니다
       about_json: "가져오기 오류: about.json이 없거나 유효하지 않습니다. Discourse용 테마가 맞는지 확인해주세요."
       about_json_values: "about.json에 유효하지 않은 값이 있습니다 : %{errors}"
       modifier_values: "about.json 수정 자에 유효하지 않은 값이 있습니다 : %{errors}"
@@ -1450,9 +1449,6 @@ ko:
     enable_twitter_logins: "Twitter 인증을 사용하려면 twitter_consumer_key 및 twitter_consumer_secret이 필요합니다. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse에 대한 Twitter 로그인 구성 및 리치 임베디드를</a> 참조하십시오."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps에</a> 등록 된 Twitter 인증을위한 소비자 키"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps에</a> 등록 된 트위터 인증을위한 소비자 비밀"
-    enable_instagram_logins: "인스타그램 인증 켜기, instagram_consumer_key 와 instagram_consumer_secret 필요"
-    instagram_consumer_key: "인스타그램 인증을 위한 Consumer key "
-    instagram_consumer_secret: "인스타그램 인증을 위한 Consumer secret"
     enable_facebook_logins: "Facebook 인증을 사용하려면 facebook_app_id 및 facebook_app_secret이 필요합니다. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse에 대한 Facebook 로그인 구성을</a> 참조하십시오."
     facebook_app_id: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps에</a> 등록 된 Facebook 인증을위한 앱 ID"
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps에</a> 등록 된 Facebook 인증을위한 앱 비밀"
@@ -1774,7 +1770,6 @@ ko:
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립 보드에 복사합니다. 이 기능은 Internet Explorer에서 지원되지 않습니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
-    embed_set_canonical_url: "퍼간 주제의 표준 URL을 퍼간 컨텐츠의 URL로 설정하십시오."
     embed_truncate: "임베드된 글 비우기"
     embed_unlisted: "가져온 주제는 사용자가 답장 할 때까지 나열되지 않습니다."
     embed_support_markdown: "임베드 된 게시물에 대한 마크 다운 형식을 지원합니다."
@@ -2876,7 +2871,6 @@ ko:
     file_missing: "죄송합니다. 업로드 할 파일을 지정하셔야 합니다."
     empty: "죄송합니다. 지정된 파일은 빈 파일입니다."
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
-    optimize_failure_message: "업로드 된 이미지를 최적화하는 중에 오류가 발생했습니다."
     attachments:
       too_large: "죄송합니다, 업로드하려는 파일이 너무 큽니다. (최대 크기 %{max_size_kb}KB)."
     images:

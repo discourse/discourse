@@ -54,7 +54,6 @@ ar:
     compile_error:
       unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
     import_error:
-      generic: حدث عُطل أثناء استيراد هذه السمة
       about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
       about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
       modifier_values: "تحتوي مُعدّلات about.json قيم غير صالحة: %{errors}"
@@ -1074,9 +1073,6 @@ ar:
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
     google_oauth2_client_id: "رقم التعريف لتطبيق جوجل الخاص بك"
     google_oauth2_client_secret: "الرقم السري لتطبيق جوجل الخاص بك."
-    enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق حساب انستغرام."
-    instagram_consumer_key: "مفتاح المستهلك لنظام تسجيل الدخول بحساب انستجرام."
-    instagram_consumer_secret: "رقم المستهلك السري لنظام تسجيل الدخول بحساب انستجرام."
     allow_restore: "تسمح استعادة، والتي يمكن أن تحل محل ALL بيانات الموقع! ترك كاذبة إلا إذا كنت تخطط لاستعادة نسخة احتياطية"
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."

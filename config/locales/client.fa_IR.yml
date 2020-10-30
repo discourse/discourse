@@ -320,6 +320,7 @@ fa_IR:
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "لغو"
+    deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در حال ذخیره..."
     saved: "ذخیره شد!"
@@ -1841,6 +1842,9 @@ fa_IR:
         choose_append_tags: "انتخاب برچسب‌های جدید برای افزودن به این موضوعات:"
         changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
         remove_tags: "حذف برچسب‌ها"
+        progress:
+          one: "پیشرفت: <strong>%{count}</strong> موضوع"
+          other: "پیشرفت: <strong>%{count}</strong> موضوع"
       none:
         unread: "موضوع خوانده نشده‌ای ندارید."
         new: "شما هیچ موضوع تازه‌ای ندارید"
@@ -1927,8 +1931,6 @@ fa_IR:
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
       slow_mode_update:
-        select: "مدت زمان"
-        save: "ذخیره"
         remove: "غیرفعال"
         durations:
           15_minutes: "۱۵ دقیقه"
@@ -2321,6 +2323,9 @@ fa_IR:
         unlock_post_description: "اجازه به فرستنده پست برای ویرایش پست"
         delete_topic_disallowed_modal: "شما دسترسی برای حذف این مبحث را ندارید. اگر واقعاً می‌خواهید حذف شود، یک علامت همراه دلیل برای خبردار کردن مدیر ثبت کنید."
         delete_topic_disallowed: "شما مجاز به حذف این تاپیک نمی‌باشید"
+        delete_topic_confirm_modal_yes: "بله، این موضوع را حذف کنید."
+        delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
+        delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
         add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
         remove_post_notice: "اطلاعیه کارکنان را پاک کنید"

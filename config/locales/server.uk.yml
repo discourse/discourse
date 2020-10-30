@@ -56,7 +56,6 @@ uk:
     compile_error:
       unrecognized_extension: "Нерозпізнане розширення файлу: %{extension}"
     import_error:
-      generic: Виникла помилка при імпорті цієї теми
       about_json: "Помилка імпорту: about.json не існує або недійсна. Ви впевнені, що це тема дискурсу?"
       about_json_values: "about.json має неприпустимі значення: %{errors}"
       modifier_values: "about.json має неприпустимі значення: %{errors}"

@@ -325,6 +325,7 @@ nl:
       other: "%{count} nieuwe topics bekijken"
     preview: "voorbeeld"
     cancel: "annuleren"
+    deleting: "Verwijderen..."
     save: "Wijzigingen opslaan"
     saving: "Opslaan..."
     saved: "Opgeslagen!"
@@ -2036,6 +2037,9 @@ nl:
         choose_append_tags: "Kies nieuwe tags om voor deze topics toe te voegen:"
         changed_tags: "De tags van deze topics zijn gewijzigd."
         remove_tags: "Tags verwijderen"
+        progress:
+          one: "Voortgang: <strong>%{count}</strong> topic"
+          other: "Voortgang: <strong>%{count}</strong> topics"
       none:
         unread: "U hebt geen ongelezen topics."
         new: "U hebt geen nieuwe topics."
@@ -2136,9 +2140,6 @@ nl:
       deleted: "Het topic is verwijderd"
       slow_mode_update:
         title: "Langzame modus"
-        select: "Tijdsduur:"
-        description: "Gebruikers moeten wachten om opnieuw berichten te kunnen plaatsen."
-        save: "Opslaan"
         remove: "Uitschakelen"
         hours: "Uren:"
         minutes: "Minuten:"
@@ -2587,6 +2588,10 @@ nl:
         unlock_post_description: "toestaan dat de schrijver dit bericht bewerkt"
         delete_topic_disallowed_modal: "U hebt geen toestemming om dit topic te verwijderen. Als u echt wilt dat het wordt verwijderd, plaats dan een markering voor aandacht van een moderator, en voeg de reden bij."
         delete_topic_disallowed: "u hebt geen toestemming om dit topic te verwijderen"
+        delete_topic_confirm_modal: "Dit topic heeft momenteel meer dan %{minViews} weergaven en kan een populaire zoekbestemming zijn. Weet u zeker dat u dit topic volledig wilt verwijderen, in plaats van het te bewerken voor verbetering?"
+        delete_topic_confirm_modal_yes: "Ja, dit topic verwijderen"
+        delete_topic_confirm_modal_no: "Nee, dit topic behouden"
+        delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
         add_post_notice: "Stafmelding toevoegen"
         remove_post_notice: "Stafmelding verwijderen"
@@ -3221,6 +3226,7 @@ nl:
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
+      approval_not_required: "Gebruiker wordt automatisch goedgekeurd zodra hij of zij deze uitnodiging accepteert."
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."

@@ -297,6 +297,7 @@ ko:
       other: "%{count}개의 새로운 글 보기"
     preview: "미리보기"
     cancel: "취소"
+    deleting: "삭제 중..."
     save: "변경사항 저장"
     saving: "저장하는 중..."
     saved: "저장되었습니다!"
@@ -975,6 +976,7 @@ ko:
         remaining_codes:
           other: "<strong>%{count}</strong>개의 백업 코드가 남아 있습니다."
         use: "백업 코드 사용"
+        enable_prerequisites: "백업 코드를 생성하기 전에 기본 2단계 방법을 활성화해야 합니다."
         codes:
           title: "생성된 백업 코드"
           description: "이 백업 코드는 한 번만 사용할 수 있습니다. 안전한 곳에 보관하십시오."
@@ -993,10 +995,17 @@ ko:
         show_key_description: "수동으로 입력"
         short_description: |
           일회용 보안 코드로 계정을 보호하십시오.
+        extended_description: |
+          이중 인증은 암호 외에 일회성 토큰을 요구하여 계정에 보안을 강화합니다. 토큰은 <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>안드로이드</a> 및 <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> 장치에서 생성 될 수 있습니다.
+        oauth_enabled_warning: "계정에서 2단계 인증이 활성화되면 소셜 로그인이 비활성화됩니다."
         use: "Authenticator 앱 사용"
+        enforced_notice: "이 사이트에 접근하려면 2단계 인증을 활성화해야합니다."
         disable: "해제"
+        disable_confirm: "모든 2단계 인증을 비활성화 하시겠습니까?"
         save: "저장"
         edit: "편집"
+        edit_title: "인증자 편집"
+        edit_description: "인증자 명칭"
         enable_security_key_description: |
           <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">하드웨어 보안 키</a>가 준비되었다면 아래의 등록 버튼을 누르십시오.
         totp:
@@ -1128,6 +1137,8 @@ ko:
         browser_and_device: "%{device}의 %{browser}"
         secure_account: "내 계정 보안"
         latest_post: "마지막 작성…"
+        device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
+        browser_active: '%{browser} | <span class="active">현재 사용</span>'
         browser_last_seen: "%{browser} | %{date}"
       last_posted: "마지막 글"
       last_emailed: "마지막 이메일"
@@ -1243,6 +1254,8 @@ ko:
         generate_link: "초대 링크 복사"
         link_generated: "초대 링크가 성공적으로 생성되었습니다!"
         valid_for: "초대 링크는 다음 이메일 주소에만 유효합니다: %{email}"
+        single_user: "이메일로 초대"
+        multiple_user: "링크로 초대"
         invite_link:
           title: "초대 링크"
           success: "초대 링크가 성공적으로 생성되었습니다!"
@@ -2042,9 +2055,7 @@ ko:
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
         title: "느린 모드"
-        select: "기간:"
-        description: "사용자는 다시 작성 할 수있을 때까지 기다려야합니다."
-        save: "저장"
+        save: "활성화"
         remove: "비활성화"
         hours: "시간:"
         minutes: "분:"
@@ -2466,6 +2477,10 @@ ko:
         unlock_post_description: "작성자가 글을 수정하도록 허용"
         delete_topic_disallowed_modal: "이 주제를 삭제할 권한이 없습니다. 실제로 삭제하려면 추론과 함께 중재자주의 플래그를 제출하십시오."
         delete_topic_disallowed: "이 글을 삭제할 수있는 권한이 없습니다"
+        delete_topic_confirm_modal: "이 글은 현재 조회수가 %{minViews}회 이상이며 인기 검색 대상 일 수 있습니다. 이 주제를 개선하기 위해 편집하는 대신 완전히 삭제 하시겠습니까?"
+        delete_topic_confirm_modal_yes: "예, 이 글을 삭제합니다."
+        delete_topic_confirm_modal_no: "아니요, 이 글을 유지합니다."
+        delete_topic_error: "이 항목을 삭제하는 동안 오류가 발생했습니다."
         delete_topic: "글 삭제"
         add_post_notice: "직원 공지 사항 추가"
         remove_post_notice: "직원 통지 제거"
@@ -2678,6 +2693,7 @@ ko:
     flagging:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "글 신고했습니다"
+      take_action: "조치 수행..."
       take_action_options:
         default:
           title: "조치하기"

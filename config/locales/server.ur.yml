@@ -56,7 +56,6 @@ ur:
     compile_error:
       unrecognized_extension: "نامعلوم فائل ایکسٹینشن: %{extension}"
     import_error:
-      generic: تِھیم درآمد کرتے ہوئے ایک خرابی کا سامنا کرنا پڑا
       about_json_values: "about.json غلط اقدار پر مشتمل ہے: %{errors}"
       git: "گِٹ رِیپَوزِٹَری کلَون کرنے میں خرابی، رسائی کی اجازت نہیں یا رِیپَوزِٹَری موجود نہیں ہے"
       unpack_failed: "فائل کھولنے میں ناکام"
@@ -1367,9 +1366,6 @@ ur:
     enable_twitter_logins: "ٹویٹر توثیق فعال کریں۔ twitter_consumer_key اور twitter_consumer_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13395' target='_blank'>ڈسکورس کیلئے ٹویٹر لاگ اِن ترتیب دیں (اور رِچ اَیمبَیڈ)</a>۔"
     twitter_consumer_key: "ٹویٹر توثیق کیلئے کنزِیُومر کِی، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
     twitter_consumer_secret: "ٹویٹر توثیق کیلئے کنزِیُومر سیکرٹ، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
-    enable_instagram_logins: "اِنسٹاگرام توثیق کو فعال کریں، instagram_consumer_key اور instagram_consumer_secret کی ضرورت ہے"
-    instagram_consumer_key: "اِنسٹاگرام توثیق کیلئے کنزِیُومر کلید"
-    instagram_consumer_secret: "اِنسٹاگرام توثیق کیلئے کنزِیُومر سیکرٹ"
     enable_facebook_logins: "فَیسبُک توثیق فعال کریں۔ facebook_app_id اور facebook_app_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13394' target='_blank'>ڈسکورس کیلئے فَیسبُک لاگ اِن ترتیب دیں</a>۔"
     facebook_app_secret: "فَیسبُک توثیق کیلئے اَیپ سیکرٹ، <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a> پر رجسٹر کردہ"
     enable_discord_logins: "صارفین کو بذریعہ ڈِسکَورڈ تصدیق کی اجازت دیں؟"
