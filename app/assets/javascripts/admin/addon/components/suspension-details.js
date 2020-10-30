@@ -1,7 +1,8 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { observes } from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
+import { action } from "@ember/object";
 
 const CUSTOM_REASON_KEY = "custom";
 
@@ -17,6 +18,7 @@ export default Component.extend({
     "no_constructive_purpose",
     CUSTOM_REASON_KEY,
   ],
+  isCustomReason: equal("selectedReason", CUSTOM_REASON_KEY),
 
   @discourseComputed("reasonKeys")
   reasons(keys) {
@@ -25,12 +27,7 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed("selectedReason")
-  isCustomReason(selectedReason) {
-    return selectedReason === CUSTOM_REASON_KEY;
-  },
-
-  @observes("isCustomReason", "customReason", "selectedReason")
+  @action
   setReason() {
     if (this.isCustomReason) {
       this.set("reason", this.customReason);

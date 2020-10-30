@@ -14,11 +14,13 @@
   {{combo-box
     content=reasons
     value=selectedReason
-    class="suspend-reason"}}
+    class="suspend-reason"
+    onChange=(action setCustomReason)}}
   {{#if isCustomReason}}
     {{text-field
       value=customReason
-      class="suspend-reason"}}
+      class="suspend-reason"
+      onChange=(action setCustomReason)}}
   {{/if}}
 </div>
 
