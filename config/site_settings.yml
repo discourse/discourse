@@ -386,15 +386,6 @@ login:
     default: ""
     regex: "^[\\w+-]+$"
     secret: true
-  enable_instagram_logins:
-    default: false
-  instagram_consumer_key:
-    default: ""
-    regex: "^[a-z0-9]+$"
-  instagram_consumer_secret:
-    default: ""
-    regex: "^[a-z0-9]+$"
-    secret: true
   enable_facebook_logins:
     default: false
   facebook_app_id:

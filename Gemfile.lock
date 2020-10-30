@@ -226,9 +226,6 @@ GEM
       jwt (>= 2.0)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.6)
-    omniauth-instagram (1.3.0)
-      omniauth (~> 1)
-      omniauth-oauth2 (~> 1)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -504,7 +501,6 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-github
   omniauth-google-oauth2
-  omniauth-instagram
   omniauth-oauth2
   omniauth-twitter
   onebox
