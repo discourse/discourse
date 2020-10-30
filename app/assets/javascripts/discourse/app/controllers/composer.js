@@ -28,7 +28,10 @@ import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
-import { cannotPostAgain } from "discourse/helpers/slow-mode";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -661,10 +664,15 @@ export default Controller.extend({
           topic.user_last_posted_at
         )
       ) {
-        const message = I18n.t("composer.slow_mode.error");
+        const message = I18n.t("composer.slow_mode.error", {
+          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+        });
 
         bootbox.alert(message);
         return;
+      } else {
+        // Edge case where the user tries to post again immediately.
+        topic.set("user_last_posted_at", new Date().toISOString());
       }
     }
 

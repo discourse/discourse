@@ -130,7 +130,7 @@ module SvgSprite
     "heading",
     "heart",
     "home",
-    "hourglass-end",
+    "hourglass-start",
     "id-card",
     "info-circle",
     "italic",
