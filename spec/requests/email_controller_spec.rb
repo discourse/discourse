@@ -211,7 +211,8 @@ RSpec.describe EmailController do
         expect(body).not_to include("Don&#39;t send me any mail from Discourse")
       end
 
-      it 'correctly handles mailing list mode' do
+      it 'correctly handles mailing list mode' d
+        SiteSetting.disable_mailing_list_mode = false
         user.user_option.update_columns(mailing_list_mode: true)
 
         navigate_to_unsubscribe
