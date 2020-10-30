@@ -4,7 +4,6 @@ import EmberObject from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import LinkLookup from "discourse/lib/link-lookup";
-import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 
 let _messagesCache = {};
 
@@ -115,21 +114,6 @@ export default Component.extend({
           });
         this.send("popup", message);
       }
-    }
-
-    const topic = composer.topic;
-    if (topic && topic.slow_mode_seconds) {
-      const msg = composer.store.createRecord("composer-message", {
-        id: "slow-mode-enabled",
-        extraClass: "custom-body",
-        templateName: "custom-body",
-        title: I18n.t("composer.slow_mode.title"),
-        body: I18n.t("composer.slow_mode.body", {
-          duration: durationTextFromSeconds(topic.slow_mode_seconds),
-        }),
-      });
-
-      this.send("popup", msg);
     }
 
     this.queuedForTyping.forEach((msg) => this.send("popup", msg));

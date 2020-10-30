@@ -1925,9 +1925,7 @@ en:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
-        title: "This topic is in slow mode."
-        body: "After submitting a post, you'll need to wait %{duration} before being able to post again."
-        error: "You recently posted on this topic, which is in slow mode. Please wait so other users can have their chance to participate."
+        error: "This topic is in slow mode. In order to promote thoughtful, considered discussion you may only post once every %{duration}."
 
       admin_options_title: "Optional staff settings for this topic"
 

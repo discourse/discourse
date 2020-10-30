@@ -274,7 +274,7 @@ export default createWidget("topic-admin-menu", {
         className: "topic-admin-slow-mode",
         buttonClass: "popup-menu-btn",
         action: "showTopicSlowModeUpdate",
-        icon: "hourglass-end",
+        icon: "hourglass-start",
         label: "actions.slow_mode",
       });
 
