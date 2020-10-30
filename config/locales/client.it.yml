@@ -899,6 +899,7 @@ it:
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
+      github_profile: "GitHub"
       email_activity_summary: "Riassunto Attività"
       mailing_list_mode:
         label: "Modalità Mailing list"
@@ -996,6 +997,7 @@ it:
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
       second_factor_backup:
+        title: "Codice di backup per l'autenticazione a due fattori"
         regenerate: "Rigenera"
         disable: "Disabilita"
         enable: "Abilita"
@@ -1005,10 +1007,13 @@ it:
         copied_to_clipboard: "Copiato nella Clipboard"
         download_backup_codes: "Scarica i codici di backup"
         use: "Usa un codice di backup"
+        enable_prerequisites: "Devi attivare un metodo primario di autenticazione a due fattori prima di generare i codici di backup."
         codes:
           title: "Codici di backup generati"
           description: "Ciascuno di questi codici di backup può essere usato una sola volta. Conservali in un posto sicuro ma accessibile."
       second_factor:
+        title: "Autenticazione a due fattori"
+        enable: "Gestione autenticazione a due fattori"
         disable_all: "Disattiva tutto"
         forgot_password: "Ha dimenticato la password?"
         confirm_password_description: "Per favore conferma la tua password per continuare"
@@ -1723,6 +1728,10 @@ it:
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
         body: "Per ora il messaggio sarà inviato solo a te stesso!"
+      slow_mode:
+        title: "Questo argomento è in modalità lenta."
+        body: "Dopo aver lasciato un messaggio, dovrai attendere %{duration} prima di poterne lasciare un altro."
+        error: "Hai recentemente lasciato un messaggio su questo argomento, che è in modalità lenta. Sei pregato di attendere, affinché gli altri utenti abbiano la possibilità di partecipare."
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       composer_actions:
         reply: Rispondi
@@ -2075,6 +2084,21 @@ it:
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
       deleted: "L'argomento è stato eliminato"
+      slow_mode_update:
+        title: "Modalità lenta"
+        remove: "Disattiva"
+        hours: "Ore:"
+        minutes: "Minuti:"
+        seconds: "Secondi:"
+        durations:
+          15_minutes: "15 minuti"
+          1_hour: "1 ora"
+          4_hours: "4 ore"
+          1_day: "1 giorno"
+          1_week: "1 settimana"
+          custom: "Durata personalizzata"
+      slow_mode_notice:
+        duration: "Devi aspettare %{duration} tra ciascun messaggio in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -2204,6 +2228,7 @@ it:
         open: "Apri Argomento"
         close: "Chiudi Argomento"
         multi_select: "Seleziona Messaggi..."
+        slow_mode: "Imposta modalità lenta"
         timed_update: "Imposta Timer..."
         pin: "Appunta Argomento..."
         unpin: "Spunta Argomento..."
@@ -2720,6 +2745,13 @@ it:
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
+      take_action_options:
+        suspend:
+          title: "Sospendi utente"
+          details: "Raggiungi la soglia delle segnalazioni e sospendi l'utente"
+        silence:
+          title: "Silenzia utente"
+          details: "Raggiungi la soglia delle segnalazioni e silenzia l'utente"
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
@@ -2886,6 +2918,7 @@ it:
         this_week: "Settimana"
         today: "Oggi"
         other_periods: "vedi argomenti di punta:"
+    browser_update: 'Sfortunatamente <a href="https://www.discourse.org/faq/#browser">il tuo browser è troppo obsoleto per funzionare su questo sito</a>. <a href="https://browsehappy.com">Aggiorna il tuo browser</a> per visualizzare contenuti multimediali, accedere e rispondere.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -3106,6 +3139,8 @@ it:
         delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
         everyone_can_use: "Le etichette possono essere usate da tutti"
+        usable_only_by_groups: "Le etichette sono visibili a tutti, ma solo i gruppi seguenti possono usarle"
+        visible_only_to_groups: "Le etichette sono visibili soltanto ai seguenti gruppi"
       topics:
         none:
           unread: "Non hai argomenti non letti."
@@ -3118,6 +3153,7 @@ it:
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
+      approval_not_required: "L'utente sarà approvato automaticamente non appena accetterà questo invito."
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
@@ -3330,6 +3366,8 @@ it:
         continue: Continua
         use_global_key: Chiave globale (consente tutte le azioni)
         scopes:
+          resource: Risorsa
+          action: Azione
           allowed_parameters: Parametri consentiti
           optional_allowed_parameters: Parametri Consentiti (Opzionali)
           any_parameter: (qualsiasi parametro)
@@ -3338,6 +3376,8 @@ it:
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica su uno esistente.
+            users:
+              check_emails: Elenca le email degli utenti.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3576,6 +3616,7 @@ it:
           hide_unused_fields: "Nascondi campi inutilizzati"
           is_default: "Il tema è abilitato di default"
           user_selectable: "Il tema può essere selezionato dagli utenti"
+          color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
           color_scheme: "Tavolozza dei colori"
           default_light_scheme: "Light (predefinito)"
           color_scheme_select: "Seleziona i colori da usare nel tema"
@@ -3909,6 +3950,7 @@ it:
             post_edit: "modifica messaggio"
             post_unlocked: "messaggio sbloccato"
             check_personal_message: "controlla messaggio personale"
+            disabled_second_factor: "Disabilita autenticazione a due fattori"
             topic_published: "argomento pubblicato"
             post_approved: "messaggio approvato"
             post_rejected: "messaggio respinto"
@@ -4136,6 +4178,7 @@ it:
         private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
         post_count: Messaggi Creati
+        second_factor_enabled: Autenticazione a due fattori abilitata
         topics_entered: Argomenti Visti
         flags_given_count: Segnalazioni Fatte
         flags_received_count: Segnalazioni Ricevute
@@ -4261,6 +4304,7 @@ it:
           external_name: "Nome"
           external_email: "Email"
           external_avatar_url: "URL dell'Immagine Profilo"
+          last_payload: "Ultimo payload"
           delete_sso_record: "Elimina record SSO"
       user_fields:
         title: "Campi Utente"

@@ -432,6 +432,7 @@ ar:
       other: "طالِع %{count} موضوع جديد"
     preview: "معاينة"
     cancel: "ألغِ"
+    deleting: "يحذف..."
     save: "احفظ التعديلات"
     saving: "يحفظ..."
     saved: "حُفظت!"
@@ -1025,7 +1026,7 @@ ar:
         notifications: "التنبيهات"
         categories: "الفئات"
         users: "الأعضاء"
-        tags: "الأوسمة"
+        tags: "الوسوم"
         interface: "واجهة المستخدم"
         apps: "التطبيقات"
       change_password:
@@ -2001,9 +2002,9 @@ ar:
           other: "حدّدت <b>%{count}</b> موضوع."
         change_tags: "غيّر الأوسمة"
         append_tags: "اضف الأوسمة"
-        choose_new_tags: "اختر أوسمة جديدة لهذه الموضوعات:"
-        choose_append_tags: "اختر أوسمة جديدة لإضافتها لهذة الموضوعات"
-        changed_tags: "تغيرت أوسمة هذه الموضوعات."
+        choose_new_tags: "اختر الوسوم الجديدة لهذه المواضيع:"
+        choose_append_tags: "اختر الوسوم الجديدة لإضافتها إلى هذه المواضيع:"
+        changed_tags: "تغيّرت وسوم هذه المواضيع."
       none:
         unread: "ليست هناك مواضيع غير مقروءة."
         new: "ليست هناك مواضيع جديدة."
@@ -2011,7 +2012,7 @@ ar:
         posted: "لم تشارك في أيّ موضوع بعد."
         bookmarks: "لا مواضيع معلّمة بعد."
         category: "ما من مواضيع في فئة ”%{category}“."
-        top: "لا يوجد موضوعات مشاهدة بكثرة"
+        top: "ما من مواضيع نشطة."
         educate:
           unread: '<p>تظهر المواضيع غير المقروءة هنا.</p><p>تكون المواضيع (مبدئيًا) غير مقروءة وتعرض أعداد <span class="badge new-posts badge-notification">1</span> غير مقروءة إن:</p><ul><li>كتبت الموضوع</li><li>رددت على موضوع</li><li>قرأت الموضوع لمدّة أربع دقائق فأكثر</li></ul><p>أو أنّك ضبطت الموضوع ليُراقب أو يُتابع عبر زرّ التحكّم بالإخطارات أسفل كلّ موضوع.</p><p>إن أردت تعديل هذا السلوك، فزُر <a href="%{userPrefsUrl}">تفضيلاتك</a>.</p>'
       bottom:
@@ -2021,7 +2022,7 @@ ar:
         new: "لا يوجد مواضيع جديدة أخرى."
         unread: "ما من مواضيع أخرى غير مقروءة."
         category: "لا يوجد مواضيع أخرى في قسم \"%{category}\"."
-        top: "لا يوجد موضوعات مشاهدة بكثرة اخري."
+        top: "ما من مواضيع نشطة أخرى."
         bookmarks: "ما من مواضيع أخرى عليها علامة."
     topic:
       filter_to:
@@ -2077,7 +2078,7 @@ ar:
       total_unread_posts:
         zero: "ما من مشاركات غير مقروءة في هذا الموضوع"
         one: "لديك مشاركة واحدة غير مقروءة في هذا الموضوع"
-        two: "لديك %{count} مشاركتين غير مقروءتين في هذا الموضوع"
+        two: "لديك مشاركتين غير مقروءتين في هذا الموضوع"
         few: "لديك %{count} مشاركات غير مقروءة في هذا الموضوع"
         many: "لديك %{count} مشاركة غير مقروءة في هذا الموضوع"
         other: "لديك %{count} مشاركة غير مقروءة في هذا الموضوع"
@@ -2119,9 +2120,6 @@ ar:
       deleted: "الموضوع محذوف"
       slow_mode_update:
         title: "الوضع البطيء"
-        select: "المدة:"
-        description: "على المستخدمين الانتظار هذه المدة قبل نشر المشاركات ثانيةً."
-        save: "احفظ"
         remove: "عطّل"
         durations:
           15_minutes: "15 دقيقة"
@@ -2610,6 +2608,9 @@ ar:
         unlock_post_description: "اسمح لكاتب المشاركة تعديلها"
         delete_topic_disallowed_modal: "لا تملك التصريح لحذف هذا الموضوع. إن أردت حذفه حقًا فأرسِل إشارة إلى أحد المشرفين مع سبب الحذف المنطقي."
         delete_topic_disallowed: "لا تملك التصريح لحذف هذا الموضوع"
+        delete_topic_confirm_modal_yes: "نعم، احذف الموضوع"
+        delete_topic_confirm_modal_no: "لا، أبقِ الموضوع"
+        delete_topic_error: "حدث عُطل أثناء حذف هذا الموضوع"
         delete_topic: "احذف الموضوع"
       actions:
         people:
@@ -2721,11 +2722,11 @@ ar:
       general: "عام"
       settings: "اعدادات"
       topic_template: "إطار الموضوع"
-      tags: "الأوسمة"
+      tags: "الوسوم"
       tags_allowed_tags: "احصر هذه الوسوم على هذه الفئة:"
       tags_allowed_tag_groups: "احصر مجموعات الوسوم هذه على هذه الفئة:"
-      tags_placeholder: "(اختياري) قائمة الأوسمة المسموح بها"
-      tag_groups_placeholder: "(اختياريّ) قائمة مجموعات الأوسمة المسموح بها"
+      tags_placeholder: "(اختياري) قائمة الوسوم المسموحة"
+      tag_groups_placeholder: "(اختياري) قائمة مجموعات الوسوم المسموحة"
       manage_tag_groups_link: "أدِر مجموعات الوسوم"
       topic_featured_link_allowed: "اسمح بالروابط المُميزة بهذا القسم."
       delete: "احذف التصنيف"
@@ -2905,9 +2906,12 @@ ar:
         help: "هذا الموضوع مثبت بشكل عام, سوف يظهر في مقدمة قائمة اخر الموضوعات وفي القسم الخاصة به."
       pinned:
         title: "مثبّت"
-        help: "هذا الموضوع مثبّت لك، وسيُعرض أعلى قسمة"
+        help: "هذا الموضوع مثبّت لك وسيُعرض في أعلى فئته"
       unlisted:
         help: "هذا الموضوع غير مدرج, لن يظهر في قائمة الموضوعات ولا يمكن الوصول إلية إلا برابط مباشر"
+      personal_message:
+        title: "هذا الموضوع رسالة شخصية"
+        help: "هذا الموضوع رسالة شخصية"
     posts: "منشورات"
     posts_likes_MF: |
       {count, plural, zero {ليس في هذا الموضوع أي ردّ} one {في هذا الموضوع ردّ واحد} two {في هذا الموضوع ردّان} few {في هذا الموضوع # ردود} many {في هذا الموضوع # ردًا} other {في هذا الموضوع # ردّ}} {ratio, select,
@@ -3170,12 +3174,12 @@ ar:
         posting:
           name: النشر
     tagging:
-      all_tags: "كل الأوسمة"
-      selector_all_tags: "كل الأوسمة"
-      selector_no_tags: "لا أوسمة"
+      all_tags: "كلّ الوسوم"
+      selector_all_tags: "كلّ الوسوم"
+      selector_no_tags: "ما من وسوم"
       changed: "الأوسمة المعدلة:"
-      tags: "الأوسمة"
-      choose_for_topic: "الأوسمة الإختيارية"
+      tags: "الوسوم"
+      choose_for_topic: "الوسوم الاختيارية"
       tag_groups_info:
         zero: "ينتمي هذا الوسم إلى المجموعة: %{tag_groups}."
         one: 'ينتمي هذا الوسم إلى المجموعة: %{tag_groups}.'
@@ -3223,7 +3227,7 @@ ar:
       sort_by: "افرز ب‍:"
       sort_by_count: "العدد"
       sort_by_name: "الاسم"
-      manage_groups: "أدرج مجموعات الأوسمة"
+      manage_groups: "أدِر مجموعات الوسوم"
       manage_groups_description: "أنشئ مجموعات لتنظيم الأوسمة"
       upload_successful: "نجح رفع الوسوم"
       delete_unused_confirmation:
@@ -3261,14 +3265,14 @@ ar:
         muted:
           title: "مكتوم"
       groups:
-        title: "مجموعات الأوسمة"
-        about: "ضع الأوسمة في مجموعات ليسهل عليك إدارتها."
+        title: "مجموعات الوسوم"
+        about: "ضَع الوسوم في مجموعات ليسهُل عليك إدارتها."
         new: "مجموعة جديدة"
-        tags_label: "الأوسمة في هذه المجموعة:"
+        tags_label: "الوسوم في هذه المجموعة:"
         parent_tag_label: "التصنيف الأب"
-        parent_tag_description: "لا يمكن استخدام الأوسمة في هذه المجموعة ما لم يوجد الوسم الأب."
+        parent_tag_description: "لا يمكنك استعمال الوسوم في هذه المجموعة ما لم يوجد الوسم الأب."
         one_per_topic_label: "السماح بوسم واحد فقط من هذة المجموعة لكل موضوع"
-        new_name: "مجموعة أوسمة جديدة"
+        new_name: "مجموعة وسوم جديدة"
         name_placeholder: "اسم مجموعة الوسوم"
         save: "حفظ"
         delete: "حذف"
@@ -3308,7 +3312,7 @@ ar:
       dashboard:
         title: "لوحة التحكم"
         version: "الإصدار"
-        up_to_date: "لديك أحدث إصدار!"
+        up_to_date: "هذه أحدث إصدارة!"
         critical_available: "يتوفّر تحديث لمشكلات حرجة."
         updates_available: "التحديثات متوفرة."
         please_upgrade: "من فضلك رقّ البرمجية!"
@@ -3512,7 +3516,7 @@ ar:
         title: "الإضافات"
         installed: "الإضافات المثبتة"
         name: "الاسم"
-        none_installed: "ليس لديك أي إضافات مثبتة."
+        none_installed: "ما من إضافات مثبّتة."
         version: "الإصدار"
         enabled: "مفعّلة؟"
         is_enabled: "نعم"
@@ -4266,7 +4270,7 @@ ar:
           login: "تسجيل الدخول"
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
-          tags: "الأوسمة"
+          tags: "الوسوم"
           search: "البحث"
           groups: "المجموعات"
           dashboard: "لوحة التحكم"

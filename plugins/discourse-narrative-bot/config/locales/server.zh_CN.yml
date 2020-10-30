@@ -187,12 +187,6 @@ zh_CN:
           好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:
         like_not_found: |-
           你忘记点赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
-        not_found: |-
-          看起来你还没有上传一张图片，因此我选择了一张可以令你满意的。
-
-          `%{image_url}`
-
-          试试再上传一张，或者将链接粘贴在单独的一行中！
       likes:
         instructions: |-
           这是一只独角兽的照片：

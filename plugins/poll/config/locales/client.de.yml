@@ -103,6 +103,8 @@ de:
           step: Schrittweite
         poll_public:
           label: Anzeigen, wer abgestimmt hat
+        poll_title:
+          label: Titel (optional)
         poll_options:
           label: Bitte gib eine Umfrageoption pro Zeile ein
         automatic_close:

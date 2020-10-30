@@ -122,6 +122,7 @@ de:
       twitter: "Auf Twitter teilen"
       facebook: "Auf Facebook teilen"
       email: "Per E-Mail senden"
+      url: "URL kopieren und teilen"
     action_codes:
       public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
       private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
@@ -289,6 +290,7 @@ de:
         next_business_day: "Nächster Arbeitstag"
         tomorrow: "Morgen"
         next_week: "Nächste Woche"
+        post_local_date: "Datum im Beitrag"
         later_this_week: "Später in dieser Woche"
         start_of_next_business_week: "Montag"
         start_of_next_business_week_alt: "Am kommenden Montag"
@@ -323,6 +325,7 @@ de:
       other: "Zeige %{count} neue Themen"
     preview: "Vorschau"
     cancel: "Abbrechen"
+    deleting: "Löschen..."
     save: "Speichern"
     saving: "Speichere…"
     saved: "Gespeichert!"
@@ -1076,6 +1079,7 @@ de:
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
         error: "Beim Ändern der E-Mail-Adresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
+        success_via_admin: "Wir haben eine E-Mail an diese Adresse gesendet. Der Benutzer muss den Bestätigungsanweisungen in der E-Mail folgen."
         success_staff: "Wir haben eine E-Mail an deine aktuelle Adresse geschickt. Bitte folge den Bestätigungsanweisungen."
       change_avatar:
         title: "Ändere dein Profilbild"
@@ -1113,6 +1117,7 @@ de:
         sso_override_instructions: "E-Mail kann vom SSO-Provider aktualisiert werden."
         no_secondary: "Keine weiteren E-Mail-Adressen"
         instructions: "Nie öffentlich gezeigt."
+        admin_note: "Hinweis: Ein Administrator, der die E-Mail-Adresse eines anderen Nicht-Administratorbenutzers ändert, zeigt an, dass der Benutzer den Zugriff auf sein ursprüngliches E-Mail-Konto verloren hat. Daher wird eine E-Mail zum Zurücksetzen des Kennworts an seine neue Adresse gesendet. Die E-Mail-Adresse des Benutzers ändert sich erst, wenn der Vorgang zum Zurücksetzen des Kennworts abgeschlossen ist."
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         required: "Bitte gib eine E-Mail Adresse ein"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
@@ -1464,6 +1469,8 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
+      remove: "Entfernen..."
+      add: "Hinzufügen..."
       leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
       remove_allowed_user: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du %{name} wirklich aus dieser Unterhaltung entfernen?"
@@ -1752,6 +1759,8 @@ de:
       abandon: "Editor schließen und Entwurf verwerfen"
       enter_fullscreen: "Vollbild-Editor öffnen"
       exit_fullscreen: "Vollbild-Editor verlassen"
+      show_toolbar: "Composer-Werkzeugleiste anzeigen"
+      hide_toolbar: "Composer-Werkzeugleiste ausblenden"
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
@@ -1761,6 +1770,7 @@ de:
       slow_mode:
         title: "Dieses Thema befindet sich im langsamen Modus."
         body: "Nach dem Abschicken deines Beitrags musst du %{duration} warten, bevor du einen neuen Beitrag verfassen kannst."
+        error: "Du hast vor Kurzem in diesem Thema, das sich im langsamen Modus befindet, einen Beitrag verfasst. Bitte warte, damit andere Benutzer ebenfalls teilnehmen können."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
@@ -1792,6 +1802,8 @@ de:
         toggle_topic_bump:
           label: "Bump des Themas umschalten"
           desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"
+      reload: "Neu laden"
+      ignore: "Ignorieren"
     notifications:
       tooltip:
         regular:
@@ -1965,10 +1977,20 @@ de:
         post:
           count:
             label: Beiträge
+          min:
+            placeholder: Minimum
+          max:
+            placeholder: Maximum
           time:
             label: 'Zeitraum einschränken:'
             before: Beiträge vor dem
             after: Beiträge nach dem
+        views:
+          label: Aufrufe
+        min_views:
+          placeholder: Minimum
+        max_views:
+          placeholder: Maximum
     hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: "zurückgehen"
@@ -2005,11 +2027,16 @@ de:
         choose_new_tags: "Neue Schlagwörter für die gewählten Themen wählen:"
         choose_append_tags: "Wähle neue Schlagwörter, die diesen Themen hinzugefügt werden sollen:"
         changed_tags: "Die Schlagwörter der gewählten Themen wurden geändert."
+        remove_tags: "Tags entfernen"
+        progress:
+          one: "Fortschritt: <strong>%{count}</strong> Thema"
+          other: "Fortschritt: <strong>%{count}</strong> Themen"
       none:
         unread: "Du hast alle Themen gelesen."
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
+        ready_to_create: "Bereit zu "
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine Top-Themen."
@@ -2022,6 +2049,7 @@ de:
         new: "Das waren alle neuen Themen."
         unread: "Das waren alle ungelesen Themen."
         category: "Das waren alle Themen in der Kategorie „%{category}“."
+        tag: "Das waren alle Themen in der Kategorie „%{tag}“."
         top: "Das waren alle angesagten Themen."
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
     topic:
@@ -2093,22 +2121,27 @@ de:
       read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='{basePath}/unread'>ein ungelesenes</a> Thema } other {hast <a href='{basePath}/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'># neue</a> Themen} }. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle Kategorien durchsehen
+      browse_all_tags: Alle Tags durchsuchen
       view_latest_topics: aktuelle Themen anzeigen
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
-        select: "Dauer:"
-        description: "Benutzer müssen warten, bevor sie wieder einen Beitrag verfassen können."
-        save: "Speichern"
+        select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
+        description: "Um eine durchdachte Diskussion in schnellen oder umstrittenen Diskussionen zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut posten."
+        save: "Aktivieren"
         remove: "Deaktivieren"
+        hours: "Stunden:"
+        minutes: "Minuten:"
+        seconds: "Sekunden:"
         durations:
           15_minutes: "15 Minuten"
           1_hour: "1 Stunde"
           4_hours: "4 Stunden"
           1_day: "1 Tag"
           1_week: "1 Woche"
+          custom: "Benutzerdefinierte Dauer"
       slow_mode_notice:
         duration: "Du musst zwischen dem Verfassen von Beiträgen %{duration} warten."
       topic_status_update:
@@ -2404,6 +2437,9 @@ de:
         instructions:
           one: "Bitte wähle einen neuen Eigentümer für den Beitrag von <b>@%{old_user}</b>"
           other: "Bitte wähle einen neuen Eigentümer für %{count} Beiträge von <b>@%{old_user}</b>"
+        instructions_without_old_user:
+          one: "Bitte wählen Sie einen neuen Eigentümer für den Beitrag"
+          other: "Bitte wähle einen neuen Eigentümer für %{count} Beiträge"
       change_timestamp:
         title: "Zeitstempel ändern…"
         action: "Erstelldatum ändern"
@@ -2543,6 +2579,10 @@ de:
         unlock_post_description: "erlaube, dass der Autor den Beitrag bearbeitet"
         delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
         delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
+        delete_topic_confirm_modal: "Dieses Thema hat derzeit mehr als %{minViews} Aufrufe und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
+        delete_topic_confirm_modal_yes: "Ja, dieses Thema löschen"
+        delete_topic_confirm_modal_no: "Nein, dieses Thema behalten"
+        delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
         delete_topic: "Thema löschen"
         add_post_notice: "Team Notiz hinzufügen"
         remove_post_notice: "Team Notiz entfernen"
@@ -2631,6 +2671,7 @@ de:
       edit: "Bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"
       view: "Zeige Themen dieser Kategorie"
+      back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
       topic_template: "Themenvorlage"
@@ -2755,9 +2796,20 @@ de:
         email: "E-Mail"
       list_filters:
         all: "alle Themen"
+        none: "keine Unterkategorien"
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
+      take_action_options:
+        default:
+          title: "Reagieren"
+          details: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
+        suspend:
+          title: "Benutzer sperren"
+          details: "Erreichen Sie den Kennzeichnungsschwellenwert und sperren Sie den Benutzer"
+        silence:
+          title: "Benutzer stummschalten"
+          details: "Erreichen Sie den Kennzeichnungsschwellenwert und schalten Sie den Benutzer stumm"
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
@@ -2923,6 +2975,8 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
+        other_periods: "siehe oben:"
+    browser_update: 'Leider ist <a href="https://www.discourse.org/faq/#browser">Ihr Browser zu alt, um auf dieser Seite zu arbeiten</a>. Bitte <a href="https://browsehappy.com">aktualisieren Sie Ihren Browser</a> , um Inhalte korrekt anzuzeigen, einloggen und antworten zu können.'
     permission_types:
       full: "Erstellen / Antworten / Ansehen"
       create_post: "Antworten / Ansehen"
@@ -3104,6 +3158,7 @@ de:
       delete_unused_confirmation_more_tags:
         one: "%{tags} und%{count} weiteres"
         other: "%{tags} und %{count} weitere"
+      delete_no_unused_tags: "Es gibt keine ungenutzten Schlagwörter."
       delete_unused: "Nicht verwendete Schlagwörter löschen"
       delete_unused_description: "Alle Schlagwörter löschen, die keinem Thema und keiner Nachricht zugewiesen sind."
       cancel_delete_unused: "Abbrechen"
@@ -3142,6 +3197,8 @@ de:
         delete: "Löschen"
         confirm_delete: "Möchtest du wirklich diese Schlagwort-Gruppe löschen?"
         everyone_can_use: "Schlagwörter können von jedem verwendet werden"
+        usable_only_by_groups: "Schlagwörter sind für jeden sichtbar, aber nur die folgenden Gruppen können sie benutzen"
+        visible_only_to_groups: "Tags sind nur für folgende Gruppen sichtbar"
       topics:
         none:
           unread: "Du hast keine ungelesenen Themen."
@@ -3154,15 +3211,18 @@ de:
     invite:
       custom_message: "Gestalte deine Einladung etwas persönlicher, indem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
+      approval_not_required: "Der Benutzer wird automatisch genehmigt, sobald er diese Einladung annimmt."
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
     footer_nav:
       back: "Zurück"
+      forward: "Vorwärts"
       share: "Teilen"
       dismiss: "Alles gelesen"
     safe_mode:
       enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
+    image_removed: "(Bild entfernt)"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
@@ -3242,6 +3302,8 @@ de:
           view_table: "Tabelle"
           view_graph: "Netzwerk"
           refresh_report: "Bericht aktualisieren"
+          daily: Täglich
+          monthly: Monatlich
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
           totals_for_sample: "Insgesamt für Stichprobe"

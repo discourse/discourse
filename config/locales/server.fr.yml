@@ -56,7 +56,6 @@ fr:
     compile_error:
       unrecognized_extension: "Extension de fichier non reconnue : %{extension}"
     import_error:
-      generic: Désolé, une erreur est survenu lors de l'importation du thème
       about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr qu'il s'agit d'un thème Discourse ?"
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
@@ -1485,9 +1484,6 @@ fr:
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer Twitter login (avec rich embeds) pour Discourse</a>."
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et instagram_consumer_secret"
-    instagram_consumer_key: "« Consumer key » pour l'identification Instagram"
-    instagram_consumer_secret: "« Consumer secret » pour l'identification Instagram"
     enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et facebook_app_secret. Voir <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurer Facebook login pour Discourse</a>."
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Permettre aux utilisateurs de s'authentifier via Discord ?"
@@ -1793,7 +1789,6 @@ fr:
     show_copy_button_on_codeblocks: "Ajouter un bouton aux blocs de codes pour copier leur contenu dans le presse-papier de l'utilisateur. Cette fonctionnalité n'est pas disponible avec Internet Explorer."
     embed_any_origin: "Autoriser le contenu intégré quelque soit son origine. Cela est nécessaire pour les applications mobiles utilisant du HTML statique."
     embed_topics_list: "Permettre l'intégration HTML des listes de sujets"
-    embed_set_canonical_url: "Configurer l'URL canonique des sujets intégrés à l'URL du contenu intégré."
     embed_truncate: "Tronquer les messages embarqués."
     embed_unlisted: "Les sujets importés seront invisibles jusqu'à ce qu'un utilisateur réponde."
     embed_support_markdown: "Permettre la mise en forme Markdown pour les messages intégrés."
@@ -3242,7 +3237,6 @@ fr:
     file_missing: "Désolé, il faut fournir un fichier à envoyer."
     empty: "Désolé, mais le fichier que vous avez fourni est vide."
     png_to_jpg_conversion_failure_message: "Une erreur est survenue lors de la conversion de PNG en JPG."
-    optimize_failure_message: "Une erreur est survenue lors de l'optimisation de l'image envoyée."
     attachments:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (taille maximale de %{max_size_kb} Ko)."
     images:

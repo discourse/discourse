@@ -73,10 +73,10 @@ pl_PL:
         quote: "To mały krok dla człowieka, ale wielki krok dla ludzkości."
         author: "Neil Armstrong"
       "8":
-        quote: "Rób codziennie jedną rzecz, której się boisz."
+        quote: "Każdego dnia rób jedną rzecz, która cię przeraża"
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Błędy są zawsze wybaczalne, jeśli osoba może się do nich przyznać."
+        quote: "Błędy są zawsze wybaczalne, jeśli ktoś ma odwagę się do nich przyznać."
         author: "Bruce Lee"
       "10":
         quote: "Każda rzecz, którą umysł ludzki może pojąć i w nią uwierzyć, może on osiągnąć."
@@ -87,18 +87,18 @@ pl_PL:
       trigger: "fortuna"
       answers:
         "1": "Jest to pewne"
-        "2": "Jest to zdecydowane, więc"
+        "2": "Zdecydowanie tak"
         "3": "Bez wątpliwości"
         "4": "Tak, zdecydowanie"
         "5": "Możesz na tym polegać"
         "6": "Tak jak ja to widzę, tak"
-        "7": "Najpewniej"
+        "7": "Najprawdopodobniej"
         "8": "Perspektywy są dobre"
         "9": "Tak"
         "10": "Wszystkie znaki wskazują na to, że tak"
         "11": "Odpowiedź niejasna, spróbuj ponownie"
         "12": "Spytaj ponownie później"
-        "13": "Lepiej, abym Ci teraz nie mówił"
+        "13": "Lepiej ci teraz nie mówić"
         "14": "Nie mogę teraz tego przewidzieć"
         "15": "Skoncentruj się i spytaj ponownie"
         "16": "Nie licz na to"
@@ -128,7 +128,7 @@ pl_PL:
           %{quote_sample} `
 
           `@%{discobot_username} %{magic_8_ball_trigger}
-          >:kryształowa_kula: Możesz na tym polegać
+          >:crystal_ball: Możesz na tym polegać
       do_not_understand:
         first_response: |-
           Hej! Dzięki za odpowiedź!
@@ -152,7 +152,7 @@ pl_PL:
 
           - Jestem tylko robotem, ale [nasz przyjazny zespół](%{base_uri}/about) jest zawsze do dyspozycji, jeśli potrzebujesz skontaktować się z prawdziwą osobą.
 
-          - Ze względów bezpieczeństwa uprawnienia nowych użytkowników są mniejsze. Gdy poznamy się lepiej, uzyskasz dostęp do [nowych możliwości](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [odznak](%{base_uri}/badges)).
+          - Ze względów bezpieczeństwa uprawnienia nowych użytkowników są ograniczone. Gdy poznamy się lepiej, uzyskasz dostęp do [nowych możliwości](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [odznak](%{base_uri}/badges)).
 
           - Wierzymy w [cywilizowane zachowanie członków](%{base_uri}/guidelines) społeczności w każdej sytuacji.
       onebox:
@@ -186,12 +186,6 @@ pl_PL:
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
           Zapomniałeś polajkować :heart: mój [wpis]?(%{url}) :crying_cat_face:
-        not_found: |-
-          Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _na pewno_ Ci się podoba.
-
-          `%{image_url}`
-
-          Spróbuj przesłać go jeszcze raz lub wkleić link sam w liście!
       likes:
         instructions: |-
           Oto zdjęcie jednorożca:
@@ -314,10 +308,10 @@ pl_PL:
 
           (Jeśli będziesz chciał ponownie porozmawiać, wyślij mi wiadomość lub wzmianki `@%{discobot_username}` w dowolnym momencie!)
       certificate:
-        alt: "Certyfikat osiągnięcia"
+        alt: "Certyfikat Osiągnięcia"
     advanced_user_narrative:
       reset_trigger: "zaawansowany samouczek"
-      cert_title: "W uznaniu za pomyślne ukończenie tutorialu zaawansowanego użytkownika."
+      cert_title: "W uznaniu za pomyślne ukończenie samouczka zaawansowanego użytkownika."
       title: ":arrow_up: Zaawansowane opcje użytkownika"
       start_message: |-
         Jako _zaawansowany_ użytkownik, czy odwiedziłeś już [stronę swoich ustawień](%{base_uri}/my/preferences), @%{username}? Istnieje wiele możliwości dostosowania ustawień, takich jak wybranie ciemnego lub jasnego motywu.

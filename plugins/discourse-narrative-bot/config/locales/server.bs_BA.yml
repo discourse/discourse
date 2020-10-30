@@ -155,12 +155,6 @@ bs_BA:
           Divna slika - pritisnuo sam dugme kao: srce: da bih vas obavestio koliko ga cijenim: heart_eyes:
         like_not_found: |-
           Da li ste zaboravili da volite: heart: my [post?] (%{url}): crying_cat_face:
-        not_found: |-
-          Izgleda da niste učitali sliku pa sam izabrao sliku u kojoj sam siguran da ćete uživati.
-
-          `%{image_url}`
-
-          Pokušajte učitati jednu sljedeću, ili zalijepite link u zasebnoj liniji reda teksta!
       likes:
         instructions: |-
           Evo slike jednoroga:

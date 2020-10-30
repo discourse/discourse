@@ -56,7 +56,6 @@ es:
     compile_error:
       unrecognized_extension: "Extensión de archivo no reconocida: %{extension}"
     import_error:
-      generic: Se produjo un error al importar ese tema
       about_json: "Error de importación: about.json no existe o no es válido. ¿Estás seguro de que este es un tema de Discourse?"
       about_json_values: "about.json contiene valores inválidos: %{errors}"
       modifier_values: "los modificadores about.json contienen valores inválidos: %{errors}"
@@ -1510,9 +1509,6 @@ es:
     enable_twitter_logins: "Activar autenticación mediante Twitter, requiere una twitter_consumer_key y un twitter_consumer_secret. Ver <a href='https://meta.discourse.org/t/13395' target='_blank'>configuración del inicio de sesión mediante Twitter (e inserciones) para Discourse</a>."
     twitter_consumer_key: "Clave del consumidor para la autenticación mediante Twitter, registrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secreto del consumidor para la autenticación mediante Twitter, registrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Activar la autenticación por Instagram, requiere instagram_consumer_key y instagram_consumer_secret"
-    instagram_consumer_key: "Clave del consumidor para autenticación mediante Instagram"
-    instagram_consumer_secret: "Clave secreta del consumidor para autenticación mediante Instagram"
     enable_facebook_logins: "Activar autenticación mediante Facebook, requiere una facebook_app_id y un facebook_app_secret. Ver <a href='https://meta.discourse.org/t/13394' target='_blank'>configuración del inicio de sesión mediante Facebook para Discourse</a>."
     facebook_app_id: "App id de Facebook para inicio de sesión y compartir, registrada en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Clave secreta de la app para la autenticación mediante Facebook, registrado en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
@@ -1830,7 +1826,6 @@ es:
     show_copy_button_on_codeblocks: "Agrega un botón a los bloques de código para copiar el contenido del bloque al portapapeles del usuario. Esta característica no es compatible con Internet Explorer."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
     embed_topics_list: "Soportar la inserción HTML de listas de temas"
-    embed_set_canonical_url: "Establece la URL canónica para los temas insertados en la URL de los contenidos insertados."
     embed_truncate: "Truncar las publicaciones insertadas."
     embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
     embed_support_markdown: "Soporte de formato Markdown para publicaciones incrustadas."
@@ -3289,7 +3284,6 @@ es:
     file_missing: "Lo sentimos, debes incluir un archivo para subir."
     empty: "Disculpa, el archivo que proporcionaste está vacío."
     png_to_jpg_conversion_failure_message: "Ha ocurrido un error cuando se convertía desde PNG a JPG."
-    optimize_failure_message: "Se produjo un error al optimizar la imagen cargada."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:

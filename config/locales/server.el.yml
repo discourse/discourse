@@ -56,7 +56,6 @@ el:
     compile_error:
       unrecognized_extension: "Μη αναγνωρισμένη επέκταση αρχείου: %{extension}"
     import_error:
-      generic: Παρουσιάστηκε σφάλμα κατά την εισαγωγή αυτού του θέματος
       about_json: "Σφάλμα εισαγωγής: το about.json δεν υπάρχει ή δεν είναι έγκυρο. Είστε βέβαιοι ότι αυτό είναι ένα θέμα Discourse;"
       about_json_values: "Το about.json περιέχει μη έγκυρες τιμές: %{errors}"
       modifier_values: "Modifiers του about.json περιέχουν μη έγκυρες τιμές: %{errors}"
@@ -1040,9 +1039,6 @@ el:
     enable_signup_cta: "Δείξε μια ανακοίνωση στους ανώνυμους χρήστες που επιστρέφουν, η οποία να τους παροτρύνει να δημιουργήσουν λογαριασμό."
     google_oauth2_client_id: "Client ID της Google εφαρμογής σας."
     google_oauth2_client_secret: "Μυστικό πελάτη της Google εφαρμογής σας. "
-    enable_instagram_logins: "Ενεργοποίησε την επαλήθευση μέσω Instagram, απαιτεί instagram_consumer_key και instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key για επαλήθευση μέσω Instagram"
-    instagram_consumer_secret: "Consumer secret για επαλήθευση μέσω Instagram"
     allow_restore: "Επίτρεψε επαναφορά, η οποία μπορεί να αντικαταστήσει ΟΛΑ τα δεδομένα του ιστότοπου! Αφήστε απενεργοποιημένο, εκτός αν σχεδιάζετε να επαναφέρετε αντίγραφο ασφαλείας"
     maximum_backups: "Το μέγιστο ποσό αντιγράφων ασφαλείας το οποία θα διατηρηθούν στο δίσκο. Παλαιότερα αντίγραφα ασφαλείας διαγράφονται αυτόματα"
     automatic_backups_enabled: "Πάρε αυτόματα αντίγραφα ασφαλείας όπως ορίζεται στη συχνότητα αντιγράφων ασφαλείας"

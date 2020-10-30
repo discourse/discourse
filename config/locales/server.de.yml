@@ -56,8 +56,9 @@ de:
     compile_error:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
-      generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
+      about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Sind Sie sicher, dass dies ein Discourse Theme ist?"
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
+      modifier_values: "about.json Modifikatoren enthalten ungültige Werte: %{errors}"
       git: "Fehler beim Klonen des git-Repository, Zugriff verboten oder Repository nicht gefunden."
       unpack_failed: "Fehler beim Entpacken der Datei"
       file_too_big: "Die unkomprimierte Datei ist zu groß."
@@ -70,6 +71,7 @@ de:
       optimized_link: Optimierte Bild-Verknüpfungen sind kurzlebig und sollten nicht in Theme-Quellcode enthalten sein.
     settings_errors:
       invalid_yaml: "Der YAML-Code ist ungültig."
+      data_type_not_a_number: "Das Setzen des Typs \"%{name}\" wird nicht unterstützt. Unterstützte Typen sind \"Integer\", \"Bool\", \"List\", \"Enum\" und \"Upload\""
       name_too_long: "Es gibt eine Einstellung mit einem zu langen Namen. Die maximale Länge beträgt 255 Zeichen."
       default_value_missing: "Einstellung `%{name}` hat keinen Standardwert."
       default_not_match_type: "Bei der Einstellung `%{name}` stimmt der Datentyp des Standardwerts nicht mit dem Datentyp der Einstellung überein."
@@ -113,6 +115,7 @@ de:
         screened_email_error: "Passiert, wenn die Absenderadresse schon einmal gefiltert wurde."
         unsubscribe_not_allowed: "Kommt vor, wenn die Abbestellung per E-Mail für diesen Benutzer nicht erlaubt ist."
       unrecognized_error: "Unbekannter Fehler"
+    view_redacted_media: "Medien anzeigen"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -178,23 +181,37 @@ de:
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du die Einstellung '%{setting_name}' nicht angegeben hast."
       s3_bucket_reused: "Du kannst nicht den gleichen Bucket für 's3_upload_bucket' und 's3_backup_bucket' verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
       secure_media_requirements: "S3 Uploads müssen vor dem Aktivieren sicherer Medien aktiviert sein."
+      share_quote_facebook_requirements: "Sie müssen eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
+      second_factor_cannot_enforce_with_socials: "Sie können 2FA nicht erzwingen, wenn soziale Logins aktiviert sind. Sie müssen zuerst die Anmeldung deaktivieren über: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst kein 2FA erzwingen, wenn lokale Anmeldungen deaktiviert sind."
+      second_factor_cannot_be_enforced_with_sso_enabled: "Sie können 2FA nicht erzwingen, wenn SSO aktiviert ist."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kannst lokale Anmeldung nicht deaktivieren, wenn 2FA erzwungen wird. Deaktiviere erzwungenes 2FA vor dem Deaktivieren lokaler Anmeldungen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kannst S3 Uploads nicht aktivieren, weil S3 Uploads bereits global aktiviert sind. Aktivieren auf Seiten-Ebene kann zu kritischen Problemen mit Uploads führen"
+      cors_origins_should_not_have_trailing_slash: "Sie sollten den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found_json: "Dein Einladungstoken ist ungültig. Bitte kontaktiere das Team. "
     error_message: "Fehler beim Akzeptieren der Einladung aufgetreten. Bitte kontaktiere den Administrator dieser Seite."
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen, er/sie <a href='%{base_path}/u/%{username}/summary'>hat schon ein Konto!</a>"
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungsmail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
+    cant_invite_to_group: "Sie sind nicht berechtigt, Benutzer zu bestimmten Gruppe(n) einzuladen. Stellen Sie sicher, dass Sie Eigentümer der Gruppe(n) sind, in die Sie einladen möchten."
+    disabled_errors:
+      sso_enabled: "Einladungen sind deaktiviert, da SSO aktiviert ist."
+      local_logins_disabled: "Einladungen sind deaktiviert, da die Einstellung „Lokale Anmeldungen aktivieren“ deaktiviert ist."
+      invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datein in kleinere Teile aufzuspalten."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
+  invite_link:
+    email_taken: "Diese E-Mail-Adresse wird schon verwendet. Wenn Sie bereits ein Konto haben, melden Sie sich bitte an oder setzen Sie das Passwort zurück."
+    max_redemptions_limit: "sollte zwischen 2 und %{max_limit} sein."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
+    not_allowed: "Dieser Benutzer kann leider nicht eingeladen werden."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -264,6 +281,11 @@ de:
   too_many_mentions_newuser:
     one: "Entschuldige, neue Benutzer können nur einen anderen Benutzer in einem Beitrag erwähnen."
     other: "Entschuldige, neue Benutzer können nur %{count} Benutzer in einem Beitrag erwähnen."
+  no_embedded_media_allowed_trust: "Leider können Sie keine Medienelemente in einen Beitrag einbetten."
+  no_embedded_media_allowed: "Es tut uns leid, neue Benutzer können keine Medienelemente in Beiträge einbinden."
+  too_many_embedded_media:
+    one: "Es tut uns leid, neue Benutzer können nur ein eingebettetes Medienelement in einen Beitrag stellen."
+    other: "Entschuldigung, neue Benutzer können nur %{count} eingebettete Medienelemente in einen Beitrag stellen."
   no_attachments_allowed: "Entschuldige, neue Benutzer können Beiträgen keine Dateien hinzufügen."
   too_many_attachments:
     one: "Entschuldige, neue Benutzer können Beiträgen höchstens eine Datei hinzufügen."
@@ -284,6 +306,7 @@ de:
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   secure_upload_not_allowed_in_public_topic: "Entschuldigung, der/die folgende/n sichere Upload(s) konnte nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldigung, du kannst keine PM für ein exisiterendes Thema erstellen."
+  slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "scheint unklar, ist das ein ganzer Satz?"
@@ -294,6 +317,12 @@ de:
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
+  rss_num_posts:
+    one: "%{count} Beitrag"
+    other: "%{count} Beiträge"
+  rss_num_participants:
+    one: "%{count} Teilnehmer"
+    other: "%{count} Teilnehmer"
   read_full_topic: "Lese das vollständige Thema"
   private_message_abbrev: "Nachricht"
   rss_description:
@@ -316,10 +345,14 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
+  cannot_edit_on_slow_mode: "Das Thema ist im langsamen Modus und dieser Beitrag kann nicht mehr bearbeitet werden."
   excerpt_image: "Bild"
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
+      cannot_set_past_reminder: "Sie können in der Vergangenheit keine Lesezeichenerinnerung festlegen."
+      cannot_set_reminder_in_distant_future: "Sie können eine Lesezeichenerinnerung nicht länger als 10 Jahre in der Zukunft festlegen."
+      time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
     reminders:
       at_desktop: "Nächstes mal wenn ich an meinem PC bin"
       later_today: "Im Laufe des Tages"
@@ -345,6 +378,7 @@ de:
       email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
       cant_allow_membership_requests: "Du kannst Mitgliedschaftsanfragen nicht für eine Gruppe ohne Eigentümer erlauben."
       already_requested_membership: "Du hast die Gruppenmitgliedschaft für diese Gruppe bereits angefragt."
+      adding_too_many_users: "Maximal %{limit} Benutzer können auf einmal hinzugefügt werden"
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -357,6 +391,10 @@ de:
       trust_level_4: "vertrauensstufe_4"
     request_membership_pm:
       title: "Mitgliedschaftsanfrage für @%{group_name}"
+    request_accepted_pm:
+      title: "Sie wurden in @%{group_name}akzeptiert"
+      body: |
+        Ihre Anfrage zum Beitritt zu @%{group_name} wurde angenommen und Sie sind jetzt Mitglied.
   education:
     until_posts:
       one: "%{count} Beitrag"
@@ -397,6 +435,12 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
+    dominating_topic: |
+      ### Lassen Sie andere an der Konversation teilnehmen
+
+      Dieses Thema ist eindeutig wichtig für Sie &ndash; Sie haben mehr als %{percent}% der Antworten hier gepostet.
+
+      Es könnte sogar noch besser sein, wenn du anderen Menschen Raum geben würdest, um ihre Sichtweisen zu teilen. Kannst du sie hineinladen?
     too_many_replies: |
       ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
@@ -432,6 +476,7 @@ de:
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
               target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
+              unable_to_update: "Beim Aktualisieren dieses Themas ist ein Fehler aufgetreten."
             featured_link:
               invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
               invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
@@ -1419,9 +1464,6 @@ de:
     enable_twitter_logins: "Twitter-Authentifizierung aktivieren, erfordert twitter_consumer_key und twitter_consumer_secret. Siehe <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Consumer Key für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer Secret für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Aktiviere Instagram-Authentifizierung (benötigt instagram_consumer_key und instagram_consumer_secret)."
-    instagram_consumer_key: "Consumer Key für Instagram-Authentifizierung"
-    instagram_consumer_secret: "Consumer Secret für Instagram-Authentifizierung"
     enable_facebook_logins: "Facebook-Authentifizierung aktivieren, erfordert facebook_api_id und facebook_app_secret. Siehe <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "App-Secret für Facebook-Authentifizierung, registriert unter <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Benutzern erlauben, sich mit Discord zu authentifizieren?"
