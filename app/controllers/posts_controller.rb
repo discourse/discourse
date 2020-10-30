@@ -299,7 +299,7 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    unless current_user.staff?
+    unless current_user.staff? || guardian.is_category_group_moderator?(post.topic.category)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
@@ -320,7 +320,7 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    unless current_user.staff?
+    unless current_user.staff? || guardian.is_category_group_moderator?(post.topic.category)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
