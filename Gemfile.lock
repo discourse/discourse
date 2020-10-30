@@ -427,7 +427,7 @@ GEM
       jwt (~> 2.0)
     xorcist (1.1.2)
     yaml-lint (0.0.10)
-    zeitwerk (2.4.0)
+    zeitwerk (2.4.1)
 
 PLATFORMS
   ruby
