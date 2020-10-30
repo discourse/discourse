@@ -93,8 +93,8 @@ export default Controller.extend({
             model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
-              createdCategory: true,
             });
+            this.session.requiresRefresh = true;
           }
         })
         .catch((error) => {
@@ -132,11 +132,7 @@ export default Controller.extend({
     },
 
     goBack() {
-      if (this.model.createdCategory) {
-        DiscourseURL.redirectTo(this.model.url);
-      } else {
-        DiscourseURL.routeTo(this.model.url);
-      }
+      DiscourseURL.routeTo(this.model.url);
     },
 
     toggleMenu() {
