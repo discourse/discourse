@@ -247,7 +247,7 @@ module Email
         url = div['data-stripped-secure-media']
         filename = File.basename(url)
         filename_bare = filename.gsub(File.extname(filename), "")
-        sha1 = filename_bare.include?('_') ? filename_bare.partition('_').first : filename_bare
+        sha1 = filename_bare.partition('_').first
         upload_shas[url] = sha1
       end
       uploads = Upload.select(:original_filename, :sha1).where(sha1: upload_shas.values)

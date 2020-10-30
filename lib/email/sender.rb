@@ -272,33 +272,25 @@ module Email
       return if max_email_size == 0
 
       email_size = 0
-      post.uploads.each do |upload|
-        optimized_1X = upload.optimized_images.first
+      post.uploads.each do |original_upload|
+        optimized_1X = original_upload.optimized_images.first
 
-        if FileHelper.is_supported_image?(upload.original_filename) &&
-            !should_attach_image?(upload, optimized_1X)
+        if FileHelper.is_supported_image?(original_upload.original_filename) &&
+            !should_attach_image?(original_upload, optimized_1X)
           next
         end
 
-        # all the checks below could be performed on an upload
-        # or an optimized image, so we extract the upload only
-        # stuff first for convinience
-        original_filename = upload.original_filename
-        upload_id = upload.id
-        if optimized_1X.present?
-          upload = optimized_1X
-        end
-
-        next if email_size + upload.filesize > max_email_size
+        attached_upload = optimized_1X || original_upload
+        next if email_size + original_upload.filesize > max_email_size
 
         begin
-          path = if upload.local?
-            Discourse.store.path_for(upload)
+          path = if attached_upload.local?
+            Discourse.store.path_for(attached_upload)
           else
-            Discourse.store.download(upload).path
+            Discourse.store.download(attached_upload).path
           end
 
-          @message.attachments[original_filename] = File.read(path)
+          @message.attachments[original_upload.original_filename] = File.read(path)
           email_size += File.size(path)
         rescue => e
           Discourse.warn_exception(
@@ -306,8 +298,8 @@ module Email
             message: "Failed to attach file to email",
             env: {
               post_id: post.id,
-              upload_id: upload_id,
-              filename: original_filename
+              upload_id: original_upload.id,
+              filename: original_upload.original_filename
             }
           )
         end

@@ -408,28 +408,25 @@ module PrettyText
   def self.strip_secure_media(doc)
     # images inside a lightbox or other link
     doc.css('a[href]').each do |a|
-      if a.classes.include?('lightbox')
-        img = a.css('img[src]').first
+      next if !Upload.secure_media_url?(a['href'])
 
+      non_image_media = %w(video audio).include?(a&.parent&.name)
+      target = non_image_media ? a.parent : a
+      next if target.to_s.include?('stripped-secure-view-media')
+
+      if a.classes.include?('lightbox')
         # we are using the first image from the srcset here so we get the
         # optimized image instead of the possibly huge original
+        img = a.css('img[src]').first
         srcset = img.attributes['srcset'].value
-        if Upload.secure_media_url?(a['href'])
-          next if a.to_s.include?('stripped-secure-view-media')
-          url = srcset.split(',').first
-          a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
-          a.remove
-        end
+        url = srcset.split(',').first
+        a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
+        a.remove
       else
-        if Upload.secure_media_url?(a['href'])
-          non_image_media = %w(video audio).include?(a&.parent&.name)
-          target = non_image_media ? a.parent : a
-          next if target.to_s.include?('stripped-secure-view-media')
-          width = non_image_media ? nil : a.at_css('img').attr('width')
-          height = non_image_media ? nil : a.at_css('img').attr('height')
-          target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
-          target.remove
-        end
+        width = non_image_media ? nil : a.at_css('img').attr('width')
+        height = non_image_media ? nil : a.at_css('img').attr('height')
+        target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
+        target.remove
       end
     end
 
