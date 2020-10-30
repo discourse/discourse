@@ -7,6 +7,8 @@
 module Email
   class Styles
     MAX_IMAGE_DIMENSION = 400
+    ONEBOX_IMAGE_BASE_STYLE = "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
+    ONEBOX_IMAGE_THUMBNAIL_STYLE = "width: 60px;"
 
     @@plugin_callbacks = []
 
@@ -125,8 +127,8 @@ module Email
       style('aside.onebox header img.site-icon', "width: 16px; height: 16px; margin-right: 3px;")
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
-      style('aside.onebox .onebox-body img:not(.onebox-avatar-inline)', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
-      style('aside.onebox .onebox-body img.thumbnail', "width: 60px;")
+      style('aside.onebox .onebox-body img:not(.onebox-avatar-inline)', ONEBOX_IMAGE_BASE_STYLE)
+      style('aside.onebox .onebox-body img.thumbnail', ONEBOX_IMAGE_THUMBNAIL_STYLE)
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
       style('.github-info', "margin-top: 10px;")
@@ -259,18 +261,15 @@ module Email
         if attachments[original_filename]
           url = attachments[original_filename].url
 
-          # refer to the onebox styles above...not ideal to copy this but we do not already
-          # have this calculated at the redaction stage, redaction must occur before we kill
-          # all the classes and replace with styles
           style = if div['data-oneboxed']
-            "width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
+            "#{ONEBOX_IMAGE_THUMBNAIL_STYLE} #{ONEBOX_IMAGE_BASE_STYLE}"
           else
             calculate_width_and_height_style(div)
           end
 
-          div.add_next_sibling(
-            "<img src=\"#{url}\" data-embedded-secure-image=\"true\" style=\"#{style}\" />"
-          )
+          div.add_next_sibling(<<~HTML)
+            <img src="#{url}" data-embedded-secure-image="true" style="#{style}" />
+          HTML
           div.remove
         end
       end

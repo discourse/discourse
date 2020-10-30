@@ -406,31 +406,40 @@ module PrettyText
   end
 
   def self.strip_secure_media(doc)
-    doc.css("a[href]").each do |a|
-      if a.classes.include?("lightbox")
+    # images inside a lightbox or other link
+    doc.css('a[href]').each do |a|
+      if a.classes.include?('lightbox')
         img = a.css('img[src]').first
-        srcset = img.attributes["srcset"].value
-        if Upload.secure_media_url?(a["href"])
-          next if a.to_s.include?("stripped-secure-view-media")
-          url = srcset.split(",").first
+
+        # we are using the first image from the srcset here so we get the
+        # optimized image instead of the possibly huge original
+        srcset = img.attributes['srcset'].value
+        if Upload.secure_media_url?(a['href'])
+          next if a.to_s.include?('stripped-secure-view-media')
+          url = srcset.split(',').first
           a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
           a.remove
         end
       else
-        if Upload.secure_media_url?(a["href"])
-          target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
-          next if target.to_s.include?("stripped-secure-view-media")
-          width = a.xpath("//*[@width]").attr("width")&.value
-          height = a.xpath("//*[@height]").attr("height")&.value
+        if Upload.secure_media_url?(a['href'])
+          non_image_media = %w(video audio).include?(a&.parent&.name)
+          target = non_image_media ? a.parent : a
+          next if target.to_s.include?('stripped-secure-view-media')
+          width = non_image_media ? nil : a.at_css('img').attr('width')
+          height = non_image_media ? nil : a.at_css('img').attr('height')
           target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
           target.remove
         end
       end
     end
+
+    # images by themselves or inside a onebox
     doc.css('img[src]').each do |img|
-      # do we have a parent ref here? if so check if .aspect-image ... and get the first
-      # comma separated item from the srcset as the URL instead
       url = if img.parent.classes.include?("aspect-image")
+
+        # we are using the first image from the srcset here so we get the
+        # optimized image instead of the original, because an optimized
+        # image may be used for the onebox thumbnail
         srcset = img.attributes["srcset"].value
         srcset.split(",").first
       else
@@ -439,7 +448,7 @@ module PrettyText
 
       width = img.classes.include?('site-icon') ? 16 : img['width']
       height = img.classes.include?('site-icon') ? 16 : img['height']
-      oneboxed = img.parent.parent.classes.include?('onebox-body')
+      oneboxed = (img.parent&.parent&.classes || []).include?('onebox-body')
 
       if Upload.secure_media_url?(url)
         img.add_next_sibling secure_media_placeholder(doc, url, oneboxed: oneboxed, width: width, height: height)
