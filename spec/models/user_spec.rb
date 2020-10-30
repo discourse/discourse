@@ -514,12 +514,12 @@ describe User do
 
       UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
       UserAssociatedAccount.create(user_id: user.id, provider_name: "facebook", provider_uid: "1234", info: { email: "test@example.com" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "instagram", provider_uid: "examplel123123", info: { nickname: "sam" })
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "discord", provider_uid: "examplel123123", info: { nickname: "sam" })
       UserAssociatedAccount.create(user_id: user.id, provider_name: "google_oauth2", provider_uid: "1", info: { email: "sam@sam.com" })
       GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
 
       user.reload
-      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'instagram')
+      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'discord')
 
     end
   end
