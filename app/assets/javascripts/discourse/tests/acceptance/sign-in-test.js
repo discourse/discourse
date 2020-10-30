@@ -1,7 +1,7 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
@@ -72,7 +72,7 @@ acceptance("Signing In", function () {
     assert.equal(queryAll(".modal-body b").text(), "different@example.com");
   });
 
-  test("second factor", async function (assert) {
+  skip("second factor", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
@@ -105,7 +105,7 @@ acceptance("Signing In", function () {
     );
   });
 
-  test("security key", async function (assert) {
+  skip("security key", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
