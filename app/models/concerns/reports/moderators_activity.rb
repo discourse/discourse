@@ -152,7 +152,7 @@ module Reports::ModeratorsActivity
       AND p.created_at <= '#{report.end_date}'
       GROUP BY p.user_id
       )
-    
+
       SELECT
       m.user_id,
       m.username,
