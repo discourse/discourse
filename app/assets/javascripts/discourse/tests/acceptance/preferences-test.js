@@ -71,7 +71,7 @@ function preferencesPretender(server, helper) {
 acceptance("User Preferences", function (needs) {
   needs.user();
   needs.pretender(preferencesPretender);
-  test("update some fields", async (assert) => {
+  test("update some fields", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
     assert.ok($("body.user-preferences-page").length, "has the body class");
@@ -128,12 +128,12 @@ acceptance("User Preferences", function (needs) {
     );
   });
 
-  test("username", async (assert) => {
+  test("username", async function (assert) {
     await visit("/u/eviltrout/preferences/username");
     assert.ok(exists("#change_username"), "it has the input element");
   });
 
-  test("email", async (assert) => {
+  test("email", async function (assert) {
     await visit("/u/eviltrout/preferences/email");
 
     assert.ok(exists("#change-email"), "it has the input element");
@@ -147,7 +147,7 @@ acceptance("User Preferences", function (needs) {
     );
   });
 
-  test("email field always shows up", async (assert) => {
+  test("email field always shows up", async function (assert) {
     await visit("/u/eviltrout/preferences/email");
 
     assert.ok(exists("#change-email"), "it has the input element");
@@ -161,7 +161,7 @@ acceptance("User Preferences", function (needs) {
     assert.ok(exists("#change-email"), "it has the input element");
   });
 
-  test("connected accounts", async (assert) => {
+  test("connected accounts", async function (assert) {
     await visit("/u/eviltrout/preferences/account");
 
     assert.ok(
@@ -182,7 +182,7 @@ acceptance("User Preferences", function (needs) {
       .indexOf("Connect") > -1;
   });
 
-  test("second factor totp", async (assert) => {
+  test("second factor totp", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     assert.ok(exists("#password"), "it has a password input");
@@ -203,7 +203,7 @@ acceptance("User Preferences", function (needs) {
     );
   });
 
-  test("second factor security keys", async (assert) => {
+  test("second factor security keys", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     assert.ok(exists("#password"), "it has a password input");
@@ -229,7 +229,7 @@ acceptance("User Preferences", function (needs) {
     }
   });
 
-  test("default avatar selector", async (assert) => {
+  test("default avatar selector", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
     await click(".pref-avatar .btn");
@@ -266,7 +266,7 @@ acceptance("Second Factor Backups", function (needs) {
     });
   });
 
-  test("second factor backup", async (assert) => {
+  test("second factor backup", async function (assert) {
     updateCurrentUser({ second_factor_enabled: true });
     await visit("/u/eviltrout/preferences/second-factor");
     await click(".edit-2fa-backup");
@@ -294,7 +294,7 @@ acceptance("Avatar selector when selectable avatars is enabled", function (
     );
   });
 
-  test("selectable avatars", async (assert) => {
+  test("selectable avatars", async function (assert) {
     await visit("/u/eviltrout/preferences");
     await click(".pref-avatar .btn");
     assert.ok(
@@ -308,7 +308,7 @@ acceptance("User Preferences when badges are disabled", function (needs) {
   needs.settings({ enable_badges: false });
   needs.pretender(preferencesPretender);
 
-  test("visit my preferences", async (assert) => {
+  test("visit my preferences", async function (assert) {
     await visit("/u/eviltrout/preferences");
     assert.ok($("body.user-preferences-page").length, "has the body class");
     assert.equal(
@@ -319,7 +319,7 @@ acceptance("User Preferences when badges are disabled", function (needs) {
     assert.ok(exists(".user-preferences"), "it shows the preferences");
   });
 
-  test("recently connected devices", async (assert) => {
+  test("recently connected devices", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
     assert.equal(
@@ -374,7 +374,7 @@ acceptance(
       });
     });
 
-    test("setting featured topic on profile", async (assert) => {
+    test("setting featured topic on profile", async function (assert) {
       await visit("/u/eviltrout/preferences/profile");
 
       assert.ok(
@@ -429,7 +429,7 @@ acceptance("Custom User Fields", function (needs) {
   });
   needs.pretender(preferencesPretender);
 
-  test("can select an option from a dropdown", async (assert) => {
+  test("can select an option from a dropdown", async function (assert) {
     await visit("/u/eviltrout/preferences/profile");
     assert.ok(exists(".user-field"), "it has at least one user field");
     await click(".user-field.dropdown");
@@ -455,7 +455,7 @@ acceptance(
       top_menu: "categories|latest|top|bookmarks",
     });
 
-    test("selecting bookmarks as home directs home to bookmarks", async (assert) => {
+    test("selecting bookmarks as home directs home to bookmarks", async function (assert) {
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".home .combo-box"), "it has a home selector combo-box");
 

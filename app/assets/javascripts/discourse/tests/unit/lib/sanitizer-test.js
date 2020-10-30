@@ -4,7 +4,7 @@ import { hrefAllowed } from "pretty-text/sanitizer";
 
 module("lib:sanitizer");
 
-test("sanitize", (assert) => {
+test("sanitize", function (assert) {
   const pt = new PrettyText(
     buildOptions({
       siteSettings: {
@@ -131,7 +131,7 @@ test("sanitize", (assert) => {
   cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
-test("ids on headings", (assert) => {
+test("ids on headings", function (assert) {
   const pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
   assert.equal(
@@ -160,7 +160,7 @@ test("ids on headings", (assert) => {
   );
 });
 
-test("poorly formed ids on headings", (assert) => {
+test("poorly formed ids on headings", function (assert) {
   let pt = new PrettyText(buildOptions({ siteSettings: {} }));
   assert.equal(
     pt.sanitize(`<h1 id="evil-trout">Test Heading</h1>`),
@@ -188,7 +188,7 @@ test("poorly formed ids on headings", (assert) => {
   );
 });
 
-test("urlAllowed", (assert) => {
+test("urlAllowed", function (assert) {
   const allowed = (url, msg) => assert.equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");

@@ -3,7 +3,7 @@ import ScreenTrack from "discourse/lib/screen-track";
 
 module("lib:screen-track");
 
-test("consolidateTimings", (assert) => {
+test("consolidateTimings", function (assert) {
   const tracker = new ScreenTrack();
 
   tracker.consolidateTimings({ 1: 10, 2: 5 }, 10, 1);

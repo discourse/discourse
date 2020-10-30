@@ -6,7 +6,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Search Log Term", function (needs) {
   needs.user();
 
-  test("show search log term details", async (assert) => {
+  test("show search log term details", async function (assert) {
     await visit("/admin/logs/search_logs/term?term=ruby");
 
     assert.ok($("div.search-logs-filter").length, "has the search type filter");

@@ -8,7 +8,7 @@ import pretender from "discourse/tests/helpers/create-pretender";
 
 module("lib:link-mentions");
 
-test("linkSeenMentions replaces users and groups", async (assert) => {
+test("linkSeenMentions replaces users and groups", async function (assert) {
   pretender.get("/u/is_local_username", () => [
     200,
     { "Content-Type": "application/json" },

@@ -16,7 +16,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
   });
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
-  test("regular user - sufficient trust level", async (assert) => {
+  test("regular user - sufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await displayPollBuilderButton();
@@ -27,7 +27,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("regular user - insufficient trust level", async (assert) => {
+  test("regular user - insufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 0 });
 
     await displayPollBuilderButton();
@@ -38,7 +38,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("staff - with insufficient trust level", async (assert) => {
+  test("staff - with insufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: true, trust_level: 0 });
 
     await displayPollBuilderButton();
@@ -49,7 +49,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("poll preview", async (assert) => {
+  test("poll preview", async function (assert) {
     await displayPollBuilderButton();
 
     const popupMenu = selectKit(".toolbar-popup-menu-options");

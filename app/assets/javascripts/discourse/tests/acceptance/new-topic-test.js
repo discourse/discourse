@@ -6,7 +6,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Topic - Anonymous", function () {
-  test("accessing new-topic route when logged out", async (assert) => {
+  test("accessing new-topic route when logged out", async function (assert) {
     await visit("/new-topic?title=topic%20title&body=topic%20body");
 
     assert.ok(exists(".modal.login-modal"), "it shows the login modal");
@@ -15,7 +15,7 @@ acceptance("New Topic - Anonymous", function () {
 
 acceptance("New Topic - Authenticated", function (needs) {
   needs.user();
-  test("accessing new-topic route when logged in", async (assert) => {
+  test("accessing new-topic route when logged in", async function (assert) {
     await visit(
       "/new-topic?title=topic%20title&body=topic%20body&category=bug"
     );

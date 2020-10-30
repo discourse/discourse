@@ -17,7 +17,7 @@ function buildDateHelper(params = {}) {
   });
 }
 
-test("#format", (assert) => {
+test("#format", function (assert) {
   let date = buildDateHelper({
     day: 15,
     month: 2,
@@ -28,7 +28,7 @@ test("#format", (assert) => {
   assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
-test("#repetitionsBetweenDates", (assert) => {
+test("#repetitionsBetweenDates", function (assert) {
   let date;
 
   date = buildDateHelper({
@@ -96,7 +96,7 @@ test("#repetitionsBetweenDates", (assert) => {
   );
 });
 
-test("#add", (assert) => {
+test("#add", function (assert) {
   let date;
   let futureLocalDate;
 

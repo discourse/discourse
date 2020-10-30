@@ -10,7 +10,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Managing Group Membership", function (needs) {
   needs.user();
 
-  test("As an admin", async (assert) => {
+  test("As an admin", async function (assert) {
     updateCurrentUser({ can_create_group: true });
 
     await visit("/g/alternative-group/manage/membership");
@@ -79,7 +79,7 @@ acceptance("Managing Group Membership", function (needs) {
     assert.equal(emailDomains.header().value(), "foo.com");
   });
 
-  test("As a group owner", async (assert) => {
+  test("As a group owner", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/g/discourse/manage/membership");

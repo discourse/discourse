@@ -28,7 +28,7 @@ acceptance("Create Account - User Fields", function (needs) {
     ],
   });
 
-  test("create account with user fields", async (assert) => {
+  test("create account with user fields", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
 

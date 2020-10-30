@@ -42,7 +42,7 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
     delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`];
   });
 
-  test("Calls the plugin callback with the rendered outlet", async (assert) => {
+  test("Calls the plugin callback with the rendered outlet", async function (assert) {
     await visit("/");
 
     const fooConnector = queryAll(

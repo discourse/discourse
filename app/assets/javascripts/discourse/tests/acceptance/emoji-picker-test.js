@@ -15,7 +15,7 @@ acceptance("EmojiPicker", function (needs) {
     this.emojiStore.reset();
   });
 
-  test("emoji picker can be opened/closed", async (assert) => {
+  test("emoji picker can be opened/closed", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -26,7 +26,7 @@ acceptance("EmojiPicker", function (needs) {
     assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
   });
 
-  test("emoji picker triggers event when picking emoji", async (assert) => {
+  test("emoji picker triggers event when picking emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -39,7 +39,7 @@ acceptance("EmojiPicker", function (needs) {
     );
   });
 
-  test("emoji picker adds leading whitespace before emoji", async (assert) => {
+  test("emoji picker adds leading whitespace before emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -64,7 +64,7 @@ acceptance("EmojiPicker", function (needs) {
     );
   });
 
-  test("emoji picker has a list of recently used emojis", async (assert) => {
+  test("emoji picker has a list of recently used emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -102,7 +102,7 @@ acceptance("EmojiPicker", function (needs) {
     );
   });
 
-  test("emoji picker correctly orders recently used emojis", async (assert) => {
+  test("emoji picker correctly orders recently used emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -125,7 +125,7 @@ acceptance("EmojiPicker", function (needs) {
     );
   });
 
-  test("emoji picker persists state", async (assert) => {
+  test("emoji picker persists state", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");

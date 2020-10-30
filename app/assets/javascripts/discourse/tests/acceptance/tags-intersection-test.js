@@ -31,7 +31,7 @@ acceptance("Tags intersection", function (needs) {
     });
   });
 
-  test("Populate tags when creating new topic", async (assert) => {
+  test("Populate tags when creating new topic", async function (assert) {
     await visit("/tags/intersection/first/second");
     await click("#create-topic");
 

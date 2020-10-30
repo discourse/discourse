@@ -19,7 +19,7 @@ acceptance("Composer Actions", function (needs) {
   needs.settings({ enable_whispers: true });
   needs.site({ can_tag_topics: true });
 
-  test("creating new topic and then reply_as_private_message keeps attributes", async (assert) => {
+  test("creating new topic and then reply_as_private_message keeps attributes", async function (assert) {
     await visit("/");
     await click("button#create-topic");
 
@@ -34,7 +34,7 @@ acceptance("Composer Actions", function (needs) {
     assert.ok(queryAll(".d-editor-input").val(), "this is the reply");
   });
 
-  test("replying to post", async (assert) => {
+  test("replying to post", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -52,7 +52,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rowByIndex(5).value(), undefined);
   });
 
-  test("replying to post - reply_as_private_message", async (assert) => {
+  test("replying to post - reply_as_private_message", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -68,7 +68,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - reply_to_topic", async (assert) => {
+  test("replying to post - reply_to_topic", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -95,7 +95,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - toggle_whisper", async (assert) => {
+  test("replying to post - toggle_whisper", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -113,7 +113,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post - reply_as_new_topic", async (assert) => {
+  test("replying to post - reply_as_new_topic", async function (assert) {
     sinon
       .stub(Draft, "get")
       .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
@@ -144,7 +144,7 @@ acceptance("Composer Actions", function (needs) {
     sinon.restore();
   });
 
-  test("reply_as_new_topic without a new_topic draft", async (assert) => {
+  test("reply_as_new_topic without a new_topic draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
     const composerActions = selectKit(".composer-actions");
@@ -153,7 +153,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(exists(queryAll(".bootbox")), false);
   });
 
-  test("reply_as_new_group_message", async (assert) => {
+  test("reply_as_new_group_message", async function (assert) {
     await visit("/t/lorem-ipsum-dolor-sit-amet/130");
     await click(".create.reply");
     const composerActions = selectKit(".composer-actions");
@@ -168,7 +168,7 @@ acceptance("Composer Actions", function (needs) {
     assert.deepEqual(items, ["foo", "foo_group"]);
   });
 
-  test("hide component if no content", async (assert) => {
+  test("hide component if no content", async function (assert) {
     await visit("/");
     await click("button#create-topic");
 
@@ -184,7 +184,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rows().length, 2);
   });
 
-  test("interactions", async (assert) => {
+  test("interactions", async function (assert) {
     const composerActions = selectKit(".composer-actions");
     const quote = "Life is like riding a bicycle.";
 
@@ -265,7 +265,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rows().length, 3);
   });
 
-  test("replying to post - toggle_topic_bump", async (assert) => {
+  test("replying to post - toggle_topic_bump", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -293,7 +293,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("replying to post as staff", async (assert) => {
+  test("replying to post as staff", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     updateCurrentUser({ admin: true });
@@ -305,7 +305,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
   });
 
-  test("replying to post as TL3 user", async (assert) => {
+  test("replying to post as TL3 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
@@ -323,7 +323,7 @@ acceptance("Composer Actions", function (needs) {
     });
   });
 
-  test("replying to post as TL4 user", async (assert) => {
+  test("replying to post as TL4 user", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
@@ -335,7 +335,7 @@ acceptance("Composer Actions", function (needs) {
     assert.equal(composerActions.rowByIndex(3).value(), "toggle_topic_bump");
   });
 
-  test("replying to first post - reply_as_private_message", async (assert) => {
+  test("replying to first post - reply_as_private_message", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -351,7 +351,7 @@ acceptance("Composer Actions", function (needs) {
     );
   });
 
-  test("editing post", async (assert) => {
+  test("editing post", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
     await visit("/t/internationalization-localization/280");
@@ -385,7 +385,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.hooks.beforeEach(() => _clearSnapshots());
   needs.hooks.afterEach(() => _clearSnapshots());
 
-  test("shared draft", async (assert) => {
+  test("shared draft", async function (assert) {
     stubDraftResponse();
     try {
       toggleCheckDraftPopup(true);
@@ -427,7 +427,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     sinon.restore();
   });
 
-  test("reply_as_new_topic with new_topic draft", async (assert) => {
+  test("reply_as_new_topic with new_topic draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
     const composerActions = selectKit(".composer-actions");

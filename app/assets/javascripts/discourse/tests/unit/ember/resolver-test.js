@@ -31,7 +31,7 @@ module("lib:resolver", {
   },
 });
 
-test("finds templates in top level dir", (assert) => {
+test("finds templates in top level dir", function (assert) {
   setTemplates(["foobar", "fooBar", "foo_bar", "foo.bar"]);
 
   lookupTemplate(assert, "template:foobar", "foobar", "by lowcased name");
@@ -40,7 +40,7 @@ test("finds templates in top level dir", (assert) => {
   lookupTemplate(assert, "template:foo.bar", "foo.bar", "by dotted name");
 });
 
-test("finds templates in first-level subdir", (assert) => {
+test("finds templates in first-level subdir", function (assert) {
   setTemplates(["foo/bar_baz"]);
 
   lookupTemplate(
@@ -69,7 +69,7 @@ test("finds templates in first-level subdir", (assert) => {
   );
 });
 
-test("resolves precedence between overlapping top level dir and first level subdir templates", (assert) => {
+test("resolves precedence between overlapping top level dir and first level subdir templates", function (assert) {
   setTemplates(["fooBar", "foo_bar", "foo.bar", "foo/bar"]);
 
   lookupTemplate(
@@ -92,7 +92,7 @@ test("resolves precedence between overlapping top level dir and first level subd
   );
 });
 
-test("finds templates in subdir deeper than one level", (assert) => {
+test("finds templates in subdir deeper than one level", function (assert) {
   setTemplates(["foo/bar/baz/qux"]);
 
   lookupTemplate(
@@ -146,7 +146,7 @@ test("finds templates in subdir deeper than one level", (assert) => {
   );
 });
 
-test("resolves mobile templates to 'mobile/' namespace", (assert) => {
+test("resolves mobile templates to 'mobile/' namespace", function (assert) {
   setTemplates(["mobile/foo", "bar", "mobile/bar", "baz"]);
 
   setResolverOption("mobileView", true);
@@ -171,7 +171,7 @@ test("resolves mobile templates to 'mobile/' namespace", (assert) => {
   );
 });
 
-test("resolves plugin templates to 'javascripts/' namespace", (assert) => {
+test("resolves plugin templates to 'javascripts/' namespace", function (assert) {
   setTemplates(["javascripts/foo", "bar", "javascripts/bar", "baz"]);
 
   lookupTemplate(
@@ -194,7 +194,7 @@ test("resolves plugin templates to 'javascripts/' namespace", (assert) => {
   );
 });
 
-test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", (assert) => {
+test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", function (assert) {
   setTemplates([
     "admin/templates/foo",
     "adminBar",
@@ -248,7 +248,7 @@ test("resolves templates with 'admin' prefix to 'admin/templates/' namespace", (
   );
 });
 
-test("returns 'not_found' template when template name cannot be resolved", (assert) => {
+test("returns 'not_found' template when template name cannot be resolved", function (assert) {
   setTemplates(["not_found"]);
 
   lookupTemplate(assert, "template:foo/bar/baz", "not_found", "");

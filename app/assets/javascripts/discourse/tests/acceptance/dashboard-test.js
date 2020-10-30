@@ -24,13 +24,13 @@ acceptance("Dashboard", function (needs) {
     ],
   });
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/admin");
 
     assert.ok(exists(".dashboard"), "has dashboard-next class");
   });
 
-  test("tabs", async (assert) => {
+  test("tabs", async function (assert) {
     await visit("/admin");
 
     assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
@@ -42,7 +42,7 @@ acceptance("Dashboard", function (needs) {
     assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
   });
 
-  test("general tab", async (assert) => {
+  test("general tab", async function (assert) {
     await visit("/admin");
     assert.ok(exists(".admin-report.signups"), "signups report");
     assert.ok(exists(".admin-report.posts"), "posts report");
@@ -65,7 +65,7 @@ acceptance("Dashboard", function (needs) {
     );
   });
 
-  test("activity metrics", async (assert) => {
+  test("activity metrics", async function (assert) {
     await visit("/admin");
 
     assert.ok(exists(".admin-report.page-view-total-reqs .today-count"));
@@ -74,7 +74,7 @@ acceptance("Dashboard", function (needs) {
     assert.ok(exists(".admin-report.page-view-total-reqs .thirty-days-count"));
   });
 
-  test("reports tab", async (assert) => {
+  test("reports tab", async function (assert) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
@@ -112,7 +112,7 @@ acceptance("Dashboard", function (needs) {
     );
   });
 
-  test("reports filters", async (assert) => {
+  test("reports filters", async function (assert) {
     await visit(
       '/admin/reports/signups_with_groups?end_date=2018-07-16&filters=%7B"group"%3A88%7D&start_date=2018-06-16'
     );
@@ -131,7 +131,7 @@ acceptance("Dashboard: dashboard_visible_tabs", function (needs) {
   needs.user();
   needs.settings({ dashboard_visible_tabs: "general|security|reports" });
 
-  test("visible tabs", async (assert) => {
+  test("visible tabs", async function (assert) {
     await visit("/admin");
 
     assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
@@ -151,7 +151,7 @@ acceptance("Dashboard: dashboard_hidden_reports", function (needs) {
     dashboard_hidden_reports: "posts|dau_by_mau",
   });
 
-  test("hidden reports", async (assert) => {
+  test("hidden reports", async function (assert) {
     await visit("/admin");
 
     assert.ok(exists(".admin-report.signups.is-visible"), "signups report");

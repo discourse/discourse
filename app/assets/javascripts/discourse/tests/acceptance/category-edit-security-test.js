@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Category Edit - security", function (needs) {
   needs.user();
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/c/bug/edit/security");
 
     const $firstItem = queryAll(".permission-list li:eq(0)");
@@ -19,7 +19,7 @@ acceptance("Category Edit - security", function (needs) {
     assert.equal(permission, "Create / Reply / See");
   });
 
-  test("removing a permission", async (assert) => {
+  test("removing a permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
 
     await visit("/c/bug/edit/security");
@@ -43,7 +43,7 @@ acceptance("Category Edit - security", function (needs) {
     );
   });
 
-  test("adding a permission", async (assert) => {
+  test("adding a permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
     const permissionSelector = selectKit(".permission-selector");
 
@@ -67,7 +67,7 @@ acceptance("Category Edit - security", function (needs) {
     assert.equal(permission, "Reply / See");
   });
 
-  test("adding a previously removed permission", async (assert) => {
+  test("adding a previously removed permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
 
     await visit("/c/bug/edit/security");

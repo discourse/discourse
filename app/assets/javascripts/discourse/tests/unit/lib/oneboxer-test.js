@@ -17,7 +17,7 @@ function loadOnebox(element) {
 
 module("lib:oneboxer");
 
-test("load - failed onebox", async (assert) => {
+test("load - failed onebox", async function (assert) {
   let element = document.createElement("A");
   element.setAttribute("href", "http://somebadurl.com");
 
@@ -35,7 +35,7 @@ test("load - failed onebox", async (assert) => {
   );
 });
 
-test("load - successful onebox", async (assert) => {
+test("load - successful onebox", async function (assert) {
   const html = `
     <aside class="onebox allowlistedgeneric">
       <header class="source">

@@ -27,17 +27,17 @@ acceptance("Unknown", function (needs) {
     });
   });
 
-  test("Permalink Unknown URL", async (assert) => {
+  test("Permalink Unknown URL", async function (assert) {
     await visit("/url-that-doesn't-exist");
     assert.ok(exists(".page-not-found"), "The not found content is present");
   });
 
-  test("Permalink URL to a Topic", async (assert) => {
+  test("Permalink URL to a Topic", async function (assert) {
     await visit("/viewtopic.php?f=8&t=280");
     assert.equal(currentURL(), "/t/internationalization-localization/280");
   });
 
-  test("Permalink URL to a static page", async (assert) => {
+  test("Permalink URL to a static page", async function (assert) {
     await visit("/not-the-url-for-faq");
     assert.equal(currentURL(), "/faq");
   });

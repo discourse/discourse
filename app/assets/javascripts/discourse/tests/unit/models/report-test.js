@@ -16,7 +16,7 @@ function reportWithData(data) {
   });
 }
 
-test("counts", (assert) => {
+test("counts", function (assert) {
   const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
 
   assert.equal(report.get("todayCount"), 5);
@@ -40,7 +40,7 @@ test("counts", (assert) => {
   );
 });
 
-test("percentChangeString", (assert) => {
+test("percentChangeString", function (assert) {
   const report = reportWithData([]);
 
   assert.equal(report.percentChangeString(5, 8), "+60%", "value increased");
@@ -57,19 +57,19 @@ test("percentChangeString", (assert) => {
   );
 });
 
-test("yesterdayCountTitle with valid values", (assert) => {
+test("yesterdayCountTitle with valid values", function (assert) {
   const title = reportWithData([6, 8, 5, 2, 1]).get("yesterdayCountTitle");
   assert.ok(title.indexOf("+60%") !== -1);
   assert.ok(title.match(/Was 5/));
 });
 
-test("yesterdayCountTitle when two days ago was 0", (assert) => {
+test("yesterdayCountTitle when two days ago was 0", function (assert) {
   const title = reportWithData([6, 8, 0, 2, 1]).get("yesterdayCountTitle");
   assert.equal(title.indexOf("%"), -1);
   assert.ok(title.match(/Was 0/));
 });
 
-test("sevenDaysCountTitle", (assert) => {
+test("sevenDaysCountTitle", function (assert) {
   const title = reportWithData([
     100,
     1,
@@ -93,7 +93,7 @@ test("sevenDaysCountTitle", (assert) => {
   assert.ok(title.match(/Was 14/));
 });
 
-test("thirtyDaysCountTitle", (assert) => {
+test("thirtyDaysCountTitle", function (assert) {
   const report = reportWithData([5, 5, 5, 5]);
   report.set("prev30Days", 10);
   const title = report.get("thirtyDaysCountTitle");
@@ -102,7 +102,7 @@ test("thirtyDaysCountTitle", (assert) => {
   assert.ok(title.match(/Was 10/));
 });
 
-test("sevenDaysTrend", (assert) => {
+test("sevenDaysTrend", function (assert) {
   let report;
   let trend;
 
@@ -127,7 +127,7 @@ test("sevenDaysTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-test("yesterdayTrend", (assert) => {
+test("yesterdayTrend", function (assert) {
   let report;
   let trend;
 
@@ -152,7 +152,7 @@ test("yesterdayTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-test("thirtyDaysTrend", (assert) => {
+test("thirtyDaysTrend", function (assert) {
   let report;
   let trend;
 
@@ -342,7 +342,7 @@ test("thirtyDaysTrend", (assert) => {
   assert.ok(trend === "trending-down");
 });
 
-test("higher is better false", (assert) => {
+test("higher is better false", function (assert) {
   let report;
   let trend;
 
@@ -367,7 +367,7 @@ test("higher is better false", (assert) => {
   assert.ok(trend === "trending-up");
 });
 
-test("small variation (-2/+2% change) is no-change", (assert) => {
+test("small variation (-2/+2% change) is no-change", function (assert) {
   let report;
   let trend;
 
@@ -380,7 +380,7 @@ test("small variation (-2/+2% change) is no-change", (assert) => {
   assert.ok(trend === "no-change");
 });
 
-test("average", (assert) => {
+test("average", function (assert) {
   let report;
 
   report = reportWithData([5, 5, 5, 5, 5, 5, 5, 5]);
@@ -392,7 +392,7 @@ test("average", (assert) => {
   assert.ok(report.get("lastSevenDaysCount") === 35);
 });
 
-test("computed labels", (assert) => {
+test("computed labels", function (assert) {
   const data = [
     {
       username: "joffrey",

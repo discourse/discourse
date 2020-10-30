@@ -94,7 +94,7 @@ acceptance("Group logs", function (needs) {
     });
   });
 
-  test("Browsing group logs", async (assert) => {
+  test("Browsing group logs", async function (assert) {
     await visit("/g/snorlax/manage/logs");
     assert.ok(
       queryAll("tr.group-manage-logs-row").length === 2,

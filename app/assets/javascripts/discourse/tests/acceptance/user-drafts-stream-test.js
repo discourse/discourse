@@ -7,7 +7,7 @@ import { click } from "@ember/test-helpers";
 acceptance("User Drafts", function (needs) {
   needs.user();
 
-  test("Stream", async (assert) => {
+  test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(queryAll(".user-stream-item").length === 3, "has drafts");
 
@@ -18,7 +18,7 @@ acceptance("User Drafts", function (needs) {
     );
   });
 
-  test("Stream - resume draft", async (assert) => {
+  test("Stream - resume draft", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(queryAll(".user-stream-item").length > 0, "has drafts");
 

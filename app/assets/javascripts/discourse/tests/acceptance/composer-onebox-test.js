@@ -10,7 +10,7 @@ acceptance("Composer - Onebox", function (needs) {
     enable_markdown_linkify: true,
   });
 
-  test("Preview update should respect max_oneboxes_per_post site setting", async (assert) => {
+  test("Preview update should respect max_oneboxes_per_post site setting", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 

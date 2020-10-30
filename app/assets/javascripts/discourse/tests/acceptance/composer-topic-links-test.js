@@ -12,7 +12,7 @@ acceptance("Composer topic featured links", function (needs) {
     enable_markdown_linkify: true,
   });
 
-  test("onebox with title", async (assert) => {
+  test("onebox with title", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "http://www.example.com/has-title.html");
@@ -31,7 +31,7 @@ acceptance("Composer topic featured links", function (needs) {
     );
   });
 
-  test("onebox result doesn't include a title", async (assert) => {
+  test("onebox result doesn't include a title", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "http://www.example.com/no-title.html");
@@ -50,7 +50,7 @@ acceptance("Composer topic featured links", function (needs) {
     );
   });
 
-  test("no onebox result", async (assert) => {
+  test("no onebox result", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "http://www.example.com/nope-onebox.html");
@@ -69,7 +69,7 @@ acceptance("Composer topic featured links", function (needs) {
     );
   });
 
-  test("ignore internal links", async (assert) => {
+  test("ignore internal links", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const title = "http://" + window.location.hostname + "/internal-page.html";
@@ -91,7 +91,7 @@ acceptance("Composer topic featured links", function (needs) {
     );
   });
 
-  test("link is longer than max title length", async (assert) => {
+  test("link is longer than max title length", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn(
@@ -113,7 +113,7 @@ acceptance("Composer topic featured links", function (needs) {
     );
   });
 
-  test("onebox with title but extra words in title field", async (assert) => {
+  test("onebox with title but extra words in title field", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "http://www.example.com/has-title.html test");
@@ -146,7 +146,7 @@ acceptance(
       allow_uncategorized_topics: false,
     });
 
-    test("Pasting a link enables the text input area", async (assert) => {
+    test("Pasting a link enables the text input area", async function (assert) {
       await visit("/");
       await click("#create-topic");
       assert.ok(

@@ -6,7 +6,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import RestModel from "discourse/models/rest";
 import RestAdapter from "discourse/adapters/rest";
 
-test("munging", (assert) => {
+test("munging", function (assert) {
   const store = createStore();
   const Grape = RestModel.extend();
   Grape.reopenClass({
@@ -20,7 +20,7 @@ test("munging", (assert) => {
   assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
 });
 
-test("update", async (assert) => {
+test("update", async function (assert) {
   const store = createStore();
   const widget = await store.find("widget", 123);
   assert.equal(widget.get("name"), "Trout Lure");
@@ -41,7 +41,7 @@ test("update", async (assert) => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-test("updating simultaneously", async (assert) => {
+test("updating simultaneously", async function (assert) {
   assert.expect(2);
 
   const store = createStore();
@@ -59,7 +59,7 @@ test("updating simultaneously", async (assert) => {
   });
 });
 
-test("save new", async (assert) => {
+test("save new", async function (assert) {
   const store = createStore();
   const widget = store.createRecord("widget");
 
@@ -85,7 +85,7 @@ test("save new", async (assert) => {
   assert.equal(result.target.name, widget.get("name"));
 });
 
-test("creating simultaneously", (assert) => {
+test("creating simultaneously", function (assert) {
   assert.expect(2);
 
   const store = createStore();
@@ -102,14 +102,14 @@ test("creating simultaneously", (assert) => {
   });
 });
 
-test("destroyRecord", async (assert) => {
+test("destroyRecord", async function (assert) {
   const store = createStore();
   const widget = await store.find("widget", 123);
 
   assert.ok(await widget.destroyRecord());
 });
 
-test("custom api name", async (assert) => {
+test("custom api name", async function (assert) {
   const store = createStore((type) => {
     if (type === "adapter:my-widget") {
       return RestAdapter.extend({

@@ -3,7 +3,7 @@ import UserAction from "discourse/models/user-action";
 
 module("model: user-action");
 
-test("collapsing likes", (assert) => {
+test("collapsing likes", function (assert) {
   var actions = UserAction.collapseStream([
     UserAction.create({
       action_type: UserAction.TYPES.likes_given,

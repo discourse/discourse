@@ -10,13 +10,13 @@ var buildDetails = function (id) {
   return topic.get("details");
 };
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   var details = buildDetails(1234);
   assert.present(details, "the details are present by default");
   assert.ok(!details.get("loaded"), "details are not loaded by default");
 });
 
-test("updateFromJson", (assert) => {
+test("updateFromJson", function (assert) {
   var details = buildDetails(1234);
 
   details.updateFromJson({

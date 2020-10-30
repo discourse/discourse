@@ -13,7 +13,7 @@ module("lib:bookmark", {
   },
 });
 
-test("formattedReminderTime works when the reminder time is tomorrow", (assert) => {
+test("formattedReminderTime works when the reminder time is tomorrow", function (assert) {
   let reminderAt = "2020-04-12 09:45:00";
   let reminderAtDate = moment
     .tz(reminderAt, "Australia/Brisbane")
@@ -24,7 +24,7 @@ test("formattedReminderTime works when the reminder time is tomorrow", (assert) 
   );
 });
 
-test("formattedReminderTime works when the reminder time is today", (assert) => {
+test("formattedReminderTime works when the reminder time is today", function (assert) {
   let reminderAt = "2020-04-11 09:45:00";
   let reminderAtDate = moment
     .tz(reminderAt, "Australia/Brisbane")
@@ -35,7 +35,7 @@ test("formattedReminderTime works when the reminder time is today", (assert) => 
   );
 });
 
-test("formattedReminderTime works when the reminder time is in the future", (assert) => {
+test("formattedReminderTime works when the reminder time is in the future", function (assert) {
   let reminderAt = "2020-04-15 09:45:00";
   let reminderAtDate = moment
     .tz(reminderAt, "Australia/Brisbane")

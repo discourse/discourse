@@ -7,7 +7,7 @@ import pretender from "discourse/tests/helpers/create-pretender";
 
 module("model:user");
 
-test("staff", (assert) => {
+test("staff", function (assert) {
   var user = User.create({ id: 1, username: "eviltrout" });
 
   assert.ok(!user.get("staff"), "user is not staff");
@@ -19,7 +19,7 @@ test("staff", (assert) => {
   assert.ok(user.get("staff"), "admins are staff");
 });
 
-test("searchContext", (assert) => {
+test("searchContext", function (assert) {
   var user = User.create({ id: 1, username: "EvilTrout" });
 
   assert.deepEqual(
@@ -29,7 +29,7 @@ test("searchContext", (assert) => {
   );
 });
 
-test("isAllowedToUploadAFile", (assert) => {
+test("isAllowedToUploadAFile", function (assert) {
   var user = User.create({ trust_level: 0, admin: true });
   assert.ok(
     user.isAllowedToUploadAFile("image"),
@@ -43,7 +43,7 @@ test("isAllowedToUploadAFile", (assert) => {
   );
 });
 
-test("canMangeGroup", (assert) => {
+test("canMangeGroup", function (assert) {
   let user = User.create({ admin: true });
   let group = Group.create({ automatic: true });
 
@@ -72,7 +72,7 @@ test("canMangeGroup", (assert) => {
   );
 });
 
-test("resolvedTimezone", (assert) => {
+test("resolvedTimezone", function (assert) {
   const tz = "Australia/Brisbane";
   let user = User.create({ timezone: tz, username: "chuck", id: 111 });
   let stub = sinon.stub(moment.tz, "guess").returns("America/Chicago");
@@ -124,7 +124,7 @@ test("resolvedTimezone", (assert) => {
   stub.restore();
 });
 
-test("muted ids", (assert) => {
+test("muted ids", function (assert) {
   let user = User.create({ username: "chuck", muted_category_ids: [] });
 
   assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);

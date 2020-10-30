@@ -3,6 +3,6 @@ import Invite from "discourse/models/invite";
 
 module("model:invite");
 
-test("create", (assert) => {
+test("create", function (assert) {
   assert.ok(Invite.create(), "it can be created without arguments");
 });

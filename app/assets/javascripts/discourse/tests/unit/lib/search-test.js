@@ -7,7 +7,7 @@ import {
 
 module("lib:search");
 
-test("unescapesEmojisInBlurbs", (assert) => {
+test("unescapesEmojisInBlurbs", function (assert) {
   const source = {
     posts: [
       {
@@ -37,7 +37,7 @@ test("unescapesEmojisInBlurbs", (assert) => {
   assert.ok(blurb.indexOf(":thinking:") === -1);
 });
 
-test("searchContextDescription", (assert) => {
+test("searchContextDescription", function (assert) {
   assert.equal(
     searchContextDescription("topic"),
     I18n.t("search.context.topic")

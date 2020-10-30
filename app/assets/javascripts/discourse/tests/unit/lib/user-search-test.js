@@ -86,7 +86,7 @@ module("lib:user-search", {
   },
 });
 
-test("it flushes cache when switching categories", async (assert) => {
+test("it flushes cache when switching categories", async function (assert) {
   let results = await userSearch({ term: "hello", categoryId: 1 });
   assert.equal(results[0].username, "category_1");
   assert.equal(results.length, 1);
@@ -101,7 +101,7 @@ test("it flushes cache when switching categories", async (assert) => {
   assert.equal(results.length, 1);
 });
 
-test("it returns cancel when eager completing with no results", async (assert) => {
+test("it returns cancel when eager completing with no results", async function (assert) {
   // Do everything twice, to check the cache works correctly
 
   for (let i = 0; i < 2; i++) {
@@ -124,17 +124,17 @@ test("it returns cancel when eager completing with no results", async (assert) =
   }
 });
 
-test("it places groups unconditionally for exact match", async (assert) => {
+test("it places groups unconditionally for exact match", async function (assert) {
   let results = await userSearch({ term: "Team" });
   assert.equal(results[results.length - 1]["name"], "team");
 });
 
-test("it strips @ from the beginning", async (assert) => {
+test("it strips @ from the beginning", async function (assert) {
   let results = await userSearch({ term: "@Team" });
   assert.equal(results[results.length - 1]["name"], "team");
 });
 
-test("it skips a search depending on punctuations", async (assert) => {
+test("it skips a search depending on punctuations", async function (assert) {
   let results;
   let skippedTerms = [
     "@sam  s", // double space is not allowed

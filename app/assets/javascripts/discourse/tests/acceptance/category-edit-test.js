@@ -10,7 +10,7 @@ acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("Editing the category", async (assert) => {
+  test("Editing the category", async function (assert) {
     await visit("/c/bug");
 
     await click("button.edit-category");
@@ -57,7 +57,7 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
-  test("Index Route", async (assert) => {
+  test("Index Route", async function (assert) {
     await visit("/c/bug/edit");
     assert.equal(
       currentURL(),
@@ -66,7 +66,7 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
-  test("Slugless Route", async (assert) => {
+  test("Slugless Route", async function (assert) {
     await visit("/c/1-category/edit");
     assert.equal(
       currentURL(),
@@ -76,7 +76,7 @@ acceptance("Category Edit", function (needs) {
     assert.equal(queryAll("input.category-name").val(), "bug");
   });
 
-  test("Error Saving", async (assert) => {
+  test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
@@ -88,7 +88,7 @@ acceptance("Category Edit", function (needs) {
     assert.ok(!visible(".bootbox"));
   });
 
-  test("Subcategory list settings", async (assert) => {
+  test("Subcategory list settings", async function (assert) {
     await visit("/c/bug/edit/settings");
 
     assert.ok(

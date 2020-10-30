@@ -40,7 +40,7 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     });
   });
 
-  test("Polls", async (assert) => {
+  test("Polls", async function (assert) {
     await visit("/t/-/15");
 
     const polls = queryAll(".poll");
@@ -60,7 +60,7 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     );
   });
 
-  test("Public poll", async (assert) => {
+  test("Public poll", async function (assert) {
     await visit("/t/-/14");
 
     const polls = queryAll(".poll");
@@ -83,7 +83,7 @@ acceptance("Rendering polls with bar charts - desktop", function (needs) {
     );
   });
 
-  test("Public number poll", async (assert) => {
+  test("Public number poll", async function (assert) {
     await visit("/t/-/13");
 
     const polls = queryAll(".poll");

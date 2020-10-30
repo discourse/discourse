@@ -16,7 +16,7 @@ acceptance("Composer - Tags", function (needs) {
   });
   needs.site({ can_tag_topics: true });
 
-  test("staff bypass tag validation rule", async (assert) => {
+  test("staff bypass tag validation rule", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
@@ -33,7 +33,7 @@ acceptance("Composer - Tags", function (needs) {
     assert.notEqual(currentURL(), "/");
   });
 
-  test("users do not bypass tag validation rule", async (assert) => {
+  test("users do not bypass tag validation rule", async function (assert) {
     await visit("/");
     await click("#create-topic");
 

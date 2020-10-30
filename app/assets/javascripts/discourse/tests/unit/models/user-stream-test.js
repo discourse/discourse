@@ -4,7 +4,7 @@ import User from "discourse/models/user";
 
 module("model: UserStream");
 
-test("basics", (assert) => {
+test("basics", function (assert) {
   var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
   assert.present(stream, "a user has a stream by default");
@@ -17,7 +17,7 @@ test("basics", (assert) => {
   assert.ok(!stream.get("loaded"), "the stream is not loaded by default");
 });
 
-test("filterParam", (assert) => {
+test("filterParam", function (assert) {
   var user = User.create({ id: 1, username: "eviltrout" });
   var stream = user.get("stream");
 

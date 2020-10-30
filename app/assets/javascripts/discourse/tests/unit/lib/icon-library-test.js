@@ -7,7 +7,7 @@ import {
 
 module("lib:icon-library");
 
-test("return icon markup", (assert) => {
+test("return icon markup", function (assert) {
   assert.ok(iconHTML("bars").indexOf('use xlink:href="#bars"') > -1);
 
   const nodeIcon = iconNode("bars");
@@ -18,7 +18,7 @@ test("return icon markup", (assert) => {
   );
 });
 
-test("convert icon names", (assert) => {
+test("convert icon names", function (assert) {
   const fa5Icon = convertIconClass("fab fa-facebook");
   assert.ok(iconHTML(fa5Icon).indexOf("fab-facebook") > -1, "FA 5 syntax");
 

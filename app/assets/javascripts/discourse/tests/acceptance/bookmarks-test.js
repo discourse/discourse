@@ -39,7 +39,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Bookmarks modal opening", async (assert) => {
+  test("Bookmarks modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     assert.ok(
@@ -48,7 +48,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Bookmarks modal selecting reminder type", async (assert) => {
+  test("Bookmarks modal selecting reminder type", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await openBookmarkModal();
@@ -79,7 +79,7 @@ acceptance("Bookmarking", function (needs) {
     ]);
   });
 
-  test("Saving a bookmark with a reminder", async (assert) => {
+  test("Saving a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Check this out later");
@@ -98,7 +98,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["tomorrow"]);
   });
 
-  test("Opening the options panel and remembering the option", async (assert) => {
+  test("Opening the options panel and remembering the option", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".bookmark-options-button");
@@ -119,7 +119,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["none"]);
   });
 
-  test("Saving a bookmark with no reminder or name", async (assert) => {
+  test("Saving a bookmark with no reminder or name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#save-bookmark");
@@ -137,7 +137,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["none"]);
   });
 
-  test("Deleting a bookmark with a reminder", async (assert) => {
+  test("Deleting a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#tap_tile_tomorrow");
@@ -169,7 +169,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Cancelling saving a bookmark", async (assert) => {
+  test("Cancelling saving a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".d-modal-cancel");
@@ -179,7 +179,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Editing a bookmark", async (assert) => {
+  test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");

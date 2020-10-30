@@ -4,7 +4,7 @@ import badgeFixtures from "discourse/tests/fixtures/user-badges";
 
 module("model:user-badge");
 
-test("createFromJson single", (assert) => {
+test("createFromJson single", function (assert) {
   const userBadge = UserBadge.createFromJson(
     JSON.parse(JSON.stringify(badgeFixtures["/user_badges"]))
   );
@@ -26,7 +26,7 @@ test("createFromJson single", (assert) => {
   );
 });
 
-test("createFromJson array", (assert) => {
+test("createFromJson array", function (assert) {
   const userBadges = UserBadge.createFromJson(
     JSON.parse(JSON.stringify(badgeFixtures["/user-badges/:username"]))
   );
@@ -38,22 +38,22 @@ test("createFromJson array", (assert) => {
   );
 });
 
-test("findByUsername", async (assert) => {
+test("findByUsername", async function (assert) {
   const badges = await UserBadge.findByUsername("anne3");
   assert.ok(Array.isArray(badges), "returns an array");
 });
 
-test("findByBadgeId", async (assert) => {
+test("findByBadgeId", async function (assert) {
   const badges = await UserBadge.findByBadgeId(880);
   assert.ok(Array.isArray(badges), "returns an array");
 });
 
-test("grant", async (assert) => {
+test("grant", async function (assert) {
   const userBadge = await UserBadge.grant(1, "username");
   assert.ok(!Array.isArray(userBadge), "does not return an array");
 });
 
-test("revoke", async (assert) => {
+test("revoke", async function (assert) {
   assert.expect(0);
   const userBadge = UserBadge.create({ id: 1 });
   await userBadge.revoke();

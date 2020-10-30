@@ -21,7 +21,7 @@ acceptance("Jump to", function (needs) {
     });
   });
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("nav#topic-progress .nums");
     await click("button.jump-to-post");
@@ -38,7 +38,7 @@ acceptance("Jump to", function (needs) {
     );
   });
 
-  test("invalid date", async (assert) => {
+  test("invalid date", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("nav#topic-progress .nums");
     await click("button.jump-to-post");

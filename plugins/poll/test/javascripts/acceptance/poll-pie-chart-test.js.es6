@@ -8,7 +8,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
     poll_groupable_user_fields: "something",
   });
 
-  test("Displays the pie chart", async (assert) => {
+  test("Displays the pie chart", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
     const poll = queryAll(".poll")[0];

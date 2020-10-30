@@ -10,7 +10,7 @@ module("lib:sharing", {
   },
 });
 
-test("addSource", (assert) => {
+test("addSource", function (assert) {
   const sharingSettings = "facebook|twitter";
 
   assert.blank(Sharing.activeSources(sharingSettings));
@@ -22,7 +22,7 @@ test("addSource", (assert) => {
   assert.equal(Sharing.activeSources(sharingSettings).length, 1);
 });
 
-test("addSharingId", (assert) => {
+test("addSharingId", function (assert) {
   const sharingSettings = "";
 
   assert.blank(Sharing.activeSources(sharingSettings));

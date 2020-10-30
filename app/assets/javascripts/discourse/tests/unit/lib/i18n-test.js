@@ -99,12 +99,12 @@ module("lib:i18n", {
   },
 });
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   assert.equal(I18n.defaultLocale, "en", "it has English as default locale");
   assert.ok(I18n.pluralizationRules["en"], "it has English pluralizer");
 });
 
-test("translations", (assert) => {
+test("translations", function (assert) {
   assert.equal(
     I18n.t("topic.reply.title"),
     "Répondre",
@@ -123,7 +123,7 @@ test("translations", (assert) => {
   assert.equal(I18n.t("hello.universe"), "", "allows empty strings");
 });
 
-test("extra translations", (assert) => {
+test("extra translations", function (assert) {
   I18n.locale = "pl_PL";
   I18n.extras = {
     en: {
@@ -195,7 +195,7 @@ test("extra translations", (assert) => {
   );
 });
 
-test("pluralizations", (assert) => {
+test("pluralizations", function (assert) {
   assert.equal(I18n.t("character_count", { count: 0 }), "0 ZERO");
   assert.equal(I18n.t("character_count", { count: 1 }), "1 ONE");
   assert.equal(I18n.t("character_count", { count: 2 }), "2 TWO");
@@ -211,7 +211,7 @@ test("pluralizations", (assert) => {
   assert.equal(I18n.t("word_count", { count: 100 }), "100 words");
 });
 
-test("fallback", (assert) => {
+test("fallback", function (assert) {
   assert.equal(
     I18n.t("days", { count: 1 }),
     "1 day",
@@ -243,7 +243,7 @@ test("fallback", (assert) => {
   );
 });
 
-test("Dollar signs are properly escaped", (assert) => {
+test("Dollar signs are properly escaped", function (assert) {
   assert.equal(
     I18n.t("dollar_sign", {
       description: "$& $&",

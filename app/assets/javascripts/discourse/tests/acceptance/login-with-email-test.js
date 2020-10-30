@@ -18,7 +18,7 @@ acceptance("Login with email", function (needs) {
     );
   });
 
-  test("with email button", async (assert) => {
+  test("with email button", async function (assert) {
     await visit("/");
     await click("header .login-button");
 

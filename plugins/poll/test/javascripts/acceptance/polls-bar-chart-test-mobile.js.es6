@@ -22,7 +22,7 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
     clearPopupMenuOptionsCallback();
   });
 
-  test("Public number poll", async (assert) => {
+  test("Public number poll", async function (assert) {
     await visit("/t/-/13");
 
     const polls = queryAll(".poll");

@@ -37,7 +37,7 @@ acceptance("Topic footer buttons mobile", function (needs) {
     _test = undefined;
   });
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.equal(_test, null);

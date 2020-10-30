@@ -8,14 +8,14 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("model:topic");
 
-test("defaults", (assert) => {
+test("defaults", function (assert) {
   const topic = Topic.create({ id: 1234 });
 
   assert.blank(topic.get("deleted_at"), "deleted_at defaults to blank");
   assert.blank(topic.get("deleted_by"), "deleted_by defaults to blank");
 });
 
-test("visited", (assert) => {
+test("visited", function (assert) {
   const topic = Topic.create({
     highest_post_number: 2,
     last_read_post_number: 1,
@@ -36,7 +36,7 @@ test("visited", (assert) => {
   );
 });
 
-test("lastUnreadUrl", (assert) => {
+test("lastUnreadUrl", function (assert) {
   const category = EmberObject.create({
     navigate_to_first_post_after_read: true,
   });
@@ -53,7 +53,7 @@ test("lastUnreadUrl", (assert) => {
   assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
 });
 
-test("has details", (assert) => {
+test("has details", function (assert) {
   const topic = Topic.create({ id: 1234 });
   const topicDetails = topic.get("details");
 
@@ -65,7 +65,7 @@ test("has details", (assert) => {
   );
 });
 
-test("has a postStream", (assert) => {
+test("has a postStream", function (assert) {
   const topic = Topic.create({ id: 1234 });
   const postStream = topic.get("postStream");
 
@@ -77,7 +77,7 @@ test("has a postStream", (assert) => {
   );
 });
 
-test("has suggestedTopics", (assert) => {
+test("has suggestedTopics", function (assert) {
   const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
   const suggestedTopics = topic.get("suggestedTopics");
 
@@ -85,7 +85,7 @@ test("has suggestedTopics", (assert) => {
   assert.containsInstance(suggestedTopics, Topic);
 });
 
-test("category relationship", (assert) => {
+test("category relationship", function (assert) {
   // It finds the category by id
   const category = Category.list()[0];
   const topic = Topic.create({ id: 1111, category_id: category.get("id") });
@@ -93,7 +93,7 @@ test("category relationship", (assert) => {
   assert.equal(topic.get("category"), category);
 });
 
-test("updateFromJson", (assert) => {
+test("updateFromJson", function (assert) {
   const topic = Topic.create({ id: 1234 });
   const category = Category.list()[0];
 
@@ -110,7 +110,7 @@ test("updateFromJson", (assert) => {
   assert.equal(topic.get("category"), category);
 });
 
-test("recover", (assert) => {
+test("recover", function (assert) {
   const user = User.create({ username: "eviltrout" });
   const topic = Topic.create({
     id: 1234,
@@ -123,7 +123,7 @@ test("recover", (assert) => {
   assert.blank(topic.get("deleted_by"), "it clears deleted_by");
 });
 
-test("fancyTitle", (assert) => {
+test("fancyTitle", function (assert) {
   const topic = Topic.create({
     fancy_title: ":smile: with all :) the emojis :pear::peach:",
   });
@@ -152,7 +152,7 @@ test("fancyTitle direction", function (assert) {
   );
 });
 
-test("excerpt", (assert) => {
+test("excerpt", function (assert) {
   const topic = Topic.create({
     excerpt: "This is a test topic :smile:",
     pinned: true,

@@ -45,7 +45,7 @@ test("setting", function (assert) {
   );
 });
 
-test("propertyEqual", (assert) => {
+test("propertyEqual", function (assert) {
   var t = EmberObject.extend({
     same: propertyEqual("cookies", "biscuits"),
   }).create({
@@ -58,7 +58,7 @@ test("propertyEqual", (assert) => {
   assert.ok(!t.get("same"), "it isn't true when one property is different");
 });
 
-test("propertyNotEqual", (assert) => {
+test("propertyNotEqual", function (assert) {
   var t = EmberObject.extend({
     diff: propertyNotEqual("cookies", "biscuits"),
   }).create({
@@ -71,7 +71,7 @@ test("propertyNotEqual", (assert) => {
   assert.ok(t.get("diff"), "it is true when one property is different");
 });
 
-test("fmt", (assert) => {
+test("fmt", function (assert) {
   var t = EmberObject.extend({
     exclaimyUsername: fmt("username", "!!! %@ !!!"),
     multiple: fmt("username", "mood", "%@ is %@"),
@@ -105,7 +105,7 @@ test("fmt", (assert) => {
   );
 });
 
-test("i18n", (assert) => {
+test("i18n", function (assert) {
   var t = EmberObject.extend({
     exclaimyUsername: i18n("username", "!!! %@ !!!"),
     multiple: i18n("username", "mood", "%@ is %@"),
@@ -139,7 +139,7 @@ test("i18n", (assert) => {
   );
 });
 
-test("url", (assert) => {
+test("url", function (assert) {
   var t, testClass;
 
   testClass = EmberObject.extend({
@@ -162,7 +162,7 @@ test("url", (assert) => {
   );
 });
 
-test("htmlSafe", (assert) => {
+test("htmlSafe", function (assert) {
   const cookies = "<p>cookies and <b>biscuits</b></p>";
   const t = EmberObject.extend({
     desc: htmlSafe("cookies"),

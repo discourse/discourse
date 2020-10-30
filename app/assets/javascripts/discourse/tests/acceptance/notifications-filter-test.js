@@ -7,13 +7,13 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Notifications filter", function (needs) {
   needs.user();
 
-  test("Notifications filter true", async (assert) => {
+  test("Notifications filter true", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
     assert.ok(queryAll(".large-notification").length >= 0);
   });
 
-  test("Notifications filter read", async (assert) => {
+  test("Notifications filter read", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
     const dropdown = selectKit(".notifications-filter");
@@ -23,7 +23,7 @@ acceptance("Notifications filter", function (needs) {
     assert.ok(queryAll(".large-notification").length >= 0);
   });
 
-  test("Notifications filter unread", async (assert) => {
+  test("Notifications filter unread", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
     const dropdown = selectKit(".notifications-filter");

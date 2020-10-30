@@ -3,7 +3,7 @@ import AllowLister from "pretty-text/allow-lister";
 
 module("lib:allowLister");
 
-test("allowLister", (assert) => {
+test("allowLister", function (assert) {
   const allowLister = new AllowLister();
 
   assert.ok(

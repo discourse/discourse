@@ -4,11 +4,11 @@ import { setPrefix } from "discourse-common/lib/get-url";
 
 module("model:email-log");
 
-test("create", (assert) => {
+test("create", function (assert) {
   assert.ok(EmailLog.create(), "it can be created without arguments");
 });
 
-test("subfolder support", (assert) => {
+test("subfolder support", function (assert) {
   setPrefix("/forum");
   const attrs = {
     id: 60,

@@ -60,7 +60,7 @@ function generateClickEventOn(selector) {
   return $.Event("click", { currentTarget: fixture(selector).first() });
 }
 
-skip("tracks internal URLs", async (assert) => {
+skip("tracks internal URLs", async function (assert) {
   assert.expect(2);
   sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
@@ -76,7 +76,7 @@ skip("tracks internal URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("#same-site")));
 });
 
-skip("tracks external URLs", async (assert) => {
+skip("tracks external URLs", async function (assert) {
   assert.expect(2);
 
   const done = assert.async();
@@ -91,7 +91,7 @@ skip("tracks external URLs", async (assert) => {
   assert.notOk(track(generateClickEventOn("a")));
 });
 
-skip("tracks external URLs when opening in another window", async (assert) => {
+skip("tracks external URLs when opening in another window", async function (assert) {
   assert.expect(3);
   User.currentProp("external_links_in_new_tab", true);
 

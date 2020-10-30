@@ -8,7 +8,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Personal Message", function (needs) {
   needs.user();
 
-  test("footer edit button", async (assert) => {
+  test("footer edit button", async function (assert) {
     await visit("/t/pm-for-testing/12");
 
     assert.ok(
@@ -17,7 +17,7 @@ acceptance("Personal Message", function (needs) {
     );
   });
 
-  test("suggested messages", async (assert) => {
+  test("suggested messages", async function (assert) {
     await visit("/t/pm-for-testing/12");
 
     assert.equal(

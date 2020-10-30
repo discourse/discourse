@@ -13,7 +13,7 @@ acceptance("Opening the hamburger menu with some reviewables", function (
   needs.pretender((server, helper) => {
     server.get("/review/count.json", () => helper.response({ count: 3 }));
   });
-  test("As a staff member", async (assert) => {
+  test("As a staff member", async function (assert) {
     updateCurrentUser({ moderator: true, admin: false });
 
     await visit("/");

@@ -7,7 +7,7 @@ import User from "discourse/models/user";
 
 module("lib:url");
 
-test("isInternal with a HTTP url", (assert) => {
+test("isInternal with a HTTP url", function (assert) {
   sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
   assert.not(DiscourseURL.isInternal(null), "a blank URL is not internal");
@@ -34,7 +34,7 @@ test("isInternal with a HTTP url", (assert) => {
   );
 });
 
-test("isInternal with a HTTPS url", (assert) => {
+test("isInternal with a HTTPS url", function (assert) {
   sinon.stub(DiscourseURL, "origin").returns("https://eviltrout.com");
   assert.ok(
     DiscourseURL.isInternal("http://eviltrout.com/monocle"),
@@ -42,7 +42,7 @@ test("isInternal with a HTTPS url", (assert) => {
   );
 });
 
-test("isInternal on subfolder install", (assert) => {
+test("isInternal on subfolder install", function (assert) {
   sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com/forum");
   assert.not(
     DiscourseURL.isInternal("http://eviltrout.com"),
@@ -58,18 +58,18 @@ test("isInternal on subfolder install", (assert) => {
   );
 });
 
-test("userPath", (assert) => {
+test("userPath", function (assert) {
   assert.equal(userPath(), "/u");
   assert.equal(userPath("eviltrout"), "/u/eviltrout");
 });
 
-test("userPath with prefix", (assert) => {
+test("userPath with prefix", function (assert) {
   setPrefix("/forum");
   assert.equal(userPath(), "/forum/u");
   assert.equal(userPath("eviltrout"), "/forum/u/eviltrout");
 });
 
-test("routeTo with prefix", async (assert) => {
+test("routeTo with prefix", async function (assert) {
   setPrefix("/forum");
   logIn();
   const user = User.current();
@@ -82,7 +82,7 @@ test("routeTo with prefix", async (assert) => {
   );
 });
 
-test("prefixProtocol", async (assert) => {
+test("prefixProtocol", async function (assert) {
   assert.equal(
     prefixProtocol("mailto:mr-beaver@aol.com"),
     "mailto:mr-beaver@aol.com"

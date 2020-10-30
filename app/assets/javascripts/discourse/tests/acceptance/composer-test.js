@@ -24,7 +24,7 @@ acceptance("Composer", function (needs) {
     });
   });
 
-  skip("Tests the Composer controls", async (assert) => {
+  skip("Tests the Composer controls", async function (assert) {
     await visit("/");
     assert.ok(exists("#create-topic"), "the create button is visible");
 
@@ -102,7 +102,7 @@ acceptance("Composer", function (needs) {
     assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
   });
 
-  test("Composer upload placeholder", async (assert) => {
+  test("Composer upload placeholder", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
@@ -198,7 +198,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Create a topic with server side errors", async (assert) => {
+  test("Create a topic with server side errors", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "this title triggers an error");
@@ -210,7 +210,7 @@ acceptance("Composer", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
-  test("Create a Topic", async (assert) => {
+  test("Create a Topic", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Internationalization Localization");
@@ -226,7 +226,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Create an enqueued Topic", async (assert) => {
+  test("Create an enqueued Topic", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Internationalization Localization");
@@ -239,7 +239,7 @@ acceptance("Composer", function (needs) {
     assert.ok(invisible(".d-modal"), "the modal can be dismissed");
   });
 
-  test("Can display a message and route to a URL", async (assert) => {
+  test("Can display a message and route to a URL", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "This title doesn't matter");
@@ -259,7 +259,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Create a Reply", async (assert) => {
+  test("Create a Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -282,7 +282,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Can edit a post after starting a reply", async (assert) => {
+  test("Can edit a post after starting a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click("#topic-footer-buttons .create");
@@ -300,7 +300,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Posting on a different topic", async (assert) => {
+  test("Posting on a different topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await fillIn(
@@ -320,7 +320,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Create an enqueued Reply", async (assert) => {
+  test("Create an enqueued Reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.notOk(queryAll(".pending-posts .reviewable-item").length);
@@ -347,7 +347,7 @@ acceptance("Composer", function (needs) {
     assert.ok(queryAll(".pending-posts .reviewable-item").length);
   });
 
-  test("Edit the first post", async (assert) => {
+  test("Edit the first post", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -385,7 +385,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can switch between edits", async (assert) => {
+  test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.edit");
@@ -402,7 +402,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer with dirty edit can toggle to another edit", async (assert) => {
+  test("Composer with dirty edit can toggle to another edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.edit");
@@ -418,7 +418,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle between edit and reply", async (assert) => {
+  test("Composer can toggle between edit and reply", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.edit");
@@ -437,7 +437,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle whispers", async (assert) => {
+  test("Composer can toggle whispers", async function (assert) {
     const menu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/t/this-is-a-test-topic/9");
@@ -472,7 +472,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle layouts (open, fullscreen and draft)", async (assert) => {
+  test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:eq(0) button.reply");
 
@@ -511,7 +511,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer can toggle between reply and createTopic", async (assert) => {
+  test("Composer can toggle between reply and createTopic", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:eq(0) button.reply");
 
@@ -557,7 +557,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer with dirty reply can toggle to edit", async (assert) => {
+  test("Composer with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.reply");
@@ -572,7 +572,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer draft with dirty reply can toggle to edit", async (assert) => {
+  test("Composer draft with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.reply");
@@ -592,7 +592,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer draft can switch to draft in new context without destroying current draft", async (assert) => {
+  test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:eq(0) button.reply");
@@ -614,7 +614,7 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Checks for existing draft", async (assert) => {
+  test("Checks for existing draft", async function (assert) {
     try {
       toggleCheckDraftPopup(true);
 
@@ -634,7 +634,7 @@ acceptance("Composer", function (needs) {
     }
   });
 
-  test("Can switch states without abandon popup", async (assert) => {
+  test("Can switch states without abandon popup", async function (assert) {
     try {
       toggleCheckDraftPopup(true);
 
@@ -684,7 +684,7 @@ acceptance("Composer", function (needs) {
     sinon.restore();
   });
 
-  test("Loading draft also replaces the recipients", async (assert) => {
+  test("Loading draft also replaces the recipients", async function (assert) {
     try {
       toggleCheckDraftPopup(true);
 
@@ -706,7 +706,7 @@ acceptance("Composer", function (needs) {
     }
   });
 
-  test("Deleting the text content of the first post in a private message", async (assert) => {
+  test("Deleting the text content of the first post in a private message", async function (assert) {
     await visit("/t/34");
 
     await click("#post_1 .d-icon-ellipsis-h");
@@ -730,7 +730,7 @@ acceptance("Composer", function (needs) {
     );
   };
 
-  test("Image resizing buttons", async (assert) => {
+  test("Image resizing buttons", async function (assert) {
     await visit("/");
     await click("#create-topic");
 

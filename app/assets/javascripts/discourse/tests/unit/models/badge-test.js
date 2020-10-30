@@ -3,14 +3,14 @@ import Badge from "discourse/models/badge";
 
 module("model:badge");
 
-test("newBadge", (assert) => {
+test("newBadge", function (assert) {
   const badge1 = Badge.create({ name: "New Badge" }),
     badge2 = Badge.create({ id: 1, name: "Old Badge" });
   assert.ok(badge1.get("newBadge"), "badges without ids are new");
   assert.ok(!badge2.get("newBadge"), "badges with ids are not new");
 });
 
-test("createFromJson array", (assert) => {
+test("createFromJson array", function (assert) {
   const badgesJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
     badges: [
@@ -29,7 +29,7 @@ test("createFromJson array", (assert) => {
   );
 });
 
-test("createFromJson single", (assert) => {
+test("createFromJson single", function (assert) {
   const badgeJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
     badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
@@ -40,7 +40,7 @@ test("createFromJson single", (assert) => {
   assert.ok(!Array.isArray(badge), "does not returns an array");
 });
 
-test("updateFromJson", (assert) => {
+test("updateFromJson", function (assert) {
   const badgeJson = {
     badge_types: [{ id: 6, name: "Silver 1" }],
     badge: { id: 1126, name: "Badge 1", description: null, badge_type_id: 6 },
@@ -55,7 +55,7 @@ test("updateFromJson", (assert) => {
   );
 });
 
-test("save", (assert) => {
+test("save", function (assert) {
   assert.expect(0);
   const badge = Badge.create({
     name: "New Badge",
@@ -65,7 +65,7 @@ test("save", (assert) => {
   return badge.save(["name", "description", "badge_type_id"]);
 });
 
-test("destroy", (assert) => {
+test("destroy", function (assert) {
   assert.expect(0);
   const badge = Badge.create({
     name: "New Badge",

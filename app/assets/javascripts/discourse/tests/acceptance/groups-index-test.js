@@ -9,7 +9,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Groups", function () {
-  test("Browsing Groups", async (assert) => {
+  test("Browsing Groups", async function (assert) {
     await visit("/g?username=eviltrout");
 
     assert.equal(count(".group-box"), 1, "it displays user's groups");

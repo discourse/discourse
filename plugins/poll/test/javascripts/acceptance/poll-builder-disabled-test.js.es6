@@ -14,7 +14,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
   });
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
-  test("regular user - sufficient trust level", async (assert) => {
+  test("regular user - sufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });
 
     await displayPollBuilderButton();
@@ -25,7 +25,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     );
   });
 
-  test("regular user - insufficient trust level", async (assert) => {
+  test("regular user - insufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await displayPollBuilderButton();
@@ -36,7 +36,7 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     );
   });
 
-  test("staff", async (assert) => {
+  test("staff", async function (assert) {
     updateCurrentUser({ moderator: true });
 
     await displayPollBuilderButton();

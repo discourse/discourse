@@ -7,7 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic - Admin Menu Anonymous Users", function () {
-  test("Enter as a regular user", async (assert) => {
+  test("Enter as a regular user", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
     assert.ok(
@@ -19,7 +19,7 @@ acceptance("Topic - Admin Menu Anonymous Users", function () {
 
 acceptance("Topic - Admin Menu", function (needs) {
   needs.user();
-  test("Enter as a user with group moderator permissions", async (assert) => {
+  test("Enter as a user with group moderator permissions", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await visit("/t/topic-for-group-moderators/2480");
@@ -30,7 +30,7 @@ acceptance("Topic - Admin Menu", function (needs) {
     );
   });
 
-  test("Enter as a user with moderator and admin permissions", async (assert) => {
+  test("Enter as a user with moderator and admin permissions", async function (assert) {
     updateCurrentUser({ moderator: true, admin: true, trust_level: 4 });
 
     await visit("/t/internationalization-localization/280");
@@ -41,7 +41,7 @@ acceptance("Topic - Admin Menu", function (needs) {
     );
   });
 
-  test("Toggle the menu as admin focuses the first item", async (assert) => {
+  test("Toggle the menu as admin focuses the first item", async function (assert) {
     updateCurrentUser({ admin: true });
 
     await visit("/t/internationalization-localization/280");

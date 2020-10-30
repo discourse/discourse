@@ -15,7 +15,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     server.get("/u/charlie/card.json", () => helper.response(cardResponse));
   });
 
-  test("user card local time - does not update timezone for another user", async (assert) => {
+  test("user card local time - does not update timezone for another user", async function (assert) {
     User.current().changeTimezone("Australia/Brisbane");
 
     await visit("/t/internationalization-localization/280");

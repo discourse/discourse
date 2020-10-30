@@ -76,7 +76,7 @@ acceptance("Group - Anonymous", function (needs) {
     );
   });
 
-  test("Anonymous Viewing Automatic Group", async (assert) => {
+  test("Anonymous Viewing Automatic Group", async function (assert) {
     await visit("/g/moderators");
 
     assert.equal(
@@ -185,7 +185,7 @@ acceptance("Group - Authenticated", function (needs) {
     );
   });
 
-  test("User Viewing Group", async (assert) => {
+  test("User Viewing Group", async function (assert) {
     await visit("/g");
     await click(".group-index-request");
 
@@ -218,7 +218,7 @@ acceptance("Group - Authenticated", function (needs) {
     );
   });
 
-  test("Admin viewing group messages when there are no messages", async (assert) => {
+  test("Admin viewing group messages when there are no messages", async function (assert) {
     await visit("/g/alternative-group");
     await click(".nav-pills li a[title='Messages']");
 
@@ -229,7 +229,7 @@ acceptance("Group - Authenticated", function (needs) {
     );
   });
 
-  test("Admin viewing group messages", async (assert) => {
+  test("Admin viewing group messages", async function (assert) {
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
 
@@ -240,7 +240,7 @@ acceptance("Group - Authenticated", function (needs) {
     );
   });
 
-  test("Admin Viewing Group", async (assert) => {
+  test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
     assert.ok(
@@ -260,7 +260,7 @@ acceptance("Group - Authenticated", function (needs) {
     );
   });
 
-  test("Moderator Viewing Group", async (assert) => {
+  test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
     assert.ok(
