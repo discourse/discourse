@@ -13,8 +13,6 @@ class ThemeJavascriptsController < ApplicationController
 
   before_action :is_asset_path, :no_cookies, only: [:show]
 
-  cdn_action only: [:show]
-
   def show
     raise Discourse::NotFound unless last_modified.present?
     return render body: nil, status: 304 if not_modified?
