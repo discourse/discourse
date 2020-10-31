@@ -138,6 +138,9 @@ export function discourseModule(name, options) {
     module(name, function (hooks) {
       hooks.beforeEach(function () {
         this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
         this.siteSettings = currentSettings();
       });
 

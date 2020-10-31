@@ -1,48 +1,49 @@
 import EmberObject from "@ember/object";
 import { mapRoutes } from "discourse/mapping-router";
-import { moduleFor } from "ember-qunit";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
-moduleFor("controller:avatar-selector", "controller:avatar-selector", {
-  beforeEach() {
+discourseModule("Unit | Controller | avatar-selector", function (hooks) {
+  hooks.beforeEach(function () {
     this.registry.register("router:main", mapRoutes());
-  },
-  needs: ["controller:modal"],
-});
-
-test("avatarTemplate", function (assert) {
-  const avatarSelectorController = this.subject();
-
-  const user = EmberObject.create({
-    avatar_template: "avatar",
-    system_avatar_template: "system",
-    gravatar_avatar_template: "gravatar",
-
-    system_avatar_upload_id: 1,
-    gravatar_avatar_upload_id: 2,
-    custom_avatar_upload_id: 3,
   });
 
-  avatarSelectorController.setProperties({ user });
+  test("avatarTemplate", function (assert) {
+    const avatarSelectorController = this.owner.lookup(
+      "controller:avatar-selector"
+    );
 
-  user.set("avatar_template", "system");
-  assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
-    1,
-    "we are using system by default"
-  );
+    const user = EmberObject.create({
+      avatar_template: "avatar",
+      system_avatar_template: "system",
+      gravatar_avatar_template: "gravatar",
 
-  user.set("avatar_template", "gravatar");
-  assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
-    2,
-    "we are using gravatar when set"
-  );
+      system_avatar_upload_id: 1,
+      gravatar_avatar_upload_id: 2,
+      custom_avatar_upload_id: 3,
+    });
 
-  user.set("avatar_template", "avatar");
-  assert.equal(
-    avatarSelectorController.get("selectedUploadId"),
-    3,
-    "we are using custom when set"
-  );
+    avatarSelectorController.setProperties({ user });
+
+    user.set("avatar_template", "system");
+    assert.equal(
+      avatarSelectorController.get("selectedUploadId"),
+      1,
+      "we are using system by default"
+    );
+
+    user.set("avatar_template", "gravatar");
+    assert.equal(
+      avatarSelectorController.get("selectedUploadId"),
+      2,
+      "we are using gravatar when set"
+    );
+
+    user.set("avatar_template", "avatar");
+    assert.equal(
+      avatarSelectorController.get("selectedUploadId"),
+      3,
+      "we are using custom when set"
+    );
+  });
 });
