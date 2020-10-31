@@ -1,7 +1,7 @@
 import { test, module } from "qunit";
 import UserAction from "discourse/models/user-action";
 
-module("Unit | Model | UserAction", function () {
+module("Unit | Model | user-action", function () {
   test("collapsing likes", function (assert) {
     var actions = UserAction.collapseStream([
       UserAction.create({

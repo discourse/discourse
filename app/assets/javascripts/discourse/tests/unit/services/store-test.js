@@ -1,7 +1,7 @@
 import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 
-module("Unit | Service | Store", function () {
+module("Unit | Service | store", function () {
   test("createRecord", function (assert) {
     const store = createStore();
     const widget = store.createRecord("widget", { id: 111, name: "hello" });

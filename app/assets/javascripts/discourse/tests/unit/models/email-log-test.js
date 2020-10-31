@@ -2,7 +2,7 @@ import { test, module } from "qunit";
 import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
 
-module("Unit | Model | EmailLog", function () {
+module("Unit | Model | email-log", function () {
   test("create", function (assert) {
     assert.ok(EmailLog.create(), "it can be created without arguments");
   });

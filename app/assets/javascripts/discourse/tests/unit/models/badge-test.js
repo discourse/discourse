@@ -1,7 +1,7 @@
 import { test, module } from "qunit";
 import Badge from "discourse/models/badge";
 
-module("Unit | Model | Badge", function () {
+module("Unit | Model | badge", function () {
   test("newBadge", function (assert) {
     const badge1 = Badge.create({ name: "New Badge" }),
       badge2 = Badge.create({ id: 1, name: "Old Badge" });

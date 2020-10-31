@@ -3,7 +3,7 @@ import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import Category from "discourse/models/category";
 
-module("Unit | Model | Category", function () {
+module("Unit | Model | category", function () {
   test("slugFor", function (assert) {
     const store = createStore();
 

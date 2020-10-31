@@ -5,7 +5,7 @@ import NavItem from "discourse/models/nav-item";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 
-module("Unit | Model | NavItem", function (hooks) {
+module("Unit | Model | nav-item", function (hooks) {
   hooks.beforeEach(function () {
     run(function () {
       const asianCategory = Category.create({

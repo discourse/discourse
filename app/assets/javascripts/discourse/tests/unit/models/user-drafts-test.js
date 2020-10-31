@@ -4,7 +4,7 @@ import UserDraft from "discourse/models/user-draft";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import User from "discourse/models/user";
 
-module("Unit | Model | UserDrafts", function () {
+module("Unit | Model | user-draft", function () {
   test("stream", function (assert) {
     const user = User.create({ id: 1, username: "eviltrout" });
     const stream = user.get("userDraftsStream");

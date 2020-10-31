@@ -1,7 +1,7 @@
 import { test, module } from "qunit";
 import Group from "discourse/models/group";
 
-module("Unit | Model | Group", function () {
+module("Unit | Model | group", function () {
   test("displayName", function (assert) {
     const group = Group.create({ name: "test", display_name: "donkey" });
 

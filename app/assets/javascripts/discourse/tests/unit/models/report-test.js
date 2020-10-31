@@ -14,7 +14,7 @@ function reportWithData(data) {
   });
 }
 
-module("Unit | Model | Report", function () {
+module("Unit | Model | report", function () {
   test("counts", function (assert) {
     const report = reportWithData([5, 4, 3, 2, 1, 100, 99, 98, 1000]);
 

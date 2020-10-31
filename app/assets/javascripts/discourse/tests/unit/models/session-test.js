@@ -1,7 +1,7 @@
 import { test, module } from "qunit";
 import Session from "discourse/models/session";
 
-module("Unit | Model | Session", function () {
+module("Unit | Model | session", function () {
   test("highestSeenByTopic", function (assert) {
     const session = Session.current();
     assert.deepEqual(

@@ -6,7 +6,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import User from "discourse/models/user";
 import sinon from "sinon";
 
-module("Unit | Model | TopicTrackingState", function (hooks) {
+module("Unit | Model | topic-tracking-state", function (hooks) {
   hooks.beforeEach(function () {
     this.clock = sinon.useFakeTimers(new Date(2012, 11, 31, 12, 0).getTime());
   });

@@ -2,7 +2,7 @@ import { test, module } from "qunit";
 import ResultSet from "discourse/models/result-set";
 import createStore from "discourse/tests/helpers/create-store";
 
-module("Unit | Model | ResultSet", function () {
+module("Unit | Model | result-set", function () {
   test("defaults", function (assert) {
     const resultSet = ResultSet.create({ content: [] });
     assert.equal(resultSet.get("length"), 0);

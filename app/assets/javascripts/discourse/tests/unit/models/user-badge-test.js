@@ -2,7 +2,7 @@ import { test, module } from "qunit";
 import UserBadge from "discourse/models/user-badge";
 import badgeFixtures from "discourse/tests/fixtures/user-badges";
 
-module("Unit | Model | UserBadge", function () {
+module("Unit | Model | user-badge", function () {
   test("createFromJson single", function (assert) {
     const userBadge = UserBadge.createFromJson(
       JSON.parse(JSON.stringify(badgeFixtures["/user_badges"]))

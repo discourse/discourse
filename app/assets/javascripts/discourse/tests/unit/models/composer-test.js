@@ -27,7 +27,7 @@ function openComposer(opts) {
   return composer;
 }
 
-discourseModule("Unit | Model | Composer", function () {
+discourseModule("Unit | Model | composer", function () {
   test("replyLength", function (assert) {
     const replyLength = function (val, expectedLength) {
       const composer = createComposer({ reply: val });

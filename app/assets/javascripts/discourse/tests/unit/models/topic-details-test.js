@@ -7,7 +7,7 @@ function buildDetails(id) {
   return topic.get("details");
 }
 
-module("Unit | Model | TopicDetails", function () {
+module("Unit | Model | topic-details", function () {
   test("defaults", function (assert) {
     var details = buildDetails(1234);
     assert.present(details, "the details are present by default");

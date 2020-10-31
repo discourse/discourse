@@ -4,7 +4,7 @@ import createStore from "discourse/tests/helpers/create-store";
 import RestModel from "discourse/models/rest";
 import RestAdapter from "discourse/adapters/rest";
 
-module("Unit | Model | RestModel", function () {
+module("Unit | Model | rest-model", function () {
   test("munging", function (assert) {
     const store = createStore();
     const Grape = RestModel.extend();

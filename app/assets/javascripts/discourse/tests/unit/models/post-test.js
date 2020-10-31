@@ -16,7 +16,7 @@ function buildPost(args) {
   );
 }
 
-module("Unit | Model | Post", function () {
+module("Unit | Model | post", function () {
   test("defaults", function (assert) {
     var post = Post.create({ id: 1 });
     assert.blank(post.get("deleted_at"), "it has no deleted_at by default");

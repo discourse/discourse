@@ -2,7 +2,7 @@ import { test, module } from "qunit";
 import UserAction from "discourse/models/user-action";
 import User from "discourse/models/user";
 
-module("Unit | Model | UserStream", function () {
+module("Unit | Model | user-stream", function () {
   test("basics", function (assert) {
     var user = User.create({ id: 1, username: "eviltrout" });
     var stream = user.get("stream");

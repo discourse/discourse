@@ -6,7 +6,7 @@ import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
-discourseModule("Unit | Model | Topic", function () {
+discourseModule("Unit | Model | topic", function () {
   test("defaults", function (assert) {
     const topic = Topic.create({ id: 1234 });
 

@@ -19,7 +19,7 @@ function buildStream(id, stream) {
 
 const participant = { username: "eviltrout" };
 
-module("Unit | Model | PostStream", function () {
+module("Unit | Model | post-stream", function () {
   test("create", function (assert) {
     const store = createStore();
     assert.ok(

@@ -2,7 +2,7 @@ import { test, module } from "qunit";
 import createStore from "discourse/tests/helpers/create-store";
 import Site from "discourse/models/site";
 
-module("Unit | Model | Site", function () {
+module("Unit | Model | site", function () {
   test("create", function (assert) {
     assert.ok(Site.create(), "it can create with no parameters");
   });

@@ -5,7 +5,7 @@ import Group from "discourse/models/group";
 import * as ajaxlib from "discourse/lib/ajax";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-module("Unit | Model | User", function () {
+module("Unit | Model | user", function () {
   test("staff", function (assert) {
     var user = User.create({ id: 1, username: "eviltrout" });
 
