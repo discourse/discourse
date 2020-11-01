@@ -6,12 +6,9 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
-  const response = (object) => {
-    return [200, { "Content-Type": "application/json" }, object];
-  };
   if (!imageSrcs) {
     imageSrcs = [
       {
@@ -61,10 +58,10 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
       },
     ];
   }
-  // prettier-ignore
-  pretender.post("/uploads/lookup-urls", () => {
-    return response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)));
-  });
+
+  pretender.post("/uploads/lookup-urls", () =>
+    response(imageSrcs.concat(attachmentSrcs.concat(otherMediaSrcs)))
+  );
 
   fixture().html(
     imageSrcs.map((src) => `<img data-orig-src="${src.short_url}"/>`).join("") +
@@ -86,137 +83,138 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
         .join("")
   );
 }
-module("lib:pretty-text/upload-short-url", {
-  afterEach() {
+
+module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
+  hooks.afterEach(function () {
     resetCache();
-  },
-});
-
-test("resolveAllShortUrls", async function (assert) {
-  stubUrls();
-  let lookup;
-
-  lookup = lookupCachedUploadUrl("upload://a.jpeg");
-  assert.deepEqual(lookup, {});
-
-  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
-
-  lookup = lookupCachedUploadUrl("upload://a.jpeg");
-
-  assert.deepEqual(lookup, {
-    url: "/images/avatar.png?a",
-    short_path: "/uploads/short-url/a.jpeg",
   });
 
-  lookup = lookupCachedUploadUrl("upload://b.jpeg");
+  test("resolveAllShortUrls", async function (assert) {
+    stubUrls();
+    let lookup;
 
-  assert.deepEqual(lookup, {
-    url: "/images/avatar.png?b",
-    short_path: "/uploads/short-url/b.jpeg",
+    lookup = lookupCachedUploadUrl("upload://a.jpeg");
+    assert.deepEqual(lookup, {});
+
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+
+    lookup = lookupCachedUploadUrl("upload://a.jpeg");
+
+    assert.deepEqual(lookup, {
+      url: "/images/avatar.png?a",
+      short_path: "/uploads/short-url/a.jpeg",
+    });
+
+    lookup = lookupCachedUploadUrl("upload://b.jpeg");
+
+    assert.deepEqual(lookup, {
+      url: "/images/avatar.png?b",
+      short_path: "/uploads/short-url/b.jpeg",
+    });
+
+    lookup = lookupCachedUploadUrl("upload://c.jpeg");
+    assert.deepEqual(lookup, {});
+
+    lookup = lookupCachedUploadUrl("upload://c.pdf");
+    assert.deepEqual(lookup, {
+      url: "/uploads/default/original/3X/c/b/3.pdf",
+      short_path: "/uploads/short-url/c.pdf",
+    });
+
+    lookup = lookupCachedUploadUrl("upload://d.mp4");
+    assert.deepEqual(lookup, {
+      url: "/uploads/default/original/3X/c/b/4.mp4",
+      short_path: "/uploads/short-url/d.mp4",
+    });
+
+    lookup = lookupCachedUploadUrl("upload://e.mp3");
+    assert.deepEqual(lookup, {
+      url: "/uploads/default/original/3X/c/b/5.mp3",
+      short_path: "/uploads/short-url/e.mp3",
+    });
+
+    lookup = lookupCachedUploadUrl("upload://f.mp4");
+    assert.deepEqual(lookup, {
+      url: "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4",
+      short_path: "/uploads/short-url/f.mp4",
+    });
   });
 
-  lookup = lookupCachedUploadUrl("upload://c.jpeg");
-  assert.deepEqual(lookup, {});
+  test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
+    stubUrls();
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
 
-  lookup = lookupCachedUploadUrl("upload://c.pdf");
-  assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/3.pdf",
-    short_path: "/uploads/short-url/c.pdf",
+    let image1 = fixture().find("img").eq(0);
+    let image2 = fixture().find("img").eq(1);
+    let link = fixture().find("a");
+    let audio = fixture().find("audio").eq(0);
+    let video = fixture().find("video").eq(0);
+
+    assert.equal(image1.attr("src"), "/images/avatar.png?a");
+    assert.equal(image2.attr("src"), "/images/avatar.png?b");
+    assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
+    assert.equal(
+      video.find("source").attr("src"),
+      "/uploads/default/original/3X/c/b/4.mp4"
+    );
+    assert.equal(
+      audio.find("source").attr("src"),
+      "/uploads/default/original/3X/c/b/5.mp3"
+    );
   });
 
-  lookup = lookupCachedUploadUrl("upload://d.mp4");
-  assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/4.mp4",
-    short_path: "/uploads/short-url/d.mp4",
+  test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
+    stubUrls();
+    await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    let video = fixture().find("video").eq(1);
+
+    assert.equal(
+      video.find("source").attr("src"),
+      "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
+    );
   });
 
-  lookup = lookupCachedUploadUrl("upload://e.mp3");
-  assert.deepEqual(lookup, {
-    url: "/uploads/default/original/3X/c/b/5.mp3",
-    short_path: "/uploads/short-url/e.mp3",
+  test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async function (assert) {
+    stubUrls(
+      null,
+      [
+        {
+          short_url: "upload://c.pdf",
+          url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
+          short_path: "/uploads/short-url/c.pdf",
+        },
+      ],
+      null
+    );
+    await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
+
+    let link = fixture().find("a");
+    assert.equal(
+      link.attr("href"),
+      "/secure-media-uploads/default/original/3X/c/b/3.pdf"
+    );
   });
 
-  lookup = lookupCachedUploadUrl("upload://f.mp4");
-  assert.deepEqual(lookup, {
-    url: "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4",
-    short_path: "/uploads/short-url/f.mp4",
+  test("resolveAllShortUrls - scoped", async function (assert) {
+    stubUrls();
+    let lookup;
+
+    let scopedElement = fixture()[0].querySelector(".scoped-area");
+    await resolveAllShortUrls(ajax, {}, scopedElement);
+
+    lookup = lookupCachedUploadUrl("upload://z.jpeg");
+
+    assert.deepEqual(lookup, {
+      url: "/images/avatar.png?z",
+      short_path: "/uploads/short-url/z.jpeg",
+    });
+
+    // do this because the pretender caches ALL the urls, not
+    // just the ones being looked up (like the normal behaviour)
+    resetCache();
+    await resolveAllShortUrls(ajax, {}, scopedElement);
+
+    lookup = lookupCachedUploadUrl("upload://a.jpeg");
+    assert.deepEqual(lookup, {});
   });
-});
-
-test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
-  stubUrls();
-  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
-
-  let image1 = fixture().find("img").eq(0);
-  let image2 = fixture().find("img").eq(1);
-  let link = fixture().find("a");
-  let audio = fixture().find("audio").eq(0);
-  let video = fixture().find("video").eq(0);
-
-  assert.equal(image1.attr("src"), "/images/avatar.png?a");
-  assert.equal(image2.attr("src"), "/images/avatar.png?b");
-  assert.equal(link.attr("href"), "/uploads/short-url/c.pdf");
-  assert.equal(
-    video.find("source").attr("src"),
-    "/uploads/default/original/3X/c/b/4.mp4"
-  );
-  assert.equal(
-    audio.find("source").attr("src"),
-    "/uploads/default/original/3X/c/b/5.mp3"
-  );
-});
-
-test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
-  stubUrls();
-  await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
-  let video = fixture().find("video").eq(1);
-
-  assert.equal(
-    video.find("source").attr("src"),
-    "http://localhost:3000/uploads/default/original/3X/c/b/6.mp4"
-  );
-});
-
-test("resolveAllShortUrls - when secure media is enabled use the attachment full URL", async function (assert) {
-  stubUrls(
-    null,
-    [
-      {
-        short_url: "upload://c.pdf",
-        url: "/secure-media-uploads/default/original/3X/c/b/3.pdf",
-        short_path: "/uploads/short-url/c.pdf",
-      },
-    ],
-    null
-  );
-  await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
-
-  let link = fixture().find("a");
-  assert.equal(
-    link.attr("href"),
-    "/secure-media-uploads/default/original/3X/c/b/3.pdf"
-  );
-});
-
-test("resolveAllShortUrls - scoped", async function (assert) {
-  stubUrls();
-  let lookup;
-
-  let scopedElement = fixture()[0].querySelector(".scoped-area");
-  await resolveAllShortUrls(ajax, {}, scopedElement);
-
-  lookup = lookupCachedUploadUrl("upload://z.jpeg");
-
-  assert.deepEqual(lookup, {
-    url: "/images/avatar.png?z",
-    short_path: "/uploads/short-url/z.jpeg",
-  });
-
-  // do this because the pretender caches ALL the urls, not
-  // just the ones being looked up (like the normal behaviour)
-  resetCache();
-  await resolveAllShortUrls(ajax, {}, scopedElement);
-
-  lookup = lookupCachedUploadUrl("upload://a.jpeg");
-  assert.deepEqual(lookup, {});
 });
