@@ -9,7 +9,7 @@ class UploadCreator
   ALLOWED_SVG_ELEMENTS ||= %w{
     circle clipPath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
-    textpath tref tspan use
+    textPath tref tspan use
   }.each(&:freeze)
 
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor
