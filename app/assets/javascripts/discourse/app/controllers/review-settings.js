@@ -32,8 +32,10 @@ export default Controller.extend({
   scoreTypes(types) {
     const username = I18n.t("review.example_username");
 
-    return types.map((type) => Object.assign({}, type, {
-      title: type.title.replace("%{username}", username),
-    }));
+    return types.map((type) =>
+      Object.assign({}, type, {
+        title: type.title.replace("%{username}", username),
+      })
+    );
   },
 });
