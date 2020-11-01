@@ -29,14 +29,11 @@ export default Controller.extend({
   },
 
   @discourseComputed("settings.reviewable_score_types")
-  scoreTypes() {
+  scoreTypes(types) {
     const username = I18n.t("review.example_username");
-    const types = this.get("settings.reviewable_score_types");
 
-    types.forEach((type) => {
-      type.title = type.title.replace("%{username}", username);
-    });
-
-    return types;
+    return types.map((type) => Object.assign({}, type, {
+      title: type.title.replace("%{username}", username),
+    }));
   },
 });
