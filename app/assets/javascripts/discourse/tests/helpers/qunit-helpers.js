@@ -129,10 +129,10 @@ export function controllerModule(name, args = {}) {
 }
 
 export function discourseModule(name, options) {
-  deprecated(
-    `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
-    { since: "2.6.0" }
-  );
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
 
   if (typeof options === "function") {
     module(name, function (hooks) {
