@@ -210,10 +210,9 @@ describe Email::Styles do
   context "inline_secure_images" do
     let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
     fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
+    let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
 
     def strip_and_inline
-      html = "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>"
-
       # strip out the secure media
       styler = Email::Styles.new(html)
       styler.format_basic
@@ -239,6 +238,63 @@ describe Email::Styles do
 
       expect(@frag.to_s).not_to include("cid:email/test.png")
       expect(@frag.css('[data-stripped-secure-media]')).to be_present
+    end
+
+    context "when an optimized image is used instead of the original" do
+      let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\"><img src=\"/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\" width=\"20\" height=\"30\"></a>" }
+
+      it "inlines attachments where the stripped-secure-media data attr is present" do
+        optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
+        strip_and_inline
+        expect(@frag.to_s).to include("cid:email/test.png")
+        expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+        expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
+      end
+    end
+
+    context "when inlining an originally oneboxed image" do
+      before do
+        SiteSetting.authorized_extensions = "*"
+      end
+
+      let(:siteicon) { Fabricate(:upload, original_filename: "siteicon.ico") }
+      let(:attachments) do
+        {
+          'testimage.png' => stub(url: 'cid:email/test.png'),
+          'siteicon.ico' => stub(url: 'cid:email/test2.ico')
+        }
+      end
+      let(:html) do
+        <<~HTML
+<aside class="onebox allowlistedgeneric">
+  <header class="source">
+      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
+  </header>
+  <article class="onebox-body">
+    <div class="aspect-image" style="--aspect-ratio:20/30;"><img src="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png" class="thumbnail d-lazyload" width="20" height="30" srcset="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png"></div>
+
+<h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
+
+<p>This is a test onebox.</p>
+
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+        HTML
+      end
+
+      it "keeps the special site icon width and height and onebox styles" do
+        optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
+        strip_and_inline
+        expect(@frag.to_s).to include("cid:email/test.png")
+        expect(@frag.to_s).to include("cid:email/test2.ico")
+        expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+        expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 16px; height: 16px;')
+        expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+      end
     end
   end
 end

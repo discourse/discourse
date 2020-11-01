@@ -406,29 +406,60 @@ module PrettyText
   end
 
   def self.strip_secure_media(doc)
-    doc.css("a[href]").each do |a|
-      if Upload.secure_media_url?(a["href"])
-        target = %w(video audio).include?(a&.parent&.name) ? a.parent : a
-        next if target.to_s.include?("stripped-secure-view-media")
-        width = a.xpath("//*[@width]").attr("width")&.value
-        height = a.xpath("//*[@height]").attr("height")&.value
+    # images inside a lightbox or other link
+    doc.css('a[href]').each do |a|
+      next if !Upload.secure_media_url?(a['href'])
+
+      non_image_media = %w(video audio).include?(a&.parent&.name)
+      target = non_image_media ? a.parent : a
+      next if target.to_s.include?('stripped-secure-view-media')
+
+      if a.classes.include?('lightbox')
+        # we are using the first image from the srcset here so we get the
+        # optimized image instead of the possibly huge original
+        img = a.css('img[src]').first
+        srcset = img.attributes['srcset'].value
+        url = srcset.split(',').first
+        a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
+        a.remove
+      else
+        width = non_image_media ? nil : a.at_css('img').attr('width')
+        height = non_image_media ? nil : a.at_css('img').attr('height')
         target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
         target.remove
       end
     end
+
+    # images by themselves or inside a onebox
     doc.css('img[src]').each do |img|
-      if Upload.secure_media_url?(img['src'])
-        img.add_next_sibling secure_media_placeholder(doc, img['src'], width: img['width'], height: img['height'])
+      url = if img.parent.classes.include?("aspect-image")
+
+        # we are using the first image from the srcset here so we get the
+        # optimized image instead of the original, because an optimized
+        # image may be used for the onebox thumbnail
+        srcset = img.attributes["srcset"].value
+        srcset.split(",").first
+      else
+        img['src']
+      end
+
+      width = img.classes.include?('site-icon') ? 16 : img['width']
+      height = img.classes.include?('site-icon') ? 16 : img['height']
+      oneboxed = (img.parent&.parent&.classes || []).include?('onebox-body')
+
+      if Upload.secure_media_url?(url)
+        img.add_next_sibling secure_media_placeholder(doc, url, oneboxed: oneboxed, width: width, height: height)
         img.remove
       end
     end
   end
 
-  def self.secure_media_placeholder(doc, url, width: nil, height: nil)
+  def self.secure_media_placeholder(doc, url, oneboxed: false, width: nil, height: nil)
     data_width = width ? "data-width=#{width}" : ''
     data_height = height ? "data-height=#{height}" : ''
+    data_oneboxed = oneboxed ? "data-oneboxed=true" : ''
     <<~HTML
-    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_width} #{data_height}>
+    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_oneboxed} #{data_width} #{data_height}>
       #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML
