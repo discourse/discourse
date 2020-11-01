@@ -12,6 +12,13 @@
           </div>
         {{/if}}
         {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+        {{group-chooser
+          class="filter-name"
+          content=availableGroups
+          singleSelect=true
+          value=selectedGroupId
+          onChange=(action "updateGroupParam")
+          labelProperty="directory.filter_group"}}
       </div>
 
       {{#conditional-loading-spinner condition=model.loading}}

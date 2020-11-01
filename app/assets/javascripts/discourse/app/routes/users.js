@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import Group from "discourse/models/group";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -35,12 +36,20 @@ export default DiscourseRoute.extend({
     }
   },
 
+  afterModel(model) {
+    return Group.findAll().then((groups) => {
+      this.set("_availableGroups", groups);
+      return model;
+    });
+  },
+
   model(params) {
     return params;
   },
 
   setupController(controller, params) {
     controller.loadUsers(params);
+    controller.set("availableGroups", this._availableGroups);
   },
 
   actions: {

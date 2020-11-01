@@ -29,6 +29,18 @@
     .filter-name {
       height: 1em;
     }
+    .select-kit.multi-select {
+      margin-bottom: 4px;
+    }
+    .select-kit.multi-select .choices .choice {
+      height: 1em;
+      padding-left: 10px;
+    }
+    .select-kit .select-kit-header .selected-name {
+      text-align: left;
+      color: inherit;
+      min-height: 25px;
+    }
   }
 
   .directory-last-updated {

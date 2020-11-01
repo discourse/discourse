@@ -1,7 +1,7 @@
 import { equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { longDate } from "discourse/lib/formatter";
 
 export default Controller.extend({
@@ -16,6 +16,14 @@ export default Controller.extend({
   isLoading: false,
 
   showTimeRead: equal("period", "all"),
+
+  @discourseComputed("group")
+  selectedGroupId(group) {
+    let selectedGroup = this.get("availableGroups").find(
+      (item) => item.name === group
+    );
+    return selectedGroup ? selectedGroup.id : -1;
+  },
 
   loadUsers(params) {
     this.set("isLoading", true);
@@ -49,6 +57,10 @@ export default Controller.extend({
   actions: {
     loadMore() {
       this.model.loadMore();
+    },
+
+    updateGroupParam(selectedGroups, currentSelection) {
+      this.set("group", currentSelection ? currentSelection.name : null);
     },
   },
 });
