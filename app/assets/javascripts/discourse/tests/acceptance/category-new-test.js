@@ -37,12 +37,12 @@ acceptance("Category New", function (needs) {
       "it can switch to the settings tab"
     );
 
-    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "routeTo");
 
     await click(".category-back");
     assert.ok(
-      DiscourseURL.redirectTo.calledWith("/c/testing/11"),
-      "it full page redirects after a newly created category"
+      DiscourseURL.routeTo.calledWith("/c/testing/11"),
+      "back routing works"
     );
   });
 });
