@@ -48,7 +48,7 @@ const NavItem = EmberObject.extend({
     }, this);
 
     if (customHref) {
-      return customHref;
+      return getURL(customHref);
     }
 
     const context = { category, noSubcategories, tagId };
