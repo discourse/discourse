@@ -563,6 +563,7 @@ en:
           one: "You have <strong>%{count}</strong> post pending."
           other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
+      example_username: "username"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
