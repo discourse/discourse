@@ -245,6 +245,10 @@ NavItem.reopenClass({
         item.init(item, category, args);
       }
 
+      if (item.href) {
+        item.href = getURL(item.href);
+      }
+
       const before = item.before;
       if (before) {
         let i = 0;
