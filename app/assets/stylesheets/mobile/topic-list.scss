@@ -480,6 +480,14 @@ ol.category-breadcrumb {
   display: none;
 }
 
+.tags-controls {
+  display: flex;
+  h2 {
+    order: -1;
+    margin-right: auto;
+  }
+}
+
 .staff.tags-page #create-topic {
   clear: right;
 }
