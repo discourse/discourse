@@ -330,6 +330,21 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "doesn't raise an error if the page is a string number" do
+      get "/search.json", params: { q: 'kittens', page: '3' }
+      expect(response.status).to eq(200)
+    end
+
+    it "doesn't raise an error if the page is a integer number" do
+      get "/search.json", params: { q: 'kittens', page: 3 }
+      expect(response.status).to eq(200)
+    end
+
+    it "returns a 400 error if the page parameter is invalid" do
+      get "/search.json?page=xawesome%27\"</a\&"
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
