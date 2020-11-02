@@ -330,8 +330,13 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
-    it "doesn't raise an error if the page is a number" do
+    it "doesn't raise an error if the page is a string number" do
       get "/search.json", params: { q: 'kittens', page: '3' }
+      expect(response.status).to eq(200)
+    end
+
+    it "doesn't raise an error if the page is a integer number" do
+      get "/search.json", params: { q: 'kittens', page: 3 }
       expect(response.status).to eq(200)
     end
 
