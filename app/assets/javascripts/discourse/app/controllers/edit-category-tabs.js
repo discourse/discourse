@@ -5,6 +5,8 @@ import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import { readOnly } from "@ember/object/computed";
+import PermissionType from "discourse/models/permission-type";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 export default Controller.extend({
   selectedTab: "general",
@@ -93,8 +95,10 @@ export default Controller.extend({
             model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
-              createdCategory: true,
+              permission: PermissionType.FULL,
+              notification_level: NotificationLevels.REGULAR,
             });
+            this.site.updateCategory(model);
           }
         })
         .catch((error) => {
@@ -132,11 +136,7 @@ export default Controller.extend({
     },
 
     goBack() {
-      if (this.model.createdCategory) {
-        DiscourseURL.redirectTo(this.model.url);
-      } else {
-        DiscourseURL.routeTo(this.model.url);
-      }
+      DiscourseURL.routeTo(this.model.url);
     },
 
     toggleMenu() {
