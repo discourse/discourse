@@ -2140,6 +2140,7 @@ en:
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
+    auto_close_topics_create_linked_topic: "Create a new linked topic when a topic is auto-closed based on 'auto close topics post count' setting"
 
     code_formatting_style: "Code button in composer will default to this code formatting style"
 
@@ -4936,3 +4937,10 @@ en:
       %{keys}
 
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.
+
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Part %{count})"
+      other: "%{topic_title} (Part %{count})"
+    post_raw: "Continuing the discussion from %{parent_title}.\n\nPrevious discussions:\n\n%{previous_topics}"
+    moderator_post_raw: "Continue discussion here: %{new_title}"

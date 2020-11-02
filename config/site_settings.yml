@@ -930,6 +930,8 @@ posting:
     default: 500
   auto_close_topics_post_count:
     default: 10000
+  auto_close_topics_create_linked_topic:
+    default: true
   code_formatting_style:
     client: true
     type: enum
