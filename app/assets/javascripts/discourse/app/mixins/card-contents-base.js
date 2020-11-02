@@ -211,6 +211,7 @@ export default Mixin.create({
               }
             }
 
+            position.top -= $("#main-outlet").offset().top;
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
