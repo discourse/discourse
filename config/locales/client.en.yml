@@ -3980,6 +3980,7 @@ en:
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme_user_selectable: "Color scheme can be selected by users"
+          auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"

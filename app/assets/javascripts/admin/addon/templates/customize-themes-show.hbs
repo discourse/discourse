@@ -134,12 +134,17 @@
     {{/if}}
   </div>
 
-  {{#unless model.component}}
+  {{#if showCheckboxes}}
     <div class="control-unit">
-      {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default}}
-      {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
+      {{#unless model.component}}
+        {{inline-edit-checkbox action=(action "applyDefault") labelKey="admin.customize.theme.is_default" checked=model.default}}
+        {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.user_selectable" checked=model.user_selectable}}
+      {{/unless}}
+      {{#if model.remote_theme}}
+        {{inline-edit-checkbox action=(action "applyAutoUpdateable") labelKey="admin.customize.theme.auto_update" checked=model.auto_update}}
+      {{/if}}
     </div>
-  {{/unless}}
+  {{/if}}
 
   {{#unless model.component}}
     {{#d-section class="form-horizontal theme settings control-unit"}}

@@ -51,6 +51,16 @@ task "themes:install" => :environment do |task, args|
   end
 end
 
+desc "Update themes & theme components"
+task "themes:update" => :environment do |task, args|
+  Theme.where(auto_update: true).find_each do |theme|
+    if theme.remote_theme.present?
+      puts "Updating #{theme.name}..."
+      theme.remote_theme.update_from_remote
+    end
+  end
+end
+
 desc "List all the installed themes on the site"
 task "themes:audit" => :environment do
   components = Set.new

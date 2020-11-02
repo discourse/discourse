@@ -35,6 +35,11 @@ export default Controller.extend({
   childThemesNames: mapBy("model.childThemes", "name"),
   extraFiles: filterBy("model.theme_fields", "target", "extra_js"),
 
+  @discourseComputed("model.component", "model.remote_theme")
+  showCheckboxes() {
+    return !this.model.component || this.model.remote_theme;
+  },
+
   @discourseComputed("model.editedFields")
   editedFieldsFormatted() {
     const descriptions = [];
@@ -302,6 +307,10 @@ export default Controller.extend({
 
     applyUserSelectable() {
       this.model.saveChanges("user_selectable");
+    },
+
+    applyAutoUpdateable() {
+      this.model.saveChanges("auto_update");
     },
 
     addChildTheme() {
