@@ -278,7 +278,7 @@ module Email
     def to_html
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
-      replace_secure_media_urls
+      replace_secure_media_urls if SiteSetting.secure_media?
       strip_classes_and_ids
       replace_relative_urls
 

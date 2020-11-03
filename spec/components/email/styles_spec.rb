@@ -188,6 +188,11 @@ describe Email::Styles do
   end
 
   context "replace_secure_media_urls" do
+    before do
+      setup_s3
+      SiteSetting.secure_media = true
+    end
+
     let(:attachments) { { 'testimage.png' => stub(url: 'email/test.png') } }
     it "replaces secure media within a link with a placeholder" do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
@@ -208,6 +213,11 @@ describe Email::Styles do
   end
 
   context "inline_secure_images" do
+    before do
+      setup_s3
+      SiteSetting.secure_media = true
+    end
+
     let(:attachments) { { 'testimage.png' => stub(url: 'cid:email/test.png') } }
     fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
     let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
