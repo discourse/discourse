@@ -511,6 +511,7 @@ de:
           one: "Du hast <strong>%{count}</strong> verbleibenden Beitrag."
           other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
         ok: "OK"
+      example_username: "benutzername"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"%{userUrl}\">Du</a> hast <a href=\"%{topicUrl}\">das Thema</a> verfasst"
@@ -783,6 +784,7 @@ de:
       topic_stat_sentence_month:
         one: "%{count} neues Thema im letzten Monat."
         other: "%{count} neue Themen im letzten Monat."
+      n_more: "Kategorien (%{count} weitere)..."
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -936,6 +938,7 @@ de:
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du bekommst keine Benachrichtigung über irgendetwas an neuen Themen in diesen Kategorien."
       regular_categories: "Stammgast"
+      regular_categories_instructions: "Diese Kategorien werden in den Themenlisten „Neueste“ und „Top“ angezeigt."
       no_category_access: "Moderaturen haben eingeschränkte Kategorien-Berechtigungen, Speichern ist nicht verfügbar."
       delete_account: "Lösche mein Benutzerkonto"
       delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
@@ -1045,6 +1048,8 @@ de:
         disable_confirm: "Sollen wirklich alle Methoden zur Zwei-Faktor-Authentifizierung deaktiviert werden?"
         save: "Speichern"
         edit: "Bearbeiten"
+        edit_title: "Authenticator bearbeiten"
+        edit_description: "Authentifikator-Name"
         enable_security_key_description: |
           Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> vorbereitet hast, klicke unten auf Registrieren.
         totp:
@@ -1291,10 +1296,12 @@ de:
         link_groups: Gruppen
         link_expires_at: Gültig bis
         create: "Einladung versenden"
-        copy_link: "Link kopieren"
-        generate_link: "Einladungslink kopieren"
-        link_generated: "Der Einladungslink wurde erfolgreich generiert!"
+        copy_link: "Link anzeigen"
+        generate_link: "Einladungslink erstellen"
+        link_generated: "Hier ist dein Einladungslink!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
+        single_user: "Einladen per E-Mail"
+        multiple_user: "Per Link einladen"
         invite_link:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
@@ -1469,6 +1476,8 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
+      invite: "Lade andere ein ..."
+      edit: "Hinzufügen oder Entfernen ..."
       remove: "Entfernen..."
       add: "Hinzufügen..."
       leave_message: "Möchtest du diese Nachricht wirklich verlassen?"
@@ -1543,6 +1552,7 @@ de:
       awaiting_approval: "Dein Konto wurde noch nicht von einem Teammitglied genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>%{sentTo}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
+      not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
@@ -1586,6 +1596,7 @@ de:
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
+      password_label: "Passwort"
       optional_description: "(optional)"
     password_reset:
       continue: "Weiter zu %{site_name}"
@@ -1768,15 +1779,14 @@ de:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       slow_mode:
-        title: "Dieses Thema befindet sich im langsamen Modus."
-        body: "Nach dem Abschicken deines Beitrags musst du %{duration} warten, bevor du einen neuen Beitrag verfassen kannst."
-        error: "Du hast vor Kurzem in diesem Thema, das sich im langsamen Modus befindet, einen Beitrag verfasst. Bitte warte, damit andere Benutzer ebenfalls teilnehmen können."
+        error: "Dieses Thema befindet sich im langsamen Modus. Um eine durchdachte Diskussion zu fördern, können Sie nur einmal pro %{duration} posten."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
         draft: Entwurf
         edit: Bearbeiten
         reply_to_post:
+          label: Auf einen Beitrag von %{postUsername}antworten
           desc: Antworte auf einen bestimmten Beitrag
         reply_as_new_topic:
           label: Antworte als verknüpftes Thema
@@ -1848,7 +1858,7 @@ de:
       membership_request_accepted: "Mitgliedschaft akzeptiert in '%{group_name}' "
       membership_request_consolidated:
         one: "%{count} offene Mitgliedschaftsanfrage für '%{group_name}'"
-        other: "%{count} offene Mitgliedschaftsanfragen für '%{group_name}'"
+        other: "%{count} offene Mitgliedschaftanfragen für '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - abgeschlossen"
@@ -2037,10 +2047,12 @@ de:
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
         ready_to_create: "Bereit zu "
+        latest: "Ihr seid alle eingeholt!"
         bookmarks: "Du hast noch keine Themen mit einem Lesezeichen versehen."
         category: "Es gibt keine Themen in %{category}."
         top: "Es gibt keine Top-Themen."
         educate:
+          new: '<p>Ihre neuen Themen werden hier angezeigt. Standardmäßig gelten Themen als neu und zeigen einen Indikator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> an, wenn sie in den letzten 2 Tagen erstellt wurden.</p><p>Besuchen Sie Ihre <a href="%{userPrefsUrl}">Einstellungen</a> , um dies zu ändern.</p>'
           unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird standardmäßig als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
@@ -2123,6 +2135,7 @@ de:
       browse_all_categories: Alle Kategorien durchsehen
       browse_all_tags: Alle Tags durchsuchen
       view_latest_topics: aktuelle Themen anzeigen
+      suggest_create_topic: eine neue Unterhaltung starten?
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
@@ -2681,6 +2694,7 @@ de:
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tags_tab_description: "Die oben spezifizierten Tags und Tag-Gruppen werden nur in dieser Kategorie und anderen Kategorien, für die sie ebenfalls spezifiziert sind, verfügbar sein. Darüber hinaus werden sie nicht in weiteren Kategorien verwendbar sein."
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
+      manage_tag_groups_link: "Schlagwort-Gruppen verwalten"
       allow_global_tags_label: "Erlaube auch andere Schlagwörter."
       tag_group_selector_placeholder: "(Optional) Tag Gruppe"
       required_tag_group_description: "Neue Themen müssen Tags von einer Tag Gruppe haben:"
@@ -2800,6 +2814,7 @@ de:
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
+      take_action: "Reagieren..."
       take_action_options:
         default:
           title: "Reagieren"
@@ -3304,6 +3319,8 @@ de:
           refresh_report: "Bericht aktualisieren"
           daily: Täglich
           monthly: Monatlich
+          weekly: Wöchentlich
+          dates: "Datumsangaben (UTC)"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
           totals_for_sample: "Insgesamt für Stichprobe"
@@ -3320,6 +3337,8 @@ de:
               label: Gruppe
             category:
               label: Kategorie
+            include_subcategories:
+              label: "Unterkategorien einschließen"
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
@@ -3350,6 +3369,8 @@ de:
               title: "Wer kann diese Gruppe sehen?"
               public: "Jeder"
               logged_on_users: "Angemeldete Benutzer"
+              members: "Gruppeneigentümer, Mitglieder und Moderatoren"
+              staff: "Gruppeneigentümer und Moderatoren"
               owners: "Gruppenbesitzer"
               description: "Administratoren können alle Gruppen sehen."
             members_visibility_levels:
@@ -3362,6 +3383,7 @@ de:
             effects: Effekte
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
+            automatic_membership_user_count: "%{count} Benutzer haben die neuen E-Mail-Domänen und werden der Gruppe hinzugefügt."
             primary_group: "Automatisch als Hauptgruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Hauptgruppe"
@@ -3412,8 +3434,32 @@ de:
         save: Speichern
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
+        delete: Endgültig gelöscht
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
+        use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
+        scopes:
+          description: |
+            Wenn Sie Bereiche verwenden, können Sie einen API-Schlüssel auf einen bestimmten Satz von Endpunkten beschränken.
+            Sie können auch festlegen, welche Parameter zulässig sind. Verwenden Sie Kommas, um mehrere Werte zu trennen.
+          title: Geltungsbereiche
+          resource: Ressource
+          action: Aktion
+          allowed_parameters: Zulässige Parameter
+          optional_allowed_parameters: Zulässige Parameter (optional)
+          any_parameter: (beliebiger Parameter)
+          allowed_urls: Zulässige URLs
+          descriptions:
+            topics:
+              read: Lesen Sie ein Thema oder einen bestimmten Beitrag darin. RSS wird ebenfalls unterstützt.
+              write: Erstellen Sie ein neues Thema oder posten Sie es in einem vorhandenen Thema.
+              read_lists: Lesen Sie Themenlisten wie Top, Neu, Aktuell usw. RSS wird ebenfalls unterstützt.
+              wordpress: Notwendig, damit das WordPress-WP-Diskurs-Plugin funktioniert.
+            users:
+              bookmarks: Benutzer-Lesezeichen auflisten. Es gibt Lesezeichenerinnerungen zurück, wenn Sie das ICS-Format verwenden.
+              sync_sso: Synchronisieren Sie einen Benutzer mit SSO.
+              show: Informationen über einen Benutzer abrufen.
+              check_emails: Benutzer-E-Mails auflisten.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
@@ -3472,6 +3518,9 @@ de:
         notification_event:
           name: "Benachrichtigungs-Ereignis"
           details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
+        user_badge_event:
+          name: "Abzeichen-Verleihungs-Event"
+          details: "Wenn ein Benutzer ein Abzeichen erhält."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -3620,6 +3669,7 @@ de:
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
+          themes_intro_emoji: "Künstlerin Emoji"
           beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Leitfaden für Entwickler zur Verwendung von Discourse-Themes"
           browse_themes: "Community-Themes durchsuchen"
@@ -3639,6 +3689,8 @@ de:
           settings: "Einstellungen"
           translations: "Übersetzungen"
           extra_scss: "Zusätzliches SCSS"
+          extra_files: "Zusätzliche Dateien"
+          extra_files_upload: "Theme exportieren, um diese Dateien anzuzeigen."
           extra_files_remote: "Theme exportieren oder das Git-Repository überprüfen, um diese Dateien anzuzeigen."
           preview: "Vorschau"
           show_advanced: "erweiterte Felder anzeigen"
@@ -3646,6 +3698,7 @@ de:
           hide_unused_fields: "unbenutzte Felder verbergen"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
+          color_scheme_user_selectable: "Das Farbschema kann vom Benutzer ausgewählt werden"
           color_scheme: "Farbpalette"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme"
@@ -3748,6 +3801,17 @@ de:
           color_definitions:
             text: "Farbdefinitionen"
             title: "Benutzerdefinierte Farbdefinitionen eingeben (nur für fortgeschrittene Benutzer)"
+            placeholder: |2-
+
+              Verwende dieses Stylesheet, um benutzerdefinierte Farben zur Liste der benutzerdefinierten CSS-Eigenschaften hinzuzufügen.
+
+              Beispiel:
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              Eigenschaften sollten mit einem Präfix versehen werden, um Konflikte mit Discourse und Plugins zu vermeiden.
           head_tag:
             text: "</head>"
             title: "HTML, das vor dem </head>-Befehl eingefügt wird"
@@ -3775,6 +3839,10 @@ de:
           primary:
             name: "erste"
             description: "Die meisten Texte, Bilder und Ränder."
+          primary-medium:
+            name: "primär mittel"
+          primary-low-mid:
+            name: "primär niedrig-mittel"
           secondary:
             name: "zweite"
             description: "Die Haupthintergrundfarbe und Textfarbe einiger Schaltflächen."
@@ -3793,6 +3861,12 @@ de:
           highlight:
             name: "hervorheben"
             description: "Die Hintergrundfarbe von hervorgehobenen Elementen, wie etwa Beiträge und Themen."
+          highlight-high:
+            name: "Highlight-hoch"
+          highlight-medium:
+            name: "Highlight-Medium"
+          highlight-low:
+            name: "Highlight-niedrig"
           danger:
             name: "Gefahr"
             description: "Hervorhebungsfarbe für Aktionen wie Löschen von Beiträgen und Themen."
@@ -4334,6 +4408,9 @@ de:
           external_name: "Name"
           external_email: "E-Mail"
           external_avatar_url: "URL des Profilbilds"
+          last_payload: "Letzte Nutzlast"
+          delete_sso_record: "SSO-Datensatz löschen"
+          confirm_delete: "Sind Sie sicher, dass Sie diesen SSO-Datensatz (Single Sign On) löschen möchten?"
       user_fields:
         title: "Benutzerfelder"
         help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
@@ -4604,5 +4681,6 @@ de:
           regular: "Normaler Anwender"
       previews:
         topic_title: "Diskussionsthema"
+        font_title: "%{font} Schriftart"
         share_button: "Teilen"
         reply_button: "Antworten"

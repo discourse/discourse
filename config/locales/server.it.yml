@@ -277,6 +277,9 @@ it:
     other: "Spiacenti, i nuovi utenti possono menzionare al massimo %{count} utenti in un messaggio."
   no_embedded_media_allowed_trust: "Siamo spiacenti, non puoi incorporare elementi multimediali in un messaggio."
   no_embedded_media_allowed: "Siamo spiacenti, i nuovi utenti non possono incorporare elementi multimediali nei messaggi."
+  too_many_embedded_media:
+    one: "Spiacenti, i nuovi utenti possono inserire solo un elemento multimediale incorporato in un messaggio."
+    other: "Spiacenti, i nuovi utenti possono inserire solo %{count} elementi multimediali incorporati in un messaggio."
   no_attachments_allowed: "Spiacenti, i nuovi utenti non possono inserire allegati nei messaggi."
   too_many_attachments:
     one: "Spiacenti, i nuovi utenti possono inserire al massimo un allegato in un messaggio."
@@ -336,7 +339,6 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   edit_conflict: "Il messaggio è stato modificato da un altro utente e le tue modifiche non possono più essere salvate."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
-  cannot_edit_on_slow_mode: "Il topic è in modalità lenta e quel post non può più essere modificato."
   excerpt_image: "immagine"
   bookmarks:
     errors:
@@ -1410,6 +1412,8 @@ it:
     invite_code: "L&#39;utente deve digitare questo codice per consentire la registrazione dell&#39;account, ignorato quando vuoto (senza distinzione tra maiuscole e minuscole)"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
+    ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics (analytics.js), ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Abilita il monitoraggio interdominio di Google Universal Analytics (analytics.js). Ai collegamenti in uscita da questi domini verrà aggiunto l'ID client. Consulta la <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>guida Impostare il monitoraggio interdominio di Google.</a>"
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
@@ -1825,6 +1829,7 @@ it:
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
     default_categories_watching_first_post: "Elenco di categorie in cui il primo messaggio di ogni nuovo argomento verrà osservato per impostazione predefinita."
+    default_tags_tracking: "Elenco di etichette seguite di default."
     default_text_size: "Dimensione del testo selezionata per impostazione predefinita"
     default_title_count_mode: "Modalità predefinita per il contatore del titolo della pagina"
     retain_web_hook_events_period_days: "Numero di giorni per mantenere i record degli eventi di web hook."
@@ -3005,6 +3010,8 @@ it:
       title: "Nuovo avviso di accesso"
       subject_template: "[%{site_name}] Nuovo accesso da %{location}"
       text_body_template: "Ciao, \n\nabbiamo notato un accesso da un dispositivo o da una posizione che non utilizzi abitualmente. Sei stato tu? \n\n- Posizione: %{location} (%{client_ip}) \n- Browser: %{browser} \n- Dispositivo: %{device} - %{os} \n\nSe eri tu, fantastico! Non c'è nient'altro che devi fare. Se non sei stato tu, ti preghiamo di [controllare le tue sessioni esistenti] (%{base_url}/my/preferences/account) e prendere in considerazione la possibilità di cambiare la tua password.\n"
+  page_forbidden:
+    title: "Ops! Quella pagina è privata."
   page_not_found:
     title: "La pagina richiesta non esiste oppure è privata."
     popular_topics: "Di successo"
@@ -3527,6 +3534,8 @@ it:
     initial_topic_title: Rapporti sul rendimento del sito web
   tags:
     title: "Etichette"
+    restricted_tag_disallowed: 'Non puoi applicare l''etichetta "%{tag}".'
+    restricted_tag_remove_disallowed: 'Non puoi rimuovere l''etichetta "%{tag}".'
     minimum_required_tags:
       one: "Devi selezionare almeno un'Etichetta %{count}."
       other: "Devi selezionare almeno le Etichette %{count}."
@@ -3541,6 +3550,9 @@ it:
         other: '"%{tag_name}" è limitato alle seguenti categorie: %{category_names}'
       synonym: 'I sinonimi non sono ammessi. Utilizza invece &quot;%{tag_name}&quot;.'
       has_synonyms: '&quot;%{tag_name}&quot; non può essere utilizzato perché ha dei sinonimi.'
+    required_tags_from_group:
+      one: "Devi includere almeno %{count} %{tag_group_name} etichetta."
+      other: "Devi includere almeno %{count} %{tag_group_name} etichette."
     invalid_target_tag: "non può essere sinonimo di un sinonimo"
     synonyms_exist: "non è consentito finché esistono sinonimi"
   rss_by_tag: "Argomenti etichettati %{tag}"
@@ -3642,6 +3654,17 @@ it:
           city_for_disputes:
             label: "Sede per eventuali controversie"
             placeholder: "San Francisco, California"
+      colors:
+        title: "Colori"
+      fonts:
+        title: "Caratteri"
+        fields:
+          body_font:
+            label: "Carattere Corpo"
+          heading_font:
+            label: "Carattere Intestazione"
+          font_preview:
+            label: "Anteprima"
       logos:
         title: "Loghi"
         fields:
@@ -3689,6 +3712,10 @@ it:
         disabled: "Poiché le connessioni locali sono disabilitate, non è possibile inviare inviti a nessuno. Per favore, prosegui con il passo successivo."
       finished:
         title: "Il tuo Discourse è Pronto!"
+        description: |
+          <p>Se vorrai cambiare queste impostazioni, <b>esegui nuovamente questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>la sezione admin</a>; lo trovi accanto all'icona della chiave chiave nel menu del sito.</p>
+          <p>È facile personalizzare il tuo Discourse ancora di più utilizzando il nostro potente sistema di temi. Per esempio, consulta i <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temi e componenti principali</a> su <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:
     graph_title: "Conteggio Ricerche"
   joined: "Iscritto"
@@ -3712,7 +3739,11 @@ it:
     user_delete_self: "Cancellato autonomamente da %{url}"
     webhook_deactivation_reason: "Il tuo webhook è stato automaticamente disattivato. Abbiamo ricevuto vari errori HTTP '%{status}'."
     api_key:
+      automatic_revoked:
+        one: "Revocata automaticamente, ultima attività più di %{count} giorno fa"
+        other: "Revocata automaticamente, ultima attività più di %{count} giorni fa"
       revoked: Revocata
+      restored: Ripristinato
   reviewables:
     already_handled: "Grazie, ma abbiamo già esaminato il messaggio e stabilito che non è necessario segnalarlo di nuovo."
     priorities:
@@ -3739,6 +3770,10 @@ it:
       category: "I post in questa Categoria richiedono l'approvazione manuale da parte dello staff. Vedi le impostazioni della categoria."
       must_approve_users: "Tutti i nuovi utenti devono essere approvati dallo staff. Vedi 'must_approve_users'."
       invite_only: "Tutti i nuovi utenti dovrebbero essere invitati. Vedi `invite_only`."
+      email_auth_res_enqueue: "Questa email ha fallito un controllo DMARC, molto probabilmente non arriva da chi sembra provenire. Controlla le intestazioni email non elaborate per ulteriori informazioni."
+      email_spam: "Questa email è stata contrassegnata come spam dall'intestazione definita in `email_in_spam_header`."
+      suspect_user: "Questo nuovo utente ha inserito le informazioni del profilo senza leggere alcun argomento o messaggio, il che suggerisce fortemente che potrebbe essere uno spammer. Vedi `approve_suspect_users`."
+      contains_media: "Questo post include i contenuti multimediali incorporati. Vedi `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Acconsenti..."
@@ -3814,7 +3849,13 @@ it:
         reason: "Eliminato tramite la coda di revisione"
   email_style:
     html_missing_placeholder: "Il template html deve includere %{placeholder}"
+  notification_level:
+    ignore_error: "Spiacenti, non puoi ignorare questo utente."
+    mute_error: "Spiacenti, non puoi silenziate questo utente."
+  discord:
+    not_in_allowed_guild: "Autenticazione non riuscita. Non sei un membro di una gilda Discord consentita."
   old_keys_reminder:
+    title: "Promemoria sulle vecchie credenziali"
     body: |
       Ciao! Questo è un promemoria di sicurezza annuale di routine dall&#39;istanza di Discourse. A titolo di cortesia, desideriamo informarti che le seguenti credenziali utilizzate nell&#39;istanza di Discourse non sono state aggiornate da più di due anni: %{keys} Al momento non è richiesta alcuna azione, tuttavia è considerata una buona pratica di sicurezza eseguire un aggiornamento di tutte le credenziali importanti ogni pochi anni.
   activemodel:

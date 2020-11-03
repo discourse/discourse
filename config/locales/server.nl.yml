@@ -348,7 +348,6 @@ nl:
   too_late_to_edit: "Dat bericht is te lang geleden geschreven. Het kan niet meer worden gewijzigd of verwijderd."
   edit_conflict: "Dat bericht is door een andere gebruiker bewerkt, en uw wijzigingen kunnen niet meer worden opgeslagen."
   revert_version_same: "De huidige versie is dezelfde als de versie die u probeert terug te zetten."
-  cannot_edit_on_slow_mode: "Het topic bevindt zich in langzame modus, en dat bericht kan niet meer worden bewerkt."
   excerpt_image: "afbeelding"
   bookmarks:
     errors:

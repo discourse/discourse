@@ -28,6 +28,8 @@ ko:
     bio: "안녕, 사실 나는 사람이 아니야. 이 사이트에 대해서 알려주는 로봇이지. 나한테 물어보고 싶은 게 있다면 메세지를 보내거나 **`@%{discobot_username}`** 를 멘션하면 돼."
     tl2_promotion_message:
       subject_template: "이제 승격 했으므로 몇 가지 고급 기능에 대해 알아볼 차례입니다!"
+      text_body_template: |
+        `@%{discobot_username} %{reset_trigger}` 로 이 메시지에 회신하고 사용자님이 무엇을 할 수 있는지에 대해 알아보세요.
     timeout:
       message: |-
         안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
@@ -172,6 +174,12 @@ ko:
           멋진 사진이네. 내가 얼마나 좋아하는 지:heart_eyes: 알려주고 싶어서 좋아요:heart:를 눌렀단다.
         like_not_found: |-
           [내글에](%{url})좋아요:heart: 안 눌러 줄거니? :crying_cat_face:
+        not_found: |-
+          이미지를 업로드하지 않으신것 같아 좋아할만한 사진을 선택했습니다.
+
+          <%{image_url}>
+
+          업로드하거나 링크를 붙여 넣으십시오!
       likes:
         instructions: |-
           다음은 유니콘 사진입니다.

@@ -185,9 +185,9 @@ ja:
     or: "あるいは"
     now: "たった今"
     read_more: "もっと読む"
-    more: "増やす"
+    more: "もっと読む"
     less: "減らす"
-    never: "never"
+    never: "決して"
     every_30_minutes: "30分毎"
     every_hour: "毎時"
     daily: "毎日"
@@ -239,6 +239,8 @@ ja:
         tomorrow: "明日"
         next_week: "来週"
         later_this_week: "今週中"
+        start_of_next_business_week: "月曜日"
+        start_of_next_business_week_alt: "来週の月曜日"
         next_month: "来月"
     drafts:
       resume: "続ける"
@@ -971,8 +973,6 @@ ja:
         link_created_at: "作成者"
         link_groups: グループ
         create: "招待を送る"
-        generate_link: "招待リンクをコピー"
-        link_generated: "招待リンクが生成されました！"
         valid_for: "招待リンクはこのメールアドレスにだけ有効です。%{email}"
         invite_link:
           success: "招待リンクが生成されました！"
@@ -2246,9 +2246,9 @@ ja:
         posting:
           name: 投稿
     tagging:
-      all_tags: "全てのタグ"
+      all_tags: "すべてのタグ"
       other_tags: "他のタグ"
-      selector_all_tags: "全てのタグ"
+      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       changed: "タグを変更しました:"
       tags: "タグ"

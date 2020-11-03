@@ -1104,8 +1104,6 @@ da:
         link_created_at: "Oprettet"
         link_groups: grupper
         create: "Send invitation"
-        generate_link: "Kopier invitations-link"
-        link_generated: "Invitiationslinket blev genereret!"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         invite_link:
           success: "Invitiationslinket blev genereret!"

@@ -1145,8 +1145,6 @@ sl:
         link_created_at: "Ustvarjeno"
         link_groups: Skupine
         create: "Pošlji povabilo"
-        generate_link: "Kopiraj povezavo s povabilom"
-        link_generated: "Povezava s povabilom ustvarjena!"
         valid_for: "Povezava s povabilom je veljavna samo za e-naslov: %{email}"
         invite_link:
           success: "Povezava s povabilom ustvarjena!"

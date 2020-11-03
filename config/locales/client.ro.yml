@@ -1118,8 +1118,6 @@ ro:
         link_created_at: "Creat"
         link_groups: Grupuri
         create: "Trimite o invitație"
-        generate_link: "Copiază link-ul de invitație"
-        link_generated: "Link de invitare generat cu succes!"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         invite_link:
           success: "Link de invitare generat cu succes!"

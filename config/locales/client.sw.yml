@@ -864,8 +864,6 @@ sw:
         link_created_at: "Imetengenezwa"
         link_groups: Makundi
         create: "Tuma Mualiko"
-        generate_link: "Nakili Kiungo cha Mualiko"
-        link_generated: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"

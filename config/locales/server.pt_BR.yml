@@ -1712,6 +1712,7 @@ pt_BR:
     notify_about_queued_posts_after: "Se houver postagens que estão aguardando revisão por mais que muitas horas, envie uma notificação a todos os moderadores. Defina como 0 para desativar essas notificações."
     auto_close_messages_post_count: "Número máximo de postagens permitidas em uma mensagem antes de ser automaticamente fechada (0 para desativar)"
     auto_close_topics_post_count: "Número máximo de postagens permitidas em um tópico antes de ser automaticamente fechado (0 para desativar)"
+    auto_close_topics_create_linked_topic: "Criar um novo tópico relacionado quando um tópico é fechado automaticamente com base na configuração \"fechar automaticamente a contagem de posts\""
     code_formatting_style: "Botão de código no compositor será o padrão para este estilo de formatação de código"
     max_allowed_message_recipients: "Máximo de destinatários permitidos em uma mensagem."
     watched_words_regular_expressions: "Palavras assistidas são expressões regulares."

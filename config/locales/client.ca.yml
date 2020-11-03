@@ -1175,8 +1175,6 @@ ca:
         link_created_at: "Creat"
         link_groups: Grups
         create: "Envia la invitació"
-        generate_link: "Copia l'enllaç d'invitació"
-        link_generated: "Enllaç d'invitació generat emb èxit!"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"

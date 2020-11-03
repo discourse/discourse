@@ -354,7 +354,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
-  cannot_edit_on_slow_mode: "Ämnet är i långsamt läge och det inlägget kan inte längre redigeras."
+  cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg."
   excerpt_image: "bild"
   bookmarks:
     errors:
@@ -1905,6 +1905,7 @@ sv:
     notify_about_queued_posts_after: "Om det finns inlägg som har väntat på att granskas i mer än detta antal timmar skickas en avisering till alla moderatorer. Inaktivera dessa aviseringar genom att ställa in till 0."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
+    auto_close_topics_create_linked_topic: "Skapa ett nytt länkat ämne när ett ämne stängs automatiskt baserat på inställningen 'auto close topics post count' (automatisk stängning av ämnen efter antal)"
     code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformateringsstilen som standard"
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
@@ -4084,6 +4085,12 @@ sv:
   old_keys_reminder:
     title: "Påminnelse gällande gamla behörigheter"
     body: "Hejsan! Detta är en årlig säkerhetspåminnelse från din Discourse-instans.\n \nVi ville bara upplysa dig om att följande behörighet som används för din Discourse-instans inte har uppdaterats under de senaste 2 åren:\n\n%{keys}\n\nIngen åtgärd är nödvändig i nuläget, däremot anses det som god praxis ur säkerhetssynpunkt att ändra alla dina viktiga behörigheter med tiden.\n"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (del %{count})"
+      other: "%{topic_title} (del %{count})"
+    post_raw: "Fortsätter diskussionen från %{parent_title}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
+    moderator_post_raw: "Fortsätt diskussionen här: %{new_title}"
   activemodel:
     errors:
       <<: *errors

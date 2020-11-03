@@ -149,6 +149,7 @@ cs:
     share:
       post: "příspěvek #%{postNumber}"
       close: "zavřít"
+      url: "Zkopírujte a sdílejte URL adresu."
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
@@ -180,6 +181,7 @@ cs:
       banner:
         enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
         disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+    topic_admin_menu: "Akce tématu."
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
@@ -955,8 +957,6 @@ cs:
         link_created_at: "Vytvořený"
         link_groups: Skupiny
         create: "Poslat pozvánku"
-        generate_link: "Zkopírovat odkaz na pozvánku"
-        link_generated: "Odkaz pozvánky byl úspěšně vygenerován!"
         valid_for: "Odkaz pozvánky je platný pouze pro tuto emailovou adresu: %{email}"
         invite_link:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"

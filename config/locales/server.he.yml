@@ -388,7 +388,7 @@ he:
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותו."
   edit_conflict: "פוסט זה נערך על ידי משתמש אחר ואין אפשרות עוד לשמור את השינויים שלך."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה שמועמדת להחזרה."
-  cannot_edit_on_slow_mode: "הנושא נמצא במצב אטי ולא ניתן עוד לערוך את הפוסט הזה."
+  cannot_edit_on_slow_mode: "נושא זה נכנס למצב אטי. כדי לעודד דיון מתחשב ואחראי אסור כרגע לערוך פוסטים ישנים."
   excerpt_image: "תמונה"
   bookmarks:
     errors:
@@ -1998,7 +1998,8 @@ he:
     approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. יש להגדיר ל־0 כדי לנטרל את ההתראות האלה."
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
-    auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 לניטרול)"
+    auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 להשבתה)"
+    auto_close_topics_create_linked_topic: "ליצור נושא חדש מקושר כאשר נושא נסגר אוטומטית עקב ההגדרה ‚לסגור אוטומטית נושאים בהתאם לכמות פוסטים’"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
@@ -4431,6 +4432,14 @@ he:
       %{keys}
 
       אין צורך לנקוט בפעולה כלשהי כעת, עם זאת, מטעמי שיפור אבטחת המידע מומלץ להחליף את כל פרטי הגישה החשובים שלך כל כמה שנים.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (חלק %{count})"
+      two: "%{topic_title} (חלק %{count})"
+      many: "%{topic_title} (חלק %{count})"
+      other: "%{topic_title} (חלק %{count})"
+    post_raw: "המשך הדיון %{parent_title}.\n\nדיונים קודמים:\n\n%{previous_topics}"
+    moderator_post_raw: "ניתן להמשיך את הדיון כאן: %{new_title}"
   activemodel:
     errors:
       <<: *errors

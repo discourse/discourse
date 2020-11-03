@@ -1095,8 +1095,6 @@ hu:
         link_created_at: "Létrehozott"
         link_groups: Csoportok
         create: "Meghívó küldése"
-        generate_link: "Meghívó link másolása"
-        link_generated: "Meghívó link elkészült!"
         valid_for: "A meghívási hivatkozás csak ehhez az e-mail-címhez érvényes: %{email}"
         invite_link:
           success: "Meghívó link elkészült!"

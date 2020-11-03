@@ -943,8 +943,6 @@ pt:
         link_created_at: "Criado"
         link_groups: Grupos
         create: "Enviar Convite"
-        generate_link: "Copiar Hiperligação do Convite"
-        link_generated: "Hiperligação do convite gerada com sucesso!"
         valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Hiperligação do convite gerada com sucesso!"

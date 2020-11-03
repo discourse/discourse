@@ -1295,9 +1295,6 @@ nl:
         link_groups: Groepen
         link_expires_at: Verloopt
         create: "Uitnodiging sturen"
-        copy_link: "Koppeling kopiëren"
-        generate_link: "Uitnodigingskoppeling kopiëren"
-        link_generated: "Uitnodigingskoppeling is aangemaakt!"
         valid_for: "De uitnodigingskoppeling is alleen geldig voor dit e-mailadres: %{email}"
         invite_link:
           title: "Uitnodigingskoppeling"
@@ -1775,10 +1772,6 @@ nl:
       yourself_confirm:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
-      slow_mode:
-        title: "Dit topic bevindt zich in de langzame modus."
-        body: "Na het plaatsen van een bericht dient u %{duration} te wachten voordat u weer een bericht kunt plaatsen."
-        error: "U hebt onlangs een bericht geplaatst in dit topic, dat zich in de langzame modus bevindt. Wacht nog even, zodat anderen de kans krijgen om deel te nemen."
       admin_options_title: "Optionele stafinstellingen voor dit topic"
       composer_actions:
         reply: Antwoorden

@@ -1245,9 +1245,6 @@ fr:
         link_groups: Groupes
         link_expires_at: Expire
         create: "Envoyer une invitation"
-        copy_link: "Copier le lien"
-        generate_link: "Copier le lien d'invitation"
-        link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         invite_link:
           title: "Lien d'invitation"

@@ -201,6 +201,7 @@ es:
     max_rows: "Las primeras %{max_bulk_invites} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
     error: "Se produjo un error al subir este archivo. Por favor, inténtalo de nuevo más tarde."
   invite_link:
+    email_taken: "Alguien está usando este correo electrónico. Si ya tienes una cuenta, inicia sesión o restablece tu contraseña."
     max_redemptions_limit: "debe ser entre 2 y %{max_limit}."
   topic_invite:
     failed_to_invite: "No se puede invitar al usuario a este tema sin ser miembro de un grupo en cualquiera de los siguientes grupos: %{group_names}."
@@ -339,6 +340,7 @@ es:
   too_late_to_edit: "Esa publicación se publicó hace demasiado tiempo. No se puede editar ni eliminar."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no se pueden guardar."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
+  cannot_edit_on_slow_mode: "Este tema está en modo lento. Para fomentar un debate considerado y adecuado, no se pueden editar las publicaciones antiguas."
   excerpt_image: "imagen"
   bookmarks:
     errors:
@@ -2118,8 +2120,10 @@ es:
     missing_user_field: "No has completado todos los campos de usuario"
     auth_complete: "Autenticación completa."
     click_to_continue: "Haz clic aquí para continuar."
+    second_factor_title: "Autenticación de dos factores"
     second_factor_description: "Por favor, ingresa el código de autenticación desde tu aplicación:"
     second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
+    second_factor_backup_title: "Códigos de respaldo de la autenticación de dos factores"
     invalid_second_factor_code: "Código de autentificación inválido. Cada código se puede usar solo una vez."
     invalid_security_key: "Clave de seguridad inválida."
     missing_second_factor_name: "Por favor, introduce un nombre."
@@ -2512,6 +2516,12 @@ es:
         ```text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Te han añadido como propietario a un grupo"
+      subject_template: "Te han añadido como propietario al grupo %{group_name}"
+    user_added_to_group_as_member:
+      title: "Te han añadido a un grupo"
+      subject_template: "Te han añadido como miembro al grupo %{group_name}"
     csv_export_succeeded:
       title: "Exportación de datos en CSV realizada con éxito"
       subject_template: "[%{export_title}] exportación de datos completa"
@@ -3096,6 +3106,9 @@ es:
         Si no quisiste crear una cuenta con el correo %{email} o cambiar la dirección de correo electrónico, no te preocupes – puedes ignorar este mensaje.
 
         Si tienes alguna pregunta, [contacta a nuestro amigable staff](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Autenticación de dos factores desactivada"
+      subject_template: "[%{email_prefix}] Autenticación de dos factores desactivada"
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
       since_last_visit: "Desde tu última visita"
@@ -3284,6 +3297,7 @@ es:
     file_missing: "Lo sentimos, debes incluir un archivo para subir."
     empty: "Disculpa, el archivo que proporcionaste está vacío."
     png_to_jpg_conversion_failure_message: "Ha ocurrido un error cuando se convertía desde PNG a JPG."
+    optimize_failure_message: "Ha ocurrido un error al optimizar la imagen subida."
     attachments:
       too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
@@ -3331,6 +3345,10 @@ es:
     latte: "Latte"
     summer: "Verano"
     dark_rose: "Rosa oscuro"
+    wcag: "WCAG Claro"
+    wcag_theme_name: "WCAG Claro"
+    wcag_dark: "WCAG Oscuro"
+    wcag_dark_theme_name: "WCAG Oscuro"
     default_theme_name: "Por defecto"
     light_theme_name: "Claro"
     dark_theme_name: "Oscuro"
@@ -3961,6 +3979,8 @@ es:
     initial_topic_title: Informe sobre el rendimiento del sitio
   tags:
     title: "Etiquetas"
+    restricted_tag_disallowed: 'No puedes aplicar la etiqueta "%{tag}".'
+    restricted_tag_remove_disallowed: 'No puedes quitar la etiqueta "%{tag}".'
     minimum_required_tags:
       one: "Debes seleccionar al menos %{count} etiqueta."
       other: "Debes seleccionar al menos %{count} etiquetas."
@@ -4079,6 +4099,17 @@ es:
           city_for_disputes:
             label: "Ciudad para disputas"
             placeholder: "San Francisco, California"
+      colors:
+        title: "Colores"
+      fonts:
+        title: "Tipos de letra"
+        fields:
+          body_font:
+            label: "Tipo de letra para contenido de mensajes"
+          heading_font:
+            label: "Tipo de letra para encabezados"
+          font_preview:
+            label: "Vista previa"
       logos:
         title: "Logos"
         fields:
@@ -4273,6 +4304,9 @@ es:
       %{keys}
 
       No se requiere ninguna acción en este momento, sin embargo, se considera una buena práctica de seguridad ir cambiando todas las credenciales importantes cada pocos años.
+  create_linked_topic:
+    post_raw: "Continuando la discusión desde %{parent_title}.\n\nDiscusiones anteriores:\n\n%{previous_topics}"
+    moderator_post_raw: "Continúa la discusión aquí: %{new_title}"
   activemodel:
     errors:
       <<: *errors

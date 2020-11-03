@@ -1292,9 +1292,6 @@ bs_BA:
         link_groups: Grupa
         link_expires_at: Ističe
         create: "Email pozivnica"
-        copy_link: "Kopiraj link"
-        generate_link: "Kopiraj link za pozivnicu"
-        link_generated: "Link pozivnice je uspješno generisan!"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         invite_link:
           title: "Link pozivnice"

@@ -963,8 +963,6 @@ lt:
         link_created_at: "Sukurta"
         link_groups: Grupės
         create: "Siųsti pakvietimą"
-        generate_link: "Kopijuoti pavietimo nuorodą"
-        link_generated: "Pavyko sugeneruoti pakvietimo nuorodą"
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"

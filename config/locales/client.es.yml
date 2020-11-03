@@ -321,6 +321,7 @@ es:
       other: "Ver %{count} temas nuevos"
     preview: "vista previa"
     cancel: "cancelar"
+    deleting: "Eliminando..."
     save: "Guardar cambios"
     saving: "Guardando..."
     saved: "¡Guardado!"
@@ -506,6 +507,7 @@ es:
           one: "Tienes <strong>%{count}</strong> publicación pendiente."
           other: "Tienes <strong>%{count}</strong> publicaciones pendientes."
         ok: "OK"
+      example_username: "nombre de usuario"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicó <a href='%{topicUrl}'>el tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tú</a> publicaste <a href='%{topicUrl}'>el tema</a>"
@@ -989,19 +991,29 @@ es:
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
       second_factor_backup:
+        title: "Códigos de respaldo de la autenticación en dos factores"
         regenerate: "Regenerar"
         disable: "Habilitar"
         enable: "Deshabilitar"
         enable_long: "Habilitar códigos de respaldo"
+        manage:
+          one: "Gestiona tus códigos de respaldo. Te queda <strong>%{count}</strong> código sin usar."
+          other: "Gestiona tus códigos de respaldo. Te quedan <strong>%{count}</strong> códigos sin usar."
         copy_to_clipboard: "Copiar al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         download_backup_codes: "Descargar códigos de recuperación"
+        remaining_codes:
+          one: "Te queda <strong>%{count}</strong> código de respaldo sin usar todavía."
+          other: "Te quedan <strong>%{count}</strong> códigos de respaldo sin usar todavía."
         use: "Usar un código de respaldo"
+        enable_prerequisites: "Debes activar un método de segundo factor antes de generar códigos de respaldo."
         codes:
           title: "Códigos de respaldo generados"
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Manténlos en un lugar seguro pero accesible."
       second_factor:
+        title: "Autenticación en dos factores"
+        enable: "Gestionar la autenticación en dos factores"
         disable_all: "Desactivar todo"
         forgot_password: "¿Olvidaste tu contraseña?"
         confirm_password_description: "Por favor, confirma tu contraseña para continuar"
@@ -1014,10 +1026,17 @@ es:
         show_key_description: "Ingresa el código manualmente"
         short_description: |
           Protege tu cuenta mediante códigos de respaldo de un solo uso.
+        extended_description: |
+          La autenticación en dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación en dos factores."
         use: "Usar app Authenticator"
+        enforced_notice: "Es obligatorio que actives la autenticación en dos factores antes de acceder al sitio web."
         disable: "Inhabilitar"
+        disable_confirm: "¿Seguro que quieres desactivar todos los métodos de segundo factor?"
         save: "Guardar"
         edit: "Editar"
+        edit_title: "Editar autenticador"
+        edit_description: "Nombre del autenticador"
         enable_security_key_description: |
           Cuando tengas tu <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">llave de seguridad</a> preparada, pulsa el botón de Registrar más abajo.
         totp:
@@ -1264,10 +1283,12 @@ es:
         link_groups: Grupos
         link_expires_at: Caducidad
         create: "Enviar invitación"
-        copy_link: "Copiar enlace"
-        generate_link: "Copiar enlace de invitación"
-        link_generated: "¡Enlace de invitación generado satisfactoriamente!"
+        copy_link: "Mostrar enlace"
+        generate_link: "Crear enlacew de invitación"
+        link_generated: "Aquí tienes el enlace"
         valid_for: "El enlace de invitación solo es válido para esta dirección de correo electrónico: %{email}"
+        single_user: "Invitar a través de correo electrónico"
+        multiple_user: "Invitar a través de enlace"
         invite_link:
           title: "Enlace de invitación"
           success: "¡Enlace de invitación generado satisfactoriamente!"
@@ -1491,8 +1512,10 @@ es:
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
+      second_factor_title: "Autenticación en dos pasos"
       second_factor_description: "Por favor, ingresa el código de autenticación desde tu aplicación:"
       second_factor_backup: "Iniciar sesión utilizando un código de respaldo"
+      second_factor_backup_title: "Código de respaldo de la autenticación en dos pasos"
       second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la app Authenticator"
       security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
@@ -1519,6 +1542,7 @@ es:
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el correo electrónico de activación nuevamente."
+      omniauth_disallow_totp: "Tu cuenta tiene la autenticación en dos pasos activada. Por favor, inicia sesión con tu contraseña."
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
       provide_new_email: "Ingresa una dirección de correo electrónico nueva y te reenviaremos el correo electrónico de confirmación."
@@ -1597,6 +1621,9 @@ es:
       min_content_not_reached:
         one: "Seleccionar al menos %{count} item."
         other: "Selecciona al menos %{count} elementos."
+      invalid_selection_length:
+        one: "Selecciona al menos %{count} carácter."
+        other: "Selecciona al menos %{count} caracteres."
       components:
         categories_admin_dropdown:
           title: "Gestionar categorías"
@@ -1646,6 +1673,9 @@ es:
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores sin conexión"
       edit_conflict: "conflicto de edición"
+      group_mentioned_limit:
+        one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
+        other: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuarios) de una vez. No se notificará a nadie."
       group_mentioned:
         one: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} persona</a> – ¿seguro que quieres hacerlo?"
         other: "Al mencionar a %{group}, estás a punto de notificar a <a href='%{group_link}'>%{count} personas</a> ¿Estás seguro de que quieres hacerlo?"
@@ -1729,9 +1759,7 @@ es:
         title: "¿Olvidaste añadir destinatarios?"
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
       slow_mode:
-        title: "Este tema está en modo lento."
-        body: "Cuando respondas, tendrás que esperar %{duration} antes de volver a publicar aquí."
-        error: "Has respondido hace poco en este tema, que está en modo lento. Por favor, espera para que los demás puedan participar también."
+        error: "Este tema está en modo lento. Para promover un debate considerado y adecuado solo puedes publicar una vez cada %{duration}."
       admin_options_title: "Configuración opcional del administrador para este tema"
       composer_actions:
         reply: Responder
@@ -1987,6 +2015,9 @@ es:
         choose_append_tags: "Elegir etiquetas nuevas para agregar a estos temas:"
         changed_tags: "Las etiquetas de esos temas fueron cambiadas."
         remove_tags: "Quitar etiquetas"
+        progress:
+          one: "Progreso: <strong>%{count}</strong> tema"
+          other: "Progreso: <strong>%{count}</strong> temas"
       none:
         unread: "No tienes temas no leídos."
         new: "No tienes temas nuevos."
@@ -2006,6 +2037,7 @@ es:
         new: "No hay más temas nuevos."
         unread: "No hay más temas que no hayas leído."
         category: "No hay más temas de la categoría %{category}."
+        tag: "No hay más temas con la etiqueta %{tag}."
         top: "No hay más temas destacados."
         bookmarks: "No hay más temas guardados en marcadores."
     topic:
@@ -2085,6 +2117,9 @@ es:
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
+        select: "Los usuarios solo pueden publicar en este tema una vez cada:"
+        description: "Para promover un debate considerado en temas con mucho tráfico o controvertidos, los usuarios deberán esperar antes de volver a publicar en este tema."
+        save: "Activar"
         remove: "Desactivar"
         hours: "Horas:"
         minutes: "Minutos:"
@@ -2466,6 +2501,9 @@ es:
         upload: "Lo sentimos, se produjo un error al subir este archivo. Por favor, inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
         too_many_uploads: "Lo sentimos, solo puedes subir un archivo a la vez."
+        too_many_dragged_and_dropped_files:
+          one: "Solo se puede subir archivos de %{count} en 1."
+          other: "Solo se pueden subir %{count} archivos cada vez."
         upload_not_authorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
@@ -2527,6 +2565,10 @@ es:
         unlock_post_description: "permitir que el usuario que realizó esta publicación la edite"
         delete_topic_disallowed_modal: "No tienes permiso para eliminar este tema. Si de verdad quieres que se elimine, repórtalo y explica tus motivos a los moderadores."
         delete_topic_disallowed: "no tienes permiso para eliminar este tema"
+        delete_topic_confirm_modal: "Este tema tiene más de %{minViews} visitas y podría ser un resultado de búsqueda popular. ¿Seguro que quieres eliminar por completo este tema, en lugar de editarlo o mejorarlo?"
+        delete_topic_confirm_modal_yes: "Sí, eliminar este tema"
+        delete_topic_confirm_modal_no: "No, mantener este tema"
+        delete_topic_error: "Ha ocurrido un error al eliminar este tema"
         delete_topic: "eliminar tema"
         add_post_notice: "Añadir aviso del staff"
         remove_post_notice: "Eliminar aviso del staff"
@@ -2615,6 +2657,7 @@ es:
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Ver temas en la categoría"
+      back: "Volver a la categoría"
       general: "General"
       settings: "Ajustes"
       topic_template: "Plantilla de tema"
@@ -2624,6 +2667,7 @@ es:
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "Las etiquetas y grupos de etiquetas arriba especificados solo estarán disponibles en esta categoría y en las otras categorías que igualmente lo especifiquen. No se permitirá su uso en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
+      manage_tag_groups_link: "Gestionar grupos de etiquetas"
       allow_global_tags_label: "Permitir también otras etiquetas"
       tag_group_selector_placeholder: "(Opcional) Grupo de etiquetas"
       required_tag_group_description: "Requerir que los nuevos temas tengan etiquetas de un grupo de etiquetas:"
@@ -2747,10 +2791,13 @@ es:
       take_action_options:
         default:
           title: "Tomar medidas"
+          details: "Alcanzar el umbral de reportes inmediatamente en vez de esperar más reportes de la comunidad"
         suspend:
           title: "Suspender usuario"
+          details: "Alcanzar el umbral del reporte y suspender al usuario"
         silence:
           title: "Silenciar usuario"
+          details: "Alcanzar el umbral del reporte y silenciar al usuario"
       notify_action: "Mensaje"
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
@@ -2921,6 +2968,7 @@ es:
         this_week: "Semana"
         today: "Hoy"
         other_periods: "ver arriba:"
+    browser_update: 'Lamentablemente, <a href="https://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor, <a href="https://browsehappy.com">actualiza tu navegador</a> para ver el contenido enriquecido, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3141,6 +3189,7 @@ es:
         delete: "Eliminar"
         confirm_delete: "¿Estás seguro de que quieres eliminar este grupo de etiquetas?"
         everyone_can_use: "Todos pueden utilizar las etiquetas"
+        usable_only_by_groups: "Las etiquetas son visibles para todo el mundo, pero solo los siguientes grupos las pueden usar"
         visible_only_to_groups: "Las etiquetas sólo son visibles para los siguientes grupos"
       topics:
         none:
@@ -3154,6 +3203,7 @@ es:
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Ingresa tu mensaje personalizado"
+      approval_not_required: "Se aprobará automáticamente el usuario en cuanto acepte esta invitación."
       custom_message_template_forum: "¡Hey, deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, creemos que este tema te va a encantar!"
     forced_anonymous: "Debido a una carga extrema, esto se está mostrando temporalmente a todos como lo vería un usuario que no haya iniciado sesión."
@@ -3619,6 +3669,7 @@ es:
           hide_unused_fields: "Ocultar campos sin uso"
           is_default: "El tema está habilitado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
+          color_scheme_user_selectable: "Permitir que esta paleta pueda ser seleccionada por los usuarios"
           color_scheme: "Paleta de color"
           default_light_scheme: "Claro (predeterminado)"
           color_scheme_select: "Selecciona colores para usar en el tema"
@@ -3747,6 +3798,10 @@ es:
           primary:
             name: "primario"
             description: "La mayoría del texto, iconos y bordes."
+          primary-medium:
+            name: "primary-medium"
+          primary-low-mid:
+            name: "primary-low-mid"
           secondary:
             name: "secundario"
             description: "El color de fondo principal y el color de texto de algunos botones."
@@ -3765,6 +3820,12 @@ es:
           highlight:
             name: "resaltado"
             description: "El color de fondo de los elementos resaltados en la página, como temas o publicaciones."
+          highlight-high:
+            name: "highlight-high"
+          highlight-medium:
+            name: "highlight-medium"
+          highlight-low:
+            name: "highlight-low"
           danger:
             name: "peligro"
             description: "Color del resaltado para acciones como eliminar temas o publicaciones."
@@ -3951,6 +4012,7 @@ es:
             post_edit: "editar publicación"
             post_unlocked: "publicación desbloqueada"
             check_personal_message: "revisar mensaje personal"
+            disabled_second_factor: "desactivar autenticación en dos pasos"
             topic_published: "tema publicado"
             post_approved: "publicación aprobada"
             post_rejected: "publicación rechazada"
@@ -4002,6 +4064,7 @@ es:
           domain: "Dominio"
         screened_ips:
           title: "Direcciones IP bloqueadas"
+          description: 'Direcciones IP que se están vigilando. Usar "Allow" para añadir direcciones a la lista de permitidas.'
           delete_confirm: "¿Estás seguro de que quieres quitar el bloqueo para %{ip_address}?"
           roll_up_confirm: "¿Estás seguro de que quieres agrupar las direcciones IP bloqueadas vistas con frecuencia en subredes?"
           rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP bloqueadas a estas subredes: %{subnets}."
@@ -4178,6 +4241,7 @@ es:
         private_topics_count: Temas privados
         posts_read_count: Publicaciones leídas
         post_count: Publicaciones publicadas
+        second_factor_enabled: activar autenticación en dos pasos
         topics_entered: Temas vistos
         flags_given_count: Reportes enviados
         flags_received_count: Reportes recibidos
@@ -4303,6 +4367,8 @@ es:
           external_name: "Nombre"
           external_email: "Correo electrónico"
           external_avatar_url: "URL de la imagen de perfil"
+          last_payload: "Último payload"
+          delete_sso_record: "Eliminar registro SSO"
       user_fields:
         title: "Campos de usuario"
         help: "Añadir campos que tus usuarios pueden llenar."
@@ -4518,6 +4584,7 @@ es:
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
         allowed_embed_selectors: "Selector CSS para elementos permitidos en los insertados"
+        allowed_embed_classnames: "Clases CSS permitidas"
         save: "Guardar ajustes de insertado"
       permalink:
         title: "Enlaces permanentes"
@@ -4571,5 +4638,6 @@ es:
           regular: "Usuario habitual"
       previews:
         topic_title: "Tema"
+        font_title: "Fuente %{font}"
         share_button: "Compartir"
         reply_button: "Responder"
