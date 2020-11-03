@@ -17,7 +17,7 @@ BYPASS_DISABLE_TYPES = %w(
   test_message
   new_version
   group_smtp
-  invite
+  invite_password_instructions
   download_backup_message
   admin_confirmation_message
 )
