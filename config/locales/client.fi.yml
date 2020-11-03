@@ -1237,9 +1237,6 @@ fi:
         link_groups: Ryhmät
         link_expires_at: Vanhenee
         create: "Lähetä kutsu"
-        copy_link: "Kopioi linkki"
-        generate_link: "Kopioi kutsulinkki"
-        link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         invite_link:
           title: "Kutsulinkki"

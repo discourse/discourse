@@ -511,6 +511,7 @@ sv:
           one: "Du har <strong>%{count}</strong> inlägg som väntar."
           other: "Du har <strong>%{count}</strong> inlägg som väntar."
         ok: "OK"
+      example_username: "användarnamn"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -1295,9 +1296,9 @@ sv:
         link_groups: Grupper
         link_expires_at: Upphör
         create: "Skicka inbjudan"
-        copy_link: "Kopiera länk"
-        generate_link: "Kopiera inbjudningslänken"
-        link_generated: "Länk för inbjudan framgångsrikt skapad!"
+        copy_link: "Visa länk"
+        generate_link: "Skapa inbjudningslänk"
+        link_generated: "Här är din inbjudningslänk!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
         single_user: "Bjud in via e-post"
         multiple_user: "Bjud in via länk"
@@ -1778,9 +1779,7 @@ sv:
         title: "Glömde du lägga till mottagare?"
         body: "Just nu skickas det här meddelandet bara till dig själv!"
       slow_mode:
-        title: "Detta ämne är i långsamt läge."
-        body: "När du har skickat in ett inlägg måste du vänta %{duration} innan du kan göra det igen."
-        error: "Du publicerade nyligen ett inlägg om det här ämnet, som är i långsamt läge. Vänta så att andra användare får en chans att delta."
+        error: "Detta ämne är i långsamt läge. För att främja eftertänksam, genomtänkt diskussion får du bara publicera en gång var %{duration}."
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara

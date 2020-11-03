@@ -952,8 +952,6 @@ nb_NO:
         link_created_at: "Opprettet"
         link_groups: Grupper
         create: "Send Invitasjon"
-        generate_link: "Kopier invitasjonslenke"
-        link_generated: "Invitasjonslenke har blitt generert!"
         valid_for: "Invitasjonslenke er kun gyldig for denne e-postadressen: %{email}"
         invite_link:
           success: "Invitasjonslenke har blitt generert!"

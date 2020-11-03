@@ -1121,8 +1121,6 @@ tr_TR:
         link_created_at: "Oluşturuldu"
         link_groups: Gruplar
         create: "Davet Gönder"
-        generate_link: "Davet Bağlantısını Kopyala"
-        link_generated: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         valid_for: "Davet bağlantısı sadece bu adres için geçerli: %{email}"
         invite_link:
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "

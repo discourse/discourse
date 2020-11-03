@@ -1089,8 +1089,6 @@ ur:
         link_created_at: "بنایا گیا"
         link_groups: گروپس
         create: "دعوت بھیجیں"
-        generate_link: "دعوت لنک کاپی کریں"
-        link_generated: "دعوت لنک کامیابی سے بن گیا!"
         valid_for: "دعوت لنک صرف اِس اِی میل اِیڈریس کے لئے درست ہے:%{email}"
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"

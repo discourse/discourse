@@ -1130,8 +1130,6 @@ vi:
         link_created_at: "Tạo bởi"
         link_groups: Nhóm
         create: "Gửi Lời Mời"
-        generate_link: "Chép liên kết Mời"
-        link_generated: "Link mời đã được tạo thành công !"
         valid_for: "Link mời chỉ có hiệu lực với địa chỉ email: %{email}"
         invite_link:
           success: "Link mời đã được tạo thành công !"

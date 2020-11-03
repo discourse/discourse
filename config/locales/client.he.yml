@@ -583,6 +583,7 @@ he:
           many: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
           other: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
         ok: "אישור"
+      example_username: "שם משתמש"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -1385,9 +1386,9 @@ he:
         link_groups: קבוצות
         link_expires_at: תפוגה
         create: "שלח הזמנה"
-        copy_link: "העתקת קישור"
-        generate_link: "העתקת קישור הזמנה"
-        link_generated: "קישור הזמנה יוצר בהצלחה!"
+        copy_link: "הצגת קישור"
+        generate_link: "יצירת קישור הזמנה"
+        link_generated: "הנה קישור ההזמנה שלך!"
         valid_for: "קישור ההזמנה תקף רק לכתובת דוא״ל זו: %{email}"
         single_user: "הזמנה בדוא״ל"
         multiple_user: "הזמנה באמצעות קישור"
@@ -1900,9 +1901,7 @@ he:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
       slow_mode:
-        title: "נושא זה הוא במצב אטי."
-        body: "לאחר הגשת הפוסט, יהיה עליך להמתין %{duration} בטרם פרסום פוסט נוסף."
-        error: "פרסמת לאחרונה בנושא הזה, שנמצא במצב אטי. נא להמתין כדי לאפשר למשתמשים אחרים לקחת חלק."
+        error: "נושא זה נכנס למצב אטי. כדי לקדם דיון מתחשב ואחראי ניתן לפרסם פעם בכל %{duration}."
       admin_options_title: "אפשרויות סגל כרשות לנושא זה"
       composer_actions:
         reply: השב

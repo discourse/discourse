@@ -337,7 +337,7 @@ zh_CN:
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   edit_conflict: "该帖子由其他用户编辑，你的更改无法再保存。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
-  cannot_edit_on_slow_mode: "该主题处于慢速模式，不能被编辑。"
+  cannot_edit_on_slow_mode: "这个主题正处于满速模式中。为了鼓励优质的讨论，当前不允许编辑旧的发帖。"
   excerpt_image: "图片"
   bookmarks:
     errors:
@@ -1419,7 +1419,7 @@ zh_CN:
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "允许版主管理分类和群组"
-    cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
+    cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
     use_admin_ip_allowlist: "当使用的IP地址在已屏蔽IP列表（管理>日志>已屏蔽的IP）中时，只有管理员能够登录。"
     blocked_ip_blocks: "不应被Discourse爬取的私有IP屏蔽列表"
     allowed_internal_hosts: "可以安全地进行onebox或其它用途的爬取的内网主机列表"
@@ -1878,6 +1878,7 @@ zh_CN:
     notify_about_queued_posts_after: "如果有帖子等待了这些小时后仍未处理，给所有版主发送通知。设置为0禁用这些通知。"
     auto_close_messages_post_count: "私信中贴子数上限，达到后自动关闭私信（0 为禁用）"
     auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题 ( 0 为禁用 )"
+    auto_close_topics_create_linked_topic: "根据 “主题中贴子数上限” 设置自动关闭主题后，创建一个新的链接主题"
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
     watched_words_regular_expressions: "监视词是正则表达式。"
@@ -4351,6 +4352,11 @@ zh_CN:
       %{keys}
 
       目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。
+  create_linked_topic:
+    topic_title_with_sequence:
+      other: "%{topic_title} (第 %{count} 部分)"
+    post_raw: "从 %{parent_title} 继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
+    moderator_post_raw: "在这里继续讨论： %{new_title}"
   activemodel:
     errors:
       <<: *errors

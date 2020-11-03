@@ -1004,9 +1004,6 @@ th:
         link_groups: กลุ่ม
         link_expires_at: หมดอายุ
         create: "ส่งคำเชิญ"
-        copy_link: "คัดลอกลิงก์"
-        generate_link: "คัดลอกลิงก์การเชิญชวน"
-        link_generated: "สร้างลิงก์การเชิญชวนสำเร็จแล้ว!"
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"

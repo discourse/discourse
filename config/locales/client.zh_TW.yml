@@ -1001,8 +1001,6 @@ zh_TW:
         link_created_at: "已建立"
         link_groups: 群組
         create: "送出邀請"
-        generate_link: "拷貝邀請連結"
-        link_generated: "邀請連結生成成功！"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"

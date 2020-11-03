@@ -475,6 +475,7 @@ zh_CN:
         pending_posts:
           other: "你有 <strong>%{count}</strong> 个帖子在等待审核中。"
         ok: "确认"
+      example_username: "用户名"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -1250,9 +1251,9 @@ zh_CN:
         link_groups: 群组
         link_expires_at: 过期
         create: "发送邀请"
-        copy_link: "复制链接"
-        generate_link: "复制邀请链接"
-        link_generated: "邀请链接生成成功！"
+        copy_link: "显示链接"
+        generate_link: "创建邀请链接"
+        link_generated: "这是你的邀请链接！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         single_user: "通过电子邮件邀请"
         multiple_user: "通过链接邀请"
@@ -1717,9 +1718,7 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       slow_mode:
-        title: "这个主题处于慢速模式"
-        body: "提交一个帖子后，再次发帖前你需要等待%{duration}。"
-        error: "你刚刚在这个主题中发表了内容，现在处于慢状态模式。请等待以便其他用户有机会参与。"
+        error: "这个这个主题正处于慢速模式中。为了提高讨论质量，每%{duration}只能回复一次。"
       admin_options_title: "本主题可选设置"
       composer_actions:
         reply: 回复
@@ -2064,6 +2063,9 @@ zh_CN:
       deleted: "此主题已被删除"
       slow_mode_update:
         title: "慢速模式"
+        select: "用户只能在这个主题中发言一次："
+        description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
+        save: "启用"
         remove: "停用"
         hours: "小时："
         minutes: "分钟："

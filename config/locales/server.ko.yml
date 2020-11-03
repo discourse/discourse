@@ -56,6 +56,7 @@ ko:
     compile_error:
       unrecognized_extension: "인식 할 수없는 파일 확장자 : %{extension}"
     import_error:
+      generic: 테마를 가져오는 동안 오류가 발생했습니다.
       about_json: "가져오기 오류: about.json이 없거나 유효하지 않습니다. Discourse용 테마가 맞는지 확인해주세요."
       about_json_values: "about.json에 유효하지 않은 값이 있습니다 : %{errors}"
       modifier_values: "about.json 수정 자에 유효하지 않은 값이 있습니다 : %{errors}"
@@ -184,11 +185,18 @@ ko:
       second_factor_cannot_be_enforced_with_sso_enabled: "SSO가 활성화된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용되는 경우 로컬 로그인을 비활성화 할 수 없습니다. 로컬 로그인을 비활성화하기 전에 강제 2FA를 비활성화하십시오."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
+      cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
     conflicting_google_user_id: '이 계정의 Google 계정 ID가 변경되었습니다. 보안상의 이유로 직원의 개입이 필요합니다. 직원에게 연락하여 <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
     not_found_json: "초대 토큰이 유효하지 않습니다. 직원에게 문의하십시오."
+    not_found_template: |
+      <p><a href="%{base_url}">%{site_name}</a>의 초대가 이미 사용되었습니다.</p>
+
+      <p>비밀번호가 기억 나시면 <a href="%{base_url}/login">로그인</a>을 하십시오.</p>
+
+      <p>그렇지 않으면 <a href="%{base_url}/password-reset">비밀번호 재설정</a>을 하십시오.</p>
     error_message: "초대를 수락하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하십시오."
     user_exists: "<b>%{email}</b>님은 초대하지 않아도 됩니다. <a href='%{base_path}/u/%{username}/summary'>이미 회원이거든요!</a>"
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
@@ -200,8 +208,9 @@ ko:
   bulk_invite:
     file_should_be_csv: "업로드 파일은 CSV형식이어야 합니다."
     max_rows: "첫 번째 %{max_bulk_invites} 초대가 전송되었습니다. 파일을 작은 부분으로 분할하십시오."
-    error: "해당 파일을 업로드하는 중에 에러가 발생했습니다. 다음에 다시 시도해보세요."
+    error: "해당 파일을 업로드하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오."
   invite_link:
+    email_taken: "이 이메일은 이미 사용중입니다. 이미 계정이 있는 경우 로그인하거나 비밀번호를 재설정하십시오."
     max_redemptions_limit: "2와 %{max_limit} 사이여야 합니다."
   topic_invite:
     failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면이 주제에 사용자를 초대 할 수 없습니다."
@@ -328,6 +337,7 @@ ko:
   too_late_to_edit: "이 글은 작성된 지 너무 오랜 기간이 지났습니다. 수정 또는 삭제할 수 없습니다."
   edit_conflict: "해당 게시물은 다른 사용자가 수정했으며 변경 사항을 더 이상 저장할 수 없습니다."
   revert_version_same: "복구하려는 버전과 현재 버전이 똑같습니다."
+  cannot_edit_on_slow_mode: "이 항목은 느린 모드입니다. 신중한 글 작성을 장려하기 위해 현재는 이전 게시물을 편집 할 수 없습니다."
   excerpt_image: "이미지"
   bookmarks:
     errors:
@@ -424,6 +434,14 @@ ko:
       이 글은 사용자님에게 중요합니다 &ndash; 사용자님은 여기에 %{percent}% 이상의 댓글을 게시했습니다.
 
       다른 사람들에게도 그들의 관점을 공유 할 수있는 공간을 제공하면 더 좋을 수 있습니다. 그들을 초대 할 수 있습니까?
+    get_a_room: |
+      ### 모든 사람이 대화에 참여하도록 장려
+
+      이 글에서 @%{reply_username}님은 %{count}번 댓글을 달았습니다!
+
+      훌륭한 토론에는 많은 목소리와 관점이 포함됩니다. 다른 사람들도 참여시킬 수 있습니까?
+
+      그리고 잊지 마세요. 이 특정 사용자와의 대화를 비공개로 계속하려면 [개인 메시지를 보내세요](%{base_path}/u/%{reply_username}).
     too_many_replies: |2
 
       ### 이 토픽 답글 제한량을 모두 채우셨습니다
@@ -431,6 +449,12 @@ ko:
       죄송하지만, 새로운 사용자는 한 토픽 당%{newuser_max_replies_per_topic}개의 답글만 쓸 수 있습니다.
 
       새 답글을 다는 대신에, 전에 쓴 답글을 수정하거나 다른 토픽을 구경해보세요.
+    reviving_old_topic: |
+      ### 이 글을 되살리시겠습니까?
+
+      이 글에 대한 마지막 댓글은**%{time_ago}**입니다. 댓글을 작성하면 글이 목록 맨 위로 올라가며 이전에 대화에 참여한 사람에게 알릴 수 있습니다.
+
+      오래된 이 대화를 계속하시겠습니까?
   activerecord:
     attributes:
       category:
@@ -538,6 +562,27 @@ ko:
       이 토픽에 답글이 쌓이는 게 싫다면, 관리기능 :wrench:(우측 상단에 있어요)을 통해 이 토픽을 닫을 수 있습니다.
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
+    body: |2
+
+      축하합니다! :confetti_ball:
+
+      이 글이 보이면 최근 **일반** (회원레벨 3)으로 승격된 것입니다.
+
+      이제 다음을 할 수 있습니다 &hellip;
+
+      * 모든 글의 제목 편집
+      * 글의 카테고리 변경
+      * 모든 링크 팔로우 ([automatic nofollow](https://en.wikipedia.org/wiki/Nofollow)가 제거됨)
+      * 회원레벨 3 이상의 사용자 만 볼 수있는 비공개 카테고리에 접근
+      * 한 번의 신고로 스팸 숨기기
+
+      다음은 [동일 권한 회원들 목록](%{base_path}/badges/3/regular)입니다. 반갑게 인사 해주세요.
+
+      이 커뮤니티의 중요한 일원이되어 주셔서 감사합니다!
+
+      (회원레벨에 대한 자세한 내용은 [이 항목 참조][trust]. 지속적으로 기본 필요 사항을 충족해야만 회원레벨이 유지됩니다.)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "먼저 읽어보기: 빠른 관리 시작 안내서"
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
@@ -1225,7 +1270,11 @@ ko:
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
     memory_warning: "당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요."
-    s3_config_warning: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정으로</a> 이동하여 <a href="%{base_path}/admin/site_settings">설정</a> 을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">&quot;S3에 이미지 업로드를 설정하는 방법&quot;을 참조하십시오. 자세한 내용은</a> .'
+    google_oauth2_config_warning: '서버가 Google OAuth2 (enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 클라이언트 ID 및 클라이언트 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+    facebook_config_warning: '서버는 페이스북(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 앱 ID 및 앱 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+    twitter_config_warning: '서버가 트위터(enable_twitter_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 키 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 안내서를 참조하십시오</a>.'
+    github_config_warning: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+    s3_config_warning: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
     s3_backup_config_warning: '서버가 백업을 S3에 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정으로</a> 이동하여 <a href="%{base_path}/admin/site_settings">설정</a> 을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">&quot;S3에 이미지 업로드를 설정하는 방법&quot;을 참조하십시오. 자세한 내용은</a> .'
     image_magick_warning: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
     failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
@@ -1256,6 +1305,7 @@ ko:
     max_post_length: "글의 최대 글자 수"
     topic_featured_link_enabled: "토픽에 링크 게시글 달기 활성화"
     show_topic_featured_link_in_digest: "요약 메일에 토픽 주요 링크 보이게 하기."
+    min_topic_views_for_delete_confirm: "삭제시 확인 팝업을 위해 필요한 글의 최소 조회수"
     min_topic_title_length: "글타래 제목의 최소 글자 수"
     max_topic_title_length: "글타래 제목의 최대 글자 수"
     min_personal_message_title_length: "메세지 제목의 최소 길이"
@@ -1307,6 +1357,7 @@ ko:
     show_pinned_excerpt_desktop: "데스크톱 뷰에서 고정 토픽의 발췌 내용을 보여주기"
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
     blocked_onebox_domains: "원박스화에서 제외 할 도메인 목록입니다."
+    allowed_inline_onebox_domains: "제목없이 링크 된 경우 미니어처 형식으로 oneboxed 될 도메인 목록"
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용하십시오."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 정의 onebox 사용자 에이전트를 사용할 호스트. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)."
     max_oneboxes_per_post: "포스트 당 최대 박스링크(Onebox)의 수"
@@ -1314,6 +1365,9 @@ ko:
     logo_small: "아래로 스크롤하면 사이트 왼쪽 상단에 작은 로고 이미지가 표시됩니다. 정사각형 120 × 120 이미지를 사용하십시오. 비워두면 홈 글리프가 표시됩니다."
     digest_logo: "사이트 이메일 요약 상단에 사용 된 대체 로고 이미지. 넓은 직사각형 이미지를 사용하십시오. SVG 이미지를 사용하지 마십시오. 비워두면`logo` 설정의 이미지가 사용됩니다."
     mobile_logo: "사이트의 모바일 버전에 사용 된 로고입니다. 높이가 120이고 가로 세로 비율이 3 : 1보다 큰 넓은 직사각형 이미지를 사용하십시오. 비워두면`logo` 설정의 이미지가 사용됩니다."
+    logo_dark: "'로고'사이트 설정에 대한 어두운 구성표 대체."
+    logo_small_dark: "'로고 작은'사이트 설정에 대한 어두운 구성표 대안."
+    mobile_logo_dark: "'모바일 로고'사이트 설정에 대한 어두운 구성표 대안."
     large_icon: "다른 메타 데이터 아이콘의 기본으로 사용되는 이미지. 이상적으로 512 x 512보다 커야합니다. 비워두면 logo_small이 사용됩니다."
     manifest_icon: "Android에서 로고 / 스플래쉬 이미지로 사용되는 이미지. 512 × 512로 자동 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
     favicon: "사이트의 즐겨 찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon을</a> 참조 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>하십시오</a> . CDN에서 올바르게 작동하려면 png 여야합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
@@ -1335,6 +1389,7 @@ ko:
     enable_personal_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
     enable_system_message_replies: "개인 메시지가 비활성화 된 경우에도 사용자가 시스템 메시지에 회신 할 수 있습니다"
     enable_long_polling: "Message bus used for notification can use long polling"
+    enable_chunked_encoding: "서버에서 청크 분할 인코딩 응답을 활성화합니다. 이 기능은 대부분의 설정에서 작동하지만 일부 프록시는 버퍼링되어 응답이 지연될 수 있습니다."
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
     long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
     polling_interval: "long polling을 안 쓸 때 로그인된 클라이언트가 몇 밀리초마다 poll해야 하는 지"
@@ -1366,13 +1421,20 @@ ko:
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     persistent_sessions: "사용자는 웹 브라우저가 닫혀도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
+    ga_universal_tracking_code: "Google 유니버설 애널리틱스 (analytics.js) 추적 코드 ID, 예 : UA-12345678-9; 참조 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google 유니버설 애널리틱스 (analytics.js) 도메인 이름, 예: mysite.com; 참조 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Google 유니버설 애널리틱스 (analytics.js) 교차 도메인 추적을 사용합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드를 참조하세요.</a>"
     gtm_container_id: "Google 태그 관리자 컨테이너 ID 예 : GTM-ABCDEF. <br/> 참고 : GTM에서로드 한 타사 스크립트는 &#39;콘텐츠 보안 정책 스크립트 src&#39;에 허용 목록에 있어야합니다."
     enable_escaped_fragments: "웹 크롤러가 감지되지 않으면 Google의 Ajax-Crawling API로 폴백하십시오. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more를</a> 참조 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>하십시오.</a>"
     moderators_manage_categories_and_groups: "관리자가 카테고리 및 그룹을 관리하도록 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_allowlist: "관리자는 선별 된 IP 목록(관리자> 로그> 선별된 IP)에 있는 IP에서만 로그인 할 수 있습니다."
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안되는 개인 IP 블록 목록"
+    allowed_internal_hosts: "원박싱 및 기타 목적을 위해 안전하게 크롤링할 수 있는 내부 호스트 목록"
+    allowed_onebox_iframes: "Onebox 삽입에 허용되는 iframe src 도메인 목록입니다. `*`는 모든 기본 Onebox 엔진을 허용합니다."
     allowed_iframes: "Discourse가 안전한 게시물로 허용 할 수있는 iframe src 도메인 접두사 목록"
+    allowed_crawler_user_agents: "사이트에 대한 액세스를 허용해야하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
+    blocked_crawler_user_agents: "사이트 액세스를 허용해서는 안되는 웹 크롤러를 식별하는 사용자 에이전트 문자열에서 대소 문자를 구분하지 않는 고유 한 단어입니다. 허용 목록이 정의 된 경우 적용되지 않습니다."
     slow_down_crawler_user_agents: "Crawls-delay 지시문을 사용하여 robots.txt에서 속도를 제한해야하는 웹 크롤러의 사용자 에이전트"
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면이 비율이 모든 크롤러에 적용됩니다 (요청 사이의 지연 시간 (초))."
     content_security_policy: "콘텐츠 보안 정책 사용"
@@ -1393,7 +1455,7 @@ ko:
     suppress_reply_directly_above: "단 하나의 댓글 위의 글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
     remove_full_quote: "직접 답장에서 전체 따옴표를 자동으로 제거합니다."
     suppress_reply_when_quoting: "글안에 답글이 인용될 때 in-reply-to를 보여주지 않습니다."
-    max_reply_history: "덧글 확장해서 보여지는 최대 갯수"
+    max_reply_history: "확장시 보여지는 최대 댓글 수"
     topics_per_period_in_top_summary: "인기 글타래 요약에 기본으로 보여질 글타래 수"
     topics_per_period_in_top_page: "인기 글타래에서 '더 보기'를 요청할 시 보여질 글타래 수"
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 인기글 페이지로 리다이렉트."
@@ -1407,6 +1469,7 @@ ko:
     enable_whispers: "토픽 내 운영진 비공개 커뮤니케이션 허용"
     allow_index_in_robots_txt: "robots.txt에 웹 검색 엔진이이 사이트를 색인 할 수 있도록 지정하십시오. 예외적 인 경우 <a href='%{base_path}/admin/customize/robots'>robots.txt를</a> 영구적으로 <a href='%{base_path}/admin/customize/robots'>무시할</a> 수 있습니다."
     blocked_email_domains: "사용자가 계정을 등록 할 수없는 파이프- 로 구분 된 이메일 도메인 목록입니다. 예: mailinator.com | trashmail.net"
+    allowed_email_domains: "사용자가 계정 등록에 사용해야하는 파이프로 구분 된 이메일 도메인 목록입니다. 경고: 나열된 것 이외의 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
     auto_approve_email_domains: "이 도메인 목록의 이메일 주소를 가진 사용자는 자동으로 승인됩니다."
     hide_email_address_taken: "가입하는 동안 및 비밀번호를 잊어 버린 양식에서 지정된 이메일 주소로 계정이 존재한다고 사용자에게 알리지 마십시오."
     log_out_strict: "로그아웃 할때, 모든 장치에서 다같이 로그아웃"
@@ -1418,12 +1481,14 @@ ko:
     min_username_length: "최소 아이디 글자수. 경고: 이미 가입한 사용자나 그룹의 아이디 길이가 이 값보다 작으면 사이트가 깨집니다!"
     max_username_length: "최대 아이디 글자수. 경고: 이미 가입한 사용자나 그룹의 아이디 길이가 이 값보다 크면 사이트가 깨집니다!"
     unicode_usernames: "사용자 이름과 그룹 이름에 유니 코드 문자와 숫자를 포함 할 수 있습니다."
+    allowed_unicode_username_characters: "사용자 이름 내에 일부 유니 코드 문자만 허용하는 정규식입니다. ASCII 문자와 숫자는 항상 허용되며 허용 목록에 포함될 필요는 없습니다."
     reserved_usernames: "가입을 금지하는 아이디. 와일드카드 기호 * 를 사용해서 하나 이상의 글자를 매칭시킬 때 사용할 수 있습니다."
     min_password_length: "비밀번호 최소 글자수."
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     external_auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. sso_overrides_email, sso_overrides_username 및 sso_overrides_name과 함께 사용하는 것이 가장 좋습니다.
+    external_auth_immediately: "사용자 상호 작용없이 자동으로 외부 로그인 시스템으로 리디렉션됩니다. 이것은 login_required가 true이고 외부 인증 방법이 하나만 있는 경우에만 적용됩니다."
     enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
     verbose_sso_logging: "자세한 SSO 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/ logs에 기록</a>"
     enable_sso_provider: "/ session / sso_provider 엔드 포인트에서 Discourse SSO 제공자 프로토콜을 구현하려면 sso_provider_secrets를 설정해야합니다."
@@ -1432,7 +1497,12 @@ ko:
     sso_provider_secrets: "Discourse를 SSO 공급자로 사용하는 도메인 비밀 쌍 목록입니다. SSO 비밀이 10 자 이상인지 확인하십시오. 와일드 카드 기호 *를 사용하면 도메인이나 도메인의 일부만 일치시킬 수 있습니다 (예 : * .example.com)."
     sso_overrides_bio: "사용자 프로필에서 사용자 bio를 덮어쓰고 사용자의 변경을 금지"
     sso_overrides_groups: "모든 수동 그룹 구성원을 groups sso 속성에 지정된 그룹과 동기화하십시오 (경고 : 그룹을 지정하지 않으면 모든 수동 그룹 구성원이 사용자에 대해 지워짐)"
+    sso_overrides_email: "로그인 할 때마다 로컬 이메일을 무시하고 외부 사이트 이메일 SSO 페이로드로 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 로컬 이메일의 정규화로 인해 불일치가 발생할 수 있습니다.)"
+    sso_overrides_username: "로그인 할 때마다 외부 사이트 SSO 페이로드의 사용자 이름으로  로컬 사용자 이름을 재정의하고 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 사용자 이름 길이/요구 사항의 차이로 인해 불일치가 발생할 수 있음)"
+    sso_overrides_name: "로그인 할 때마다 사용자의 로컬 전체 이름을 무시하고 SSO 페이로드의 외부 사이트 전체 이름을 사용해 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다."
     sso_overrides_avatar: "SSO 페이로드에서 외부 사이트 아바타로 사용자 아바타를 재정의합니다. 활성화하면 사용자가 Discourse에서 아바타를 업로드 할 수 없습니다."
+    sso_overrides_location: "사용자의 위치를 무시하고 SSO 페이로드의 외부 위치로 로컬 변경을 방지합니다."
+    sso_overrides_website: "사용자의 외부 위치를 SSO 페이로드의 웹 사이트로 재정의하고 로컬 변경을 방지합니다."
     sso_overrides_profile_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 프로필 배경을 재정의합니다."
     sso_overrides_card_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 카드 배경을 재정의합니다."
     sso_not_approved_url: "승인안된 SSO 계정은 이 URL로 이동"
@@ -1452,9 +1522,13 @@ ko:
     enable_facebook_logins: "Facebook 인증을 사용하려면 facebook_app_id 및 facebook_app_secret이 필요합니다. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse에 대한 Facebook 로그인 구성을</a> 참조하십시오."
     facebook_app_id: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps에</a> 등록 된 Facebook 인증을위한 앱 ID"
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps에</a> 등록 된 Facebook 인증을위한 앱 비밀"
+    enable_github_logins: "GitHub 인증을 활성화 하려면, github_client_id 및 github_client_secret이 필요합니다. <a href='https://meta.discourse.org/t/13745' target='_blank'>Discourse에 대한 GitHub 로그인 구성</a>을 참조하십시오."
+    github_client_id: "GitHub 인증을 위한 클라이언트 ID, <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>에서 등록됨"
+    github_client_secret: "GitHub 인증을위한 클라이언트 암호, <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>에서 등록됨"
     enable_discord_logins: "사용자가 Discord를 사용하여 인증 할 수 있습니까?"
     discord_client_id: 'Discord Client ID (하나는 필요합니까? <a href="https://discordapp.com/developers/applications/me">Discord 개발자 포털을</a> 방문하십시오)'
     discord_secret: "불화 비밀 키"
+    discord_trusted_guilds: '이 Discord 구성원만 Discord를 통해 로그인 할 수 있습니다. 숫자 ID를 사용하십시오. 자세한 내용은 <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">여기</a>지침을 확인하십시오. 허용하려면 공백으로 두십시오.'
     enable_backups: "관리자가 포럼 백업을 만들 수 있도록 허용"
     allow_restore: "데이터 복원을 허용합니다. 이 사이트의 모든 데이터가 변경될 수 있다. 백업이나 복원 계획이 없다면 비활성화로 놔둡니다."
     maximum_backups: "디스크에 유지할 최대 백업 개수. 오래된 백업순으로 자동으로 삭제된다."
@@ -1463,6 +1537,7 @@ ko:
     s3_backup_bucket: "백업본을 유지할 s3 버켓 이름. 주의 : 프라이빗 버켓인지 반드시 확인해야하세요."
     s3_endpoint: "엔드 포인트는 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스에 백업하도록 수정할 수 있습니다. 경고 : AWS S3를 사용하는 경우 비워 두십시오."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 사용하십시오. 중요 : 비활성화하면 업로드가 삭제 된 후 공간이 회수되지 않습니다."
+    s3_disable_cleanup: "허용되는 최대 개수보다 많은 백업이 있는 경우에도 S3에서 이전 백업이 제거되지 않도록합니다."
     enable_s3_inventory: "Amazon S3 인벤토리를 사용하여 보고서를 생성하고 업로드를 확인하십시오. 중요 : 유효한 S3 자격 증명 (액세스 키 ID 및 비밀 액세스 키 모두)이 필요합니다."
     backup_time_of_day: "백업이 실행되어야 할 UTC 시간"
     backup_with_uploads: "스케쥴링된 백업을 실행할 때 업로드된 자료도 포함. 해제하면 데이터베이스만 백업합니다."
@@ -1486,13 +1561,14 @@ ko:
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
-    max_personal_messages_per_day: "하루에 유저가 쓸 수 있는 최대 메세지 갯수"
+    max_personal_messages_per_day: "사용자가 하루에 작성할 수있는 최대 글 수입니다."
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다."
     max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다."
+    invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     categories_topics: "/ 카테고리 페이지에 표시 할 주제 수입니다. 0으로 설정하면 두 열을 대칭 (범주 및 주제)으로 유지하는 값을 자동으로 찾습니다."
@@ -1501,8 +1577,8 @@ ko:
     suggested_topics_max_days_old: "설정된 일수 이상의 토픽은 추천하지 않음"
     suggested_topics_unread_max_days_old: "읽지 않은 주제는 n 일을 넘지 않아야합니다."
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거합니다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋습니다."
-    clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
-    purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
+    clean_orphan_uploads_grace_period_hours: "글에 연결되지 않은 업로드 파일을 제거하기 전 유예 기간 (시간) 입니다."
+    purge_deleted_uploads_grace_period_days: "글에 연결되지 않은 업로드 파일이 삭제되기 전 유예 기간 (일) 입니다."
     purge_unactivated_users_grace_period_days: "계정을 활성화하지 않은 사용자가 삭제되기 전의 유예 기간 (일)입니다. 활성화되지 않은 사용자를 제거하지 않으려면 0으로 설정하십시오."
     enable_s3_uploads: "Amazon S3 storage에 업로드해주세요. 중요: 올바른 S3 계정이 필요합니다.(access key id와 secret access key 둘다)"
     s3_use_iam_profile: '<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 인스턴스 프로파일</a> 을 사용하여 S3 버킷에 대한 액세스 권한을 부여하십시오. 참고 :이를 활성화하려면 Discourse가 적절하게 구성된 EC2 인스턴스에서 실행되고 &quot;s3 액세스 키 ID&quot;및 &quot;s3 비밀 액세스 키&quot;설정이 무시됩니다.'
@@ -1519,6 +1595,8 @@ ko:
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
     allow_all_attachments_for_group_messages: "그룹 메시지에 모든 이메일 첨부 허용"
     png_to_jpg_quality: "변환된 JPG 파일의 퀄리티(1은 최하, 99는 최상, 100은 해제)"
+    recompress_original_jpg_quality: "업로드된 이미지 파일의 품질 (1은 최저 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
+    image_preview_jpg_quality: "크기가 조정된 이미지 파일의 품질 (1은 가장 낮은 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
     allow_staff_to_upload_any_file_in_pm: "운영진이 보내는 개인메시지에 모든 파일 첨부 허용"
     strip_image_metadata: "스트립 이미지 메타 데이터."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율. 너비 / 높이의 결과를 입력하십시오."
@@ -1526,16 +1604,16 @@ ko:
     enable_flash_video_onebox: "swf, flv(어도비 플래쉬)링크를 embed 할 수 있도록 함. 주의: 보안에 대한 위험성을 알려주는 것이 좋다."
     default_invitee_trust_level: "초대 된 사용자의 기본 회원 등급 (0-4) 입니다."
     default_trust_level: "모든 새 사용자에 대한 기본 회원등급 (0-4). 경고! 이를 변경하면 스팸에 대한 심각한 위험에 처하게됩니다."
-    tl1_requires_topics_entered: "새 사용자가 회원등급 1이 되기 위해 확인해야 하는 글 수."
-    tl1_requires_read_posts: "새 사용자가 회원등급 1이 되기 위해 읽어야 하는 글 수."
+    tl1_requires_topics_entered: "회원레벨 1로 승격하기 위해 사용자가 작성 해야하는 글 수"
+    tl1_requires_read_posts: "새 사용자가 회원레벨 1로 승격하기 위해 읽어야하는 게시물 수"
     tl1_requires_time_spent_mins: "새 사용자가 회원등급 1이 되기 위해 게시물을 읽어야 하는 시간(분)."
-    tl2_requires_topics_entered: "회원등급 2가 되기 위해 확인해야 하는 글 수."
-    tl2_requires_read_posts: "회원등급 2가 되기 위해 읽어야 하는 글 수."
+    tl2_requires_topics_entered: "회원레벨 2로 승격하기 위해 사용자가 작성 해야하는 글 수"
+    tl2_requires_read_posts: "회원레벨 2로 승격하기 위해 사용자가 읽어야하는 게시물 수"
     tl2_requires_time_spent_mins: "회원등급 2가 되기 위해 게시물을 읽어야 하는 시간(분)."
     tl2_requires_days_visited: "회원등급 2가 되기 위해 사이트를 방문해야하는 일 수."
     tl2_requires_likes_received: "회원등급 2가 되기 위해 사용자가 받아야하는 좋아요 수."
     tl2_requires_likes_given: "회원등급 2가 되기 위해 사용자가 클릭해야 하는 좋아요 수."
-    tl2_requires_topic_reply_count: "회원등급 2가 되기 위해 사용자가 작성해야 하는 댓글 수."
+    tl2_requires_topic_reply_count: "회원레벨 2로 승격하기 위해 사용자가 작성 해야하는 댓글 수"
     tl3_time_period: "회원 등급 3 자격을 얻기 위한 활동 기간 (일)"
     tl3_requires_days_visited: "회원 레벨 3이 자격을 얻기 위하여 지난 (tl3 time period)일 동안 사용자가 사이트에 방문해야하는 최소 일 수. tl3 기간보다 길게 설정하면 회원레벨 3 승격을 해제합니다. (0이상)"
     tl3_requires_topics_replied_to: "회원 레벨 3 자격을 얻기 위하여 지난 (tl3 time period)일 동안 사용자가 댓글을 달아야 하는 최소 토픽 수 (0 이상)"
@@ -1616,6 +1694,8 @@ ko:
     privacy_policy_url: "개인정보 보호가 있으면 전체 URL을 적어주세요."
     log_anonymizer_details: "익명화 된 후 사용자 세부 정보를 로그에 유지할지 여부 GDPR을 준수 할 때는이 기능을 해제해야합니다."
     newuser_spam_host_threshold: "새로운 사용자가 동일한 호스트의 링크를 포스팅하더라도 스팸으로 간주되지 않는 최대 포스팅 수 `newuser_spam_host_threshold`"
+    allowed_spam_host_domains: "스팸 호스트 테스트에서 제외 된 도메인 목록입니다. 신규 사용자는 이러한 도메인에 대한 링크가있는 게시물을 작성하는데 제한을 받지 않습니다."
+    staff_like_weight: "관리자의 좋아요에 부여 할 가중치 (일반 회원의 가중치는 1임)"
     topic_view_duration_hours: "N 시간마다 IP/User 별로 새 토픽 조회수를 셉니다."
     user_profile_view_duration_hours: "N 시간마다 IP/User 별로 새 프로필 조회수를 셉니다."
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
@@ -1685,8 +1765,13 @@ ko:
     email_in_authserv_id: "수신 이메일에서 인증 검사를 수행하는 서비스의 식별자입니다. 이를 구성하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 을 참조 <a href='https://meta.discourse.org/t/134358'>하십시오</a> ."
     email_in_spam_header: "스팸을 탐지하는 이메일 헤더입니다."
     enable_imap: "그룹 메시지를 동기화하기 위해 IMAP을 사용하도록 설정합니다."
+    enable_imap_write: "양방향 IMAP 동기화를 사용합니다. 비활성화하면 IMAP 계정에 대한 모든 쓰기 작업이 비활성화됩니다."
+    enable_imap_idle: "새로운 이메일을 기다리는 IMAP IDLE 메커니즘을 사용합니다."
     enable_smtp: "그룹 메시지에 대한 알림을 보내기 위해 SMTP를 사용하도록 설정합니다."
     imap_polling_period_mins: "IMAP 계정에서 이메일을 확인하는 간격(분) 입니다."
+    imap_polling_old_emails: "IMAP 상자가 폴링 될 때마다 업데이트 될 (처리 된) 이전 이메일의 최대 수입니다 (모두 0)."
+    imap_polling_new_emails: "IMAP 상자가 폴링 될 때마다 업데이트되는 (처리되지 않은) 새 이메일의 최대 수입니다."
+    imap_batch_import_email: "가져오기 모드를 트리거하는 새 이메일의 최소 수입니다 (게시물 알림 비활성화)."
     email_prefix: "이메일 제목에 쓰일 [라벨]. 설정하지 않으면 기본적으로 'title(필수 설정의)' 이 된다."
     email_site_title: "사이트에서 전송되는 이메일의 보내는 이를 사이트 이름으로 설정. 설정하지 않으면 'title(필수 설정의)'이 된다. 만약 'title'에 보내는 이에 허용되지 않는 글자가 포함되어 있으면 이 설정이 사용된다."
     find_related_post_with_key: "답글을 게시하려면 &#39;답장 키&#39;만 사용하십시오. 경고 :이 기능을 비활성화하면 이메일 주소를 기반으로 사용자 가장이 허용됩니다."
@@ -1719,6 +1804,7 @@ ko:
     enable_user_directory: "브라우징을 위한 유저의 디렉토리 제공"
     enable_group_directory: "브라우징을 위한 그룹의 디렉토리 제공"
     enable_category_group_moderation: "그룹이 특정 카테고리의 콘텐츠를 관리하도록 허용"
+    group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목에 %%{optional_pm} 을 설정합니다. 참조: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
     allow_anonymous_posting: "익명 모드 허용"
     anonymous_posting_min_trust_level: "익명 게시 할 수 있는 최소 회원등급"
     anonymous_account_duration_minutes: "한 익명이 익명계정을 만들 때 빨리 만드는 걸 막을 분 단위 시간 예: 600으로 정해놓으면 마지막 게시하고 익명 전환 후로 600분이 지나는 즉시 새 계정이 만들어 집니다."
@@ -1734,6 +1820,7 @@ ko:
     clean_up_unused_staged_users_after_days: "사용하지 않는 준비된 사용자 (게시물 없음)가 제거되기까지의 일 수입니다. 정리를 비활성화하려면 0으로 설정하십시오."
     user_selected_primary_groups: "사용자가 자신의 기본 그룹을 설정하도록 허용"
     max_notifications_per_user: "이 수를 초과하면 사용자 당 최대 알림 수는 이전 알림이 삭제됩니다. 매주 시행됩니다. 비활성화하려면 0으로 설정"
+    allowed_user_website_domains: "다음 도메인의 사용자 웹사이트는 확인됩니다. 파이프로 구분 된 목록."
     allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용합니다."
     sequential_replies_threshold: "너무 많은 연속 댓글을 달고 있다고 경고를 받지 않고 사용자가 연달아 쓸 수 있는 포스트 수."
     get_a_room_threshold: "경고를 받지 않고, 같은 토픽에서 같은 사람에게 보낼 수 있는 허용 포스트 수."
@@ -1749,7 +1836,7 @@ ko:
     likes_notification_consolidation_window_mins: "임계 값에 도달하면 선호 알림이 단일 알림으로 통합되는 시간 (분)입니다. 임계 값은`SiteSetting.notification_consolidation_threshold`를 통해 구성 할 수 있습니다."
     automatically_unpin_topics: "사용자가 하단에 도달하면 토픽 고정을 자동 해제."
     read_time_word_count: "읽은 시간 추정치 계산을 위한 1분 당 워드 카운트."
-    topic_page_title_includes_category: "주제 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a> 에는 카테고리 이름이 포함됩니다."
+    topic_page_title_includes_category: "글 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a>에는 카테고리 이름이 포함됩니다."
     native_app_install_banner_ios: "iOS 장치의 DiscourseHub 앱 배너를 일반 사용자 (신뢰 수준 1 이상)에게 표시합니다."
     native_app_install_banner_android: "일반 사용자 (신뢰 수준 1 이상)에게 Android 장치에 DiscourseHub 앱 배너를 표시합니다."
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known / assetlinks.json</a> 엔드 포인트의 컨텐츠"
@@ -1770,9 +1857,11 @@ ko:
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립 보드에 복사합니다. 이 기능은 Internet Explorer에서 지원되지 않습니다."
     embed_any_origin: "출처와 상관없이 퍼갈 수있는 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_topics_list: "주제 목록의 HTML 임베딩 지원"
+    embed_set_canonical_url: "포함된 글의 표준 URL을 포함된 콘텐츠의 URL로 설정합니다."
     embed_truncate: "임베드된 글 비우기"
     embed_unlisted: "가져온 주제는 사용자가 답장 할 때까지 나열되지 않습니다."
     embed_support_markdown: "임베드 된 게시물에 대한 마크 다운 형식을 지원합니다."
+    allowed_embed_selectors: "삽입에 허용되는 쉼표로 구분 된 CSS 요소 목록입니다."
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 체계."
     embed_post_limit: "글 개수가 최대치입니다."
     embed_username_required: "토픽 생성을 위한 사용자명이 필요합니다."
@@ -1782,6 +1871,8 @@ ko:
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     secure_media: '모든 업로드 (이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. &quot;로그인 필요&quot;가 활성화 된 경우 로그인 한 사용자 만 업로드에 액세스 할 수 있습니다. 그렇지 않으면 개인 메시지 및 개인 범주의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고 :이 설정은 복잡하며 관리에 대한 깊은 이해가 필요합니다. 세부 사항 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">은 메타에</a> 대한 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">보안 매체 주제</a> 를 참조하십시오.'
+    secure_media_allow_embed_images_in_emails: "크기가 '이메일에 포함을 허용하는 보안 미디어 kb 크기' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지를 포함 할 수 있습니다."
+    secure_media_max_email_embed_image_size_kb: "'이메일에 포함을 허용하는 보안 미디어' 설정이 활성화 된 경우 이메일에 포함되는 보안 이미지의 크기 제한입니다. 해당 설정을 사용하지 않으면 이 설정이 적용되지 않습니다."
     slug_generation_method: "slug 생성 방식. 'encoded'는 퍼센트 기호로 인코딩해서 생성합니다. 'none'은 slug 자체를 비활성화합니다.."
     enable_emoji: "emoji 활성화"
     enable_emoji_shortcuts: ":) : p :(과 같은 일반적인 스마일 텍스트는 이모티콘으로 변환됩니다."
@@ -1795,6 +1886,7 @@ ko:
     notify_about_queued_posts_after: "여러 시간 동안 검토 대기중인 게시물이있는 경우 모든 중재자에게 알림을 보냅니다. 이러한 알림을 비활성화하려면 0으로 설정하십시오."
     auto_close_messages_post_count: "메시지가 자동으로 닫히기 전에 허용되는 최대 게시물 수 (0은 비활성화)"
     auto_close_topics_post_count: "주제가 자동으로 닫히기 전에 허용되는 최대 게시물 수 (0은 사용 안함)"
+    auto_close_topics_create_linked_topic: "글이 '게시물 자동 닫기' 설정에 따라 자동으로 닫히면 연결된 새 글을 만듭니다."
     code_formatting_style: "글 작성기의 코드 버튼은 기본적으로 이 코드 형식 스타일로 설정됩니다"
     max_allowed_message_recipients: "메시지에 허용되는 최대 수신자입니다."
     watched_words_regular_expressions: "시청 한 단어는 정규식입니다."
@@ -1802,6 +1894,7 @@ ko:
     new_user_notice_tl: "새로운 사용자 게시물 알림을 보려면 최소 신뢰 수준이 필요합니다."
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
     returning_users_days: "사용자가 돌아오는 것으로 간주되기까지 며칠이 경과해야합니다."
+    review_media_unless_trust_level: "관리자는 회원레벨이 낮은 사용자의 게시물에 임베디드 미디어가 포함 된 경우 이를 검토합니다."
     enable_page_publishing: "직원이 자신의 스타일을 사용하여 주제를 새 URL에 게시 할 수 있습니다."
     show_published_pages_login_required: "익명 사용자는 로그인이 필요한 경우에도 게시된 페이지를 볼 수 있습니다."
     default_email_digest_frequency: "사용자가 기본적으로 요약 이메일을받는 빈도입니다."
@@ -1857,7 +1950,7 @@ ko:
     tag_style: "태그 배지 시각 스타일"
     allow_staff_to_tag_pms: "직원이 개인 메시지에 태그를 지정할 수 있도록 허용"
     min_trust_level_to_tag_topics: "토픽에 태깅할 수 있는 최소 신뢰도"
-    suppress_overlapping_tags_in_list: "토픽 이름에 태그가 포함되어있으면 그 태그는 숨기기"
+    suppress_overlapping_tags_in_list: "태그가 글 제목의 단어와 정확히 일치하면 태그를 표시하지 않습니다."
     remove_muted_tags_from_latest: "최신 주제 목록에서 음소거 태그로만 태그 된 주제를 표시하지 마십시오."
     force_lowercase_tags: "모든 새 태그를 완전히 소문자로 만듭니다."
     company_name: "회사 이름"
@@ -1875,6 +1968,8 @@ ko:
     gravatar_name: "Gravatar 제공 업체 이름"
     gravatar_base_url: "Gravatar 제공자의 API 기반 URL"
     gravatar_login_url: "사용자에게 Gravatar 서비스에 대한 로그인을 제공하는 gravatar_base_url과 관련된 URL"
+    share_quote_buttons: "견적 공유 위젯에 표시되는 항목과 순서를 결정합니다."
+    share_quote_visibility: "견적 공유 버턴을 표시할 시기를 결정합니다. 익명 사용자만 또는 모든 사용자에게 표시하지 않습니다. "
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -1965,6 +2060,8 @@ ko:
       other: "%{count}개의 글이 새 글로 분할되었습니다: %{topic_link}"
     existing_topic_moderator_post:
       other: "%{count}개의 글이 다음 글에 병합되었습니다: %{topic_link}"
+    existing_message_moderator_post:
+      other: "%{count}개의 게시물이 기존 글에 병합되었습니다: %{topic_link}"
   change_owner:
     post_revision_text: "소유권 이전"
   publish_page:
@@ -1973,6 +2070,10 @@ ko:
       unavailable: "사용할 수 없습니다"
       invalid: "사용할 수 없는 문자를 포함하고 있습니다."
   topic_statuses:
+    autoclosed_message_max_posts:
+      other: "이 글은 최대 %{count}개의 최대 댓글 제한에 도달하여 자동으로 닫혔습니다."
+    autoclosed_topic_max_posts:
+      other: "이 글은 최대 %{count}개의 최대 댓글 제한에 도달하여 자동으로 닫혔습니다."
     autoclosed_enabled_days:
       other: "이 글은 %{count}일 뒤 자동적으로 닫혔습니다. 새 댓글을 다실 수 없습니다."
     autoclosed_enabled_hours:
@@ -1989,11 +2090,20 @@ ko:
       other: "이 글은 %{count}일 후 자동으로 열렸습니다."
     autoclosed_disabled_hours:
       other: "이 글은 %{count}시간 후 자동으로 열렸습니다."
+    autoclosed_disabled_minutes:
+      other: "이 글은 %{count}분 후에 자동으로 열렸습니다."
+    autoclosed_disabled_lastpost_days:
+      other: "이 글은 마지막 댓글 작성 후 %{count}일 뒤 자동으로 열렸습니다."
+    autoclosed_disabled_lastpost_hours:
+      other: "이 글은 마지막 댓글 작성 후 %{count}시간 뒤 자동으로 열렸습니다."
+    autoclosed_disabled_lastpost_minutes:
+      other: "이 글은 마지막 댓글 작성 후 %{count}분 뒤 자동으로 열렸습니다."
     autoclosed_disabled: "이제 이 항목이 열립니다. 새 댓글이 허용됩니다."
     autoclosed_disabled_lastpost: "이제 이 항목이 열립니다. 새로운 댓글이 허용됩니다."
     auto_deleted_by_timer: "타이머에 의해 자동삭제됨"
   login:
     invalid_second_factor_method: "선택한 2단계 방법이 잘못되었습니다."
+    not_enabled_second_factor_method: "선택한 2단계 방법이 사용자님의 계정에서 활성화되지 않았습니다."
     security_key_description: "실제 보안 키가 준비되면 아래의 보안 키로 인증 버튼을 누릅니다."
     security_key_alternative: "다른 방법으로 시도"
     security_key_authenticate: "보안 키로 인증"
@@ -2103,14 +2213,71 @@ ko:
   invite_mailer:
     title: "메일러 초대"
     subject_template: "%{inviter_name}님이 %{site_domain_name}의 %{topic_title}에 사용자님을 초대했습니다."
+    text_body_template: |
+      %{inviter_name}님이 사용자님을 대화에 초대했습니다.
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      에서
+
+      > %{site_title} -- %{site_description}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{invite_link}
   custom_invite_mailer:
     title: "맞춤 초대 메일러"
+    subject_template: "%{inviter_name}님이 %{site_domain_name}의 %{topic_title}에 사용자님을 초대했습니다."
+    text_body_template: |
+      %{inviter_name}님이 사용자님을 대화에 초대했습니다.
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      에서
+
+      > %{site_title} -- %{site_description}
+
+      남긴 메시지
+
+      > %{user_custom_message}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{invite_link}
   invite_forum_mailer:
     title: "포럼 메일러 초대"
     subject_template: "%{inviter_name} 님이 초대했습니다. %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name}님이 사용자님을 대화에 초대했습니다.
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{invite_link}
   custom_invite_forum_mailer:
     title: "맞춤 초대 포럼 메일러"
     subject_template: "%{inviter_name} 님이 초대했습니다. %{site_domain_name}"
+    text_body_template: |
+      %{inviter_name}님이 사용자님을 대화에 초대했습니다.
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      남긴 메시지
+
+      > %{user_custom_message}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{invite_link}
   invite_password_instructions:
     title: "비밀번호 안내 초대"
     subject_template: "%{site_name} 계정을 위해 비밀번호 설정"
@@ -2142,12 +2309,65 @@ ko:
   test_mailer:
     title: "메일러 테스트"
     subject_template: "[%{email_prefix}] 이메일 전달 테스트"
+    text_body_template: |
+      이것은 다음의 테스트 이메일 입니다.
+
+      [**%{base_url}**][0]
+
+      이메일 전달은 복잡합니다. 다음은 먼저 확인해야 할 몇 가지 중요한 사항입니다:
+
+      - '알림 이메일의 발신' from: 주소를 사이트 설정에서 올바르게 설정했는지 *확인*하십시오. **보내는 이메일의 "보낸 사람" 주소에 지정된 도메인은 이메일의 유효성을 검사 할 도메인입니다**.
+
+      -메일 클라이언트에서 이메일의 중요한 단서를 찾기 위해 이메일 헤더를 조사 할 수 있습니다. Gmail에서는 각 메일의 오른쪽 상단에있는 드롭 다운 메뉴에있는 "원본보기" 옵션입니다.
+
+      -**중요: ** ISP에 메일을 보내는 도메인 이름과 IP 주소를 연결하기 위해 입력된 역 DNS 레코드가 있습니까? [Reverse PTR record 테스트][2]. 사용자님의 ISP에 적절한 역방향 DNS 포인터 레코드를 입력하지 않으면 이메일이 전달 될 가능성이 거의 없습니다.
+
+      -도메인의 [SPF 레코드][8]가 맞습니까? [SPF 레코드 테스트][1]. TXT는 SPF의 올바른 공식 레코드 유형입니다.
+
+      -도메인의 [DKIM 레코드][3]가 맞습니까? 이것은 이메일 전달성을 크게 향상시킵니다. [DKIM 레코드 테스트][7].
+
+      -자체 메일 서버를 운영하는 경우 메일 서버의 IP가 [이메일 차단 목록에 없음][4] 을 확인하십시오. 또한 HELO 메시지의 DNS에서 확인되는 정규화 된 호스트 이름을 확실히 보내고 있는지 확인합니다. 그렇지 않으면 많은 메일 서비스에서 이메일이 거부됩니다.
+
+      -위의 모든 사항이 올바르게 작동하는지 확인하려면 **[mail-tester.com][mt]**로 테스트 이메일을 보내는 것이 좋습니다.
+
+      (*쉬운* 방법은 [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] 또는 [Mailjet][mj]에 계정을 만드는 것입니다. 이 계정은 저렴한 메일링 계획을 가지고 있으며 괜찮습니다. 소규모 커뮤니티의 경우에도 DNS에 SPF 및 DKIM 레코드를 설정해야합니다!)
+
+      이 이메일 전달성 테스트를 성공하셨기를 바랍니다!
+
+      행운을 빕니다,
+
+      사용자님의 친구들 [Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새로운 담화 버전, 업데이트 가능"
+    text_body_template: |
+      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
+
+      현재 버전: %{installed_version}
+      새 버전: **%{new_version}**
+
+      - 간편한 ** [원 클릭 브라우저 업그레이드](%{base_url}/admin/upgrade) **
+
+      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [raw GitHub 변경 로그](https://github.com/discourse/discourse/commits/master) 보기
+
+      - [meta.discourse.org](https://meta.discourse.org) 뉴스, 토론 및 Discourse 지원 살펴보기
   new_version_mailer_with_notes:
     title: "노트가있는 새로운 버전 메일러"
     subject_template: "[%{email_prefix}] 업데이트 가능"
+    text_body_template: "[Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!\n\n버전 : %{installed_version}\n새 버전 : **%{new_version}**\n\n- 간편한 **[원 클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**\n\n- [출시 노트]( https://meta.discourse.org/tag/release-notes) 또는 [raw GitHub 변경 로그](https://github.com/discourse/discourse/commits/master) 보기\n\n- Discourse에 대한 뉴스, 토론 및 지원을 위한 [meta.discourse.org](https://meta.discourse.org) 방문 \n\n### 릴리스 노트\n\n%{notes}\n"
   flag_reasons:
     off_topic: "내가 올린 글타래가 **주제 벗어난 이야기**으로 신고 되었습니다. 사람들이 이 글타래의 제목이랑 글 내용이 안 맞는다고 느끼나 봅니다. "
     inappropriate: "내가 올린 글타래가 **부적절**로 신고 되었습니다. 사람들이 이 글타래가 [가이드라인](%{base_path}/guidelines)에서 벗어나 공격적, 모욕적, 폭력적이라고 느낍니다."
@@ -2159,21 +2379,82 @@ ko:
     disagreed: "알려줘서 감사합니다. 살펴보겠습니다."
     ignored: "알려줘서 감사합니다. 살펴보겠습니다."
     ignored_and_deleted: "알려줘서 감사합니다. 해당 글을 삭제했습니다."
+  temporarily_closed_due_to_flags:
+    other: "이 글은 많은 신고로 인해 최소 %{count}시간 동안 일시적으로 닫힙니다."
   system_messages:
     private_topic_title: "주제 # %{id}"
     contents_hidden: "내용을 보려면 게시물을 방문하십시오."
     post_hidden:
       title: "숨겨진 게시물"
       subject_template: "커뮤니티 플래그로 숨겨진 게시물"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 게시물이 숨겨 졌음을 알리기 위한 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        이 게시물은 신고로 인해 숨겨 졌으므로 이를 보완하기 위해 게시물을 수정하는 방법을 고려하십시오. **%{edit_delay}분 후에 게시물을 수정할 수 있으며, 수정 후 자동으로 숨김 해제됩니다.**
+
+        그러나 게시물이 두 번째로 신고되면 관리자가 처리 할 때까지 숨겨집니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     post_hidden_again:
       title: "다시 숨겨진 게시물"
       subject_template: "커뮤니티 플래그에 의해 숨겨진 게시물, 직원에게 알림"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 게시물이 다시 숨겨 졌음을 알리기 위한 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        이 게시물은 신고로 인해 숨겨졌습니다. **이 게시물은 두 번 이상 숨겨졌으므로 이제 이 게시물은 관리자가 처리 할 때까지 숨겨진 상태로 유지됩니다.**
+
+        추가 지침은 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     flags_disagreed:
       title: "직원이 복원 한 신고 된 게시물"
       subject_template: "직원이 복원 한 신고 된 게시물"
+      text_body_template: |
+        안녕하세요,
+
+        [사용자님의 게시물](%{base_url}%{url})이 복원 되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        신고된 이 게시물은 관리자가 복원하기로 결정했습니다.
+
+        [상세="클릭해 복원된 글 보기"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
     flags_agreed_and_post_deleted:
       title: "직원이 신고 한 소식을 삭제했습니다."
       subject_template: "직원이 신고 한 소식을 삭제했습니다."
+      text_body_template: |
+        안녕하세요,
+
+        [사용자님의 게시물](%{base_url}%{url})이 삭제되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        %{flag_reason}
+
+        이 게시물은 신고로 인해 관리자가 삭제하기로 결정했습니다.
+
+        [details="클릭해 삭제된 게시물 확인"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        자세한 사항은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 살펴보세요.
+    usage_tips:
+      text_body_template: |
+        신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
+
+        여기를 확인하면 일시적인 신규 사용자 제한이 해제됩니다. 시간이 지남에 따라 커뮤니티를 함께 관리하는데 도움이되는 기능을 포함하는 [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)을 얻게됩니다.
     welcome_user:
       title: "사용자 환영"
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
@@ -2188,6 +2469,10 @@ ko:
     welcome_tl1_user:
       title: "TL1 사용자 환영"
       subject_template: "우리와 함께 시간을 보내 주셔서 감사합니다"
+      text_body_template: |
+        안녕하세요. 많은 글을 읽어주셔서 감사드립니다. 그래서 사용자님을 [회원 레벨!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)으로 승격 시켰습니다.
+
+        저희와 함께 시간을 보내 주셔서 정말 기쁩니다. 저희는 여러분에 대해 더 많이 알고 싶습니다. 잠시 시간을내어 [프로필 작성](%{base_url}/my/preferences/profile) 또는 [새 글 작성](%{base_url}/categories)을 권유드립니다.
     welcome_staff:
       title: "직원 환영"
       subject_template: "축하합니다, 귀하는 %{role} 등급을 받았습니다!"
@@ -2200,8 +2485,26 @@ ko:
     welcome_invite:
       title: "초대합니다"
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
+      text_body_template: |
+        %{site_name}의 초대를 수락해 주셔서 감사합니다 -- 환영합니다!
+
+        - 새로운 계정 **%{username}**을 만들었습니다. [사용자 프로필][prefs]을 방문하여 사용자명 또는 비밀번호를 변경하세요.
+
+        - 로그인 할 때 **원래 초대장과 동일한 이메일 주소를 사용하십시오** — 그렇지 않으면 본인임을 알 수 없습니다!
+
+        %{new_user_tips}
+
+        그리고 [올바른 커뮤니티 활동](%{base_url}/guidelines)을 확인해주세요.
+
+        즐거운 시간 되십시오!
+
+        [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
+      text_body_template: |
+        [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)으로 승격했습니다.
+
+        앞으로도 많은 참여를 부탁드립니다 - 사용자님들과 함께하는 것이 즐겁습니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
@@ -2291,18 +2594,38 @@ ko:
     email_reject_insufficient_trust_level:
       title: "이메일 거부 신뢰 수준이 충분하지 않습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-불충분 한 신뢰 수준"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        사용자님은 현재 권한이 없습니다. 오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_user_not_found:
       title: "이메일 거부 사용자를 찾을 수 없음"
       subject_template: "[%{email_prefix}] 이메일 문제-사용자를 찾을 수 없음"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        알 수없는 이메일 주소에서 보냈습니다. 다른 이메일 주소에서 보내거나 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_screened_email:
       title: "이메일 거부 된 이메일 거부"
       subject_template: "[%{email_prefix}] 이메일 문제-차단 된 이메일"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        차단된 이메일 주소에서 전송되었습니다. 다른 이메일 주소에서 보내거나 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_not_allowed_email:
       title: "이메일 거부가 허용되지 않는 이메일"
       subject_template: "[%{email_prefix}] 이메일 문제-차단 된 이메일"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        차단된 이메일 주소에서 전송되었습니다. 다른 이메일 주소에서 보내거나 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_inactive_user:
       title: "이메일 거부 비활성 사용자"
       subject_template: "[%{email_prefix}] 이메일 문제-비활성 사용자"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        이 이메일 주소와 연결된 계정이 활성화되지 않았습니다. 이메일을 보내기 전에 계정을 활성화하십시오.
     email_reject_silenced_user:
       title: "이메일 거부 사일런트 사용자"
       subject_template: "[%{email_prefix}] 이메일 문제-무음 사용자"
@@ -2351,33 +2674,74 @@ ko:
     email_reject_reply_key:
       title: "이메일 거부 회신 키"
       subject_template: "[%{email_prefix}] 이메일 문제-알 수없는 회신 키"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        이메일의 답장 키가 잘못되었거나 알수없습니다. [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_bad_destination_address:
       title: "이메일 거부 잘못된 대상 주소"
       subject_template: "[%{email_prefix}] 이메일 문제-알 수 없음 : 주소"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        하나 이상의 이메일 주소를 사용하십니까? 다른 이메일 주소에서 전송 했습니까? 동일한 이메일 주소를 사용하지 않았거나 이메일의 Message-ID 헤더가 수정되었을 수 있습니다.
     email_reject_old_destination:
       title: "이메일 거부 이전 대상"
       subject_template: "[%{email_prefix}] 이메일 문제-이전 알림에 답장하려고합니다"
     email_reject_topic_not_found:
       title: "이메일 거부 주제를 찾을 수 없습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-주제를 찾을 수 없습니다"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        댓글을 작성하려는 원래의 글이 더 이상 존재하지 않습니다. 삭제되었을 수 있습니다. 오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_topic_closed:
       title: "이메일 거부 주제 종료"
       subject_template: "[%{email_prefix}] 이메일 문제-주제 마감"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        댓글을 작성하려는 원래의 글이 현재 닫혀 있으며 더 이상 해당 글에 댓글을 작성 할 수 없습니다. 오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_auto_generated:
       title: "이메일 거부 자동 생성"
       subject_template: "[%{email_prefix}] 이메일 문제-자동 생성 된 회신"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        사용자님의 이메일은 "자동 생성"으로 표시되었습니다. 이것은 사람이 입력하는 대신 컴퓨터에 의해 자동으로 생성되었음을 의미합니다. 이것이 오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_unrecognized_error:
       title: "이메일 거부 인식 할 수없는 오류"
       subject_template: "[%{email_prefix}] 이메일 문제-인식 할 수없는 오류"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        이메일을 처리하는 동안 알 수없는 오류가 발생하여 글이 게시되지 않았습니다. 다시 시도하거나 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_attachment:
       title: "이메일 첨부가 거부 됨"
       subject_template: "[%{email_prefix}] 이메일 문제-첨부 파일 거부"
+      text_body_template: |
+        죄송합니다. 사용자님의 이메일 메시지에서 %{destination} (제목 %{former_title})에 대한 일부 첨부 파일이 거부되었습니다.
+
+        내용:
+        %{rejected_errors}
+
+        오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_reply_not_allowed:
       title: "이메일 거부 회신이 허용되지 않습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-회신이 허용되지 않습니다"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        글 작성 권한이 없습니다. 오류라고 생각되면 [관리자에게 문의] (%{base_url}/about) 하세요.
     email_reject_reply_to_digest:
       title: "회신 거부 이메일 요약"
       subject_template: "[%{email_prefix}] 이메일 문제 — 요약에 답장"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        수락되지 않은 요약 이메일에 답장했습니다.
+
+        오류라고 생각되면 [관리자에게 문의] (%{base_url}/about) 하세요.
     email_error_notification:
       title: "이메일 에러 알림"
       subject_template: "[%{email_prefix}] 이메일 문제-POP 인증 오류"
@@ -2390,18 +2754,54 @@ ko:
     email_revoked:
       title: "이메일 해지"
       subject_template: "이메일 주소가 맞습니까?"
+      text_body_template: |
+        죄송합니다. 이메일로 연락하는 데 문제가 있습니다. 사용자님에게 보내 드린 최근 몇 개의 이메일이 모두 반송되었습니다.
+
+        [사용자님의 이메일 주소] (%{base_url}/my/preferences/email)가 유효하고 작동하는지 확인할 수 있습니까? 전송 가능성을 높이기 위해 주소록/연락처 목록에 이메일 주소를 추가 할 수도 있습니다.
+    email_bounced: |
+      %{email} 에 대한 메시지가 반송되었습니다.
+
+      ### 세부 사항
+
+      ``` text
+      %{raw}
+      ```
     ignored_users_summary:
       title: "무시 된 사용자가 임계 값을 통과했습니다."
       subject_template: "다른 많은 사용자가 사용자를 무시하고 있습니다."
     too_many_spam_flags:
       title: "너무 많은 스팸 플래그"
       subject_template: "대기중인 신규 계정"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 게시물이 신고로 인해 일시적으로 숨겨 졌음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        예방 조치로 사용자님의 계정이 일시적으로 숨겨졌으며 관리자가 사용자님의 계정을 검토 할 수있을 때까지 새 글이나 댓글을 작성할 수 없습니다. 불편을 드려 죄송합니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     too_many_tl3_flags:
       title: "TL3 Flag가 너무 많음"
       subject_template: "대기중인 신규 계정"
+      text_body_template: |
+        안녕하세요,
+
+        사용자님의 계정은 많은 신고로 인해 계정이 보류 상태가 되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        예방 조치로서, 관리자가 사용자님의 계정을 검토 할 수있을 때까지 새 글이나 댓글을 작성하지 못하도록 차단되었습니다. 불편을 드려 죄송합니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     silenced_by_staff:
       title: "직원에 의해 침묵"
       subject_template: "일시적으로 보류중인 계정"
+      text_body_template: |
+        안녕하세요,
+
+        예방 조치로 사용자님의 계정이 일시적으로 보류 상태가 되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        [관리자](%{base_url}/about)가 사용자님의 최근 게시물을 검토 할 때까지 새 글을 작성하거나 댓글을 작성할 수 없습니다. 불편을 드려 죄송합니다.
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     user_automatically_silenced:
       title: "자동 침묵하는 사용자"
       subject_template: "커뮤니티 플래그로 새 사용자 %{username}이 침묵 함"
@@ -2411,6 +2811,12 @@ ko:
     unsilenced:
       title: "침묵하지 않는"
       subject_template: "계정의 대기가 해제되었습니다"
+      text_body_template: |
+        안녕하세요,
+
+        관리자의 검토 후 사용자님의 계정이 더 이상 보류 상태가 아님을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
+
+        이제 새 댓글과 글을 작성 할 수 있습니다. 양해 해 주셔서 감사합니다.
     pending_users_reminder:
       title: "대기중인 사용자 알림"
       subject_template:
@@ -2445,19 +2851,25 @@ ko:
       title: "대기중인 게시물 알림"
       subject_template:
         other: "%{count} 게시물 검토 대기"
+      text_body_template: |
+        안녕하세요,
+
+        신규 사용자의 게시물이 잠시 보류되어 현재 검토 대기 중입니다. [여기에서 승인 또는 거부](%{base_url}/review?type=ReviewableQueuedPost).
   unsubscribe_link: |
     이러한 이메일을 수신 거부하려면 [여기를 클릭](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
-    이러한 이메일을 수신 거부하려면 [여기를 클릭](%{unsubscribe_url}).
+    이메일 수신 거부는 [여기를 클릭](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
     메일링리스트 모드를 활성화했기 때문에 이 메일을 수신 한 것입니다.
 
-    이러한 이메일을 수신 거부하려면 [여기를 클릭](%{unsubscribe_url}).
+    이메일 수신 거부는 [여기를 클릭](%{unsubscribe_url}).
   subject_re: "덧: "
   subject_pm: "[PM] "
   email_from: "%{site_name}를 통한 %{user_name}"
   user_notifications:
     previous_discussion: "이전 답글"
+    reached_limit:
+      other: "주의: 매일 최대 %{count}개의 이메일을 보냅니다. 보류 될 수있는 사이트를 확인하십시오."
     in_reply_to: "에 회신하여"
     unsubscribe:
       title: "구독해지"
@@ -2466,10 +2878,38 @@ ko:
     reply_by_email_pm: "[방문 메시지] (%{base_url}%{url}) 또는이 이메일에 회신하여 %{participants}에 응답하십시오."
     only_reply_by_email: "답장을 보내려면이 이메일에 회신하십시오."
     only_reply_by_email_pm: "%{participants}에 응답하려면이 이메일에 회신하십시오."
-    visit_link_to_respond: "[방문 주제] (%{base_url}%{url})가 응답합니다."
-    visit_link_to_respond_pm: "[방문 메시지] (%{base_url}%{url})는 %{participants}에 응답합니다."
+    visit_link_to_respond: "[글](%{base_url}%{url})을 살펴보고 댓글을 작성해보세요."
+    visit_link_to_respond_pm: "%{participants}에 응답하려면 [글 보기](%{base_url}%{url})을 살펴보세요."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
     pm_participants: "참가자 : %{participants}"
+    invited_group_to_private_message_body: |
+      %{username}님이 사용자님을 @%{group_name} 대화에 초대했습니다.
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      에서
+
+      > %{site_title} -- %{site_description}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username}님이 사용자님을 대화에 초대했습니다.
+
+      > **[%{topic_title}](%{topic_url})**
+      >
+      > %{topic_excerpt}
+
+      에서
+
+      > %{site_title} -- %{site_description}
+
+      대화에 참여 하시려면 아래 링크를 클릭 하세요:
+
+      %{topic_url}
     invited_to_topic_body: |
       %{username}님이 사용자님을 대화에 초대했습니다.
 
@@ -2658,6 +3098,12 @@ ko:
     account_silenced:
       title: "계정 침묵"
       subject_template: "[%{email_prefix}] 귀하의 계정이 침묵되었습니다"
+      text_body_template: |
+        사용자님은 %{silenced_till}까지 사이트에서 글 작성이 중지되었습니다.
+
+        %{reason}
+
+        %{message}
     account_exists:
       title: "계정이 이미 존재합니다"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -2672,6 +3118,12 @@ ko:
     account_second_factor_disabled:
       title: "2단계 인증 사용 안 함"
       subject_template: "[%{email_prefix}] 2단계 인증 사용 안 함"
+      text_body_template: |
+        %{site_name} 계정에서 2단계 인증이 비활성화되었습니다. 이제 비밀번호만으로 로그인 할 수 있습니다. 추가 인증 코드가 더 이상 필요하지 않습니다.
+
+        2단계 인증 비활성화를 선택하지 않은 경우 누군가가 귀하의 계정을 도용했을 수 있습니다.
+
+        궁금한 점이 있으면 [친절한 관리자에게 문의](%{base_url}/about) 바랍니다.
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
       since_last_visit: "마지막 방문 후 경과시간"
@@ -2724,6 +3176,13 @@ ko:
     admin_login:
       title: "관리자 로그인"
       subject_template: "[%{email_prefix}] 로그인"
+      text_body_template: |
+        누군가 [%{site_name}](%{base_url})에서 사용자님의 계정에 로그인하도록 요청했습니다.
+
+        이 요청을하지 않으셨다면 이 이메일을 무시 하셔도됩니다.
+
+        다음 링크를 클릭하여 로그인하세요:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "계정 생성"
       subject_template: "[%{email_prefix}] 새 계정"
@@ -2871,6 +3330,7 @@ ko:
     file_missing: "죄송합니다. 업로드 할 파일을 지정하셔야 합니다."
     empty: "죄송합니다. 지정된 파일은 빈 파일입니다."
     png_to_jpg_conversion_failure_message: "PNG에서 JPG로 변환 할 때 오류가 발생했습니다."
+    optimize_failure_message: "업로드된 이미지를 최적화하는 동안 오류가 발생했습니다."
     attachments:
       too_large: "죄송합니다, 업로드하려는 파일이 너무 큽니다. (최대 크기 %{max_size_kb}KB)."
     images:
@@ -2918,6 +3378,10 @@ ko:
     latte: "라떼"
     summer: "여름"
     dark_rose: "다크 로즈"
+    wcag: "WCAG 라이트"
+    wcag_theme_name: "WCAG 라이트"
+    wcag_dark: "WCAG 다크"
+    wcag_dark_theme_name: "WCAG 다크"
     default_theme_name: "기본"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
@@ -2939,6 +3403,178 @@ ko:
     title: "자주하는 질문/가이드라인"
   tos_topic:
     title: "서비스 이용약관"
+    body: |
+      이 약관은 <%{base_url}>의 사이트 사용에 적용됩니다. 사이트를 이용 하려면 사이트를 운영하는 %{company_name}의 약관에 동의해야합니다.
+
+      사이트 운영자는 조건에 따라 다른 서비스를 제공 할 수 있습니다. 이 약관은 사이트 이용에만 적용됩니다.
+
+      건너 뛰기:
+
+      - [Important Terms](#heading--important-terms)
+      - [Your Permission to Use the Forum](#heading--permission)
+      - [Conditions for Use of the Forum](#heading--conditions)
+      - [Acceptable Use](#heading--acceptable-use)
+      - [Content Standards](#heading--content-standards)
+      - [Enforcement](#heading--enforcement)
+      - [Your Account](#heading--your-account)
+      - [Your Content](#heading--your-content)
+      - [Your Responsibility](#heading--responsibility)
+      - [Disclaimers](#heading--disclaimers)
+      - [Limits on Liability](#heading--liability)
+      - [Feedback](#heading--feedback)
+      - [Termination](#heading--termination)
+      - [Disputes](#heading--disputes)
+      - [General Terms](#heading--general)
+      - [Contact](#heading--contact)
+      - [Changes](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">중요 용어</a></h2>
+
+      ***이러한 약관에는 [면책 조항](#heading--disclaimers)의 면책 조항, [책임에 대한 제한](#heading--liability)의 책임 제한과 같이 사용자님의 권리와 책임에 영향을 미치는 여러 가지 중요한 조항이 포함됩니다.), [사용에 대한 책임](#heading--reponsibility)에서 사이트 이용을 오용하여 발생한 손해에 대해 배상하겠다는 사용자님의 동의 및 [분쟁](#heading--disputes)의 분쟁 중재에 대한 동의.***
+
+      <h2 id="heading--permission"><a href="#heading--permission">사이트 사용 권한</a></h2>
+
+      이 약관에 따라 우리는 사용자님에게 사이트 이용 권한을 부여합니다. 사이트를 이용하려면 모든 사람이 이 약관에 동의해야합니다.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">사이트 이용 조건</a></h2>
+
+      사이트 이용 권한은 다음 조건을 따릅니다:
+
+      1. 13세 이상이어야합니다.
+
+      2. 사이트가 사용자님에게 사이트 이용을 불허하면 더 이상 사이트를 이용할 수 없습니다.
+
+      3. [허용되는 사용](#heading--acceptable-use) 및 [콘텐츠 기준](#heading--content-standards)에 따라 사이트를 이용해야합니다.
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">허용되는 사용</a></h2>
+
+      1. 사이트를 이용하여 법률을 위반할 수 없습니다.
+
+      2. 사용자님은 특정 허가없이 사이트에서 다른 사람의 계정을 사용하거나 사용하려고 시도 할 수 없습니다.
+
+      3. 사이트에서 사용자 이름이나 기타 고유 식별자를 구매, 판매 또는 거래 할 수 없습니다.
+
+      4. 사용자님은 사이트를 통해 광고, 스팸 메일 또는 기타 권유를 보내거나 사이트를 사용하여 상업용 메일 링리스트 또는 데이터베이스에 대한 주소 또는 기타 개인 데이터를 수집 할 수 없습니다.
+
+      5. 웹 크롤러, 브라우저 플러그인 또는 애드온 또는 웹 브라우저가 아닌 기타 컴퓨터 프로그램을 사용하여 사이트에 대한 액세스를 자동화하거나 사이트를 모니터링 할 수 없습니다. 사이트를 크롤링하여 공개적으로 사용 가능한 검색 엔진을 사용하는 경우 색인을 생성 할 수 있습니다.
+
+      6. 사이트를 사용하여 배포 목록, 뉴스 그룹 또는 그룹 메일 별칭으로 전자 메일을 보낼 수 없습니다.
+
+      7. 사용자님은 이 사이트와 제휴하거나 이 사이트의 보증을 받았다고 거짓으로 암시해서는 안됩니다.
+
+      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+
+      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
+
+      10. You may not show any part of the forum on other websites with `<iframe>`.
+
+      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
+
+      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
+
+      13. You may not impersonate others through the forum.
+
+      14. You may not encourage or help anyone in violation of these terms.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+
+      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
+
+      2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
+
+      3. You may not submit content to the forum containing malicious computer code, such as computer viruses or spyware.
+
+      4. You may not submit content to the forum as a mere placeholder, to hold a particular address, user name, or other unique identifier.
+
+      5. You may not use the forum to disclose information that you don't have the right to disclose, like others' confidential or personal information.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Enforcement</a></h2>
+
+      The company may investigate and prosecute violations of these terms to the fullest legal extent. The company may notify and cooperate with law enforcement authorities in prosecuting violations of the law and these terms.
+
+      The company reserves the right to change, redact, and delete content on the forum for any reason. If you believe someone has submitted content to the forum in violation of these terms, [contact us immediately](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Your Account</a></h2>
+
+      You must create and log into an account to use some features of the forum.
+
+      To create an account, you must provide some information about yourself. If you create an account, you agree to provide, at a minimum, a valid e-mail address, and to keep that address up-to-date. You may close your account at any time by e-mailing <%{contact_email}>.
+
+      You agree to be responsible for all action taken using your account, whether authorized by you or not, until you either close your account or notify the company that your account has been compromised. You agree to notify the company immediately if you suspect your account has been compromised. You agree to select a secure password for your account, and keep it secret.
+
+      The company may restrict, suspend, or close your account on the forum according to its policy for handling copyright-related takedown requests, or if the company reasonably believes that you've broken any rule in these terms.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Your Content</a></h2>
+
+      Nothing in these terms gives the company any ownership rights in intellectual property that you share with the forum, such as your account information, posts, or other content you submit to the forum. Nothing in these terms gives you any ownership rights in the company's intellectual property, either.
+
+      Between you and the company, you remain solely responsible for content you submit to the forum. You agree not to wrongly imply that content you submit to the forum is sponsored or approved by the company. These terms do not obligate the company to store, maintain, or provide copies of content you submit, and to change it, according to these terms.
+
+      Content you submit to the forum belongs to you, and you decide what permission to give others for it. But at a minimum, you license the company to provide content that you submit to the forum to other users of the forum. That special license allows the company to copy, publish, and analyze content you submit to the forum.
+
+      When content you submit is removed from the forum, whether by you or by the company, the company's special license ends when the last copy disappears from the company's backups, caches, and other systems. Other licenses you apply to content you submit, such as [Creative Commons](https://creativecommons.org) licenses, may continue after your content is removed. Those licenses may give others, or the company itself, the right to share your content through the forum again.
+
+      Others who receive content you submit to the forum may violate the terms on which you license your content. You agree that the company will not be liable to you for those violations or their consequences.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Your Responsibility</a></h2>
+
+      You agree to indemnify the company from legal claims by others related to your breach of these terms, or breach of these terms by others using your account on the forum. Both you and the company agree to notify the other side of any legal claims for which you might have to indemnify the company as soon as possible. If the company fails to notify you of a legal claim promptly, you won't have to indemnify the company for damages that you could have defended against or mitigated with prompt notice. You agree to allow the company to control investigation, defense, and settlement of legal claims for which you would have to indemnify the company, and to cooperate with those efforts. The company agrees not to agree to any settlement that admits fault for you or imposes obligations on you without your prior agreement.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
+
+      ***You accept all risk of using the forum and content on the forum. As far as the law allows, the company and its suppliers provide the forum as is, without any warranty whatsoever.***
+
+      The forum may hyperlink to and integrate forums and services run by others. The company does not make any warranty about services run by others, or content they may provide. Use of services run by others may be governed by other terms between you and the one running service.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Limits on Liability</a></h2>
+
+      ***Neither the company nor its suppliers will be liable to you for breach-of-contract damages their personnel could not have reasonably foreseen when you agreed to these terms.***
+
+      ***As far as the law allows, the total liability to you for claims of any kind that are related to the forum or content on the forum will be limited to $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
+
+      The company welcomes your feedback and suggestions for the forum. See the [Contact](#heading--contact) section below for ways to get in touch with us.
+
+      You agree that the company will be free to act on feedback and suggestions you provide, and that the company won't have to notify you that your feedback was used, get your permission to use it, or pay you. You agree not to submit feedback or suggestions that you believe might be confidential or proprietary, to you or others.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Termination</a></h2>
+
+      Either you or the company may end the agreement written out in these terms at any time. When our agreement ends, your permission to use the forum also ends.
+
+      The following provisions survive the end of our agreement: [Your Content](#heading--your-content), [Feedback](#heading--feedback), [Your Responsibility](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Limits on Liability](#heading--liability), and [General Terms](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputes</a></h2>
+
+      %{governing_law} will govern any dispute related to these terms or your use of the forum.
+
+      You and the company agree to seek injunctions related to these terms only in state or federal court in %{city_for_disputes}. Neither you nor the company will object to jurisdiction, forum, or venue in those courts.
+
+      ***Other than to seek an injunction or for claims under the Computer Fraud and Abuse Act, you and the company will resolve any dispute by binding American Arbitration Association arbitration. Arbitration will follow the AAA's Commercial Arbitration Rules and Supplementary Procedures for Consumer Related Disputes. Arbitration will happen in %{city_for_disputes}. You will settle any dispute as an individual, and not as part of a class action or other representative proceeding, whether as the plaintiff or a class member. No arbitrator will consolidate any dispute with any other arbitration without the company's permission.***
+
+      Any arbitration award will include costs of the arbitration, reasonable attorneys' fees, and reasonable costs for witnesses. You and the company may enter arbitration awards in any court with jurisdiction.
+
+      <h2 id="heading--general"><a href="#heading--general">General Terms</a></h2>
+
+      If a provision of these terms is unenforceable as written, but could be changed to make it enforceable, that provision should be modified to the minimum extent necessary to make it enforceable. Otherwise, that provision should be removed.
+
+      You may not assign your agreement with the company. The company may assign your agreement to any affiliate of the company, any other company that obtains control of the company, or any other company that buys assets of the company related to the forum. Any attempted assignment against these terms has no legal effect.
+
+      Neither the exercise of any right under this Agreement, nor waiver of any breach of this Agreement, waives any other breach of this Agreement.
+
+      These terms embody all the terms of agreement between you and the company about use of the forum. These terms entirely replace any other agreements about your use of the forum, written or not.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+
+      You may notify the company under these terms, and send questions to the company, at <%{contact_email}>.
+
+      The company may notify you under these terms using the e-mail address you provide for your account on the forum, or by posting a message to the homepage of the forum or your account page.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Changes</a></h2>
+
+      The company last updated these terms on July 12, 2018, and may update these terms again. The company will post all updates to the forum. For updates that contain substantial changes, the company agrees to e-mail you, if you've created an account and provided a valid e-mail address. The company may also announce updates with special messages or alerts on the forum.
+
+      Once you get notice of an update to these terms, you must agree to the new terms in order to keep using the forum.
   privacy_topic:
     title: "개인정보처리방침"
   badges:
@@ -3076,9 +3712,13 @@ ko:
     first_quote:
       name: 첫 번째 인용
       description: 포스트를 인용함
+      long_description: |
+        이 배지는 댓글에서 게시물을 처음 인용 할 때 부여됩니다. 댓글에서 이전 게시물의 관련 부분을 인용하면 대화가 연결되고 소통에 도움이 됩니다. 가장 쉬운 인용 방법은 게시물의 섹션을 강조 표시 한 다음 아무 댓글 작성 버튼을 누르는 것입니다. 아낌없이 인용하십시오!
     read_guidelines:
       name: 가이드라인 읽기
       description: <a href="%{base_uri}/guidelines">커뮤니티 지침을</a> 읽으십시오
+      long_description: |
+        이 배지는 <a href="%{base_uri}/guidelines">커뮤니티 가이드를 읽었을 때 부여됩니다</a>. 가이드의 간단한 지침을 따르고 공유하면 모든 사람을위한 안전하고 재미 있고 지속 가능한 커뮤니티를 구축하는데 도움이됩니다.
     reader:
       name: 글 읽기
       description: 100개가 넘는 답글이 달린 토픽의 답글을 모두 읽었습니다
@@ -3154,9 +3794,13 @@ ko:
     first_emoji:
       name: 첫 번째 이모티콘
       description: 게시글에 Emoji를 사용했습니다
+      long_description: |
+        이 배지는 게시물에 이모티콘을 처음 추가 할 때 부여됩니다 :thumbsup:. 이모티콘을 사용하면 게시물에 행복 :smiley: , 슬픔 :anguished: , 분노 :angry: 등 모든 감정을 전달할 수 있습니다 :sunglasses:. :(콜론)을 입력하거나 편집기에서 이모티콘 도구 모음 버튼을 눌러 수백 가지 선택 항목 중에서 선택하세요. :ok_hand:
     first_mention:
       name: 첫 번째 멘션
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다
+      long_description: |
+        이 배지는 게시물에서 누군가의 @username 형식으로 처음 언급 했을때 부여됩니다. 각 멘션은 해당 사용자에게 알림을 생성하므로 사용자는 게시물에 대해 알 수 있습니다. @ (기호)를 입력하기만 하면 사용자 또는 허용되는 경우 그룹을 언급 할 수 있습니다. 이는 사용자의 관심을 끌 수있는 편리한 방법입니다.
     first_onebox:
       name: 첫 번째 박스 링크
       description: 박스 링크를 처음으로 포스팅했습니다
@@ -3177,9 +3821,13 @@ ko:
     enthusiast:
       name: 열성가
       description: 연속 10 일 방문
+      long_description: |
+        이 배지는 연속 10일 방문시 부여됩니다. 일주일 이상 함께 해주셔서 감사합니다!
     aficionado:
       name: 열렬한 애호가
       description: 연속 100 일 방문
+      long_description: |
+        이 배지는 연속 100일 방문시 부여됩니다. 3개월이 넘었습니다!
     devotee:
       name: 신봉자
       description: 365 일 연속 방문
@@ -3202,7 +3850,7 @@ ko:
     restricted_tag_remove_disallowed: '"%{tag}"태그를 제거 할 수 없습니다.'
     minimum_required_tags:
       other: "최소한 %{count}개의 태그를 선택해야합니다."
-    upload_row_too_long: "CSV 파일에는 한 줄에 하나의 태그가 있어야합니다. 선택적으로 태그 뒤에 쉼표가 붙은 다음 태그 그룹 이름이 올 수 있습니다."
+    upload_row_too_long: "CSV 파일에는 한 줄에 하나의 태그가 있어야 합니다. 선택적으로 태그 뒤에 쉼표를 붙인 다음 태그 그룹명을 붙일 수 있습니다."
     forbidden:
       invalid:
         other: "선택한 태그를 사용할 수 없습니다."
@@ -3244,7 +3892,7 @@ ko:
         title: "Welcome to your Discourse!"
         fields:
           default_locale:
-            description: "What’s the default language for your community?"
+            description: "사이트의 기본 언어는 무엇인가요?"
       forum_title:
         title: "이름"
         description: "이 이름은 이 사이트의 간판이 되며, 방문자들이 이 커뮤니티를 파악하는 <i>첫번째</i> 요소가 됩니다. 사이트 이름과 타이틀은 이 커뮤니티에 대하여 무엇을 알려주나요?"
@@ -3372,6 +4020,10 @@ ko:
         disabled: "로컬 로그인이 비활성화되어 있으므로 누구에게도 초대장을 보낼 수 없습니다. 다음 단계로 진행하십시오."
       finished:
         title: "당신의 Discourse가 준비되었습니다!"
+        description: |
+          <p>이러한 설정을 변경하고 싶다면 <b>언제든지이 마법사를 다시 실행하거나</b> 또는 <a href='%{base_path}/admin' target='_blank'>관리자 섹션</a>을 방문하십시오. 사이트 메뉴의 공구 모양 아이콘 옆에 있습니다.</p>
+          <p>강력한 테마 시스템을 사용하여 사이트를 더욱 쉽게 맞춤화 할 수 있습니다. 예를 들어, <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>의 <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">주요 테마 및 구성 요소</a>를 확인하세요. </p>
+          <p>즐거운 시간 되세요, <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>새로운 커뮤니티를 구축에 행운을 빕니다!</a></p>
   search_logs:
     graph_title: "검색 횟수"
   joined: "가입함"
@@ -3428,6 +4080,7 @@ ko:
       email_auth_res_enqueue: "이 이메일은 DMARC 확인에 실패했으며, 발신자가 아닌 것 같습니다. 자세한 내용은 원시 이메일 헤더를 확인하십시오."
       email_spam: "이 이메일은`email_in_spam_header`에 정의 된 헤더에 의해 스팸으로 표시되었습니다."
       suspect_user: "이 새로운 사용자는 주제 나 게시물을 읽지 않고 프로필 정보를 입력했으며, 이는 스팸 발송자 일 수 있음을 강력하게 제안합니다. `approve_suspect_users`를 참조하십시오."
+      contains_media: "이 게시물에는 임베디드 미디어가 포함되어 있습니다. `review_media_unless_trust_level`을 참조하십시오."
     actions:
       agree:
         title: "동의..."

@@ -1192,8 +1192,6 @@ fa_IR:
         link_created_at: "ساخته شده"
         link_groups: گروه ها
         create: "ارسال دعوتنامه "
-        generate_link: "کپی لینک دعوت"
-        link_generated: "لینک دعوت با موفقیت ایجاد شد!"
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
         invite_link:
           success: "لینک دعوت با موفقیت ایجاد شد!"

@@ -862,8 +862,6 @@ et:
         link_created_at: "Loodud"
         link_groups: Grupid
         create: "Saada kutse"
-        generate_link: "Kopeeri viide kutsele"
-        link_generated: "Kutse link edukalt genereeritud!"
         valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         invite_link:
           success: "Kutse link edukalt genereeritud!"

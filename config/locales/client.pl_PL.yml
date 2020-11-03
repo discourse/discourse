@@ -1369,9 +1369,6 @@ pl_PL:
         link_groups: Grupy
         link_expires_at: Wygasa
         create: "Wyślij zaproszenie"
-        copy_link: "Skopiuj odnośnik"
-        generate_link: "Skopiuj odnośnik z zaproszeniem"
-        link_generated: "Link z zaproszenie został poprawnie wygenerowany!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
         single_user: "Zaproś przez e-mail"
         multiple_user: "Zaproś za pomocą linku"
@@ -1855,10 +1852,6 @@ pl_PL:
       yourself_confirm:
         title: "Nie zapomniałeś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
-      slow_mode:
-        title: "Ten temat jest w trybie zwolnionym."
-        body: "Po wysłaniu postu musisz poczekać %{duration} , zanim będziesz mógł ponownie coś opublikować."
-        error: "Ostatnio napisałeś na ten temat, który jest w trybie zwolnionym. Poczekaj, aby inni użytkownicy mogli wziąć udział w dyskusji."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
