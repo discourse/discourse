@@ -1,4 +1,4 @@
-import { alias, not } from "@ember/object/computed";
+import { alias, not, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -10,6 +10,10 @@ export default Controller.extend({
   navigationCategory: controller("navigation/category"),
   application: controller(),
   router: service(),
+  viewingCategoriesList: equal(
+    "router.currentRouteName",
+    "discovery.categories"
+  ),
 
   loading: false,
 
