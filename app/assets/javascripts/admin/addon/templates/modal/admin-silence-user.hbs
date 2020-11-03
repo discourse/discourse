@@ -1,6 +1,10 @@
 {{#d-modal-body title="admin.user.silence_modal_title"}}
   {{#conditional-loading-spinner condition=loadingUser}}
 
+    {{#if errorMessage}}
+      <div class="alert alert-error">{{errorMessage}}</div>
+    {{/if}}
+
     <div class="until-controls">
       <label>
         {{future-date-input

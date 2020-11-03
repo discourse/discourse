@@ -2507,6 +2507,8 @@ en:
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
     email_in_spam_header: "User's first email was flagged as spam"
+    already_silenced: "User was already silenced by %{staff} %{time_ago}."
+    already_suspended: "User was already suspended by %{staff} %{time_ago}."
 
   reviewables_reminder:
     submitted:
