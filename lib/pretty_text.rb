@@ -432,7 +432,7 @@ module PrettyText
 
     # images by themselves or inside a onebox
     doc.css('img[src]').each do |img|
-      url = if img.parent.classes.include?("aspect-image")
+      url = if img.parent.classes.include?("aspect-image") && img.attributes["srcset"].present?
 
         # we are using the first image from the srcset here so we get the
         # optimized image instead of the original, because an optimized
