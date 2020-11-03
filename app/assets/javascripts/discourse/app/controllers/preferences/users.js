@@ -43,7 +43,6 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_usernames",
-      "ignored_usernames",
       "allowed_pm_usernames",
       "enable_allowed_pm_users",
     ];

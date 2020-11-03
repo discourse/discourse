@@ -6,7 +6,6 @@ module Jobs
 
     def execute(args)
       IgnoredUser.where("expiring_at <= ?", Time.zone.now).delete_all
-      IgnoredUser.where("created_at <= ? AND expiring_at IS NULL", 4.months.ago).delete_all
     end
   end
 end
