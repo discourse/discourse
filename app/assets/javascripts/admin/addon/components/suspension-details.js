@@ -28,6 +28,17 @@ export default Component.extend({
   },
 
   @action
+  setSelectedReason(value) {
+    this.set("selectedReason", value);
+    this.setReason();
+  },
+
+  @action
+  setCustomReason(value) {
+    this.set("customReason", value);
+    this.setReason();
+  },
+
   setReason() {
     if (this.isCustomReason) {
       this.set("reason", this.customReason);
