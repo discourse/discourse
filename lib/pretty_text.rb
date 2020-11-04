@@ -409,11 +409,12 @@ module PrettyText
     # images inside a lightbox or other link
     doc.css('a[href]').each do |a|
       next if !Upload.secure_media_url?(a['href'])
-      next if a.css('img[src]').empty?
 
       non_image_media = %w(video audio).include?(a&.parent&.name)
       target = non_image_media ? a.parent : a
       next if target.to_s.include?('stripped-secure-view-media')
+
+      next if a.css('img[src]').empty? && !non_image_media
 
       if a.classes.include?('lightbox')
         img = a.css('img[src]').first
