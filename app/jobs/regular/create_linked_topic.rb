@@ -10,6 +10,7 @@ module Jobs
       return unless parent_topic.present?
       parent_topic_id = parent_topic.id
       parent_title = parent_topic.title
+      @post_creator = nil
 
       ActiveRecord::Base.transaction do
         linked_topic_record = parent_topic.linked_topic
@@ -42,11 +43,13 @@ module Jobs
         new_topic_title = I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: sequence)
         new_topic_raw = I18n.t('create_linked_topic.post_raw', parent_url: reference_post.full_url, previous_topics: previous_topics)
         system_user = Discourse.system_user
-        new_post = PostCreator.create!(
+        @post_creator = PostCreator.new(
           system_user,
           title: new_topic_title,
           raw: new_topic_raw,
-          skip_validations: true)
+          skip_validations: true,
+          skip_jobs: true)
+        new_post = @post_creator.create
         new_topic = new_post.topic
         new_topic_id = new_topic.id
 
@@ -75,6 +78,7 @@ module Jobs
         # add moderator post to old topic
         parent_topic.add_moderator_post(system_user, I18n.t('create_linked_topic.moderator_post_raw', new_url: new_topic.url))
       end
+      @post_creator.enqueue_jobs if @post_creator
     end
   end
 end
