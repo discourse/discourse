@@ -345,6 +345,11 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "returns a 400 error if the page parameter is padded with spaces" do
+      get "/search.json", params: { q: 'kittens', page: ' 3  ' }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
