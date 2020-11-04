@@ -409,17 +409,22 @@ module PrettyText
     # images inside a lightbox or other link
     doc.css('a[href]').each do |a|
       next if !Upload.secure_media_url?(a['href'])
+      next if a.css('img[src]').empty?
 
       non_image_media = %w(video audio).include?(a&.parent&.name)
       target = non_image_media ? a.parent : a
       next if target.to_s.include?('stripped-secure-view-media')
 
       if a.classes.include?('lightbox')
-        # we are using the first image from the srcset here so we get the
-        # optimized image instead of the possibly huge original
         img = a.css('img[src]').first
-        srcset = img.attributes['srcset'].value
-        url = srcset.split(',').first
+        srcset = img&.attributes['srcset']&.value
+        if srcset
+          # if available, use the first image from the srcset here
+          # so we get the optimized image instead of the possibly huge original
+          url = srcset.split(',').first
+        else
+          url = img['src']
+        end
         a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
         a.remove
       else
