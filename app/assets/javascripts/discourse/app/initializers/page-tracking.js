@@ -45,6 +45,18 @@ export default {
       });
     }
 
+    // And UA via gtag if we're upgraded
+    if (typeof window.gtag !== "undefined") {
+      appEvents.on("page:changed", (data) => {
+        if (!data.replacedOnlyQueryParams) {
+          window.gtag("event", "page_view", {
+            page_location: data.url,
+            page_title: data.title,
+          });
+        }
+      });
+    }
+
     // And Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
       appEvents.on("page:changed", (data) => {

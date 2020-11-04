@@ -56,6 +56,8 @@ class ContentSecurityPolicy
       ].tap do |sources|
         sources << :report_sample if SiteSetting.content_security_policy_collect_reports
         sources << :unsafe_eval if Rails.env.development? # TODO remove this once we have proper source maps in dev
+        # we need analytics.js still as gtag/js is a script wrapper for it
+        sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtag/js' if SiteSetting.ga_universal_tracking_code.present?
         sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?
       end

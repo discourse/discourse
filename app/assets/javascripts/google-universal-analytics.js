@@ -1,12 +1,12 @@
 // discourse-skip-module
 (function () {
   const gaDataElement = document.getElementById("data-ga-universal-analytics");
-
   window.dataLayer = window.dataLayer || [];
-  function gtag() {
+
+  window.gtag = function () {
     window.dataLayer.push(arguments);
-  }
-  gtag("js", new Date());
+  };
+  window.gtag("js", new Date());
 
   let autoLinkConfig = {};
 
@@ -19,5 +19,8 @@
       },
     };
   }
-  gtag("config", gaDataElement.dataset.trackingCode, autoLinkConfig);
+  window.gtag("config", gaDataElement.dataset.trackingCode, {
+    send_page_view: false,
+    autoLinkConfig,
+  });
 })();
