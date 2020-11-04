@@ -299,7 +299,7 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    unless current_user.staff? || guardian.is_category_group_moderator?(post.topic.category)
+    unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
@@ -320,7 +320,7 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    unless current_user.staff? || guardian.is_category_group_moderator?(post.topic.category)
+    unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
@@ -809,10 +809,14 @@ class PostsController < ApplicationController
     raise Discourse::NotFound unless post
 
     post.topic = Topic.with_deleted.find(post.topic_id)
-    raise Discourse::NotFound unless post.topic
 
-    has_elevated_permissions = current_user.try(:staff?) || guardian.is_category_group_moderator?(post.topic.category)
-    raise Discourse::NotFound if (post.deleted_at.present? || post.topic.deleted_at.present?) && !has_elevated_permissions
+    if !post.topic ||
+       (
+        (post.deleted_at.present? || post.topic.deleted_at.present?) &&
+        !guardian.can_moderate_topic?(post.topic)
+       )
+      raise Discourse::NotFound
+    end
 
     guardian.ensure_can_see!(post)
     post

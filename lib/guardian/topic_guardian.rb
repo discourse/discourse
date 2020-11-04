@@ -19,6 +19,7 @@ module TopicGuardian
 
     is_category_group_moderator?(topic.category)
   end
+  alias :can_moderate_topic? :can_review_topic?
 
   def can_create_shared_draft?
     is_staff? && SiteSetting.shared_drafts_enabled?

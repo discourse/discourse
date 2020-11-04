@@ -181,18 +181,22 @@ module PostGuardian
     return false if post.is_first_post?
 
     # Can't delete posts in archived topics unless you are staff
-    has_elevated_permissions = is_staff? || is_category_group_moderator?(post.topic.category)
-    return false if !has_elevated_permissions && post.topic.archived?
+    can_moderate = can_moderate_topic?(post.topic)
+    return false if !can_moderate && post.topic&.archived?
 
     # You can delete your own posts
     return !post.user_deleted? if is_my_own?(post)
 
-    has_elevated_permissions
+    can_moderate
   end
 
   # Recovery Method
   def can_recover_post?(post)
-    if is_staff? || is_category_group_moderator?(post&.topic&.category)
+    return false unless post
+
+    topic = Topic.with_deleted.find(post.topic_id) if post.topic_id
+
+    if can_moderate_topic?(topic)
       !!post.deleted_at
     else
       is_my_own?(post) && post.user_deleted && !post.deleted_at
