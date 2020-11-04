@@ -174,6 +174,7 @@ module SvgSprite
     "star",
     "step-backward",
     "step-forward",
+    "stopwatch",
     "stream",
     "sync-alt",
     "sync",
