@@ -210,6 +210,31 @@ describe Email::Styles do
       frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-media-uploads/235723\">Visit Topic</a>")
       expect(frag.to_s).not_to include("Redacted")
     end
+
+    it "works in lightboxes with missing srcset attribute" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\" class=\"lightbox\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
+      expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
+    end
+
+    it "works in lightboxes with srcset attribute set" do
+      frag = html_fragment(
+        <<~HTML
+          <a href="#{Discourse.base_url}/secure-media-uploads/original/1X/testimage.png" class="lightbox">
+            <img src="/secure-media-uploads/original/1X/testimage.png" srcset="/secure-media-uploads/optimized/1X/testimage.png, /secure-media-uploads/original/1X/testimage.png 1.5x" />
+          </a>
+        HTML
+      )
+
+      expect(frag.at('img')).not_to be_present
+      expect(frag.to_s).to include("Redacted")
+    end
+
+    it "skips links with no images as children" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><span>Clearly not an image</span></a>")
+      expect(frag.to_s).to include("not an image")
+    end
+
   end
 
   context "inline_secure_images" do
