@@ -70,24 +70,24 @@ export default createPreviewComponent(659, 320, {
 
     // Share Button
     ctx.beginPath();
-    ctx.rect(margin, line + lineHeight, width * 0.1, height * 0.12);
+    ctx.rect(margin, line + lineHeight, width * 0.125, height * 0.1);
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
-      margin + width / 55,
-      line + lineHeight * 1.85
+      margin + width / 65,
+      line + lineHeight * 1.7
     );
 
     // Reply Button
     ctx.beginPath();
     ctx.rect(
-      margin + width * 0.12,
+      margin + width * 0.145,
       line + lineHeight,
-      width * 0.1,
-      height * 0.12
+      width * 0.13,
+      height * 0.1
     );
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
@@ -95,8 +95,8 @@ export default createPreviewComponent(659, 320, {
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
-      margin + width * 0.12 + width / 55,
-      line + lineHeight * 1.85
+      margin + width * 0.14 + width / 55,
+      line + lineHeight * 1.7
     );
 
     // Draw Timeline
