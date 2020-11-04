@@ -44,7 +44,7 @@ describe Jobs::CreateLinkedTopic do
       new_topic = Topic.last
       linked_topic = new_topic.linked_topic
       expect(topic.title).to include(I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: 1))
-      expect(topic.posts.last.raw).to eq(I18n.t('create_linked_topic.moderator_post_raw', new_title: "[#{new_topic.title}](#{new_topic.url})"))
+      expect(topic.posts.last.raw).to eq(I18n.t('create_linked_topic.moderator_post_raw', new_url: new_topic.url))
       expect(new_topic.title).to include(I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: 2))
       expect(new_topic.first_post.raw).to include(topic.url)
       expect(new_topic.topic_users.count).to eq(3)

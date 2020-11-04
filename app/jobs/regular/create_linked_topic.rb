@@ -35,12 +35,12 @@ module Jobs
         previous_topics = ""
         linked_topic_ids = LinkedTopic.where(original_topic_id: original_topic_id).pluck(:topic_id)
         Topic.where(id: linked_topic_ids).order(:id).each do |topic|
-          previous_topics += "- [#{topic.title}](#{topic.url})\n"
+          previous_topics += "- #{topic.url}\n"
         end
 
         # create new topic
         new_topic_title = I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: sequence)
-        new_topic_raw = I18n.t('create_linked_topic.post_raw', parent_title: "[#{parent_title}](#{reference_post.full_url})", previous_topics: previous_topics)
+        new_topic_raw = I18n.t('create_linked_topic.post_raw', parent_url: reference_post.full_url, previous_topics: previous_topics)
         system_user = Discourse.system_user
         new_post = PostCreator.create!(
           system_user,
@@ -73,7 +73,7 @@ module Jobs
         SQL
 
         # add moderator post to old topic
-        parent_topic.add_moderator_post(system_user, I18n.t('create_linked_topic.moderator_post_raw', new_title: "[#{new_topic_title}](#{new_topic.url})"))
+        parent_topic.add_moderator_post(system_user, I18n.t('create_linked_topic.moderator_post_raw', new_url: new_topic.url))
       end
     end
   end
