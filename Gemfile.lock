@@ -356,7 +356,7 @@ GEM
       rubocop-rspec (>= 2.0.0.pre)
     rubocop-rspec (2.0.0.pre)
       rubocop (~> 1.0)
-    ruby-prof (1.4.1)
+    ruby-prof (1.4.2)
     ruby-progressbar (1.10.1)
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
