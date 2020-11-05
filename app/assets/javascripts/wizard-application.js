@@ -1,5 +1,4 @@
 //= require_tree ./discourse-common/addon
-//= require i18n-patches
 //= require_tree ./select-kit/addon
 //= require wizard/router
 //= require wizard/wizard
