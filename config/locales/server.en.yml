@@ -4945,4 +4945,4 @@ en:
       one: "%{topic_title} (Part %{count})"
       other: "%{topic_title} (Part %{count})"
     post_raw: "Continuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
-    moderator_post_raw: "Continue discussion here: %{new_url}"
+    small_action_post_raw: "Continue discussion at %{new_title}."

@@ -75,8 +75,12 @@ module Jobs
           ON CONFLICT (topic_id, user_id) DO NOTHING
         SQL
 
-        # add moderator post to old topic
-        parent_topic.add_moderator_post(system_user, I18n.t('create_linked_topic.moderator_post_raw', new_url: new_topic.url))
+        # update small action post on old topic to add new topic link
+        small_action_post = Post.where(topic_id: parent_topic_id, post_type: Post.types[:small_action], action_code: "closed.enabled").last
+        if small_action_post.present?
+          small_action_post.raw = "#{small_action_post.raw} #{I18n.t('create_linked_topic.small_action_post_raw', new_title: "[#{new_topic_title}](#{new_topic.url})")}"
+          small_action_post.save!
+        end
       end
       @post_creator.enqueue_jobs if @post_creator
     end
