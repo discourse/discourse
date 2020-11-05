@@ -441,6 +441,7 @@ class Topic < ActiveRecord::Base
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
+    return unless regular?
     if user && user.new_user_posting_on_first_day?
       limit_first_day_topics_per_day
     else

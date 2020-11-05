@@ -2215,6 +2215,29 @@ describe Topic do
     end
   end
 
+  context "per day personal message limit" do
+    before do
+      SiteSetting.max_personal_messages_per_day = 1
+      SiteSetting.max_topics_per_day = 0
+      SiteSetting.max_topics_in_first_day = 0
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.clear_all!
+      RateLimiter.disable
+    end
+
+    it "limits according to max_personal_messages_per_day" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      expect {
+        create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+  end
+
   describe ".count_exceeds_minimun?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
