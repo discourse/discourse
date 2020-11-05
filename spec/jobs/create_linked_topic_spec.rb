@@ -37,6 +37,7 @@ describe Jobs::CreateLinkedTopic do
     end
 
     it 'creates a linked topic' do
+      small_action_post = Fabricate(:post, topic: topic, post_type: Post.types[:small_action], action_code: "closed.enabled")
       Jobs::CreateLinkedTopic.new.execute(post_id: post.id)
 
       raw_title = topic.title
@@ -44,7 +45,7 @@ describe Jobs::CreateLinkedTopic do
       new_topic = Topic.last
       linked_topic = new_topic.linked_topic
       expect(topic.title).to include(I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: 1))
-      expect(topic.posts.last.raw).to eq(I18n.t('create_linked_topic.moderator_post_raw', new_url: new_topic.url))
+      expect(topic.posts.last.raw).to include(I18n.t('create_linked_topic.small_action_post_raw', new_title: "[#{new_topic.title}](#{new_topic.url})"))
       expect(new_topic.title).to include(I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: 2))
       expect(new_topic.first_post.raw).to include(topic.url)
       expect(new_topic.topic_users.count).to eq(3)
