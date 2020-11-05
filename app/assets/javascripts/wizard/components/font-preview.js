@@ -38,7 +38,7 @@ export default createPreviewComponent(659, 320, {
       this.drawFullHeader(colors, headingFont, this.logo);
     }
 
-    const margin = width * 0.04;
+    const margin = 20;
     const avatarSize = height * 0.2;
     const lineHeight = height / 11;
 
@@ -69,25 +69,29 @@ export default createPreviewComponent(659, 320, {
     }
 
     // Share Button
+    const shareButtonWidth = I18n.t("wizard.previews.share_button").length * 11;
+
     ctx.beginPath();
-    ctx.rect(margin, line + lineHeight, width * 0.1, height * 0.12);
+    ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
-      margin + width / 55,
-      line + lineHeight * 1.85
+      margin + 10,
+      line + lineHeight * 1.7
     );
 
     // Reply Button
+    const replyButtonWidth = I18n.t("wizard.previews.reply_button").length * 11;
+
     ctx.beginPath();
     ctx.rect(
-      margin + width * 0.12,
+      shareButtonWidth + margin + 10,
       line + lineHeight,
-      width * 0.1,
-      height * 0.12
+      replyButtonWidth,
+      height * 0.1
     );
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
@@ -95,8 +99,8 @@ export default createPreviewComponent(659, 320, {
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
-      margin + width * 0.12 + width / 55,
-      line + lineHeight * 1.85
+      shareButtonWidth + margin + 20,
+      line + lineHeight * 1.7
     );
 
     // Draw Timeline

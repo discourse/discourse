@@ -71,24 +71,27 @@ export default createPreviewComponent(305, 165, {
     }
 
     // Share Button
+    const shareButtonWidth = I18n.t("wizard.previews.share_button").length * 9;
+
     ctx.beginPath();
-    ctx.rect(margin, line + lineHeight, width * 0.14, height * 0.14);
+    ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.14);
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, 65);
     ctx.fill();
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.share_button"),
-      margin + width / 55,
+      margin + 8,
       line + lineHeight * 1.85
     );
 
     // Reply Button
+    const replyButtonWidth = I18n.t("wizard.previews.reply_button").length * 9;
     ctx.beginPath();
     ctx.rect(
-      margin * 2 + width * 0.14,
+      shareButtonWidth + margin + 10,
       line + lineHeight,
-      width * 0.14,
+      replyButtonWidth,
       height * 0.14
     );
     ctx.fillStyle = colors.tertiary;
@@ -97,7 +100,7 @@ export default createPreviewComponent(305, 165, {
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
       I18n.t("wizard.previews.reply_button"),
-      margin * 2 + width * 0.14 + width / 55,
+      shareButtonWidth + margin + 18,
       line + lineHeight * 1.85
     );
 
