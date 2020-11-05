@@ -194,6 +194,7 @@ module ImportScripts::PhpBB3
 
     def fix_markdown(text)
       text.gsub!(/(\n*\[\/?quote.*?\]\n*)/mi) { |q| "\n#{q.strip}\n" }
+      text.gsub!(/^!\[[^\]]*\]\([^\]]*\)$/i) { |img| "\n#{img.strip}\n" } # space out images single on line
       text
     end
   end
