@@ -15,28 +15,27 @@ function loadOnebox(element) {
   });
 }
 
-module("lib:oneboxer");
+module("Unit | Utility | oneboxer", function () {
+  test("load - failed onebox", async function (assert) {
+    let element = document.createElement("A");
+    element.setAttribute("href", "http://somebadurl.com");
 
-test("load - failed onebox", async function (assert) {
-  let element = document.createElement("A");
-  element.setAttribute("href", "http://somebadurl.com");
+    await loadOnebox(element);
 
-  await loadOnebox(element);
+    assert.equal(
+      failedCache["http://somebadurl.com"],
+      true,
+      "stores the url as failed in a cache"
+    );
+    assert.equal(
+      loadOnebox(element),
+      undefined,
+      "it returns early for a failed cache"
+    );
+  });
 
-  assert.equal(
-    failedCache["http://somebadurl.com"],
-    true,
-    "stores the url as failed in a cache"
-  );
-  assert.equal(
-    loadOnebox(element),
-    undefined,
-    "it returns early for a failed cache"
-  );
-});
-
-test("load - successful onebox", async function (assert) {
-  const html = `
+  test("load - successful onebox", async function (assert) {
+    const html = `
     <aside class="onebox allowlistedgeneric">
       <header class="source">
           <a href="http://test.com/somepage" target="_blank">test.com</a>
@@ -49,21 +48,22 @@ test("load - successful onebox", async function (assert) {
       <div class="onebox-metadata"></div>
       <div style="clear: both"></div>
     </aside>
-  `;
+    `;
 
-  let element = document.createElement("A");
-  element.setAttribute("href", "http://somegoodurl.com");
+    let element = document.createElement("A");
+    element.setAttribute("href", "http://somegoodurl.com");
 
-  await loadOnebox(element);
+    await loadOnebox(element);
 
-  assert.equal(
-    localCache["http://somegoodurl.com"].prop("outerHTML"),
-    stringToHTML(html).outerHTML,
-    "stores the html of the onebox in a local cache"
-  );
-  assert.equal(
-    loadOnebox(element),
-    html.trim(),
-    "it returns the html from the cache"
-  );
+    assert.equal(
+      localCache["http://somegoodurl.com"].prop("outerHTML"),
+      stringToHTML(html).outerHTML,
+      "stores the html of the onebox in a local cache"
+    );
+    assert.equal(
+      loadOnebox(element),
+      html.trim(),
+      "it returns the html from the cache"
+    );
+  });
 });

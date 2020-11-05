@@ -128,18 +128,39 @@ export function controllerModule(name, args = {}) {
   });
 }
 
-export function discourseModule(name, hooks) {
+export function discourseModule(name, options) {
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
+
+  if (typeof options === "function") {
+    module(name, function (hooks) {
+      hooks.beforeEach(function () {
+        this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
+        this.siteSettings = currentSettings();
+      });
+
+      options.call(this, hooks);
+    });
+
+    return;
+  }
+
   module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (hooks && hooks.beforeEach) {
-        hooks.beforeEach.call(this);
+      if (options && options.beforeEach) {
+        options.beforeEach.call(this);
       }
     },
     afterEach() {
-      if (hooks && hooks.afterEach) {
-        hooks.afterEach.call(this);
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
     },
   });

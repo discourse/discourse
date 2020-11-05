@@ -6,8 +6,14 @@ import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
 
-module("lib:click-track-edit-history", {
-  beforeEach() {
+const track = ClickTrack.trackClick;
+
+function generateClickEventOn(selector) {
+  return $.Event("click", { currentTarget: fixture(selector).first() });
+}
+
+module("Unit | Utility | click-track-edit-history", function (hooks) {
+  hooks.beforeEach(function () {
     logIn();
 
     let win = { focus: function () {} };
@@ -51,59 +57,53 @@ module("lib:click-track-edit-history", {
          </div>
        </div>`
     );
-  },
-});
-
-var track = ClickTrack.trackClick;
-
-function generateClickEventOn(selector) {
-  return $.Event("click", { currentTarget: fixture(selector).first() });
-}
-
-skip("tracks internal URLs", async function (assert) {
-  assert.expect(2);
-  sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
-
-  const done = assert.async();
-  pretender.post("/clicks/track", (request) => {
-    assert.equal(
-      request.requestBody,
-      "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
-    );
-    done();
   });
 
-  assert.notOk(track(generateClickEventOn("#same-site")));
-});
+  skip("tracks internal URLs", async function (assert) {
+    assert.expect(2);
+    sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
-skip("tracks external URLs", async function (assert) {
-  assert.expect(2);
+    const done = assert.async();
+    pretender.post("/clicks/track", (request) => {
+      assert.equal(
+        request.requestBody,
+        "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
+      );
+      done();
+    });
 
-  const done = assert.async();
-  pretender.post("/clicks/track", (request) => {
-    assert.equal(
-      request.requestBody,
-      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-    );
-    done();
+    assert.notOk(track(generateClickEventOn("#same-site")));
   });
 
-  assert.notOk(track(generateClickEventOn("a")));
-});
+  skip("tracks external URLs", async function (assert) {
+    assert.expect(2);
 
-skip("tracks external URLs when opening in another window", async function (assert) {
-  assert.expect(3);
-  User.currentProp("external_links_in_new_tab", true);
+    const done = assert.async();
+    pretender.post("/clicks/track", (request) => {
+      assert.equal(
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
+      );
+      done();
+    });
 
-  const done = assert.async();
-  pretender.post("/clicks/track", (request) => {
-    assert.equal(
-      request.requestBody,
-      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-    );
-    done();
+    assert.notOk(track(generateClickEventOn("a")));
   });
 
-  assert.notOk(track(generateClickEventOn("a")));
-  assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+  skip("tracks external URLs when opening in another window", async function (assert) {
+    assert.expect(3);
+    User.currentProp("external_links_in_new_tab", true);
+
+    const done = assert.async();
+    pretender.post("/clicks/track", (request) => {
+      assert.equal(
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
+      );
+      done();
+    });
+
+    assert.notOk(track(generateClickEventOn("a")));
+    assert.ok(window.open.calledWith("http://www.google.com", "_blank"));
+  });
 });
