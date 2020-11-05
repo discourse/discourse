@@ -1404,7 +1404,7 @@ en:
           max_redemptions_allowed_label: "How many people are allowed to register using this link?"
           expires_at: "When will this invite link expire?"
         bulk_invite:
-          none: "You haven't invited anyone here yet. Send individual invites, or invite many people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
+          none: "No invitations to display on this page. You can invite specific people using their email, or create an invite link that can be used by anybody."
           text: "Bulk Invite"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
