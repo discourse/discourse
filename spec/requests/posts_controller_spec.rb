@@ -45,6 +45,28 @@ shared_examples 'finding and showing post' do
       get url
       expect(response.status).to eq(200)
     end
+
+    context "category group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user_gm) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(user_gm)
+      end
+
+      it "can find posts in the allowed category" do
+        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        get url
+        expect(response.status).to eq(200)
+      end
+
+      it "can't find posts outside of the allowed category" do
+        get url
+        expect(response.status).to eq(404)
+      end
+    end
   end
 end
 

@@ -94,6 +94,9 @@ class Guardian
   end
 
   def is_category_group_moderator?(category)
+    return false unless category
+    return false unless authenticated?
+
     @is_category_group_moderator ||= begin
       SiteSetting.enable_category_group_moderation? &&
         category.present? &&

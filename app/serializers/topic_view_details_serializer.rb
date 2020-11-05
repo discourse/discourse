@@ -20,7 +20,8 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_close_topic,
      :can_archive_topic,
      :can_split_merge_topic,
-     :can_edit_staff_notes]
+     :can_edit_staff_notes,
+     :can_moderate_category]
   end
 
   attributes(
@@ -145,6 +146,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   alias :include_can_archive_topic? :can_perform_action_available_to_group_moderators?
   alias :include_can_split_merge_topic? :can_perform_action_available_to_group_moderators?
   alias :include_can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
+  alias :include_can_moderate_category? :can_perform_action_available_to_group_moderators?
 
   def include_can_publish_page?
     scope.can_publish_page?(object.topic)

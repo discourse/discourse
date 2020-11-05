@@ -704,7 +704,7 @@ class TopicView
       .includes({ user: :primary_group }, :reply_to_user, :deleted_by, :incoming_email, :topic)
       .order('sort_order')
     @posts = filter_post_types(@posts)
-    @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
+    @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     @posts
   end
 
@@ -720,7 +720,7 @@ class TopicView
 
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
-    result = result.with_deleted if @guardian.can_see_deleted_posts?
+    result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
     result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
     result = result.where(hidden: false) if @exclude_hidden
     result
@@ -776,7 +776,7 @@ class TopicView
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
 
-    if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
+    if @guardian.can_see_deleted_posts?(@topic.category) && !@show_deleted && has_deleted?
       @filtered_posts = @filtered_posts.where(
         "posts.deleted_at IS NULL OR posts.post_number = 1"
       )

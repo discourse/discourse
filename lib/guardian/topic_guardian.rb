@@ -19,6 +19,7 @@ module TopicGuardian
 
     is_category_group_moderator?(topic.category)
   end
+  alias :can_moderate_topic? :can_review_topic?
 
   def can_create_shared_draft?
     is_staff? && SiteSetting.shared_drafts_enabled?
@@ -115,7 +116,7 @@ module TopicGuardian
 
   # Recovery Method
   def can_recover_topic?(topic)
-    if is_staff?
+    if is_staff? || (topic&.category && is_category_group_moderator?(topic.category))
       !!(topic && topic.deleted_at)
     else
       topic && can_recover_post?(topic.ordered_posts.first)
@@ -124,7 +125,7 @@ module TopicGuardian
 
   def can_delete_topic?(topic)
     !topic.trashed? &&
-    (is_staff? || (is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago)) &&
+    (is_staff? || (is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago) || is_category_group_moderator?(topic.category)) &&
     !topic.is_category_topic? &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
@@ -142,14 +143,14 @@ module TopicGuardian
     authenticated? && topic && @user.has_trust_level?(TrustLevel[1])
   end
 
-  def can_see_deleted_topics?
-    is_staff?
+  def can_see_deleted_topics?(category)
+    is_staff? || is_category_group_moderator?(category)
   end
 
   def can_see_topic?(topic, hide_deleted = true)
     return false unless topic
     return true if is_admin?
-    return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?
+    return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?(topic.category)
 
     if topic.private_message?
       return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?

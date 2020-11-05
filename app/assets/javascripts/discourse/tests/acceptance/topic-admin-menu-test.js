@@ -28,6 +28,9 @@ acceptance("Topic - Admin Menu", function (needs) {
       exists(".toggle-admin-menu"),
       "The admin menu button was rendered"
     );
+
+    await click(".toggle-admin-menu");
+    assert.ok(exists(".topic-admin-delete"), "The delete item was rendered");
   });
 
   test("Enter as a user with moderator and admin permissions", async function (assert) {
