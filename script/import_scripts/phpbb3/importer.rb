@@ -75,6 +75,7 @@ module ImportScripts::PhpBB3
 
       batches do |offset|
         rows, last_user_id = @database.fetch_users(last_user_id)
+        rows = rows.to_a.uniq { |row| row[:user_id] }
         break if rows.size < 1
 
         next if all_records_exist?(:users, importer.map_users_to_import_ids(rows))
