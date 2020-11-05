@@ -45,7 +45,7 @@ module Onebox
       return "" unless html
 
       if @options[:max_width]
-        doc = Nokogiri::HTML::fragment(html)
+        doc = Nokogiri::HTML5::fragment(html)
         if doc
           doc.css('[width]').each do |e|
             width = e['width'].to_i

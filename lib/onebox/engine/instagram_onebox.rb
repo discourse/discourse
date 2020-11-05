@@ -16,12 +16,26 @@ module Onebox
 
       def data
         og = get_opengraph
-        author_name = og.description.match(/\(@(\w+)\) on Instagram/)[1]
+
+        # There are at least two different versions of the description. e.g.
+        # - "3,227 Likes, 88 Comments - An Account (@user.name) on Instagram: “Look at my picture!”"
+        # - "@user.name posted on their Instagram profile: “Look at my picture!”"
+
+        m = og.description.match(/\(@([\w\.]+)\) on Instagram/)
+        author_name = m[1] if m
+
+        author_name ||= begin
+          m = og.description.match(/^\@([\w\.]+)\ posted/)
+          m[1] if m
+        end
+
+        raise "Author username not found for post #{clean_url}" unless author_name
+
         permalink = clean_url.gsub("/#{author_name}/", "/")
 
         { link: permalink,
           title: "@#{author_name}",
-          image: "#{permalink}/media/?size=l",
+          image: og.image,
           description: Onebox::Helpers.truncate(og.title, 250)
         }
       end

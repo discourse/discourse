@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'fakeweb', '~> 1.3'
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'mocha', '~> 1.1'
-  spec.add_development_dependency 'rubocop-discourse', '~> 2.1.2'
+  spec.add_development_dependency 'rubocop-discourse', '~> 2.4.0'
   spec.add_development_dependency 'twitter', '~> 4.8'
   spec.add_development_dependency 'guard-rspec', '~> 4.2.8'
   spec.add_development_dependency 'sinatra', '~> 1.4'

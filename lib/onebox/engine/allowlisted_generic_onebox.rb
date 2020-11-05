@@ -316,7 +316,7 @@ module Onebox
         return true if AllowlistedGenericOnebox.html_providers.include?(data[:provider_name])
         return false unless data[:html]["iframe"]
 
-        fragment = Nokogiri::HTML::fragment(data[:html])
+        fragment = Nokogiri::HTML5::fragment(data[:html])
         src = fragment.at_css('iframe')&.[]("src")
         options[:allowed_iframe_regexes]&.any? { |r| src =~ r }
       end
@@ -367,7 +367,7 @@ module Onebox
       end
 
       def embedded_html
-        fragment = Nokogiri::HTML::fragment(data[:html])
+        fragment = Nokogiri::HTML5::fragment(data[:html])
         fragment.css("img").each { |img| img["class"] = "thumbnail" }
         if iframe = fragment.at_css("iframe")
           iframe.remove_attribute("style")
