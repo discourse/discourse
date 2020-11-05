@@ -399,6 +399,18 @@ describe TopicViewSerializer do
           expect(json[:published_page]).to be_present
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
+
+        context "secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "doesn't return the published page" do
+            json = serialize_topic(topic, admin)
+            expect(json[:published_page]).to be_blank
+          end
+        end
       end
     end
   end
