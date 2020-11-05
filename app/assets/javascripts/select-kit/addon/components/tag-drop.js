@@ -81,7 +81,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   }),
 
   noTagsUrl: computed("firstCategory", "secondCategory", function () {
-    let url = "/tags";
+    let url = "/tag";
     if (this.currentCategory) {
       url += `/c/${Category.slugFor(this.currentCategory)}/${
         this.currentCategory.id
