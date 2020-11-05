@@ -67,8 +67,7 @@ class Post < ActiveRecord::Base
   DOWNLOADED_IMAGES       ||= "downloaded_images"
   MISSING_UPLOADS         ||= "missing uploads"
   MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
-  NOTICE_TYPE             ||= "notice_type"
-  NOTICE_ARGS             ||= "notice_args"
+  NOTICE                  ||= "notice"
 
   SHORT_POST_CHARS ||= 1200
 
@@ -78,6 +77,8 @@ class Post < ActiveRecord::Base
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
+
+  register_custom_field_type(NOTICE, :json)
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (#{Topic::PRIVATE_MESSAGES_SQL})", user_id: user.id)
@@ -225,7 +226,7 @@ class Post < ActiveRecord::Base
 
   def trash!(trashed_by = nil)
     self.topic_links.each(&:destroy)
-    self.delete_post_notices
+    self.save_custom_fields if self.custom_fields.delete(Post::NOTICE)
     super(trashed_by)
   end
 
@@ -428,8 +429,7 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete(Post::NOTICE_TYPE)
-    self.custom_fields.delete(Post::NOTICE_ARGS)
+    self.custom_fields.delete(Post::NOTICE)
     self.save_custom_fields
   end
 

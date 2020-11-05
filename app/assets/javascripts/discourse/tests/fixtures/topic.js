@@ -5174,7 +5174,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          notice_type: "new-user",
+          notice: { type: "new_user" }
         },
       ],
       stream: [25, 26, 27],

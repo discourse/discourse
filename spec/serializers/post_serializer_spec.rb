@@ -201,8 +201,7 @@ describe PostSerializer do
 
     let(:post) {
       post = Fabricate(:post, user: user)
-      post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-      post.custom_fields[Post::NOTICE_ARGS] = 1.day.ago
+      post.custom_fields[Post::NOTICE] = { type: Post.notices[:returning_user], last_posted_at: 1.day.ago }
       post.save_custom_fields
       post
     }
@@ -212,16 +211,16 @@ describe PostSerializer do
     end
 
     it "is visible for TL2+ users (except poster)" do
-      expect(json_for_user(nil)[:notice_type]).to eq(nil)
-      expect(json_for_user(user)[:notice_type]).to eq(nil)
+      expect(json_for_user(nil)[:notice]).to eq(nil)
+      expect(json_for_user(user)[:notice]).to eq(nil)
 
       SiteSetting.returning_user_notice_tl = 2
-      expect(json_for_user(user_tl1)[:notice_type]).to eq(nil)
-      expect(json_for_user(user_tl2)[:notice_type]).to eq(Post.notices[:returning_user])
+      expect(json_for_user(user_tl1)[:notice]).to eq(nil)
+      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
 
       SiteSetting.returning_user_notice_tl = 1
-      expect(json_for_user(user_tl1)[:notice_type]).to eq(Post.notices[:returning_user])
-      expect(json_for_user(user_tl2)[:notice_type]).to eq(Post.notices[:returning_user])
+      expect(json_for_user(user_tl1)[:notice][:type]).to eq(Post.notices[:returning_user])
+      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
     end
   end
 

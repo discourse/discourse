@@ -934,11 +934,13 @@ widgetTest("post notice - with username", {
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
-      noticeType: "returning_user",
-      noticeTime: twoDaysAgo,
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date(),
+      notice: {
+        type: "returning_user",
+        lastPostedAt: twoDaysAgo,
+      },
     });
   },
   test(assert) {
@@ -959,10 +961,10 @@ widgetTest("post notice - with name", {
     this.siteSettings.prioritize_username_in_ux = false;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
-      noticeType: "new_user",
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date(2019, 0, 1),
+      notice: { type: "new_user" },
     });
   },
   test(assert) {
