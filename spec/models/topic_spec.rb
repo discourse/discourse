@@ -694,6 +694,7 @@ describe Topic do
           it 'fails with an error message' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.muted_invitee"))
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -729,6 +730,7 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
           end
 
           it 'should succeed for staff even when not allowed' do
@@ -743,14 +745,16 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
           it 'should raise error if target_user has not allowed any of the other participants' do
-            user2.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
 
             expect { pm.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
           end
         end
       end
