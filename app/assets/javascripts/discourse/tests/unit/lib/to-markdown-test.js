@@ -21,6 +21,11 @@ module("Unit | Utility | to-markdown", function () {
      random</b> <s>bold</s> words.</i>`;
     markdown = `<i>Italicised line with <b>some\nrandom</b> ~~bold~~ words.</i>`;
     assert.equal(toMarkdown(html), markdown);
+
+    // eslint-disable-next-line no-irregular-whitespace
+    html = `<span>this is<span> </span></span><strong>bold</strong><span><span> </span>statement</span>`;
+    markdown = `this is **bold** statement`;
+    assert.equal(toMarkdown(html), markdown);
   });
 
   test("converts a link", function (assert) {
