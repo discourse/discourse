@@ -11,7 +11,7 @@ export default Controller.extend({
   actions: {
     save() {
       let priorities = {};
-      this.get("settings.reviewable_score_types").forEach((st) => {
+      this.scoreTypes.forEach((st) => {
         priorities[st.id] = parseFloat(st.reviewable_priority);
       });
 
