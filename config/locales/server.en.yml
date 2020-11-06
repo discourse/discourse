@@ -149,6 +149,9 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      is_invalid_meaningful: "seems unclear, most of the words contain the same letters over and over?"
+      is_invalid_unpretentious: "seems unclear, one or more words is very long?"
+      is_invalid_quiet: "seems unclear, did you mean to enter it in ALL CAPS?"
       invalid_timezone: "'%{tz}' is not a valid timezone"
       contains_censored_words: "contains the following censored words: %{censored_words}"
       less_than: must be less than %{count}
