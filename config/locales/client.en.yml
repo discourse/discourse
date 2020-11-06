@@ -2011,7 +2011,7 @@ en:
         one: "%{count} open membership request for '%{group_name}'"
         other: "%{count} open membership requests for '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
-      reaction_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
 
       group_message_summary:
