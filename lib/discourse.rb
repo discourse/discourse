@@ -448,7 +448,7 @@ module Discourse
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
-    if key == PG_READONLY_MODE_KEY || PG_FORCE_READONLY_MODE_KEY
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
@@ -501,7 +501,7 @@ module Discourse
   end
 
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
-    if key == PG_READONLY_MODE_KEY || PG_FORCE_READONLY_MODE_KEY
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Sidekiq.unpause! if Sidekiq.paused?
     end
 
