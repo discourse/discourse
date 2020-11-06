@@ -523,7 +523,8 @@ class Guardian
   end
 
   def can_publish_page?(topic)
-    return false unless SiteSetting.enable_page_publishing?
+    return false if !SiteSetting.enable_page_publishing?
+    return false if SiteSetting.secure_media?
     return false if topic.blank?
     return false if topic.private_message?
     return false unless can_see_topic?(topic)

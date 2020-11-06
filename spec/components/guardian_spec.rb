@@ -3756,6 +3756,20 @@ describe Guardian do
         post = Fabricate(:private_message_post, user: admin)
         expect(Guardian.new(admin).can_publish_page?(post.topic)).to eq(false)
       end
+
+      context "when secure_media is also enabled" do
+        before do
+          setup_s3
+          SiteSetting.secure_media = true
+        end
+
+        it "is false for everyone" do
+          expect(Guardian.new(moderator).can_publish_page?(topic)).to eq(false)
+          expect(Guardian.new(user).can_publish_page?(topic)).to eq(false)
+          expect(Guardian.new.can_publish_page?(topic)).to eq(false)
+          expect(Guardian.new(admin).can_publish_page?(topic)).to eq(false)
+        end
+      end
     end
   end
 end
