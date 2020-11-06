@@ -2,7 +2,7 @@
 
 module CommonHelper
   def render_google_universal_analytics_code
-    if SiteSetting.ga_universal_tracking_code.present?
+    if Rails.env.production? && SiteSetting.ga_universal_tracking_code.present?
       render partial: "common/google_universal_analytics"
     end
   end
