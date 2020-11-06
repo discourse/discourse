@@ -36,8 +36,11 @@ export default {
       return;
     }
 
-    // Also use Universal Analytics if it is present
-    if (typeof window.ga !== "undefined") {
+    // Use Universal Analytics v3 if it is present
+    if (
+      typeof window.ga !== "undefined" &&
+      typeof window.gtag === "undefined"
+    ) {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           window.ga("send", "pageview", { page: data.url, title: data.title });
@@ -45,7 +48,7 @@ export default {
       });
     }
 
-    // And UA via gtag if we're upgraded
+    // And Universal Analytics v4 if we're upgraded
     if (typeof window.gtag !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
@@ -57,7 +60,7 @@ export default {
       });
     }
 
-    // And Google Tag Manager too
+    // Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
       appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
