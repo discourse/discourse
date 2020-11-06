@@ -145,7 +145,6 @@ basic:
     choices:
       - v3_analytics
       - v4_gtag
-    client: true
   ga_universal_tracking_code:
     client: true
     default: ""
