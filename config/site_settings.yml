@@ -139,6 +139,12 @@ basic:
     default: 365
     min: 7
     max: 36500
+  ga_version:
+    type: enum
+    default: v3_analytics
+    choices:
+      - v3_analytics
+      - v4_gtag
   ga_universal_tracking_code:
     client: true
     default: ""
