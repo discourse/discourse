@@ -26,6 +26,9 @@ define("@ember/test-helpers", () => {
     getApplication() {
       return _app;
     },
+    async settled() {
+      // No-op in pre ember-cli environment
+    },
   };
   ["click", "visit", "currentURL", "fillIn", "setResolver"].forEach((attr) => {
     helpers[attr] = function () {
