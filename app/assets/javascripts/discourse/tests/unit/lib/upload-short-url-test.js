@@ -7,6 +7,7 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { settled } from "@ember/test-helpers";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
   if (!imageSrcs) {
@@ -97,6 +98,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     assert.deepEqual(lookup, {});
 
     await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await settled();
 
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
 
@@ -143,6 +145,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
   test("resolveAllShortUrls - href + src replaced correctly", async function (assert) {
     stubUrls();
     await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await settled();
 
     let image1 = fixture().find("img").eq(0);
     let image2 = fixture().find("img").eq(1);
@@ -166,6 +169,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
   test("resolveAllShortUrls - url with full origin replaced correctly", async function (assert) {
     stubUrls();
     await resolveAllShortUrls(ajax, { secure_media: false }, fixture()[0]);
+    await settled();
     let video = fixture().find("video").eq(1);
 
     assert.equal(
@@ -187,6 +191,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
       null
     );
     await resolveAllShortUrls(ajax, { secure_media: true }, fixture()[0]);
+    await settled();
 
     let link = fixture().find("a");
     assert.equal(
@@ -201,6 +206,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
 
     let scopedElement = fixture()[0].querySelector(".scoped-area");
     await resolveAllShortUrls(ajax, {}, scopedElement);
+    await settled();
 
     lookup = lookupCachedUploadUrl("upload://z.jpeg");
 
@@ -213,6 +219,7 @@ module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
     // just the ones being looked up (like the normal behaviour)
     resetCache();
     await resolveAllShortUrls(ajax, {}, scopedElement);
+    await settled();
 
     lookup = lookupCachedUploadUrl("upload://a.jpeg");
     assert.deepEqual(lookup, {});
