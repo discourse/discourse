@@ -227,10 +227,9 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @on("init")
-  @observes("category_id")
-  _categoryIdChanged() {
-    this.set("category", Category.findById(this.category_id));
+  @discourseComputed("category_id")
+  category(categoryId) {
+    return Category.findById(categoryId);
   },
 
   categoryClass: fmt("category.fullSlug", "category-%@"),
