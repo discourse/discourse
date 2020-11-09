@@ -894,7 +894,7 @@ export default Component.extend({
       !isInlinePasting &&
       !isCodeBlock
     ) {
-      plainText = plainText.trim().replace(/\r/g, "");
+      plainText = plainText.replace(/\r/g, "");
       const table = this._extractTable(plainText);
       if (table) {
         this.appEvents.trigger("composer:insert-text", table);
