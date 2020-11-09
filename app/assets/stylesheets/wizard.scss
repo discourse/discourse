@@ -1189,6 +1189,22 @@ body.wizard {
       margin-top: 0.5em;
     }
 
+    .field-extra-description {
+      margin-top: 0.5em;
+      color: var(--primary-high);
+    }
+
+    .field-required {
+      display: none;
+    }
+
+    &.text-field {
+      .field-required {
+        display: inline;
+        color: var(--danger);
+      }
+    }
+
     margin-bottom: 2em;
   }
 }
