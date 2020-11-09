@@ -1,0 +1,3 @@
+[submodule "plugins/discourse-solved"]
+	path = plugins/discourse-solved
+	url = git@github.com:discourse/discourse-solved.git
