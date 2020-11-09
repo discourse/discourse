@@ -921,6 +921,8 @@ Discourse::Application.routes.draw do
 
         get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       end
+
+      get '*tag_id', to: redirect(relative_url_root + 'tag/%{tag_id}')
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do
