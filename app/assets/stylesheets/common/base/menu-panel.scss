@@ -260,7 +260,7 @@
       span.multi-username {
         @include ellipsis;
         flex: 0 1 auto;
-        min-width: 2em;
+        min-width: 1.2em;
         max-width: 10em;
         &:nth-of-type(2) {
           // margin for comma between username and username2
