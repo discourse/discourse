@@ -1989,10 +1989,10 @@ en:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span>%{username}, %{username2} and %{count} others</span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
