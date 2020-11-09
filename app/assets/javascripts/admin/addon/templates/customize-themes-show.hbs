@@ -59,7 +59,12 @@
         {{#if sourceIsHttp}}
           <a class="remote-url" href={{remoteThemeLink}}>{{i18n "admin.customize.theme.source_url"}}{{d-icon "link"}}</a>
         {{else}}
-          <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
+          <div class="remote-url">
+            <code>{{model.remote_theme.remote_url}}</code>
+            {{#if model.remote_theme.branch}}
+              (<code>{{model.remote_theme.branch}}</code>)
+            {{/if}}
+          </div>
         {{/if}}
       {{/if}}
       {{#if model.remote_theme.about_url}}
