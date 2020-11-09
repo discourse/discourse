@@ -173,9 +173,13 @@ class SearchController < ApplicationController
   protected
 
   def site_overloaded?
-    (queue_time = request.env['REQUEST_QUEUE_SECONDS']) &&
-      (GlobalSetting.disable_search_queue_threshold > 0) &&
-      (queue_time > GlobalSetting.disable_search_queue_threshold)
+    queue_time = request.env['REQUEST_QUEUE_SECONDS']
+    if queue_time
+      threshold = GlobalSetting.disable_search_queue_threshold.to_f
+      threshold > 0 && queue_time > threshold
+    else
+      false
+    end
   end
 
   def rate_limit_search
