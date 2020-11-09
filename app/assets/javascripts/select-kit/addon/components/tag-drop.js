@@ -81,11 +81,13 @@ export default ComboBoxComponent.extend(TagsMixin, {
   }),
 
   noTagsUrl: computed("firstCategory", "secondCategory", function () {
-    let url = "/tag";
+    let url;
     if (this.currentCategory) {
-      url += `/c/${Category.slugFor(this.currentCategory)}/${
+      url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
         this.currentCategory.id
       }`;
+    } else {
+      url = "/tag";
     }
     return getURL(`${url}/${NONE_TAG_ID}`);
   }),

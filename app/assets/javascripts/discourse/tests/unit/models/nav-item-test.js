@@ -8,23 +8,30 @@ import Site from "discourse/models/site";
 module("Unit | Model | nav-item", function (hooks) {
   hooks.beforeEach(function () {
     run(function () {
-      const asianCategory = Category.create({
-        name: "确实是这样",
-        id: 343434,
+      const fooCategory = Category.create({
+        slug: "foo",
+        id: 123,
       });
-      Site.currentProp("categories").addObject(asianCategory);
+      Site.currentProp("categories").addObject(fooCategory);
     });
   });
 
   test("href", function (assert) {
-    assert.expect(2);
+    assert.expect(4);
 
-    function href(text, expected, label) {
-      assert.equal(NavItem.fromText(text, {}).get("href"), expected, label);
+    function href(text, opts, expected, label) {
+      assert.equal(NavItem.fromText(text, opts).get("href"), expected, label);
     }
 
-    href("latest", "/latest", "latest");
-    href("categories", "/categories", "categories");
+    href("latest", {}, "/latest", "latest");
+    href("categories", {}, "/categories", "categories");
+    href("latest", { tagId: "bar" }, "/tag/bar/l/latest", "latest with tag");
+    href(
+      "latest",
+      { tagId: "bar", category: Category.findBySlugPath(["foo"]) },
+      "/tags/c/foo/123/bar/l/latest",
+      "latest with tag and category"
+    );
   });
 
   test("count", function (assert) {
