@@ -4663,6 +4663,7 @@ en:
               </ul>
               <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
+            extra_description: "If you are not sure, you can skip this step and write your welcome topic later."
 
       privacy:
         title: "Access"
