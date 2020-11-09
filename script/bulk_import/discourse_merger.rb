@@ -153,7 +153,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
-    [UserAssociatedAccount, GithubUserInfo, Oauth2UserInfo,
+    [UserAssociatedAccount, Oauth2UserInfo,
       SingleSignOnRecord, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
@@ -623,11 +623,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   def process_notification(notification)
     notification['post_action_id'] = post_action_id_from_imported_id(notification['post_action_id']) if notification['post_action_id']
     notification
-  end
-
-  def process_github_user_info(r)
-    return nil if GithubUserInfo.where(github_user_id: r['github_user_id']).exists?
-    r
   end
 
   def process_oauth2_user_info(r)
