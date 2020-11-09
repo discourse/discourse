@@ -502,7 +502,14 @@ class ApplicationController < ActionController::Base
       result.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
-      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      if provider_name = params[:external_provider]
+        raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+        provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
+        UserAssociatedAccount.find_by(provider_name: provider_name, provider_uid: external_id)&.user
+      else
+        SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      end
     end
     raise Discourse::NotFound if user.blank?
 

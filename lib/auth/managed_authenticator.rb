@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Auth::ManagedAuthenticator < Auth::Authenticator
+  def is_managed?
+    # Tells core that it can safely assume this authenticator
+    # uses UserAssociatedAccount
+    true
+  end
+
   def description_for_user(user)
     associated_account = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
     return "" if associated_account.nil?
