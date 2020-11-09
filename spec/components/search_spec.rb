@@ -8,6 +8,7 @@ describe Search do
 
   before do
     SearchIndexer.enable
+    Jobs.run_immediately!
   end
 
   context 'post indexing' do

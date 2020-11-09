@@ -778,11 +778,10 @@ class Category < ActiveRecord::Base
   end
 
   def index_search
-    if saved_change_to_attribute?(:name)
-      SearchIndexer.queue_category_posts_reindex(self.id)
-    end
-
-    SearchIndexer.index(self)
+    Jobs.enqueue(:index_category_for_search,
+      category_id: self.id,
+      force: saved_change_to_attribute?(:name),
+    )
   end
 
   def update_reviewables
