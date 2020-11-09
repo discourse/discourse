@@ -170,6 +170,7 @@ class FinalDestination
     end
 
     unless validate_uri
+      @status = :invalid_address
       log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}") if @verbose
       return nil
     end
@@ -274,6 +275,10 @@ class FinalDestination
 
     # Disallow IP based crawling
     (IPAddr.new(@uri.hostname) rescue nil).nil?
+  end
+
+  def hostname
+    @uri.hostname
   end
 
   def hostname_matches?(url)

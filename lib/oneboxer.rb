@@ -319,6 +319,20 @@ module Oneboxer
                               force_custom_user_agent_hosts: force_custom_user_agent_hosts,
                               preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
+
+      if fd.status != :resolved
+        args = { link: url }
+        if fd.status == :invalid_address
+          args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
+        elsif fd.status_code
+          args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
+        end
+
+        error_box = blank_onebox
+        error_box[:preview] = preview_error_onebox(args)
+        return error_box
+      end
+
       return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
@@ -331,9 +345,49 @@ module Oneboxer
       options[:cookie] = fd.cookie if fd.cookie
 
       r = Onebox.preview(uri.to_s, options)
+      result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
 
-      { onebox: r.to_s, preview: r&.placeholder_html.to_s }
+      # NOTE: Call r.errors after calling placeholder_html
+      if r.errors.any?
+        # TODO: verify this will work for all locales
+        connector = " #{I18n.t('errors.onebox.missing_data_word_connector')} "
+        error_msg = r.errors.keys.map(&:to_s).to_sentence(two_words_connector: connector, last_word_connector: connector)
+        error_message = I18n.t("errors.onebox.missing_data", missing_data_fields: error_msg)
+        args = r.data.merge(error_message: error_message)
+
+        if result[:preview].blank?
+          result[:preview] = preview_error_onebox(args)
+        else
+          doc = Nokogiri::HTML5::fragment(result[:preview])
+          aside = doc.at('aside')
+
+          if aside
+            # Add an error message to the preview that was returned
+            error_fragment = preview_error_onebox_fragment(args)
+            aside.add_child(error_fragment)
+            result[:preview] = doc.to_html
+          end
+        end
+      end
+
+      result
     end
+  end
+
+  def self.preview_error_onebox(args, is_fragment = false)
+    args[:title] ||= args[:link] if args[:link]
+    args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
+
+    if is_fragment
+      template = File.read("#{Rails.root}/lib/onebox/templates/preview_error_fragment_onebox.mustache")
+    else
+      template = File.read("#{Rails.root}/lib/onebox/templates/preview_error_onebox.mustache")
+    end
+    Mustache.render(template, args)
+  end
+
+  def self.preview_error_onebox_fragment(args)
+    preview_error_onebox(args, true)
   end
 
 end
