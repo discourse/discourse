@@ -3,7 +3,9 @@
 module JsLocaleHelper
 
   def self.plugin_client_files(locale_str)
-    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"]
+    Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].sort_by do |file|
+      file.include?("discourse-teams") ? 1 : 0
+    end
   end
 
   def self.reloadable_plugins(locale_sym, ctx)

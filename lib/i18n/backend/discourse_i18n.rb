@@ -20,7 +20,10 @@ module I18n
       # force explicit loading
       def load_translations(*filenames)
         unless filenames.empty?
-          filenames.flatten.each { |filename| load_file(filename) }
+          filenames
+            .flatten
+            .sort_by { |filename| filename.include?("discourse-teams") ? 1 : 0 }
+            .each { |filename| load_file(filename) }
         end
       end
 
