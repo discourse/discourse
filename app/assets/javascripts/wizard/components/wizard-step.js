@@ -166,15 +166,10 @@ export default Component.extend({
         const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
         if (unwarned.length) {
           unwarned.forEach((w) => (alreadyWarned[w] = true));
-          return window.swal(
-            {
-              customClass: "wizard-warning",
-              title: "",
-              text: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#6699ff",
-            },
+          return window.bootbox.confirm(
+            unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+            I18n.t("no_value"),
+            I18n.t("yes_value"),
             (confirmed) => {
               if (confirmed) {
                 this.advance();
