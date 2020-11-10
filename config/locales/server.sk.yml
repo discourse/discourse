@@ -879,7 +879,6 @@ sk:
     max_bookmarks_per_day: "Maximálny počet záložiek na jedného používateľa denne."
     max_edits_per_day: "Maximálny počet úprav používateľa denne."
     max_topics_per_day: "Maximálny počet tém používateľa denne."
-    max_personal_messages_per_day: "Maximálny počet správ ktoré môže používateľ denne vytvoriť."
     max_invites_per_day: "Maximálny počet pozvánok ktoré môže používateľ denne zaslať."
     max_topic_invitations_per_day: "Maximálny počet pozvánok do tém ktoré môže používateľ denne zaslať."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."

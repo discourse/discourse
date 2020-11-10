@@ -28,6 +28,10 @@ Discourse::Application.configure do
 
   config.assets.debug = false
 
+  config.public_file_server.headers = {
+    'Access-Control-Allow-Origin' => '*'
+  }
+
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
   config.watchable_dirs['lib'] = [:rb]
@@ -91,6 +95,10 @@ Discourse::Application.configure do
       ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
         line =~ /lib\/freedom_patches/
       end
+    end
+
+    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
+      ActiveRecord::Base.logger = nil
     end
 
     if ENV['BULLET']

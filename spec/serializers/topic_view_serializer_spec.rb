@@ -399,6 +399,18 @@ describe TopicViewSerializer do
           expect(json[:published_page]).to be_present
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
+
+        context "secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "doesn't return the published page" do
+            json = serialize_topic(topic, admin)
+            expect(json[:published_page]).to be_blank
+          end
+        end
       end
     end
   end
@@ -423,4 +435,38 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#user_last_posted_at' do
+    context 'When the slow mode is disabled' do
+      it 'returns nil' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+    end
+
+    context 'Wwhen the slow mode is enabled' do
+      before { topic.update!(slow_mode_seconds: 1000) }
+
+      it 'returns nil if no user is given' do
+        json = serialize_topic(topic, nil)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it "returns nil if there's no topic_user association" do
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it 'returns the last time the user posted' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_present
+      end
+    end
+  end
 end

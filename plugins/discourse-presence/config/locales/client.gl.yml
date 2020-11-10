@@ -4,4 +4,15 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-gl: 
+gl:
+  js:
+    presence:
+      replying:
+        one: "respondendo"
+        other: "respondendo"
+      editing:
+        one: "editando"
+        other: "editando"
+      replying_to_topic:
+        one: "respondendo"
+        other: "respondendo"

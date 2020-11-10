@@ -1,6 +1,6 @@
 import I18n from "I18n";
 import { schedule } from "@ember/runloop";
-import { and } from "@ember/object/computed";
+import { and, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { action } from "@ember/object";
 import { isPresent } from "@ember/utils";
@@ -64,6 +64,8 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
+  postDetectedLocalDate: null,
+  postDetectedLocalTime: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
@@ -78,6 +80,8 @@ export default Controller.extend(ModalFunctionality, {
       customReminderTime: this._defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
+      postDetectedLocalDate: null,
+      postDetectedLocalTime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       model: this.model || {},
@@ -236,6 +240,11 @@ export default Controller.extend(ModalFunctionality, {
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
+  showPostLocalDate: or(
+    "model.postDetectedLocalDate",
+    "model.postDetectedLocalTime"
+  ),
+
   get showLaterToday() {
     let later = this.laterToday();
     return (
@@ -293,6 +302,10 @@ export default Controller.extend(ModalFunctionality, {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
   },
 
+  get postLocalDateFormatted() {
+    return this.postLocalDate().format(I18n.t("dates.long_no_year"));
+  },
+
   @discourseComputed("userTimezone")
   userHasTimezoneSet(userTimezone) {
     return !isEmpty(userTimezone);
@@ -316,7 +329,10 @@ export default Controller.extend(ModalFunctionality, {
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
       reminderType = null;
-    } else if (this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM) {
+    } else if (
+      this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM ||
+      this.selectedReminderType === REMINDER_TYPES.POST_LOCAL_DATE
+    ) {
       reminderType = REMINDER_TYPES.CUSTOM;
     } else {
       reminderType = this.selectedReminderType;
@@ -419,6 +435,8 @@ export default Controller.extend(ModalFunctionality, {
         return customDateTime;
       case REMINDER_TYPES.LAST_CUSTOM:
         return this.parsedLastCustomReminderDatetime;
+      case REMINDER_TYPES.POST_LOCAL_DATE:
+        return this.postLocalDate();
     }
   },
 
@@ -428,6 +446,19 @@ export default Controller.extend(ModalFunctionality, {
 
   nextMonth() {
     return this.startOfDay(this.now().add(1, "month"));
+  },
+
+  postLocalDate() {
+    let parsedPostLocalDate = this._parseCustomDateTime(
+      this.model.postDetectedLocalDate,
+      this.model.postDetectedLocalTime
+    );
+
+    if (!this.model.postDetectedLocalTime) {
+      return this.startOfDay(parsedPostLocalDate);
+    }
+
+    return parsedPostLocalDate;
   },
 
   tomorrow() {

@@ -492,6 +492,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
       delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }
       get "#{root_path}/by-external/:external_id" => "users#show", constraints: { external_id: /[^\/]+/ }
+      get "#{root_path}/by-external/:external_provider/:external_id" => "users#show", constraints: { external_id: /[^\/]+/ }
       get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/deleted-posts" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: { username: RouteFormat.username }
@@ -682,6 +683,9 @@ Discourse::Application.routes.draw do
 
     get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
+    get "c/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "c/:parent_category_slug/:category_slug/edit(/:tab)" => "categories#find_by_slug", constraints: { format: 'html' }
+    get "/new-category" => "categories#show", constraints: { format: 'html' }
 
     get "c/*category_slug_path_with_id.rss" => "list#category_feed", format: :rss
     scope path: 'c/*category_slug_path_with_id' do
@@ -919,22 +923,7 @@ Discourse::Application.routes.draw do
         get '/intersection/:tag_id/*additional_tag_ids' => 'tags#show', as: 'tag_intersection'
       end
 
-      # legacy routes
-      constraints(tag_id: /[^\/]+?/, format: /json|rss/) do
-        get '/:tag_id.rss' => 'tags#tag_feed'
-        get '/:tag_id' => 'tags#show'
-        get '/:tag_id/info' => 'tags#info'
-        get '/:tag_id/notifications' => 'tags#notifications'
-        put '/:tag_id/notifications' => 'tags#update_notifications'
-        put '/:tag_id' => 'tags#update'
-        delete '/:tag_id' => 'tags#destroy'
-        post '/:tag_id/synonyms' => 'tags#create_synonyms'
-        delete '/:tag_id/synonyms/:synonym_id' => 'tags#destroy_synonym'
-
-        Discourse.filters.each do |filter|
-          get "/:tag_id/l/#{filter}" => "tags#show_#{filter}"
-        end
-      end
+      get '*tag_id', to: redirect(relative_url_root + 'tag/%{tag_id}')
     end
 
     resources :tag_groups, constraints: StaffConstraint.new, except: [:edit] do

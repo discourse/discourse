@@ -199,7 +199,7 @@ en:
         not_found: |-
           Looks like you didn’t upload an image so I’ve chosen a picture that I’m _sure_ you will enjoy.
 
-          `%{image_url}`
+          <%{image_url}>
 
           Try uploading that one next, or pasting the link in on a line by itself!
 

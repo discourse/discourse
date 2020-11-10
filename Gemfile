@@ -101,7 +101,6 @@ gem 'css_parser', require: false
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-instagram'
 gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false

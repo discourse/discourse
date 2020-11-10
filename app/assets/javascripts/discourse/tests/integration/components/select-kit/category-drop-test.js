@@ -1,3 +1,4 @@
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -8,6 +9,7 @@ import {
   ALL_CATEGORIES_ID,
 } from "select-kit/components/category-drop";
 import { set } from "@ember/object";
+import sinon from "sinon";
 
 testSelectKitModule("category-drop");
 
@@ -332,7 +334,7 @@ componentTest("category url", {
 
   beforeEach() {
     initCategoriesWithParentCategory(this);
-    sandbox.stub(DiscourseURL, "routeTo");
+    sinon.stub(DiscourseURL, "routeTo");
   },
 
   async test(assert) {

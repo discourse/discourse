@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -15,10 +16,10 @@ widgetTest("avatar flair with an icon", {
     });
   },
   test(assert) {
-    assert.ok(find(".avatar-flair").length, "it has the tag");
-    assert.ok(find("svg.d-icon-bars").length, "it has the svg icon");
+    assert.ok(queryAll(".avatar-flair").length, "it has the tag");
+    assert.ok(queryAll("svg.d-icon-bars").length, "it has the svg icon");
     assert.equal(
-      find(".avatar-flair").attr("style"),
+      queryAll(".avatar-flair").attr("style"),
       "background-color: #CC0000; color: #FFFFFF; ",
       "it has styles"
     );
@@ -33,7 +34,7 @@ widgetTest("avatar flair with an image", {
     });
   },
   test(assert) {
-    assert.ok(find(".avatar-flair").length, "it has the tag");
-    assert.ok(find("svg").length === 0, "it does not have an svg icon");
+    assert.ok(queryAll(".avatar-flair").length, "it has the tag");
+    assert.ok(queryAll("svg").length === 0, "it does not have an svg icon");
   },
 });

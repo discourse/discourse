@@ -7,6 +7,16 @@
 he:
   js:
     presence:
+      replying:
+        one: "תגובה מוקלדת"
+        two: "תגובות מוקלדות"
+        many: "תגובות מוקלדות"
+        other: "תגובות מוקלדות"
+      editing:
+        one: "מתבצעת עריכה"
+        two: "מתבצעות עריכות"
+        many: "מתבצעות עריכות"
+        other: "מתבצעות עריכות"
       replying_to_topic:
         one: "תגובה"
         two: "תגובה"

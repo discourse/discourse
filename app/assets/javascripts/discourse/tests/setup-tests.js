@@ -12,10 +12,10 @@ import createPretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { flushMap } from "discourse/models/store";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import DiscourseURL from "discourse/lib/url";
 import {
   resetSite,
   applyPretender,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
@@ -67,12 +67,36 @@ export default function setupTests(app, container) {
       return server;
     },
   });
+  Object.defineProperty(window, "sandbox", {
+    get() {
+      deprecated(
+        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return sinon;
+    },
+  });
+  Object.defineProperty(window, "exists", {
+    get() {
+      deprecated(
+        "Accessing the global function `exists` is deprecated. Import it instead.",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return exists;
+    },
+  });
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
     server = createPretender;
-    applyDefaultHandlers(server);
     server.handlers = [];
+    applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
       if (body && typeof body === "object") {
@@ -97,7 +121,8 @@ export default function setupTests(app, container) {
       const error =
         "Unhandled request in test environment: " + path + " (" + verb + ")";
 
-      window.console.error(error);
+      // eslint-disable-next-line no-console
+      console.error(error);
       throw new Error(error);
     };
 
@@ -118,24 +143,18 @@ export default function setupTests(app, container) {
       site,
     });
 
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
-
     PreloadStore.reset();
 
-    window.sandbox = sinon;
-    window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
-    window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
-    window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "screenNotFull");
+    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
-    window.sandbox.restore();
+    sinon.restore();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
@@ -148,7 +167,6 @@ export default function setupTests(app, container) {
 
     MessageBus.unsubscribe("*");
     server = null;
-    window.Mousetrap.reset();
   });
 
   // Load ES6 tests

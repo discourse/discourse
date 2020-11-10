@@ -1,12 +1,13 @@
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractError } from "discourse/lib/ajax-error";
 import Mixin from "@ember/object/mixin";
 import { next } from "@ember/runloop";
 import { Promise } from "rsvp";
 import bootbox from "bootbox";
 
 export default Mixin.create(ModalFunctionality, {
+  errorMessage: null,
   reason: null,
   message: null,
   postEdit: null,
@@ -18,6 +19,7 @@ export default Mixin.create(ModalFunctionality, {
 
   resetModal() {
     this.setProperties({
+      errorMessage: null,
       reason: null,
       message: null,
       loadingUser: true,
@@ -66,6 +68,8 @@ export default Mixin.create(ModalFunctionality, {
           callback(result);
         }
       })
-      .catch(popupAjaxError);
+      .catch((error) => {
+        this.set("errorMessage", extractError(error));
+      });
   },
 });

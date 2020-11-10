@@ -48,7 +48,7 @@ const NavItem = EmberObject.extend({
     }, this);
 
     if (customHref) {
-      return customHref;
+      return getURL(customHref);
     }
 
     const context = { category, noSubcategories, tagId };
@@ -122,7 +122,12 @@ NavItem.reopenClass({
 
     if (context.tagId && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
-      path += "/tags";
+
+      if (context.category) {
+        path += "/tags";
+      } else {
+        path += "/tag";
+      }
     }
 
     if (context.category) {
@@ -243,6 +248,10 @@ NavItem.reopenClass({
     extraItems.forEach((item) => {
       if (item.init) {
         item.init(item, category, args);
+      }
+
+      if (item.href) {
+        item.href = getURL(item.href);
       }
 
       const before = item.before;

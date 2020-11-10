@@ -187,4 +187,25 @@ describe "S3Inventory" do
     expect(db2.lines.count).to eq(1)
     files.values.each { |f| f.close; f.unlink }
   end
+
+  context "s3 inventory configuration" do
+    let(:bucket_name) { "s3-upload-bucket" }
+    let(:subfolder_path) { "subfolder" }
+    before do
+      SiteSetting.s3_upload_bucket = "#{bucket_name}/#{subfolder_path}"
+    end
+
+    it "is formatted correctly for subfolders" do
+      s3_helper = S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client)
+      config = S3Inventory.new(s3_helper, :upload).send(:inventory_configuration)
+
+      expect(config[:destination][:s3_bucket_destination][:bucket]).to eq("arn:aws:s3:::#{bucket_name}")
+      expect(config[:destination][:s3_bucket_destination][:prefix]).to eq("#{subfolder_path}/inventory/1")
+      expect(config[:id]).to eq("#{subfolder_path}-original")
+      expect(config[:schedule][:frequency]).to eq("Daily")
+      expect(config[:included_object_versions]).to eq("Current")
+      expect(config[:optional_fields]).to eq(["ETag"])
+      expect(config[:filter][:prefix]).to eq(subfolder_path)
+    end
+  end
 end

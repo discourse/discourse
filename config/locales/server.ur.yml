@@ -56,7 +56,6 @@ ur:
     compile_error:
       unrecognized_extension: "نامعلوم فائل ایکسٹینشن: %{extension}"
     import_error:
-      generic: تِھیم درآمد کرتے ہوئے ایک خرابی کا سامنا کرنا پڑا
       about_json_values: "about.json غلط اقدار پر مشتمل ہے: %{errors}"
       git: "گِٹ رِیپَوزِٹَری کلَون کرنے میں خرابی، رسائی کی اجازت نہیں یا رِیپَوزِٹَری موجود نہیں ہے"
       unpack_failed: "فائل کھولنے میں ناکام"
@@ -1367,9 +1366,6 @@ ur:
     enable_twitter_logins: "ٹویٹر توثیق فعال کریں۔ twitter_consumer_key اور twitter_consumer_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13395' target='_blank'>ڈسکورس کیلئے ٹویٹر لاگ اِن ترتیب دیں (اور رِچ اَیمبَیڈ)</a>۔"
     twitter_consumer_key: "ٹویٹر توثیق کیلئے کنزِیُومر کِی، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
     twitter_consumer_secret: "ٹویٹر توثیق کیلئے کنزِیُومر سیکرٹ، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
-    enable_instagram_logins: "اِنسٹاگرام توثیق کو فعال کریں، instagram_consumer_key اور instagram_consumer_secret کی ضرورت ہے"
-    instagram_consumer_key: "اِنسٹاگرام توثیق کیلئے کنزِیُومر کلید"
-    instagram_consumer_secret: "اِنسٹاگرام توثیق کیلئے کنزِیُومر سیکرٹ"
     enable_facebook_logins: "فَیسبُک توثیق فعال کریں۔ facebook_app_id اور facebook_app_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13394' target='_blank'>ڈسکورس کیلئے فَیسبُک لاگ اِن ترتیب دیں</a>۔"
     facebook_app_secret: "فَیسبُک توثیق کیلئے اَیپ سیکرٹ، <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a> پر رجسٹر کردہ"
     enable_discord_logins: "صارفین کو بذریعہ ڈِسکَورڈ تصدیق کی اجازت دیں؟"
@@ -1406,7 +1402,6 @@ ur:
     max_bookmarks_per_day: "فی صارف ایک دن کے بُکمارکس کی زیادہ سے زیادہ تعداد۔"
     max_edits_per_day: "فی صارف ایک دن کے ترامیم کی زیادہ سے زیادہ تعداد۔"
     max_topics_per_day: "ایک صارف کے فی دن بنائے گئے ٹاپکس کی زیادہ سے زیادہ تعداد۔"
-    max_personal_messages_per_day: "صارفین کے فی دن بنائے گئے پیغامات کی زیادہ سے زیادہ تعداد۔"
     max_invites_per_day: "ایک صارف کے فی دن بھیجی گئی دعوتوں کی زیادہ سے زیادہ تعداد۔"
     max_topic_invitations_per_day: "ایک صارف کے فی دن بھیجی گئی ٹاپک دعوتوں کی زیادہ سے زیادہ تعداد۔"
     max_logins_per_ip_per_hour: "ایک IP ایڈریس سے فی گھنٹہ لاگ اِنوں کی زیادہ سے زیادہ تعداد"
@@ -1912,7 +1907,6 @@ ur:
     missing_user_field: "آپ نے تمام صارف فیلڈز مکمل نہیں کی ہیں"
     auth_complete: "تصدیق مکمل ہوگئی ہے۔"
     click_to_continue: "جاری رکھنے کیلئے یہاں کلِک کریں۔"
-    already_logged_in: "افوہ، لگتا ہے کہ آپ کسی اور صارف کیلئے دعوت نامے کو قبول کرنے کی کوشش کر رہے ہیں۔ اگر آپ %{current_user} نہیں ہیں تو، براہ مہربانی لاگ آُوٹ کریں اور دوبارہ کوشش کریں۔"
     second_factor_description: "براہ مہربانی اپنی اَیپ میں سے مطلوبہ توثیقی کَوڈ درج کریں:"
     second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
     invalid_second_factor_code: "غلط توثیقی کَوڈ۔ ہر کَوڈ صرف ایک بار ہی استعمال کیا جاسکتا ہے۔"

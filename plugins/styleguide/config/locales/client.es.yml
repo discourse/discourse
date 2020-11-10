@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-es: 
+es:
+  js:
+    styleguide:
+      title: "Guía de estilos"

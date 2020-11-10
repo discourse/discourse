@@ -5,7 +5,7 @@ class ClearApprovedUsersFromTheReviewQueue < ActiveRecord::Migration[6.0]
       UPDATE reviewables r
       SET status = #{Reviewable.statuses[:approved]}
       FROM users u
-      WHERE u.id = r.target_id AND u.approved = true 
+      WHERE u.id = r.target_id AND u.approved = true
       AND r.type = 'ReviewableUser' AND r.status = #{Reviewable.statuses[:pending]}
       RETURNING r.id
     SQL

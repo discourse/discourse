@@ -28,6 +28,8 @@ ko:
     bio: "안녕, 사실 나는 사람이 아니야. 이 사이트에 대해서 알려주는 로봇이지. 나한테 물어보고 싶은 게 있다면 메세지를 보내거나 **`@%{discobot_username}`** 를 멘션하면 돼."
     tl2_promotion_message:
       subject_template: "이제 승격 했으므로 몇 가지 고급 기능에 대해 알아볼 차례입니다!"
+      text_body_template: |
+        `@%{discobot_username} %{reset_trigger}` 로 이 메시지에 회신하고 사용자님이 무엇을 할 수 있는지에 대해 알아보세요.
     timeout:
       message: |-
         안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
@@ -43,6 +45,8 @@ ko:
       trigger: "굴리기"
       invalid: |-
         미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
+      not_enough_dice:
+        other: "난 주사위가 %{count}개 뿐입니다. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), 나도 알아요!"
       out_of_range: |-
         수학적으로 공평하면서도 [가장 큰 수](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)를 가진 주사위의 면 수가 120이라는 거 아니?
       results: |-
@@ -113,6 +117,11 @@ ko:
       random_mention:
         reply: |-
           내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
+        tracks: |-
+          저는 현재 어떻게 해야 하는지 다음과 같은 방법을 알고 있습니다:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > 개인 메시지에서 사용자님을 위해 안내를 시작합니다. `{name-of-tutorial}` 다음중 하나: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -173,11 +182,11 @@ ko:
         like_not_found: |-
           [내글에](%{url})좋아요:heart: 안 눌러 줄거니? :crying_cat_face:
         not_found: |-
-          니가 그림을 안올린 거 같아서 니가 좋아할 거 같은 사진을 올려봤어.
+          이미지를 업로드하지 않으신것 같아 좋아할만한 사진을 선택했습니다.
 
-          `%{image_url}`
+          <%{image_url}>
 
-          다음엔 니가 한번 업로드 해봐. 사진 링크만 있는 한 줄을 남겨도 돼!
+          업로드하거나 링크를 붙여 넣으십시오!
       likes:
         instructions: |-
           다음은 유니콘 사진입니다.

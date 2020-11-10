@@ -222,7 +222,7 @@ describe PostAlerter do
 
     it 'does not notify for ignored users' do
       post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
-      IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
+      Fabricate(:ignored_user, user: evil_trout, ignored_user: post.user)
 
       expect {
         PostAlerter.post_created(post)

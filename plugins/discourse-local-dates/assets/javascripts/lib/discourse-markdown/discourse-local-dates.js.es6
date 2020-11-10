@@ -13,7 +13,7 @@ function addLocalDate(buffer, matches, state) {
     countdown: null,
   };
 
-  const matchString = matches[1].replace(/„|“/g, '"');
+  const matchString = matches[1].replace(/‘|’|„|“|«|»|”/g, '"');
 
   let parsed = parseBBCodeTag(
     "[date date" + matchString + "]",
@@ -138,7 +138,7 @@ function closeBuffer(buffer, state, text) {
 }
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "span.discourse-local-date",
     "span[data-*]",
     "span[aria-label]",

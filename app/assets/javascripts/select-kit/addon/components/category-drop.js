@@ -161,7 +161,14 @@ export default ComboBoxComponent.extend({
     onChange(categoryId) {
       let categoryURL;
 
-      if (categoryId === ALL_CATEGORIES_ID) {
+      if (this.tagId && !this.category) {
+        const category = Category.findById(parseInt(categoryId, 10));
+        categoryURL = getURL(
+          `/tags/c/${Category.slugFor(category)}/${
+            category.id
+          }/${this.tagId.toLowerCase()}`
+        );
+      } else if (categoryId === ALL_CATEGORIES_ID) {
         categoryURL = this.allCategoriesUrl;
       } else if (categoryId === NO_CATEGORIES_ID) {
         categoryURL = this.noCategoriesUrl;

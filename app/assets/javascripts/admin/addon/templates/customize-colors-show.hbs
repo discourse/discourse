@@ -41,7 +41,14 @@
     <br>
 
     <div class="admin-controls">
-      {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable}}
+      {{#if model.theme_id}}
+        {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable}}
+      {{else}}
+        <label>
+          {{input type="checkbox" checked=model.user_selectable}}
+          {{i18n "admin.customize.theme.color_scheme_user_selectable"}}
+        </label>
+      {{/if}}
     </div>
 
     {{#if colors.length}}

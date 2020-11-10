@@ -4,7 +4,7 @@ import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import bootbox from "bootbox";
 
-const MAX_FIELDS = 20;
+const MAX_FIELDS = 30;
 
 export default Controller.extend({
   fieldTypes: null,

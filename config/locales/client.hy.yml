@@ -1129,14 +1129,10 @@ hy:
         link_created_at: "Ստեղծված"
         link_groups: Խմբեր
         create: "Ուղարկել Հրավեր"
-        generate_link: "Կրկնօրինակել Հրավերի Հղումը"
-        link_generated: "Հրավերի հղումը հաջողությամբ գեներացված է!"
         valid_for: "Հրավերի հղումը վավեր է միայն հետևյալ էլ. հասցեի համար՝ %{email}"
-        single_user: "Առանձին Օգտատեր "
         invite_link:
           success: "Հրավերի հղումը հաջողությամբ գեներացված է!"
         bulk_invite:
-          none: "Դուք դեռևս ոչ ոքի չեք հրավիրել այստեղ: Ուղարկեք անհատական հրավերներ կամ հրավիրեք բազմաթիվ մարդկանց միանգամից՝ <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>վերբեռնելով CSV ֆայլ</a>:"
           success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
           error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
           confirmation_message: "Դուք պատրաստվում եք էլ. նամակով հրավերներ ուղարկել վերբեռնված ֆայլում բոլոր նշվածներին:"
@@ -1369,7 +1365,6 @@ hy:
       sent_activation_email_again_generic: "Մենք ուղարկել ենք ակտիվացիայի մեկ այլ նամակ: Այն կժամանի մի քանի րոպեի ընթացքում. ստուգեք նաև սպամի արկղը:"
       to_continue: "Խնդրում ենք Մուտք Գործել"
       preferences: "Ձեր նախընտրությունները փոփոխելու համար անհրաժեշտ է մուտք գործել:"
-      forgot: "Ես չեմ հիշում իմ հաշվի տվյալները:"
       not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք կստանաք ծանուցում էլ. նամակի միջոցով, երբ այն հաստատվի:"
       google_oauth2:
         name: "Google"
@@ -1614,10 +1609,6 @@ hy:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
@@ -2388,7 +2379,6 @@ hy:
       tags_placeholder: "(Ընտրովի) թույլատրված թեգերի ցանկը"
       tags_tab_description: "Այստեղ սահմանված թեգերը և թեգերի խմբերը հասանելի կլինեն միայն այս կատեգորիայում և այլ կատեգորիաներում, որոնք նույնպես սահմանում են դրանք: Դրանք հասանելի չեն լինի օգտագործման համար այլ կատեգորիաներում:"
       tag_groups_placeholder: "(Ընտրովի) թույլատրված թեգերի խմբերի ցանկը"
-      manage_tag_groups_link: "Կառավարել թեգերի խմբերը այստեղ:"
       allow_global_tags_label: "Նաև թույլ տալ այլ տեգեր "
       tag_group_selector_placeholder: "(Ընտրովի) Թեգերի խումբ"
       required_tag_group_description: "Պահանջել, որ նոր թեմաների տեգերը լինեն տեգերի խմբից:"

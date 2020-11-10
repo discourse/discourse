@@ -4,4 +4,32 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-fa_IR: 
+fa_IR:
+  js:
+    styleguide:
+      welcome: "برای شروع، از فهرست سمت چپ یک گزینه را انتخاب کنید."
+      sections:
+        typography:
+          example: "به سامانه گفتمان Discourse خوش آمدید!"
+        colors:
+          title: "رنگ‌ها"
+        icons:
+          title: "نشانه‌ها"
+          full_list: "نمایش لیست تمامی نشانه‌های Font Awesome"
+        buttons:
+          title: "دکمه ها"
+        categories:
+          title: "دسته‌بندی‌ها"
+        navigation:
+          title: "ناوبری"
+        topic_link:
+          title: "پیوند/لینک موضوع"
+        topic_list:
+          title: "فهرست موضوعات"
+        latest_topic_list:
+          title: "آخرین فهرست موضوعات"
+        modal:
+          header: "عنوان پنجره (مودال)"
+          footer: "پایین پنجره (مودال)"
+        user_about:
+          title: "جعبه درباره کاربر"

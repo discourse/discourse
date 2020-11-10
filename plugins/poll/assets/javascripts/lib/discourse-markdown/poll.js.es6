@@ -272,7 +272,7 @@ function newApiInit(helper) {
 }
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "div.poll",
     "div.poll-info",
     "div.poll-container",

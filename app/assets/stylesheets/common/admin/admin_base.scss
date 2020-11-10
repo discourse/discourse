@@ -78,14 +78,13 @@ $mobile-breakpoint: 700px;
   }
 }
 
-.nav-stacked {
-  @media screen and (max-width: 700px) {
-    margin: 0 15px 0 -10px;
-  }
-}
-
 .admin-contents {
   position: relative;
+  .nav-stacked {
+    @media screen and (max-width: 700px) {
+      margin: 0 15px 0 -10px;
+    }
+  }
 }
 
 .admin-contents table {

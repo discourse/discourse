@@ -125,6 +125,7 @@ blockquote {
           height: 100%;
           display: block;
           padding: 5px 8px;
+          @include ellipsis;
         }
       }
     }
@@ -138,6 +139,11 @@ blockquote {
 }
 
 // Special elements
+
+#main-outlet {
+  padding-top: 0.25em;
+}
+
 #main {
   position: relative;
 }

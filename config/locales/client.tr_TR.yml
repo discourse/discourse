@@ -1121,14 +1121,10 @@ tr_TR:
         link_created_at: "Oluşturuldu"
         link_groups: Gruplar
         create: "Davet Gönder"
-        generate_link: "Davet Bağlantısını Kopyala"
-        link_generated: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         valid_for: "Davet bağlantısı sadece bu adres için geçerli: %{email}"
-        single_user: "Tekil kullanıcı"
         invite_link:
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         bulk_invite:
-          none: "Henüz hiç kimseyi davet etmedin. Kişsel davet gönderebilir ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yüklerek</a> birden fazla kişiyi davet edebilirsin. "
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bilgilendirileceksin."
           error: "Üzgünüz, dosya CSV formatında olmalı. "
           confirmation_message: "Yüklenen dosyadaki herkese davetleri e-posta ile göndermek üzeresiniz."
@@ -1362,7 +1358,6 @@ tr_TR:
       sent_activation_email_again_generic: "Başka bir aktivasyon e-postası gönderdik. Gelmesi birkaç dakika sürebilir; spam klasörünü kontrol ettiğinizden emin olun."
       to_continue: "Lütfen Giriş Yap"
       preferences: "Tercihlerini değiştirebilmek için giriş yapman gerekiyor."
-      forgot: "Hesap bilgilerimi hatırlamıyorum"
       not_approved: "Hesabın henüz onaylanmış değil. Onaylandığında e--posta ile bilgilendirileceksin. "
       google_oauth2:
         name: "Google"
@@ -1606,10 +1601,6 @@ tr_TR:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
-        other: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
       liked_consolidated_description:
         one: "gönderilerinizden %{count} tanesi beğenildi"
         other: "gönderilerinizden %{count} tanesi beğenildi"
@@ -2364,7 +2355,6 @@ tr_TR:
       tags_placeholder: "(Seçmeli) izin verilen etiketlerin listesi"
       tags_tab_description: "Yukarıda belirtilen etiketler ve etiket grupları yalnızca bu kategoride ve bunları belirten diğer kategorilerde bulunur. Diğer kategorilerde kullanılamazlar."
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
-      manage_tag_groups_link: "Etiket gruplarını burada yönetin."
       allow_global_tags_label: "Diğer etiketlere de izin ver"
       tag_group_selector_placeholder: "(Opsiyonel) Etiket grubu"
       required_tag_group_description: "Bir etiket grubundaki etiketleresahip olmak için için yeni konular gerekiyor:"

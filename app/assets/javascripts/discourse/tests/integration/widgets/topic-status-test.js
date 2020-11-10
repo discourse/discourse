@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
   widgetTest,
@@ -15,7 +16,7 @@ widgetTest("basics", {
     });
   },
   test(assert) {
-    assert.ok(find(".topic-status .d-icon-lock").length);
+    assert.ok(queryAll(".topic-status .d-icon-lock").length);
   },
 });
 
@@ -35,6 +36,6 @@ widgetTest("extendability", {
     });
   },
   test(assert) {
-    assert.ok(find(".topic-status .d-icon-far-check-square").length);
+    assert.ok(queryAll(".topic-status .d-icon-far-check-square").length);
   },
 });

@@ -38,10 +38,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: hidden;
-  @include breakpoint(mobile-large) {
-    width: 100%;
-  }
-  .d-icon {
+  width: 100%;
+  .d-icon,
+  span {
     margin: 0 0.25em;
   }
 }

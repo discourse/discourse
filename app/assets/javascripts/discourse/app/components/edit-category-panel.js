@@ -9,7 +9,7 @@ export function buildCategoryPanel(tab, extras) {
     {
       activeTab: equal("selectedTab", tab),
       classNameBindings: [
-        ":modal-tab",
+        ":edit-category-tab",
         "activeTab::hide",
         `:edit-category-tab-${tab}`,
       ],

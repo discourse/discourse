@@ -19,18 +19,20 @@ define("ember-qunit", () => {
 });
 let _app;
 define("@ember/test-helpers", () => {
-  return {
-    setResolver: window.setResolver,
+  let helpers = {
     setApplication(app) {
       _app = app;
     },
     getApplication() {
       return _app;
     },
-    visit() {
-      return window.visit(...arguments);
-    },
   };
+  ["click", "visit", "currentURL", "fillIn", "setResolver"].forEach((attr) => {
+    helpers[attr] = function () {
+      return window[attr](...arguments);
+    };
+  });
+  return helpers;
 });
 define("pretender", () => {
   return { default: window.Pretender };

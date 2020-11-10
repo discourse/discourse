@@ -3,8 +3,8 @@ import Controller from "@ember/controller";
 import GrantBadgeControllerMixin from "discourse/mixins/grant-badge-controller";
 import Badge from "discourse/models/badge";
 
-module("mixin:grant-badge-controller", {
-  before: function () {
+module("Unit | Mixin | grant-badge-controller", function (hooks) {
+  hooks.beforeEach(function () {
     this.GrantBadgeController = Controller.extend(GrantBadgeControllerMixin);
 
     this.badgeFirst = Badge.create({
@@ -37,9 +37,7 @@ module("mixin:grant-badge-controller", {
       enabled: true,
       manually_grantable: false,
     });
-  },
 
-  beforeEach: function () {
     this.subject = this.GrantBadgeController.create({
       userBadges: [],
       allBadges: [
@@ -50,34 +48,34 @@ module("mixin:grant-badge-controller", {
         this.badgeAutomatic,
       ],
     });
-  },
-});
+  });
 
-test("grantableBadges", function (assert) {
-  const sortedNames = [
-    this.badgeFirst.name,
-    this.badgeMiddle.name,
-    this.badgeLast.name,
-  ];
-  const badgeNames = this.subject
-    .get("grantableBadges")
-    .map((badge) => badge.name);
+  test("grantableBadges", function (assert) {
+    const sortedNames = [
+      this.badgeFirst.name,
+      this.badgeMiddle.name,
+      this.badgeLast.name,
+    ];
+    const badgeNames = this.subject
+      .get("grantableBadges")
+      .map((badge) => badge.name);
 
-  assert.not(
-    badgeNames.includes(this.badgeDisabled),
-    "excludes disabled badges"
-  );
-  assert.not(
-    badgeNames.includes(this.badgeAutomatic),
-    "excludes automatic badges"
-  );
-  assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
-});
+    assert.not(
+      badgeNames.includes(this.badgeDisabled),
+      "excludes disabled badges"
+    );
+    assert.not(
+      badgeNames.includes(this.badgeAutomatic),
+      "excludes automatic badges"
+    );
+    assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
+  });
 
-test("selectedBadgeGrantable", function (assert) {
-  this.subject.set("selectedBadgeId", this.badgeDisabled.id);
-  assert.not(this.subject.get("selectedBadgeGrantable"));
+  test("selectedBadgeGrantable", function (assert) {
+    this.subject.set("selectedBadgeId", this.badgeDisabled.id);
+    assert.not(this.subject.get("selectedBadgeGrantable"));
 
-  this.subject.set("selectedBadgeId", this.badgeFirst.id);
-  assert.ok(this.subject.get("selectedBadgeGrantable"));
+    this.subject.set("selectedBadgeId", this.badgeFirst.id);
+    assert.ok(this.subject.get("selectedBadgeGrantable"));
+  });
 });

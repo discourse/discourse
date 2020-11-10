@@ -53,7 +53,15 @@ module Email
     def subject
       if @opts[:template] &&
           TranslationOverride.exists?(locale: I18n.locale, translation_key: "#{@opts[:template]}.subject_template")
-        subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
+        augmented_template_args = @template_args.merge({
+          site_name: @template_args[:email_prefix],
+          optional_re: @opts[:add_re_to_subject] ? I18n.t('subject_re') : '',
+          optional_pm: @opts[:private_reply] ? @template_args[:subject_pm] : '',
+          optional_cat: @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '',
+          optional_tags: @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : '',
+          topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : '',
+        })
+        subject = I18n.t("#{@opts[:template]}.subject_template", augmented_template_args)
       elsif @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
@@ -153,7 +161,7 @@ module Email
       # please, don't send us automatic responses...
       result['X-Auto-Response-Suppress'] = 'All'
 
-      if allow_reply_by_email?
+      if allow_reply_by_email? && !@opts[:use_from_address_for_reply_to]
         result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
         result['Reply-To'] = reply_by_email_address
       else

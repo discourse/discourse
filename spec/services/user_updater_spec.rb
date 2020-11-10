@@ -36,58 +36,6 @@ describe UserUpdater do
     end
   end
 
-  describe '#update_ignored_users' do
-    it 'updates ignored users' do
-      u1 = Fabricate(:user, trust_level: 2)
-      u2 = Fabricate(:user, trust_level: 2)
-      u3 = Fabricate(:user, trust_level: 2)
-
-      updater = UserUpdater.new(u1, u1)
-      updater.update_ignored_users("#{u2.username},#{u3.username}")
-
-      updater = UserUpdater.new(u2, u2)
-      updater.update_ignored_users("#{u3.username},#{u1.username}")
-
-      updater = UserUpdater.new(u3, u3)
-      updater.update_ignored_users("")
-
-      expect(IgnoredUser.where(user_id: u2.id).pluck(:ignored_user_id)).to match_array([u3.id, u1.id])
-      expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id, u3.id])
-      expect(IgnoredUser.where(user_id: u3.id).count).to eq(0)
-    end
-
-    it 'excludes acting user' do
-      u1 = Fabricate(:user, trust_level: 2)
-      u2 = Fabricate(:user)
-      updater = UserUpdater.new(u1, u1)
-      updater.update_ignored_users("#{u1.username},#{u2.username}")
-
-      expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id])
-    end
-
-    context 'when acting user\'s trust level is below tl2' do
-      it 'excludes acting user' do
-        u1 = Fabricate(:user, trust_level: 1)
-        u2 = Fabricate(:user)
-        updater = UserUpdater.new(u1, u1)
-        updater.update_ignored_users("#{u2.username}")
-
-        expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq(0)
-      end
-    end
-
-    context 'when acting user is admin' do
-      it 'excludes acting user' do
-        u1 = Fabricate(:admin)
-        u2 = Fabricate(:user)
-        updater = UserUpdater.new(u1, u1)
-        updater.update_ignored_users("#{u1.username},#{u2.username}")
-
-        expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id])
-      end
-    end
-  end
-
   describe '#update' do
     fab!(:category) { Fabricate(:category) }
     fab!(:tag) { Fabricate(:tag) }

@@ -159,7 +159,7 @@ class PostCreator
         return false
       end
 
-      if @topic&.slow_mode_seconds.to_i > 0
+      if guardian.affected_by_slow_mode?(@topic)
         tu = TopicUser.find_by(user: @user, topic: @topic)
 
         if tu&.last_posted_at
@@ -381,6 +381,11 @@ class PostCreator
           locale: SiteSetting.default_locale
         )
       )
+
+      if SiteSetting.auto_close_topics_create_linked_topic?
+        # enqueue a job to create a linked topic
+        Jobs.enqueue_in(5.seconds, :create_linked_topic, post_id: @post.id)
+      end
     end
   end
 

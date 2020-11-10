@@ -51,6 +51,7 @@ export default DiscourseRoute.extend({
             userInvitedShow: this.controllerFor("user-invited-show"),
           },
         });
+        panels.reverse();
       }
 
       showModal("share-and-invite", {
@@ -65,7 +66,7 @@ export default DiscourseRoute.extend({
       const panels = [
         {
           id: "invite-link",
-          title: "user.invited.generate_link",
+          title: "user.invited.invite_link.title",
           model: {
             inviteModel: this.currentUser,
             userInvitedShow: this.controllerFor("user-invited-show"),

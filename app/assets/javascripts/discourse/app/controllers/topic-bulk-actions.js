@@ -5,6 +5,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
 import bootbox from "bootbox";
+import { Promise } from "rsvp";
 
 const _buttons = [];
 
@@ -84,6 +85,7 @@ export default Controller.extend(ModalFunctionality, {
 
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
+  processedTopicCount: 0,
 
   onShow() {
     const topics = this.get("model.topics");
@@ -101,21 +103,68 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   perform(operation) {
+    this.set("processedTopicCount", 0);
+    this.send("changeBulkTemplate", "modal/bulk-progress");
     this.set("loading", true);
 
-    const topics = this.get("model.topics");
-    return Topic.bulkOperation(topics, operation)
-      .then((result) => {
-        this.set("loading", false);
-        if (result && result.topic_ids) {
-          return result.topic_ids.map((t) => topics.findBy("id", t));
-        }
-        return result;
-      })
+    return this._processChunks(operation)
       .catch(() => {
         bootbox.alert(I18n.t("generic_error"));
+      })
+      .finally(() => {
         this.set("loading", false);
       });
+  },
+
+  _generateTopicChunks(allTopics) {
+    let startIndex = 0;
+    const chunkSize = 30;
+    const chunks = [];
+
+    while (startIndex < allTopics.length) {
+      let topics = allTopics.slice(startIndex, startIndex + chunkSize);
+      chunks.push(topics);
+      startIndex += chunkSize;
+    }
+
+    return chunks;
+  },
+
+  _processChunks(operation) {
+    const allTopics = this.get("model.topics");
+    const topicChunks = this._generateTopicChunks(allTopics);
+    const topicIds = [];
+
+    const tasks = topicChunks.map((topics) => () => {
+      return Topic.bulkOperation(topics, operation).then((result) => {
+        this.set(
+          "processedTopicCount",
+          this.get("processedTopicCount") + topics.length
+        );
+        return result;
+      });
+    });
+
+    return new Promise((resolve, reject) => {
+      const resolveNextTask = () => {
+        if (tasks.length === 0) {
+          const topics = topicIds.map((id) => allTopics.findBy("id", id));
+          return resolve(topics);
+        }
+
+        tasks
+          .shift()()
+          .then((result) => {
+            if (result && result.topic_ids) {
+              topicIds.push(...result.topic_ids);
+            }
+            resolveNextTask();
+          })
+          .catch(reject);
+      };
+
+      resolveNextTask();
+    });
   },
 
   forEachPerformed(operation, cb) {

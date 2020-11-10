@@ -3,8 +3,18 @@ export function scrollTopFor(y) {
 }
 
 export function minimumOffset() {
-  const header = document.querySelector("header.d-header");
-  return header ? header.offsetHeight : 0;
+  const header = document.querySelector("header.d-header"),
+    iPadNav = document.querySelector(".footer-nav-ipad .footer-nav"),
+    iPadNavHeight = iPadNav ? iPadNav.offsetHeight : 0;
+
+  // if the header has a positive offset from the top of the window, we need to include the offset
+  // this covers cases where a site has a custom header above d-header (covers fixed and unfixed)
+  const headerWrap = document.querySelector(".d-header-wrap"),
+    headerWrapOffset = headerWrap.getBoundingClientRect();
+
+  return header
+    ? header.offsetHeight + headerWrapOffset.top + iPadNavHeight
+    : 0;
 }
 
 export default function offsetCalculator() {

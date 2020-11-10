@@ -48,6 +48,7 @@ class GroupSmtpMailer < ActionMailer::Base
       group_name: from_group.name,
       allow_reply_by_email: true,
       only_reply_by_email: true,
+      use_from_address_for_reply_to: from_group.imap_enabled?,
       private_reply: post.topic.private_message?,
       participants: participants(post),
       include_respond_instructions: true,

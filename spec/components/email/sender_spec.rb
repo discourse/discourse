@@ -424,7 +424,7 @@ describe Email::Sender do
     context "when secure media enabled" do
       before do
         setup_s3
-        stub_s3_store
+        store = stub_s3_store
 
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
@@ -436,7 +436,8 @@ describe Email::Sender do
         FileStore::S3Store.any_instance.expects(:has_been_uploaded?).returns(true).at_least_once
         CookedPostProcessor.any_instance.stubs(:get_size).returns([244, 66])
 
-        @secure_image = UploadCreator.new(file_from_fixtures("logo.png", "images"), "logo.png")
+        @secure_image_file = file_from_fixtures("logo.png", "images")
+        @secure_image = UploadCreator.new(@secure_image_file, "logo.png")
           .create_for(Discourse.system_user.id)
         @secure_image.update_secure_status(secure_override_value: true)
         @secure_image.update(access_control_post_id: reply.id)
@@ -470,6 +471,7 @@ describe Email::Sender do
           expect(message.attachments.length).to eq(4)
           expect(message.attachments.map(&:filename))
             .to contain_exactly(*[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename))
+          expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(@secure_image_file))
           expect(message.html_part.body).to include("cid:")
           expect(message.html_part.body).to include("embedded-secure-image")
           expect(message.attachments.length).to eq(4)
@@ -480,6 +482,25 @@ describe Email::Sender do
           expect(message.html_part.body).not_to include("Itâ\u0080\u0099s")
           expect(message.html_part.body).to include("It’s")
           expect(message.html_part.charset.downcase).to eq("utf-8")
+        end
+
+        context "when the uploaded secure image has an optimized image" do
+          let!(:optimized) { Fabricate(:optimized_image, upload: @secure_image) }
+          let!(:optimized_image_file) { file_from_fixtures("logo-dev.png", "images") }
+
+          it "uses the email styles and the optimized image to inline secure images and attaches the secure image upload to the email" do
+            Discourse.store.store_optimized_image(optimized_image_file, optimized)
+            optimized.update(url: Discourse.store.absolute_base_url + '/' + optimized.url)
+            Discourse.store.cache_file(optimized_image_file, File.basename("#{optimized.sha1}.png"))
+            Email::Sender.new(message, :valid_type).send
+            expect(message.attachments.length).to eq(4)
+            expect(message.attachments.map(&:filename))
+              .to contain_exactly(*[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename))
+            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(optimized_image_file))
+            expect(message.html_part.body).to include("cid:")
+            expect(message.html_part.body).to include("embedded-secure-image")
+            expect(message.attachments.length).to eq(4)
+          end
         end
       end
     end

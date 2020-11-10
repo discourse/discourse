@@ -22,8 +22,9 @@
   grid-template-columns: auto auto;
   > .row {
     grid-area: posts;
-    max-width: 100%;
-    overflow: hidden;
+    max-width: calc(
+      100vw - 16px
+    ); // 16px is the left + right padding on .wrap in common/base/discourse.scss
   }
 
   .timeline-container {

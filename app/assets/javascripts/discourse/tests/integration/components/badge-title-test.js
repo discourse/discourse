@@ -3,6 +3,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest from "discourse/tests/helpers/component-test";
 import EmberObject from "@ember/object";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { click } from "@ember/test-helpers";
 
 moduleForComponent("badge-title", { integration: true });
 

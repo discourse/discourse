@@ -14,6 +14,10 @@ describe Jobs::ExportUserArchive do
   }
   let(:component) { raise 'component not set' }
 
+  let(:category) { Fabricate(:category_with_definition) }
+  let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
+  let(:topic) { Fabricate(:topic, category: category) }
+
   def make_component_csv
     data_rows = []
     csv_out = CSV.generate do |csv|
@@ -90,13 +94,10 @@ describe Jobs::ExportUserArchive do
   context 'user_archive posts' do
     let(:component) { 'user_archive' }
     let(:user2) { Fabricate(:user) }
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:subsubtopic) { Fabricate(:topic, category: subsubcategory) }
     let(:subsubpost) { Fabricate(:post, user: user, topic: subsubtopic) }
 
-    let(:topic) { Fabricate(:topic, category: category) }
     let(:normal_post) { Fabricate(:post, user: user, topic: topic) }
     let(:reply) { PostCreator.new(user2, raw: 'asdf1234qwert7896', topic_id: topic.id, reply_to_post_number: normal_post.post_number).create }
 
@@ -297,11 +298,8 @@ describe Jobs::ExportUserArchive do
   context 'category_preferences' do
     let(:component) { 'category_preferences' }
 
-    let(:category) { Fabricate(:category_with_definition) }
-    let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
     let(:subsubcategory) { Fabricate(:category_with_definition, parent_category_id: subcategory.id) }
     let(:announcements) { Fabricate(:category_with_definition) }
-
     let(:deleted_category) { Fabricate(:category) }
 
     let(:reset_at) { DateTime.parse('2017-03-01 12:00') }
@@ -350,6 +348,32 @@ describe Jobs::ExportUserArchive do
       expect(data[2][:dismiss_new_timestamp]).to eq('')
 
       expect(data[3][:category_names]).to eq(data[3][:category_id])
+    end
+  end
+
+  context 'queued posts' do
+    let(:component) { 'queued_posts' }
+    let(:reviewable_post) { Fabricate(:reviewable_queued_post, topic: topic, created_by: user) }
+    let(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic, category: category, created_by: user) }
+    let(:admin) { Fabricate(:admin) }
+
+    it 'correctly exports queued posts' do
+      SiteSetting.tagging_enabled = true
+
+      reviewable_post.perform(admin, :reject_post)
+      reviewable_topic.payload['tags'] = ['example_tag']
+      result = reviewable_topic.perform(admin, :approve_post)
+      expect(result.success?).to eq(true)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(2)
+      data.sort { |e| e['id'].to_i }
+
+      expect(csv_out).to_not match(admin.username)
+
+      expect(data[0]['post_raw']).to eq('hello world post contents.')
+      expect(data[0]['other_json']).to match('reply_to_post_number')
+      expect(data[1]['other_json']).to match('example_tag')
     end
   end
 

@@ -10,7 +10,7 @@ import Category from "discourse/models/category";
 import mobile from "discourse/lib/mobile";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { inject as service } from "@ember/service";
 import bootbox from "bootbox";
@@ -203,13 +203,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get("id")).then((atts) => {
-        const model = this.store.createRecord("category", atts.category);
-        model.setupGroupsAndPermissions();
-        this.site.updateCategory(model);
-        showModal("edit-category", { model });
-        this.controllerFor("edit-category").set("selectedTab", "general");
-      });
+      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
     },
 
     checkEmail(user) {

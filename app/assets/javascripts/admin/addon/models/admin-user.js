@@ -352,28 +352,17 @@ const AdminUser = User.extend({
       type: "PUT",
     })
       .then((result) => this.setProperties(result.unsilence))
-      .catch((e) => {
-        const error = I18n.t("admin.user.unsilence_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      })
       .finally(() => this.set("silencingUser", false));
   },
 
   silence(data) {
     this.set("silencingUser", true);
+
     return ajax(`/admin/users/${this.id}/silence`, {
       type: "PUT",
       data,
     })
       .then((result) => this.setProperties(result.silence))
-      .catch((e) => {
-        const error = I18n.t("admin.user.silence_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      })
       .finally(() => this.set("silencingUser", false));
   },
 

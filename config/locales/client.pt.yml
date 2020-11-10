@@ -943,13 +943,10 @@ pt:
         link_created_at: "Criado"
         link_groups: Grupos
         create: "Enviar Convite"
-        generate_link: "Copiar Hiperligação do Convite"
-        link_generated: "Hiperligação do convite gerada com sucesso!"
         valid_for: "A hiperligação do convite é válida apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Hiperligação do convite gerada com sucesso!"
         bulk_invite:
-          none: "Ainda não convidou ninguém aqui. Envie convites individuais, ou convide muitas pessoas de uma vez só, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviando um ficheiro CSV</a>."
           success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
           error: "Desculpe, o ficheiro deverá estar no formato CSV."
           confirmation_message: "Está prestes a enviar convites por email a todos os incluídos no ficheiro que enviou."
@@ -1167,7 +1164,6 @@ pt:
       sent_activation_email_again_generic: "Enviámos outro email de ativação. Pode demorar alguns minutos até que chegue; certifique-se de que verifica a sua pasta de spam."
       to_continue: "Por favor, inicie a sessão"
       preferences: "Necessita de ter a sessão iniciada para alterar as suas preferências de utilizador."
-      forgot: "Eu não me lembro dos detalhes da minha conta"
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
@@ -1395,10 +1391,6 @@ pt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"

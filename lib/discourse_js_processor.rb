@@ -52,7 +52,8 @@ class DiscourseJsProcessor
       wizard-start
       onpopstate-handler
       google-tag-manager
-      google-universal-analytics
+      google-universal-analytics-v3
+      google-universal-analytics-v4
       activate-account
       auto-redirect
       embed-application

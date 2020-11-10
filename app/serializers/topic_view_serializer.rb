@@ -275,7 +275,10 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_published_page?
-    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+    SiteSetting.enable_page_publishing? &&
+      scope.is_staff? &&
+      object.published_page.present? &&
+      !SiteSetting.secure_media
   end
 
   def thumbnails
@@ -288,6 +291,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_user_last_posted_at?
-    object.topic.slow_mode_seconds.to_i > 0
+    has_topic_user? && object.topic.slow_mode_seconds.to_i > 0
   end
 end

@@ -243,6 +243,7 @@ class SearchIndexer
     end
 
     if Category === obj && (obj.saved_change_to_name? || force)
+      SearchIndexer.queue_category_posts_reindex(obj.id)
       SearchIndexer.update_categories_index(obj.id, obj.name)
     end
 

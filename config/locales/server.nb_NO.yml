@@ -1133,7 +1133,6 @@ nb_NO:
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
-    already_logged_in: "Oisann, ser ut som du prøver å akseptere en invitasjon for en en annen bruker. Hvis du ikke er %{current_user}, logg ut og prøv igjen."
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
   admin:
     email:

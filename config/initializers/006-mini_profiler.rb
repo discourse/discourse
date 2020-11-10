@@ -25,6 +25,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   )
 
   Rack::MiniProfiler.config.snapshot_every_n_requests = GlobalSetting.mini_profiler_snapshots_period
+  Rack::MiniProfiler.config.snapshots_transport_destination_url = GlobalSetting.mini_profiler_snapshots_transport_url
+  Rack::MiniProfiler.config.snapshots_transport_auth_key = GlobalSetting.mini_profiler_snapshots_transport_auth_key
   Rack::MiniProfiler.config.skip_paths = [
     /^\/message-bus/,
     /^\/extra-locales/,
@@ -74,6 +76,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
 
   Rack::MiniProfiler.config.backtrace_includes = [/^\/?(app|config|lib|test|plugins)/]
 
+  Rack::MiniProfiler.counter_method(Redis::Client, :call) { 'redis' }
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
   # Rack::MiniProfiler.counter_method(Array, 'uniq')
   # require "#{Rails.root}/vendor/backports/notification"

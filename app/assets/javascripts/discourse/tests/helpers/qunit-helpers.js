@@ -39,6 +39,8 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import Site from "discourse/models/site";
 import createStore from "discourse/tests/helpers/create-store";
 import { getApplication } from "@ember/test-helpers";
+import deprecated from "discourse-common/lib/deprecated";
+import sinon from "sinon";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -60,28 +62,10 @@ export function loggedInUser() {
 
 export function fakeTime(timeString, timezone = null, advanceTime = false) {
   let now = moment.tz(timeString, timezone);
-  return sandbox.useFakeTimers({
+  return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
   });
-}
-
-export async function acceptanceUseFakeClock(
-  timeString,
-  callback,
-  timezone = null
-) {
-  if (!timezone) {
-    let user = loggedInUser();
-    if (user) {
-      timezone = user.resolvedTimezone(user);
-    } else {
-      timezone = "America/Denver";
-    }
-  }
-  let clock = fakeTime(timeString, timezone, true);
-  await callback();
-  clock.reset();
 }
 
 const Plugin = $.fn.modal;
@@ -144,18 +128,39 @@ export function controllerModule(name, args = {}) {
   });
 }
 
-export function discourseModule(name, hooks) {
+export function discourseModule(name, options) {
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
+
+  if (typeof options === "function") {
+    module(name, function (hooks) {
+      hooks.beforeEach(function () {
+        this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
+        this.siteSettings = currentSettings();
+      });
+
+      options.call(this, hooks);
+    });
+
+    return;
+  }
+
   module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (hooks && hooks.beforeEach) {
-        hooks.beforeEach.call(this);
+      if (options && options.beforeEach) {
+        options.beforeEach.call(this);
       }
     },
     afterEach() {
-      if (hooks && hooks.afterEach) {
-        hooks.afterEach.call(this);
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
     },
   });
@@ -163,17 +168,39 @@ export function discourseModule(name, hooks) {
 
 export function addPretenderCallback(name, fn) {
   if (name && fn) {
+    if (_pretenderCallbacks[name]) {
+      // eslint-disable-next-line no-console
+      throw `There is already a pretender callback with module name (${name}).`;
+    }
+
     _pretenderCallbacks[name] = fn;
   }
 }
 
-export function acceptance(name, options) {
+export function acceptance(name, optionsOrCallback) {
   name = `Acceptance: ${name}`;
-  options = options || {};
+
+  let callback;
+  let options = {};
+  if (typeof optionsOrCallback === "function") {
+    callback = optionsOrCallback;
+  } else if (typeof optionsOrCallback === "object") {
+    deprecated(
+      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
+      { since: "2.6.0" }
+    );
+    options = optionsOrCallback;
+  }
 
   addPretenderCallback(name, options.pretend);
 
-  module(name, {
+  let loggedIn = false;
+  let mobileView = false;
+  let siteChanges;
+  let settingChanges;
+  let userChanges;
+
+  const setup = {
     beforeEach() {
       resetMobile();
 
@@ -181,16 +208,19 @@ export function acceptance(name, options) {
       HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
-      if (options.mobileView) {
+      if (mobileView) {
         forceMobile();
       }
 
-      if (options.loggedIn) {
+      if (loggedIn) {
         logIn();
+        if (userChanges) {
+          updateCurrentUser(userChanges);
+        }
       }
 
-      if (options.settings) {
-        mergeSettings(options.settings);
+      if (settingChanges) {
+        mergeSettings(settingChanges);
       }
       this.siteSettings = currentSettings();
 
@@ -198,8 +228,8 @@ export function acceptance(name, options) {
       clearHTMLCache();
       resetPluginApi();
 
-      if (options.site) {
-        resetSite(currentSettings(), options.site);
+      if (siteChanges) {
+        resetSite(currentSettings(), siteChanges);
       }
 
       getApplication().reset();
@@ -248,7 +278,52 @@ export function acceptance(name, options) {
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
     },
-  });
+  };
+
+  const needs = {
+    user(changes) {
+      loggedIn = true;
+      userChanges = changes;
+    },
+    pretender(fn) {
+      addPretenderCallback(name, fn);
+    },
+    site(changes) {
+      siteChanges = changes;
+    },
+    settings(changes) {
+      settingChanges = changes;
+    },
+    mobileView() {
+      mobileView = true;
+    },
+  };
+
+  if (options.loggedIn) {
+    needs.user();
+  }
+  if (options.site) {
+    needs.site(options.site);
+  }
+  if (options.settings) {
+    needs.settings(options.settings);
+  }
+  if (options.mobileView) {
+    needs.mobileView();
+  }
+
+  if (callback) {
+    // New, preferred way
+    module(name, function (hooks) {
+      hooks.beforeEach(setup.beforeEach);
+      hooks.afterEach(setup.afterEach);
+      needs.hooks = hooks;
+      callback(needs);
+    });
+  } else {
+    // Old way
+    module(name, setup);
+  }
 }
 
 export function controllerFor(controller, model) {
@@ -319,4 +394,29 @@ export async function selectDate(selector, date) {
 
     resolve();
   });
+}
+
+export function queryAll() {
+  return window.find(...arguments);
+}
+
+export function invisible(selector) {
+  const $items = queryAll(selector + ":visible");
+  return (
+    $items.length === 0 ||
+    $items.css("opacity") !== "1" ||
+    $items.css("visibility") === "hidden"
+  );
+}
+
+export function visible(selector) {
+  return queryAll(selector + ":visible").length > 0;
+}
+
+export function count(selector) {
+  return queryAll(selector).length;
+}
+
+export function exists(selector) {
+  return count(selector) > 0;
 }

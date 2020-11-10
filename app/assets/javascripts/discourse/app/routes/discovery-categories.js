@@ -9,7 +9,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { hash } from "rsvp";
 import Site from "discourse/models/site";
 
@@ -111,7 +110,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createCategory() {
-      openNewCategoryModal(this);
+      this.transitionTo("newCategory");
     },
 
     reorderCategories() {
@@ -133,23 +132,5 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     },
   },
 });
-
-export function openNewCategoryModal(context) {
-  const groups = context.site.groups,
-    everyoneName = groups.findBy("id", 0).name;
-
-  const model = context.store.createRecord("category", {
-    color: "0088CC",
-    text_color: "FFFFFF",
-    group_permissions: [{ group_name: everyoneName, permission_type: 1 }],
-    available_groups: groups.map((g) => g.name),
-    allow_badges: true,
-    topic_featured_link_allowed: true,
-    custom_fields: {},
-    search_priority: SEARCH_PRIORITIES.normal,
-  });
-
-  showModal("edit-category", { model }).set("selectedTab", "general");
-}
 
 export default DiscoveryCategoriesRoute;
