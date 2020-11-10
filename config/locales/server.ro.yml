@@ -913,7 +913,6 @@ ro:
     max_bookmarks_per_day: "Numărul maxim zilnic de semne de carte per utilizator."
     max_edits_per_day: "Numărul maxim zilnic de editări per utilizator."
     max_topics_per_day: "Numărul maxim de subiecte pe care un utilizator le poare crea zilnic."
-    max_personal_messages_per_day: "Număr maxim de mesaje pe care utilizatorii le pot crea pe zi."
     max_invites_per_day: "Număr maxim de invitații pe care un utilizator le poate trimite pe zi."
     max_topic_invitations_per_day: "Numărul maxim de invitații la subiect pe care un utilizator le poate trimite pe zi."
     alert_admins_if_errors_per_minute: "Numărul de erori pe minut la care să se declanșeze o alerta admin. Valoarea 0 dezactivează această funcționalitate. NOTĂ: necesită restart."

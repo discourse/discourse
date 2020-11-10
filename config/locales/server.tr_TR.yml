@@ -1463,7 +1463,6 @@ tr_TR:
     max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla imleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
-    max_personal_messages_per_day: "Bir günde kullanıcıların oluşturabileceği en fazla ileti sayısı"
     max_invites_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla davet sayısı."
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"

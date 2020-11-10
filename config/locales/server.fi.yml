@@ -1485,7 +1485,6 @@ fi:
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Kuinka monta ketjua käyttäjä voi aloittaa päivässä."
-    max_personal_messages_per_day: "Kuinka monta yksityisviestiketjua käyttäjä voi aloittaa päivässä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"

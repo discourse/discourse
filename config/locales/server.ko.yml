@@ -108,7 +108,7 @@ ko:
         silenced_user_error: "발신자가 무음 상태가되면 발생합니다."
         bad_destination_address: "받는 사람 / 참조 필드의 전자 메일 주소가 구성된 수신 전자 메일 주소와 일치하지 않으면 발생합니다."
         strangers_not_allowed_error: "사용자가 자신이 속하지 않은 카테고리에 토픽 생성을 시도할 때 발생합니다."
-        insufficient_trust_level_error: "사용자가 더 높은 신뢰 레벨이 필요한 카테고리에 토픽 생성을 시도할 때 발생합니다."
+        insufficient_trust_level_error: "카테고리가 요구하는 최소 회원레벨이 아닌 사용자가 새 글을 작성하려고 할 때 발생합니다."
         reply_user_not_matching_error: "발신한 알림에 대하여 서로 다른 이메일로 답장이 올 때 발생합니다."
         topic_not_found_error: "댓글을 달았지만 해당 토픽이 삭제된 경우 발생합니다."
         topic_closed_error: "답글을 했지만 해당 토픽이 닫힌 경우 발생합니다."
@@ -176,6 +176,7 @@ ko:
       default_tags_already_selected: "다른 목록에 사용 된 태그를 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'이 설정되지 않으면 S3로 업로드하기를 활성화할 수 없습니다."
       enable_s3_uploads_is_required: "S3 업로드를 활성화하지 않으면 S3에 인벤토리를 활성화 할 수 없습니다."
+      page_publishing_requirements: "보안 미디어를 사용하도록 설정한 경우 페이지 게시를 사용할 수 없습니다."
       s3_backup_requires_s3_settings: "&#39;%{setting_name}&#39;을 제공하지 않으면 S3을 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "&#39;s3_upload_bucket&#39;및 &#39;s3_backup_bucket&#39;에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷마다 다른 경로를 사용하십시오."
       secure_media_requirements: "보안 미디어를 활성화하기 전에 S3 업로드를 활성화해야합니다."
@@ -215,7 +216,11 @@ ko:
   topic_invite:
     failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면이 주제에 사용자를 초대 할 수 없습니다."
     user_exists: "해당 사용자는 이미 초대를 받았습니다. 토픽 초대는 딱 한번만 할 수 있습니다."
-    not_allowed: "죄송합니다. 해당 사용자를 초대할 수 없습니다."
+    muted_invitee: "죄송합니다. 해당 사용자는 사용자님을 관심없음으로 설정했습니다."
+    muted_topic: "죄송합니다. 해당 사용자는 이 글을 관심없음으로 설정했습니다."
+    receiver_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
+    sender_does_not_allow_pm: "죄송합니다. 해당 사용자는 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
+    receiver_does_not_allow_other_user_pm: "죄송합니다. 해당 사용자는 기존 참가자들에게 비공개 메시지를 보낼 수 있도록 허용하지 않습니다."
   backup:
     operation_already_running: "현재 작업이 실행중입니다. 지금은 새로운 일을 시작할 수 없습니다."
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
@@ -924,7 +929,7 @@ ko:
       confirm_title: '%{site_name}으로 가기'
       logging_in_as: '%{username}으로 로그인'
       confirm_button: 로그인 완료
-    no_trust_level: "죄송하지만, 사용자 API에 접근할 수 있는 신뢰 레벨보다 낮습니다."
+    no_trust_level: "죄송합니다. 사용자 API에 액세스하는 데 필요한 회원 레벨이 아닙니다."
     generic_error: "죄송합니다. 사용자 API 키를 발급할 수 없습니다. 운영진이 이 기능을 해제한 것 같습니다."
     scopes:
       message_bus: "실시간 업데이트"
@@ -1085,7 +1090,7 @@ ko:
         admin: 관리자
         moderator: 운영자
         suspended: 차단됨
-        silenced: 침묵
+        silenced: 쓰기 금지
       description: "관리자, 운영자, 일시 중지 및 자동으로 그룹화 된 사용자 수"
     trending_search:
       title: 인기 검색어
@@ -1396,7 +1401,7 @@ ko:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "(페이지를 안 보고 있을 때) 클라이언트가 몇 밀리초마다 poll해야 하는 지"
     hide_post_sensitivity: "신고 된 게시물이 숨겨 질 가능성"
-    silence_new_user_sensitivity: "스팸 플래그를 기준으로 새 사용자가 침묵 할 가능성"
+    silence_new_user_sensitivity: "스팸 신고에 따라 새 사용자가 쓰기 금지될 가능성"
     auto_close_topic_sensitivity: "신고 된 주제가 자동으로 닫힐 가능성"
     cooldown_minutes_after_hiding_posts: "신고 당해서 숨겨진 글을 사용자가 편집할 수 있기 전까지 기대려야 하는 시간(분)"
     max_topics_in_first_day: "첫 포스트 생성 후 24시간동안 사용자가 생성할 수 있는 최대 토픽 수"
@@ -1407,7 +1412,7 @@ ko:
     num_users_to_silence_new_user: "새 사용자의 게시물에이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 플래그가 표시되면 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_flags_to_silence_new_user: "새 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 수준 3 사용자로부터이 많은 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
     num_tl3_users_to_silence_new_user: "새 사용자의 게시물이이 많은 다른 신뢰 수준 3 사용자로부터 num_tl3_flags_to_silence_new_user 플래그를 얻는 경우 모든 게시물을 숨기고 향후 게시를 방지하십시오. 비활성화하려면 0입니다."
-    notify_mods_when_user_silenced: "사용자가 자동으로 침묵되면 모든 중재자에게 메시지를 보냅니다."
+    notify_mods_when_user_silenced: "사용자가 자동으로 쓰기 금지되면 모든 관리자에게 메시지를 보냅니다."
     flag_sockpuppets: "새 사용자가 주제를 시작한 사용자와 동일한 IP 주소로 주제에 응답하면 두 게시물을 모두 스팸 가능성으로 표시하십시오."
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     enable_markdown_typographer: "타이포그래피 규칙을 사용하여 텍스트의 가독성을 향상 시키십시오. 직선 인용 부호 &#39;를 중괄호&#39;로 바꾸고, (c) (tm)을 기호로 바꾸십시오."
@@ -1421,9 +1426,10 @@ ko:
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     persistent_sessions: "사용자는 웹 브라우저가 닫혀도 로그인 상태를 유지합니다."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
-    ga_universal_tracking_code: "Google 유니버설 애널리틱스 (analytics.js) 추적 코드 ID, 예 : UA-12345678-9; 참조 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google 유니버설 애널리틱스 (analytics.js) 도메인 이름, 예: mysite.com; 참조 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Google 유니버설 애널리틱스 (analytics.js) 교차 도메인 추적을 사용합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드를 참조하세요.</a>"
+    ga_version: "사용할 Google 유니버설 애널리틱스 버전: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google 유니버설 애널리틱스 추적 코드 ID, 예: UA-12345678-9; <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> 참조"
+    ga_universal_domain_name: "Google Universal Analytics 도메인 이름, 예: mysite.com; <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> 참조"
+    ga_universal_auto_link_domains: "Google 유니버설 애널리틱스 교차 도메인 추적을 사용합니다. 이러한 도메인으로 나가는 링크에는 클라이언트 ID가 추가됩니다. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google의 교차 도메인 추적 가이드를 참조하세요.</a>"
     gtm_container_id: "Google 태그 관리자 컨테이너 ID 예 : GTM-ABCDEF. <br/> 참고 : GTM에서로드 한 타사 스크립트는 &#39;콘텐츠 보안 정책 스크립트 src&#39;에 허용 목록에 있어야합니다."
     enable_escaped_fragments: "웹 크롤러가 감지되지 않으면 Google의 Ajax-Crawling API로 폴백하십시오. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more를</a> 참조 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>하십시오.</a>"
     moderators_manage_categories_and_groups: "관리자가 카테고리 및 그룹을 관리하도록 허용"
@@ -1561,7 +1567,7 @@ ko:
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
-    max_personal_messages_per_day: "사용자가 하루에 작성할 수있는 최대 글 수입니다."
+    max_personal_messages_per_day: "사용자가 하루에 작성 할 수있는 최대 새 개인 메시지 수입니다."
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
@@ -1634,7 +1640,7 @@ ko:
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
     min_trust_to_edit_post: "포스트를 편집하기 위한 최소 신뢰도"
     min_trust_to_allow_self_wiki: "사용자의 포스트 위키를 만들기 위한 최소 신뢰도"
-    min_trust_to_send_messages: "새 개인 메시지를 작성하는 데 필요한 최소 신뢰 레벨입니다."
+    min_trust_to_send_messages: "새 개인 메시지를 작성하는데 필요한 최소 회원 레벨입니다."
     min_trust_to_flag_posts: "게시물을 신고하는 데 필요한 최소 신뢰 수준"
     min_trust_to_post_links: "게시물에 링크를 포함하는 데 필요한 최소 신뢰 수준"
     min_trust_to_post_embedded_media: "게시물에 미디어 항목을 삽입하는데 필요한 최소 회원 레벨"
@@ -1707,8 +1713,8 @@ ko:
     num_hours_to_close_topic: "운영진 중재를 위하여 토픽을 중지시킬 시간"
     auto_respond_to_flag_actions: "신고 기각 시 자동 답변 활성화"
     min_first_post_typing_time: "사용자가 첫번째 포스트를 작성할 때 타이핑에 소요해야 하는 밀리초. 설정값에 도달하지 않았을 때는 자동으로 승인 큐에 포함됩니다. 승인 0으로 설정하면 해제됩니다.(해제는 권장하지 않습니다)"
-    auto_silence_fast_typers_on_first_post: "min_first_post_typing_time을 충족하지 않는 사용자를 자동으로 침묵시킵니다."
-    auto_silence_fast_typers_max_trust_level: "빠른 자동 입력기를 침묵시키는 최대 신뢰 수준"
+    auto_silence_fast_typers_on_first_post: "min_first_post_typing_time을 충족하지 않는 사용자를 자동으로 쓰기 금지 시킵니다."
+    auto_silence_fast_typers_max_trust_level: "빠른 타이퍼를 자동으로 쓰기 금지 시키기 위한 최대 신뢰 수준"
     auto_silence_first_post_regex: "대소 문자를 구분하지 않는 정규 표현식은 전달되면 사용자 별 첫 번째 게시물이 침묵되고 승인 대기열로 전송됩니다. 예 : raging | a [bc] a는 raging 또는 aba 또는 aca를 포함하는 모든 게시물이 먼저 침묵되도록합니다. 첫 번째 게시물에만 적용됩니다."
     reviewable_claiming: "검토 가능한 컨텐츠를 사용하려면 먼저 컨텐츠를 청구해야합니까?"
     reviewable_default_topics: "기본적으로 주제별로 그룹화 된 검토 가능한 컨텐츠 표시"
@@ -1816,7 +1822,7 @@ ko:
     log_personal_messages_views: "다른 사용자 / 그룹에 대해 관리자가 개인 메시지보기를 기록합니다."
     ignored_users_count_message_threshold: "이 많은 다른 사용자가 특정 사용자를 무시하면 중재자에게 알립니다."
     ignored_users_message_gap_days: "다른 사람이 무시한 사용자에 대해 중재자에게 다시 알리기 전에 기다리는 시간입니다."
-    clean_up_inactive_users_after_days: "비활성 사용자 (소식이없는 신뢰 레벨 0)가 제거되기 전의 일 수입니다. 정리를 비활성화하려면 0으로 설정하십시오."
+    clean_up_inactive_users_after_days: "비활성 사용자 (작성한 게시물이 없는 회원 레벨 0)가 정리되기까지의 일 수입니다. 정리를 비활성화 하려면 0으로 설정합니다."
     clean_up_unused_staged_users_after_days: "사용하지 않는 준비된 사용자 (게시물 없음)가 제거되기까지의 일 수입니다. 정리를 비활성화하려면 0으로 설정하십시오."
     user_selected_primary_groups: "사용자가 자신의 기본 그룹을 설정하도록 허용"
     max_notifications_per_user: "이 수를 초과하면 사용자 당 최대 알림 수는 이전 알림이 삭제됩니다. 매주 시행됩니다. 비활성화하려면 0으로 설정"
@@ -2194,6 +2200,8 @@ ko:
       same_ip_address: "다른 사용자와 동일한 IP 주소 (%{ip_address})"
       inactive_user: "비활성 사용자"
     email_in_spam_header: "사용자의 첫 번째 이메일이 스팸으로 표시되었습니다"
+    already_silenced: "사용자가 이미 %{time_ago}전 %{staff}의해 글 작성이 금지되었습니다."
+    already_suspended: "사용자의 계정이 이미 %{time_ago}전 %{staff}의해 일시 중지되었습니다."
   reviewables_reminder:
     submitted:
       other: "항목이 %{count}시간 전에 제출되었습니다. [검토해주세요] (%{base_path}/review)."
@@ -2629,12 +2637,26 @@ ko:
     email_reject_silenced_user:
       title: "이메일 거부 사일런트 사용자"
       subject_template: "[%{email_prefix}] 이메일 문제-무음 사용자"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        이 이메일 주소와 연결된 사용자님의 계정은 글 작성이 금지된 상태입니다.
     email_reject_reply_user_not_matching:
       title: "이메일 거부 사용자가 일치하지 않습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-예기치 않은 회신 주소"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        기존의 이메일과 다른 이메일 주소에서 발송되어 동일 사용자인지 확인이 어렵습니다. 기존의 이메일 주소에서 보내거나 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_empty:
       title: "이메일 거부 빈"
       subject_template: "[%{email_prefix}] 이메일 문제-내용 없음"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        사용자님의 이메일에서 내용을 찾을 수 없습니다.
+
+        전송 _완료_ 후 이 메시지를 받았다면, 더 간단한 서식으로 다시 시도하십시오.
     email_reject_parsing:
       title: "이메일 거부 파싱"
       subject_template: "[%{email_prefix}] 이메일 문제-인식 할 수없는 콘텐츠"
@@ -2646,9 +2668,17 @@ ko:
     email_reject_invalid_access:
       title: "이메일이 잘못된 액세스를 거부"
       subject_template: "[%{email_prefix}] 이메일 문제-잘못된 액세스"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        사용자님의 계정은 해당 카테고리에 새 글을 쓸 권한이 없습니다. 오류라고 생각되면 [관리자에게 문의](%{base_url}/about) 하세요.
     email_reject_strangers_not_allowed:
       title: "이메일 거부 낯선 사람은 허용되지 않습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-잘못된 액세스"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        전송하고자 하는 카테고리는 허용된 이메일과 사용자만 글을 게시 할 수 있습니다. 오류라고 생각되면 [관리자에게 문의] (%{base_url}/about) 하세요.
     email_reject_invalid_post:
       title: "이메일 거부 잘못된 게시물"
       subject_template: "[%{email_prefix}] 이메일 문제-게시 오류"
@@ -2664,6 +2694,10 @@ ko:
     email_reject_post_too_short:
       title: "이메일 거부 게시물이 너무 짧음"
       subject_template: "[%{email_prefix}] 이메일 문제-게시물이 너무 짧습니다"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        너무 짧은 글은 허용되지 않습니다. %{count}자 이상으로 작성하거나 "+1"로 작성해 해당 게시물을 좋아한다고 표시할 수 있습니다.
     email_reject_invalid_post_action:
       title: "이메일 거부 잘못된 사후 조치"
       subject_template: "[%{email_prefix}] 이메일 문제-잘못된 사후 조치"
@@ -2688,6 +2722,10 @@ ko:
     email_reject_old_destination:
       title: "이메일 거부 이전 대상"
       subject_template: "[%{email_prefix}] 이메일 문제-이전 알림에 답장하려고합니다"
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
+
+        알림에 대한 답변은 %{number_of_days}일 동안만 가능합니다. 대화를 계속하려면 [글을 방문](%{short_url})해 보세요.
     email_reject_topic_not_found:
       title: "이메일 거부 주제를 찾을 수 없습니다"
       subject_template: "[%{email_prefix}] 이메일 문제-주제를 찾을 수 없습니다"
@@ -2769,6 +2807,14 @@ ko:
     ignored_users_summary:
       title: "무시 된 사용자가 임계 값을 통과했습니다."
       subject_template: "다른 많은 사용자가 사용자를 무시하고 있습니다."
+      text_body_template: |
+        안녕하세요,
+
+         %{ignores_threshold}명의 사용자가 @%{username} 사용자를 무시했음을 알리는 %{site_name}의 자동 메시지입니다. 커뮤니티에서 어떠한 문제가 발생하고 있음을 나타내는 것일 수 있습니다.
+
+        이 사용자의 [최근 게시물 검토](%{base_url}/u/%{username}/summary)와 [무시 및 글 작성 차단 사용자 확인](%{base_url}/admin/reports/top_ignored_users).
+
+        추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     too_many_spam_flags:
       title: "너무 많은 스팸 플래그"
       subject_template: "대기중인 신규 계정"
@@ -2792,7 +2838,7 @@ ko:
 
         추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     silenced_by_staff:
-      title: "직원에 의해 침묵"
+      title: "관리자에 의해 쓰기 금지됨"
       subject_template: "일시적으로 보류중인 계정"
       text_body_template: |
         안녕하세요,
@@ -2803,13 +2849,29 @@ ko:
 
         추가 안내는 [커뮤니티 가이드 라인](%{base_url}/guidelines)을 참조하세요.
     user_automatically_silenced:
-      title: "자동 침묵하는 사용자"
-      subject_template: "커뮤니티 플래그로 새 사용자 %{username}이 침묵 함"
+      title: "사용자가 자동으로 쓰기 금지됨"
+      subject_template: "신고로 인해 새 사용자 %{username}이 쓰기 금지됨"
+      text_body_template: |
+        이것은 자동 발송되는 메시지입니다.
+
+        여러 사용자가 %{username}의 게시물을 신고해 신규 사용자 [%{username}](%{user_url})님은 글 작성이 금지되었습니다.
+
+        [신고 검토](%{base_url}/admin/flags). 만약 %{username}님이 잘못 처리 된 경우 [이 사용자의 관리자 페이지](%{user_url})에서 글작성 금지 해제 버튼을 클릭합니다.
+
+        이 기본 값은 사이트 설정 `silence_new_user` 를 통해 변경할 수 있습니다.
     spam_post_blocked:
       title: "스팸 게시글 차단됨"
       subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
+      text_body_template: |
+        이것은 자동 전송되는 메시지 입니다.
+
+        신규 사용자 [%{username}](%{user_url})님이 %{domains} 링크가있는 여러 게시물을 작성하려고 했지만 스팸으로 의심되어 게시물이 차단되었습니다. 해당 사용자는 %{domains}과 관련없는 새 게시물은 작성할 수 있습니다.
+
+        [사용자 확인](%{user_url}) 이 필요합니다.
+
+        사이트 설정에서 `newuser_spam_host_threshold` 와 `allowed_spam_host_domains` 에서 수정할 수 있습니다. 제외 하고자 하는 경우 허용 목록에 %{domains} 을 추가하는 것을 고려하십시오.
     unsilenced:
-      title: "침묵하지 않는"
+      title: "쓰기 금지 해제"
       subject_template: "계정의 대기가 해제되었습니다"
       text_body_template: |
         안녕하세요,
@@ -3096,8 +3158,8 @@ ko:
 
         %{message}
     account_silenced:
-      title: "계정 침묵"
-      subject_template: "[%{email_prefix}] 귀하의 계정이 침묵되었습니다"
+      title: "계정이 쓰기 금지됨"
+      subject_template: "[%{email_prefix}] 사용자님의 계정이 쓰기 금지 되었습니다"
       text_body_template: |
         사용자님은 %{silenced_till}까지 사이트에서 글 작성이 중지되었습니다.
 
@@ -3914,6 +3976,7 @@ ko:
             label: "웰컴 토픽"
             description: "<p>만약 1분동안 낯선 사람에게 이 커뮤니티를 설명해야한다면 어떻게 말하실 건가요?</p> <ul> <li>이 토론에는 누가 참여하나요?</li> <li>여기에서 어떤 것을 볼 수 있나요?</li> <li>왜 방문해야 하나요?</li> </ul> <p>환영 토픽은 새로운 방문자가 가장 처음으로 읽을 글이됩니다. 이 토픽을<b>한 문단으로 된</b> '엘리베이터 피칭' 또는 '사명 선언문'이라고 생각하시면 됩니다. </p>"
             one_paragraph: "환영 메시지를 딱 한 문단으로 줄여주세요."
+            extra_description: "확실하지 않은 경우 이 단계를 건너뛰고 나중에 환영 글을 편집할 수 있습니다."
       privacy:
         title: "접근성"
         description: "<p> 커뮤니티가 모든 사람에게 공개됩니까, 아니면 회원, 초대 또는 승인에 의해 제한됩니까? 원하는 경우 비공개로 설정 한 다음 나중에 공개로 전환 할 수 있습니다. </p>"
@@ -4095,7 +4158,7 @@ ko:
         description: "플래그에 동의하고 사용자를 일시 중지하십시오."
       agree_and_silence:
         title: "무음 사용자"
-        description: "플래그에 동의하고 사용자를 침묵 시키십시오."
+        description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
       agree_and_restore:
         title: "글 복원"
         description: "모든 사용자가 볼 수 있도록 게시물을 복원하십시오."
@@ -4171,6 +4234,11 @@ ko:
       %{keys}
 
       반드시 해야 할 조치는 아니지만 보안을 위해 몇 년마다 모든 중요한 자격 증명을 업데이트 하십시오.
+  create_linked_topic:
+    topic_title_with_sequence:
+      other: "%{topic_title} (파트 %{count})"
+    post_raw: "%{parent_url}에서 대화를 계속합니다.\n\n이전 대화:\n\n%{previous_topics}"
+    small_action_post_raw: "%{new_title}에서 대화를 계속합니다."
   activemodel:
     errors:
       <<: *errors

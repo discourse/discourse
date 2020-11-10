@@ -188,6 +188,7 @@ pl_PL:
       default_tags_already_selected: "Nie można wybrać znacznika używanego z innej listy."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Nie możesz włączyć zasobów reklamowych do S3, chyba że włączysz przesyłanie S3."
+      page_publishing_requirements: "Nie można włączyć publikowania stron, jeśli włączone są bezpieczne media."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
       secure_media_requirements: "Przesyłanie S3 musi być włączone przed włączeniem bezpiecznych mediów."
@@ -215,7 +216,6 @@ pl_PL:
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
-    not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
@@ -1623,7 +1623,6 @@ pl_PL:
     max_bookmarks_per_day: "Maksymalna liczba zakładek per użytkownik per dzień."
     max_edits_per_day: "Maksymalna liczba edycji per użytkownik per dzień."
     max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
-    max_personal_messages_per_day: "Maksymalna liczba wiadomości jakie użytkownik może wysłać jednego dnia."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
     max_logins_per_ip_per_hour: "Maksymalna liczba logowań dozwolona per adres IP na godzinę"

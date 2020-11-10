@@ -181,6 +181,7 @@ de:
       default_tags_already_selected: "Du kannst keinen Tag wählen, der in einer anderen Liste verwendet wird."
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
       enable_s3_uploads_is_required: "Der S3-Bestand setzt voraus, dass S3-Uploads aktiviert sind."
+      page_publishing_requirements: "Die Veröffentlichung von Seiten kann nicht aktiviert werden, wenn sichere Medien aktiviert sind."
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du die Einstellung '%{setting_name}' nicht angegeben hast."
       s3_bucket_reused: "Du kannst nicht den gleichen Bucket für 's3_upload_bucket' und 's3_backup_bucket' verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
       secure_media_requirements: "S3 Uploads müssen vor dem Aktivieren sicherer Medien aktiviert sein."
@@ -220,7 +221,11 @@ de:
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
-    not_allowed: "Dieser Benutzer kann leider nicht eingeladen werden."
+    muted_invitee: "Entschuldigung, dieser Benutzer hat dich stummgeschaltet."
+    muted_topic: "Entschuldigung, dieser Benutzer hat dieses Thema stummgeschaltet."
+    receiver_does_not_allow_pm: "Entschuldigung, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
+    sender_does_not_allow_pm: "Entschuldigung, du erlaubst diesem Benutzer nicht, dir private Nachrichten zu senden."
+    receiver_does_not_allow_other_user_pm: "Entschuldigung, dieser Benutzer erlaubt es einem bestehenden Teilnehmer nicht, ihm private Nachrichten zu senden."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -1440,9 +1445,10 @@ de:
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Aktivieren Sie die domänenübergreifende Verfolgung von Google Universal Analytics (analytics.js). Bei ausgehenden Links zu diesen Domänen wird ihnen die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
+    ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analyse.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Aktiviere die domänenübergreifende Verfolgung von Google Universal Analytics. Bei ausgehenden Links zu diesen Domänen wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google Tag Manager Container-ID. z.B.: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssten in der 'content security policy script src' Liste erlaubt werden."
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu verwalten"
@@ -1580,7 +1586,7 @@ de:
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Benutzer und Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Benutzer und Tag."
     max_topics_per_day: "Maximale Anzahl der Themen, die ein Benutzer pro Tag erstellen kann."
-    max_personal_messages_per_day: "Maximale Anzahl an Nachrichten, die Benutzer pro Tag erstellen können."
+    max_personal_messages_per_day: "Maximale Anzahl neuer persönlicher Nachrichtenthemen, die ein Benutzer pro Tag erstellen kann."
     max_invites_per_day: "Maximale Zahl an Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_topic_invitations_per_day: "Maximale Zahl an Thema-Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_logins_per_ip_per_hour: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Stunde"
@@ -2233,6 +2239,8 @@ de:
       same_ip_address: "Gleiche IP-Adresse (%{ip_address}) wie andere Benutzer"
       inactive_user: "Deaktivierter Benutzer"
     email_in_spam_header: "Die erste E-Mail des Benutzers wurde als Spam gekennzeichnet"
+    already_silenced: "Benutzer wurde bereits von %{staff} %{time_ago} stumm geschaltet."
+    already_suspended: "Benutzer wurde bereits von %{staff} %{time_ago}gesperrt."
   reviewables_reminder:
     submitted:
       one: "Einträge wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
@@ -4188,6 +4196,7 @@ de:
             label: "Willkommen-Thema"
             description: "<p>Wie würdest du deine Community einem Fremden im Fahrstuhl in etwa 1 Minute beschreiben?</p> <ul> <li>An wen richten sich die Diskussionen?</li> <li>Was kann ich hier finden?</li> <li>Warum lohnt es sich, vorbeizuschauen?</li> </ul> <p>Dein Willkommen-Thema ist die erste Sache, die neue Besucher sehen werden. Betrachte es als dein 'Fahrstuhl-Vorstellungsgespräch' oder als 'Leitbild' bestehend aus <b>einem Absatz</b>. </p>"
             one_paragraph: "Bitte begrenze deine Begrüßungsnachricht auf einen Absatz."
+            extra_description: "Wenn du dir nicht sicher bist, kannst du diesen Schritt überspringen und dein Begrüßungsthema später bearbeiten."
       privacy:
         title: "Zugriff"
         description: "<p>Ist deine Community für jeden offen oder ist sie auf Mitgliedschaft, Einladung oder Genehmigung beschränkt? Wenn du es vorziehst, die Dinge privat einzurichten, dann schalte später auf öffentlich um.</p>"
@@ -4450,8 +4459,8 @@ de:
     topic_title_with_sequence:
       one: "%{topic_title} (Teil %{count})"
       other: "%{topic_title} (Teil %{count})"
-    post_raw: "Fortsetzung der Diskussion von %{parent_title}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
-    moderator_post_raw: "Setze die Diskussion hier fort: %{new_title}"
+    post_raw: "Fortsetzung der Diskussion von %{parent_url}.\n\nVorherige Diskussionen:\n\n%{previous_topics}"
+    small_action_post_raw: "Setze die Diskussion bei %{new_title} fort."
   activemodel:
     errors:
       <<: *errors

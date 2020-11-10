@@ -38,17 +38,27 @@ vi:
   topics: "Chủ đề"
   posts: "bài viết"
   loading: "Đang tải"
+  powered_by_html: 'Được hỗ trợ bởi <a href="https://www.discourse.org">Discourse</a>, được xem tốt nhất khi bật JavaScript'
   sign_up: "Đăng ký"
   log_in: "Đăng nhập"
   submit: "Gửi đi"
+  purge_reason: "Tự động bị xóa vì tài khoản bị bỏ rơi, bị vô hiệu hóa"
   disable_remote_images_download_reason: "Không thể tải ảnh về máy chủ vì không dung lượng lưu trữ."
   anonymous: "Ẩn danh"
   remove_posts_deleted_by_author: "Đã bị xóa bởi tác giả"
+  redirect_warning: "Chúng tôi không thể xác minh rằng liên kết bạn chọn đã thực sự được đăng lên diễn đàn. Nếu bạn vẫn muốn tiếp tục, hãy chọn liên kết bên dưới."
+  on_another_topic: "Về chủ đề khác"
   themes:
+    bad_color_scheme: "Không thể cập nhật chủ đề, bảng màu không hợp lệ"
+    other_error: "Đã xảy ra lỗi khi cập nhật chủ đề"
+    compile_error:
+      unrecognized_extension: "Phần mở rộng tệp không được công nhận: %{extension}"
     import_error:
+      generic: Đã xảy ra lỗi khi nhập chủ đề đó
       git: "Lỗi nhân bản kho git, truy cập bị từ chối hoặc không tìm thấy kho lưu trữ"
   emails:
     incoming:
+      default_subject: "Chủ đề này cần một tiêu đề"
       show_trimmed_content: "Hiện nội dung đã ẩn"
       maximum_staged_user_per_email_reached: "Đạt số lượng thành viên theo giai đoạn tối đa được tạo trên mỗi email."
       errors:
@@ -771,7 +781,6 @@ vi:
     max_bookmarks_per_day: "Số tối đa người dùng có thể đánh dấu mỗi ngày."
     max_edits_per_day: "Số tối đa người dùng có thể chỉnh sửa mỗi ngày."
     max_topics_per_day: "Số chủ đề tối đa người dùng có thể tạo mỗi ngày."
-    max_personal_messages_per_day: "Số tin nhắn tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
     alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
@@ -890,6 +899,7 @@ vi:
     allow_uploaded_avatars: "Cho phép người dùng tải lên hình hồ sơ."
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
+    digest_topics: "Số lượng tối đa các chủ đề phổ biến để hiển thị trong phần tóm tắt email."
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
     enable_user_directory: "Cung cấp một danh mục thành viên để duyệt xem"
@@ -1057,6 +1067,14 @@ vi:
   system_messages:
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
+      text_body_template: |
+        Cảm ơn bạn đã tham gia %{site_name}, và chào mừng bạn!
+
+        %{new_user_tips}
+
+         Bạn có thể tham khảo hướng dẫn cơ bản tại [đây] (%{base_url}/guidelines)
+
+        Chúc bạn một ngày vui vẽ!
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
     backup_succeeded:
@@ -1135,6 +1153,12 @@ vi:
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"
+      text_body_template: |
+        Xin chúc mừng, bạn đã giành được giải thưởng ** Người dùng mới của tháng với giá %{month_year}**. :trophy:
+
+        Giải thưởng này chỉ được cấp cho hai người dùng mới mỗi tháng và nó sẽ hiển thị vĩnh viễn trên [trang huy hiệu] (%{url}).
+
+        Bạn đã nhanh chóng trở thành một thành viên có giá trị trong cộng đồng của chúng tôi. Cảm ơn bạn đã tham gia và tiếp tục công việc tuyệt vời!
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1149,10 +1173,16 @@ vi:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
+      since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
+      new_topics: "Chủ đề mới"
       liked_received: "Likes Đã Nhận"
       new_users: "Thành viên mới"
+      popular_topics: "Những chủ đề phổ biến"
       join_the_discussion: "Đọc Tiếp"
+      more_new: "Mới cho bạn"
+      unsubscribe: "Tóm tắt này được gửi từ %{site_link} khi chúng tôi không gặp bạn trong một thời gian. Thay đổi %{email_preferences_link}hoặc %{unsubscribe_link} để hủy đăng ký."
       click_here: "bấm vào đây"
+      preheader: "Bản tóm tắt ngắn gọn kể từ lần cuối bạn ghé thăm vào %{last_seen_at}"
     forgot_password:
       title: "Quên mật khẩu"
     set_password:

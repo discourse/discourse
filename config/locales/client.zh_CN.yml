@@ -1264,7 +1264,7 @@ zh_CN:
           max_redemptions_allowed_label: "多少人被允许通过这个链接注册？"
           expires_at: "邀请链接多久失效？"
         bulk_invite:
-          none: "你还没有邀请任何人。你可以单独邀请用户，也可以通过<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传CSV文件</a>批量邀请。"
+          none: "这个页面上没有可显示的邀请。你可以通过电子邮件邀请指定的人，也可以创建一个任何人都能够使用的邀请链接。"
           text: "批量邀请"
           success: "文件上传成功，当操作完成时将通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
@@ -1774,9 +1774,9 @@ zh_CN:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}、%{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        other: "<span>%{username}和%{username2}还有其余%{count}人</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} 还有其余 %{count} 人 </span> %{description}"
       liked_consolidated_description:
         other: "你的帖子有%{count}个赞"
       liked_consolidated: "<span>%{username}</span>%{description}"

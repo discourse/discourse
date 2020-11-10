@@ -947,7 +947,6 @@ pt:
         invite_link:
           success: "Hiperligação do convite gerada com sucesso!"
         bulk_invite:
-          none: "Ainda não convidou ninguém aqui. Envie convites individuais, ou convide muitas pessoas de uma vez só, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviando um ficheiro CSV</a>."
           success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
           error: "Desculpe, o ficheiro deverá estar no formato CSV."
           confirmation_message: "Está prestes a enviar convites por email a todos os incluídos no ficheiro que enviou."
@@ -1392,10 +1391,6 @@ pt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"

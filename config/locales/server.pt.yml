@@ -56,6 +56,7 @@ pt:
     compile_error:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
+      about_json: "Erro de importação: about.json não existe ou é inválido. Tem a certeza de que este é um Tema do Discourse?"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -66,6 +67,7 @@ pt:
       component_no_default: "Components de um tema não podem ter o tema predefinido"
       component_no_color_scheme: "Componentes de um tema não podem ter paletas de cor"
       no_multilevels_components: "Temas com temas descendentes não pode ser temas descendentes"
+      optimized_link: Os links de imagens otimizadas são efémeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
@@ -110,6 +112,7 @@ pt:
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
         unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
       unrecognized_error: "Erro Desconhecido"
+    view_redacted_media: "Exibir media"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -131,6 +134,7 @@ pt:
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro, é uma frase completa?"
+      invalid_timezone: "'%{tz}' não é um fuso horário válido"
       contains_censored_words: "contém as seguintes paravras censuradas: %{censored_words}"
       less_than: tem que ser menos que %{count}
       less_than_or_equal_to: tem que ser menos ou igual a %{count}
@@ -171,9 +175,12 @@ pt:
       default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Não pode ativar envio de inventório para S3 a não ser que tenha ativado carregamentos para S3."
+      page_publishing_requirements: "A publicação de página não pode ser ativada se a media segura estiver ativada."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       secure_media_requirements: "Envios para S3 deve estar ativado antes de ativar média segura."
+      share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
+      second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
   invite:
     not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
@@ -956,7 +963,6 @@ pt:
     max_bookmarks_per_day: "Número máximo de marcadores por utilizador por dia."
     max_edits_per_day: "Número máximo de edições por utilizador por dia."
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
-    max_personal_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."

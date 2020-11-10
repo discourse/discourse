@@ -956,7 +956,6 @@ nb_NO:
         invite_link:
           success: "Invitasjonslenke har blitt generert!"
         bulk_invite:
-          none: "Du har ikke invitert noen ennå. Sende enkeltsående invitasjoner, eller inviter mange samtidig ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp ei CSV-fil</a>."
           success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
           error: "Beklager, fila må være i CSV-format."
       password:
@@ -1377,10 +1376,6 @@ nb_NO:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} og én annen</span> %{description}"
-        other: "<span>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

@@ -750,6 +750,7 @@ hu:
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
+    auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
     company_name: "Cégnév"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
@@ -1323,6 +1324,10 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (%{count}. rész)"
+      other: "%{topic_title} (%{count}. rész)"
   activemodel:
     errors:
       <<: *errors

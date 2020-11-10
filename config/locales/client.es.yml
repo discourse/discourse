@@ -158,6 +158,9 @@ es:
     topic_admin_menu: "acciones del tema"
     wizard_required: "¡Bienvenido a tu nuevo Discourse! Empezaremos con <a href='%{url}' data-auto-route='true'>el asistente de configuración</a> ✨"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido deshabilitados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
+    bootstrap_mode_enabled:
+      one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuario."
+      other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo lanzamiento está activado. Todas las cuentas tendrán nivel de confianza 1 y los mensajes de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
     bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
     themes:
       default_description: "Por defecto"
@@ -287,6 +290,7 @@ es:
         next_business_day: "Siguiente día hábil"
         tomorrow: "Mañana"
         next_week: "Próxima semana"
+        post_local_date: "Fecha de la publicación"
         later_this_week: "Esta misma semana"
         start_of_next_business_week: "Lunes"
         start_of_next_business_week_alt: "Lunes que viene"
@@ -614,6 +618,11 @@ es:
           title: Etiquetas
           long_title: "Etiqueta notificaciones predeterminadas"
           description: "Cuando se agregan usuarios a este grupo, su configuración de notificaciones de etiquetas será establecida a estos valores predeterminados. Después, pueden cambiarla."
+          watched_tags_instructions: "Vigilar automáticamente todos los temas con estas etiquetas. Los miembros del grupo serán notificados de todos los nuevos temas y respuestas, y un contados con el número de mensajes nuevos aparecerá junto al tema."
+          tracked_tags_instructions: "Seguir automáticamente todos los temas con estas etiquetas. Un contados con el número de mensajes nuevos aparecerá junto al tema."
+          watching_first_post_tags_instructions: "Se notificará a los usuarios cuando se publique un nuevo tema con estas etiquetas."
+          regular_tags_instructions: "Si estas etiquetas están silenciadas, dejarán de estarlo para los miembros del grupo. Los usuarios serán notificados si se les menciona o alguien les responde."
+          muted_tags_instructions: "No se notificará de nada relacionado con nuevos temas con estas etiquetas, y no aparecerán en recientes."
         logs:
           title: "Registros"
           when: "Cuándo"
@@ -875,7 +884,9 @@ es:
       color_schemes:
         default_description: "Predeterminado"
         disable_dark_scheme: "Igual que regular"
+        dark_instructions: "Puedes previsualizar el esquema de colores del modo oscuro activando o desactivando el modo oscuro de tu dispositivo."
         undo: "Restablecer"
+        regular: "Normal"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
       dark_mode: "Modo oscuro"
@@ -926,6 +937,7 @@ es:
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."
+      regular_categories_instructions: "Verás estas categorías en las listas de temas «Recientes» y «Destacados»."
       no_category_access: "Como moderador tienes acceso limitado a categorías. Guardar está deshabilitado."
       delete_account: "Eliminar mi cuenta"
       delete_account_confirm: "¿Estás seguro de que quieres eliminar permanentemente tu cuenta? ¡Esta acción no puede ser revertida!"
@@ -991,7 +1003,7 @@ es:
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
       second_factor_backup:
-        title: "Códigos de respaldo de la autenticación en dos factores"
+        title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Regenerar"
         disable: "Habilitar"
         enable: "Deshabilitar"
@@ -1012,8 +1024,8 @@ es:
           title: "Códigos de respaldo generados"
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Manténlos en un lugar seguro pero accesible."
       second_factor:
-        title: "Autenticación en dos factores"
-        enable: "Gestionar la autenticación en dos factores"
+        title: "Autenticación de dos factores"
+        enable: "Gestionar la autenticación de dos factores"
         disable_all: "Desactivar todo"
         forgot_password: "¿Olvidaste tu contraseña?"
         confirm_password_description: "Por favor, confirma tu contraseña para continuar"
@@ -1021,16 +1033,16 @@ es:
         label: "Código"
         rate_limit: "Por favor, espera antes de intentar utilizar otro código de autenticación."
         enable_description: |
-          Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e ingresa el código de autenticación.
+          Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e introduce el código de autenticación.
         disable_description: "Por favor, ingresa el código de autenticación que aparece en tu aplicación"
         show_key_description: "Ingresa el código manualmente"
         short_description: |
           Protege tu cuenta mediante códigos de respaldo de un solo uso.
         extended_description: |
-          La autenticación en dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación en dos factores."
+          La autenticación de dos factores añade una capa extra de seguridad a tu cuenta al pedirte un código de un solo uso además de tu contraseña. Los códigos se pueden generar en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
+        oauth_enabled_warning: "Ten en cuenta que los inicios de sesión con redes sociales y páginas de terceros se desactivarán para tu cuenta una vez que actives la autenticación de dos factores."
         use: "Usar app Authenticator"
-        enforced_notice: "Es obligatorio que actives la autenticación en dos factores antes de acceder al sitio web."
+        enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
         disable: "Inhabilitar"
         disable_confirm: "¿Seguro que quieres desactivar todos los métodos de segundo factor?"
         save: "Guardar"
@@ -1296,7 +1308,7 @@ es:
           max_redemptions_allowed_label: "¿Cuánta gente puede registrarse con este enlace?"
           expires_at: "¿Cuándo caducará este enlace?"
         bulk_invite:
-          none: "No has invitado a nadie aún. Puedes enviar invitaciones individuales o invitar a varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo CVS</a>."
+          none: "No hay invitaciones para mostrar en esta página. Puede invitar a personas específicas a través de su correo electrónico o crear un enlace de invitación que cualquiera pueda utilizar."
           text: "Invitaciones masivas"
           success: "Archivo subido correctamente, se te notificará mediante un mensaje cuando se complete el proceso."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
@@ -1512,10 +1524,10 @@ es:
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
-      second_factor_title: "Autenticación en dos pasos"
+      second_factor_title: "Autenticación de dos factores"
       second_factor_description: "Por favor, ingresa el código de autenticación desde tu aplicación:"
       second_factor_backup: "Iniciar sesión utilizando un código de respaldo"
-      second_factor_backup_title: "Código de respaldo de la autenticación en dos pasos"
+      second_factor_backup_title: "Código de respaldo de la autenticación de dos factores"
       second_factor_backup_description: "Por favor, ingresa uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la app Authenticator"
       security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
@@ -1542,7 +1554,7 @@ es:
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
       admin_not_allowed_from_ip_address: "No puedes iniciar sesión como administrador desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el correo electrónico de activación nuevamente."
-      omniauth_disallow_totp: "Tu cuenta tiene la autenticación en dos pasos activada. Por favor, inicia sesión con tu contraseña."
+      omniauth_disallow_totp: "Tu cuenta tiene la autenticación de dos factores activada. Por favor, inicia sesión con tu contraseña."
       resend_title: "Volver a enviar el correo electrónico de activación"
       change_email: "Cambiar dirección de correo electrónico"
       provide_new_email: "Ingresa una dirección de correo electrónico nueva y te reenviaremos el correo electrónico de confirmación."
@@ -1609,6 +1621,10 @@ es:
       enter: "Intro"
     conditional_loading_section:
       loading: Cargando...
+    category_row:
+      topic_count:
+        one: "%{count} tema en esta categoría"
+        other: "%{count} temas en esta categoría"
     select_kit:
       default_header_text: Seleccionar...
       no_content: No se encontraron coincidencias
@@ -1692,6 +1708,9 @@ es:
         post_length: "La publicación debe tener por lo menos %{min} caracteres."
         try_like: "¿Has probado el botón %{heart}?"
         category_missing: "Debes escoger una categoría."
+        tags_missing:
+          one: "Debes seleccionar al menos %{count} etiqueta"
+          other: "Debes seleccionar al menos %{count} etiquetas"
         topic_template_not_modified: "Por favor, agrega detalles y especificaciones a tu tema editando la plantilla de tema."
       save_edit: "Guardar edición"
       overwrite_edit: "Sobrescribir edición"
@@ -1818,10 +1837,10 @@ es:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} and %{count} mas</span> %{description}"
-        other: "<span>%{username}, %{username2} y otros %{count} </span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
       liked_consolidated_description:
         one: "le ha dado me gusta a %{count} de tus mensajes"
         other: "le ha dado me gusta a %{count} de tus publicaciones"
@@ -1836,6 +1855,9 @@ es:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nuevo tema</span> %{description}"
       membership_request_accepted: "Membresía aceptada en «%{group_name}»"
+      membership_request_consolidated:
+        one: "%{count} solicitude de membresía pendiente para el grupo «%{group_name}»"
+        other: "%{count} solicitudes de membresía pendientes para el grupo «%{group_name}»"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username} y %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
@@ -2029,6 +2051,7 @@ es:
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
         educate:
+          new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
           unread: '<p>Tus temas sin leer aparecen aquí.</p><p>Por defecto, los temas se consideran sin leer y mostrarán contadores de publicaciones sin leer <span class="badge new-posts badge-notification">1</span> si tu:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema por más de 4 minutos</li></ul><p>O si has establecido específicamente el tema como seguido o vigilado a través del control de notificaciones al pie de cada tema.</p><p>Configura tus <a href="%{userPrefsUrl}">preferencias</a> para cambiar esto.</p>'
       bottom:
         latest: "No hay más temas recientes."
@@ -2225,7 +2248,7 @@ es:
           "2_8": "Verás el número de respuestas  nuevas porque estás siguiendo esta categoría."
           "2_4": "Verás el número de respuestas nuevas porque has publicado una respuesta en este tema."
           "2_2": "Verás el número de respuestas nuevas porque estás siguiendo este tema."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'Verás un contador con el número de nuevas respuestas porque has <a href="%{basePath}/u/%{username}/preferences/notifications">leído este tema</a>.'
           "1_2": "Se te notificará si alguien menciona tu @nombre o te responde."
           "1": "Se te notificará si alguien menciona tu @nombre o te responde."
           "0_7": "Estás ignorando todas las notificaciones en esta categoría."
@@ -2312,6 +2335,9 @@ es:
           one: "Tema destacado actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temas destacados actualmente en %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Hacer que este tema aparezca de primero en todas las listas de temas hasta"
+        confirm_pin_globally:
+          one: "Ya tienes %{count} tema anclado globalmente. Demasiados temas anclados pueden suponer una carga para usuarios nuevos y anónimos. ¿Seguro que quieres anclar otro tema globalmente?"
+          other: "Ya tienes %{count} temas anclados globalmente. Demasiados temas anclados pueden suponer una carga para usuarios nuevos y anónimos. ¿Seguro que quieres anclar otro tema globalmente?"
         unpin_globally: "Quitar este tema de la parte superior de todas las listas de temas."
         unpin_globally_until: "Quitar este tema de la parte superior de todas las listas de temas o esperar hasta <strong>%{until}</strong>."
         global_pin_note: "Los usuarios pueden dejar de destacar el tema de forma individual por sí mismos."
@@ -3427,6 +3453,7 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
+              wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             users:
               sync_sso: Sincronizar usuario usando SSO.
               show: Obtener información sobre un usuario.
@@ -3771,6 +3798,18 @@ es:
             title: "Ingresar CSS personalizado para mostrar en la versión insertada de los comentarios"
           color_definitions:
             text: "Definiciones de color"
+            title: "Introducir definiciones de colores personalizadas (para usuarios avanzados)"
+            placeholder: |2-
+
+              Usa esta hoja de estilos para añadir colores personalizados a la lista de propiedades personalizadas de CSS.
+
+              Por ejemplo:
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              Añadir un prefijo a los nombres de las propiedades es altamente recomendado para evitar conflictos con plugins y el núcleo.
           head_tag:
             text: "</head>"
             title: "HTML que será insertado antes de la </head> etiqueta"
@@ -4012,7 +4051,7 @@ es:
             post_edit: "editar publicación"
             post_unlocked: "publicación desbloqueada"
             check_personal_message: "revisar mensaje personal"
-            disabled_second_factor: "desactivar autenticación en dos pasos"
+            disabled_second_factor: "desactivar autenticación de dos factores"
             topic_published: "tema publicado"
             post_approved: "publicación aprobada"
             post_rejected: "publicación rechazada"
@@ -4241,7 +4280,7 @@ es:
         private_topics_count: Temas privados
         posts_read_count: Publicaciones leídas
         post_count: Publicaciones publicadas
-        second_factor_enabled: activar autenticación en dos pasos
+        second_factor_enabled: activar autenticación de dos factores
         topics_entered: Temas vistos
         flags_given_count: Reportes enviados
         flags_received_count: Reportes recibidos
@@ -4369,6 +4408,7 @@ es:
           external_avatar_url: "URL de la imagen de perfil"
           last_payload: "Último payload"
           delete_sso_record: "Eliminar registro SSO"
+          confirm_delete: "¿Seguro que quieres eliminar este registro de single sign on (SSO)?"
       user_fields:
         title: "Campos de usuario"
         help: "Añadir campos que tus usuarios pueden llenar."
@@ -4584,6 +4624,7 @@ es:
         embed_truncate: "Truncar las publicaciones insertadas"
         embed_unlisted: "Los temas importados se ocultarán de la lista hasta que tengan una respuesta."
         allowed_embed_selectors: "Selector CSS para elementos permitidos en los insertados"
+        blocked_embed_selectors: "Selector CSS para elementos que deben ser eliminados de los insertados"
         allowed_embed_classnames: "Clases CSS permitidas"
         save: "Guardar ajustes de insertado"
       permalink:

@@ -1399,7 +1399,7 @@ he:
           max_redemptions_allowed_label: "לכמה אנשים מותר להירשם באמצעות הקישור הזה?"
           expires_at: "מתי תוקף קישור ההזמנה יפוג?"
         bulk_invite:
-          none: "עדיין לא הזמנתם לכאן אף אחד. שילחו הזמנות אישיות, או הזמינו הרבה אנשים ביחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
+          none: "אין הזמנות להציג בדף זה. ניתן להזמין אנשים מסוימים באמצעות הדוא״ל שלהם או ליצור קישור הזמנה שיכול לשמש כל אחד ואחת."
           text: "הזמנה כמותית"
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
           error: "הקובץ אמור להיות בתצורת CSV, עמך הסליחה."
@@ -1966,12 +1966,12 @@ he:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} ו%{count} נוסף</span> %{description}"
-        two: "<span>%{username}, %{username2} ו%{count} נוספים</span> %{description}"
-        many: "<span>%{username}, %{username2} ו%{count} נוספים</span> %{description}"
-        other: "<span>%{username}, %{username2} ו%{count} נוספים </span>%{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
+        two: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
+        many: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} ועוד %{count} </span> %{description}"
       liked_consolidated_description:
         one: "אהבו פוסט %{count} שלך"
         two: "אהבו %{count} מהפוסטים שלך"

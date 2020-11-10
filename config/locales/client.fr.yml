@@ -1253,7 +1253,6 @@ fr:
           max_redemptions_allowed_label: "Combien de personnes peuvent s'inscrire en utilisant ce lien ?"
           expires_at: "Quand ce lien va-t-il expirer ?"
         bulk_invite:
-          none: "Vous n'avez encore invité personne. Envoyez des invitations individuelles ou à plusieurs personnes en même temps en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV.</a>"
           text: "Invitation en masse"
           success: "Le fichier a été correctement importé. Vous serez notifié par message direct lorsque le traitement sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
@@ -1751,10 +1750,6 @@ fr:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} et %{count} autre</span> %{description}"
-        other: "<span>%{username}, %{username2} et %{count} autres</span> %{description}"
       liked_consolidated_description:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
@@ -2452,7 +2447,7 @@ fr:
         delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
         delete_topic: "supprimer le sujet"
-        add_post_notice: "Ajouter une note pour les responsables"
+        add_post_notice: "Afficher une note des responsables"
         remove_post_notice: "Retirer la note pour les responsables"
         remove_timer: "supprimer la planification"
       actions:

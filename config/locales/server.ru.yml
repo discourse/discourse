@@ -191,9 +191,10 @@ ru:
       default_tags_already_selected: "Вы не можете выбрать тег, используемый в другом списке."
       s3_upload_bucket_is_required: "Нельзя включить загрузки на S3, пока не задана настройка 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Вы не можете включить инвентаризацию для S3, если вы не включили загрузки S3."
+      page_publishing_requirements: "Публикация страниц не может быть включена при включённом ограничении доступа к мультимедийному контенту."
       s3_backup_requires_s3_settings: "Нельзя включить резервные копии на S3, пока не задана настройка '%{setting_name}'"
-      s3_bucket_reused: "Нельзя использовать одно и то же bucket для 's3_upload_bucket' и 's3_backup_bucket'. Выберите другое bucket или используйте другой путь для каждого bucket."
-      secure_media_requirements: "Перед включением безопасного носителя необходимо включить загрузку S3."
+      s3_bucket_reused: "Нельзя использовать одну и ту же корзину для 's3_upload_bucket' и 's3_backup_bucket'. Выберите другую корзину или используйте различные пути для каждой корзины."
+      secure_media_requirements: "Перед включением ограничения доступа к мультимедийному контенту необходимо включить загрузки в хранилище S3."
       share_quote_facebook_requirements: "Вы должны установить идентификатор приложения, чтобы включить обмен цитатами для Фейсбука."
       second_factor_cannot_enforce_with_socials: "Вы не можете применить двухфакторную аутентификацию при включённом входе в социальные сети. Сначала вы должны отключить вход через: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Вы не можете применить двухфакторную аутентификацию, если локальный вход в систему отключён."
@@ -230,7 +231,11 @@ ru:
   topic_invite:
     failed_to_invite: "Пользователь не может быть приглашён в эту тему без членства в одной из следующих групп: %{group_names}."
     user_exists: "К сожалению, этот пользователь уже был приглашён. Вы можете пригласить пользователя в тему только один раз."
-    not_allowed: "Извините, пользователь не может быть приглашён."
+    muted_invitee: "Извините, но этот пользователь отключил возможность получать от вас уведомления."
+    muted_topic: "Извините, но этот пользователь отключил возможность получать уведомления для этой темы."
+    receiver_does_not_allow_pm: "Извините, но этот пользователь не позволяет вам отправлять ему личные сообщения."
+    sender_does_not_allow_pm: "Извините, но вы не позволяете этому пользователю отправлять вам личные сообщения."
+    receiver_does_not_allow_other_user_pm: "Извините, но этот пользователь не позволяет существующим участникам отправлять ему личные сообщения."
   backup:
     operation_already_running: "Действие уже выполняется, поэтому невозможно начать новое действие прямо сейчас."
     backup_file_should_be_tar_gz: "Файл резервной копии должен быть архивом в формате .TAR.GZ."
@@ -343,7 +348,7 @@ ru:
   max_pm_recipients: "Извините, но вы можете послать личное сообщение максимум %{recipients_limit} получателям."
   pm_reached_recipients_limit: "Извините, но вы не можете указать больше %{recipients_limit} получателей в личном сообщении."
   removed_direct_reply_full_quotes: "Автоматически удалять цитирование всего предыдущего сообщения."
-  secure_upload_not_allowed_in_public_topic: "Извините, но следующие защищённые загрузки не могут быть использованы в публичной теме: %{upload_filenames}."
+  secure_upload_not_allowed_in_public_topic: "Извините, но следующие файлы с ограниченным доступом не могут быть использованы в публичной теме: %{upload_filenames}."
   create_pm_on_existing_topic: "Извините, но вы не можете создать личное сообщение в существующей теме."
   slow_mode_enabled: "Эта тема находится в замедленном режиме."
   just_posted_that: "слишком похоже на уже опубликованное вами ранее"
@@ -1405,8 +1410,8 @@ ru:
     facebook_config_warning: 'Сервер настроен для разрешения регистрации и авторизации у с помощью Facebook (enable_facebook_logins), но идентификатор приложения и секретные значения приложения не установлены. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Смотрите это руководство, чтобы узнать больше</a>.'
     twitter_config_warning: 'Сервер настроен для разрешения регистрации и авторизации с помощью Twitter (enable_twitter_logins), но ключ и секретные значения не установлены. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите настройки. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Смотрите это руководство, чтобы узнать больше</a>.'
     github_config_warning: 'Сервер настроен для разрешения регистрации и авторизации с помощью GitHub (enable_github_logins), но идентификатор клиента и секретные значения не установлены. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите их. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Смотрите это руководство, чтобы узнать больше</a>.'
-    s3_config_warning: 'Сервер настроен для загрузки файлов в S3, но по крайней мере один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_upload_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите их. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Смотрите ''Как настроить загрузку изображений на S3?'', чтобы узнать больше</a>.'
-    s3_backup_config_warning: 'Сервер настроен для загрузки резервных копий на S3, но по крайней мере один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_backup_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите их. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Смотрите "Как настроить загрузку изображений на S3?" чтобы узнать больше</a>.'
+    s3_config_warning: 'Сервер настроен для загрузки файлов в S3, но по крайней мере один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_upload_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите их. См. тему <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Как настроить загрузку изображений в S3?</a>, чтобы узнать больше.'
+    s3_backup_config_warning: 'Сервер настроен для загрузки резервных копий в S3, но по крайней мере один из следующих параметров не задан: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile или s3_backup_bucket. Зайдите в <a href="%{base_path}/admin/site_settings">настройки сайта</a> и обновите их. См. тему <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Как настроить загрузку изображений в S3?</a>, чтобы узнать больше.'
     image_magick_warning: 'Сервер настроен на создание миниатюр больших изображений, но ImageMagick не установлен. Установите ImageMagick с помощью менеджера пакетов или <a href="https://www.imagemagick.org/script/download.php" target="_blank">загрузите последнюю версию</a> с официального сайта.'
     failing_emails_warning: 'Есть %{num_failed_jobs} заданий электронной почты, которые не удалось выполнить. Проверьте файл app.yml и убедитесь, что настройки почтового сервера правильные. <a href="%{base_path}/sidekiq/retries" target="_blank">Смотрите невыполненные задания в Sidekiq</a>.'
     subfolder_ends_in_slash: "Неверная настройка вложенной папки; DISCOURSE_RELATIVE_URL_ROOT заканчивается косой чертой."
@@ -1555,9 +1560,10 @@ ru:
     pending_users_reminder_delay: "Уведомлять модераторов, если новые пользователи ждут одобрения больше, чем указанное здесь количество часов. Установите значение в -1 для отключения уведомлений."
     persistent_sessions: "Пользователи остаются авторизованными после закрытия веб-браузера"
     maximum_session_age: "Пользователь остаётся в системе в течение указанного здесь количества часов с момента последнего посещения"
-    ga_universal_tracking_code: "Идентификатор отслеживания Google Universal Analytics (analytics.js), например: UA-12345678-9; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Доменное имя для Google Universal Analytics (analytics.js), например: mysite.com; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Включить междоменное отслеживание Google Universal Analytics (analytics.js). К исходящим ссылкам на эти домены будет добавлен идентификатор клиента. См. <a href='https://support.google.com/analytics/answer/1034342?hl=ru' target='_blank'>Как настроить междоменное отслеживание</a>"
+    ga_version: "Используемая версия Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Идентификатор отслеживания Google Universal Analytics, например: UA-12345678-9; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Доменное имя для Google Universal Analytics, например: mysite.com; см. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Включить междоменное отслеживание Google Universal Analytics. К исходящим ссылкам на эти домены будет добавлен идентификатор клиента. См. <a href='https://support.google.com/analytics/answer/1034342?hl=ru' target='_blank'>Как настроить междоменное отслеживание</a>"
     gtm_container_id: "Идентификатор менеджера тегов Google, например: GTM-ABCDEF. <br/> Примечание: Сторонние скрипты, загруженные менеджером тегов, могут быть внесены в белый список в при помощи директивы `script-src` политики защиты контента (CSP)."
     enable_escaped_fragments: "Обратитесь к Google Ajax-Crawling API, если веб-сканер не обнаружен. См. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>Https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Разрешать модераторам управлять разделами и группами"
@@ -1695,7 +1701,7 @@ ru:
     max_bookmarks_per_day: "Максимальное количество закладок, которое пользователь может создать за один день."
     max_edits_per_day: "Максимальное количество редактирований, которое пользователь может выполнить за один день."
     max_topics_per_day: "Максимальное количество тем, которое пользователь может создать за один день."
-    max_personal_messages_per_day: "Максимальное количество личных сообщений, которое пользователь может создать за один день."
+    max_personal_messages_per_day: "Максимальное количество новых личных сообщений, которые пользователь может создать за день."
     max_invites_per_day: "Максимальное количество приглашений, которое пользователь может отправить за один день."
     max_topic_invitations_per_day: "Максимальное количество приглашений в тему, которое может отправить пользователь за один день."
     max_logins_per_ip_per_hour: "Максимальное количество входов в систему с одного IP-адреса в течение часа"
@@ -1716,7 +1722,7 @@ ru:
     purge_unactivated_users_grace_period_days: "Количество дней до удаления пользователя, который не активировал свою учетную запись. Установите 0, чтобы никогда не удалять неактивированных пользователей."
     enable_s3_uploads: "Размещать загружаемые файлы на Amazon S3. ВАЖНО: требуется правильные настройки S3 (access key id и secret access key)."
     s3_use_iam_profile: 'Использовать <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">профиль экземпляра AWS EC2</a> для предоставления доступа к корзине S3. ПРИМЕЧАНИЕ: для включения этого параметра необходимо, чтобы Discourse работал в соответствующем сконфигурированном экземпляре EC2 и перезаписывал настройки "s3 access key id" и "s3 secret access key".'
-    s3_upload_bucket: "Имя Amazon S3 bucket, куда будут загружаться файлы. ВНИМАНИЕ: имя должно быть в нижнем регистре, без пробелов, без подчёркиваний.\nhttp://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
+    s3_upload_bucket: "Название корзины Amazon S3, куда будут загружаться файлы. ВНИМАНИЕ: название должно быть в нижнем регистре, без пробелов, без подчёркиваний. См. \nhttp://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
     s3_access_key_id: "Идентификатор ключа доступа Amazon S3, который будет использоваться для загрузки изображений, вложений и резервных копий."
     s3_secret_access_key: "Секретный ключ доступа Amazon S3, который будет использоваться для загрузки изображений, вложений и резервных копий."
     s3_region: "Название региона Amazon S3, которое будет использоваться для загрузки изображений и резервных копий."
@@ -2005,8 +2011,8 @@ ru:
     bootstrap_mode_min_users: "Минимальное количество пользователей, необходимое для отключения специального режима (Для отключения этого параметра установите значение в 0)"
     prevent_anons_from_downloading_files: "Запретить анонимным пользователям скачивать вложения. ВНИМАНИЕ: при этом будут недоступны любые вложения, кроме картинок."
     secure_media: 'Ограничивать доступ ко ВСЕМ загрузкам (изображения, видео, аудио, текст, PDF, ZIP-файлы и другие). Только зарегистрированные пользователи будут получать доступ к загрузкам. При отключённом параметре загрузки будут недоступны только в личных сообщениях и в закрытых разделах форума. ВНИМАНИЕ: Этот сложный параметр и администратор, используя его, должен отдавать себе отчёт в своих действиях. См. тему <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">Secure Media Uploads</a>.'
-    secure_media_allow_embed_images_in_emails: "Разрешать встраивать изображения в письма, если их размер не превышает значения, указанного в параметре 'secure_media_max_email_embed_image_size_kb'."
-    secure_media_max_email_embed_image_size_kb: "Количество килобайт, до которого будет уменьшен размер встроенных в письма изображений, если включён параметр 'secure_media_allow_embed_images_in_emails'."
+    secure_media_allow_embed_images_in_emails: "Разрешать встраивать изображения с ограниченным доступом в письма, если их размер не превышает значения, указанного в параметре 'secure_media_max_email_embed_image_size_kb'."
+    secure_media_max_email_embed_image_size_kb: "Количество килобайт, до которого будет уменьшен размер встроенных в письма изображений с ограниченным доступом, если включён параметр 'secure_media_allow_embed_images_in_emails'."
     slug_generation_method: "Метод создания <a href='https://ru.wikipedia.org/wiki/Семантический_URL' target='_blank'>слагов</a>. При выборе 'encoded' будет выполняться процентное кодирование строки. При выборе 'none' слаги создаваться не будут."
     enable_emoji: "Использовать смайлы (emoji)"
     enable_emoji_shortcuts: "Текстовая альтернатива смайлика, например, сочетания :), :p или :( - будет преобразовываться в полноценный смайлик"
@@ -2018,7 +2024,7 @@ ru:
     approve_new_topics_unless_trust_level: "Новые темы от пользователей с уровнем доверия ниже указанного должны быть одобрены"
     approve_unless_staged: "Новые темы и сообщения сымитированных пользователей должны быть одобрены"
     notify_about_queued_posts_after: "Отправлять уведомления всем модераторам, если сообщения находятся в очереди на модерацию дольше, чем указанное здесь количество часов. Для отключения уведомлений установите это значение в 0."
-    auto_close_messages_post_count: "Максимальное количество постов, разрешённых в личных сообщениях, после чего они будут автоматически закрыты. Для отключения параметра установите это значение в 0."
+    auto_close_messages_post_count: "Максимальное количество сообщений, разрешённых в личных сообщениях, после чего они будут автоматически закрыты. Для отключения параметра установите это значение в 0."
     auto_close_topics_post_count: "Максимальное количество сообщений, разрешённых в теме, после чего она будет автоматически закрыта. Для отключения параметра установите это значение в 0."
     auto_close_topics_create_linked_topic: "Создавать новую связанную тему, если тема автоматически закрывается на основе настроенного параметра 'auto close topics post count'"
     code_formatting_style: "Кнопка кода в редакторе будет использовать по умолчанию этот стиль форматирования кода"
@@ -2388,6 +2394,8 @@ ru:
       same_ip_address: "Тот же IP-адрес (%{ip_address}), что и у других пользователей"
       inactive_user: "Неактивный пользователь"
     email_in_spam_header: "Первое электронное письмо пользователя было помечено как спам"
+    already_silenced: "Пользователь уже был заблокирован сотрудником %{staff} %{time_ago}."
+    already_suspended: "Пользователь уже был заморожен сотрудником %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Сообщения были отправлены более %{count} часа назад. [Пожалуйста, просмотрите их](%{base_path}/review)."
@@ -4061,7 +4069,7 @@ ru:
       name: Первая цитата
       description: Процитировал сообщение
       long_description: |
-        Эта награда выдается при первом цитировании сообщения в вашем ответе. Цитирование соответствующих частей более ранних постов в вашем ответе помогает поддерживать связь между ответом и остальным содержанием. Самый простой способ процитировать - это выделить часть сообщения, а затем нажать на кнопку 'Ответить с цитированием'. Цитируйте щедро!
+        Эта награда выдается при первом цитировании сообщения в вашем ответе. Цитирование соответствующих частей более ранних сообщений в вашем ответе помогает поддерживать связь между ответом и остальным содержанием. Самый простой способ процитировать - это выделить часть сообщения, а затем нажать на кнопку 'Ответить с цитированием'. Цитируйте щедро!
     read_guidelines:
       name: Прочитал основные принципы сообщества
       description: Читал <a href="%{base_uri}/guidelines">основные принципы сообщества</a>
@@ -4265,6 +4273,7 @@ ru:
             label: "Приветственная тема"
             description: "<p>Как бы Вы описали ваше сообщество незнакомцу в лифте за 1 минуту?</p> <ul> <li>Для кого предназначены эти обсуждения?</li> <li>Что интересного могу я здесь найти?</li> <li>Почему я должен сюда зайти?</li> </ul> <p>Ваше приветственное сообщение - это первое, что прочтут новые посетители. Подумайте об этом сообщении как о \"короткой презентации в лифте\" или как о \"программном заявлении\", состоящем из <b>одного абзаца</b>.</p>"
             one_paragraph: "Пожалуйста, ограничьте приветственное сообщение одним абзацем."
+            extra_description: "Вы можете пропустить этот шаг и отредактировать приветственную тему позже."
       privacy:
         title: "Доступ"
         description: "<p> Ваше сообщество открыто для всех, или оно ограничено членством / приглашением? При необходимости вы можете выполнить все необходимые настройки в закрытом режиме, а затем сделать ресурс общедоступным. </p>"
@@ -4531,8 +4540,8 @@ ru:
       few: "%{topic_title} (часть %{count})"
       many: "%{topic_title} (часть %{count})"
       other: "%{topic_title} (часть %{count})"
-    post_raw: "Продолжение обсуждения, начатого в теме %{parent_title}.\n\nПредыдущие обсуждения:\n\n%{previous_topics}"
-    moderator_post_raw: "Продолжите обсуждение здесь: %{new_title}"
+    post_raw: "Продолжение обсуждения, начатого в теме %{parent_url}.\n\nПредыдущие обсуждения:\n\n%{previous_topics}"
+    small_action_post_raw: "Продолжить обсуждение в теме %{new_title}."
   activemodel:
     errors:
       <<: *errors

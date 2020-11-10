@@ -583,6 +583,7 @@ pl_PL:
           many: "Masz <strong>%{count}</strong> oczekujących wpisów."
           other: "Masz <strong>%{count}</strong> oczekujących wpisów."
         ok: "OK"
+      example_username: "użytkownik"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
       you_posted_topic: "<a href='%{userUrl}'>Dodajesz</a> <a href='%{topicUrl}'>temat</a>"
@@ -1369,6 +1370,9 @@ pl_PL:
         link_groups: Grupy
         link_expires_at: Wygasa
         create: "Wyślij zaproszenie"
+        copy_link: "Pokaż link"
+        generate_link: "Stwórz odnośnik z zaproszeniem"
+        link_generated: "Oto Twój link z zaproszeniem!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
         single_user: "Zaproś przez e-mail"
         multiple_user: "Zaproś za pomocą linku"
@@ -1379,7 +1383,7 @@ pl_PL:
           max_redemptions_allowed_label: "Ile osób może zarejestrować się za pomocą tego linku?"
           expires_at: "Kiedy ten link z zaproszeniem wygaśnie?"
         bulk_invite:
-          none: "Jeszcze nikogo nie zaprosiłeś. Możesz wysłać pojedyncze zaproszenia lub zaprosić wiele osób na raz poprzez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> wysłanie pliku CSV</a>."
+          none: "Brak zaproszeń do wyświetlenia na tej stronie. Możesz zaprosić określone osoby za pomocą ich e-maili lub utworzyć link z zaproszeniem, z którego będzie mógł korzystać każdy."
           text: "Zaproszenie zbiorcze"
           success: "Plik został przesłany pomyślnie: otrzymasz prywatną wiadomość, gdy proces zostanie zakończony."
           error: "Przykro nam, ale wymagany format pliku to CSV."
@@ -1594,6 +1598,7 @@ pl_PL:
     email_login:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
+      emoji: "zablokuj emoji"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
@@ -1909,12 +1914,6 @@ pl_PL:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} i %{count} inna osoba</span> %{description}"
-        few: "<span>%{username}, %{username2} i %{count} inne osoby</span> %{description}"
-        many: "<span>%{username}, %{username2} i %{count} innych osób</span> %{description}"
-        other: "<span>%{username}, %{username2} i %{count} innych osób</span> %{description}"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubiłem %{count} twoich postów"
@@ -2228,6 +2227,7 @@ pl_PL:
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
+        save: "Włącz"
         remove: "Wyłącz"
         hours: "Godziny:"
         minutes: "Minuty:"
@@ -3163,6 +3163,7 @@ pl_PL:
         return: "%{shortcut} Powróć do kompozytora"
         fullscreen: "%{shortcut} Pełnoekranowy kompozytor"
       bookmarks:
+        title: "Tworzenie zakładek"
         enter: "%{shortcut} Zapisz i zamknij"
         later_today: "%{shortcut} Później dzisiaj"
         later_this_week: "%{shortcut} Później w tym tygodniu"
@@ -3420,6 +3421,7 @@ pl_PL:
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
           totals_for_sample: "Całkowite na próbkowanie"
@@ -3530,6 +3532,7 @@ pl_PL:
         delete: Usuń bezpowrotnie
         continue: Kontynuuj
         scopes:
+          allowed_parameters: Dozwolone parametry
           allowed_urls: Dozwolone adresy URL
       web_hooks:
         title: "Webhooks"

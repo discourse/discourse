@@ -1108,7 +1108,6 @@ da:
         invite_link:
           success: "Invitiationslinket blev genereret!"
         bulk_invite:
-          none: "Du har ikke inviteret noget endnu. Send individuelle invitationer eller inviter mange på en gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en CSV-fil</a>."
           success: "Fil uploaded successfuldt, du vil blive meddelt via en beskede når processen er fuldendt."
           error: "Desværre, filen skal være CSV format."
           confirmation_message: "Du er ved at sende email invitationer til alle i den uploadede fil."
@@ -1564,10 +1563,6 @@ da:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} og %{count} anden</span> %{description}"
-        other: "<span>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated_description:
         one: "kunne godt lide %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"

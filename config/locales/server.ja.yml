@@ -851,7 +851,6 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_personal_messages_per_day: "ユーザーが1日に作成できるメッセージの最大数です。"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     max_topic_invitations_per_day: "ユーザが一日にトピックに招待できる最大数"
     max_post_deletions_per_minute: "ユーザーが1分間に削除できる投稿の最大数です。"

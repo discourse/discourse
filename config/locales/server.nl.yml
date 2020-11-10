@@ -215,7 +215,6 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
-    not_allowed: "Sorry, die gebruiker kan niet worden uitgenodigd."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -1431,9 +1430,6 @@ nl:
     approve_suspect_users: "Verdachte gebruikers toevoegen aan de wachtrij voor beoordeling. Verdachte gebruikers hebben een bio/website ingevoerd, maar hebben geen leesactiviteit."
     pending_users_reminder_delay: "Moderators inlichten als nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js)-trackingcode-ID, bv. UA-12345678-9; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js)-domeinnaam, bv. mysite.com; zie <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Google Universal Analytics (analytics.js)-cross-domain-tracking inschakelen. Aan uitgaande koppelingen naar deze domeinen wordt de client-ID toegevoegd. Zie de <a href='https://support.google.com/analytics/answer/1034342?hl=nl' target='_blank'>Google's Cross-Domain Tracking-gids.</a>"
     gtm_container_id: "Google Tag Manager-container-ID, bv. GTM-ABCDEF. <br/>Opmerking: scripts van derden die door GTM worden geladen, dienen mogelijk op de acceptatielijst te worden geplaatst in 'content security policy script src'."
     enable_escaped_fragments: "Terugvallen naar Google's Ajax-Crawling-API als geen webcrawler wordt gedetecteerd. Zie <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Toegestane domeinen voor cross-origin-aanvragen (CORS). Elk domein moet http:// of https:// bevatten. De omgevingsvariabele DISCOURSE_ENABLE_CORS moet op true zijn ingesteld om CORS in te schakelen."
@@ -1559,7 +1555,6 @@ nl:
     max_bookmarks_per_day: "Maximale aantal bladwijzers per gebruiker per dag."
     max_edits_per_day: "Maximale aantal bewerkingen per gebruiker per dag."
     max_topics_per_day: "Maximale aantal topics dat een gebruiker per dag kan plaatsen."
-    max_personal_messages_per_day: "Maximale aantal berichten dat een gebruiker per dag kan plaatsen."
     max_invites_per_day: "Maximale aantal uitnodigingen dat een gebruiker per dag kan versturen."
     max_topic_invitations_per_day: "Maximale aantal uitnodigingen voor een topic dat een gebruiker per dag kan versturen."
     max_logins_per_ip_per_hour: "Maximale aantal toegestane aanmeldingen per IP-adres per uur"
@@ -1868,6 +1863,7 @@ nl:
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
     auto_close_topics_post_count: "Maximale aantal toegestane berichten in een topic voordat het automatisch wordt gesloten (0 voor uitschakelen)"
+    auto_close_topics_create_linked_topic: "Een nieuw gekoppeld topic aanmaken wanneer een onderwerp automatisch wordt gesloten op basis van de instelling 'auto close topics post count'"
     code_formatting_style: "Codeknop in editor gebruikt standaard deze stijl voor codeopmaak"
     max_allowed_message_recipients: "Maximale aantal ontvangers in een bericht."
     watched_words_regular_expressions: "In de gaten gehouden woorden zijn reguliere expressies."
@@ -2182,6 +2178,8 @@ nl:
       same_ip_address: "Zelfde IP-adres (%{ip_address}) als andere gebruikers"
       inactive_user: "Inactieve gebruiker"
     email_in_spam_header: "Eerste e-mail van gebruiker is als spam gemarkeerd"
+    already_silenced: "Gebruiker is %{time_ago} al gedempt door %{staff}."
+    already_suspended: "Gebruiker is %{time_ago} al geschorst door %{staff}."
   reviewables_reminder:
     subject_template:
       one: "%{count} item moet worden beoordeeld"
@@ -3090,6 +3088,10 @@ nl:
   notification_level:
     ignore_error: "Sorry, u kunt die gebruiker niet negeren."
     mute_error: "Sorry, u kunt die gebruiker niet dempen."
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Deel %{count})"
+      other: "%{topic_title} (Deel %{count})"
   activemodel:
     errors:
       <<: *errors

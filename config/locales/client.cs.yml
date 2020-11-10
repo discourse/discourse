@@ -961,7 +961,6 @@ cs:
         invite_link:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
         bulk_invite:
-          none: "Nikoho jste zatím nepozval. Můžete poslat individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrát CSV soubor</a> a pozvat tak několik lidí najednou."
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
           error: "Omlouváme se, soubor by měl být ve formátu CSV."
       password:
@@ -1420,12 +1419,6 @@ cs:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        few: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        many: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
-        other: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

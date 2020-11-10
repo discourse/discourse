@@ -1149,7 +1149,6 @@ sl:
         invite_link:
           success: "Povezava s povabilom ustvarjena!"
         bulk_invite:
-          none: "Niste povabili še nikogar. Pošljite posamična povabila ali povabite več oseb naenkrat tako da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>naložite CSV datoteko</a>."
           success: "Datoteka je uspešno naložena. Obveščeni boste, ko bo postopek zaključen."
           error: "Datoteka mora biti v CSV obliki."
           confirmation_message: "Poslali boste povabila preko e-pošte vsem iz naložene datoteke."
@@ -1634,12 +1633,6 @@ sl:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} in %{count} drug</span> %{description}"
-        two: "<span>%{username}, %{username2} in %{count} druga</span> %{description}"
-        few: "<span>%{username}, %{username2} in %{count} drugi</span> %{description}"
-        other: "<span>%{username}, %{username2} in %{count} drugih</span> %{description}"
       liked_consolidated_description:
         one: "je všečkal %{count} vaš prispevek"
         two: "je všečkal %{count} vaša prispevka"

@@ -1287,9 +1287,8 @@ ar:
           max_redemptions_allowed_label: "كم شخصًا يمكنه التسجيل باستعمال هذا الرابط؟"
           expires_at: "متى ينقضي رابط الدعوة هذا؟"
         bulk_invite:
-          none: "لم تدعُ أحدًا إلى هنا بعد. أرسِل الدعوات فردية أو جماعية عبر <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>رفع ملف CSV</a>."
           success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
-          error: "عذرا، يجب أن يكون الملفّ بنسق CSV."
+          error: "معذرةً، يجب أن يكون الملف بنسق CSV."
       password:
         title: "كلمة السر"
         too_short: "كلمة السر قصيرة جدًا."
@@ -1527,7 +1526,7 @@ ar:
       authenticating: "يوثق..."
       awaiting_activation: "ما زال حسابك غير مفعّل، استخدم رابط نسيان كلمة المرور لإرسال بريد إلكتروني تفعيلي آخر."
       awaiting_approval: "لم يوافق أي من أعضاء طاقم العمل على حسابك بعد. سيُرسل إليك بريد إلكتروني حالما يتمّ ذلك."
-      requires_invite: "عذرا، الدخول لهذا الموقع خاص بالمدعويين فقط."
+      requires_invite: "معذرةً، دخول هذا المنتدى بالدعوات فقط."
       not_activated: "لا يمكنك تسجيل دخول بعد. لقد أرسلنا سابقًا بريدًا إلى <b>%{sentTo}</b>. رجاء اتّبع الإرشادات فيه لتفعيل حسابك."
       not_allowed_from_ip_address: "لا يمكنك الولوج من عنوان IP هذا."
       admin_not_allowed_from_ip_address: "لا يمكنك تسجيل دخول كمدير من عنوان IP هذا."
@@ -1800,14 +1799,6 @@ ar:
       posted: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       edited: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked: "‏<span>⁨%{username}⁩</span> ‏%{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        zero: "<span>‏%{username} و%{username2}</span> ‏%{description}"
-        one: "<span>‏%{username} و%{username2} وشخص آخر</span> ‏%{description}"
-        two: "<span>‏%{username} و%{username2} وشخصان آخران</span> ‏%{description}"
-        few: "<span>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
-        many: "<span>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
-        other: "<span>‏%{username} و%{username2} و%{count} آخرون</span> ‏%{description}"
       liked_consolidated_description:
         zero: "لم تُعجبه أيّ مشاركة من مشاركاتك"
         one: "أعجبته مشاركة واحدة من مشاركاتك"
@@ -2061,14 +2052,14 @@ ar:
       title: "الموضوع"
       invalid_access:
         title: "الموضوع خاص"
-        description: "عذرا, لا تملك صلاحيات الوصول لهذا الموضوع"
+        description: "معذرةً، لا تملك التصريح الكافي لهذا الموضوع!"
         login_required: "عليك تسجيل الدخول لرؤية هذا الموضوع."
       server_error:
         title: "فشل تحميل الموضوع"
         description: "عذرا، تعذر علينا تحميل هذا الموضوع، قد يرجع ذلك إلى مشكلة بالاتصال. من فضلك حاول مجددا. أخبرنا بالمشكلة إن استمر حدوثها."
       not_found:
         title: "لم يُعثر على الموضوع"
-        description: "عذرا، لم نجد هذا الموضوع. ربما أزاله أحد المشرفين؟"
+        description: "معذرةً، لم نجد هذا الموضوع. لربّما أزاله أحد المشرفين؟"
       total_unread_posts:
         zero: "ما من مشاركات غير مقروءة في هذا الموضوع"
         one: "لديك مشاركة واحدة غير مقروءة في هذا الموضوع"
@@ -2325,7 +2316,7 @@ ar:
         action: "دعوة"
         success: "لقد دعونا ذلك العضو للمشاركة في هذه الرسالة."
         success_group: "لقد دعونا تلك المجموعة للمشاركة في هذه الرسالة."
-        error: "عذرا، حدث عطل أثناء دعوة هذا المستخدم."
+        error: "معذرةً، حدث عُطل أثناء دعوة هذا المستخدم."
         not_allowed: "معذرةً، لا يمكنك دعوة هذا المستخدم."
         group_name: "اسم المجموعة"
       controls: "لوحة تحكم الموضوع"
@@ -2522,7 +2513,7 @@ ar:
         many: "أعجبتك أنت و%{count} شخصًا هذه المشاركة"
         other: "أعجبتك أنت و%{count} شخص هذه المشاركة"
       errors:
-        create: "عذرا، حدثت مشكلة اثناء إنشاء منشورك. من فضلك حاول مجددا."
+        create: "معذرةً، حدث عُطل أثناء إنشاء المشاركة. من فضلك أعِد المحاولة."
         edit: "عذرا، حدثت مشكلة اثناء تعديل منشورك. من فضلك حاول مجددا."
         upload: "عذرا، حدثت مشكلة اثناء رفع الملف. من فضلك حاول مجددا."
         file_too_large: "معذرةً ولكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.بايت). لماذا لا ترفع الملف الكبير هذا إلى خدمة مشاركة سحابية وتلصق الرابط؟"

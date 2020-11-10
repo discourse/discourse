@@ -7,6 +7,12 @@
 es:
   js:
     presence:
+      replying:
+        one: "respondiendo"
+        other: "respondiendo"
+      editing:
+        one: "editando"
+        other: "editando"
       replying_to_topic:
         one: "respondiendo"
         other: "respondiendo"

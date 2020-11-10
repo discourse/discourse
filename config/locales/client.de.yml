@@ -1309,7 +1309,7 @@ de:
           max_redemptions_allowed_label: "Wie viele Personen dürfen sich über diesen Link registrieren?"
           expires_at: "Wann läuft dieser Einladungslink ab?"
         bulk_invite:
-          none: "Du hast noch niemanden eingeladen. Verschicke eine individuelle Einladung, oder lade gleich mehrere Leute auf einmal durch <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>Hochladen einer CSV-Datei</a> ein."
+          none: "Keine Einladungen auf dieser Seite. Du kannst bestimmte Personen mit Hilfe ihrer E-Mail einladen oder einen Einladungslink erstellen, der von jedem benutzt werden kann."
           text: "Massen-Einladung"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
@@ -1838,10 +1838,10 @@ de:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} und jemand anderes</span> %{description}"
-        other: "<span>%{username}, %{username2} und %{count} andere</span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} und %{count} anderer</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} und %{count} andere</span> %{description}"
       liked_consolidated_description:
         one: "gefällt %{count} deiner Beiträge"
         other: "gefallen %{count} deiner Beiträge"
