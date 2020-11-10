@@ -19,6 +19,7 @@ export default Controller.extend(CanCheckEmails, {
   customGroupIdsBuffer: null,
   availableGroups: null,
   userTitleValue: null,
+  ssoExternalEmail: null,
 
   showBadges: setting("enable_badges"),
   hasLockedTrustLevel: notEmpty("model.manual_locked_trust_level"),
@@ -338,6 +339,16 @@ export default Controller.extend(CanCheckEmails, {
           return this.model.deleteSSORecord();
         }
       );
+    },
+
+    checkSsoEmail() {
+      return ajax(userPath(`${this.model.username_lower}/sso-email.json`), {
+        data: { context: window.location.pathname },
+      }).then((result) => {
+        if (result) {
+          this.set("ssoExternalEmail", result.email);
+        }
+      });
     },
   },
 });

@@ -2667,6 +2667,34 @@ describe UsersController do
     end
   end
 
+  describe '#check_sso_email' do
+    it 'raises an error when not logged in' do
+      get "/u/zogstrip/sso-email.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
+      let(:user) { Fabricate(:user) }
+
+      it "raises an error when you aren't allowed to check sso email" do
+        sign_in(Fabricate(:user))
+        get "/u/#{user.username}/sso-email.json"
+        expect(response).to be_forbidden
+      end
+
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_email: "foobar@example.com", external_id: "example", last_payload: "looks good")
+        sign_in_admin
+
+        get "/u/#{user.username}/sso-email.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email"]).to eq("foobar@example.com")
+      end
+    end
+  end
+
   describe '#update_primary_email' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_email) { user.primary_email }
