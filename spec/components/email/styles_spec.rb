@@ -330,6 +330,38 @@ describe Email::Styles do
         expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 16px; height: 16px;')
         expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
       end
+
+      context "when inlining a oneboxed image with a direct parent of onebox-body" do
+        let(:html) do
+          <<~HTML
+<aside class="onebox allowlistedgeneric">
+  <header class="source">
+      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
+  </header>
+  <article class="onebox-body">
+    <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="thumbnail onebox-avatar" width="20" height="30">
+
+<h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
+
+<p>This is a test onebox.</p>
+
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+          HTML
+        end
+
+        it "keeps the special onebox styles" do
+          strip_and_inline
+          expect(@frag.to_s).to include("cid:email/test.png")
+          expect(@frag.to_s).to include("cid:email/test2.ico")
+          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+        end
+      end
     end
   end
 end
