@@ -13,10 +13,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
