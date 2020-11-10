@@ -11,7 +11,8 @@ describe Jobs::CreateLinkedTopic do
 
   context 'with a post' do
 
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) do
       Fabricate(:post, topic: topic)
     end
@@ -48,6 +49,7 @@ describe Jobs::CreateLinkedTopic do
       expect(topic.posts.last.raw).to include(I18n.t('create_linked_topic.small_action_post_raw', new_title: "[#{new_topic.title}](#{new_topic.url})"))
       expect(new_topic.title).to include(I18n.t("create_linked_topic.topic_title_with_sequence", topic_title: raw_title, count: 2))
       expect(new_topic.first_post.raw).to include(topic.url)
+      expect(new_topic.category.id).to eq(category.id)
       expect(new_topic.topic_users.count).to eq(3)
       expect(new_topic.topic_users.pluck(:notification_level)).to contain_exactly(muted, tracking, watching)
       expect(linked_topic.topic_id).to eq(new_topic.id)
