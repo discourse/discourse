@@ -1001,14 +1001,12 @@ describe UserMerger do
 
   it "deletes external auth infos of source user" do
     UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
-    GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
     Oauth2UserInfo.create(user_id: source_user.id, uid: "example", provider: "example")
     SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
 
     merge_users!
 
     expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
-    expect(GithubUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(Oauth2UserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(SingleSignOnRecord.where(user_id: source_user.id).count).to eq(0)
   end
