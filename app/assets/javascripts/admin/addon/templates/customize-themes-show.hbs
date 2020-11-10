@@ -1,4 +1,5 @@
 <div class="show-current-style">
+  {{plugin-outlet name="admin-customize-themes-show-top" args=(hash remote=model.remote_theme)}}
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
