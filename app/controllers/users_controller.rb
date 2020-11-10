@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :invite_links
+    :bookmarks, :invited, :invite_links, :check_sso_email
   ]
 
   skip_before_action :check_xhr, only: [
@@ -202,6 +202,22 @@ class UsersController < ApplicationController
       unconfirmed_emails: unconfirmed_emails,
       associated_accounts: user.associated_accounts
     }
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: 403
+  end
+
+  def check_sso_email
+    user = fetch_user_from_params(include_inactive: true)
+
+    unless user == current_user
+      guardian.ensure_can_check_sso_email!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
+
+    email = user&.single_sign_on_record&.external_email
+    email = I18n.t("user.email.does_not_exist") if email.blank?
+
+    render json: { email: email }
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end

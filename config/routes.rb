@@ -446,6 +446,7 @@ Discourse::Application.routes.draw do
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get "#{root_path}/:username/emails" => "users#check_emails", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/sso-email" => "users#check_sso_email", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/email" => "users_email#index", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/account" => "users#preferences", constraints: { username: RouteFormat.username }
