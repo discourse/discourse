@@ -1424,6 +1424,12 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id }));
             break;
           }
+          case "destroyed": {
+            postStream
+              .triggerDestroyedPost(data.id)
+              .then(() => refresh({ id: data.id }));
+            break;
+          }
           case "recovered": {
             postStream
               .triggerRecoveredPost(data.id)

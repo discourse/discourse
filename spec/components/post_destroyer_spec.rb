@@ -961,4 +961,27 @@ describe PostDestroyer do
       expect(user.user_profile.reload.featured_topic).to eq(nil)
     end
   end
+
+  describe "permanent destroy" do
+    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
+    fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
+    it "destroys the post and topic if deleting first post" do
+      PostDestroyer.new(reply.user, reply, permanent: true).destroy
+      expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(private_message_topic.reload.persisted?).to be true
+
+      PostDestroyer.new(private_post.user, private_post, permanent: true).destroy
+      expect { private_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'soft delete if not creator of post or not private message' do
+      PostDestroyer.new(moderator, reply, permanent: true).destroy
+      expect(reply.deleted_at).not_to eq(nil)
+
+      PostDestroyer.new(post.user, post, permanent: true).destroy
+      expect(post.user_deleted).to be true
+    end
+  end
 end
