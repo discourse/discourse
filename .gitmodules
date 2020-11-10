@@ -1,3 +1,6 @@
 [submodule "plugins/discourse-solved"]
 	path = plugins/discourse-solved
-	url = git@github.com:discourse/discourse-solved.git
+	url = https://github.com/discourse/discourse-solved.git
+[submodule "plugins/discourse-sentry"]
+	path = plugins/discourse-sentry
+	url = https://github.com/debtcollective/discourse-sentry.git
