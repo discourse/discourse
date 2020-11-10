@@ -886,7 +886,8 @@ class Plugin::Instance
 
     locales.each do |locale, opts|
       opts = opts.dup
-      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
+      opts[:client_locale_file] = File.join(root_path, "config/locales/client*.#{locale}.yml")
+      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
       opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
       opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 

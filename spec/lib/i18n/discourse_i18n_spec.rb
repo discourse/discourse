@@ -104,4 +104,22 @@ describe I18n::Backend::DiscourseI18n do
       expect { backend.translate(:ru, :airplanes, count: 2) }.to raise_error(I18n::InvalidPluralizationData)
     end
   end
+
+  describe ".sort_local_files" do
+    it "sorts an array of client ymls with '-(highest-number)' being last" do
+      expect(I18n::Backend::DiscourseI18n.sort_locale_files(
+        [
+          'discourse/plugins/discourse-second/config/locales/client-99.en.yml',
+          'discourse/plugins/discourse-first/config/locales/client.en.yml',
+          'discourse/plugins/discourse-third/config/locales/client-2.en.yml',
+        ]
+      )).to eq(
+        [
+          'discourse/plugins/discourse-first/config/locales/client.en.yml',
+          'discourse/plugins/discourse-third/config/locales/client-2.en.yml',
+          'discourse/plugins/discourse-second/config/locales/client-99.en.yml',
+        ]
+      )
+    end
+  end
 end
