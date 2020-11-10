@@ -201,10 +201,7 @@ export default Mixin.create({
               }
             } else {
               // The site direction is ltr
-              const pageLeftOffset = document.querySelector(
-                ".ember-application > .ember-view"
-              ).offsetLeft;
-              position.left += target.width() - pageLeftOffset + 10;
+              position.left += target.width() + 10;
 
               let overage = $(window).width() - 50 - (position.left + width);
               if (overage < 0) {

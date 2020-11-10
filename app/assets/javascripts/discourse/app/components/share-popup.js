@@ -69,10 +69,7 @@ export default Component.extend({
     }
 
     const shareLinkWidth = $this.width();
-    const pageLeftOffset = document.querySelector(
-      ".ember-application > .ember-view"
-    ).offsetLeft;
-    let x = $currentTargetOffset.left - pageLeftOffset - shareLinkWidth / 2;
+    let x = $currentTargetOffset.left - shareLinkWidth / 2;
     if (x < 25) {
       x = 25;
     }
