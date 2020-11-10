@@ -160,7 +160,7 @@ GEM
     jwt (2.2.2)
     kgio (2.11.3)
     libv8 (8.4.255.0)
-    listen (3.2.1)
+    listen (3.3.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
