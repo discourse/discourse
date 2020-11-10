@@ -83,7 +83,7 @@ acceptance("Admin - Suspend User", function (needs) {
     await suspendUntilCombobox.expand();
     await suspendUntilCombobox.selectRowByValue("tomorrow");
 
-    await fillIn(".suspend-reason", "for breaking the rules");
+    await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     assert.equal(
