@@ -191,26 +191,28 @@
     {{/d-section}}
   {{/if}}
 
-  <div class="control-unit">
-    <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
-    {{#if model.hasEditedFields}}
-      <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
-      <ul>
-        {{#each editedFieldsFormatted as |field|}}
-          <li>{{field}}</li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <div class="description">
-        {{i18n "admin.customize.theme.edit_css_html_help"}}
-      </div>
-    {{/if}}
+  {{#unless model.remote_theme}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
+      {{#if model.hasEditedFields}}
+        <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
+        <ul>
+          {{#each editedFieldsFormatted as |field|}}
+            <li>{{field}}</li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="description">
+          {{i18n "admin.customize.theme.edit_css_html_help"}}
+        </div>
+      {{/if}}
 
-    {{d-button
-      class="btn-default edit"
-      action=(action "editTheme")
-      label="admin.customize.theme.edit_css_html"}}
-  </div>
+      {{d-button
+        class="btn-default edit"
+        action=(action "editTheme")
+        label="admin.customize.theme.edit_css_html"}}
+    </div>
+  {{/unless}}
 
   <div class="control-unit">
     <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
