@@ -13,7 +13,7 @@ import UserStream from "discourse/models/user-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import Singleton from "discourse/mixins/singleton";
 import { longDate } from "discourse/lib/formatter";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import UserActionStat from "discourse/models/user-action-stat";
@@ -729,41 +729,29 @@ const User = RestModel.extend({
     });
   },
 
-  @observes("muted_category_ids")
-  updateMutedCategories() {
-    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  @discourseComputed("muted_category_ids")
+  mutedCategories(mutedCategoryIds) {
+    return Category.findByIds(mutedCategoryIds);
   },
 
-  @observes("regular_category_ids")
-  updateRegularCategories() {
-    this.set(
-      "regularCategories",
-      Category.findByIds(this.regular_category_ids)
-    );
+  @discourseComputed("regular_category_ids")
+  regularCategories(regularCategoryIds) {
+    return Category.findByIds(regularCategoryIds);
   },
 
-  @observes("tracked_category_ids")
-  updateTrackedCategories() {
-    this.set(
-      "trackedCategories",
-      Category.findByIds(this.tracked_category_ids)
-    );
+  @discourseComputed("tracked_category_ids")
+  trackedCategories(trackedCategoryIds) {
+    return Category.findByIds(trackedCategoryIds);
   },
 
-  @observes("watched_category_ids")
-  updateWatchedCategories() {
-    this.set(
-      "watchedCategories",
-      Category.findByIds(this.watched_category_ids)
-    );
+  @discourseComputed("watched_category_ids")
+  watchedCategories(watchedCategoryIds) {
+    return Category.findByIds(watchedCategoryIds);
   },
 
-  @observes("watched_first_post_category_ids")
-  updateWatchedFirstPostCategories() {
-    this.set(
-      "watchedFirstPostCategories",
-      Category.findByIds(this.watched_first_post_category_ids)
-    );
+  @discourseComputed("watched_first_post_category_ids")
+  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
+    return Category.findByIds(wachedFirstPostCategoryIds);
   },
 
   @discourseComputed("can_delete_account")
