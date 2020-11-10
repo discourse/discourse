@@ -3246,6 +3246,37 @@ describe UsersController do
           get "/u/by-external/99.json"
           expect(response).not_to be_successful
         end
+
+        context "for an external provider" do
+          before do
+            sign_in(Fabricate(:admin))
+            SiteSetting.enable_google_oauth2_logins = true
+            UserAssociatedAccount.create!(user: user, provider_uid: 'myuid', provider_name: 'google_oauth2')
+          end
+
+          it "doesn't work for non-admin" do
+            sign_in(user)
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(403)
+          end
+
+          it "can fetch the user" do
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user"]["username"]).to eq(user.username)
+          end
+
+          it "fails for disabled provider" do
+            SiteSetting.enable_google_oauth2_logins = false
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(404)
+          end
+
+          it "returns 404 for missing user" do
+            get "/u/by-external/google_oauth2/myotheruid.json"
+            expect(response.status).to eq(404)
+          end
+        end
       end
 
       describe "include_post_count_for" do
