@@ -16,7 +16,7 @@ export default {
   },
   updateAppBackground() {
     later(() => {
-      const header = document.querySelectorAll(".d-header")[0];
+      const header = document.querySelector(".d-header-wrap .d-header");
       if (header) {
         const styles = window.getComputedStyle(header);
         postRNWebviewMessage("headerBg", styles.backgroundColor);
