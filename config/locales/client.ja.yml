@@ -977,7 +977,6 @@ ja:
         invite_link:
           success: "招待リンクが生成されました！"
         bulk_invite:
-          none: "まだ誰も招待していません。個々に招待するか、<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSVファイルをアップロード</a>して、まとめて招待しましょう。"
           success: "ファイルは無事にアップロードされました。処理が完了したらメッセージでお知らせします。"
           error: "申し訳ありません、ファイルはCSV形式である必要があります。"
       password:
@@ -1358,9 +1357,6 @@ ja:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span>%{username}, %{username2} 、他 %{count} 人</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

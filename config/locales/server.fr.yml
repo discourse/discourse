@@ -56,6 +56,7 @@ fr:
     compile_error:
       unrecognized_extension: "Extension de fichier non reconnue : %{extension}"
     import_error:
+      generic: Une erreur s'est produite lors de l'importation de ce thème
       about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr qu'il s'agit d'un thème Discourse ?"
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
@@ -201,7 +202,6 @@ fr:
   topic_invite:
     failed_to_invite: "L'utilisateur ne peut pas être invité dans ce sujet sans être membre d'un des groupes suivants : %{group_names}."
     user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
-    not_allowed: "Désolé, cet utilisateur ne peut pas être invité."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer une nouvelle tâche pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -1521,7 +1521,6 @@ fr:
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
     max_topics_per_day: "Nombre maximum de sujet qu'utilisateur peut créer par jour."
-    max_personal_messages_per_day: "Nombre maximum de messages directs que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     max_logins_per_ip_per_hour: "Nombre maximum de connexions autorisées par adresse IP et par heure"

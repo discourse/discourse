@@ -511,6 +511,7 @@ nl:
           one: "U hebt <strong>%{count}</strong> wachtend bericht."
           other: "U hebt <strong>%{count}</strong> wachtende berichten."
         ok: "OK"
+      example_username: "gebruikersnaam"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> heeft <a href='%{topicUrl}'>het topic</a> geplaatst"
       you_posted_topic: "<a href='%{userUrl}'>U</a> hebt <a href='%{topicUrl}'>het topic</a> geplaatst"
@@ -1295,7 +1296,12 @@ nl:
         link_groups: Groepen
         link_expires_at: Verloopt
         create: "Uitnodiging sturen"
+        copy_link: "Koppeling tonen"
+        generate_link: "Uitnodigingskoppeling maken"
+        link_generated: "Hier is uw uitnodigingskoppeling!"
         valid_for: "De uitnodigingskoppeling is alleen geldig voor dit e-mailadres: %{email}"
+        single_user: "Uitnodigen via e-mail"
+        multiple_user: "Uitnodigen via koppeling"
         invite_link:
           title: "Uitnodigingskoppeling"
           success: "Uitnodigingskoppeling is aangemaakt!"
@@ -1303,7 +1309,7 @@ nl:
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
         bulk_invite:
-          none: "U hebt hier nog niemand uitgenodigd. Stuur individuele uitnodigingen of nodig meerdere mensen tegelijk uit door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een CSV-bestand te uploaden</a>."
+          none: "Geen uitnodigingen om weer te geven op deze pagina. U kunt bepaalde mensen uitnodigen via hun e-mailadres, of een uitnodigingskoppeling maken die door iedereen kan worden gebruikt."
           text: "Bulkuitnodiging"
           success: "Het bestand is geüpload. U ontvangt een melding via een bericht zodra het proces is voltooid."
           error: "Sorry, bestand dient de CSV-indeling te hebben."
@@ -1772,6 +1778,8 @@ nl:
       yourself_confirm:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
+      slow_mode:
+        error: "Dit topic bevindt zich in de langzame modus. Om een doordachte, weloverwogen discussie te stimuleren, mag u slechts één keer per %{duration} een bericht plaatsen."
       admin_options_title: "Optionele stafinstellingen voor dit topic"
       composer_actions:
         reply: Antwoorden
@@ -1830,10 +1838,6 @@ nl:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} en %{count} anderen</span> %{description}"
-        other: "<span>%{username}, %{username2} en %{count} anderen</span> %{description}"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -2133,6 +2137,9 @@ nl:
       deleted: "Het topic is verwijderd"
       slow_mode_update:
         title: "Langzame modus"
+        select: "Gebruikers mogen slechts een bericht in dit topic plaatsen om de:"
+        description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
+        save: "Inschakelen"
         remove: "Uitschakelen"
         hours: "Uren:"
         minutes: "Minuten:"

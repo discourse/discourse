@@ -56,6 +56,7 @@ it:
     compile_error:
       unrecognized_extension: "Estensione del file non riconosciuta: %{extension}"
     import_error:
+      generic: Errore durante l'importazione del tema
       about_json: "Errore di importazione: about.json non esiste o non è valido. Sei sicuro che questo sia un tema di Discourse?"
       about_json_values: "about.json contiene valori non validi: %{errors}"
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
@@ -114,7 +115,9 @@ it:
         bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
         screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
+        email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
       unrecognized_error: "Errore Non Riconosciuto"
+    view_redacted_media: "Visualizza media"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -177,9 +180,11 @@ it:
       default_tags_already_selected: "Non è possibile selezionare un'etichetta utilizzata in un altro elenco."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Non puoi abilitare l'inventario su S3 se non hai abilitato i caricamenti S3."
+      page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i media sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
       secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i supporti sicuri."
+      share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare 2FA se i login locali sono disabilitati."
       second_factor_cannot_be_enforced_with_sso_enabled: "Non si può applicare 2FA se SSO è attivato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
@@ -187,11 +192,13 @@ it:
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
+    expired: "Il tuo token di invito è scaduto. <a href='%{base_url}/about'>Contatta lo staff</a>."
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
     not_found_json: "Il token del tuo invito non è valido. Per favore contatta lo staff."
     error_message: "Si è verificato un errore accettando l'invito. Si prega di contattare l'amministratore del sito."
     user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
+    cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
     disabled_errors:
       sso_enabled: "Gli inviti sono disattivati perché SSO è attivato."
       local_logins_disabled: "Gli inviti sono disattivati perché l'impostazione 'abilita login locali' è disattivata."
@@ -201,11 +208,16 @@ it:
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
     error: "Si è verificato un errore durante il caricamento del file. Per favore riprova più tardi."
   invite_link:
+    email_taken: "Questa e-mail è già in uso. Se hai già un account, effettua il login o reimposta la password."
     max_redemptions_limit: "dovrebbe essere compreso tra 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "L'utente non può essere invitato in questo argomento senza essere membro di uno dei seguenti gruppi: %{group_names}."
     user_exists: "Spiacenti, l'utente è stato già invitato. Puoi invitare un utente ad uno stesso argomento solo una volta ."
-    not_allowed: "Siamo spiacenti, questo utente non può essere invitato."
+    muted_invitee: "Spiacenti, quell'utente ti ha silenziato."
+    muted_topic: "Spiacenti, quell'utente ha silenziato questo argomento."
+    receiver_does_not_allow_pm: "Spiacenti, quell'utente non ti permette di inviargli messaggi privati."
+    sender_does_not_allow_pm: "Spiacenti, non permetti a quell'utente di inviarti messaggi privati."
+    receiver_does_not_allow_other_user_pm: "Spiacenti, quell'utente non permette a un partecipante esistente di inviargli messaggi privati."
   backup:
     operation_already_running: "Un'operazione è attualmente in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -339,6 +351,7 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   edit_conflict: "Il messaggio è stato modificato da un altro utente e le tue modifiche non possono più essere salvate."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
+  cannot_edit_on_slow_mode: "Questo argomento è in modalità lenta. Per incoraggiare discussioni cortesi e ponderate, non è attualmente permesso modificare vecchi post."
   excerpt_image: "immagine"
   bookmarks:
     errors:
@@ -436,7 +449,7 @@ it:
 
       Spiacenti, ma i nuovi utenti hanno un limite temporaneo di %{newuser_max_replies_per_topic} risposte nello stesso argomento.
 
-      Invece di aggiungere un'altra risposta, per favore considera di modificare le tue precedenti risposte o di visitare altri argomenti.
+      Invece di aggiungere un'altra risposta, per favore valuta la possibilità di modificare le tue precedenti risposte o di visitare altri argomenti.
     reviving_old_topic: |
       ### Vuoi resuscitare questo argomento?
 
@@ -467,6 +480,7 @@ it:
               reply_by_email_disabled: "La risposta via email è stata disabilitata."
               target_user_not_found: "Impossibile trovare uno degli utenti a cui stai inviando questo messaggio."
               unable_to_update: "Si è verificato un errore durante l'aggiornamento dell'argomento."
+              unable_to_tag: "Si è verificato un errore etichettando l'argomento."
             featured_link:
               invalid: "è invalido. Un URL dovrebbe includere http:// o https://."
               invalid_category: "non può essere modificato in questa categoria."
@@ -913,6 +927,7 @@ it:
     submit: "Salva preferenze"
     digest_frequency:
       title: "Stai ricevendo email riepilogative ogni %{frequency}"
+      never_title: "Non ricevi e-mail di riepilogo"
       select_title: "Imposta la frequenza delle email riepilogative a:"
       never: "mai"
       every_30_minutes: "ogni 30 minuti"
@@ -1309,6 +1324,7 @@ it:
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     topic_featured_link_enabled: "Abilita la pubblicazione di collegamenti con gli argomenti."
     show_topic_featured_link_in_digest: "Mostra i collegamenti in primo piano dell'argomento nella email riepilogativa."
+    min_topic_views_for_delete_confirm: "Numero minimo di visualizzazioni che un argomento deve avere perché appaia un popup di conferma quando viene eliminato"
     min_topic_title_length: "Numero minimo di caratteri per i titoli degli argomenti"
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
     min_personal_message_title_length: "Numero minimo di caratteri per un messaggio"
@@ -1327,6 +1343,7 @@ it:
     category_search_priority_very_high_weight: "Peso attribuito alla classifica per priorità di ricerca di categoria molto alta."
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo"
+    allow_duplicate_topic_titles_category: "Permetti argomenti con titoli identici e duplicati se la categoria è diversa. allow_duplicate_topic_titles deve essere falso."
     unique_posts_mins: "Quanti minuti prima che un utente possa inviare un altro argomento con lo stesso contenuto"
     educate_until_posts: "Per i primi (n) messaggi di un utente, mostra la finestra pop-up con il pannello di istruzioni per nuovi utenti."
     title: "Il nome di questo sito, da usare nell'attributo title."
@@ -1363,6 +1380,9 @@ it:
     logo_small: "La piccola immagine del logo in alto a sinistra del tuo sito, vista quando scorri verso il basso. Usa un'immagine quadrata di 120 × 120. Se lasciato vuoto, verrà mostrato un simbolo Home."
     digest_logo: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'email del tuo sito. Usa un'immagine a rettangolo largo. Non usare un'immagine SVG. Se lasciato vuoto, verrà utilizzata l'immagine dall'impostazione `logo`."
     mobile_logo: "Il logo utilizzato sulla versione mobile del tuo sito. Utilizzare un'immagine rettangolare ampia con un'altezza di 120 e un rapporto d'aspetto superiore a 3: 1. Se lasciato vuoto, verrà utilizzata l'immagine dell'impostazione `logo`."
+    logo_dark: "Schema scuro alternativo per l'impostazione 'logo' del sito."
+    logo_small_dark: "Schema scuro alternativo per l'impostazione 'logo piccolo' del sito."
+    mobile_logo_dark: "Schema scuro alternativo per l'impostazione 'logo mobile' del sito."
     large_icon: "Immagine utilizzata come base per altre icone di metadati. Idealmente dovrebbe essere più grande di 512 x 512. Se lasciato vuoto, verrà usato logo_small."
     manifest_icon: "Immagine utilizzata come immagine logo / splash su Android. Verrà automaticamente ridimensionato a 512 × 512. Se lasciato vuoto, verrà utilizzato large_icon."
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere una PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
@@ -1412,10 +1432,11 @@ it:
     invite_code: "L&#39;utente deve digitare questo codice per consentire la registrazione dell&#39;account, ignorato quando vuoto (senza distinzione tra maiuscole e minuscole)"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics (analytics.js), ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Abilita il monitoraggio interdominio di Google Universal Analytics (analytics.js). Ai collegamenti in uscita da questi domini verrà aggiunto l'ID client. Consulta la <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>guida Impostare il monitoraggio interdominio di Google.</a>"
+    ga_version: "Versione di Google Universal Analytics da usare: v3 (analytics.js), v4 (gtag)"
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories_and_groups: "Permetti ai moderatori di gestire categorie e gruppi"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
+    use_admin_ip_allowlist: "Gli amministratori possono effettuare il login solo se usano un indirizzo IP definito nell'elenco degli IP schermati (Admin > Logs > IP schermati)."
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     slow_down_crawler_user_agents: "Agenti utente di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva di ritardo della scansione"
     slow_down_crawler_rate: "Se viene specificato slow_down_crawler_user_agents, tale frequenza verrà applicata a tutti i crawler (numero di secondi di ritardo tra le richieste)"
@@ -1523,7 +1544,6 @@ it:
     max_bookmarks_per_day: "Massimo numero di segnalibri per utente al giorno."
     max_edits_per_day: "Massimo numero di modifiche per utente al giorno."
     max_topics_per_day: "Massimo numero di argomenti che un utente può creare al giorno."
-    max_personal_messages_per_day: "Numero massimo di messaggi che gli utenti possono creare al giorno."
     max_invites_per_day: "Numero massimo di inviti che un utente può inviare in un giorno."
     max_topic_invitations_per_day: "Numero massimo di inviti ad argomenti che un utente può inviare al giorno."
     max_logins_per_ip_per_hour: "Numero massimo di accessi consentiti per indirizzo Ip per ora"
@@ -1536,7 +1556,7 @@ it:
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."
-    suggested_topics_unread_max_days_old: "Gli argomenti non letti suggeriti non dovrebbero essere più vecchi di n giorni."
+    suggested_topics_unread_max_days_old: "Gli argomenti suggeriti non letti non devono essere più vecchi di n giorni."
     clean_up_uploads: "Elimina i caricamenti orfani per evitare l'hosting di materiale illegale. ATTENZIONE: prima di attivare questa impostazione è meglio effettuare un backup della cartella /uploads."
     clean_orphan_uploads_grace_period_hours: "Dopo quante ore un caricamento orfano (senza riferimenti) viene rimosso."
     purge_deleted_uploads_grace_period_days: "Dopo quanti giorni un caricamento cancellato viene rimosso."
@@ -1743,6 +1763,7 @@ it:
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
     allow_users_to_hide_profile: "Permetti agli utenti di nascondere il loro profilo e la loro presenza"
+    allow_featured_topic_on_user_profiles: "Permetti agli utenti di aggiungere un link a un argomento nella scheda utente e nel profilo."
     show_inactive_accounts: "Consenti agli utenti registrati di consultare i profili degli account inattivi."
     hide_suspension_reasons: "Non visualizzare pubblicamente i motivi della sospensione sui profili utente."
     log_personal_messages_views: "Registra le visualizzazioni fatte da Amministratore dei messaggi personali di altri utenti/gruppi ."
@@ -1757,7 +1778,7 @@ it:
     disable_avatar_education_message: "Disabilita il messaggio educativo per cambiare avatar"
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     header_dropdown_category_count: "Quante categorie possono essere visualizzate nel menu a discesa dell'intestazione."
-    permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle catture"
+    permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, imposta a vuoto per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
@@ -1779,6 +1800,7 @@ it:
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
     embed_topics_list: "Supporta l'inclusione delle liste di argomenti nell'HTML"
     embed_truncate: "Tronca i messaggi incorporati."
+    embed_unlisted: "Gli argomenti importati non saranno in elenco finché un utente non risponderà."
     embed_support_markdown: "Supporta la formattazione Markdown per i messaggi incorporati."
     allowed_href_schemes: "Schemi consentiti nei collegamenti in aggiunta a http e https."
     embed_post_limit: "Numero massimo di messaggi da incorporare."
@@ -1788,6 +1810,7 @@ it:
     delete_drafts_older_than_n_days: "Elimina bozze più vecchie di (n) giorni."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedire agli utenti anonimi di scaricare gli allegati. ATTENZIONE: questo impedirà a qualsiasi risorsa del sito pubblicata come allegato di funzionare ad eccezione delle immagini."
+    secure_media: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se “login richiesto” è attivato, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">l''argomento sui media sicuri su Meta</a>.'
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
     enable_emoji: "Attiva gli emoji"
     enable_emoji_shortcuts: "Smiley comuni come :) :p :( verranno convertiti in emoji"
@@ -1801,6 +1824,7 @@ it:
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
     auto_close_messages_post_count: "Numero massimo di messaggi consentiti in un messaggio privato prima di essere automaticamente chiuso (0 per disabilitare)"
     auto_close_topics_post_count: "Numero massimo di messaggi consentiti in un argomento prima di essere automaticamente chiuso (0 per disabilitare)"
+    auto_close_topics_create_linked_topic: "Quando un argomento viene chiuso in base all'impostazione \"chiudi automaticamente il conteggio dei post\", creane un altro collegato."
     code_formatting_style: "Il pulsante del testo preformattato nel composer verrà predefinito a questo stile di formattazione del codice"
     max_allowed_message_recipients: "Numero massimo di destinatari consentiti in un messaggio privato."
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
@@ -1808,8 +1832,10 @@ it:
     new_user_notice_tl: "Livello Esperienza minimo richiesto per vedere le nuove notifiche degli utenti."
     returning_user_notice_tl: "Livello Esperienza minimo richiesto per vedere le notifiche sul post di ritorno dell'utente."
     returning_users_days: "Quanti giorni devono trascorrere prima che un utente venga considerato come il ritorno."
+    enable_page_publishing: "Permetti allo staff di pubblicare gli argomenti su nuovi URL in modo personalizzato."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
+    default_email_level: "Impostare il livello di notifica per e-mail predefinito per gli argomenti normali."
     default_email_messages_level: "Imposta il livello di notifica email predefinito quando un utente invia messaggi all'utente."
     default_email_mailing_list_mode: "Invia una email per ogni nuovo messaggio di default."
     default_email_mailing_list_mode_frequency: "Con quale frequenza gli utenti che hanno attivato la modalità mailing list riceveranno email di default."
@@ -1830,6 +1856,7 @@ it:
     default_categories_muted: "Elenco di categorie silenziate per default."
     default_categories_watching_first_post: "Elenco di categorie in cui il primo messaggio di ogni nuovo argomento verrà osservato per impostazione predefinita."
     default_tags_tracking: "Elenco di etichette seguite di default."
+    default_tags_watching_first_post: "Etichette in cui il primo messaggio di ogni nuovo argomento sarà \"in osservazione\" per impostazione predefinita."
     default_text_size: "Dimensione del testo selezionata per impostazione predefinita"
     default_title_count_mode: "Modalità predefinita per il contatore del titolo della pagina"
     retain_web_hook_events_period_days: "Numero di giorni per mantenere i record degli eventi di web hook."
@@ -1947,13 +1974,13 @@ it:
       other: "%{count} messaggi sono stati spostati in un nuovo Argomento: %{topic_link}"
     new_message_moderator_post:
       one: "Un messaggio è stato spostato in un nuovo messaggio ai moderatori: %{topic_link}"
-      other: "%{count} messaggi sono stati spostati in un nuovo messaggio ai moderatori: %{topic_link}"
+      other: "%{count} messaggi sono stati spostati in un nuovo messaggio: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Un messaggio è stato unito ad un Argomento esistente: %{topic_link}"
+      one: "Un messaggio è stato unito a un argomento esistente: %{topic_link}"
       other: "%{count} messaggi sono stati uniti ad un Argomento esistente: %{topic_link}"
     existing_message_moderator_post:
-      one: "Un messaggio è stato unito ad un messaggio esistente: %{topic_link}"
-      other: "%{count} messaggi sono stati uniti ad un messaggio esitente: %{topic_link}"
+      one: "Un messaggio è stato unito a un messaggio esistente: %{topic_link}"
+      other: "%{count} messaggi sono stati uniti a un messaggio esistente: %{topic_link}"
   change_owner:
     post_revision_text: "Proprietà trasferita"
   publish_page:
@@ -1986,23 +2013,23 @@ it:
       one: "Questo argomento è stato automaticamente chiuso un minuto dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} minuti dopo l'ultima risposta. Non sono permesse altre risposte."
     autoclosed_disabled_days:
-      one: "This topic was automatically opened after %{count} day."
+      one: "Questo argomento è stato aperto automaticamente dopo %{count} giorno."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} giorni."
     autoclosed_disabled_hours:
-      one: "This topic was automatically opened after %{count} hour."
+      one: "Questo argomento è stato aperto automaticamente dopo %{count} ora."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} ore."
     autoclosed_disabled_minutes:
-      one: "This topic was automatically opened after %{count} minute."
+      one: "Questo argomento è stato aperto automaticamente dopo %{count} minuto."
       other: "Questo argomento è stato aperto automaticamente dopo %{count} minuti."
     autoclosed_disabled_lastpost_days:
-      one: "This topic was automatically opened %{count} day after the last reply."
+      one: "Questo argomento è stato aperto automaticamente %{count} giorno dopo l'ultima risposta."
       other: "Questo argomento è stato aperto automaticamente %{count} giorni dopo l'ultima risposta."
     autoclosed_disabled_lastpost_hours:
-      one: "This topic was automatically opened %{count} hour after the last reply."
+      one: "Questo argomento è stato aperto automaticamente %{count} ora dopo l'ultima risposta."
       other: "Questo argomento è stato aperto automaticamente %{count} ore dopo l'ultima risposta."
     autoclosed_disabled_lastpost_minutes:
       one: "Questo argomento è stato aperto automaticamente %{count} minuto dopo l'ultima risposta."
-      other: "This topic was automatically opened %{count} minutes after the last reply."
+      other: "Questo argomento è stato aperto automaticamente %{count} minuti dopo l'ultima risposta."
     autoclosed_disabled: "Questo argomento è ora aperto. Sono permesse altre risposte."
     autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
     auto_deleted_by_timer: "Eliminato automaticamente dal timer."
@@ -2086,6 +2113,8 @@ it:
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
       same_ip_address: "Lo stesso indirizzo IP (%{ip_address}) di altri utenti"
       inactive_user: "Utente inattivo"
+    already_silenced: "L'utente è già stato silenziato da %{staff} %{time_ago}."
+    already_suspended: "L'utente è già stato sospeso da %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Gli articoli sono stati inviati oltre %{count} ora fa. [Si prega di rivederli] (%{base_path} / recensione)."
@@ -2113,11 +2142,11 @@ it:
       >
       > %{topic_excerpt}
 
-      a
+      su
 
       > %{site_title} -- %{site_description}
 
-      Se sei interessato, clicca il link sottostante:
+      Se ti interessa, clicca sul link sottostante:
 
       %{invite_link}
   custom_invite_mailer:
@@ -2130,7 +2159,7 @@ it:
       >
       > %{topic_excerpt}
 
-      a
+      su
 
       > %{site_title} -- %{site_description}
 
@@ -2138,7 +2167,7 @@ it:
 
       > %{user_custom_message}
 
-      Se sei interessato, clicca il link sottostante:
+      Se ti interessa, clicca sul link sottostante:
       %{invite_link}
   invite_forum_mailer:
     title: "Mailer Invito Forum"
@@ -2677,7 +2706,7 @@ it:
 
       > %{site_title} -- %{site_description}
 
-      Per partecipare al messaggio, clicca sul seguente collegamento:
+      Per partecipare al messaggio, clicca sul link sottostante:
 
       %{topic_url}
     invited_to_private_message_body: |
@@ -2989,7 +3018,7 @@ it:
 
         %{new_user_tips}
 
-        Noi crediamo in una comunità che si [comporta civilmente](%{base_url}/guidelines).
+        Noi crediamo da sempre in un [comportamento civile](%{base_url}/guidelines).
 
         Buona permanenza!
     signup:
@@ -3026,7 +3055,7 @@ it:
     welcome_message: |
       ## [Benvenuto su %{title}](#welcome)
       E' richiesto un account. Per continuare, crea un nuovo account oppure connettiti.
-    welcome_message_invite_only: "## [Benvenuto su %{title}] (# benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
+    welcome_message_invite_only: "## [Benvenuto su %{title}](#benvenuto) \nÈ richiesto un account. Per favore, chiedi a un membro esistente un invito o accedi per continuare.\n"
   deleted: "cancellati"
   image: "immagine"
   upload:
@@ -3059,7 +3088,7 @@ it:
     user_email_user_suspended_not_pm: "L'utente è sospeso, non è un messaggio"
     user_email_seen_recently: "L'utente è stato visto di recente"
     user_email_notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"
-    user_email_notification_topic_nil: "post.topic è nil"
+    user_email_notification_topic_nil: "post.topic è nullo"
     user_email_post_user_deleted: "L'utente del messaggio è stato eliminato."
     user_email_post_deleted: "il messaggio è stato cancellato dal suo autore"
     user_email_user_suspended: "l'utente è stato sospeso"
@@ -3071,6 +3100,7 @@ it:
     sender_body_blank: "il corpo è vuoto"
     sender_post_deleted: "il messaggio è stato cancellato"
     sender_message_to_invalid: "il destinatario ha un indirizzo email non valido"
+    sender_topic_deleted: "L'argomento è stato eliminato"
   color_schemes:
     base_theme_name: "Base"
     light: "Chiaro"
@@ -3600,7 +3630,7 @@ it:
             placeholder: "La miglior comunità di sempre"
       introduction:
         title: "Introduzione"
-        disabled: "<p> Non è stato possibile trovare alcun Argomento con il titolo '%{topic_title}'. </p><ul><li> Se hai cambiato il titolo, modifica quell'Argomento per cambiare il testo introduttivo del tuo sito. </li><li> Se hai eliminato questo Argomento, crea un altro argomento avente '%{topic_title}' come titolo. Il contenuto del primo Messaggio è il testo introduttivo del tuo sito. </li></ul>"
+        disabled: "<p> Non è stato possibile trovare alcun argomento con il titolo '%{topic_title}'. </p><ul><li> Se hai cambiato il titolo, modifica quell'argomento per cambiare il testo introduttivo del tuo sito. </li><li> Se hai eliminato questo argomento, creane un altro avente per titolo '%{topic_title}'. Il contenuto del primo messaggio è il testo introduttivo del tuo sito. </li></ul>"
         fields:
           welcome:
             label: "Argomento di Benvenuto"
@@ -3858,6 +3888,12 @@ it:
     title: "Promemoria sulle vecchie credenziali"
     body: |
       Ciao! Questo è un promemoria di sicurezza annuale di routine dall&#39;istanza di Discourse. A titolo di cortesia, desideriamo informarti che le seguenti credenziali utilizzate nell&#39;istanza di Discourse non sono state aggiornate da più di due anni: %{keys} Al momento non è richiesta alcuna azione, tuttavia è considerata una buona pratica di sicurezza eseguire un aggiornamento di tutte le credenziali importanti ogni pochi anni.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Parte %{count})"
+      other: "%{topic_title} (Parti %{count})"
+    post_raw: "La discussione prosegue da %{parent_url}.\n\nDiscussioni precedenti:\n\n%{previous_topics}"
+    small_action_post_raw: "Continua la discussione su %{new_title}."
   activemodel:
     errors:
       <<: *errors

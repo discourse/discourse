@@ -1311,12 +1311,6 @@ lt:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} ir dar %{count}</span> %{description}"
-        few: "<span>%{username}, %{username2}ir %{count} kiti</span> %{description}"
-        many: "<span>%{username}, %{username2} ir %{count}kitų</span> %{description}"
-        other: "<span>%{username}, %{username2} ir %{count}kitų</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

@@ -1399,7 +1399,7 @@ ru:
           max_redemptions_allowed_label: "Сколько человек могут зарегистрироваться по этой ссылке?"
           expires_at: "Когда истечёт срок действия этой ссылки?"
         bulk_invite:
-          none: "Вы ещё никого не приглашали сюда. Отправьте индивидуальные приглашения или пригласите несколько людей за раз, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>загрузив файл CSV</a>."
+          none: "Приглашения отсутствуют. Вы можете пригласить определенных людей, используя их электронную почту, или создать ссылку для приглашения, которую может использовать кто угодно."
           text: "Массовое приглашение"
           success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершён."
           error: "Извините, но файл должен быть в формате CSV."
@@ -1966,12 +1966,12 @@ ru:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} и %{count} другой</span> %{description}"
-        few: "<span>%{username}, %{username2} и %{count} другие</span> %{description}"
-        many: "<span>%{username}, %{username2} и %{count} других</span> %{description}"
-        other: "<span>%{username}, %{username2} и %{count} других</span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} и %{count} другой пользователь</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователя</span> %{description}"
+        many: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
       liked_consolidated_description:
         one: "Понравилось %{count} ваше сообщение"
         few: "Понравилось %{count} ваших сообщения"
@@ -2350,9 +2350,9 @@ ru:
         title: "Закрыть на время"
       auto_close:
         title: "Автоматическое закрытие темы"
-        label: "Закрыть тему через:"
+        label: "Закрыть тему через указанное количество часов:"
         error: "Пожалуйста, введите корректное значение."
-        based_on_last_post: "Не закрывать, пока не пройдёт столько времени с последнего сообщения в теме."
+        based_on_last_post: "Не закрывать, пока не пройдёт указанное количество часов с момента последнего сообщения в теме."
       auto_delete:
         title: "Автоматическое удаление темы"
       auto_bump:
@@ -2519,7 +2519,7 @@ ru:
       automatically_add_to_groups: "Это приглашение также предоставит доступ к следующим группам:"
       invite_private:
         title: "Пригласить в беседу"
-        email_or_username: "Адрес электронной почты или псевдоним того, кого вы хотите пригласить"
+        email_or_username: "Укажите адрес электронной почты или псевдоним того, кого вы хотите пригласить:"
         email_or_username_placeholder: "Email или псевдоним"
         action: "Пригласить"
         success: "Мы пригласили этого пользователя принять участие в беседе."

@@ -349,7 +349,7 @@ ko:
           title: "신고가 처리된 경우 신고자 에게는 보너스가 주어집니다."
         trust_level_bonus:
           name: "회원 레벨"
-          title: "레원 레벨이 놓은 사용자가 만든 검토 항목의 점수가 높습니다."
+          title: "회원 레벨이 놓은 사용자가 만든 검토 항목의 점수가 높습니다."
         type_bonus:
           name: "유형 보너스"
           title: "특정한 검토 유형에는 관리자가 보너스를 할당하여 우선 순위를 높일 수 있습니다."
@@ -1264,7 +1264,7 @@ ko:
           max_redemptions_allowed_label: "이 링크를 사용하여 등록 할 수있는 사람은 몇 명입니까?"
           expires_at: "이 초대 링크는 언제 만료됩니까?"
         bulk_invite:
-          none: "아직 아무도 초대하지 않았습니다. 개별로 초대장을 보내거나<a href='https://meta.discourse.org/t/send-bulk-invites/16468'> CSV 파일을 업로드</a>하여 한 번에 여러 사람을 초대 할 수 있습니다."
+          none: "이 페이지에 표시 할 초대장이 없습니다. 이메일을 사용하여 특정 사람을 초대하거나 누구나 사용할 수있는 초대 링크를 만들 수 있습니다."
           text: "일괄 초대"
           success: "파일이 성공적으로 업로드되었습니다. 처리가 완료되면 메시지를 통해 알림을 받게됩니다."
           error: "죄송합니다. 파일은 CSV 형식이어야 합니다."
@@ -1774,9 +1774,9 @@ ko:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description} "
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        other: "<span>%{username}, %{username2} 외 %{count} 명의 사용자가</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} 그리고 %{count} 그외 </span> %{description}"
       liked_consolidated_description:
         other: "내 게시물 중 %{count}개를 좋아합니다."
       liked_consolidated: "<span>%{username}</span> %{description} "
@@ -1981,7 +1981,7 @@ ko:
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
         educate:
-          new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 글은 새로운 글로 간주되며 지난 2일 이내에 작성 된 경우 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이것은 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 가능합니다.</p>'
+          new: '<p>새로운 글이 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 글은 새로운 글로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 가 표시됩니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경 하십시오.</p>'
           unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글갯수 <span class="badge new-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>글 만들기</li><li>글에 댓글달기</li><li>글을 4분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포합됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 글이 없습니다."
@@ -2052,7 +2052,7 @@ ko:
       read_more_in_category: "더 읽을거리가 필요하신가요? %{catLink} 또는 %{latestLink}를 살펴보세요."
       read_more: "%{catLink} 또는 %{latestLink}에서 더 많은 글을 찾으실 수 있습니다."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
-      read_more_MF: "읽지 않은 글 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 개</a> }other {  <a href='{basePath}/unread'># 개</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{와 } false {를 } other{}} 새 글 <a href='{basePath}/new'>1 개</a> } other { {BOTH, select, true{와 } false {를 } other{}} 새 글 <a href='{basePath}/new'># 개</a> } } 를 확인해보세요, {CATEGORY, select, true {{catLink} 카테고리의 다른 글들도 살펴보세요.} false {{latestLink}} other {}}"
+      read_more_MF: "아직 { UNREAD, plural, =0 {} one {<a href='{basePath}/unread'>1개의 읽지않은 글</a> } other {<a href='{basePath}/unread'>#개의 읽지않은 글</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{과 } false {이 } other{}} <a href='{basePath}/new'>1개의 새로운</a> 글} other { {BOTH, select, true{과 } false {이 } other{}} <a href='{basePath}/new'>#개의 새로운</a> 글} }이 있습니다. 아니면 {CATEGORY, select, true {{catLink} 카테고리의 다른 글도 살펴보세요.} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
@@ -3000,7 +3000,7 @@ ko:
         community:
           name: 커뮤니티
         trust_level:
-          name: 신뢰 레벨
+          name: 회원 레벨
         other:
           name: 기타
         posting:
@@ -3026,7 +3026,7 @@ ko:
       add_synonyms_label: "동의어 추가 :"
       add_synonyms: "추가"
       add_synonyms_explanation:
-        other: "현재 이 태그를 사용하는 모든 게시물이 <b>%{tag_name}</b>대신 변경됩니다. 정말로 변경 하시겠습니까?"
+        other: "현재 이 태그를 사용하는 모든 게시물의 태그가 <b>%{tag_name}</b>으로 변경됩니다. 정말로 변경 하시겠습니까?"
       add_synonyms_failed: "다음 태그를 동의어로 추가 할 수 없습니다 : <b>%{tag_names}</b> . 동의어가없고 다른 태그의 동의어가 아닌지 확인하십시오."
       remove_synonym: "동의어 제거"
       delete_synonym_confirm: '동의어 &quot;%{tag_name}&quot;를 삭제 하시겠습니까?'
@@ -3839,7 +3839,7 @@ ko:
         actions:
           delete_user: "사용자 삭제됨"
           suspend_user: "일시 중지 된 사용자"
-          silence_user: "사용자 침묵"
+          silence_user: "쓰기 금지"
           delete_post: "게시물 삭제"
           delete_topic: "주제가 삭제되었습니다."
           post_approved: "게시물 승인"
@@ -3901,10 +3901,10 @@ ko:
             change_category_settings: "카테고리 설정 변경"
             delete_category: "카테고리 지우기"
             create_category: "카테고리 만들기"
-            silence_user: "침묵 사용자"
-            unsilence_user: "침묵하는 사용자"
-            removed_silence_user: "사용자 침묵 (제거)"
-            removed_unsilence_user: "침묵 사용자 (제거)"
+            silence_user: "쓰기 금지 사용자"
+            unsilence_user: "쓰기 금지 사용자"
+            removed_silence_user: "사용자 쓰기 금지 (제거됨)"
+            removed_unsilence_user: "쓰기 금지 해제 사용자 (제거됨)"
             grant_admin: "관리자권한 부여"
             revoke_admin: "관리자권한 회수"
             grant_moderation: "운영자권한 부여"
@@ -4067,7 +4067,7 @@ ko:
           active: "활성화 사용자"
           staff: "스태프"
           suspended: "접근 금지 사용자"
-          silenced: "침묵"
+          silenced: "쓰기 금지"
           staged: "격리됨"
         approved: "승인?"
         titles:
@@ -4103,9 +4103,9 @@ ko:
         silence_reason: "사유"
         silenced_by: "사일런트"
         silence_modal_title: "무음 사용자"
-        silence_duration: "사용자는 얼마나 오래 침묵합니까?"
-        silence_reason_label: "왜이 사용자를 침묵시키고 있습니까?"
-        silence_reason_placeholder: "침묵 이유"
+        silence_duration: "사용자를 얼마나 오랫동안 쓰기 금지를 하시겠습니까?"
+        silence_reason_label: "이 사용자가 쓰기 금지된 이유는 무엇입니까?"
+        silence_reason_placeholder: "글쓰기 금지된 이유"
         silence_message: "이메일 메시지"
         silence_message_placeholder: "(기본 메시지를 보내려면 비워 두십시오)"
         suspended_until: "(%{until} 까지)"
@@ -4123,9 +4123,9 @@ ko:
           title: "명확한 페널티 기록"
           description: "위약금이있는 사용자는 TL3에 도달 할 수 없습니다"
         delete_all_posts_confirm_MF: " {POSTS, plural, one {1개의 포스트} other {#개의 포스트}} 와 {TOPICS, plural, one {1개의 토픽} other {#개의 토픽}}을 삭제하려고 합니다. 정말로 삭제할까요?"
-        silence: "침묵"
-        unsilence: "침묵"
-        silenced: "침묵?"
+        silence: "쓰기 금지"
+        unsilence: "쓰기 금지 해제"
+        silenced: "쓰기 금지?"
         moderator: "운영자?"
         admin: "관리자?"
         suspended: "접근 금지?"
@@ -4216,10 +4216,10 @@ ko:
         activate_failed: "사용자 활성화에 문제가 있습니다."
         deactivate_account: "계정 비활성화"
         deactivate_failed: "사용자 비활성에 문제가 있습니다."
-        unsilence_failed: "사용자의 침묵을 해제하는 중에 문제가 발생했습니다."
-        silence_failed: "사용자를 침묵시키는 데 문제가있었습니다."
-        silence_confirm: "이 사용자를 침묵 하시겠습니까? 새로운 주제 나 게시물을 만들 수 없습니다."
-        silence_accept: "예,이 사용자를 침묵시킵니다"
+        unsilence_failed: "사용자의 쓰기 금지를 해제하는 중에 문제가 발생했습니다."
+        silence_failed: "사용자를 쓰기 금지 설정하는중 문제가 발생했습니다."
+        silence_confirm: "이 사용자를 쓰기 금지 시키시겠습니까? 새 글이나 댓글을 작성할 수 없습니다."
+        silence_accept: "예, 이 사용자를 쓰기 금지 시킵니다."
         bounce_score: "반송 스코어"
         reset_bounce_score:
           label: "리셋"
@@ -4228,7 +4228,7 @@ ko:
         deactivate_explanation: "비활성화 사용자는 이메일 인증을 다시 받아야합니다."
         suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
         silence_explanation: "미활동 사용자는 글을 게시하거나 시작할 수 없습니다."
-        staged_explanation: "격리조치된 회원은 특정 토픽에 한해서 이메일로만 글을 쓸 수 있습니다."
+        staged_explanation: "격리조치된 회원은 특정 글에 한해서 이메일로만 글을 쓸 수 있습니다."
         bounce_score_explanation:
           none: "최근 해당 이메일로부터 반송메일을 받은 내역이 없습니다."
           some: "최근 해당 이메일로부터 몇몇 반송메일을 받았습니다."
@@ -4262,7 +4262,7 @@ ko:
           likes_received_days: "한번이라도 '좋아요' 받아본 날짜횟수"
           likes_received_users: "한번이라도 '좋아요' 선물해준 회원수"
           suspended: "일시 중지됨 (지난 6 개월)"
-          silenced: "침묵 (지난 6 개월)"
+          silenced: "쓰기 금지 (지난 6개월)"
           qualifies: "3등급회원 자격을 만족합니다"
           does_not_qualify: "3등급회원 자격을 만족하지 않습니다"
           will_be_promoted: "곧 승급 됩니다."

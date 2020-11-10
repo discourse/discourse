@@ -1196,7 +1196,6 @@ fa_IR:
         invite_link:
           success: "لینک دعوت با موفقیت ایجاد شد!"
         bulk_invite:
-          none: "هنوز کسی را دعوت نکرده‌اید. افراد را یکی یکی یا یک جا با <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>فایل CSV</a> دعوت کنید."
           success: "فایل با موفقیت بارگذاری شد٬ وقتی که پروسه تمام شد به شما را از طریق پیام اطلاع می دهیم. "
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
           confirmation_message: "میخواهید به همه ی افراد فایل اپلود شده دعوتنامه بفرستید"
@@ -1662,10 +1661,6 @@ fa_IR:
       posted: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
-      liked_2: "<span>%{username}،%{username2}</span>%{description}"
-      liked_many:
-        one: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
-        other: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
       liked_consolidated_description:
         one: "%{count}نوشته ی شما را پسندید"
         other: "%{count}نوشته ی شما را پسندید"

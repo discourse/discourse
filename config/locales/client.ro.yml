@@ -1122,7 +1122,6 @@ ro:
         invite_link:
           success: "Link de invitare generat cu succes!"
         bulk_invite:
-          none: "Încă nu ai invitat pe nimeni. Trimite invitații indivituale sau invită mai multe persoane odată <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploadând un fișier CSV</a>."
           success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
           error: "Scuze, fișierul trebuie să fie în format CSV."
       password:
@@ -1512,11 +1511,6 @@ ro:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} și încă o persoană</span> %{description}"
-        few: "<span>%{username}, %{username2} și încă o persoană</span> %{description}"
-        other: "<span>%{username}, %{username2} și alți %{count}</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"

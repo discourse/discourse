@@ -1309,7 +1309,7 @@ sv:
           max_redemptions_allowed_label: "Hur många personer är tillåtna att registrera sig via denna länk?"
           expires_at: "När ska denna inbjudningslänk upphöra?"
         bulk_invite:
-          none: "Du har inte bjudit in någon ännu. Skicka individuella inbjudningar eller bjud in många personer på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en CSV-fil</a>."
+          none: "Inga inbjudningar att visa på denna sida. Du kan bjuda in specifika personer med hjälp av deras e-post eller skapa en inbjudningslänk som kan användas av vem som helst."
           text: "Massinbjudan"
           success: "Filen laddades upp och du underrättas via meddelande när processen är klar"
           error: "Tyvärr bör filen vara i CSV-format."
@@ -1838,10 +1838,10 @@ sv:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username},%{username2}</span>%{description}"
+      liked_2: "<span class='double-user'>%{username},%{username2}</span>%{description}"
       liked_many:
-        one: "<span>%{username},%{username2} och %{count} annan</span> %{description}"
-        other: "<span>%{username},%{username2} och %{count} andra</span> %{description}"
+        one: "<span class='multi-user'>%{username},%{username2} och %{count} annan</span> %{description}"
+        other: "<span class='multi-user'>%{username},%{username2} och %{count} andra</span> %{description}"
       liked_consolidated_description:
         one: "gillade %{count} av dina inlägg"
         other: "gillade %{count} av dina inlägg"

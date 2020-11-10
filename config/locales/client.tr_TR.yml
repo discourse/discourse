@@ -1125,7 +1125,6 @@ tr_TR:
         invite_link:
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         bulk_invite:
-          none: "Henüz hiç kimseyi davet etmedin. Kişsel davet gönderebilir ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yüklerek</a> birden fazla kişiyi davet edebilirsin. "
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bilgilendirileceksin."
           error: "Üzgünüz, dosya CSV formatında olmalı. "
           confirmation_message: "Yüklenen dosyadaki herkese davetleri e-posta ile göndermek üzeresiniz."
@@ -1602,10 +1601,6 @@ tr_TR:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
-        other: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
       liked_consolidated_description:
         one: "gönderilerinizden %{count} tanesi beğenildi"
         other: "gönderilerinizden %{count} tanesi beğenildi"

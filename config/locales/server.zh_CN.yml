@@ -176,6 +176,7 @@ zh_CN:
       default_tags_already_selected: "你不能选择一个已经被使用在其它列表中的标签。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
       enable_s3_uploads_is_required: "除非已启用上传到 S3，否则你无法存储到S3。"
+      page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
       s3_bucket_reused: "你不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
@@ -215,7 +216,11 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此主题：%{group_names}。"
     user_exists: "抱歉，用户已经被邀请过了。你只可以邀请一个用户到一个主题中一次。"
-    not_allowed: "对不起，该用户无法被邀请。"
+    muted_invitee: "抱歉，该用户忽略了你。"
+    muted_topic: "抱歉，该用户忽略了该主题。"
+    receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
+    sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
+    receiver_does_not_allow_other_user_pm: "抱歉，该用户不允许现有的参与者向他们发送私人消息。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 存档文件。"
@@ -1413,9 +1418,10 @@ zh_CN:
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
-    ga_universal_tracking_code: "Google Universal Analytics(analytics.js) 跟踪代码ID，例如：UA-12345678-9; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics(analytics.js) 域名，例如：mysite.com;参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "启用 Google Universal Analytics(analytics.js) 跨域跟踪。指向这些域的传出链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨域跟踪指南。</a>"
+    ga_version: "要使用的 Google Universal Analytics 版本：v3(analytics.js)，v4(gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics 域名，例如: mysite.com; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "启用 Google Universal Analytics 跨域跟踪。指向这些域的传出链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨域跟踪指南。</a>"
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "允许版主管理分类和群组"
@@ -1553,7 +1559,7 @@ zh_CN:
     max_bookmarks_per_day: "每用户每天能收藏的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
-    max_personal_messages_per_day: "用户每天可以创建的最大消息数。"
+    max_personal_messages_per_day: "用户每天可以创建的新个人消息主题的最大数量。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登录次数。"
@@ -2186,6 +2192,8 @@ zh_CN:
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
       inactive_user: "非活跃用户"
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
+    already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
+    already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
   reviewables_reminder:
     submitted:
       other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"
@@ -4355,8 +4363,8 @@ zh_CN:
   create_linked_topic:
     topic_title_with_sequence:
       other: "%{topic_title} (第 %{count} 部分)"
-    post_raw: "从 %{parent_title} 继续讨论。\n\n以前的讨论：\n\n%{previous_topics}"
-    moderator_post_raw: "在这里继续讨论： %{new_title}"
+    post_raw: "延续 %{parent_url} 的讨论。\n\n之前的讨论：\n\n%{previous_topics}"
+    small_action_post_raw: "在 %{new_title} 继续讨论。"
   activemodel:
     errors:
       <<: *errors

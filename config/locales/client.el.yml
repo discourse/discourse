@@ -1275,7 +1275,6 @@ el:
           max_redemptions_allowed_label: "Πόσα άτομα επιτρέπεται να εγγραφούν χρησιμοποιώντας αυτόν τον σύνδεσμο;"
           expires_at: "Πότε θα λήξει αυτός ο σύνδεσμος πρόσκλησης;"
         bulk_invite:
-          none: "Δεν έχετε προσκαλέσει κανέναν ακόμα. Στείλτε ατομικές προσκλήσεις ή καλέστε πολλά άτομα με τη μία <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> μεταφορτώνοντας ένα αρχείο CSV</a>."
           text: "Μαζική πρόσκληση"
           success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
@@ -1764,10 +1763,6 @@ el:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
-        other: "<span>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
       liked_consolidated_description:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"

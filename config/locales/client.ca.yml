@@ -1179,7 +1179,6 @@ ca:
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         bulk_invite:
-          none: "Encara no heu convidat ningú aquí. Envieu invitacions individuals o convideu molta gent d'un sol cop <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviant un fitxer CSV</a>."
           success: "Fitxer carregat amb èxit. Us notificarem amb un missatge quan s'hagi completat el procés."
           error: "El fitxer hauria de tenir format CSV."
           confirmation_message: "Esteu a punt d'enviar invitacions a tothom en el fitxer pujat. "
@@ -1657,10 +1656,6 @@ ca:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} i %{count} altre</span> %{description}"
-        other: "<span>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"

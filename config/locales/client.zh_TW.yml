@@ -28,7 +28,7 @@ zh_TW:
       timeline_date: "YYYY年 M月"
       long_no_year_no_time: "M月 D日"
       full_no_year_no_time: "M月 D日"
-      long_with_year: "YYYY年 M月 D日 h:mm a"
+      long_with_year: "YYYY年M月D日 h:mm a"
       long_with_year_no_time: "YYYY年 M月 D日"
       full_with_year_no_time: "YYYY年 M月 D日"
       long_date_with_year: "YYYY年 M月 D日 LT"
@@ -226,11 +226,16 @@ zh_TW:
       help:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
         unbookmark: "點擊以移除此話題所有書籤"
+        unbookmark_with_reminder: "按一下以移除本主題中的所有書籤和提醒事項。此主題的提醒設定為 %{reminder_at} 。"
     bookmarks:
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
+      confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
+      no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
+      auto_delete_preference:
+        on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
         later_today: "今日稍晚"
@@ -238,7 +243,12 @@ zh_TW:
         next_week: "下週"
         post_local_date: "張貼日期"
         later_this_week: "本週稍晚"
+        start_of_next_business_week: "星期一"
+        start_of_next_business_week_alt: "下個星期一"
         next_month: "下個月"
+        custom: "自定義日期和時間"
+        none: "無需提醒"
+        existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     drafts:
       resume: "恢復"
       remove: "移除"
@@ -1005,7 +1015,6 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         bulk_invite:
-          none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳大量邀請檔</a>一次邀請一群人。"
           success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
           error: "上傳的檔案必須是 csv 格式。"
           confirmation_message: "您即將寄email邀請給上傳文件中的所有人。"
@@ -1438,9 +1447,6 @@ zh_TW:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2094,8 +2100,13 @@ zh_TW:
             title: "顯示電子郵件HTML格式"
             button: "HTML"
       bookmarks:
+        edit: "編輯書籤"
         created: "已建立"
         name: "名稱"
+        actions:
+          edit_bookmark:
+            name: "編輯書籤"
+            description: "編輯書籤名稱或更改提醒日期和時間"
     category:
       can: "可以&hellip; "
       none: "( 無分類 )"

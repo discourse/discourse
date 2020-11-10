@@ -833,7 +833,6 @@ lv:
         invite_link:
           success: "Ielūguma saite gatava!"
         bulk_invite:
-          none: "Jūs vēl šeit neesat nevienu ielūdzis. Nosūtiet atsevišķus ielūgumus vai ielūdziet daudzus lietotājus vienlaicīgi,<a href='https://meta.discourse.org/t/send-bulk-invites/16468'> augšupielādējot CSV failu</a>"
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:

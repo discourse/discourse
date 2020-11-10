@@ -25,6 +25,7 @@ id:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
@@ -95,6 +96,10 @@ id:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "tutup"
+      twitter: "Bagikan di Twitter"
+      facebook: "Bagikan di Facebook"
+      email: "Kirim lewat email"
+      url: "Salin dan bagikan URL"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"

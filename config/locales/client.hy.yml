@@ -1133,7 +1133,6 @@ hy:
         invite_link:
           success: "Հրավերի հղումը հաջողությամբ գեներացված է!"
         bulk_invite:
-          none: "Դուք դեռևս ոչ ոքի չեք հրավիրել այստեղ: Ուղարկեք անհատական հրավերներ կամ հրավիրեք բազմաթիվ մարդկանց միանգամից՝ <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>վերբեռնելով CSV ֆայլ</a>:"
           success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
           error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
           confirmation_message: "Դուք պատրաստվում եք էլ. նամակով հրավերներ ուղարկել վերբեռնված ֆայլում բոլոր նշվածներին:"
@@ -1610,10 +1609,6 @@ hy:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"

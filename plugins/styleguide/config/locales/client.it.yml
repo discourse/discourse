@@ -70,7 +70,7 @@ it:
         topic_map:
           title: "Mappa Argomento"
         suggested_topics:
-          title: "Argomenti Suggeriti"
+          title: "Argomenti suggeriti"
         post_menu:
           title: "Menu Messaggio"
         modal:

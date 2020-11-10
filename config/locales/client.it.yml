@@ -56,8 +56,8 @@ it:
           one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "%{count}o"
-          other: "%{count}o"
+          one: "%{count}ora"
+          other: "%{count}ore"
         x_days:
           one: "%{count}g"
           other: "%{count}g"
@@ -200,7 +200,7 @@ it:
     log_in: "Connetti"
     age: "Età"
     joined: "Iscritto"
-    admin_title: "Amministratore"
+    admin_title: "Amministrazione"
     show_more: "mostra altro"
     show_help: "opzioni"
     links: "Collegamenti"
@@ -717,7 +717,7 @@ it:
         everyone: "Chiunque"
       notifications:
         watching:
-          title: "In osservazione"
+          title: "Osservate"
           description: "Verrai avvertito per ogni nuovo invio in qualsiasi messaggio, e verrà mostrato il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osservando Primo Messaggio"
@@ -726,7 +726,7 @@ it:
           title: "Seguendo"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
         regular:
-          title: "Esperto"
+          title: "Normale"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
@@ -1296,6 +1296,9 @@ it:
         link_groups: Gruppi
         link_expires_at: Scadenza
         create: "Invia Invito"
+        copy_link: "Mostra collegamento"
+        generate_link: "Crea link di invito"
+        link_generated: "Ecco il tuo link di invito!"
         valid_for: "Questo collegamento di invito è valido solamente per il seguente indirizzo email: %{email}"
         single_user: "Invita via email"
         multiple_user: "Invita tramite link"
@@ -1306,7 +1309,7 @@ it:
           max_redemptions_allowed_label: "Quante persone sono autorizzate a registrarsi utilizzando questo link?"
           expires_at: "Quando scadrà questo link di invito?"
         bulk_invite:
-          none: "Non hai ancora invitato nessuno. Puoi inviare degli inviti individuali o più persone alla volta <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CSV</a>."
+          none: "Nessun invito da mostrare. Puoi invitare persone specifiche per e-mail o creare un link di invito che può essere usato da chiunque."
           text: "Inviti di gruppo"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
@@ -1422,7 +1425,7 @@ it:
     too_few_topics_and_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono <strong>#</strong> argomenti}} e {currentPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}} and {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
     too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
     too_few_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}.  I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
     logs_error_rate_notice:
@@ -1835,10 +1838,7 @@ it:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} e %{count} altri</span> %{description}"
-        other: "<span>%{username}, %{username2} e %{count} altri</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_consolidated_description:
         one: "ha messo \"mi piace\" ad %{count} tuo messaggio"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
@@ -2018,7 +2018,7 @@ it:
         dismiss_button: "Nascondi..."
         dismiss_tooltip: "Nascondi solo i nuovi messaggi o smetti di seguire gli argomenti"
         also_dismiss_topics: "Smetti di seguire questi argomenti così che non compariranno più come non letti per me"
-        dismiss_new: "Nascondi i Nuovi"
+        dismiss_new: "Ignora i nuovi messaggi"
         toggle: "commuta la selezione multipla degli argomenti"
         actions: "Azioni Multiple"
         change_category: "Imposta categoria"
@@ -3450,7 +3450,12 @@ it:
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica su uno esistente.
+              read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
+              wordpress: Necessario al funzionamento del plugin wp-discourse di WordPress.
             users:
+              bookmarks: Elenca i segnalibri utente. Restituisce i segnalibri quando si utilizza il formato ICS.
+              sync_sso: Sincronizza un utente usando SSO.
+              show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
       web_hooks:
         title: "Webhook"
@@ -3793,6 +3798,17 @@ it:
           color_definitions:
             text: "Definizioni dei colori"
             title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
+            placeholder: |2-
+
+              Usa questo foglio di stile per aggiungere colori personalizzati all'elenco delle proprietà personalizzate CSS.
+
+              Esempio:
+
+              :root {
+              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
+              }
+
+              E' fortemente raccomandato premettere i nomi delle proprietà per evitare conflitti con i plugin e/o il nucleo.
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "
@@ -3820,6 +3836,10 @@ it:
           primary:
             name: "primario"
             description: "Per la maggior parte del testo, icone e bordi."
+          primary-medium:
+            name: "primary-medium"
+          primary-low-mid:
+            name: "primary-low-mid"
           secondary:
             name: "secondario"
             description: "Il colore di sfondo principale e il colore del testo di alcuni pulsanti"
@@ -3838,6 +3858,12 @@ it:
           highlight:
             name: "evidenzia"
             description: "Il colore di sfondo degli elementi evidenziati nella pagina, come messaggi e argomenti."
+          highlight-high:
+            name: "highlight-high"
+          highlight-medium:
+            name: "highlight-medium"
+          highlight-low:
+            name: "highlight-low"
           danger:
             name: "pericolo"
             description: "Colore per evidenzare azioni come la cancellazione di messaggi e argomenti."
@@ -4058,7 +4084,7 @@ it:
             update_email: "aggiorna email"
             destroy_email: "distruggi email"
             topic_closed: "argomento chiuso"
-            topic_opened: "topic aperto"
+            topic_opened: "argomento aperto"
             topic_archived: "argomento archiviato"
             topic_unarchived: "argomento de-archiviato"
             post_staff_note_create: "aggiungi note dello staff"
@@ -4076,6 +4102,7 @@ it:
           domain: "Dominio"
         screened_ips:
           title: "IP scansionati"
+          description: 'Indirizzi IP in osservazione. Usa "Permetti" per aggiungerli alla lista di indirizzi consentiti.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
           roll_up_confirm: "Sicuro di voler raggruppare in sottoreti gli indirizzi IP schermati normalmente?"
           rolled_up_some_subnets: " L'elenco di indirizzi IP interdetti sono stati sintetizzati correttamente: %{subnets}."
@@ -4380,6 +4407,7 @@ it:
           external_avatar_url: "URL dell'Immagine Profilo"
           last_payload: "Ultimo payload"
           delete_sso_record: "Elimina record SSO"
+          confirm_delete: "Vuoi davvero eliminare questo registro di autenticazione unica (SSO)?"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."
@@ -4594,6 +4622,9 @@ it:
         embed_title_scrubber: "Espressione regolare usata per ripulire i titoli dei messaggi"
         embed_truncate: "Tronca i messaggi incorporati"
         embed_unlisted: "Gli argomenti importati non saranno visibili fino a quando non ci sarà una risposta."
+        allowed_embed_selectors: "Selettore CSS per gli elementi ammessi negli inserimenti"
+        blocked_embed_selectors: "Selettore CSS per elementi rimossi dagli inserimenti"
+        allowed_embed_classnames: "Nomi di classe CSS consentiti"
         save: "Salva Impostazioni Inclusione"
       permalink:
         title: "Collegamenti permanenti"

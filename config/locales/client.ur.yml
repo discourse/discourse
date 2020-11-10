@@ -1093,7 +1093,6 @@ ur:
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"
         bulk_invite:
-          none: "آپ نے یہاں ابھی تک کسی کو بھی مدعو نہیں کیا۔ انفرادی طار پر دعوت نامے ارسال کریں، یا <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ایک CSV فائل اَپ لوڈ کرکے</a> ایک وقت میں ہی بہت سے لوگوں کو دعوت دیں۔"
           success: "فائل کامیابی سے اَپ لوڈ کر دی گئی، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
           error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
           confirmation_message: "آپ اَپ لوڈ شدہ فائل میں موجود سبھی کو دعوت نامے ایمیل کرنے لگے ہیں۔"
@@ -1553,10 +1552,6 @@ ur:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username2}، %{username} اور %{count} مزید</span> %{description}"
-        other: "<span>%{username2}، %{username} اور %{count} مزید</span> %{description}"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
