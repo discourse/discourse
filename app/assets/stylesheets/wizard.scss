@@ -2,12 +2,12 @@
 @import "color_definitions";
 @import "vendor/normalize";
 @import "vendor/normalize-ext";
-@import "vendor/sweetalert";
 @import "common/foundation/colors";
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 @import "common/select-kit/*";
 @import "common/components/svg";
+@import "common/base/modal";
 
 $bubbles-mask: svg-uri(
   '<svg xmlns="http://www.w3.org/2000/svg" width="415.2" height="414" viewBox="0 0 415.2 414">
@@ -1011,6 +1011,9 @@ body.wizard {
     margin-right: 1em;
     text-decoration: none;
     color: var(--tertiary);
+    &:hover {
+      color: var(--tertiary-hover);
+    }
   }
 
   .wizard-btn {
@@ -1301,8 +1304,36 @@ body.wizard {
   }
 }
 
+.modal-footer {
+  a.btn {
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--primary-low);
+    color: var(--primary);
+    &:hover {
+      background: var(--primary-medium);
+      color: var(--secondary);
+    }
+
+    &.btn-primary {
+      background: var(--tertiary);
+      color: var(--secondary);
+      &:hover {
+        background-color: var(--tertiary-hover);
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 569px) {
+  @import "desktop/modal";
+}
+
 /* fix wizard for mobile -- iPhone 5 default width */
 @media only screen and (max-device-width: 568px) {
+  @import "mobile/modal";
+
   h1 {
     font-size: $font-up-2 !important;
   }
