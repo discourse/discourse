@@ -449,9 +449,16 @@ module PrettyText
         img['src']
       end
 
-      width = img.classes.include?('site-icon') ? 16 : img['width']
-      height = img.classes.include?('site-icon') ? 16 : img['height']
-      oneboxed = (img.parent&.parent&.classes || []).include?('onebox-body')
+      width = img['width']
+      height = img['height']
+      oneboxed = img.ancestors.css(".onebox-body").any? || img.classes.include?("onebox-avatar")
+
+      # we always want this to be tiny and without any special styles
+      if img.classes.include?('site-icon')
+        oneboxed = false
+        width = 16
+        height = 16
+      end
 
       if Upload.secure_media_url?(url)
         img.add_next_sibling secure_media_placeholder(doc, url, oneboxed: oneboxed, width: width, height: height)
