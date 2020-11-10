@@ -7,8 +7,9 @@ module Jobs
       reference_post = Post.find_by(id: args[:post_id])
       return unless reference_post.present?
       parent_topic = reference_post.topic
-      return unless parent_topic.present?
+      return unless parent_topic.present? && parent_topic.regular?
       parent_topic_id = parent_topic.id
+      parent_category_id = parent_topic.category_id
       parent_title = parent_topic.title
       @post_creator = nil
 
@@ -47,6 +48,7 @@ module Jobs
           system_user,
           title: new_topic_title,
           raw: new_topic_raw,
+          category: parent_category_id,
           skip_validations: true,
           skip_jobs: true)
         new_post = @post_creator.create
