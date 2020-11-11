@@ -1,5 +1,4 @@
 import { test } from "qunit";
-import EmberObject from "@ember/object";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
