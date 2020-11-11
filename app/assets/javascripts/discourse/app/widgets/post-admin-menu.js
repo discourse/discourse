@@ -59,7 +59,9 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         ? "post.controls.change_post_notice"
         : "post.controls.add_post_notice",
       action: "changeNotice",
-      className: "popup-menu-button change-notice",
+      className: attrs.notice
+        ? "popup-menu-button change-notice"
+        : "popup-menu-button add-notice",
     });
   }
 
