@@ -65,11 +65,11 @@ module ImportScripts::PhpBB3
     end
 
     def process_post(raw, attachments)
-      process_raw_text(raw, attachments)
+      process_raw_text(raw, attachments) rescue raw
     end
 
     def process_private_msg(raw, attachments)
-      process_raw_text(raw, attachments)
+      process_raw_text(raw, attachments) rescue raw
     end
 
     protected

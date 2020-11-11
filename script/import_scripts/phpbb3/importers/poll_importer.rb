@@ -49,7 +49,7 @@ module ImportScripts::PhpBB3
     end
 
     def get_option_text(row)
-      text = @text_processor.process_raw_text(row[:poll_option_text])
+      text = @text_processor.process_raw_text(row[:poll_option_text]) rescue row[:poll_option_text]
       text.squish!
       text.gsub!(/^(\d+)\./, '\1\.')
       text
@@ -57,7 +57,7 @@ module ImportScripts::PhpBB3
 
     # @param poll_data [ImportScripts::PhpBB3::PollData]
     def get_poll_text(poll_data)
-      title = @text_processor.process_raw_text(poll_data.title)
+      title = @text_processor.process_raw_text(poll_data.title) rescue poll_data.title
       text = +"#{title}\n\n"
 
       arguments = ["results=always"]

@@ -51,7 +51,7 @@ module ImportScripts::PhpBB3
       end
 
       if row[:forum_desc].present?
-        changes = { raw: @text_processor.process_raw_text(row[:forum_desc]) }
+        changes = { raw: (@text_processor.process_raw_text(row[:forum_desc]) rescue row[:forum_desc]) }
         opts = { revised_at: post.created_at, bypass_bump: true }
         post.revise(Discourse.system_user, changes, opts)
       end
