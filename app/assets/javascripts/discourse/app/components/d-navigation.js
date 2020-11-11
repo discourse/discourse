@@ -4,11 +4,14 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import bootbox from "bootbox";
+import { readOnly } from "@ember/object/computed";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
 
   tagName: "",
+
+  categories: readOnly("site.categoriesList"),
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
@@ -51,11 +54,6 @@ export default Component.extend(FilterModeMixin, {
     } else {
       return "btn-default";
     }
-  },
-
-  @discourseComputed()
-  categories() {
-    return this.site.get("categoriesList");
   },
 
   @discourseComputed("hasDraft")
