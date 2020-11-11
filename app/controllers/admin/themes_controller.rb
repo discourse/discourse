@@ -6,6 +6,8 @@ class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: [:show, :preview, :export]
 
+  UPLOAD_TYPE_ID = 2
+
   def preview
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
@@ -361,9 +363,9 @@ class Admin::ThemesController < Admin::AdminController
     return unless fields = theme_params[:theme_fields]
 
     ban_in_allowlist_mode!
-    ban_for_remote_theme!
 
     fields.each do |field|
+      next if @theme.remote_theme && field[:type_id] != UPLOAD_TYPE_ID
       @theme.set_field(
         target: field[:target],
         name: field[:name],
