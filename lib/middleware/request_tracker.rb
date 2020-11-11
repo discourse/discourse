@@ -167,7 +167,7 @@ class Middleware::RequestTracker
     request = Rack::Request.new(env)
 
     if rate_limit(request)
-      result = [429, {}, ["Slow down, too Many Requests from this IP Address"]]
+      result = [429, {}, ["Slow down, too many requests from this IP address"]]
       return result
     end
 
