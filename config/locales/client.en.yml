@@ -1405,7 +1405,7 @@ en:
           max_redemptions_allowed_label: "How many people are allowed to register using this link?"
           expires_at: "When will this invite link expire?"
         bulk_invite:
-          none: "No invitations to display on this page. You can invite specific people using their email, or create an invite link that can be used by anybody."
+          none: "No invitations to display on this page."
           text: "Bulk Invite"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
