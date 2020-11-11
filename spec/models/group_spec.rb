@@ -853,21 +853,22 @@ describe Group do
     end
 
     it 'triggers a user_added_to_group event' do
-      begin
-        automatic = nil
-        called = false
+      automatic = nil
+      called = false
 
-        DiscourseEvent.on(:user_added_to_group) do |_u, _g, options|
-          automatic = options[:automatic]
-          called = true
-        end
+      block = Proc.new do |_u, _g, options|
+        automatic = options[:automatic]
+        called = true
+      end
+      begin
+        DiscourseEvent.on(:user_added_to_group, &block)
 
         group.add(user)
 
         expect(automatic).to eql(false)
         expect(called).to eq(true)
       ensure
-        DiscourseEvent.off(:user_added_to_group)
+        DiscourseEvent.off(:user_added_to_group, &block)
       end
     end
 
