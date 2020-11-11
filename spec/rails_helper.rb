@@ -266,6 +266,13 @@ RSpec.configure do |config|
 
   config.before :each, &TestSetup.method(:test_setup)
 
+  config.around :each do |example|
+    before_event_count = DiscourseEvent.events.values.sum(&:count)
+    example.run
+    after_event_count = DiscourseEvent.events.values.sum(&:count)
+    expect(before_event_count).to eq(after_event_count), "DiscourseEvent registrations were not cleaned up"
+  end
+
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation
 

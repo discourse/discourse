@@ -2344,14 +2344,18 @@ describe Topic do
     user.admin = true
     @topic_status_event_triggered = false
 
-    DiscourseEvent.on(:topic_status_updated) do
+    blk = Proc.new do
       @topic_status_event_triggered = true
     end
+
+    DiscourseEvent.on(:topic_status_updated, &blk)
 
     topic.update_status('closed', true, user)
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &blk)
   end
 
   it 'allows users to normalize counts' do

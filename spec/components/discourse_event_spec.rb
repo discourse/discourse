@@ -31,10 +31,16 @@ describe DiscourseEvent do
       )
     }
 
+    let(:event_handler) do
+      Proc.new { |user| user.name = 'Two Face' }
+    end
+
     before do
-      DiscourseEvent.on(:acid_face) do |user|
-        user.name = 'Two Face'
-      end
+      DiscourseEvent.on(:acid_face, &event_handler)
+    end
+
+    after do
+      DiscourseEvent.off(:acid_face, &event_handler)
     end
 
     context 'when event does not exist' do
@@ -60,12 +66,17 @@ describe DiscourseEvent do
 
     context 'when multiple events exist' do
 
-      before do
-        DiscourseEvent.on(:acid_face) do |user|
-          user.job = 'Supervillian'
-        end
+      let(:event_handler_2) do
+        Proc.new { |user| user.job = 'Supervillian' }
+      end
 
+      before do
+        DiscourseEvent.on(:acid_face, &event_handler_2)
         DiscourseEvent.trigger(:acid_face, harvey)
+      end
+
+      after do
+        DiscourseEvent.off(:acid_face, &event_handler_2)
       end
 
       it 'triggers both events' do
