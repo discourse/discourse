@@ -241,11 +241,10 @@ export default Controller.extend(ModalFunctionality, {
 
     changeCategory() {
       const categoryId = parseInt(this.newCategoryId, 10) || 0;
-      const category = Category.findById(categoryId);
 
       this.perform({ type: "change_category", category_id: categoryId }).then(
         (topics) => {
-          topics.forEach((t) => t.set("category", category));
+          topics.forEach((t) => t.set("category_id", categoryId));
           (this.refreshClosure || identity)();
           this.send("closeModal");
         }
