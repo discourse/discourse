@@ -4,14 +4,18 @@ import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import bootbox from "bootbox";
-import { readOnly } from "@ember/object/computed";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
 
   tagName: "",
 
-  categories: readOnly("site.categoriesList"),
+  // Should be a `readOnly` instead but some themes/plugins still pass
+  // the `categories` property into this component
+  @discourseComputed("site.categoriesList")
+  categories(categoriesList) {
+    return categoriesList;
+  },
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
