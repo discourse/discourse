@@ -299,6 +299,10 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidAccess if !GlobalSetting.allowed_theme_ids.nil?
   end
 
+  def ban_for_remote_theme!
+    raise Discourse::InvalidAccess if @theme.remote_theme
+  end
+
   def add_relative_themes!(kind, ids)
     expected = ids.map(&:to_i)
 
@@ -357,6 +361,7 @@ class Admin::ThemesController < Admin::AdminController
     return unless fields = theme_params[:theme_fields]
 
     ban_in_allowlist_mode!
+    ban_for_remote_theme!
 
     fields.each do |field|
       @theme.set_field(
