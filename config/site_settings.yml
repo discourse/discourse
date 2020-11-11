@@ -983,6 +983,9 @@ posting:
   review_media_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+  blur_tl0_flagged_posts_media:
+    default: true
+    client: true
   enable_page_publishing:
     default: false
   show_published_pages_login_required:
