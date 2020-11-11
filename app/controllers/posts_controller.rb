@@ -477,18 +477,25 @@ class PostsController < ApplicationController
     post = find_post_from_params
     raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)
 
-    previous_notice = post.custom_fields[Post::NOTICE_ARGS]
+    old_notice = post.custom_fields[Post::NOTICE]
 
     if params[:notice].present?
-      post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:custom]
-      post.custom_fields[Post::NOTICE_ARGS] = PrettyText.cook(params[:notice], features: { onebox: false })
-      post.save_custom_fields
+      post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:custom],
+        raw: params[:notice],
+        cooked: PrettyText.cook(params[:notice], features: { onebox: false })
+      }
     else
-      post.delete_post_notices
+      post.custom_fields.delete(Post::NOTICE)
     end
 
-    details = { new_raw_value: params[:notice], old_value: previous_notice }
-    StaffActionLogger.new(current_user).log_post_staff_note(post, details)
+    post.save_custom_fields
+
+    StaffActionLogger.new(current_user).log_post_staff_note(
+      post,
+      old_value: old_notice&.[]("raw"),
+      new_value: params[:notice]
+    )
 
     render body: nil
   end

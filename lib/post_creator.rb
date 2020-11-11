@@ -616,10 +616,12 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE] = { type: Post.notices[:new_user] }
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:returning_user],
+        last_posted_at: last_post_time.iso8601
+      }
     end
   end
 

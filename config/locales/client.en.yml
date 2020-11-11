@@ -2823,7 +2823,8 @@ en:
         delete_topic_error: "An error occurred while deleting this topic"
         delete_topic: "delete topic"
         add_post_notice: "Add Staff Notice"
-        remove_post_notice: "Remove Staff Notice"
+        change_post_notice: "Change Staff Notice"
+        delete_post_notice: "Delete Staff Notice"
         remove_timer: "remove timer"
 
       actions:

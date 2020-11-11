@@ -463,7 +463,7 @@ describe 'posts' do
           edit_reason: { type: :string, nullable: true },
           can_view_edit_history: { type: :boolean },
           wiki: { type: :boolean },
-          notice_type: { type: :string },
+          notice: { type: :object },
           reviewable_id: { type: :string, nullable: true },
           reviewable_score_count: { type: :integer },
           reviewable_score_pending_count: { type: :integer },
