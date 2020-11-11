@@ -5,7 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
-import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { isEmpty } from "@ember/utils";
 import User from "discourse/models/user";
@@ -156,12 +155,10 @@ TopicList.reopenClass({
 
     // Stitch together our side loaded data
 
-    const categories = Category.list(),
-      users = extractByKey(result.users, User),
-      groups = extractByKey(result.primary_groups, EmberObject);
+    const users = extractByKey(result.users, User);
+    const groups = extractByKey(result.primary_groups, EmberObject);
 
     return result.topic_list[listKey].map((t) => {
-      t.category = categories.findBy("id", t.category_id);
       t.posters.forEach((p) => {
         p.user = users[p.user_id];
         p.extraClasses = p.extras;
