@@ -453,6 +453,7 @@ class TagsController < ::ApplicationController
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
 
     if params[:tag_id] == 'none'
+      options.delete(:tags)
       options[:no_tags] = true
     else
       options[:tags] = tag_params
