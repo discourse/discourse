@@ -337,6 +337,7 @@ en:
     drafts:
       resume: "Resume"
       remove: "Remove"
+      remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"

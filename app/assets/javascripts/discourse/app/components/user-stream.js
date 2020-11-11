@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
@@ -9,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
+import bootbox from "bootbox";
 
 export default Component.extend(LoadMore, {
   _initialize: on("init", function () {
@@ -94,13 +96,22 @@ export default Component.extend(LoadMore, {
 
     removeDraft(draft) {
       const stream = this.stream;
-      Draft.clear(draft.draft_key, draft.sequence)
-        .then(() => {
-          stream.remove(draft);
-        })
-        .catch((error) => {
-          popupAjaxError(error);
-        });
+      bootbox.confirm(
+        I18n.t("drafts.remove_confirmation"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (confirmed) => {
+          if (confirmed) {
+            Draft.clear(draft.draft_key, draft.sequence)
+              .then(() => {
+                stream.remove(draft);
+              })
+              .catch((error) => {
+                popupAjaxError(error);
+              });
+          }
+        }
+      );
     },
 
     loadMore() {

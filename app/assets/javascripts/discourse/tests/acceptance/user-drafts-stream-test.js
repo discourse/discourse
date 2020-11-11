@@ -1,7 +1,7 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 
 acceptance("User Drafts", function (needs) {
@@ -12,6 +12,9 @@ acceptance("User Drafts", function (needs) {
     assert.ok(queryAll(".user-stream-item").length === 3, "has drafts");
 
     await click(".user-stream-item:last-child .remove-draft");
+    assert.ok(visible(".bootbox"));
+
+    await click(".bootbox .btn-primary");
     assert.ok(
       queryAll(".user-stream-item").length === 2,
       "draft removed, list length diminished by one"
