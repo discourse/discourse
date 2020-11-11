@@ -278,7 +278,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _handleLogout() {
     if (this.currentUser) {
-      this.currentUser.destroySession().then(() => logout());
+      this.currentUser.destroySession().then(logout);
     }
   },
 });
