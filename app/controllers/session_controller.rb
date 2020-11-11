@@ -442,12 +442,30 @@ class SessionController < ApplicationController
   end
 
   def destroy
+    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+
+    sso = SiteSetting.enable_sso
+    only_one_authenticator = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+    if sso || only_one_authenticator
+      # In this situation visiting most URLs will start the auth process again
+      # Go to the `/login` page to avoid an immediate redirect
+      redirect_url ||= path("/login")
+    end
+
+    redirect_url ||= path("/")
+
+    event_data = { redirect_url: redirect_url, user: current_user }
+    DiscourseEvent.trigger(:before_session_destroy, event_data)
+    redirect_url = event_data[:redirect_url]
+
     reset_session
     log_off_user
     if request.xhr?
-      render body: nil
+      render json: {
+        redirect_url: redirect_url
+      }
     else
-      redirect_to (params[:return_url] || path("/"))
+      redirect_to redirect_url
     end
   end
 
