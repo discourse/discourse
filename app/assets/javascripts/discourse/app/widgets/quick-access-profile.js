@@ -56,6 +56,15 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
       },
     ];
 
+    if (this.currentUser.can_invite_to_forum) {
+      defaultItems.push({
+        icon: "user-plus",
+        href: `${this.attrs.path}/invited`,
+        content: I18n.t("user.invited.title"),
+        className: "invites",
+      });
+    }
+
     defaultItems.push(
       {
         icon: "pencil-alt",
