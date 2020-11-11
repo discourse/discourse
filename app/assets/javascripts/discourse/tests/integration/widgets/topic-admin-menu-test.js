@@ -37,7 +37,7 @@ widgetTest("topic-admin-menu-button is present for admin/moderators", {
       id: 123,
     });
     const topic = Topic.create({ user_id: this.currentUser.id });
-    topic.category = Category.create({ read_restricted: true });
+    topic.set("category_id", Category.create({ read_restricted: true }).id);
     this.siteSettings.allow_featured_topic_on_user_profiles = true;
     this.set("args", createArgs(topic));
   },
@@ -59,7 +59,7 @@ widgetTest(
         id: 123,
       });
       const topic = Topic.create({ user_id: this.currentUser.id });
-      topic.category = Category.create({ read_restricted: true });
+      topic.set("category_id", Category.create({ read_restricted: true }).id);
       this.siteSettings.allow_featured_topic_on_user_profiles = true;
       this.set("args", createArgs(topic));
     },
