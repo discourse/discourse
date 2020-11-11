@@ -6,6 +6,17 @@ require 'text_cleaner'
 class QualityTitleValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     sentinel = TextSentinel.title_sentinel(value)
-    record.errors.add(attribute, :is_invalid) unless sentinel.valid?
+
+    if !sentinel.valid?
+      if !sentinel.seems_meaningful?
+        record.errors.add(attribute, :is_invalid_meaningful)
+      elsif !sentinel.seems_unpretentious?
+        record.errors.add(attribute, :is_invalid_unpretentious)
+      elsif !sentinel.seems_quiet?
+        record.errors.add(attribute, :is_invalid_quiet)
+      else
+        record.errors.add(attribute, :is_invalid)
+      end
+    end
   end
 end
