@@ -30,7 +30,14 @@ define("@ember/test-helpers", () => {
       // No-op in pre ember-cli environment
     },
   };
-  ["click", "visit", "currentURL", "fillIn", "setResolver"].forEach((attr) => {
+  [
+    "click",
+    "visit",
+    "currentURL",
+    "currentRouteName",
+    "fillIn",
+    "setResolver",
+  ].forEach((attr) => {
     helpers[attr] = function () {
       return window[attr](...arguments);
     };
