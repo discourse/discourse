@@ -213,26 +213,26 @@
         action=(action "editTheme")
         label="admin.customize.theme.edit_css_html"}}
     </div>
-  {{/unless}}
 
-  <div class="control-unit">
-    <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
-    {{#if model.uploads}}
-      <ul class="removable-list">
-        {{#each model.uploads as |upload|}}
-          <li>
-            <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
-            <span class="col">
-              {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
-            </span>
-          </li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
-    {{/if}}
-    {{d-button action=(action "addUploadModal") class="btn-default" icon="plus" label="admin.customize.theme.add"}}
-  </div>
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
+      {{#if model.uploads}}
+        <ul class="removable-list">
+          {{#each model.uploads as |upload|}}
+            <li>
+              <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
+              <span class="col">
+                {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
+              </span>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
+      {{/if}}
+      {{d-button action=(action "addUploadModal") class="btn-default" icon="plus" label="admin.customize.theme.add"}}
+    </div>
+  {{/unless}}
 
   {{#if extraFiles.length}}
     <div class="control-unit">
