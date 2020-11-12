@@ -225,14 +225,8 @@ const Topic = RestModel.extend({
   },
 
   @discourseComputed("category_id")
-  category: {
-    get(categoryId) {
-      return Category.findById(categoryId);
-    },
-    set(category) {
-      this.set("category_id", category.id);
-      return category;
-    },
+  category(categoryId) {
+    return Category.findById(categoryId);
   },
 
   categoryClass: fmt("category.fullSlug", "category-%@"),

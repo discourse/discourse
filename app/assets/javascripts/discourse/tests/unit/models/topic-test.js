@@ -4,7 +4,7 @@ import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import createStore from "discourse/tests/helpers/create-store";
+import EmberObject from "@ember/object";
 
 discourseModule("Unit | Model | topic", function () {
   test("defaults", function (assert) {
@@ -36,9 +36,7 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("lastUnreadUrl", function (assert) {
-    const store = createStore();
-    const category = store.createRecord("category", {
-      id: 1,
+    const category = EmberObject.create({
       navigate_to_first_post_after_read: true,
     });
 
@@ -47,8 +45,9 @@ discourseModule("Unit | Model | topic", function () {
       highest_post_number: 10,
       last_read_post_number: 10,
       slug: "hello",
-      category_id: category.id,
     });
+
+    topic.set("category", category);
 
     assert.equal(topic.get("lastUnreadUrl"), "/t/hello/101/1");
   });
