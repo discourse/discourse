@@ -11,10 +11,10 @@ const SiteSetting = EmberObject.extend(Setting, {
       return;
     }
 
-    return JSON.stringify({
+    return {
       subject: setting,
       action_name: "change_site_setting",
-    });
+    };
   },
 });
 

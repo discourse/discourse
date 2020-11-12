@@ -47,7 +47,7 @@ acceptance("Admin - Site Settings", function (needs) {
 
     assert.equal(
       queryAll(".row.setting .setting-label h3 a").attr("href"),
-      "/admin/logs/staff_action_logs?filter=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D",
+      "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D",
       "it links to the staff action log"
     );
   });

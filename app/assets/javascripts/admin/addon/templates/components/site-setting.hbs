@@ -1,7 +1,7 @@
 <div class="setting-label">
   <h3>
     {{#if staffLogFilter}}
-      {{#link-to "adminLogs.staffActionLogs" (query-params filter=staffLogFilter) title=(i18n "admin.settings.history")}}
+      {{#link-to "adminLogs.staffActionLogs" (query-params filters=staffLogFilter) title=(i18n "admin.settings.history")}}
         {{settingName}}
         <span class="history-icon">
           {{d-icon "history"}}
