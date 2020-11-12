@@ -291,9 +291,9 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.edit");
 
-    await click("a[data-handler='0']");
+    await click(".modal-footer button:eq(1)");
 
-    assert.ok(!visible(".bootbox.modal"));
+    assert.ok(!visible(".discard-draft-modal.modal"));
     assert.equal(
       queryAll(".d-editor-input").val(),
       "this is the content of my reply"
@@ -408,9 +408,12 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:eq(0) button.edit");
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".topic-post:eq(1) button.edit");
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up a confirmation dialog"
+    );
 
-    await click(".modal-footer a:eq(0)");
+    await click(".modal-footer button:eq(0)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -563,8 +566,11 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:eq(0) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".topic-post:eq(0) button.edit");
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
-    await click(".modal-footer a:eq(0)");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up a confirmation dialog"
+    );
+    await click(".modal-footer button:eq(0)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
@@ -579,12 +585,15 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
     await click(".topic-post:eq(1) button.edit");
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up a confirmation dialog"
+    );
     assert.equal(
-      queryAll(".modal-footer a:eq(1)").text(),
+      queryAll(".modal-footer button:eq(1)").text().trim(),
       I18n.t("post.abandon.no_value")
     );
-    await click(".modal-footer a:eq(0)");
+    await click(".modal-footer button:eq(0)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -601,12 +610,15 @@ acceptance("Composer", function (needs) {
     await click("#site-logo");
     await click("#create-topic");
 
-    assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
+    assert.ok(
+      exists(".discard-draft-modal.modal"),
+      "it pops up a confirmation dialog"
+    );
     assert.equal(
-      queryAll(".modal-footer a:eq(1)").text(),
+      queryAll(".modal-footer button:eq(1)").text().trim(),
       I18n.t("post.abandon.no_save_draft")
     );
-    await click(".modal-footer a:eq(1)");
+    await click(".modal-footer button:eq(1)");
     assert.equal(
       queryAll(".d-editor-input").val(),
       "",

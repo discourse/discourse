@@ -2762,6 +2762,7 @@ en:
         yes_value: "Yes, discard edit"
 
       abandon:
+        title: "Abandon Draft"
         confirm: "Are you sure you want to abandon your post?"
         no_value: "No, keep"
         no_save_draft: "No, save draft"

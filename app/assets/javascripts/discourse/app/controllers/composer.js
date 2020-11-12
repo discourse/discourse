@@ -28,6 +28,7 @@ import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import showModal from "discourse/lib/show-modal";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -1097,46 +1098,36 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    const keyPrefix =
-      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
-
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
-          {
-            label: differentDraft
-              ? I18n.t(keyPrefix + ".no_save_draft")
-              : I18n.t(keyPrefix + ".no_value"),
-            callback: () => {
-              // cancel composer without destroying draft on new draft context
-              if (differentDraft) {
+        const controller = showModal("discard-draft", {
+          model: this.model,
+          modalClass: "discard-draft-modal",
+          title: "post.abandon.title",
+        });
+        controller.setProperties({
+          differentDraft,
+          onDestroyDraft: () => {
+            this.destroyDraft()
+              .then(() => {
                 this.model.clearState();
                 this.close();
+              })
+              .finally(() => {
                 resolve();
-              }
+              });
+          },
+          onSaveDraft: () => {
+            // cancel composer without destroying draft on new draft context
+            if (differentDraft) {
+              this.model.clearState();
+              this.close();
+              resolve();
+            }
 
-              reject();
-            },
+            reject();
           },
-          {
-            label: I18n.t(keyPrefix + ".yes_value"),
-            class: "btn-danger",
-            callback: (result) => {
-              if (result) {
-                this.destroyDraft()
-                  .then(() => {
-                    this.model.clearState();
-                    this.close();
-                  })
-                  .finally(() => {
-                    resolve();
-                  });
-              } else {
-                resolve();
-              }
-            },
-          },
-        ]);
+        });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
