@@ -5,6 +5,7 @@ import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import { escapeExpression } from "discourse/lib/utilities";
+import outletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 
 export default Mixin.create({
@@ -211,7 +212,7 @@ export default Mixin.create({
               }
             }
 
-            position.top -= $("#main-outlet").offset().top;
+            position.top -= $("#main-outlet").offset().top - outletHeights();
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
