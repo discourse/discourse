@@ -1,6 +1,12 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentURL, click, fillIn } from "@ember/test-helpers";
+import {
+  visit,
+  currentURL,
+  currentRouteName,
+  click,
+  fillIn,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import {
@@ -466,7 +472,7 @@ acceptance(
       await visit("/");
       assert.ok(exists(".topic-list"), "The list of topics was rendered");
       assert.equal(
-        currentPath(),
+        currentRouteName(),
         "discovery.bookmarks",
         "it navigates to bookmarks"
       );
