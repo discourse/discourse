@@ -2,8 +2,21 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import Setting from "admin/mixins/setting-object";
 import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
-const SiteSetting = EmberObject.extend(Setting, {});
+const SiteSetting = EmberObject.extend(Setting, {
+  @discourseComputed("setting")
+  staffLogFilter(setting) {
+    if (!setting) {
+      return;
+    }
+
+    return JSON.stringify({
+      subject: setting,
+      action_name: "change_site_setting",
+    });
+  },
+});
 
 SiteSetting.reopenClass({
   findAll() {

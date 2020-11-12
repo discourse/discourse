@@ -4767,6 +4767,7 @@ en:
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"
+        history: "View change history"
         reset: "reset"
         none: "none"
       site_settings:

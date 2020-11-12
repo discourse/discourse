@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
 import SiteSetting from "admin/models/site-setting";
 import SettingComponent from "admin/mixins/setting-component";
+import { readOnly } from "@ember/object/computed";
 
 export default Component.extend(BufferedContent, SettingComponent, {
   updateExistingUsers: null,
@@ -12,4 +13,6 @@ export default Component.extend(BufferedContent, SettingComponent, {
       updateExistingUsers: this.updateExistingUsers,
     });
   },
+
+  staffLogFilter: readOnly("setting.staffLogFilter"),
 });
