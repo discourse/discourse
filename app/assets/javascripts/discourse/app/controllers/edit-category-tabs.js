@@ -95,6 +95,7 @@ export default Controller.extend({
             model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
+              can_edit: result.category.can_edit,
               permission: PermissionType.FULL,
               notification_level: NotificationLevels.REGULAR,
             });
@@ -115,15 +116,19 @@ export default Controller.extend({
         I18n.t("yes_value"),
         (result) => {
           if (result) {
-            this.model.destroy().then(
-              () => {
-                this.transitionToRoute("discovery.categories");
-              },
-              () => {
-                this.displayErrors([I18n.t("category.delete_error")]);
+            this.model
+              .destroy()
+              .then(
+                () => {
+                  this.transitionToRoute("discovery.categories");
+                },
+                () => {
+                  this.displayErrors([I18n.t("category.delete_error")]);
+                }
+              )
+              .finally(() => {
                 this.set("deleting", false);
-              }
-            );
+              });
           } else {
             this.set("deleting", false);
           }
