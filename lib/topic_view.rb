@@ -106,7 +106,7 @@ class TopicView
   end
 
   def show_read_indicator?
-    return false unless @user || topic.private_message?
+    return false if !@user || !topic.private_message?
 
     topic.allowed_groups.any? do |group|
       group.publish_read_state? && group.users.include?(@user)

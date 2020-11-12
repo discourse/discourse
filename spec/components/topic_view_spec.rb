@@ -795,4 +795,30 @@ describe TopicView do
       end
     end
   end
+
+  describe '#show_read_indicator?' do
+    let(:topic) { Fabricate(:topic) }
+    let(:pm_topic) { Fabricate(:private_message_topic) }
+
+    it "shows read indicator for private messages" do
+      group = Fabricate(:group, users: [admin], publish_read_state: true)
+      pm_topic.topic_allowed_groups = [Fabricate.build(:topic_allowed_group, group: group)]
+
+      topic_view = TopicView.new(pm_topic.id, admin)
+      expect(topic_view.show_read_indicator?).to be_truthy
+    end
+
+    it "does not show read indicator if groups do not have read indicator enabled" do
+      topic_view = TopicView.new(pm_topic.id, admin)
+      expect(topic_view.show_read_indicator?).to be_falsey
+    end
+
+    it "does not show read indicator for topics with allowed groups" do
+      group = Fabricate(:group, users: [admin], publish_read_state: true)
+      topic.topic_allowed_groups = [Fabricate.build(:topic_allowed_group, group: group)]
+
+      topic_view = TopicView.new(topic.id, admin)
+      expect(topic_view.show_read_indicator?).to be_falsey
+    end
+  end
 end
