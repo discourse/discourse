@@ -232,7 +232,7 @@ zh_CN:
       user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "如有重要问题或网站紧急事件，请以 %{contact_info} 联系我们。"
+      contact_info: "如有重要问题或网站紧急事件，请通过 %{contact_info} 联系我们。"
     bookmarked:
       title: "收藏"
       clear_bookmarks: "取消收藏"
