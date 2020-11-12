@@ -23,11 +23,6 @@ module Slug
     (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
 
-  def self.sanitize(string, downcase: false, max_length: MAX_LENGTH)
-    slug = self.encoded_generator(string, downcase: downcase)
-    self.prettify_slug(slug, max_length: max_length)
-  end
-
   private
 
   def self.slug_is_only_numbers?(slug)
