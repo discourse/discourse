@@ -1,5 +1,16 @@
 <div class="setting-label">
-  <h3>{{settingName}}</h3>
+  <h3>
+    {{#if staffLogFilter}}
+      {{#link-to "adminLogs.staffActionLogs" (query-params filter=staffLogFilter) title=(i18n "admin.settings.history")}}
+        {{settingName}}
+        <span class="history-icon">
+          {{d-icon "history"}}
+        </span>
+      {{/link-to}}
+    {{else}}
+      {{settingName}}
+    {{/if}}
+  </h3>
   {{#if defaultIsAvailable}}
     <a href onClick={{action "setDefaultValues"}}>{{setting.setDefaultValuesLabel}}</a>
   {{/if}}

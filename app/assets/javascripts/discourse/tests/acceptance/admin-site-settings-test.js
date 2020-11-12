@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -39,6 +40,16 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
+  });
+
+  test("links to staff action log", async function (assert) {
+    await visit("/admin/site_settings");
+
+    assert.equal(
+      queryAll(".row.setting .setting-label h3 a").attr("href"),
+      "/admin/logs/staff_action_logs?filter=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D",
+      "it links to the staff action log"
+    );
   });
 
   test("changing value updates dirty state", async function (assert) {
