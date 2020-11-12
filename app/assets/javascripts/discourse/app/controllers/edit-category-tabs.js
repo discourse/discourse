@@ -118,14 +118,12 @@ export default Controller.extend({
           if (result) {
             this.model
               .destroy()
-              .then(
-                () => {
-                  this.transitionToRoute("discovery.categories");
-                },
-                () => {
-                  this.displayErrors([I18n.t("category.delete_error")]);
-                }
-              )
+              .then(() => {
+                this.transitionToRoute("discovery.categories");
+              })
+              .catch(() => {
+                this.displayErrors([I18n.t("category.delete_error")]);
+              })
               .finally(() => {
                 this.set("deleting", false);
               });
@@ -142,10 +140,6 @@ export default Controller.extend({
 
     goBack() {
       DiscourseURL.routeTo(this.model.url);
-    },
-
-    toggleMenu() {
-      this.toggleProperty("expandedMenu");
     },
   },
 });
