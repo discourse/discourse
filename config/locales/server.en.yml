@@ -2258,6 +2258,8 @@ en:
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
+    create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."

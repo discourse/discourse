@@ -2183,6 +2183,9 @@ uncategorized:
     default: false
     hidden: true
 
+  create_revision_on_bulk_topic_moves:
+    default: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
