@@ -129,6 +129,7 @@ module SvgSprite
     "hands-helping",
     "heading",
     "heart",
+    "history",
     "home",
     "hourglass-start",
     "id-card",
