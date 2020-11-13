@@ -84,6 +84,7 @@ function composerTestCase(title, testFunc) {
     beforeEach() {
       this.set("value", "hello world.");
     },
+
     test(assert) {
       const textarea = jumpEnd(queryAll("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
@@ -680,6 +681,26 @@ composerTestCase("replace-text event for composer", async function (assert) {
     .trigger("composer:replace-text", "green", "yellow");
 
   assert.equal(this.value, "red yellow blue");
+});
+
+function paste(element, text) {
+  let e = new Event("paste");
+  e.clipboardData = { getData: () => text };
+  element.dispatchEvent(e);
+}
+
+componentTest("paste table", {
+  template: "{{d-editor value=value composerEvents=true}}",
+  beforeEach() {
+    this.set("value", "");
+    this.siteSettings.enable_rich_text_paste = true;
+  },
+
+  async test(assert) {
+    let element = queryAll(".d-editor")[0];
+    await paste(element, "\ta\tb\n1\t2\t3");
+    assert.equal(this.value, "||a|b|\n|---|---|---|\n|1|2|3|\n");
+  },
 });
 
 (() => {

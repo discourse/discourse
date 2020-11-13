@@ -313,6 +313,10 @@ export default Component.extend({
       this.appEvents.on("composer:replace-text", this, "_replaceText");
     }
     this._mouseTrap = mouseTrap;
+
+    if (isTesting()) {
+      this.element.addEventListener("paste", this.paste.bind(this));
+    }
   },
 
   _insertBlock(text) {
@@ -336,6 +340,10 @@ export default Component.extend({
       mouseTrap.unbind(sc)
     );
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
+
+    if (isTesting()) {
+      this.element.removeEventListener("paste", this.paste);
+    }
   },
 
   @discourseComputed()
@@ -870,7 +878,7 @@ export default Component.extend({
   },
 
   paste(e) {
-    if (!$(".d-editor-input").is(":focus")) {
+    if (!$(".d-editor-input").is(":focus") && !isTesting()) {
       return;
     }
 
