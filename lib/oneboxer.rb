@@ -340,6 +340,7 @@ module Oneboxer
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
+        facebook_app_access_token: SiteSetting.facebook_app_access_token,
       }
 
       options[:cookie] = fd.cookie if fd.cookie

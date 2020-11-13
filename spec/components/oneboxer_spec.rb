@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 describe Oneboxer do
+  def response(file)
+    file = File.join("spec", "fixtures", "onebox", "#{file}.response")
+    File.exists?(file) ? File.read(file) : ""
+  end
+
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
@@ -251,11 +256,6 @@ describe Oneboxer do
   end
 
   context 'missing attributes' do
-    def response(file)
-      file = File.join("spec", "fixtures", "onebox", "#{file}.response")
-      File.exists?(file) ? File.read(file) : ""
-    end
-
     before do
       stub_request(:head, url)
     end
@@ -275,6 +275,28 @@ describe Oneboxer do
     it 'video with missing description returns a placeholder' do
       stub_request(:get, url).to_return(body: response("video_missing_description"))
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
+    end
+  end
+
+  context 'facebook_app_access_token' do
+    it 'providing a token should attempt to use new endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      access_token = 'abc123'
+
+      SiteSetting.facebook_app_access_token = access_token
+
+      stub_request(:head, url)
+      stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+    end
+
+    it 'unconfigured token should attempt to use old endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
     end
   end
 
