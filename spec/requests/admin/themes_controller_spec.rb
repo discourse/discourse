@@ -370,6 +370,22 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'blocks remote theme fields from being locally edited' do
+      r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+      theme.update!(remote_theme_id: r.id)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'test', target: 'common', value: 'filename.jpg', upload_id: 4 }
+          ]
+        }
+      }
+
+      expect(response.status).to eq(403)
+    end
+
     it 'updates a child theme' do
       child_theme = Fabricate(:theme, component: true)
       put "/admin/themes/#{child_theme.id}.json", params: {

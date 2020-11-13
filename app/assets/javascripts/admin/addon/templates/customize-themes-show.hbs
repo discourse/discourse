@@ -1,4 +1,5 @@
 <div class="show-current-style">
+  {{plugin-outlet name="admin-customize-themes-show-top" args=(hash theme=model)}}
   <div class="title">
     {{#if editingName}}
       {{text-field value=model.name autofocus="true"}}
@@ -191,45 +192,47 @@
     {{/d-section}}
   {{/if}}
 
-  <div class="control-unit">
-    <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
-    {{#if model.hasEditedFields}}
-      <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
-      <ul>
-        {{#each editedFieldsFormatted as |field|}}
-          <li>{{field}}</li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <div class="description">
-        {{i18n "admin.customize.theme.edit_css_html_help"}}
-      </div>
-    {{/if}}
+  {{#unless model.remote_theme}}
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
+      {{#if model.hasEditedFields}}
+        <div class="description">{{i18n "admin.customize.theme.custom_sections"}}</div>
+        <ul>
+          {{#each editedFieldsFormatted as |field|}}
+            <li>{{field}}</li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="description">
+          {{i18n "admin.customize.theme.edit_css_html_help"}}
+        </div>
+      {{/if}}
 
-    {{d-button
-      class="btn-default edit"
-      action=(action "editTheme")
-      label="admin.customize.theme.edit_css_html"}}
-  </div>
+      {{d-button
+        class="btn-default edit"
+        action=(action "editTheme")
+        label="admin.customize.theme.edit_css_html"}}
+    </div>
 
-  <div class="control-unit">
-    <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
-    {{#if model.uploads}}
-      <ul class="removable-list">
-        {{#each model.uploads as |upload|}}
-          <li>
-            <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
-            <span class="col">
-              {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
-            </span>
-          </li>
-        {{/each}}
-      </ul>
-    {{else}}
-      <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
-    {{/if}}
-    {{d-button action=(action "addUploadModal") class="btn-default" icon="plus" label="admin.customize.theme.add"}}
-  </div>
+    <div class="control-unit">
+      <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
+      {{#if model.uploads}}
+        <ul class="removable-list">
+          {{#each model.uploads as |upload|}}
+            <li>
+              <span class="col">${{upload.name}}: <a href={{upload.url}} rel="noopener noreferrer" target="_blank">{{upload.filename}}</a></span>
+              <span class="col">
+                {{d-button action=(action "removeUpload") actionParam=upload class="second btn-default btn-default cancel-edit" icon="times"}}
+              </span>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <div class="description">{{i18n "admin.customize.theme.no_uploads"}}</div>
+      {{/if}}
+      {{d-button action=(action "addUploadModal") class="btn-default" icon="plus" label="admin.customize.theme.add"}}
+    </div>
+  {{/unless}}
 
   {{#if extraFiles.length}}
     <div class="control-unit">
