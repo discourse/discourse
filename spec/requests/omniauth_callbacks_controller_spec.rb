@@ -196,6 +196,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
+        expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
         expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
 
         expect(response.status).to eq(302)

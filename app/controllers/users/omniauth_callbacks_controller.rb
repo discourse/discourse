@@ -34,6 +34,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       Discourse.redis.setex "#{Users::AssociateAccountsController::REDIS_PREFIX}_#{current_user.id}_#{token}", 10.minutes, auth.to_json
       return redirect_to "#{Discourse.base_path}/associate/#{token}"
     else
+      DiscourseEvent.trigger(:before_auth, authenticator, auth)
       @auth_result = authenticator.after_authenticate(auth)
       DiscourseEvent.trigger(:after_auth, authenticator, @auth_result)
     end
