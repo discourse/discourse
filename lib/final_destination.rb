@@ -67,7 +67,7 @@ class FinalDestination
     @timeout = @opts[:timeout] || nil
     @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
     @validate_uri = @opts.fetch(:validate_uri) { true }
-    @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+    @user_agent = @force_custom_user_agent_hosts.any? { |host| hostname_matches?(host) } ? Onebox.options.user_agent : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15"
   end
 
   def self.connection_timeout
