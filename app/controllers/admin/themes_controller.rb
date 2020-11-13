@@ -6,8 +6,6 @@ class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: [:show, :preview, :export]
 
-  UPLOAD_TYPE_ID = 2
-
   def preview
     theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless theme
