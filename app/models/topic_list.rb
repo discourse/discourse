@@ -130,6 +130,8 @@ class TopicList < DraftableList
       ft.topic_list = self
     end
 
+    ActiveRecord::Associations::Preloader.new.preload(@topics, [:image_upload, topic_thumbnails: :optimized_image])
+
     if preloaded_custom_fields.present?
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
