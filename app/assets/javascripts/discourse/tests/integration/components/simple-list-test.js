@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 import { click, fillIn } from "@ember/test-helpers";
@@ -13,7 +14,7 @@ componentTest("adding a value", {
 
   async test(assert) {
     assert.ok(
-      find(".add-value-btn[disabled]").length,
+      queryAll(".add-value-btn[disabled]").length,
       "while loading the + button is disabled"
     );
 
@@ -21,12 +22,13 @@ componentTest("adding a value", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
     assert.ok(
-      find(".values .value[data-index='2'] .value-input")[0].value === "penar",
+      queryAll(".values .value[data-index='2'] .value-input")[0].value ===
+        "penar",
       "it sets the correct value for added item"
     );
 
@@ -34,7 +36,7 @@ componentTest("adding a value", {
     await keyEvent(".add-value-input", "keydown", 13); // enter
 
     assert.ok(
-      find(".values .value").length === 4,
+      queryAll(".values .value").length === 4,
       "it adds the value when keying Enter"
     );
   },
@@ -51,12 +53,13 @@ componentTest("removing a value", {
     await click(".values .value[data-index='0'] .remove-value-btn");
 
     assert.ok(
-      find(".values .value").length === 1,
+      queryAll(".values .value").length === 1,
       "it removes the value from the list of values"
     );
 
     assert.ok(
-      find(".values .value[data-index='0'] .value-input")[0].value === "osama",
+      queryAll(".values .value[data-index='0'] .value-input")[0].value ===
+        "osama",
       "it removes the correct value"
     );
   },
@@ -74,12 +77,12 @@ componentTest("delimiter support", {
     await click(".add-value-btn");
 
     assert.ok(
-      find(".values .value").length === 3,
+      queryAll(".values .value").length === 3,
       "it adds the value to the list of values"
     );
 
     assert.ok(
-      find(".values .value[data-index='2'] .value-input")[0].value ===
+      queryAll(".values .value[data-index='2'] .value-input")[0].value ===
         "eviltrout",
       "it adds the correct value"
     );

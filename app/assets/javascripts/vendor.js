@@ -1,7 +1,6 @@
 //= require logster
 
 //= require template_include.js
-//= require i18n-patches
 
 //= require message-bus
 //= require jquery.ui.widget.js

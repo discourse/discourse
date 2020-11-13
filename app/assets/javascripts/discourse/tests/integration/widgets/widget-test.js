@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { next } from "@ember/runloop";
 import {
@@ -25,7 +26,7 @@ widgetTest("widget attributes are passed in via args", {
   },
 
   test(assert) {
-    assert.equal(find(".test").text(), "Hello Robin");
+    assert.equal(queryAll(".test").text(), "Hello Robin");
   },
 });
 
@@ -41,7 +42,7 @@ widgetTest("hbs template - no tagName", {
   },
 
   test(assert) {
-    assert.equal(find("div.test").text(), "Hello Robin");
+    assert.equal(queryAll("div.test").text(), "Hello Robin");
   },
 });
 
@@ -58,7 +59,7 @@ widgetTest("hbs template - with tagName", {
   },
 
   test(assert) {
-    assert.equal(find("div.test").text(), "Hello Robin");
+    assert.equal(queryAll("div.test").text(), "Hello Robin");
   },
 });
 
@@ -72,7 +73,7 @@ widgetTest("hbs template - with data attributes", {
   },
 
   test(assert) {
-    assert.equal(find("div.mydiv").data("my-test"), "hello world");
+    assert.equal(queryAll("div.mydiv").data("my-test"), "hello world");
   },
 });
 
@@ -92,7 +93,10 @@ widgetTest("buildClasses", {
   },
 
   test(assert) {
-    assert.ok(find(".test.static.cool-class").length, "it has all the classes");
+    assert.ok(
+      queryAll(".test.static.cool-class").length,
+      "it has all the classes"
+    );
   },
 });
 
@@ -112,8 +116,8 @@ widgetTest("buildAttributes", {
   },
 
   test(assert) {
-    assert.ok(find(".test[data-evil=trout]").length);
-    assert.ok(find(".test[aria-label=accessibility]").length);
+    assert.ok(queryAll(".test[data-evil=trout]").length);
+    assert.ok(queryAll(".test[aria-label=accessibility]").length);
   },
 });
 
@@ -131,7 +135,7 @@ widgetTest("buildId", {
   },
 
   test(assert) {
-    assert.ok(find("#test-1234").length);
+    assert.ok(queryAll("#test-1234").length);
   },
 });
 
@@ -155,11 +159,11 @@ widgetTest("widget state", {
   },
 
   async test(assert) {
-    assert.ok(find("button.test").length, "it renders the button");
-    assert.equal(find("button.test").text(), "0 clicks");
+    assert.ok(queryAll("button.test").length, "it renders the button");
+    assert.equal(queryAll("button.test").text(), "0 clicks");
 
-    await click(find("button"));
-    assert.equal(find("button.test").text(), "1 clicks");
+    await click(queryAll("button"));
+    assert.equal(queryAll("button.test").text(), "1 clicks");
   },
 });
 
@@ -190,10 +194,10 @@ widgetTest("widget update with promise", {
   },
 
   async test(assert) {
-    assert.equal(find("button.test").text().trim(), "No name");
+    assert.equal(queryAll("button.test").text().trim(), "No name");
 
-    await click(find("button"));
-    assert.equal(find("button.test").text().trim(), "Robin");
+    await click(queryAll("button"));
+    assert.equal(queryAll("button.test").text().trim(), "Robin");
   },
 });
 
@@ -210,8 +214,8 @@ widgetTest("widget attaching", {
   },
 
   test(assert) {
-    assert.ok(find(".container").length, "renders container");
-    assert.ok(find(".container .embedded").length, "renders attached");
+    assert.ok(queryAll(".container").length, "renders container");
+    assert.ok(queryAll(".container .embedded").length, "renders attached");
   },
 });
 
@@ -228,8 +232,8 @@ widgetTest("magic attaching by name", {
   },
 
   test(assert) {
-    assert.ok(find(".container").length, "renders container");
-    assert.ok(find(".container .embedded").length, "renders attached");
+    assert.ok(queryAll(".container").length, "renders container");
+    assert.ok(queryAll(".container .embedded").length, "renders attached");
   },
 });
 
@@ -249,8 +253,8 @@ widgetTest("custom attrs to a magic attached widget", {
   },
 
   test(assert) {
-    assert.ok(find(".container").length, "renders container");
-    assert.equal(find(".container .value").text(), "hello world");
+    assert.ok(queryAll(".container").length, "renders container");
+    assert.equal(queryAll(".container .value").text(), "hello world");
   },
 });
 
@@ -264,7 +268,7 @@ widgetTest("handlebars d-icon", {
   },
 
   test(assert) {
-    assert.equal(find(".d-icon-arrow-down").length, 1);
+    assert.equal(queryAll(".d-icon-arrow-down").length, 1);
   },
 });
 
@@ -298,9 +302,9 @@ widgetTest("handlebars i18n", {
 
   test(assert) {
     // comin up
-    assert.equal(find("span.string").text(), "evil");
-    assert.equal(find("span.var").text(), "trout");
-    assert.equal(find("a").prop("title"), "evil");
+    assert.equal(queryAll("span.string").text(), "evil");
+    assert.equal(queryAll("span.var").text(), "trout");
+    assert.equal(queryAll("a").prop("title"), "evil");
   },
 });
 
@@ -323,8 +327,8 @@ widgetTest("handlebars #each", {
   },
 
   test(assert) {
-    assert.equal(find("ul li").length, 3);
-    assert.equal(find("ul li:eq(0)").text(), "one");
+    assert.equal(queryAll("ul li").length, 3);
+    assert.equal(queryAll("ul li:eq(0)").text(), "one");
   },
 });
 
@@ -349,9 +353,9 @@ widgetTest("widget decorating", {
   },
 
   test(assert) {
-    assert.ok(find(".decorate").length);
-    assert.equal(find(".decorate b").text(), "before");
-    assert.equal(find(".decorate i").text(), "after");
+    assert.ok(queryAll(".decorate").length);
+    assert.equal(queryAll(".decorate b").text(), "before");
+    assert.equal(queryAll(".decorate i").text(), "after");
   },
 });
 
@@ -367,7 +371,7 @@ widgetTest("widget settings", {
   },
 
   test(assert) {
-    assert.equal(find(".settings").text(), "age is 36");
+    assert.equal(queryAll(".settings").text(), "age is 36");
   },
 });
 
@@ -387,7 +391,7 @@ widgetTest("override settings", {
   },
 
   test(assert) {
-    assert.equal(find(".settings").text(), "age is 37");
+    assert.equal(queryAll(".settings").text(), "age is 37");
   },
 });
 
@@ -407,6 +411,6 @@ widgetTest("get accessor", {
   },
 
   test(assert) {
-    assert.equal(find("div.test").text(), "Hello eviltrout");
+    assert.equal(queryAll("div.test").text(), "Hello eviltrout");
   },
 });

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -9,7 +10,7 @@ componentTest("renders markdown", {
   template: '{{cook-text "_foo_" class="post-body"}}',
 
   test(assert) {
-    const html = find(".post-body")[0].innerHTML.trim();
+    const html = queryAll(".post-body")[0].innerHTML.trim();
     assert.equal(html, "<p><em>foo</em></p>");
   },
 });
@@ -38,7 +39,7 @@ componentTest("resolves short URLs", {
   },
 
   test(assert) {
-    const html = find(".post-body")[0].innerHTML.trim();
+    const html = queryAll(".post-body")[0].innerHTML.trim();
     assert.equal(html, '<p><img src="/images/avatar.png" alt="an image"></p>');
   },
 });

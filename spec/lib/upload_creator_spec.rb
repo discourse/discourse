@@ -443,6 +443,21 @@ RSpec.describe UploadCreator do
         end
       end
     end
+
+    context 'custom emojis' do
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      it 'should not be cropped if animated' do
+        upload = UploadCreator.new(animated_file, animated_filename,
+          force_optimize: true,
+          type: 'custom_emoji'
+        ).create_for(user.id)
+
+        expect(upload.animated).to eq(true)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
+      end
+    end
   end
 
   describe '#clean_svg!' do

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
@@ -13,12 +14,12 @@ widgetTest("basics", {
   template: '{{mount-widget widget="user-menu"}}',
 
   test(assert) {
-    assert.ok(find(".user-menu").length);
-    assert.ok(find(".user-preferences-link").length);
-    assert.ok(find(".user-notifications-link").length);
-    assert.ok(find(".user-bookmarks-link").length);
-    assert.ok(find(".quick-access-panel").length);
-    assert.ok(find(".notifications-dismiss").length);
+    assert.ok(queryAll(".user-menu").length);
+    assert.ok(queryAll(".user-preferences-link").length);
+    assert.ok(queryAll(".user-notifications-link").length);
+    assert.ok(queryAll(".user-bookmarks-link").length);
+    assert.ok(queryAll(".quick-access-panel").length);
+    assert.ok(queryAll(".notifications-dismiss").length);
   },
 });
 
@@ -26,7 +27,7 @@ widgetTest("notifications", {
   template: '{{mount-widget widget="user-menu"}}',
 
   async test(assert) {
-    const $links = find(".quick-access-panel li a");
+    const $links = queryAll(".quick-access-panel li a");
 
     assert.equal($links.length, 5);
     assert.ok($links[0].href.includes("/t/a-slug/123"));
@@ -73,7 +74,7 @@ widgetTest("notifications", {
     const routeToStub = sinon.stub(DiscourseURL, "routeTo");
     await click(".user-notifications-link");
     assert.ok(
-      routeToStub.calledWith(find(".user-notifications-link")[0].href),
+      routeToStub.calledWith(queryAll(".user-notifications-link")[0].href),
       "a second click should redirect to the full notifications page"
     );
   },
@@ -88,7 +89,7 @@ widgetTest("log out", {
 
   async test(assert) {
     await click(".user-preferences-link");
-    assert.ok(find(".logout").length);
+    assert.ok(queryAll(".logout").length);
 
     await click(".logout");
     assert.ok(this.loggedOut);
@@ -102,7 +103,7 @@ widgetTest("private messages - disabled", {
   },
 
   test(assert) {
-    assert.ok(!find(".user-pms-link").length);
+    assert.ok(!queryAll(".user-pms-link").length);
   },
 });
 
@@ -113,11 +114,11 @@ widgetTest("private messages - enabled", {
   },
 
   async test(assert) {
-    const userPmsLink = find(".user-pms-link")[0];
+    const userPmsLink = queryAll(".user-pms-link")[0];
     assert.ok(userPmsLink);
     await click(".user-pms-link");
 
-    const message = find(".quick-access-panel li a")[0];
+    const message = queryAll(".quick-access-panel li a")[0];
     assert.ok(message);
 
     assert.ok(
@@ -148,7 +149,7 @@ widgetTest("bookmarks", {
   async test(assert) {
     await click(".user-bookmarks-link");
 
-    const bookmark = find(".quick-access-panel li a")[0];
+    const bookmark = queryAll(".quick-access-panel li a")[0];
     assert.ok(bookmark);
 
     assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
@@ -164,7 +165,7 @@ widgetTest("bookmarks", {
     const routeToStub = sinon.stub(DiscourseURL, "routeTo");
     await click(".user-bookmarks-link");
     assert.ok(
-      routeToStub.calledWith(find(".user-bookmarks-link")[0].href),
+      routeToStub.calledWith(queryAll(".user-bookmarks-link")[0].href),
       "a second click should redirect to the full bookmarks page"
     );
   },
@@ -184,7 +185,7 @@ widgetTest("anonymous", {
 
   async test(assert) {
     await click(".user-preferences-link");
-    assert.ok(find(".enable-anonymous").length);
+    assert.ok(queryAll(".enable-anonymous").length);
 
     await click(".enable-anonymous");
     assert.ok(this.anonymous);
@@ -200,7 +201,7 @@ widgetTest("anonymous - disabled", {
 
   async test(assert) {
     await click(".user-preferences-link");
-    assert.ok(!find(".enable-anonymous").length);
+    assert.ok(!queryAll(".enable-anonymous").length);
   },
 });
 
@@ -217,7 +218,7 @@ widgetTest("anonymous - switch back", {
 
   async test(assert) {
     await click(".user-preferences-link");
-    assert.ok(find(".disable-anonymous").length);
+    assert.ok(queryAll(".disable-anonymous").length);
 
     await click(".disable-anonymous");
     assert.notOk(this.anonymous);

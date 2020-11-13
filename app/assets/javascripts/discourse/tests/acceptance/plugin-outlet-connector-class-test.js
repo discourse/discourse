@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -66,25 +67,29 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
   });
 
-  test("Renders a template into the outlet", async (assert) => {
+  test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok(
-      find(".user-profile-primary-outlet.hello").length === 1,
+      queryAll(".user-profile-primary-outlet.hello").length === 1,
       "it has class names"
     );
     assert.ok(
-      !find(".user-profile-primary-outlet.dont-render").length,
+      !queryAll(".user-profile-primary-outlet.dont-render").length,
       "doesn't render"
     );
 
     await click(".say-hello");
     assert.equal(
-      find(".hello-result").text(),
+      queryAll(".hello-result").text(),
       "hello!",
       "actions delegate properly"
     );
 
     await click(".say-hi");
-    assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
+    assert.equal(
+      queryAll(".hi-result").text(),
+      "hi!",
+      "actions delegate properly"
+    );
   });
 });

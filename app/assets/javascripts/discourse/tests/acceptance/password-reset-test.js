@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click, fillIn } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -58,7 +59,7 @@ acceptance("Password Reset", function (needs) {
     });
   });
 
-  test("Password Reset Page", async (assert) => {
+  test("Password Reset Page", async function (assert) {
     PreloadStore.store("password_reset", { is_developer: false });
 
     await visit("/u/password-reset/myvalidtoken");
@@ -70,7 +71,7 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "123");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      find(".password-reset .tip.bad")
+      queryAll(".password-reset .tip.bad")
         .html()
         .indexOf(I18n.t("user.password.too_short")) > -1,
       "password too short"
@@ -80,7 +81,7 @@ acceptance("Password Reset", function (needs) {
     await click(".password-reset form button");
     assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
     assert.ok(
-      find(".password-reset .tip.bad")
+      queryAll(".password-reset .tip.bad")
         .html()
         .indexOf("is the name of your cat") > -1,
       "server validation error message shows"
@@ -92,7 +93,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
-  test("Password Reset Page With Second Factor", async (assert) => {
+  test("Password Reset Page With Second Factor", async function (assert) {
     PreloadStore.store("password_reset", {
       is_developer: false,
       second_factor_required: true,
@@ -109,7 +110,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(exists(".alert-error"), "shows 2 factor error");
 
     assert.ok(
-      find(".alert-error").html().indexOf("invalid token") > -1,
+      queryAll(".alert-error").html().indexOf("invalid token") > -1,
       "shows server validation error message"
     );
 

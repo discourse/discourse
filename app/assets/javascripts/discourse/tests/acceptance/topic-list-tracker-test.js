@@ -8,7 +8,7 @@ import {
 } from "discourse/lib/topic-list-tracker";
 
 acceptance("Topic list tracking", function () {
-  test("Navigation", async (assert) => {
+  test("Navigation", async function (assert) {
     await visit("/");
     let url = await nextTopicUrl();
     assert.equal(url, "/t/error-after-upgrade-to-0-9-7-9/11557");

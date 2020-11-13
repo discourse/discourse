@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -14,25 +15,25 @@ acceptance("Composer - Edit conflict", function (needs) {
     });
   });
 
-  test("Edit a post that causes an edit conflict", async (assert) => {
+  test("Edit a post that causes an edit conflict", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.edit");
     await fillIn(".d-editor-input", "this will 409");
     await click("#reply-control button.create");
     assert.equal(
-      find("#reply-control button.create").text().trim(),
+      queryAll("#reply-control button.create").text().trim(),
       I18n.t("composer.overwrite_edit"),
       "it shows the overwrite button"
     );
     assert.ok(
-      find("#draft-status .d-icon-user-edit"),
+      queryAll("#draft-status .d-icon-user-edit"),
       "error icon should be there"
     );
     await click(".modal .btn-primary");
   });
 
-  test("Should not send originalText when posting a new reply", async (assert) => {
+  test("Should not send originalText when posting a new reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.reply");
     await fillIn(
@@ -42,7 +43,7 @@ acceptance("Composer - Edit conflict", function (needs) {
     assert.ok(lastBody.indexOf("originalText") === -1);
   });
 
-  test("Should send originalText when editing a reply", async (assert) => {
+  test("Should send originalText when editing a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.edit");

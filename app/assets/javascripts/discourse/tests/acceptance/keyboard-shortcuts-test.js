@@ -23,7 +23,7 @@ acceptance("Keyboard Shortcuts", function (needs) {
     });
   });
 
-  test("go to first suggested topic", async (assert) => {
+  test("go to first suggested topic", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
     await keyEvent(document, "keypress", "g".charCodeAt(0));
     await keyEvent(document, "keypress", "s".charCodeAt(0));

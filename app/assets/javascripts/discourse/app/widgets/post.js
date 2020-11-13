@@ -471,7 +471,7 @@ createWidget("post-notice", {
   tagName: "div.post-notice",
 
   buildClasses(attrs) {
-    const classes = [attrs.noticeType.replace(/_/g, "-")];
+    const classes = [attrs.notice.type.replace(/_/g, "-")];
 
     if (
       new Date() - new Date(attrs.created_at) >
@@ -484,30 +484,33 @@ createWidget("post-notice", {
   },
 
   html(attrs) {
+    if (attrs.notice.type === "custom") {
+      return [
+        iconNode("user-shield"),
+        new RawHtml({ html: `<div>${attrs.notice.cooked}</div>` }),
+      ];
+    }
+
     const user =
       this.siteSettings.display_name_on_posts && prioritizeNameInUx(attrs.name)
         ? attrs.name
         : attrs.username;
-    let text, icon;
-    if (attrs.noticeType === "custom") {
-      icon = "user-shield";
-      text = new RawHtml({ html: `<div>${attrs.noticeMessage}</div>` });
-    } else if (attrs.noticeType === "new_user") {
-      icon = "hands-helping";
-      text = h("p", I18n.t("post.notice.new_user", { user }));
-    } else if (attrs.noticeType === "returning_user") {
-      icon = "far-smile";
-      const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
-      text = h(
-        "p",
-        I18n.t("post.notice.returning_user", {
-          user,
-          time: relativeAgeMediumSpan(distance, true),
-        })
-      );
+
+    if (attrs.notice.type === "new_user") {
+      return [
+        iconNode("hands-helping"),
+        h("p", I18n.t("post.notice.new_user", { user })),
+      ];
     }
 
-    return [iconNode(icon), text];
+    if (attrs.notice.type === "returning_user") {
+      const timeAgo = (new Date() - new Date(attrs.notice.lastPostedAt)) / 1000;
+      const time = relativeAgeMediumSpan(timeAgo, true);
+      return [
+        iconNode("far-smile"),
+        h("p", I18n.t("post.notice.returning_user", { user, time })),
+      ];
+    }
   },
 });
 
@@ -593,7 +596,7 @@ createWidget("post-article", {
       );
     }
 
-    if (attrs.noticeType) {
+    if (!attrs.deleted_at && attrs.notice) {
       rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 

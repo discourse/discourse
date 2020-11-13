@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import {
@@ -24,7 +25,7 @@ async function clickRowById(id) {
 }
 
 function rowById(id) {
-  return find(`#my-dropdown .widget-dropdown-item.item-${id}`)[0];
+  return queryAll(`#my-dropdown .widget-dropdown-item.item-${id}`)[0];
 }
 
 async function toggle() {
@@ -32,17 +33,17 @@ async function toggle() {
 }
 
 function headerLabel() {
-  return find(
+  return queryAll(
     "#my-dropdown .widget-dropdown-header .label"
   )[0].innerText.trim();
 }
 
 function header() {
-  return find("#my-dropdown .widget-dropdown-header")[0];
+  return queryAll("#my-dropdown .widget-dropdown-header")[0];
 }
 
 function body() {
-  return find("#my-dropdown .widget-dropdown-body")[0];
+  return queryAll("#my-dropdown .widget-dropdown-body")[0];
 }
 
 const TEMPLATE = `
@@ -151,7 +152,7 @@ widgetTest("onChange action", {
   async test(assert) {
     await toggle();
     await clickRowById(2);
-    assert.equal(find("#test").text(), 2, "it calls the onChange actions");
+    assert.equal(queryAll("#test").text(), 2, "it calls the onChange actions");
   },
 });
 
@@ -270,7 +271,7 @@ widgetTest("separator", {
   async test(assert) {
     await toggle();
     assert.ok(
-      find(
+      queryAll(
         "#my-dropdown .widget-dropdown-item:nth-child(3)"
       )[0].classList.contains("separator")
     );

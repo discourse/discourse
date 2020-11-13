@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -12,14 +13,14 @@ acceptance("Topic Discovery", function (needs) {
     show_pinned_excerpt_desktop: true,
   });
 
-  test("Visit Discovery Pages", async (assert) => {
+  test("Visit Discovery Pages", async function (assert) {
     await visit("/");
     assert.ok($("body.navigation-topics").length, "has the default navigation");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.equal(
-      find("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
+      queryAll("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
@@ -71,7 +72,7 @@ acceptance("Topic Discovery", function (needs) {
     );
   });
 
-  test("Clearing state after leaving a category", async (assert) => {
+  test("Clearing state after leaving a category", async function (assert) {
     await visit("/c/dev");
     assert.ok(
       exists(".topic-list-item[data-topic-id=11994] .topic-excerpt"),
@@ -84,7 +85,7 @@ acceptance("Topic Discovery", function (needs) {
     );
   });
 
-  test("Live update unread state", async (assert) => {
+  test("Live update unread state", async function (assert) {
     await visit("/");
     assert.ok(
       exists(".topic-list-item:not(.visited) a[data-topic-id='11995']"),
@@ -113,7 +114,7 @@ acceptance("Topic Discovery", function (needs) {
     );
   });
 
-  test("Using period chooser when query params are present", async (assert) => {
+  test("Using period chooser when query params are present", async function (assert) {
     await visit("/top?f=foo&d=bar");
 
     sinon.stub(DiscourseURL, "routeTo");

@@ -18,13 +18,13 @@ function exists(selector) {
   return document.querySelector(selector) !== null;
 }
 
-test("Wizard starts", async (assert) => {
+test("Wizard starts", async function (assert) {
   await visit("/");
   assert.ok(exists(".wizard-column-contents"));
   assert.equal(currentPath(), "step");
 });
 
-test("Going back and forth in steps", async (assert) => {
+test("Going back and forth in steps", async function (assert) {
   await visit("/steps/hello-world");
   assert.ok(exists(".wizard-step"));
   assert.ok(

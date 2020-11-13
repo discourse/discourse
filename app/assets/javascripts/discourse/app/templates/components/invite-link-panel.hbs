@@ -41,6 +41,11 @@
       }}
     </div>
 
+    {{#if showApprovalMessage}}
+      <label class="instructions approval-notice">
+        {{i18n "invite.approval_not_required"}}
+      </label>
+    {{/if}}
   {{/if}}
 </div>
 

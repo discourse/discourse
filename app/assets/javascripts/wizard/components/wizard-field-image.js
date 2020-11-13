@@ -48,13 +48,7 @@ export default Component.extend({
         message = response.jqXHR.responseJSON.errors.join("\n");
       }
 
-      window.swal({
-        customClass: "wizard-warning",
-        title: "",
-        text: message,
-        type: "warning",
-        confirmButtonColor: "#6699ff",
-      });
+      window.bootbox.alert(message);
       this.set("uploading", false);
     });
   },

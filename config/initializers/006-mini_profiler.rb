@@ -76,6 +76,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
 
   Rack::MiniProfiler.config.backtrace_includes = [/^\/?(app|config|lib|test|plugins)/]
 
+  Rack::MiniProfiler.counter_method(Redis::Client, :call) { 'redis' }
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')
   # Rack::MiniProfiler.counter_method(Array, 'uniq')
   # require "#{Rails.root}/vendor/backports/notification"

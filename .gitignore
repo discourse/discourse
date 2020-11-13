@@ -137,6 +137,12 @@ node_modules
 # ignore generated api documentation files
 openapi/*
 
+# ignore VSCode config files
+.vscode
+
+# ignore direnv
+.envrc
+
 # ember-cli generated
 dist
 

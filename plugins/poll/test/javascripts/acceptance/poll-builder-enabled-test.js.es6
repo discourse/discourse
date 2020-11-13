@@ -6,6 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
   needs.user();
@@ -15,7 +16,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
   });
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
-  test("regular user - sufficient trust level", async (assert) => {
+  test("regular user - sufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
 
     await displayPollBuilderButton();
@@ -26,7 +27,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("regular user - insufficient trust level", async (assert) => {
+  test("regular user - insufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 0 });
 
     await displayPollBuilderButton();
@@ -37,7 +38,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("staff - with insufficient trust level", async (assert) => {
+  test("staff - with insufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: true, trust_level: 0 });
 
     await displayPollBuilderButton();
@@ -48,7 +49,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     );
   });
 
-  test("poll preview", async (assert) => {
+  test("poll preview", async function (assert) {
     await displayPollBuilderButton();
 
     const popupMenu = selectKit(".toolbar-popup-menu-options");
@@ -57,11 +58,11 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await fillIn(".poll-textarea textarea", "First option\nSecond option");
 
     assert.equal(
-      find(".d-editor-preview li:first-child").text(),
+      queryAll(".d-editor-preview li:first-child").text(),
       "First option"
     );
     assert.equal(
-      find(".d-editor-preview li:last-child").text(),
+      queryAll(".d-editor-preview li:last-child").text(),
       "Second option"
     );
   });

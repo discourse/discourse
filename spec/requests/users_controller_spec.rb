@@ -2667,6 +2667,34 @@ describe UsersController do
     end
   end
 
+  describe '#check_sso_email' do
+    it 'raises an error when not logged in' do
+      get "/u/zogstrip/sso-email.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
+      let(:user) { Fabricate(:user) }
+
+      it "raises an error when you aren't allowed to check sso email" do
+        sign_in(Fabricate(:user))
+        get "/u/#{user.username}/sso-email.json"
+        expect(response).to be_forbidden
+      end
+
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_email: "foobar@example.com", external_id: "example", last_payload: "looks good")
+        sign_in_admin
+
+        get "/u/#{user.username}/sso-email.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email"]).to eq("foobar@example.com")
+      end
+    end
+  end
+
   describe '#update_primary_email' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_email) { user.primary_email }
@@ -3245,6 +3273,37 @@ describe UsersController do
         it "returns not found when external_id doesn't match" do
           get "/u/by-external/99.json"
           expect(response).not_to be_successful
+        end
+
+        context "for an external provider" do
+          before do
+            sign_in(Fabricate(:admin))
+            SiteSetting.enable_google_oauth2_logins = true
+            UserAssociatedAccount.create!(user: user, provider_uid: 'myuid', provider_name: 'google_oauth2')
+          end
+
+          it "doesn't work for non-admin" do
+            sign_in(user)
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(403)
+          end
+
+          it "can fetch the user" do
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user"]["username"]).to eq(user.username)
+          end
+
+          it "fails for disabled provider" do
+            SiteSetting.enable_google_oauth2_logins = false
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(404)
+          end
+
+          it "returns 404 for missing user" do
+            get "/u/by-external/google_oauth2/myotheruid.json"
+            expect(response.status).to eq(404)
+          end
         end
       end
 

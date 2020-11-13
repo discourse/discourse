@@ -325,6 +325,7 @@ nl:
       other: "%{count} nieuwe topics bekijken"
     preview: "voorbeeld"
     cancel: "annuleren"
+    deleting: "Verwijderen..."
     save: "Wijzigingen opslaan"
     saving: "Opslaan..."
     saved: "Opgeslagen!"
@@ -510,6 +511,7 @@ nl:
           one: "U hebt <strong>%{count}</strong> wachtend bericht."
           other: "U hebt <strong>%{count}</strong> wachtende berichten."
         ok: "OK"
+      example_username: "gebruikersnaam"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> heeft <a href='%{topicUrl}'>het topic</a> geplaatst"
       you_posted_topic: "<a href='%{userUrl}'>U</a> hebt <a href='%{topicUrl}'>het topic</a> geplaatst"
@@ -1294,10 +1296,12 @@ nl:
         link_groups: Groepen
         link_expires_at: Verloopt
         create: "Uitnodiging sturen"
-        copy_link: "Koppeling kopiëren"
-        generate_link: "Uitnodigingskoppeling kopiëren"
-        link_generated: "Uitnodigingskoppeling is aangemaakt!"
+        copy_link: "Koppeling tonen"
+        generate_link: "Uitnodigingskoppeling maken"
+        link_generated: "Hier is uw uitnodigingskoppeling!"
         valid_for: "De uitnodigingskoppeling is alleen geldig voor dit e-mailadres: %{email}"
+        single_user: "Uitnodigen via e-mail"
+        multiple_user: "Uitnodigen via koppeling"
         invite_link:
           title: "Uitnodigingskoppeling"
           success: "Uitnodigingskoppeling is aangemaakt!"
@@ -1305,7 +1309,7 @@ nl:
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
         bulk_invite:
-          none: "U hebt hier nog niemand uitgenodigd. Stuur individuele uitnodigingen of nodig meerdere mensen tegelijk uit door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een CSV-bestand te uploaden</a>."
+          none: "Geen uitnodigingen om weer te geven op deze pagina. U kunt bepaalde mensen uitnodigen via hun e-mailadres, of een uitnodigingskoppeling maken die door iedereen kan worden gebruikt."
           text: "Bulkuitnodiging"
           success: "Het bestand is geüpload. U ontvangt een melding via een bericht zodra het proces is voltooid."
           error: "Sorry, bestand dient de CSV-indeling te hebben."
@@ -1775,9 +1779,7 @@ nl:
         title: "Bent u ontvangers vergeten toe te voegen?"
         body: "Het bericht wordt nu alleen naar uzelf verstuurd!"
       slow_mode:
-        title: "Dit topic bevindt zich in de langzame modus."
-        body: "Na het plaatsen van een bericht dient u %{duration} te wachten voordat u weer een bericht kunt plaatsen."
-        error: "U hebt onlangs een bericht geplaatst in dit topic, dat zich in de langzame modus bevindt. Wacht nog even, zodat anderen de kans krijgen om deel te nemen."
+        error: "Dit topic bevindt zich in de langzame modus. Om een doordachte, weloverwogen discussie te stimuleren, mag u slechts één keer per %{duration} een bericht plaatsen."
       admin_options_title: "Optionele stafinstellingen voor dit topic"
       composer_actions:
         reply: Antwoorden
@@ -1836,10 +1838,6 @@ nl:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} en %{count} anderen</span> %{description}"
-        other: "<span>%{username}, %{username2} en %{count} anderen</span> %{description}"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -2036,6 +2034,9 @@ nl:
         choose_append_tags: "Kies nieuwe tags om voor deze topics toe te voegen:"
         changed_tags: "De tags van deze topics zijn gewijzigd."
         remove_tags: "Tags verwijderen"
+        progress:
+          one: "Voortgang: <strong>%{count}</strong> topic"
+          other: "Voortgang: <strong>%{count}</strong> topics"
       none:
         unread: "U hebt geen ongelezen topics."
         new: "U hebt geen nieuwe topics."
@@ -2136,9 +2137,9 @@ nl:
       deleted: "Het topic is verwijderd"
       slow_mode_update:
         title: "Langzame modus"
-        select: "Tijdsduur:"
-        description: "Gebruikers moeten wachten om opnieuw berichten te kunnen plaatsen."
-        save: "Opslaan"
+        select: "Gebruikers mogen slechts een bericht in dit topic plaatsen om de:"
+        description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
+        save: "Inschakelen"
         remove: "Uitschakelen"
         hours: "Uren:"
         minutes: "Minuten:"
@@ -2587,6 +2588,10 @@ nl:
         unlock_post_description: "toestaan dat de schrijver dit bericht bewerkt"
         delete_topic_disallowed_modal: "U hebt geen toestemming om dit topic te verwijderen. Als u echt wilt dat het wordt verwijderd, plaats dan een markering voor aandacht van een moderator, en voeg de reden bij."
         delete_topic_disallowed: "u hebt geen toestemming om dit topic te verwijderen"
+        delete_topic_confirm_modal: "Dit topic heeft momenteel meer dan %{minViews} weergaven en kan een populaire zoekbestemming zijn. Weet u zeker dat u dit topic volledig wilt verwijderen, in plaats van het te bewerken voor verbetering?"
+        delete_topic_confirm_modal_yes: "Ja, dit topic verwijderen"
+        delete_topic_confirm_modal_no: "Nee, dit topic behouden"
+        delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
         add_post_notice: "Stafmelding toevoegen"
         remove_post_notice: "Stafmelding verwijderen"
@@ -3221,6 +3226,7 @@ nl:
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
+      approval_not_required: "Gebruiker wordt automatisch goedgekeurd zodra hij of zij deze uitnodiging accepteert."
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."

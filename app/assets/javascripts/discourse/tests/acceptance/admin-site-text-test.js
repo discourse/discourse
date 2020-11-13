@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -6,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
 
-  test("search for a key", async (assert) => {
+  test("search for a key", async function (assert) {
     await visit("/admin/customize/site_texts");
 
     await fillIn(".site-text-search", "Test");
@@ -27,10 +28,10 @@ acceptance("Admin - Site Texts", function (needs) {
     assert.ok(exists(".site-text.overridden"));
   });
 
-  test("edit and revert a site text by key", async (assert) => {
+  test("edit and revert a site text by key", async function (assert) {
     await visit("/admin/customize/site_texts/site.test");
 
-    assert.equal(find(".title h3").text(), "site.test");
+    assert.equal(queryAll(".title h3").text(), "site.test");
     assert.ok(!exists(".saved"));
     assert.ok(!exists(".revert-site-text"));
 

@@ -1,11 +1,42 @@
 div.edit-category {
   display: block;
-  position: relative;
+
+  .edit-category-nav {
+    width: 100%;
+    background-color: var(--secondary);
+    position: relative;
+    border-top: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
+    margin: 0.5em 0;
+    overflow: hidden;
+    &:after {
+      background: linear-gradient(
+        to right,
+        rgba(var(--secondary-rgb), 0) 0%,
+        rgba(var(--secondary-rgb), 1) 100%
+      );
+      content: "";
+      position: absolute;
+      right: 0px;
+      height: 100%;
+      width: 30px;
+    }
+  }
+
   .nav-stacked {
-    position: absolute;
-    top: 3.2em;
-    left: -80%;
-    transition: left 0.2s ease;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    display: inline-flex;
+    width: 100%;
+    margin-bottom: 0;
+    li {
+      font-size: $font-down-1;
+      border-bottom: none;
+    }
+    a.active::after {
+      display: none;
+    }
   }
 
   .edit-category-tab,

@@ -381,6 +381,7 @@ pl_PL:
       other: "Zobacz %{count} nowych tematów"
     preview: "podgląd"
     cancel: "anuluj"
+    deleting: "Usuwam..."
     save: "Zapisz zmiany"
     saving: "Zapisuję…"
     saved: "Zapisano!"
@@ -455,7 +456,7 @@ pl_PL:
           title: "Przeglądalne priorytety"
       moderation_history: "Historia moderacji"
       view_all: "Pokaż wszystko"
-      grouped_by_topic: "Grupuj tematycznie"
+      grouped_by_topic: "Pogrupowane według tematu"
       none: "Brak elementów do przejrzenia."
       view_pending: "pokaż oczekujące"
       topic_has_pending:
@@ -481,8 +482,8 @@ pl_PL:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (%{count} flaga ogółem)"
           few: "%{agreed}, %{disagreed}, %{ignored} (%{count} flagi ogółem)"
-          many: "%{agreed}, %{disagreed}, %{ignored} (%{count} flagi ogółem)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} flagi ogółem)"
+          many: "%{agreed}, %{disagreed}, %{ignored} (%{count} flag ogółem)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} flag ogółem)"
         agreed:
           one: "%{count}% zgadza się"
           few: "%{count}% zgadza się"
@@ -554,7 +555,7 @@ pl_PL:
         approved:
           title: "Zaakceptowany"
         rejected:
-          title: "Odrzucone"
+          title: "Odrzucony"
         ignored:
           title: "Zignorowany"
         deleted:
@@ -582,6 +583,7 @@ pl_PL:
           many: "Masz <strong>%{count}</strong> oczekujących wpisów."
           other: "Masz <strong>%{count}</strong> oczekujących wpisów."
         ok: "OK"
+      example_username: "użytkownik"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
       you_posted_topic: "<a href='%{userUrl}'>Dodajesz</a> <a href='%{topicUrl}'>temat</a>"
@@ -640,7 +642,7 @@ pl_PL:
         title: "Prośby"
         reason: "Powód"
         accept: "Zaakceptuj"
-        accepted: "przyjęty"
+        accepted: "zaakceptowano"
         deny: "Odrzuć"
         denied: "odrzucony"
         undone: "prośba cofnięta"
@@ -1368,10 +1370,12 @@ pl_PL:
         link_groups: Grupy
         link_expires_at: Wygasa
         create: "Wyślij zaproszenie"
-        copy_link: "Skopiuj odnośnik"
-        generate_link: "Skopiuj odnośnik z zaproszeniem"
-        link_generated: "Link z zaproszenie został poprawnie wygenerowany!"
+        copy_link: "Pokaż link"
+        generate_link: "Stwórz odnośnik z zaproszeniem"
+        link_generated: "Oto Twój link z zaproszeniem!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
+        single_user: "Zaproś przez e-mail"
+        multiple_user: "Zaproś za pomocą linku"
         invite_link:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
@@ -1379,7 +1383,7 @@ pl_PL:
           max_redemptions_allowed_label: "Ile osób może zarejestrować się za pomocą tego linku?"
           expires_at: "Kiedy ten link z zaproszeniem wygaśnie?"
         bulk_invite:
-          none: "Jeszcze nikogo nie zaprosiłeś. Możesz wysłać pojedyncze zaproszenia lub zaprosić wiele osób na raz poprzez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> wysłanie pliku CSV</a>."
+          none: "Brak zaproszeń do wyświetlenia na tej stronie. Możesz zaprosić określone osoby za pomocą ich e-maili lub utworzyć link z zaproszeniem, z którego będzie mógł korzystać każdy."
           text: "Zaproszenie zbiorcze"
           success: "Plik został przesłany pomyślnie: otrzymasz prywatną wiadomość, gdy proces zostanie zakończony."
           error: "Przykro nam, ale wymagany format pliku to CSV."
@@ -1489,8 +1493,8 @@ pl_PL:
         network: "Sprawdź swoje połączenie."
         network_fixed: "Chyba już w porządku."
         server: "Kod błędu: %{status}"
-        forbidden: "Nie możesz obejrzeć tego zasobu."
-        not_found: "Ups, aplikacja próbowała otworzyć URL który nie istnieje."
+        forbidden: "Nie masz uprawnień, aby to wyświetlić."
+        not_found: "Ups, aplikacja próbowała załadować adres URL, który nie istnieje."
         unknown: "Coś poszło nie tak."
       buttons:
         back: "Cofnij"
@@ -1518,11 +1522,11 @@ pl_PL:
     all_time: "łącznie"
     all_time_desc: "łącznie utworzonych tematów"
     year: "rok"
-    year_desc: "tematy dodane w ciągu ostatnich 365 dni"
+    year_desc: "tematów utworzonych w ciągu ostatnich 365 dni"
     month: "miesiąc"
-    month_desc: "tematy dodane w ciągu ostatnich 30 dni"
+    month_desc: "tematów utworzonych w ciągu ostatnich 30 dni"
     week: "tydzień"
-    week_desc: "tematy dodane w ciągu ostatnich 7 dni"
+    week_desc: "tematów utworzonych w ciągu ostatnich 7 dni"
     day: "dzień"
     first_post: Pierwszy wpis
     mute: Wycisz
@@ -1594,6 +1598,7 @@ pl_PL:
     email_login:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
+      emoji: "zablokuj emoji"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> , <b>wkrótce</b> otrzymasz wiadomość e-mail z linkiem do logowania."
@@ -1852,10 +1857,6 @@ pl_PL:
       yourself_confirm:
         title: "Nie zapomniałeś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
-      slow_mode:
-        title: "Ten temat jest w trybie zwolnionym."
-        body: "Po wysłaniu postu musisz poczekać %{duration} , zanim będziesz mógł ponownie coś opublikować."
-        error: "Ostatnio napisałeś na ten temat, który jest w trybie zwolnionym. Poczekaj, aby inni użytkownicy mogli wziąć udział w dyskusji."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
@@ -1913,12 +1914,6 @@ pl_PL:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} i %{count} inna osoba</span> %{description}"
-        few: "<span>%{username}, %{username2} i %{count} inne osoby</span> %{description}"
-        many: "<span>%{username}, %{username2} i %{count} innych osób</span> %{description}"
-        other: "<span>%{username}, %{username2} i %{count} innych osób</span> %{description}"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubiłem %{count} twoich postów"
@@ -2226,14 +2221,13 @@ pl_PL:
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy
+      suggest_create_topic: rozpocząć nową rozmowę?
       jump_reply_up: przeskocz do wcześniejszej odpowiedzi
       jump_reply_down: przeskocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
-        select: "Czas trwania:"
-        description: "Użytkownicy będą musieli poczekać, aby móc ponownie opublikować."
-        save: "Zapisz"
+        save: "Włącz"
         remove: "Wyłącz"
         hours: "Godziny:"
         minutes: "Minuty:"
@@ -2702,6 +2696,10 @@ pl_PL:
         unlock_post_description: "zezwól postującemu na edycję tego wpisu"
         delete_topic_disallowed_modal: "Nie masz uprawnień do usunięcia tego tematu. Jeśli naprawdę chcesz go usunąć, prześlij flagę do moderatora wraz z uzasadnieniem."
         delete_topic_disallowed: "nie masz uprawnień do usunięcia tego tematu"
+        delete_topic_confirm_modal: "Ten temat ma obecnie ponad %{minViews} wyświetleń i może być popularnym miejscem wyszukiwania. Czy na pewno chcesz całkowicie usunąć ten temat, zamiast edytować go w celu ulepszenia?"
+        delete_topic_confirm_modal_yes: "Tak, usuń ten temat"
+        delete_topic_confirm_modal_no: "Nie, zachowaj ten temat"
+        delete_topic_error: "Wystąpił błąd podczas usuwania tego wątku"
         delete_topic: "usuń temat"
         add_post_notice: "Dodaj notatkę personelu"
         remove_post_notice: "Usuń wiadomość dla zespołu zarządzającego"
@@ -2788,6 +2786,7 @@ pl_PL:
       tags_allowed_tag_groups: "Zabroń następujących grup tagów w tej kategorii:"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
+      manage_tag_groups_link: "Zarządzaj grupami tagów"
       allow_global_tags_label: "Zezwól dodatkowo na inne tagi"
       tag_group_selector_placeholder: "(Opcjonalnie) Grupa znaczników"
       required_tag_group_description: "Wymagaj, aby nowe tematy miały znaczniki z grupy znaczników:"
@@ -3164,6 +3163,7 @@ pl_PL:
         return: "%{shortcut} Powróć do kompozytora"
         fullscreen: "%{shortcut} Pełnoekranowy kompozytor"
       bookmarks:
+        title: "Tworzenie zakładek"
         enter: "%{shortcut} Zapisz i zamknij"
         later_today: "%{shortcut} Później dzisiaj"
         later_this_week: "%{shortcut} Później w tym tygodniu"
@@ -3327,6 +3327,7 @@ pl_PL:
           top: "Brak najlepszych tematów."
     invite:
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
+      approval_not_required: "Użytkownik zostanie automatycznie zatwierdzony, gdy tylko zaakceptuje to zaproszenie."
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
       custom_message_template_topic: "Hej, pomyślałem że spodoba Ci się ten temat !"
     footer_nav:
@@ -3420,6 +3421,7 @@ pl_PL:
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
           totals_for_sample: "Całkowite na próbkowanie"
@@ -3527,8 +3529,10 @@ pl_PL:
         save: Zapisz
         new_key: Nowy klucz API
         revoked: Unieważniono
+        delete: Usuń bezpowrotnie
         continue: Kontynuuj
         scopes:
+          allowed_parameters: Dozwolone parametry
           allowed_urls: Dozwolone adresy URL
       web_hooks:
         title: "Webhooks"
@@ -4096,6 +4100,7 @@ pl_PL:
             post_edit: "edycja wpisu"
             post_unlocked: "wpis odblokowany"
             check_personal_message: "sprawdź wiadomości prywatne"
+            disabled_second_factor: "wyłącz dwuskładnikowe uwierzytelnienie"
             topic_published: "wątek opublikowany"
             post_approved: "post zatwierdzony"
             post_rejected: "wpis odrzucony"
@@ -4308,6 +4313,7 @@ pl_PL:
         private_topics_count: Prywatne tematy
         posts_read_count: Przeczytane wpisy
         post_count: Napisane wpisy
+        second_factor_enabled: Uwierzytelnianie dwuskładnikowe włączone
         topics_entered: Widziane tematy
         flags_given_count: Dane flagi
         flags_received_count: Otrzymane flagi

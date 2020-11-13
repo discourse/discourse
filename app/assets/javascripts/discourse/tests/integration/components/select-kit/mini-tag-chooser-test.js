@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
 import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
@@ -32,9 +33,9 @@ componentTest("create a tag", {
 
     await this.subject.expand();
     await this.subject.fillInFilter("mon");
-    assert.equal(find(".select-kit-row").text().trim(), "monkey x1");
+    assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
     await this.subject.fillInFilter("key");
-    assert.equal(find(".select-kit-row").text().trim(), "monkey x1");
+    assert.equal(queryAll(".select-kit-row").text().trim(), "monkey x1");
     await this.subject.keyboard("enter");
 
     assert.equal(this.subject.header().value(), "foo,bar,monkey");
@@ -56,7 +57,7 @@ componentTest("max_tags_per_topic", {
     await this.subject.fillInFilter("baz");
     await this.subject.keyboard("enter");
 
-    const error = find(".select-kit-error").text();
+    const error = queryAll(".select-kit-error").text();
     assert.equal(
       error,
       I18n.t("select_kit.max_content_reached", {

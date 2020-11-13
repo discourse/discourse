@@ -25,19 +25,15 @@ class Discourse::Cors
     status, headers, body = @app.call(env)
     headers ||= {}
 
-    Discourse::Cors.apply_headers(cors_origins, env, headers)
+    Discourse::Cors.apply_headers(cors_origins, env, headers) if cors_origins
 
     [status, headers, body]
   end
 
   def self.apply_headers(cors_origins, env, headers)
-    request_method = env['REQUEST_METHOD']
+    origin = nil
 
-    if env['SCRIPT_NAME'] == "/assets" && Discourse.is_cdn_request?(env, request_method)
-      Discourse.apply_cdn_headers(headers)
-    elsif cors_origins
-      origin = nil
-
+    if cors_origins
       if origin = env['HTTP_ORIGIN']
         origin = nil unless cors_origins.include?(origin)
       end
@@ -52,6 +48,6 @@ class Discourse::Cors
   end
 end
 
-if GlobalSetting.enable_cors || GlobalSetting.cdn_url
+if GlobalSetting.enable_cors
   Rails.configuration.middleware.insert_before ActionDispatch::Flash, Discourse::Cors
 end

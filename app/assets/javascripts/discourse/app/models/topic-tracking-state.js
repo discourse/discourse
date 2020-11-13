@@ -6,6 +6,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import { deepEqual } from "discourse-common/lib/object";
+import DiscourseURL from "discourse/lib/url";
 
 function isNew(topic) {
   return (
@@ -147,6 +148,17 @@ const TopicTrackingState = EmberObject.extend({
         delete old.deleted;
       }
       tracker.incrementMessageCount();
+    });
+
+    this.messageBus.subscribe("/destroy", (msg) => {
+      tracker.incrementMessageCount();
+      const currentRoute = DiscourseURL.router.currentRoute.parent;
+      if (
+        currentRoute.name === "topic" &&
+        parseInt(currentRoute.params.id, 10) === msg.topic_id
+      ) {
+        DiscourseURL.redirectTo("/");
+      }
     });
   },
 

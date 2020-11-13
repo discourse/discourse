@@ -11,7 +11,7 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.hooks.beforeEach(function () {
     KeyboardShortcutInitializer.initialize(this.container);
   });
-  test("a plugin can add a keyboard shortcut", async (assert) => {
+  test("a plugin can add a keyboard shortcut", async function (assert) {
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {
         $("#qunit-fixture").html(
@@ -34,7 +34,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function (needs) {
   needs.hooks.beforeEach(function () {
     KeyboardShortcutInitializer.initialize(this.container);
   });
-  test("a plugin can add a keyboard shortcut with an option", async (assert) => {
+  test("a plugin can add a keyboard shortcut with an option", async function (assert) {
     let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {}, {

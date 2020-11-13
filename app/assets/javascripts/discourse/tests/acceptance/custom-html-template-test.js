@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -13,10 +14,10 @@ acceptance("CustomHTML template", function (needs) {
     delete Ember.TEMPLATES["top"];
   });
 
-  test("renders custom template", async (assert) => {
+  test("renders custom template", async function (assert) {
     await visit("/static/faq");
     assert.equal(
-      find("span.top-span").text(),
+      queryAll("span.top-span").text(),
       "TOP",
       "it inserted the template"
     );

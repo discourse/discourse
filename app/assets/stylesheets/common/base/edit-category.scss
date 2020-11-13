@@ -7,19 +7,24 @@ div.edit-category {
   grid-template-rows: auto auto auto;
   grid-row-gap: 1em;
   grid-column-gap: 1.5em;
-  grid-template-areas: "sidebar header" "sidebar content" "sidebar footer";
+  grid-template-areas: "header header" "sidebar content" "sidebar footer";
 
   .edit-category-title {
     grid-area: header;
+    grid-column: 1 / span 2;
     display: flex;
     justify-content: space-between;
     align-self: start;
+    background-color: var(--primary-very-low);
+    padding: 20px;
   }
 
-  .nav-stacked {
+  .edit-category-nav {
     grid-area: sidebar;
-    grid-row: 1 / span 3;
-    background: transparent;
+    grid-row: 2 / span 3;
+    .nav-stacked {
+      background-color: var(--secondary);
+    }
   }
 
   #list-area & h2 {
@@ -33,6 +38,12 @@ div.edit-category {
   .edit-category-tab-general {
     .category-chooser {
       width: unquote("min(340px, 90%)");
+    }
+
+    .warning {
+      background-color: var(--tertiary-low);
+      padding: 0.5em 2.5em 0.5em 1em;
+      margin-top: 0;
     }
   }
 
@@ -136,6 +147,7 @@ div.edit-category {
     display: flex;
     justify-content: space-between;
     align-self: start;
+    padding-bottom: 2em;
 
     .disable-info {
       position: relative;

@@ -275,7 +275,10 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_published_page?
-    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present?
+    SiteSetting.enable_page_publishing? &&
+      scope.is_staff? &&
+      object.published_page.present? &&
+      !SiteSetting.secure_media
   end
 
   def thumbnails

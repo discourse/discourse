@@ -64,7 +64,7 @@ describe PostActionUsersController do
     PostActionCreator.like(ignored_user, post)
     regular_user = Fabricate(:user)
     PostActionCreator.like(regular_user, post)
-    IgnoredUser.create(user: user, ignored_user: ignored_user)
+    Fabricate(:ignored_user, user: user, ignored_user: ignored_user)
 
     get "/post_action_users.json", params: {
       id: post.id, post_action_type_id: PostActionType.types[:like]

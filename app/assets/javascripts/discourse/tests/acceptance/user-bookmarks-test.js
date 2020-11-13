@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -9,9 +10,9 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("User's bookmarks", function (needs) {
   needs.user();
 
-  test("removing a bookmark with no reminder does not show a confirmation", async (assert) => {
+  test("removing a bookmark with no reminder does not show a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(find(".bookmark-list-item").length > 0);
+    assert.ok(queryAll(".bookmark-list-item").length > 0);
 
     const dropdown = selectKit(".bookmark-actions-dropdown:eq(0)");
     await dropdown.expand();
@@ -32,7 +33,7 @@ acceptance("User's bookmarks - reminder", function (needs) {
     });
   });
 
-  test("removing a bookmark with a reminder shows a confirmation", async (assert) => {
+  test("removing a bookmark with a reminder shows a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
 
     const dropdown = selectKit(".bookmark-actions-dropdown");
@@ -57,8 +58,8 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
     );
   });
 
-  test("listing users bookmarks - no bookmarks", async (assert) => {
+  test("listing users bookmarks - no bookmarks", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.equal(find(".alert.alert-info").text(), "no bookmarks");
+    assert.equal(queryAll(".alert.alert-info").text(), "no bookmarks");
   });
 });

@@ -109,15 +109,16 @@ describe TopicUser do
 
   describe 'notifications' do
     it 'should trigger the right DiscourseEvent' do
+      called = false
+      blk = Proc.new { called = true }
       begin
-        called = false
-        DiscourseEvent.on(:topic_notification_level_changed) { called = true }
+        DiscourseEvent.on(:topic_notification_level_changed, &blk)
 
         TopicUser.change(user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
 
         expect(called).to eq(true)
       ensure
-        DiscourseEvent.off(:topic_notification_level_changed) { called = true }
+        DiscourseEvent.off(:topic_notification_level_changed, &blk)
       end
     end
 

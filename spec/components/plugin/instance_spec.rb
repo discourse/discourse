@@ -409,7 +409,7 @@ describe Plugin::Instance do
 
     it "enables the registered locales only on activate" do
       plugin.register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
-      plugin.register_locale("es_MX", name: "Spanish (Mexico)", nativeName: "Español (México)", fallbackLocale: "es")
+      plugin.register_locale("tup", name: "Tupi", nativeName: "Tupi", fallbackLocale: "pt_BR")
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
 
       plugin.activate!
@@ -444,21 +444,21 @@ describe Plugin::Instance do
     end
 
     it "correctly registers a new locale using a fallback locale" do
-      locale = register_locale("es_MX", name: "Spanish (Mexico)", nativeName: "Español (México)", fallbackLocale: "es")
+      locale = register_locale("tup", name: "Tupi", nativeName: "Tupi", fallbackLocale: "pt_BR")
 
       expect(DiscoursePluginRegistry.locales.count).to eq(1)
-      expect(DiscoursePluginRegistry.locales).to have_key(:es_MX)
+      expect(DiscoursePluginRegistry.locales).to have_key(:tup)
 
-      expect(locale[:fallbackLocale]).to eq("es")
-      expect(locale[:message_format]).to eq(["es", "#{Rails.root}/lib/javascripts/locale/es.js"])
-      expect(locale[:moment_js]).to eq(["es", "#{Rails.root}/vendor/assets/javascripts/moment-locale/es.js"])
-      expect(locale[:moment_js_timezones]).to eq(["es", "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale/es.js"])
+      expect(locale[:fallbackLocale]).to eq("pt_BR")
+      expect(locale[:message_format]).to eq(["pt_BR", "#{Rails.root}/lib/javascripts/locale/pt_BR.js"])
+      expect(locale[:moment_js]).to eq(["pt-br", "#{Rails.root}/vendor/assets/javascripts/moment-locale/pt-br.js"])
+      expect(locale[:moment_js_timezones]).to eq(["pt", "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale/pt.js"])
       expect(locale[:plural]).to be_nil
 
-      expect(Rails.configuration.assets.precompile).to include("locales/es_MX.js")
+      expect(Rails.configuration.assets.precompile).to include("locales/tup.js")
 
-      expect(JsLocaleHelper.find_message_format_locale(["es_MX"], fallback_to_english: true)).to eq(locale[:message_format])
-      expect(JsLocaleHelper.find_moment_locale(["es_MX"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_message_format_locale(["tup"], fallback_to_english: true)).to eq(locale[:message_format])
+      expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq (locale[:moment_js])
     end
 
     it "correctly registers a new locale when some files exist in core" do

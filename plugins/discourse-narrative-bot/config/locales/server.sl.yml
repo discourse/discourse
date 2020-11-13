@@ -181,12 +181,6 @@ sl:
           Lepa slika – pritisnil sem :heart: gumb, da vam povem kako zelo mi je všeč. :heart_eyes:
         like_not_found: |-
           Ali ste pozabili všečkati :heart: moj [prispevek?](%{url}) :crying_cat_face:
-        not_found: |-
-          Kaže da niste uspeli naložiti slike, zato sem jaz izbral takšno, ki vam bo _zagotovo_ všeč.
-
-          `%{image_url}`
-
-          Poskusite naložiti to sliko ali pa prilepite povezavo do slike v svojo vrstico!
       likes:
         instructions: |-
           Tu je slika samoroga:

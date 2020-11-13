@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
 import pretender from "discourse/tests/helpers/create-pretender";
 import {
@@ -47,17 +48,17 @@ widgetTest("sets notification as read on middle click", {
       return [200, { "Content-Type": "application/json" }, { success: true }];
     });
 
-    assert.equal(find("li.read").length, 0);
+    assert.equal(queryAll("li.read").length, 0);
 
     await $(document).trigger(
       $.Event("mouseup", {
-        target: find("li")[0],
+        target: queryAll("li")[0],
         button: 1,
         which: 2,
       })
     );
 
-    assert.equal(find("li.read").length, 1);
+    assert.equal(queryAll("li.read").length, 1);
     assert.equal(requests, 1);
   },
 });

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -8,17 +9,17 @@ import sinon from "sinon";
 acceptance("Category New", function (needs) {
   needs.user();
 
-  test("Creating a new category", async (assert) => {
+  test("Creating a new category", async function (assert) {
     await visit("/new-category");
-    assert.ok(find(".badge-category"));
+    assert.ok(queryAll(".badge-category"));
 
     await fillIn("input.category-name", "testing");
-    assert.equal(find(".badge-category").text(), "testing");
+    assert.equal(queryAll(".badge-category").text(), "testing");
 
     await click("#save-category");
 
     assert.equal(
-      find(".edit-category-title h2").text(),
+      queryAll(".edit-category-title h2").text(),
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",
       })
@@ -26,22 +27,22 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-security a");
     assert.ok(
-      find("button.edit-permission"),
+      queryAll("button.edit-permission"),
       "it can switch to the security tab"
     );
 
     await click(".edit-category-settings a");
     assert.ok(
-      find("#category-search-priority"),
+      queryAll("#category-search-priority"),
       "it can switch to the settings tab"
     );
 
-    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "routeTo");
 
     await click(".category-back");
     assert.ok(
-      DiscourseURL.redirectTo.calledWith("/c/testing/11"),
-      "it full page redirects after a newly created category"
+      DiscourseURL.routeTo.calledWith("/c/testing/11"),
+      "back routing works"
     );
   });
 });

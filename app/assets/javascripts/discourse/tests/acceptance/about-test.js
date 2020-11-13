@@ -4,7 +4,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("About", function () {
-  test("viewing", async (assert) => {
+  test("viewing", async function (assert) {
     await visit("/about");
 
     assert.ok($("body.about-page").length, "has body class");

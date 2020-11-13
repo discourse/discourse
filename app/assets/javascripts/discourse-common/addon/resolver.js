@@ -52,6 +52,24 @@ export function buildResolver(baseName) {
         return "service:app-events";
       }
 
+      for (const [key, value] of Object.entries({
+        "controller:discovery.categoryWithID": "controller:discovery.category",
+        "controller:discovery.parentCategory": "controller:discovery.category",
+        "controller:tags-show": "controller:tag-show",
+        "controller:tags.show": "controller:tag.show",
+        "controller:tagsShow": "controller:tagShow",
+        "route:discovery.categoryWithID": "route:discovery.category",
+        "route:discovery.parentCategory": "route:discovery.category",
+        "route:tags-show": "route:tag-show",
+        "route:tags.show": "route:tag.show",
+        "route:tagsShow": "route:tagShow",
+      })) {
+        if (fullName === key) {
+          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
+          return value;
+        }
+      }
+
       const split = fullName.split(":");
       if (split.length > 1) {
         const appBase = `${baseName}/${split[0]}s/`;

@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -14,7 +15,7 @@ acceptance("EmojiPicker", function (needs) {
     this.emojiStore.reset();
   });
 
-  test("emoji picker can be opened/closed", async (assert) => {
+  test("emoji picker can be opened/closed", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -25,20 +26,20 @@ acceptance("EmojiPicker", function (needs) {
     assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
   });
 
-  test("emoji picker triggers event when picking emoji", async (assert) => {
+  test("emoji picker triggers event when picking emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       ":grinning:",
       "it adds the emoji code in the editor when selected"
     );
   });
 
-  test("emoji picker adds leading whitespace before emoji", async (assert) => {
+  test("emoji picker adds leading whitespace before emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -47,7 +48,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and a leading whitespace when there is text"
     );
@@ -57,13 +58,13 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       "This is a test input :grinning:",
       "it adds the emoji code and no leading whitespace when user already entered whitespace"
     );
   });
 
-  test("emoji picker has a list of recently used emojis", async (assert) => {
+  test("emoji picker has a list of recently used emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -101,7 +102,7 @@ acceptance("EmojiPicker", function (needs) {
     );
   });
 
-  test("emoji picker correctly orders recently used emojis", async (assert) => {
+  test("emoji picker correctly orders recently used emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
@@ -109,21 +110,22 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
     assert.equal(
-      find('.section[data-section="recent"] .section-group img.emoji').length,
+      queryAll('.section[data-section="recent"] .section-group img.emoji')
+        .length,
       2,
       "it has multiple recent emojis"
     );
 
     assert.equal(
       /grinning/.test(
-        find(".section.recent .section-group img.emoji").first().attr("src")
+        queryAll(".section.recent .section-group img.emoji").first().attr("src")
       ),
       true,
       "it puts the last used emoji in first"
     );
   });
 
-  test("emoji picker persists state", async (assert) => {
+  test("emoji picker persists state", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");

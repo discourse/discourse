@@ -168,22 +168,15 @@ componentTest("filter works with non english characters", {
   template: `
     {{category-chooser
       value=value
-      content=content
     }}
   `,
 
   beforeEach() {
     const store = createStore();
-    const nonEnglishCat = store.createRecord("category", {
+    store.createRecord("category", {
       id: 1,
       name: "chữ Quốc ngữ",
     });
-    const englishCat = store.createRecord("category", {
-      id: 2,
-      name: "Baz",
-    });
-
-    this.set("content", [nonEnglishCat, englishCat]);
   },
 
   async test(assert) {
@@ -199,19 +192,17 @@ componentTest("decodes entities in row title", {
   template: `
     {{category-chooser
       value=value
-      content=content
+      options=(hash scopedCategoryId=1)
     }}
   `,
 
   beforeEach() {
     const store = createStore();
-    const catWithEntities = store.createRecord("category", {
+    store.createRecord("category", {
       id: 1,
       name: "cat-with-entities",
       description: "baz &quot;bar ‘foo’",
     });
-
-    this.set("content", [catWithEntities]);
   },
 
   async test(assert) {

@@ -1,20 +1,7 @@
 <div class="edit-category {{if expandedMenu "expanded-menu"}}">
-  <ul class="nav nav-stacked">
-    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="general"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="security"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="settings"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="images"}}
-    {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="topic-template"}}
-    {{#if siteSettings.tagging_enabled}}
-      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="tags"}}
-    {{/if}}
-  </ul>
-
   <div class="edit-category-title">
     <h2>{{title}}</h2>
-    {{#if mobileView}}
-      {{d-button action=(action "toggleMenu") class="menu-toggle" icon="bars"}}
-    {{else}}
+    {{#unless mobileView}}
       {{#if model.id}}
         {{d-button
           class="category-back"
@@ -23,7 +10,20 @@
           icon="caret-left"
         }}
       {{/if}}
-    {{/if}}
+    {{/unless}}
+  </div>
+
+  <div class="edit-category-nav">
+    <ul class="nav nav-stacked">
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="general"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="security"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="settings"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="images"}}
+      {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="topic-template"}}
+      {{#if siteSettings.tagging_enabled}}
+        {{edit-category-tab panels=panels selectedTab=selectedTab params=parentParams tab="tags"}}
+      {{/if}}
+    </ul>
   </div>
 
   {{#each panels as |tab|}}

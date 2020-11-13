@@ -128,18 +128,39 @@ export function controllerModule(name, args = {}) {
   });
 }
 
-export function discourseModule(name, hooks) {
+export function discourseModule(name, options) {
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
+
+  if (typeof options === "function") {
+    module(name, function (hooks) {
+      hooks.beforeEach(function () {
+        this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
+        this.siteSettings = currentSettings();
+      });
+
+      options.call(this, hooks);
+    });
+
+    return;
+  }
+
   module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (hooks && hooks.beforeEach) {
-        hooks.beforeEach.call(this);
+      if (options && options.beforeEach) {
+        options.beforeEach.call(this);
       }
     },
     afterEach() {
-      if (hooks && hooks.afterEach) {
-        hooks.afterEach.call(this);
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
     },
   });
@@ -375,8 +396,12 @@ export async function selectDate(selector, date) {
   });
 }
 
+export function queryAll() {
+  return window.find(...arguments);
+}
+
 export function invisible(selector) {
-  const $items = find(selector + ":visible");
+  const $items = queryAll(selector + ":visible");
   return (
     $items.length === 0 ||
     $items.css("opacity") !== "1" ||
@@ -385,11 +410,11 @@ export function invisible(selector) {
 }
 
 export function visible(selector) {
-  return find(selector + ":visible").length > 0;
+  return queryAll(selector + ":visible").length > 0;
 }
 
 export function count(selector) {
-  return find(selector).length;
+  return queryAll(selector).length;
 }
 
 export function exists(selector) {

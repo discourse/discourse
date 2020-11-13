@@ -26,7 +26,7 @@ export default Controller.extend(ModalFunctionality, BufferedContent, {
           this.send("closeModal");
 
           if (result.responseJson.tag) {
-            this.transitionToRoute("tags.show", result.responseJson.tag.id);
+            this.transitionToRoute("tag.show", result.responseJson.tag.id);
           } else {
             this.flash(extractError(result.responseJson.errors[0]), "error");
           }

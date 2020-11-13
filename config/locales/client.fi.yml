@@ -1237,9 +1237,6 @@ fi:
         link_groups: Ryhmät
         link_expires_at: Vanhenee
         create: "Lähetä kutsu"
-        copy_link: "Kopioi linkki"
-        generate_link: "Kopioi kutsulinkki"
-        link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         invite_link:
           title: "Kutsulinkki"
@@ -1248,7 +1245,6 @@ fi:
           max_redemptions_allowed_label: "Kuinka moni voi enintään liittyä tämä linkin avulla?"
           expires_at: "Koska tämä linkki vanhenee?"
         bulk_invite:
-          none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
           text: "Massakutsu"
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
           error: "Tiedoston tulee olla CSV-muodossa."
@@ -1742,10 +1738,6 @@ fi:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} ja %{count} muu</span> %{description}"
-        other: "<span>%{username}, %{username2} ja %{count} muuta</span> %{description}"
       liked_consolidated_description:
         one: "tykkäsi %{count} viestistäsi"
         other: "tykkäsi %{count} viestistäsi"
@@ -2021,9 +2013,6 @@ fi:
       deleted: "Tämä ketju on poistettu"
       slow_mode_update:
         title: "Hidas tila"
-        select: "Kesto:"
-        description: "Käyttäjän on odotettava ennen kuin voi lähettää toisen viestin."
-        save: "Tallenna"
         remove: "Poista käytöstä"
         hours: "Tuntia:"
         minutes: "Minuuttia:"

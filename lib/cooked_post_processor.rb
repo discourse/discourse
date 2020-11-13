@@ -384,7 +384,7 @@ class CookedPostProcessor
     w, h = img["width"].to_i, img["height"].to_i
 
     # note: optimize_urls cooks the src and data-small-upload further after this
-    thumbnail = upload.thumbnail(w, h)
+    thumbnail = !upload.animated && upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
       img["src"] = thumbnail.url
 

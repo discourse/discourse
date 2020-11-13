@@ -15,11 +15,6 @@
 }
 
 .topic-body {
-  // this ensures consistent top margin on topic posts even if the first line of a post
-  // is a top-margin-less element like a list or image.
-  .regular {
-    margin-top: 15px;
-  }
   padding: 0;
   &:first-of-type {
     border-top: none;
@@ -573,7 +568,7 @@ blockquote {
   padding: 12px 0 0 0;
   .topic-meta-data,
   .cooked {
-    padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+    padding: 1em $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
   .group-request {
     padding: 0.5em $topic-body-width-padding 0 $topic-body-width-padding;

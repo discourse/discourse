@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -6,19 +7,19 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Category Edit - security", function (needs) {
   needs.user();
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/c/bug/edit/security");
 
-    const $permissionListItems = find(".permission-list li");
+    const $firstItem = queryAll(".permission-list li:eq(0)");
 
-    const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
+    const badgeName = $firstItem.find(".badge-group").text();
     assert.equal(badgeName, "everyone");
 
-    const permission = $permissionListItems.eq(0).find(".permission").text();
+    const permission = $firstItem.find(".permission").text();
     assert.equal(permission, "Create / Reply / See");
   });
 
-  test("removing a permission", async (assert) => {
+  test("removing a permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
 
     await visit("/c/bug/edit/security");
@@ -42,7 +43,7 @@ acceptance("Category Edit - security", function (needs) {
     );
   });
 
-  test("adding a permission", async (assert) => {
+  test("adding a permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
     const permissionSelector = selectKit(".permission-selector");
 
@@ -55,7 +56,7 @@ acceptance("Category Edit - security", function (needs) {
     await permissionSelector.selectRowByValue("2");
     await click(".edit-category-tab-security .add-permission");
 
-    const $addedPermissionItem = find(
+    const $addedPermissionItem = queryAll(
       ".edit-category-tab-security .permission-list li:nth-child(2)"
     );
 
@@ -66,7 +67,7 @@ acceptance("Category Edit - security", function (needs) {
     assert.equal(permission, "Reply / See");
   });
 
-  test("adding a previously removed permission", async (assert) => {
+  test("adding a previously removed permission", async function (assert) {
     const availableGroups = selectKit(".available-groups");
 
     await visit("/c/bug/edit/security");
@@ -77,7 +78,7 @@ acceptance("Category Edit - security", function (needs) {
     );
 
     assert.equal(
-      find(".edit-category-tab-security .permission-list li").length,
+      queryAll(".edit-category-tab-security .permission-list li").length,
       0,
       "it removes the permission from the list"
     );
@@ -87,17 +88,17 @@ acceptance("Category Edit - security", function (needs) {
     await click(".edit-category-tab-security .add-permission");
 
     assert.equal(
-      find(".edit-category-tab-security .permission-list li").length,
+      queryAll(".edit-category-tab-security .permission-list li").length,
       1,
       "it adds the permission to the list"
     );
 
-    const $permissionListItems = find(".permission-list li");
+    const $firstItem = queryAll(".permission-list li:eq(0)");
 
-    const badgeName = $permissionListItems.eq(0).find(".badge-group").text();
+    const badgeName = $firstItem.find(".badge-group").text();
     assert.equal(badgeName, "everyone");
 
-    const permission = $permissionListItems.eq(0).find(".permission").text();
+    const permission = $firstItem.find(".permission").text();
     assert.equal(permission, "Create / Reply / See");
   });
 });

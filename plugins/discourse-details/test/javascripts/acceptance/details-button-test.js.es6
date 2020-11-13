@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -7,7 +7,7 @@ acceptance("Details Button", function (needs) {
   needs.user();
   needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
-  test("details button", async (assert) => {
+  test("details button", async function (assert) {
     const popupMenu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/");
@@ -17,7 +17,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t("composer.details_title")}"]\n${I18n.t(
         "composer.details_text"
       )}\n[/details]\n`,
@@ -26,7 +26,7 @@ acceptance("Details Button", function (needs) {
 
     await fillIn(".d-editor-input", "This is my title");
 
-    const textarea = find(".d-editor-input")[0];
+    const textarea = queryAll(".d-editor-input")[0];
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -34,7 +34,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nThis is my title\n[/details]\n`,
@@ -61,7 +61,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       `Before \n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n After`,
@@ -88,7 +88,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       `Before \n\n[details="${I18n.t(
         "composer.details_title"
       )}"]\nsome text in between\n[/details]\n\n After`,
@@ -107,7 +107,7 @@ acceptance("Details Button", function (needs) {
     );
   });
 
-  test("details button surrounds all selected text in a single details block", async (assert) => {
+  test("details button surrounds all selected text in a single details block", async function (assert) {
     const multilineInput = "first line\n\nsecond line\n\nthird line";
     const popupMenu = selectKit(".toolbar-popup-menu-options");
 
@@ -115,7 +115,7 @@ acceptance("Details Button", function (needs) {
     await click("#create-topic");
     await fillIn(".d-editor-input", multilineInput);
 
-    const textarea = find(".d-editor-input")[0];
+    const textarea = queryAll(".d-editor-input")[0];
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -123,7 +123,7 @@ acceptance("Details Button", function (needs) {
     await popupMenu.selectRowByValue("insertDetails");
 
     assert.equal(
-      find(".d-editor-input").val(),
+      queryAll(".d-editor-input").val(),
       `\n[details="${I18n.t(
         "composer.details_title"
       )}"]\n${multilineInput}\n[/details]\n`,

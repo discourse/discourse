@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -9,7 +10,7 @@ import {
 acceptance("Tags", function (needs) {
   needs.user();
 
-  test("list the tags", async (assert) => {
+  test("list the tags", async function (assert) {
     await visit("/tags");
 
     assert.ok($("body.tags-page").length, "has the body class");
@@ -84,7 +85,7 @@ acceptance("Tags listed by group", function (needs) {
     );
   });
 
-  test("list the tags in groups", async (assert) => {
+  test("list the tags in groups", async function (assert) {
     await visit("/tags");
     assert.equal(
       $(".tag-list").length,
@@ -125,22 +126,22 @@ acceptance("Tags listed by group", function (needs) {
     );
   });
 
-  test("new topic button is not available for staff-only tags", async (assert) => {
+  test("new topic button is not available for staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(find("#create-topic:disabled").length === 0);
+    assert.ok(queryAll("#create-topic:disabled").length === 0);
 
     await visit("/tag/staff-only-tag");
-    assert.ok(find("#create-topic:disabled").length === 1);
+    assert.ok(queryAll("#create-topic:disabled").length === 1);
 
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(find("#create-topic:disabled").length === 0);
+    assert.ok(queryAll("#create-topic:disabled").length === 0);
 
     await visit("/tag/staff-only-tag");
-    assert.ok(find("#create-topic:disabled").length === 0);
+    assert.ok(queryAll("#create-topic:disabled").length === 0);
   });
 });
 
@@ -224,24 +225,24 @@ acceptance("Tag info", function (needs) {
     );
   });
 
-  test("tag info can show synonyms", async (assert) => {
+  test("tag info can show synonyms", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/planters");
-    assert.ok(find("#show-tag-info").length === 1);
+    assert.ok(queryAll("#show-tag-info").length === 1);
 
     await click("#show-tag-info");
     assert.ok(exists(".tag-info .tag-name"), "show tag");
     assert.ok(
-      find(".tag-info .tag-associations").text().indexOf("Gardening") >= 0,
+      queryAll(".tag-info .tag-associations").text().indexOf("Gardening") >= 0,
       "show tag group names"
     );
     assert.ok(
-      find(".tag-info .synonyms-list .tag-box").length === 2,
+      queryAll(".tag-info .synonyms-list .tag-box").length === 2,
       "shows the synonyms"
     );
     assert.ok(
-      find(".tag-info .badge-category").length === 1,
+      queryAll(".tag-info .badge-category").length === 1,
       "show the category"
     );
     assert.ok(!exists("#rename-tag"), "can't rename tag");
@@ -249,11 +250,11 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#delete-tag"), "can't delete tag");
   });
 
-  test("admin can manage tags", async (assert) => {
+  test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/planters");
-    assert.ok(find("#show-tag-info").length === 1);
+    assert.ok(queryAll("#show-tag-info").length === 1);
 
     await click("#show-tag-info");
     assert.ok(exists("#rename-tag"), "can rename tag");
@@ -262,17 +263,17 @@ acceptance("Tag info", function (needs) {
 
     await click("#edit-synonyms");
     assert.ok(
-      find(".unlink-synonym:visible").length === 2,
+      queryAll(".unlink-synonym:visible").length === 2,
       "unlink UI is visible"
     );
     assert.ok(
-      find(".delete-synonym:visible").length === 2,
+      queryAll(".delete-synonym:visible").length === 2,
       "delete UI is visible"
     );
 
     await click(".unlink-synonym:first");
     assert.ok(
-      find(".tag-info .synonyms-list .tag-box").length === 1,
+      queryAll(".tag-info .synonyms-list .tag-box").length === 1,
       "removed a synonym"
     );
   });

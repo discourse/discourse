@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -9,7 +10,7 @@ acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("Editing the category", async (assert) => {
+  test("Editing the category", async function (assert) {
     await visit("/c/bug");
 
     await click("button.edit-category");
@@ -19,9 +20,9 @@ acceptance("Category Edit", function (needs) {
       "it jumps to the correct screen"
     );
 
-    assert.equal(find(".badge-category").text(), "bug");
+    assert.equal(queryAll(".badge-category").text(), "bug");
     await fillIn("input.category-name", "testing");
-    assert.equal(find(".badge-category").text(), "testing");
+    assert.equal(queryAll(".badge-category").text(), "testing");
 
     await fillIn("#edit-text-color", "#ff0000");
 
@@ -56,7 +57,7 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
-  test("Index Route", async (assert) => {
+  test("Index Route", async function (assert) {
     await visit("/c/bug/edit");
     assert.equal(
       currentURL(),
@@ -65,29 +66,29 @@ acceptance("Category Edit", function (needs) {
     );
   });
 
-  test("Slugless Route", async (assert) => {
+  test("Slugless Route", async function (assert) {
     await visit("/c/1-category/edit");
     assert.equal(
       currentURL(),
       "/c/1-category/edit/general",
       "it goes to the general tab"
     );
-    assert.equal(find("input.category-name").val(), "bug");
+    assert.equal(queryAll("input.category-name").val(), "bug");
   });
 
-  test("Error Saving", async (assert) => {
+  test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
 
     assert.ok(visible(".bootbox"));
-    assert.equal(find(".bootbox .modal-body").html(), "duplicate email");
+    assert.equal(queryAll(".bootbox .modal-body").html(), "duplicate email");
 
     await click(".bootbox .btn-primary");
     assert.ok(!visible(".bootbox"));
   });
 
-  test("Subcategory list settings", async (assert) => {
+  test("Subcategory list settings", async function (assert) {
     await visit("/c/bug/edit/settings");
 
     assert.ok(

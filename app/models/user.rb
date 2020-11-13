@@ -40,7 +40,6 @@ class User < ActiveRecord::Base
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :github_user_info, dependent: :destroy
   has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user

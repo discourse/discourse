@@ -17,7 +17,6 @@ end
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
-  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -326,7 +325,6 @@ module Discourse
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
-    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, icon: "fab-instagram"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord")
   ]
 
@@ -450,6 +448,10 @@ module Discourse
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+    end
+
     if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Discourse.redis.set(key, 1)
     else
@@ -499,6 +501,10 @@ module Discourse
   end
 
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.unpause! if Sidekiq.paused?
+    end
+
     Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
@@ -507,7 +513,6 @@ module Discourse
   def self.enable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
     true
@@ -516,7 +521,6 @@ module Discourse
   def self.disable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.unpause!
     end
 
     true
@@ -910,24 +914,6 @@ module Discourse
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
-  end
-
-  CDN_REQUEST_METHODS ||= ["GET", "HEAD", "OPTIONS"]
-
-  def self.is_cdn_request?(env, request_method)
-    return unless CDN_REQUEST_METHODS.include?(request_method)
-
-    cdn_hostnames = GlobalSetting.cdn_hostnames
-    return if cdn_hostnames.blank?
-
-    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
-    cdn_hostnames.include?(requested_hostname)
-  end
-
-  def self.apply_cdn_headers(headers)
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
-    headers
   end
 end
 

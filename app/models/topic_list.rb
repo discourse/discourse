@@ -59,7 +59,7 @@ class TopicList < DraftableList
   def top_tags
     opts = @category ? { category: @category } : {}
     opts[:guardian] = Guardian.new(@current_user)
-    Tag.top_tags(opts)
+    Tag.top_tags(**opts)
   end
 
   def preload_key

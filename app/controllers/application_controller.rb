@@ -42,7 +42,6 @@ class ApplicationController < ActionController::Base
   before_action :preload_json
   before_action :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   before_action :check_xhr
-  before_action :block_cdn_requests
   after_action  :add_readonly_header
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
@@ -503,7 +502,14 @@ class ApplicationController < ActionController::Base
       result.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
-      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      if provider_name = params[:external_provider]
+        raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+        provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
+        UserAssociatedAccount.find_by(provider_name: provider_name, provider_uid: external_id)&.user
+      else
+        SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      end
     end
     raise Discourse::NotFound if user.blank?
 
@@ -671,19 +677,6 @@ class ApplicationController < ActionController::Base
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
-  end
-
-  def block_cdn_requests
-    raise Discourse::NotFound if Discourse.is_cdn_request?(request.env, request.method)
-  end
-
-  def apply_cdn_headers
-    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
-  end
-
-  def self.cdn_action(args = {})
-    skip_before_action :block_cdn_requests, args
-    before_action :apply_cdn_headers, args
   end
 
   def self.requires_login(arg = {})

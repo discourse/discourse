@@ -1751,6 +1751,44 @@ RSpec.describe SessionController do
       expect(session[:current_user_id]).to be_blank
       expect(response.cookies["_t"]).to be_blank
     end
+
+    it 'returns the redirect URL in the body for XHR requests' do
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to be_blank
+      expect(response.cookies["_t"]).to be_blank
+
+      expect(response.parsed_body["redirect_url"]).to eq("/")
+    end
+
+    it 'redirects to /login for SSO' do
+      SiteSetting.sso_url = "https://example.com/sso"
+      SiteSetting.enable_sso = true
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/login")
+    end
+
+    it 'allows plugins to manipulate redirect URL' do
+      callback = -> (data) do
+        data[:redirect_url] = "/myredirect/#{data[:user].username}"
+      end
+
+      DiscourseEvent.on(:before_session_destroy, &callback)
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/myredirect/#{user.username}")
+    ensure
+      DiscourseEvent.off(:before_session_destroy, &callback)
+    end
   end
 
   describe '#one_time_password' do

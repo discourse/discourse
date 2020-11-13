@@ -297,6 +297,7 @@ zh_CN:
       other: "有 %{count} 个新主题"
     preview: "预览"
     cancel: "取消"
+    deleting: "删除中..."
     save: "保存更改"
     saving: "保存中…"
     saved: "已保存！"
@@ -474,6 +475,7 @@ zh_CN:
         pending_posts:
           other: "你有 <strong>%{count}</strong> 个帖子在等待审核中。"
         ok: "确认"
+      example_username: "用户名"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -1249,9 +1251,9 @@ zh_CN:
         link_groups: 群组
         link_expires_at: 过期
         create: "发送邀请"
-        copy_link: "复制链接"
-        generate_link: "复制邀请链接"
-        link_generated: "邀请链接生成成功！"
+        copy_link: "显示链接"
+        generate_link: "创建邀请链接"
+        link_generated: "这是你的邀请链接！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         single_user: "通过电子邮件邀请"
         multiple_user: "通过链接邀请"
@@ -1262,7 +1264,7 @@ zh_CN:
           max_redemptions_allowed_label: "多少人被允许通过这个链接注册？"
           expires_at: "邀请链接多久失效？"
         bulk_invite:
-          none: "你还没有邀请任何人。你可以单独邀请用户，也可以通过<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传CSV文件</a>批量邀请。"
+          none: "这个页面上没有可显示的邀请。你可以通过电子邮件邀请指定的人，也可以创建一个任何人都能够使用的邀请链接。"
           text: "批量邀请"
           success: "文件上传成功，当操作完成时将通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
@@ -1716,9 +1718,7 @@ zh_CN:
         title: "你忘记添加收信人了吗？"
         body: "目前该私信只发给了你自己！"
       slow_mode:
-        title: "这个主题处于慢速模式"
-        body: "提交一个帖子后，再次发帖前你需要等待%{duration}。"
-        error: "你刚刚在这个主题中发表了内容，现在处于慢状态模式。请等待以便其他用户有机会参与。"
+        error: "这个这个主题正处于慢速模式中。为了提高讨论质量，每%{duration}只能回复一次。"
       admin_options_title: "本主题可选设置"
       composer_actions:
         reply: 回复
@@ -1774,9 +1774,9 @@ zh_CN:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}、%{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        other: "<span>%{username}和%{username2}还有其余%{count}人</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} 还有其余 %{count} 人 </span> %{description}"
       liked_consolidated_description:
         other: "你的帖子有%{count}个赞"
       liked_consolidated: "<span>%{username}</span>%{description}"
@@ -1968,6 +1968,8 @@ zh_CN:
         choose_append_tags: "为这些主题添加新标签："
         changed_tags: "主题的标签被修改"
         remove_tags: "移除标签"
+        progress:
+          other: "进度： <strong>%{count}</strong> 主题"
       none:
         unread: "你没有未读主题。"
         new: "你没有近期主题可读。"
@@ -2061,9 +2063,9 @@ zh_CN:
       deleted: "此主题已被删除"
       slow_mode_update:
         title: "慢速模式"
-        select: "持续时间："
-        description: "用户再次发帖前将需要等待。"
-        save: "保存"
+        select: "用户只能在这个主题中发言一次："
+        description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
+        save: "启用"
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
@@ -2491,6 +2493,10 @@ zh_CN:
         unlock_post_description: "允许发布者编辑帖子"
         delete_topic_disallowed_modal: "你无权删除该贴。如果你真想删除，向版主提交原因并标记。"
         delete_topic_disallowed: "你无权删除此主题"
+        delete_topic_confirm_modal: "这个话题目前有超过 %{minViews} 个浏览，可能是一个受欢迎的搜索目标。 你确定要完全删除该主题，而不是对其进行编辑以改善它吗？"
+        delete_topic_confirm_modal_yes: "是，删除此主题"
+        delete_topic_confirm_modal_no: "不，保留这个话题"
+        delete_topic_error: "删除此主题时发生错误"
         delete_topic: "删除主题"
         add_post_notice: "添加管理人员通知"
         remove_post_notice: "移除管理人员通知"
@@ -3093,6 +3099,7 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
+      approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"

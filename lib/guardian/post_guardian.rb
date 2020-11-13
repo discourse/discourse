@@ -181,17 +181,22 @@ module PostGuardian
     return false if post.is_first_post?
 
     # Can't delete posts in archived topics unless you are staff
-    return false if !is_staff? && post.topic.archived?
+    can_moderate = can_moderate_topic?(post.topic)
+    return false if !can_moderate && post.topic&.archived?
 
     # You can delete your own posts
     return !post.user_deleted? if is_my_own?(post)
 
-    is_staff?
+    can_moderate
   end
 
   # Recovery Method
   def can_recover_post?(post)
-    if is_staff?
+    return false unless post
+
+    topic = Topic.with_deleted.find(post.topic_id) if post.topic_id
+
+    if can_moderate_topic?(topic)
       !!post.deleted_at
     else
       is_my_own?(post) && post.user_deleted && !post.deleted_at
@@ -212,7 +217,7 @@ module PostGuardian
     return true if is_admin?
     return false unless can_see_topic?(post.topic)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
-    return false if !is_moderator? && post.deleted_at.present?
+    return false if !(is_moderator? || is_category_group_moderator?(post.topic.category)) && post.deleted_at.present?
 
     true
   end
@@ -261,8 +266,8 @@ module PostGuardian
     is_staff?
   end
 
-  def can_see_deleted_posts?
-    is_staff?
+  def can_see_deleted_posts?(category = nil)
+    is_staff? || is_category_group_moderator?(category)
   end
 
   def can_view_raw_email?(post)

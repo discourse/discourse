@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   moduleForWidget,
@@ -10,8 +11,8 @@ moduleForWidget("header");
 widgetTest("rendering basics", {
   template: '{{mount-widget widget="header"}}',
   test(assert) {
-    assert.ok(find("header.d-header").length);
-    assert.ok(find("#site-logo").length);
+    assert.ok(queryAll("header.d-header").length);
+    assert.ok(queryAll("#site-logo").length);
   },
 });
 
@@ -27,8 +28,8 @@ widgetTest("sign up / login buttons", {
   },
 
   async test(assert) {
-    assert.ok(find("button.sign-up-button").length);
-    assert.ok(find("button.login-button").length);
+    assert.ok(queryAll("button.sign-up-button").length);
+    assert.ok(queryAll("button.login-button").length);
 
     await click("button.sign-up-button");
     assert.ok(this.signupShown);

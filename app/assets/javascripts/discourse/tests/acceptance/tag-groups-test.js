@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -34,7 +35,7 @@ acceptance("Tag Groups", function (needs) {
     });
   });
 
-  test("tag groups can be saved and deleted", async (assert) => {
+  test("tag groups can be saved and deleted", async function (assert) {
     const tags = selectKit(".tag-chooser");
 
     await visit("/tag_groups");
@@ -47,10 +48,10 @@ acceptance("Tag Groups", function (needs) {
     await click(".tag-group-content .btn.btn-default");
 
     await click(".tag-chooser .choice:first");
-    assert.ok(!find(".tag-group-content .btn.btn-danger")[0].disabled);
+    assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
   });
 
-  test("tag groups can have multiple groups added to them", async (assert) => {
+  test("tag groups can have multiple groups added to them", async function (assert) {
     const tags = selectKit(".tag-chooser");
     const groups = selectKit(".group-chooser");
 
@@ -62,11 +63,11 @@ acceptance("Tag Groups", function (needs) {
     await tags.selectRowByValue("monkey");
 
     await click("#private-permission");
-    assert.ok(find(".tag-group-content .btn.btn-default:disabled").length);
+    assert.ok(queryAll(".tag-group-content .btn.btn-default:disabled").length);
 
     await groups.expand();
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
-    assert.ok(!find(".tag-group-content .btn.btn-default")[0].disabled);
+    assert.ok(!queryAll(".tag-group-content .btn.btn-default")[0].disabled);
   });
 });

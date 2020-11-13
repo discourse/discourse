@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -6,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Share and Invite modal - desktop", function (needs) {
   needs.user();
 
-  test("Topic footer button", async (assert) => {
+  test("Topic footer button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -34,20 +35,20 @@ acceptance("Share and Invite modal - desktop", function (needs) {
     );
 
     assert.equal(
-      find(".share-and-invite.modal .modal-panel.share .title").text(),
+      queryAll(".share-and-invite.modal .modal-panel.share .title").text(),
       "Topic: Internationalization / localization",
       "it shows the topic title"
     );
 
     assert.ok(
-      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      queryAll(".share-and-invite.modal .modal-panel.share .topic-share-url")
         .val()
         .includes("/t/internationalization-localization/280?u=eviltrout"),
       "it shows the topic sharing url"
     );
 
     assert.ok(
-      find(".share-and-invite.modal .social-link").length > 1,
+      queryAll(".share-and-invite.modal .social-link").length > 1,
       "it shows social sources"
     );
 
@@ -68,7 +69,7 @@ acceptance("Share and Invite modal - desktop", function (needs) {
     );
   });
 
-  test("Post date link", async (assert) => {
+  test("Post date link", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#post_2 .post-info.post-date a");
 
@@ -79,12 +80,12 @@ acceptance("Share and Invite modal - desktop", function (needs) {
 acceptance("Share url with badges disabled - desktop", function (needs) {
   needs.user();
   needs.settings({ enable_badges: false });
-  test("topic footer button - badges disabled - desktop", async (assert) => {
+  test("topic footer button - badges disabled - desktop", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-share-and-invite");
 
     assert.notOk(
-      find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      queryAll(".share-and-invite.modal .modal-panel.share .topic-share-url")
         .val()
         .includes("?u=eviltrout"),
       "it doesn't add the username param when badges are disabled"

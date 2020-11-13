@@ -944,8 +944,6 @@ sk:
         link_created_at: "Vytvorené"
         link_groups: Skupiny
         create: "Pošli pozvánku"
-        generate_link: "Kopírovať Odkaz Pozvánky"
-        link_generated: "Pozývací link bol úspešne vygenerovaný!"
         valid_for: "Pozývací link je platný len pre túto emailovú adresu: %{email}"
         invite_link:
           success: "Pozývací link bol úspešne vygenerovaný!"

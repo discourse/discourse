@@ -381,6 +381,11 @@ class PostCreator
           locale: SiteSetting.default_locale
         )
       )
+
+      if SiteSetting.auto_close_topics_create_linked_topic?
+        # enqueue a job to create a linked topic
+        Jobs.enqueue_in(5.seconds, :create_linked_topic, post_id: @post.id)
+      end
     end
   end
 
@@ -611,10 +616,12 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE] = { type: Post.notices[:new_user] }
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:returning_user],
+        last_posted_at: last_post_time.iso8601
+      }
     end
   end
 
