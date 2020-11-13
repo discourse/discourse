@@ -1391,7 +1391,7 @@ en:
         link_redemption_stats: "Redemptions"
         link_groups: Groups
         link_expires_at: Expires
-        create: "Send Invite"
+        create: "Invite"
         copy_link: "Show Link"
         generate_link: "Create Invite Link"
         link_generated: "Here's your invite link!"
