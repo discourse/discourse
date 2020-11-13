@@ -173,15 +173,24 @@ function _loadShortUrls(uploads, ajax, siteSettings, opts) {
   );
 }
 
+const SHORT_URL_ATTRIBUTES =
+  "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
+
+export function resolveCachedShortUrls(siteSettings, scope, opts) {
+  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
+
+  if (shortUploadElements.length > 0) {
+    _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
+  }
+}
+
 export function resolveAllShortUrls(ajax, siteSettings, scope, opts) {
-  const attributes =
-    "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
-  let shortUploadElements = scope.querySelectorAll(attributes);
+  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
 
   if (shortUploadElements.length > 0) {
     _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
 
-    shortUploadElements = scope.querySelectorAll(attributes);
+    shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
     if (shortUploadElements.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
       return discourseDebounce(

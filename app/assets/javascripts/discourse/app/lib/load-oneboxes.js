@@ -7,7 +7,8 @@ export function loadOneboxes(
   topicId,
   categoryId,
   maxOneboxes,
-  refresh
+  refresh,
+  offline
 ) {
   const oneboxes = {};
   const inlineOneboxes = {};
@@ -44,7 +45,15 @@ export function loadOneboxes(
   let newBoxes = 0;
 
   if (Object.keys(oneboxes).length > 0) {
-    _loadOneboxes(oneboxes, ajax, newBoxes, topicId, categoryId, refresh);
+    _loadOneboxes(
+      oneboxes,
+      ajax,
+      newBoxes,
+      topicId,
+      categoryId,
+      refresh,
+      offline
+    );
   }
 
   if (Object.keys(inlineOneboxes).length > 0) {
@@ -61,7 +70,15 @@ function _loadInlineOneboxes(inline, ajax, topicId, categoryId) {
   });
 }
 
-function _loadOneboxes(oneboxes, ajax, count, topicId, categoryId, refresh) {
+function _loadOneboxes(
+  oneboxes,
+  ajax,
+  count,
+  topicId,
+  categoryId,
+  refresh,
+  offline
+) {
   Object.values(oneboxes).forEach((onebox) => {
     onebox.forEach((o) => {
       load({
@@ -70,6 +87,7 @@ function _loadOneboxes(oneboxes, ajax, count, topicId, categoryId, refresh) {
         ajax,
         categoryId: categoryId,
         topicId: topicId,
+        offline,
       });
 
       count++;

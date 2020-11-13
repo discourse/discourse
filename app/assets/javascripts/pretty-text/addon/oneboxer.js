@@ -104,6 +104,7 @@ function loadNext(ajax) {
 export function load({
   elem,
   refresh = true,
+  offline = false,
   ajax,
   synchronous = false,
   categoryId,
@@ -132,6 +133,10 @@ export function load({
     // If the request failed, don't do anything
     const failed = failedCache[normalize(url)];
     if (failed) {
+      return;
+    }
+
+    if (offline) {
       return;
     }
   }

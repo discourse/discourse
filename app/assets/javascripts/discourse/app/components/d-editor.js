@@ -32,6 +32,11 @@ import toMarkdown from "discourse/lib/to-markdown";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
+import { linkSeenHashtags } from "discourse/lib/link-hashtags";
+import { linkSeenMentions } from "discourse/lib/link-mentions";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
+
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
 function getHead(head, prev) {
@@ -389,6 +394,28 @@ export default Component.extend({
       }
 
       this.set("preview", cooked);
+
+      const cookedElement = document.createElement("div");
+      cookedElement.innerHTML = cooked;
+      linkSeenHashtags($(cookedElement));
+      linkSeenMentions($(cookedElement), this.siteSettings);
+      resolveCachedShortUrls(this.siteSettings, cookedElement);
+      loadOneboxes(
+        cookedElement,
+        null,
+        null,
+        null,
+        this.siteSettings.max_oneboxes_per_post,
+        false,
+        true
+      );
+
+      /* global diff */
+      diff.innerHTML(
+        this.element.querySelector(".d-editor-preview"),
+        cookedElement.innerHTML
+      );
+
       schedule("afterRender", () => {
         if (this._state !== "inDOM") {
           return;
