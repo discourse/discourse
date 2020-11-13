@@ -12,6 +12,10 @@
         "diversity": false
       },
       {
+        "name": "grinning_face_with_smiling_eyes",
+        "diversity": false
+      },
+      {
         "name": "smile",
         "diversity": false
       },
@@ -289,6 +293,10 @@
       },
       {
         "name": "frowning",
+        "diversity": false
+      },
+      {
+        "name": "frowning_face_with_open_mouth",
         "diversity": false
       },
       {
