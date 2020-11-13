@@ -27,7 +27,7 @@ module Oneboxer
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net']
+    @force_get_hosts ||= ['http://us.battle.net', 'https://news.yahoo.com/']
   end
 
   def self.force_custom_user_agent_hosts
@@ -313,11 +313,11 @@ module Oneboxer
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
-                              ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blocked_domains,
-                              force_get_hosts: force_get_hosts,
-                              force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-                              preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+                                ignore_redirects: ignore_redirects,
+                                ignore_hostnames: blocked_domains,
+                                force_get_hosts: force_get_hosts,
+                                force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+                                preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
 
       if fd.status != :resolved
