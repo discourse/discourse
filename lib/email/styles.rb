@@ -9,6 +9,7 @@ module Email
     MAX_IMAGE_DIMENSION = 400
     ONEBOX_IMAGE_BASE_STYLE = "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;"
     ONEBOX_IMAGE_THUMBNAIL_STYLE = "width: 60px;"
+    ONEBOX_INLINE_AVATAR_STYLE = "width: 20px; height: 20px; float: none; vertical-align: middle;"
 
     @@plugin_callbacks = []
 
@@ -133,7 +134,7 @@ module Email
       style('.onebox-metadata', "color: #919191")
       style('.github-info', "margin-top: 10px;")
       style('.github-info div', "display: inline; margin-right: 10px;")
-      style('.onebox-avatar-inline', "width: 20px; height: 20px; float: none; vertical-align: middle;")
+      style('.onebox-avatar-inline', ONEBOX_INLINE_AVATAR_STYLE)
 
       @fragment.css('aside.quote blockquote > p').each do |p|
         p['style'] = 'padding: 0;'
@@ -261,8 +262,10 @@ module Email
         if attachments[original_filename]
           url = attachments[original_filename].url
 
-          style = if div['data-oneboxed']
-            "#{ONEBOX_IMAGE_THUMBNAIL_STYLE} #{ONEBOX_IMAGE_BASE_STYLE}"
+          onebox_type = div['data-onebox-type']
+          style = if onebox_type
+            onebox_style = onebox_type == "avatar-inline" ? ONEBOX_INLINE_AVATAR_STYLE : ONEBOX_IMAGE_THUMBNAIL_STYLE
+            "#{onebox_style} #{ONEBOX_IMAGE_BASE_STYLE}"
           else
             calculate_width_and_height_style(div)
           end
