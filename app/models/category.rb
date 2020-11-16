@@ -77,7 +77,6 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
-  after_save :index_search
   after_save :update_reviewables
 
   after_destroy :reset_topic_ids_cache
@@ -92,6 +91,8 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
+
+  after_save_commit :index_search
 
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
