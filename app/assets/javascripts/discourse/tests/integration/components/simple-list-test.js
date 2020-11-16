@@ -1,7 +1,7 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import componentTest from "discourse/tests/helpers/component-test";
-import { click, fillIn } from "@ember/test-helpers";
+import { click, keyEvent, fillIn } from "@ember/test-helpers";
 
 moduleForComponent("simple-list", { integration: true });
 

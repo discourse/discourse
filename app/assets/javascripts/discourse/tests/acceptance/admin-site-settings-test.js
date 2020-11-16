@@ -1,6 +1,12 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit, currentURL } from "@ember/test-helpers";
+import {
+  fillIn,
+  click,
+  keyEvent,
+  visit,
+  currentURL,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
