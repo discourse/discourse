@@ -266,15 +266,6 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
-  def diff_local_changes
-    theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless theme
-    changes = theme.remote_theme&.diff_local_changes
-    respond_to do |format|
-      format.json { render json: changes || {} }
-    end
-  end
-
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])

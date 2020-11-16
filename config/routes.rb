@@ -213,7 +213,6 @@ Discourse::Application.routes.draw do
       post "themes/upload_asset" => "themes#upload_asset"
       post "themes/generate_key_pair" => "themes#generate_key_pair"
       get "themes/:id/preview" => "themes#preview"
-      get "themes/:id/diff_local_changes" => "themes#diff_local_changes"
       put "themes/:id/setting" => "themes#update_single_setting"
 
       scope "/customize", constraints: AdminConstraint.new do
