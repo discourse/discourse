@@ -178,7 +178,7 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    [:name, :color_scheme_id, :user_selectable, :enabled].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :enabled, :auto_update].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
@@ -348,6 +348,7 @@ class Admin::ThemesController < Admin::AdminController
           :user_selectable,
           :component,
           :enabled,
+          :auto_update,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
