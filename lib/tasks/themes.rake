@@ -54,9 +54,15 @@ end
 desc "Update themes & theme components"
 task "themes:update" => :environment do |task, args|
   Theme.where(auto_update: true).find_each do |theme|
-    if theme.remote_theme.present?
-      puts "Updating #{theme.name}..."
-      theme.remote_theme.update_from_remote
+    begin
+      if theme.remote_theme.present?
+        puts "Updating #{theme.name}..."
+        theme.remote_theme.update_from_remote
+      end
+    rescue => e
+      STDERR.puts "Failed to update #{theme.name}"
+      STDERR.puts e
+      STDERR.puts e.backtrace
     end
   end
 end
