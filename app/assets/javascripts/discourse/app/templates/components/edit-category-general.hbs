@@ -12,14 +12,16 @@
     <section class="field">
       <label>{{i18n "category.parent"}}</label>
       {{category-chooser
-        rootNone=true
         value=category.parent_category_id
-        excludeCategoryId=category.id
         categories=parentCategories
         allowSubCategories=true
         allowUncategorized=false
         allowRestrictedCategories=true
         onChange=(action (mut category.parent_category_id))
+        options=(hash
+          excludeCategoryId=category.id
+          none=true
+        )
       }}
     </section>
   {{/if}}

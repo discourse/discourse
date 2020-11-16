@@ -27,6 +27,10 @@ div.edit-category {
     }
   }
 
+  .edit-category-content {
+    grid-area: content;
+  }
+
   #list-area & h2 {
     margin: 0;
   }
@@ -35,15 +39,15 @@ div.edit-category {
     margin-bottom: 1em;
   }
 
+  .warning {
+    background-color: var(--tertiary-low);
+    padding: 0.5em 2.5em 0.5em 1em;
+    margin-top: 0;
+  }
+
   .edit-category-tab-general {
     .category-chooser {
       width: unquote("min(340px, 90%)");
-    }
-
-    .warning {
-      background-color: var(--tertiary-low);
-      padding: 0.5em 2.5em 0.5em 1em;
-      margin-top: 0;
     }
   }
 
@@ -69,11 +73,6 @@ div.edit-category {
         top: -13px;
         left: 200px;
       }
-    }
-
-    .add-permission {
-      position: relative;
-      top: 0.1em;
     }
 
     .permission-list {
@@ -172,6 +171,79 @@ div.edit-category {
           border-width: 8px;
         }
       }
+    }
+  }
+}
+
+.category-permissions-table {
+  max-width: 450px;
+  margin-bottom: 2em;
+
+  .permission-row {
+    border-bottom: 1px solid var(--primary-low);
+    display: flex;
+    &.row-header {
+      font-weight: bold;
+      border-bottom: 2px solid var(--primary-low);
+    }
+    .group-name,
+    .options {
+      display: flex;
+      box-sizing: border-box;
+      text-align: center;
+      width: 50%;
+      margin: 0px;
+    }
+    .group-name {
+      text-align: left;
+      padding: 0.5em;
+    }
+    .options {
+      &.disabled {
+        opacity: 0.4;
+        color: var(--success);
+        background-color: var(--success-low);
+      }
+      .cell {
+        width: 33%;
+        padding: 0.5em;
+      }
+    }
+    .actionable {
+      .cell {
+        cursor: pointer;
+        color: var(--danger-medium);
+        background-color: var(--danger-low);
+        &.granted {
+          color: var(--success);
+          background-color: var(--success-low);
+        }
+      }
+    }
+  }
+
+  .remove-permission {
+    margin-left: 0.5em;
+    color: var(--danger);
+    &:hover {
+      color: var(--danger-hover);
+    }
+  }
+
+  .row-empty,
+  .add-group {
+    padding: 0.5em;
+  }
+
+  .row-empty {
+    color: var(--primary-medium);
+  }
+
+  .add-group {
+    margin: 1em 0;
+    .group-name {
+      width: 100%;
+      align-items: center;
     }
   }
 }

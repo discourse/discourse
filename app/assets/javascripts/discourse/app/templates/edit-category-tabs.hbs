@@ -26,9 +26,13 @@
     </ul>
   </div>
 
-  {{#each panels as |tab|}}
-    {{component tab selectedTab=selectedTab category=model registerValidator=(action "registerValidator")}}
-  {{/each}}
+  <div class="edit-category-content">
+    <h3>{{selectedTabTitle}}</h3>
+
+    {{#each panels as |tab|}}
+      {{component tab selectedTab=selectedTab category=model registerValidator=(action "registerValidator")}}
+    {{/each}}
+  </div>
 
   <div class="edit-category-footer">
     {{d-button id="save-category" class="btn-primary" disabled=disabled action=(action "saveCategory") label=saveLabel}}

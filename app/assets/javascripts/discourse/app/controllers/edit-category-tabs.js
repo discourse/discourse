@@ -69,6 +69,11 @@ export default Controller.extend({
       : I18n.t("category.create");
   },
 
+  @discourseComputed("selectedTab")
+  selectedTabTitle(tab) {
+    return I18n.t("category." + tab.replace("-", "_"));
+  },
+
   actions: {
     registerValidator(validator) {
       this.validators.push(validator);
