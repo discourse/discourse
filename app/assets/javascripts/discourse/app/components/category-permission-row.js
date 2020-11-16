@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
-import { action } from "@ember/object";
 import { equal, alias } from "@ember/object/computed";
 
 const EVERYONE = "everyone";
