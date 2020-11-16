@@ -38,6 +38,9 @@ class ApiKeyScope < ActiveRecord::Base
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
           show: { actions: %w[users#show], params: %i[username external_id] },
           check_emails: { actions: %w[users#check_emails], params: %i[username] }
+        },
+        email: {
+          receive_emails: { actions: %w[admin/email#handle_mail] }
         }
       }
 
