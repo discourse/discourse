@@ -3735,7 +3735,7 @@ en:
               sync_sso: Synchronize a user using SSO.
               show: Obtain information about an user.
               check_emails: List user emails.
-            mail:
+            email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
       web_hooks:
