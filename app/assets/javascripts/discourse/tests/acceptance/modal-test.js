@@ -1,5 +1,5 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, keyEvent, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import I18n from "I18n";
 import { run } from "@ember/runloop";

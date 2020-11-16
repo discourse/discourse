@@ -37,6 +37,7 @@ define("@ember/test-helpers", () => {
     "currentRouteName",
     "fillIn",
     "setResolver",
+    "keyEvent",
   ].forEach((attr) => {
     helpers[attr] = function () {
       return window[attr](...arguments);

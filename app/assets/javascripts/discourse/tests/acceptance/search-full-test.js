@@ -1,6 +1,6 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, fillIn, click } from "@ember/test-helpers";
+import { keyEvent, visit, fillIn, click } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
