@@ -254,7 +254,7 @@ class PostDestroyer
       .limit(1)
       .first
 
-    if last_post.present? && @post.topic.present?
+    if last_post.present?
       topic = @post.topic
       topic.last_posted_at = last_post.created_at
       topic.last_post_user_id = last_post.user_id
@@ -277,7 +277,9 @@ class PostDestroyer
 
   def trash_public_post_actions
     if public_post_actions = PostAction.publics.where(post_id: @post.id)
-      public_post_actions.each { |pa| pa.trash!(@user) }
+      public_post_actions.each { |pa| permanent? ? pa.destroy! : pa.trash!(@user) }
+
+      return if permanent?
 
       @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
       @post.save_custom_fields
