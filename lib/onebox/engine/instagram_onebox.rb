@@ -15,35 +15,30 @@ module Onebox
       end
 
       def data
-        og = get_opengraph
-
-        # There are at least two different versions of the description. e.g.
-        # - "3,227 Likes, 88 Comments - An Account (@user.name) on Instagram: “Look at my picture!”"
-        # - "@user.name posted on their Instagram profile: “Look at my picture!”"
-
-        m = og.description.match(/\(@([\w\.]+)\) on Instagram/)
-        author_name = m[1] if m
-
-        author_name ||= begin
-          m = og.description.match(/^\@([\w\.]+)\ posted/)
-          m[1] if m
-        end
-
-        raise "Author username not found for post #{clean_url}" unless author_name
-
-        permalink = clean_url.gsub("/#{author_name}/", "/")
+        oembed = get_oembed
+        permalink = clean_url.gsub("/#{oembed.author_name}/", "/")
 
         { link: permalink,
-          title: "@#{author_name}",
-          image: og.image,
-          description: Onebox::Helpers.truncate(og.title, 250)
+          title: "@#{oembed.author_name}",
+          image: oembed.thumbnail_url,
+          description: Onebox::Helpers.truncate(oembed.title, 250),
         }
+
       end
 
       protected
 
+      def access_token
+        (options[:facebook_app_access_token] || Onebox.options.facebook_app_access_token).to_s
+      end
+
       def get_oembed_url
-        oembed_url = "https://api.instagram.com/oembed/?url=#{clean_url}"
+        if access_token != ''
+          oembed_url = "https://graph.facebook.com/v9.0/instagram_oembed?url=#{clean_url}&access_token=#{access_token}"
+        else
+          # The following is officially deprecated by Instagram, but works in some limited circumstances.
+          oembed_url = "https://api.instagram.com/oembed/?url=#{clean_url}"
+        end
       end
     end
   end

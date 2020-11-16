@@ -256,6 +256,15 @@ module Onebox
             d[:data_1] = Onebox::Helpers.truncate("#{d[:price_currency].strip} #{d[:price_amount].strip}")
           end
 
+          skip_missing_tags = [:video]
+          d.each do |k, v|
+            next if skip_missing_tags.include?(k)
+            if v == nil || v == ''
+              errors[k] ||= []
+              errors[k] << 'is blank'
+            end
+          end
+
           d
         end
       end

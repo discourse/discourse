@@ -30,6 +30,7 @@ module Onebox
 
     attr_reader :url, :uri
     attr_reader :timeout
+    attr :errors
 
     DEFAULT = {}
     def options
@@ -44,6 +45,7 @@ module Onebox
     end
 
     def initialize(link, timeout = nil)
+      @errors = {}
       @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
 

@@ -91,7 +91,7 @@ module Onebox
         html_doc.css('meta').each do |m|
           if (m["property"] && m["property"][/^twitter:(.+)$/i]) || (m["name"] && m["name"][/^twitter:(.+)$/i])
             value = (m["content"] || m["value"]).to_s
-            twitter[$1.tr('-:' , '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
+            twitter[$1.tr('-:' , '_').to_sym] ||= value unless (Onebox::Helpers::blank?(value) || value == "0 minutes")
           end
         end
 

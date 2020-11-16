@@ -156,6 +156,7 @@ module Onebox
     end
 
     def self.truncate(string, length = 50)
+      return string if string.nil?
       string.size > length ? string[0...(string.rindex(" ", length) || length)] + "..." : string
     end
 

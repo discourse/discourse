@@ -31,6 +31,16 @@ module Onebox
       ""
     end
 
+    def errors
+      return {} unless engine
+      engine.errors
+    end
+
+    def data
+      return {} unless engine
+      engine.data
+    end
+
     def options
       OpenStruct.new(@options)
     end
