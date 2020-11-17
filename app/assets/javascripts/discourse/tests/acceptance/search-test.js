@@ -1,6 +1,6 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, keyEvent, fillIn, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -28,7 +28,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(!exists(".search-menu .results ul li"), "no results by default");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
     assert.ok(
       exists(".search-menu .results ul li .topic-title[data-topic-id]"),
@@ -54,7 +54,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
 
     await fillIn("#search-term", "evil");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
   });
 
@@ -97,7 +97,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "a proper");
     await click(".search-context input[type='checkbox']");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
 
@@ -187,7 +187,7 @@ acceptance("Search - with tagging enabled", function (needs) {
     await click("#search-button");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
     const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
       .text()
