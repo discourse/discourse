@@ -1146,7 +1146,6 @@ gl:
         link_created_at: "Creado"
         link_groups: Grupos
         link_expires_at: Caduca
-        create: "Enviar convite"
         valid_for: "A ligazón do convite só é válida para este enderezo de correo electrónico: %{email}"
         invite_link:
           title: "Ligazón do convite"
@@ -3623,7 +3622,6 @@ gl:
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procura ser breve."
         suspend_reason_hidden_label: "Cal é o motivo da suspensión? Este texto amosaráselle ao usuario cando tente iniciar sesión. Procura ser breve."
         suspend_reason: "Razón"
-        suspend_reason_placeholder: "Razón da suspensión"
         suspend_message: "Mensaxe de correo electrónico"
         suspend_message_placeholder: "Podes achegar máis información sobre a suspensión e enviarlla por correo electrónico ao usuario."
         suspended_by: "Suspendido por"

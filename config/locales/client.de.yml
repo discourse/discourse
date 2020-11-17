@@ -307,6 +307,7 @@ de:
     drafts:
       resume: "Fortsetzen"
       remove: "Entfernen"
+      remove_confirmation: "Bist du sicher, dass du diese Vorlage löschen möchtest?"
       new_topic: "Neues Thema Entwurf"
       new_private_message: "Neuer privater Nachrichten Entwurf"
       topic_reply: "Antwort Entwurf"
@@ -1295,7 +1296,7 @@ de:
         link_redemption_stats: "Rücknahmen"
         link_groups: Gruppen
         link_expires_at: Gültig bis
-        create: "Einladung versenden"
+        create: "Einladen"
         copy_link: "Link anzeigen"
         generate_link: "Einladungslink erstellen"
         link_generated: "Hier ist dein Einladungslink!"
@@ -1309,7 +1310,7 @@ de:
           max_redemptions_allowed_label: "Wie viele Personen dürfen sich über diesen Link registrieren?"
           expires_at: "Wann läuft dieser Einladungslink ab?"
         bulk_invite:
-          none: "Keine Einladungen auf dieser Seite. Du kannst bestimmte Personen mit Hilfe ihrer E-Mail einladen oder einen Einladungslink erstellen, der von jedem benutzt werden kann."
+          none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Die Datei sollte im CSV Format vorliegen."
@@ -2541,6 +2542,7 @@ de:
         no_save_draft: "Nein, speichere den Entwurf"
         yes_value: "Ja, Änderungen verwerfen"
       abandon:
+        title: "Entwurf verwerfen"
         confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
         no_save_draft: "Nein, speichere den Entwurf"
@@ -2598,7 +2600,8 @@ de:
         delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
         delete_topic: "Thema löschen"
         add_post_notice: "Team Notiz hinzufügen"
-        remove_post_notice: "Team Notiz entfernen"
+        change_post_notice: "Team Notiz ändern"
+        delete_post_notice: "Team Notiz löschen"
         remove_timer: "Stoppuhr entfernen"
       actions:
         people:
@@ -3460,6 +3463,8 @@ de:
               sync_sso: Synchronisieren Sie einen Benutzer mit SSO.
               show: Informationen über einen Benutzer abrufen.
               check_emails: Benutzer-E-Mails auflisten.
+            email:
+              receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
       web_hooks:
         title: "Webhooks"
         none: "Aktuell gibt es keine Webhooks."
@@ -3699,6 +3704,7 @@ de:
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
           color_scheme_user_selectable: "Das Farbschema kann vom Benutzer ausgewählt werden"
+          auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
           default_light_scheme: "Hell (Standard)"
           color_scheme_select: "Wähle Farben für dieses Theme"
@@ -4223,7 +4229,14 @@ de:
         suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
         suspend_reason_hidden_label: "Warum sperrst du? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
-        suspend_reason_placeholder: "Grund der Sperre"
+        suspend_reason_title: "Grund der Sperre"
+        suspend_reasons:
+          not_listening_to_staff: "Würde nicht auf Team Feedback hören"
+          consuming_staff_time: "Hat überproportional viel Zeit des Teams verbraucht"
+          combatative: "Zu kämpferisch"
+          in_wrong_place: "An der falschen Stelle"
+          no_constructive_purpose: "Kein konstruktiver Zweck für ihre Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
+          custom: "Benutzerdefiniert..."
         suspend_message: "E-Mail-Nachricht"
         suspend_message_placeholder: "Optional: Gib weitere Informationen über deine Sperrung an und sie wird dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"
@@ -4458,6 +4471,7 @@ de:
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte anzeigen"
+        history: "Änderungsverlauf ansehen"
         reset: "zurücksetzen"
         none: "keine"
       site_settings:

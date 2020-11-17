@@ -232,7 +232,7 @@ zh_CN:
       user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "如有重要问题或网站紧急事件，请以 %{contact_info} 联系我们。"
+      contact_info: "如果出现影响到此站点的关键问题或紧急事项，请通过 %{contact_info} 联系我们。"
     bookmarked:
       title: "收藏"
       clear_bookmarks: "取消收藏"
@@ -282,6 +282,7 @@ zh_CN:
     drafts:
       resume: "复位"
       remove: "移除"
+      remove_confirmation: "你确定要删除这草稿吗？"
       new_topic: "新主题草稿"
       new_private_message: "新私信草稿"
       topic_reply: "草稿回复"
@@ -1250,7 +1251,7 @@ zh_CN:
         link_redemption_stats: "兑换量"
         link_groups: 群组
         link_expires_at: 过期
-        create: "发送邀请"
+        create: "邀请"
         copy_link: "显示链接"
         generate_link: "创建邀请链接"
         link_generated: "这是你的邀请链接！"
@@ -1264,7 +1265,7 @@ zh_CN:
           max_redemptions_allowed_label: "多少人被允许通过这个链接注册？"
           expires_at: "邀请链接多久失效？"
         bulk_invite:
-          none: "这个页面上没有可显示的邀请。你可以通过电子邮件邀请指定的人，也可以创建一个任何人都能够使用的邀请链接。"
+          none: "此页面没有要显示的邀请。"
           text: "批量邀请"
           success: "文件上传成功，当操作完成时将通过私信通知你。"
           error: "抱歉，文件必须是CSV格式。"
@@ -2444,6 +2445,7 @@ zh_CN:
         no_save_draft: "不，保存草稿"
         yes_value: "是的，忽略编辑"
       abandon:
+        title: "放弃草稿"
         confirm: "确定要放弃编辑帖子吗？"
         no_value: "否"
         no_save_draft: "不，保存草稿"
@@ -2499,7 +2501,8 @@ zh_CN:
         delete_topic_error: "删除此主题时发生错误"
         delete_topic: "删除主题"
         add_post_notice: "添加管理人员通知"
-        remove_post_notice: "移除管理人员通知"
+        change_post_notice: "变更管理人员通知"
+        delete_post_notice: "移除管理人员通知"
         remove_timer: "移除计时器"
       actions:
         people:
@@ -3332,6 +3335,8 @@ zh_CN:
               sync_sso: 使用 SSO 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
+            email:
+              receive_emails: 将此范围与邮件收件人结合起来处理传入的电子邮件。
       web_hooks:
         title: "Webhooks"
         none: "当前没有 Webhooks。"
@@ -3569,6 +3574,7 @@ zh_CN:
           is_default: "主题默认启用"
           user_selectable: "用户可选择主题"
           color_scheme_user_selectable: "配色方案可由用户选择"
+          auto_update: "当 Discourse 更新时自动更新"
           color_scheme: "调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色"
@@ -4092,7 +4098,14 @@ zh_CN:
         suspend_reason_label: "你为什么封禁该用户？该理由<b>对所有人可见</b>并将放置在用户的个人主页上，当用户尝试登陆时也会显示该理由。语句尽量简洁。"
         suspend_reason_hidden_label: "你为什么封禁该用户？当用户尝试登陆时会显示该理由。语句尽量简洁。"
         suspend_reason: "封禁的理由"
-        suspend_reason_placeholder: "封禁理由"
+        suspend_reason_title: "封禁原因"
+        suspend_reasons:
+          not_listening_to_staff: "不理会管理人员的反馈"
+          consuming_staff_time: "消耗了过多的管理人员时间"
+          combatative: "太好斗了"
+          in_wrong_place: "在错误的地方"
+          no_constructive_purpose: "除了在社区内引起异议外，他们的行动没有任何建设性的目的"
+          custom: "自定义..."
         suspend_message: "邮件消息"
         suspend_message_placeholder: "可选内容，可以提供关于此次封禁的更多信息，这些信息会通过邮件告知用户。"
         suspended_by: "封禁操作者："
@@ -4323,6 +4336,7 @@ zh_CN:
         more_than_50_results: "有超过50个结果。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
+        history: "查看变更历史"
         reset: "重置"
         none: "无"
       site_settings:

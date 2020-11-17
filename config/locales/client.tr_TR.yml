@@ -1120,7 +1120,6 @@ tr_TR:
         links_tab: "Bağlantılar"
         link_created_at: "Oluşturuldu"
         link_groups: Gruplar
-        create: "Davet Gönder"
         valid_for: "Davet bağlantısı sadece bu adres için geçerli: %{email}"
         invite_link:
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
@@ -2271,7 +2270,6 @@ tr_TR:
         delete_topic_disallowed: "bu konuyu silme iznin yok"
         delete_topic: "konuyu sil"
         add_post_notice: "Personel Bildirimi Ekle"
-        remove_post_notice: "Personel Bilgisini Kaldır"
         remove_timer: "zamanlayıcıyı kaldır"
       actions:
         people:
@@ -3762,7 +3760,6 @@ tr_TR:
         suspend_reason_label: "Neden askıya alıyorsun? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görüntülenecek<b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcı tarafından görüntülenecek. Metin lütfen kısa olsun. "
         suspend_reason_hidden_label: "Neden askıya alıyorsun? Kullanıcı giriş yapmaya çalıştığında yazdığın metni görecek. Metin lütfen kısa olsun."
         suspend_reason: "Sebep"
-        suspend_reason_placeholder: "Askıya Alma Sebebi"
         suspend_message: "E Posta Mesajı"
         suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma sebebini daha uzun yazabilirsin. Askıya alma sebebi kullanıcıya e-postayla gönderilecek."
         suspended_by: "Askıya alan"

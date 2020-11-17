@@ -1294,7 +1294,6 @@ es:
         link_redemption_stats: "Canjes"
         link_groups: Grupos
         link_expires_at: Caducidad
-        create: "Enviar invitación"
         copy_link: "Mostrar enlace"
         generate_link: "Crear enlacew de invitación"
         link_generated: "Aquí tienes el enlace"
@@ -1308,7 +1307,6 @@ es:
           max_redemptions_allowed_label: "¿Cuánta gente puede registrarse con este enlace?"
           expires_at: "¿Cuándo caducará este enlace?"
         bulk_invite:
-          none: "No hay invitaciones para mostrar en esta página. Puede invitar a personas específicas a través de su correo electrónico o crear un enlace de invitación que cualquiera pueda utilizar."
           text: "Invitaciones masivas"
           success: "Archivo subido correctamente, se te notificará mediante un mensaje cuando se complete el proceso."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
@@ -2597,7 +2595,6 @@ es:
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
         delete_topic: "eliminar tema"
         add_post_notice: "Añadir aviso del staff"
-        remove_post_notice: "Eliminar aviso del staff"
         remove_timer: "quitar temporizador"
       actions:
         people:
@@ -4221,7 +4218,6 @@ es:
         suspend_reason_label: "¿Por qué lo suspendes? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
         suspend_reason_hidden_label: "¿Por qué estás suspendiendo? Este texto se mostrará al usuario cuando trate de iniciar sesión. Sé conciso."
         suspend_reason: "Causa"
-        suspend_reason_placeholder: "Razón de suspensión"
         suspend_message: "Mensaje por correo electrónico"
         suspend_message_placeholder: "Opcionalmente, brinda más información sobre la suspensión y esta se enviará por correo electrónico al usuario."
         suspended_by: "Suspendido por"

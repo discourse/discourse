@@ -863,7 +863,6 @@ sw:
         links_tab: "Viungo"
         link_created_at: "Imetengenezwa"
         link_groups: Makundi
-        create: "Tuma Mualiko"
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
@@ -2917,7 +2916,6 @@ sw:
         suspend_reason_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe <b>utaonyeshwa kwa kila mtumiaji</b> kwenye taarifa binafsi za huyo mtu na ataonyeshwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason_hidden_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe utaonyeshwa kwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason: "Sababu"
-        suspend_reason_placeholder: "Sababu ya kusitisha kwa mda mfupi"
         suspend_message: "Tuma Ujumbe kwa Barua Pepe"
         suspend_message_placeholder: "Sio lazima, ila unaweza kutoa sababu za ziada kuhusiana na sitisho na itatumwa kwa mtumiaji."
         suspended_by: "Amesitishwa kwa mda mfupi na"

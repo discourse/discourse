@@ -140,6 +140,9 @@ zh_CN:
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
+      is_invalid_meaningful: "似乎不清楚，大多数字眼都包含重复的字母？"
+      is_invalid_unpretentious: "似乎不清楚，一个或多个单词很长？"
+      is_invalid_quiet: "似乎不清楚，你是要用全部大写字母输入吗？"
       invalid_timezone: "“%{tz}”不是一个有效的时区"
       contains_censored_words: "包含了以下敏感词:%{censored_words}"
       less_than: 必须小于 %{count}
@@ -1893,6 +1896,7 @@ zh_CN:
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
     review_media_unless_trust_level: "工作人员将会审核信任等级较低的用户所发布含有嵌入多媒体的内容。"
+    blur_tl0_flagged_posts_media: "模糊标记帖子图像以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
     show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
@@ -1968,6 +1972,7 @@ zh_CN:
     gravatar_login_url: "供用户登录到 Gravatar 服务，基于 gravatar_base_url 的相对链接"
     share_quote_buttons: "确定分享对话框中出现的按钮及其显示顺序。"
     share_quote_visibility: "确定何时显示引用分享按钮：从不，仅匿名用户或所有用户。 "
+    create_revision_on_bulk_topic_moves: "当主题批量移动到新类别时，为第一篇帖子创建修订版本。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -2180,6 +2185,7 @@ zh_CN:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
       revoked: "在%{date}之前不发送邮件至“%{email}”"
+      does_not_exist: "N/A"
     ip_address:
       blocked: "不允许从你的 IP 地址注册新用户。"
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
@@ -4103,6 +4109,7 @@ zh_CN:
             label: "欢迎主题"
             description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
             one_paragraph: "请限制你的欢迎私信至一段话。"
+            extra_description: "如果你不确定，可以跳过此步骤，稍后编辑你的欢迎主题。"
       privacy:
         title: "访问"
         description: "<p>你的社区对所有人开放，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"

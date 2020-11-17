@@ -972,7 +972,6 @@ ja:
         links_tab: "リンク"
         link_created_at: "作成者"
         link_groups: グループ
-        create: "招待を送る"
         valid_for: "招待リンクはこのメールアドレスにだけ有効です。%{email}"
         invite_link:
           success: "招待リンクが生成されました！"
@@ -2822,7 +2821,6 @@ ja:
         suspend_duration: "ユーザを何日間凍結しますか?"
         suspend_reason_label: "アカウントを凍結する理由を説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
         suspend_reason: "理由"
-        suspend_reason_placeholder: "凍結理由"
         suspend_message: "メールメッセージ"
         suspended_by: "凍結したユーザ"
         silence_reason: "理由"

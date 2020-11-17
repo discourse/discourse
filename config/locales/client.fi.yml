@@ -1236,7 +1236,6 @@ fi:
         link_created_at: "Luotu"
         link_groups: Ryhmät
         link_expires_at: Vanhenee
-        create: "Lähetä kutsu"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         invite_link:
           title: "Kutsulinkki"
@@ -2458,7 +2457,6 @@ fi:
         delete_topic_disallowed: "et saa poistaa ketjua"
         delete_topic: "poista ketju"
         add_post_notice: "Lisää henkilökuntanootti"
-        remove_post_notice: "Poista henkilökuntanootti"
         remove_timer: "poista ajastin"
       actions:
         people:
@@ -3989,7 +3987,6 @@ fi:
         suspend_reason_label: "Miksi hyllytät käyttäjän? Tämä teksti <b>on näkyvillä julkisesti</b> käyttäjän profiilisivulla ja näytetään käyttäjälle kun hän kirjautuu sisään. Pidä siis viesti lyhyenä."
         suspend_reason_hidden_label: "Miksi hyllytät? Tämä teksti näytetään käyttäjälle, kun hän yrittää kirjautua sisään. Pidä lyhyenä."
         suspend_reason: "Syy"
-        suspend_reason_placeholder: "Syy hyllytykselle:"
         suspend_message: "Sähköpostiviesti"
         suspend_message_placeholder: "Voit halutessasi kertoa enemmän hyllytyksen syystä, jolloin kertomus lähetetään käyttäjälle sähköpostitse."
         suspended_by: "Käyttäjän hyllytti"

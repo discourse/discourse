@@ -703,6 +703,9 @@ ar:
       title: "إعجاب"
       description: "أُعجَب بهذا المنشور"
       short_description: "أُعجَب بهذا المنشور"
+  draft:
+    sequence_conflict_error:
+      description: "أنت تُحرّر المسودّة في نافذة أخرى. من فضلك أعِد تحميل هذه الصفحة."
   user_activity:
     no_bookmarks:
       others: "لا علامات."

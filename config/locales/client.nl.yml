@@ -307,6 +307,7 @@ nl:
     drafts:
       resume: "Hervatten"
       remove: "Verwijderen"
+      remove_confirmation: "Weet u zeker dat u dit concept wilt verwijderen?"
       new_topic: "Nieuw-topicconcept"
       new_private_message: "Nieuw-privéberichtconcept"
       topic_reply: "Conceptantwoord"
@@ -1295,7 +1296,6 @@ nl:
         link_redemption_stats: "Inwisselingen"
         link_groups: Groepen
         link_expires_at: Verloopt
-        create: "Uitnodiging sturen"
         copy_link: "Koppeling tonen"
         generate_link: "Uitnodigingskoppeling maken"
         link_generated: "Hier is uw uitnodigingskoppeling!"
@@ -1309,7 +1309,7 @@ nl:
           max_redemptions_allowed_label: "Hoeveel mensen mogen zich via deze koppeling registreren?"
           expires_at: "Wanneer verloopt deze uitnodigingskoppeling?"
         bulk_invite:
-          none: "Geen uitnodigingen om weer te geven op deze pagina. U kunt bepaalde mensen uitnodigen via hun e-mailadres, of een uitnodigingskoppeling maken die door iedereen kan worden gebruikt."
+          none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
           success: "Het bestand is geüpload. U ontvangt een melding via een bericht zodra het proces is voltooid."
           error: "Sorry, bestand dient de CSV-indeling te hebben."
@@ -1838,6 +1838,10 @@ nl:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} en %{count} ander</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} en %{count} anderen</span> %{description}"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -2594,7 +2598,8 @@ nl:
         delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
         add_post_notice: "Stafmelding toevoegen"
-        remove_post_notice: "Stafmelding verwijderen"
+        change_post_notice: "Stafmelding wijzigen"
+        delete_post_notice: "Stafmelding verwijderen"
         remove_timer: "timer verwijderen"
       actions:
         people:
@@ -4223,7 +4228,14 @@ nl:
         suspend_reason_label: "Waarom schorst u deze gebruiker? Deze tekst <b>zal voor iedereen zichtbaar zijn</b> op de profielpagina van deze gebruiker, en zal aan de gebruiker worden getoond als deze zich probeert aan te melden. Houd het kort."
         suspend_reason_hidden_label: "Waarom schorst u? Deze tekst wordt aan de gebruiker getoond wanneer deze zich probeert aan te melden. Hou het kort."
         suspend_reason: "Reden"
-        suspend_reason_placeholder: "Reden van schorsing"
+        suspend_reason_title: "Reden van schorsing"
+        suspend_reasons:
+          not_listening_to_staff: "Wilde niet naar feedback van stafleden luisteren"
+          consuming_staff_time: "Heeft onevenredig veel tijd van stafleden verbruikt"
+          combatative: "Te strijdlustig"
+          in_wrong_place: "Op de verkeerde plek"
+          no_constructive_purpose: "Geen constructief doel voor zijn/haar acties, anders dan het creëren van onenigheid binnen de gemeenschap"
+          custom: "Aangepast..."
         suspend_message: "E-mailbericht"
         suspend_message_placeholder: "Optioneel kunt u meer informatie over de schorsing geven, die naar de gebruiker wordt gemaild."
         suspended_by: "Geschorst door"

@@ -1010,7 +1010,6 @@ zh_TW:
         links_tab: "連結"
         link_created_at: "已建立"
         link_groups: 群組
-        create: "送出邀請"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"
@@ -2050,7 +2049,6 @@ zh_TW:
         delete_topic_disallowed: "您沒有刪除此話題的權限。"
         delete_topic: "刪除話題"
         add_post_notice: "加入工作人員通知"
-        remove_post_notice: "移除工作人員通知"
       actions:
         people:
           like_capped:
@@ -3392,7 +3390,6 @@ zh_TW:
         suspend_reason_label: "你為什麼要將此使用者停權？你輸入的原因將在此使用者登入時顯示，及顯示在此使用者的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason_hidden_label: "您為何要將該使用者停權？使用者在登入時會看見這段文字，請簡短描述。"
         suspend_reason: "原因"
-        suspend_reason_placeholder: "停權原因"
         suspend_message: "Email 訊息"
         suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"

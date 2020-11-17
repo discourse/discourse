@@ -64,6 +64,9 @@ sl:
       has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
+      is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
+      is_invalid_unpretentious: "zdi se nejasno, ena ali več besed je zelo dolga?"
+      is_invalid_quiet: "zdi se nejasno, ali ste ga mislili vnesti z VELIKIMI ZAČETNICAMI?"
       less_than: mora biti manj kot %{count}
       less_than_or_equal_to: mora biti manj ali enako kot %{count}
       not_a_number: ni številka
@@ -852,6 +855,8 @@ sl:
     second_factor_toggle:
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
   user:
+    email:
+      does_not_exist: "N/A"
     ip_address:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:

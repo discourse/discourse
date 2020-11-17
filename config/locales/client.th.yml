@@ -1003,7 +1003,6 @@ th:
         link_created_at: "สร้างเมื่อ"
         link_groups: กลุ่ม
         link_expires_at: หมดอายุ
-        create: "ส่งคำเชิญ"
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"

@@ -13,9 +13,9 @@ vi:
     multiple_polls_without_name: "Có nhiều cuộc thăm dò chưa được đặt tên. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
     multiple_polls_with_same_name: "Có nhiều cuộc thăm dò có cùng tên: <strong>%{name}</strong>. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
     default_poll_must_have_less_options:
-      other: "Thăm dò phải có ít hơn %{count} lựa chọn."
+      other: "Thăm dò ý kiến phải có ít hơn %{count} tùy chọn."
     named_poll_must_have_less_options:
-      other: "Thăm dò <strong>%{name}</strong> phải có ít hơn %{count} lựa chọn."
+      other: "Cuộc thăm dò có tên <strong>%{name}</strong> phải có ít hơn %{count} lựa chọn."
     default_poll_must_have_different_options: "Thăm dò ​​phải có các lựa chọn khác nhau."
     named_poll_must_have_different_options: "Thăm dò <strong>%{name}</strong> ​​phải có các lựa chọn khác nhau."
     default_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò ​​với nhiều lựa chọn có các tham số không hợp lệ."

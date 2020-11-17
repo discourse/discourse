@@ -1174,7 +1174,6 @@ ca:
         links_tab: "Enllaços"
         link_created_at: "Creat"
         link_groups: Grups
-        create: "Envia la invitació"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
@@ -2316,7 +2315,6 @@ ca:
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
         add_post_notice: "Afegeix un avís a l'equip responsable"
-        remove_post_notice: "Elimina l'avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -3767,7 +3765,6 @@ ca:
         suspend_reason_label: "Per què suspeneu aquest usuari? Aquest text <b>serà visible per a tothom</b> en el perfil de l'usuari, i es mostrarà a l'usuari quan vulgui iniciar la sessió. Sigueu breu."
         suspend_reason_hidden_label: "Per què suspeneu aquest usuari? Aquest text es mostrarà a l'usuari quan intenti iniciar la sessió. Sigueu breu. "
         suspend_reason: "Motiu"
-        suspend_reason_placeholder: "Raó de la suspensió"
         suspend_message: "Missatge de correu"
         suspend_message_placeholder: "Opcionalment, doneu més informació sobre la suspensió i s'enviarà per correu a l'usuari."
         suspended_by: "Suspès per"

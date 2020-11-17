@@ -307,6 +307,7 @@ sv:
     drafts:
       resume: "Återuppta"
       remove: "Ta bort"
+      remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för privat meddelande"
       topic_reply: "Svar på utkast"
@@ -1295,7 +1296,7 @@ sv:
         link_redemption_stats: "Återbeviljade"
         link_groups: Grupper
         link_expires_at: Upphör
-        create: "Skicka inbjudan"
+        create: "Inbjudan"
         copy_link: "Visa länk"
         generate_link: "Skapa inbjudningslänk"
         link_generated: "Här är din inbjudningslänk!"
@@ -1309,7 +1310,7 @@ sv:
           max_redemptions_allowed_label: "Hur många personer är tillåtna att registrera sig via denna länk?"
           expires_at: "När ska denna inbjudningslänk upphöra?"
         bulk_invite:
-          none: "Inga inbjudningar att visa på denna sida. Du kan bjuda in specifika personer med hjälp av deras e-post eller skapa en inbjudningslänk som kan användas av vem som helst."
+          none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
           success: "Filen laddades upp och du underrättas via meddelande när processen är klar"
           error: "Tyvärr bör filen vara i CSV-format."
@@ -2541,6 +2542,7 @@ sv:
         no_save_draft: "Nej, spara utkast"
         yes_value: "Ja, kasta ändringar"
       abandon:
+        title: "Överge utkast"
         confirm: "Är du säker på att du vill avbryta ditt inlägg?"
         no_value: "Nej, behåll"
         no_save_draft: "Nej, spara utkast"
@@ -2598,7 +2600,8 @@ sv:
         delete_topic_error: "Ett fel inträffade när det här ämnet togs bort"
         delete_topic: "ta bort ämne"
         add_post_notice: "Lägg till personalnotering"
-        remove_post_notice: "Ta bort personalnotering"
+        change_post_notice: "Ändra personalnotering"
+        delete_post_notice: "Radera personalnotering"
         remove_timer: "Ta bort tidtagning"
       actions:
         people:
@@ -3464,6 +3467,8 @@ sv:
               sync_sso: Synkronisera en användare genom SSO.
               show: Erhåll information om en användare.
               check_emails: Lista användares e-post.
+            email:
+              receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
       web_hooks:
         title: "Webhookar"
         none: "Det finns inga webhookar just nu."
@@ -3703,6 +3708,7 @@ sv:
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
           color_scheme_user_selectable: "Färgschema kan väljas av användare"
+          auto_update: "Uppdatera automatiskt när Discourse uppdateras"
           color_scheme: "Färgpalett"
           default_light_scheme: "Ljus (standard)"
           color_scheme_select: "Välj färger som ska användas av temat"
@@ -4227,7 +4233,14 @@ sv:
         suspend_reason_label: "Varför stänger du av användaren? Denna text <b>kommer att vara synlig för alla</b> på användarens profilsida, och kommer att visas för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason_hidden_label: "Varför stänger du av användaren? Denna text kommer att vara synlig för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason: "Anledning"
-        suspend_reason_placeholder: "Anledning till avstängningen"
+        suspend_reason_title: "Anledning till avstängningen"
+        suspend_reasons:
+          not_listening_to_staff: "Lyssnade inte på personalen"
+          consuming_staff_time: "Förbrukade oproportionerligt mycket personaltid"
+          combatative: "För stridslysten"
+          in_wrong_place: "På fel plats"
+          no_constructive_purpose: "Inget konstruktivt syfte med sina handlingar annat än att skapa oenighet inom forumet"
+          custom: "Anpassad..."
         suspend_message: "E-postmeddelande"
         suspend_message_placeholder: "Valfritt kan du erbjuda mer information om avstängningen som skickas per e-post till användaren."
         suspended_by: "Avstängd av"
@@ -4462,6 +4475,7 @@ sv:
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"
+        history: "Visa ändringshistorik"
         reset: "återställ"
         none: "ingen"
       site_settings:
