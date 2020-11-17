@@ -27,7 +27,7 @@
               &mdash;
             {{/if}}
           </td>
-          <td><a href="mailto:{{l.to_address}}">{{l.to_address}}</a></td>
+          <td class="email-address"><a href="mailto:{{l.to_address}}">{{l.to_address}}</a></td>
           {{#if l.has_bounce_key}}
             <td><a href {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
           {{else}}
