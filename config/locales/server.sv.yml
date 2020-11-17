@@ -140,6 +140,9 @@ sv:
       inclusion: ingår inte i listan
       invalid: är ogiltig
       is_invalid: "Verkar oklart, är det en fullständig mening?"
+      is_invalid_meaningful: "verkar oklart, de flesta orden innehåller samma bokstäver om och om igen?"
+      is_invalid_unpretentious: "verkar oklart, ett eller flera ord är mycket långa?"
+      is_invalid_quiet: "verkar oklart, var det din avsikt att skriva med STORA BOKSTÄVER?"
       invalid_timezone: "'%{tz}' är inte en giltig tidszon"
       contains_censored_words: "innehåller följande censurerade ord: %{censored_words}"
       less_than: måste vara mindre än %{count}
@@ -1920,6 +1923,7 @@ sv:
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."
     review_media_unless_trust_level: "Personalen kommer att granska inlägg från användare med lägre förtroendenivåer om de innehåller inbäddade medier."
+    blur_tl0_flagged_posts_media: "Diffusera flaggade inläggsbilder för att dölja innehåll som kanske är bäst att inte visa på arbetet."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
@@ -1995,6 +1999,7 @@ sv:
     gravatar_login_url: "Url relaterad till gravatar_base_url, som tillhandahåller inloggning för användaren hos Gravatar-tjänsten"
     share_quote_buttons: "Bestäm vilka objekt som visas i citatdelningswidgeten, samt i vilken ordning."
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
+    create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -2227,6 +2232,7 @@ sv:
       not_allowed: "är inte en tillåten e-postleverantör. Använd en annan e-postadress."
       blocked: "är inte tillåtet."
       revoked: "Kommer inte att skicka e-post till '%{email}' förrän %{date}."
+      does_not_exist: "---"
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
@@ -3553,7 +3559,7 @@ sv:
       long_description: |
         Den här utmärkelsen beviljas när du får din första gillning på ett inlägg. Grattis, du har skrivit något som en av medlemmarna på forumet tyckte var intressant, coolt eller användbart!
     autobiographer:
-      name: Självbiograf
+      name: Självbiografi
       description: Fyllde i sin <a href="%{base_uri}/my/preferences/profile">profilinformation</a>
       long_description: |
         Den här utmärkelsen beviljas för att ha fyllt i din <a href="%{base_uri}/my/preferences/profile">profilinformation</a> och valt en profilbild. Genom att låta oss få lära känna dig bättre och vad du är intresserad av möjliggörs ett bättre, mer sammanhållet forum. Häng med oss!

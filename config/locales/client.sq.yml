@@ -732,7 +732,6 @@ sq:
         links_tab: "Lidhjet"
         link_created_at: "Krijuar"
         link_groups: Grupet
-        create: "Dërgoni ftesën"
         bulk_invite:
           success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."

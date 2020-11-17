@@ -962,7 +962,6 @@ lt:
         links_tab: "Nuorodos"
         link_created_at: "Sukurta"
         link_groups: Grupės
-        create: "Siųsti pakvietimą"
         valid_for: "Pakvietimo nuoroda galioja tik šiam elektroninio pašto adresui: %{email}"
         invite_link:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
@@ -2874,7 +2873,6 @@ lt:
         suspend_duration: "Kuriam laikui vartotojas bus sustabdytas?"
         suspend_reason_label: "Kodėl sustabdote? Šis tekstas <b>bus matomas visiems</b> vartotojo profilyje ir vartotojui bandant prisijungti. Stenkitės aprašyti trumpai."
         suspend_reason: "Priežastis"
-        suspend_reason_placeholder: "Suspendavimo priežastis"
         suspend_message: "E-pašto žinutė"
         suspended_by: "Sustabdė"
         silence_reason: "Priežastis"

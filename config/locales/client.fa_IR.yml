@@ -302,6 +302,7 @@ fa_IR:
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
+      remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
@@ -1191,7 +1192,6 @@ fa_IR:
         links_tab: "پیوندها"
         link_created_at: "ساخته شده"
         link_groups: گروه ها
-        create: "ارسال دعوتنامه "
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
         invite_link:
           success: "لینک دعوت با موفقیت ایجاد شد!"
@@ -2321,7 +2321,8 @@ fa_IR:
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
         add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
-        remove_post_notice: "اطلاعیه کارکنان را پاک کنید"
+        change_post_notice: "تغییر اطلاعیه همکاران"
+        delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
       actions:
         people:
@@ -3605,7 +3606,6 @@ fa_IR:
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
-        suspend_reason_placeholder: "دلیل تعلیق شدن"
         suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
@@ -3783,6 +3783,7 @@ fa_IR:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
+        history: "مشاهده تاریخچه تغییر"
         reset: "بازنشانی"
         none: "هیچی"
       site_settings:

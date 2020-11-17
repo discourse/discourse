@@ -307,6 +307,7 @@ it:
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
+      remove_confirmation: "Vuoi davvero eliminare questa bozza?"
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio privato in bozza"
       topic_reply: "Risposta in bozza"
@@ -1295,7 +1296,7 @@ it:
         link_redemption_stats: "Redemptions"
         link_groups: Gruppi
         link_expires_at: Scadenza
-        create: "Invia Invito"
+        create: "Invita"
         copy_link: "Mostra collegamento"
         generate_link: "Crea link di invito"
         link_generated: "Ecco il tuo link di invito!"
@@ -1309,7 +1310,7 @@ it:
           max_redemptions_allowed_label: "Quante persone sono autorizzate a registrarsi utilizzando questo link?"
           expires_at: "Quando scadrà questo link di invito?"
         bulk_invite:
-          none: "Nessun invito da mostrare. Puoi invitare persone specifiche per e-mail o creare un link di invito che può essere usato da chiunque."
+          none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
           error: "Spiacenti, il file deve essere in formato CSV."
@@ -1839,6 +1840,9 @@ it:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
       liked_consolidated_description:
         one: "ha messo \"mi piace\" ad %{count} tuo messaggio"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
@@ -1847,7 +1851,7 @@ it:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> ha accettato il tuo invito"
-      moved_post: "<span>%{username}</span> spostato %{description}"
+      moved_post: "<span>%{username}</span> ha spostato %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Guadagnato '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
@@ -2538,6 +2542,7 @@ it:
         no_save_draft: "No, salva in bozza"
         yes_value: "Sì, scarta le modifiche"
       abandon:
+        title: "Abbandona la bozza"
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
         no_save_draft: "No, salva in bozza"
@@ -2595,7 +2600,8 @@ it:
         delete_topic_error: "Si è verificato un errore durante l'eliminazione di questo argomento"
         delete_topic: "elimina argomento"
         add_post_notice: "Aggiungi Note Staff"
-        remove_post_notice: "Rimuovi Note Staff"
+        change_post_notice: "Modifica note dello staff"
+        delete_post_notice: "Elimina avviso dello staff"
         remove_timer: "rimuovi il timer"
       actions:
         people:
@@ -3457,6 +3463,8 @@ it:
               sync_sso: Sincronizza un utente usando SSO.
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
+            email:
+              receive_emails: Combina questo ambito con il destinatario della posta per elaborare le e-mail in arrivo.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3696,6 +3704,7 @@ it:
           is_default: "Il tema è abilitato di default"
           user_selectable: "Il tema può essere selezionato dagli utenti"
           color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
+          auto_update: "Aggiorna automaticamente quando Discourse viene aggiornato"
           color_scheme: "Tavolozza dei colori"
           default_light_scheme: "Light (predefinito)"
           color_scheme_select: "Seleziona i colori da usare nel tema"
@@ -4220,7 +4229,14 @@ it:
         suspend_reason_label: "Perché lo stai sospendendo? Questo testo <b>sarà visibile a tutti</b> nella pagina del profilo dell'utente, e gli verrà mostrato tutte le volte che si connetterà. Scrivi il meno possibile."
         suspend_reason_hidden_label: "Perché stai sospendendo l'utente? Questo testo verrà mostrato all'utente quando cercherà di accedere. Mantienilo breve."
         suspend_reason: "Motivo"
-        suspend_reason_placeholder: "Motivo Sospensione"
+        suspend_reason_title: "Motivo della sospensione"
+        suspend_reasons:
+          not_listening_to_staff: "Non ascoltava le raccomandazioni dello staff"
+          consuming_staff_time: "Ha fatto sprecare troppo tempo allo staff"
+          combatative: "Troppo veemente"
+          in_wrong_place: "Al posto sbagliato"
+          no_constructive_purpose: "Azioni senza fini costruttivi se non creare disaccordo nella comunità"
+          custom: "Personalizzato..."
         suspend_message: "Messaggio Email"
         suspend_message_placeholder: "Facoltativamente, fornisci ulteriori informazioni sulla sospensione e verranno inviate via email all'utente."
         suspended_by: "Sospeso da"
@@ -4455,6 +4471,7 @@ it:
         more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
       settings:
         show_overriden: "Mostra solo i sovrascritti"
+        history: "Visualizza la cronologia delle modifiche"
         reset: "reimposta"
         none: "nessuno"
       site_settings:

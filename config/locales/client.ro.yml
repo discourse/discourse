@@ -1117,7 +1117,6 @@ ro:
         links_tab: "Adrese web"
         link_created_at: "Creat"
         link_groups: Grupuri
-        create: "Trimite o invitație"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         invite_link:
           success: "Link de invitare generat cu succes!"

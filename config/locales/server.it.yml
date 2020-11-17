@@ -117,6 +117,7 @@ it:
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
         email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
       unrecognized_error: "Errore Non Riconosciuto"
+    secure_media_placeholder: "Redatto: i media sicuri sono attivati su questo sito; visita l'argomento o clicca su Visualizza media per vedere i media allegati."
     view_redacted_media: "Visualizza media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -139,6 +140,9 @@ it:
       inclusion: non è incluso nella lista
       invalid: non è valido
       is_invalid: "sembra poco chiaro, è una frase completa?"
+      is_invalid_meaningful: "non è chiaro. La maggior parte delle parole contiene sempre le stesse lettere."
+      is_invalid_unpretentious: "non è chiaro. Ci sono una o più parole molto lunghe."
+      is_invalid_quiet: "non è chiaro. Volevi scrivere TUTTO IN MAIUSCOLO?"
       invalid_timezone: "'%{tz}' non è un fuso orario valido"
       contains_censored_words: "contiene le seguenti parole censurate: %{censored_words}"
       less_than: deve essere minore di %{count}
@@ -185,6 +189,7 @@ it:
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
       secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i supporti sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
+      second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se il login tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare 2FA se i login locali sono disabilitati."
       second_factor_cannot_be_enforced_with_sso_enabled: "Non si può applicare 2FA se SSO è attivato."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non è possibile disabilitare l'accesso locale se 2FA è abilitato. Disabilitare 2FA prima di disabilitare gli accessi locali."
@@ -195,6 +200,12 @@ it:
     expired: "Il tuo token di invito è scaduto. <a href='%{base_url}/about'>Contatta lo staff</a>."
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
     not_found_json: "Il token del tuo invito non è valido. Per favore contatta lo staff."
+    not_found_template: |
+      <p>Il tuo invito a <a href="%{base_url}">%{site_name}</a> è già stato riscattato.</p>
+
+      <p>Se ti ricordi la password, puoi fare il <a href="%{base_url}/login">login</a>.</p>
+
+      <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     error_message: "Si è verificato un errore accettando l'invito. Si prega di contattare l'amministratore del sito."
     user_exists: "Non è necessario invitare X, hanno già un account!\nNon è necessario invitare <b>%{email}</b>,  <a href='%{base_path}/u/%{username}/summary'>hanno già un account!</a>"
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per favore per attivare il tuo account segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
@@ -1294,6 +1305,8 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: "Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
     memory_warning: "Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
+    google_oauth2_config_warning: 'Il server è configurato per permettere l''iscrizione e il login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni segui questa guida</a>.'
+    facebook_config_warning: 'Il server è configurato per consentire l''iscrizione e il login con Facebook (enable_facebook_logins), ma l''app id e l''app secret non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vedi questa guida per saperne di più</a> .'
     s3_config_warning: 'Il server è configurato per caricare file su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Impostazioni sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi "How to set up image uploads to S3?" per saperne di più</a>'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Vai a <a href="%{base_path}/admin/site_settings">Impostazioni sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi ""How to set up image uploads to S3?" per saperne di più</a>'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini di grandi dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo gestore di pacchetti preferito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">scarica l''ultima versione</a> .'
@@ -1890,6 +1903,11 @@ it:
     push_notifications_prompt: "Visualizza richiesta di consenso dell'utente."
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'tente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
+    gravatar_name: "Nome del provider Gravatar"
+    gravatar_base_url: "Url della base API del provider Gravatar"
+    gravatar_login_url: "Url relativo a gravatar_base_url, che l'utente fornisce nel login al servizio Gravatar"
+    share_quote_buttons: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
+    create_revision_on_bulk_topic_moves: "Crea una revisione per i primi post quando gli argomenti vengono spostati in blocco in una nuova categoria."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -2102,6 +2120,7 @@ it:
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."
       revoked: "Non ti verranno inviate email a '%{email}' fino a %{date}."
+      does_not_exist: "N/D"
     ip_address:
       blocked: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP."
       max_new_accounts_per_registration_ip: "Le nuove iscrizioni non sono consentite dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
@@ -3003,6 +3022,16 @@ it:
         Il tuo indirizzo email è stato cambiato in:
 
         %{new_email}
+    notify_old_email_add:
+      subject_template: "[%{email_prefix}] È stato aggiunto un nuovo indirizzo email"
+      text_body_template: |
+        Questo è un messaggio automatico per farti sapere che è stato aggiunto un indirizzo email per
+        %{site_name} . Se questo è stato fatto in errore, si prega di contattare
+        un amministratore del sito.
+
+        Il tuo indirizzo email aggiunto è:
+
+        %{new_email}
     signup_after_approval:
       title: "Iscrizione Dopo Approvazione"
       subject_template: "Sei stato ammesso su %{site_name}!"
@@ -3066,6 +3095,7 @@ it:
     file_missing: "Spiacenti, devi fornire un file da caricare."
     empty: "Spiacenti, ma il file che hai fornito è vuoto."
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
+    optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     attachments:
       too_large: "Spiacenti, ma il file che stai cercando di caricare è troppo grande (la dimensione massima è %{max_size_kb}KB)."
     images:
@@ -3094,6 +3124,7 @@ it:
     user_email_user_suspended: "l'utente è stato sospeso"
     user_email_already_read: "l'utente ha già letto questo messaggio"
     user_email_access_denied: "l'utente non è abilitato alla visualizzazione di questo post"
+    user_email_no_email: "Nessuna email associata all'ID utente %{user_id}"
     sender_message_blank: "il messaggio è vuoto"
     sender_message_to_blank: "message.to è vuoto"
     sender_text_part_body_blank: "text_part.body è vuoto"
@@ -3111,6 +3142,11 @@ it:
     latte: "Latte"
     summer: "Estate"
     dark_rose: "Rosa scuro"
+    wcag: "WCAG Chiaro"
+    wcag_theme_name: "WCAG Chiaro"
+    wcag_dark: "WCAG Scuro"
+    wcag_dark_theme_name: "WCAG Scuro"
+    default_theme_name: "Predefinito"
     light_theme_name: "Chiaro"
     dark_theme_name: "Scuro"
     neutral_theme_name: "Neutro"
@@ -3313,6 +3349,9 @@ it:
 
       Questo documento è CC-BY-SA. Le ultime modifiche sono state effettuate il 31 Maggio 2013.
   badges:
+    mass_award:
+      errors:
+        invalid_csv: Si è verificato un errore sulla riga %{line_number}. Si prega di confermare che il CSV ha un'email per riga.
     editor:
       name: Redattore
       description: Prima modifica ad un messaggio
@@ -3485,6 +3524,7 @@ it:
         Questo distintivo è assegnato quando ricevi almeno 5 "Mi piace" su 300 messaggi differenti. Wow! La comunità ammira i tuoi contributi frequenti e di alta qualità nelle conversazioni.
     out_of_love:
       name: Amato
+      description: Usato %{max_likes_per_day} "Mi piace" in un giorno
       long_description: |
         Questo distintivo è concesso quando usi tutti i tuoi %{max_likes_per_day} "Mi piace" quotidiani. Ricordarsi di dedicare un momento e di apprezzare i messaggi che ti piacciono e apprezzi incoraggia gli altri membri della community a creare discussioni ancora più interessanti in futuro.
     higher_love:
@@ -3494,6 +3534,7 @@ it:
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 5 giorni. Grazie per aver dedicato del tempo ad incoraggiare le migliori conversazioni ogni giorno!
     crazy_in_love:
       name: Pazzo d’Amore
+      description: Usato %{max_likes_per_day} "Mi piace" in un giorno per 20 volte
       long_description: |
         Questo distintivo è assegnato quando usi tutti i %{max_likes_per_day} mi piace giornalieri per 20 giorni. Wow, sei davvero un modello di comportamento per i tuoi compagni di comunità!
     thank_you:
@@ -3636,6 +3677,7 @@ it:
             label: "Argomento di Benvenuto"
             description: "<p>Come descriveresti la tua comunità ad un estraneo su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come al <b>tuo paragrafo</b> 'discorso da ascensore' o 'dichiarazione di intenti'.</p>"
             one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
+            extra_description: "In caso d'incertezza, puoi saltare questo passaggio e modificare il tuo argomento di benvenuto più tardi."
       privacy:
         title: "Accesso"
         description: "<p> La tua comunità è aperta a tutti, o è limitata da adesione, invito o approvazione? Se preferisci, puoi impostare le cose in privato, quindi passare a pubblico più avanti. </p>"

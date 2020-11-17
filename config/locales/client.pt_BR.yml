@@ -1225,7 +1225,6 @@ pt_BR:
         link_url: "Link"
         link_created_at: "Criado"
         link_groups: Grupos
-        create: "Enviar Convite"
         valid_for: "Link do convite é válido apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Link do convite gerado com sucesso!"
@@ -2414,7 +2413,6 @@ pt_BR:
         delete_topic_disallowed: "você não tem permissão para apagar este tópico"
         delete_topic: "apagar tópico"
         add_post_notice: "Adicionar Aviso da Staff"
-        remove_post_notice: "Remover Aviso da Staff"
         remove_timer: "remover contador"
       actions:
         people:
@@ -3958,7 +3956,6 @@ pt_BR:
         suspend_reason_label: "Por que você está suspendendo? Este texto <b>será visível para todos</b> na página de perfil deste usuário, e será mostrado ao usuário quando ele tentar se logar. Seja breve."
         suspend_reason_hidden_label: "Por que você está suspendendo? Este texto será exibido para o usuário quando ele tentar efetuar login. Mantenha-o curto."
         suspend_reason: "Motivo"
-        suspend_reason_placeholder: "Razão de Suspensão"
         suspend_message: "Mensagem de e-mail"
         suspend_message_placeholder: "Opcionalmente, forneça mais informações sobre a suspensão e ela será enviada para o usuário por e-mail."
         suspended_by: "Suspenso por"

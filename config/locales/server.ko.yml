@@ -140,6 +140,7 @@ ko:
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
       is_invalid: "문장이 불분명합니다."
+      is_invalid_unpretentious: "명확하지 않은 것 같습니다. 하나 이상의 단어가 매우 깁니다."
       invalid_timezone: "&#39;%{tz}&#39;은 (는) 유효한 시간대가 아닙니다"
       contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
       less_than: '%{count}보다 작아야 함'
@@ -1871,7 +1872,7 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 체계."
     embed_post_limit: "글 개수가 최대치입니다."
     embed_username_required: "토픽 생성을 위한 사용자명이 필요합니다."
-    notify_about_flags_after: "이 몇 시간 후에 처리되지 않은 플래그가있는 경우 중재자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하십시오."
+    notify_about_flags_after: "이 시간이 지난 후에도 처리되지 않은 신고가있는 경우 관리자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하십시오."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
@@ -2188,6 +2189,7 @@ ko:
       not_allowed: "이 이메일 제공업체는 허용되지 않습니다. 다른 이메일 제공 업체를 사용하세요."
       blocked: "는 허용되지 않습니다"
       revoked: "'%{email}'로 %{date}까지는 이메일을 보내지 않습니다."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "이 IP주소에서는 가입이 안됩니다."
       max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
@@ -2660,11 +2662,10 @@ ko:
     email_reject_parsing:
       title: "이메일 거부 파싱"
       subject_template: "[%{email_prefix}] 이메일 문제-인식 할 수없는 콘텐츠"
-      text_body_template: |2
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
 
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
+        이메일에서 내용을 찾을 수 없습니다. **답장이 이메일 상단에 있는지 확인하세요** -- 한 줄 답변은 처리 할 수 없습니다.
     email_reject_invalid_access:
       title: "이메일이 잘못된 액세스를 거부"
       subject_template: "[%{email_prefix}] 이메일 문제-잘못된 액세스"

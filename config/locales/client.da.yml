@@ -1103,7 +1103,6 @@ da:
         links_tab: "Links"
         link_created_at: "Oprettet"
         link_groups: grupper
-        create: "Send invitation"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         invite_link:
           success: "Invitiationslinket blev genereret!"
@@ -2218,7 +2217,6 @@ da:
         delete_topic_disallowed: "du har ikke tilladelse til at slette dette emne"
         delete_topic: "slet emne"
         add_post_notice: "Tilføj Hjælperteam Notits"
-        remove_post_notice: "Fjern Hjælperteam Notits"
         remove_timer: "fjern timer"
       actions:
         people:
@@ -3627,7 +3625,6 @@ da:
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason_hidden_label: "Hvorfor suspenderer du? Teksten er synlig for  denne bruger, når de prøver et log ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
-        suspend_reason_placeholder: "Årsag til suspension"
         suspend_message: "Email Besked"
         suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"

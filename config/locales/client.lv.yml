@@ -828,7 +828,6 @@ lv:
         links_tab: "Saites"
         link_created_at: "Radīts"
         link_groups: Grupas
-        create: "Nosūtīt ielūgumu"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"

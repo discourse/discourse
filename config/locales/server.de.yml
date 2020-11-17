@@ -140,6 +140,9 @@ de:
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
       is_invalid: "scheint unklar, ist das ein ganzer Satz?"
+      is_invalid_meaningful: "scheint unklar zu sein, die meisten Wörter enthalten immer wieder die gleichen Buchstaben?"
+      is_invalid_unpretentious: "scheint unklar zu sein, ein oder mehrere Worte ist sehr lang?"
+      is_invalid_quiet: "scheint unklar zu sein, wolltest Du es in GROSSBUCHSTABEN eingeben?"
       invalid_timezone: "'%{tz}' ist keine gültige Zeitzone"
       contains_censored_words: "enthält die folgenden nicht erlaubten Wörter: %{censored_words}"
       less_than: muss weniger als %{count} sein
@@ -1920,6 +1923,7 @@ de:
     returning_user_notice_tl: "inimale Vertrauensstufe, die für das Sehen von Beitrags Benachrichtigungen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wieviele Tage sollen vergehen, bis ein Benutzer als wiederkommend angesehen wird?"
     review_media_unless_trust_level: "Mitarbeiter werden Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
+    blur_tl0_flagged_posts_media: "Mit Unschärfe gekennzeichnete Beiträge Bilder, um potenziell NSFW-Inhalte zu verbergen."
     enable_page_publishing: "Erlauben Sie Mitarbeitern, Themen in neuen URLs mit ihrem eigenen Styling zu veröffentlichen."
     show_published_pages_login_required: "Anonyme Benutzer können veröffentlichte Seiten sehen, auch wenn eine Anmeldung erforderlich ist."
     default_email_digest_frequency: "Wie häufig sollen Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten?"
@@ -1995,6 +1999,7 @@ de:
     gravatar_login_url: "URL relativ zu gravatar_base_url, die dem Benutzer die Anmeldung beim Gravatar-Dienst ermöglicht"
     share_quote_buttons: "Legen Sie fest, welche Elemente im Quote-Sharing-Widget erscheinen und in welcher Reihenfolge."
     share_quote_visibility: "Legen Sie fest, wann die Quote-Sharing-Buttons angezeigt werden sollen: Niemals, für anonyme Benutzer nur oder alle Benutzer. "
+    create_revision_on_bulk_topic_moves: "Erstelle Revision für erste Beiträge, wenn Themen in eine neue Kategorie in Masse verschoben werden."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -2227,6 +2232,7 @@ de:
       not_allowed: "ist für diesen E-Mail-Provider nicht erlaubt. Bitte verwende eine andere E-Mail-Adresse."
       blocked: "ist nicht erlaubt."
       revoked: "Sende keine E-Mails an '%{email}' bis %{date}."
+      does_not_exist: "N / A"
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."

@@ -950,7 +950,6 @@ bg:
         links_tab: "Връзки"
         link_created_at: "Създадени"
         link_groups: Групи
-        create: "Изпрати покана"
         bulk_invite:
           success: "Файлът е качен успешно. Ще бъдете информирани чрез съобщение, когато процесът завърши."
       password:

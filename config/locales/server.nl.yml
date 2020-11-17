@@ -139,6 +139,9 @@ nl:
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
       is_invalid: "lijkt onduidelijk, is het een volledige zin?"
+      is_invalid_meaningful: "lijkt onduidelijk, de meeste woorden bevatten steeds dezelfde letters?"
+      is_invalid_unpretentious: "lijkt onduidelijk, een of meer woorden zijn nogal lang?"
+      is_invalid_quiet: "lijkt onduidelijk, wilde u het IN HOOFDLETTERS invoeren?"
       invalid_timezone: "'%{tz}' is geen geldige tijdzone"
       contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
       less_than: moet minder zijn dan %{count}
@@ -1871,6 +1874,7 @@ nl:
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
+    blur_tl0_flagged_posts_media: "Afbeeldingen van gemarkeerde berichten vervagen om mogelijke NSFW-inhoud te verbergen."
     enable_page_publishing: "Stafleden mogen topics naar nieuwe URL's publiceren met hun eigen stijlen."
     show_published_pages_login_required: "Anonieme gebruikers kunnen gepubliceerde pagina's zien, zelfs wanneer aanmelding is vereist."
     default_email_digest_frequency: "Hoe vaak gebruikers standaard e-mailsamenvattingen ontvangen."
@@ -2168,6 +2172,7 @@ nl:
       not_allowed: "is niet toegestaan vanaf die e-mailprovider. Gebruik een ander e-mailadres."
       blocked: "is niet toegestaan."
       revoked: "Stuurt geen e-mails naar '%{email}' tot %{date}."
+      does_not_exist: "N.v.t."
     ip_address:
       blocked: "Nieuwe registraties vanaf uw IP-adres zijn niet toegestaan."
       max_new_accounts_per_registration_ip: "Nieuwe registraties vanaf uw IP-adres zijn niet toegestaan (maximumlimiet bereikt). Neem contact op met een staflid."

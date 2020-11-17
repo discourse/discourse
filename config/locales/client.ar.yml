@@ -402,6 +402,7 @@ ar:
     drafts:
       resume: "أكمل"
       remove: "أزِل"
+      remove_confirmation: "أمتأكّد من حذف هذه المسودّة؟"
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودّة رسالة خاصّة جديدة"
       topic_reply: "مسودة الرد"
@@ -792,6 +793,7 @@ ar:
         muted:
           title: "مكتوم"
       flair_url: "الصورة الرمزية المميزة"
+      flair_upload_description: "استعمل صورًا مربّعة الشكل مقاسها الأدنى هو 20 بكسل × 20 بكسل."
       flair_bg_color: "لون خلفية الصورة الرمزية"
       flair_bg_color_placeholder: "(إختياري) اللون بترميز Hexadecimal"
       flair_color: "لون الصورة الرمزية"
@@ -833,6 +835,7 @@ ar:
       latest_by: "الاحدث بـ"
       toggle_ordering: "تبديل التحكم في الترتيب"
       subcategories: "أقسام فرعية"
+      muted: "الفئات المكتومة"
       topic_sentence:
         zero: "ما من مواضيع"
         one: "موضوع واحد"
@@ -854,6 +857,7 @@ ar:
         few: "فُتحت %{count} مواضيع جديدة خلال الشهر الماضي."
         many: "فُتح %{count} موضوعًا جديدًا خلال الشهر الماضي."
         other: "فُتح %{count} موضوع جديد خلال الشهر الماضي."
+      n_more: "الفئات (%{count} أكثر)..."
     ip_lookup:
       title: جدول عناوين الIP
       hostname: اسم المضيف
@@ -1279,7 +1283,6 @@ ar:
         links_tab: "روابط"
         link_created_at: "أُنشئ في"
         link_groups: المجموعات
-        create: "أرسل دعوة"
         valid_for: "رابط الدعوة صالح للبريد الإلكترونيّ هذا فقط: %{email}"
         invite_link:
           success: "وُلّد رابط الدعوة بنجاح!"
@@ -1445,6 +1448,9 @@ ar:
     unmute: إلغاء الكتم
     last_post: آخر مشاركة
     time_read: المقروءة
+    time_read_recently: "حديثًا %{time_read}"
+    time_read_tooltip: "إجمالي وقت القراءة هو %{time_read}"
+    time_read_recently_tooltip: "إجمالي وقت القراءة هو %{time_read} (منها %{recent_time_read} خلال الستّين يومًا الماضية)"
     last_reply_lowercase: آخر رد
     replies_lowercase:
       zero: الردود
@@ -1706,6 +1712,8 @@ ar:
       cancel: "ألغِ"
       create_topic: "إنشاء موضوع"
       create_pm: "أرسِل"
+      create_shared_draft: "أنشِئ مسودّة مشتركة"
+      edit_shared_draft: "عدّل المسودّة المشتركة"
       title: "أو اضغط Ctrl+Enter"
       users_placeholder: "أضف عضوا"
       title_placeholder: "بجملة واحدة، صف ما الذي تود المناقشة فية؟"
@@ -1749,6 +1757,7 @@ ar:
       help: "مساعدة التعديل بنُسق مارك‌داون"
       collapse: "صغّر لوحة الكتابة"
       open: "افتح لوحة الكتابة"
+      abandon: "أغلِق لوحة الكتابة وأهمِل المسودّة"
       modal_ok: "حسنا"
       modal_cancel: "ألغِ"
       cant_send_pm: "معذرةً، لا يمكنك الإرسال إلى %{username}."
@@ -2002,12 +2011,12 @@ ar:
           unread: '<p>تظهر المواضيع غير المقروءة هنا.</p><p>تكون المواضيع (مبدئيًا) غير مقروءة وتعرض أعداد <span class="badge new-posts badge-notification">1</span> غير مقروءة إن:</p><ul><li>كتبت الموضوع</li><li>رددت على موضوع</li><li>قرأت الموضوع لمدّة أربع دقائق فأكثر</li></ul><p>أو أنّك ضبطت الموضوع ليُراقب أو يُتابع عبر زرّ التحكّم بالإخطارات أسفل كلّ موضوع.</p><p>إن أردت تعديل هذا السلوك، فزُر <a href="%{userPrefsUrl}">تفضيلاتك</a>.</p>'
       bottom:
         latest: "ما من مواضيع أخرى حديثة."
-        posted: "لا يوجد مواضيع منشورة أخرى."
+        posted: "ما من مواضيع أخرى منشورة."
         read: "ما من مواضيع أخرى مقروءة."
-        new: "لا يوجد مواضيع جديدة أخرى."
+        new: "ما من مواضيع أخرى جديدة."
         unread: "ما من مواضيع أخرى غير مقروءة."
-        category: "لا يوجد مواضيع أخرى في قسم \"%{category}\"."
-        top: "ما من مواضيع نشطة أخرى."
+        category: "ما من مواضيع أخرى في فئة ”%{category}“."
+        top: "ما من مواضيع أخرى نشطة."
         bookmarks: "ما من مواضيع أخرى عليها علامة."
     topic:
       filter_to:
@@ -2099,9 +2108,9 @@ ar:
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: تصفّح كلّ الفئات
       browse_all_tags: تصفّح كلّ الوسوم
-      view_latest_topics: اعرض اخر الموضوعات
-      jump_reply_up: انتقل إلى أول رد
-      jump_reply_down: انتقل إلى آخر رد
+      view_latest_topics: اعرض أحدث المواضيع
+      jump_reply_up: انتقل إلى هذا الردّ بالأعلى
+      jump_reply_down: انتقل إلى هذا الردّ بالأسفل
       deleted: "الموضوع محذوف"
       slow_mode_update:
         title: "الوضع البطيء"
@@ -2345,7 +2354,7 @@ ar:
           few: "%{count} مشاركات"
           many: "%{count} مشاركة"
           other: "%{count} مشاركة"
-        cancel: "إزالة الترشيح"
+        cancel: "ألغِ الترشيح"
       move_to:
         error: "حدث عُطل أثناء نقل المشاركات."
       split_topic:
@@ -2467,7 +2476,7 @@ ar:
       reply_as_new_topic: "التعليق على الموضوع الاصلي"
       reply_as_new_private_message: "الرد في رسالة جديدة علي نفس المستلم"
       continue_discussion: "تكملة النقاش من %{postLink}:"
-      follow_quote: "انتقل إلى المنشور المقتبَس منه"
+      follow_quote: "انتقل إلى المشاركة المقتبسة هنا"
       show_full: "عرض كامل المنشور"
       deleted_by_author:
         zero: "(سحب الكاتب مشاركته، وستُحذف خلال أقلّ من ساعة ما لم يُوضع عليها إشارة)"
@@ -2476,7 +2485,8 @@ ar:
         few: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعات ما لم يُوضع عليها إشارة)"
         many: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعة ما لم يُوضع عليها إشارة)"
         other: "(سحب الكاتب مشاركته، وستُحذف خلال %{count} ساعة ما لم يُوضع عليها إشارة)"
-      expand_collapse: "إظهار/إخفاء"
+      collapse: "اطوِ"
+      expand_collapse: "وسّع/اطوِ"
       locked: "قفل أحد أعضاء طاقم العمل تعديل هذه المشاركة"
       gap:
         zero: "ما من ردود مخفية"
@@ -2488,7 +2498,7 @@ ar:
       notice:
         new_user: "هذه أوّل مرة ينشر فيها %{user} شيئًا، فلنرحّب به في مجتمعنا المتحضّر!"
         returning_user: "مرّت فترة طويلة مذ قرأنا شيئًا من %{user}، إذ كانت آخر مشاركة له %{time}."
-      unread: "المنشور غير مقروء"
+      unread: "هذه المشاركة غير مقروءة"
       has_replies:
         zero: "ما من ردود"
         one: "ردّ واحد"
@@ -2535,6 +2545,7 @@ ar:
         no_save_draft: "لا، احفظ المسودّة"
         yes_value: "نعم، أهمِل التعديل"
       abandon:
+        title: "أهمِل المسودّة"
         confirm: "أمتأكّد من التخلي عن المسودّة التي كنت تكتبها؟"
         no_value: "لا، أبقِها"
         no_save_draft: "لا، احفظ المسودّة"
@@ -2658,8 +2669,8 @@ ar:
           hide: "أخفِ المراجعة"
           show: "أظهر المراجعة"
           revert: "ارجع إلى المراجعة %{revision}"
-          edit_wiki: "عدل الwiki"
-          edit_post: "عدل المنشور"
+          edit_wiki: "عدّل هذا الويكي"
+          edit_post: "عدّل هذه المشاركة"
         displays:
           inline:
             title: "اعرض النسخة المنسقة في عمود واحد مع تمييز الاسطر المضافة و المحذوفة"
@@ -3635,7 +3646,7 @@ ar:
           disabled_component_tooltip: "عُطّل هذا المكوّن"
           default_theme_tooltip: "هذه السمة هي السمة المبدئي للموقع"
           updates_available_tooltip: "لهذه السمة تحديثات متاحة"
-          collapse: إخفاء
+          collapse: اطوِ
           uploads: "الملفات المساعدة"
           no_uploads: "يمكنك رفع ملفات خاصة بواجهة المستخدم الخاصة بك مثل الخطوط و الصور"
           add_upload: "اضف ملف"
@@ -4009,7 +4020,6 @@ ar:
         suspend_reason_label: "لماذا هل أنت عالق؟ هذا النص <b>سيكون ظاهراً للكل</b> على صفحة تعريف هذا العضو, وسيكون ظاهراً للعضو عندما يحاول تسجل الدخول. احفظها قصيرة."
         suspend_reason_hidden_label: "لماذا انت موقوف؟ هذا النص سيظهر للعضو حين يحاول الولوج. اجعله قصيراً."
         suspend_reason: "سبب"
-        suspend_reason_placeholder: "سبب التوقيف"
         suspend_message: "رسالة بريد الكتروني"
         suspend_message_placeholder: "اختياري. وفر المزيد من المعلومات حول التوقيف و سيتم ارساله عبر البريد الالكتروني الى العضو."
         suspended_by: "محظور من قبل"

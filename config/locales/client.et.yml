@@ -861,7 +861,6 @@ et:
         links_tab: "Viited"
         link_created_at: "Loodud"
         link_groups: Grupid
-        create: "Saada kutse"
         valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         invite_link:
           success: "Kutse link edukalt genereeritud!"
@@ -2866,7 +2865,6 @@ et:
         suspend_duration: "Kauaks see kasutaja peatatakse?"
         suspend_reason_label: "Peatamise põhjus? See tekst <b>on nähtav kõigile</b> selle kasutaja profiililehel, samuti kuvatakse kasutajale, kui ta üritab sisse logida. Tee lühidalt."
         suspend_reason: "Põhjus"
-        suspend_reason_placeholder: "Peatamise põhjus"
         suspended_by: "Peatati kasutaja poolt"
         silence_reason: "Põhjus"
         silenced_by: "Vaigistaja"

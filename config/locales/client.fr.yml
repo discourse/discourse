@@ -1244,7 +1244,6 @@ fr:
         link_redemption_stats: "Utilisations"
         link_groups: Groupes
         link_expires_at: Expire
-        create: "Envoyer une invitation"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         invite_link:
           title: "Lien d'invitation"
@@ -2448,7 +2447,6 @@ fr:
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
         delete_topic: "supprimer le sujet"
         add_post_notice: "Afficher une note des responsables"
-        remove_post_notice: "Retirer la note pour les responsables"
         remove_timer: "supprimer la planification"
       actions:
         people:
@@ -3999,7 +3997,6 @@ fr:
         suspend_reason_label: "Pourquoi suspendez-vous ? Ce texte <b>sera visible par tout le monde</b> sur la page du profil de cet utilisateur et sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason_hidden_label: "Pourquoi le suspendez-vous ? Ce texte sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason: "Raison"
-        suspend_reason_placeholder: "Raison de la suspension"
         suspend_message: "Message courriel"
         suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par courriel."
         suspended_by: "Suspendu par"
