@@ -33,7 +33,7 @@ var $buo = function() {
   }
 
   // retrieve localized browser upgrade text
-  var t = <%= "'" + I18n.t('js.browser_update') + "'" %>;
+  var t = I18n.translate('js.browser_update');
 
   // create the notification div HTML
   var div = document.createElement("div");
