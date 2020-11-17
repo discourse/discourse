@@ -10,6 +10,8 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { getOwner } from "discourse-common/lib/get-owner";
 
+const STAFF_GROUP_NAME = "staff";
+
 const Category = RestModel.extend({
   permissions: null,
 
@@ -229,7 +231,12 @@ const Category = RestModel.extend({
   _permissionsForUpdate() {
     const permissions = this.permissions;
     let rval = {};
-    permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    if (permissions.length) {
+      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    } else {
+      // empty permissions => staff-only access
+      rval[STAFF_GROUP_NAME] = PermissionType.FULL;
+    }
     return rval;
   },
 

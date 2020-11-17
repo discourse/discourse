@@ -1,17 +1,28 @@
 <span class="group-name">
-  {{group_name}}
+  <span class="group-name-label">{{group_name}}</span>
   <a class="remove-permission" href {{action "removeRow"}}>
     {{d-icon "times-circle"}}
   </a>
 </span>
 <span class="options actionable">
-  <span class="cell see granted" {{action "setPermissionSee"}}>
-    {{d-icon "check"}}
-  </span>
-  <span class="cell {{if canReply "granted"}}" {{action "setPermissionReply"}}>
-    {{d-icon canReplyIcon}}
-  </span>
-  <span class="cell {{if canCreate "granted"}}" {{action "setPermissionFull"}}>
-    {{d-icon canCreateIcon}}
-  </span>
+  {{d-button
+    icon="check"
+    action=(action "setPermissionSee")
+    class="btn btn-flat see"
+    translatedTitle=seeTooltip
+  }}
+
+  {{d-button
+    icon=canReplyIcon
+    action=(action "setPermissionReply")
+    translatedTitle=replyTooltip
+    class="btn btn-flat"
+  }}
+
+  {{d-button
+    icon=canCreateIcon
+    action=(action "setPermissionFull")
+    translatedTitle=createTooltip
+    class="btn btn-flat"
+  }}
 </span>

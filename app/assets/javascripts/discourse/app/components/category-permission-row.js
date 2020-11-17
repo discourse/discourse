@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
@@ -28,15 +29,51 @@ export default Component.extend({
   },
 
   @observes("everyonePermissionType")
-  updatePerms() {
+  inheritFromEveryone() {
     if (this.group_name === EVERYONE) {
       return;
     }
 
-    // groups cannot have a permission level lower than the "everyone" special group
+    // groups cannot have a lesser permission than "everyone"
     if (this.everyonePermissionType < this.type) {
       this.updatePermission(this.everyonePermissionType);
     }
+  },
+
+  @discourseComputed("everyonePermissionType", "type")
+  seeTooltip(everyonePermissionType) {
+    if (
+      this.group_name !== EVERYONE &&
+      everyonePermissionType &&
+      everyonePermissionType < PermissionType.READONLY
+    ) {
+      return I18n.t("category.permissions.inherited");
+    }
+    return I18n.t("category.permissions.grant_see");
+  },
+
+  @discourseComputed("everyonePermissionType", "type")
+  replyTooltip(everyonePermissionType) {
+    if (
+      this.group_name !== EVERYONE &&
+      everyonePermissionType &&
+      everyonePermissionType < PermissionType.CREATE_POST
+    ) {
+      return I18n.t("category.permissions.inherited");
+    }
+    return I18n.t("category.permissions.grant_reply");
+  },
+
+  @discourseComputed("everyonePermissionType", "type")
+  createTooltip(everyonePermissionType) {
+    if (
+      this.group_name !== EVERYONE &&
+      everyonePermissionType &&
+      everyonePermissionType === PermissionType.FULL
+    ) {
+      return I18n.t("category.permissions.inherited");
+    }
+    return I18n.t("category.permissions.grant_full");
   },
 
   updatePermission(type) {
@@ -65,6 +102,7 @@ export default Component.extend({
       ) {
         return;
       }
+
       this.updatePermission(PermissionType.CREATE_POST);
     },
 

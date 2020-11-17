@@ -197,28 +197,26 @@ div.edit-category {
     .group-name {
       text-align: left;
       padding: 0.5em;
-    }
-    .options {
-      &.disabled {
-        opacity: 0.4;
-        color: var(--success);
-        background-color: var(--success-low);
-      }
-      .cell {
-        width: 33%;
-        padding: 0.5em;
+      padding-left: 0;
+      .group-name-label {
+        @include ellipsis;
       }
     }
-    .actionable {
-      .cell {
-        cursor: pointer;
-        color: var(--danger-medium);
-        background-color: var(--danger-low);
-        &.granted {
-          color: var(--success);
-          background-color: var(--success-low);
-        }
-      }
+    .cell,
+    .btn-flat {
+      width: 33%;
+      padding: 0.5em;
+    }
+    .btn-flat:hover {
+      background-color: var(--primary-very-low);
+    }
+    .d-icon-times,
+    .btn-flat:hover .d-icon-times {
+      color: var(--danger);
+    }
+    .d-icon-check,
+    .btn-flat:hover .d-icon-check {
+      color: var(--success);
     }
   }
 
