@@ -7,7 +7,7 @@ import { equal, alias } from "@ember/object/computed";
 const EVERYONE = "everyone";
 
 export default Component.extend({
-  classNames: ["permission-row"],
+  classNames: ["permission-row", "row-body"],
   canCreate: equal("type", PermissionType.FULL),
   everyonePermissionType: alias("everyonePermission.permission_type"),
 
