@@ -51,6 +51,9 @@ task "themes:install" => :environment do |task, args|
   end
 end
 
+task "themes:update" => :environment do
+end
+
 desc "List all the installed themes on the site"
 task "themes:audit" => :environment do
   components = Set.new
