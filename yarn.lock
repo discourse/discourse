@@ -1227,10 +1227,6 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-"favcount@https://github.com/chrishunt/favcount":
-  version "0.0.0"
-  resolved "https://github.com/chrishunt/favcount#d053eac5ce33e2e299363ab927103e2ff6c7361e"
-
 fb-watchman@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-2.0.1.tgz#fc84fb39d2709cf3ff6d743706157bb5708a8a85"

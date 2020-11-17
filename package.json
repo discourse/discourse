@@ -15,7 +15,6 @@
     "chart.js": "2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
     "eslint-config-discourse": "^1.1.5",
-    "favcount": "https://github.com/chrishunt/favcount",
     "handlebars": "^4.7.0",
     "highlight.js": "https://github.com/highlightjs/highlight.js",
     "intersection-observer": "^0.5.1",
