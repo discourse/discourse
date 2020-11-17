@@ -31,3 +31,7 @@
     padding: 0.75em calc(0.5em + 4px + 1px);
   }
 }
+
+.panel-body-contents {
+  padding-bottom: env(safe-area-inset-bottom);
+}
