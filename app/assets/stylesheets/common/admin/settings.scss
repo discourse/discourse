@@ -15,18 +15,13 @@
           margin-bottom: 6px;
         }
       }
-      h3 {
-        a:any-link {
-          color: unset;
-        }
-        .history-icon {
-          opacity: 0;
-          transition: opacity 0.3s;
-          color: var(--primary-medium);
-        }
-        &:hover .history-icon {
-          opacity: 1;
-        }
+      .history-icon {
+        opacity: 0;
+        transition: opacity 0.3s;
+        color: var(--primary-medium);
+      }
+      &:hover .history-icon {
+        opacity: 1;
       }
     }
     .setting-value {
