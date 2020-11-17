@@ -371,9 +371,9 @@ describe Jobs::ExportUserArchive do
 
       expect(csv_out).to_not match(admin.username)
 
-      expect(data[0]['post_raw']).to eq('hello world post contents.')
-      expect(data[0]['other_json']).to match('reply_to_post_number')
-      expect(data[1]['other_json']).to match('example_tag')
+      expect(data[0]['other_json']).to match('example_tag')
+      expect(data[1]['post_raw']).to eq('hello world post contents.')
+      expect(data[1]['other_json']).to match('reply_to_post_number')
     end
   end
 
