@@ -412,7 +412,7 @@ module Discourse
     unless uri.is_a?(URI)
       uri = begin
         URI(uri)
-      rescue URI::Error
+      rescue ArgumentError, URI::Error
       end
     end
 
