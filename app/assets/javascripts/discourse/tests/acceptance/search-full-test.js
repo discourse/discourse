@@ -1,6 +1,6 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { keyEvent, visit, fillIn, click } from "@ember/test-helpers";
+import { triggerKeyEvent, visit, fillIn, click } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
@@ -128,7 +128,11 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await fillIn(".search-advanced-options .user-selector", "admin");
     await click(".search-advanced-options .user-selector");
-    await keyEvent(".search-advanced-options .user-selector", "keydown", 8);
+    await triggerKeyEvent(
+      ".search-advanced-options .user-selector",
+      "keydown",
+      8
+    );
 
     waitFor(assert, async () => {
       assert.ok(

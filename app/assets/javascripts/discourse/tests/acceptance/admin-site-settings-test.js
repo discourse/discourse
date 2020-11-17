@@ -3,7 +3,7 @@ import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   fillIn,
   click,
-  keyEvent,
+  triggerKeyEvent,
   visit,
   currentURL,
 } from "@ember/test-helpers";
@@ -98,7 +98,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     await fillIn(".input-setting-string", "Test");
-    await keyEvent(".input-setting-string", "keydown", 13); // enter
+    await triggerKeyEvent(".input-setting-string", "keydown", 13); // enter
     assert.ok(
       exists(".row.setting.overridden"),
       "saving via Enter key marks setting as overriden"

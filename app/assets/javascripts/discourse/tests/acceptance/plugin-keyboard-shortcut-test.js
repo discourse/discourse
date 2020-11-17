@@ -1,4 +1,4 @@
-import { keyEvent, visit } from "@ember/test-helpers";
+import { triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -21,7 +21,7 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
     });
 
     await visit("/t/this-is-a-test-topic/9");
-    await keyEvent(document, "keypress", "]".charCodeAt(0));
+    await triggerKeyEvent(document, "keypress", "]".charCodeAt(0));
     assert.equal(
       $("#added-element").length,
       1,
