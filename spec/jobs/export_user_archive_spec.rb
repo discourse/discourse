@@ -331,7 +331,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
       expect(data.length).to eq(4)
-      data.sort { |a, b| a['category_id'] <=> b['category_id'] }
+      data.sort! { |a, b| a['category_id'] <=> b['category_id'] }
 
       expect(data[0][:category_id]).to eq(subcategory.id.to_s)
       expect(data[0][:notification_level].to_s).to eq('tracking')
@@ -358,7 +358,6 @@ describe Jobs::ExportUserArchive do
     let(:admin) { Fabricate(:admin) }
 
     it 'correctly exports queued posts' do
-      skip 'flaky'
       SiteSetting.tagging_enabled = true
 
       reviewable_post.perform(admin, :reject_post)
@@ -368,7 +367,7 @@ describe Jobs::ExportUserArchive do
 
       data, csv_out = make_component_csv
       expect(data.length).to eq(2)
-      data.sort { |e| e['id'].to_i }
+      data.sort! { |e| e['id'].to_i }
 
       expect(csv_out).to_not match(admin.username)
 
