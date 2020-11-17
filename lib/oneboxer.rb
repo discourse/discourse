@@ -261,7 +261,7 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.mustache")
+      template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
   end
@@ -287,8 +287,7 @@ module Oneboxer
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.mustache")
-      Mustache.render(template, args)
+      Mustache.render(template("discourse_user_onebox"), args)
     else
       nil
     end
@@ -379,16 +378,20 @@ module Oneboxer
     args[:title] ||= args[:link] if args[:link]
     args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
 
-    if is_fragment
-      template = File.read("#{Rails.root}/lib/onebox/templates/preview_error_fragment_onebox.mustache")
-    else
-      template = File.read("#{Rails.root}/lib/onebox/templates/preview_error_onebox.mustache")
-    end
-    Mustache.render(template, args)
+    template_name = is_fragment ? "preview_error_fragment_onebox" : "preview_error_onebox"
+    Mustache.render(template(template_name), args)
   end
 
   def self.preview_error_onebox_fragment(args)
     preview_error_onebox(args, true)
+  end
+
+  def self.template(template_name)
+    @template_cache ||= {}
+    @template_cache[template_name] ||= begin
+      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      File.read(full_path)
+    end
   end
 
 end
