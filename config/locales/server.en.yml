@@ -205,8 +205,7 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
-      missing_data: "No %{missing_data_fields} provided due to missing oEmbed / OpenGraph tags on this web page. :cry:"
-      missing_data_word_connector: "or"
+      missing_data: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag(s) could not be found: %{missing_attributes}"
 
   activemodel:
     errors:

@@ -124,14 +124,14 @@ describe OneboxController do
       it "returns preview-error if the onebox is nil" do
         stub_request_to_onebox_url(nil)
         get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.body).to include("No description or image provided due to missing oEmbed / OpenGraph tags on this web page")
+        expect(response.body).to include("Sorry, we were unable to generate a preview for this web page")
       end
 
       it "returns preview-error if the onebox is an empty string" do
         stub_request_to_onebox_url(" \t ")
         get "/onebox.json", params: { url: url, refresh: "true" }
         expect(response.response_code).to eq(200)
-        expect(response.body).to include("No description or image provided due to missing oEmbed / OpenGraph tags on this web page")
+        expect(response.body).to include("Sorry, we were unable to generate a preview for this web page")
       end
     end
 

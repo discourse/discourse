@@ -349,10 +349,8 @@ module Oneboxer
 
       # NOTE: Call r.errors after calling placeholder_html
       if r.errors.any?
-        # TODO: verify this will work for all locales
-        connector = " #{I18n.t('errors.onebox.missing_data_word_connector')} "
-        error_msg = r.errors.keys.map(&:to_s).to_sentence(two_words_connector: connector, last_word_connector: connector)
-        error_message = I18n.t("errors.onebox.missing_data", missing_data_fields: error_msg)
+        missing_attributes = r.errors.keys.map(&:to_s).sort.join(', ')
+        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes)
         args = r.data.merge(error_message: error_message)
 
         if result[:preview].blank?

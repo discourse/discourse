@@ -12,7 +12,7 @@ describe Oneboxer do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
-    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("No description or image provided due to missing oEmbed / OpenGraph tags on this web page")
+    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("Sorry, we were unable to generate a preview for this web page")
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
@@ -264,12 +264,12 @@ describe Oneboxer do
 
     it 'handles a missing description' do
       stub_request(:get, url).to_return(body: response("missing_description"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("No description provided due to missing oEmbed / OpenGraph tags on this web page")
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description")
     end
 
     it 'handles a missing description and image' do
       stub_request(:get, url).to_return(body: response("missing_description_and_image"))
-      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("No description or image provided")
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
     end
 
     it 'video with missing description returns a placeholder' do
