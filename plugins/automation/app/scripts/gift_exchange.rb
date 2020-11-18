@@ -6,7 +6,7 @@ DiscourseAutomation::Script.add_script('gift_exchange') do
   field :giftee_assignment_message, component: :pm, placeholders: true
   field :gift_exchangers_group, component: :group
 
-  version 15
+  version 16
 
   script do
     now = Time.zone.now
@@ -64,7 +64,7 @@ DiscourseAutomation::Script.add_script('gift_exchange') do
       )
 
       utils.send_pm(
-        target_usernames: gifter,
+        target_usernames: Array(gifter),
         title: title,
         raw: raw
       )
