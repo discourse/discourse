@@ -954,6 +954,7 @@ en:
       others: "No activity."
     no_bookmarks:
       self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
+      search: "No bookmarks found with the provided search query."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."

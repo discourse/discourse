@@ -4561,6 +4561,31 @@ describe UsersController do
       get "/u/#{bookmark3.user.username}/bookmarks.json"
       expect(response.status).to eq(403)
     end
+
+    it "shows a helpful message if no bookmarks are found" do
+      bookmark1.destroy
+      bookmark2.destroy
+      bookmark3.destroy
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
+      expect(response.parsed_body['no_results_help']).to eq(
+        I18n.t('user_activity.no_bookmarks.self')
+      )
+    end
+
+    it "shows a helpful message if no bookmarks are found for the search" do
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json", params: {
+        q: 'badsearch'
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
+      expect(response.parsed_body['no_results_help']).to eq(
+        I18n.t('user_activity.no_bookmarks.search')
+      )
+    end
   end
 
   def create_second_factor_security_key

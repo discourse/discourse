@@ -1542,7 +1542,9 @@ class UsersController < ApplicationController
         if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
-            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+            no_results_help: I18n.t(
+              params[:q].present? ? "user_activity.no_bookmarks.search" : "user_activity.no_bookmarks.self"
+            )
           }
         else
           page = params[:page].to_i + 1
