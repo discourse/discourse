@@ -17,18 +17,18 @@
 }
 
 .enabled-automation {
-  color: $success;
+  color: var(--success);
 }
 
 .disabled-automation {
-  color: $danger;
+  color: var(--danger);
 }
 
 .discourse-automation-form {
   .scripts-list {
     width: 210px;
     .select-kit-header {
-      background: white;
+      background: var(--secondary);
       border: 1px solid var(--primary-medium);
 
       &:hover {
@@ -46,7 +46,7 @@
     .title {
       padding-bottom: 0.5em;
       margin-bottom: 1em;
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
     }
 
     input[type="text"],
