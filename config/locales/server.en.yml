@@ -205,7 +205,13 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
-      missing_data: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag(s) could not be found: %{missing_attributes}"
+      missing_data:
+        one:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
+        other:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
+
+  word_connector:
+    # Connects words with a comma. Example: "foo, bar"
+    comma: ", "
 
   activemodel:
     errors:

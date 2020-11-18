@@ -349,8 +349,8 @@ module Oneboxer
 
       # NOTE: Call r.errors after calling placeholder_html
       if r.errors.any?
-        missing_attributes = r.errors.keys.map(&:to_s).sort.join(', ')
-        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes)
+        missing_attributes = r.errors.keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: r.errors.keys.size)
         args = r.data.merge(error_message: error_message)
 
         if result[:preview].blank?
