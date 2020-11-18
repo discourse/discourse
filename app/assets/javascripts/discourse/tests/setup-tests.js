@@ -26,6 +26,34 @@ import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
 import { setApplication, setResolver } from "@ember/test-helpers";
+import bootbox from "bootbox";
+
+const Plugin = $.fn.modal;
+const Modal = Plugin.Constructor;
+
+function AcceptanceModal(option, _relatedTarget) {
+  return this.each(function () {
+    var $this = $(this);
+    var data = $this.data("bs.modal");
+    var options = $.extend(
+      {},
+      Modal.DEFAULTS,
+      $this.data(),
+      typeof option === "object" && option
+    );
+
+    if (!data) {
+      $this.data("bs.modal", (data = new Modal(this, options)));
+    }
+    data.$body = $("#ember-testing");
+
+    if (typeof option === "string") {
+      data[option](_relatedTarget);
+    } else if (options.show) {
+      data.show(_relatedTarget);
+    }
+  });
+}
 
 export default function setupTests(app, container) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -45,6 +73,8 @@ export default function setupTests(app, container) {
   app.setupForTesting();
   app.SiteSettings = currentSettings();
   app.start();
+  bootbox.$body = $("#ember-testing");
+  $.fn.modal = AcceptanceModal;
 
   // disable logster error reporting
   if (window.Logster) {
