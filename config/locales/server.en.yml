@@ -46,6 +46,7 @@ en:
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
+  views: "views"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   sign_up: "Sign Up"
