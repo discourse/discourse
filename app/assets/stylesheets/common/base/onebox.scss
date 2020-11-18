@@ -379,6 +379,16 @@ pre.onebox code {
   white-space: normal;
 }
 
+.onebox-warning-message {
+  margin-top: 5px;
+  color: var(--primary-med-or-secondary-med);
+  img.emoji {
+    width: 20px;
+    height: 20px;
+    float: none;
+  }
+}
+
 // Onebox - Github - PR, Commit & Issue
 .onebox.githubpullrequest,
 .onebox.githubcommit,

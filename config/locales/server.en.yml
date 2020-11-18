@@ -206,6 +206,16 @@ en:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
+      error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      missing_data:
+        one:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
+        other:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
+
+  word_connector:
+    # Connects words with a comma. Example: "foo, bar"
+    comma: ", "
 
   activemodel:
     errors:
@@ -1491,6 +1501,7 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
+    facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."

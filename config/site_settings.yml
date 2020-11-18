@@ -1599,6 +1599,9 @@ onebox:
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
+  facebook_app_access_token:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
