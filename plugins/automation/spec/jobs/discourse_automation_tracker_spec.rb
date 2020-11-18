@@ -27,15 +27,6 @@ describe Jobs::DiscourseAutomationTracker do
     context 'pending automation is in past' do
       before do
         automation.trigger.update_with_params(metadata: { execute_at: 2.hours.ago })
-
-        automation.fields.create!(
-          name: 'giftee_assignment_message',
-          component: 'pm',
-          metadata: {
-            title: "this is a foo title xxx xxx",
-            body: "this is a foo body xxx xxx zzz"
-          }
-        )
       end
 
       it 'consumes the pending automation' do
@@ -47,7 +38,7 @@ describe Jobs::DiscourseAutomationTracker do
       end
     end
 
-    context 'pending automation is in past' do
+    context 'pending automation is in future' do
       before do
         automation.trigger.update_with_params(metadata: { execute_at: 2.hours.from_now })
       end

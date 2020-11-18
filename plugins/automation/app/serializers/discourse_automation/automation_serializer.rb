@@ -44,13 +44,7 @@ module DiscourseAutomation
     private
 
     def script_options
-      script_method = DiscourseAutomation::Script
-        .instance_methods(false)
-        .grep(/^script_#{object.script}/).first
-
-      script = DiscourseAutomation::Script.new(object)
-      script.public_send(script_method)
-      script
+      DiscourseAutomation::Script.script_for_automation(object)
     end
   end
 end

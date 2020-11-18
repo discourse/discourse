@@ -27,7 +27,8 @@ after_initialize do
     '../app/models/discourse_automation/field',
     '../app/models/discourse_automation/trigger',
     '../app/jobs/scheduled/discourse_automation_tracker',
-    '../app/core_ext/plugin_instance'
+    '../app/core_ext/plugin_instance',
+    '../app/scripts/gift_exchange',
   ].each { |path| require File.expand_path(path, __FILE__) }
 
   module ::DiscourseAutomation
@@ -70,7 +71,7 @@ Rake::Task.define_task run_automation: :environment do
   scripts = []
 
   DiscourseAutomation::Automation.find_each do |automation|
-    script_methods.map do |name|
+    script_methods.each do |name|
       type = name.to_s.gsub('script_', '')
 
       next if type != automation.script

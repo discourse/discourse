@@ -17,7 +17,7 @@ module Jobs
     end
 
     def run_pending_automation(pending_automation)
-      DiscourseAutomation::Script.all.map do |name|
+      DiscourseAutomation::Script.all.each do |name|
         type = name.to_s.gsub('script_', '')
 
         next if type != pending_automation.automation.script

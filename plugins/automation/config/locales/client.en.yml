@@ -33,3 +33,9 @@ en:
             label: Name
           script:
             label: Script
+          version:
+            label: Version
+          enabled:
+            label: Enabled
+          placeholders:
+            label: Placeholders

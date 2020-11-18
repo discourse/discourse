@@ -15,6 +15,10 @@ export default Component.extend({
 
   @action
   setGroupField(groupIds) {
-    this.onChangeField("group_id", groupIds && groupIds.firstObject);
+    this.onChangeField(
+      this.field,
+      "group_id",
+      groupIds && groupIds.firstObject
+    );
   }
 });

@@ -1,4 +1,4 @@
-import { set, setProperties } from "@ember/object";
+import { set } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { reads } from "@ember/object/computed";
