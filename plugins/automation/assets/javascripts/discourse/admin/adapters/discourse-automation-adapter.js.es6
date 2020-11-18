@@ -6,6 +6,6 @@ export default RestAdapter.extend({
   },
 
   pathFor() {
-    return this._super(...arguments).replace("_", "-");
-  }
+    return this._super(...arguments).replace("_", "-") + ".json";
+  },
 });

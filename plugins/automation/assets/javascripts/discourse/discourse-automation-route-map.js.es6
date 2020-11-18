@@ -4,13 +4,14 @@ export default {
   path: "/plugins",
 
   map() {
-    this.route("discourse-automation", function() {
-      this.route("workflows", function() {
-        this.route("show", { path: "/:id" });
-      });
-
-      this.route("plans");
-      this.route("plannables");
-    });
-  }
+    // this.route("discourse-automation");
+    this.route(
+      "discourse-automation",
+      { path: "discourse-automation" },
+      function () {
+        this.route("new");
+        this.route("edit", { path: "/:id" });
+      }
+    );
+  },
 };

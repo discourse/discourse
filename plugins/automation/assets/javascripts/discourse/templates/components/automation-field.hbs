@@ -1,0 +1,12 @@
+<h3 class="field-title">
+  {{i18n (concat "discourse_automation.scripts." automation.script.id ".fields." field.name ".label")}}
+</h3>
+
+{{#if field.placeholders}}
+  <p>Placeholders: {{placeholdersString}}</p>
+{{/if}}
+
+{{component (concat field.component "-field")
+  field=field
+  onChangeField=onChangeField
+}}

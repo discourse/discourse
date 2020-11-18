@@ -22,7 +22,7 @@ Triggers.add(:on_cake_day) do
 
   provided([:target_username])
 
-  field(:group, type: :group)
+  field(:group, component: :group)
 end
 ```
 

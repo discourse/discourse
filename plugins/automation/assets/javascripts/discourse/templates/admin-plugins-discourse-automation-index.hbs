@@ -1,0 +1,27 @@
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Script</th>
+      <th>Version</th>
+      <th>Enabled</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each model as |automation|}}
+      <tr>
+        <td>{{automation.name}}</td>
+        <td>{{automation.script.name}}</td>
+        <td>{{automation.script.version}}</td>
+        <td>{{format-enabled-automation automation.enabled}}</td>
+        <td>
+          {{d-button
+            icon="pencil-alt"
+            action=(action "editAutomation" automation)
+          }}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

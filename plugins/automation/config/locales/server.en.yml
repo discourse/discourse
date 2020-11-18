@@ -1,3 +1,9 @@
 en:
   site_settings:
     discourse_automation_enabled: "Enable discourse-automation plugin"
+  discourse_automation:
+    scripts:
+      gift_exchange:
+        title: Gift exchange
+        description: Allows to anonymously pair users of a group to send each other a gift.
+        doc: Gift exchange requires an existing group with at least 3 users. At the chosen date each users of the group will be paired with one gifter and one giftee.

@@ -1,0 +1,17 @@
+<section class="group-field">
+  <div class="control-group">
+    <label class="control-label">
+      {{i18n "discourse_automation.fields.group.label"}}
+    </label>
+
+    <div class="controls">
+      {{group-chooser
+        content=allGroups
+        value=field.metadata.group_id
+        labelProperty="name"
+        onChange=(action "setGroupField")
+        options=(hash maximum=1)
+      }}
+    </div>
+  </div>
+</section>

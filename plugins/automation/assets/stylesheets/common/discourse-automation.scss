@@ -1,166 +1,78 @@
 .discourse-automation {
-  &.modal {
-    width: 400px;
+}
 
-    .form-errors {
-      ul {
-        margin: 0 1em;
+.discourse-automation-title {
+  display: flex;
+  align-items: center;
+
+  .title {
+    margin-left: 0.5em;
+    font-weight: 700;
+    font-size: $font-up-3;
+  }
+
+  .new-automation {
+    margin-left: auto;
+  }
+}
+
+.enabled-automation {
+  color: $success;
+}
+
+.disabled-automation {
+  color: $danger;
+}
+
+.discourse-automation-form {
+  .scripts-list {
+    width: 210px;
+    .select-kit-header {
+      background: white;
+      border: 1px solid var(--primary-medium);
+
+      &:hover {
+        color: var(--primary);
       }
     }
+  }
 
-    &.add-plan,
-    &.edit-plan {
-      width: 600px;
-    }
+  .script-doc {
+    background: var(--primary-very-low);
+    border-left: 3px solid var(--primary-low);
+  }
 
-    .control {
-      .label {
-        font-weight: 700;
-        margin-bottom: 0.5em;
-        display: flex;
-      }
+  .form-section {
+    .title {
+      padding-bottom: 0.5em;
       margin-bottom: 1em;
+      border-bottom: 1px solid $primary-low;
     }
 
-    .combo-box,
-    input,
-    textarea,
-    .d-date-time-input-range {
-      box-sizing: border-box;
+    input[type="text"],
+    .select-kit,
+    .d-date-time-input {
+      width: 300px;
+
+      .select-kit,
+      input[type="text"] {
+        width: auto;
+      }
+    }
+
+    .d-date-time-input {
+      border-color: var(--primary-medium);
+    }
+  }
+
+  .pm-field {
+    .pm-input {
       width: 100%;
     }
-
-    .ac-wrap {
+    .pm-textarea {
+      width: 100%;
       box-sizing: border-box;
-      width: 100% !important;
-    }
-
-    &.add-modal {
-    }
-  }
-
-  .workflow-title {
-    display: flex;
-    align-items: center;
-
-    .logo {
-      margin-right: 0.5em;
-    }
-
-    h2 {
-      margin: 0;
-    }
-  }
-
-  .section {
-    margin-bottom: 2em;
-
-    .form-errors {
-      ul {
-        margin: 0 1em;
-      }
-    }
-  }
-
-  .section.workflow {
-    .section-body {
-      .workflow-name {
-        width: 100%;
-        margin: 0;
-        padding: 0.5em;
-      }
-    }
-  }
-
-  .section.workflowable {
-    display: flex;
-
-    .section-body {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: stretch;
-      box-sizing: border-box;
-      justify-content: flex-start;
-      margin-bottom: 1em;
-      margin-left: -8px;
-      margin-right: -8px;
-
-      .workflowable-container {
-        width: 33%;
-        display: flex;
-        flex-direction: column;
-        padding: 0.25em;
-        box-sizing: border-box;
-
-        .workflowable {
-          padding: 0.5em;
-          min-height: 180px;
-          border: 1px solid $primary-low;
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          .workflowable-header {
-            .workflowable-label {
-              font-weight: 700;
-            }
-          }
-
-          .workflowable-footer {
-            .d-button {
-              align-self: flex-end;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .section-body {
-    table thead th,
-    table tbody tr td {
-      padding: 0.5em 0;
-    }
-    table th td {
-      padding: 0;
-    }
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 1em 0;
-    padding-bottom: 1em;
-    border-bottom: 1px solid $primary;
-
-    h3.title {
-      margin: 0;
-    }
-
-    .actions {
-      .d-button {
-        height: 31px;
-      }
-    }
-  }
-
-  .workflows-list {
-    .workflow-active,
-    .workflow-inactive {
-      display: block;
-      width: 12px;
-      height: 12px;
-      border-radius: 6px;
-    }
-
-    .workflow-inactive {
-      background: $danger;
-    }
-
-    .workflow-active {
-      background: $success;
+      height: 200px;
     }
   }
 }

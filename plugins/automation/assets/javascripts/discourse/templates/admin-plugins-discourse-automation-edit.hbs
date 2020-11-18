@@ -1,0 +1,90 @@
+<section class="discourse-automation-form edit">
+  <form class="form-horizontal">
+    {{form-error error=error}}
+
+    <section class="script-section form-section edit">
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.models.automation.name.label"}}
+        </label>
+
+        <div class="controls">
+          {{text-field
+            value=automation.name
+            type="text"
+            classNames="input-large"
+            autofocus="autofocus"
+          }}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.models.automation.script.label"}}
+        </label>
+
+        <div class="controls">
+          {{dropdown-select-box
+            value=automation.script.id
+            content=model.scripts.content
+            class="scripts-list"
+            onChange=(action (mut automation.script.id))
+            options=(hash filterable=true)
+          }}
+        </div>
+      </div>
+
+      <div class="alert alert-info script-doc">{{automation.script.doc}}</div>
+    </section>
+
+    <section class="trigger-section form-section edit">
+      <h2 class="title">Trigger</h2>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.models.trigger.name.label"}}
+        </label>
+
+        <div class="controls">
+          {{combo-box
+            value=automation.trigger.name
+            content=model.triggers.content
+            class="scripts-list"
+            onChange=(action (mut automation.trigger.name))
+          }}
+        </div>
+      </div>
+
+      {{#if automation.trigger.name}}
+        {{component (concat automation.trigger.name "-trigger")
+          metadata=automation.trigger.metadata
+        }}
+      {{/if}}
+    </section>
+
+    <section class="fields-section form-section edit">
+      <h2 class="title">Fields</h2>
+
+      <div class="control-group">
+        {{#each automation.fields as |field|}}
+          {{automation-field
+            automation=automation
+            field=field
+            onChangeField=(action "onChangeField")
+          }}
+        {{/each}}
+      </div>
+    </section>
+
+    <div class="control-group">
+      <div class="controls">
+        {{d-button
+          icon="plus"
+          class="btn-primary"
+          label="discourse_automation.update"
+          action=(action "saveAutomation" automation)
+        }}
+      </div>
+    </div>
+  </form>
+</section>
