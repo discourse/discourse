@@ -32,7 +32,6 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import bootbox from "bootbox";
 import { moduleFor } from "ember-qunit";
 import QUnit, { module } from "qunit";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
@@ -67,36 +66,6 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
     shouldAdvanceTime: advanceTime,
   });
 }
-
-const Plugin = $.fn.modal;
-const Modal = Plugin.Constructor;
-
-function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
-      {},
-      Modal.DEFAULTS,
-      $this.data(),
-      typeof option === "object" && option
-    );
-
-    if (!data) {
-      $this.data("bs.modal", (data = new Modal(this, options)));
-    }
-    data.$body = $("#ember-testing");
-
-    if (typeof option === "string") {
-      data[option](_relatedTarget);
-    } else if (options.show) {
-      data.show(_relatedTarget);
-    }
-  });
-}
-
-bootbox.$body = $("#ember-testing");
-$.fn.modal = AcceptanceModal;
 
 let _pretenderCallbacks = {};
 
