@@ -146,7 +146,7 @@ div.edit-category {
     display: flex;
     justify-content: space-between;
     align-self: start;
-    padding-bottom: 2em;
+    padding: 0 1.5em 2em 0;
 
     .disable-info {
       position: relative;
@@ -228,9 +228,8 @@ div.edit-category {
     }
   }
 
-  .row-empty,
-  .add-group {
-    padding: 0.5em;
+  .row-empty {
+    padding: 0.5em 0;
   }
 
   .row-empty {
