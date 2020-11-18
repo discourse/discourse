@@ -2,32 +2,6 @@
 // Topic lists
 // --------------------------------------------------
 
-// List controls
-// --------------------------------------------------
-
-.list-controls {
-  .nav {
-    margin-bottom: 0;
-  }
-
-  .btn {
-    &:not(:first-child) {
-      margin-left: 0.5em;
-    }
-    font-size: $font-up-1;
-    font-weight: normal;
-  }
-
-  .notifications-button {
-    margin-left: 0.5em;
-  }
-
-  a.badge-category {
-    padding: 3px 12px;
-    font-size: $font-up-1;
-  }
-}
-
 // Base list
 // --------------------------------------------------
 
@@ -226,35 +200,9 @@ button.dismiss-read {
   }
 }
 
-.category-navigation {
-  clear: both;
-}
-
 .category-logo.aspect-image {
   float: left;
   margin: 0.25em 1em 0.5em 0;
-
-  img {
-    width: auto;
-    max-height: 150px;
-  }
-}
-
-@supports (--custom: property) {
-  .category-logo.aspect-image {
-    --max-height: 150px;
-    max-height: var(--max-height);
-    max-width: 60%;
-    height: auto;
-    width: calc(var(--max-height) * var(--aspect-ratio));
-
-    img {
-      width: 100%;
-      height: inherit;
-      max-width: initial;
-      max-height: initial;
-    }
-  }
 }
 
 /* Tablet (portrait) ----------- */
