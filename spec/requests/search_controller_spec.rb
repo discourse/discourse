@@ -231,8 +231,8 @@ describe SearchController do
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
 
-    it "does not raise 500" do
-      get "/search/query.json", params: { term: "F status:public", type_filter: "topic", search_for_id: true }
+    it "does not raise 500 with an empty term" do
+      get "/search/query.json", params: { term: "in:first", type_filter: "topic", search_for_id: true }
       expect(response.status).to eq(200)
     end
 
