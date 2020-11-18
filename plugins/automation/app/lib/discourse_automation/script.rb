@@ -14,7 +14,7 @@ module DiscourseAutomation
     end
 
     def self.all
-      @@all_scripts = DiscourseAutomation::Script
+      @@all_scripts ||= DiscourseAutomation::Script
         .instance_methods(false)
         .grep(/^script_/)
     end
