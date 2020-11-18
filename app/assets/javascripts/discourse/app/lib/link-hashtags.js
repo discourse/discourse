@@ -23,15 +23,19 @@ export function linkSeenHashtags($elem) {
         slug = slug.substr(0, slug.length - TAG_HASHTAG_POSTFIX.length);
       }
 
-      if (categoryHashtags[slug] && !hasTagSuffix) {
-        replaceSpan($(hashtag), slug, categoryHashtags[slug]);
-      } else if (tagHashtags[slug]) {
-        replaceSpan($(hashtag), slug, tagHashtags[slug]);
+      const lowerSlug = slug.toLowerCase();
+      if (categoryHashtags[lowerSlug] && !hasTagSuffix) {
+        replaceSpan($(hashtag), slug, categoryHashtags[lowerSlug]);
+      } else if (tagHashtags[lowerSlug]) {
+        replaceSpan($(hashtag), slug, tagHashtags[lowerSlug]);
       }
     });
   });
 
-  return slugs.uniq().filter((slug) => !checkedHashtags.has(slug));
+  return slugs
+    .map((slug) => slug.toLowerCase())
+    .uniq()
+    .filter((slug) => !checkedHashtags.has(slug));
 }
 
 export function fetchUnseenHashtags(slugs) {

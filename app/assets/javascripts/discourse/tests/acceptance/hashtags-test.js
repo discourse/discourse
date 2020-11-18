@@ -27,14 +27,17 @@ acceptance("Category and Tag Hashtags", function (needs) {
 
 this is a tag hashtag #monkey
 
-category vs tag: #bug vs #bug::tag`
+category vs tag: #bug vs #bug::tag
+
+uppercase hashtag works too #BUG, #BUG::tag`
     );
 
     assert.equal(
       queryAll(".d-editor-preview:visible").html().trim(),
       `<p>this is a category hashtag <a href="/c/bugs" class="hashtag">#<span>bug</span></a></p>
 <p>this is a tag hashtag <a href="/tag/monkey" class="hashtag">#<span>monkey</span></a></p>
-<p>category vs tag: <a href="/c/bugs" class="hashtag">#<span>bug</span></a> vs <a href="/tag/bug" class="hashtag">#<span>bug</span></a></p>`
+<p>category vs tag: <a href="/c/bugs" class="hashtag">#<span>bug</span></a> vs <a href="/tag/bug" class="hashtag">#<span>bug</span></a></p>
+<p>uppercase hashtag works too <a href="/c/bugs" class="hashtag">#<span>BUG</span></a>, <a href=\"/tag/bug\" class=\"hashtag\">#<span>BUG</span></a></p>`
     );
   });
 });
