@@ -62,12 +62,18 @@ acceptance("Tag Groups", function (needs) {
     await tags.expand();
     await tags.selectRowByValue("monkey");
 
-    await click("#private-permission");
+    await click("#visible-permission");
     assert.ok(queryAll(".tag-group-content .btn.btn-default:disabled").length);
 
     await groups.expand();
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
     assert.ok(!queryAll(".tag-group-content .btn.btn-default")[0].disabled);
+
+    await click(".tag-group-content .btn.btn-default");
+    assert.ok(
+      exists("#visible-permission:checked"),
+      "selected permission does not change after saving"
+    );
   });
 });
