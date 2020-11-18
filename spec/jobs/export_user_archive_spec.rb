@@ -331,7 +331,7 @@ describe Jobs::ExportUserArchive do
 
       expect(data.find { |r| r['category_id'] == category.id }).to be_nil
       expect(data.length).to eq(4)
-      data.sort! { |a, b| a['category_id'] <=> b['category_id'] }
+      data.sort! { |a, b| a['category_id'].to_i <=> b['category_id'].to_i }
 
       expect(data[0][:category_id]).to eq(subcategory.id.to_s)
       expect(data[0][:notification_level].to_s).to eq('tracking')
@@ -367,13 +367,14 @@ describe Jobs::ExportUserArchive do
 
       data, csv_out = make_component_csv
       expect(data.length).to eq(2)
-      data.sort! { |e| e['id'].to_i }
-
       expect(csv_out).to_not match(admin.username)
 
-      expect(data[0]['other_json']).to match('example_tag')
-      expect(data[1]['post_raw']).to eq('hello world post contents.')
-      expect(data[1]['other_json']).to match('reply_to_post_number')
+      approved = data.find { |el| el["verdict"] === "approved" }
+      rejected = data.find { |el| el["verdict"] === "rejected" }
+
+      expect(approved['other_json']).to match('example_tag')
+      expect(rejected['post_raw']).to eq('hello world post contents.')
+      expect(rejected['other_json']).to match('reply_to_post_number')
     end
   end
 
