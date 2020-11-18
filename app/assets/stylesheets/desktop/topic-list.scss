@@ -7,20 +7,19 @@
 
 .list-controls {
   .nav {
-    float: left;
-    margin-bottom: 10px;
+    margin-bottom: 0;
   }
 
   .btn {
-    float: right;
-    margin-left: 8px;
-    margin-bottom: 9px;
+    &:not(:first-child) {
+      margin-left: 0.5em;
+    }
     font-size: $font-up-1;
     font-weight: normal;
   }
 
-  .search .btn {
-    float: none;
+  .notifications-button {
+    margin-left: 0.5em;
   }
 
   a.badge-category {
@@ -266,16 +265,6 @@ button.dismiss-read {
     > li > a {
       font-size: $font-0;
       padding: 7px 10px;
-    }
-  }
-
-  // new topic just a "+" no text
-  button#create-topic {
-    span {
-      display: none;
-    }
-    .d-icon {
-      margin-right: 0;
     }
   }
 

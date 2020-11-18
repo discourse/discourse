@@ -1,3 +1,53 @@
+.navigation-container {
+  --nav-margin-bottom: 0.75em;
+
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  grid-template-areas: "breadcrumb navigation controls";
+  @include breakpoint(medium) {
+    grid-template-rows: auto auto;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "breadcrumb controls"
+      "navigation navigation";
+  }
+  @include breakpoint(mobile-extra-large) {
+    grid-template-rows: auto auto;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "breadcrumb"
+      "navigation"
+      "controls";
+  }
+}
+
+.category-breadcrumb {
+  grid-area: breadcrumb;
+  margin: 0 0 var(--nav-margin-bottom);
+}
+
+.navigation-controls {
+  grid-area: controls;
+  margin-left: auto;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: var(--nav-margin-bottom);
+  > * {
+    white-space: nowrap;
+  }
+  @include breakpoint(mobile-extra-large) {
+    margin-left: 0;
+  }
+}
+
+#navigation-bar {
+  grid-area: navigation;
+  display: flex;
+  margin: 0 0 var(--nav-margin-bottom);
+}
+
 .topic-list.shared-drafts {
   margin-bottom: 1.5em;
 }
@@ -12,7 +62,6 @@
 }
 
 .list-controls {
-  clear: both;
   margin-bottom: 5px;
   .combo-box .combo-box-header {
     background: var(--secondary);
@@ -43,6 +92,18 @@
   }
   .category-heading {
     max-width: 100%;
+  }
+
+  @include breakpoint(medium) {
+    // hide button labels to save space
+    .btn {
+      .d-button-label {
+        display: none;
+      }
+      .d-icon {
+        margin: 0;
+      }
+    }
   }
 }
 
@@ -270,16 +331,15 @@ ol.category-breadcrumb.hidden {
   display: none;
 }
 
-ol.category-breadcrumb {
+.category-breadcrumb {
   display: block;
   float: left;
   list-style: none;
-  margin: 0 10px 10px 0;
   padding: 0;
 
   li {
     float: left;
-    margin-right: 5px;
+    margin-right: 0.5em;
   }
 
   .bread-crumbs-right-outlet {
