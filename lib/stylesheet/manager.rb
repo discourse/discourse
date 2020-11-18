@@ -155,7 +155,7 @@ class Stylesheet::Manager
     color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
     color_schemes = color_schemes.compact.uniq
 
-    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin]
+    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
     targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
 
     themes.each do |id, name, color_scheme_id|
