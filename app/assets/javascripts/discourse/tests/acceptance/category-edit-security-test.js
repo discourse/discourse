@@ -1,3 +1,4 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -10,7 +11,7 @@ acceptance("Category Edit - security", function (needs) {
   test("default", async function (assert) {
     await visit("/c/bug/edit/security");
 
-    const firstRow = find(".row-body").first();
+    const firstRow = queryAll(".row-body").first();
     const badgeName = firstRow.find(".group-name-label").text();
     assert.equal(badgeName, "everyone");
 
@@ -37,7 +38,7 @@ acceptance("Category Edit - security", function (needs) {
       "everyone has been removed and appears in the available groups"
     );
     assert.ok(
-      find(".row-empty").text(),
+      queryAll(".row-empty").text(),
       I18n.t("category.permissions.no_groups_selected"),
       "shows message when no groups are selected"
     );
@@ -51,7 +52,7 @@ acceptance("Category Edit - security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("staff");
 
-    const addedRow = find(".row-body").last();
+    const addedRow = queryAll(".row-body").last();
 
     assert.equal(addedRow.find(".group-name-label").text(), "staff");
     assert.equal(
@@ -69,7 +70,7 @@ acceptance("Category Edit - security", function (needs) {
     await click(".row-body .remove-permission");
 
     assert.equal(
-      find(".row-body").length,
+      queryAll(".row-body").length,
       0,
       "removes the permission from the list"
     );
@@ -78,12 +79,12 @@ acceptance("Category Edit - security", function (needs) {
     await availableGroups.selectRowByValue("everyone");
 
     assert.equal(
-      find(".row-body").length,
+      queryAll(".row-body").length,
       1,
       "adds back the permission tp the list"
     );
 
-    const firstRow = find(".row-body").first();
+    const firstRow = queryAll(".row-body").first();
 
     assert.equal(firstRow.find(".group-name-label").text(), "everyone");
     assert.equal(
@@ -98,7 +99,7 @@ acceptance("Category Edit - security", function (needs) {
 
     await visit("/c/bug/edit/security");
 
-    const everyoneRow = find(".row-body").first();
+    const everyoneRow = queryAll(".row-body").first();
 
     assert.equal(
       everyoneRow.find(".d-icon-check").length,
@@ -109,7 +110,7 @@ acceptance("Category Edit - security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("staff");
 
-    const staffRow = find(".row-body").last();
+    const staffRow = queryAll(".row-body").last();
 
     assert.equal(
       staffRow.find(".d-icon-check").length,

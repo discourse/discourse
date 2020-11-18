@@ -6,6 +6,7 @@ import { propertyEqual } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import { empty } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
+import { underscore } from "@ember/string";
 
 export default Component.extend({
   tagName: "li",
@@ -21,7 +22,7 @@ export default Component.extend({
 
   @discourseComputed("tab")
   title(tab) {
-    return I18n.t("category." + tab.replace("-", "_"));
+    return I18n.t(`category.${underscore(tab)}`);
   },
 
   didInsertElement() {
