@@ -343,8 +343,7 @@ class Category < ActiveRecord::Base
     if slug.present?
       # if we don't unescape it first we strip the % from the encoded version
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
-      # sanitize the custom slug
-      self.slug = Slug.sanitize(slug)
+      self.slug = Slug.for_category(slug)
 
       if self.slug.blank?
         errors.add(:slug, :invalid)
