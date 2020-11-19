@@ -15,7 +15,7 @@ acceptance("Category Edit - security", function (needs) {
     const badgeName = firstRow.find(".group-name-label").text();
     assert.equal(badgeName, "everyone");
 
-    const permission = firstRow.find(".d-icon-check");
+    const permission = firstRow.find(".d-icon-check-square");
     assert.equal(permission.length, 3);
   });
 
@@ -56,7 +56,7 @@ acceptance("Category Edit - security", function (needs) {
 
     assert.equal(addedRow.find(".group-name-label").text(), "staff");
     assert.equal(
-      addedRow.find(".d-icon-check").length,
+      addedRow.find(".d-icon-check-square").length,
       3,
       "new row permissions match default 'everyone' permissions"
     );
@@ -88,7 +88,7 @@ acceptance("Category Edit - security", function (needs) {
 
     assert.equal(firstRow.find(".group-name-label").text(), "everyone");
     assert.equal(
-      firstRow.find(".d-icon-check").length,
+      firstRow.find(".d-icon-check-square").length,
       1,
       "adds only 'See' permission for a new row"
     );
@@ -102,9 +102,9 @@ acceptance("Category Edit - security", function (needs) {
     const everyoneRow = queryAll(".row-body").first();
 
     assert.equal(
-      everyoneRow.find(".d-icon-check").length,
-      3,
-      "everyone has full permissions"
+      everyoneRow.find(".reply-granted, .create-granted").length,
+      2,
+      "everyone has full permissions by default"
     );
 
     await availableGroups.expand();
@@ -113,62 +113,56 @@ acceptance("Category Edit - security", function (needs) {
     const staffRow = queryAll(".row-body").last();
 
     assert.equal(
-      staffRow.find(".d-icon-check").length,
-      3,
+      staffRow.find(".reply-granted, .create-granted").length,
+      2,
       "staff group also has full permissions"
     );
 
-    await click(everyoneRow.find(".btn.see"));
+    await click(everyoneRow.find(".reply-toggle"));
 
     assert.equal(
-      everyoneRow.find(".see .d-icon-check").length,
-      1,
-      "everyone has see permission"
-    );
-
-    assert.equal(
-      everyoneRow.find(".d-icon-times").length,
-      2,
+      everyoneRow.find(".reply-granted, .create-granted").length,
+      0,
       "everyone does not have reply or create"
     );
 
     assert.equal(
-      staffRow.find(".d-icon-check").length,
-      3,
+      staffRow.find(".reply-granted, .create-granted").length,
+      2,
       "staff group still has full permissions"
     );
 
-    await click(staffRow.find(".btn.reply"));
+    await click(staffRow.find(".reply-toggle"));
 
     assert.equal(
-      everyoneRow.find(".d-icon-check").length,
-      1,
+      everyoneRow.find(".reply-granted, .create-granted").length,
+      0,
       "everyone permission unchanged"
     );
 
     assert.equal(
-      staffRow.find(".see .d-icon-check, .reply .d-icon-check").length,
+      staffRow.find(".reply-granted").length,
+      0,
+      "staff does not have reply permission"
+    );
+
+    assert.equal(
+      staffRow.find(".create-granted").length,
+      0,
+      "staff does not have create permission"
+    );
+
+    await click(everyoneRow.find(".create-toggle"));
+
+    assert.equal(
+      everyoneRow.find(".reply-granted, .create-granted").length,
       2,
-      "staff group has see and reply permissions"
-    );
-
-    assert.equal(
-      staffRow.find(".create .d-icon-times").length,
-      1,
-      "staff does not have create permissions"
-    );
-
-    await click(everyoneRow.find(".btn.create"));
-
-    assert.equal(
-      everyoneRow.find(".d-icon-check").length,
-      3,
       "everyone has full permissions"
     );
 
     assert.equal(
-      staffRow.find(".d-icon-check").length,
-      3,
+      staffRow.find(".reply-granted, .create-granted").length,
+      2,
       "staff group has full permissions (inherited from everyone)"
     );
   });

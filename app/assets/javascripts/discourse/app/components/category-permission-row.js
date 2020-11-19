@@ -20,12 +20,22 @@ export default Component.extend({
 
   @discourseComputed("type")
   canReplyIcon() {
-    return this.canReply ? "check" : "times";
+    return this.canReply ? "check-square" : "far-square";
   },
 
   @discourseComputed("type")
   canCreateIcon() {
-    return this.canCreate ? "check" : "times";
+    return this.canCreate ? "check-square" : "far-square";
+  },
+
+  @discourseComputed("type")
+  replyGranted() {
+    return this.type <= PermissionType.CREATE_POST ? "reply-granted" : "";
+  },
+
+  @discourseComputed("type")
+  createGranted() {
+    return this.type === PermissionType.FULL ? "create-granted" : "";
   },
 
   @observes("everyonePermissionType")
@@ -41,39 +51,41 @@ export default Component.extend({
   },
 
   @discourseComputed("everyonePermissionType", "type")
-  seeTooltip(everyonePermissionType) {
+  replyDisabled(everyonePermissionType) {
     if (
       this.group_name !== EVERYONE &&
       everyonePermissionType &&
-      everyonePermissionType < PermissionType.READONLY
+      everyonePermissionType <= PermissionType.CREATE_POST
     ) {
-      return I18n.t("category.permissions.inherited");
+      return true;
     }
-    return I18n.t("category.permissions.grant_see");
+    return false;
+  },
+
+  @discourseComputed("replyDisabled")
+  replyTooltip() {
+    return this.replyDisabled
+      ? I18n.t("category.permissions.inherited")
+      : I18n.t("category.permissions.toggle_reply");
   },
 
   @discourseComputed("everyonePermissionType", "type")
-  replyTooltip(everyonePermissionType) {
-    if (
-      this.group_name !== EVERYONE &&
-      everyonePermissionType &&
-      everyonePermissionType < PermissionType.CREATE_POST
-    ) {
-      return I18n.t("category.permissions.inherited");
-    }
-    return I18n.t("category.permissions.grant_reply");
-  },
-
-  @discourseComputed("everyonePermissionType", "type")
-  createTooltip(everyonePermissionType) {
+  createDisabled(everyonePermissionType) {
     if (
       this.group_name !== EVERYONE &&
       everyonePermissionType &&
       everyonePermissionType === PermissionType.FULL
     ) {
-      return I18n.t("category.permissions.inherited");
+      return true;
     }
-    return I18n.t("category.permissions.grant_full");
+    return false;
+  },
+
+  @discourseComputed("createDisabled")
+  createTooltip() {
+    return this.createDisabled
+      ? I18n.t("category.permissions.inherited")
+      : I18n.t("category.permissions.toggle_full");
   },
 
   updatePermission(type) {
@@ -85,29 +97,27 @@ export default Component.extend({
       this.category.removePermission(this.group_name);
     },
 
-    setPermissionSee() {
-      if (
-        this.group_name !== EVERYONE &&
-        this.everyonePermissionType < PermissionType.READONLY
-      ) {
-        return;
-      }
-      this.updatePermission(PermissionType.READONLY);
-    },
-
     setPermissionReply() {
-      if (
-        this.group_name !== EVERYONE &&
-        this.everyonePermissionType < PermissionType.CREATE_POST
-      ) {
-        return;
+      if (this.type <= PermissionType.CREATE_POST) {
+        this.updatePermission(PermissionType.READONLY);
+      } else {
+        this.updatePermission(PermissionType.CREATE_POST);
       }
-
-      this.updatePermission(PermissionType.CREATE_POST);
     },
 
     setPermissionFull() {
-      this.updatePermission(PermissionType.FULL);
+      if (
+        this.group_name !== EVERYONE &&
+        this.everyonePermissionType === PermissionType.FULL
+      ) {
+        return;
+      }
+
+      if (this.type === PermissionType.FULL) {
+        this.updatePermission(PermissionType.CREATE_POST);
+      } else {
+        this.updatePermission(PermissionType.FULL);
+      }
     },
   },
 });

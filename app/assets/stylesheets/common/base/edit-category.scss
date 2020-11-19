@@ -193,6 +193,7 @@ div.edit-category {
       text-align: center;
       width: 50%;
       margin: 0px;
+      align-items: center;
     }
     .group-name {
       text-align: left;
@@ -208,20 +209,17 @@ div.edit-category {
       padding: 0.5em;
     }
     .btn-flat:hover {
-      background-color: var(--primary-very-low);
+      background-color: transparent;
     }
-    .d-icon-times,
-    .btn-flat:hover .d-icon-times {
-      color: var(--danger);
-    }
-    .d-icon-check,
-    .btn-flat:hover .d-icon-check {
+    .btn-flat .d-icon-check-square,
+    .btn-flat:hover .d-icon-check-square {
       color: var(--success);
     }
   }
 
   .remove-permission {
     margin-left: 0.5em;
+    padding: 0.15em;
     color: var(--danger);
     &:hover {
       color: var(--danger-hover);
@@ -240,7 +238,6 @@ div.edit-category {
     margin: 1em 0;
     .group-name {
       width: 100%;
-      align-items: center;
     }
   }
 }
