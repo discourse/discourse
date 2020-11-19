@@ -22,13 +22,11 @@ module Jobs
 
         next if type != pending_automation.automation.script
 
-        ActiveRecord::Base.transaction do
-          script = DiscourseAutomation::Script.new(pending_automation.automation)
-          script.public_send(name)
-          script.script_block.call
+        script = DiscourseAutomation::Script.new(pending_automation.automation)
+        script.public_send(name)
+        script.script_block.call
 
-          pending_automation.destroy!
-        end
+        pending_automation.destroy!
       end
     end
   end
