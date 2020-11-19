@@ -199,12 +199,6 @@ class PostCreator
   end
 
   def create
-    if !Rails.env.test? && !@opts[:import_mode]
-      if ActiveRecord::Base.connection.open_transactions > 0 && !@opts[:skip_jobs]
-        raise "You must use 'skip_jobs = true' when creating a post inside a transaction, otherwise jobs won't run properly."
-      end
-    end
-
     if valid?
       transaction do
         build_post_stats
