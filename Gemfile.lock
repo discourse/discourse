@@ -298,7 +298,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
-    redis (4.2.2)
+    redis (4.2.4)
     redis-namespace (1.8.0)
       redis (>= 3.0.4)
     regexp_parser (1.8.2)
