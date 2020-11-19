@@ -12,8 +12,10 @@ module ImportScripts::PhpBB3
     end
 
     attr_reader :site_name
+
     attr_reader :category_mapping
     attr_reader :tags_mapping
+    attr_reader :rank_mapping
 
     attr_reader :import_anonymous_users
     attr_reader :import_attachments
@@ -44,6 +46,7 @@ module ImportScripts::PhpBB3
       @site_name = import_settings['site_name']
 
       @category_mapping, @tags_mapping = setup_mappings(import_settings['category_mapping'])
+      @rank_mapping = import_settings['rank_mapping']
 
       @import_anonymous_users = import_settings['anonymous_users']
       @import_attachments = import_settings['attachments']
@@ -73,6 +76,18 @@ module ImportScripts::PhpBB3
     def prefix(val)
       @site_name.present? ? "#{@site_name}:#{val}" : val
     end
+
+    def trust_level_for_posts(rank, trust_level: 0)
+      if @rank_mapping.present?
+        @rank_mapping.each do |key, value|
+          trust_level = [trust_level, key.gsub('trust_level_', '').to_i].max if rank >= value
+        end
+      end
+
+      trust_level
+    end
+
+    private
 
     def setup_mappings(filename)
       return {} if !filename

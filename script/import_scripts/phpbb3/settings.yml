@@ -17,6 +17,9 @@ import:
   # Category and tag mappings
   category_mapping:
 
+  # Rank to trust level mapping
+  rank_mapping:
+
   # WARNING: Do not activate this option unless you know what you are doing.
   # It will probably break the BBCode to Markdown conversion and slows down your import.
   use_bbcode_to_md: false
