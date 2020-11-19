@@ -21,7 +21,7 @@ module DiscourseAutomation
     end
 
     def fields
-      fields = script_options.script_fields.map do |script_field|
+      fields = Array(script_options.script_fields).map do |script_field|
         field = object.fields.find_by(name: script_field[:name], component: script_field[:component])
         field || DiscourseAutomation::Field.new(name: script_field[:name], component: script_field[:component])
       end

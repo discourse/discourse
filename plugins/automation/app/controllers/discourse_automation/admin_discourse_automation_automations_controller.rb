@@ -35,7 +35,7 @@ module DiscourseAutomation
         automation.trigger.update_with_params(trigger_params)
       end
 
-      request.parameters[:automation][:fields].each do |field|
+      Array(request.parameters[:automation][:fields]).each do |field|
         f = automation.fields.find_or_initialize_by(name: field[:name], component: field[:component])
         f.update!(metadata: field[:metadata])
       end
