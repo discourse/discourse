@@ -69,6 +69,7 @@
 
 #navigation-bar {
   display: flex;
+  flex-wrap: wrap;
   margin: 0 0 var(--nav-space);
   margin-right: auto;
 }
