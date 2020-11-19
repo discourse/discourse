@@ -42,7 +42,7 @@ acceptance("Admin - Suspend User", function (needs) {
 
     assert.equal(queryAll(".suspend-user-modal:visible").length, 1);
 
-    await fillIn(".suspend-reason", "for breaking the rules");
+    await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     await click(".d-modal-cancel");
