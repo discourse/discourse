@@ -59,21 +59,20 @@ class PostCreator
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
     # If we don't do this we introduce a rather risky dependency
     @user = user
-    @opts = opts || {}
-    opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
-    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
-    opts.delete(:reply_to_post_number) unless opts[:topic_id]
-    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
-    @guardian = opts[:guardian] if opts[:guardian]
-
     @spam = false
+    @opts = opts || {}
+
+    opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
+    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
+
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
 
   def pg_clean_up(str)
     str.gsub("\u0000", "")
   end
 
-  # True if the post was considered spam
   def spam?
     @spam
   end
@@ -83,7 +82,7 @@ class PostCreator
   end
 
   def guardian
-    @guardian ||= Guardian.new(@user)
+    @guardian ||= @opts[:guardian] || Guardian.new(@user)
   end
 
   def valid?
@@ -200,6 +199,10 @@ class PostCreator
   end
 
   def create
+    if !Rails.env.test? && ActiveRecord::Base.connection.open_transactions > 0 && !@opts[:skip_jobs]
+      raise "You must use 'skip_jobs = true' when creating a post inside a transaction, otherwise jobs won't run properly."
+    end
+
     if valid?
       transaction do
         build_post_stats
