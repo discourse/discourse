@@ -1085,6 +1085,7 @@ class TopicQuery
     result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
     result = remove_muted_categories(result, @user)
+    result = remove_muted_topics(result, @user)
 
     # If we are in a category, prefer it for the random results
     if topic.category_id
