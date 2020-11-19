@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { visit, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -20,7 +20,7 @@ acceptance("Redirect to Top", function (needs) {
   });
   needs.user();
 
-  test("redirects categories to weekly top", async (assert) => {
+  test("redirects categories to weekly top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {
@@ -31,13 +31,13 @@ acceptance("Redirect to Top", function (needs) {
 
     await visit("/categories");
     assert.equal(
-      currentPath(),
+      currentRouteName(),
       "discovery.topWeekly",
       "it works for categories"
     );
   });
 
-  test("redirects latest to monthly top", async (assert) => {
+  test("redirects latest to monthly top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {
@@ -47,10 +47,14 @@ acceptance("Redirect to Top", function (needs) {
     });
 
     await visit("/latest");
-    assert.equal(currentPath(), "discovery.topMonthly", "it works for latest");
+    assert.equal(
+      currentRouteName(),
+      "discovery.topMonthly",
+      "it works for latest"
+    );
   });
 
-  test("redirects root to All top", async (assert) => {
+  test("redirects root to All top", async function (assert) {
     updateCurrentUser({
       should_be_redirected_to_top: true,
       redirected_to_top: {
@@ -60,6 +64,6 @@ acceptance("Redirect to Top", function (needs) {
     });
 
     await visit("/");
-    assert.equal(currentPath(), "discovery.topAll", "it works for root");
+    assert.equal(currentRouteName(), "discovery.topAll", "it works for root");
   });
 });

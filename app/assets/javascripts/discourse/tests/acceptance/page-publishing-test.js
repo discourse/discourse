@@ -25,7 +25,7 @@ acceptance("Page Publishing", function (needs) {
     });
   });
 
-  test("can publish a page via modal", async (assert) => {
+  test("can publish a page via modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.show-post-admin-menu");

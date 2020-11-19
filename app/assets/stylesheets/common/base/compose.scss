@@ -359,10 +359,6 @@
   }
 }
 
-.cooked > *:first-child {
-  margin-top: 0;
-}
-
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;

@@ -9,10 +9,8 @@ class PostActionUsersController < ApplicationController
     page = params[:page].to_i
     page_size = (params[:limit] || 200).to_i
 
-    finder = Post.where(id: params[:id].to_i)
-    finder = finder.with_deleted if guardian.is_staff?
-
-    post = finder.first
+    # Find the post, and then determine if they can see the post (if deleted)
+    post = Post.with_deleted.where(id: params[:id].to_i).first
     guardian.ensure_can_see!(post)
 
     unknown_user_ids = Set.new

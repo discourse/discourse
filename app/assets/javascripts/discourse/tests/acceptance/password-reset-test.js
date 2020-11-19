@@ -59,7 +59,7 @@ acceptance("Password Reset", function (needs) {
     });
   });
 
-  test("Password Reset Page", async (assert) => {
+  test("Password Reset Page", async function (assert) {
     PreloadStore.store("password_reset", { is_developer: false });
 
     await visit("/u/password-reset/myvalidtoken");
@@ -93,7 +93,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
-  test("Password Reset Page With Second Factor", async (assert) => {
+  test("Password Reset Page With Second Factor", async function (assert) {
     PreloadStore.store("password_reset", {
       is_developer: false,
       second_factor_required: true,

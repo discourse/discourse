@@ -9,7 +9,7 @@ acceptance("Login with email disabled", function (needs) {
     enable_facebook_logins: true,
   });
 
-  test("with email button", async (assert) => {
+  test("with email button", async function (assert) {
     await visit("/");
     await click("header .login-button");
 

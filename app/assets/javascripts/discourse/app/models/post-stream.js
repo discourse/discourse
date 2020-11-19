@@ -737,6 +737,12 @@ export default RestModel.extend({
     return Promise.resolve();
   },
 
+  triggerDestroyedPost(postId) {
+    const existing = this._identityMap[postId];
+    this.removePosts([existing]);
+    return Promise.resolve();
+  },
+
   triggerChangedPost(postId, updatedAt, opts) {
     opts = opts || {};
 

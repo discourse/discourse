@@ -5,6 +5,7 @@ import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import { escapeExpression } from "discourse/lib/utilities";
+import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
 
 export default Mixin.create({
@@ -211,6 +212,10 @@ export default Mixin.create({
               }
             }
 
+            position.top -= this._calculateTopOffset(
+              $("#main-outlet").offset(),
+              headerOutletHeights()
+            );
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
@@ -257,6 +262,13 @@ export default Mixin.create({
         });
       }
     });
+  },
+
+  // some plugins/themes modify the page layout and may
+  // need to override this calculation for the card to
+  // position correctly
+  _calculateTopOffset(mainOutletOffset, outletHeights) {
+    return mainOutletOffset.top - outletHeights;
   },
 
   _hide() {

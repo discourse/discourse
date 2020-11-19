@@ -357,6 +357,7 @@ ru:
     drafts:
       resume: "Продолжить"
       remove: "Удалить"
+      remove_confirmation: "Вы действительно хотите удалить этот черновик?"
       new_topic: "Черновик новой темы"
       new_private_message: "Черновик нового личного сообщения"
       topic_reply: "Черновик ответа"
@@ -583,6 +584,7 @@ ru:
           many: "У вас <strong>%{count}</strong> сообщений в ожидании модерации."
           other: "У вас <strong>%{count}</strong> сообщений в ожидании модерации."
         ok: "OK"
+      example_username: "имя пользователя"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> создал <a href='%{topicUrl}'>тему</a>"
       you_posted_topic: "<a href='%{userUrl}'>Вы</a> создали <a href='%{topicUrl}'>тему</a>"
@@ -1384,11 +1386,10 @@ ru:
         link_redemption_stats: "Принятые приглашения"
         link_groups: Группы
         link_expires_at: Истекает
-        create: "Отправить приглашение"
-        copy_link: "Копировать ссылку"
-        generate_link: "Скопировать ссылку для приглашений"
-        link_generated: "Пригласительная ссылка успешно создана!"
-        valid_for: "Пригласительная ссылка действительна только для этого email: %{email}"
+        copy_link: "Показать ссылку"
+        generate_link: "Создать ссылку для приглашения"
+        link_generated: "Вот ссылка на приглашение:"
+        valid_for: "Ссылка на приглашение действительна только для этого email: %{email}"
         single_user: "Пригласить по электронной почте"
         multiple_user: "Пригласить по ссылке"
         invite_link:
@@ -1398,7 +1399,6 @@ ru:
           max_redemptions_allowed_label: "Сколько человек могут зарегистрироваться по этой ссылке?"
           expires_at: "Когда истечёт срок действия этой ссылки?"
         bulk_invite:
-          none: "Вы ещё никого не приглашали сюда. Отправьте индивидуальные приглашения или пригласите несколько людей за раз, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>загрузив файл CSV</a>."
           text: "Массовое приглашение"
           success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершён."
           error: "Извините, но файл должен быть в формате CSV."
@@ -1900,9 +1900,7 @@ ru:
         title: "Забыли указать получателей?"
         body: "В списке получателей сейчас только вы сами!"
       slow_mode:
-        title: "Эта тема находится в замедленном режиме."
-        body: "После отправки сообщения вам нужно подождать %{duration} прежде чем можно будет опубликовать новое сообщение."
-        error: "Вы недавно уже писали в этой теме, которая находится в замедленном режиме. Немного подождите, чтобы и другие пользователи смогли принять участие в обсуждении."
+        error: "Эта тема находится в замедленном режиме. Чтобы способствовать вдумчивому и взвешенному обсуждению, вы можете публиковать сообщения только раз в %{duration}."
       admin_options_title: "Дополнительные настройки темы для персонала"
       composer_actions:
         reply: Ответить
@@ -1967,12 +1965,12 @@ ru:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} и %{count} другой</span> %{description}"
-        few: "<span>%{username}, %{username2} и %{count} другие</span> %{description}"
-        many: "<span>%{username}, %{username2} и %{count} других</span> %{description}"
-        other: "<span>%{username}, %{username2} и %{count} других</span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} и %{count} другой пользователь</span> %{description}"
+        few: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователя</span> %{description}"
+        many: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} и %{count} других пользователей</span> %{description}"
       liked_consolidated_description:
         one: "Понравилось %{count} ваше сообщение"
         few: "Понравилось %{count} ваших сообщения"
@@ -2351,9 +2349,9 @@ ru:
         title: "Закрыть на время"
       auto_close:
         title: "Автоматическое закрытие темы"
-        label: "Закрыть тему через:"
+        label: "Закрыть тему через указанное количество часов:"
         error: "Пожалуйста, введите корректное значение."
-        based_on_last_post: "Не закрывать, пока не пройдёт столько времени с последнего сообщения в теме."
+        based_on_last_post: "Не закрывать, пока не пройдёт указанное количество часов с момента последнего сообщения в теме."
       auto_delete:
         title: "Автоматическое удаление темы"
       auto_bump:
@@ -2520,7 +2518,7 @@ ru:
       automatically_add_to_groups: "Это приглашение также предоставит доступ к следующим группам:"
       invite_private:
         title: "Пригласить в беседу"
-        email_or_username: "Адрес электронной почты или псевдоним того, кого вы хотите пригласить"
+        email_or_username: "Укажите адрес электронной почты или псевдоним того, кого вы хотите пригласить:"
         email_or_username_placeholder: "Email или псевдоним"
         action: "Пригласить"
         success: "Мы пригласили этого пользователя принять участие в беседе."
@@ -2736,6 +2734,7 @@ ru:
         no_save_draft: "Нет, сохранить черновик"
         yes_value: "Да, отменить редактирование"
       abandon:
+        title: "Отказаться от черновика"
         confirm: "Вы действительно хотите отказаться от создания сообщения?"
         no_value: "Нет, оставить"
         no_save_draft: "Нет, сохранить черновик"
@@ -2797,7 +2796,8 @@ ru:
         delete_topic_error: "Произошла ошибка при удалении темы"
         delete_topic: "Удалить тему"
         add_post_notice: "Сообщение от модератора"
-        remove_post_notice: "Удалить сообщение модератора"
+        change_post_notice: "Изменить сообщение модератора"
+        delete_post_notice: "Удалить сообщение модератора"
         remove_timer: "Отменить таймер"
       actions:
         people:
@@ -2859,7 +2859,7 @@ ru:
             title: "Показать отличия версий бок о бок"
             button: "HTML"
           side_by_side_markdown:
-            title: "Показать отличия редакций бок о бок"
+            title: "Показать отличия в исходном тексте бок о бок"
             button: "Исходный текст"
       raw_email:
         displays:
@@ -3729,6 +3729,8 @@ ru:
               sync_sso: Синхронизация пользователя с использованием SSO.
               show: Получение информации о пользователе.
               check_emails: Список электронных писем пользователя.
+            email:
+              receive_emails: Объединение этой области действия с получателем почты для обработки входящих писем.
       web_hooks:
         title: "Вебхуки"
         none: "Вебхуки отсутствуют."
@@ -3972,6 +3974,7 @@ ru:
           is_default: "Активирована по умолчанию"
           user_selectable: "Тема может быть выбрана пользователем"
           color_scheme_user_selectable: "Цветовая схема может быть выбрана пользователем"
+          auto_update: "Автообновление при обновлении Discourse"
           color_scheme: "Цветовая палитра"
           default_light_scheme: "Light (используется по умолчанию)"
           color_scheme_select: "Выберите цвета темы"
@@ -4490,7 +4493,14 @@ ru:
         suspend_reason_label: "Причина заморозки? Данный текст <b>будет виден всем</b> на странице профиля пользователя и будет отображаться, когда пользователь попытается войти. Введите краткое описание."
         suspend_reason_hidden_label: "Почему вы замораживаете пользователя? Этот текст будет показан пользователю, когда он попытается войти в систему. Введите краткое описание."
         suspend_reason: "Причина"
-        suspend_reason_placeholder: "Причина заморозки"
+        suspend_reason_title: "Причина заморозки"
+        suspend_reasons:
+          not_listening_to_staff: "Не прислушался к рекомендациям персонала"
+          consuming_staff_time: "Потрачено слишком много времени персонала"
+          combatative: "Агрессивное поведение"
+          in_wrong_place: "Обсуждение не в том месте"
+          no_constructive_purpose: "У действий пользователя нет никакой конструктивной цели, кроме внесения раскола в сообщество"
+          custom: "Другое..."
         suspend_message: "Сообщение на электронную почту"
         suspend_message_placeholder: "При необходимости предоставьте дополнительную информацию о заморозке, и она будет отправлена пользователю по электронной почте."
         suspended_by: "Кем заморожен"
@@ -4733,6 +4743,7 @@ ru:
         more_than_50_results: "Найдено более 50 результатов. Пожалуйста, уточните параметры поиска."
       settings:
         show_overriden: "Показывать только изменённые значения"
+        history: "Просмотреть историю изменений"
         reset: "Сброс"
         none: "(нет)"
       site_settings:

@@ -823,7 +823,6 @@ sw:
     max_bookmarks_per_day: "Kiwango cha juu cha mialamisho kwa kila mtumiaji kwa siku."
     max_edits_per_day: "Kiwango cha juu cha uhariri kwa kila mtumiaji kwa siku."
     max_topics_per_day: "Kiwango cha juu cha mada mtumiaji anaweza kutengeneza kwa siku."
-    max_personal_messages_per_day: "Kiwango cha juu cha ujumbe mtumiaji anaweza kutengeneza na kutuma kwa siku."
     max_invites_per_day: "Kiwango cha juu cha mialiko mtumiaji anaweza kutuma kwa siku."
     max_topic_invitations_per_day: "Kiwango cha juu cha mialiko ya mada mtumiaji anaweza kutuma kwa siku."
     max_logins_per_ip_per_hour: "Kiwango cha juu cha uingiaji mtumiaji anaruhusiwa kuendana na anwani yake ya mtandao kila saa"

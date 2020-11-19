@@ -140,6 +140,9 @@ sv:
       inclusion: ingår inte i listan
       invalid: är ogiltig
       is_invalid: "Verkar oklart, är det en fullständig mening?"
+      is_invalid_meaningful: "verkar oklart, de flesta orden innehåller samma bokstäver om och om igen?"
+      is_invalid_unpretentious: "verkar oklart, ett eller flera ord är mycket långa?"
+      is_invalid_quiet: "verkar oklart, var det din avsikt att skriva med STORA BOKSTÄVER?"
       invalid_timezone: "'%{tz}' är inte en giltig tidszon"
       contains_censored_words: "innehåller följande censurerade ord: %{censored_words}"
       less_than: måste vara mindre än %{count}
@@ -181,6 +184,7 @@ sv:
       default_tags_already_selected: "Du kan inte välja en etikett som används i en annan lista."
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Du kan inte aktivera lagret till S3 innan du har aktiverat s3-uppladdningarna."
+      page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra medier är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
       secure_media_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra medier."
@@ -220,7 +224,11 @@ sv:
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
-    not_allowed: "Tyvärr kan den användaren inte bjudas in."
+    muted_invitee: "Tyvärr tystade den användaren dig."
+    muted_topic: "Tyvärr tystade den användaren detta ämne."
+    receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
+    sender_does_not_allow_pm: "Tyvärr tillåter du inte den användaren att skicka privata meddelanden till dig."
+    receiver_does_not_allow_other_user_pm: "Tyvärr tillåter inte den användaren att en befintlig deltagare skickar privata meddelanden till henne/honom."
   backup:
     operation_already_running: "En operation är redan igång och därför kan inte ett nytt jobb snartas just nu."
     backup_file_should_be_tar_gz: "Säkerhetskopiefilen ska vara ett .tar.gz-arkiv."
@@ -354,7 +362,7 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   edit_conflict: "Det inlägget redigerades av en annan användare och dina ändringar kan inte längre sparas."
   revert_version_same: "Nuvarande version är den samma som du försöker återgå till."
-  cannot_edit_on_slow_mode: "Ämnet är i långsamt läge och det inlägget kan inte längre redigeras."
+  cannot_edit_on_slow_mode: "Detta ämne är i långsamt läge. För att uppmuntra eftertänksam och övervägd diskussion är det för närvarande inte tillåtet att redigera gamla inlägg."
   excerpt_image: "bild"
   bookmarks:
     errors:
@@ -1440,9 +1448,10 @@ sv:
     pending_users_reminder_delay: "Avisera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera aviseringar."
     persistent_sessions: "Användarna förblir inloggade när webbläsaren stängs"
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) spårningskod-ID, t.ex.: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domännamn, t.ex.: mysite.com; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Aktivera Google Universal Analytics (analytics.js) spårning över flera domäner. Klient-id läggs till i utgående länkar till dessa domäner. Se <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googles guide för spårning över flera domäner.</a>"
+    ga_version: "Version av Google Universal Analytics att använda: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics spårningskods-ID, t.ex.: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics domännamn, t.ex.: minsida.se; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Aktivera Google Universal Analytics spårning över flera domäner. Utgående länkar till dessa domäner kommer att få klient-id tillagt till dem. Se <a href='https://support.google.com/analytics/answer/1034342?hl=sv' target='_blank'>Googles guide över domänspårning.</a>"
     gtm_container_id: "Innehålls-ID för Google Tag Manager. t.ex. GTM-ABCDEF. <br/>Notera: Skript från tredje part som laddats av GTM kan behöva vitlistas i 'content security policy script src'."
     enable_escaped_fragments: "Återgå till Googles Ajax-Crawling API om ingen sökrobot upptäcks. Se <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Tillåt moderatorer att hantera kategorier och grupper"
@@ -1580,7 +1589,7 @@ sv:
     max_bookmarks_per_day: "Max antal bokmärken per användare och dag."
     max_edits_per_day: "Max antal redigeringar per användare och dag."
     max_topics_per_day: "Max antal ämnen en användare kan skapa per dag."
-    max_personal_messages_per_day: "Max antal meddelanden användare kan skapa per dag."
+    max_personal_messages_per_day: "Max antal nya privatmeddelandeämnen en användare kan skapa per dag."
     max_invites_per_day: "Max antal inbjudningar en användare kan skicka per dag."
     max_topic_invitations_per_day: "Max antal ämnesinbjudningar en användare kan skicka per dag."
     max_logins_per_ip_per_hour: "Maximalt antal inloggningar tillåtna per IP-adress per timme"
@@ -1905,6 +1914,7 @@ sv:
     notify_about_queued_posts_after: "Om det finns inlägg som har väntat på att granskas i mer än detta antal timmar skickas en avisering till alla moderatorer. Inaktivera dessa aviseringar genom att ställa in till 0."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
+    auto_close_topics_create_linked_topic: "Skapa ett nytt länkat ämne när ett ämne stängs automatiskt baserat på inställningen 'auto close topics post count' (automatisk stängning av ämnen efter antal)"
     code_formatting_style: "Kodknappen i redigeraren kommer att använda den här kodformateringsstilen som standard"
     max_allowed_message_recipients: "Maximalt antal mottagare som tillåts i ett meddelande."
     watched_words_regular_expressions: "Bevakade ord är reguljära uttryck."
@@ -1913,6 +1923,7 @@ sv:
     returning_user_notice_tl: "Lägsta förtroendenivå som krävs för att se återkommande användares inläggsnoteringar."
     returning_users_days: "Hur många dagar som går innan en användare anses återkomma."
     review_media_unless_trust_level: "Personalen kommer att granska inlägg från användare med lägre förtroendenivåer om de innehåller inbäddade medier."
+    blur_tl0_flagged_posts_media: "Diffusera flaggade inläggsbilder för att dölja innehåll som kanske är bäst att inte visa på arbetet."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
@@ -1988,6 +1999,7 @@ sv:
     gravatar_login_url: "Url relaterad till gravatar_base_url, som tillhandahåller inloggning för användaren hos Gravatar-tjänsten"
     share_quote_buttons: "Bestäm vilka objekt som visas i citatdelningswidgeten, samt i vilken ordning."
     share_quote_visibility: "Avgör när du ska visa citatdelningsknappar: aldrig, endast till anonyma användare eller för alla användare. "
+    create_revision_on_bulk_topic_moves: "Skapa ny version av första inlägg när ämnen flyttas till en ny kategori i bulk."
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -2220,6 +2232,7 @@ sv:
       not_allowed: "är inte en tillåten e-postleverantör. Använd en annan e-postadress."
       blocked: "är inte tillåtet."
       revoked: "Kommer inte att skicka e-post till '%{email}' förrän %{date}."
+      does_not_exist: "---"
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
@@ -2232,6 +2245,8 @@ sv:
       same_ip_address: "Samma IP-adress (%{ip_address}) som andra användare"
       inactive_user: "Inaktiv användare"
     email_in_spam_header: "Användarens första e-post flaggades som skräppost"
+    already_silenced: "Användaren har redan tystats av %{staff} %{time_ago}."
+    already_suspended: "Användaren har redan avstängts av %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Artiklar skickades in över %{count} timme sedan. [Vi ber dig granska dem] (%{base_path}/review)."
@@ -3544,7 +3559,7 @@ sv:
       long_description: |
         Den här utmärkelsen beviljas när du får din första gillning på ett inlägg. Grattis, du har skrivit något som en av medlemmarna på forumet tyckte var intressant, coolt eller användbart!
     autobiographer:
-      name: Självbiograf
+      name: Självbiografi
       description: Fyllde i sin <a href="%{base_uri}/my/preferences/profile">profilinformation</a>
       long_description: |
         Den här utmärkelsen beviljas för att ha fyllt i din <a href="%{base_uri}/my/preferences/profile">profilinformation</a> och valt en profilbild. Genom att låta oss få lära känna dig bättre och vad du är intresserad av möjliggörs ett bättre, mer sammanhållet forum. Häng med oss!
@@ -3833,6 +3848,7 @@ sv:
             label: "Välkomstämne"
             description: "<p>Hur skulle du beskriva ditt forum för en främling under en hissfärd på cirka 1 minut?</p> <ul> <li>Vem är dessa diskussioner för?</li> <li>Vad kan jag hitta här?</li> <li>Varför ska jag besöka?</li> </ul> <p>Ditt välkomstämne är det första som nyanlända kommer att läsa. Tänk på det som ditt <b>kortfattade</b> 'säljargument' eller 'målbeskrivning'.</p>"
             one_paragraph: "Vi ber dig begränsa ditt välkomstmeddelande till ett stycke."
+            extra_description: "Om du är osäker kan du hoppa över det här steget och redigera ditt välkomstämne senare."
       privacy:
         title: "Tillgång"
         description: "<p>Är ditt forum öppet för alla, eller begränsas det av medlemskap, inbjudan eller godkännande? Om du föredrar kan du ställa in saker privat och sedan byta till offentligt senare.</p>"
@@ -4084,6 +4100,12 @@ sv:
   old_keys_reminder:
     title: "Påminnelse gällande gamla behörigheter"
     body: "Hejsan! Detta är en årlig säkerhetspåminnelse från din Discourse-instans.\n \nVi ville bara upplysa dig om att följande behörighet som används för din Discourse-instans inte har uppdaterats under de senaste 2 åren:\n\n%{keys}\n\nIngen åtgärd är nödvändig i nuläget, däremot anses det som god praxis ur säkerhetssynpunkt att ändra alla dina viktiga behörigheter med tiden.\n"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (del %{count})"
+      other: "%{topic_title} (del %{count})"
+    post_raw: "Fortsätter diskussionen från %{parent_url}.\n\nTidigare diskussioner:\n\n%{previous_topics}"
+    small_action_post_raw: "Fortsätt diskussionen vid %{new_title}."
   activemodel:
     errors:
       <<: *errors

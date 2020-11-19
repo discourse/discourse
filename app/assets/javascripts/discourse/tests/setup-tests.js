@@ -26,6 +26,34 @@ import MessageBus from "message-bus-client";
 import deprecated from "discourse-common/lib/deprecated";
 import sinon from "sinon";
 import { setApplication, setResolver } from "@ember/test-helpers";
+import bootbox from "bootbox";
+
+const Plugin = $.fn.modal;
+const Modal = Plugin.Constructor;
+
+function AcceptanceModal(option, _relatedTarget) {
+  return this.each(function () {
+    var $this = $(this);
+    var data = $this.data("bs.modal");
+    var options = $.extend(
+      {},
+      Modal.DEFAULTS,
+      $this.data(),
+      typeof option === "object" && option
+    );
+
+    if (!data) {
+      $this.data("bs.modal", (data = new Modal(this, options)));
+    }
+    data.$body = $("#ember-testing");
+
+    if (typeof option === "string") {
+      data[option](_relatedTarget);
+    } else if (options.show) {
+      data.show(_relatedTarget);
+    }
+  });
+}
 
 export default function setupTests(app, container) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -45,6 +73,8 @@ export default function setupTests(app, container) {
   app.setupForTesting();
   app.SiteSettings = currentSettings();
   app.start();
+  bootbox.$body = $("#ember-testing");
+  $.fn.modal = AcceptanceModal;
 
   // disable logster error reporting
   if (window.Logster) {
@@ -76,7 +106,7 @@ export default function setupTests(app, container) {
           dropFrom: "2.6.0",
         }
       );
-      return window.sinon;
+      return sinon;
     },
   });
   Object.defineProperty(window, "exists", {
@@ -121,7 +151,8 @@ export default function setupTests(app, container) {
       const error =
         "Unhandled request in test environment: " + path + " (" + verb + ")";
 
-      window.console.error(error);
+      // eslint-disable-next-line no-console
+      console.error(error);
       throw new Error(error);
     };
 
@@ -144,16 +175,16 @@ export default function setupTests(app, container) {
 
     PreloadStore.reset();
 
-    window.sinon.stub(ScrollingDOMMethods, "screenNotFull");
-    window.sinon.stub(ScrollingDOMMethods, "bindOnScroll");
-    window.sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "screenNotFull");
+    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
-    window.sinon.restore();
+    sinon.restore();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
@@ -166,7 +197,6 @@ export default function setupTests(app, container) {
 
     MessageBus.unsubscribe("*");
     server = null;
-    window.Mousetrap.reset();
   });
 
   // Load ES6 tests

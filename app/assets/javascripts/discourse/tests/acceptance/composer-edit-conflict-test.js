@@ -15,7 +15,7 @@ acceptance("Composer - Edit conflict", function (needs) {
     });
   });
 
-  test("Edit a post that causes an edit conflict", async (assert) => {
+  test("Edit a post that causes an edit conflict", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.edit");
@@ -33,7 +33,7 @@ acceptance("Composer - Edit conflict", function (needs) {
     await click(".modal .btn-primary");
   });
 
-  test("Should not send originalText when posting a new reply", async (assert) => {
+  test("Should not send originalText when posting a new reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.reply");
     await fillIn(
@@ -43,7 +43,7 @@ acceptance("Composer - Edit conflict", function (needs) {
     assert.ok(lastBody.indexOf("originalText") === -1);
   });
 
-  test("Should send originalText when editing a reply", async (assert) => {
+  test("Should send originalText when editing a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:eq(0) button.show-more-actions");
     await click(".topic-post:eq(0) button.edit");

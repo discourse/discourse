@@ -657,8 +657,6 @@ sr:
         links_tab: "Linkovi"
         link_created_at: "Napravljeno"
         link_groups: Grupe
-        generate_link: "Kopiraj link pozivnice"
-        link_generated: "Link pozivnice je uspešno kreiran!"
         invite_link:
           success: "Link pozivnice je uspešno kreiran!"
       password:

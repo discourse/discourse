@@ -157,14 +157,6 @@ describe RemoteTheme do
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.colors.find_by(name: 'tertiary_low_color')).to eq(nil)
-
-      # It should detect local changes
-      @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')
-      @theme.save
-      @theme.reload
-
-      expect(remote.diff_local_changes[:diff]).not_to include("similarity index 100%")
-      expect(remote.diff_local_changes[:diff]).to include("background-color: blue")
     end
   end
 

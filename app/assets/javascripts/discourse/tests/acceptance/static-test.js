@@ -1,10 +1,9 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { visit, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Static", function () {
-  test("Static Pages", async (assert) => {
+  test("Static Pages", async function (assert) {
     await visit("/faq");
     assert.ok($("body.static-faq").length, "has the body class");
     assert.ok(exists(".body-page"), "The content is present");
@@ -23,7 +22,7 @@ acceptance("Static", function () {
 
     await visit("/login");
     assert.equal(
-      currentPath(),
+      currentRouteName(),
       "discovery.latest",
       "it redirects them to latest unless `login_required`"
     );

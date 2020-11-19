@@ -371,6 +371,8 @@ class UploadCreator
   end
 
   def should_crop?
+    return false if @opts[:type] == 'custom_emoji' && animated?(@file)
+
     TYPES_TO_CROP.include?(@opts[:type])
   end
 

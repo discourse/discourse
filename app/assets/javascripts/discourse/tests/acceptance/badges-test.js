@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Badges", function (needs) {
   needs.user();
 
-  test("Visit Badge Pages", async (assert) => {
+  test("Visit Badge Pages", async function (assert) {
     await visit("/badges");
 
     assert.ok($("body.badges-page").length, "has body class");
@@ -20,7 +20,7 @@ acceptance("Badges", function (needs) {
     assert.ok(!exists(".badge-card:eq(0) script"));
   });
 
-  test("shows correct badge titles to choose from", async (assert) => {
+  test("shows correct badge titles to choose from", async function (assert) {
     const availableBadgeTitles = selectKit(".select-kit");
     await visit("/badges/50/custombadge");
     await availableBadgeTitles.expand();

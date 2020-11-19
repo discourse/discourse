@@ -1120,14 +1120,10 @@ tr_TR:
         links_tab: "Bağlantılar"
         link_created_at: "Oluşturuldu"
         link_groups: Gruplar
-        create: "Davet Gönder"
-        generate_link: "Davet Bağlantısını Kopyala"
-        link_generated: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         valid_for: "Davet bağlantısı sadece bu adres için geçerli: %{email}"
         invite_link:
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
         bulk_invite:
-          none: "Henüz hiç kimseyi davet etmedin. Kişsel davet gönderebilir ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yüklerek</a> birden fazla kişiyi davet edebilirsin. "
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bilgilendirileceksin."
           error: "Üzgünüz, dosya CSV formatında olmalı. "
           confirmation_message: "Yüklenen dosyadaki herkese davetleri e-posta ile göndermek üzeresiniz."
@@ -1604,10 +1600,6 @@ tr_TR:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
-        other: "<span>%{username}, %{username2} ve %{count} diğer</span> %{description}"
       liked_consolidated_description:
         one: "gönderilerinizden %{count} tanesi beğenildi"
         other: "gönderilerinizden %{count} tanesi beğenildi"
@@ -2278,7 +2270,6 @@ tr_TR:
         delete_topic_disallowed: "bu konuyu silme iznin yok"
         delete_topic: "konuyu sil"
         add_post_notice: "Personel Bildirimi Ekle"
-        remove_post_notice: "Personel Bilgisini Kaldır"
         remove_timer: "zamanlayıcıyı kaldır"
       actions:
         people:
@@ -3769,7 +3760,6 @@ tr_TR:
         suspend_reason_label: "Neden askıya alıyorsun? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görüntülenecek<b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcı tarafından görüntülenecek. Metin lütfen kısa olsun. "
         suspend_reason_hidden_label: "Neden askıya alıyorsun? Kullanıcı giriş yapmaya çalıştığında yazdığın metni görecek. Metin lütfen kısa olsun."
         suspend_reason: "Sebep"
-        suspend_reason_placeholder: "Askıya Alma Sebebi"
         suspend_message: "E Posta Mesajı"
         suspend_message_placeholder: "İsteğe bağlı olarak, askıya alma sebebini daha uzun yazabilirsin. Askıya alma sebebi kullanıcıya e-postayla gönderilecek."
         suspended_by: "Askıya alan"

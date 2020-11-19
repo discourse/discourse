@@ -1,5 +1,12 @@
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit, currentURL } from "@ember/test-helpers";
+import {
+  fillIn,
+  click,
+  triggerKeyEvent,
+  visit,
+  currentURL,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
@@ -30,7 +37,7 @@ acceptance("Admin - Site Settings", function (needs) {
     updatedTitle = null;
   });
 
-  test("upload site setting", async (assert) => {
+  test("upload site setting", async function (assert) {
     await visit("/admin/site_settings");
 
     assert.ok(
@@ -41,7 +48,17 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
   });
 
-  test("changing value updates dirty state", async (assert) => {
+  test("links to staff action log", async function (assert) {
+    await visit("/admin/site_settings");
+
+    assert.equal(
+      queryAll(".row.setting .setting-label h3 a").attr("href"),
+      "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D",
+      "it links to the staff action log"
+    );
+  });
+
+  test("changing value updates dirty state", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", " title ");
     assert.equal(count(".row.setting"), 1, "filter returns 1 site setting");
@@ -81,14 +98,14 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     await fillIn(".input-setting-string", "Test");
-    await keyEvent(".input-setting-string", "keydown", 13); // enter
+    await triggerKeyEvent(".input-setting-string", "keydown", 13); // enter
     assert.ok(
       exists(".row.setting.overridden"),
       "saving via Enter key marks setting as overriden"
     );
   });
 
-  test("always shows filtered site settings if a filter is set", async (assert) => {
+  test("always shows filtered site settings if a filter is set", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", "title");
     assert.equal(count(".row.setting"), 1);
@@ -102,7 +119,7 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.equal(count(".row.setting"), 1);
   });
 
-  test("filter settings by plugin name", async (assert) => {
+  test("filter settings by plugin name", async function (assert) {
     await visit("/admin/site_settings");
 
     await fillIn("#setting-filter", "plugin:discourse-logo");
@@ -113,7 +130,7 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.equal(count(".row.setting"), 0);
   });
 
-  test("category name is preserved", async (assert) => {
+  test("category name is preserved", async function (assert) {
     await visit("admin/site_settings/category/basic?filter=menu");
     assert.equal(
       currentURL(),
@@ -121,7 +138,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
   });
 
-  test("shows all_results if current category has none", async (assert) => {
+  test("shows all_results if current category has none", async function (assert) {
     await visit("admin/site_settings");
 
     await click(".admin-nav .basic a");

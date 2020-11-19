@@ -203,7 +203,6 @@ gl:
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
-    not_allowed: "Este usuario non pode ser invitado."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode iniciar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -1523,7 +1522,6 @@ gl:
     max_bookmarks_per_day: "Número máximo de marcadores por usuario e día."
     max_edits_per_day: "Número máximo de edicións por usuario e día."
     max_topics_per_day: "Número máximo de temas que un usuario pode crear por día."
-    max_personal_messages_per_day: "Número máximo de mensaxes que un usuario pode crear por día."
     max_invites_per_day: "Número máximo de invitacións que un usuario pode enviar por días."
     max_topic_invitations_per_day: "Número máximo de invitacións a un tema que un usuario pode enviar por día."
     max_logins_per_ip_per_hour: "Número máximo de inicios de sesión permitidos por enderezo IP por hora"

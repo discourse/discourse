@@ -9,7 +9,6 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_usernames",
-      "ignored_usernames",
       "new_topic_duration_minutes",
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",

@@ -35,13 +35,13 @@ function assertMultipleSecondary(assert, firstEmail, secondEmail) {
 acceptance("Admin - User Emails", function (needs) {
   needs.user();
 
-  test("viewing self without secondary emails", async (assert) => {
+  test("viewing self without secondary emails", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
     assertNoSecondary(assert);
   });
 
-  test("viewing self with multiple secondary emails", async (assert) => {
+  test("viewing self with multiple secondary emails", async function (assert) {
     await visit("/admin/users/3/markvanlan");
 
     assert.equal(
@@ -57,14 +57,14 @@ acceptance("Admin - User Emails", function (needs) {
     );
   });
 
-  test("viewing another user with no secondary email", async (assert) => {
+  test("viewing another user with no secondary email", async function (assert) {
     await visit("/admin/users/1234/regular");
     await click(`.display-row.secondary-emails button`);
 
     assertNoSecondary(assert);
   });
 
-  test("viewing another account with secondary emails", async (assert) => {
+  test("viewing another account with secondary emails", async function (assert) {
     await visit("/admin/users/1235/regular1");
     await click(`.display-row.secondary-emails button`);
 

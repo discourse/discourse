@@ -81,6 +81,11 @@ $quote-share-maxwidth: 150px;
 .d-editor-preview {
   word-wrap: break-word;
   line-height: $line-height-large;
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
   h1,
   h2,
   h3,

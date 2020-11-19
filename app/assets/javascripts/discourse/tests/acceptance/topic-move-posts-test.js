@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Topic move posts", function (needs) {
   needs.user();
 
-  test("default", async (assert) => {
+  test("default", async function (assert) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");
@@ -50,7 +50,7 @@ acceptance("Topic move posts", function (needs) {
     );
   });
 
-  test("moving all posts", async (assert) => {
+  test("moving all posts", async function (assert) {
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");
@@ -86,7 +86,7 @@ acceptance("Topic move posts", function (needs) {
     );
   });
 
-  test("moving posts from personal message", async (assert) => {
+  test("moving posts from personal message", async function (assert) {
     await visit("/t/pm-for-testing/12");
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");
@@ -122,7 +122,7 @@ acceptance("Topic move posts", function (needs) {
     );
   });
 
-  test("group moderator moving posts", async (assert) => {
+  test("group moderator moving posts", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");

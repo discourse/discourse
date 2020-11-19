@@ -1,6 +1,6 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -19,7 +19,7 @@ acceptance("Search - Anonymous", function (needs) {
     });
   });
 
-  test("search", async (assert) => {
+  test("search", async function (assert) {
     await visit("/");
 
     await click("#search-button");
@@ -28,7 +28,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(!exists(".search-menu .results ul li"), "no results by default");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
     assert.ok(
       exists(".search-menu .results ul li .topic-title[data-topic-id]"),
@@ -48,17 +48,17 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
-  test("search for a tag", async (assert) => {
+  test("search for a tag", async function (assert) {
     await visit("/");
 
     await click("#search-button");
 
     await fillIn("#search-term", "evil");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
   });
 
-  test("search scope checkbox", async (assert) => {
+  test("search scope checkbox", async function (assert) {
     await visit("/tag/important");
     await click("#search-button");
     assert.ok(
@@ -91,13 +91,13 @@ acceptance("Search - Anonymous", function (needs) {
     );
   });
 
-  test("Search with context", async (assert) => {
+  test("Search with context", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
 
     await click("#search-button");
     await fillIn("#search-term", "a proper");
     await click(".search-context input[type='checkbox']");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
 
@@ -126,7 +126,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(!$(".search-context input[type=checkbox]").is(":checked"));
   });
 
-  test("Right filters are shown to anonymous users", async (assert) => {
+  test("Right filters are shown to anonymous users", async function (assert) {
     const inSelector = selectKit(".select-kit#in");
 
     await visit("/search?expanded=true");
@@ -153,7 +153,7 @@ acceptance("Search - Anonymous", function (needs) {
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
 
-  test("Right filters are shown to logged-in users", async (assert) => {
+  test("Right filters are shown to logged-in users", async function (assert) {
     const inSelector = selectKit(".select-kit#in");
 
     await visit("/search?expanded=true");
@@ -181,13 +181,13 @@ acceptance("Search - with tagging enabled", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
 
-  test("displays tags", async (assert) => {
+  test("displays tags", async function (assert) {
     await visit("/");
 
     await click("#search-button");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
     const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
       .text()

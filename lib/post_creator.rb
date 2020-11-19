@@ -59,21 +59,20 @@ class PostCreator
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
     # If we don't do this we introduce a rather risky dependency
     @user = user
-    @opts = opts || {}
-    opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
-    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
-    opts.delete(:reply_to_post_number) unless opts[:topic_id]
-    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
-    @guardian = opts[:guardian] if opts[:guardian]
-
     @spam = false
+    @opts = opts || {}
+
+    opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
+    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
+
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
 
   def pg_clean_up(str)
     str.gsub("\u0000", "")
   end
 
-  # True if the post was considered spam
   def spam?
     @spam
   end
@@ -83,7 +82,7 @@ class PostCreator
   end
 
   def guardian
-    @guardian ||= Guardian.new(@user)
+    @guardian ||= @opts[:guardian] || Guardian.new(@user)
   end
 
   def valid?
@@ -381,6 +380,11 @@ class PostCreator
           locale: SiteSetting.default_locale
         )
       )
+
+      if SiteSetting.auto_close_topics_create_linked_topic?
+        # enqueue a job to create a linked topic
+        Jobs.enqueue_in(5.seconds, :create_linked_topic, post_id: @post.id)
+      end
     end
   end
 
@@ -611,10 +615,12 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE] = { type: Post.notices[:new_user] }
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:returning_user],
+        last_posted_at: last_post_time.iso8601
+      }
     end
   end
 

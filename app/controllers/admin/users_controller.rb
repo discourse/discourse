@@ -93,6 +93,16 @@ class Admin::UsersController < Admin::AdminController
 
   def suspend
     guardian.ensure_can_suspend!(@user)
+
+    if @user.suspended?
+      suspend_record = @user.suspend_record
+      message = I18n.t("user.already_suspended",
+        staff: suspend_record.acting_user.username,
+        time_ago: FreedomPatches::Rails4.time_ago_in_words(suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+      )
+      return render json: failed_json.merge(message: message), status: 409
+    end
+
     params.require([:suspend_until, :reason])
 
     @user.suspended_till = params[:suspend_until]
@@ -314,6 +324,15 @@ class Admin::UsersController < Admin::AdminController
 
   def silence
     guardian.ensure_can_silence_user! @user
+
+    if @user.silenced?
+      silenced_record = @user.silenced_record
+      message = I18n.t("user.already_silenced",
+        staff: silenced_record.acting_user.username,
+        time_ago: FreedomPatches::Rails4.time_ago_in_words(silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+      )
+      return render json: failed_json.merge(message: message), status: 409
+    end
 
     message = params[:message]
 

@@ -6,7 +6,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Reports", function (needs) {
   needs.user();
 
-  test("Visit reports page", async (assert) => {
+  test("Visit reports page", async function (assert) {
     await visit("/admin/reports");
 
     assert.equal($(".reports-list .report").length, 1);
@@ -21,7 +21,7 @@ acceptance("Reports", function (needs) {
     );
   });
 
-  test("Visit report page", async (assert) => {
+  test("Visit report page", async function (assert) {
     await visit("/admin/reports/staff_logins");
 
     assert.ok(exists(".export-csv-btn"));

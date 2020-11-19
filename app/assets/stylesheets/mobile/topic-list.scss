@@ -480,6 +480,14 @@ ol.category-breadcrumb {
   display: none;
 }
 
+.tags-controls {
+  display: flex;
+  h2 {
+    order: -1;
+    margin-right: auto;
+  }
+}
+
 .staff.tags-page #create-topic {
   clear: right;
 }
@@ -538,8 +546,13 @@ td .main-link {
   // so the topic excerpt is full width
   // as the containing div is 80%
   .topic-excerpt {
+    display: block;
     padding-right: 0;
     width: 120%;
+  }
+
+  .topic-excerpt-more {
+    color: var(--tertiary);
   }
 }
 

@@ -13,10 +13,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
@@ -227,10 +224,9 @@ const Topic = RestModel.extend({
     return { type: "topic", id };
   },
 
-  @on("init")
-  @observes("category_id")
-  _categoryIdChanged() {
-    this.set("category", Category.findById(this.category_id));
+  @discourseComputed("category_id")
+  category(categoryId) {
+    return Category.findById(categoryId);
   },
 
   categoryClass: fmt("category.fullSlug", "category-%@"),

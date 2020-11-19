@@ -139,6 +139,12 @@ basic:
     default: 365
     min: 7
     max: 36500
+  ga_version:
+    type: enum
+    default: v3_analytics
+    choices:
+      - v3_analytics
+      - v4_gtag
   ga_universal_tracking_code:
     client: true
     default: ""
@@ -477,7 +483,7 @@ login:
     type: list
     list_type: simple
   hide_email_address_taken: false
-  log_out_strict: true
+  log_out_strict: false
   pending_users_reminder_delay:
     min: -1
     default: 8
@@ -930,6 +936,8 @@ posting:
     default: 500
   auto_close_topics_post_count:
     default: 10000
+  auto_close_topics_create_linked_topic:
+    default: true
   code_formatting_style:
     client: true
     type: enum
@@ -975,6 +983,9 @@ posting:
   review_media_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
+  blur_tl0_flagged_posts_media:
+    default: true
+    client: true
   enable_page_publishing:
     default: false
   show_published_pages_login_required:
@@ -1588,6 +1599,9 @@ onebox:
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
+  facebook_app_access_token:
+    default: ""
+    secret: true
 spam:
   add_rel_nofollow_to_user_content: true
   hide_post_sensitivity:
@@ -2171,6 +2185,9 @@ uncategorized:
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
+
+  create_revision_on_bulk_topic_moves:
+    default: true
 
 user_preferences:
   default_email_digest_frequency:

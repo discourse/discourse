@@ -1446,7 +1446,6 @@ ca:
     max_bookmarks_per_day: "Nombre màxim de preferits per usuari i dia."
     max_edits_per_day: "Nombre màxim d'edicions per usuari i dia."
     max_topics_per_day: "Nombre màxim de temes que un usuari pot crear cada dia."
-    max_personal_messages_per_day: "Nombre màxim de missatges que un usuari pot crear cada dia."
     max_invites_per_day: "Nombre màxim d'invitacions que un usuari pot enviar cada dia."
     max_topic_invitations_per_day: "Nombre màxim d'invitacions a temes que un usuari pot enviar cada dia."
     max_logins_per_ip_per_hour: "Nombre màxim de connexions permeses per adreça IP per hora"

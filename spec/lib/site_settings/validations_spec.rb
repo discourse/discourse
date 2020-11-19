@@ -205,6 +205,25 @@ describe SiteSettings::Validations do
       end
     end
 
+    describe "#validate_enable_page_publishing" do
+      context "when the new value is true" do
+        it "is ok" do
+          expect { subject.validate_enable_page_publishing("t") }.not_to raise_error
+        end
+
+        context "if secure media is enabled" do
+          let(:error_message) { I18n.t("errors.site_settings.page_publishing_requirements") }
+          before do
+            enable_secure_media
+          end
+
+          it "is not ok" do
+            expect { subject.validate_enable_page_publishing("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+          end
+        end
+      end
+    end
+
     describe "#validate_secure_media" do
       let(:error_message) { I18n.t("errors.site_settings.secure_media_requirements") }
 

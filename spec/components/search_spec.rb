@@ -8,6 +8,7 @@ describe Search do
 
   before do
     SearchIndexer.enable
+    Jobs.run_immediately!
   end
 
   context 'post indexing' do
@@ -330,6 +331,26 @@ describe Search do
         )
 
         expect(results.posts).to eq([])
+      end
+    end
+
+    context 'all-pms flag' do
+      it 'returns matching PMs if the user is an admin' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(admin))
+
+        expect(results.posts).to include(reply, post2)
+      end
+
+      it 'returns nothing if the user is not an admin' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(Fabricate(:user)))
+
+        expect(results.posts).to be_empty
+      end
+
+      it 'returns nothing if the user is a moderator' do
+        results = Search.execute('mars in:all-pms', guardian: Guardian.new(Fabricate(:moderator)))
+
+        expect(results.posts).to be_empty
       end
     end
 

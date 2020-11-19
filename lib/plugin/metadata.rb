@@ -62,6 +62,7 @@ class Plugin::Metadata
     "discourse-sitemap",
     "discourse-solved",
     "discourse-spoiler-alert",
+    "discourse-subscriptions",
     "discourse-user-notes",
     "styleguide",
     "discourse-teambuild",

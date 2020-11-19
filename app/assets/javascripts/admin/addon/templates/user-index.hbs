@@ -671,10 +671,19 @@
         <div class="field">{{i18n "admin.user.sso.external_name"}}</div>
         <div class="value">{{sso.external_name}}</div>
       </div>
-      {{#if sso.external_email}}
+      {{#if canAdminCheckEmails}}
         <div class="display-row">
           <div class="field">{{i18n "admin.user.sso.external_email"}}</div>
-          <div class="value">{{sso.external_email}}</div>
+          {{#if ssoExternalEmail}}
+            <div class="value">{{ssoExternalEmail}}</div>
+          {{else}}
+            {{d-button
+              class="btn-default"
+              action=(action "checkSsoEmail")
+              actionParam=model icon="far-envelope"
+              label="admin.users.check_email.text"
+              title="admin.users.check_email.title"}}
+          {{/if}}
         </div>
       {{/if}}
       <div class="display-row">

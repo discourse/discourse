@@ -32,7 +32,6 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { setURLContainer } from "discourse/lib/url";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import bootbox from "bootbox";
 import { moduleFor } from "ember-qunit";
 import QUnit, { module } from "qunit";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
@@ -68,36 +67,6 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   });
 }
 
-const Plugin = $.fn.modal;
-const Modal = Plugin.Constructor;
-
-function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
-      {},
-      Modal.DEFAULTS,
-      $this.data(),
-      typeof option === "object" && option
-    );
-
-    if (!data) {
-      $this.data("bs.modal", (data = new Modal(this, options)));
-    }
-    data.$body = $("#ember-testing");
-
-    if (typeof option === "string") {
-      data[option](_relatedTarget);
-    } else if (options.show) {
-      data.show(_relatedTarget);
-    }
-  });
-}
-
-bootbox.$body = $("#ember-testing");
-$.fn.modal = AcceptanceModal;
-
 let _pretenderCallbacks = {};
 
 export function resetSite(siteSettings, extras) {
@@ -128,18 +97,39 @@ export function controllerModule(name, args = {}) {
   });
 }
 
-export function discourseModule(name, hooks) {
+export function discourseModule(name, options) {
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
+
+  if (typeof options === "function") {
+    module(name, function (hooks) {
+      hooks.beforeEach(function () {
+        this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
+        this.siteSettings = currentSettings();
+      });
+
+      options.call(this, hooks);
+    });
+
+    return;
+  }
+
   module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (hooks && hooks.beforeEach) {
-        hooks.beforeEach.call(this);
+      if (options && options.beforeEach) {
+        options.beforeEach.call(this);
       }
     },
     afterEach() {
-      if (hooks && hooks.afterEach) {
-        hooks.afterEach.call(this);
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
     },
   });

@@ -1266,10 +1266,6 @@ el:
         link_redemption_stats: "Εξαργυρώσεις"
         link_groups: Ομάδες
         link_expires_at: Λήγει
-        create: "Αποστολή Πρόσκλησης"
-        copy_link: "Αντιγραφή συνδέσμου"
-        generate_link: "Αντιγραφή Συνδέσμου Πρόσκλησης"
-        link_generated: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
         valid_for: "Ο σύνδεσμος πρόσκλησης είναι έγκυρος μόνο για αυτή τη διεύθυνση email: %{email}"
         invite_link:
           title: "Σύνδεσμος πρόσκλησης"
@@ -1278,7 +1274,6 @@ el:
           max_redemptions_allowed_label: "Πόσα άτομα επιτρέπεται να εγγραφούν χρησιμοποιώντας αυτόν τον σύνδεσμο;"
           expires_at: "Πότε θα λήξει αυτός ο σύνδεσμος πρόσκλησης;"
         bulk_invite:
-          none: "Δεν έχετε προσκαλέσει κανέναν ακόμα. Στείλτε ατομικές προσκλήσεις ή καλέστε πολλά άτομα με τη μία <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> μεταφορτώνοντας ένα αρχείο CSV</a>."
           text: "Μαζική πρόσκληση"
           success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
@@ -1767,10 +1762,6 @@ el:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
-        other: "<span>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
       liked_consolidated_description:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"
@@ -2475,7 +2466,6 @@ el:
         delete_topic_disallowed: "δεν έχετε άδεια να διαγράψετε αυτό το θέμα"
         delete_topic: "διαγραφή νήματος"
         add_post_notice: "Προσθήκη ειδοποίησης προσωπικού"
-        remove_post_notice: "Αφαίρεση ειδοποίησης προσωπικού"
         remove_timer: "αφαίρεση χρονοδιακόπτη"
       actions:
         people:
@@ -4067,7 +4057,6 @@ el:
         suspend_reason_label: "Γιατί αποβάλεις τον χρήστη; Αυτό το κείμενο <b>θα είναι ορατό σε όλους</b> στη σελίδα προφίλ αυτού του χρήστη και θα εμφανίζεται στο χρήστη όταν αυτός προσπαθήσει να συνδεθεί. Φρόντισε να είναι σύντομο."
         suspend_reason_hidden_label: "Ποιος είναι ο λόγος της αποβολής; Το κείμενο αυτό θα εμφανίζεται στον χρήστη όταν προσπαθήσει να συνδεθεί. Φροντίστε να είναι σύντομο."
         suspend_reason: "Αιτία"
-        suspend_reason_placeholder: "Αιτιολόγηση Αποβολής"
         suspend_message: "Μήνυμα Email"
         suspend_message_placeholder: "Προεραιτικά συμπληρώστε αναλυτική αιτιολόγηση για τον λόγο αποβολής και αυτή θα σταλεί με email στον χρήστη."
         suspended_by: "Αποβλήθηκε από τον/την"

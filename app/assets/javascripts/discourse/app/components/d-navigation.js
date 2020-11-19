@@ -10,6 +10,13 @@ export default Component.extend(FilterModeMixin, {
 
   tagName: "",
 
+  // Should be a `readOnly` instead but some themes/plugins still pass
+  // the `categories` property into this component
+  @discourseComputed("site.categoriesList")
+  categories(categoriesList) {
+    return categoriesList;
+  },
+
   @discourseComputed("category")
   showCategoryNotifications(category) {
     return category && this.currentUser;
@@ -25,14 +32,20 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed(
     "createTopicDisabled",
     "hasDraft",
-    "categoryReadOnlyBanner"
+    "categoryReadOnlyBanner",
+    "canCreateTopicOnTag",
+    "tag.id"
   )
   createTopicButtonDisabled(
     createTopicDisabled,
     hasDraft,
-    categoryReadOnlyBanner
+    categoryReadOnlyBanner,
+    canCreateTopicOnTag,
+    tagId
   ) {
-    if (categoryReadOnlyBanner && !hasDraft) {
+    if (tagId && !canCreateTopicOnTag) {
+      return true;
+    } else if (categoryReadOnlyBanner && !hasDraft) {
       return false;
     }
     return createTopicDisabled;
@@ -47,11 +60,6 @@ export default Component.extend(FilterModeMixin, {
     }
   },
 
-  @discourseComputed()
-  categories() {
-    return this.site.get("categoriesList");
-  },
-
   @discourseComputed("hasDraft")
   createTopicLabel(hasDraft) {
     return hasDraft ? "topic.open_draft" : "topic.create";
@@ -60,14 +68,20 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed("category.can_edit")
   showCategoryEdit: (canEdit) => canEdit,
 
-  @discourseComputed("filterType", "category", "noSubcategories")
-  navItems(filterType, category, noSubcategories) {
+  @discourseComputed("additionalTags", "category", "tag.id")
+  showToggleInfo(additionalTags, category, tagId) {
+    return !additionalTags && !category && tagId !== "none";
+  },
+
+  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
+  navItems(filterType, category, noSubcategories, tagId) {
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
 
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
+      tagId,
       siteSettings: this.siteSettings,
     });
   },

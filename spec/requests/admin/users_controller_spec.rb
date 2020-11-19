@@ -149,6 +149,27 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "checks if user is suspended" do
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_suspended",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
+    end
+
     it "requires suspend_until and reason" do
       expect(user).not_to be_suspended
       put "/admin/users/#{user.id}/suspend.json", params: {}
@@ -748,6 +769,27 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       reg_user.reload
       expect(reg_user).to be_silenced
+    end
+
+    it "checks if user is silenced" do
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_silenced",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
     end
   end
 

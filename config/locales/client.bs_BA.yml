@@ -1291,10 +1291,6 @@ bs_BA:
         link_redemption_stats: "Opozivi"
         link_groups: Grupa
         link_expires_at: Ističe
-        create: "Email pozivnica"
-        copy_link: "Kopiraj link"
-        generate_link: "Kopiraj link za pozivnicu"
-        link_generated: "Link pozivnice je uspješno generisan!"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         invite_link:
           title: "Link pozivnice"
@@ -1303,7 +1299,6 @@ bs_BA:
           max_redemptions_allowed_label: "Koliko se ljudi smije registrirati putem ovog linka?"
           expires_at: "Kada će ovaj link za pozivnicu isteći?"
         bulk_invite:
-          none: "Još nikoga niste pozvali ovdje. Pošaljite pojedinačne pozivnice ili pozovite mnogo ljudi odjednom <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>prijenosom CSV datoteke</a>."
           text: "Skupna pozivnica"
           success: "Fajl je uspješno učitan, dobit će te ukratko obavijest o progresu."
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1797,11 +1792,6 @@ bs_BA:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} and %{count} ostali</span> %{description}"
-        few: "<span>%{username}, %{username2} i ostalih %{count}</span> %{description}"
-        other: "<span>%{username}, %{username2} i ostalih %{count} </span> %{description}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"
@@ -2486,7 +2476,6 @@ bs_BA:
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
         add_post_notice: "Dodaj obavještenje moderatora"
-        remove_post_notice: "Ukloni obavijest osoblja"
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -4009,7 +3998,6 @@ bs_BA:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Zašto suspendirate? Ovaj tekst će biti prikazan korisniku kada se pokušaju prijaviti."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Razlog suspenzije"
         suspend_message: "Email Message"
         suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i on će biti poslan e-poštom korisniku."
         suspended_by: "Suspended by"

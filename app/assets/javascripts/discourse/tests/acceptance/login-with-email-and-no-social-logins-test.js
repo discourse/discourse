@@ -9,14 +9,14 @@ acceptance("Login with email - no social logins", function (needs) {
   needs.pretender((server, helper) => {
     server.post("/u/email-login", () => helper.response({ success: "OK" }));
   });
-  test("with login with email enabled", async (assert) => {
+  test("with login with email enabled", async function (assert) {
     await visit("/");
     await click("header .login-button");
 
     assert.ok(exists(".login-with-email-button"));
   });
 
-  test("with login with email disabled", async (assert) => {
+  test("with login with email disabled", async function (assert) {
     await visit("/");
     await click("header .login-button");
 

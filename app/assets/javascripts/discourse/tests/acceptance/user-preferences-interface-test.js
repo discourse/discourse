@@ -12,7 +12,7 @@ import { click } from "@ember/test-helpers";
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
 
-  test("font size change", async (assert) => {
+  test("font size change", async function (assert) {
     removeCookie("text_size");
 
     const savePreferences = async () => {
@@ -57,12 +57,12 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
   });
 
-  test("does not show option to disable dark mode by default", async (assert) => {
+  test("does not show option to disable dark mode by default", async function (assert) {
     await visit("/u/eviltrout/preferences/interface");
     assert.equal($(".control-group.dark-mode").length, 0);
   });
 
-  test("shows light/dark color scheme pickers", async (assert) => {
+  test("shows light/dark color scheme pickers", async function (assert) {
     let site = Site.current();
     site.set("user_color_schemes", [
       { id: 2, name: "Cool Breeze" },
@@ -88,7 +88,7 @@ acceptance(
       });
     });
 
-    test("show option to disable dark mode", async (assert) => {
+    test("show option to disable dark mode", async function (assert) {
       await visit("/u/eviltrout/preferences/interface");
 
       assert.ok(
@@ -97,7 +97,7 @@ acceptance(
       );
     });
 
-    test("no color scheme picker by default", async (assert) => {
+    test("no color scheme picker by default", async function (assert) {
       let site = Site.current();
       site.set("user_color_schemes", []);
 
@@ -105,7 +105,7 @@ acceptance(
       assert.equal($(".control-group.color-scheme").length, 0);
     });
 
-    test("light color scheme picker", async (assert) => {
+    test("light color scheme picker", async function (assert) {
       let site = Site.current();
       site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
@@ -118,7 +118,7 @@ acceptance(
       );
     });
 
-    test("light and dark color scheme pickers", async (assert) => {
+    test("light and dark color scheme pickers", async function (assert) {
       let site = Site.current();
       let session = Session.current();
       session.userDarkSchemeId = 1; // same as default set in site settings

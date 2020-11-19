@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { visit, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
 
 acceptance("User Routes", function (needs) {
@@ -13,29 +15,29 @@ acceptance("User Routes", function (needs) {
       helper.response(400, {})
     );
   });
-  test("Invalid usernames", async (assert) => {
+  test("Invalid usernames", async function (assert) {
     await visit("/u/eviltrout%2F..%2F..%2F/summary");
 
-    assert.equal(currentPath(), "exception-unknown");
+    assert.equal(currentRouteName(), "exception-unknown");
   });
 
-  test("Unicode usernames", async (assert) => {
+  test("Unicode usernames", async function (assert) {
     await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
 
-    assert.equal(currentPath(), "user.summary");
+    assert.equal(currentRouteName(), "user.summary");
   });
 
-  test("Invites", async (assert) => {
+  test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
     assert.ok($("body.user-invites-page").length, "has the body class");
   });
 
-  test("Messages", async (assert) => {
+  test("Messages", async function (assert) {
     await visit("/u/eviltrout/messages");
     assert.ok($("body.user-messages-page").length, "has the body class");
   });
 
-  test("Notifications", async (assert) => {
+  test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
     assert.ok($("body.user-notifications-page").length, "has the body class");
 
@@ -48,18 +50,18 @@ acceptance("User Routes", function (needs) {
     );
   });
 
-  test("Root URL - Viewing Self", async (assert) => {
+  test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-activity-page").length, "has the body class");
     assert.equal(
-      currentPath(),
-      "user.userActivity.index",
+      currentRouteName(),
+      "userActivity.index",
       "it defaults to activity"
     );
     assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
   });
 
-  test("Viewing Summary", async (assert) => {
+  test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");
 
     assert.ok(exists(".replies-section li a"), "replies");
@@ -75,7 +77,7 @@ acceptance("User Routes", function (needs) {
     );
   });
 
-  test("Viewing Drafts", async (assert) => {
+  test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(exists(".user-stream"), "has drafts stream");
     assert.ok(

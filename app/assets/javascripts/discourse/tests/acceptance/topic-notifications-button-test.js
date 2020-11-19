@@ -12,7 +12,7 @@ acceptance("Topic Notifications button", function (needs) {
     });
   });
 
-  test("Updating topic notification level", async (assert) => {
+  test("Updating topic notification level", async function (assert) {
     const notificationOptions = selectKit(
       "#topic-footer-buttons .topic-notifications-options"
     );

@@ -117,21 +117,21 @@ Object.keys(functionBindings).forEach((func) => {
   });
 });
 
-test("selectDown calls _moveSelection with 1", (assert) => {
+test("selectDown calls _moveSelection with 1", function (assert) {
   let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
 
   KeyboardShortcuts.selectDown();
   assert.ok(stub.calledWith(1), "_moveSelection is called with 1");
 });
 
-test("selectUp calls _moveSelection with -1", (assert) => {
+test("selectUp calls _moveSelection with -1", function (assert) {
   let stub = sinon.stub(KeyboardShortcuts, "_moveSelection");
 
   KeyboardShortcuts.selectUp();
   assert.ok(stub.calledWith(-1), "_moveSelection is called with -1");
 });
 
-test("goBack calls history.back", (assert) => {
+test("goBack calls history.back", function (assert) {
   let called = false;
   sinon.stub(history, "back").callsFake(function () {
     called = true;
@@ -141,14 +141,14 @@ test("goBack calls history.back", (assert) => {
   assert.ok(called, "history.back is called");
 });
 
-test("nextSection calls _changeSection with 1", (assert) => {
+test("nextSection calls _changeSection with 1", function (assert) {
   let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
   KeyboardShortcuts.nextSection();
   assert.ok(spy.calledWith(1), "_changeSection is called with 1");
 });
 
-test("prevSection calls _changeSection with -1", (assert) => {
+test("prevSection calls _changeSection with -1", function (assert) {
   let spy = sinon.spy(KeyboardShortcuts, "_changeSection");
 
   KeyboardShortcuts.prevSection();

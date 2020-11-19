@@ -28,7 +28,7 @@ acceptance("Admin - Emails", function (needs) {
     });
   });
 
-  test("shows selected and elided text", async (assert) => {
+  test("shows selected and elided text", async function (assert) {
     await visit("/admin/email/advanced-test");
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");

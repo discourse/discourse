@@ -5174,7 +5174,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          notice_type: "new-user",
+          notice: { type: "new_user" }
         },
       ],
       stream: [25, 26, 27],
@@ -5583,6 +5583,7 @@ export default {
     details: {
       notification_level: 3,
       notifications_reason_id: 1,
+      can_delete: true,
       can_edit: true,
       can_create_post: true,
       can_move_posts: true,
@@ -5593,6 +5594,7 @@ export default {
       can_archive_topic: true,
       can_split_merge_topic: true,
       can_edit_staff_notes: true,
+      can_moderate_category: true,
       participants: [
         {
           id: 3,

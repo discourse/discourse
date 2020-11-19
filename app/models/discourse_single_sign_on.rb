@@ -64,6 +64,19 @@ class DiscourseSingleSignOn < SingleSignOn
       raise BannedExternalId, external_id
     end
 
+    # we protect here to ensure there is no situation where the same external id
+    # concurrently attempts to create or update sso records
+    #
+    # we can get duplicate HTTP requests quite easily (client rapid refresh) and this path does stuff such
+    # as updating groups for a users and so on that can happen even after the sso record and user is there
+    DistributedMutex.synchronize("sso_lookup_or_create_user_#{external_id}") do
+      lookup_or_create_user_unsafe(ip_address)
+    end
+  end
+
+  private
+
+  def lookup_or_create_user_unsafe(ip_address)
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && (user = sso_record.user)
@@ -135,8 +148,6 @@ class DiscourseSingleSignOn < SingleSignOn
     sso_record && sso_record.user
   end
 
-  private
-
   def synchronize_groups(user)
     names = (groups || "").split(",").map(&:downcase)
     ids = Group.where('LOWER(NAME) in (?) AND NOT automatic', names).pluck(:id)
@@ -187,7 +198,7 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def match_email_or_create_user(ip_address)
-    # Use a mutex here to counter SSO requests that are sent at the same time w
+    # Use a mutex here to counter SSO requests that are sent at the same time with
     # the same email payload
     DistributedMutex.synchronize("discourse_single_sign_on_#{email}") do
       user = User.find_by_email(email) if !require_activation

@@ -4,4 +4,10 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-vi: 
+vi:
+  js:
+    presence:
+      replying:
+        other: "đang trả lời"
+      replying_to_topic:
+        other: "đang trả lời"

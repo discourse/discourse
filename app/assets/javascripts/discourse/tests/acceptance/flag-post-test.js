@@ -82,13 +82,13 @@ acceptance("flagging", function (needs) {
     });
   });
 
-  test("Flag modal opening", async (assert) => {
+  test("Flag modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
     assert.ok(exists(".flag-modal-body"), "it shows the flag modal");
   });
 
-  test("Flag take action dropdown exists", async (assert) => {
+  test("Flag take action dropdown exists", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
     await click("#radio_inappropriate");
@@ -101,7 +101,7 @@ acceptance("flagging", function (needs) {
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
   });
 
-  test("Can silence from take action", async (assert) => {
+  test("Can silence from take action", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
     await click("#radio_inappropriate");
@@ -116,7 +116,7 @@ acceptance("flagging", function (needs) {
     assert.equal(queryAll(".bootbox.modal:visible").length, 0);
   });
 
-  test("Gets dismissable warning from canceling incomplete silence from take action", async (assert) => {
+  test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
     await click("#radio_inappropriate");

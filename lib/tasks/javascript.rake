@@ -60,8 +60,6 @@ def dependencies
       source: 'spectrum-colorpicker/spectrum.css',
       public: true
     }, {
-      source: 'favcount/favcount.js'
-    }, {
       source: 'handlebars/dist/handlebars.js'
     }, {
       source: 'handlebars/dist/handlebars.runtime.js'

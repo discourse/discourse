@@ -1127,26 +1127,22 @@ const Composer = RestModel.extend({
 
     if (this.canEditTitle) {
       // Save title and/or post body
-      if (!this.title && !this.reply) {
+      if (isEmpty(this.title) && isEmpty(this.reply)) {
         return Promise.resolve();
       }
 
-      if (
-        this.title &&
-        this.titleLengthValid &&
-        this.reply &&
-        this.replyLength < this.siteSettings.min_post_length
-      ) {
+      // Do not save when both title and reply's length are too small
+      if (!this.titleLengthValid && this.replyLength < this.minimumPostLength) {
         return Promise.resolve();
       }
     } else {
       // Do not save when there is no reply
-      if (!this.reply) {
+      if (isEmpty(this.reply)) {
         return Promise.resolve();
       }
 
       // Do not save when the reply's length is too small
-      if (this.replyLength < this.siteSettings.min_post_length) {
+      if (this.replyLength < this.minimumPostLength) {
         return Promise.resolve();
       }
     }

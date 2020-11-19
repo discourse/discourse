@@ -313,19 +313,6 @@ describe PostDestroyer do
               end
             end
           end
-
-          context "when the post does not have a Reviewable record" do
-            it "does not recover the post" do
-              PostDestroyer.new(Discourse.system_user, @reply).destroy
-              @reply.reload
-              expect(@reply.user_deleted).to eq(false)
-              expect(@reply.deleted_at).not_to eq(nil)
-
-              PostDestroyer.new(review_user, @reply).recover
-              @reply.reload
-              expect(@reply.deleted_at).not_to eq(nil)
-            end
-          end
         end
       end
     end
@@ -514,21 +501,6 @@ describe PostDestroyer do
           author.reload
           expect(author.post_count).to eq(post_count - 1)
           expect(UserHistory.count).to eq(history_count + 1)
-        end
-      end
-
-      context "when the post does not have a reviewable" do
-        it "does not delete the post" do
-          author = post.user
-          reply = create_post(topic_id: post.topic_id, user: author)
-
-          post_count = author.post_count
-          history_count = UserHistory.count
-
-          PostDestroyer.new(review_user, reply).destroy
-
-          expect(reply.deleted_at).not_to be_present
-          expect(reply.deleted_by).to eq(nil)
         end
       end
     end
@@ -987,6 +959,31 @@ describe PostDestroyer do
       user.user_profile.update(featured_topic: post.topic)
       PostDestroyer.new(admin, post).destroy
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe "permanent destroy" do
+    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
+    fab!(:post_action) { Fabricate(:post_action, post: private_post) }
+    fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
+    it "destroys the post and topic if deleting first post" do
+      PostDestroyer.new(reply.user, reply, permanent: true).destroy
+      expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(private_message_topic.reload.persisted?).to be true
+
+      PostDestroyer.new(private_post.user, private_post, permanent: true).destroy
+      expect { private_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { post_action.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'soft delete if not creator of post or not private message' do
+      PostDestroyer.new(moderator, reply, permanent: true).destroy
+      expect(reply.deleted_at).not_to eq(nil)
+
+      PostDestroyer.new(post.user, post, permanent: true).destroy
+      expect(post.user_deleted).to be true
     end
   end
 end

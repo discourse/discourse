@@ -14,7 +14,7 @@ acceptance(
       allow_uncategorized_topics: false,
     });
 
-    test("Disable body until category is selected", async (assert) => {
+    test("Disable body until category is selected", async function (assert) {
       await visit("/");
       await click("#create-topic");
       assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -80,7 +80,7 @@ acceptance(
         },
       ],
     });
-    test("Enable composer/body if no topic templates present", async (assert) => {
+    test("Enable composer/body if no topic templates present", async function (assert) {
       await visit("/");
       await click("#create-topic");
       assert.ok(exists(".d-editor-input"), "the composer input is visible");

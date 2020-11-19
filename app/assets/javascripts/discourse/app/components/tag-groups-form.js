@@ -99,14 +99,18 @@ export default Component.extend(bufferedProperty("model"), {
     },
 
     setPermissionsGroups(groupIds) {
-      let permissions = {};
+      let updatedPermissions = Object.assign(
+        {},
+        this.buffered.get("permissions")
+      );
+
       this.allGroups.forEach((group) => {
         if (groupIds.includes(group.id)) {
-          permissions[group.name] = PermissionType.FULL;
+          updatedPermissions[group.name] = PermissionType.FULL;
         }
       });
 
-      this.buffered.set("permissions", permissions);
+      this.buffered.set("permissions", updatedPermissions);
     },
 
     save() {

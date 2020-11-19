@@ -16,7 +16,7 @@ acceptance("Login with email - hide email address taken", function (needs) {
     });
   });
 
-  test("with hide_email_address_taken enabled", async (assert) => {
+  test("with hide_email_address_taken enabled", async function (assert) {
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "someuser@example.com");

@@ -4,7 +4,7 @@ acceptance("Local Dates - composer", function (needs) {
   needs.user();
   needs.settings({ discourse_local_dates_enabled: true });
 
-  test("composer bbcode", async (assert) => {
+  test("composer bbcode", async function (assert) {
     const getAttr = (attr) => {
       return queryAll(
         ".d-editor-preview .discourse-local-date.cooked-date"

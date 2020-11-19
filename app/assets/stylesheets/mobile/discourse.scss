@@ -125,6 +125,7 @@ blockquote {
           height: 100%;
           display: block;
           padding: 5px 8px;
+          @include ellipsis;
         }
       }
     }

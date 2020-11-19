@@ -26,12 +26,23 @@ define("@ember/test-helpers", () => {
     getApplication() {
       return _app;
     },
+    async settled() {
+      // No-op in pre ember-cli environment
+    },
   };
-  ["click", "visit", "currentURL", "fillIn", "setResolver"].forEach((attr) => {
+  [
+    "click",
+    "visit",
+    "currentURL",
+    "currentRouteName",
+    "fillIn",
+    "setResolver",
+  ].forEach((attr) => {
     helpers[attr] = function () {
       return window[attr](...arguments);
     };
   });
+  helpers.triggerKeyEvent = window.keyEvent;
   return helpers;
 });
 define("pretender", () => {

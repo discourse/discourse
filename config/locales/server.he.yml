@@ -140,6 +140,9 @@ he:
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
+      is_invalid_meaningful: "לא מספיק ברור, רוב המילים מכילה את אותן האותיות שוב ושוב?"
+      is_invalid_unpretentious: "לא מספיק ברור, מילה אחת או יותר היא ארוכה מאוד?"
+      is_invalid_quiet: "לא מספיק ברור, התכוונת למלא הכול באותיות גדולות?"
       invalid_timezone: "‚%{tz}’ אינו אזור זמן תקף"
       contains_censored_words: "מכיל את המילים המצונזרות הבאות: %{censored_words}"
       less_than: חייב להיות קטן מ־%{count}
@@ -191,6 +194,7 @@ he:
       default_tags_already_selected: "לא ניתן לבחור תגית שנעשה בה שימוש ברשימה אחרת"
       s3_upload_bucket_is_required: "לא ניתן להפעיל העלאות ל־S3 ללא ‚s3_upload_bucket’."
       enable_s3_uploads_is_required: "אי אפשר להגדיר מאגר ל־S3 אלמלא הפעלת העלאות ל־S3."
+      page_publishing_requirements: "לא ניתן להפעיל פרסום עמודים אם מדיה מאובטחת פעילה."
       s3_backup_requires_s3_settings: "לא ניתן להשתמש ב־S3 כמיקום לגיבוי אלמלא סיפקת את ‚%{setting_name}’."
       s3_bucket_reused: "אין לך אפשרות להשתמש באותו הדלי עבור ‚s3_upload_bucket’ וגם ‚s3_backup_bucket’. נא לבחור בדלי שונה או להשתמש בנתיב שונה לכל דלי."
       secure_media_requirements: "יש להפעיל העלאה ל־S3 בטרם הפעלת מדיה מאובטחת."
@@ -230,7 +234,11 @@ he:
   topic_invite:
     failed_to_invite: "לא ניתן להזמין את המשתמש לנושא הזה בהעדר חברות באחת הקבוצות הבאות: %{group_names}"
     user_exists: "כבר נשלחה הזמנה למשתמש זה. ניתן להזמין משתמש לנושא פעם אחת בלבד, עמך הסליחה."
-    not_allowed: "אי אפשר להזמין משתמש זה, עמך הסליחה."
+    muted_invitee: "הושתקת על ידי המשתמש הזה, עמך הסליחה."
+    muted_topic: "המשתמש הזה השתיק את הנושא הזה, עמך הסליחה."
+    receiver_does_not_allow_pm: "משתמש זה לא מאשר לך לשלוח אליו הודעות פרטיות, עמך הסליחה."
+    sender_does_not_allow_pm: "אסרת על משתמש זה לשלוח אליך הודעות פרטיות, עמך הסליחה."
+    receiver_does_not_allow_other_user_pm: "משתמש זה לא מאשר למשתתף קיים לשלוח אליו הודעות פרטיות, עמך הסליחה."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא ניתן להתחיל משימה חדשה כרגע."
     backup_file_should_be_tar_gz: "על קובץ הגיבוי להיות ‎.tar.gz."
@@ -388,7 +396,7 @@ he:
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותו."
   edit_conflict: "פוסט זה נערך על ידי משתמש אחר ואין אפשרות עוד לשמור את השינויים שלך."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה שמועמדת להחזרה."
-  cannot_edit_on_slow_mode: "הנושא נמצא במצב אטי ולא ניתן עוד לערוך את הפוסט הזה."
+  cannot_edit_on_slow_mode: "נושא זה נכנס למצב אטי. כדי לעודד דיון מתחשב ואחראי אסור כרגע לערוך פוסטים ישנים."
   excerpt_image: "תמונה"
   bookmarks:
     errors:
@@ -1534,9 +1542,10 @@ he:
     pending_users_reminder_delay: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של שעות. יש להגדיר ל־‎-1 כדי לנטרל את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics (analytics.js), למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "שם התחום של Google Universal Analytics (analytics.js), למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics (analytics.js). לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
+    ga_version: "גרסה של Google Universal Analytics לשימוש: v3‏ (analytics.js),‏ v4‏ (gtag)"
+    ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics, למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "שם התחום של Google Universal Analytics, למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics. לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
     gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים לנהל קטגוריות וקבוצות"
@@ -1674,7 +1683,7 @@ he:
     max_bookmarks_per_day: "מספר מקסימלי של סימניות למשתמשים ביום."
     max_edits_per_day: "מספר עריכות מקסימלי מותר למשתמשים ליום."
     max_topics_per_day: "מספר הנושאים המרבי שמשתמשים יכולים ליצור ביום."
-    max_personal_messages_per_day: "מספר ההודעות המרבי שמשתמשים יכולים ליצור ביום."
+    max_personal_messages_per_day: "מספר ההודעות האישיות החדשות המרבי שמשתמשים יכולים ליצור ביום."
     max_invites_per_day: "מספר מקסימלי של הזמנות שיכולים משתמשים לשלוח ביום."
     max_topic_invitations_per_day: "מספר מירבי של הזמנות לנושא שמשתמשים יכולים לשלוח ביום. "
     max_logins_per_ip_per_hour: "מספר מקסימלי של התחברויות מורשות לכל כתובת IP בשעה"
@@ -1998,7 +2007,8 @@ he:
     approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים עבור משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. יש להגדיר ל־0 כדי לנטרל את ההתראות האלה."
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
-    auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 לניטרול)"
+    auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 להשבתה)"
+    auto_close_topics_create_linked_topic: "ליצור נושא חדש מקושר כאשר נושא נסגר אוטומטית עקב ההגדרה ‚לסגור אוטומטית נושאים בהתאם לכמות פוסטים’"
     code_formatting_style: "כפתור קוד בדפדפן יציע אוטומטית סגנון קידוד זה"
     max_allowed_message_recipients: "מספר מקסימלי של נמענים מותר בהודעה."
     watched_words_regular_expressions: "מילים במעקב הן ביטויים רגולריים."
@@ -2007,6 +2017,7 @@ he:
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
     review_media_unless_trust_level: "הסגל יסקור פוסטים של משתמשים עם דרגות אמון נמוכות יותר אם הוטמעה בהם מדיה."
+    blur_tl0_flagged_posts_media: "לטשטש פוסטים שסומנו בדגל כדי להסתיר תוכן שעוי להיות פוגעני."
     enable_page_publishing: "לאפשר לחברי סגל לפרסם נושאים לכתובות חדשות עם סגנון עצמאי."
     show_published_pages_login_required: "משתמשים אלמוניים יכולים לראות דפים שפורסמו, אפילו כשנדרשת כניסה למערכת."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
@@ -2082,6 +2093,7 @@ he:
     gravatar_login_url: "כתובת ביחס אל gravatar_base_url (כתובת הבסיס של Gravatat) שמספקת למשתמש גישה לשירות Gravatar"
     share_quote_buttons: "קביעת הפריטים שיופיעו בווידג׳ט שיתוף הציטוטים ובאיזה סדר."
     share_quote_visibility: "קביעה מתי להציג כפתורי שיתוף ציטוטים: אף פעם למשתמשים אלמוניים בלבד או לכל המשתמשים. "
+    create_revision_on_bulk_topic_moves: "יצירת מהדורה לפוסטים הראשונים כאשר הנושאים מועברים לקטגוריה חדשה במרוכז."
     errors:
       invalid_email: "כתובת דוא״ל שגויה."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -2354,6 +2366,7 @@ he:
       not_allowed: "לא מורשה מכתובת הדואר האלקטרוני הזו. בבקשה השתמש בכתובת אחרת."
       blocked: "לא מורשה."
       revoked: "לא יישלחו הודעות דוא״ל אל ‚%{email}’ עד %{date}."
+      does_not_exist: "לא זמין"
     ip_address:
       blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך."
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
@@ -2366,6 +2379,8 @@ he:
       same_ip_address: "אותה כתובת ה־IP (%{ip_address}) כמו משתמשים אחרים"
       inactive_user: "משתמש בלתי פעיל"
     email_in_spam_header: "כתובת הדוא״ל הראשונה של המשתמש סומנה כזבל"
+    already_silenced: "המשתמש כבר הושתק על ידי %{staff} %{time_ago}."
+    already_suspended: "המשתמש כבר הושעה על ידי %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "הוגשו פריטים לפני למעלה משעה (%{count}). [נא לסקור אותם](%{base_path}/review)."
@@ -4171,6 +4186,7 @@ he:
             label: "נושא ברוכים-הבאים"
             description: "<p>כיצד הייתם מתארים את הקהילה שלכם לאדם זר במעלית אם יש לכם רק דקה 1?</p> <ul> <li>עבור מי נועדו דיונים אלו?</li> <li>מה אוכל למצוא פה?</li> <li>למה כדאי לי לבקר?</li> </ul> <p>נושא הברוכים-הבאים שלכם הוא הדבר הראשון שמבקרים חדשים יקראו. חישבו עליו כ<b>פסקה אחת</b> של ׳נאום המעלית׳ או ׳הצהרת הכוונות׳ שלכם.</p>"
             one_paragraph: "אנא הגבילו את הודעת הברוכים-הבאים שלכם לפסקה אחת."
+            extra_description: "במקרה של ספק ניתן לדלג על השלב הזה ולערוך את קבלת הפנים ואת הנושא בהמשך."
       privacy:
         title: "גישה"
         description: "<p>הקהילה שלך פתוחה לכולם או שהיא מוגבלת לחברים בהזמנה או באישור? לבחירתך, ניתן לערוך את כל ההגדרות באופן פרטי ורק לאחר מכן לעבור לתצורה ציבורית.</p>"
@@ -4431,6 +4447,14 @@ he:
       %{keys}
 
       אין צורך לנקוט בפעולה כלשהי כעת, עם זאת, מטעמי שיפור אבטחת המידע מומלץ להחליף את כל פרטי הגישה החשובים שלך כל כמה שנים.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (חלק %{count})"
+      two: "%{topic_title} (חלק %{count})"
+      many: "%{topic_title} (חלק %{count})"
+      other: "%{topic_title} (חלק %{count})"
+    post_raw: "המשך של הדיון %{parent_url}.\n\nדיונים קודמים:\n\n%{previous_topics}"
+    small_action_post_raw: "ניתן להמשיך את הדיון תחת %{new_title}."
   activemodel:
     errors:
       <<: *errors

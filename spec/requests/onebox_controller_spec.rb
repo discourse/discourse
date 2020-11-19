@@ -121,28 +121,17 @@ describe OneboxController do
         stub_request(:get, url).to_return(body: response_body).then.to_raise
       end
 
-      it "returns 404 if the onebox is nil" do
+      it "returns preview-error if the onebox is nil" do
         stub_request_to_onebox_url(nil)
         get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.response_code).to eq(404)
+        expect(response.body).to include("Sorry, we were unable to generate a preview for this web page")
       end
 
-      it "returns 404 if the onebox is an empty string" do
+      it "returns preview-error if the onebox is an empty string" do
         stub_request_to_onebox_url(" \t ")
         get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.response_code).to eq(404)
-      end
-
-      it "cases missing onebox URLs so we do not attempt to preview again" do
-        stub_request_to_onebox_url(nil)
-        get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.response_code).to eq(404)
-        Oneboxer.expects(:preview_onebox!).never
-        get "/onebox.json", params: { url: url, refresh: "true" }
-        expect(response.response_code).to eq(404)
-        expect(
-          Discourse.cache.read(Oneboxer.onebox_failed_cache_key(url))
-        ).not_to eq(nil)
+        expect(response.response_code).to eq(200)
+        expect(response.body).to include("Sorry, we were unable to generate a preview for this web page")
       end
     end
 

@@ -1,16 +1,19 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentURL } from "@ember/test-helpers";
+import { visit, currentURL, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Anonymous", function () {
-  test("Root URL", async (assert) => {
+  test("Root URL", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-summary-page").length, "has the body class");
-    assert.equal(currentPath(), "user.summary", "it defaults to summary");
+    assert.equal(currentRouteName(), "user.summary", "it defaults to summary");
   });
 
-  test("Filters", async (assert) => {
+  test("Filters", async function (assert) {
     await visit("/u/eviltrout/activity");
     assert.ok($("body.user-activity-page").length, "has the body class");
     assert.ok(exists(".user-main .about"), "it has the about section");
@@ -27,13 +30,13 @@ acceptance("User Anonymous", function () {
     assert.ok(exists(".user-stream.filter-5"), "stream has filter class");
   });
 
-  test("Badges", async (assert) => {
+  test("Badges", async function (assert) {
     await visit("/u/eviltrout/badges");
     assert.ok($("body.user-badges-page").length, "has the body class");
     assert.ok(exists(".user-badges-list .badge-card"), "shows a badge");
   });
 
-  test("Restricted Routes", async (assert) => {
+  test("Restricted Routes", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
     assert.equal(

@@ -1323,7 +1323,6 @@ zh_TW:
     max_bookmarks_per_day: "每個使用者每天最多能建立\"書籤\"的數量"
     max_edits_per_day: "每個使用者每天最大的\"編輯次數\"的數量"
     max_topics_per_day: "每個使用者每天最多建立\"討論話題\"的數量"
-    max_personal_messages_per_day: "使用者每天能建立的訊息數量上限。"
     max_invites_per_day: "每個使用者每天最多能邀請使用者的數量。"
     max_topic_invitations_per_day: "每個使用者每天能創建的邀請至主題數量的最大值。"
     max_logins_per_ip_per_hour: "每小時每個 IP 可登入的次數上限"

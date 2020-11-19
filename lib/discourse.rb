@@ -448,6 +448,10 @@ module Discourse
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+    end
+
     if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Discourse.redis.set(key, 1)
     else
@@ -497,6 +501,10 @@ module Discourse
   end
 
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.unpause! if Sidekiq.paused?
+    end
+
     Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
@@ -505,7 +513,6 @@ module Discourse
   def self.enable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
     true
@@ -514,7 +521,6 @@ module Discourse
   def self.disable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.unpause!
     end
 
     true

@@ -19,9 +19,19 @@ export default Component.extend({
   editing: false,
   _updates: null,
 
-  @discourseComputed("reviewable.type")
-  customClass(type) {
-    return type.dasherize();
+  @discourseComputed(
+    "reviewable.type",
+    "siteSettings.blur_tl0_flagged_posts_media",
+    "reviewable.target_created_by_trust_level"
+  )
+  customClasses(type, blurEnabled, trustLevel) {
+    let classes = type.dasherize();
+
+    if (blurEnabled && trustLevel === 0) {
+      classes = `${classes} blur-images`;
+    }
+
+    return classes;
   },
 
   @discourseComputed(

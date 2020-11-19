@@ -4,7 +4,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Post - Admin Menu - Anonymous", function () {
-  test("Enter as a anon user", async (assert) => {
+  test("Enter as a anon user", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".show-more-actions");
 
@@ -22,7 +22,7 @@ acceptance("Post - Admin Menu - Anonymous", function () {
 
 acceptance("Post - Admin Menu - Authenticated", function (needs) {
   needs.user();
-  test("Enter as a user with group moderator permissions", async (assert) => {
+  test("Enter as a user with group moderator permissions", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
     await click(".show-more-actions");
     await click(".show-post-admin-menu");

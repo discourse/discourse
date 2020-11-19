@@ -10,7 +10,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance("User's bookmarks", function (needs) {
   needs.user();
 
-  test("removing a bookmark with no reminder does not show a confirmation", async (assert) => {
+  test("removing a bookmark with no reminder does not show a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
     assert.ok(queryAll(".bookmark-list-item").length > 0);
 
@@ -33,7 +33,7 @@ acceptance("User's bookmarks - reminder", function (needs) {
     });
   });
 
-  test("removing a bookmark with a reminder shows a confirmation", async (assert) => {
+  test("removing a bookmark with a reminder shows a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
 
     const dropdown = selectKit(".bookmark-actions-dropdown");
@@ -58,7 +58,7 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
     );
   });
 
-  test("listing users bookmarks - no bookmarks", async (assert) => {
+  test("listing users bookmarks - no bookmarks", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
     assert.equal(queryAll(".alert.alert-info").text(), "no bookmarks");
   });

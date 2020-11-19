@@ -18,7 +18,7 @@ acceptance("Category and Tag Hashtags", function (needs) {
     });
   });
 
-  test("hashtags are cooked properly", async (assert) => {
+  test("hashtags are cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 

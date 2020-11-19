@@ -159,7 +159,8 @@ module Discourse
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
-      google-universal-analytics.js
+      google-universal-analytics-v3.js
+      google-universal-analytics-v4.js
       start-discourse.js
       print-page.js
       omniauth-complete.js

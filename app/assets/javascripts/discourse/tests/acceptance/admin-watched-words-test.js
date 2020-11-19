@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
 
-  test("list words in groups", async (assert) => {
+  test("list words in groups", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
 
     assert.ok(exists(".watched-words-list"));
@@ -44,7 +44,7 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
   });
 
-  test("add words", async (assert) => {
+  test("add words", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
 
     click(".show-words-checkbox");
@@ -61,7 +61,7 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.equal(found.length, 1);
   });
 
-  test("remove words", async (assert) => {
+  test("remove words", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
     await click(".show-words-checkbox");
 
