@@ -188,6 +188,7 @@ module Oneboxer
       when "uploads" then local_upload_html(url)
       when "topics"  then local_topic_html(url, route, opts)
       when "users"   then local_user_html(url, route)
+      when "list"    then local_category_html(url, route)
       end
 
     html = html.presence || "<a href='#{url}'>#{url}</a>"
@@ -291,6 +292,26 @@ module Oneboxer
     else
       nil
     end
+  end
+
+  def self.local_category_html(url, route)
+    category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
+
+    if category.nil? || !Guardian.new.can_see_category?(category)
+      raise Discourse::NotFound.new("category not found")
+    end
+
+    args = {
+      url: category.url,
+      name: category.name,
+      color: category.color,
+      logo_url: category.uploaded_logo&.url,
+      description: category.description,
+      has_subcategories: category.subcategories.present?,
+      subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
+    }
+
+    Mustache.render(template("discourse_category_onebox"), args)
   end
 
   def self.blocked_domains
