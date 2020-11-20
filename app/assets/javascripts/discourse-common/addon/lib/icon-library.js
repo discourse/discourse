@@ -115,8 +115,9 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  // _iconList is actually an array as a string: '["foo", "bar"]'
-  return _iconList && _iconList.indexOf(`"${id}"`) >= 0;
+  // TODO: investigate why _iconList is actually an array as a string: '["foo", "bar"]'
+  // in local and a real array in production
+  return _iconList && _iconList.indexOf(id) >= 0;
 }
 
 function warnIfMissing(id) {
