@@ -189,7 +189,9 @@ acceptance("Search - with tagging enabled", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", 16);
 
-    const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
+    const tags = queryAll(
+      ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
+    )
       .text()
       .trim();
 

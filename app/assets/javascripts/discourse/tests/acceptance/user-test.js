@@ -85,7 +85,7 @@ acceptance("User Routes", function (needs) {
       "has draft action buttons"
     );
 
-    await click(".user-stream button.resume-draft:eq(0)");
+    await click(".user-stream button.resume-draft:nth-of-type(1)");
     assert.ok(
       exists(".d-editor-input"),
       "composer is visible after resuming a draft"

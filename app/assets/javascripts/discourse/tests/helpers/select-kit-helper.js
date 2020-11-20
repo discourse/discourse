@@ -249,7 +249,9 @@ export default function selectKit(selector) {
 
     rowByIndex(index) {
       return rowHelper(
-        queryAll(selector).find(".select-kit-row:eq(" + index + ")")
+        queryAll(selector).find(
+          ".select-kit-row:nth-of-type(" + (index + 1) + ")"
+        )
       );
     },
 

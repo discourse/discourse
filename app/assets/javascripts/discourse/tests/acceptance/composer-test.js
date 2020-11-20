@@ -98,7 +98,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control a.cancel");
     assert.ok(exists(".bootbox.modal"), "it pops up a confirmation dialog");
 
-    await click(".modal-footer a:eq(1)");
+    await click(".modal-footer a:nth-of-type(2)");
     assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
   });
 
@@ -288,10 +288,10 @@ acceptance("Composer", function (needs) {
     await click("#topic-footer-buttons .create");
     await fillIn(".d-editor-input", "this is the content of my reply");
 
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
 
-    await click(".modal-footer button:eq(1)");
+    await click(".modal-footer button:nth-of-type(2)");
 
     assert.ok(!visible(".discard-draft-modal.modal"));
     assert.equal(
@@ -351,12 +351,12 @@ acceptance("Composer", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
-      !exists(".topic-post:eq(0) .post-info.edits"),
+      !exists(".topic-post:nth-of-type(1) .post-info.edits"),
       "it has no edits icon at first"
     );
 
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("Any plans to support"),
       0,
@@ -368,7 +368,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert.ok(!exists(".d-editor-input"), "it closes the composer");
     assert.ok(
-      exists(".topic-post:eq(0) .post-info.edits"),
+      exists(".topic-post:nth-of-type(1) .post-info.edits"),
       "it has the edits icon"
     );
     assert.ok(
@@ -378,7 +378,7 @@ acceptance("Composer", function (needs) {
       "it shows the new title"
     );
     assert.ok(
-      queryAll(".topic-post:eq(0) .cooked")
+      queryAll(".topic-post:nth-of-type(1) .cooked")
         .text()
         .indexOf("This is the new text for the post") !== -1,
       "it updates the post"
@@ -388,13 +388,13 @@ acceptance("Composer", function (needs) {
   test("Composer can switch between edits", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.edit");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
       "it populates the input with the post text"
     );
-    await click(".topic-post:eq(1) button.edit");
+    await click(".topic-post:nth-of-type(2) button.edit");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -405,15 +405,15 @@ acceptance("Composer", function (needs) {
   test("Composer with dirty edit can toggle to another edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.edit");
     await fillIn(".d-editor-input", "This is a dirty reply");
-    await click(".topic-post:eq(1) button.edit");
+    await click(".topic-post:nth-of-type(2) button.edit");
     assert.ok(
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
 
-    await click(".modal-footer button:eq(0)");
+    await click(".modal-footer button:nth-of-type(1)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -424,15 +424,15 @@ acceptance("Composer", function (needs) {
   test("Composer can toggle between edit and reply", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.edit");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
       "it populates the input with the post text"
     );
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     assert.equal(queryAll(".d-editor-input").val(), "", "it clears the input");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.edit");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
@@ -444,7 +444,7 @@ acceptance("Composer", function (needs) {
     const menu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/t/this-is-a-test-topic/9");
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
     await menu.selectRowByValue("toggleWhisper");
@@ -477,7 +477,7 @@ acceptance("Composer", function (needs) {
 
   test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
 
     assert.ok(
       queryAll("#reply-control.open").length === 1,
@@ -516,7 +516,7 @@ acceptance("Composer", function (needs) {
 
   test("Composer can toggle between reply and createTopic", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
 
     await selectKit(".toolbar-popup-menu-options").expand();
     await selectKit(".toolbar-popup-menu-options").selectRowByValue(
@@ -551,7 +551,7 @@ acceptance("Composer", function (needs) {
 
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     assert.ok(
       queryAll(".composer-fields .whisper")
         .text()
@@ -563,14 +563,14 @@ acceptance("Composer", function (needs) {
   test("Composer with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.edit");
     assert.ok(
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
-    await click(".modal-footer button:eq(0)");
+    await click(".modal-footer button:nth-of-type(1)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the first post."),
       0,
@@ -581,19 +581,19 @@ acceptance("Composer", function (needs) {
   test("Composer draft with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
-    await click(".topic-post:eq(1) button.edit");
+    await click(".topic-post:nth-of-type(2) button.edit");
     assert.ok(
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:eq(1)").text().trim(),
+      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
       I18n.t("post.abandon.no_value")
     );
-    await click(".modal-footer button:eq(0)");
+    await click(".modal-footer button:nth-of-type(1)");
     assert.equal(
       queryAll(".d-editor-input").val().indexOf("This is the second post."),
       0,
@@ -604,7 +604,7 @@ acceptance("Composer", function (needs) {
   test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     await fillIn(".d-editor-input", "This is a dirty reply");
 
     await click("#site-logo");
@@ -615,10 +615,10 @@ acceptance("Composer", function (needs) {
       "it pops up a confirmation dialog"
     );
     assert.equal(
-      queryAll(".modal-footer button:eq(1)").text().trim(),
+      queryAll(".modal-footer button:nth-of-type(2)").text().trim(),
       I18n.t("post.abandon.no_save_draft")
     );
-    await click(".modal-footer button:eq(1)");
+    await click(".modal-footer button:nth-of-type(2)");
     assert.equal(
       queryAll(".d-editor-input").val(),
       "",
@@ -632,8 +632,8 @@ acceptance("Composer", function (needs) {
 
       await visit("/t/internationalization-localization/280");
 
-      await click(".topic-post:eq(0) button.show-more-actions");
-      await click(".topic-post:eq(0) button.edit");
+      await click(".topic-post:nth-of-type(1) button.show-more-actions");
+      await click(".topic-post:nth-of-type(1) button.edit");
 
       assert.equal(
         queryAll(".modal-body").text(),
@@ -712,7 +712,10 @@ acceptance("Composer", function (needs) {
       await click("button.compose-pm");
       await click(".modal .btn-default");
 
-      assert.equal(queryAll(".users-input .item:eq(0)").text(), "codinghorror");
+      assert.equal(
+        queryAll(".users-input .item:nth-of-type(1)").text(),
+        "codinghorror"
+      );
     } finally {
       toggleCheckDraftPopup(false);
     }

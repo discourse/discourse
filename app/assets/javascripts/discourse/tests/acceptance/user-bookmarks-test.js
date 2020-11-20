@@ -14,7 +14,7 @@ acceptance("User's bookmarks", function (needs) {
     await visit("/u/eviltrout/activity/bookmarks");
     assert.ok(queryAll(".bookmark-list-item").length > 0);
 
-    const dropdown = selectKit(".bookmark-actions-dropdown:eq(0)");
+    const dropdown = selectKit(".bookmark-actions-dropdown:nth-of-type(1)");
     await dropdown.expand();
     await dropdown.selectRowByValue("remove");
 
