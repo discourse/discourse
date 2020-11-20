@@ -67,20 +67,20 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     @auth_result.destination_url = @origin
+    @auth_result.authenticator_name = authenticator.name
 
-    if @auth_result.failed?
-      flash[:error] = @auth_result.failed_reason.html_safe
-      render('failure')
-    else
-      @auth_result.authenticator_name = authenticator.name
-      complete_response_data
-      cookies['_bypass_cache'] = true
-      cookies[:authentication_data] = {
-        value: @auth_result.to_client_hash.to_json,
-        path: Discourse.base_path("/")
-      }
-      redirect_to @origin
-    end
+    return render_auth_result_failure if @auth_result.failed?
+
+    complete_response_data
+
+    return render_auth_result_failure if @auth_result.failed?
+
+    cookies['_bypass_cache'] = true
+    cookies[:authentication_data] = {
+      value: @auth_result.to_client_hash.to_json,
+      path: Discourse.base_path("/")
+    }
+    redirect_to @origin
   end
 
   def failure
@@ -97,6 +97,11 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   protected
+
+  def render_auth_result_failure
+    flash[:error] = @auth_result.failed_reason.html_safe
+    render 'failure'
+  end
 
   def complete_response_data
     if @auth_result.user
@@ -138,7 +143,14 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
       @auth_result.admin_not_allowed_from_ip_address = true
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
-      user.save! if @auth_result.apply_user_attributes!
+      begin
+        user.save! if @auth_result.apply_user_attributes!
+      rescue ActiveRecord::RecordInvalid => e
+        @auth_result.failed = true
+        @auth_result.failed_reason = e.record.errors.full_messages.join(", ")
+        return
+      end
+
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
