@@ -295,23 +295,22 @@ module Oneboxer
   end
 
   def self.local_category_html(url, route)
+    return unless route[:category_slug_path_with_id]
     category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
 
-    if category.nil? || !Guardian.new.can_see_category?(category)
-      raise Discourse::NotFound.new("category not found")
+    if Guardian.new.can_see_category?(category)
+      args = {
+        url: category.url,
+        name: category.name,
+        color: category.color,
+        logo_url: category.uploaded_logo&.url,
+        description: category.description,
+        has_subcategories: category.subcategories.present?,
+        subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
+      }
+
+      Mustache.render(template("discourse_category_onebox"), args)
     end
-
-    args = {
-      url: category.url,
-      name: category.name,
-      color: category.color,
-      logo_url: category.uploaded_logo&.url,
-      description: category.description,
-      has_subcategories: category.subcategories.present?,
-      subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
-    }
-
-    Mustache.render(template("discourse_category_onebox"), args)
   end
 
   def self.blocked_domains
