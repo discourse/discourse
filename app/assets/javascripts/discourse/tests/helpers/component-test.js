@@ -7,6 +7,31 @@ import Site from "discourse/models/site";
 import Session from "discourse/models/session";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import { test } from "qunit";
+import { TestModuleForComponent } from "@ember/test-helpers";
+
+export function setupRenderingTest(hooks) {
+  let testModule;
+
+  hooks.before(function () {
+    const name = this.moduleName.split("|").pop();
+    testModule = new TestModuleForComponent(name, {
+      integration: true,
+    });
+  });
+
+  hooks.beforeEach(function () {
+    testModule.setContext(this);
+    return testModule.setup(...arguments);
+  });
+
+  hooks.afterEach(function () {
+    return testModule.teardown(...arguments);
+  });
+
+  hooks.after(function () {
+    testModule = null;
+  });
+}
 
 export default function (name, opts) {
   opts = opts || {};

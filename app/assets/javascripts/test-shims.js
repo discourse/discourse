@@ -29,6 +29,7 @@ define("@ember/test-helpers", () => {
     async settled() {
       // No-op in pre ember-cli environment
     },
+    TestModuleForComponent: window.TestModuleForComponent,
   };
   [
     "click",
