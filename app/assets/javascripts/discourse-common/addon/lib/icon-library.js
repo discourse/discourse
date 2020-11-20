@@ -114,8 +114,13 @@ export function setIconList(iconList) {
   _iconList = iconList;
 }
 
+export function isExistingIconId(id) {
+  // _iconList is actually an array as a string: '["foo", "bar"]'
+  return _iconList && _iconList.indexOf(`"${id}"`) >= 0;
+}
+
 function warnIfMissing(id) {
-  if (warnMissingIcons && _iconList && _iconList.indexOf(id) === -1) {
+  if (warnMissingIcons && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
