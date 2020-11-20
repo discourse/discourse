@@ -1,6 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { debounce, later, next, schedule, throttle } from "@ember/runloop";
+import { run, debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import discourseComputed, {
@@ -693,63 +693,73 @@ export default Component.extend({
 
       const isUploading = validateUploadedFiles(data.files, opts);
 
-      this.setProperties({ uploadProgress: 0, isUploading });
+      run(() => {
+        this.setProperties({ uploadProgress: 0, isUploading });
+      });
 
       return isUploading;
     });
 
     $element.on("fileuploadprogressall", (e, data) => {
-      this.set(
-        "uploadProgress",
-        parseInt((data.loaded / data.total) * 100, 10)
-      );
+      run(() => {
+        this.set(
+          "uploadProgress",
+          parseInt((data.loaded / data.total) * 100, 10)
+        );
+      });
     });
 
     $element.on("fileuploadsend", (e, data) => {
-      this._pasted = false;
-      this._validUploads++;
+      run(() => {
+        this._pasted = false;
+        this._validUploads++;
 
-      this._setUploadPlaceholderSend(data);
+        this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
+        this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
-      if (data.xhr && data.originalFiles.length === 1) {
-        this.set("isCancellable", true);
-        this._xhr = data.xhr();
-      }
+        if (data.xhr && data.originalFiles.length === 1) {
+          this.set("isCancellable", true);
+          this._xhr = data.xhr();
+        }
+      });
     });
 
     $element.on("fileuploaddone", (e, data) => {
-      let upload = data.result;
-      this._setUploadPlaceholderDone(data);
-      if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = uploadMarkdownResolvers.reduce(
-          (md, resolver) => resolver(upload) || md,
-          getUploadMarkdown(upload)
-        );
+      run(() => {
+        let upload = data.result;
+        this._setUploadPlaceholderDone(data);
+        if (!this._xhr || !this._xhr._userCancelled) {
+          const markdown = uploadMarkdownResolvers.reduce(
+            (md, resolver) => resolver(upload) || md,
+            getUploadMarkdown(upload)
+          );
 
-        cacheShortUploadUrl(upload.short_url, upload);
-        this.appEvents.trigger(
-          "composer:replace-text",
-          this.uploadPlaceholder.trim(),
-          markdown
-        );
-        this._resetUpload(false);
-      } else {
-        this._resetUpload(true);
-      }
+          cacheShortUploadUrl(upload.short_url, upload);
+          this.appEvents.trigger(
+            "composer:replace-text",
+            this.uploadPlaceholder.trim(),
+            markdown
+          );
+          this._resetUpload(false);
+        } else {
+          this._resetUpload(true);
+        }
+      });
     });
 
     $element.on("fileuploadfail", (e, data) => {
-      this._setUploadPlaceholderDone(data);
-      this._resetUpload(true);
+      run(() => {
+        this._setUploadPlaceholderDone(data);
+        this._resetUpload(true);
 
-      const userCancelled = this._xhr && this._xhr._userCancelled;
-      this._xhr = null;
+        const userCancelled = this._xhr && this._xhr._userCancelled;
+        this._xhr = null;
 
-      if (!userCancelled) {
-        displayErrorForUpload(data, this.siteSettings);
-      }
+        if (!userCancelled) {
+          displayErrorForUpload(data, this.siteSettings);
+        }
+      });
     });
 
     if (this.site.mobileView) {
