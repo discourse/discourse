@@ -2961,7 +2961,7 @@ describe Guardian do
 
   describe '#can_ignore_user?' do
     before do
-      SiteSetting.min_trust_level_to_ignore = 1
+      SiteSetting.min_trust_level_to_allow_ignore = 1
     end
 
     let(:guardian) { Guardian.new(trust_level_2) }
