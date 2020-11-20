@@ -16,6 +16,8 @@ module Onebox
 
       def data
         oembed = get_oembed
+        raise "No oEmbed data found. Ensure 'facebook_app_access_token' is valid" if oembed.data.empty?
+
         permalink = clean_url.gsub("/#{oembed.author_name}/", "/")
 
         { link: permalink,
