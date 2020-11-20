@@ -2993,21 +2993,21 @@ describe Guardian do
       end
     end
 
-    context "when ignorer's trust level is below min_trust_to_ignore" do
+    context "when ignorer's trust level is below min_trust_level_to_allow_ignore" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it 'does not allow ignoring user' do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
     end
 
-    context "when ignorer's trust level is equal to min_trust_to_ignore site setting" do
+    context "when ignorer's trust level is equal to min_trust_level_to_allow_ignore site setting" do
       let(:guardian) { Guardian.new(trust_level_1) }
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
 
-    context "when ignorer's trust level is above min_trust_to_ignore site setting" do
+    context "when ignorer's trust level is above min_trust_level_to_allow_ignore site setting" do
       let(:guardian) { Guardian.new(trust_level_3) }
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
