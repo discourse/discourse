@@ -132,7 +132,7 @@ class DiscoursePluginRegistry
       end
 
       Dir.glob("#{root}/**/*.#{ext}") do |f|
-        yield f, ext
+        yield f
       end
     end
   end
