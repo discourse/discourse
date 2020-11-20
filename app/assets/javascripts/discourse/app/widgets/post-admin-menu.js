@@ -141,7 +141,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
 
   if (attrs.canManage) {
     contents.push({
-      icon: "cog",
+      icon: "sync-alt",
       label: "post.controls.rebake",
       action: "rebakePost",
       className: "popup-menu-button rebuild-html",
