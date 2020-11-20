@@ -1,7 +1,8 @@
-import componentTest from "discourse/tests/helpers/component-test";
-import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
-
-testSelectKitModule("list-setting");
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function template(options = []) {
   return `
@@ -15,21 +16,31 @@ function template(options = []) {
   `;
 }
 
-componentTest("default", {
-  template: template(),
+discourseModule("Integration | Component | select-kit/list-setting", function (
+  hooks
+) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.set("value", ["bold", "italic"]);
-    this.set("choices", ["bold", "italic", "underline"]);
-  },
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-  async test(assert) {
-    assert.equal(this.subject.header().name(), "bold,italic");
-    assert.equal(this.subject.header().value(), "bold,italic");
+  componentTest("default", {
+    template: template(),
 
-    await this.subject.expand();
+    beforeEach() {
+      this.set("value", ["bold", "italic"]);
+      this.set("choices", ["bold", "italic", "underline"]);
+    },
 
-    assert.equal(this.subject.rows().length, 1);
-    assert.equal(this.subject.rowByIndex(0).value(), "underline");
-  },
+    async test(assert) {
+      assert.equal(this.subject.header().name(), "bold,italic");
+      assert.equal(this.subject.header().value(), "bold,italic");
+
+      await this.subject.expand();
+
+      assert.equal(this.subject.rows().length, 1);
+      assert.equal(this.subject.rowByIndex(0).value(), "underline");
+    },
+  });
 });

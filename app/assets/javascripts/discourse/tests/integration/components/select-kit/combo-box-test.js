@@ -1,15 +1,9 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import componentTest from "discourse/tests/helpers/component-test";
 import { click } from "@ember/test-helpers";
-
-moduleForComponent("select-kit/combo-box", {
-  integration: true,
-  beforeEach() {
-    this.set("subject", selectKit());
-  },
-});
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -30,76 +24,86 @@ const setDefaultState = (ctx, options) => {
   ctx.setProperties(properties);
 };
 
-componentTest("options.clearable", {
-  template: `
-    {{combo-box
-      value=value
-      content=content
-      onChange=onChange
-      options=(hash clearable=clearable)
-    }}
-  `,
+discourseModule("Integration | Component | select-kit/combo-box", function (
+  hooks
+) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    setDefaultState(this, {
-      clearable: true,
-      onChange: (value) => {
-        this.set("value", value);
-      },
-    });
-  },
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-  async test(assert) {
-    const $header = this.subject.header();
+  componentTest("options.clearable", {
+    template: `
+      {{combo-box
+        value=value
+        content=content
+        onChange=onChange
+        options=(hash clearable=clearable)
+      }}
+    `,
 
-    assert.ok(
-      exists($header.el().find(".btn-clear")),
-      "it shows the clear button"
-    );
-    assert.equal($header.value(), DEFAULT_VALUE);
+    beforeEach() {
+      setDefaultState(this, {
+        clearable: true,
+        onChange: (value) => {
+          this.set("value", value);
+        },
+      });
+    },
 
-    await click($header.el().find(".btn-clear"));
+    async test(assert) {
+      const $header = this.subject.header();
 
-    assert.notOk(
-      exists($header.el().find(".btn-clear")),
-      "it hides the clear button"
-    );
-    assert.equal($header.value(), null);
-  },
-});
+      assert.ok(
+        exists($header.el().find(".btn-clear")),
+        "it shows the clear button"
+      );
+      assert.equal($header.value(), DEFAULT_VALUE);
 
-componentTest("options.{caretUpIcon,caretDownIcon}", {
-  template: `
-    {{combo-box
-      value=value
-      content=content
-      options=(hash
-        caretUpIcon=caretUpIcon
-        caretDownIcon=caretDownIcon
-      )
-    }}
-  `,
+      await click($header.el().find(".btn-clear"));
 
-  beforeEach() {
-    setDefaultState(this, {
-      caretUpIcon: "pencil-alt",
-      caretDownIcon: "trash-alt",
-    });
-  },
+      assert.notOk(
+        exists($header.el().find(".btn-clear")),
+        "it hides the clear button"
+      );
+      assert.equal($header.value(), null);
+    },
+  });
 
-  async test(assert) {
-    const $header = this.subject.header().el();
+  componentTest("options.{caretUpIcon,caretDownIcon}", {
+    template: `
+      {{combo-box
+        value=value
+        content=content
+        options=(hash
+          caretUpIcon=caretUpIcon
+          caretDownIcon=caretDownIcon
+        )
+      }}
+    `,
 
-    assert.ok(
-      exists($header.find(`.d-icon-${this.caretDownIcon}`)),
-      "it uses the icon provided"
-    );
+    beforeEach() {
+      setDefaultState(this, {
+        caretUpIcon: "pencil-alt",
+        caretDownIcon: "trash-alt",
+      });
+    },
 
-    await this.subject.expand();
+    async test(assert) {
+      const $header = this.subject.header().el();
 
-    assert.ok(
-      exists($header.find(`.d-icon-${this.caretUpIcon}`)),
-      "it uses the icon provided"
-    );
-  },
+      assert.ok(
+        exists($header.find(`.d-icon-${this.caretDownIcon}`)),
+        "it uses the icon provided"
+      );
+
+      await this.subject.expand();
+
+      assert.ok(
+        exists($header.find(`.d-icon-${this.caretUpIcon}`)),
+        "it uses the icon provided"
+      );
+    },
+  });
 });

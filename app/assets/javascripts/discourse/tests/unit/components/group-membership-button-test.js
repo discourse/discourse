@@ -1,6 +1,7 @@
 import { test } from "qunit";
 import { moduleFor } from "ember-qunit";
 
+// TODO: Convert to a modern *integration* test
 moduleFor("component:group-membership-button");
 
 test("canJoinGroup", function (assert) {
