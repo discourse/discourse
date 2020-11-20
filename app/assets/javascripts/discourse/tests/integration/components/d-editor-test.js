@@ -272,10 +272,10 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `first line
-      ${I18n.t("composer.code_text")}
-  second line
+    ${I18n.t("composer.code_text")}
+second line
 
-  third line`
+third line`
       );
 
       this.set("value", "first line\n\nsecond line\n\nthird line");
@@ -285,9 +285,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         this.value,
         `first line
 
-  second line
+second line
 
-  third line\`${I18n.t("composer.code_title")}\``
+third line\`${I18n.t("composer.code_title")}\``
       );
       this.set("value", "first line\n\nsecond line\n\nthird line");
 
@@ -299,9 +299,9 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
         this.value,
         `first\`${I18n.t("composer.code_title")}\` line
 
-  second line
+second line
 
-  third line`
+third line`
       );
       this.set("value", "first line\n\nsecond line\n\nthird line");
 
@@ -349,8 +349,8 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `\`\`\`
-  ${I18n.t("composer.paste_code_text")}
-  \`\`\``
+${I18n.t("composer.paste_code_text")}
+\`\`\``
       );
 
       assert.equal(textarea.selectionStart, 4);
@@ -366,11 +366,11 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `\`\`\`
-  first line
-  second line
-  third line
-  \`\`\`
-  `
+first line
+second line
+third line
+\`\`\`
+`
       );
 
       assert.equal(textarea.selectionStart, textarea.value.length);
@@ -386,8 +386,8 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `\`${I18n.t("composer.code_title")}\`first line
-  second line
-  third line`
+second line
+third line`
       );
 
       assert.equal(textarea.selectionStart, 1);
@@ -406,8 +406,8 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `\`first line\`
-  second line
-  third line`
+second line
+third line`
       );
 
       assert.equal(textarea.selectionStart, 1);
@@ -423,10 +423,10 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
       assert.equal(
         this.value,
         `\`\`\`
-  first line
-  second line
-  \`\`\`
-  third line`
+first line
+second line
+\`\`\`
+third line`
       );
 
       assert.equal(textarea.selectionStart, 30);
