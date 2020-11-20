@@ -2,7 +2,7 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
-import { cancel, debounce } from "@ember/runloop";
+import { cancel, debounce, run } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { inject } from "@ember/controller";
 import Controller from "@ember/controller";
@@ -1190,7 +1190,8 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+        let method = isTesting() ? run : debounce;
+        this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }
   },
