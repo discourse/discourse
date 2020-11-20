@@ -10,6 +10,8 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { getOwner } from "discourse-common/lib/get-owner";
 
+const STAFF_GROUP_NAME = "staff";
+
 const Category = RestModel.extend({
   permissions: null,
 
@@ -22,15 +24,13 @@ const Category = RestModel.extend({
     this.set("availableGroups", availableGroups);
 
     const groupPermissions = this.group_permissions;
+
     if (groupPermissions) {
       this.set(
         "permissions",
         groupPermissions.map((elem) => {
           availableGroups.removeObject(elem.group_name);
-          return {
-            group_name: elem.group_name,
-            permission: PermissionType.create({ id: elem.permission_type }),
-          };
+          return elem;
         })
       );
     }
@@ -231,7 +231,12 @@ const Category = RestModel.extend({
   _permissionsForUpdate() {
     const permissions = this.permissions;
     let rval = {};
-    permissions.forEach((p) => (rval[p.group_name] = p.permission.id));
+    if (permissions.length) {
+      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    } else {
+      // empty permissions => staff-only access
+      rval[STAFF_GROUP_NAME] = PermissionType.FULL;
+    }
     return rval;
   },
 
@@ -246,9 +251,20 @@ const Category = RestModel.extend({
     this.availableGroups.removeObject(permission.group_name);
   },
 
-  removePermission(permission) {
-    this.permissions.removeObject(permission);
-    this.availableGroups.addObject(permission.group_name);
+  removePermission(group_name) {
+    const permission = this.permissions.findBy("group_name", group_name);
+    if (permission) {
+      this.permissions.removeObject(permission);
+      this.availableGroups.addObject(group_name);
+    }
+  },
+
+  updatePermission(group_name, type) {
+    this.permissions.forEach((p, i) => {
+      if (p.group_name === group_name) {
+        this.set(`permissions.${i}.permission_type`, type);
+      }
+    });
   },
 
   @discourseComputed("topics")
