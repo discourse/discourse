@@ -7,7 +7,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Review", function (needs) {
   needs.user();
 
-  const user = ".reviewable-item[data-reviewable-id=1234]";
+  const user = '.reviewable-item[data-reviewable-id="1234"]';
 
   test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
@@ -92,7 +92,7 @@ acceptance("Review", function (needs) {
   });
 
   test("Editing a reviewable", async function (assert) {
-    const topic = ".reviewable-item[data-reviewable-id=4321]";
+    const topic = '.reviewable-item[data-reviewable-id="4321"]';
     await visit("/review");
     assert.ok(queryAll(`${topic} .reviewable-action.approve`).length);
     assert.ok(!queryAll(`${topic} .category-name`).length);

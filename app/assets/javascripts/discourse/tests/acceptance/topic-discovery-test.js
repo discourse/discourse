@@ -75,12 +75,12 @@ acceptance("Topic Discovery", function (needs) {
   test("Clearing state after leaving a category", async function (assert) {
     await visit("/c/dev");
     assert.ok(
-      exists(".topic-list-item[data-topic-id=11994] .topic-excerpt"),
+      exists('.topic-list-item[data-topic-id="11994"] .topic-excerpt'),
       "it expands pinned topics in a subcategory"
     );
     await visit("/");
     assert.ok(
-      !exists(".topic-list-item[data-topic-id=11557] .topic-excerpt"),
+      !exists('.topic-list-item[data-topic-id="11557"] .topic-excerpt'),
       "it doesn't expand all pinned in the latest category"
     );
   });

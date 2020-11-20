@@ -263,7 +263,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
-      !exists("article[data-post-id=12345]"),
+      !exists('article[data-post-id="12345"]'),
       "the post is not in the DOM"
     );
 
