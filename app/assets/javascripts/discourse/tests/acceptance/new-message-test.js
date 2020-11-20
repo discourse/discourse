@@ -34,7 +34,7 @@ acceptance("New Message - Authenticated", function (needs) {
       "it pre-fills message body"
     );
     assert.equal(
-      queryAll(".users-input .item:eq(0)").text().trim(),
+      queryAll(".users-input .item:nth-of-type(1)").text().trim(),
       "charlie",
       "it selects correct username"
     );

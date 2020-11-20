@@ -331,7 +331,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
 
     test(assert) {
       assert.equal(queryAll("ul li").length, 3);
-      assert.equal(queryAll("ul li:eq(0)").text(), "one");
+      assert.equal(queryAll("ul li:nth-of-type(1)").text(), "one");
     },
   });
 

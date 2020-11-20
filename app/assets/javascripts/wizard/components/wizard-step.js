@@ -98,13 +98,15 @@ export default Component.extend({
 
   autoFocus() {
     schedule("afterRender", () => {
-      const $invalid = $(".wizard-field.invalid:eq(0) .wizard-focusable");
+      const $invalid = $(
+        ".wizard-field.invalid:nth-of-type(1) .wizard-focusable"
+      );
 
       if ($invalid.length) {
         return $invalid.focus();
       }
 
-      $(".wizard-focusable:eq(0)").focus();
+      $(".wizard-focusable:nth-of-type(1)").focus();
     });
   },
 

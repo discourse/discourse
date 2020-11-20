@@ -76,37 +76,37 @@ discourseModule("Integration | Component | Widget | post-stream", function (
 
       // look for special class bindings
       assert.equal(
-        queryAll(".topic-post:eq(0).topic-owner").length,
+        queryAll(".topic-post:nth-of-type(1).topic-owner").length,
         1,
         "it applies the topic owner class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(0).group-trout").length,
+        queryAll(".topic-post:nth-of-type(1).group-trout").length,
         1,
         "it applies the primary group class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(0).regular").length,
+        queryAll(".topic-post:nth-of-type(1).regular").length,
         1,
         "it applies the regular class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(1).moderator").length,
+        queryAll(".topic-post:nth-of-type(2).moderator").length,
         1,
         "it applies the moderator class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(2).post-hidden").length,
+        queryAll(".topic-post:nth-of-type(3).post-hidden").length,
         1,
         "it applies the hidden class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(3).whisper").length,
+        queryAll(".topic-post:nth-of-type(4).whisper").length,
         1,
         "it applies the whisper class"
       );
       assert.equal(
-        queryAll(".topic-post:eq(4).wiki").length,
+        queryAll(".topic-post:nth-of-type(5).wiki").length,
         1,
         "it applies the wiki class"
       );
@@ -119,7 +119,7 @@ discourseModule("Integration | Component | Widget | post-stream", function (
       assert.equal(queryAll("article#post_6.is-auto-generated").length, 1);
 
       assert.equal(
-        queryAll("article:eq(0) .main-avatar").length,
+        queryAll("article:nth-of-type(1) .main-avatar").length,
         1,
         "renders the main avatar"
       );

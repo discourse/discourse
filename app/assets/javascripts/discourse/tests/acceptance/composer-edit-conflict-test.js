@@ -17,8 +17,8 @@ acceptance("Composer - Edit conflict", function (needs) {
 
   test("Edit a post that causes an edit conflict", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
     await fillIn(".d-editor-input", "this will 409");
     await click("#reply-control button.create");
     assert.equal(
@@ -35,7 +35,7 @@ acceptance("Composer - Edit conflict", function (needs) {
 
   test("Should not send originalText when posting a new reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.reply");
+    await click(".topic-post:nth-of-type(1) button.reply");
     await fillIn(
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"
@@ -45,8 +45,8 @@ acceptance("Composer - Edit conflict", function (needs) {
 
   test("Should send originalText when editing a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
     await fillIn(
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"

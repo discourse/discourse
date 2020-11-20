@@ -118,7 +118,7 @@ acceptance("Category Edit - security", function (needs) {
       "staff group also has full permissions"
     );
 
-    await click(everyoneRow.find(".reply-toggle"));
+    await click(everyoneRow.find(".reply-toggle")[0]);
 
     assert.equal(
       everyoneRow.find(".reply-granted, .create-granted").length,
@@ -132,7 +132,7 @@ acceptance("Category Edit - security", function (needs) {
       "staff group still has full permissions"
     );
 
-    await click(staffRow.find(".reply-toggle"));
+    await click(staffRow.find(".reply-toggle")[0]);
 
     assert.equal(
       everyoneRow.find(".reply-granted, .create-granted").length,
@@ -152,7 +152,7 @@ acceptance("Category Edit - security", function (needs) {
       "staff does not have create permission"
     );
 
-    await click(everyoneRow.find(".create-toggle"));
+    await click(everyoneRow.find(".create-toggle")[0]);
 
     assert.equal(
       everyoneRow.find(".reply-granted, .create-granted").length,
