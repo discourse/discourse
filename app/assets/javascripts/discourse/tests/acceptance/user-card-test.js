@@ -19,7 +19,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     User.current().changeTimezone("Australia/Brisbane");
 
     await visit("/t/internationalization-localization/280");
-    await click("a[data-user-card=charlie]:first");
+    await click('a[data-user-card="charlie"]:first');
 
     assert.not(
       exists(".user-card .local-time"),

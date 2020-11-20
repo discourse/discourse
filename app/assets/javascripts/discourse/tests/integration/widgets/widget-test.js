@@ -119,8 +119,8 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
 
     test(assert) {
-      assert.ok(queryAll(".test[data-evil=trout]").length);
-      assert.ok(queryAll(".test[aria-label=accessibility]").length);
+      assert.ok(queryAll('.test[data-evil="trout"]').length);
+      assert.ok(queryAll('.test[aria-label="accessibility"]').length);
     },
   });
 

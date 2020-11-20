@@ -22,8 +22,8 @@ discourseModule("Integration | Component | Widget | small-user-list", function (
       });
     },
     async test(assert) {
-      assert.ok(queryAll("[data-user-card=eviltrout]").length === 1);
-      assert.ok(queryAll("[data-user-card=someone]").length === 0);
+      assert.ok(queryAll('[data-user-card="eviltrout"]').length === 1);
+      assert.ok(queryAll('[data-user-card="someone"]').length === 0);
       assert.ok(queryAll(".unknown").length, "includes unkown user");
     },
   });

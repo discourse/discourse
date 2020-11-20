@@ -113,8 +113,8 @@ discourseModule("Integration | Component | Widget | post-stream", function (
 
       // it renders an article for the body with appropriate attributes
       assert.equal(queryAll("article#post_2").length, 1);
-      assert.equal(queryAll("article[data-user-id=123]").length, 1);
-      assert.equal(queryAll("article[data-post-id=3]").length, 1);
+      assert.equal(queryAll('article[data-user-id="123"]').length, 1);
+      assert.equal(queryAll('article[data-post-id="3"]').length, 1);
       assert.equal(queryAll("article#post_5.via-email").length, 1);
       assert.equal(queryAll("article#post_6.is-auto-generated").length, 1);
 

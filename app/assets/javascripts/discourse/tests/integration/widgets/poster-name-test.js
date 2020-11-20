@@ -24,7 +24,7 @@ discourseModule("Integration | Component | Widget | poster-name", function (
     test(assert) {
       assert.ok(queryAll(".names").length);
       assert.ok(queryAll("span.username").length);
-      assert.ok(queryAll("a[data-user-card=eviltrout]").length);
+      assert.ok(queryAll('a[data-user-card="eviltrout"]').length);
       assert.equal(queryAll(".username a").text(), "eviltrout");
       assert.equal(queryAll(".full-name a").text(), "Robin Ward");
       assert.equal(queryAll(".user-title").text(), "Trout Master");
