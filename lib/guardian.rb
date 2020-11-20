@@ -487,7 +487,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
+    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i)
   end
 
   def allowed_theme_repo_import?(repo)
