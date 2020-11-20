@@ -1,6 +1,6 @@
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   updateCurrentUser,
@@ -179,6 +179,28 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tags/c/faq/4/planters/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "planters",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+
     server.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
@@ -248,6 +270,15 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#rename-tag"), "can't rename tag");
     assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
     assert.ok(!exists("#delete-tag"), "can't delete tag");
+  });
+
+  test("can filter tags page by category", async function (assert) {
+    await visit("/tag/planters");
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click('.category-breadcrumb .category-row[data-name="faq"]');
+
+    assert.equal(currentURL(), "/tags/c/faq/4/planters");
   });
 
   test("admin can manage tags", async function (assert) {
