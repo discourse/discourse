@@ -183,16 +183,11 @@ a.badge-category {
 .private-message-glyph {
   color: var(--primary-medium);
   height: 0.95em;
-  &.d-icon-user-secret {
-    // special case because it's a tall icon
-    height: 0.8em;
-    vertical-align: baseline;
-  }
 }
 
 .private-message-glyph-wrapper {
   float: left;
-  margin-right: 0.15em;
+  margin-right: 0.25em;
 }
 
 .private_message {
