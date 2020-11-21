@@ -4,10 +4,10 @@
       <span class="private-message-glyph-wrapper">
         {{d-icon "envelope" class="private-message-glyph"}}
       </span>
-    </a>
-  {{else}}
+    </a>{{!-- whitespace control --}}
+  {{~else}}
     <span class="private-message-glyph-wrapper">
       {{d-icon "envelope" class="private-message-glyph"}}
     </span>
-  {{/if}}
+  {{~/if}}
 {{/if}}

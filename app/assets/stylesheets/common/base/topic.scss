@@ -114,7 +114,7 @@
     display: inline-block;
   }
   .topic-statuses {
-    line-height: 1.2em;
+    line-height: 1.2;
     margin-right: 0.15em;
     &:empty {
       margin-right: 0;
@@ -181,16 +181,18 @@ a.badge-category {
 }
 
 .private-message-glyph {
-  color: var(--primary-low-mid-or-secondary-high);
+  color: var(--primary-medium);
+  height: 0.95em;
+  &.d-icon-user-secret {
+    // special case because it's a tall icon
+    height: 0.8em;
+    vertical-align: baseline;
+  }
 }
 
 .private-message-glyph-wrapper {
   float: left;
-
-  .private-message-glyph {
-    margin: 0 5px 0 0;
-    display: inline-block;
-  }
+  margin-right: 0.15em;
 }
 
 .private_message {
