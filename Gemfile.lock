@@ -244,7 +244,7 @@ GEM
       sanitize
     openssl-signature_algorithm (1.0.0)
     optimist (3.0.1)
-    parallel (1.20.0)
+    parallel (1.20.1)
     parallel_tests (3.3.0)
       parallel
     parser (2.7.2.0)
