@@ -204,7 +204,7 @@ GEM
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    nokogumbo (2.0.2)
+    nokogumbo (2.0.3)
       nokogiri (~> 1.8, >= 1.8.4)
     oauth (0.5.4)
     oauth2 (1.4.4)
@@ -235,7 +235,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (2.1.6)
+    onebox (2.1.7)
       addressable (~> 2.7.0)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
