@@ -188,6 +188,7 @@ aside.onebox {
 
       // full size images for instagram, twitter, etc.
       .aspect-image-full-size {
+        margin: 0.5em 0;
         max-height: 100%;
         width: calc(500px * var(--aspect-ratio));
         max-width: 100%;
@@ -198,7 +199,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          padding: 5px 5px 5px 5px;
         }
       }
 
