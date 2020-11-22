@@ -71,7 +71,7 @@ class DirectoryItemsController < ApplicationController
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
 
     # Put yourself at the top of the first page
-    if result.present? && current_user.present? && page == 0
+    if result.present? && current_user.present? && page == 0 && !params[:group].present?
 
       position = result.index { |r| r.user_id == current_user.id }
 
