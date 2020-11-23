@@ -49,7 +49,7 @@ a.loading-onebox {
       max-width: 25%;
       height: auto;
       float: left;
-      margin-right: 10px;
+      margin-right: 1em;
     }
     h3,
     h4 {
@@ -96,12 +96,15 @@ a.loading-onebox {
 aside.onebox {
   border: 5px solid var(--primary-low);
   margin-bottom: 1em;
-  padding: 12px 25px 12px 12px;
+  padding: 1em;
   font-size: $font-0;
   background: var(--secondary);
 
   header {
-    margin-bottom: 8px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+
     a[href] {
       color: var(--primary-med-or-secondary-med);
       text-decoration: none;
@@ -148,7 +151,7 @@ aside.onebox {
       height: auto;
       width: auto;
       float: left;
-      margin-right: 10px;
+      margin-right: 1em;
       &.onebox-full-image {
         max-height: none;
         max-width: none;
@@ -173,7 +176,7 @@ aside.onebox {
         width: calc(128px * var(--magic-ratio));
         max-width: 20%;
         float: left;
-        margin-right: 10px;
+        margin-right: 1em;
         height: auto;
 
         img {
@@ -329,6 +332,10 @@ blockquote {
   aside.onebox {
     @include post-aside;
   }
+}
+
+pre.onebox {
+  margin-bottom: 0;
 }
 
 // -- Onebox Github Code Blob --
@@ -658,7 +665,7 @@ aside.onebox.stackexchange .onebox-body {
     .site-icon {
       width: 16px;
       height: 16px;
-      margin-right: 3px;
+      margin-right: 0.5em;
     }
   }
 }
