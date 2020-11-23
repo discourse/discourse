@@ -300,7 +300,7 @@
                   removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if showSelectedPostsAtBottom}}
-                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                <div class="selected-posts {{unless multiSelect "hidden"}} {{if showSelectedPostsAtBottom "hidden"}}">
                   {{selected-posts
                     selectedPostsCount=selectedPostsCount
                     canSelectAll=canSelectAll
