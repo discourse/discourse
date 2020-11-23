@@ -105,7 +105,11 @@
               {{i18n "admin.customize.theme.updating"}}
             {{else}}
               {{#if model.remote_theme.commits_behind}}
-                {{i18n "admin.customize.theme.commits_behind" count=model.remote_theme.commits_behind}}
+                {{#if hasOverwrittenHistory}}
+                  {{i18n "admin.customize.theme.has_overwritten_history"}}
+                {{else}}
+                  {{i18n "admin.customize.theme.commits_behind" count=model.remote_theme.commits_behind}}
+                {{/if}}
                 {{#if model.remote_theme.github_diff_link}}
                   <a href={{model.remote_theme.github_diff_link}}>
                     {{i18n "admin.customize.theme.compare_commits"}}

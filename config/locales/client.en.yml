@@ -4073,6 +4073,7 @@ en:
           check_for_updates: "Check for Updates"
           updating: "Updating..."
           up_to_date: "Theme is up-to-date, last checked:"
+          has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
           no_settings: "This theme has no settings."
