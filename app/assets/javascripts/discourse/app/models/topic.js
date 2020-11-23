@@ -194,12 +194,7 @@ const Topic = RestModel.extend({
   @discourseComputed("suggested_topics")
   suggestedTopics(suggestedTopics) {
     if (suggestedTopics) {
-      const store = this.store;
-
-      return this.set(
-        "suggested_topics",
-        suggestedTopics.map((st) => store.createRecord("topic", st))
-      );
+      return suggestedTopics.map((st) => this.store.createRecord("topic", st));
     }
   },
 
