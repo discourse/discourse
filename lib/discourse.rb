@@ -142,6 +142,7 @@ module Discourse
     attr_reader :obj
     attr_reader :opts
     attr_reader :custom_message
+    attr_reader :custom_message_params
     attr_reader :group
 
     def initialize(msg = nil, obj = nil, opts = nil)
@@ -150,6 +151,7 @@ module Discourse
       @opts = opts || {}
       @obj = obj
       @custom_message = opts[:custom_message] if @opts[:custom_message]
+      @custom_message_params = opts[:custom_message_params] if @opts[:custom_message_params]
       @group = opts[:group] if @opts[:group]
     end
   end

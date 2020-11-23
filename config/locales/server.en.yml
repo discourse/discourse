@@ -281,7 +281,7 @@ en:
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
-    title_topic: "You must be in a group to see this topic."
+    title_topic: "You need to request membership to the '%{group}' group to see this topic."
     title_category: "You must be in a group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
