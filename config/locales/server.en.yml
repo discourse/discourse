@@ -2252,6 +2252,7 @@ en:
     city_for_disputes: "City for Disputes"
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
+    shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."

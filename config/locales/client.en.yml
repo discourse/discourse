@@ -1964,7 +1964,7 @@ en:
           label: "New Topic"
         shared_draft:
           label: "Shared Draft"
-          desc: "Draft a topic that will only be visible to staff"
+          desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
