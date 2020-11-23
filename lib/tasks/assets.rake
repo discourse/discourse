@@ -82,7 +82,7 @@ def global_path_klass
 end
 
 def cdn_path(p)
-  global_path_klass.cdn_relative_path(p)
+  global_path_klass.cdn_path(p)
 end
 
 def cdn_relative_path(p)
