@@ -73,7 +73,7 @@ describe PostsController do
 
     it "accepts different Chinese options" do
       SiteSetting.default_locale = 'zh_CN'
-      
+
       post :create, params: {
         title: title, raw: "[poll]\n- Microsoft Edge（新）\n- Microsoft Edge（旧）\n[/poll]"
       }, format: :json
