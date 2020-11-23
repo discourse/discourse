@@ -5,6 +5,7 @@ import {
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 discourseModule("Integration | Component | site-header", function (hooks) {
   setupRenderingTest(hooks);
@@ -30,6 +31,26 @@ discourseModule("Integration | Component | site-header", function (hooks) {
         queryAll(".ring-backdrop").length === 0,
         "it hides the first notification mask"
       );
+    },
+  });
+
+  componentTest("do not call authenticated endpoints as anonymous", {
+    template: `{{site-header}}`,
+    anonymous: true,
+
+    async test(assert) {
+      assert.ok(
+        queryAll(".ring-backdrop").length === 0,
+        "there is no first notification mask for anonymous users"
+      );
+
+      pretender.get("/notifications", () => {
+        assert.ok(false, "it should not try to refresh notifications");
+        return [403, { "Content-Type": "application/json" }, {}];
+      });
+
+      // Click anywhere
+      await click("header.d-header");
     },
   });
 });
