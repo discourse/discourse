@@ -281,7 +281,7 @@ module Email
         end
 
         attached_upload = optimized_1X || original_upload
-        next if email_size + original_upload.filesize > max_email_size
+        next if email_size + attached_upload.filesize > max_email_size
 
         begin
           path = if attached_upload.local?
