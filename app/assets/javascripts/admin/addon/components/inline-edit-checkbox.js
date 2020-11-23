@@ -1,42 +1,31 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["inline-edit"],
 
-  checked: null,
-  checkedInternal: null,
+  buffer: null,
 
-  init() {
+  didReceiveAttrs() {
     this._super(...arguments);
 
-    this.set("checkedInternal", this.checked);
+    this.set("buffer", this.checked);
   },
 
-  @observes("checked")
-  checkedChanged() {
-    this.set("checkedInternal", this.checked);
+  @discourseComputed("checked", "buffer")
+  changed(checked, buffer) {
+    return !!checked !== !!buffer;
   },
 
-  @discourseComputed("labelKey")
-  label(key) {
-    return I18n.t(key);
+  @action
+  apply() {
+    this.set("checked", this.buffer);
+    this.action();
   },
 
-  @discourseComputed("checked", "checkedInternal")
-  changed(checked, checkedInternal) {
-    return !!checked !== !!checkedInternal;
-  },
-
-  actions: {
-    cancelled() {
-      this.set("checkedInternal", this.checked);
-    },
-
-    finished() {
-      this.set("checked", this.checkedInternal);
-      this.action();
-    },
+  @action
+  cancel() {
+    this.set("buffer", this.checked);
   },
 });
