@@ -333,17 +333,18 @@ blockquote {
 
 // -- Onebox Github Code Blob --
 pre.onebox code ol.lines li:before {
-  position: absolute;
-  display: inline-block;
-  width: 35px;
-  left: -40px;
-  color: #afafaf;
-  text-align: right;
-  padding-right: 5px;
-  font-size: $font-down-1;
-  line-height: $line-height-large;
+  @include unselectable;
+
+  border-right: 1px solid var(--primary-low);
+  color: var(--primary-low-mid);
   content: counter(li-counter);
   counter-increment: li-counter;
+  display: table-cell;
+  font-size: $font-down-1;
+  line-height: $line-height-large;
+  padding-left: 0.5em;
+  padding-right: 1em;
+  text-align: right;
 }
 
 pre.onebox code ol {
@@ -358,16 +359,18 @@ pre.onebox code li {
 }
 
 pre.onebox code ol.lines {
-  position: relative;
-  margin: 0 0 0 40px;
+  border-spacing: 1em 0;
+  display: table;
+  margin: 0;
+  margin-left: -1em;
+  padding: 0;
 }
 
 pre.onebox code ol.lines li {
+  display: table-row;
+  line-height: 1.5em;
   list-style-type: none;
-  padding-left: 5px;
-  margin-left: 0;
-  border-left: 1px solid #cfcfcf;
-  min-height: 1.5em; //show empty li lines
+  padding: 0;
   white-space: pre;
 }
 
