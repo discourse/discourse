@@ -580,6 +580,22 @@ RSpec.describe SessionController do
       expect(response.body).to include(I18n.t('sso.blank_id_error'))
     end
 
+    it 'can handle invalid sso email validation errors' do
+      SiteSetting.blocked_email_domains = "test.com"
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = '123'
+      sso.username = 'sam'
+
+      messages = track_log_messages(level: Logger::WARN) do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
+
+      expect(messages.length).to eq(0)
+      expect(response.status).to eq(500)
+      expect(response.body).to include(I18n.t("sso.email_error", email: ERB::Util.html_escape("test@test.com")))
+    end
+
     it 'can handle invalid sso external ids due to banned word' do
       sso = get_sso("/")
       sso.email = "test@test.com"
