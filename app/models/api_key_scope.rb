@@ -38,7 +38,7 @@ class ApiKeyScope < ActiveRecord::Base
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
           show: { actions: %w[users#show], params: %i[username external_id] },
           check_emails: { actions: %w[users#check_emails], params: %i[username] },
-          update: { actions: %w[users#update], params: %i[user_id] },
+          update: { actions: %w[users#update], params: %i[username] },
           anonymize: { actions: %w[admin/users#anonymize] },
           delete: { actions: %w[admin/users#destroy] },
         },
