@@ -24,6 +24,10 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
+import { linkSeenHashtags } from "discourse/lib/link-hashtags";
+import { linkSeenMentions } from "discourse/lib/link-mentions";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
@@ -31,11 +35,6 @@ import { siteDir } from "discourse/lib/text-direction";
 import toMarkdown from "discourse/lib/to-markdown";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-
-import { linkSeenHashtags } from "discourse/lib/link-hashtags";
-import { linkSeenMentions } from "discourse/lib/link-mentions";
-import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { loadOneboxes } from "discourse/lib/load-oneboxes";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -395,26 +394,29 @@ export default Component.extend({
 
       this.set("preview", cooked);
 
-      const cookedElement = document.createElement("div");
-      cookedElement.innerHTML = cooked;
-      linkSeenHashtags($(cookedElement));
-      linkSeenMentions($(cookedElement), this.siteSettings);
-      resolveCachedShortUrls(this.siteSettings, cookedElement);
-      loadOneboxes(
-        cookedElement,
-        null,
-        null,
-        null,
-        this.siteSettings.max_oneboxes_per_post,
-        false,
-        true
-      );
+      if (this.siteSettings.enable_diffhtml_preview) {
+        const cookedElement = document.createElement("div");
+        cookedElement.innerHTML = cooked;
 
-      /* global diff */
-      diff.innerHTML(
-        this.element.querySelector(".d-editor-preview"),
-        cookedElement.innerHTML
-      );
+        linkSeenHashtags($(cookedElement));
+        linkSeenMentions($(cookedElement), this.siteSettings);
+        resolveCachedShortUrls(this.siteSettings, cookedElement);
+        loadOneboxes(
+          cookedElement,
+          null,
+          null,
+          null,
+          this.siteSettings.max_oneboxes_per_post,
+          false,
+          true
+        );
+
+        /* global diff */
+        diff.innerHTML(
+          this.element.querySelector(".d-editor-preview"),
+          cookedElement.innerHTML
+        );
+      }
 
       schedule("afterRender", () => {
         if (this._state !== "inDOM") {

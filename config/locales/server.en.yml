@@ -2184,6 +2184,8 @@ en:
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
 
+    enable_diffhtml_preview: "Experimental feature which uses diffHTML to sync preview instead of full re-render"
+
     old_post_notice_days: "Days before post notice becomes old"
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
