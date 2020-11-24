@@ -483,7 +483,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   before_save do
-    if will_save_change_to_value? && !will_save_change_to_value_baked?
+    if (will_save_change_to_value? || will_save_change_to_upload_id?) && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
   end
