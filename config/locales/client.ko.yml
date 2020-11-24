@@ -2829,7 +2829,7 @@ ko:
           other: "최근글 (%{count})"
         help: "가장 최근 글"
       read:
-        title: "읽기"
+        title: "읽은 글"
         help: "마지막으로 순서대로 읽은 주제"
       categories:
         title: "카테고리"
@@ -3577,6 +3577,7 @@ ko:
           is_default: "기본값에 의해 테마가 활성화 되었습니다"
           user_selectable: "사용자가 테마를 선택하게 하기"
           color_scheme_user_selectable: "사용자가 색 구성표를 선택할 수 있습니다."
+          auto_update: "Discourse가 업데이트되면 자동 업데이트"
           color_scheme: "색상 팔레트"
           default_light_scheme: "라이트 (기본값)"
           color_scheme_select: "테마에서 사용될 컬러 선택"
@@ -4103,6 +4104,7 @@ ko:
         suspend_reasons:
           not_listening_to_staff: "관리자의 조치를 따르지 않음"
           combatative: "분란 조장"
+          no_constructive_purpose: "반대나 분란 조장의 목적 이외에는 다른 긍정적인 목적이 없습니다."
           custom: "사용자 지정..."
         suspend_message: "이메일 메시지"
         suspend_message_placeholder: "필요한 경우, 사용자에게 이메일을 통하여 일시정지에 대한 더 많은 정보를 제공할 수 있습니다."

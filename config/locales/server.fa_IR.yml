@@ -39,6 +39,7 @@ fa_IR:
   title: "Discourse"
   topics: "موضوعات"
   posts: "فرسته‌ها"
+  views: "بازدیدها"
   loading: "بارگیری..."
   powered_by_html: 'قدرت گرفته از <a href="https://www.discourse.org">دیسکورس</a>، بهترین نمایش با جاوا اسکریپت فعال.'
   sign_up: "ثبت نام"
@@ -130,6 +131,8 @@ fa_IR:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
       second_factor_cannot_be_enforced_with_sso_enabled: "اگر SSO فعال باشد، نمی‌توانید 2FA را اجرا کنید."
+  word_connector:
+    comma: "، "
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
@@ -593,6 +596,7 @@ fa_IR:
       short_description: "پسندیدن این فرسته"
   user_activity:
     no_bookmarks:
+      search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       others: "نشانه‌گذاری وجود ندارد"
     no_likes_given:
       self: "شما هیچ فرسته‌ای را نپسندیده‌اید."

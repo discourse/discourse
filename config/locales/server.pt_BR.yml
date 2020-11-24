@@ -217,7 +217,6 @@ pt_BR:
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
-    title_topic: "Você precisa estar em um grupo para ver este tópico."
     title_category: "Você deve estar em um grupo para ver esta categoria."
     request_membership: "Pedir para participar"
     join_group: "Entrar no Grupo"
