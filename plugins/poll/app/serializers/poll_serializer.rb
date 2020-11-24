@@ -42,11 +42,13 @@ class PollSerializer < ApplicationSerializer
   end
 
   def options
+    can_see_results = object.can_see_results?(scope.user)
+
     object.poll_options.map do |option|
       PollOptionSerializer.new(
         option,
         root: false,
-        scope: { can_see_results: object.can_see_results?(scope.user) }
+        scope: { can_see_results: can_see_results }
       ).as_json
     end
   end
