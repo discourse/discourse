@@ -188,5 +188,28 @@ describe OneboxController do
       get "/onebox.json", params: { url: url }
       expect(response.body).to include('blockquote')
     end
+
+    context 'local categories' do
+      fab!(:category) { Fabricate(:category) }
+
+      it 'oneboxes a public category' do
+        get "/onebox.json", params: { url: category.url }
+        expect(response.body).to include('aside')
+      end
+
+      it 'includes subcategories' do
+        subcategory = Fabricate(:category, name: "child", parent_category_id: category.id)
+
+        get "/onebox.json", params: { url: subcategory.url }
+        expect(response.body).not_to include('subcategories')
+      end
+
+      it 'does not onebox restricted categories' do
+        staff_category = Fabricate(:private_category, group: Group[:staff])
+
+        get "/onebox.json", params: { url: staff_category.url }
+        expect(response.body).not_to include('aside')
+      end
+    end
   end
 end
