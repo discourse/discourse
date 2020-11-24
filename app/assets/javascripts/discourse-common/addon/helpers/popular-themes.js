@@ -86,14 +86,6 @@ export const POPULAR_THEMES = [
     component: true,
   },
   {
-    name: "Alternative Logos",
-    value: "https://github.com/discourse/discourse-alt-logo",
-    description: "Add alternative logos for dark / light themes.",
-    meta_url:
-      "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
-    component: true,
-  },
-  {
     name: "Automatic Table of Contents",
     value: "https://github.com/discourse/DiscoTOC",
     description:
