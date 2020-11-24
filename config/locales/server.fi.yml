@@ -218,7 +218,6 @@ fi:
   email_template_cant_be_modified: "Tätä sähköpostipohjaa ei voi muokata"
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
   not_in_group:
-    title_topic: "Täytyy kuulua ryhmään, jotta näkee tämän ketjun."
     title_category: "Täytyy kuulua ryhmään, jotta näkee tämän alueen."
     request_membership: "Hae jäsenyyttä"
     join_group: "Liity ryhmään"

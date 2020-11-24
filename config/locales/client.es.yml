@@ -307,6 +307,7 @@ es:
     drafts:
       resume: "Reanudar"
       remove: "Eliminar"
+      remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje privado"
       topic_reply: "Borrador de respuesta"
@@ -616,7 +617,7 @@ es:
           muted_categories_instructions: "Los usuarios no serán notificados acerca de temas nuevos en estas categorías, y no aparecerán en las categorías o páginas de temas recientes."
         tags:
           title: Etiquetas
-          long_title: "Etiqueta notificaciones predeterminadas"
+          long_title: "Ajustes de notificación por defecto para etiquetas"
           description: "Cuando se agregan usuarios a este grupo, su configuración de notificaciones de etiquetas será establecida a estos valores predeterminados. Después, pueden cambiarla."
           watched_tags_instructions: "Vigilar automáticamente todos los temas con estas etiquetas. Los miembros del grupo serán notificados de todos los nuevos temas y respuestas, y un contados con el número de mensajes nuevos aparecerá junto al tema."
           tracked_tags_instructions: "Seguir automáticamente todos los temas con estas etiquetas. Un contados con el número de mensajes nuevos aparecerá junto al tema."
@@ -937,6 +938,7 @@ es:
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."
+      regular_categories: "Habitual"
       regular_categories_instructions: "Verás estas categorías en las listas de temas «Recientes» y «Destacados»."
       no_category_access: "Como moderador tienes acceso limitado a categorías. Guardar está deshabilitado."
       delete_account: "Eliminar mi cuenta"
@@ -1294,6 +1296,7 @@ es:
         link_redemption_stats: "Canjes"
         link_groups: Grupos
         link_expires_at: Caducidad
+        create: "Invitar"
         copy_link: "Mostrar enlace"
         generate_link: "Crear enlacew de invitación"
         link_generated: "Aquí tienes el enlace"
@@ -1307,6 +1310,7 @@ es:
           max_redemptions_allowed_label: "¿Cuánta gente puede registrarse con este enlace?"
           expires_at: "¿Cuándo caducará este enlace?"
         bulk_invite:
+          none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones masivas"
           success: "Archivo subido correctamente, se te notificará mediante un mensaje cuando se complete el proceso."
           error: "Lo sentimos, el formato del archivo debe ser CSV. "
@@ -1329,7 +1333,7 @@ es:
           one: "tema creado"
           other: "temas creados"
         post_count:
-          one: "post publicado"
+          one: "publicación creada"
           other: "publicaciones creadas"
         likes_given:
           one: "dado"
@@ -1344,7 +1348,7 @@ es:
           one: "tema visto"
           other: "temas vistos"
         posts_read:
-          one: "post leído"
+          one: "publicación leída"
           other: "publicaciones leídas"
         bookmark_count:
           one: "marcador"
@@ -2063,7 +2067,7 @@ es:
         bookmarks: "No hay más temas guardados en marcadores."
     topic:
       filter_to:
-        one: "%{count} post en el tema"
+        one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Crear tema"
       create_long: "Crear un tema nuevo"
@@ -2112,10 +2116,10 @@ es:
         one: "tienes %{count} publicación sin leer en este tema"
         other: "tienes %{count} publicaciones sin leer en este tema"
       unread_posts:
-        one: "tienes %{count} post antiguo sin leer en este tema"
+        one: "tienes %{count} publicación antigua sin leer en este tema"
         other: "tienes %{count} publicaciones antiguas sin leer en este tema"
       new_posts:
-        one: "hay %{count} nuevo post en este tema desde la última vez que lo leíste"
+        one: "hay %{count} nueva publicación en este tema desde la última vez que lo leíste"
         other: "hay %{count} publicaciones nuevas en este tema desde la última vez que lo leíste"
       likes:
         one: "este tema le gusta a %{count} persona"
@@ -2213,7 +2217,7 @@ es:
         auto_delete_replies: "Las respuestas a este tema serán eliminadas automáticamente después de %{duration}."
       auto_close_title: "Configuración de cierre automático"
       auto_close_immediate:
-        one: "El último post se publicó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
+        one: "La última publicación se realizó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
         other: "La última publicación se realizó hace %{count} horas, por lo que el tema se cerrará inmediatamente."
       timeline:
         back: "Volver"
@@ -2380,7 +2384,7 @@ es:
       login_reply: "Inicia sesión para responder"
       filters:
         n_posts:
-          one: "%{count} post"
+          one: "%{count} publicación"
           other: "%{count} publicaciones"
         cancel: "Quitar filtro"
       move_to:
@@ -2394,15 +2398,15 @@ es:
         radio_label: "Tema nuevo"
         error: "Se produjo un error al mover las publicaciones al nuevo tema"
         instructions:
-          one: "Estas a punto de crear un tema nuevo y rellenarlo con el post que has seleccionado."
-          other: "Estas a punto de crear un tema nuevo y rellenarlo con las <b>%{count}</b> publiacaciones que seleccionaste."
+          one: "Estas a punto de crear un tema nuevo y rellenarlo con la publicación que has seleccionado."
+          other: "Estas a punto de crear un tema nuevo y rellenarlo con las <b>%{count}</b> publiacaciones que has seleccionado."
       merge_topic:
         title: "Mover a un tema existente"
         action: "mover a un tema existente"
         error: "Se produjo un error al mover las publicaciones a ese tema"
         radio_label: "Tema existente"
         instructions:
-          one: "Por favor escoge el tema al que quieres mover ese post."
+          one: "Por favor escoge el tema al que quieres mover esa publicación."
           other: "Por favor, escoge el tema al que quieres mover estas <b>%{count}</b> publicaciones."
       move_to_new_message:
         title: "Mover a un mensaje nuevo"
@@ -2446,7 +2450,7 @@ es:
         placeholder: "nombre de usuario del nuevo dueño"
         instructions:
           one: "Por favor escoge el nuevo dueño del post de <b>@%{old_user}</b>"
-          other: "Por favor, escoge el nuevo dueño de las %{count} publicaciones de <b>@%{old_user}</b>"
+          other: "Por favor, escoge el nuevo dueño para las %{count} publicaciones de <b>@%{old_user}</b>"
         instructions_without_old_user:
           one: "Por favor, escoge un nuevo propietario para la publicación."
           other: "Por favor, escoge un nuevo propietario para las %{count} publicaciones"
@@ -2476,7 +2480,7 @@ es:
         select_all: seleccionar todo
         deselect_all: deshacer seleccionar todo
         description:
-          one: Has seleccionado <b>%{count}</b> post.
+          one: Has seleccionado <b>%{count}</b> publicación.
           other: "Has seleccionado <b>%{count}</b> publicaciones."
       deleted_by_author:
         one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora, salvo que sea reportado)"
@@ -2538,6 +2542,7 @@ es:
         no_save_draft: "No, guardar borrador"
         yes_value: "Sí, descartar edición"
       abandon:
+        title: "Abandonar borrador"
         confirm: "¿Estás seguro de que deseas abandonar tu publicación?"
         no_value: "No, permanecer"
         no_save_draft: "No, guardar borrador"
@@ -2595,6 +2600,8 @@ es:
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
         delete_topic: "eliminar tema"
         add_post_notice: "Añadir aviso del staff"
+        change_post_notice: "Cambiar aviso del staff"
+        delete_post_notice: "Eliminar aviso del staff"
         remove_timer: "quitar temporizador"
       actions:
         people:
@@ -2722,6 +2729,17 @@ es:
       change_in_category_topic: "Editar descripción"
       already_used: "Este color ya ha sido usado para otra categoría"
       security: "Seguridad"
+      security_add_group: "Añadir grupo"
+      permissions:
+        group: "Grupo"
+        see: "Ver"
+        reply: "Responder"
+        create: "Crear"
+        no_groups_selected: "Ningún grupo tiene acceso. Esta categoría solo será visible por el staff."
+        everyone_has_access: "Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos»."
+        toggle_reply: "Alternar el permiso para responder"
+        toggle_full: "Alternar el permiso para crear temas"
+        inherited: "Este permiso está heredado de «todos»"
       special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">por favor, desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
@@ -3450,8 +3468,10 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
+              read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             users:
+              bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
               sync_sso: Sincronizar usuario usando SSO.
               show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
@@ -3694,6 +3714,7 @@ es:
           is_default: "El tema está habilitado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
           color_scheme_user_selectable: "Permitir que esta paleta pueda ser seleccionada por los usuarios"
+          auto_update: "Actualizar automáticamente junto a Discourse"
           color_scheme: "Paleta de color"
           default_light_scheme: "Claro (predeterminado)"
           color_scheme_select: "Selecciona colores para usar en el tema"
@@ -4218,6 +4239,14 @@ es:
         suspend_reason_label: "¿Por qué lo suspendes? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
         suspend_reason_hidden_label: "¿Por qué estás suspendiendo? Este texto se mostrará al usuario cuando trate de iniciar sesión. Sé conciso."
         suspend_reason: "Causa"
+        suspend_reason_title: "Motivo de la suspensión"
+        suspend_reasons:
+          not_listening_to_staff: "No escucha indicaciones del personal"
+          consuming_staff_time: "Hace perder el tiempo desproporcionadamente al personal"
+          combatative: "Demasiado combatiente"
+          in_wrong_place: "No está en el sitio adecuado"
+          no_constructive_purpose: "No hay otro propósito constructivo para sus acciones que crear conflictos dentro de la comunidad"
+          custom: "Personalizado..."
         suspend_message: "Mensaje por correo electrónico"
         suspend_message_placeholder: "Opcionalmente, brinda más información sobre la suspensión y esta se enviará por correo electrónico al usuario."
         suspended_by: "Suspendido por"
@@ -4452,6 +4481,7 @@ es:
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
       settings:
         show_overriden: "Solo mostrar anulados"
+        history: "Ver historial de cambios"
         reset: "restablecer"
         none: "ninguno"
       site_settings:

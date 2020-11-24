@@ -225,7 +225,6 @@ gl:
   email_template_cant_be_modified: "Este modelo de correo electrónico non pode ser modificado."
   invalid_whisper_access: "Ou bisbar non está habilitado ou non o tes permitido facer."
   not_in_group:
-    title_topic: "Debes estar no grupo para ver este tema."
     title_category: "Debes estar no grupo para ver esta categoría."
     request_membership: "Solicitar ser membro"
     join_group: "Unirse ao grupo"

@@ -39,6 +39,7 @@ pl_PL:
   title: "Discourse"
   topics: "Tematy"
   posts: "wpisy"
+  views: "wyświetlenia"
   loading: "Ładowanie"
   powered_by_html: 'Oparte na <a href="https://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   sign_up: "Rejestracja"
@@ -206,6 +207,16 @@ pl_PL:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
     conflicting_google_user_id: 'Identyfikator konta Google dla tego konta został zmieniony; interwencja personelu jest wymagana ze względów bezpieczeństwa. Skontaktuj się z personelem i wskaż go <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
+      error_response: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ serwer zwrócił kod błędu %{status_code}. Zamiast podglądu w poście pojawi się tylko link. :cry:"
+      missing_data:
+        one: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
+        few: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
+        many: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
+        other: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "Twój token z zaproszeniem wygasł. Prosimy <a href='%{base_url}/about'>skontaktować się z personelem</a>."
     not_found: "Token do zaproszeń jest nieprawidłowy. <a href='%{base_url}/about'>Skontaktuj się z administracją strony</a>."
@@ -261,7 +272,6 @@ pl_PL:
   email_template_cant_be_modified: "Ten szablon e-mail nie może być zmodyfikowany"
   invalid_whisper_access: "Albo szepty nie są włączone, albo nie masz dostępu do tworzenia wpisów szeptanych"
   not_in_group:
-    title_topic: "Musisz być w grupie, aby zobaczyć ten temat."
     title_category: "Musisz być w grupie, aby zobaczyć tę kategorię."
     request_membership: "Poproś o członkostwo"
     join_group: "Dołącz do grupy"
@@ -967,6 +977,7 @@ pl_PL:
       others: "Brak aktywności"
     no_bookmarks:
       self: "Nie masz żadnych wpisów dodanych do zakładek. Zakładki pozwalają na szybkie odwoływanie się do konkretnych wpisów."
+      search: "Nie znaleziono zakładek dla podanego wyszukiwania."
       others: "Brak zakładek."
     no_likes_given:
       self: "Nie masz polubionych wpisów."
@@ -1503,6 +1514,7 @@ pl_PL:
     enable_inline_onebox_on_all_domains: "Ignoruj ustawienie witryny `inline_onebox_domain_whitelist` i zezwalaj na osadzanie ramek we wszystkich domenach."
     force_custom_user_agent_hosts: "Hosty, dla których ma być używany niestandardowy klient użytkownika Onebox przy wszystkich żądaniach. (Szczególnie przydatne dla hostów, które ograniczają dostęp do agenta użytkownika)."
     max_oneboxes_per_post: "Masymalna ilość oneboxów we wpisie."
+    facebook_app_access_token: "Token wygenerowany z Twojego identyfikatora aplikacji Facebook i sekret. Używany do generowania osadzonych oneboxów z serwisu Instagram."
     logo: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, wyświetlony zostanie tekst tytułu witryny."
     logo_small: "Mały obraz logo w lewym górnym rogu witryny, widoczny podczas przewijania w dół. Użyj kwadratowego obrazu 120 × 120. Jeśli pole pozostanie puste, wyświetlony zostanie glif domowy."
     digest_logo: "Alternatywne logo użyte w górnej części podsumowania e-mail witryny. Użyj szerokiego obrazu prostokąta. Nie używaj obrazu SVG. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."
@@ -1784,6 +1796,7 @@ pl_PL:
     min_trust_level_to_allow_profile_background: "Minimalny poziom zaufania wymagany do przesłania tła profilu"
     min_trust_level_to_allow_user_card_background: "Minimalny poziom zaufania wymagany do przesłania tła karty użytkownika"
     min_trust_level_to_allow_invite: "Minimalny poziom zaufania wymagany do zapraszania użytkowników"
+    min_trust_level_to_allow_ignore: "Minimalny poziom zaufania wymagany do ignorowania użytkowników"
     allowed_link_domains: "Domeny, do których użytkownicy mogą tworzyć linki, nawet jeśli nie mają odpowiedniego poziomu zaufania do publikowania linków"
     newuser_max_links: "Ile linków może dodać nowy użytkownik do wpisu."
     newuser_max_embedded_media: "Ile osadzonych elementów multimedialnych nowy użytkownik może dodać do posta."

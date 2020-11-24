@@ -26,8 +26,10 @@ tr_TR:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ggg, SS:dd"
       timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
       long_with_year: "D MMM, YYYY h:mm a"
@@ -117,6 +119,7 @@ tr_TR:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
+      twitter: "Twitter'da paylaş"
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
@@ -266,8 +269,13 @@ tr_TR:
         tomorrow: "Yarın"
         next_week: "Gelecek hafta"
         later_this_week: "Bu hafta içinde"
+        start_of_next_business_week: "Pazartesi"
+        start_of_next_business_week_alt: "Sonraki Ay"
         next_month: "Gelecek ay"
         custom: "Özel tarih ve saat"
+        today_with_time: "bugün %{time}"
+        tomorrow_with_time: "yarın %{time}"
+        at_time: "%{date_time}"
     drafts:
       resume: "Sürdür"
       remove: "Kaldır"
@@ -289,6 +297,7 @@ tr_TR:
       other: "%{count} Yeni konular gör"
     preview: "önizleme"
     cancel: "iptal"
+    deleting: "Siliniyor..."
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor..."
     saved: "Kaydedildi!"
@@ -473,6 +482,7 @@ tr_TR:
           one: "Bekleyen <strong>%{count}</strong> gönderiniz var."
           other: "Bekleyen <strong>%{count}</strong> gönderiniz var."
         ok: "Tamam"
+      example_username: "kullaniciadi"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>konuyu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>konuyu</a> <a href='%{userUrl}'>sen</a> açtın"
@@ -488,6 +498,7 @@ tr_TR:
       sent_by_user: "<a href='%{userUrl}'>%{user}</a> tarafından gönderildi"
       sent_by_you: "<a href='%{userUrl}'>Senin</a> tarafından gönderildi"
     directory:
+      username: "Kullanıcı Adı"
       filter_name: "kullanıcı adına göre filtrele"
       title: "Kullanıcılar"
       likes_given: "Verilen"
@@ -504,6 +515,7 @@ tr_TR:
       days_visited_long: "Ziyaret edilen günler"
       posts_read: "Okunan"
       posts_read_long: "Okunan Gönderiler"
+      last_updated: "Son Güncelleme:"
       total_rows:
         one: "%{count} kullanıcı"
         other: "%{count} kullanıcı"
@@ -517,6 +529,8 @@ tr_TR:
     groups:
       member_added: "Eklendi"
       member_requested: "İstenen"
+      add_members:
+        input_placeholder: "Kullanıcı adı ya da e-posta"
       requests:
         title: "İstekler"
         reason: "Sebep"
@@ -546,6 +560,8 @@ tr_TR:
         membership:
           title: Üyelik
           access: Erişim
+        categories:
+          title: Kategoriler
         logs:
           title: "Kayıtlar"
           when: "Ne zaman"
@@ -784,6 +800,10 @@ tr_TR:
       first_notification: "İlk bildirimin! Başlamak için seç. "
       dynamic_favicon: "Sayacı, tarayıcı ikonunda göster"
       theme_default_on_all_devices: "Bu temayı bütün cihazlarımda varsayılan yap"
+      color_schemes:
+        undo: "Sıfırla"
+      dark_mode: "Karanlık Mod"
+      dark_mode_enable: "Karanlık mod renk düzenini otomatik etkinleştir"
       text_size_default_on_all_devices: "Bu metin boyutunu bütün cihazlarımda varsayılan yap"
       allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
@@ -827,6 +847,7 @@ tr_TR:
       muted_categories: "Sessiz"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve son soyfalarda görmeyeceksiniz."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında hiçbir şey size bildirilmeyecek."
+      regular_categories_instructions: "Bu kategorileri \"En son\" ve \"Popüler\" konu listelerinde göreceksiniz."
       no_category_access: "Bir moderatör olarak kategori erişimin sınırlı ve kaydetme devre dışıdır."
       delete_account: "Hesabımı Sil"
       delete_account_confirm: "Hesabını kalıcı olarak silmek istediğine emin misin? Bu eylemi geri alamazsın!"
@@ -1951,7 +1972,7 @@ tr_TR:
           "2_8": "Bu kategoriyi takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
           "2_4": "Bu konuyu yanıtladığınız için yeni cevapların sayısını göreceksiniz."
           "2_2": "Bu konuyu takip ettiğiniz için yeni cevapların sayısını göreceksiniz."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": '<a href="%{basePath}/u/%{username}/preferences/notifications">Bu konuyu okuduğunuz</a> için yeni cevapların sayısını göreceksiniz.'
           "1_2": "Birisi @isminden bahsederse ya da sana cevap verirse bildirim alacaksın."
           "1": "Birisi @isminden bahsederse veya sana cevap verirse bildirim alacaksın."
           "0_7": "Bu kategoriye ait tüm bildirimleri yok sayıyorsun."
@@ -2168,6 +2189,7 @@ tr_TR:
         other: "(yazarı tarafından geri alınan konu, bildirilmiş hale gelmezse %{count} saat içinde otomatik olarak silinecek.)"
     post:
       quote_reply: "Alıntı"
+      quote_share: "Paylaş"
       edit_reason: "Neden: "
       post_number: "gönderi %{number}"
       ignored: "Yoksayılan içerik"
@@ -2384,6 +2406,9 @@ tr_TR:
       change_in_category_topic: "Açıklamayı Düzenle"
       already_used: "Bu renk başka bir kategori için kullanıldı"
       security: "Güvenlik"
+      permissions:
+        reply: "Cevapla"
+        create: "Oluştur"
       special_warning: "Uyarı: Bu kategori önceden ayarlanmış bir kategoridir ve güvenlik ayarları değiştirilemez. Eğer bu kategoriyi kullanmak istemiyorsan, başka bir amaçla kullanmak yerine sil."
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
       uncategorized_general_warning: 'Bu kategori özeldir. Kategori seçilmeyen yeni konular için varsayılan kategori olarak kullanılır. Bu davranışı önlemek ve kategori seçimini zorlamak istiyorsanız, <a href="%{settingLink}">lütfen buradaki ayarı</a> devre dışı bırakın. Adı veya açıklamayı değiştirmek istiyorsanız, <a href="%{customizeLink}">Özelleştir / Metin İçeriği</a>''ne gidin.'
@@ -3045,6 +3070,8 @@ tr_TR:
         revoked: İptal edilmiş
         not_shown_again: Bu anahtar bir daha gösterilmez. Devam etmeden önce bir kopyasını aldığınızdan emin olun.
         continue: Devam et
+        scopes:
+          resource: Kaynak
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
@@ -3333,6 +3360,7 @@ tr_TR:
           license: "Lisans"
           version: "Versiyon:"
           authors: "Yazan:"
+          creator: "Oluşturan:"
           source_url: "Kaynak"
           enable: "Etkinleştir"
           disable: "Devre dışı bırak"

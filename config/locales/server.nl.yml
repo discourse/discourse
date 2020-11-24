@@ -240,7 +240,6 @@ nl:
   email_template_cant_be_modified: "Deze e-mailsjabloon kan niet worden aangepast."
   invalid_whisper_access: "Fluisterberichten zijn niet ingeschakeld, of u kunt geen fluisterberichten maken"
   not_in_group:
-    title_topic: "U moet in een groep zitten om dit topic te zien."
     title_category: "U moet in een groep zitten om deze categorie te zien."
     request_membership: "Lidmaatschap aanvragen"
     join_group: "Deelnemen aan groep"

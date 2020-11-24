@@ -39,6 +39,7 @@ ko:
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
+  views: "조회"
   loading: "로딩중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a> 으로 호스팅되고 있습니다. JavaScript 가 활성화되어 있을 때 가장 멋지게 보입니다.'
   sign_up: "회원가입"
@@ -244,7 +245,6 @@ ko:
   email_template_cant_be_modified: "이 이메일 템플릿은 수정할 수 없습니다"
   invalid_whisper_access: "속삭임이 활성화되어 있지 않거나 속삭임 게시물을 작성할 수있는 권한이 없습니다"
   not_in_group:
-    title_topic: "이 주제를 보려면 그룹에 있어야합니다."
     title_category: "이 카테고리를 보려면 그룹에 속해 있어야합니다."
     request_membership: "회원 신청"
     join_group: "그룹 참여하기"
@@ -834,6 +834,7 @@ ko:
       others: "활동 없음."
     no_bookmarks:
       self: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
+      search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
       others: "북마크가 없습니다"
     no_likes_given:
       self: "좋아요한 게시글이 없습니다"
@@ -1367,6 +1368,7 @@ ko:
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용하십시오."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 정의 onebox 사용자 에이전트를 사용할 호스트. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)."
     max_oneboxes_per_post: "포스트 당 최대 박스링크(Onebox)의 수"
+    facebook_app_access_token: "Facebook 앱 ID 및 시크릿에서 생성 된 토큰입니다. Instagram onebox를 생성하는 데 사용됩니다."
     logo: "사이트 왼쪽 상단의 로고 이미지 높이가 120이고 가로 세로 비율이 3 : 1보다 큰 넓은 직사각형 이미지를 사용하십시오. 비워두면 사이트 제목 텍스트가 표시됩니다."
     logo_small: "아래로 스크롤하면 사이트 왼쪽 상단에 작은 로고 이미지가 표시됩니다. 정사각형 120 × 120 이미지를 사용하십시오. 비워두면 홈 글리프가 표시됩니다."
     digest_logo: "사이트 이메일 요약 상단에 사용 된 대체 로고 이미지. 넓은 직사각형 이미지를 사용하십시오. SVG 이미지를 사용하지 마십시오. 비워두면`logo` 설정의 이미지가 사용됩니다."
@@ -2304,9 +2306,9 @@ ko:
     text_body_template: |
       요청하신 [사이트 백업 다운로드](%{backup_file_path})입니다.
 
-      보안상의 이유로 이 다운로드 링크를 이메일 주소로 보냈습니다.
+      보안상의 이유로 다운로드 링크가 이메일 주소로 발송되었습니다.
 
-      (이 다운로드를 요청하지 *않은* 경우, 누군가가 사용자님의 사이트에 대한 관리자 액세스 권한을 가지고 있을 가능성이 있다는점에 대해 우려해야합니다.)
+      (이 다운로드를 요청하지 *않은* 경우, 누군가가 사용자님의 사이트에 대한 관리자 액세스 권한을 가지고 있을 가능성이 있습니다.)
     no_token: |
       죄송합니다. 이 백업 다운로드 링크는 이미 사용되었거나 만료되었습니다.
   admin_confirmation_mailer:

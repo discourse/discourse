@@ -2114,6 +2114,7 @@ ar:
       deleted: "الموضوع محذوف"
       slow_mode_update:
         title: "الوضع البطيء"
+        select: "لا يمكن للمستخدمين نشر المشاركات في هذا الموضوع إلا مرّة كلّ:"
         remove: "عطّل"
         durations:
           15_minutes: "15 دقيقة"

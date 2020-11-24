@@ -39,6 +39,7 @@ de:
   title: "Discourse"
   topics: "Themen"
   posts: "Beiträge"
+  views: "Aufrufe"
   loading: "Wird geladen"
   powered_by_html: 'Angetrieben von <a href="https://www.discourse.org">Discourse</a>, beste Erfahrung mit aktiviertem JavaScript'
   sign_up: "Registrieren"
@@ -196,6 +197,14 @@ de:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kannst S3 Uploads nicht aktivieren, weil S3 Uploads bereits global aktiviert sind. Aktivieren auf Seiten-Ebene kann zu kritischen Problemen mit Uploads führen"
       cors_origins_should_not_have_trailing_slash: "Sie sollten den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
     conflicting_google_user_id: 'Die Google-Konto-ID für dieses Konto hat sich geändert; das Einschreiten des Teams ist aus Sicherheitsgründen erforderlich. Bitte kontaktiere das Team und verweise es auf <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da der Server '%{hostname}' nicht gefunden werden konnte. Statt einer Vorschau erscheint nur ein Link in Deinem Beitrag. :cry:"
+      error_response: "Es tut uns leid, wir konnten keine Vorschau für diese Webseite erstellen, da der Webserver einen Fehlercode von %{status_code} zurückgegeben hat. Statt einer Vorschau erscheint nur ein Link in Deinem Beitrag. :cry:"
+      missing_data:
+        one: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da das folgende oEmbed / OpenGraph Tag nicht gefunden werden konnte: %{missing_attributes}"
+        other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed / OpenGraph Tags nicht gefunden werden konnten: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
@@ -251,7 +260,6 @@ de:
   email_template_cant_be_modified: "Diese E-Mail-Vorlag kann nicht bearbeitet werden."
   invalid_whisper_access: "Enweder ist Flüstern nicht aktiviert oder du hast keinen Zugang zu Flüster-Beiträgen"
   not_in_group:
-    title_topic: "Du musst in einer Gruppe sein um dieses Thema zu sehen."
     title_category: "Du musst in einer Gruppe sein um diese Kategorie zu sehen."
     request_membership: "Mitgliedschaft anfordern"
     join_group: "Gruppe beitreten"
@@ -854,6 +862,7 @@ de:
       others: "Keine Aktivität."
     no_bookmarks:
       self: "Du hast keine Beiträge mit Lesezeichen; Lesezeichen erlauben es Dir schnell zu einem spezifischen Beitrag zu referenzieren."
+      search: "Keine Lesezeichen mit der angegebenen Suchanfrage gefunden."
       others: "Keine Lesezeichen."
     no_likes_given:
       self: "Du hast noch keine Beiträge mit einem „Like“ markiert."
@@ -1388,6 +1397,7 @@ de:
     enable_inline_onebox_on_all_domains: "Ignoriere die `inline_onebox_domain_allowlist`-Seiteneinstellung und erlaube Inline-Oneboxen für alle Domains"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren)."
     max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
+    facebook_app_access_token: "Ein Token, das aus Ihrer Facebook-App-ID und Ihrem Geheimnis generiert wurde. Wird verwendet, um Instagram-Oneboxen zu generieren."
     logo: "Das Logo oben links auf deiner Seite. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Seitenüberschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches 120 × 120 Bild . Falls leer wird ein \"Home\" Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Seite. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
@@ -1669,6 +1679,7 @@ de:
     min_trust_level_to_allow_profile_background: "Die Mindestvertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
     min_trust_level_to_allow_user_card_background: "Die Mindestvertrauensstufe, die zum Hochladen eines Benutzerkartenhintergrunds erforderlich ist"
     min_trust_level_to_allow_invite: "Die Mindestvertrauensstufe, die zum Einladen von Benutzern erforderlich ist"
+    min_trust_level_to_allow_ignore: "Die minimale Vertrauensstufe, um Benutzer zu ignorieren"
     allowed_link_domains: "Domänen, auf die Benutzer möglicherweise verlinken, auch wenn sie nicht über die entsprechende Vertrauensstufe zum Posten von Links verfügen"
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_embedded_media: "Wie viele eingebettete Medienelemente ein neuer Benutzer zu einem Beitrag hinzufügen kann."
@@ -3313,16 +3324,16 @@ de:
       text_body_template: |
         Bestätigen Sie Ihre neue E-Mail-Adresse für %{site_name} indem Sie auf den folgenden Link klicken:
 
-        %{base_url}/ u / Bestätige-neue-E-Mail /%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
 
-        Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [Site-Administrator] (%{base_url}/ ungefähr).
+        Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [site admin] (%{base_url}/ ungefähr).
     confirm_new_email_via_admin:
       title: "Neue E-Mail Adresse bestätigen"
       subject_template: "[%{email_prefix}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Bestätigen Sie Ihre neue E-Mail-Adresse für %{site_name} indem Sie auf den folgenden Link klicken:
 
-        %{base_url}/ u / Bestätige-neue-E-Mail /%{email_token}
+        %{base_url}/u/confirm-new-email/%{email_token}
 
         Diese E-Mail-Änderung wurde von einem Site-Administrator angefordert. Wenn Sie diese Änderung nicht angefordert haben, wenden Sie sich bitte an einen [site admin] (%{base_url}/ ungefähr).
     confirm_old_email:

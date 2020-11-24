@@ -105,7 +105,7 @@ it:
       later:
         x_days:
           one: "%{count} giorno dopo"
-          other: "%{count}giorni dopo"
+          other: "%{count} giorni dopo"
         x_months:
           one: "%{count} mese dopo"
           other: "%{count} mesi dopo"
@@ -3464,7 +3464,7 @@ it:
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
             email:
-              receive_emails: Combina questo ambito con il destinatario della posta per elaborare le e-mail in arrivo.
+              receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
       web_hooks:
         title: "Webhook"
         none: "Non ci sono webhook disponibili adesso."
@@ -3778,6 +3778,7 @@ it:
           check_for_updates: "Controllo Aggiornamenti"
           updating: "Aggiornamento..."
           up_to_date: "Il tema è aggiornato, ultima verifica:"
+          has_overwritten_history: "La versione attuale del tema non esiste più perché la cronologia Git è stata sovrascritta da un push forzato."
           add: "Aggiungi"
           theme_settings: "Impostazioni Tema"
           no_settings: "Questo tema non ha impostazioni."

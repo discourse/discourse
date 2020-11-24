@@ -1737,6 +1737,16 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
+      plus_subcategories_title:
+        one: "%{name} ותת־קטגוריה נוספת"
+        two: "%{name} ו־%{count} תת־קטגוריות"
+        many: "%{name} ו־%{count} תת־קטגוריות"
+        other: "%{name} ו־%{count} תת־קטגוריות"
+      plus_subcategories:
+        one: "+ תת־קטגוריה %{count}"
+        two: "+ %{count} תת־קטגוריות"
+        many: "+ %{count} תת־קטגוריות"
+        other: "+ %{count} תת־קטגוריות"
     select_kit:
       default_header_text: בחירה…
       no_content: לא נמצאו התאמות
@@ -1847,7 +1857,7 @@ he:
       create_whisper: "לחישה"
       create_shared_draft: "צור טיוטה משותפת"
       edit_shared_draft: "עריכת טיוטה משותפת"
-      title: "או לחצו Ctrl+Enter"
+      title: "או ללחוץ על Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
@@ -2861,7 +2871,7 @@ he:
             title: "הצג את הפרשי הפלט אחד ליד השני"
             button: "HTML"
           side_by_side_markdown:
-            title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
+            title: "הצגת הבדלי המקור הגולמיים זה לצד זה"
             button: "גולמי"
       raw_email:
         displays:
@@ -2939,6 +2949,17 @@ he:
       change_in_category_topic: "עריכת תיאור"
       already_used: "הצבע הזה בשימוש על ידי קטגוריה אחרת"
       security: "אבטחה"
+      security_add_group: "הוספת קבוצה"
+      permissions:
+        group: "קבוצה"
+        see: "לראות"
+        reply: "להגיב"
+        create: "ליצור"
+        no_groups_selected: "אף קבוצה לא קיבלה גישה; קטגוריה זו תהיה גלויה רק לסגל."
+        everyone_has_access: "קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”."
+        toggle_reply: "החלפת הרשאות תגובה"
+        toggle_full: "החלפת הרשאות יצירה"
+        inherited: "הרשאה זו התקבלה בירושה מתוך „כולם”"
       special_warning: "אזהרה: קטגוריה זו הגיעה מראש והגדרות האבטחה שלה אינן ניתנות לשינוי. אם אתם מעוניינים להשתמש בקטגוריה זו, מחקו אותה במקום להשתמש בה מחדש."
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. אם ברצונך למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא לנטרל את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
@@ -3518,7 +3539,7 @@ he:
           only_muted: "בעת שימוש בנפרד או עם תגיות מושתקות אחרות"
           never: "אף פעם"
       reports:
-        title: "רשימה של דיווחים זמינים"
+        title: "רשימת דיווחים זמינים"
       dashboard:
         title: "לוח בקרה"
         last_updated: "עדכון לוח המחוונים:"
@@ -3846,7 +3867,7 @@ he:
         menu:
           backups: "גיבויים"
           logs: "יומנים"
-        none: "אין גיבויים זמינים."
+        none: "אין גיבוי זמין."
         read_only:
           enable:
             title: "הפעלת מצב קריאה-בלבד"
@@ -4050,6 +4071,7 @@ he:
           check_for_updates: "בדיקת עדכונים"
           updating: "מעדכנים..."
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
+          has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
           theme_settings: "הגדרות ערכת עיצוב"
           no_settings: "לערכת עיצוב זו אין הגדרות."
@@ -4751,10 +4773,10 @@ he:
         revert_confirm: "לבטל את השינויים שלך?"
         go_back: "חזרה לחיפוש"
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
-        show_overriden: "הציגו רק דרוסים"
+        show_overriden: "להציג רק את אלו שנדרסו"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
-        show_overriden: "הציגו רק דרוסים"
+        show_overriden: "להציג רק את אלו שנדרסו"
         history: "הצגת היסטוריית שינויים"
         reset: "אתחול"
         none: "ללא"
