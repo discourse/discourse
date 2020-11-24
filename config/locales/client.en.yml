@@ -3752,6 +3752,9 @@ en:
               sync_sso: Synchronize a user using SSO.
               show: Obtain information about an user.
               check_emails: List user emails.
+              update: Update user profile information.
+              anonymize: Anonymize user accounts.
+              delete: Delete user accounts.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
