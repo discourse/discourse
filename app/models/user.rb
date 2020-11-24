@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :email_tokens, dependent: :destroy
   has_many :topic_links, dependent: :destroy
   has_many :user_uploads, dependent: :destroy
-  has_many :user_emails, dependent: :destroy
+  has_many :user_emails, dependent: :destroy, autosave: true
   has_many :user_associated_accounts, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
-  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy
+  has_one :primary_email, -> { where(primary: true)  }, class_name: 'UserEmail', dependent: :destroy, autosave: true
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -1263,12 +1263,21 @@ class User < ActiveRecord::Base
     primary_email&.email
   end
 
+  # Shortcut to set the primary email of the user.
+  # Automatically removes any identical secondary emails.
   def email=(new_email)
     if primary_email
-      new_record? ? primary_email.email = new_email : primary_email.update(email: new_email)
+      primary_email.email = new_email
     else
-      self.primary_email = UserEmail.new(email: new_email, user: self, primary: true, skip_validate_email: !should_validate_email_address?)
+      build_primary_email email: new_email, skip_validate_email: !should_validate_email_address?
     end
+
+    if secondary_match = user_emails.detect { |ue| !ue.primary && Email.downcase(ue.email) == Email.downcase(new_email) }
+      secondary_match.mark_for_destruction
+      primary_email.skip_validate_unique_email = true
+    end
+
+    new_email
   end
 
   def emails

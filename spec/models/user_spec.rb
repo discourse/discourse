@@ -2069,6 +2069,35 @@ describe User do
     end
   end
 
+  describe "#email=" do
+    let(:new_email) { "newprimary@example.com" }
+    it 'sets the primary email' do
+      user.update!(email: new_email)
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'only saves when save called' do
+      old_email = user.email
+      user.email = new_email
+      expect(User.find(user.id).email).to eq(old_email)
+      user.save!
+      expect(User.find(user.id).email).to eq(new_email)
+    end
+
+    it 'will automatically remove matching secondary emails' do
+      secondary_email_record = Fabricate(:secondary_email, user: user)
+      user.reload
+      expect(user.secondary_emails.count).to eq(1)
+      user.email = secondary_email_record.email
+      puts "done setting"
+      user.save!
+
+      expect(User.find(user.id).email).to eq(secondary_email_record.email)
+      expect(user.secondary_emails.count).to eq(0)
+    end
+
+  end
+
   describe "set_random_avatar" do
     it "sets a random avatar when selectable avatars is enabled" do
       avatar1 = Fabricate(:upload)
