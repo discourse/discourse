@@ -4,7 +4,6 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def self.can_attributes
     [:can_move_posts,
-     :can_edit,
      :can_delete,
      :can_recover,
      :can_remove_allowed_users,
@@ -24,7 +23,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_moderate_category]
   end
 
+  # NOTE: can_edit is defined as an attribute because we explicitly want
+  # it returned even if it has a value of `false`
   attributes(
+    :can_edit,
     :notification_level,
     :notifications_reason_id,
     *can_attributes,
@@ -95,7 +97,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     scope.can_move_posts?(object.topic)
   end
 
-  def include_can_edit?
+  def can_edit
     scope.can_edit?(object.topic)
   end
 
