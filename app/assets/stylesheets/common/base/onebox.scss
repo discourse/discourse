@@ -118,6 +118,7 @@ aside.onebox {
   @include onebox-favicon("githubcommit", "github");
   @include onebox-favicon("githubpullrequest", "github");
   @include onebox-favicon("githubissue", "github");
+  @include onebox-favicon("githubfile", "github");
   @include onebox-favicon("githubgist", "github");
   @include onebox-favicon("amazon", "amazon");
   @include onebox-favicon("instagram", "instagram");
@@ -661,7 +662,8 @@ aside.onebox.stackexchange .onebox-body {
 .onebox {
   &.allowlistedgeneric,
   &.whitelistedgeneric,
-  &.gfycat {
+  &.gfycat,
+  &.githubfolder {
     .site-icon {
       width: 16px;
       height: 16px;
@@ -688,6 +690,20 @@ aside.onebox.stackexchange .onebox-body {
     position: relative;
   }
   div.description {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+.onebox.githubfolder {
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    &.onebox-full-image {
+      max-height: 60px;
+      max-width: 60px;
+    }
+  }
+  .label1 {
     color: var(--primary-med-or-secondary-med);
   }
 }
