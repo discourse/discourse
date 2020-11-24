@@ -103,12 +103,12 @@ function loadNext(ajax) {
 // It will insert a loading indicator and remove it when the loading is complete or fails.
 export function load({
   elem,
+  ajax,
+  topicId,
+  categoryId,
   refresh = true,
   offline = false,
-  ajax,
   synchronous = false,
-  categoryId,
-  topicId,
 }) {
   const $elem = $(elem);
 
