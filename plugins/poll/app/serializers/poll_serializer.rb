@@ -42,7 +42,13 @@ class PollSerializer < ApplicationSerializer
   end
 
   def options
-    object.poll_options.map { |o| PollOptionSerializer.new(o, root: false).as_json }
+    object.poll_options.map do |option|
+      PollOptionSerializer.new(
+        option,
+        root: false,
+        scope: { can_see_results: object.can_see_results?(scope.user) }
+      ).as_json
+    end
   end
 
   def voters
