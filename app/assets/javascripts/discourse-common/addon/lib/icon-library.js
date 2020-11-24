@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
+import { isDevelopment } from "discourse-common/config/environment";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -115,13 +116,11 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  // TODO: investigate why _iconList is actually an array as a string: '["foo", "bar"]'
-  // in local and a real array in production
   return _iconList && _iconList.indexOf(id) >= 0;
 }
 
 function warnIfMissing(id) {
-  if (warnMissingIcons && !isExistingIconId(id)) {
+  if (warnMissingIcons && isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
