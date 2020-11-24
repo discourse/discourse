@@ -95,7 +95,7 @@ export default {
     session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
     if (isDevelopment()) {
-      setIconList(setupData.svgIconList);
+      setIconList(JSON.parse(setupData.svgIconList));
     }
 
     if (setupData.s3BaseUrl) {
