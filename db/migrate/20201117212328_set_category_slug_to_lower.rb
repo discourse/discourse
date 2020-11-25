@@ -10,23 +10,21 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
     # Resolve duplicate tags by replacing mixed case slugs with new ones
     # extracted from category names
     slugs = categories
-      .filter { |category| category.slug != '' }
+      .filter { |category| category.slug.present? }
       .group_by { |category| [category.parent_category_id, category.slug.downcase] }
       .map { |slug, cats| [slug, cats.size] }
       .to_h
 
     categories.each do |category|
       old_parent_and_slug = [category.parent_category_id, category.slug.downcase]
-      next if category.slug == '' ||
+      next if category.slug.blank? ||
               category.slug == category.slug.downcase ||
               slugs[old_parent_and_slug] <= 1
 
-      new_slug = category.name.parameterize
-        .tr("_", "-").squeeze('-').gsub(/\A-+|-+\z/, '')
-        .truncate(255, omission: '')
+      new_slug = category.name.parameterize.tr("_", "-").squeeze('-').gsub(/\A-+|-+\z/, '')[0..255]
       new_slug = '' if (new_slug =~ /[^\d]/).blank?
       new_parent_and_slug = [category.parent_category_id, new_slug]
-      next if new_slug == '' ||
+      next if new_slug.blank? ||
               (slugs[new_parent_and_slug].present? && slugs[new_parent_and_slug] > 0)
 
       updates[category.id] = category.slug = new_slug
@@ -36,7 +34,7 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
 
     # Reset left conflicting slugs
     slugs = categories
-      .filter { |category| category.slug != '' }
+      .filter { |category| category.slug.present? }
       .group_by { |category| [category.parent_category_id, category.slug.downcase] }
       .map { |slug, cats| [slug, cats.size] }
       .to_h
