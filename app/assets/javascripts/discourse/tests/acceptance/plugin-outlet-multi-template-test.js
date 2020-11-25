@@ -3,6 +3,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { clearCache } from "discourse/lib/plugin-connectors";
+import hbs from "htmlbars-inline-precompile";
 
 const HELLO = "javascripts/multi-test/connectors/user-profile-primary/hello";
 const GOODBYE =
@@ -11,12 +12,8 @@ const GOODBYE =
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {
     clearCache();
-    Ember.TEMPLATES[HELLO] = Ember.HTMLBars.compile(
-      `<span class='hello-span'>Hello</span>`
-    );
-    Ember.TEMPLATES[GOODBYE] = Ember.HTMLBars.compile(
-      `<span class='bye-span'>Goodbye</span>`
-    );
+    Ember.TEMPLATES[HELLO] = hbs`<span class='hello-span'>Hello</span>`;
+    Ember.TEMPLATES[GOODBYE] = hbs`<span class='bye-span'>Goodbye</span>`;
   });
 
   needs.hooks.afterEach(() => {

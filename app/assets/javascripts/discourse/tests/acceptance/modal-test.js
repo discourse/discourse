@@ -8,6 +8,7 @@ import {
   controllerFor,
 } from "discourse/tests/helpers/qunit-helpers";
 import showModal from "discourse/lib/show-modal";
+import hbs from "htmlbars-inline-precompile";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -60,9 +61,9 @@ acceptance("Modal", function (needs) {
       "ESC should close the modal"
     );
 
-    Ember.TEMPLATES["modal/not-dismissable"] = Ember.HTMLBars.compile(
-      '{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}'
-    );
+    Ember.TEMPLATES[
+      "modal/not-dismissable"
+    ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
 
     run(() => showModal("not-dismissable", {}));
 
@@ -81,7 +82,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
+    Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
       { id: "test2", rawTitle: "Test 2" },
@@ -98,10 +99,10 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    Ember.TEMPLATES["modal/test-title"] = Ember.HTMLBars.compile("");
-    Ember.TEMPLATES["modal/test-title-with-body"] = Ember.HTMLBars.compile(
-      "{{#d-modal-body}}test{{/d-modal-body}}"
-    );
+    Ember.TEMPLATES["modal/test-title"] = hbs``;
+    Ember.TEMPLATES[
+      "modal/test-title-with-body"
+    ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;
 
     await visit("/");
 
