@@ -4,6 +4,9 @@
       <label for="name">{{i18n "admin.badges.name"}}</label>
       {{#if readOnly}}
         {{input type="text" name="name" value=buffered.name disabled=true}}
+        <p class="help">
+          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="name")}}
+        </p>
       {{else}}
         {{input type="text" name="name" value=buffered.name}}
       {{/if}}
@@ -64,6 +67,9 @@
       <label for="description">{{i18n "admin.badges.description"}}</label>
       {{#if buffered.system}}
         {{textarea name="description" value=buffered.description disabled=true}}
+        <p class="help">
+          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="description")}}
+        </p>
       {{else}}
         {{textarea name="description" value=buffered.description}}
       {{/if}}
@@ -73,6 +79,9 @@
       <label for="long_description">{{i18n "admin.badges.long_description"}}</label>
       {{#if buffered.system}}
         {{textarea name="long_description" value=buffered.long_description disabled=true}}
+        <p class="help">
+          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="long_description")}}
+        </p>
       {{else}}
         {{textarea name="long_description" value=buffered.long_description}}
       {{/if}}

@@ -48,6 +48,11 @@ export default Controller.extend(bufferedProperty("model"), {
     });
   },
 
+  @discourseComputed("model.slug")
+  text_customization_name(slug) {
+    return slug.replaceAll("-", "_");
+  },
+
   @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {
     if (bufferedQuery) {
