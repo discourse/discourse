@@ -16,6 +16,7 @@ const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
+  /^\/secure-media-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,
