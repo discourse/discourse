@@ -1,20 +1,16 @@
 {{#if isActive}}
-  <div class="emoji-picker {{if @isActive 'opened'}}">
+  <div class="emoji-picker {{if @isActive "opened"}}">
     <div class="emoji-picker-category-buttons">
       {{#if recentEmojis.length}}
-        <button data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
+        <button type="button" data-section="recent" {{action "onCategorySelection" "recent"}} class="btn btn-default category-button emoji">
           {{replace-emoji ":star:"}}
         </button>
       {{/if}}
 
-      <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
-        <button data-section="<%= group["name"] %>" {{action "onCategorySelection" "<%= group["name"] %>"}} class="btn btn-default category-button emoji">
-          {{replace-emoji ":<%= group["tabicon"] %>:"}}
-        </button>
-      <% end %>
+      {{emoji-group-buttons onCategorySelection=(action "onCategorySelection")}}
 
       {{#each-in customEmojis as |group emojis|}}
-        <button data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
+        <button type="button" data-section={{concat "custom-" group}} {{action "onCategorySelection" (concat "custom-" group)}} class="btn btn-default category-button emoji">
           {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
         </button>
       {{/each-in}}
@@ -35,18 +31,18 @@
         {{d-icon "search"}}
       </div>
 
-      <div class="emoji-picker-emoji-area" {{on "click" this.onEmojiSelection}} {{on "mouseover" this.onEmojiHover}}>
-        <div class='results'></div>
+      <div class="emoji-picker-emoji-area" role="button" {{on "click" this.onEmojiSelection}} {{on "mouseover" this.onEmojiHover}}>
+        <div class="results"></div>
 
         {{#conditional-loading-spinner condition=isLoading}}
           <div class="emojis-container">
             {{#if recentEmojis.length}}
-              <div class='section recent' data-section='recent'>
-                <div class='section-header'>
-                  <span class="title">{{i18n 'emoji_picker.recent'}}</span>
+              <div class="section recent" data-section="recent">
+                <div class="section-header">
+                  <span class="title">{{i18n "emoji_picker.recent"}}</span>
                   {{d-button icon="trash-alt" action=(action "onClearRecents") class="trash-recent"}}
                 </div>
-                <div class='section-group'>
+                <div class="section-group">
                   {{#each recentEmojis as |emoji|}}
                     {{replace-emoji (concat ":" emoji ":") (hash lazy=true)}}
                   {{/each}}
@@ -54,30 +50,19 @@
               </div>
             {{/if}}
 
-            <% JSON.parse(File.read("lib/emoji/groups.json")).each.with_index do |group, group_index| %>
-              <div class='section' data-section='<%= group["name"] %>'>
-                <div class='section-header'>
-                  <span class="title">{{i18n 'emoji_picker.<%= group["name"] %>'}}</span>
-                </div>
-                <div class='section-group'>
-                  <% group["icons"].each  do |icon| %>
-                    {{replace-emoji ":<%= icon['name'] %>:" (hash lazy=true class="<%= "diversity" if icon["diversity"] %>")}}
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
+            {{emoji-group-sections}}
 
             {{#each-in customEmojis as |group emojis|}}
-              <div class='section' data-section='custom-{{group}}'>
-                <div class='section-header'>
+              <div class="section" data-section="custom-{{group}}">
+                <div class="section-header">
                   <span class="title">
-                    {{i18n (concat 'emoji_picker.' group)}}
+                    {{i18n (concat "emoji_picker." group)}}
                   </span>
                 </div>
                 {{#if emojis.length}}
-                  <div class='section-group'>
+                  <div class="section-group">
                     {{#each emojis as |emoji|}}
-                      <img title="{{emoji.code}}" width="20" height="20" loading="lazy" class="emoji" src="{{emoji.src}}">
+                      <img title={{emoji.code}} width="20" height="20" loading="lazy" class="emoji" src={{emoji.src}}>
                     {{/each}}
                   </div>
                 {{/if}}
@@ -109,6 +94,6 @@
   </div>
 
   {{#if site.mobileView}}
-    <div class="emoji-picker-modal-overlay" {{on "click" this.onClose}}></div>
+    <div role="button" class="emoji-picker-modal-overlay" {{on "click" this.onClose}}></div>
   {{/if}}
 {{/if}}
