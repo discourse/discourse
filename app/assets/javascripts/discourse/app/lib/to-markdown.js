@@ -273,7 +273,13 @@ export class Tag {
 
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
-          return "[" + text + "](" + attr.href + ")";
+
+          let linkModifier = "";
+          if (attr.class && attr.class.includes("attachment")) {
+            linkModifier = "|attachment";
+          }
+
+          return "[" + text + linkModifier + "](" + attr.href + ")";
         }
 
         return text;
