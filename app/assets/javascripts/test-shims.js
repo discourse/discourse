@@ -17,6 +17,14 @@ define("ember-qunit", () => {
     moduleForComponent: window.moduleForComponent,
   };
 });
+define("htmlbars-inline-precompile", () => {
+  return {
+    default: function (str) {
+      return Ember.HTMLBars.compile(str[0]);
+    },
+  };
+});
+
 let _app;
 define("@ember/test-helpers", () => {
   let helpers = {

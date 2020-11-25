@@ -4,6 +4,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { action } from "@ember/object";
+import hbs from "htmlbars-inline-precompile";
 
 const PREFIX = "javascripts/single-test/connectors";
 
@@ -45,20 +46,16 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
 
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hello`
-    ] = Ember.HTMLBars.compile(
-      `<span class='hello-username'>{{model.username}}</span>
+    ] = hbs`<span class='hello-username'>{{model.username}}</span>
         <button class='say-hello' {{action "sayHello"}}></button>
-        <span class='hello-result'>{{hello}}</span>`
-    );
+        <span class='hello-result'>{{hello}}</span>`;
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hi`
-    ] = Ember.HTMLBars.compile(
-      `<button class='say-hi' {{action "sayHi"}}></button>
-        <span class='hi-result'>{{hi}}</span>`
-    );
+    ] = hbs`<button class='say-hi' {{action "sayHi"}}></button>
+        <span class='hi-result'>{{hi}}</span>`;
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/dont-render`
-    ] = Ember.HTMLBars.compile(`I'm not rendered!`);
+    ] = hbs`I'm not rendered!`;
   });
 
   needs.hooks.afterEach(() => {
