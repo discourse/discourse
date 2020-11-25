@@ -1,7 +1,7 @@
 import { isValidSearchTerm, searchForTerm } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
-import { debounce } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
@@ -284,7 +284,7 @@ export default createWidget("search-menu", {
     searchData.noResults = false;
     this.searchService().set("highlightTerm", searchData.term);
     searchData.loading = true;
-    debounce(SearchHelper, SearchHelper.perform, this, 400);
+    discourseDebounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {

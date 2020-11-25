@@ -1,7 +1,8 @@
 import { cloak, uncloak } from "discourse/widgets/post-stream";
-import { debounce, next, scheduleOnce } from "@ember/runloop";
+import { next, scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
@@ -309,12 +310,13 @@ export default MountWidget.extend({
   },
 
   _debouncedScroll() {
-    debounce(this, this._scrollTriggered, 10);
+    discourseDebounce(this, this._scrollTriggered, 10);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () => debounce(this, this._scrollTriggered, 10);
+    const debouncedScroll = () =>
+      discourseDebounce(this, this._scrollTriggered, 10);
 
     this._previouslyNearby = {};
 

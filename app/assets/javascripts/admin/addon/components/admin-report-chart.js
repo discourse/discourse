@@ -1,8 +1,9 @@
-import { debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import discourseDebounce from "discourse-common/lib/debounce";
 import loadScript from "discourse/lib/load-script";
 import { makeArray } from "discourse-common/lib/helpers";
 import { number } from "discourse/lib/formatter";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["admin-report-chart"],
@@ -14,7 +15,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.resizeHandler = () =>
-      debounce(this, this._scheduleChartRendering, 500);
+      discourseDebounce(this, this._scheduleChartRendering, 500);
   },
 
   didInsertElement() {
@@ -34,7 +35,7 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    debounce(this, this._scheduleChartRendering, 100);
+    discourseDebounce(this, this._scheduleChartRendering, 100);
   },
 
   _scheduleChartRendering() {

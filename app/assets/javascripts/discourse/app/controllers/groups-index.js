@@ -2,8 +2,8 @@ import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
-import { debounce } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default Controller.extend({
   application: controller(),
@@ -45,7 +45,7 @@ export default Controller.extend({
 
   @action
   onFilterChanged(filter) {
-    debounce(this, this._debouncedFilter, filter, INPUT_DELAY);
+    discourseDebounce(this, this._debouncedFilter, filter, INPUT_DELAY);
   },
 
   @action
