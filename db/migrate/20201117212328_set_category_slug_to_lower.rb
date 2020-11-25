@@ -43,7 +43,7 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
 
     categories.each do |category|
       old_parent_and_slug = [category.parent_category_id, category.slug.downcase]
-      next if category.slug == '' ||
+      next if category.slug.blank? ||
               category.slug == category.slug.downcase ||
               slugs[old_parent_and_slug] <= 1
 
