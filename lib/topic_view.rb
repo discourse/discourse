@@ -771,6 +771,16 @@ class TopicView
       @contains_gaps = true
     end
 
+    # Filter replies
+    if @replies_to_post_number.present?
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.post_number = :post_number
+        OR posts.reply_to_post_number = :post_number', { post_number: @replies_to_post_number.to_i })
+
+      @contains_gaps = true
+    end
+
     # Deleted
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method

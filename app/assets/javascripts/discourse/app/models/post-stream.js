@@ -27,6 +27,7 @@ export default RestModel.extend({
   stagingPost: null,
   postsWithPlaceholders: null,
   timelineLookup: null,
+  filterRepliesToPostNumber: null,
 
   init() {
     this._identityMap = {};
@@ -42,6 +43,7 @@ export default RestModel.extend({
       stream: [],
       userFilters: [],
       summary: false,
+      filterRepliesToPostNumber: false,
       loaded: false,
       loadingAbove: false,
       loadingBelow: false,
@@ -117,7 +119,7 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @discourseComputed("summary", "userFilters.[]")
+  @discourseComputed("summary", "userFilters.[]", "filterRepliesToPostNumber")
   streamFilters(summary) {
     const result = {};
     if (summary) {
@@ -129,6 +131,9 @@ export default RestModel.extend({
       result.username_filters = userFilters.join(",");
     }
 
+    if (this.filterRepliesToPostNumber) {
+      result.replies_to_post_number = this.filterRepliesToPostNumber;
+    }
     return result;
   },
 
@@ -200,12 +205,13 @@ export default RestModel.extend({
   },
 
   cancelFilter() {
-    this.set("summary", false);
+    this.setProperties({ summary: false, filterRepliesToPostNumber: false });
     this.userFilters.clear();
   },
 
   toggleSummary() {
     this.userFilters.clear();
+    this.set("filterRepliesToPostNumber", false);
     this.toggleProperty("summary");
     const opts = {};
 
@@ -220,6 +226,18 @@ export default RestModel.extend({
     });
   },
 
+  enableRepliesFilter(postNumber) {
+    this.userFilters.clear();
+    this.setProperties({
+      summary: false,
+      filterRepliesToPostNumber: postNumber,
+    });
+
+    return this.refresh().then(() => {
+      this.jumpToSecondVisible();
+    });
+  },
+
   jumpToSecondVisible() {
     const posts = this.posts;
     if (posts.length > 1) {
@@ -231,7 +249,7 @@ export default RestModel.extend({
   // Filter the stream to a particular user.
   toggleParticipant(username) {
     const userFilters = this.userFilters;
-    this.set("summary", false);
+    this.setProperties({ summary: false, filterRepliesToPostNumber: false });
 
     let jump = false;
     if (userFilters.includes(username)) {

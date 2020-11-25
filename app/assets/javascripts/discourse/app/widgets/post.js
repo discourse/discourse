@@ -436,6 +436,17 @@ createWidget("post-contents", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
+  filterRepliesView() {
+    const post = this.findAncestorModel();
+    const controller = this.register.lookup("controller:topic");
+    post
+      .get("topic.postStream")
+      .enableRepliesFilter(this.attrs.post_number)
+      .then(() => {
+        controller.updateQueryParams();
+      });
+  },
+
   toggleRepliesBelow(goToPost = "false") {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
@@ -618,7 +629,11 @@ createWidget("post-article", {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     // jump directly on mobile
-    if (this.attrs.mobileView) {
+
+    if (
+      this.attrs.mobileView ||
+      this.siteSettings.enable_filtered_replies_view
+    ) {
       const topicUrl = this._getTopicUrl();
       if (topicUrl) {
         DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);

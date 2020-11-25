@@ -725,6 +725,10 @@ posting:
       ja: true
   max_consecutive_replies:
     default: 3
+  enable_filtered_replies_view:
+    default: false
+    client: true
+    hidden: true
   title_prettify:
     default: true
     locale_default:

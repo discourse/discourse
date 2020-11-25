@@ -429,6 +429,15 @@ export default Controller.extend(bufferedProperty("model"), {
         });
     },
 
+    cancelFilter() {
+      this.get("model.postStream").cancelFilter();
+      this.get("model.postStream")
+        .refresh()
+        .then(() => {
+          this.updateQueryParams();
+        });
+    },
+
     removeAllowedUser(user) {
       return this.get("model.details")
         .removeAllowedUser(user)

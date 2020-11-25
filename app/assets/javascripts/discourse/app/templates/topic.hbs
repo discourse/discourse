@@ -203,6 +203,7 @@
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
+                streamFilters=model.postStream.streamFilters
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
@@ -223,6 +224,7 @@
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
                 toggleSummary=(action "toggleSummary")
+                cancelFilter=(action "cancelFilter")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
                 topVisibleChanged=(action "topVisibleChanged")
