@@ -1,4 +1,3 @@
-import EmberObject from "@ember/object";
 import createStore from "discourse/tests/helpers/create-store";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -12,11 +11,10 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       categories.push(store.createRecord("category", { id: i, position: 0 }));
     }
 
-    const site = EmberObject.create({ categories: categories });
-    const reorderCategoriesController = this.owner.lookup(
-      "controller:reorder-categories"
+    const reorderCategoriesController = this.getController(
+      "reorder-categories",
+      { site: { categories } }
     );
-    reorderCategoriesController.setProperties({ site });
     reorderCategoriesController.reorder();
 
     reorderCategoriesController
@@ -52,14 +50,11 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "other",
     });
 
-    const categories = [child2, parent, other, child1];
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
-
-    const site = EmberObject.create({ categories: categories });
-    const reorderCategoriesController = this.owner.lookup(
-      "controller:reorder-categories"
+    const reorderCategoriesController = this.getController(
+      "reorder-categories",
+      { site: { categories: [child2, parent, other, child1] } }
     );
-    reorderCategoriesController.setProperties({ site });
     reorderCategoriesController.reorder();
 
     assert.deepEqual(
@@ -89,12 +84,10 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const categories = [elem1, elem2, elem3];
-    const site = EmberObject.create({ categories: categories });
-    const reorderCategoriesController = this.owner.lookup(
-      "controller:reorder-categories"
+    const reorderCategoriesController = this.getController(
+      "reorder-categories",
+      { site: { categories: [elem1, elem2, elem3] } }
     );
-    reorderCategoriesController.setProperties({ site });
 
     reorderCategoriesController.actions.change.call(
       reorderCategoriesController,
@@ -136,12 +129,10 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const categories = [elem1, child1, elem2, elem3];
-    const site = EmberObject.create({ categories: categories });
-    const reorderCategoriesController = this.owner.lookup(
-      "controller:reorder-categories"
+    const reorderCategoriesController = this.getController(
+      "reorder-categories",
+      { site: { categories: [elem1, child1, elem2, elem3] } }
     );
-    reorderCategoriesController.setProperties({ site });
 
     reorderCategoriesController.actions.change.call(
       reorderCategoriesController,
@@ -190,12 +181,10 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const categories = [elem1, child1, child2, elem2, elem3];
-    const site = EmberObject.create({ categories: categories });
-    const reorderCategoriesController = this.owner.lookup(
-      "controller:reorder-categories"
+    const reorderCategoriesController = this.getController(
+      "reorder-categories",
+      { site: { categories: [elem1, child1, child2, elem2, elem3] } }
     );
-    reorderCategoriesController.setProperties({ site });
     reorderCategoriesController.reorder();
 
     reorderCategoriesController.actions.moveDown.call(

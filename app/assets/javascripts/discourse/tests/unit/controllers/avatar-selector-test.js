@@ -9,10 +9,6 @@ discourseModule("Unit | Controller | avatar-selector", function (hooks) {
   });
 
   test("avatarTemplate", function (assert) {
-    const avatarSelectorController = this.owner.lookup(
-      "controller:avatar-selector"
-    );
-
     const user = EmberObject.create({
       avatar_template: "avatar",
       system_avatar_template: "system",
@@ -22,8 +18,9 @@ discourseModule("Unit | Controller | avatar-selector", function (hooks) {
       gravatar_avatar_upload_id: 2,
       custom_avatar_upload_id: 3,
     });
-
-    avatarSelectorController.setProperties({ user });
+    const avatarSelectorController = this.getController("avatar-selector", {
+      user,
+    });
 
     user.set("avatar_template", "system");
     assert.equal(

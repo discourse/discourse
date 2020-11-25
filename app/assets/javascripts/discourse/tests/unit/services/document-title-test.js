@@ -2,13 +2,21 @@ import {
   currentUser,
   discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
+import DocumentTitle from "discourse/services/document-title";
+import AppEvents from "discourse/services/app-events";
+import Session from "discourse/models/session";
 import { test } from "qunit";
 
 discourseModule("Unit | Service | document-title", function (hooks) {
   hooks.beforeEach(function () {
-    this.documentTitle = this.container.lookup("service:document-title");
+    const session = Session.current();
+    session.hasFocus = true;
+
+    this.documentTitle = DocumentTitle.create({
+      session,
+      appEvents: AppEvents.create(),
+    });
     this.documentTitle.currentUser = null;
-    this.container.lookup("session:main").hasFocus = true;
   });
 
   hooks.afterEach(function () {
