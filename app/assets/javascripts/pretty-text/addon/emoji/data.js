@@ -1920,6 +1920,7 @@ export const aliases = {
     "white_sun_rain_cloud",
     "white_sun_behind_cloud_with_rain",
   ],
+  grinning_face_with_smiling_eyes: ["smile"],
   partly_sunny: ["white_sun_small_cloud", "white_sun_with_small_cloud"],
   open_umbrella: ["umbrella2"],
   hammer_and_wrench: ["tools"],
