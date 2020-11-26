@@ -101,10 +101,12 @@ export default Controller.extend(
 
     @discourseComputed
     fullnameRequired() {
-      return (
-        this.get("siteSettings.full_name_required") ||
-        this.get("siteSettings.enable_names")
-      );
+      return this.get("siteSettings.full_name_required");
+    },
+
+    @discourseComputed
+    fullnameOptional() {
+      return this.get("siteSettings.enable_names");
     },
 
     @discourseComputed("authOptions.auth_provider")
