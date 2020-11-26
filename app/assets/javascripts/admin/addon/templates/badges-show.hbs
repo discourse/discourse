@@ -5,7 +5,9 @@
       {{#if readOnly}}
         {{input type="text" name="name" value=buffered.name disabled=true}}
         <p class="help">
-          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="name")}}
+          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "name")}}
+            {{i18n "admin.badges.read_only_setting_help"}}
+          {{/link-to}}
         </p>
       {{else}}
         {{input type="text" name="name" value=buffered.name}}
@@ -68,7 +70,9 @@
       {{#if buffered.system}}
         {{textarea name="description" value=buffered.description disabled=true}}
         <p class="help">
-          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="description")}}
+          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "description")}}
+            {{i18n "admin.badges.read_only_setting_help"}}
+          {{/link-to}}
         </p>
       {{else}}
         {{textarea name="description" value=buffered.description}}
@@ -80,7 +84,9 @@
       {{#if buffered.system}}
         {{textarea name="long_description" value=buffered.long_description disabled=true}}
         <p class="help">
-          {{html-safe (i18n "admin.badges.read_only_setting_help" basePath=(base-path) name=text_customization_name detail="long_description")}}
+          {{#link-to "adminSiteText.edit" (concat textCustomizationPrefix "long_description")}}
+            {{i18n "admin.badges.read_only_setting_help"}}
+          {{/link-to}}
         </p>
       {{else}}
         {{textarea name="long_description" value=buffered.long_description}}

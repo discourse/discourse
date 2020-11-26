@@ -48,17 +48,17 @@ export default Controller.extend(bufferedProperty("model"), {
     });
   },
 
-  @discourseComputed("model.slug")
-  text_customization_name(slug) {
-    return slug.replaceAll("-", "_");
-  },
-
   @discourseComputed("model.query", "buffered.query")
   hasQuery(modelQuery, bufferedQuery) {
     if (bufferedQuery) {
       return bufferedQuery.trim().length > 0;
     }
     return modelQuery && modelQuery.trim().length > 0;
+  },
+
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
   },
 
   @observes("model.id")
