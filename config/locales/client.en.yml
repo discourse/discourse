@@ -3753,6 +3753,7 @@ en:
               show: Obtain information about an user.
               check_emails: List user emails.
               update: Update user profile information.
+              log_out: Log out all sessions for a user.
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
             email:

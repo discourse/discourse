@@ -39,6 +39,7 @@ class ApiKeyScope < ActiveRecord::Base
           show: { actions: %w[users#show], params: %i[username external_id] },
           check_emails: { actions: %w[users#check_emails], params: %i[username] },
           update: { actions: %w[users#update], params: %i[username] },
+          log_out: { actions: %w[admin/users#log_out] },
           anonymize: { actions: %w[admin/users#anonymize] },
           delete: { actions: %w[admin/users#destroy] },
         },
