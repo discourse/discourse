@@ -1,5 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import I18n from "I18n";
@@ -9,6 +7,8 @@ import {
   acceptance,
   invisible,
   visible,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import Draft from "discourse/models/draft";

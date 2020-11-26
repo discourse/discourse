@@ -1,5 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   fillIn,
   click,
@@ -8,7 +6,12 @@ import {
   currentURL,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  count,
+  queryAll,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 
 acceptance("Admin - Site Settings", function (needs) {

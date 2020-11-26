@@ -4,10 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightSearch from "discourse/lib/highlight-search";
-import {
-  default as highlightHTML,
-  unhighlightHTML,
-} from "discourse/lib/highlight-html";
+import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let _beforeAdoptDecorators = [];

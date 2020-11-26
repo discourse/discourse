@@ -1,5 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { triggerKeyEvent, visit, fillIn, click } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -8,6 +6,8 @@ import {
   acceptance,
   waitFor,
   visible,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Full Page", function (needs) {

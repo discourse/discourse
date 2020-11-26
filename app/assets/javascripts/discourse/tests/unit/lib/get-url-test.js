@@ -1,6 +1,5 @@
 import { test, module } from "qunit";
-import {
-  default as getURL,
+import getURL, {
   setupURL,
   setupS3CDN,
   getURLWithCDN,

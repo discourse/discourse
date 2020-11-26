@@ -1,10 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   updateCurrentUser,
   acceptance,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Tags", function (needs) {

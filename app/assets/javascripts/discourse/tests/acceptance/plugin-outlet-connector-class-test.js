@@ -1,7 +1,6 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit, click } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { action } from "@ember/object";
 import hbs from "htmlbars-inline-precompile";

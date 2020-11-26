@@ -6,10 +6,9 @@ import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import { inject as service } from "@ember/service";
+import showModal from "discourse/lib/show-modal";
 
 const SCROLL_DELAY = 500;
-
-import showModal from "discourse/lib/show-modal";
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),

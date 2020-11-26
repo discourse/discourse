@@ -1,11 +1,13 @@
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  on,
+  observes,
+} from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import bootbox from "bootbox";

@@ -1,7 +1,10 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  exists,
+  acceptance,
+  invisible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, invisible } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login Required", function (needs) {
   needs.settings({ login_required: true });

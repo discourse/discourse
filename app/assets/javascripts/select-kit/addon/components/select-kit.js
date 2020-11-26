@@ -6,7 +6,6 @@ import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
-import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
 import { isPresent, isEmpty, isNone } from "@ember/utils";
 import {
@@ -18,7 +17,7 @@ import {
   schedule,
 } from "@ember/runloop";
 import { Promise } from "rsvp";
-import {
+import PluginApiMixin, {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";

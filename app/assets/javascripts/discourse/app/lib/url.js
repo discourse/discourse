@@ -5,7 +5,7 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import LockOn from "discourse/lib/lock-on";
 import { defaultHomepage } from "discourse/lib/utilities";
 import User from "discourse/models/user";
-import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
+import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
 import { setOwner } from "@ember/application";
 

@@ -1,8 +1,7 @@
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
 import LivePostCounts from "discourse/models/live-post-counts";
 import { htmlSafe } from "@ember/template";
 

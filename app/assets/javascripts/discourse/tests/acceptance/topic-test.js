@@ -1,11 +1,14 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  queryAll,
+  exists,
+  acceptance,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 function selectText(selector) {

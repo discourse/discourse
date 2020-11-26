@@ -1,5 +1,4 @@
-import { skip } from "qunit";
-import { test, module } from "qunit";
+import { skip, test, module } from "qunit";
 import { buildQuote } from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
@@ -11,7 +10,6 @@ import {
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { deepMerge } from "discourse-common/lib/object";
-import QUnit from "qunit";
 
 const rawOpts = {
   siteSettings: {
