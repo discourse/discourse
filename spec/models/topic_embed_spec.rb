@@ -351,7 +351,7 @@ describe TopicEmbed do
 
     it "handles badly formed URIs" do
       raw = TopicEmbed.absolutize_urls(invalid_url, contents)
-      expect(raw).to eq('hello world new post <a href=\"http://source.com/hello\">hello</a>')
+      expect(raw).to eq("hello world new post <a href=\"http://source.com/hello\">hello</a>")
     end
   end
 
