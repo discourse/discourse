@@ -191,7 +191,7 @@ module Oneboxer
       when "list"    then local_category_html(url, route)
       end
 
-    html = html.presence || "<a href='#{url}'>#{url}</a>"
+    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
     { onebox: html, preview: html }
   end
 
