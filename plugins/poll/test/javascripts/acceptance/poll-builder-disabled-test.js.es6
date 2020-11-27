@@ -1,7 +1,7 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   acceptance,
   updateCurrentUser,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";

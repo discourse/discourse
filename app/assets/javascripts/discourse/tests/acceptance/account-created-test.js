@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  queryAll,
+  exists,
+  acceptance,
+} from "discourse/tests/helpers/qunit-helpers";
 import { visit, click, fillIn, currentRouteName } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 
 acceptance("Account Created", function () {

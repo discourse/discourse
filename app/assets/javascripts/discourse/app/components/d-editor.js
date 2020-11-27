@@ -10,7 +10,6 @@ import discourseComputed, {
 } from "discourse-common/utils/decorators";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { generateCookFunction } from "discourse/lib/text";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
@@ -26,7 +25,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { translations } from "pretty-text/emoji/data";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { emojiUrlFor } from "discourse/lib/text";
+import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";

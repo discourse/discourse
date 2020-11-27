@@ -1,10 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
   count,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Managing Group Category Notification Defaults", function () {

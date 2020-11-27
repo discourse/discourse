@@ -1,9 +1,11 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  on,
+  observes,
+} from "discourse-common/utils/decorators";
 import { debounce } from "@ember/runloop";
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { convertIconClass } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";

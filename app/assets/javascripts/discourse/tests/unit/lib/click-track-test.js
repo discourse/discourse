@@ -1,6 +1,5 @@
 import sinon from "sinon";
-import { skip } from "qunit";
-import { test, module } from "qunit";
+import { skip, test, module } from "qunit";
 import { later } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import ClickTrack from "discourse/lib/click-track";

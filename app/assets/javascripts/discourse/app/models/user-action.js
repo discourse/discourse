@@ -1,7 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { or, equal, and } from "@ember/object/computed";
 import RestModel from "discourse/models/rest";
-import { on } from "discourse-common/utils/decorators";
 import UserActionGroup from "discourse/models/user-action-group";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";

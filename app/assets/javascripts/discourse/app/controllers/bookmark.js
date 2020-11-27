@@ -1,9 +1,8 @@
 import I18n from "I18n";
-import { schedule } from "@ember/runloop";
+import { schedule, next } from "@ember/runloop";
 import { and, or } from "@ember/object/computed";
-import { next } from "@ember/runloop";
 import { action } from "@ember/object";
-import { isPresent } from "@ember/utils";
+import { isPresent, isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -14,7 +13,6 @@ import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import bootbox from "bootbox";
-import { isEmpty } from "@ember/utils";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed

@@ -7,7 +7,6 @@ import DiscourseURL from "discourse/lib/url";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
-
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
 export function showEntrance(e) {

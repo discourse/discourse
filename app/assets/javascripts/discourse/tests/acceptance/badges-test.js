@@ -1,8 +1,7 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Badges", function (needs) {
   needs.user();

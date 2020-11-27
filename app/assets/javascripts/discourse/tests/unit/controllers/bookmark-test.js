@@ -1,11 +1,13 @@
 import sinon from "sinon";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import {
+  discourseModule,
+  logIn,
+  fakeTime,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { REMINDER_TYPES } from "discourse/lib/bookmark";
-import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 let BookmarkController;
 

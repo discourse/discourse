@@ -1,7 +1,6 @@
 import I18n from "I18n";
-import { computed } from "@ember/object";
+import { computed, action } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { action } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bookmark-actions-dropdown"],

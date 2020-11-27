@@ -1,7 +1,6 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Click Track", function (needs) {
   let tracked = false;

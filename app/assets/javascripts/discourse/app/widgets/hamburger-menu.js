@@ -3,9 +3,8 @@ import I18n from "I18n";
 import { later } from "@ember/runloop";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { ajax } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 

@@ -1,8 +1,7 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll, exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import { isEmpty } from "@ember/utils";
 import { click, fillIn } from "@ember/test-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (queryAll(selector).hasClass("is-expanded")) {

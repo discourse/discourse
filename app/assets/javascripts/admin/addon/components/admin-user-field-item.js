@@ -6,8 +6,7 @@ import Component from "@ember/component";
 import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
-import { i18n } from "discourse/lib/computed";
+import { propertyEqual, i18n } from "discourse/lib/computed";
 import discourseComputed, {
   observes,
   on,

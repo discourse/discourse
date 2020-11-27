@@ -1,11 +1,13 @@
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  on,
+  observes,
+} from "discourse-common/utils/decorators";
 import { alias, gt, not, or, equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
-import { on, observes } from "discourse-common/utils/decorators";
 import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";

@@ -1,9 +1,8 @@
 import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import { on } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Site from "discourse/models/site";

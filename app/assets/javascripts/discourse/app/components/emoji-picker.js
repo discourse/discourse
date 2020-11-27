@@ -1,20 +1,17 @@
-import { observes } from "discourse-common/utils/decorators";
-import { bind } from "discourse-common/utils/decorators";
+import { observes, bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { schedule, later } from "@ember/runloop";
 import Component from "@ember/component";
-import { emojiUrlFor } from "discourse/lib/text";
 import { createPopper } from "@popperjs/core";
 import {
   extendedEmojiList,
   isSkinTonableEmoji,
   emojiSearch,
 } from "pretty-text/emoji";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import { safariHacksDisabled, escapeExpression } from "discourse/lib/utilities";
 
 function customEmojis() {
   const list = extendedEmojiList();

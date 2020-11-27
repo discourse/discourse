@@ -1,4 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import I18n from "I18n";
@@ -6,6 +5,7 @@ import { run } from "@ember/runloop";
 import {
   acceptance,
   controllerFor,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import showModal from "discourse/lib/show-modal";
 import hbs from "htmlbars-inline-precompile";

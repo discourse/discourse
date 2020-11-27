@@ -1,7 +1,6 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import compile from "handlebars-compiler";
 import {
   addRawTemplate,

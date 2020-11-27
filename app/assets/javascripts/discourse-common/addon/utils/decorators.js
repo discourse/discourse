@@ -3,8 +3,7 @@ import isDescriptor from "discourse-common/utils/is-descriptor";
 import extractValue from "discourse-common/utils/extract-value";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import macroAlias from "discourse-common/utils/macro-alias";
-import { schedule, next } from "@ember/runloop";
-import { bind as emberBind } from "@ember/runloop";
+import { schedule, next, bind as emberBind } from "@ember/runloop";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed

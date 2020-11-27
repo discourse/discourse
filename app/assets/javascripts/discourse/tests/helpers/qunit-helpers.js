@@ -11,7 +11,7 @@ import {
 } from "discourse/lib/plugin-connectors";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { flushMap } from "discourse/models/store";
-import { clearRewrites } from "discourse/lib/url";
+import { clearRewrites, setURLContainer } from "discourse/lib/url";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
@@ -28,10 +28,8 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-import { setURLContainer } from "discourse/lib/url";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { moduleFor } from "ember-qunit";
 import QUnit, { module } from "qunit";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";

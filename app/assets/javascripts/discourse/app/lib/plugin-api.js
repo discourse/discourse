@@ -1,9 +1,7 @@
 import deprecated from "discourse-common/lib/deprecated";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton, removeButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
@@ -16,8 +14,12 @@ import {
   reopenWidget,
   decorateWidget,
   changeSetting,
+  queryRegistry,
 } from "discourse/widgets/widget";
-import { preventCloak } from "discourse/widgets/post-stream";
+import {
+  preventCloak,
+  addPostTransformCallback,
+} from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
@@ -27,7 +29,6 @@ import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addPostClassesCallback } from "discourse/widgets/post";
-import { addPostTransformCallback } from "discourse/widgets/post-stream";
 import {
   attachAdditionalPanel,
   addToHeaderIcons,
@@ -35,8 +36,8 @@ import {
 import {
   registerIconRenderer,
   replaceIcon,
+  iconNode,
 } from "discourse-common/lib/icon-library";
-import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addNavItem } from "discourse/models/nav-item";
 import { replaceFormatter } from "discourse/lib/utilities";
@@ -47,13 +48,15 @@ import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-usernam
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
-import {
+import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addExtraIconRenderer } from "discourse/helpers/category-link";
-import { queryRegistry } from "discourse/widgets/widget";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/helpers/category-link";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
