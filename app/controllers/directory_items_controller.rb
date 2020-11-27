@@ -29,9 +29,9 @@ class DirectoryItemsController < ApplicationController
     order = params[:order] || DirectoryItem.headings.first
     dir = params[:asc] ? 'ASC' : 'DESC'
     if DirectoryItem.headings.include?(order.to_sym)
-      result = result.order("directory_items.#{order} #{dir}")
+      result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
-      result = result.order("users.#{order} #{dir}")
+      result = result.order("users.#{order} #{dir}, directory_items.id")
     end
 
     if period_type == DirectoryItem.period_types[:all]
