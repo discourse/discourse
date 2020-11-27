@@ -308,4 +308,11 @@ acceptance("Tag info", function (needs) {
       "removed a synonym"
     );
   });
+
+  test("composer will not set tags if user cannot create them", async function (assert) {
+    await visit("/tag/planters");
+    await click("#create-topic");
+    const composer = this.container.lookup("controller:composer");
+    assert.equal(composer.model.tags, null);
+  });
 });
