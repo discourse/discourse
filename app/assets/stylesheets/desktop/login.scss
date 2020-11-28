@@ -294,7 +294,8 @@
   h2 {
     margin-bottom: 12px;
   }
-  input {
+  input:not([type="checkbox"]) {
+    // 80% width on checkboxes messes up the layout for custom fields
     width: 80%;
   }
 }
