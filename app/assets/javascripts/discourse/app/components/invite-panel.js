@@ -1,8 +1,8 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import EmberObject, { computed } from "@ember/object";
-import { alias, and, equal } from "@ember/object/computed";
+import EmberObject, { action } from "@ember/object";
+import { alias, and, equal, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
@@ -12,9 +12,13 @@ import { getNativeContact } from "discourse/lib/pwa-utils";
 
 export default Component.extend({
   tagName: null,
+  groupIds: null,
+  allGroups: null,
 
   inviteModel: alias("panel.model.inviteModel"),
   userInvitedShow: alias("panel.model.userInvitedShow"),
+  isStaff: readOnly("currentUser.staff"),
+  isAdmin: readOnly("currentUser.admin"),
 
   // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
@@ -24,11 +28,14 @@ export default Component.extend({
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,
 
-  isAdmin: alias("currentUser.admin"),
+  init() {
+    this._super(...arguments);
+    this.setDefaultSelectedGroups();
+    this.setGroupOptions();
+  },
 
   willDestroyElement() {
     this._super(...arguments);
-
     this.reset();
   },
 
@@ -37,7 +44,7 @@ export default Component.extend({
     "emailOrUsername",
     "invitingToTopic",
     "isPrivateTopic",
-    "inviteModel.groupNames.[]",
+    "groupIds",
     "inviteModel.saving",
     "inviteModel.details.can_invite_to"
   )
@@ -46,12 +53,16 @@ export default Component.extend({
     emailOrUsername,
     invitingToTopic,
     isPrivateTopic,
-    groupNames,
+    groupIds,
     saving,
     can_invite_to
   ) {
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -66,11 +77,13 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupNames) && emailValid(emailTrimmed)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(emailTrimmed)) {
       return true;
     }
 
-    if (can_invite_to) return false;
+    if (can_invite_to) {
+      return false;
+    }
 
     return false;
   },
@@ -80,7 +93,7 @@ export default Component.extend({
     "emailOrUsername",
     "inviteModel.saving",
     "isPrivateTopic",
-    "inviteModel.groupNames.[]",
+    "groupIds",
     "hasCustomMessage"
   )
   disabledCopyLink(
@@ -88,12 +101,18 @@ export default Component.extend({
     emailOrUsername,
     saving,
     isPrivateTopic,
-    groupNames,
+    groupIds,
     hasCustomMessage
   ) {
-    if (hasCustomMessage) return true;
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (hasCustomMessage) {
+      return true;
+    }
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const email = emailOrUsername.trim();
 
@@ -108,7 +127,7 @@ export default Component.extend({
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupNames) && emailValid(email)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(email)) {
       return true;
     }
 
@@ -153,7 +172,7 @@ export default Component.extend({
   @discourseComputed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
-      isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
+      isAdmin || (groupUsers && groupUsers.some((groupUser) => groupUser.owner))
     );
   },
 
@@ -181,10 +200,6 @@ export default Component.extend({
       (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic)
     );
   },
-
-  showContactPicker: computed(function() {
-    return this.capabilities.hasContactPicker;
-  }),
 
   @discourseComputed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
@@ -242,10 +257,6 @@ export default Component.extend({
     return isPrivateTopic ? "required" : "optional";
   },
 
-  groupFinder(term) {
-    return Group.findAll({ term, ignore_automatic: true });
-  },
-
   @discourseComputed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
   successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
     if (this.hasGroups) {
@@ -254,7 +265,7 @@ export default Component.extend({
       return I18n.t("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
       return I18n.t("topic.invite_reply.success_existing_email", {
-        emailOrUsername
+        emailOrUsername,
       });
     } else if (emailValid(emailOrUsername)) {
       return I18n.t("topic.invite_reply.success_email", { emailOrUsername });
@@ -277,6 +288,8 @@ export default Component.extend({
       : "topic.invite_reply.username_placeholder";
   },
 
+  showApprovalMessage: and("isStaff", "siteSettings.must_approve_users"),
+
   customMessagePlaceholder: i18n("invite.custom_message_placeholder"),
 
   // Reset the modal to allow a new user to be invited.
@@ -285,31 +298,136 @@ export default Component.extend({
       emailOrUsername: null,
       hasCustomMessage: false,
       customMessage: null,
-      invitingExistingUserToTopic: false
+      invitingExistingUserToTopic: false,
+      groupIds: [],
     });
 
     this.inviteModel.setProperties({
-      groupNames: null,
       error: false,
       saving: false,
       finished: false,
-      inviteLink: null
+      inviteLink: null,
     });
   },
 
-  actions: {
-    createInvite() {
-      if (this.disabled) {
-        return;
+  setDefaultSelectedGroups() {
+    this.set("groupIds", []);
+  },
+
+  setGroupOptions() {
+    Group.findAll().then((groups) => {
+      this.set("allGroups", groups.filterBy("automatic", false));
+    });
+  },
+
+  @action
+  createInvite() {
+    if (this.disabled) {
+      return;
+    }
+
+    const groupIds = this.groupIds;
+    const userInvitedController = this.userInvitedShow;
+
+    const model = this.inviteModel;
+    model.setProperties({ saving: true, error: false });
+
+    const onerror = (e) => {
+      if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+        this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+      } else {
+        this.set(
+          "errorMessage",
+          this.isPM
+            ? I18n.t("topic.invite_private.error")
+            : I18n.t("topic.invite_reply.error")
+        );
       }
+      model.setProperties({ saving: false, error: true });
+    };
 
-      const groupNames = this.get("inviteModel.groupNames");
-      const userInvitedController = this.userInvitedShow;
+    if (this.hasGroups) {
+      return this.inviteModel
+        .createGroupInvite(this.emailOrUsername.trim())
+        .then((data) => {
+          model.setProperties({ saving: false, finished: true });
+          this.get("inviteModel.details.allowed_groups").pushObject(
+            EmberObject.create(data.group)
+          );
+          this.appEvents.trigger("post-stream:refresh");
+        })
+        .catch(onerror);
+    } else {
+      return this.inviteModel
+        .createInvite(this.emailOrUsername.trim(), groupIds, this.customMessage)
+        .then((result) => {
+          model.setProperties({ saving: false, finished: true });
+          if (!this.invitingToTopic && userInvitedController) {
+            Invite.findInvitedBy(
+              this.currentUser,
+              userInvitedController.get("filter")
+            ).then((inviteModel) => {
+              userInvitedController.setProperties({
+                model: inviteModel,
+                totalInvites: inviteModel.invites.length,
+              });
+            });
+          } else if (this.isPM && result && result.user) {
+            this.get("inviteModel.details.allowed_users").pushObject(
+              EmberObject.create(result.user)
+            );
+            this.appEvents.trigger("post-stream:refresh", { force: true });
+          } else if (
+            this.invitingToTopic &&
+            emailValid(this.emailOrUsername.trim()) &&
+            result &&
+            result.user
+          ) {
+            this.set("invitingExistingUserToTopic", true);
+          }
+        })
+        .catch(onerror);
+    }
+  },
 
-      const model = this.inviteModel;
-      model.setProperties({ saving: true, error: false });
+  @action
+  generateInvitelink() {
+    if (this.disabled) {
+      return;
+    }
 
-      const onerror = e => {
+    const groupIds = this.groupIds;
+    const userInvitedController = this.userInvitedShow;
+    const model = this.inviteModel;
+    model.setProperties({ saving: true, error: false });
+
+    let topicId;
+    if (this.invitingToTopic) {
+      topicId = this.get("inviteModel.id");
+    }
+
+    return model
+      .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
+      .then((result) => {
+        model.setProperties({
+          saving: false,
+          finished: true,
+          inviteLink: result,
+        });
+
+        if (userInvitedController) {
+          Invite.findInvitedBy(
+            this.currentUser,
+            userInvitedController.get("filter")
+          ).then((inviteModel) => {
+            userInvitedController.setProperties({
+              model: inviteModel,
+              totalInvites: inviteModel.invites.length,
+            });
+          });
+        }
+      })
+      .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
@@ -321,130 +439,33 @@ export default Component.extend({
           );
         }
         model.setProperties({ saving: false, error: true });
-      };
-
-      if (this.hasGroups) {
-        return this.inviteModel
-          .createGroupInvite(this.emailOrUsername.trim())
-          .then(data => {
-            model.setProperties({ saving: false, finished: true });
-            this.get("inviteModel.details.allowed_groups").pushObject(
-              EmberObject.create(data.group)
-            );
-            this.appEvents.trigger("post-stream:refresh");
-          })
-          .catch(onerror);
-      } else {
-        return this.inviteModel
-          .createInvite(
-            this.emailOrUsername.trim(),
-            groupNames,
-            this.customMessage
-          )
-          .then(result => {
-            model.setProperties({ saving: false, finished: true });
-            if (!this.invitingToTopic && userInvitedController) {
-              Invite.findInvitedBy(
-                this.currentUser,
-                userInvitedController.get("filter")
-              ).then(inviteModel => {
-                userInvitedController.setProperties({
-                  model: inviteModel,
-                  totalInvites: inviteModel.invites.length
-                });
-              });
-            } else if (this.isPM && result && result.user) {
-              this.get("inviteModel.details.allowed_users").pushObject(
-                EmberObject.create(result.user)
-              );
-              this.appEvents.trigger("post-stream:refresh");
-            } else if (
-              this.invitingToTopic &&
-              emailValid(this.emailOrUsername.trim()) &&
-              result &&
-              result.user
-            ) {
-              this.set("invitingExistingUserToTopic", true);
-            }
-          })
-          .catch(onerror);
-      }
-    },
-
-    generateInvitelink() {
-      if (this.disabled) {
-        return;
-      }
-
-      const groupNames = this.get("inviteModel.groupNames");
-      const userInvitedController = this.userInvitedShow;
-      const model = this.inviteModel;
-      model.setProperties({ saving: true, error: false });
-
-      let topicId;
-      if (this.invitingToTopic) {
-        topicId = this.get("inviteModel.id");
-      }
-
-      return model
-        .generateInviteLink(this.emailOrUsername.trim(), groupNames, topicId)
-        .then(result => {
-          model.setProperties({
-            saving: false,
-            finished: true,
-            inviteLink: result
-          });
-
-          if (userInvitedController) {
-            Invite.findInvitedBy(
-              this.currentUser,
-              userInvitedController.get("filter")
-            ).then(inviteModel => {
-              userInvitedController.setProperties({
-                model: inviteModel,
-                totalInvites: inviteModel.invites.length
-              });
-            });
-          }
-        })
-        .catch(e => {
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
-          } else {
-            this.set(
-              "errorMessage",
-              this.isPM
-                ? I18n.t("topic.invite_private.error")
-                : I18n.t("topic.invite_reply.error")
-            );
-          }
-          model.setProperties({ saving: false, error: true });
-        });
-    },
-
-    showCustomMessageBox() {
-      this.toggleProperty("hasCustomMessage");
-      if (this.hasCustomMessage) {
-        if (this.inviteModel === this.currentUser) {
-          this.set(
-            "customMessage",
-            I18n.t("invite.custom_message_template_forum")
-          );
-        } else {
-          this.set(
-            "customMessage",
-            I18n.t("invite.custom_message_template_topic")
-          );
-        }
-      } else {
-        this.set("customMessage", null);
-      }
-    },
-
-    searchContact() {
-      getNativeContact(["email"], false).then(result => {
-        this.set("emailOrUsername", result[0].email[0]);
       });
+  },
+
+  @action
+  showCustomMessageBox() {
+    this.toggleProperty("hasCustomMessage");
+    if (this.hasCustomMessage) {
+      if (this.inviteModel === this.currentUser) {
+        this.set(
+          "customMessage",
+          I18n.t("invite.custom_message_template_forum")
+        );
+      } else {
+        this.set(
+          "customMessage",
+          I18n.t("invite.custom_message_template_topic")
+        );
+      }
+    } else {
+      this.set("customMessage", null);
     }
-  }
+  },
+
+  @action
+  searchContact() {
+    getNativeContact(this.capabilities, ["email"], false).then((result) => {
+      this.set("emailOrUsername", result[0].email[0]);
+    });
+  },
 });

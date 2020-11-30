@@ -45,6 +45,24 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/login")
     end
 
+    it "should not redirect to SSO when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should not redirect to authenticator when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.enable_google_oauth2_logins = true
+      SiteSetting.enable_local_logins = false
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
     context "with omniauth in test mode" do
       before do
         OmniAuth.config.test_mode = true
@@ -627,5 +645,171 @@ RSpec.describe ApplicationController do
     topic = create_post.topic
     get "/t/#{topic.slug}/#{topic.id}"
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
+  end
+
+  context "default locale" do
+    before do
+      SiteSetting.default_locale = :fr
+      sign_in(Fabricate(:user))
+    end
+
+    after do
+      I18n.reload!
+    end
+
+    context "with rate limits" do
+      before do
+        RateLimiter.clear_all!
+        RateLimiter.enable
+      end
+
+      after { RateLimiter.disable }
+
+      it "serves a LimitExceeded error in the preferred locale" do
+        SiteSetting.max_likes_per_day = 1
+        post1 = Fabricate(:post)
+        post2 = Fabricate(:post)
+        override = TranslationOverride.create(
+          locale: "fr",
+          translation_key: "rate_limiter.by_type.create_like",
+          value: "French LimitExceeded error message"
+        )
+        I18n.reload!
+
+        post "/post_actions.json", params: {
+          id: post1.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(200)
+
+        post "/post_actions.json", params: {
+          id: post2.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["errors"].first).to eq(override.value)
+      end
+    end
+
+    it "serves an InvalidParameters error with the default locale" do
+      override = TranslationOverride.create(
+        locale: "fr",
+        translation_key: "invalid_params",
+        value: "French InvalidParameters error message"
+      )
+      I18n.reload!
+
+      get "/search.json", params: { q: "hello\0hello" }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to eq(override.value)
+    end
+  end
+
+  describe "set_locale" do
+    # Using /bootstrap.json because it returns a locale-dependent value
+    def headers(locale)
+      { HTTP_ACCEPT_LANGUAGE: locale }
+    end
+
+    context "allow_user_locale disabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = false
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the default locale" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+          end
+        end
+
+        context "with a logged in user" do
+          it "it uses the default locale" do
+            user = Fabricate(:user, locale: :fr)
+            sign_in(user)
+
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+          end
+        end
+      end
+    end
+
+    context "set_locale_from_accept_language_header enabled" do
+      context "accept-language header differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the headers" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+          end
+
+          it "doesn't leak after requests" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
+          end
+        end
+
+        context "with a logged in user" do
+          let(:user) { Fabricate(:user, locale: :fr) }
+
+          before do
+            sign_in(user)
+          end
+
+          it "uses the user's preferred locale" do
+            get "/bootstrap.json", headers: headers("fr")
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("fr.js")
+          end
+
+          it "serves a 404 page in the preferred locale" do
+            get "/missingroute", headers: headers("fr")
+            expect(response.status).to eq(404)
+            expected_title = I18n.t("page_not_found.title", locale: :fr)
+            expect(response.body).to include(CGI.escapeHTML(expected_title))
+          end
+
+          it "serves a RenderEmpty page in the preferred locale" do
+            get "/u/#{user.username}/preferences/interface"
+            expect(response.status).to eq(200)
+            expect(response.body).to have_tag('script', with: { src: "/assets/locales/fr.js" })
+          end
+        end
+      end
+
+      context "the preferred locale includes a region" do
+        it "returns the locale and region separated by an underscore" do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_accept_language_header = true
+          SiteSetting.default_locale = "en"
+
+          get "/bootstrap.json", headers: headers("zh-CN")
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['bootstrap']['locale_script']).to end_with("zh_CN.js")
+        end
+      end
+
+      context 'accept-language header is not set' do
+        it 'uses the site default locale' do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = 'en'
+
+          get "/bootstrap.json", headers: headers("")
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+        end
+      end
+    end
   end
 end

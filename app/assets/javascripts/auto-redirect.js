@@ -1,7 +1,7 @@
 // discourse-skip-module
-(function() {
+(function () {
   const path = document.getElementById("data-auto-redirect").dataset.path;
-  setTimeout(function() {
+  setTimeout(function () {
     window.location.href = path;
   }, 2000);
 })();

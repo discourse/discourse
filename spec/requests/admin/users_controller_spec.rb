@@ -149,6 +149,43 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "checks if user is suspended" do
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_suspended",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
+    end
+
+    it "requires suspend_until and reason" do
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {}
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+
+      expect(user).not_to be_suspended
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now
+      }
+      expect(response.status).to eq(400)
+      user.reload
+      expect(user).not_to be_suspended
+    end
+
     context "with an associated post" do
       it "can have an associated post" do
         put "/admin/users/#{user.id}/suspend.json", params: suspend_params
@@ -453,8 +490,14 @@ RSpec.describe Admin::UsersController do
     end
 
     it 'updates the moderator flag' do
-      Jobs.expects(:enqueue).with(:send_system_message, user_id: another_user.id, message_type: 'welcome_staff', message_options: { role: :moderator })
-      put "/admin/users/#{another_user.id}/grant_moderation.json"
+      expect_enqueued_with(job: :send_system_message, args: {
+        user_id: another_user.id,
+        message_type: 'welcome_staff',
+        message_options: { role: :moderator }
+      }) do
+        put "/admin/users/#{another_user.id}/grant_moderation.json"
+      end
+
       expect(response.status).to eq(200)
       another_user.reload
       expect(another_user.moderator).to eq(true)
@@ -727,6 +770,27 @@ RSpec.describe Admin::UsersController do
       reg_user.reload
       expect(reg_user).to be_silenced
     end
+
+    it "checks if user is silenced" do
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_silenced",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
+    end
   end
 
   describe '#unsilence' do
@@ -878,12 +942,14 @@ RSpec.describe Admin::UsersController do
   describe '#disable_second_factor' do
     let(:second_factor) { user.create_totp(enabled: true) }
     let(:second_factor_backup) { user.generate_backup_codes }
+    let(:security_key) { Fabricate(:user_security_key, user: user) }
 
     describe 'as an admin' do
       before do
         sign_in(admin)
         second_factor
         second_factor_backup
+        security_key
         expect(user.reload.user_second_factors.totps.first).to eq(second_factor)
       end
 
@@ -894,6 +960,7 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.user_second_factors).to be_empty
+        expect(user.reload.security_keys).to be_empty
 
         job_args = Jobs::CriticalUserEmail.jobs.first["args"].first
 
@@ -907,9 +974,27 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(403)
       end
 
+      describe 'when user has only one second factor type enabled' do
+        it 'should succeed with security keys' do
+          user.user_second_factors.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+        it 'should succeed with totp' do
+          user.security_keys.destroy_all
+
+          put "/admin/users/#{user.id}/disable_second_factor.json"
+
+          expect(response.status).to eq(200)
+        end
+      end
+
       describe 'when user does not have second factor enabled' do
         it 'should raise the right error' do
           user.user_second_factors.destroy_all
+          user.security_keys.destroy_all
 
           put "/admin/users/#{user.id}/disable_second_factor.json"
 
@@ -1003,6 +1088,19 @@ RSpec.describe Admin::UsersController do
       expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
       expect(topic.reload.user_id).to eq(target_user.id)
       expect(first_post.reload.user_id).to eq(target_user.id)
+    end
+  end
+
+  describe '#sso_record' do
+    fab!(:sso_record) { SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '') }
+
+    it "deletes the record" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      delete "/admin/users/#{user.id}/sso_record.json"
+      expect(response.status).to eq(200)
+      expect(user.single_sign_on_record).to eq(nil)
     end
   end
 

@@ -3,8 +3,7 @@ import { next } from "@ember/runloop";
 import Component from "@ember/component";
 import discourseDebounce from "discourse/lib/debounce";
 import { searchForTerm } from "discourse/lib/search";
-import { observes } from "discourse-common/utils/decorators";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
@@ -25,13 +24,13 @@ export default Component.extend({
     this.topicTitle = this.topicTitle || "";
 
     if (this.loadOnInit && !isEmpty(this.additionalFilters)) {
-      searchForTerm(this.additionalFilters, {}).then(results => {
+      searchForTerm(this.additionalFilters, {}).then((results) => {
         if (results && results.posts && results.posts.length > 0) {
           this.set(
             "topics",
             results.posts
               .mapBy("topic")
-              .filter(t => t.id !== this.currentTopicId)
+              .filter((t) => t.id !== this.currentTopicId)
           );
         } else {
           this.setProperties({ topics: null, loading: false });
@@ -45,7 +44,7 @@ export default Component.extend({
     this.setProperties({
       loading: true,
       noResults: true,
-      selectedTopicId: null
+      selectedTopicId: null,
     });
 
     this.search(this.topicTitle);
@@ -65,7 +64,7 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  search: discourseDebounce(function(title) {
+  search: discourseDebounce(function (title) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
     }
@@ -85,11 +84,11 @@ export default Component.extend({
       searchParams.searchForId = true;
     }
 
-    searchForTerm(titleWithFilters, searchParams).then(results => {
+    searchForTerm(titleWithFilters, searchParams).then((results) => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
           "topics",
-          results.posts.mapBy("topic").filter(t => t.id !== currentTopicId)
+          results.posts.mapBy("topic").filter((t) => t.id !== currentTopicId)
         );
       } else {
         this.setProperties({ topics: null, loading: false });
@@ -103,7 +102,9 @@ export default Component.extend({
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
       });
-      if (this.topicChangedCallback) this.topicChangedCallback(topic);
-    }
-  }
+      if (this.topicChangedCallback) {
+        this.topicChangedCallback(topic);
+      }
+    },
+  },
 });

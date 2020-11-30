@@ -1,4 +1,4 @@
-(function() {
+(function () {
   function postMessageReceived(e) {
     if (!e) {
       return;
@@ -13,21 +13,17 @@
   }
   window.addEventListener("message", postMessageReceived, false);
 
-  document.addEventListener("DOMContentLoaded", function(event) {
+  document.addEventListener("DOMContentLoaded", function (event) {
     var lists = document.querySelectorAll("d-topics-list");
 
     for (var i = 0; i < lists.length; i++) {
       var list = lists[i];
       var url = list.getAttribute("discourse-url");
       if (!url || url.length === 0) {
-        console.error("Error, `data-discourse-url` was not found");
+        console.error("Error, `discourse-url` was not found");
         continue;
       }
-      var frameId =
-        "de-" +
-        Math.random()
-          .toString(36)
-          .substr(2, 9);
+      var frameId = "de-" + Math.random().toString(36).substr(2, 9);
       var params = ["discourse_embed_id=" + frameId];
       list.removeAttribute("discourse-url");
 

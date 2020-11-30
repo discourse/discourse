@@ -1,50 +1,36 @@
-{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id)}}
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "")}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
 
   <div class="list-controls">
     <div class="container">
-      <section class="navigation-container">
+      <section class="navigation-container tag-navigation">
+
         {{#if showTagFilter}}
-          {{bread-crumbs
-            categories=categories
-            category=category
-            tagId=tag.id
-            noSubcategories=noSubcategories
-          }}
-          {{navigation-bar navItems=navItems filterMode=filterMode}}
+          {{#if additionalTags}}
+            {{!-- Tag intersections don't work with the tag filter, so show the tag heading instead --}}
+            {{tag-heading tag=tag additionalTags=additionalTags}}
+          {{/if}}
         {{else}}
-          <h2 class="tag-show-heading">
-            {{#link-to "tags"}}{{i18n "tagging.tags"}}{{/link-to}}
-            {{d-icon "angle-right"}}
-            {{discourse-tag-bound tagRecord=tag style="simple"}}
-            {{#each additionalTags as |tag|}}
-              <span>&amp;</span>
-              {{discourse-tag tag style="simple"}}
-            {{/each}}
-          </h2>
+          {{tag-heading tag=tag additionalTags=additionalTags}}
         {{/if}}
 
-        {{#if tagNotification}}
-          {{#unless additionalTags}}
-            {{tag-notifications-button
-              onChange=(action "changeTagNotificationLevel")
-              value=tagNotification.notification_level
-            }}
-          {{/unless}}
-        {{/if}}
-
-        {{create-topic-button
+        {{d-navigation
+          filterMode=filterMode
           canCreateTopic=canCreateTopic
-          disabled=createTopicDisabled
-          label=createTopicLabel
-          action=(route-action "createTopic")
-        }}
-
-        {{#if showToggleInfo}}
-          {{d-button icon="tag" class="btn-default" label="tagging.info" action=(action "toggleInfo") id="show-tag-info"}}
-        {{/if}}
+          hasDraft=draft
+          createTopic=(route-action "createTopic")
+          category=category
+          tag=tag
+          noSubcategories=noSubcategories
+          tagNotification=tagNotification
+          additionalTags=additionalTags
+          showInfo=showInfo
+          canCreateTopicOnTag=canCreateTopicOnTag
+          changeTagNotificationLevel=(action "changeTagNotificationLevel")
+          toggleInfo=(action "toggleInfo")
+          }}
       </section>
     </div>
   </div>
@@ -75,13 +61,21 @@
                   changeSort=(action "changeSort")
                 }}
               {{/discovery-topics-list}}
-            {{else}}
-              <footer class="topic-list-bottom">
-                <h3>
-                  {{footerMessage}}{{#link-to "discovery.categories"}} {{i18n "topic.browse_all_categories"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
-                </h3>
-              </footer>
             {{/if}}
+            <footer class="topic-list-bottom">
+              {{#if showDismissRead}}
+                {{d-button
+                  class="btn-default dismiss-read"
+                  id="dismiss-topics"
+                  action=(action "dismissReadPosts")
+                  title="topics.bulk.dismiss_tooltip"
+                  label="topics.bulk.dismiss_button"}}
+              {{/if}}
+
+              {{#footer-message education=footerEducation message=footerMessage}}
+                {{#link-to "tags"}} {{i18n "topic.browse_all_tags"}}{{/link-to}} {{i18n "or"}} {{#link-to "discovery.latest"}}{{i18n "topic.view_latest_topics"}}{{/link-to}}.
+              {{/footer-message}}
+            </footer>
           {{/unless}}
 
           {{conditional-loading-spinner condition=list.loadingMore}}

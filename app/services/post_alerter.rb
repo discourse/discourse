@@ -199,9 +199,18 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
-    Notification.types[t]
-  }
+  NOTIFIABLE_TYPES = [
+    :mentioned,
+    :replied,
+    :quoted,
+    :posted,
+    :linked,
+    :private_message,
+    :group_mentioned,
+    :watching_first_post,
+    :event_reminder,
+    :event_invitation
+  ].map { |t| Notification.types[t] }
 
   def group_stats(topic)
     sql = <<~SQL
@@ -214,7 +223,7 @@ class PostAlerter
     topic.allowed_groups.map do |g|
       {
         group_id: g.id,
-        group_name: g.name.downcase,
+        group_name: g.name,
         inbox_count: DB.query_single(sql, group_id: g.id).first.to_i
       }
     end
@@ -404,7 +413,9 @@ class PostAlerter
       notification_data[:group_name] = group.name
     end
 
-    if original_post.via_email && (incoming_email = original_post.incoming_email)
+    if opts[:skip_send_email_to]&.include?(user.email)
+      skip_send_email = true
+    elsif original_post.via_email && (incoming_email = original_post.incoming_email)
       skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
         contains_email_address?(incoming_email.cc_addresses, user)
     else
@@ -459,7 +470,8 @@ class PostAlerter
 
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
-        .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
+        .joins(:scopes)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
@@ -508,13 +520,17 @@ class PostAlerter
   end
 
   def extract_linked_users(post)
-    post.topic_links.where(reflection: false).map do |link|
+    users = post.topic_links.where(reflection: false).map do |link|
       linked_post = link.link_post
       if !linked_post && topic = link.link_topic
         linked_post = topic.posts.find_by(post_number: 1)
       end
       (linked_post && post.user_id != linked_post.user_id && linked_post.user) || nil
     end.compact
+
+    DiscourseEvent.trigger(:after_extract_linked_users, users, post)
+
+    users
   end
 
   # Notify a bunch of users
@@ -538,10 +554,50 @@ class PostAlerter
     users
   end
 
+  def group_notifying_via_smtp(post)
+    return nil if !SiteSetting.enable_smtp ||
+                  post.post_type != Post.types[:regular] ||
+                  post.incoming_email
+
+    post.topic.allowed_groups
+      .where.not(smtp_server: nil)
+      .where.not(smtp_port: nil)
+      .where.not(email_username: nil)
+      .where.not(email_password: nil)
+      .first
+  end
+
   def notify_pm_users(post, reply_to_user, notified)
     return unless post.topic
 
     warn_if_not_sidekiq
+
+    # users who interacted with the post by _directly_ emailing the group
+    if group = group_notifying_via_smtp(post)
+      group_email_regex = group.email_username_regex
+      email_addresses = Set[group.email_username]
+
+      post.topic.incoming_email.each do |incoming_email|
+        to_addresses = incoming_email.to_addresses&.split(';')
+        cc_addresses = incoming_email.cc_addresses&.split(';')
+
+        next if to_addresses&.none? { |address| address =~ group_email_regex } &&
+                cc_addresses&.none? { |address| address =~ group_email_regex }
+
+        email_addresses.add(incoming_email.from_address)
+        email_addresses.merge(to_addresses) if to_addresses.present?
+        email_addresses.merge(cc_addresses) if cc_addresses.present?
+      end
+
+      email_addresses.subtract([nil, ''])
+
+      if email_addresses.size > 1
+        Jobs.enqueue(:group_smtp_email,
+          group_id: group.id,
+          post_id: post.id,
+          email: email_addresses.to_a - [group.email_username])
+      end
+    end
 
     # users that aren't part of any mentioned groups
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
@@ -549,39 +605,46 @@ class PostAlerter
     users.each do |user|
       notification_level = TopicUser.get(post.topic, user)&.notification_level
       if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-        create_notification(user, Notification.types[:private_message], post)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
       end
     end
 
-    # users that are part of all mentionned groups
+    # users that are part of all mentioned groups
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
       when TopicUser.notification_levels[:tracking]
         notify_group_summary(user, post)
       end
     end
   end
 
-  def notify_post_users(post, notified, include_category_watchers: true, include_tag_watchers: true, new_record: false)
+  def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
     return unless post.topic
 
     warn_if_not_sidekiq
 
     condition = +<<~SQL
       id IN (
+        SELECT id FROM users WHERE false
+        /*topic*/
+        /*category*/
+        /*tags*/
+      )
+    SQL
+    if include_topic_watchers
+      condition.sub! "/*topic*/", <<~SQL
+        UNION
         SELECT user_id
           FROM topic_users
          WHERE notification_level = :watching
            AND topic_id = :topic_id
-         /*category*/
-         /*tags*/
-      )
-    SQL
+      SQL
+    end
 
     if include_category_watchers
       condition.sub! "/*category*/", <<~SQL
@@ -593,7 +656,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE cu.notification_level = :watching
            AND cu.category_id = :category_id
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -609,7 +672,7 @@ class PostAlerter
                              AND tu.topic_id = :topic_id
          WHERE tag_users.notification_level = :watching
            AND tag_users.tag_id IN (:tag_ids)
-           AND tu.user_id IS NULL
+           AND (tu.user_id IS NULL OR tu.notification_level = :watching)
       SQL
     end
 
@@ -619,6 +682,10 @@ class PostAlerter
       category_id: post.topic.category_id,
       tag_ids: tag_ids
     )
+
+    if post.topic.private_message?
+      notify = notify.where(staged: false).staff
+    end
 
     exclude_user_ids = notified.map(&:id)
     notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?

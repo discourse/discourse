@@ -43,7 +43,7 @@
                 {{/if}}
               </div>
             {{/unless}}
-            {{composer-toggles composeState=model.composeState
+            {{composer-toggles composeState=model.composeState showToolbar=showToolbar
                       toggleComposer=(action "toggle")
                       toggleToolbar=(action "toggleToolbar")
                       toggleFullscreen=(action "fullscreenComposer")}}
@@ -135,6 +135,7 @@
               {{composer-save-button action=(action "save")
                                      icon=saveIcon
                                      label=saveLabel
+                                     forwardEvent=true
                                      disableSubmit=disableSubmit}}
 
               {{#if site.mobileView}}
@@ -190,12 +191,12 @@
 
           {{#if site.mobileView}}
             {{#if allowUpload}}
-              <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}">
+              <a class="btn btn-default no-text mobile-file-upload {{if isUploading "hidden"}}"  aria-label={{i18n "composer.upload_title"}}>
                 {{d-icon uploadIcon}}
               </a>
             {{/if}}
 
-            <a href class="btn btn-default no-text mobile-preview" title={{i18n "composer.show_preview"}} {{action "togglePreview"}}>
+            <a href class="btn btn-default no-text mobile-preview" title={{i18n "composer.show_preview"}} {{action "togglePreview"}} aria-label={{i18n "preview"}}>
               {{d-icon "desktop"}}
             </a>
 

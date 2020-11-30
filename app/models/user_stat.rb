@@ -12,10 +12,59 @@ class UserStat < ActiveRecord::Base
     update_distinct_badge_count
     update_view_counts(last_seen)
     update_first_unread(last_seen)
+    update_first_unread_pm(last_seen)
   end
 
-  def self.update_first_unread(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: 10.minutes.ago)
+  UPDATE_UNREAD_MINUTES_AGO = 10
+  UPDATE_UNREAD_USERS_LIMIT = 10_000
+
+  def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit)
+    UPDATE user_stats us
+    SET first_unread_pm_at = COALESCE(Z.min_date, :now)
+    FROM (
+      SELECT
+        Y.user_id,
+        Y.min_date
+      FROM (
+        SELECT
+          u1.id user_id,
+          X.min_date
+        FROM users u1
+        LEFT JOIN (
+          SELECT
+            tau.user_id,
+            MIN(t.updated_at) min_date
+          FROM topic_allowed_users tau
+          INNER JOIN topics t ON t.id = tau.topic_id
+          INNER JOIN users u ON u.id = tau.user_id
+          LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
+          WHERE t.deleted_at IS NULL
+          AND t.archetype = :archetype
+          AND tu.last_read_post_number < CASE
+                                         WHEN u.admin OR u.moderator
+                                         THEN t.highest_staff_post_number
+                                         ELSE t.highest_post_number
+                                         END
+          AND (COALESCE(tu.notification_level, 1) >= 2)
+          GROUP BY tau.user_id
+        ) AS X ON X.user_id = u1.id
+      ) AS Y
+      WHERE Y.user_id IN (
+        SELECT id
+        FROM users
+        WHERE last_seen_at IS NOT NULL
+        AND last_seen_at > :last_seen
+        ORDER BY last_seen_at DESC
+        LIMIT :limit
+      )
+    ) AS Z
+    WHERE us.user_id = Z.user_id
+    SQL
+  end
+
+  def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
+    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago)
       UPDATE user_stats us
       SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
@@ -154,11 +203,9 @@ class UserStat < ActiveRecord::Base
   end
 
   # topic_reply_count is a count of posts in other users' topics
-  def calc_topic_reply_count!(max, start_time = nil)
+  def calc_topic_reply_count!(start_time = nil)
     sql = <<~SQL
-    SELECT COUNT(*) count
-    FROM (
-      SELECT DISTINCT posts.topic_id
+      SELECT COUNT(DISTINCT posts.topic_id) AS count
       FROM posts
       INNER JOIN topics ON topics.id = posts.topic_id
       WHERE posts.user_id = ?
@@ -166,13 +213,11 @@ class UserStat < ActiveRecord::Base
       AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
       AND topics.archetype <> 'private_message'
       #{start_time.nil? ? '' : 'AND posts.created_at > ?'}
-      LIMIT ?
-    ) as user_topic_replies
     SQL
     if start_time.nil?
-      DB.query_single(sql, self.user_id, max).first
+      DB.query_single(sql, self.user_id).first
     else
-      DB.query_single(sql, self.user_id, start_time, max).first
+      DB.query_single(sql, self.user_id, start_time).first
     end
   end
 
@@ -245,4 +290,6 @@ end
 #  flags_ignored            :integer          default(0), not null
 #  first_unread_at          :datetime         not null
 #  distinct_badge_count     :integer          default(0), not null
+#  first_unread_pm_at       :datetime         not null
+#  digest_attempted_at      :datetime
 #

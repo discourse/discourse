@@ -4,7 +4,7 @@ import {
   searchAliases,
   translations,
   tonableEmojis,
-  replacements
+  replacements,
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
@@ -25,17 +25,11 @@ export function buildReplacementsList(emojiReplacements) {
   return Object.keys(emojiReplacements)
     .sort()
     .reverse()
-    .map(emoji => {
+    .map((emoji) => {
       return emoji
         .split("")
-        .map(chr => {
-          return (
-            "\\u" +
-            chr
-              .charCodeAt(0)
-              .toString(16)
-              .padStart(4, "0")
-          );
+        .map((chr) => {
+          return "\\u" + chr.charCodeAt(0).toString(16).padStart(4, "0");
         })
         .join("");
     })
@@ -69,16 +63,18 @@ function unicodeRegexp(inlineEmoji) {
 }
 
 // add all default emojis
-emojis.forEach(code => (emojiHash[code] = true));
+emojis.forEach((code) => (emojiHash[code] = true));
 
 // and their aliases
 const aliasHash = {};
-Object.keys(aliases).forEach(name => {
-  aliases[name].forEach(alias => (aliasHash[alias] = name));
+Object.keys(aliases).forEach((name) => {
+  aliases[name].forEach((alias) => (aliasHash[alias] = name));
 });
 
 function isReplacableInlineEmoji(string, index, inlineEmoji) {
-  if (inlineEmoji) return true;
+  if (inlineEmoji) {
+    return true;
+  }
 
   // index depends on regex; when `inlineEmoji` is false, the regex starts
   // with a `\B` character, so there's no need to subtract from the index
@@ -117,18 +113,24 @@ export function performEmojiUnescape(string, opts) {
     }
     const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
     const url = buildEmojiUrl(emojiVal, opts);
-    const classes = isCustomEmoji(emojiVal, opts)
+    let classes = isCustomEmoji(emojiVal, opts)
       ? "emoji emoji-custom"
       : "emoji";
+
+    if (opts.class) {
+      classes = `${classes} ${opts.class}`;
+    }
 
     const isReplacable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
       isReplacableInlineEmoji(string, index, inlineEmoji);
 
     return url && isReplacable
-      ? `<img src='${url}' ${
+      ? `<img width="20" height="20" src='${url}' ${
           opts.skipTitle ? "" : `title='${emojiVal}'`
-        } alt='${emojiVal}' class='${classes}'>`
+        } ${
+          opts.lazy ? "loading='lazy' " : ""
+        }alt='${emojiVal}' class='${classes}'>`
       : m;
   });
 }
@@ -157,9 +159,12 @@ export function performEmojiEscape(string, opts) {
 
 export function isCustomEmoji(code, opts) {
   code = code.toLowerCase();
-  if (extendedEmoji.hasOwnProperty(code)) return true;
-  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code))
+  if (extendedEmoji.hasOwnProperty(code)) {
     return true;
+  }
+  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code)) {
+    return true;
+  }
   return false;
 }
 
@@ -211,7 +216,11 @@ export function emojiSearch(term, options) {
 
   toSearch =
     toSearch ||
-    _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
+    [
+      ...Object.keys(emojiHash),
+      ...Object.keys(extendedEmoji),
+      ...Object.keys(aliasHash),
+    ].sort();
 
   const results = [];
 
@@ -225,7 +234,9 @@ export function emojiSearch(term, options) {
   // if term matches from beginning
   for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
-    if (item.indexOf(term) === 0) addResult(item);
+    if (item.indexOf(term) === 0) {
+      addResult(item);
+    }
   }
 
   if (searchAliases[term]) {
@@ -234,7 +245,9 @@ export function emojiSearch(term, options) {
 
   for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
-    if (item.indexOf(term) > 0) addResult(item);
+    if (item.indexOf(term) > 0) {
+      addResult(item);
+    }
   }
 
   if (maxResults === -1) {
@@ -245,7 +258,7 @@ export function emojiSearch(term, options) {
 }
 
 export function isSkinTonableEmoji(term) {
-  const match = _.compact(term.split(":"))[0];
+  const match = term.split(":").filter(Boolean)[0];
   if (match) {
     return tonableEmojis.indexOf(match) !== -1;
   }

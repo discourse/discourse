@@ -1,9 +1,7 @@
 import deprecated from "discourse-common/lib/deprecated";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import ComposerEditor from "discourse/components/composer-editor";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import { addButton, removeButton } from "discourse/widgets/post-menu";
 import { includeAttributes } from "discourse/lib/transform-post";
@@ -15,9 +13,13 @@ import {
   createWidget,
   reopenWidget,
   decorateWidget,
-  changeSetting
+  changeSetting,
+  queryRegistry,
 } from "discourse/widgets/widget";
-import { preventCloak } from "discourse/widgets/post-stream";
+import {
+  preventCloak,
+  addPostTransformCallback,
+} from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
@@ -27,16 +29,15 @@ import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addPostClassesCallback } from "discourse/widgets/post";
-import { addPostTransformCallback } from "discourse/widgets/post-stream";
 import {
   attachAdditionalPanel,
-  addToHeaderIcons
+  addToHeaderIcons,
 } from "discourse/widgets/header";
 import {
   registerIconRenderer,
-  replaceIcon
+  replaceIcon,
+  iconNode,
 } from "discourse-common/lib/icon-library";
-import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addNavItem } from "discourse/models/nav-item";
 import { replaceFormatter } from "discourse/lib/utilities";
@@ -47,19 +48,29 @@ import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-usernam
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
-import {
+import ComposerEditor, {
   addComposerUploadHandler,
-  addComposerUploadMarkdownResolver
+  addComposerUploadMarkdownResolver,
 } from "discourse/components/composer-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addExtraIconRenderer } from "discourse/helpers/category-link";
-import { queryRegistry } from "discourse/widgets/widget";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/helpers/category-link";
 import Composer from "discourse/models/composer";
 import { on } from "@ember/object/evented";
+import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import {
+  addSaveableUserField,
+  addSaveableUserOptionField,
+} from "discourse/models/user";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.10.1";
+const PLUGIN_API_VERSION = "0.11.1";
 
 class PluginApi {
   constructor(version, container) {
@@ -286,7 +297,7 @@ class PluginApi {
     const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
-    decorateWidget(`poster-name:${loc}`, dec => {
+    decorateWidget(`poster-name:${loc}`, (dec) => {
       const attrs = dec.attrs;
       const result = cb(attrs.userCustomFields || {}, attrs);
 
@@ -296,9 +307,11 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split("|").map(name => {
+          iconBody = result.emoji.split("|").map((name) => {
             let widgetAttrs = { name };
-            if (result.emojiTitle) widgetAttrs.title = true;
+            if (result.emojiTitle) {
+              widgetAttrs.title = true;
+            }
             return dec.attach("emoji", widgetAttrs);
           });
         }
@@ -488,7 +501,7 @@ class PluginApi {
    ```
    **/
   onPageChange(fn) {
-    this.onAppEvent("page:changed", data => fn(data.url, data.title));
+    this.onAppEvent("page:changed", (data) => fn(data.url, data.title));
   }
 
   /**
@@ -807,7 +820,7 @@ class PluginApi {
       const customHref = item.customHref;
       if (customHref) {
         const router = this.container.lookup("service:router");
-        item.customHref = function(category, args) {
+        item.customHref = function (category, args) {
           return customHref(category, args, router);
         };
       }
@@ -815,7 +828,7 @@ class PluginApi {
       const customFilter = item.customFilter;
       if (customFilter) {
         const router = this.container.lookup("service:router");
-        item.customFilter = function(category, args) {
+        item.customFilter = function (category, args) {
           return customFilter(category, args, router);
         };
       }
@@ -823,7 +836,7 @@ class PluginApi {
       const forceActive = item.forceActive;
       if (forceActive) {
         const router = this.container.lookup("service:router");
-        item.forceActive = function(category, args) {
+        item.forceActive = function (category, args) {
           return forceActive(category, args, router);
         };
       }
@@ -831,7 +844,7 @@ class PluginApi {
       const init = item.init;
       if (init) {
         const router = this.container.lookup("service:router");
-        item.init = function(navItem, category, args) {
+        item.init = function (navItem, category, args) {
           init(navItem, category, args, router);
         };
       }
@@ -1157,6 +1170,57 @@ class PluginApi {
   addToHeaderIcons(icon) {
     addToHeaderIcons(icon);
   }
+
+  /**
+   * Adds an item to the quick access profile panel, before "Log Out".
+   *
+   * ```
+   * api.addQuickAccessProfileItem({
+   *   icon: "pencil-alt",
+   *   href: "/somewhere",
+   *   content: I18n.t("user.somewhere")
+   * })
+   * ```
+   *
+   **/
+  addQuickAccessProfileItem(item) {
+    addQuickAccessProfileItem(item);
+  }
+
+  addFeaturedLinkMetaDecorator(decorator) {
+    addFeaturedLinkMetaDecorator(decorator);
+  }
+
+  /**
+   * Adds items to dropdown's in search-advanced-options.
+   *
+   * ```
+   * api.addAdvancedSearchOptions({
+   *   inOptionsForUsers:[{
+   *     name: I18n.t("search.advanced.in.assigned"),
+   *     value: "assigned",
+   *   },
+   *   {
+   *     name: I18n.t("search.advanced.in.not_assigned"),
+   *     value: "not_assigned",
+   *   },]
+   *   statusOptions: [{
+   *     name: I18n.t("search.advanced.status.open"),
+   *     value: "open"
+   *   }]
+   * ```
+   *
+   **/
+  addAdvancedSearchOptions(options) {
+    addAdvancedSearchOptions(options);
+  }
+
+  addSaveableUserField(fieldName) {
+    addSaveableUserField(fieldName);
+  }
+  addSaveableUserOptionField(fieldName) {
+    addSaveableUserOptionField(fieldName);
+  }
 }
 
 let _pluginv01;
@@ -1182,7 +1246,7 @@ function getPluginApi(version) {
   version = version.toString();
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, Discourse.__container__);
+      _pluginv01 = new PluginApi(version, getOwner(this));
     }
 
     // We are recycling the compatible object, but let's update to the higher version
@@ -1234,7 +1298,7 @@ function decorate(klass, evt, cb, id) {
   }
 
   const mixin = {};
-  mixin["_decorate_" + _decorateId++] = on(evt, function(elem) {
+  mixin["_decorate_" + _decorateId++] = on(evt, function (elem) {
     elem = elem || this.element;
     if (elem) {
       cb(elem);

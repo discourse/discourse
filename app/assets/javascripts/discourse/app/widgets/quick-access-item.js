@@ -44,11 +44,11 @@ createWidget("quick-access-item", {
       }
     }
 
-    return h("a", { attributes: { href } }, [
+    return h("a", { attributes: this._linkAttributes(href) }, [
       iconNode(icon),
       new RawHtml({
-        html: `<div>${this._usernameHtml()}${content}</div>`
-      })
+        html: `<div>${this._usernameHtml()}${content}</div>`,
+      }),
     ]);
   },
 
@@ -58,6 +58,10 @@ createWidget("quick-access-item", {
       e.preventDefault();
       return this.sendWidgetAction(this.attrs.action, this.attrs.actionParam);
     }
+  },
+
+  _linkAttributes(href) {
+    return { href };
   },
 
   _contentHtml() {
@@ -72,5 +76,5 @@ createWidget("quick-access-item", {
     return this.attrs.username
       ? `<span>${this.attrs.username}</span> `
       : "<span></span>";
-  }
+  },
 });

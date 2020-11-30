@@ -26,11 +26,10 @@ export default {
           Object.prototype.toString
             .call(window.HTMLElement)
             .indexOf("Constructor") > 0 ||
-          (function(p) {
+          (function (p) {
             return p.toString() === "[object SafariRemoteNotification]";
           })(!window["safari"] || safari.pushNotification);
         caps.isChrome = !!window.chrome && !caps.isOpera;
-        caps.isIE11 = !!ua.match(/Trident.*rv\:11\./);
 
         caps.canPasteImages = caps.isChrome || caps.isFirefox;
       }
@@ -47,7 +46,7 @@ export default {
       caps.hasContactPicker =
         "contacts" in navigator && "ContactsManager" in window;
 
-      caps.canVibrate = "vibrate" in navigator;
+      caps.canVibrate = "vibrate" in navigator && !caps.isFirefox; // Remove Firefox condition when https://arewefenixyet.com/ lands
     }
 
     // We consider high res a device with 1280 horizontal pixels. High DPI tablets like
@@ -59,5 +58,5 @@ export default {
     application.inject("view", "capabilities", "capabilities:main");
     application.inject("controller", "capabilities", "capabilities:main");
     application.inject("component", "capabilities", "capabilities:main");
-  }
+  },
 };

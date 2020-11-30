@@ -3,9 +3,12 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import BufferedContent from "discourse/mixins/buffered-content";
 import { extractError } from "discourse/lib/ajax-error";
+import { oneWay } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, BufferedContent, {
-  @discourseComputed("buffered.id", "id")
+  tagId: oneWay("model.id"),
+
+  @discourseComputed("tagId", "model.id")
   renameDisabled(inputTagName, currentTagName) {
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     const newTagName = inputTagName
@@ -18,17 +21,17 @@ export default Controller.extend(ModalFunctionality, BufferedContent, {
   actions: {
     performRename() {
       this.model
-        .update({ id: this.get("buffered.id") })
-        .then(result => {
+        .update({ id: this.get("tagId") })
+        .then((result) => {
           this.send("closeModal");
 
           if (result.responseJson.tag) {
-            this.transitionToRoute("tags.show", result.responseJson.tag.id);
+            this.transitionToRoute("tag.show", result.responseJson.tag.id);
           } else {
             this.flash(extractError(result.responseJson.errors[0]), "error");
           }
         })
-        .catch(error => this.flash(extractError(error), "error"));
-    }
-  }
+        .catch((error) => this.flash(extractError(error), "error"));
+    },
+  },
 });

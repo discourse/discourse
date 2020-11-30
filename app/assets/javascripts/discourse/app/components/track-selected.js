@@ -5,7 +5,7 @@ export default Component.extend({
   tagName: "span",
 
   @observes("selected")
-  selectionChanged: function() {
+  selectionChanged: function () {
     const selected = this.selected;
     const list = this.selectedList;
     const id = this.selectedId;
@@ -15,5 +15,5 @@ export default Component.extend({
     } else {
       list.removeObject(id);
     }
-  }
+  },
 });

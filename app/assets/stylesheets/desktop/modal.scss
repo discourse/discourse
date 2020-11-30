@@ -28,11 +28,11 @@
   font-size: $font-up-3;
   text-decoration: none;
   &:visited {
-    color: $primary-high;
+    color: var(--primary-high);
   }
   cursor: pointer;
   &:hover {
-    color: $primary;
+    color: var(--primary);
   }
 }
 
@@ -44,64 +44,6 @@
   .modal-body.insert-link {
     input {
       min-width: 450px;
-    }
-  }
-}
-
-.edit-category-modal {
-  .modal-body {
-    position: relative;
-    height: 420px;
-  }
-
-  .edit-category-tab-general {
-    .category-chooser {
-      width: 434px;
-    }
-  }
-
-  .disable_info_wrap {
-    .cannot_delete_reason {
-      top: -100px;
-      right: 4px;
-      max-width: 380px;
-      min-width: 300px;
-    }
-  }
-}
-
-.topic-bulk-actions-modal {
-  p {
-    margin-top: 0;
-  }
-  &.full .modal-body {
-    height: 400px;
-    max-height: 400px;
-  }
-
-  .bulk-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -1%;
-
-    .btn {
-      flex: 1 0 30%;
-      margin-bottom: 1em;
-      margin-right: 1%;
-      white-space: nowrap;
-      overflow: hidden;
-      max-width: 33%;
-
-      @media screen and (max-width: 767px) {
-        flex: 1 0 48%;
-        max-width: 48%;
-      }
-
-      @include breakpoint(mobile-extra-large) {
-        flex: 1 1 auto;
-        min-width: 49%;
-        max-width: unset;
-      }
     }
   }
 }
@@ -151,5 +93,11 @@
         margin-bottom: 9px;
       }
     }
+  }
+}
+
+.change-post-notice-modal {
+  .modal-body {
+    min-width: 450px;
   }
 }

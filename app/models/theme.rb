@@ -122,7 +122,7 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  BASE_COMPILER_VERSION = 16
+  BASE_COMPILER_VERSION = 17
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -606,6 +606,7 @@ end
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
 #  enabled          :boolean          default(TRUE), not null
+#  auto_update      :boolean          default(TRUE), not null
 #
 # Indexes
 #

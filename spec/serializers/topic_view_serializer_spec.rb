@@ -19,7 +19,7 @@ describe TopicViewSerializer do
   fab!(:admin) { Fabricate(:admin) }
 
   describe '#featured_link and #featured_link_root_domain' do
-    let(:featured_link) { 'http://meta.discourse.org' }
+    fab!(:featured_link) { 'http://meta.discourse.org' }
 
     describe 'when topic featured link is disable' do
       it 'should return the right attributes' do
@@ -46,7 +46,7 @@ describe TopicViewSerializer do
   end
 
   describe '#image_url' do
-    let(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
+    fab!(:image_upload) { Fabricate(:image_upload, width: 5000, height: 5000) }
 
     describe 'when a topic has an image' do
       before { topic.update!(image_upload_id: image_upload.id) }
@@ -90,7 +90,7 @@ describe TopicViewSerializer do
   end
 
   describe '#suggested_topics' do
-    let(:topic2) { Fabricate(:topic) }
+    fab!(:topic2) { Fabricate(:topic) }
 
     before do
       TopicUser.update_last_read(user, topic2.id, 0, 0, 0)
@@ -105,8 +105,8 @@ describe TopicViewSerializer do
     end
 
     describe 'when not loading last chunk' do
-      let(:post) { Fabricate(:post, topic: topic) }
-      let(:post2) { Fabricate(:post, topic: topic) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+      fab!(:post2) { Fabricate(:post, topic: topic) }
 
       it 'should not include suggested topics' do
         post
@@ -120,7 +120,7 @@ describe TopicViewSerializer do
     end
 
     describe 'with private messages' do
-      let!(:topic) do
+      fab!(:topic) do
         Fabricate(:private_message_topic,
           highest_post_number: 1,
           topic_allowed_users: [
@@ -129,7 +129,7 @@ describe TopicViewSerializer do
         )
       end
 
-      let!(:topic2) do
+      fab!(:topic2) do
         Fabricate(:private_message_topic,
           highest_post_number: 1,
           topic_allowed_users: [
@@ -155,9 +155,9 @@ describe TopicViewSerializer do
   end
 
   describe 'when tags added to private message topics' do
-    let(:moderator) { Fabricate(:moderator) }
-    let(:tag) { Fabricate(:tag) }
-    let(:pm) do
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:pm) do
       Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: moderator),
         Fabricate.build(:topic_allowed_user, user: user)
@@ -192,12 +192,12 @@ describe TopicViewSerializer do
   end
 
   describe 'with hidden tags' do
-    let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-    let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+    fab!(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     before do
       SiteSetting.tagging_enabled = true
-      staff_tag_group
+      hidden_tag.tag_groups << staff_tag_group
       topic.tags << hidden_tag
     end
 
@@ -212,9 +212,33 @@ describe TopicViewSerializer do
     end
   end
 
+  describe 'tags order' do
+    fab!(:tag1) { Fabricate(:tag, name: 'ctag', topic_count: 5) }
+    fab!(:tag2) { Fabricate(:tag, name: 'btag', topic_count: 9) }
+    fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topic.tags << tag1
+      topic.tags << tag2
+      topic.tags << tag3
+    end
+
+    it 'tags are automatically sorted by tag popularity' do
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(btag ctag atag))
+    end
+
+    it 'tags can be sorted alphabetically' do
+      SiteSetting.tags_sort_alphabetically = true
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(atag btag ctag))
+    end
+  end
+
   context "with flags" do
-    let!(:post) { Fabricate(:post, topic: topic) }
-    let!(:other_post) { Fabricate(:post, topic: topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:other_post) { Fabricate(:post, topic: topic) }
 
     it "will return reviewable counts on posts" do
       r = PostActionCreator.inappropriate(Fabricate(:user), post).reviewable
@@ -239,7 +263,7 @@ describe TopicViewSerializer do
         SiteSetting.approve_post_count = 1
       end
 
-      let!(:queued_post) do
+      fab!(:queued_post) do
         ReviewableQueuedPost.needs_review!(
           topic: topic,
           payload: { raw: "hello my raw contents" },
@@ -375,8 +399,74 @@ describe TopicViewSerializer do
           expect(json[:published_page]).to be_present
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
+
+        context "secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "doesn't return the published page" do
+            json = serialize_topic(topic, admin)
+            expect(json[:published_page]).to be_blank
+          end
+        end
       end
     end
   end
 
+  context "viewing private messages when enable_category_group_moderation is enabled" do
+    fab!(:pm_topic) do
+      Fabricate(:private_message_topic, topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: user),
+        Fabricate.build(:topic_allowed_user, user: admin)
+      ])
+    end
+    fab!(:post) { Fabricate(:post, topic: pm_topic) }
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+    end
+
+    # Ensure having enable_category_group_moderation turned on doesn't break private messages
+    it "should return posts" do
+      json = serialize_topic(pm_topic, user)
+      expect(json[:post_stream][:posts]).to be_present
+    end
+  end
+
+  describe '#user_last_posted_at' do
+    context 'When the slow mode is disabled' do
+      it 'returns nil' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+    end
+
+    context 'Wwhen the slow mode is enabled' do
+      before { topic.update!(slow_mode_seconds: 1000) }
+
+      it 'returns nil if no user is given' do
+        json = serialize_topic(topic, nil)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it "returns nil if there's no topic_user association" do
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it 'returns the last time the user posted' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_present
+      end
+    end
+  end
 end

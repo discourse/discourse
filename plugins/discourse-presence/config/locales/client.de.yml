@@ -1,15 +1,18 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   js:
     presence:
-      replying: "antwortet"
-      editing: "bearbeitet"
+      replying:
+        one: "antwortet"
+        other: "antworten"
+      editing:
+        one: "bearbeitet"
+        other: "bearbeiten"
       replying_to_topic:
         one: "antwortet"
-        other: "antwortet"
+        other: "antworten"

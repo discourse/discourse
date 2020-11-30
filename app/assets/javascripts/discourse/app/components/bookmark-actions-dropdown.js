@@ -1,7 +1,6 @@
 import I18n from "I18n";
-import { computed } from "@ember/object";
+import { computed, action } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { action } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bookmark-actions-dropdown"],
@@ -9,7 +8,7 @@ export default DropdownSelectBoxComponent.extend({
   selectKitOptions: {
     icon: null,
     translatedNone: "...",
-    showFullTitle: true
+    showFullTitle: true,
   },
 
   content: computed(() => {
@@ -20,14 +19,14 @@ export default DropdownSelectBoxComponent.extend({
         name: I18n.t("post.bookmarks.actions.delete_bookmark.name"),
         description: I18n.t(
           "post.bookmarks.actions.delete_bookmark.description"
-        )
+        ),
       },
       {
         id: "edit",
         icon: "pencil-alt",
         name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
-        description: I18n.t("post.bookmarks.actions.edit_bookmark.description")
-      }
+        description: I18n.t("post.bookmarks.actions.edit_bookmark.description"),
+      },
     ];
   }),
 
@@ -38,5 +37,5 @@ export default DropdownSelectBoxComponent.extend({
     } else if (selectedAction === "edit") {
       this.editBookmark(this.bookmark);
     }
-  }
+  },
 });

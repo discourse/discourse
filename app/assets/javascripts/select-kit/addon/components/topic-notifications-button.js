@@ -1,18 +1,18 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import layout from "select-kit/templates/components/topic-notifications-button";
 
 export default Component.extend({
-  layoutName: "select-kit/templates/components/topic-notifications-button",
+  layout,
   classNames: ["topic-notifications-button"],
   classNameBindings: ["isLoading"],
   appendReason: true,
   showFullTitle: true,
-  placement: "bottom-start",
   notificationLevel: null,
   topic: null,
   showCaret: true,
   isLoading: false,
-  icon: computed("isLoading", function() {
+  icon: computed("isLoading", function () {
     return this.isLoading ? "spinner" : null;
   }),
 
@@ -24,5 +24,5 @@ export default Component.extend({
         .updateNotifications(levelId)
         .finally(() => this.set("isLoading", false));
     }
-  }
+  },
 });

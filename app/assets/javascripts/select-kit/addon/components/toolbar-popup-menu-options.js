@@ -8,20 +8,20 @@ export default DropdownSelectBoxComponent.extend({
   selectKitOptions: {
     showFullTitle: false,
     filterable: false,
-    autoFilterable: false
+    autoFilterable: false,
   },
 
   modifyContent(contents) {
     return contents
-      .map(content => {
+      .map((content) => {
         if (content.condition) {
           return {
             icon: content.icon,
             name: I18n.t(content.label),
-            id: content.action
+            id: content.action,
           };
         }
       })
       .filter(Boolean);
-  }
+  },
 });

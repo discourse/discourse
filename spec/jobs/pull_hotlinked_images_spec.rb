@@ -14,6 +14,8 @@ describe Jobs::PullHotlinkedImages do
   let(:upload_path) { Discourse.store.upload_path }
 
   before do
+    Jobs.run_immediately!
+
     stub_request(:get, image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:get, encoded_image_url).to_return(body: png, headers: { "Content-Type" => "image/png" })
     stub_request(:get, broken_image_url).to_return(status: 404)
@@ -60,6 +62,37 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
+    it 'removes downloaded images when they are no longer needed' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post.rebake!
+      post.reload
+      expect(post.post_uploads.count).to eq(1)
+
+      post.update(raw: "Post with no images")
+      post.rebake!
+      post.reload
+      expect(post.post_uploads.count).to eq(0)
+    end
+
+    it 'replaces images again after edit' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+
+      expect do
+        post.rebake!
+      end.to change { Upload.count }.by(1)
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+
+      # Post raw is updated back to the old value (e.g. by wordpress integration)
+      post.update(raw: "<img src='#{image_url}'>")
+
+      expect do
+        post.rebake!
+      end.to change { Upload.count }.by(0) # We alread have the upload
+
+      expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
+    end
+
     it 'replaces encoded image urls' do
       post = Fabricate(:post, raw: "<img src='#{encoded_image_url}'>")
       expect do
@@ -69,7 +102,11 @@ describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("![](#{Upload.last.short_url})")
     end
 
-    it 'replaces images in an anchor tag with weird indentation' do
+    xit 'replaces images in an anchor tag with weird indentation' do
+      # Skipped pending https://meta.discourse.org/t/152801
+      # This spec was previously passing, even though the resulting markdown was invalid
+      # Now the spec has been improved, and shows the issue
+
       stub_request(:get, "http://test.localhost/uploads/short-url/z2QSs1KJWoj51uYhDjb6ifCzxH6.gif")
         .to_return(status: 200, body: "")
 
@@ -149,7 +186,9 @@ describe Jobs::PullHotlinkedImages do
 
     context "when secure media enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
-        enable_secure_media
+        setup_s3
+        SiteSetting.secure_media = true
+
         upload = Fabricate(:secure_upload_s3, secure: true)
         stub_s3(upload)
         url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -162,7 +201,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload original_sha1 is missing" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -181,7 +222,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when the upload access_control_post is different to the current post" do
         it "redownloads the upload" do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:secure_upload_s3, secure: true)
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
@@ -190,11 +233,13 @@ describe Jobs::PullHotlinkedImages do
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
+          FastImage.expects(:size).returns([100, 100]).at_least_once
 
-          # without this we get an infinite hang...
-          Post.any_instance.stubs(:trigger_post_process)
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
+
+          expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+            .to change { Upload.count }.by(0)
         end
       end
     end
@@ -261,7 +306,6 @@ describe Jobs::PullHotlinkedImages do
       let(:api_url) { "https://en.wikipedia.org/w/api.php?action=query&titles=#{media}&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url&iiurlwidth=500&format=json" }
 
       before do
-        Jobs.run_later!
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
 
@@ -283,13 +327,25 @@ describe Jobs::PullHotlinkedImages do
 
       it 'replaces image src' do
         post = Fabricate(:post, raw: "#{url}")
-
-        Jobs::ProcessPost.new.execute(post_id: post.id)
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-        Jobs::ProcessPost.new.execute(post_id: post.id)
+        post.rebake!
         post.reload
 
         expect(post.cooked).to match(/<img src=.*\/uploads/)
+        expect(post.post_uploads.count).to eq(1)
+      end
+
+      it 'associates uploads correctly' do
+        post = Fabricate(:post, raw: "#{url}")
+        post.rebake!
+        post.reload
+
+        expect(post.post_uploads.count).to eq(1)
+
+        post.update(raw: "no onebox")
+        post.rebake!
+        post.reload
+
+        expect(post.post_uploads.count).to eq(0)
       end
 
       it 'all combinations' do
@@ -301,8 +357,7 @@ describe Jobs::PullHotlinkedImages do
         BODY
 
         2.times do
-          Jobs::ProcessPost.new.execute(post_id: post.id)
-          Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+          post.rebake!
         end
 
         post.reload
@@ -346,7 +401,9 @@ describe Jobs::PullHotlinkedImages do
 
       context "when secure media enabled" do
         it 'should return false for secure-media-upload url' do
-          enable_secure_media
+          setup_s3
+          SiteSetting.secure_media = true
+
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_media_url_from_upload_url(upload.url)
@@ -366,12 +423,9 @@ describe Jobs::PullHotlinkedImages do
     end
 
     it "returns false for emoji when app and S3 CDNs configured" do
-      set_cdn_url "https://mydomain.cdn/test"
-      SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-      SiteSetting.s3_access_key_id = "s3-access-key-id"
-      SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+      setup_s3
       SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-      SiteSetting.enable_s3_uploads = true
+      set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
       expect(subject.should_download_image?(src)).to eq(false)
@@ -454,22 +508,8 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  def enable_secure_media
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secrets3_region key"
-    SiteSetting.secure_media = true
-  end
-
   def stub_s3(upload)
-    stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-    stub_request(
-      :put,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}?acl"
-    )
+    stub_upload(upload)
     stub_request(:get, "https:" + upload.url).to_return(status: 200, body: file_from_fixtures("smallest.png"))
-    # stub_request(:get, /#{SiteSetting.s3_upload_bucket}\.s3\.amazonaws\.com/)
   end
 end

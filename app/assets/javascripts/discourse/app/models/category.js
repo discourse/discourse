@@ -1,13 +1,15 @@
 import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
-import { on } from "discourse-common/utils/decorators";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { getOwner } from "discourse-common/lib/get-owner";
+
+const STAFF_GROUP_NAME = "staff";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -21,15 +23,13 @@ const Category = RestModel.extend({
     this.set("availableGroups", availableGroups);
 
     const groupPermissions = this.group_permissions;
+
     if (groupPermissions) {
       this.set(
         "permissions",
-        groupPermissions.map(elem => {
+        groupPermissions.map((elem) => {
           availableGroups.removeObject(elem.group_name);
-          return {
-            group_name: elem.group_name,
-            permission: PermissionType.create({ id: elem.permission_type })
-          };
+          return elem;
         })
       );
     }
@@ -47,7 +47,7 @@ const Category = RestModel.extend({
     return [
       PermissionType.create({ id: PermissionType.FULL }),
       PermissionType.create({ id: PermissionType.CREATE_POST }),
-      PermissionType.create({ id: PermissionType.READONLY })
+      PermissionType.create({ id: PermissionType.READONLY }),
     ];
   },
 
@@ -76,7 +76,7 @@ const Category = RestModel.extend({
     return (
       subcategories &&
       subcategories.some(
-        cat => cat.subcategories && cat.subcategories.length > 0
+        (cat) => cat.subcategories && cat.subcategories.length > 0
       )
     );
   },
@@ -86,13 +86,45 @@ const Category = RestModel.extend({
     return notificationLevel === NotificationLevels.MUTED;
   },
 
+  @discourseComputed("isMuted", "subcategories")
+  isHidden(isMuted, subcategories) {
+    if (!isMuted) {
+      return false;
+    } else if (!subcategories) {
+      return true;
+    }
+
+    if (subcategories.some((cat) => !cat.isHidden)) {
+      return false;
+    }
+
+    return true;
+  },
+
+  @discourseComputed("isMuted", "subcategories")
+  hasMuted(isMuted, subcategories) {
+    if (isMuted) {
+      return true;
+    } else if (!subcategories) {
+      return false;
+    }
+
+    if (subcategories.some((cat) => cat.hasMuted)) {
+      return true;
+    }
+
+    return false;
+  },
+
   @discourseComputed("notification_level")
   notificationLevelString(notificationLevel) {
     // Get the key from the value
     const notificationLevelString = Object.keys(NotificationLevels).find(
-      key => NotificationLevels[key] === notificationLevel
+      (key) => NotificationLevels[key] === notificationLevel
     );
-    if (notificationLevelString) return notificationLevelString.toLowerCase();
+    if (notificationLevelString) {
+      return notificationLevelString.toLowerCase();
+    }
   },
 
   @discourseComputed("name")
@@ -133,7 +165,7 @@ const Category = RestModel.extend({
   @discourseComputed("topic_count", "subcategories.[]")
   totalTopicCount(topicCount, subcategories) {
     if (subcategories) {
-      subcategories.forEach(subcategory => {
+      subcategories.forEach((subcategory) => {
         topicCount += subcategory.topic_count;
       });
     }
@@ -189,22 +221,27 @@ const Category = RestModel.extend({
         search_priority: this.search_priority,
         reviewable_by_group_name: this.reviewable_by_group_name,
         read_only_banner: this.read_only_banner,
-        default_list_filter: this.default_list_filter
+        default_list_filter: this.default_list_filter,
       },
-      type: id ? "PUT" : "POST"
+      type: id ? "PUT" : "POST",
     });
   },
 
   _permissionsForUpdate() {
     const permissions = this.permissions;
     let rval = {};
-    permissions.forEach(p => (rval[p.group_name] = p.permission.id));
+    if (permissions.length) {
+      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    } else {
+      // empty permissions => staff-only access
+      rval[STAFF_GROUP_NAME] = PermissionType.FULL;
+    }
     return rval;
   },
 
   destroy() {
     return ajax(`/categories/${this.id || this.slug}`, {
-      type: "DELETE"
+      type: "DELETE",
     });
   },
 
@@ -213,9 +250,20 @@ const Category = RestModel.extend({
     this.availableGroups.removeObject(permission.group_name);
   },
 
-  removePermission(permission) {
-    this.permissions.removeObject(permission);
-    this.availableGroups.addObject(permission.group_name);
+  removePermission(group_name) {
+    const permission = this.permissions.findBy("group_name", group_name);
+    if (permission) {
+      this.permissions.removeObject(permission);
+      this.availableGroups.addObject(group_name);
+    }
+  },
+
+  updatePermission(group_name, type) {
+    this.permissions.forEach((p, i) => {
+      if (p.group_name === group_name) {
+        this.set(`permissions.${i}.permission_type`, type);
+      }
+    });
   },
 
   @discourseComputed("topics")
@@ -261,12 +309,17 @@ const Category = RestModel.extend({
   @discourseComputed("id")
   isUncategorizedCategory(id) {
     return id === Site.currentProp("uncategorized_category_id");
-  }
+  },
 });
 
 var _uncategorized;
 
 Category.reopenClass({
+  slugEncoded() {
+    let siteSettings = getOwner(this).lookup("site-settings:main");
+    return siteSettings.slug_generation_method === "encoded";
+  },
+
   findUncategorized() {
     _uncategorized =
       _uncategorized ||
@@ -278,7 +331,9 @@ Category.reopenClass({
   },
 
   slugFor(category, separator = "/", depth = 3) {
-    if (!category) return "";
+    if (!category) {
+      return "";
+    }
 
     const parentCategory = get(category, "parentCategory");
     let result = "";
@@ -309,10 +364,12 @@ Category.reopenClass({
   },
 
   findSingleBySlug(slug) {
-    if (Discourse.SiteSettings.slug_generation_method !== "encoded") {
-      return Category.list().find(c => Category.slugFor(c) === slug);
+    if (!this.slugEncoded()) {
+      return Category.list().find((c) => Category.slugFor(c) === slug);
     } else {
-      return Category.list().find(c => Category.slugFor(c) === encodeURI(slug));
+      return Category.list().find(
+        (c) => Category.slugFor(c) === encodeURI(slug)
+      );
     }
   },
 
@@ -325,7 +382,7 @@ Category.reopenClass({
 
   findByIds(ids = []) {
     const categories = [];
-    ids.forEach(id => {
+    ids.forEach((id) => {
       const found = Category.findById(id);
       if (found) {
         categories.push(found);
@@ -335,10 +392,10 @@ Category.reopenClass({
   },
 
   findBySlugAndParent(slug, parentCategory) {
-    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
+    if (this.slugEncoded()) {
       slug = encodeURI(slug);
     }
-    return Category.list().find(category => {
+    return Category.list().find((category) => {
       return (
         category.slug === slug &&
         (category.parentCategory || null) === parentCategory
@@ -363,8 +420,8 @@ Category.reopenClass({
   findBySlugPathWithID(slugPathWithID) {
     let parts = slugPathWithID.split("/").filter(Boolean);
     // slugs found by star/glob pathing in emeber do not automatically url decode - ensure that these are decoded
-    if (Discourse.SiteSettings.slug_generation_method === "encoded") {
-      parts = parts.map(urlPart => decodeURI(urlPart));
+    if (this.slugEncoded()) {
+      parts = parts.map((urlPart) => decodeURI(urlPart));
     }
     let category = null;
 
@@ -400,13 +457,13 @@ Category.reopenClass({
           return parentCategory;
         }
 
-        category = categories.find(item => {
+        category = categories.find((item) => {
           return (
             item &&
             item.get("parentCategory") === parentCategory &&
-            ((Discourse.SiteSettings.slug_generation_method !== "encoded" &&
+            ((!this.slugEncoded() &&
               Category.slugFor(item) === parentSlug + "/" + slug) ||
-              (Discourse.SiteSettings.slug_generation_method === "encoded" &&
+              (this.slugEncoded() &&
                 Category.slugFor(item) ===
                   encodeURI(parentSlug) + "/" + encodeURI(slug)))
           );
@@ -416,7 +473,9 @@ Category.reopenClass({
       category = Category.findSingleBySlug(slug);
 
       // If we have a parent category, we need to enforce it
-      if (category && category.get("parentCategory")) return;
+      if (category && category.get("parentCategory")) {
+        return;
+      }
     }
 
     // In case the slug didn't work, try to find it by id instead.
@@ -439,6 +498,25 @@ Category.reopenClass({
 
   reloadBySlugPath(slugPath) {
     return ajax(`/c/${slugPath}/find_by_slug.json`);
+  },
+
+  reloadCategoryWithPermissions(params, store, site) {
+    if (params.slug && params.slug.match(/^\d+-category/)) {
+      const id = parseInt(params.slug, 10);
+      return this.reloadById(id).then((result) =>
+        this._includePermissions(result.category, store, site)
+      );
+    }
+    return this.reloadBySlug(params.slug, params.parentSlug).then((result) =>
+      this._includePermissions(result.category, store, site)
+    );
+  },
+
+  _includePermissions(category, store, site) {
+    const record = store.createRecord("category", category);
+    record.setupGroupsAndPermissions();
+    site.updateCategory(record);
+    return record;
   },
 
   search(term, opts) {
@@ -475,14 +553,8 @@ Category.reopenClass({
       if (
         (emptyTerm && !category.get("parent_category_id")) ||
         (!emptyTerm &&
-          (category
-            .get("name")
-            .toLowerCase()
-            .indexOf(term) === 0 ||
-            category
-              .get("slug")
-              .toLowerCase()
-              .indexOf(slugTerm) === 0))
+          (category.get("name").toLowerCase().indexOf(term) === 0 ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) === 0))
       ) {
         data.push(category);
       }
@@ -494,24 +566,18 @@ Category.reopenClass({
 
         if (
           !emptyTerm &&
-          (category
-            .get("name")
-            .toLowerCase()
-            .indexOf(term) > 0 ||
-            category
-              .get("slug")
-              .toLowerCase()
-              .indexOf(slugTerm) > 0)
+          (category.get("name").toLowerCase().indexOf(term) > 0 ||
+            category.get("slug").toLowerCase().indexOf(slugTerm) > 0)
         ) {
-          if (data.indexOf(category) === -1) data.push(category);
+          if (data.indexOf(category) === -1) {
+            data.push(category);
+          }
         }
       }
     }
 
-    return _.sortBy(data, category => {
-      return category.get("read_restricted");
-    });
-  }
+    return data.sortBy("read_restricted");
+  },
 });
 
 export default Category;

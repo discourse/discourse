@@ -8,10 +8,9 @@ lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/highlight_js/
 plugins/**/lib/javascripts/locale
-public/javascripts/
+public/
 vendor/
-test/javascripts/test_helper.js
-test/javascripts/fixtures
-test/javascripts/helpers/assertions.js
+app/assets/javascripts/discourse/tests/test_helper.js
+app/assets/javascripts/discourse/tests/fixtures
 node_modules/
 dist/

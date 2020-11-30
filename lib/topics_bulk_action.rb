@@ -13,7 +13,8 @@ class TopicsBulkAction
   def self.operations
     @operations ||= %w(change_category close archive change_notification_level
                        reset_read dismiss_posts delete unlist archive_messages
-                       move_messages_to_inbox change_tags append_tags relist)
+                       move_messages_to_inbox change_tags append_tags remove_tags
+                       relist)
   end
 
   def self.register_operation(name, &block)
@@ -85,9 +86,26 @@ class TopicsBulkAction
   end
 
   def change_category
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        @changed_ids << t.id if t.change_category_to_id(@operation[:category_id])
+    updatable_topics = topics.where.not(category_id: @operation[:category_id])
+
+    if SiteSetting.create_revision_on_bulk_topic_moves
+      opts = {
+        bypass_bump: true,
+        validate_post: false,
+        bypass_rate_limiter: true
+      }
+
+      updatable_topics.each do |t|
+        if guardian.can_edit?(t)
+          changes = { category_id: @operation[:category_id] }
+          @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
+        end
+      end
+    else
+      updatable_topics.each do |t|
+        if guardian.can_edit?(t)
+          @changed_ids << t.id if t.change_category_to_id(@operation[:category_id])
+        end
       end
     end
   end
@@ -171,6 +189,15 @@ class TopicsBulkAction
         if tags.present?
           DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true)
         end
+        @changed_ids << t.id
+      end
+    end
+  end
+
+  def remove_tags
+    topics.each do |t|
+      if guardian.can_edit?(t)
+        TopicTag.where(topic_id: t.id).delete_all
         @changed_ids << t.id
       end
     end

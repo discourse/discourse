@@ -26,7 +26,7 @@ function parseName(fullName) {
     fullNameWithoutType,
     name: fullNameWithoutType,
     root,
-    resolveMethodName: "resolve" + classify(type)
+    resolveMethodName: "resolve" + classify(type),
   };
 }
 
@@ -50,6 +50,24 @@ export function buildResolver(baseName) {
           { since: "2.4.0" }
         );
         return "service:app-events";
+      }
+
+      for (const [key, value] of Object.entries({
+        "controller:discovery.categoryWithID": "controller:discovery.category",
+        "controller:discovery.parentCategory": "controller:discovery.category",
+        "controller:tags-show": "controller:tag-show",
+        "controller:tags.show": "controller:tag.show",
+        "controller:tagsShow": "controller:tagShow",
+        "route:discovery.categoryWithID": "route:discovery.category",
+        "route:discovery.parentCategory": "route:discovery.category",
+        "route:tags-show": "route:tag-show",
+        "route:tags.show": "route:tag.show",
+        "route:tagsShow": "route:tagShow",
+      })) {
+        if (fullName === key) {
+          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
+          return value;
+        }
       }
 
       const split = fullName.split(":");
@@ -85,7 +103,7 @@ export function buildResolver(baseName) {
       // If we end with the name we want, use it. This allows us to define components within plugins.
       const suffix = parsedName.type + "s/" + parsedName.fullNameWithoutType,
         dashed = dasherize(suffix),
-        moduleName = Object.keys(requirejs.entries).find(function(e) {
+        moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
             e.indexOf(suffix, e.length - suffix.length) !== -1 ||
             e.indexOf(dashed, e.length - dashed.length) !== -1
@@ -259,6 +277,6 @@ export function buildResolver(baseName) {
           Ember.TEMPLATES[dashed.replace("admin-", "admin/")]
         );
       }
-    }
+    },
   });
 }

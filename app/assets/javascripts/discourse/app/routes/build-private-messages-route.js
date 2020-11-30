@@ -17,7 +17,7 @@ export default (viewName, path, channel) => {
       didTransition() {
         this.controllerFor("user-topics-list")._showFooter();
         return true;
-      }
+      },
     },
 
     model() {
@@ -43,13 +43,13 @@ export default (viewName, path, channel) => {
         showPosters: true,
         canBulkSelect: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
-        selected: []
+        selected: [],
       });
 
       this.controllerFor("user-private-messages").setProperties({
         archive: false,
         pmView: viewName,
-        showToggleBulkSelect: true
+        showToggleBulkSelect: true,
       });
 
       this.searchService.set("contextType", "private_messages");
@@ -62,6 +62,6 @@ export default (viewName, path, channel) => {
         "searchContext",
         this.controllerFor("user").get("model.searchContext")
       );
-    }
+    },
   });
 };

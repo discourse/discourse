@@ -3,11 +3,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import UploadMixin from "discourse/mixins/upload";
 import { on } from "@ember/object/evented";
+import bootbox from "bootbox";
 
 export default Component.extend(UploadMixin, {
   type: "csv",
   tagName: "span",
   uploadUrl: "/invites/upload_csv",
+  i18nPrefix: "user.invited.bulk_invite",
 
   validateUploadedFilesOptions() {
     return { csvOnly: true };
@@ -15,9 +17,7 @@ export default Component.extend(UploadMixin, {
 
   @discourseComputed("uploading")
   uploadButtonText(uploading) {
-    return uploading
-      ? I18n.t("uploading")
-      : I18n.t("user.invited.bulk_invite.text");
+    return uploading ? I18n.t("uploading") : I18n.t(`${this.i18nPrefix}.text`);
   },
 
   @discourseComputed("uploading")
@@ -27,23 +27,23 @@ export default Component.extend(UploadMixin, {
   },
 
   uploadDone() {
-    bootbox.alert(I18n.t("user.invited.bulk_invite.success"));
+    bootbox.alert(I18n.t(`${this.i18nPrefix}.success`));
   },
 
   uploadOptions() {
     return { autoUpload: false };
   },
 
-  _init: on("didInsertElement", function() {
+  _init: on("didInsertElement", function () {
     const $upload = $(this.element);
 
     $upload.on("fileuploadadd", (e, data) => {
       bootbox.confirm(
-        I18n.t("user.invited.bulk_invite.confirmation_message"),
+        I18n.t(`${this.i18nPrefix}.confirmation_message`),
         I18n.t("cancel"),
         I18n.t("go_ahead"),
-        result => (result ? data.submit() : data.abort())
+        (result) => (result ? data.submit() : data.abort())
       );
     });
-  })
+  }),
 });

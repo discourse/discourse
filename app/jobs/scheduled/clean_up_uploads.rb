@@ -25,23 +25,6 @@ module Jobs
       s3_hostname = URI.parse(base_url).hostname
       s3_cdn_hostname = URI.parse(SiteSetting.Upload.s3_cdn_url || "").hostname
 
-      # Any URLs in site settings are fair game
-      ignore_urls = [
-        *SiteSetting.selectable_avatars.split("\n"),
-      ].flatten.map do |url|
-        if url.present?
-          url = url.dup
-
-          if s3_cdn_hostname.present? && s3_hostname.present?
-            url.gsub!(s3_cdn_hostname, s3_hostname)
-          end
-
-          url[base_url] && url[url.index(base_url)..-1]
-        else
-          nil
-        end
-      end.compact.uniq
-
       result = Upload.by_users
         .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
@@ -71,7 +54,9 @@ module Jobs
         .where("g.flair_upload_id IS NULL")
         .where("ss.value IS NULL")
 
-      result = result.where("uploads.url NOT IN (?)", ignore_urls) if ignore_urls.present?
+      if SiteSetting.selectable_avatars.present?
+        result = result.where.not(id: SiteSetting.selectable_avatars.map(&:id))
+      end
 
       result.find_each do |upload|
         if upload.sha1.present?

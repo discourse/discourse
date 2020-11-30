@@ -382,7 +382,7 @@ describe DiscourseNarrativeBot::TrackSelector do
                 new_post = Post.last
 
                 expected_raw = <<~RAW
-                #{I18n.t('discourse_narrative_bot.dice.not_enough_dice', num_of_dice: DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE)}
+                #{I18n.t('discourse_narrative_bot.dice.not_enough_dice', count: DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE)}
 
                 #{I18n.t('discourse_narrative_bot.dice.results', results: '1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1')}
                 RAW
@@ -414,6 +414,15 @@ describe DiscourseNarrativeBot::TrackSelector do
             new_post = Post.last
 
             expect(new_post.raw).to eq(random_mention_reply)
+          end
+
+          it 'works with french locale' do
+            I18n.with_locale("fr") do
+              post.update!(raw: "@discobot afficher l'aide")
+              described_class.new(:reply, user, post_id: post.id).select
+              # gsub'ing to ensure non-breaking whitespaces matches regular whitespaces
+              expect(Post.last.raw.gsub(/[[:space:]]+/, " ")).to eq(help_message.gsub(/[[:space:]]+/, " "))
+            end
           end
 
           it 'should not rate limit help message' do

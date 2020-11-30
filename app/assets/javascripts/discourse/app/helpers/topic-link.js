@@ -9,7 +9,7 @@ registerUnbound("topic-link", (topic, args) => {
 
   const classes = ["title"];
   if (args.class) {
-    args.class.split(" ").forEach(c => classes.push(c));
+    args.class.split(" ").forEach((c) => classes.push(c));
   }
 
   const result = `<a href='${url}'

@@ -20,6 +20,6 @@ export default Component.extend({
   actions: {
     clearFilter(param) {
       this.clearFilter(param);
-    }
-  }
+    },
+  },
 });

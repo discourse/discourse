@@ -5,14 +5,18 @@ import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import { escapeExpression } from "discourse/lib/utilities";
+import headerOutletHeights from "discourse/lib/header-outlet-height";
+import { inject as service } from "@ember/service";
 
 export default Mixin.create({
+  router: service(),
+
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
 
   postStream: alias("topic.postStream"),
-  viewingTopic: match("currentPath", /^topic\./),
+  viewingTopic: match("router.currentRouteName", /^topic\./),
 
   visible: false,
   username: null,
@@ -62,7 +66,7 @@ export default Mixin.create({
       username,
       loading: username,
       cardTarget: target,
-      post
+      post,
     });
 
     this._showCallback(username, $target);
@@ -91,12 +95,12 @@ export default Mixin.create({
       clickDataExpand,
       clickMention,
       previewClickEvent,
-      mobileScrollEvent
+      mobileScrollEvent,
     });
 
     $("html")
       .off(clickOutsideEventName)
-      .on(clickOutsideEventName, e => {
+      .on(clickOutsideEventName, (e) => {
         if (this.visible) {
           const $target = $(e.target);
           if (
@@ -113,7 +117,7 @@ export default Mixin.create({
         return true;
       });
 
-    $("#main-outlet").on(clickDataExpand, `[data-${id}]`, e => {
+    $("#main-outlet").on(clickDataExpand, `[data-${id}]`, (e) => {
       if (wantsNewWindow(e)) {
         return;
       }
@@ -121,7 +125,7 @@ export default Mixin.create({
       return this._show($target.data(id), $target);
     });
 
-    $("#main-outlet").on(clickMention, `a.${triggeringLinkClass}`, e => {
+    $("#main-outlet").on(clickMention, `a.${triggeringLinkClass}`, (e) => {
       if (wantsNewWindow(e)) {
         return;
       }
@@ -208,7 +212,10 @@ export default Mixin.create({
               }
             }
 
-            position.top -= $("#main-outlet").offset().top;
+            position.top -= this._calculateTopOffset(
+              $("#main-outlet").offset(),
+              headerOutletHeights()
+            );
             if (isFixed) {
               position.top -= $("html").scrollTop();
               //if content is fixed and will be cut off on the bottom, display it above...
@@ -257,6 +264,13 @@ export default Mixin.create({
     });
   },
 
+  // some plugins/themes modify the page layout and may
+  // need to override this calculation for the card to
+  // position correctly
+  _calculateTopOffset(mainOutletOffset, outletHeights) {
+    return mainOutletOffset.top - outletHeights;
+  },
+
   _hide() {
     if (!this.visible) {
       $(this.element).css({ left: -9999, top: -9999 });
@@ -274,7 +288,7 @@ export default Mixin.create({
       cardTarget: null,
       post: null,
       isFixed: false,
-      isDocked: false
+      isDocked: false,
     });
 
     // Card will be removed, so we unbind mobile scrolling
@@ -293,9 +307,7 @@ export default Mixin.create({
     const previewClickEvent = this.previewClickEvent;
 
     $("html").off(clickOutsideEventName);
-    $("#main")
-      .off(clickDataExpand)
-      .off(clickMention);
+    $("#main").off(clickDataExpand).off(clickMention);
 
     this.appEvents.off(previewClickEvent, this, "_previewClick");
 
@@ -315,5 +327,5 @@ export default Mixin.create({
       this._close();
       target.focus();
     }
-  }
+  },
 });

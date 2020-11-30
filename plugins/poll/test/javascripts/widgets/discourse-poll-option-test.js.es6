@@ -1,4 +1,9 @@
-import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import {
+  moduleForWidget,
+  widgetTest,
+} from "discourse/tests/helpers/widget-test";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+
 moduleForWidget("discourse-poll-option");
 
 const template = `{{mount-widget
@@ -14,8 +19,8 @@ widgetTest("single, not selected", {
   },
 
   test(assert) {
-    assert.ok(find("li .d-icon-far-circle:eq(0)").length === 1);
-  }
+    assert.ok(queryAll("li .d-icon-far-circle:nth-of-type(1)").length === 1);
+  },
 });
 
 widgetTest("single, selected", {
@@ -27,8 +32,8 @@ widgetTest("single, selected", {
   },
 
   test(assert) {
-    assert.ok(find("li .d-icon-circle:eq(0)").length === 1);
-  }
+    assert.ok(queryAll("li .d-icon-circle:nth-of-type(1)").length === 1);
+  },
 });
 
 widgetTest("multi, not selected", {
@@ -38,13 +43,13 @@ widgetTest("multi, not selected", {
     this.setProperties({
       option: { id: "opt-id" },
       isMultiple: true,
-      vote: []
+      vote: [],
     });
   },
 
   test(assert) {
-    assert.ok(find("li .d-icon-far-square:eq(0)").length === 1);
-  }
+    assert.ok(queryAll("li .d-icon-far-square:nth-of-type(1)").length === 1);
+  },
 });
 
 widgetTest("multi, selected", {
@@ -54,11 +59,13 @@ widgetTest("multi, selected", {
     this.setProperties({
       option: { id: "opt-id" },
       isMultiple: true,
-      vote: ["opt-id"]
+      vote: ["opt-id"],
     });
   },
 
   test(assert) {
-    assert.ok(find("li .d-icon-far-check-square:eq(0)").length === 1);
-  }
+    assert.ok(
+      queryAll("li .d-icon-far-check-square:nth-of-type(1)").length === 1
+    );
+  },
 });

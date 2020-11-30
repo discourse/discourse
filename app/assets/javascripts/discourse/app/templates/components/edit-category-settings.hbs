@@ -1,6 +1,4 @@
 <section>
-  <h3>{{i18n "category.settings_sections.general"}}</h3>
-
   {{#if showPositionInput}}
     <section class="field position-fields">
       <label for="category-position">
@@ -46,12 +44,14 @@
     </div>
   </section>
 
-  <section class="field">
-    <label>
-      {{input type="checkbox" checked=category.allow_badges}}
-      {{i18n "category.allow_badges_label"}}
-    </label>
-  </section>
+  {{#if siteSettings.enable_badges}}
+    <section class="field allow-badges">
+      <label>
+        {{input type="checkbox" checked=category.allow_badges}}
+        {{i18n "category.allow_badges_label"}}
+      </label>
+    </section>
+  {{/if}}
 
   {{#if siteSettings.topic_featured_link_enabled}}
     <section class="field">
@@ -81,7 +81,7 @@
 
 <section>
   <h3>{{i18n "category.settings_sections.moderation"}}</h3>
-  {{#if siteSettings.enable_category_group_review}}
+  {{#if siteSettings.enable_category_group_moderation}}
     <section class="field">
       <label for="reviewable-by-group">
         {{i18n "category.reviewable_by_group"}}

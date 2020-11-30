@@ -453,36 +453,31 @@ RSpec.describe Admin::SiteTextsController do
         end
 
         it 'updates matching user titles to the override text in a job' do
-          Jobs.expects(:enqueue).with(
-            :bulk_user_title_update,
+          expect_enqueued_with(job: :bulk_user_title_update, args: {
             new_title: 'Terminator',
             granted_badge_id: badge.id,
             action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
-          )
-          put '/admin/customize/site_texts/badges.regular.name.json', params: {
-            site_text: { value: 'Terminator' }
-          }
-
-          Jobs.expects(:enqueue).with(
-            :bulk_user_title_update,
-            granted_badge_id: badge.id,
-            action: Jobs::BulkUserTitleUpdate::RESET_ACTION
-          )
+          }) do
+            put '/admin/customize/site_texts/badges.regular.name.json', params: {
+              site_text: { value: 'Terminator' }
+            }
+          end
 
           # Revert
-          delete "/admin/customize/site_texts/badges.regular.name.json"
+          expect_enqueued_with(job: :bulk_user_title_update, args: {
+            granted_badge_id: badge.id,
+            action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+          }) do
+            delete "/admin/customize/site_texts/badges.regular.name.json"
+          end
         end
 
         it 'does not update matching user titles when overriding non-title badge text' do
-          Jobs.expects(:enqueue).with(
-            :bulk_user_title_update,
-            new_title: 'Terminator',
-            granted_badge_id: badge.id,
-            action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
-          ).never
-          put '/admin/customize/site_texts/badges.regular.long_description.json', params: {
-            site_text: { value: 'Terminator' }
-          }
+          expect_not_enqueued_with(job: :bulk_user_title_update) do
+            put '/admin/customize/site_texts/badges.regular.long_description.json', params: {
+              site_text: { value: 'Terminator' }
+            }
+          end
         end
       end
     end
@@ -533,8 +528,8 @@ RSpec.describe Admin::SiteTextsController do
           }
           expect(response.status).to eq(200)
 
-          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name"))
-          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title"))
+          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name", locale: :de))
+          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title", locale: :de))
         end
       end
     end

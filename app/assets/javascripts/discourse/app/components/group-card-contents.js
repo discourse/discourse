@@ -1,4 +1,4 @@
-import { alias, match, gt } from "@ember/object/computed";
+import { alias, gt } from "@ember/object/computed";
 import Component from "@ember/component";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -18,14 +18,12 @@ export default Component.extend(CardContentsBase, CleansUp, {
     "showBadges",
     "hasCardBadgeImage",
     "isFixed:fixed",
-    "groupClass"
+    "groupClass",
   ],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
 
   postStream: alias("topic.postStream"),
-  viewingTopic: match("currentPath", /^topic\./),
-
   showMoreMembers: gt("moreMembersCount", 0),
 
   group: null,
@@ -35,7 +33,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     memberCount - maxMemberDisplay,
 
   @discourseComputed("group.name")
-  groupClass: name => (name ? `group-card-${name}` : ""),
+  groupClass: (name) => (name ? `group-card-${name}` : ""),
 
   @discourseComputed("group")
   groupPath(group) {
@@ -45,7 +43,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
   _showCallback(username, $target) {
     this.store
       .find("group", username)
-      .then(group => {
+      .then((group) => {
         this.setProperties({ group, visible: true });
         this._positionCard($target);
         if (!group.flair_url && !group.flair_bg_color) {
@@ -94,6 +92,6 @@ export default Component.extend(CardContentsBase, CleansUp, {
     showUser(user) {
       this.showUser(user);
       this._close();
-    }
-  }
+    },
+  },
 });

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   js:
@@ -50,9 +49,6 @@ it:
       group-results:
         title: "Voti raggruppati per campo utente"
         label: "Mostra la suddivisione"
-      ungroup-results:
-        title: "Combina tutti i voti"
-        label: "Nascondi la suddivisione"
       export-results:
         title: "Esporta i risultati del sondaggio"
         label: "Esportare"
@@ -67,6 +63,12 @@ it:
       automatic_close:
         closes_in: "Chiude in <strong>%{timeLeft}</strong>."
         age: "Chiuso <strong>%{age}</strong>"
+      breakdown:
+        title: "Risultati del sondaggio"
+        votes: "%{count} voti"
+        breakdown: "Ripartizione"
+        percentage: "Percentuale"
+        count: "Conteggio"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
@@ -101,6 +103,8 @@ it:
           step: Passo
         poll_public:
           label: Mostra i votanti
+        poll_title:
+          label: Titolo (facoltativo)
         poll_options:
           label: Inserisci un'opzione di sondaggio per riga
         automatic_close:

@@ -6,12 +6,12 @@ import { h } from "virtual-dom";
 import { formatUsername } from "discourse/lib/utilities";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
-let sanitizeName = function(name) {
+let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
 };
 
 export function disableNameSuppression() {
-  sanitizeName = name => name;
+  sanitizeName = (name) => name;
 }
 
 createWidget("poster-name-title", {
@@ -25,13 +25,13 @@ createWidget("poster-name-title", {
         "a.user-group",
         {
           className: attrs.extraClasses,
-          attributes: { href, "data-group-card": attrs.primaryGroupName }
+          attributes: { href, "data-group-card": attrs.primaryGroupName },
         },
         attrs.title
       );
     }
     return titleContents;
-  }
+  },
 });
 
 export default createWidget("poster-name", {
@@ -39,14 +39,14 @@ export default createWidget("poster-name", {
 
   settings: {
     showNameAndGroup: true,
-    showGlyph: true
+    showGlyph: true,
   },
 
   // TODO: Allow extensibility
   posterGlyph(attrs) {
-    if (attrs.moderator) {
+    if (attrs.moderator || attrs.groupModerator) {
       return iconNode("shield-alt", {
-        title: I18n.t("user.moderator_tooltip")
+        title: I18n.t("user.moderator_tooltip"),
       });
     }
   },
@@ -57,8 +57,8 @@ export default createWidget("poster-name", {
       {
         attributes: {
           href: attrs.usernameUrl,
-          "data-user-card": attrs.username
-        }
+          "data-user-card": attrs.username,
+        },
       },
       formatUsername(text)
     );
@@ -68,8 +68,7 @@ export default createWidget("poster-name", {
     const username = attrs.username;
     const name = attrs.name;
     const nameFirst =
-      this.siteSettings.display_name_on_posts &&
-      prioritizeNameInUx(name, this.siteSettings);
+      this.siteSettings.display_name_on_posts && prioritizeNameInUx(name);
     const classNames = nameFirst
       ? ["first", "full-name"]
       : ["first", "username"];
@@ -82,6 +81,9 @@ export default createWidget("poster-name", {
     }
     if (attrs.moderator) {
       classNames.push("moderator");
+    }
+    if (attrs.groupModerator) {
+      classNames.push("category-moderator");
     }
     if (attrs.new_user) {
       classNames.push("new-user");
@@ -105,7 +107,7 @@ export default createWidget("poster-name", {
     nameContents = nameContents.concat(afterNameContents);
 
     const contents = [
-      h("span", { className: classNames.join(" ") }, nameContents)
+      h("span", { className: classNames.join(" ") }, nameContents),
     ];
 
     if (!this.settings.showNameAndGroup) {
@@ -134,11 +136,11 @@ export default createWidget("poster-name", {
         this.attach("poster-name-title", {
           title,
           primaryGroupName,
-          titleIsGroup
+          titleIsGroup,
         })
       );
     }
 
     return contents;
-  }
+  },
 });

@@ -171,6 +171,17 @@ class TopicTrackingState
     MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
   end
 
+  def self.publish_destroy(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "destroy"
+    }
+
+    MessageBus.publish("/destroy", message.as_json, group_ids: group_ids)
+  end
+
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level = nil)
     highest_post_number = DB.query_single("SELECT highest_post_number FROM topics WHERE id = ?", topic_id).first
 
@@ -438,11 +449,13 @@ SQL
     }
 
     channels.each do |channel, ids|
-      MessageBus.publish(
-        channel,
-        message.as_json,
-        user_ids: ids
-      )
+      if ids.present?
+        MessageBus.publish(
+          channel,
+          message.as_json,
+          user_ids: ids
+        )
+      end
     end
   end
 

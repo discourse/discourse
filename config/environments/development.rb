@@ -15,6 +15,8 @@ Discourse::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  config.action_controller.asset_host = GlobalSetting.cdn_url
+
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -25,6 +27,10 @@ Discourse::Application.configure do
   config.assets.digest = false
 
   config.assets.debug = false
+
+  config.public_file_server.headers = {
+    'Access-Control-Allow-Origin' => '*'
+  }
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
@@ -52,7 +58,10 @@ Discourse::Application.configure do
     end
   end
 
-  config.load_mini_profiler = true
+  if !ENV["DISABLE_MINI_PROFILER"]
+    config.load_mini_profiler = true
+  end
+
   if hosts = ENV['DISCOURSE_DEV_HOSTS']
     config.hosts.concat(hosts.split(","))
   end
@@ -86,6 +95,10 @@ Discourse::Application.configure do
       ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
         line =~ /lib\/freedom_patches/
       end
+    end
+
+    if ENV["RAILS_DISABLE_ACTIVERECORD_LOGS"] == "1"
+      ActiveRecord::Base.logger = nil
     end
 
     if ENV['BULLET']

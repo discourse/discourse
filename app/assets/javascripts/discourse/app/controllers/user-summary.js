@@ -1,7 +1,6 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import { alias } from "@ember/object/computed";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import { durationTiny } from "discourse/lib/formatter";
 
 // should be kept in sync with 'UserSummary::MAX_BADGES'
@@ -31,5 +30,5 @@ export default Controller.extend({
     return recentTimeReadSeconds > 0
       ? durationTiny(recentTimeReadSeconds)
       : null;
-  }
+  },
 });

@@ -3,8 +3,7 @@ import { isEmpty } from "@ember/utils";
 import { alias, or, gt, not, and } from "@ember/object/computed";
 import EmberObject, { set, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
 import optionalService from "discourse/lib/optional-service";
@@ -103,12 +102,12 @@ export default Controller.extend(CanCheckEmails, {
 
   @discourseComputed("model.name")
   nameFirst(name) {
-    return prioritizeNameInUx(name, this.siteSettings);
+    return prioritizeNameInUx(name);
   },
 
   @discourseComputed("model.badge_count")
   showBadges(badgeCount) {
-    return Discourse.SiteSettings.enable_badges && badgeCount > 0;
+    return this.siteSettings.enable_badges && badgeCount > 0;
   },
 
   @discourseComputed()
@@ -126,7 +125,7 @@ export default Controller.extend(CanCheckEmails, {
       return siteUserFields
         .filterBy("show_on_profile", true)
         .sortBy("position")
-        .map(field => {
+        .map((field) => {
           set(field, "dasherized_name", field.get("name").dasherize());
           const value = userFields
             ? userFields[field.get("id").toString()]
@@ -141,7 +140,7 @@ export default Controller.extend(CanCheckEmails, {
     "currentUser.ignored_ids",
     "model.ignored",
     "model.muted",
-    function() {
+    function () {
       if (this.get("model.ignored")) {
         return "changeToIgnored";
       } else if (this.get("model.muted")) {
@@ -164,7 +163,7 @@ export default Controller.extend(CanCheckEmails, {
     showSuspensions() {
       this.adminTools.showActionLogs(this, {
         target_user: this.get("model.username"),
-        action_name: "suspend_user"
+        action_name: "suspend_user",
       });
     },
 
@@ -175,6 +174,6 @@ export default Controller.extend(CanCheckEmails, {
     updateNotificationLevel(level) {
       const user = this.model;
       return user.updateNotificationLevel(level);
-    }
-  }
+    },
+  },
 });

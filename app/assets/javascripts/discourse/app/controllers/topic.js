@@ -2,11 +2,11 @@ import I18n from "I18n";
 import { isPresent, isEmpty } from "@ember/utils";
 import { or, and, not, alias } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { next, schedule } from "@ember/runloop";
+import { next, schedule, later } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Composer from "discourse/models/composer";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
@@ -18,13 +18,18 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { userPath } from "discourse/lib/url";
 import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
 import { Promise } from "rsvp";
 import { escapeExpression } from "discourse/lib/utilities";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { inject as service } from "@ember/service";
+import bootbox from "bootbox";
+import { deepMerge } from "discourse-common/lib/object";
 
 let customPostMessageCallbacks = {};
+
+const RETRIES_ON_RATE_LIMIT = 4;
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -41,6 +46,9 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Controller.extend(bufferedProperty("model"), {
   composer: controller(),
   application: controller(),
+  documentTitle: service(),
+  screenTrack: service(),
+
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
@@ -59,6 +67,31 @@ export default Controller.extend(bufferedProperty("model"), {
   filter: null,
   quoteState: null,
 
+  init() {
+    this._super(...arguments);
+
+    this._retryInProgress = false;
+    this._retryRateLimited = false;
+    this._newPostsInStream = [];
+
+    this.appEvents.on("post:show-revision", this, "_showRevision");
+    this.appEvents.on("post:created", this, () => {
+      this._removeDeleteOnOwnerReplyBookmarks();
+      this.appEvents.trigger("post-stream:refresh", { force: true });
+    });
+
+    this.setProperties({
+      selectedPostIds: [],
+      quoteState: new QuoteState(),
+    });
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.appEvents.off("post:show-revision", this, "_showRevision");
+  },
+
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"
@@ -75,15 +108,6 @@ export default Controller.extend(bufferedProperty("model"), {
       // force update lazily loaded titles
       this.send("refreshTitle");
     }
-  },
-
-  @discourseComputed("model.details.can_create_post", "composer.visible")
-  embedQuoteButton(canCreatePost, composerOpened) {
-    return (
-      (canCreatePost || composerOpened) &&
-      this.currentUser &&
-      this.currentUser.get("enable_quoting")
-    );
   },
 
   @discourseComputed("model.postStream.loaded", "model.category_id")
@@ -115,23 +139,6 @@ export default Controller.extend(bufferedProperty("model"), {
     return this.currentUser && this.currentUser.pmPath(topic);
   },
 
-  init() {
-    this._super(...arguments);
-
-    this.appEvents.on("post:show-revision", this, "_showRevision");
-
-    this.setProperties({
-      selectedPostIds: [],
-      quoteState: new QuoteState()
-    });
-  },
-
-  willDestroy() {
-    this._super(...arguments);
-
-    this.appEvents.off("post:show-revision", this, "_showRevision");
-  },
-
   _showRevision(postNumber, revision) {
     const post = this.model.get("postStream").postForPostNumber(postNumber);
     if (!post) {
@@ -153,7 +160,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @discourseComputed
   selectedQuery() {
-    return post => this.postSelected(post);
+    return (post) => this.postSelected(post);
   },
 
   @discourseComputed("model.isPrivateMessage", "model.category.id")
@@ -192,6 +199,22 @@ export default Controller.extend(bufferedProperty("model"), {
       : null;
   },
 
+  _removeDeleteOnOwnerReplyBookmarks() {
+    const posts = this.get("model.postStream.posts");
+    if (posts) {
+      posts
+        .filter(
+          (p) =>
+            p.bookmarked &&
+            p.bookmark_auto_delete_preference ===
+              AUTO_DELETE_PREFERENCES.ON_OWNER_REPLY
+        )
+        .forEach((p) => {
+          p.clearBookmark();
+        });
+    }
+  },
+
   _forceRefreshPostStream() {
     this.appEvents.trigger("post-stream:refresh", { force: true });
   },
@@ -199,7 +222,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _updateSelectedPostIds(postIds) {
     const smallActionsPostIds = this._smallActionPostIds();
     this.selectedPostIds.pushObjects(
-      postIds.filter(postId => !smallActionsPostIds.has(postId))
+      postIds.filter((postId) => !smallActionsPostIds.has(postId))
     );
     this.set("selectedPostIds", [...new Set(this.selectedPostIds)]);
     this._forceRefreshPostStream();
@@ -208,12 +231,12 @@ export default Controller.extend(bufferedProperty("model"), {
   _smallActionPostIds() {
     const smallActionsPostIds = new Set();
     const posts = this.get("model.postStream.posts");
-    if (posts) {
-      const small_action = this.site.get("post_types.small_action");
+    if (posts && this.site) {
+      const smallAction = this.site.get("post_types.small_action");
       const whisper = this.site.get("post_types.whisper");
-      posts.forEach(post => {
+      posts.forEach((post) => {
         if (
-          post.post_type === small_action ||
+          post.post_type === smallAction ||
           (!post.cooked && post.post_type === whisper)
         ) {
           smallActionsPostIds.add(post.id);
@@ -224,7 +247,9 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _loadPostIds(post) {
-    if (this.loadingPostIds) return;
+    if (this.loadingPostIds) {
+      return;
+    }
 
     const postStream = this.get("model.postStream");
     const url = `/t/${this.get("model.id")}/post_ids.json`;
@@ -232,12 +257,12 @@ export default Controller.extend(bufferedProperty("model"), {
     this.set("loadingPostIds", true);
 
     return ajax(url, {
-      data: _.merge(
+      data: deepMerge(
         { post_number: post.get("post_number") },
         postStream.get("streamFilters")
-      )
+      ),
     })
-      .then(result => {
+      .then((result) => {
         result.post_ids.pushObject(post.get("id"));
         this._updateSelectedPostIds(result.post_ids);
       })
@@ -278,7 +303,7 @@ export default Controller.extend(bufferedProperty("model"), {
         ? Promise.resolve(loadedPost)
         : this.get("model.postStream").loadPost(postId);
 
-      return promise.then(post => {
+      return promise.then((post) => {
         const composer = this.composer;
         const viewOpen = composer.get("model.viewOpen");
 
@@ -291,7 +316,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const composerOpts = {
           action: Composer.REPLY,
           draftSequence: post.get("topic.draft_sequence"),
-          draftKey: post.get("topic.draft_key")
+          draftKey: post.get("topic.draft_key"),
         };
 
         if (post.get("post_number") === 1) {
@@ -355,7 +380,7 @@ export default Controller.extend(bufferedProperty("model"), {
         parseFloat(this._progressIndex + event.percent - 1) / total;
       this.appEvents.trigger("topic:current-post-scrolled", {
         postIndex: this._progressIndex,
-        percent: Math.max(Math.min(percent, 1.0), 0.0)
+        percent: Math.max(Math.min(percent, 1.0), 0.0),
       });
     },
 
@@ -440,8 +465,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     deferTopic() {
-      const screenTrack = Discourse.__container__.lookup("screen-track:main");
-      const currentUser = this.currentUser;
+      const { screenTrack, currentUser } = this;
       const topic = this.model;
 
       screenTrack.reset();
@@ -461,7 +485,7 @@ export default Controller.extend(bufferedProperty("model"), {
     editFirstPost() {
       this.model
         .firstPost()
-        .then(firstPost => this.send("editPost", firstPost));
+        .then((firstPost) => this.send("editPost", firstPost));
     },
 
     // Post related methods
@@ -497,7 +521,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const opts = {
           action: Composer.REPLY,
           draftKey: topic.get("draft_key"),
-          draftSequence: topic.get("draft_sequence")
+          draftSequence: topic.get("draft_sequence"),
         };
 
         if (quotedText) {
@@ -532,12 +556,12 @@ export default Controller.extend(bufferedProperty("model"), {
       const loadedPosts = this.get("model.postStream.posts");
 
       if (user.get("staff") && hasReplies) {
-        ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
+        ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
           if (replies.length === 0) {
             return post
               .destroy(user)
               .then(refresh)
-              .catch(error => {
+              .catch((error) => {
                 popupAjaxError(error);
                 post.undoDeleteState();
               });
@@ -547,7 +571,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
           buttons.push({
             label: I18n.t("cancel"),
-            class: "btn-danger right"
+            class: "btn-danger right",
           });
 
           buttons.push({
@@ -556,50 +580,50 @@ export default Controller.extend(bufferedProperty("model"), {
               post
                 .destroy(user)
                 .then(refresh)
-                .catch(error => {
+                .catch((error) => {
                   popupAjaxError(error);
                   post.undoDeleteState();
                 });
-            }
+            },
           });
 
-          if (replies.some(r => r.level > 1)) {
+          if (replies.some((r) => r.level > 1)) {
             buttons.push({
               label: I18n.t("post.controls.delete_replies.all_replies", {
-                count: replies.length
+                count: replies.length,
               }),
               callback() {
                 loadedPosts.forEach(
-                  p =>
-                    (p === post || replies.some(r => r.id === p.id)) &&
+                  (p) =>
+                    (p === post || replies.some((r) => r.id === p.id)) &&
                     p.setDeletedState(user)
                 );
-                Post.deleteMany([post.id, ...replies.map(r => r.id)])
+                Post.deleteMany([post.id, ...replies.map((r) => r.id)])
                   .then(refresh)
                   .catch(popupAjaxError);
-              }
+              },
             });
           }
 
           const directReplyIds = replies
-            .filter(r => r.level === 1)
-            .map(r => r.id);
+            .filter((r) => r.level === 1)
+            .map((r) => r.id);
 
           buttons.push({
             label: I18n.t("post.controls.delete_replies.direct_replies", {
-              count: directReplyIds.length
+              count: directReplyIds.length,
             }),
             class: "btn-primary",
             callback() {
               loadedPosts.forEach(
-                p =>
+                (p) =>
                   (p === post || directReplyIds.includes(p.id)) &&
                   p.setDeletedState(user)
               );
               Post.deleteMany([post.id, ...directReplyIds])
                 .then(refresh)
                 .catch(popupAjaxError);
-            }
+            },
           });
 
           bootbox.dialog(
@@ -611,7 +635,7 @@ export default Controller.extend(bufferedProperty("model"), {
         return post
           .destroy(user)
           .then(refresh)
-          .catch(error => {
+          .catch((error) => {
             popupAjaxError(error);
             post.undoDeleteState();
           });
@@ -642,7 +666,7 @@ export default Controller.extend(bufferedProperty("model"), {
         post,
         action: editingSharedDraft ? Composer.EDIT_SHARED_DRAFT : Composer.EDIT,
         draftKey: post.get("topic.draft_key"),
-        draftSequence: post.get("topic.draft_sequence")
+        draftSequence: post.get("topic.draft_sequence"),
       };
 
       if (editingSharedDraft) {
@@ -663,11 +687,11 @@ export default Controller.extend(bufferedProperty("model"), {
       } else if (post) {
         return post.toggleBookmark();
       } else {
-        return this.model.toggleBookmark().then(changedIds => {
+        return this.model.toggleBookmark().then((changedIds) => {
           if (!changedIds) {
             return;
           }
-          changedIds.forEach(id =>
+          changedIds.forEach((id) =>
             this.appEvents.trigger("post-stream:refresh", { id })
           );
         });
@@ -685,13 +709,13 @@ export default Controller.extend(bufferedProperty("model"), {
     jumpToPostPrompt() {
       const topic = this.model;
       const modal = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal"
+        modalClass: "jump-to-post-modal",
       });
       modal.setProperties({
         topic,
         postNumber: null,
-        jumpToIndex: index => this.send("jumpToIndex", index),
-        jumpToDate: date => this.send("jumpToDate", date)
+        jumpToIndex: (index) => this.send("jumpToIndex", index),
+        jumpToDate: (date) => this.send("jumpToDate", date),
       });
     },
 
@@ -701,13 +725,17 @@ export default Controller.extend(bufferedProperty("model"), {
 
     jumpTop() {
       DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
-        skipIfOnScreen: false
+        skipIfOnScreen: false,
       });
     },
 
     jumpBottom() {
+      // When a topic only has one lengthy post
+      const jumpEnd = this.model.highest_post_number === 1 ? true : false;
+
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
-        skipIfOnScreen: false
+        skipIfOnScreen: false,
+        jumpEnd,
       });
     },
 
@@ -717,7 +745,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.get("model.highest_post_number")
       );
       DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
-        jumpEnd: true
+        jumpEnd: true,
       });
     },
 
@@ -738,8 +766,8 @@ export default Controller.extend(bufferedProperty("model"), {
       const smallActionsPostIds = this._smallActionPostIds();
       this.set("selectedPostIds", [
         ...this.get("model.postStream.stream").filter(
-          postId => !smallActionsPostIds.has(postId)
-        )
+          (postId) => !smallActionsPostIds.has(postId)
+        ),
       ]);
       this._forceRefreshPostStream();
     },
@@ -757,8 +785,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     selectReplies(post) {
-      ajax(`/posts/${post.id}/reply-ids.json`).then(replies => {
-        const replyIds = replies.map(r => r.id);
+      ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
+        const replyIds = replies.map((r) => r.id);
         this.selectedPostIds.pushObjects([post.id, ...replyIds]);
         this._forceRefreshPostStream();
       });
@@ -779,16 +807,18 @@ export default Controller.extend(bufferedProperty("model"), {
 
       bootbox.confirm(
         I18n.t("post.delete.confirm", {
-          count: this.selectedPostsCount
+          count: this.selectedPostsCount,
         }),
-        result => {
+        (result) => {
           if (result) {
             // If all posts are selected, it's the same thing as deleting the topic
-            if (this.selectedAllPosts) return this.deleteTopic();
+            if (this.selectedAllPosts) {
+              return this.deleteTopic();
+            }
 
             Post.deleteMany(this.selectedPostIds);
             this.get("model.postStream.posts").forEach(
-              p => this.postSelected(p) && p.setDeletedState(user)
+              (p) => this.postSelected(p) && p.setDeletedState(user)
             );
             this.send("toggleMultiSelect");
           }
@@ -799,7 +829,7 @@ export default Controller.extend(bufferedProperty("model"), {
     mergePosts() {
       bootbox.confirm(
         I18n.t("post.merge.confirm", { count: this.selectedPostsCount }),
-        result => {
+        (result) => {
           if (result) {
             Post.mergePosts(this.selectedPostIds);
             this.send("toggleMultiSelect");
@@ -826,20 +856,15 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showGrantBadgeModal");
     },
 
-    addNotice(post) {
-      return new Promise(function(resolve, reject) {
-        const modal = showModal("add-post-notice");
-        modal.setProperties({ post, resolve, reject });
+    changeNotice(post) {
+      return new Promise(function (resolve, reject) {
+        const modal = showModal("change-post-notice", { model: post });
+        modal.setProperties({
+          resolve,
+          reject,
+          notice: post.notice ? post.notice.raw : "",
+        });
       });
-    },
-
-    removeNotice(post) {
-      return post.updatePostField("notice", null).then(() =>
-        post.setProperties({
-          notice_type: null,
-          notice_args: null
-        })
-      );
     },
 
     toggleParticipant(user) {
@@ -888,7 +913,7 @@ export default Controller.extend(bufferedProperty("model"), {
     toggleClosed() {
       const topic = this.model;
 
-      this.model.toggleStatus("closed").then(result => {
+      this.model.toggleStatus("closed").then((result) => {
         topic.set("topic_status_update", result.topic_status_update);
       });
     },
@@ -914,7 +939,7 @@ export default Controller.extend(bufferedProperty("model"), {
       topic.setProperties({
         pinned_at: value ? moment() : null,
         pinned_globally: false,
-        pinned_until: value ? until : null
+        pinned_until: value ? until : null,
       });
 
       return topic.saveStatus("pinned", value, until);
@@ -928,7 +953,7 @@ export default Controller.extend(bufferedProperty("model"), {
       topic.setProperties({
         pinned_at: moment(),
         pinned_globally: true,
-        pinned_until: until
+        pinned_until: until,
       });
 
       return topic.saveStatus("pinned_globally", true, until);
@@ -965,22 +990,22 @@ export default Controller.extend(bufferedProperty("model"), {
         let users = this.get("model.details.allowed_users");
         let groups = this.get("model.details.allowed_groups");
 
-        let usernames = [];
-        users.forEach(user => usernames.push(user.username));
-        groups.forEach(group => usernames.push(group.name));
-        usernames = usernames.join();
+        let recipients = [];
+        users.forEach((user) => recipients.push(user.username));
+        groups.forEach((group) => recipients.push(group.name));
+        recipients = recipients.join();
 
         options = {
           action: Composer.PRIVATE_MESSAGE,
           archetypeId: "private_message",
           draftKey: post.topic.draft_key,
-          usernames: usernames
+          recipients,
         };
       } else {
         options = {
           action: Composer.CREATE_TOPIC,
           draftKey: post.topic.draft_key,
-          categoryId: this.get("model.category.id")
+          categoryId: this.get("model.category.id"),
         };
       }
 
@@ -989,7 +1014,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const postUrl = `${location.protocol}//${location.host}${post.url}`;
         const postLink = `[${title}](${postUrl})`;
         const text = `${I18n.t("post.continue_discussion", {
-          postLink
+          postLink,
         })}\n\n${quotedText}`;
 
         composerController.model.prependText(text, { new_line: true });
@@ -999,9 +1024,7 @@ export default Controller.extend(bufferedProperty("model"), {
     retryLoading() {
       this.set("retrying", true);
       const rollback = () => this.set("retrying", false);
-      this.get("model.postStream")
-        .refresh()
-        .then(rollback, rollback);
+      this.get("model.postStream").refresh().then(rollback, rollback);
     },
 
     toggleWiki(post) {
@@ -1028,7 +1051,7 @@ export default Controller.extend(bufferedProperty("model"), {
     convertToPublicTopic() {
       showModal("convert-to-public-topic", {
         model: this.model,
-        modalClass: "convert-to-public-topic"
+        modalClass: "convert-to-public-topic",
       });
     },
 
@@ -1056,8 +1079,8 @@ export default Controller.extend(bufferedProperty("model"), {
         null
       )
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
-        .catch(error => popupAjaxError(error));
-    }
+        .catch((error) => popupAjaxError(error));
+    },
   },
 
   _jumpToIndex(index) {
@@ -1077,7 +1100,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     postStream
       .loadNearestPostToDate(date)
-      .then(post => {
+      .then((post) => {
         DiscourseURL.routeTo(
           this.model.urlForPostNumber(post.get("post_number"))
         );
@@ -1096,7 +1119,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.model.urlForPostNumber(post.get("post_number"))
       );
     } else {
-      postStream.loadPostByPostNumber(postNumber).then(p => {
+      postStream.loadPostByPostNumber(postNumber).then((p) => {
         DiscourseURL.routeTo(this.model.urlForPostNumber(p.get("post_number")));
       });
     }
@@ -1121,7 +1144,7 @@ export default Controller.extend(bufferedProperty("model"), {
       DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")));
     } else {
       // need to load it
-      postStream.findPostsByIds([postId]).then(arr => {
+      postStream.findPostsByIds([postId]).then((arr) => {
         DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get("post_number")));
       });
     }
@@ -1156,8 +1179,8 @@ export default Controller.extend(bufferedProperty("model"), {
   )
   selectedPosts(selectedPostIds, loadedPosts) {
     return selectedPostIds
-      .map(id => loadedPosts.find(p => p.id === id))
-      .filter(post => post !== undefined);
+      .map((id) => loadedPosts.find((p) => p.id === id))
+      .filter((post) => post !== undefined);
   },
 
   @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
@@ -1166,7 +1189,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return undefined;
     }
     const username = selectedPosts[0].username;
-    return selectedPosts.every(p => p.username === username)
+    return selectedPosts.every((p) => p.username === username)
       ? username
       : undefined;
   },
@@ -1212,7 +1235,8 @@ export default Controller.extend(bufferedProperty("model"), {
   ) {
     return (
       selectedPostsCount > 0 &&
-      ((selectedAllPosts && isStaff) || selectedPosts.every(p => p.can_delete))
+      ((selectedAllPosts && isStaff) ||
+        selectedPosts.every((p) => p.can_delete))
     );
   },
 
@@ -1242,7 +1266,7 @@ export default Controller.extend(bufferedProperty("model"), {
     return (
       selectedPostsCount > 1 &&
       selectedPostsUsername !== undefined &&
-      selectedPosts.every(p => p.can_delete)
+      selectedPosts.every((p) => p.can_delete)
     );
   },
 
@@ -1265,17 +1289,80 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopic() {
-    this.model.destroy(this.currentUser);
+    if (
+      this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
+    ) {
+      this.deleteTopicModal();
+    } else {
+      this.model.destroy(this.currentUser);
+    }
+  },
+
+  deleteTopicModal() {
+    showModal("delete-topic-confirm", {
+      model: this.model,
+      title: "topic.actions.delete",
+    });
+  },
+
+  retryOnRateLimit(times, promise, topicId) {
+    const currentTopicId = this.get("model.id");
+    topicId = topicId || currentTopicId;
+    if (topicId !== currentTopicId) {
+      // we navigated to another topic, so skip
+      return;
+    }
+
+    if (this._retryRateLimited || times <= 0) {
+      return;
+    }
+
+    if (this._retryInProgress) {
+      later(() => {
+        this.retryOnRateLimit(times, promise, topicId);
+      }, 100);
+      return;
+    }
+
+    this._retryInProgress = true;
+
+    promise()
+      .catch((e) => {
+        const xhr = e.jqXHR;
+        if (
+          xhr &&
+          xhr.status === 429 &&
+          xhr.responseJSON &&
+          xhr.responseJSON.extras &&
+          xhr.responseJSON.extras.wait_seconds
+        ) {
+          let waitSeconds = xhr.responseJSON.extras.wait_seconds;
+          if (waitSeconds < 5) {
+            waitSeconds = 5;
+          }
+
+          this._retryRateLimited = true;
+
+          later(() => {
+            this._retryRateLimited = false;
+            this.retryOnRateLimit(times - 1, promise, topicId);
+          }, waitSeconds * 1000);
+        }
+      })
+      .finally(() => {
+        this._retryInProgress = false;
+      });
   },
 
   subscribe() {
     this.unsubscribe();
 
-    const refresh = args => this.appEvents.trigger("post-stream:refresh", args);
+    const refresh = (args) =>
+      this.appEvents.trigger("post-stream:refresh", args);
 
     this.messageBus.subscribe(
       `/topic/${this.get("model.id")}`,
-      data => {
+      (data) => {
         const topic = this.model;
 
         if (isPresent(data.notification_level_change)) {
@@ -1296,7 +1383,9 @@ export default Controller.extend(bufferedProperty("model"), {
           topic.reload().then(() => {
             this.send("postChangedRoute", topic.get("post_number") || 1);
             this.appEvents.trigger("header:update-topic", topic);
-            if (data.refresh_stream) postStream.refresh();
+            if (data.refresh_stream) {
+              postStream.refresh();
+            }
           });
 
           return;
@@ -1306,7 +1395,7 @@ export default Controller.extend(bufferedProperty("model"), {
           case "acted":
             postStream
               .triggerChangedPost(data.id, data.updated_at, {
-                preserveCooked: true
+                preserveCooked: true,
               })
               .then(() => refresh({ id: data.id, refreshLikes: true }));
             break;
@@ -1329,6 +1418,12 @@ export default Controller.extend(bufferedProperty("model"), {
               .then(() => refresh({ id: data.id }));
             break;
           }
+          case "destroyed": {
+            postStream
+              .triggerDestroyedPost(data.id)
+              .then(() => refresh({ id: data.id }));
+            break;
+          }
           case "recovered": {
             postStream
               .triggerRecoveredPost(data.id)
@@ -1336,9 +1431,25 @@ export default Controller.extend(bufferedProperty("model"), {
             break;
           }
           case "created": {
-            postStream.triggerNewPostInStream(data.id).then(() => refresh());
+            this._newPostsInStream.push(data.id);
+
+            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+              const postIds = this._newPostsInStream;
+              this._newPostsInStream = [];
+
+              return postStream
+                .triggerNewPostsInStream(postIds, { background: true })
+                .then(() => refresh())
+                .catch((e) => {
+                  this._newPostsInStream = postIds.concat(
+                    this._newPostsInStream
+                  );
+                  throw e;
+                });
+            });
+
             if (this.get("currentUser.id") !== data.user_id) {
-              Discourse.incrementBackgroundContextCount();
+              this.documentTitle.incrementBackgroundContextCount();
             }
             break;
           }
@@ -1389,17 +1500,21 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: discourseDebounce(function(postNumber) {
+  _scrollToPost: discourseDebounce(function (postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
-    if ($post.length === 0 || isElementInViewport($post)) return;
+    if ($post.length === 0 || isElementInViewport($post)) {
+      return;
+    }
 
     $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
   }, 500),
 
   unsubscribe() {
     // never unsubscribe when navigating from topic to topic
-    if (!this.get("model.id")) return;
+    if (!this.get("model.id")) {
+      return;
+    }
     this.messageBus.unsubscribe("/topic/*");
   },
 
@@ -1412,7 +1527,7 @@ export default Controller.extend(bufferedProperty("model"), {
     const postStream = topic.get("postStream");
 
     if (topic.get("id") === topicId) {
-      postStream.get("posts").forEach(post => {
+      postStream.get("posts").forEach((post) => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
           this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
@@ -1425,7 +1540,7 @@ export default Controller.extend(bufferedProperty("model"), {
         this.currentUser.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
-        const max = _.max(postNumbers);
+        const max = Math.max(...postNumbers);
         if (topic.get("pinned") && max >= topic.get("highest_post_number")) {
           next(() => topic.clearPin());
         }
@@ -1439,5 +1554,5 @@ export default Controller.extend(bufferedProperty("model"), {
       this.get("model.postStream.loaded") &&
       this.get("model.postStream.loadedAllPosts");
     this.set("application.showFooter", showFooter);
-  }
+  },
 });

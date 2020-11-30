@@ -10,5 +10,5 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("tagging.groups.title");
-  }
+  },
 });

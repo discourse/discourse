@@ -14,8 +14,8 @@ export default {
       //
       // iPad physical keyboard does not offer Command or Control detection
       // so use ALT-ENTER
-      this.save();
+      this.save(undefined, e);
       return false;
     }
-  }
+  },
 };

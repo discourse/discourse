@@ -40,22 +40,6 @@ describe BasicGroupSerializer do
     end
   end
 
-  describe '#automatic_membership_email_domains' do
-    fab!(:group) { Fabricate(:group, automatic_membership_email_domains: 'ilovediscourse.com') }
-    let(:admin_guardian) { Guardian.new(Fabricate(:admin)) }
-
-    it 'should include email domains for admin' do
-      subject = described_class.new(group, scope: admin_guardian, root: false, owner_group_ids: [group.id])
-      expect(subject.as_json[:automatic_membership_email_domains]).to eq('ilovediscourse.com')
-    end
-
-    it 'should not include email domains for other users' do
-      subject = described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
-      expect(subject.as_json[:automatic_membership_email_domains]).to eq(nil)
-    end
-
-  end
-
   describe '#has_messages' do
     fab!(:group) { Fabricate(:group, has_messages: true) }
 

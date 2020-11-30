@@ -13,6 +13,6 @@ export default Controller.extend({
     },
     goBack() {
       this.transitionToRoute("step", this.get("step.previous"));
-    }
-  }
+    },
+  },
 });

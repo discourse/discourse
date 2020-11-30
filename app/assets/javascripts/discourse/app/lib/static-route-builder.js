@@ -6,10 +6,10 @@ import DiscourseURL, { jumpToElement } from "discourse/lib/url";
 const configs = {
   faq: "faq_url",
   tos: "tos_url",
-  privacy: "privacy_policy_url"
+  privacy: "privacy_policy_url",
 };
 
-export default function(page) {
+export default function (page) {
   return DiscourseRoute.extend({
     renderTemplate() {
       this.render("static");
@@ -17,9 +17,9 @@ export default function(page) {
 
     beforeModel(transition) {
       const configKey = configs[page];
-      if (configKey && Discourse.SiteSettings[configKey].length > 0) {
+      if (configKey && this.siteSettings[configKey].length > 0) {
         transition.abort();
-        DiscourseURL.redirectTo(Discourse.SiteSettings[configKey]);
+        DiscourseURL.redirectTo(this.siteSettings[configKey]);
       }
     },
 
@@ -44,7 +44,7 @@ export default function(page) {
       didTransition() {
         this.controllerFor("application").set("showFooter", true);
         return true;
-      }
-    }
+      },
+    },
   });
 }

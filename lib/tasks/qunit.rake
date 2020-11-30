@@ -47,7 +47,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     {
       "RAILS_ENV" => "test",
       "SKIP_ENFORCE_HOSTNAME" => "1",
-      "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test.pid", # So this can run alongside development
+      "UNICORN_PID_PATH" => "#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid", # So this can run alongside development
       "UNICORN_PORT" => port.to_s,
       "UNICORN_SIDEKIQS" => "0"
     },
@@ -86,10 +86,10 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
     puts "Warming up Rails server"
     begin
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
       sleep 1
       retry unless elapsed() > 60
-      puts "Timed out. Can no connect to forked server!"
+      puts "Timed out. Can not connect to forked server!"
       exit 1
     end
     puts "Rails server is warmed up"

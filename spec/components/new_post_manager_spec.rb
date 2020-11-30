@@ -71,6 +71,32 @@ describe NewPostManager do
       end
     end
 
+    context 'basic post/topic count restrictions' do
+      before do
+        SiteSetting.approve_post_count = 1
+      end
+
+      it "works with a correct `user_stat.post_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(post_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+
+      it "works with a correct `user_stat.topic_count`" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
+
+        manager.user.user_stat.update(topic_count: 1)
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+    end
+
     context 'with a high approval post count and TL0' do
       before do
         SiteSetting.approve_post_count = 100
@@ -182,6 +208,73 @@ describe NewPostManager do
       end
     end
 
+    context 'with a fast typer' do
+      let(:user) { manager.user }
+
+      before do
+        user.update!(trust_level: 0)
+      end
+
+      it "adds the silence reason in the system locale" do
+        manager = build_manager_with('this is new post content')
+        I18n.with_locale(:fr) do # Simulate french user
+          result = NewPostManager.default_handler(manager)
+        end
+        expect(user.silenced?).to eq(true)
+        expect(user.silence_reason).to eq(I18n.t("user.new_user_typed_too_fast", locale: :en))
+      end
+
+      it 'runs the watched words check before checking if the user is a fast typer' do
+        Fabricate(:watched_word, word: "darn", action: WatchedWord.actions[:require_approval])
+        manager = build_manager_with('this is darn new post content')
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:watched_word)
+      end
+
+      def build_manager_with(raw)
+        NewPostManager.new(topic.user, raw: raw, topic_id: topic.id, first_post_checks: true)
+      end
+    end
+
+    context 'with media' do
+      let(:user) { manager.user }
+      let(:manager_opts) do
+        {
+          raw: 'this is new post content', topic_id: topic.id, first_post_checks: false,
+          image_sizes: {
+            "http://localhost:3000/uploads/default/original/1X/652fc9667040b1b89dc4d9b061a823ddb3c0cef0.jpeg" => {
+              "width" => "500", "height" => "500"
+            }
+          }
+        }
+      end
+
+      before do
+        user.update!(trust_level: 0)
+      end
+
+      it 'queues the post for review because if it contains embedded media.' do
+        SiteSetting.review_media_unless_trust_level = 1
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:contains_media)
+      end
+
+      it 'does not enqueue the post if the poster is a trusted user' do
+        SiteSetting.review_media_unless_trust_level = 0
+        manager = NewPostManager.new(topic.user, manager_opts)
+
+        result = NewPostManager.default_handler(manager)
+
+        expect(result).to be_nil
+      end
+    end
   end
 
   context "new topic handler" do
@@ -270,8 +363,9 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      Reviewable.set_priorities(high: 20.5)
-      SiteSetting.reviewable_default_visibility = 'high'
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
 
       manager = NewPostManager.new(
         topic.user,
@@ -288,7 +382,7 @@ describe NewPostManager do
       expect(reviewable).to be_present
       expect(reviewable.payload['title']).to eq('this is the title of the queued post')
       expect(reviewable.reviewable_scores).to be_present
-      expect(reviewable.score).to eq(20.5)
+      expect(reviewable.force_review).to eq(true)
       expect(reviewable.reviewable_by_moderator?).to eq(true)
       expect(reviewable.category).to be_present
       expect(reviewable.payload['tags']).to eq(['hello', 'world'])

@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 th:
   dates:
@@ -17,12 +16,25 @@ th:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, มกราคม, กุมภาพันธ์, มีนาคม, เมษายน, พฤษภาคม, มิถุนายน, กรกฎาคม, สิงหาคม, กันยายน, ตุลาคม, พฤศจิกายน, ธันวาคม]
+    month_names:
+    - null
+    - มกราคม
+    - กุมภาพันธ์
+    - มีนาคม
+    - เมษายน
+    - พฤษภาคม
+    - มิถุนายน
+    - กรกฎาคม
+    - สิงหาคม
+    - กันยายน
+    - ตุลาคม
+    - พฤศจิกายน
+    - ธันวาคม
     <<: *datetime_formats
   time:
-    <<: *datetime_formats
     am: "am"
     pm: "pm"
+    <<: *datetime_formats
   title: "ดิสคอส"
   topics: "หัวข้อ"
   posts: "โพสต์"
@@ -43,9 +55,6 @@ th:
       exclusion: ถูกจองแล้ว
       has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
-  activemodel:
-    errors:
-      <<: *errors
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"
   likes: "ถูกใจ"
@@ -112,9 +121,6 @@ th:
   post_action_types:
     spam:
       title: "ขยะ"
-      long_form: "ปักธงไว้ว่าเป็นสแปม"
-    inappropriate:
-      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
     bookmark:
       title: "บุ๊คมาร์ค"
   topic_flag_types:
@@ -138,7 +144,7 @@ th:
       every_six_months: "ทุกหกเดือน"
   user_api_key:
     otp_confirmation:
-      confirm_title: "ดำเนินการต่อไปยัง %{site_name}"
+      confirm_title: ดำเนินการต่อไปยัง %{site_name}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
   reports:
     post_edits:
@@ -395,10 +401,6 @@ th:
             placeholder: "name@example.com"
       corporate:
         title: "องค์กร"
-      colors:
-        title: "ธีม"
-      themes_further_reading:
-        title: "ธีม"
       homepage:
         fields:
           homepage_style:
@@ -452,3 +454,6 @@ th:
         title: "ละทิ้ง"
       delete_user:
         title: "ลบผู้ใช้"
+  activemodel:
+    errors:
+      <<: *errors

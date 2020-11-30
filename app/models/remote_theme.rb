@@ -104,6 +104,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def self.out_of_date_themes
     self.joined_remotes.where("commits_behind > 0 OR remote_version <> local_version")
+      .where(themes: { enabled: true })
       .pluck("themes.name", "themes.id")
   end
 
@@ -196,21 +197,6 @@ class RemoteTheme < ActiveRecord::Base
       importer.cleanup! if cleanup
     rescue => e
       Rails.logger.warn("Failed cleanup remote git #{e}")
-    end
-  end
-
-  def diff_local_changes
-    return unless is_git?
-    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
-    begin
-      importer.import!
-    rescue RemoteTheme::ImportError => err
-      { error: err.message }
-    else
-      changes = importer.diff_local_changes(self.id)
-      return nil if changes.blank?
-
-      { diff: changes }
     end
   end
 

@@ -313,14 +313,15 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(updated_at: Time.zone.now, expires_at: SiteSetting.invite_expiry_days.days.from_now)
+    self.update_columns(updated_at: Time.zone.now, invalidated_at: nil, expires_at: SiteSetting.invite_expiry_days.days.from_now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
   def self.resend_all_invites_from(user_id)
     Invite.single_use_invites
-      .joins(:invited_users)
+      .left_outer_joins(:invited_users)
       .where('invited_users.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id)
+      .group('invites.id')
       .find_each do |invite|
       invite.resend_invite
     end

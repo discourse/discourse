@@ -29,10 +29,10 @@ export default Component.extend({
       formData: {
         synchronous: true,
         type: `wizard_${id}`,
-        authenticity_token: getToken()
+        authenticity_token: getToken(),
       },
       dataType: "json",
-      dropZone: $upload
+      dropZone: $upload,
     });
 
     $upload.on("fileuploadsubmit", () => this.set("uploading", true));
@@ -48,14 +48,8 @@ export default Component.extend({
         message = response.jqXHR.responseJSON.errors.join("\n");
       }
 
-      window.swal({
-        customClass: "wizard-warning",
-        title: "",
-        text: message,
-        type: "warning",
-        confirmButtonColor: "#6699ff"
-      });
+      window.bootbox.alert(message);
       this.set("uploading", false);
     });
-  }
+  },
 });

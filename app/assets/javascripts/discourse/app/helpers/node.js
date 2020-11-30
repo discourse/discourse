@@ -1,6 +1,5 @@
 import { h } from "virtual-dom";
-import { relativeAge, longDate } from "discourse/lib/formatter";
-import { number } from "discourse/lib/formatter";
+import { relativeAge, longDate, number } from "discourse/lib/formatter";
 
 export function dateNode(dt) {
   if (typeof dt === "string") {
@@ -10,16 +9,11 @@ export function dateNode(dt) {
     const attributes = {
       title: longDate(dt),
       "data-time": dt.getTime(),
-      "data-format": "tiny"
+      "data-format": "tiny",
     };
 
     return h("span.relative-date", { attributes }, relativeAge(dt));
   }
-}
-
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.dateNode = dateNode;
 }
 
 export function numberNode(num, opts) {

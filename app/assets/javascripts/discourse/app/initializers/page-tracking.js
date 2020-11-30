@@ -2,7 +2,7 @@ import { cleanDOM } from "discourse/lib/clean-dom";
 import {
   startPageTracking,
   resetPageTracking,
-  googleTagManagerPageChanged
+  googleTagManagerPageChanged,
 } from "discourse/lib/page-tracker";
 import { viewTrackingRequired } from "discourse/lib/ajax";
 
@@ -15,16 +15,19 @@ export default {
     const router = container.lookup("router:main");
 
     router.on("routeWillChange", viewTrackingRequired);
-    router.on("routeDidChange", cleanDOM);
+    router.on("routeDidChange", () => {
+      cleanDOM(container);
+    });
 
     let appEvents = container.lookup("service:app-events");
+    let documentTitle = container.lookup("service:document-title");
 
-    startPageTracking(router, appEvents);
+    startPageTracking(router, appEvents, documentTitle);
 
     // Out of the box, Discourse tries to track google analytics
     // if it is present
     if (typeof window._gaq !== "undefined") {
-      appEvents.on("page:changed", data => {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           window._gaq.push(["_set", "title", data.title]);
           window._gaq.push(["_trackPageview", data.url]);
@@ -33,18 +36,33 @@ export default {
       return;
     }
 
-    // Also use Universal Analytics if it is present
-    if (typeof window.ga !== "undefined") {
-      appEvents.on("page:changed", data => {
+    // Use Universal Analytics v3 if it is present
+    if (
+      typeof window.ga !== "undefined" &&
+      typeof window.gtag === "undefined"
+    ) {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           window.ga("send", "pageview", { page: data.url, title: data.title });
         }
       });
     }
 
-    // And Google Tag Manager too
+    // And Universal Analytics v4 if we're upgraded
+    if (typeof window.gtag !== "undefined") {
+      appEvents.on("page:changed", (data) => {
+        if (!data.replacedOnlyQueryParams) {
+          window.gtag("event", "page_view", {
+            page_location: data.url,
+            page_title: data.title,
+          });
+        }
+      });
+    }
+
+    // Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
-      appEvents.on("page:changed", data => {
+      appEvents.on("page:changed", (data) => {
         if (!data.replacedOnlyQueryParams) {
           googleTagManagerPageChanged(data);
         }
@@ -54,5 +72,5 @@ export default {
 
   teardown() {
     resetPageTracking();
-  }
+  },
 };

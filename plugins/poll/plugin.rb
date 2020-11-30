@@ -8,6 +8,7 @@
 
 register_asset "stylesheets/common/poll.scss"
 register_asset "stylesheets/common/poll-ui-builder.scss"
+register_asset "stylesheets/common/poll-breakdown.scss"
 register_asset "stylesheets/desktop/poll.scss", :desktop
 register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/mobile/poll-ui-builder.scss", :mobile
@@ -328,6 +329,7 @@ after_initialize do
           type: poll["type"].presence || "regular",
           status: poll["status"].presence || "open",
           visibility: poll["public"] == "true" ? "everyone" : "secret",
+          title: poll["title"],
           results: poll["results"].presence || "always",
           min: poll["min"],
           max: poll["max"],
@@ -364,6 +366,12 @@ after_initialize do
           p.css("li[#{DATA_PREFIX}option-id]").each do |o|
             option_id = o.attributes[DATA_PREFIX + "option-id"].value.to_s
             poll["options"] << { "id" => option_id, "html" => o.inner_html.strip }
+          end
+
+          # title
+          title_element = p.css(".poll-title").first
+          if title_element
+            poll["title"] = title_element.inner_html.strip
           end
 
           poll
@@ -562,7 +570,7 @@ after_initialize do
 
   register_post_custom_field_type(DiscoursePoll::HAS_POLLS, :boolean)
 
-  topic_view_post_custom_fields_whitelister { [DiscoursePoll::HAS_POLLS] }
+  topic_view_post_custom_fields_allowlister { [DiscoursePoll::HAS_POLLS] }
 
   add_to_class(:topic_view, :polls) do
     @polls ||= begin

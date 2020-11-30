@@ -27,7 +27,7 @@ describe TranslationOverride do
             translation_override = TranslationOverride.upsert!(
               I18n.locale,
               'some_key',
-              "#{described_class::CUSTOM_INTERPOLATION_KEYS_WHITELIST['user_notifications.user_'].join(", ")} %{something}"
+              "#{described_class::ALLOWED_CUSTOM_INTERPOLATION_KEYS['user_notifications.user_'].join(", ")} %{something}"
             )
 
             expect(translation_override.errors.full_messages).to include(I18n.t(

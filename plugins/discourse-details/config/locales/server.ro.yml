@@ -1,8 +1,11 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
-ro: {}
+ro:
+  site_settings:
+    details_enabled: 'Activați funcția de detalii. Dacă schimbați acest lucru, trebuie să reluați toate mesajele cu: "rake posts: rebake".'
+  details:
+    excerpt_details: "(click pentru mai multe detalii)"

@@ -11,19 +11,19 @@ export default Controller.extend({
   @discourseComputed
   canSignUp() {
     return (
-      !Discourse.SiteSettings.invite_only &&
-      Discourse.SiteSettings.allow_new_registrations &&
-      !Discourse.SiteSettings.enable_sso
+      !this.siteSettings.invite_only &&
+      this.siteSettings.allow_new_registrations &&
+      !this.siteSettings.enable_sso
     );
   },
 
   @discourseComputed
   loginRequired() {
-    return Discourse.SiteSettings.login_required && !this.currentUser;
+    return this.siteSettings.login_required && !this.currentUser;
   },
 
   @discourseComputed
   showFooterNav() {
     return isAppWebview() || isiOSPWA();
-  }
+  },
 });

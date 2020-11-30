@@ -44,5 +44,5 @@ export default EmberObject.extend({
     }
 
     return name.join(" ");
-  }
+  },
 });

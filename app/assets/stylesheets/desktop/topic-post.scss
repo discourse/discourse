@@ -6,25 +6,22 @@
   margin-left: 0;
 }
 
-.topic-post:first-child {
-  nav.post-controls .post-admin-menu {
-    bottom: -125px;
+.staff {
+  .topic-post:first-child {
+    nav.post-controls .post-admin-menu {
+      bottom: -125px;
+    }
   }
 }
 
 .topic-body {
-  // this ensures consistent top margin on topic posts even if the first line of a post
-  // is a top-margin-less element like a list or image.
-  .regular {
-    margin-top: 15px;
-  }
   padding: 0;
   &:first-of-type {
     border-top: none;
   }
   .reply-to-tab {
     z-index: z("base") + 1;
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: var(--primary-med-or-secondary-med);
   }
   .actions .fade-out {
     .discourse-no-touch & {
@@ -65,12 +62,12 @@ nav.post-controls {
     // Some buttons can be doubled up, like likes or flags
     .double-button {
       display: inline-flex;
-      color: $primary-low-mid;
+      color: var(--primary-low-mid);
       margin-right: 0.15em;
       &:hover {
         button {
-          background: $primary-low;
-          color: $primary-medium;
+          background: var(--primary-low);
+          color: var(--primary-medium);
         }
       }
       button {
@@ -85,28 +82,28 @@ nav.post-controls {
         &.regular-likes {
           // Like count on posts
           .d-icon {
-            color: $primary-low-mid;
+            color: var(--primary-low-mid);
             padding-left: 0.45em;
           }
         }
         &.like {
           // Like button with 0 likes
           &.d-hover {
-            background: $love-low;
+            background: var(--love-low);
             .d-icon {
-              color: $love;
+              color: var(--love);
             }
           }
         }
         &.has-like {
           // Like button after I've liked
           .d-icon {
-            color: $love;
+            color: var(--love);
           }
           &.d-hover {
-            background: $primary-low;
+            background: var(--primary-low);
             .d-icon {
-              color: $primary-medium;
+              color: var(--primary-medium);
             }
           }
         }
@@ -120,13 +117,13 @@ nav.post-controls {
             padding-right: 0;
           }
           &.d-hover {
-            color: $primary;
+            color: var(--primary);
           }
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
             &.d-hover {
-              background: $primary-low;
+              background: var(--primary-low);
             }
           }
         }
@@ -134,7 +131,7 @@ nav.post-controls {
     }
     a,
     button {
-      color: dark-light-choose($primary-low-mid, $secondary-high);
+      color: var(--primary-low-mid-or-secondary-high);
       .d-icon {
         opacity: 1;
       }
@@ -152,10 +149,10 @@ nav.post-controls {
 
     button.create {
       margin-right: 0;
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: var(--primary-high-or-secondary-low);
       margin-left: 10px;
       .d-icon {
-        color: dark-light-choose($primary-high, $secondary-low);
+        color: var(--primary-high-or-secondary-low);
       }
     }
     .create .d-icon {
@@ -170,8 +167,8 @@ nav.post-controls {
       margin-left: 3px;
       &.d-hover,
       &:focus {
-        background: $primary-low;
-        color: $primary;
+        background: var(--primary-low);
+        color: var(--primary);
       }
       &:active {
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -185,16 +182,16 @@ nav.post-controls {
       &.delete.d-hover,
       &.delete:hover,
       &.delete:focus {
-        background: $danger;
-        color: $secondary;
+        background: var(--danger);
+        color: var(--secondary);
         .d-icon {
-          color: $secondary;
+          color: var(--secondary);
         }
       }
       &.bookmark {
         padding: 8px 11px;
         &.bookmarked .d-icon {
-          color: $tertiary;
+          color: var(--tertiary);
         }
       }
     }
@@ -205,10 +202,10 @@ nav.post-controls {
     margin-left: -10px;
     font-size: inherit;
     padding: 10px;
-    color: $primary-medium;
+    color: var(--primary-medium);
     &:hover {
-      color: $primary;
-      background: $primary-low;
+      color: var(--primary);
+      background: var(--primary-low);
     }
     .d-icon {
       margin-left: 5px;
@@ -234,7 +231,7 @@ pre.copy-codeblocks:hover .copy-cmd {
   h3 {
     margin: 10px 0;
   }
-  border: 1px solid $primary-low;
+  border: 1px solid var(--primary-low);
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
@@ -253,9 +250,9 @@ pre.copy-codeblocks:hover .copy-cmd {
   .collapse-down,
   .collapse-up {
     position: absolute;
-    color: $primary-medium;
-    background: $secondary;
-    border: 1px solid $primary-low;
+    color: var(--primary-medium);
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
     .d-icon {
@@ -263,8 +260,8 @@ pre.copy-codeblocks:hover .copy-cmd {
     }
     .discourse-no-touch & {
       &:hover {
-        background: $primary-low;
-        color: $primary-high;
+        background: var(--primary-low);
+        color: var(--primary-high);
         .d-icon {
           color: currentColor;
         }
@@ -288,7 +285,7 @@ pre.copy-codeblocks:hover .copy-cmd {
       padding-bottom: 0.5em;
       .topic-avatar,
       .topic-body {
-        border-top: 1px solid $primary-low;
+        border-top: 1px solid var(--primary-low);
       }
     }
   } // top means "in reply to expansion" above a post
@@ -303,7 +300,7 @@ pre.copy-codeblocks:hover .copy-cmd {
       border-bottom: none;
       .topic-avatar,
       .topic-body {
-        border-top: 1px solid $primary-low;
+        border-top: 1px solid var(--primary-low);
       }
     }
   }
@@ -311,7 +308,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     padding: 0;
   }
   .post-date {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: var(--primary-med-or-secondary-high);
   }
   .d-icon-arrow-up,
   .d-icon-arrow-down {
@@ -329,11 +326,11 @@ pre.copy-codeblocks:hover .copy-cmd {
     font-size: $font-down-1;
     a {
       font-weight: bold;
-      color: dark-light-choose($primary-low-mid, $secondary-high);
+      color: var(--primary-low-mid-or-secondary-high);
     }
   }
   .arrow {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: var(--primary-med-or-secondary-high);
   }
 }
 
@@ -363,7 +360,7 @@ pre.copy-codeblocks:hover .copy-cmd {
       }
     }
     .number {
-      color: $primary-high;
+      color: var(--primary-high);
     }
     .number,
     .d-icon {
@@ -372,7 +369,7 @@ pre.copy-codeblocks:hover .copy-cmd {
     }
     button .d-icon,
     button:hover .d-icon {
-      color: $primary-high;
+      color: var(--primary-high);
     }
     .avatar a {
       float: left;
@@ -385,20 +382,20 @@ pre.copy-codeblocks:hover .copy-cmd {
   .links,
   .information {
     padding: 7px 10px 7px 10px;
-    color: $primary;
+    color: var(--primary);
   }
   .buttons {
     float: right;
     .btn {
       border: 0;
       padding: 0 23px;
-      color: dark-light-choose($primary-medium, $secondary-high);
-      background: blend-primary-secondary(5%);
-      border-left: 1px solid $primary-low;
+      color: var(--primary-med-or-secondary-high);
+      background: var(--blend-primary-secondary-5);
+      border-left: 1px solid var(--primary-low);
       border-top: 1px solid transparent;
       &:hover {
-        color: $primary;
-        background: $primary-low;
+        color: var(--primary);
+        background: var(--primary-low);
       }
       &.collapsed {
         padding-bottom: 1px;
@@ -411,12 +408,12 @@ pre.copy-codeblocks:hover .copy-cmd {
     }
   }
   .link-summary .btn {
-    color: dark-light-choose($primary-medium, $secondary-high);
-    background: blend-primary-secondary(5%);
+    color: var(--primary-med-or-secondary-high);
+    background: var(--blend-primary-secondary-5);
     width: 100%;
     &:hover {
-      color: $primary;
-      background: dark-light-diff($primary, $secondary, 90%, -80%);
+      color: var(--primary);
+      background: var(--primary-low);
     }
   }
 }
@@ -426,16 +423,16 @@ pre.copy-codeblocks:hover .copy-cmd {
 
   .bookmark {
     .d-icon-bookmark.bookmarked {
-      color: $tertiary;
+      color: var(--tertiary);
     }
   }
 
   .bookmark.bookmarked .d-icon-bookmark,
   .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
-    color: $tertiary;
+    color: var(--tertiary);
   }
   .feature-on-profile.featured-on-profile .d-icon-id-card {
-    color: $tertiary;
+    color: var(--tertiary);
   }
 }
 
@@ -455,18 +452,14 @@ pre.copy-codeblocks:hover .copy-cmd {
 }
 
 span.post-count {
-  background: $primary;
-  color: $secondary;
+  background: var(--primary);
+  color: var(--secondary);
   opacity: 0.8;
 }
 
 button.expand-post {
   margin-top: 10px;
   margin-left: $topic-body-width-padding;
-}
-
-.quote-button.visible {
-  display: block;
 }
 
 iframe {
@@ -514,12 +507,7 @@ video {
 
 .deleted {
   .topic-body {
-    background-color: dark-light-diff(
-      rgba($danger, 0.7),
-      $secondary,
-      50%,
-      -60%
-    );
+    background-color: var(--danger-low-mid);
   }
 }
 
@@ -535,7 +523,7 @@ video {
 
 .info-line {
   margin: 10px 0;
-  color: $primary;
+  color: var(--primary);
 }
 
 /* solo quotes */
@@ -552,7 +540,7 @@ blockquote {
 .quote {
   & > blockquote {
     .onebox-result {
-      background-color: $primary-very-low;
+      background-color: var(--primary-very-low);
     }
   }
   aside {
@@ -561,8 +549,8 @@ blockquote {
     blockquote,
     .onebox,
     .onebox-result {
-      background: $primary-very-low;
-      border-left: 5px solid $primary-low;
+      background: var(--primary-very-low);
+      border-left: 5px solid var(--primary-low);
     }
     aside.quote > blockquote,
     aside.quote > .title {
@@ -576,11 +564,13 @@ blockquote {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
   position: relative;
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
-  .topic-meta-data,
-  .cooked {
+  .topic-meta-data {
     padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+  }
+  .cooked {
+    padding: 1em $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
   .group-request {
     padding: 0.5em $topic-body-width-padding 0 $topic-body-width-padding;
@@ -591,7 +581,7 @@ blockquote {
 }
 
 .topic-avatar {
-  border-top: 1px solid $primary-low;
+  border-top: 1px solid var(--primary-low);
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
@@ -599,10 +589,19 @@ blockquote {
 }
 
 .gap {
-  width: calc(
-    #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding}
-  );
   box-sizing: border-box;
+}
+
+.topic-area > .loading-container {
+  // loader needs to be same width as posts
+  width: calc(
+    #{$topic-avatar-width} + #{$topic-body-width} +
+      (#{$topic-body-width-padding} * 2)
+  );
+  @media all and (max-width: 790px) {
+    // 16px is the left + right padding on .wrap in common/base/discourse.scss
+    max-width: calc(100vw - 16px);
+  }
 }
 
 /* hide the reply border above the time gap notices */
@@ -613,7 +612,7 @@ blockquote {
 }
 
 .time-gap + .topic-post .embedded-posts.top {
-  border-bottom: 1px solid $primary-low;
+  border-bottom: 1px solid var(--primary-low);
 }
 
 .posts-wrapper {
@@ -630,7 +629,7 @@ blockquote {
   width: 0;
   height: 0;
   vertical-align: middle;
-  border-top: 4px solid $primary;
+  border-top: 4px solid var(--primary);
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
@@ -671,7 +670,7 @@ blockquote {
   }
   h3 {
     font-size: $font-up-4;
-    color: $primary;
+    color: var(--primary);
     margin-bottom: 5px;
     .d-icon {
       margin-right: 7px;
@@ -708,11 +707,11 @@ a.attachment:before {
 
   .post-info {
     a {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: var(--primary-med-or-secondary-med);
     }
 
     a.wiki {
-      color: $wiki;
+      color: var(--wiki);
     }
   }
 }
@@ -726,18 +725,18 @@ a.attachment:before {
 }
 
 span.highlighted {
-  background-color: $tertiary-low;
+  background-color: var(--tertiary-low);
 }
 
 .first.new-user:not(.staff) a {
-  color: $primary-low-mid;
+  color: var(--primary-low-mid);
 }
 
 .read-state {
   position: absolute;
   // We use absolute positioning here because we want it to display in the padding
   align-self: center;
-  color: $tertiary-medium;
+  color: var(--tertiary-medium);
   right: 0;
   font-size: 0.571em;
 }

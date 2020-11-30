@@ -6,10 +6,6 @@ module TopicListResponder
   def respond_with_list(list)
     discourse_expires_in 1.minute
 
-    list.draft_key = Draft::NEW_TOPIC
-    list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-    list.draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
-
     respond_to do |format|
       format.html do
         @list = list

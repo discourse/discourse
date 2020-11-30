@@ -15,5 +15,5 @@ export default Component.extend(UrlRefresh, {
   @on("willDestroyElement")
   removeBodyClass() {
     $("body").removeClass(CATEGORIES_LIST_BODY_CLASS);
-  }
+  },
 });

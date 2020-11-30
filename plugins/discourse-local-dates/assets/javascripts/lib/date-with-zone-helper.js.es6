@@ -25,7 +25,7 @@ export default class DateWithZoneHelper {
         "day",
         "hour",
         "minute",
-        "second"
+        "second",
       ]),
       this.timezone
     );
@@ -79,7 +79,7 @@ export default class DateWithZoneHelper {
       minute: datetime.minute(),
       second: datetime.second(),
       timezone,
-      localTimezone
+      localTimezone,
     });
   }
 

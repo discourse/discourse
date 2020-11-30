@@ -7,12 +7,12 @@
 .topic-list-item.selected td:first-child,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
-  box-shadow: inset 3px 0 0 $danger; // needs to be inset for Edge
+  box-shadow: inset 3px 0 0 var(--danger); // needs to be inset for Edge
 }
 
 .featured-topic.selected,
 .topic-post.selected {
-  box-shadow: -3px 0 0 $danger;
+  box-shadow: -3px 0 0 var(--danger);
 }
 
 .latest .featured-topic {
@@ -51,7 +51,7 @@
     }
 
     span {
-      background: $primary-very-low;
+      background: var(--primary-very-low);
       border-radius: 3px;
       display: inline-flex;
       margin: 0 6px;

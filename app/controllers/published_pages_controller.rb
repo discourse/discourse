@@ -31,6 +31,9 @@ class PublishedPagesController < ApplicationController
 
     @topic = pp.topic
     @canonical_url = @topic.url
+    @logo = SiteSetting.logo_small || SiteSetting.logo
+    @site_url = Discourse.base_url
+    @border_color = "#" + ColorScheme.base_colors["tertiary"]
 
     @body_classes = Set.new([
       'published-page',
@@ -89,7 +92,9 @@ private
   end
 
   def ensure_publish_enabled
-    raise Discourse::NotFound unless SiteSetting.enable_page_publishing?
+    if !SiteSetting.enable_page_publishing? || SiteSetting.secure_media
+      raise Discourse::NotFound
+    end
   end
 
   def enforce_login_required!

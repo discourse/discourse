@@ -22,5 +22,5 @@ export default Service.extend({
 
   getObjectForTheme(themeId) {
     return this._settings[themeId];
-  }
+  },
 });

@@ -40,7 +40,15 @@
 
       <label class="control-label input-prepend">{{i18n "user.second_factor.label"}}</label>
       <div class="controls">
-        {{second-factor-input maxlength=6 value=secondFactorToken inputId="second-factor-token" placeholder="123456"}}
+        {{text-field
+          class="second-factor-token-input"
+          maxlength=6
+          value=secondFactorToken
+          inputId="second-factor-token"
+          placeholder="123456"
+          autocorrect="off"
+          autocapitalize="off"
+          autofocus="autofocus"}}
       </div>
     </div>
 

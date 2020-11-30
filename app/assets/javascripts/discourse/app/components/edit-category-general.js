@@ -41,11 +41,11 @@ export default buildCategoryPanel("general", {
     const categories = this.site.get("categoriesList");
     return this.siteSettings.category_colors
       .split("|")
-      .map(function(i) {
+      .map(function (i) {
         return i.toUpperCase();
       })
       .concat(
-        categories.map(function(c) {
+        categories.map(function (c) {
           return c.color.toUpperCase();
         })
       )
@@ -63,7 +63,7 @@ export default buildCategoryPanel("general", {
 
     // If editing a category, don't include its color:
     return categories
-      .map(function(c) {
+      .map(function (c) {
         return categoryId &&
           categoryColor.toUpperCase() === c.color.toUpperCase()
           ? null
@@ -76,7 +76,7 @@ export default buildCategoryPanel("general", {
   parentCategories() {
     return this.site
       .get("categoriesList")
-      .filter(c => c.level + 1 < Discourse.SiteSettings.max_category_nesting);
+      .filter((c) => c.level + 1 < this.siteSettings.max_category_nesting);
   },
 
   @discourseComputed(
@@ -92,7 +92,7 @@ export default buildCategoryPanel("general", {
       color,
       text_color: textColor,
       parent_category_id: parseInt(parentCategoryId, 10),
-      read_restricted: category.get("read_restricted")
+      read_restricted: category.get("read_restricted"),
     });
     return categoryBadgeHTML(c, { link: false });
   },
@@ -106,9 +106,13 @@ export default buildCategoryPanel("general", {
     return Category.list().filterBy("parent_category_id", categoryId);
   },
 
-  @discourseComputed("category.isUncategorizedCategory", "category.id")
-  showDescription(isUncategorizedCategory, categoryId) {
-    return !isUncategorizedCategory && categoryId;
+  @discourseComputed(
+    "category.isUncategorizedCategory",
+    "category.id",
+    "category.topic_url"
+  )
+  showDescription(isUncategorizedCategory, categoryId, topicUrl) {
+    return !isUncategorizedCategory && categoryId && topicUrl;
   },
 
   @action
@@ -122,5 +126,5 @@ export default buildCategoryPanel("general", {
       const categoryName = this.element.querySelector(".category-name");
       categoryName && categoryName.focus();
     }, 25);
-  }
+  },
 });

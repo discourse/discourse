@@ -1,4 +1,6 @@
 import I18n from "I18n";
+import bootbox from "bootbox";
+
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
     // eslint-disable-next-line no-console
@@ -52,7 +54,7 @@ export function extractError(error, defaultMessage) {
 }
 
 export function throwAjaxError(undoCallback) {
-  return function(error) {
+  return function (error) {
     // If we provided an `undo` callback
     if (undoCallback) {
       undoCallback(error);

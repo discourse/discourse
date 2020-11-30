@@ -9,7 +9,7 @@ describe TopicQuery do
   #  it indeed happens first, but is not obvious later in the tests we depend on the user being
   #  created so early otherwise finding new topics does not work
   #  we should remove the let! here and use freeze time to communicate how the clock moves
-  let!(:user) { Fabricate(:coding_horror) }
+  let!(:user) { Fabricate(:user) }
 
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
@@ -118,6 +118,53 @@ describe TopicQuery do
     end
   end
 
+  context 'tracked' do
+    it "filters tracked topics correctly" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      Fabricate(:topic, tags: [tag])
+      topic2 = Fabricate(:topic)
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(0)
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:watching]
+      )
+
+      cu = CategoryUser.create!(
+        category_id: topic2.category_id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:regular]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(1)
+
+      cu.update!(notification_level: NotificationLevels.all[:tracking])
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(2)
+
+      # includes subcategories of tracked categories
+      parentcat = Fabricate(:category)
+      subcat = Fabricate(:category, parent_category_id: parentcat.id)
+      topic3 = Fabricate(:topic, category_id: subcat.id)
+
+      CategoryUser.create!(
+        category_id: parentcat.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:tracking]
+      )
+
+      query = TopicQuery.new(user, filter: 'tracked').list_latest
+      expect(query.topics.length).to eq(3)
+    end
+  end
+
   context 'deleted filter' do
     it "filters deleted topics correctly" do
       _topic = Fabricate(:topic, deleted_at: 1.year.ago)
@@ -126,6 +173,18 @@ describe TopicQuery do
       expect(TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(user, status: 'deleted').list_latest.topics.size).to eq(0)
       expect(TopicQuery.new(nil, status: 'deleted').list_latest.topics.size).to eq(0)
+    end
+  end
+
+  describe 'include_pms option' do
+    it "includes users own pms in regular topic lists" do
+      topic = Fabricate(:topic)
+      own_pm = Fabricate(:private_message_topic, user: user)
+      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
+      expect(TopicQuery.new(user, include_pms: true).list_latest.topics).to contain_exactly(topic, own_pm)
     end
   end
 
@@ -156,6 +215,11 @@ describe TopicQuery do
         expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: subcategory.id).list_latest.topics.size).to eq(1)
         expect(TopicQuery.new(moderator, category: category.id, no_subcategories: true).list_latest.topics.size).to eq(1)
+      end
+
+      it "shows a subcategory definition topic in its parent list with the right site setting" do
+        SiteSetting.show_category_definitions_in_topic_lists = true
+        expect(TopicQuery.new(moderator, category: category.id).list_latest.topics.size).to eq(2)
       end
 
       it "works with subsubcategories" do
@@ -248,6 +312,19 @@ describe TopicQuery do
       end
     end
 
+    context 'remove_muted_tags' do
+      fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+
+      before do
+        SiteSetting.remove_muted_tags_from_latest = 'always'
+        SiteSetting.default_tags_muted = tag.name
+      end
+
+      it 'removes default muted tag topics for anonymous users' do
+        expect(TopicQuery.new(nil).list_latest.topics.map(&:id)).not_to include(topic.id)
+      end
+    end
+
     context "and categories too" do
       let(:category1) { Fabricate(:category_with_definition) }
       let(:category2) { Fabricate(:category_with_definition) }
@@ -302,6 +379,11 @@ describe TopicQuery do
 
     it 'should include default watched category topics in latest list for anonymous users' do
       SiteSetting.default_categories_watching = category.id.to_s
+      expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
+    end
+
+    it 'should include default regular category topics in latest list for anonymous users' do
+      SiteSetting.default_categories_regular = category.id.to_s
       expect(TopicQuery.new.list_latest.topics.map(&:id)).to include(topic.id)
     end
 
@@ -361,6 +443,22 @@ describe TopicQuery do
 
       topic_ids = topic_query.list_new.topics.map(&:id)
       expect(topic_ids).to contain_exactly(muted_topic.id, tagged_topic.id, muted_tagged_topic.id, untagged_topic.id)
+    end
+
+    it 'is not removed from the tag page itself' do
+      muted_tag = Fabricate(:tag)
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
+
+      muted_tag.update(name: "mixedCaseName")
+      topic_ids = topic_query.latest_results(tags: [muted_tag.name.downcase]).map(&:id)
+      expect(topic_ids).to contain_exactly(muted_topic.id)
     end
   end
 
@@ -867,6 +965,18 @@ describe TopicQuery do
           clear_cache!
 
           expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
+        end
+
+        it 'removes muted topics' do
+          SiteSetting.suggested_topics_max_days_old = 1365
+          tt = topic
+          TopicNotifier.new(old_topic).mute!(user)
+          clear_cache!
+
+          topics = topic_query.list_suggested_for(tt).topics
+
+          expect(topics.length).to eq(1)
+          expect(topics).not_to include(old_topic)
         end
 
       end

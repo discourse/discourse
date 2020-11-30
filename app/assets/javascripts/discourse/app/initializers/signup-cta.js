@@ -9,7 +9,7 @@ export default {
   name: "signup-cta",
 
   initialize(container) {
-    const screenTrack = container.lookup("screen-track:main");
+    const screenTrack = container.lookup("service:screen-track");
     const session = Session.current();
     const siteSettings = container.lookup("site-settings:main");
     const keyValueStore = container.lookup("key-value-store:main");
@@ -18,12 +18,24 @@ export default {
     screenTrack.keyValueStore = keyValueStore;
 
     // Preconditions
-    if (user) return; // must not be logged in
-    if (keyValueStore.get("anon-cta-never")) return; // "never show again"
-    if (!siteSettings.allow_new_registrations) return;
-    if (siteSettings.invite_only) return;
-    if (siteSettings.login_required) return;
-    if (!siteSettings.enable_signup_cta) return;
+    if (user) {
+      return;
+    } // must not be logged in
+    if (keyValueStore.get("anon-cta-never")) {
+      return;
+    } // "never show again"
+    if (!siteSettings.allow_new_registrations) {
+      return;
+    }
+    if (siteSettings.invite_only) {
+      return;
+    }
+    if (siteSettings.login_required) {
+      return;
+    }
+    if (!siteSettings.enable_signup_cta) {
+      return;
+    }
 
     function checkSignupCtaRequirements() {
       if (session.get("showSignupCta")) {
@@ -65,5 +77,5 @@ export default {
     screenTrack.registerAnonCallback(checkSignupCtaRequirements);
 
     checkSignupCtaRequirements();
-  }
+  },
 };

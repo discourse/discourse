@@ -137,6 +137,15 @@ describe Draft do
     expect(Draft.get(user, "test", 1)).to eq "hello"
   end
 
+  it "should disregard draft sequence if force_save is true" do
+    Draft.set(user, "test", 0, "data")
+    DraftSequence.next!(user, "test")
+    Draft.set(user, "test", 1, "hello")
+
+    seq = Draft.set(user, "test", 0, "foo", nil, force_save: true)
+    expect(seq).to eq(2)
+  end
+
   it 'can cleanup old drafts' do
     key = Draft::NEW_TOPIC
 

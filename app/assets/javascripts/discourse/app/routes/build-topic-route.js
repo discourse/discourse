@@ -1,18 +1,24 @@
 import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import {
+  changeSort,
+  resetParams,
+  queryParams,
+} from "discourse/controllers/discovery-sortable";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import { inject as service } from "@ember/service";
+import { deepEqual } from "discourse-common/lib/object";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {
   const findOpts = Object.assign({}, defaultParams || {});
 
   if (params) {
-    Object.keys(queryParams).forEach(function(opt) {
+    Object.keys(queryParams).forEach(function (opt) {
       if (!isEmpty(params[opt])) {
         findOpts[opt] = params[opt];
       }
@@ -23,7 +29,7 @@ function filterQueryParams(params, defaultParams) {
 
 function findTopicList(store, tracking, filter, filterParams, extras) {
   extras = extras || {};
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     const session = Session.current();
 
     if (extras.cached) {
@@ -34,7 +40,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
         cachedList &&
         cachedList.get("filter") === filter &&
         (cachedList.get("topics.length") || 0) > cachedList.get("per_page") &&
-        _.isEqual(cachedList.get("listParams"), filterParams)
+        deepEqual(cachedList.get("listParams"), filterParams)
       ) {
         cachedList.set("loaded", true);
 
@@ -51,7 +57,7 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
 
     // Clean up any string parameters that might slip through
     filterParams = filterParams || {};
-    Object.keys(filterParams).forEach(k => {
+    Object.keys(filterParams).forEach((k) => {
       const val = filterParams[k];
       if (val === "undefined" || val === "null") {
         filterParams[k] = null;
@@ -61,10 +67,10 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
     return resolve(
       store.findFiltered("topicList", { filter, params: filterParams || {} })
     );
-  }).then(function(list) {
+  }).then(function (list) {
     list.set("listParams", filterParams);
     if (tracking) {
-      tracking.sync(list, list.filter);
+      tracking.sync(list, list.filter, filterParams);
       tracking.trackIncoming(list.filter);
     }
     Session.currentProp("topicList", list);
@@ -79,10 +85,11 @@ function findTopicList(store, tracking, filter, filterParams, extras) {
   });
 }
 
-export default function(filter, extras) {
+export default function (filter, extras) {
   extras = extras || {};
   return DiscourseRoute.extend(
     {
+      screenTrack: service(),
       queryParams,
 
       beforeModel() {
@@ -128,18 +135,9 @@ export default function(filter, extras) {
             (filter.indexOf("top/") >= 0 ? filter.split("/")[1] : ""),
           selected: [],
           expandAllPinned: false,
-          expandGloballyPinned: true
+          expandGloballyPinned: true,
         };
 
-        const params = model.get("params");
-        if (params && Object.keys(params).length) {
-          if (params.order !== undefined) {
-            topicOpts.order = params.order;
-          }
-          if (params.ascending !== undefined) {
-            topicOpts.ascending = params.ascending;
-          }
-        }
         this.controllerFor("discovery/topics").setProperties(topicOpts);
         this.controllerFor("navigation/default").set(
           "canCreateTopic",
@@ -147,19 +145,18 @@ export default function(filter, extras) {
         );
       },
 
-      resetController(controller, isExiting) {
-        if (isExiting) {
-          controller.setProperties({ order: "default", ascending: false });
-        }
-      },
-
       renderTemplate() {
         this.render("navigation/default", { outlet: "navigation-bar" });
         this.render("discovery/topics", {
           controller: "discovery/topics",
-          outlet: "list-container"
+          outlet: "list-container",
         });
-      }
+      },
+
+      actions: {
+        changeSort,
+        resetParams,
+      },
     },
     extras
   );

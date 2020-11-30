@@ -27,7 +27,7 @@
             hasGroups=hasGroups
             usernames=emailOrUsername
             placeholderKey=placeholderKey
-            allowEmails=true
+            allowEmails=canInviteViaEmail
             class="invite-user-input"
             autocomplete="discourse"
             value=emailOrUsername
@@ -38,7 +38,7 @@
             value=emailOrUsername
             placeholderKey="topic.invite_reply.email_placeholder"}}
         {{/if}}
-        {{#if showContactPicker}}
+        {{#if capabilities.hasContactPicker}}
           {{d-button
             icon="address-book"
             action=(action "searchContact")
@@ -53,11 +53,12 @@
         <label class="instructions {{showGroupsClass}}">
           {{i18n "topic.automatically_add_to_groups"}}
         </label>
-        {{group-selector
-          fullWidthWrap=true
-          groupFinder=groupFinder
-          groupNames=inviteModel.groupNames
-          placeholderKey="topic.invite_private.group_name"}}
+        {{group-chooser
+          content=allGroups
+          value=groupIds
+          labelProperty="name"
+          onChange=(action (mut groupIds))
+        }}
       </div>
     {{/if}}
 
@@ -74,6 +75,12 @@
         {{/if}}
       </div>
     {{/if}}
+  {{/if}}
+
+  {{#if showApprovalMessage}}
+    <label class="instructions approval-notice">
+      {{i18n "invite.approval_not_required"}}
+    </label>
   {{/if}}
 </div>
 

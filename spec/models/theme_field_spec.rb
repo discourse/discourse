@@ -186,14 +186,17 @@ HTML
     theme.save!
 
     expected_js = <<~JS
-      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function () {
+      define("discourse/controllers/discovery", ["discourse/lib/ajax"], function (_ajax) {
         "use strict";
 
         var __theme_name__ = "#{theme.name}";
+
         var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+
         var themePrefix = function themePrefix(key) {
-          return "theme_translations.#{theme.id}." + key;
+          return "theme_translations.#{theme.id}.".concat(key);
         };
+
         console.log('hello from .js.es6');
       });
     JS
@@ -413,6 +416,17 @@ HTML
         expect(javascript_cache.content).to include("inline discourse plugin")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")
       end
+    end
+  end
+
+  context "SVG sprite theme fields" do
+    let(:upload) { Fabricate(:upload) }
+    let(:theme) { Fabricate(:theme) }
+    let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
+
+    it "is rebaked when upload changes" do
+      theme_field.update(upload: Fabricate(:upload))
+      expect(theme_field.value_baked).to eq(nil)
     end
   end
 

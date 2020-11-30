@@ -17,5 +17,5 @@ export default Component.extend({
     next(
       () => (this.element.querySelector("input[type=radio]").checked = checked)
     );
-  }
+  },
 });

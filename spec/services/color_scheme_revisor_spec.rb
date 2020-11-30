@@ -48,6 +48,14 @@ describe ColorSchemeRevisor do
       }.to_not change { color_scheme.reload.version }
       expect(color_scheme.colors.first.hex).to eq(color.hex)
     end
+
+    it "can change the user_selectable column" do
+      expect(color_scheme.user_selectable).to eq(false)
+
+      ColorSchemeRevisor.revise(color_scheme, { user_selectable: true })
+      expect(color_scheme.reload.user_selectable).to eq(true)
+    end
+
   end
 
 end

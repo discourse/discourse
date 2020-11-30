@@ -106,6 +106,10 @@ class TopicCreator
       topic_params[:views] = @opts[:views].to_i
     end
 
+    if topic_params[:import_mode] && @opts[:participant_count].to_i > 0
+      topic_params[:participant_count] = @opts[:participant_count].to_i
+    end
+
     # Automatically give it a moderator warning subtype if specified
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
@@ -165,7 +169,10 @@ class TopicCreator
       end
     else
       valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-      rollback_from_errors!(topic) unless valid_tags
+      unless valid_tags
+        topic.errors.add(:base, :unable_to_tag)
+        rollback_from_errors!(topic)
+      end
     end
   end
 
@@ -211,7 +218,7 @@ class TopicCreator
     names = usernames.split(',').flatten.map(&:downcase)
     len = 0
 
-    User.includes(:user_option).where('lower(username) in (?)', names).find_each do |user|
+    User.includes(:user_option).where('username_lower in (?)', names).find_each do |user|
       check_can_send_permission!(topic, user)
       @added_users << user
       topic.topic_allowed_users.build(user_id: user.id)

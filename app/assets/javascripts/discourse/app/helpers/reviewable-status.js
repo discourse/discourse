@@ -6,7 +6,7 @@ import {
   APPROVED,
   REJECTED,
   IGNORED,
-  DELETED
+  DELETED,
 } from "discourse/models/reviewable";
 
 function dataFor(status) {
@@ -42,6 +42,6 @@ export function htmlStatus(status) {
   `;
 }
 
-export default htmlHelper(status => {
+export default htmlHelper((status) => {
   return htmlStatus(status);
 });

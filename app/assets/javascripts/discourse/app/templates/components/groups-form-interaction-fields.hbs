@@ -1,4 +1,4 @@
-{{#if currentUser.admin}}
+{{#if canAdminGroup}}
   <div class="control-group">
     <label class="control-label">{{i18n "admin.groups.manage.interaction.visibility"}}</label>
     <label for="visiblity">{{i18n "admin.groups.manage.interaction.visibility_levels.title"}}</label>
@@ -62,15 +62,17 @@
   }}
 </div>
 
-<div class="control-group">
-  <label>
-    {{input type="checkbox"
-          checked=model.publish_read_state
-          class="groups-form-publish-read-state"}}
+{{#if canAdminGroup}}
+  <div class="control-group">
+    <label>
+      {{input type="checkbox"
+            checked=model.publish_read_state
+            class="groups-form-publish-read-state"}}
 
-    {{i18n "admin.groups.manage.interaction.publish_read_state"}}
-  </label>
-</div>
+      {{i18n "admin.groups.manage.interaction.publish_read_state"}}
+    </label>
+  </div>
+{{/if}}
 
 {{#if showEmailSettings}}
   <div class="control-group">
@@ -95,7 +97,6 @@
     value=model.default_notification_level
     class="groups-form-default-notification-level"
     options=(hash
-      none="select_kit.default_header_text"
       i18nPrefix="groups.notifications"
     )
   }}

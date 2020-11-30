@@ -14,11 +14,11 @@ export default createWidget("emoji", {
   buildAttributes(attrs) {
     let result = {
       src: emojiUrlFor(attrs.name),
-      alt: `:${attrs.alt || attrs.name}:`
+      alt: `:${attrs.alt || attrs.name}:`,
     };
     if (attrs.title) {
       result.title = typeof attrs.title === "string" ? attrs.title : attrs.name;
     }
     return result;
-  }
+  },
 });

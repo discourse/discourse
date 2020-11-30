@@ -23,7 +23,7 @@ module UserGuardian
   end
 
   def can_edit_username?(user)
-    return false if SiteSetting.sso_overrides_username? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_username?
     return true if is_staff?
     return false if SiteSetting.username_change_period <= 0
     return false if is_anonymous?
@@ -31,7 +31,7 @@ module UserGuardian
   end
 
   def can_edit_email?(user)
-    return false if SiteSetting.sso_overrides_email? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_email?
     return false unless SiteSetting.email_editable?
     return true if is_staff?
     return false if is_anonymous?
@@ -40,7 +40,7 @@ module UserGuardian
 
   def can_edit_name?(user)
     return false unless SiteSetting.enable_names?
-    return false if SiteSetting.sso_overrides_name? && SiteSetting.enable_sso?
+    return false if SiteSetting.sso_overrides_name?
     return true if is_staff?
     return false if is_anonymous?
     can_edit?(user)
@@ -92,6 +92,10 @@ module UserGuardian
     is_admin? || (is_staff? && SiteSetting.moderators_view_emails)
   end
 
+  def can_check_sso_email?(user)
+    user && is_admin?
+  end
+
   def restrict_user_fields?(user)
     user.trust_level == TrustLevel[0] && anonymous?
   end
@@ -111,6 +115,7 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
+    return true if !SiteSetting.allow_users_to_hide_profile?
 
     # If a user has hidden their profile, restrict it to them and staff
     if user.user_option.try(:hide_profile_and_presence?)
@@ -147,7 +152,7 @@ module UserGuardian
 
   def can_see_review_queue?
     is_staff? || (
-      SiteSetting.enable_category_group_review &&
+      SiteSetting.enable_category_group_moderation &&
       Reviewable
         .where(reviewable_by_group_id: @user.group_users.pluck(:group_id))
         .where('category_id IS NULL or category_id IN (?)', allowed_category_ids)
@@ -157,5 +162,17 @@ module UserGuardian
 
   def can_see_summary_stats?(target_user)
     true
+  end
+
+  def can_upload_profile_header?(user)
+    (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_profile_background.to_i)) || is_staff?
+  end
+
+  def can_upload_user_card_background?(user)
+    (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
+  end
+
+  def can_delete_sso_record?(user)
+    SiteSetting.enable_sso && user && is_admin?
   end
 end

@@ -33,11 +33,14 @@ describe ContentSecurityPolicy do
   end
 
   describe 'worker-src' do
-    it 'always has self and blob' do
+    it 'has expected values' do
       worker_srcs = parse(policy)['worker-src']
       expect(worker_srcs).to eq(%w[
         'self'
-        blob:
+        http://test.localhost/assets/
+        http://test.localhost/brotli_asset/
+        http://test.localhost/javascripts/
+        http://test.localhost/plugins/
       ])
     end
   end
@@ -66,16 +69,34 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include("'report-sample'")
     end
 
-    it 'whitelists Google Analytics and Tag Manager when integrated' do
-      SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
+    context 'for Google Analytics' do
+      before do
+        SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
+      end
+
+      it 'allowlists Google Analytics v3 when integrated' do
+        script_srcs = parse(policy)['script-src']
+        expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+        expect(script_srcs).not_to include('https://www.googletagmanager.com/gtag/js')
+      end
+
+      it 'allowlists Google Analytics v4 when integrated' do
+        SiteSetting.ga_version = 'v4_gtag'
+
+        script_srcs = parse(policy)['script-src']
+        expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+        expect(script_srcs).to include('https://www.googletagmanager.com/gtag/js')
+      end
+    end
+
+    it 'allowlists Google Tag Manager when integrated' do
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
-    it 'whitelists CDN assets when integrated' do
+    it 'allowlists CDN assets when integrated' do
       set_cdn_url('https://cdn.com')
 
       script_srcs = parse(policy)['script-src']

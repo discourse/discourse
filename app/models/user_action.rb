@@ -38,6 +38,23 @@ class UserAction < ActiveRecord::Base
     ASSIGNED,
   ].each_with_index.to_a.flatten]
 
+  def self.types
+    @types ||= Enum.new(
+      like: 1,
+      was_liked: 2,
+      bookmark: 3,
+      new_topic: 4,
+      reply: 5,
+      response: 6,
+      mention: 7,
+      quote: 9,
+      edit: 11,
+      new_private_message: 12,
+      got_private_message: 13,
+      solved: 15,
+      assigned: 16)
+  end
+
   def self.last_action_in_topic(user_id, topic_id)
     UserAction.where(user_id: user_id,
                      target_topic_id: topic_id,
@@ -167,7 +184,7 @@ class UserAction < ActiveRecord::Base
       'u.name AS acting_name'
     ]
 
-    AvatarLookup.lookup_columns.each do |c|
+    UserLookup.lookup_columns.each do |c|
       next if c == :id || c['.']
       acting_cols << "u.#{c} AS acting_#{c}"
     end
@@ -447,9 +464,9 @@ end
 #
 #  idx_unique_rows                                   (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
 #  idx_user_actions_speed_up_user_all                (user_id,created_at,action_type)
-#  index_user_actions_on_acting_user_id              (acting_user_id)
+#  index_actions_on_acting_user_id                   (acting_user_id)
+#  index_actions_on_user_id_and_action_type          (user_id,action_type)
 #  index_user_actions_on_action_type_and_created_at  (action_type,created_at)
 #  index_user_actions_on_target_post_id              (target_post_id)
 #  index_user_actions_on_target_user_id              (target_user_id) WHERE (target_user_id IS NOT NULL)
-#  index_user_actions_on_user_id_and_action_type     (user_id,action_type)
 #

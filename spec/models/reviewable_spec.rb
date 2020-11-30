@@ -105,7 +105,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "works with the reviewable by group" do
-        SiteSetting.enable_category_group_review = true
+        SiteSetting.enable_category_group_moderation = true
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!
@@ -121,7 +121,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "doesn't allow review by group when disabled" do
-        SiteSetting.enable_category_group_review = false
+        SiteSetting.enable_category_group_moderation = false
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!
@@ -180,8 +180,8 @@ RSpec.describe Reviewable, type: :model do
           before do
             SiteSetting.reviewable_default_visibility = :high
             Reviewable.set_priorities(high: 10)
-            @queued_post = Fabricate(:reviewable_queued_post, score: 0, target: post)
-            @queued_user = Fabricate(:reviewable_user, score: 0)
+            @queued_post = Fabricate(:reviewable_queued_post, score: 0, target: post, force_review: true)
+            @queued_user = Fabricate(:reviewable_user, score: 0, force_review: true)
           end
 
           it 'includes queued posts when searching for pending reviewables' do

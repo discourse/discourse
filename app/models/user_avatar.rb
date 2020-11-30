@@ -78,7 +78,7 @@ class UserAvatar < ActiveRecord::Base
 
   def self.local_avatar_template(hostname, username, upload_id)
     version = self.version(upload_id)
-    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+    "#{Discourse.base_path}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
   end
 
   def self.external_avatar_url(user_id, upload_id, size)

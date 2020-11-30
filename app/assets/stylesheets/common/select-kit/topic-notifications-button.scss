@@ -1,7 +1,7 @@
 .topic-notifications-button {
   &.is-loading {
+    @include unselectable;
     pointer-events: none;
-    user-select: none;
 
     .d-icon-spinner {
       margin: 0;
@@ -13,6 +13,18 @@
 
     .topic-notifications-options {
       opacity: 0.5;
+    }
+  }
+}
+
+// This is a weird fix for a weird issue in iOS/iPadOS, the browser freezes
+// when changing the notification level while in the fullscreen topic footer.
+// This prevents the selected option icon from being hidden while saving,
+// and somehow that makes Safari happy.
+.timeline-fullscreen {
+  .topic-notifications-button.is-loading {
+    .selected-name .d-icon {
+      display: inline-flex;
     }
   }
 }

@@ -5,7 +5,7 @@ export function findOrResetCachedTopicList(session, filter) {
   } else {
     session.setProperties({
       topicList: null,
-      topicListScrollPosition: null
+      topicListScrollPosition: null,
     });
     return false;
   }

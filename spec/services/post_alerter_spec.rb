@@ -71,19 +71,36 @@ describe PostAlerter do
 
     end
 
-    it "triggers :before_create_notifications_for_users" do
-      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user: pm.user, topic: pm)
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
-      group = Fabricate(:group, users: [user2])
-      pm.allowed_users << user1
-      pm.allowed_groups << group
-      events = DiscourseEvent.track_events do
-        PostAlerter.post_created(op)
+    context "group inboxes" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup") }
+      fab!(:pm) { Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group]) }
+      fab!(:op) { Fabricate(:post, user: pm.user, topic: pm) }
+
+      it "triggers :before_create_notifications_for_users" do
+        pm.allowed_users << user1
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(op)
+        end
+
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
       end
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
+      it "triggers group summary notification" do
+        TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(op)
+        group_summary_notification = Notification.where(user_id: user2.id)
+
+        expect(group_summary_notification.count).to eq(1)
+        expect(group_summary_notification.first.notification_type).to eq(Notification.types[:group_message_summary])
+
+        notification_payload = JSON.parse(group_summary_notification.first.data)
+        expect(notification_payload["group_name"]).to eq(group.name)
+      end
     end
   end
 
@@ -108,30 +125,44 @@ describe PostAlerter do
       post = Fabricate(:post, raw: 'I love waffles')
 
       admin = Fabricate(:admin)
-      post.revise(admin, raw: 'I made a revision')
+
+      expect do
+        post.revise(admin, raw: 'I made a revision')
+      end.to add_notification(post.user, :edited)
 
       # lets also like this post which should trigger a notification
-      PostActionCreator.new(
-        admin,
-        post,
-        PostActionType.types[:like]
-      ).perform
+      expect do
+        PostActionCreator.new(
+          admin,
+          post,
+          PostActionType.types[:like]
+        ).perform
+      end.to add_notification(post.user, :liked)
 
       # skip this notification cause we already notified on an edit by the same user
       # in the previous edit
       freeze_time 2.hours.from_now
-      post.revise(admin, raw: 'I made another revision')
+
+      expect do
+        post.revise(admin, raw: 'I made another revision')
+      end.to_not change { Notification.count }
 
       # this we do not skip cause 1 day has passed
       freeze_time 23.hours.from_now
-      post.revise(admin, raw: 'I made another revision xyz')
 
-      post.revise(Fabricate(:admin), raw: 'I made a revision')
+      expect do
+        post.revise(admin, raw: 'I made another revision xyz')
+      end.to add_notification(post.user, :edited)
+
+      expect do
+        post.revise(Fabricate(:admin), raw: 'I made a revision')
+      end.to add_notification(post.user, :edited)
 
       freeze_time 2.hours.from_now
-      post.revise(admin, raw: 'I made another revision')
 
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(5)
+      expect do
+        post.revise(admin, raw: 'I made another revision')
+      end.to add_notification(post.user, :edited)
     end
 
     it 'notifies flaggers when flagged post gets unhidden by edit' do
@@ -191,7 +222,7 @@ describe PostAlerter do
 
     it 'does not notify for ignored users' do
       post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
-      IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
+      Fabricate(:ignored_user, user: evil_trout, ignored_user: post.user)
 
       expect {
         PostAlerter.post_created(post)
@@ -693,7 +724,7 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
 
@@ -708,7 +739,7 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
 
@@ -1098,6 +1129,38 @@ describe PostAlerter do
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
       end
     end
+
+    context "private message" do
+      fab!(:post) { Fabricate(:private_message_post) }
+      fab!(:other_tag) { Fabricate(:tag) }
+      fab!(:other_tag2) { Fabricate(:tag) }
+      fab!(:other_tag3) { Fabricate(:tag) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:staged) { Fabricate(:staged) }
+      fab!(:admin) { Fabricate(:admin) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.allow_staff_to_tag_pms = true
+        Jobs.run_immediately!
+        TopicUser.change(user.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TopicUser.change(staged.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TopicUser.change(admin.id, post.topic.id, notification_level: TopicUser.notification_levels[:watching])
+        TagUser.change(staged.id, other_tag.id, TagUser.notification_levels[:watching])
+        TagUser.change(admin.id, other_tag3.id, TagUser.notification_levels[:watching])
+        post.topic.allowed_users << user
+        post.topic.allowed_users << staged
+      end
+
+      it "only notifes staff watching added tag" do
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag.name])).to be true
+        expect(Notification.where(user_id: staged.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag2.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(0)
+        expect(PostRevisor.new(post).revise!(Fabricate(:admin), tags: [other_tag3.name])).to be true
+        expect(Notification.where(user_id: admin.id).count).to eq(1)
+      end
+    end
   end
 
   describe '#extract_linked_users' do
@@ -1163,6 +1226,78 @@ describe PostAlerter do
         .to change { Notification.count }.by(1)
 
       expect(Notification.last.notification_type).to eq(Notification.types[:posted])
+    end
+  end
+
+  context "SMTP" do
+    before do
+      SiteSetting.enable_smtp = true
+      Jobs.run_immediately!
+    end
+
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com"
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(:private_message_topic,
+        topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ]
+      )
+    end
+
+    it "sends notifications for new posts in topic" do
+      post = Fabricate(
+        :post,
+        topic: topic,
+        incoming_email:
+          Fabricate(
+            :incoming_email,
+            topic: topic,
+            from_address: "foo@discourse.org",
+            to_addresses: group.email_username,
+            cc_addresses: "bar@discourse.org"
+          )
+      )
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+
+      post = Fabricate(:post, topic: topic)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to include(group.email_username)
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
+      expect(email.subject).to eq("Re: #{topic.title}")
+
+      post = Fabricate(
+        :post,
+        topic: topic,
+        incoming_email:
+          Fabricate(
+            :incoming_email,
+            topic: topic,
+            from_address: "bar@discourse.org",
+            to_addresses: group.email_username,
+            cc_addresses: "baz@discourse.org"
+          )
+      )
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+
+      post = Fabricate(:post, topic: topic.reload)
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+      email = ActionMailer::Base.deliveries.last
+      expect(email.from).to eq([group.email_username])
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org", "baz@discourse.org")
+      expect(email.subject).to eq("Re: #{topic.title}")
+
+      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
   end
 end

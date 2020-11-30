@@ -123,10 +123,22 @@ describe TagsController do
 
   describe '#show' do
     fab!(:tag) { Fabricate(:tag, name: 'test') }
+    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
-      get "/tag/test"
+      get "/tag/test.json"
+
       expect(response.status).to eq(200)
+
+      json = response.parsed_body
+
+      topic_list = json["topic_list"]
+
+      expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
+      expect(topic_list["draft"]).to eq(nil)
+      expect(topic_list["draft_sequence"]).to eq(nil)
+      expect(topic_list["draft_key"]).to eq(Draft::NEW_TOPIC)
     end
 
     it "should handle invalid tags" do
@@ -150,6 +162,15 @@ describe TagsController do
 
       get "/tag/test"
       expect(response.status).to eq(200)
+    end
+
+    it "handles special tag 'none'" do
+      SiteSetting.allow_staff_to_tag_pms = true
+
+      sign_in(admin)
+
+      get "/tag/none.json"
+      expect(response.parsed_body['topic_list']['topics'].length).to eq(1)
     end
 
     context "with a category in the path" do
@@ -325,19 +346,6 @@ describe TagsController do
           expect(response.parsed_body.dig('tag_info', 'category_restricted')).to eq(true)
         end
       end
-    end
-  end
-
-  describe '#check_hashtag' do
-    fab!(:tag) { Fabricate(:tag) }
-
-    it "should return the right response" do
-      get "/tags/check.json", params: { tag_values: [tag.name] }
-
-      expect(response.status).to eq(200)
-
-      response_tag = response.parsed_body["valid"].first
-      expect(response_tag["value"]).to eq(tag.name)
     end
   end
 
@@ -577,6 +585,36 @@ describe TagsController do
           end
         end
       end
+    end
+  end
+
+  describe '#show_top' do
+    fab!(:tag)       { Fabricate(:tag) }
+
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:tag_topic)  { Fabricate(:topic, category: category, tags: [tag]) }
+
+    before do
+      SiteSetting.top_page_default_timeframe = 'all'
+      TopTopic.create!(topic: topic, all_score: 1)
+      TopTopic.create!(topic: tag_topic, all_score: 1)
+    end
+
+    it "can filter by tag" do
+      get "/tag/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
+    end
+
+    it "can filter by both category and tag" do
+      get "/tags/c/#{category.slug}/#{category.id}/#{tag.name}/l/top.json"
+      expect(response.status).to eq(200)
+
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to eq([tag_topic.id])
     end
   end
 

@@ -16,5 +16,5 @@ export default DiscourseRoute.extend({
     } else {
       this.transitionTo(destination);
     }
-  }
+  },
 });

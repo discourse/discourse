@@ -1,8 +1,6 @@
 //= require logster
-//= require ./discourse-objects
 
 //= require template_include.js
-//= require i18n-patches
 
 //= require message-bus
 //= require jquery.ui.widget.js
@@ -11,10 +9,8 @@
 //= require popper.js
 //= require bootstrap-modal.js
 //= require caret_position
-//= require favcount.js
 //= require jquery.ba-resize.js
 //= require jquery.color.js
-//= require jquery.cookie.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js
 //= require jquery.tagsinput.js

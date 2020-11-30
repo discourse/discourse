@@ -30,7 +30,7 @@ export default Component.extend(
       "topic.category.read_restricted:read_restricted",
       "topic.deleted:deleted-topic",
       "topic.categoryClass",
-      "topic.tagClasses"
+      "topic.tagClasses",
     ],
     menuVisible: true,
     SHORT_POST: 1200,
@@ -67,7 +67,9 @@ export default Component.extend(
     },
 
     _showTopicInHeader(topic) {
-      if (this.pauseHeaderTopicUpdate) return;
+      if (this.pauseHeaderTopicUpdate) {
+        return;
+      }
       this.appEvents.trigger("header:show-topic", topic);
       this._lastShowTopic = true;
     },
@@ -108,9 +110,7 @@ export default Component.extend(
       $(this.element).on(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
-        function(e) {
-          return ClickTrack.trackClick(e);
-        }
+        (e) => ClickTrack.trackClick(e, this.siteSettings)
       );
 
       this.appEvents.on("discourse:focus-changed", this, "gotFocus");
@@ -214,6 +214,6 @@ export default Component.extend(
         "header:update-topic",
         this.mobileScrollDirection === "down" ? this.topic : null
       );
-    }
+    },
   }
 );

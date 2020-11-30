@@ -46,7 +46,7 @@ class UserAvatarsController < ApplicationController
 
     hijack do
       begin
-        proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+        proxy_avatar("https://avatars.discourse-cdn.com/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
       rescue OpenURI::HTTPError
         render_blank
       end
@@ -189,7 +189,7 @@ class UserAvatarsController < ApplicationController
     return if !upload
     return upload if upload.extension == "svg"
 
-    upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
+    upload.get_optimized_image(size, size)
     # TODO decide if we want to detach here
   end
 

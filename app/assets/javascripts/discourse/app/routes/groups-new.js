@@ -18,8 +18,8 @@ export default DiscourseRoute.extend({
   },
 
   afterModel() {
-    if (!(this.currentUser && this.currentUser.admin)) {
+    if (!this.get("currentUser.can_create_group")) {
       this.transitionTo("groups");
     }
-  }
+  },
 });

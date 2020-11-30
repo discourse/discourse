@@ -18,23 +18,23 @@ class InvitesController < ApplicationController
     expires_now
 
     invite = Invite.find_by(invite_key: params[:id])
+    if invite.present? && !invite.expired? && !invite.redeemed?
+      store_preloaded("invite_info", MultiJson.dump(
+        invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
+        email: invite.email,
+        username: UserNameSuggester.suggest(invite.email),
+        is_invite_link: invite.is_invite_link?)
+      )
 
-    if invite.present?
-      if !invite.redeemed?
-        store_preloaded("invite_info", MultiJson.dump(
-          invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
-          email: invite.email,
-          username: UserNameSuggester.suggest(invite.email),
-          is_invite_link: invite.is_invite_link?)
-        )
-
-        render layout: 'application'
-      else
-        flash.now[:error] = I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
-        render layout: 'no_ember'
-      end
+      render layout: 'application'
     else
-      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
+      flash.now[:error] = if invite.present? && invite.expired?
+        I18n.t('invite.expired', base_url: Discourse.base_url)
+      elsif invite.present? && invite.redeemed?
+        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+      else
+        I18n.t('invite.not_found', base_url: Discourse.base_url)
+      end
       render layout: 'no_ember'
     end
   end
@@ -122,7 +122,9 @@ class InvitesController < ApplicationController
       group_ids: params[:group_ids],
       group_names: params[:group_names]
     )
-    guardian.ensure_can_invite_to_forum!(groups)
+    if !guardian.can_invite_to_forum?(groups)
+      raise StandardError.new I18n.t("invite.cant_invite_to_group")
+    end
     group_ids = groups.map(&:id)
 
     if is_single_invite
@@ -142,25 +144,23 @@ class InvitesController < ApplicationController
       end
     end
 
-    begin
-      invite_link = if is_single_invite
-        Invite.generate_single_use_invite_link(params[:email], current_user, topic, group_ids)
-      else
-        Invite.generate_multiple_use_invite_link(
-          invited_by: current_user,
-          max_redemptions_allowed: params[:max_redemptions_allowed],
-          expires_at: params[:expires_at],
-          group_ids: group_ids
-        )
-      end
-      if invite_link.present?
-        render_json_dump(invite_link)
-      else
-        render json: failed_json, status: 422
-      end
-    rescue => e
-      render json: { errors: [e.message] }, status: 422
+    invite_link = if is_single_invite
+      Invite.generate_single_use_invite_link(params[:email], current_user, topic, group_ids)
+    else
+      Invite.generate_multiple_use_invite_link(
+        invited_by: current_user,
+        max_redemptions_allowed: params[:max_redemptions_allowed],
+        expires_at: params[:expires_at],
+        group_ids: group_ids
+      )
     end
+    if invite_link.present?
+      render_json_dump(invite_link)
+    else
+      render json: failed_json, status: 422
+    end
+  rescue => e
+    render json: { errors: [e.message] }, status: 422
   end
 
   def destroy
@@ -254,7 +254,7 @@ class InvitesController < ApplicationController
 
   def ensure_not_logged_in
     if current_user
-      flash[:error] = I18n.t("login.already_logged_in", current_user: current_user.username)
+      flash[:error] = I18n.t("login.already_logged_in")
       render layout: 'no_ember'
       false
     end

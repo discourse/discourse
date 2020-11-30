@@ -21,10 +21,10 @@ export default Mixin.create({
       return EmberObject.create({
         failed: true,
         message: I18n.t("user.name.required"),
-        element: document.querySelector("#new-account-name")
+        element: document.querySelector("#new-account-name"),
       });
     }
 
     return EmberObject.create({ ok: true });
-  }
+  },
 });

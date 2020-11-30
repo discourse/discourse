@@ -17,7 +17,7 @@
       {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
-            {{private-message-glyph isVisible=model.isPrivateMessage}}
+            {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
 
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
 
@@ -61,13 +61,14 @@
             {{#unless model.is_warning}}
               {{#if siteSettings.enable_personal_messages}}
                 {{private-message-glyph
-                  isVisible=model.isPrivateMessage
+                  shouldShow=model.isPrivateMessage
                   href=pmPath
                   title="topic_statuses.personal_message.title"
                   ariaLabel="user.messages.inbox"
+                  tagName=""
                 }}
               {{else}}
-                {{private-message-glyph isVisible=model.isPrivateMessage}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -128,7 +129,7 @@
         }}
       </div>
 
-      {{#topic-navigation topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
+      {{#topic-navigation class="topic-navigation" topic=model jumpToDate=(action "jumpToDate") jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderTimeline}}
           {{topic-timeline
             topic=model
@@ -145,6 +146,7 @@
             jumpToIndex=(action "jumpToIndex")
             replyToPost=(action "replyToPost")
             toggleMultiSelect=(action "toggleMultiSelect")
+            showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
             deleteTopic=(action "deleteTopic")
             recoverTopic=(action "recoverTopic")
             toggleClosed=(action "toggleClosed")
@@ -168,6 +170,7 @@
               openUpwards="true"
               rightSide="true"
               toggleMultiSelect=(action "toggleMultiSelect")
+              showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
               deleteTopic=(action "deleteTopic")
               recoverTopic=(action "recoverTopic")
               toggleClosed=(action "toggleClosed")
@@ -213,8 +216,7 @@
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
                 grantBadge=(action "grantBadge")
-                addNotice=(action "addNotice")
-                removeNotice=(action "removeNotice")
+                changeNotice=(action "changeNotice")
                 lockPost=(action "lockPost")
                 unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
@@ -286,14 +288,7 @@
                 </div>
               {{/if}}
 
-              {{#if model.private_topic_timer.execute_at}}
-                {{topic-timer-info
-                    topicClosed=model.closed
-                    statusType=model.private_topic_timer.status_type
-                    executeAt=model.private_topic_timer.execute_at
-                    duration=model.private_topic_timer.duration
-                    removeTopicTimer=(action "removeTopicTimer" model.private_topic_timer.status_type "private_topic_timer")}}
-              {{/if}}
+              {{slow-mode-info topic=model user=currentUser}}
 
               {{topic-timer-info
                   topicClosed=model.closed
@@ -304,42 +299,8 @@
                   categoryId=model.topic_timer.category_id
                   removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
-              {{#if session.showSignupCta}}
-                {{! replace "Log In to Reply" with the infobox }}
-                {{signup-cta}}
-              {{else}}
-                {{#if currentUser}}
-                  {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
-
-                  {{topic-footer-buttons
-                    topic=model
-                    toggleMultiSelect=(action "toggleMultiSelect")
-                    deleteTopic=(action "deleteTopic")
-                    recoverTopic=(action "recoverTopic")
-                    toggleClosed=(action "toggleClosed")
-                    toggleArchived=(action "toggleArchived")
-                    toggleVisibility=(action "toggleVisibility")
-                    showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
-                    showFeatureTopic=(route-action "showFeatureTopic")
-                    showChangeTimestamp=(route-action "showChangeTimestamp")
-                    resetBumpDate=(action "resetBumpDate")
-                    convertToPublicTopic=(action "convertToPublicTopic")
-                    convertToPrivateMessage=(action "convertToPrivateMessage")
-                    toggleBookmark=(action "toggleBookmark")
-                    showFlagTopic=(route-action "showFlagTopic")
-                    toggleArchiveMessage=(action "toggleArchiveMessage")
-                    editFirstPost=(action "editFirstPost")
-                    deferTopic=(action "deferTopic")
-                    replyToPost=(action "replyToPost")}}
-                {{else}}
-                  <div id="topic-footer-buttons">
-                    {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
-                  </div>
-                {{/if}}
-              {{/if}}
-
               {{#if showSelectedPostsAtBottom}}
-                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                <div class="selected-posts {{unless multiSelect "hidden"}} {{if showSelectedPostsAtBottom "hidden"}}">
                   {{selected-posts
                     selectedPostsCount=selectedPostsCount
                     canSelectAll=canSelectAll
@@ -357,15 +318,6 @@
                 </div>
               {{/if}}
 
-              {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
-              <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
-                {{#if model.relatedMessages.length}}
-                  {{related-messages topic=model}}
-                {{/if}}
-                {{#if model.suggestedTopics.length}}
-                  {{suggested-topics topic=model}}
-                {{/if}}
-              </div>
             {{/if}}
           {{/conditional-loading-spinner}}
 
@@ -373,6 +325,52 @@
       </div>
 
     </div>
+    {{#if loadedAllPosts}}
+      {{#if session.showSignupCta}}
+        {{! replace "Log In to Reply" with the infobox }}
+        {{signup-cta}}
+      {{else}}
+        {{#if currentUser}}
+          {{plugin-outlet name="topic-above-footer-buttons" args=(hash model=model)}}
+
+          {{topic-footer-buttons
+            topic=model
+            toggleMultiSelect=(action "toggleMultiSelect")
+            showTopicSlowModeUpdate=(route-action "showTopicSlowModeUpdate")
+            deleteTopic=(action "deleteTopic")
+            recoverTopic=(action "recoverTopic")
+            toggleClosed=(action "toggleClosed")
+            toggleArchived=(action "toggleArchived")
+            toggleVisibility=(action "toggleVisibility")
+            showTopicStatusUpdate=(route-action "showTopicStatusUpdate")
+            showFeatureTopic=(route-action "showFeatureTopic")
+            showChangeTimestamp=(route-action "showChangeTimestamp")
+            resetBumpDate=(action "resetBumpDate")
+            convertToPublicTopic=(action "convertToPublicTopic")
+            convertToPrivateMessage=(action "convertToPrivateMessage")
+            toggleBookmark=(action "toggleBookmark")
+            showFlagTopic=(route-action "showFlagTopic")
+            toggleArchiveMessage=(action "toggleArchiveMessage")
+            editFirstPost=(action "editFirstPost")
+            deferTopic=(action "deferTopic")
+            replyToPost=(action "replyToPost")}}
+        {{else}}
+          <div id="topic-footer-buttons">
+            {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
+          </div>
+        {{/if}}
+      {{/if}}
+
+      {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
+      <div class="{{if model.relatedMessages.length "related-messages-wrapper"}} {{if model.suggestedTopics.length "suggested-topics-wrapper"}}">
+        {{#if model.relatedMessages.length}}
+          {{related-messages topic=model}}
+        {{/if}}
+        {{#if model.suggestedTopics.length}}
+          {{suggested-topics topic=model}}
+        {{/if}}
+      </div>
+    {{/if}}
   {{else}}
     <div class="container">
       {{#conditional-loading-spinner condition=noErrorYet}}
@@ -397,7 +395,5 @@
 
   {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
-  {{#if embedQuoteButton}}
-    {{quote-button quoteState=quoteState selectText=(action "selectText")}}
-  {{/if}}
+  {{quote-button quoteState=quoteState selectText=(action "selectText") topic=model composerVisible=composer.visible}}
 {{/discourse-topic}}

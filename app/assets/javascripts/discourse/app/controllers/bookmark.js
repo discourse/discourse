@@ -1,8 +1,8 @@
 import I18n from "I18n";
-import { and } from "@ember/object/computed";
-import { next } from "@ember/runloop";
+import { schedule, next } from "@ember/runloop";
+import { and, or } from "@ember/object/computed";
 import { action } from "@ember/object";
-import { isPresent } from "@ember/utils";
+import { isPresent, isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import { Promise } from "rsvp";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -11,6 +11,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import bootbox from "bootbox";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -26,28 +28,27 @@ const LATER_TODAY_CUTOFF_HOUR = 17;
 const LATER_TODAY_MAX_HOUR = 18;
 const MOMENT_MONDAY = 1;
 const MOMENT_THURSDAY = 4;
-
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
   "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
   "l w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.LATER_THIS_WEEK]
+    args: [REMINDER_TYPES.LATER_THIS_WEEK],
   },
   "n b d": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY]
+    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY],
   },
   "n d": { handler: "selectReminderType", args: [REMINDER_TYPES.TOMORROW] },
   "n w": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_WEEK] },
   "n b w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK]
+    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK],
   },
   "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
   "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] },
   "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] },
-  "d d": { handler: "delete" }
+  "d d": { handler: "delete" },
 };
 
 export default Controller.extend(ModalFunctionality, {
@@ -61,10 +62,11 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
+  postDetectedLocalDate: null,
+  postDetectedLocalTime: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
-  options: null,
 
   onShow() {
     this.setProperties({
@@ -76,10 +78,11 @@ export default Controller.extend(ModalFunctionality, {
       customReminderTime: this._defaultCustomReminderTime(),
       lastCustomReminderDate: null,
       lastCustomReminderTime: null,
+      postDetectedLocalDate: null,
+      postDetectedLocalTime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
-      options: {},
-      model: this.model || {}
+      model: this.model || {},
     });
 
     this._loadBookmarkOptions();
@@ -89,6 +92,12 @@ export default Controller.extend(ModalFunctionality, {
     if (this._editingExistingBookmark()) {
       this._initializeExistingBookmarkData();
     }
+
+    schedule("afterRender", () => {
+      if (this.site.isMobileDevice) {
+        document.getElementById("bookmark-name").blur();
+      }
+    });
   },
 
   /**
@@ -103,7 +112,7 @@ export default Controller.extend(ModalFunctionality, {
     this._unbindKeyboardShortcuts();
     this._restoreGlobalShortcuts();
     if (!this._closeWithoutSaving && !this._savingBookmarkManually) {
-      this._saveBookmark().catch(e => this._handleSaveError(e));
+      this._saveBookmark().catch((e) => this._handleSaveError(e));
     }
     if (this.onCloseWithoutSaving && this._closeWithoutSaving) {
       this.onCloseWithoutSaving();
@@ -121,7 +130,7 @@ export default Controller.extend(ModalFunctionality, {
       this.setProperties({
         customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
         customReminderTime: parsedReminderAt.format("HH:mm"),
-        selectedReminderType: REMINDER_TYPES.CUSTOM
+        selectedReminderType: REMINDER_TYPES.CUSTOM,
       });
     }
   },
@@ -136,17 +145,24 @@ export default Controller.extend(ModalFunctionality, {
 
   _loadBookmarkOptions() {
     this.set(
-      "options.deleteWhenReminderSent",
-      this.model.deleteWhenReminderSent ||
-        localStorage.bookmarkOptionsDeleteWhenReminderSent === "true"
+      "autoDeletePreference",
+      this.model.autoDeletePreference || this._preferredDeleteOption() || 0
     );
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously. run next otherwise
     // the modal is not visible when it tries to slide down the options
-    if (this.options.deleteWhenReminderSent) {
+    if (this.autoDeletePreference) {
       next(() => this.toggleOptionsPanel());
     }
+  },
+
+  _preferredDeleteOption() {
+    let preferred = localStorage.bookmarkDeleteOption;
+    if (preferred && preferred !== "") {
+      preferred = parseInt(preferred, 10);
+    }
+    return preferred;
   },
 
   _loadLastUsedCustomReminderDatetime() {
@@ -164,14 +180,14 @@ export default Controller.extend(ModalFunctionality, {
       this.setProperties({
         lastCustomReminderDate: lastDate,
         lastCustomReminderTime: lastTime,
-        parsedLastCustomReminderDatetime: parsed
+        parsedLastCustomReminderDatetime: parsed,
       });
     }
   },
 
   _bindKeyboardShortcuts() {
     KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
-    Object.keys(BOOKMARK_BINDINGS).forEach(shortcut => {
+    Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
       KeyboardShortcuts.addShortcut(shortcut, () => {
         let binding = BOOKMARK_BINDINGS[shortcut];
         if (binding.args) {
@@ -210,10 +226,24 @@ export default Controller.extend(ModalFunctionality, {
     return REMINDER_TYPES;
   },
 
+  @discourseComputed()
+  autoDeletePreferences: () => {
+    return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
+      return {
+        id: AUTO_DELETE_PREFERENCES[key],
+        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
+      };
+    });
+  },
+
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
-  @discourseComputed()
-  showLaterToday() {
+  showPostLocalDate: or(
+    "model.postDetectedLocalDate",
+    "model.postDetectedLocalTime"
+  ),
+
+  get showLaterToday() {
     let later = this.laterToday();
     return (
       !later.isSame(this.tomorrow(), "date") &&
@@ -221,8 +251,7 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @discourseComputed()
-  showLaterThisWeek() {
+  get showLaterThisWeek() {
     return this.now().day() < MOMENT_THURSDAY;
   },
 
@@ -238,41 +267,46 @@ export default Controller.extend(ModalFunctionality, {
     return formattedReminderTime(existingReminderAt, this.userTimezone);
   },
 
-  @discourseComputed()
-  startNextBusinessWeekFormatted() {
+  get startNextBusinessWeekLabel() {
+    if (this.now().day() === MOMENT_MONDAY) {
+      return I18n.t("bookmarks.reminders.start_of_next_business_week_alt");
+    }
+    return I18n.t("bookmarks.reminders.start_of_next_business_week");
+  },
+
+  get startNextBusinessWeekFormatted() {
     return this.nextWeek()
       .day(MOMENT_MONDAY)
       .format(I18n.t("dates.long_no_year"));
   },
 
-  @discourseComputed()
-  laterTodayFormatted() {
+  get laterTodayFormatted() {
     return this.laterToday().format(I18n.t("dates.time"));
   },
 
-  @discourseComputed()
-  tomorrowFormatted() {
+  get tomorrowFormatted() {
     return this.tomorrow().format(I18n.t("dates.time_short_day"));
   },
 
-  @discourseComputed()
-  nextWeekFormatted() {
+  get nextWeekFormatted() {
     return this.nextWeek().format(I18n.t("dates.long_no_year"));
   },
 
-  @discourseComputed()
-  laterThisWeekFormatted() {
+  get laterThisWeekFormatted() {
     return this.laterThisWeek().format(I18n.t("dates.time_short_day"));
   },
 
-  @discourseComputed()
-  nextMonthFormatted() {
+  get nextMonthFormatted() {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
+  },
+
+  get postLocalDateFormatted() {
+    return this.postLocalDate().format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed("userTimezone")
   userHasTimezoneSet(userTimezone) {
-    return !_.isEmpty(userTimezone);
+    return !isEmpty(userTimezone);
   },
 
   _saveBookmark() {
@@ -288,12 +322,15 @@ export default Controller.extend(ModalFunctionality, {
       localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
     }
 
-    localStorage.bookmarkOptionsDeleteWhenReminderSent = this.options.deleteWhenReminderSent;
+    localStorage.bookmarkDeleteOption = this.autoDeletePreference;
 
     let reminderType;
     if (this.selectedReminderType === REMINDER_TYPES.NONE) {
       reminderType = null;
-    } else if (this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM) {
+    } else if (
+      this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM ||
+      this.selectedReminderType === REMINDER_TYPES.POST_LOCAL_DATE
+    ) {
       reminderType = REMINDER_TYPES.CUSTOM;
     } else {
       reminderType = this.selectedReminderType;
@@ -305,33 +342,33 @@ export default Controller.extend(ModalFunctionality, {
       name: this.model.name,
       post_id: this.model.postId,
       id: this.model.id,
-      delete_when_reminder_sent: this.options.deleteWhenReminderSent
+      auto_delete_preference: this.autoDeletePreference,
     };
 
     if (this._editingExistingBookmark()) {
       return ajax("/bookmarks/" + this.model.id, {
         type: "PUT",
-        data
+        data,
       }).then(() => {
         if (this.afterSave) {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            autoDeletePreference: this.autoDeletePreference,
             id: this.model.id,
-            name: this.model.name
+            name: this.model.name,
           });
         }
       });
     } else {
-      return ajax("/bookmarks", { type: "POST", data }).then(response => {
+      return ajax("/bookmarks", { type: "POST", data }).then((response) => {
         if (this.afterSave) {
           this.afterSave({
             reminderAt: reminderAtISO,
             reminderType: this.selectedReminderType,
-            deleteWhenReminderSent: this.options.deleteWhenReminderSent,
+            autoDeletePreference: this.autoDeletePreference,
             id: response.id,
-            name: this.model.name
+            name: this.model.name,
           });
         }
       });
@@ -340,8 +377,8 @@ export default Controller.extend(ModalFunctionality, {
 
   _deleteBookmark() {
     return ajax("/bookmarks/" + this.model.id, {
-      type: "DELETE"
-    }).then(response => {
+      type: "DELETE",
+    }).then((response) => {
       if (this.afterDelete) {
         this.afterDelete(response.topic_bookmarked);
       }
@@ -389,13 +426,15 @@ export default Controller.extend(ModalFunctionality, {
         if (!customDateTime.isValid()) {
           this.setProperties({
             customReminderTime: null,
-            customReminderDate: null
+            customReminderDate: null,
           });
           return;
         }
         return customDateTime;
       case REMINDER_TYPES.LAST_CUSTOM:
         return this.parsedLastCustomReminderDatetime;
+      case REMINDER_TYPES.POST_LOCAL_DATE:
+        return this.postLocalDate();
     }
   },
 
@@ -405,6 +444,19 @@ export default Controller.extend(ModalFunctionality, {
 
   nextMonth() {
     return this.startOfDay(this.now().add(1, "month"));
+  },
+
+  postLocalDate() {
+    let parsedPostLocalDate = this._parseCustomDateTime(
+      this.model.postDetectedLocalDate,
+      this.model.postDetectedLocalTime
+    );
+
+    if (!this.model.postDetectedLocalTime) {
+      return this.startOfDay(parsedPostLocalDate);
+    }
+
+    return parsedPostLocalDate;
   },
 
   tomorrow() {
@@ -465,7 +517,7 @@ export default Controller.extend(ModalFunctionality, {
     this._savingBookmarkManually = true;
     return this._saveBookmark()
       .then(() => this.send("closeModal"))
-      .catch(e => this._handleSaveError(e))
+      .catch((e) => this._handleSaveError(e))
       .finally(() => (this._saving = false));
   },
 
@@ -479,11 +531,11 @@ export default Controller.extend(ModalFunctionality, {
           this._deleting = false;
           this.send("closeModal");
         })
-        .catch(e => this._handleSaveError(e));
+        .catch((e) => this._handleSaveError(e));
     };
 
     if (this._existingBookmarkHasReminder()) {
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), result => {
+      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
         if (result) {
           deleteAction();
         }
@@ -510,5 +562,5 @@ export default Controller.extend(ModalFunctionality, {
     if (type !== REMINDER_TYPES.CUSTOM) {
       return this.saveAndClose();
     }
-  }
+  },
 });

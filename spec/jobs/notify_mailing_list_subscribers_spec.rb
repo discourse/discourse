@@ -65,6 +65,11 @@ describe Jobs::NotifyMailingListSubscribers do
       include_examples "no emails"
     end
 
+    context "with a empty post" do
+      before { post.update_columns(raw: "") }
+      include_examples "no emails"
+    end
+
     context "with a user_deleted post" do
       before { post.update(user_deleted: true) }
       include_examples "no emails"

@@ -1,5 +1,5 @@
 // discourse-skip-module
-(function() {
+(function () {
   const referer = document.getElementById("data-embedded").dataset.referer;
 
   function postUp(msg) {
@@ -23,7 +23,7 @@
     }
   }
 
-  window.onload = function() {
+  window.onload = function () {
     // get state info from data attribute
     var embedState = document.querySelector("[data-embed-state]");
     var state = "unknown";
@@ -38,7 +38,7 @@
       type: "discourse-resize",
       height: document["body"].offsetHeight,
       state,
-      embedId
+      embedId,
     });
 
     var postLinks = document.querySelectorAll("a[data-link-to-post]"),

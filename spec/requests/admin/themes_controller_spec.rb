@@ -100,17 +100,17 @@ describe Admin::ThemesController do
       file_from_fixtures("logo.png")
     end
 
-    context 'when theme whitelist mode is enabled' do
+    context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "https://github.com/discourse/discourse-brand-header"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "https://github.com/discourse/discourse-brand-header"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
-      it "allows whitelisted imports" do
+      it "allows allowlisted imports" do
         RemoteTheme.stubs(:import_theme)
         post "/admin/themes/import.json", params: {
           remote: '    https://github.com/discourse/discourse-brand-header       '
@@ -252,7 +252,7 @@ describe Admin::ThemesController do
 
       json = response.parsed_body
 
-      expect(json["extras"]["color_schemes"].length).to eq(2)
+      expect(json["extras"]["color_schemes"].length).to eq(1)
       theme_json = json["themes"].find { |t| t["id"] == theme.id }
       expect(theme_json["theme_fields"].length).to eq(2)
       expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
@@ -308,14 +308,14 @@ describe Admin::ThemesController do
       expect(SiteSetting.default_theme_id).to eq(-1)
     end
 
-    context 'when theme whitelist mode is enabled' do
+    context 'when theme allowlist mode is enabled' do
       before do
-        GlobalSetting.reset_whitelisted_theme_ids!
-        global_setting :whitelisted_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+        GlobalSetting.reset_allowed_theme_ids!
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
       after do
-        GlobalSetting.reset_whitelisted_theme_ids!
+        GlobalSetting.reset_allowed_theme_ids!
       end
 
       it 'unconditionally bans theme_fields from updating' do
@@ -368,6 +368,22 @@ describe Admin::ThemesController do
       expect(fields.length).to eq(2)
       expect(json["theme"]["child_themes"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'blocks remote theme fields from being locally edited' do
+      r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
+      theme.update!(remote_theme_id: r.id)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'test', target: 'common', value: 'filename.jpg', upload_id: 4 }
+          ]
+        }
+      }
+
+      expect(response.status).to eq(403)
     end
 
     it 'updates a child theme' do
@@ -550,15 +566,6 @@ describe Admin::ThemesController do
       get "/admin/themes/9999/preview.json"
 
       expect(response.status).to eq(400)
-    end
-  end
-
-  describe '#diff_local_changes' do
-    let(:theme) { Fabricate(:theme) }
-
-    it "should return empty for a default theme" do
-      get "/admin/themes/#{theme.id}/diff_local_changes.json"
-      expect(response.body).to eq("{}")
     end
   end
 

@@ -1,25 +1,26 @@
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
-import WhiteLister from "pretty-text/white-lister";
+import AllowLister from "pretty-text/allow-lister";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import loadScript from "discourse/lib/load-script";
 import { formatUsername } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
 import { htmlSafe } from "@ember/template";
+import { helperContext } from "discourse-common/lib/helpers";
+import Session from "discourse/models/session";
 
 function getOpts(opts) {
-  const siteSettings = Discourse.__container__.lookup("site-settings:main"),
-    site = Discourse.__container__.lookup("site:main");
+  let context = helperContext();
 
-  opts = _.merge(
+  opts = Object.assign(
     {
       getURL: getURLWithCDN,
-      currentUser: Discourse.__container__.lookup("current-user:main"),
-      censoredRegexp: site.censored_regexp,
-      customEmojiTranslation: site.custom_emoji_translation,
-      siteSettings,
-      formatUsername
+      currentUser: context.currentUser,
+      censoredRegexp: context.site.censored_regexp,
+      customEmojiTranslation: context.site.custom_emoji_translation,
+      siteSettings: context.siteSettings,
+      formatUsername,
     },
     opts
   );
@@ -43,12 +44,12 @@ export function cookAsync(text, options) {
 export function generateCookFunction(options) {
   return loadMarkdownIt().then(() => {
     const prettyText = createPrettyText(options);
-    return text => prettyText.cook(text);
+    return (text) => prettyText.cook(text);
   });
 }
 
 export function sanitize(text, options) {
-  return textSanitize(text, new WhiteLister(options));
+  return textSanitize(text, new AllowLister(options));
 }
 
 export function sanitizeAsync(text, options) {
@@ -58,14 +59,19 @@ export function sanitizeAsync(text, options) {
 }
 
 function loadMarkdownIt() {
-  if (Discourse.MarkdownItURL) {
-    return loadScript(Discourse.MarkdownItURL).catch(e => {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    });
-  } else {
-    return Promise.resolve();
-  }
+  return new Promise((resolve) => {
+    let markdownItURL = Session.currentProp("markdownItURL");
+    if (markdownItURL) {
+      loadScript(markdownItURL)
+        .then(() => resolve())
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
+    } else {
+      resolve();
+    }
+  });
 }
 
 function createPrettyText(options) {
@@ -73,15 +79,16 @@ function createPrettyText(options) {
 }
 
 function emojiOptions() {
-  if (!Discourse.SiteSettings.enable_emoji) {
+  let siteSettings = helperContext().siteSettings;
+  if (!siteSettings.enable_emoji) {
     return;
   }
 
   return {
-    getURL: url => getURLWithCDN(url),
-    emojiSet: Discourse.SiteSettings.emoji_set,
-    enableEmojiShortcuts: Discourse.SiteSettings.enable_emoji_shortcuts,
-    inlineEmoji: Discourse.SiteSettings.enable_inline_emoji_translation
+    getURL: (url) => getURLWithCDN(url),
+    emojiSet: siteSettings.emoji_set,
+    enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
+    inlineEmoji: siteSettings.enable_inline_emoji_translation,
   };
 }
 

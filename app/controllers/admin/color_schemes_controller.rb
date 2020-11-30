@@ -38,6 +38,6 @@ class Admin::ColorSchemesController < Admin::AdminController
   end
 
   def color_scheme_params
-    params.permit(color_scheme: [:base_scheme_id, :name, colors: [:name, :hex]])[:color_scheme]
+    params.permit(color_scheme: [:base_scheme_id, :name, :user_selectable, colors: [:name, :hex]])[:color_scheme]
   end
 end

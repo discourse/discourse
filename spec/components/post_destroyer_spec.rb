@@ -244,6 +244,14 @@ describe PostDestroyer do
       end
 
       context "recovered by admin" do
+        it "should set user_deleted to false" do
+          PostDestroyer.new(@user, @reply).destroy
+          expect(@reply.reload.user_deleted).to eq(true)
+
+          PostDestroyer.new(admin, @reply).recover
+          expect(@reply.reload.user_deleted).to eq(false)
+        end
+
         it "should increment the user's post count" do
           PostDestroyer.new(moderator, @reply).destroy
           expect(@user.reload.user_stat.topic_count).to eq(1)
@@ -263,6 +271,48 @@ describe PostDestroyer do
 
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::NEW_TOPIC).count).to eq(1)
           expect(UserAction.where(target_topic_id: post.topic_id, action_type: UserAction::REPLY).count).to eq(1)
+        end
+
+        context "recovered by user with access to moderate topic category" do
+          fab!(:review_user) { Fabricate(:user) }
+
+          before do
+            SiteSetting.enable_category_group_moderation = true
+            review_group = Fabricate(:group)
+            review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+            @reply.topic.update!(category: review_category)
+            review_group.users << review_user
+          end
+
+          context "when the post has a Reviewable record" do
+            before do
+              ReviewableFlaggedPost.needs_review!(target: @reply, created_by: Fabricate(:user))
+            end
+
+            def changes_deleted_at_to_nil
+              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              @reply.reload
+              expect(@reply.user_deleted).to eq(false)
+              expect(@reply.deleted_at).not_to eq(nil)
+
+              PostDestroyer.new(review_user, @reply).recover
+              @reply.reload
+              expect(@reply.deleted_at).to eq(nil)
+            end
+
+            it "changes deleted_at to nil" do
+              changes_deleted_at_to_nil
+            end
+
+            context "when the topic is deleted" do
+              before do
+                @reply.topic.trash!
+              end
+              it "changes deleted_at to nil" do
+                changes_deleted_at_to_nil
+              end
+            end
+          end
         end
       end
     end
@@ -297,6 +347,14 @@ describe PostDestroyer do
       post.reload
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
+    end
+
+    it "unmarks the matching incoming email for imap sync" do
+      SiteSetting.enable_imap = true
+      incoming = Fabricate(:incoming_email, imap_sync: true, post: post, topic: post.topic, imap_uid: 99)
+      PostDestroyer.new(moderator, post).recover
+      incoming.reload
+      expect(incoming.imap_sync).to eq(false)
     end
   end
 
@@ -415,6 +473,38 @@ describe PostDestroyer do
       end
     end
 
+    context "deleted by user with access to moderate topic category" do
+      fab!(:review_user) { Fabricate(:user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        review_group = Fabricate(:group)
+        review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+        post.topic.update!(category: review_category)
+        review_group.users << review_user
+      end
+
+      context "when the post has a reviewable" do
+        it "deletes the post" do
+          author = post.user
+          reply = create_post(topic_id: post.topic_id, user: author)
+          ReviewableFlaggedPost.needs_review!(target: reply, created_by: Fabricate(:user))
+
+          post_count = author.post_count
+          history_count = UserHistory.count
+
+          PostDestroyer.new(review_user, reply).destroy
+
+          expect(reply.deleted_at).to be_present
+          expect(reply.deleted_by).to eq(review_user)
+
+          author.reload
+          expect(author.post_count).to eq(post_count - 1)
+          expect(UserHistory.count).to eq(history_count + 1)
+        end
+      end
+    end
+
     context "as an admin" do
       it "deletes the post" do
         PostDestroyer.new(admin, post).destroy
@@ -492,6 +582,13 @@ describe PostDestroyer do
 
       expect(events[1][:event_name]).to eq(:topic_destroyed)
       expect(events[1][:params].first).to eq(first_post.topic)
+    end
+
+    it 'should not log a personal message view' do
+      SiteSetting.log_personal_messages_views = true
+      Fabricate(:topic_web_hook)
+      StaffActionLogger.any_instance.expects(:log_check_personal_message).never
+      PostDestroyer.new(admin, first_post).destroy
     end
   end
 
@@ -641,8 +738,31 @@ describe PostDestroyer do
     fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
-      Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
-      PostDestroyer.new(moderator, post).destroy
+      expect_enqueued_with(job: :feature_topic_users, args: { topic_id: post.topic_id }) do
+        PostDestroyer.new(moderator, post).destroy
+      end
+    end
+
+    describe "incoming email and imap sync" do
+      fab!(:incoming) { Fabricate(:incoming_email, post: post, topic: post.topic) }
+
+      it "does nothing if imap not enabled" do
+        IncomingEmail.expects(:find_by).never
+        PostDestroyer.new(moderator, post).destroy
+      end
+
+      it "does nothing if the incoming email has no imap_uid" do
+        SiteSetting.enable_imap = true
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(false)
+      end
+
+      it "sets imap_sync to true for the matching incoming" do
+        SiteSetting.enable_imap = true
+        incoming.update(imap_uid: 999)
+        PostDestroyer.new(moderator, post).destroy
+        expect(incoming.reload.imap_sync).to eq(true)
+      end
     end
 
     describe 'with a reply' do
@@ -839,6 +959,31 @@ describe PostDestroyer do
       user.user_profile.update(featured_topic: post.topic)
       PostDestroyer.new(admin, post).destroy
       expect(user.user_profile.reload.featured_topic).to eq(nil)
+    end
+  end
+
+  describe "permanent destroy" do
+    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
+    fab!(:post_action) { Fabricate(:post_action, post: private_post) }
+    fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
+    it "destroys the post and topic if deleting first post" do
+      PostDestroyer.new(reply.user, reply, permanent: true).destroy
+      expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(private_message_topic.reload.persisted?).to be true
+
+      PostDestroyer.new(private_post.user, private_post, permanent: true).destroy
+      expect { private_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { private_message_topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { post_action.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'soft delete if not creator of post or not private message' do
+      PostDestroyer.new(moderator, reply, permanent: true).destroy
+      expect(reply.deleted_at).not_to eq(nil)
+
+      PostDestroyer.new(post.user, post, permanent: true).destroy
+      expect(post.user_deleted).to be true
     end
   end
 end

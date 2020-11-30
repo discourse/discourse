@@ -15,19 +15,19 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
       if (count === 0) {
         return I18n.t("notifications.liked_2", {
           description,
-          username,
-          username2
+          username: `<span class="multi-username">${username}</span>`,
+          username2: `<span class="multi-username">${username2}</span>`,
         });
       } else {
         return I18n.t("notifications.liked_many", {
           description,
-          username,
-          username2,
-          count
+          username: `<span class="multi-username">${username}</span>`,
+          username2: `<span class="multi-username">${username2}</span>`,
+          count,
         });
       }
     }
 
     return I18n.t("notifications.liked", { description, username });
-  }
+  },
 });

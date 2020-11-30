@@ -3,6 +3,8 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import bootbox from "bootbox";
+import cookie from "discourse/lib/cookie";
 
 export default Component.extend({
   classNames: ["group-membership-button"],
@@ -29,7 +31,7 @@ export default Component.extend({
 
   _showLoginModal() {
     this.showLogin();
-    $.cookie("destination_url", window.location.href);
+    cookie("destination_url", window.location.href);
   },
 
   removeFromGroup() {
@@ -70,7 +72,7 @@ export default Component.extend({
           I18n.t("groups.confirm_leave"),
           I18n.t("no_value"),
           I18n.t("yes_value"),
-          result => {
+          (result) => {
             result
               ? this.removeFromGroup()
               : this.set("updatingMembership", false);
@@ -82,11 +84,11 @@ export default Component.extend({
     showRequestMembershipForm() {
       if (this.currentUser) {
         showModal("request-group-membership-form", {
-          model: this.model
+          model: this.model,
         });
       } else {
         this._showLoginModal();
       }
-    }
-  }
+    },
+  },
 });

@@ -34,12 +34,15 @@
     width: 100%;
     margin: 0;
 
-    .tag-chooser {
+    .tag-chooser,
+    .user-chooser {
       width: 100%;
     }
   }
 }
 
-.fps-topic {
-  max-width: 75%;
+.fps-result {
+  input[type="checkbox"] {
+    vertical-align: baseline;
+  }
 }

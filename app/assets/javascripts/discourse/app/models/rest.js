@@ -2,6 +2,7 @@ import { warn } from "@ember/debug";
 import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),
@@ -26,12 +27,12 @@ const RestModel = EmberObject.extend({
     this.set("isSaving", true);
     return this.store
       .update(this.__type, this.id, props)
-      .then(res => {
+      .then((res) => {
         const payload = this.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
           warn("An update call should return the updated attributes", {
-            id: "discourse.rest-model.update-attributes"
+            id: "discourse.rest-model.update-attributes",
           });
           res = props;
         }
@@ -58,7 +59,7 @@ const RestModel = EmberObject.extend({
     this.set("isSaving", true);
     return adapter
       .createRecord(this.store, this.__type, props)
-      .then(res => {
+      .then((res) => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
         }
@@ -89,7 +90,7 @@ const RestModel = EmberObject.extend({
 
   destroyRecord() {
     return this.store.destroyRecord(this.__type, this);
-  }
+  },
 });
 
 RestModel.reopenClass({
@@ -100,14 +101,21 @@ RestModel.reopenClass({
 
   create(args) {
     args = args || {};
+    let owner = getOwner(this);
+
+    // Some Discourse code calls `model.create()` directly without going through the
+    // store. In that case the injections are not made, so we do them here. Eventually
+    // we should use the store for everything to fix this.
     if (!args.store) {
-      const container = Discourse.__container__;
-      args.store = container.lookup("service:store");
+      args.store = owner.lookup("service:store");
+    }
+    if (!args.siteSettings) {
+      args.siteSettings = owner.lookup("site-settings:main");
     }
 
     args.__munge = this.munge;
     return this._super(this.munge(args, args.store));
-  }
+  },
 });
 
 export default RestModel;

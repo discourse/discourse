@@ -196,6 +196,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
+        expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
         expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
 
         expect(response.status).to eq(302)
@@ -206,7 +207,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(data["username"]).to eq("Some_Name")
         expect(data["auth_provider"]).to eq("google_oauth2")
         expect(data["email_valid"]).to eq(true)
-        expect(data["omit_username"]).to eq(false)
+        expect(data["can_edit_username"]).to eq(true)
         expect(data["name"]).to eq("Some Name")
         expect(data["destination_url"]).to eq(destination_url)
       end
@@ -229,7 +230,8 @@ RSpec.describe Users::OmniauthCallbacksController do
           uid: '123545',
           info: OmniAuth::AuthHash::InfoHash.new(
             email: user.email,
-            name: 'Some name'
+            name: 'Some name',
+            nickname: 'Somenickname'
           ),
           extra: {
             raw_info: OmniAuth::AuthHash.new(
@@ -345,6 +347,63 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         # Delete the password, it may have been set by someone else
         expect(user.confirm_password?("securepassword")).to eq(false)
+      end
+
+      it "should update name/username/email when sso_overrides is enabled" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+        SiteSetting.sso_overrides_name = true
+        SiteSetting.sso_overrides_username = true
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        old_email = user.email
+        user.update!(name: 'somename', username: 'somusername', email: 'email@example.com')
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        user.reload
+        expect(user.email).to eq(old_email)
+        expect(user.username).to eq('Somenickname')
+        expect(user.name).to eq('Some name')
+      end
+
+      it "will not update email if not verified" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+
+        OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:email_verified] = false
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        old_email = user.email
+        user.update!(email: 'email@example.com')
+
+        get "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+
+        user.reload
+        expect(user.email).to eq('email@example.com')
+      end
+
+      it "shows error when sso_overrides_email causes a validation error" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        google_email = user.email
+        user.update!(email: 'anotheremail@example.com')
+        Fabricate(:user, email: google_email) # Another user has the google account email
+
+        get "/auth/google_oauth2/callback"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("errors.messages.taken"))
+        expect(session[:current_user_id]).to eq(nil)
+
+        user.reload
+        expect(user.email).to eq('anotheremail@example.com')
       end
 
       context 'when user has TOTP enabled' do
@@ -506,6 +565,19 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
+        it "redirects to internal origin on subfolder" do
+          set_subfolder "/subpath"
+
+          post "/auth/google_oauth2?origin=http://test.localhost/subpath/t/123"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/subpath/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/subpath/t/123')
+        end
+
         it "never redirects to /auth/ origin" do
           post "/auth/google_oauth2?origin=http://test.localhost/auth/google_oauth2"
           get "/auth/google_oauth2/callback"
@@ -515,6 +587,19 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           cookie_data = JSON.parse(response.cookies['authentication_data'])
           expect(cookie_data["destination_url"]).to eq('/')
+        end
+
+        it "never redirects to /auth/ origin on subfolder" do
+          set_subfolder "/subpath"
+
+          post "/auth/google_oauth2?origin=http://test.localhost/subpath/auth/google_oauth2"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/subpath"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/subpath')
         end
 
         it "redirects to relative origin" do

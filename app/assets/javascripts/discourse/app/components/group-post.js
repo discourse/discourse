@@ -6,5 +6,5 @@ export default Component.extend({
   @discourseComputed("post.url")
   postUrl(url) {
     return getURL(url);
-  }
+  },
 });

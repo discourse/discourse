@@ -41,11 +41,11 @@ export default createWidget("link", {
       href: this.href(attrs),
       title: attrs.title
         ? I18n.t(attrs.title, attrs.titleOptions)
-        : this.label(attrs)
+        : this.label(attrs),
     };
     if (attrs.attributes) {
       Object.keys(attrs.attributes).forEach(
-        k => (ret[k] = attrs.attributes[k])
+        (k) => (ret[k] = attrs.attributes[k])
       );
     }
     return ret;
@@ -90,21 +90,25 @@ export default createWidget("link", {
             "span.badge-notification",
             {
               className: attrs.badgeClass,
-              attributes: { title }
+              attributes: { title },
             },
             val
           )
         );
       }
     }
-
     return result;
   },
 
   click(e) {
+    if (this.attrs.attributes && this.attrs.attributes.target === "_blank") {
+      return;
+    }
+
     if (wantsNewWindow(e)) {
       return;
     }
+
     e.preventDefault();
 
     if (this.attrs.action) {
@@ -115,5 +119,5 @@ export default createWidget("link", {
     }
 
     return DiscourseURL.routeToTag($(e.target).closest("a")[0]);
-  }
+  },
 });

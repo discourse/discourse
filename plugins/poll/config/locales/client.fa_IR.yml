@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fa_IR:
   js:
@@ -36,6 +35,10 @@ fa_IR:
         title: "نظرسنجی را ببند"
         label: "بستن"
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
+      breakdown:
+        title: "نتایج نظرسنجی"
+        votes: "%{count} رای"
+        percentage: "درصد"
       error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
       error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
       error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."
@@ -59,5 +62,7 @@ fa_IR:
           step: مرحله
         poll_public:
           label: نمایش رای دهندگان
+        poll_title:
+          label: عنوان (اختیاری)
         poll_options:
           label: در هر خط یک گزینه نظرسنجی را وارد کنید

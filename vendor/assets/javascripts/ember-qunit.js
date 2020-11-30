@@ -1987,5 +1987,7 @@ for (var exportName in emberQUnit) {
   window[exportName] = emberQUnit[exportName];
 }
 
+var emberTestHelpers = requireModule("ember-test-helpers");
+window.TestModuleForComponent = emberTestHelpers.TestModuleForComponent;
+
 })();
-//# sourceMappingURL=ember-qunit.map

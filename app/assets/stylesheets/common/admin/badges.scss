@@ -23,8 +23,8 @@
   }
   .badges-header {
     padding: 10px 0;
-    border-top: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
     .badges-heading {
       margin: 0;
       padding: 0 10px;
@@ -34,9 +34,9 @@
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
-      border-right: 1px solid $primary-low;
-      border-left: 1px solid $primary-low;
-      border-bottom: 1px solid $primary-low;
+      border-right: 1px solid var(--primary-low);
+      border-left: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--primary-low);
       .admin-badge-list-item {
         &:first-child {
           border-top: none;
@@ -50,8 +50,8 @@
         font-size: $font-down-1;
         font-weight: normal;
         padding: 0 6px;
-        color: $secondary;
-        background-color: $tertiary-medium;
+        color: var(--secondary);
+        background-color: var(--tertiary-medium);
         border-radius: 3px;
       }
     }
@@ -65,7 +65,7 @@
     p.help {
       margin: 0;
       margin-top: 5px;
-      color: $primary-medium;
+      color: var(--primary-medium);
       font-size: $font-down-1;
     }
     .badge-grouping-control {
@@ -109,7 +109,7 @@
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
-    border-top: 1px solid $primary-low;
+    border-top: 1px solid var(--primary-low);
   }
   .buttons {
     display: flex;
@@ -132,8 +132,8 @@
     max-width: 300px;
     display: flex;
     align-items: center;
-    background-color: $primary-very-low;
-    border: 1px solid $primary-low;
+    background-color: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
     padding: 0 10px 0 10px;
 
     img,
@@ -160,7 +160,7 @@
     list-style: none;
     margin: 0;
     .badge-grouping-item {
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -179,17 +179,17 @@
   .badge-errors,
   .badge-query-plan {
     padding: 5px;
-    background-color: $primary-low;
+    background-color: var(--primary-low);
   }
   .count-warning {
-    background-color: $danger-low;
+    background-color: var(--danger-low);
     margin-bottom: 5px;
     padding: 10px;
     p {
       margin: 0;
     }
     .heading {
-      color: $danger;
+      color: var(--danger);
       font-weight: bold;
     }
   }

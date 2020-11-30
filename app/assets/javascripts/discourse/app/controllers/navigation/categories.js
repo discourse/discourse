@@ -11,5 +11,5 @@ export default NavigationDefaultController.extend({
   )
   draft() {
     return this.get("discoveryCategories.model.draft");
-  }
+  },
 });

@@ -3,7 +3,7 @@ import { createWidget } from "discourse/widgets/widget";
 
 export default createWidget("post-gap", {
   tagName: "div.gap",
-  buildKey: attrs => `post-gap-${attrs.pos}-${attrs.postId}`,
+  buildKey: (attrs) => `post-gap-${attrs.pos}-${attrs.postId}`,
 
   defaultState() {
     return { loading: false };
@@ -27,6 +27,8 @@ export default createWidget("post-gap", {
     return this.sendWidgetAction(
       attrs.pos === "before" ? "fillGapBefore" : "fillGapAfter",
       args
-    );
-  }
+    ).then(() => {
+      state.loading = false;
+    });
+  },
 });

@@ -1,19 +1,22 @@
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, {
+  on,
+  observes,
+} from "discourse-common/utils/decorators";
 import { alias, gt, not, or, equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
-import { on, observes } from "discourse-common/utils/decorators";
 import { sanitizeAsync } from "discourse/lib/text";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import Post from "discourse/models/post";
 import Category from "discourse/models/category";
 import { computed } from "@ember/object";
+import bootbox from "bootbox";
 
 function customTagArray(fieldName) {
-  return computed(fieldName, function() {
+  return computed(fieldName, function () {
     var val = this.get(fieldName);
     if (!val) {
       return val;
@@ -55,7 +58,7 @@ export default Controller.extend(ModalFunctionality, {
         previous,
         icon: iconHTML("arrows-alt-h"),
         current,
-        total
+        total,
       }
     );
   },
@@ -68,7 +71,7 @@ export default Controller.extend(ModalFunctionality, {
   refresh(postId, postVersion) {
     this.set("loading", true);
 
-    Post.loadRevision(postId, postVersion).then(result => {
+    Post.loadRevision(postId, postVersion).then((result) => {
       this.setProperties({ loading: false, model: result });
     });
   },
@@ -88,7 +91,7 @@ export default Controller.extend(ModalFunctionality, {
   revert(post, postVersion) {
     post
       .revertToRevision(postVersion)
-      .then(result => {
+      .then((result) => {
         this.refresh(post.get("id"), postVersion);
         if (result.topic) {
           post.set("topic.slug", result.topic.slug);
@@ -100,7 +103,7 @@ export default Controller.extend(ModalFunctionality, {
         }
         this.send("closeModal");
       })
-      .catch(function(e) {
+      .catch(function (e) {
         if (
           e.jqXHR.responseJSON &&
           e.jqXHR.responseJSON.errors &&
@@ -267,13 +270,13 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       const opts = {
         features: { editHistory: true, historyOneboxes: true },
-        whiteListed: {
+        allowListed: {
           editHistory: { custom: (tag, attr) => attr === "class" },
-          historyOneboxes: ["header", "article", "div[style]"]
-        }
+          historyOneboxes: ["header", "article", "div[style]"],
+        },
       };
 
-      return sanitizeAsync(html, opts).then(result =>
+      return sanitizeAsync(html, opts).then((result) =>
         this.set("bodyDiff", result)
       );
     }
@@ -320,6 +323,6 @@ export default Controller.extend(ModalFunctionality, {
     },
     displaySideBySideMarkdown() {
       this.set("viewMode", "side_by_side_markdown");
-    }
-  }
+    },
+  },
 });

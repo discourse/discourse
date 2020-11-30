@@ -3,12 +3,19 @@ import NavItem from "discourse/models/nav-item";
 import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import bootbox from "bootbox";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
-  persistedQueryParams: null,
 
   tagName: "",
+
+  // Should be a `readOnly` instead but some themes/plugins still pass
+  // the `categories` property into this component
+  @discourseComputed("site.categoriesList")
+  categories(categoriesList) {
+    return categoriesList;
+  },
 
   @discourseComputed("category")
   showCategoryNotifications(category) {
@@ -25,14 +32,20 @@ export default Component.extend(FilterModeMixin, {
   @discourseComputed(
     "createTopicDisabled",
     "hasDraft",
-    "categoryReadOnlyBanner"
+    "categoryReadOnlyBanner",
+    "canCreateTopicOnTag",
+    "tag.id"
   )
   createTopicButtonDisabled(
     createTopicDisabled,
     hasDraft,
-    categoryReadOnlyBanner
+    categoryReadOnlyBanner,
+    canCreateTopicOnTag,
+    tagId
   ) {
-    if (categoryReadOnlyBanner && !hasDraft) {
+    if (tagId && !canCreateTopicOnTag) {
+      return true;
+    } else if (categoryReadOnlyBanner && !hasDraft) {
       return false;
     }
     return createTopicDisabled;
@@ -47,39 +60,29 @@ export default Component.extend(FilterModeMixin, {
     }
   },
 
-  @discourseComputed()
-  categories() {
-    return this.site.get("categoriesList");
-  },
-
   @discourseComputed("hasDraft")
   createTopicLabel(hasDraft) {
     return hasDraft ? "topic.open_draft" : "topic.create";
   },
 
   @discourseComputed("category.can_edit")
-  showCategoryEdit: canEdit => canEdit,
+  showCategoryEdit: (canEdit) => canEdit,
 
-  @discourseComputed("filterType", "category", "noSubcategories")
-  navItems(filterType, category, noSubcategories) {
-    let params;
+  @discourseComputed("additionalTags", "category", "tag.id")
+  showToggleInfo(additionalTags, category, tagId) {
+    return !additionalTags && !category && tagId !== "none";
+  },
+
+  @discourseComputed("filterType", "category", "noSubcategories", "tag.id")
+  navItems(filterType, category, noSubcategories, tagId) {
     const currentRouteQueryParams = this.get("router.currentRoute.queryParams");
-    if (this.persistedQueryParams && currentRouteQueryParams) {
-      const currentKeys = Object.keys(currentRouteQueryParams);
-      const discoveryKeys = Object.keys(this.persistedQueryParams);
-      const supportedKeys = currentKeys.filter(
-        i => discoveryKeys.indexOf(i) > 0
-      );
-      params = supportedKeys.reduce((object, key) => {
-        object[key] = currentRouteQueryParams[key];
-        return object;
-      }, {});
-    }
 
     return NavItem.buildList(category, {
       filterType,
       noSubcategories,
-      persistedQueryParams: params
+      currentRouteQueryParams,
+      tagId,
+      siteSettings: this.siteSettings,
     });
   },
 
@@ -105,6 +108,6 @@ export default Component.extend(FilterModeMixin, {
       } else {
         this.createTopic();
       }
-    }
-  }
+    },
+  },
 });

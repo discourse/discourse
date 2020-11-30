@@ -3,11 +3,16 @@
 require 'rails_helper'
 
 describe Oneboxer do
+  def response(file)
+    file = File.join("spec", "fixtures", "onebox", "#{file}.response")
+    File.exists?(file) ? File.read(file) : ""
+  end
+
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
-    expect(Oneboxer.preview("http://boom.com")).to eq("")
+    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("Sorry, we were unable to generate a preview for this web page")
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
@@ -69,7 +74,7 @@ describe Oneboxer do
       expect(onebox).to include(%{data-post="2"})
       expect(onebox).to include(PrettyText.avatar_img(replier.avatar_template, "tiny"))
 
-      short_url = "#{Discourse.base_uri}/t/#{public_topic.id}"
+      short_url = "#{Discourse.base_path}/t/#{public_topic.id}"
       expect(preview(short_url, user, public_category)).to include(public_topic.title)
 
       onebox = preview(public_moderator_action.url, user, public_category)
@@ -155,8 +160,8 @@ describe Oneboxer do
     end
   end
 
-  it "does not crawl blacklisted URLs" do
-    SiteSetting.onebox_domains_blacklist = "git.*.com|bitbucket.com"
+  it "does not crawl blocklisted URLs" do
+    SiteSetting.blocked_onebox_domains = "git.*.com|bitbucket.com"
     url = 'https://github.com/discourse/discourse/commit/21b562852885f883be43032e03c709241e8e6d4f'
     stub_request(:head, 'https://discourse.org/').to_return(status: 302, body: "", headers: { location: url })
 
@@ -164,7 +169,7 @@ describe Oneboxer do
     expect(Oneboxer.external_onebox('https://discourse.org/')[:onebox]).to be_empty
   end
 
-  it "does not consider ignore_redirects domains as blacklisted" do
+  it "does not consider ignore_redirects domains as blocklisted" do
     url = 'https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/'
     stub_request(:head, url).to_return(status: 200, body: "", headers: {})
     stub_request(:get, url).to_return(status: 200, body: "", headers: {})
@@ -183,4 +188,116 @@ describe Oneboxer do
 
     expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to be_present
   end
+
+  context "with youtube stub" do
+    let(:html) do
+      <<~HTML
+        <html>
+        <head>
+          <meta property="og:title" content="Onebox1">
+          <meta property="og:description" content="this is bodycontent">
+          <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
+    end
+
+    before do
+      stub_request(:any, "https://www.youtube.com/watch?v=dQw4w9WgXcQ").to_return(status: 200, body: html)
+    end
+
+    it "allows restricting engines based on the allowed_onebox_iframes setting" do
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+
+      # Disable all onebox iframes:
+      SiteSetting.allowed_onebox_iframes = ""
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+
+      expect(output).not_to include("<iframe") # Generic onebox
+      expect(output).to include("allowlistedgeneric")
+
+      # Just enable youtube:
+      SiteSetting.allowed_onebox_iframes = "https://www.youtube.com"
+      output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+      expect(output).to include("<iframe") # Regular youtube onebox
+    end
+  end
+
+  it "allows iframes from generic sites via the allowed_iframes setting" do
+    allowlisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://allowlist.ed/iframes.json" />'
+    blocklisted_body = '<html><head><link rel="alternate" type="application/json+oembed" href="https://blocklist.ed/iframes.json" />'
+
+    allowlisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://ifram.es/foo/bar'></iframe>"
+    }
+
+    blocklisted_oembed = {
+      type: "rich",
+      height: "100",
+      html: "<iframe src='https://malicious/discourse.org/'></iframe>"
+    }
+
+    stub_request(:any, "https://blocklist.ed/iframes").to_return(status: 200, body: blocklisted_body)
+    stub_request(:any, "https://blocklist.ed/iframes.json").to_return(status: 200, body: blocklisted_oembed.to_json)
+
+    stub_request(:any, "https://allowlist.ed/iframes").to_return(status: 200, body: allowlisted_body)
+    stub_request(:any, "https://allowlist.ed/iframes.json").to_return(status: 200, body: allowlisted_oembed.to_json)
+
+    SiteSetting.allowed_iframes = "discourse.org|https://ifram.es"
+
+    expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
+    expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+  end
+
+  context 'missing attributes' do
+    before do
+      stub_request(:head, url)
+    end
+
+    let(:url) { "https://example.com/fake-url/" }
+
+    it 'handles a missing description' do
+      stub_request(:get, url).to_return(body: response("missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description")
+    end
+
+    it 'handles a missing description and image' do
+      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
+    end
+
+    it 'video with missing description returns a placeholder' do
+      stub_request(:get, url).to_return(body: response("video_missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
+    end
+  end
+
+  context 'facebook_app_access_token' do
+    it 'providing a token should attempt to use new endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      access_token = 'abc123'
+
+      SiteSetting.facebook_app_access_token = access_token
+
+      stub_request(:head, url)
+      stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+    end
+
+    it 'unconfigured token should attempt to use old endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
+    end
+  end
+
 end

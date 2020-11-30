@@ -8,6 +8,7 @@ import optionalService from "discourse/lib/optional-service";
 import showModal from "discourse/lib/show-modal";
 import { dasherize } from "@ember/string";
 import { set } from "@ember/object";
+import bootbox from "bootbox";
 
 let _components = {};
 
@@ -18,9 +19,19 @@ export default Component.extend({
   editing: false,
   _updates: null,
 
-  @discourseComputed("reviewable.type")
-  customClass(type) {
-    return type.dasherize();
+  @discourseComputed(
+    "reviewable.type",
+    "siteSettings.blur_tl0_flagged_posts_media",
+    "reviewable.target_created_by_trust_level"
+  )
+  customClasses(type, blurEnabled, trustLevel) {
+    let classes = type.dasherize();
+
+    if (blurEnabled && trustLevel === 0) {
+      classes = `${classes} blur-images`;
+    }
+
+    return classes;
   },
 
   @discourseComputed(
@@ -63,7 +74,7 @@ export default Component.extend({
       return claimedBy.id === this.currentUser.id
         ? I18n.t("review.claim_help.claimed_by_you")
         : I18n.t("review.claim_help.claimed_by_other", {
-            username: claimedBy.username
+            username: claimedBy.username,
           });
     }
 
@@ -98,10 +109,10 @@ export default Component.extend({
       return ajax(
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
-          type: "PUT"
+          type: "PUT",
         }
       )
-        .then(result => {
+        .then((result) => {
           let performResult = result.reviewable_perform_result;
 
           // "fast track" to update the current user's reviewable count before the message bus finds out.
@@ -150,7 +161,7 @@ export default Component.extend({
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
-        before: performAction
+        before: performAction,
       });
     }
   },
@@ -159,7 +170,7 @@ export default Component.extend({
     explainReviewable(reviewable) {
       showModal("explain-reviewable", {
         title: "review.explain.title",
-        model: reviewable
+        model: reviewable,
       });
     },
 
@@ -176,7 +187,7 @@ export default Component.extend({
       let updates = this._updates;
 
       // Remove empty objects
-      Object.keys(updates).forEach(name => {
+      Object.keys(updates).forEach((name) => {
         let attr = updates[name];
         if (typeof attr === "object" && Object.keys(attr).length === 0) {
           delete updates[name];
@@ -212,7 +223,7 @@ export default Component.extend({
 
       let msg = action.get("confirm_message");
       if (msg) {
-        bootbox.confirm(msg, answer => {
+        bootbox.confirm(msg, (answer) => {
           if (answer) {
             return this._performConfirmed(action);
           }
@@ -220,6 +231,6 @@ export default Component.extend({
       } else {
         return this._performConfirmed(action);
       }
-    }
-  }
+    },
+  },
 });

@@ -75,7 +75,9 @@ class PostTiming < ActiveRecord::Base
 
       topic.posts.find_by(post_number: post_number).decrement!(:reads)
 
-      if !topic.private_message?
+      if topic.private_message?
+        set_minimum_first_unread_pm!(topic: topic, user_id: user.id, date: topic.updated_at)
+      else
         set_minimum_first_unread!(user_id: user.id, date: topic.updated_at)
       end
     end
@@ -98,6 +100,27 @@ class PostTiming < ActiveRecord::Base
       if date
         set_minimum_first_unread!(user_id: user_id, date: date)
       end
+    end
+  end
+
+  def self.set_minimum_first_unread_pm!(topic:, user_id:, date:)
+    if topic.topic_allowed_users.exists?(user_id: user_id)
+      UserStat.where("first_unread_pm_at > ? AND user_id = ?", date, user_id)
+        .update_all(first_unread_pm_at: date)
+    else
+      DB.exec(<<~SQL, date: date, user_id: user_id, topic_id: topic.id)
+      UPDATE group_users gu
+      SET first_unread_pm_at = :date
+      FROM (
+        SELECT
+          gu2.user_id,
+          gu2.group_id
+        FROM group_users gu2
+        INNER JOIN topic_allowed_groups tag ON tag.group_id = gu2.group_id AND tag.topic_id = :topic_id
+        WHERE gu2.user_id = :user_id
+      ) Y
+      WHERE gu.user_id = Y.user_id AND gu.group_id = Y.group_id
+      SQL
     end
   end
 

@@ -11,7 +11,7 @@ export function makeArray(obj) {
 }
 
 export function htmlHelper(fn) {
-  return Helper.helper(function(...args) {
+  return Helper.helper(function (...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
     return htmlSafe(fn.apply(this, args) || "");
@@ -40,9 +40,20 @@ export function findHelper(name) {
 }
 
 export function registerHelpers(registry) {
-  Object.keys(_helpers).forEach(name => {
+  Object.keys(_helpers).forEach((name) => {
     registry.register(`helper:${name}`, _helpers[name], { singleton: false });
   });
+}
+
+let _helperContext;
+export function createHelperContext(ctx) {
+  _helperContext = ctx;
+}
+
+// This can be used by a helper to get the SiteSettings. Note you should not
+// be using it outside of helpers (or lib code that helpers use!)
+export function helperContext() {
+  return _helperContext;
 }
 
 function resolveParams(ctx, options) {
@@ -51,7 +62,7 @@ function resolveParams(ctx, options) {
 
   if (hash) {
     if (options.hashTypes) {
-      Object.keys(hash).forEach(function(k) {
+      Object.keys(hash).forEach(function (k) {
         const type = options.hashTypes[k];
         if (
           type === "STRING" ||
@@ -71,7 +82,7 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
-  const func = function(...args) {
+  const func = function (...args) {
     const options = args.pop();
     const properties = args;
 
@@ -88,7 +99,7 @@ export function registerUnbound(name, fn) {
   };
 
   _helpers[name] = Helper.extend({
-    compute: (params, args) => fn(...params, args)
+    compute: (params, args) => fn(...params, args),
   });
   RawHandlebars.registerHelper(name, func);
 }

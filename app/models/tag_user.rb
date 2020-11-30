@@ -19,13 +19,28 @@ class TagUser < ActiveRecord::Base
     records = TagUser.where(user: user, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
-    tag_ids = tags.empty? ? [] : Tag.where_name(tags).pluck(:id)
+    tag_ids = if tags.empty?
+      []
+    elsif tags.first&.is_a?(String)
+      Tag.where_name(tags).pluck(:id)
+    else
+      tags
+    end
 
-    Tag.where_name(tags).joins(:target_tag).each do |tag|
+    Tag.where(id: tag_ids).joins(:target_tag).each do |tag|
       tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id
     end
 
     tag_ids.uniq!
+
+    if tag_ids.present? &&
+        TagUser.where(user_id: user.id, tag_id: tag_ids)
+            .where
+            .not(notification_level: notification_levels[level])
+            .update_all(notification_level: notification_levels[level]) > 0
+
+      changed = true
+    end
 
     remove = (old_ids - tag_ids)
     if remove.present?
@@ -33,9 +48,21 @@ class TagUser < ActiveRecord::Base
       changed = true
     end
 
-    (tag_ids - old_ids).each do |id|
-      TagUser.create!(user: user, tag_id: id, notification_level: notification_levels[level])
-      changed = true
+    now = Time.zone.now
+
+    new_records_attrs = (tag_ids - old_ids).map do |tag_id|
+      {
+        user_id: user.id,
+        tag_id: tag_id,
+        notification_level: notification_levels[level],
+        created_at: now,
+        updated_at: now
+      }
+    end
+
+    unless new_records_attrs.empty?
+      result = TagUser.insert_all(new_records_attrs)
+      changed = true if result.rows.length > 0
     end
 
     if changed

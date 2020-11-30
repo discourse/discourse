@@ -497,10 +497,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
   def import_banned_domains
     puts "", "Importing banned email domains..."
 
-    blacklist = SiteSetting.email_domains_blacklist.split("|")
+    blocklist = SiteSetting.blocked_email_domains.split("|")
     banned_domains = mysql_query("SELECT SUBSTRING(email_address, 3) domain FROM smf_ban_items WHERE email_address RLIKE '^%@[^%]+$' GROUP BY email_address").map { |r| r["domain"] }
 
-    SiteSetting.email_domains_blacklist = (blacklist + banned_domains).uniq.sort.join("|")
+    SiteSetting.blocked_email_domains = (blocklist + banned_domains).uniq.sort.join("|")
   end
 
   def import_banned_emails

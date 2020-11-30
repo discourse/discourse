@@ -1,17 +1,24 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pl_PL:
   js:
     presence:
-      replying: "odpowiada"
-      editing: "edytuje"
-      replying_to_topic:
+      replying:
         one: "odpowiada"
         few: "odpowiadają"
+        many: "odpowiadają"
+        other: "odpowiadają"
+      editing:
+        one: "edytuje"
+        few: "edytują"
+        many: "edytują"
+        other: "edytują"
+      replying_to_topic:
+        one: "odpowiada"
+        few: "odpowiada"
         many: "odpowiadają"
         other: "odpowiadają"

@@ -188,7 +188,7 @@ class BulkImport::Vanilla < BulkImport::Base
     now = Time.zone.now
 
     create_user_stats(users) do |row|
-      next unless @users[row['UserID'].to_s] # shouldn't need this but it can be NULL :<
+      next unless @users[row['UserID'].to_i] # shouldn't need this but it can be NULL :<
 
       {
         imported_id: row['UserID'],
@@ -371,9 +371,8 @@ class BulkImport::Vanilla < BulkImport::Base
 
     # Throw the -1 level categories away since they contain no topics.
     # Use the next level as root categories.
-    root_category_ids = Set.new(categories.select { |c| c["ParentCategoryID"] == -1 }.map { |c| c["CategoryID"] })
 
-    top_level_categories = categories.select { |c| root_category_ids.include?(c["ParentCategoryID"]) }
+    top_level_categories = categories.select { |c| c["ParentCategoryID"].blank? || c['ParentCategoryID'] == -1 }
 
     # Depth = 2
     create_categories(top_level_categories) do |category|
@@ -432,13 +431,13 @@ class BulkImport::Vanilla < BulkImport::Base
   def import_topics
     puts "", "Importing topics..."
 
-    topics_sql = "SELECT DiscussionID, CategoryID, Name, Body, DateInserted, InsertUserID, Announce
+    topics_sql = "SELECT DiscussionID, CategoryID, Name, Body, DateInserted, InsertUserID, Announce, Format
       FROM #{TABLE_PREFIX}Discussion
       WHERE DiscussionID > #{@last_imported_topic_id}
       ORDER BY DiscussionID ASC"
 
     create_topics(mysql_stream(topics_sql)) do |row|
-      {
+      data = {
         imported_id: row["DiscussionID"],
         title: normalize_text(row["Name"]),
         category_id: category_id_from_imported_id(row["CategoryID"]) ||
@@ -447,18 +446,20 @@ class BulkImport::Vanilla < BulkImport::Base
         created_at: Time.zone.at(row['DateInserted']),
         pinned_at: row['Announce'] == 0 ? nil : Time.zone.at(row['DateInserted'])
       }
+      (data[:user_id].present? && data[:title].present?) ? data : false
     end
 
     puts "", "importing first posts..."
 
     create_posts(mysql_stream(topics_sql)) do |row|
-      {
+      data = {
         imported_id: "d-" + row['DiscussionID'].to_s,
-        topic_id: topic_id_from_imported_id(row["DiscussionID"]),
+        topic_id: topic_id_from_imported_id(row['DiscussionID']),
         user_id: user_id_from_imported_id(row["InsertUserID"]),
         created_at: Time.zone.at(row['DateInserted']),
-        raw: clean_up(row["Body"])
+        raw: clean_up(row['Body'], row['Format'])
       }
+      data[:topic_id].present? ? data : false
     end
 
     puts '', 'converting deep categories to tags...'
@@ -477,7 +478,7 @@ class BulkImport::Vanilla < BulkImport::Base
     puts "", "Importing posts..."
 
     posts = mysql_stream(
-      "SELECT CommentID, DiscussionID, Body, DateInserted, InsertUserID
+      "SELECT CommentID, DiscussionID, Body, DateInserted, InsertUserID, Format
          FROM #{TABLE_PREFIX}Comment
          WHERE CommentID > #{@last_imported_post_id}
          ORDER BY CommentID ASC")
@@ -489,9 +490,9 @@ class BulkImport::Vanilla < BulkImport::Base
       {
         imported_id: row['CommentID'],
         topic_id: topic_id,
-        user_id: user_id_from_imported_id(row["InsertUserID"]),
+        user_id: user_id_from_imported_id(row['InsertUserID']),
         created_at: Time.zone.at(row['DateInserted']),
-        raw: clean_up(row["Body"])
+        raw: clean_up(row['Body'], row['Format'])
       }
     end
   end
@@ -572,7 +573,7 @@ class BulkImport::Vanilla < BulkImport::Base
     puts "", "importing private replies..."
 
     private_posts_sql = "
-      SELECT ConversationID, MessageID, Body, InsertUserID, DateInserted
+      SELECT ConversationID, MessageID, Body, InsertUserID, DateInserted, Format
         FROM GDN_ConversationMessage
        WHERE ConversationID > #{@last_imported_private_topic_id - PRIVATE_OFFSET}
        ORDER BY ConversationID ASC, MessageID ASC"
@@ -585,7 +586,7 @@ class BulkImport::Vanilla < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row['InsertUserID']),
         created_at: Time.zone.at(row['DateInserted']),
-        raw: clean_up(row['Body'])
+        raw: clean_up(row['Body'], row['Format'])
       }
     end
   end
@@ -650,13 +651,48 @@ class BulkImport::Vanilla < BulkImport::Base
     end
   end
 
-  def clean_up(raw)
-    # post id is sometimes prefixed with "c-"
-    raw.gsub!(/\[QUOTE="([^;]+);c-(\d+)"\]/i) { "[QUOTE=#{$1};#{$2}]" }
-    raw = raw.delete("\u0000")
-    raw = process_raw_text(raw)
+  def clean_up(raw, format)
+    raw.encode!("utf-8", "utf-8", invalid: :replace, undef: :replace, replace: "")
 
-    raw
+    raw.gsub!(/<(.+)>&nbsp;<\/\1>/, "\n\n")
+
+    html =
+      if format == 'Html'
+        raw
+      else
+        markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
+        markdown.render(raw)
+      end
+
+    doc = Nokogiri::HTML5.fragment(html)
+
+    doc.css("blockquote").each do |bq|
+      name = bq["rel"]
+      user = User.find_by(name: name)
+      bq.replace %{<br>[QUOTE="#{user&.username || name}"]\n#{bq.inner_html}\n[/QUOTE]<br>}
+    end
+
+    doc.css("font").reverse.each do |f|
+      f.replace f.inner_html
+    end
+
+    doc.css("span").reverse.each do |f|
+      f.replace f.inner_html
+    end
+
+    doc.css("sub").reverse.each do |f|
+      f.replace f.inner_html
+    end
+
+    doc.css("u").reverse.each do |f|
+      f.replace f.inner_html
+    end
+
+    markdown = format == 'Html' ? ReverseMarkdown.convert(doc.to_html) : doc.to_html
+    markdown.gsub!(/\[QUOTE="([^;]+);c-(\d+)"\]/i) { "[QUOTE=#{$1};#{$2}]" }
+
+    markdown = process_raw_text(markdown)
+    markdown
   end
 
   def process_raw_text(raw)

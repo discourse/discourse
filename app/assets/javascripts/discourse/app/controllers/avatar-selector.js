@@ -12,6 +12,31 @@ export default Controller.extend(ModalFunctionality, {
   gravatarLoginUrl: setting("gravatar_login_url"),
 
   @discourseComputed(
+    "siteSettings.selectable_avatars_enabled",
+    "siteSettings.selectable_avatars"
+  )
+  selectableAvatars(enabled, list) {
+    if (enabled) {
+      return list ? list.split("|") : [];
+    }
+  },
+
+  @discourseComputed(
+    "user.avatar_template",
+    "user.system_avatar_template",
+    "user.gravatar_avatar_template"
+  )
+  selected(avatarTemplate, systemAvatarTemplate, gravatarAvatarTemplate) {
+    if (avatarTemplate === systemAvatarTemplate) {
+      return "system";
+    } else if (avatarTemplate === gravatarAvatarTemplate) {
+      return "gravatar";
+    } else {
+      return "custom";
+    }
+  },
+
+  @discourseComputed(
     "selected",
     "user.system_avatar_upload_id",
     "user.gravatar_avatar_upload_id",
@@ -49,13 +74,13 @@ export default Controller.extend(ModalFunctionality, {
   allowAvatarUpload() {
     return (
       this.siteSettings.allow_uploaded_avatars &&
-      allowsImages(this.currentUser.staff)
+      allowsImages(this.currentUser.staff, this.siteSettings)
     );
   },
 
   actions: {
     uploadComplete() {
-      this.set("selected", "uploaded");
+      this.set("selected", "custom");
     },
 
     refreshGravatar() {
@@ -65,7 +90,7 @@ export default Controller.extend(ModalFunctionality, {
         `/user_avatar/${this.get("user.username")}/refresh_gravatar.json`,
         { type: "POST" }
       )
-        .then(result => {
+        .then((result) => {
           if (!result.gravatar_upload_id) {
             this.set("gravatarFailed", true);
           } else {
@@ -73,7 +98,7 @@ export default Controller.extend(ModalFunctionality, {
 
             this.user.setProperties({
               gravatar_avatar_upload_id: result.gravatar_upload_id,
-              gravatar_avatar_template: result.gravatar_avatar_template
+              gravatar_avatar_template: result.gravatar_avatar_template,
             });
           }
         })
@@ -95,6 +120,6 @@ export default Controller.extend(ModalFunctionality, {
         .pickAvatar(selectedUploadId, type)
         .then(() => window.location.reload())
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

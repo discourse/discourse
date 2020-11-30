@@ -19,6 +19,7 @@ module Autospec
     watch(%r{^app/assets/javascripts/discourse/(.+)\.js$}) { |m| "test/javascripts/#{m[1]}-test.js" }
     watch(%r{^app/assets/javascripts/admin/(.+)\.js$})     { |m| "test/javascripts/admin/#{m[1]}-test.js" }
     watch(%r{^test/javascripts/.+\.js$})
+    watch(%r{^app/assets/javascripts/discourse/tests/.+\.js$})
 
     RELOADERS = Set.new
     def self.reload(pattern)
@@ -29,9 +30,9 @@ module Autospec
     end
 
     # Discourse specific
-    reload(%r{^test/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
-    reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
-    reload("test/javascripts/test_helper.js")
+    reload(%r{^discourse/tests/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
+    reload(%r{^discourse/tests/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
+    reload("app/assets/javascripts/discoruse/tests/javascripts/test_helper.js")
 
     watch(%r{^plugins/.*/test/.+\.js(\.es6)?$})
 

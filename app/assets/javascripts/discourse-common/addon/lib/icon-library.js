@@ -7,6 +7,7 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
 
 let warnMissingIcons = true;
+let _iconList;
 
 const REPLACEMENTS = {
   "d-tracking": "bell",
@@ -19,7 +20,7 @@ const REPLACEMENTS = {
   "d-unliked": "far-heart",
   "d-liked": "heart",
   "notification.mentioned": "at",
-  "notification.group_mentioned": "at",
+  "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
   "notification.posted": "reply",
@@ -41,7 +42,9 @@ const REPLACEMENTS = {
   "notification.group_message_summary": "users",
   "notification.post_approved": "check",
   "notification.membership_request_accepted": "user-plus",
-  "notification.membership_request_consolidated": "users"
+  "notification.membership_request_consolidated": "users",
+  "notification.reaction": "bell",
+  "notification.votes_released": "plus",
 };
 
 export function replaceIcon(source, destination) {
@@ -88,11 +91,6 @@ export function convertIconClass(icon) {
     .trim();
 }
 
-// TODO: Improve how helpers are registered for vdom compliation
-if (typeof Discourse !== "undefined") {
-  Discourse.__widget_helpers.iconNode = iconNode;
-}
-
 export function registerIconRenderer(renderer) {
   _renderers.unshift(renderer);
 }
@@ -113,14 +111,16 @@ function iconClasses(icon, params) {
   return classNames;
 }
 
+export function setIconList(iconList) {
+  _iconList = iconList;
+}
+
+export function isExistingIconId(id) {
+  return _iconList && _iconList.indexOf(id) >= 0;
+}
+
 function warnIfMissing(id) {
-  if (
-    typeof Discourse !== "undefined" &&
-    isDevelopment() &&
-    warnMissingIcons &&
-    Discourse.SvgIconList &&
-    Discourse.SvgIconList.indexOf(id) === -1
-  ) {
+  if (warnMissingIcons && isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }
@@ -172,13 +172,13 @@ registerIconRenderer({
       "svg",
       {
         attributes: { class: classes, "aria-hidden": true },
-        namespace: SVG_NAMESPACE
+        namespace: SVG_NAMESPACE,
       },
       [
         h("use", {
           "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#${id}`),
-          namespace: SVG_NAMESPACE
-        })
+          namespace: SVG_NAMESPACE,
+        }),
       ]
     );
 
@@ -187,12 +187,12 @@ registerIconRenderer({
         "span",
         {
           title: params.title,
-          attributes: { class: "svg-icon-title" }
+          attributes: { class: "svg-icon-title" },
         },
         [svg]
       );
     } else {
       return svg;
     }
-  }
+  },
 });

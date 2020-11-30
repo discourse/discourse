@@ -197,19 +197,23 @@ class InlineUploads
     end
   end
 
-  def self.match_img(markdown, external_src: false)
+  def self.match_img(markdown, external_src: false, uploads: nil)
     markdown.scan(/(<(?!img)[^<>]+\/?>)?(\s*)(<img [^>\n]+>)/i) do |match|
       node = Nokogiri::HTML5::fragment(match[2].strip).children[0]
       src =  node.attributes["src"]&.value
 
       if src && (matched_uploads(src).present? || external_src)
-        text = node.attributes["alt"]&.value
-        width = node.attributes["width"]&.value.to_i
-        height = node.attributes["height"]&.value.to_i
+        upload = uploads&.[](src)
+
+        text = upload&.original_filename || node.attributes["alt"]&.value
+        width = (node.attributes["width"]&.value || upload&.width).to_i
+        height = (node.attributes["height"]&.value || upload&.height).to_i
         title = node.attributes["title"]&.value
         text = "#{text}|#{width}x#{height}" if width > 0 && height > 0
+        url = upload&.short_url || PLACEHOLDER
+
         spaces_before = match[1].present? ? match[1][/ +$/].size : 0
-        replacement = +"#{" " * spaces_before}![#{text}](#{PLACEHOLDER}#{title.present? ? " \"#{title}\"" : ""})"
+        replacement = +"#{" " * spaces_before}![#{text}](#{url}#{title.present? ? " \"#{title}\"" : ""})"
 
         yield(match[2], src, replacement, $~.offset(0)[0]) if block_given?
       end

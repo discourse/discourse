@@ -20,9 +20,9 @@ createWidget("admin-menu-button", {
       url: attrs.url,
       icon: attrs.icon,
       label: attrs.fullLabel || `topic.${attrs.label}`,
-      secondaryAction: "hideAdminMenu"
+      secondaryAction: "hideAdminMenu",
     });
-  }
+  },
 });
 
 createWidget("topic-admin-menu-button", {
@@ -41,7 +41,7 @@ createWidget("topic-admin-menu-button", {
       topic: attrs.topic,
       openUpwards: attrs.openUpwards,
       rightSide: !this.site.mobileView && attrs.rightSide,
-      actionButtons: []
+      actionButtons: [],
     });
 
     // We don't show the button when expanded on the right side on desktop
@@ -57,7 +57,7 @@ createWidget("topic-admin-menu-button", {
           title: "topic_admin_menu",
           icon: "wrench",
           action: "showAdminMenu",
-          sendActionEvent: true
+          sendActionEvent: true,
         })
       );
     }
@@ -108,9 +108,19 @@ createWidget("topic-admin-menu-button", {
     this.state.position = position;
   },
 
+  didRenderWidget() {
+    let menuButtons = document.querySelectorAll(
+      ".topic-admin-popup-menu button"
+    );
+
+    if (menuButtons && menuButtons[0]) {
+      menuButtons[0].focus();
+    }
+  },
+
   topicToggleActions() {
     this.state.expanded ? this.hideAdminMenu() : this.showAdminMenu();
-  }
+  },
 });
 
 export default createWidget("topic-admin-menu", {
@@ -130,22 +140,30 @@ export default createWidget("topic-admin-menu", {
     const visible = topic.get("visible");
 
     // Admin actions
-    if (this.currentUser && this.currentUser.get("canManageTopic")) {
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.can_split_merge_topic
+    ) {
       this.addActionButton({
         className: "topic-admin-multi-select",
         buttonClass: "popup-menu-btn",
         action: "toggleMultiSelect",
         icon: "tasks",
-        label: "actions.multi_select"
+        label: "actions.multi_select",
       });
+    }
 
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.get("can_moderate_category")
+    ) {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
           buttonClass: "popup-menu-btn-danger",
           action: "deleteTopic",
           icon: "far-trash-alt",
-          label: "actions.delete"
+          label: "actions.delete",
         });
       }
 
@@ -155,17 +173,19 @@ export default createWidget("topic-admin-menu", {
           buttonClass: "popup-menu-btn",
           action: "recoverTopic",
           icon: "undo",
-          label: "actions.recover"
+          label: "actions.recover",
         });
       }
+    }
 
+    if (this.currentUser && details.get("can_close_topic")) {
       if (topic.get("closed")) {
         this.addActionButton({
           className: "topic-admin-open",
           buttonClass: "popup-menu-btn",
           action: "toggleClosed",
           icon: "unlock",
-          label: "actions.open"
+          label: "actions.open",
         });
       } else {
         this.addActionButton({
@@ -173,16 +193,18 @@ export default createWidget("topic-admin-menu", {
           buttonClass: "popup-menu-btn",
           action: "toggleClosed",
           icon: "lock",
-          label: "actions.close"
+          label: "actions.close",
         });
       }
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-status-update",
         buttonClass: "popup-menu-btn",
         action: "showTopicStatusUpdate",
         icon: "far-clock",
-        label: "actions.timed_update"
+        label: "actions.timed_update",
       });
 
       if (!isPrivateMessage && (topic.get("visible") || featured)) {
@@ -191,7 +213,7 @@ export default createWidget("topic-admin-menu", {
           buttonClass: "popup-menu-btn",
           action: "showFeatureTopic",
           icon: "thumbtack",
-          label: featured ? "actions.unpin" : "actions.pin"
+          label: featured ? "actions.unpin" : "actions.pin",
         });
       }
 
@@ -201,7 +223,7 @@ export default createWidget("topic-admin-menu", {
           buttonClass: "popup-menu-btn",
           action: "showChangeTimestamp",
           icon: "calendar-alt",
-          label: "change_timestamp.title"
+          label: "change_timestamp.title",
         });
       }
 
@@ -210,25 +232,31 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "popup-menu-btn",
         action: "resetBumpDate",
         icon: "anchor",
-        label: "actions.reset_bump_date"
+        label: "actions.reset_bump_date",
       });
+    }
 
+    if (this.currentUser && details.get("can_archive_topic")) {
       if (!isPrivateMessage) {
         this.addActionButton({
           className: "topic-admin-archive",
           buttonClass: "popup-menu-btn",
           action: "toggleArchived",
           icon: "folder",
-          label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
+          label: topic.get("archived")
+            ? "actions.unarchive"
+            : "actions.archive",
         });
       }
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",
         action: "toggleVisibility",
         icon: visible ? "far-eye-slash" : "far-eye",
-        label: visible ? "actions.invisible" : "actions.visible"
+        label: visible ? "actions.invisible" : "actions.visible",
       });
 
       if (details.get("can_convert_topic")) {
@@ -241,16 +269,24 @@ export default createWidget("topic-admin-menu", {
           icon: isPrivateMessage ? "comment" : "envelope",
           label: isPrivateMessage
             ? "actions.make_public"
-            : "actions.make_private"
+            : "actions.make_private",
         });
       }
+
+      this.addActionButton({
+        className: "topic-admin-slow-mode",
+        buttonClass: "popup-menu-btn",
+        action: "showTopicSlowModeUpdate",
+        icon: "hourglass-start",
+        label: "actions.slow_mode",
+      });
 
       if (this.currentUser.get("staff")) {
         this.addActionButton({
           icon: "list",
           buttonClass: "popup-menu-btn",
           fullLabel: "review.moderation_history",
-          url: `/review?topic_id=${topic.id}&status=all`
+          url: `/review?topic_id=${topic.id}&status=all`,
         });
       }
     }
@@ -279,11 +315,11 @@ export default createWidget("topic-admin-menu", {
       }
 
       return {
-        style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;`
+        style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;`,
       };
     } else {
       return {
-        style: `position: ${position}; top: ${top}px; left: ${left}px;`
+        style: `position: ${position}; top: ${top}px; left: ${left}px;`,
       };
     }
   },
@@ -304,11 +340,11 @@ export default createWidget("topic-admin-menu", {
       attrs.actionButtons
         .concat(extraButtons)
         .filter(Boolean)
-        .map(b => this.attach("admin-menu-button", b))
+        .map((b) => this.attach("admin-menu-button", b))
     );
   },
 
   clickOutside() {
     this.sendWidgetAction("hideAdminMenu");
-  }
+  },
 });

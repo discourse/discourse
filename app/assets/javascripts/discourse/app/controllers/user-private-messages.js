@@ -4,6 +4,7 @@ import { alias, equal, and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import Topic from "discourse/models/topic";
+import bootbox from "bootbox";
 
 export default Controller.extend({
   userTopicsList: controller("user-topics-list"),
@@ -60,7 +61,7 @@ export default Controller.extend({
 
   actions: {
     changeGroupNotificationLevel(notificationLevel) {
-      this.group.setNotification(notificationLevel, this.get("user.id"));
+      this.group.setNotification(notificationLevel, this.get("user.model.id"));
     },
     archive() {
       this.bulkOperation("archive_messages");
@@ -73,6 +74,6 @@ export default Controller.extend({
     },
     selectAll() {
       $("input.bulk-select:not(checked)").click();
-    }
-  }
+    },
+  },
 });

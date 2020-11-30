@@ -8,7 +8,7 @@ export default Component.extend(FilterModeMixin, {
     "active",
     "content.hasIcon:has-icon",
     "content.classNames",
-    "isHidden:hidden"
+    "isHidden:hidden",
   ],
   attributeBindings: ["content.title:title"],
   hidden: false,
@@ -51,12 +51,15 @@ export default Component.extend(FilterModeMixin, {
       }
     }
 
-    // ensures we keep discovery query params added through plugin api
-    if (content.persistedQueryParams) {
-      Object.keys(content.persistedQueryParams).forEach(key => {
-        const value = content.persistedQueryParams[key];
-        queryParams.push(`${key}=${value}`);
-      });
+    // To reset the "filter" sticky param, at least one query param is needed.
+    // If no query param is present, add an empty one to ensure a ? is
+    // appended to the URL.
+    if (content.currentRouteQueryParams) {
+      if (content.currentRouteQueryParams.filter) {
+        if (queryParams.length === 0) {
+          queryParams.push("");
+        }
+      }
     }
 
     if (queryParams.length) {
@@ -65,5 +68,5 @@ export default Component.extend(FilterModeMixin, {
     this.set("hrefLink", href);
 
     this.set("activeClass", this.active ? "active" : "");
-  }
+  },
 });

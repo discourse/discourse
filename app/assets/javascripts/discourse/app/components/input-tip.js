@@ -25,5 +25,5 @@ export default Component.extend({
       this.set("tipIcon", null);
       this.set("tipReason", null);
     }
-  }
+  },
 });

@@ -56,8 +56,13 @@ $poll-margin: 10px;
     }
   }
 
-  .poll-textarea {
+  .poll-textarea,
+  .poll-title {
     flex-direction: column;
+  }
+
+  .poll-title input {
+    width: 100%;
   }
 
   .poll-textarea textarea {
@@ -66,7 +71,11 @@ $poll-margin: 10px;
     box-sizing: border-box;
   }
 
-  .poll-select + .poll-textarea {
+  .poll-select + .poll-title {
+    margin-top: $poll-margin;
+  }
+
+  .poll-textarea {
     margin-top: $poll-margin;
   }
 

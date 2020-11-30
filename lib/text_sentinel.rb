@@ -54,12 +54,6 @@ class TextSentinel
     seems_quiet?
   end
 
-  private
-
-  def symbols_regex
-    /[\ -\/\[-\`\:-\@\{-\~]/m
-  end
-
   def seems_meaningful?
     # Minimum entropy if entropy check required
     @opts[:min_entropy].blank? || (entropy >= @opts[:min_entropy])
@@ -69,10 +63,6 @@ class TextSentinel
     # At least some non-symbol characters
     # (We don't have a comprehensive list of symbols, but this will eliminate some noise)
     @text.gsub(symbols_regex, '').size > 0
-  end
-
-  def skipped_locale
-    %w(zh_CN zh_TW ko ja).freeze
   end
 
   def seems_unpretentious?
@@ -85,6 +75,16 @@ class TextSentinel
     return true if skipped_locale.include?(SiteSetting.default_locale)
     # We don't allow all upper case content
     SiteSetting.allow_uppercase_posts || @text == @text.mb_chars.downcase.to_s || @text != @text.mb_chars.upcase.to_s
+  end
+
+  private
+
+  def symbols_regex
+    /[\ -\/\[-\`\:-\@\{-\~]/m
+  end
+
+  def skipped_locale
+    %w(zh_CN zh_TW ko ja).freeze
   end
 
 end

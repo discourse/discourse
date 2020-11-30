@@ -10,6 +10,15 @@ describe InvitesController do
     fab!(:invite) { Fabricate(:invite) }
     fab!(:user) { Fabricate(:coding_horror) }
 
+    it 'does not work for logged in users' do
+      sign_in(Fabricate(:user))
+      get "/invites/#{invite.invite_key}"
+
+      expect(response.status).to eq(200)
+      body = response.body
+      expect(CGI.unescapeHTML(body)).to include(I18n.t("login.already_logged_in"))
+    end
+
     it "returns error if invite not found" do
       get "/invites/nopeNOPEnope"
 
@@ -18,6 +27,18 @@ describe InvitesController do
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
       expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', base_url: Discourse.base_url))
+    end
+
+    it "returns error if invite expired" do
+      invite.update(expires_at: 1.day.ago)
+
+      get "/invites/#{invite.invite_key}"
+
+      expect(response.status).to eq(200)
+
+      body = response.body
+      expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.expired', base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
@@ -107,7 +128,7 @@ describe InvitesController do
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         sign_in(admin)
-        post "/invites.json", params: { email: email, group_names: group.name }
+        post "/invites.json", params: { email: email, group_ids: [group.id] }
         expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
@@ -118,7 +139,7 @@ describe InvitesController do
         user.update!(trust_level: TrustLevel[2])
         group.add_owner(user)
 
-        post "/invites.json", params: { email: email, group_names: group.name }
+        post "/invites.json", params: { email: email, group_ids: [group.id] }
 
         expect(response.status).to eq(200)
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
@@ -156,7 +177,7 @@ describe InvitesController do
         it "fails if you can't invite to the forum" do
           sign_in(Fabricate(:user))
           post "/invites/link.json", params: { email: email }
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "fails for normal user if invite email already exists" do
@@ -177,7 +198,7 @@ describe InvitesController do
             email: email, topic_id: -9999
           }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(422)
         end
 
         it "verifies that inviter is authorized to invite new user to a group-private topic" do
@@ -190,7 +211,7 @@ describe InvitesController do
             email: email, topic_id: group_private_topic.id
           }
 
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "allows admins to invite to groups" do
@@ -198,7 +219,7 @@ describe InvitesController do
           sign_in(admin)
 
           post "/invites/link.json", params: {
-            email: email, group_names: group.name
+            email: email, group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)
@@ -234,7 +255,7 @@ describe InvitesController do
           post "/invites/link.json", params: {
             max_redemptions_allowed: 5
           }
-          expect(response).to be_forbidden
+          expect(response.status).to eq(422)
         end
 
         it "allows staff to invite to groups" do
@@ -245,7 +266,7 @@ describe InvitesController do
 
           post "/invites/link.json", params: {
             max_redemptions_allowed: 5,
-            group_names: group.name
+            group_ids: [group.id]
           }
 
           expect(response.status).to eq(200)

@@ -1,14 +1,13 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sv:
   js:
     details:
-      title: Göm detaljer
+      title: Dölj detaljer
     composer:
       details_title: Sammanfattning
-      details_text: "Denna text kommer att gömmas"
+      details_text: "Denna text kommer att döljas"

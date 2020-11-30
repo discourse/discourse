@@ -1,3 +1,4 @@
+import afterTransition from "discourse/lib/after-transition";
 import I18n from "I18n";
 import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
@@ -9,7 +10,7 @@ export default Component.extend({
     ":d-modal",
     "modalClass",
     "modalStyle",
-    "hasPanels"
+    "hasPanels",
   ],
   attributeBindings: ["data-keyboard", "aria-modal"],
   dismissable: true,
@@ -34,9 +35,9 @@ export default Component.extend({
 
   @on("didInsertElement")
   setUp() {
-    $("html").on("keyup.discourse-modal", e => {
+    $("html").on("keyup.discourse-modal", (e) => {
       //only respond to events when the modal is visible
-      if ($("#discourse-modal:visible").length > 0) {
+      if (!this.element.classList.contains("hidden")) {
         if (e.which === 27 && this.dismissable) {
           next(() => $(".modal-header button.modal-close").click());
         }
@@ -116,5 +117,15 @@ export default Component.extend({
     } else {
       this.set("dismissable", true);
     }
-  }
+
+    if (this.element) {
+      const autofocusInputs = this.element.querySelectorAll(
+        ".modal-body input[autofocus]"
+      );
+
+      if (autofocusInputs.length) {
+        afterTransition(() => autofocusInputs[0].focus());
+      }
+    }
+  },
 });

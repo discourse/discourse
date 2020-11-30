@@ -6,6 +6,16 @@
           {{d-button icon="times" action=(route-action "closeModal" "initiatedByCloseButton") class="btn-flat modal-close close" title="modal.close"}}
         {{/if}}
 
+        {{#if title}}
+          <div class="title">
+            <h3>{{title}}</h3>
+
+            {{#if subtitle}}
+              <p>{{subtitle}}</p>
+            {{/if}}
+          </div>
+        {{/if}}
+
         {{#if panels}}
           <ul class="modal-tabs">
             {{#each panels as |panel|}}
@@ -16,14 +26,6 @@
                 onSelectPanel=onSelectPanel}}
             {{/each}}
           </ul>
-        {{else}}
-          <div class="title">
-            <h3>{{title}}</h3>
-
-            {{#if subtitle}}
-              <p>{{subtitle}}</p>
-            {{/if}}
-          </div>
         {{/if}}
       </div>
 

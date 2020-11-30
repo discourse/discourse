@@ -222,9 +222,15 @@ module DiscourseNarrativeBot
       end
     end
 
+    @@cooked_triggers = {}
+
+    def cook(trigger)
+      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{self.discobot_username} #{trigger}")
+    end
+
     def match_trigger?(trigger)
       # we remove the leading <p> to allow for trigger to be at the end of a paragraph
-      cooked_trigger = PrettyText.cook("@#{self.discobot_username} #{trigger}")[3..-1]
+      cooked_trigger = cook(trigger)[3..-1]
       regexp = Regexp.new(cooked_trigger, 'i')
       match = @post.cooked.match(regexp)
 

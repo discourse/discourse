@@ -51,7 +51,7 @@ class Category < ActiveRecord::Base
 
   validates :user_id, presence: true
 
-  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
+  validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? || c.will_save_change_to_parent_category_id? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
@@ -79,7 +79,6 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
-  after_save :index_search
   after_save :update_reviewables
 
   after_destroy :reset_topic_ids_cache
@@ -94,6 +93,8 @@ class Category < ActiveRecord::Base
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
   after_commit :trigger_category_destroyed_event, on: :destroy
+
+  after_save_commit :index_search
 
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
@@ -370,8 +371,22 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
-    group_ids = self.groups.pluck(:id) if self.read_restricted
-    MessageBus.publish('/categories', { categories: ActiveModel::ArraySerializer.new([self]).as_json }, group_ids: group_ids)
+    if self.read_restricted
+      group_ids = self.groups.pluck(:id)
+
+      if group_ids.present?
+        MessageBus.publish(
+          '/categories',
+          { categories: ActiveModel::ArraySerializer.new([self]).as_json },
+          group_ids: group_ids
+        )
+      end
+    else
+      MessageBus.publish(
+        '/categories',
+        { categories: ActiveModel::ArraySerializer.new([self]).as_json }
+      )
+    end
   end
 
   def remove_site_settings
@@ -712,7 +727,7 @@ class Category < ActiveRecord::Base
   end
 
   def full_slug(separator = "-")
-    start_idx = "#{Discourse.base_uri}/c/".size
+    start_idx = "#{Discourse.base_path}/c/".size
     url[start_idx..-1].gsub("/", separator)
   end
 
@@ -723,7 +738,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache[self.id] ||= "#{Discourse.base_uri}/c/#{slug_path.join('/')}/#{self.id}"
+    @@url_cache[self.id] ||= "#{Discourse.base_path}/c/#{slug_path.join('/')}/#{self.id}"
   end
 
   def url_with_id
@@ -744,7 +759,7 @@ class Category < ActiveRecord::Base
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
 
-    url = +"#{Discourse.base_uri}/c"
+    url = +"#{Discourse.base_path}/c"
     url << "/#{parent_category.slug_path.join('/')}" if parent_category_id
     url << "/#{old_slug}/#{id}"
     url = Permalink.normalize_url(url)
@@ -766,11 +781,14 @@ class Category < ActiveRecord::Base
   end
 
   def index_search
-    SearchIndexer.index(self)
+    Jobs.enqueue(:index_category_for_search,
+      category_id: self.id,
+      force: saved_change_to_attribute?(:name),
+    )
   end
 
   def update_reviewables
-    if SiteSetting.enable_category_group_review? && saved_change_to_reviewable_by_group_id?
+    if SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?
       Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
     end
   end
@@ -792,6 +810,17 @@ class Category < ActiveRecord::Base
       end
 
     Category.find_by_id(query)
+  end
+
+  def self.find_by_slug_path_with_id(slug_path_with_id)
+    slug_path = slug_path_with_id.split("/")
+
+    if slug_path.last =~ /\A\d+\Z/
+      id = slug_path.pop.to_i
+      Category.find_by_id(id)
+    else
+      Category.find_by_slug_path(slug_path)
+    end
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
@@ -982,9 +1011,9 @@ end
 # Indexes
 #
 #  index_categories_on_email_in                (email_in) UNIQUE
+#  index_categories_on_forum_thread_count      (topic_count)
 #  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
 #  index_categories_on_search_priority         (search_priority)
-#  index_categories_on_topic_count             (topic_count)
 #  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #  unique_index_categories_on_slug             (COALESCE(parent_category_id, '-1'::integer), slug) UNIQUE WHERE ((slug)::text <> ''::text)
 #

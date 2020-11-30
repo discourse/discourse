@@ -53,8 +53,8 @@ bootsnap-compile-cache/
 !/plugins/discourse-nginx-performance-report
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
+!/plugins/styleguide
 !/plugins/discourse-local-dates
-!/plugins/discourse-unsupported-browser
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -88,6 +88,7 @@ config/multisite.yml
 config/multisite1.yml
 config/fog_credentials.yml
 
+/public/fonts
 /public/uploads
 /public/backups
 /public/stylesheet-cache/*
@@ -136,8 +137,16 @@ node_modules
 # ignore generated api documentation files
 openapi/*
 
+# ignore VSCode config files
+.vscode
+
+# ignore direnv
+.envrc
+
 # ember-cli generated
 dist
 
 # Copyright Deposits
 copyright
+
+yarn-error.log

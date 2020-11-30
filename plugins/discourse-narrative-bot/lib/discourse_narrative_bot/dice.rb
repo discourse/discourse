@@ -13,9 +13,7 @@ module DiscourseNarrativeBot
       output = +''
 
       if num_of_dice > MAXIMUM_NUM_OF_DICE
-        output << I18n.t('discourse_narrative_bot.dice.not_enough_dice',
-          num_of_dice: MAXIMUM_NUM_OF_DICE
-        )
+        output << I18n.t('discourse_narrative_bot.dice.not_enough_dice', count: MAXIMUM_NUM_OF_DICE)
         output << "\n\n"
         num_of_dice = MAXIMUM_NUM_OF_DICE
       end

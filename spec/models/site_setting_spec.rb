@@ -197,11 +197,11 @@ describe SiteSetting do
 
   describe 'cached settings' do
     it 'should recalcualte cached setting when dependent settings are changed' do
-      SiteSetting.attachment_filename_blacklist = 'foo'
-      expect(SiteSetting.attachment_filename_blacklist_regex).to eq(/foo/)
+      SiteSetting.blocked_attachment_filenames = 'foo'
+      expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 
-      SiteSetting.attachment_filename_blacklist = 'foo|bar'
-      expect(SiteSetting.attachment_filename_blacklist_regex).to eq(/foo|bar/)
+      SiteSetting.blocked_attachment_filenames = 'foo|bar'
+      expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo|bar/)
     end
   end
 end

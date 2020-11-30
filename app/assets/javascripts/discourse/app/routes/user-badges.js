@@ -23,6 +23,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
     didTransition() {
       this.controllerFor("application").set("showFooter", true);
       return true;
-    }
-  }
+    },
+  },
 });

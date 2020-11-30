@@ -67,7 +67,7 @@ export default Mixin.create({
       return content.findBy(property, this.getValue(item));
     } else {
       const value = this.getValue(item);
-      return content.find(contentItem => {
+      return content.find((contentItem) => {
         return this.getValue(contentItem) === value;
       });
     }
@@ -87,5 +87,5 @@ export default Mixin.create({
     }
 
     return input;
-  }
+  },
 });

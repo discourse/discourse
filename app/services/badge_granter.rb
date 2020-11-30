@@ -45,6 +45,7 @@ class BadgeGranter
   def grant
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
     return unless @badge.enabled?
+    return if @badge.badge_grouping_id == BadgeGrouping::GettingStarted && @badge.id != Badge::NewUserOfTheMonth && @user.user_option.skip_new_user_tips
 
     find_by = { badge_id: @badge.id, user_id: @user.id }
 
@@ -69,17 +70,15 @@ class BadgeGranter
                                        post_id: @post_id,
                                        seq: seq)
 
-      return unless SiteSetting.enable_badges
+        return unless SiteSetting.enable_badges
+
         if @granted_by != Discourse.system_user
           StaffActionLogger.new(@granted_by).log_badge_grant(user_badge)
         end
 
-        if SiteSetting.enable_badges?
-          unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
-            notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
-
-            user_badge.update notification_id: notification.id
-          end
+        unless @badge.badge_type_id == BadgeType::Bronze && user_badge.granted_at < 2.days.ago
+          notification = self.class.send_notification(@user.id, @user.username, @user.effective_locale, @badge)
+          user_badge.update!(notification_id: notification.id)
         end
       end
     end
@@ -396,20 +395,32 @@ class BadgeGranter
 
   def self.revoke_ungranted_titles!
     DB.exec <<~SQL
-      UPDATE users SET title = ''
-      WHERE NOT title IS NULL AND
-         title <> '' AND
-         EXISTS (
-            SELECT 1
-            FROM user_profiles
-            WHERE user_id = users.id AND badge_granted_title
-         ) AND
-         title NOT IN (
-            SELECT name
-            FROM badges
-            WHERE allow_title AND enabled AND
-              badges.id IN (SELECT badge_id FROM user_badges ub where ub.user_id = users.id)
+      UPDATE users u
+      SET title = ''
+      FROM user_profiles up
+      WHERE u.title IS NOT NULL
+        AND u.title <> ''
+        AND up.user_id = u.id
+        AND up.badge_granted_title
+        AND up.granted_title_badge_id IS NOT NULL
+        AND NOT EXISTS(
+          SELECT 1
+          FROM badges b
+                 JOIN user_badges ub ON ub.user_id = u.id AND ub.badge_id = b.id
+          WHERE b.id = up.granted_title_badge_id
+            AND b.allow_title
+            AND b.enabled
         )
+    SQL
+
+    DB.exec <<~SQL
+      UPDATE user_profiles up
+      SET badge_granted_title    = FALSE,
+          granted_title_badge_id = NULL
+      FROM users u
+      WHERE up.user_id = u.id
+        AND (u.title IS NULL OR u.title = '')
+        AND (up.badge_granted_title OR up.granted_title_badge_id IS NOT NULL)
     SQL
   end
 

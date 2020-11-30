@@ -90,7 +90,7 @@ describe 'posts' do
     end
 
     post 'Creates a new topic, a new post, or a private message' do
-      tags 'Posts'
+      tags 'Posts', 'Topics'
       consumes 'application/json'
       parameter name: 'Api-Key', in: :header, type: :string, required: true
       parameter name: 'Api-Username', in: :header, type: :string, required: true
@@ -463,7 +463,7 @@ describe 'posts' do
           edit_reason: { type: :string, nullable: true },
           can_view_edit_history: { type: :boolean },
           wiki: { type: :boolean },
-          notice_type: { type: :string },
+          notice: { type: :object },
           reviewable_id: { type: :string, nullable: true },
           reviewable_score_count: { type: :integer },
           reviewable_score_pending_count: { type: :integer },

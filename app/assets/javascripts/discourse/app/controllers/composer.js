@@ -2,31 +2,35 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { and, or, alias, reads } from "@ember/object/computed";
-import { cancel, debounce } from "@ember/runloop";
+import { cancel, debounce, run } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import { buildQuote } from "discourse/lib/quote";
 import Draft from "discourse/models/draft";
-import Composer from "discourse/models/composer";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   authorizesOneOrMoreExtensions,
-  uploadIcon
+  uploadIcon,
 } from "discourse/lib/uploads";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
-import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
+import Composer, { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
 import { Promise } from "rsvp";
 import { isTesting } from "discourse-common/config/environment";
 import EmberObject, { computed, action } from "@ember/object";
 import deprecated from "discourse-common/lib/deprecated";
+import bootbox from "bootbox";
+import showModal from "discourse/lib/show-modal";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -57,10 +61,10 @@ function loadDraft(store, opts) {
       draftSequence,
       draft: true,
       composerState: Composer.DRAFT,
-      topic: opts.topic
+      topic: opts.topic,
     };
 
-    serializedFields.forEach(f => {
+    serializedFields.forEach((f) => {
       attrs[f] = draft[f] || opts[f];
     });
 
@@ -124,7 +128,7 @@ export default Controller.extend({
     if (!this.site.mobileView) {
       this.keyValueStore.set({
         key: "composer.showPreview",
-        value: this.showPreview
+        value: this.showPreview,
       });
     }
   },
@@ -174,10 +178,10 @@ export default Controller.extend({
       this._toolbarEnabled = val;
       keyValueStore.set({
         key: "toolbar-enabled",
-        value: val ? "true" : "false"
+        value: val ? "true" : "false",
       });
       return val;
-    }
+    },
   }),
 
   topicModel: alias("topicController.model"),
@@ -222,15 +226,20 @@ export default Controller.extend({
 
   @discourseComputed("model.action", "isWhispering")
   saveIcon(modelAction, isWhispering) {
-    if (isWhispering) return "far-eye-slash";
+    if (isWhispering) {
+      return "far-eye-slash";
+    }
 
     return SAVE_ICONS[modelAction];
   },
 
   @discourseComputed("model.action", "isWhispering", "model.editConflict")
   saveLabel(modelAction, isWhispering, editConflict) {
-    if (editConflict) return "composer.overwrite_edit";
-    else if (isWhispering) return "composer.create_whisper";
+    if (editConflict) {
+      return "composer.overwrite_edit";
+    } else if (isWhispering) {
+      return "composer.create_whisper";
+    }
 
     return SAVE_LABELS[modelAction];
   },
@@ -272,7 +281,7 @@ export default Controller.extend({
             action: "toggleInvisible",
             icon: "far-eye-slash",
             label: "composer.toggle_unlisted",
-            condition: "canUnlistTopic"
+            condition: "canUnlistTopic",
           };
         })
       );
@@ -283,15 +292,15 @@ export default Controller.extend({
             action: "toggleWhisper",
             icon: "far-eye-slash",
             label: "composer.toggle_whisper",
-            condition: "showWhisperToggle"
+            condition: "showWhisperToggle",
           };
         })
       );
 
       return options.concat(
         _popupMenuOptionsCallbacks
-          .map(callback => this._setupPopupMenuOption(callback))
-          .filter(o => o)
+          .map((callback) => this._setupPopupMenuOption(callback))
+          .filter((o) => o)
       );
     }
   },
@@ -323,12 +332,15 @@ export default Controller.extend({
 
   @discourseComputed
   allowUpload() {
-    return authorizesOneOrMoreExtensions(this.currentUser.staff);
+    return authorizesOneOrMoreExtensions(
+      this.currentUser.staff,
+      this.siteSettings
+    );
   },
 
   @discourseComputed()
   uploadIcon() {
-    return uploadIcon(this.currentUser.staff);
+    return uploadIcon(this.currentUser.staff, this.siteSettings);
   },
 
   @action
@@ -357,24 +369,32 @@ export default Controller.extend({
     openComposer(options, post, topic) {
       this.open(options).then(() => {
         let url;
-        if (post) url = post.url;
-        if (!post && topic) url = topic.url;
+        if (post) {
+          url = post.url;
+        }
+        if (!post && topic) {
+          url = topic.url;
+        }
 
         let topicTitle;
-        if (topic) topicTitle = topic.title;
+        if (topic) {
+          topicTitle = topic.title;
+        }
 
-        if (!url || !topicTitle) return;
+        if (!url || !topicTitle) {
+          return;
+        }
 
         url = `${location.protocol}//${location.host}${url}`;
         const link = `[${escapeExpression(topicTitle)}](${url})`;
         const continueDiscussion = I18n.t("post.continue_discussion", {
-          postLink: link
+          postLink: link,
         });
 
         const reply = this.get("model.reply");
         if (!reply || !reply.includes(continueDiscussion)) {
           this.model.prependText(continueDiscussion, {
-            new_line: true
+            new_line: true,
           });
         }
       });
@@ -430,12 +450,12 @@ export default Controller.extend({
               domain: info.domain,
               username: info.username,
               post_url: topic.urlForPostNumber(info.post_number),
-              ago: shortDate(info.posted_at)
+              ago: shortDate(info.posted_at),
             });
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
               templateName: "custom-body",
-              body
+              body,
             });
             return false;
           }
@@ -512,9 +532,9 @@ export default Controller.extend({
       if (postId) {
         this.set("model.loading", true);
 
-        return this.store.find("post", postId).then(post => {
+        return this.store.find("post", postId).then((post) => {
           const quote = buildQuote(post, post.raw, {
-            full: true
+            full: true,
           });
 
           toolbarEvent.addText(quote);
@@ -529,8 +549,8 @@ export default Controller.extend({
       this.cancelComposer(differentDraftContext);
     },
 
-    save() {
-      this.save();
+    save(ignore, event) {
+      this.save(false, { jump: !(event && event.shiftKey) });
     },
 
     displayEditReason() {
@@ -560,21 +580,21 @@ export default Controller.extend({
         !this.get("model.creatingPrivateMessage") &&
         !this.get("model.topic.isPrivateMessage")
       ) {
-        groups.forEach(group => {
+        groups.forEach((group) => {
           let body;
           const groupLink = getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: `@${group.name}`,
-              max: group.max_mentions,
-              group_link: groupLink
+              count: group.max_mentions,
+              group_link: groupLink,
             });
           } else if (group.user_count > 0) {
             body = I18n.t("composer.group_mentioned", {
               group: `@${group.name}`,
               count: group.user_count,
-              group_link: groupLink
+              group_link: groupLink,
             });
           }
 
@@ -582,7 +602,7 @@ export default Controller.extend({
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
               templateName: "custom-body",
-              body
+              body,
             });
           }
         });
@@ -590,30 +610,36 @@ export default Controller.extend({
     },
 
     cannotSeeMention(mentions) {
-      mentions.forEach(mention => {
+      mentions.forEach((mention) => {
         const translation = this.get("model.topic.isPrivateMessage")
           ? "composer.cannot_see_mention.private"
           : "composer.cannot_see_mention.category";
         const body = I18n.t(translation, {
-          username: `@${mention.name}`
+          username: `@${mention.name}`,
         });
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
           templateName: "custom-body",
-          body
+          body,
         });
       });
-    }
+    },
   },
 
   disableSubmit: or("model.loading", "isUploading"),
 
-  save(force) {
-    if (this.disableSubmit) return;
+  save(force, options = {}) {
+    if (this.disableSubmit) {
+      return;
+    }
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
       this.set("model.isWarning", false);
+    }
+
+    if (this.site.mobileView && this.showPreview) {
+      this.set("showPreview", false);
     }
 
     const composer = this.model;
@@ -621,6 +647,32 @@ export default Controller.extend({
     if (composer.cantSubmitPost) {
       this.set("lastValidatedAt", Date.now());
       return;
+    }
+
+    const topic = composer.topic;
+    const slowModePost =
+      topic && topic.slow_mode_seconds && topic.user_last_posted_at;
+    const notEditing = this.get("model.action") !== "edit";
+
+    // Editing a topic in slow mode is directly handled by the backend.
+    if (slowModePost && notEditing) {
+      if (
+        cannotPostAgain(
+          this.currentUser,
+          topic.slow_mode_seconds,
+          topic.user_last_posted_at
+        )
+      ) {
+        const message = I18n.t("composer.slow_mode.error", {
+          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+        });
+
+        bootbox.alert(message);
+        return;
+      } else {
+        // Edge case where the user tries to post again immediately.
+        topic.set("user_last_posted_at", new Date().toISOString());
+      }
     }
 
     composer.set("disableDrafts", true);
@@ -642,8 +694,8 @@ export default Controller.extend({
           {
             label: I18n.t("composer.cancel"),
             class: "d-modal-cancel",
-            link: true
-          }
+            link: true,
+          },
         ];
 
         buttons.push({
@@ -656,7 +708,7 @@ export default Controller.extend({
           callback: () => {
             composer.setProperties({ topic: currentTopic, post: null });
             this.save(true);
-          }
+          },
         });
 
         buttons.push({
@@ -666,7 +718,7 @@ export default Controller.extend({
             this.get("model.topic.fancyTitle") +
             "</div>",
           class: "btn-primary btn-reply-on-original",
-          callback: () => this.save(true)
+          callback: () => this.save(true),
         });
 
         bootbox.dialog(message, buttons, { classes: "reply-where-modal" });
@@ -689,7 +741,9 @@ export default Controller.extend({
 
     const promise = composer
       .save({ imageSizes, editReason: this.editReason })
-      .then(result => {
+      .then((result) => {
+        this.appEvents.trigger("composer:saved");
+
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
           if (result.responseJson.pending_post) {
@@ -707,8 +761,9 @@ export default Controller.extend({
         }
 
         if (this.get("model.editingPost")) {
+          this.appEvents.trigger("composer:edited-post");
           this.appEvents.trigger("post-stream:refresh", {
-            id: parseInt(result.responseJson.id, 10)
+            id: parseInt(result.responseJson.id, 10),
           });
           if (result.responseJson.post.post_number === 1) {
             this.appEvents.trigger("header:update-topic", composer.topic);
@@ -718,6 +773,7 @@ export default Controller.extend({
         }
 
         if (result.responseJson.action === "create_post") {
+          this.appEvents.trigger("composer:created-post");
           this.appEvents.trigger("post:highlight", result.payload.post_number);
         }
 
@@ -736,11 +792,12 @@ export default Controller.extend({
         this.currentUser.set("any_posts", true);
 
         const post = result.target;
-        if (post && !staged) {
+
+        if (post && !staged && options.jump !== false) {
           DiscourseURL.routeTo(post.url, { skipIfOnScreen: true });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         composer.set("disableDrafts", false);
         if (error) {
           this.appEvents.one("composer:will-open", () => bootbox.alert(error));
@@ -801,7 +858,7 @@ export default Controller.extend({
       showEditReason: false,
       editReason: null,
       scopedCategoryId: null,
-      skipAutoSave: true
+      skipAutoSave: true,
     });
 
     // Scope the categories drop down to the category we opened the composer with.
@@ -839,7 +896,9 @@ export default Controller.extend({
           composerModel.draftKey === opts.draftKey
         ) {
           composerModel.set("composeState", Composer.OPEN);
-          if (!opts.action) return resolve();
+          if (!opts.action) {
+            return resolve();
+          }
         }
 
         // If it's a different draft, cancel it and try opening again.
@@ -860,14 +919,14 @@ export default Controller.extend({
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
         return Draft.get(opts.draftKey)
-          .then(data => {
+          .then((data) => {
             if (opts.skipDraftCheck) {
               data.draft = undefined;
               return data;
             }
             return this.confirmDraftAbandon(data);
           })
-          .then(data => {
+          .then((data) => {
             if (!opts.draft && data.draft) {
               opts.draft = data.draft;
             }
@@ -879,10 +938,10 @@ export default Controller.extend({
       // otherwise, do the draft check async
       else if (!opts.draft && !opts.skipDraftCheck) {
         Draft.get(opts.draftKey)
-          .then(data => {
+          .then((data) => {
             return this.confirmDraftAbandon(data);
           })
-          .then(data => {
+          .then((data) => {
             if (data.draft) {
               opts.draft = data.draft;
               opts.draftSequence = data.draft_sequence;
@@ -908,7 +967,7 @@ export default Controller.extend({
 
     promise = promise.then(() => {
       if (opts.draft) {
-        return loadDraft(this.store, opts).then(model => {
+        return loadDraft(this.store, opts).then((model) => {
           if (!model) {
             throw new Error("draft was not found");
           }
@@ -921,12 +980,12 @@ export default Controller.extend({
       }
     });
 
-    promise.then(composerModel => {
+    promise.then((composerModel) => {
       this.set("model", composerModel);
 
       composerModel.setProperties({
         composeState: Composer.OPEN,
-        isWarning: false
+        isWarning: false,
       });
 
       if (!this.model.targetRecipients) {
@@ -1008,11 +1067,11 @@ export default Controller.extend({
     }
 
     if (_checkDraftPopup) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
           {
             label: I18n.t("drafts.abandon.no_value"),
-            callback: () => resolve(data)
+            callback: () => resolve(data),
           },
           {
             label: I18n.t("drafts.abandon.yes_value"),
@@ -1020,8 +1079,8 @@ export default Controller.extend({
             callback: () => {
               data.draft = null;
               resolve(data);
-            }
-          }
+            },
+          },
         ]);
       });
     } else {
@@ -1037,46 +1096,36 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    const keyPrefix =
-      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
-
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
-          {
-            label: differentDraft
-              ? I18n.t(keyPrefix + ".no_save_draft")
-              : I18n.t(keyPrefix + ".no_value"),
-            callback: () => {
-              // cancel composer without destroying draft on new draft context
-              if (differentDraft) {
+        const controller = showModal("discard-draft", {
+          model: this.model,
+          modalClass: "discard-draft-modal",
+          title: "post.abandon.title",
+        });
+        controller.setProperties({
+          differentDraft,
+          onDestroyDraft: () => {
+            this.destroyDraft()
+              .then(() => {
                 this.model.clearState();
                 this.close();
+              })
+              .finally(() => {
                 resolve();
-              }
-
-              reject();
-            }
+              });
           },
-          {
-            label: I18n.t(keyPrefix + ".yes_value"),
-            class: "btn-danger",
-            callback: result => {
-              if (result) {
-                this.destroyDraft()
-                  .then(() => {
-                    this.model.clearState();
-                    this.close();
-                  })
-                  .finally(() => {
-                    resolve();
-                  });
-              } else {
-                resolve();
-              }
+          onSaveDraft: () => {
+            // cancel composer without destroying draft on new draft context
+            if (differentDraft) {
+              this.model.clearState();
+              this.close();
+              resolve();
             }
-          }
-        ]);
+
+            reject();
+          },
+        });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
@@ -1139,7 +1188,8 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+        let method = isTesting() ? run : debounce;
+        this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }
   },
@@ -1150,7 +1200,7 @@ export default Controller.extend({
       return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.category_missing"),
-        lastShownAt: lastValidatedAt
+        lastShownAt: lastValidatedAt,
       });
     }
   },
@@ -1167,9 +1217,9 @@ export default Controller.extend({
       return EmberObject.create({
         failed: true,
         reason: I18n.t("composer.error.tags_missing", {
-          count: category.minimum_required_tags
+          count: category.minimum_required_tags,
         }),
-        lastShownAt: lastValidatedAt
+        lastShownAt: lastValidatedAt,
       });
     }
   },
@@ -1212,5 +1262,5 @@ export default Controller.extend({
   @discourseComputed("model.composeState")
   visible(state) {
     return state && state !== "closed";
-  }
+  },
 });

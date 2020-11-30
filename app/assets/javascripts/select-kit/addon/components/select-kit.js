@@ -1,3 +1,4 @@
+import { createPopper } from "@popperjs/core";
 import I18n from "I18n";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -5,7 +6,6 @@ import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
-import PluginApiMixin from "select-kit/mixins/plugin-api";
 import Mixin from "@ember/object/mixin";
 import { isPresent, isEmpty, isNone } from "@ember/utils";
 import {
@@ -14,12 +14,12 @@ import {
   cancel,
   throttle,
   bind,
-  schedule
+  schedule,
 } from "@ember/runloop";
 import { Promise } from "rsvp";
-import {
+import PluginApiMixin, {
   applyContentPluginApiCallbacks,
-  applyOnChangePluginApiCallbacks
+  applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
@@ -28,8 +28,14 @@ export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
 const EMPTY_OBJECT = Object.freeze({});
 const SELECT_KIT_OPTIONS = Mixin.create({
   mergedProperties: ["selectKitOptions"],
-  selectKitOptions: EMPTY_OBJECT
+  selectKitOptions: EMPTY_OBJECT,
 });
+
+function isDocumentRTL() {
+  return (
+    window.getComputedStyle(document.querySelector("html")).direction === "rtl"
+  );
+}
 
 export default Component.extend(
   SELECT_KIT_OPTIONS,
@@ -37,14 +43,13 @@ export default Component.extend(
   UtilsMixin,
   {
     pluginApiIdentifiers: ["select-kit"],
-    layoutName: "select-kit/templates/components/select-kit",
     classNames: ["select-kit"],
     classNameBindings: [
       "selectKit.isLoading:is-loading",
       "selectKit.isExpanded:is-expanded",
-      "selectKit.isDisabled:is-disabled",
+      "selectKit.options.disabled:is-disabled",
       "selectKit.isHidden:is-hidden",
-      "selectKit.hasSelection:has-selection"
+      "selectKit.hasSelection:has-selection",
     ],
     tabindex: 0,
     content: null,
@@ -119,7 +124,7 @@ export default Component.extend(
           onInput: bind(this, this._onInput),
           onClearSelection: bind(this, this._onClearSelection),
           onHover: bind(this, this._onHover),
-          onKeydown: bind(this, this._onKeydownWrapper)
+          onKeydown: bind(this, this._onKeydownWrapper),
         })
       );
     },
@@ -178,8 +183,6 @@ export default Component.extend(
     didUpdateAttrs() {
       this._super(...arguments);
 
-      this.set("selectKit.isDisabled", this.isDisabled || false);
-
       this.handleDeprecations();
     },
 
@@ -198,7 +201,7 @@ export default Component.extend(
       this._super(...arguments);
 
       const computedOptions = {};
-      Object.keys(this.selectKitOptions).forEach(key => {
+      Object.keys(this.selectKitOptions).forEach((key) => {
         const value = this.selectKitOptions[key];
 
         if (
@@ -235,7 +238,7 @@ export default Component.extend(
       this.selectKit.setProperties({
         hasSelection: !isEmpty(this.value),
         noneItem: this._modifyNoSelectionWrapper(),
-        newItem: null
+        newItem: null,
       });
 
       if (this.selectKit.isExpanded) {
@@ -270,17 +273,17 @@ export default Component.extend(
       clearOnClick: false,
       closeOnChange: true,
       limitMatches: null,
-      placement: "bottom-start",
+      placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
       placementStrategy: null,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       castInteger: false,
       preventsClickPropagation: false,
       focusAfterOnChange: true,
-      triggerOnChangeOnTab: true
+      triggerOnChangeOnTab: true,
     },
 
-    autoFilterable: computed("content.[]", "selectKit.filter", function() {
+    autoFilterable: computed("content.[]", "selectKit.filter", function () {
       return (
         this.selectKit.filter &&
         this.options.autoFilterable &&
@@ -288,7 +291,7 @@ export default Component.extend(
       );
     }),
 
-    filterPlaceholder: computed("options.allowAny", function() {
+    filterPlaceholder: computed("options.allowAny", function () {
       return this.options.allowAny
         ? "select_kit.filter_placeholder_with_any"
         : "select_kit.filter_placeholder";
@@ -298,11 +301,11 @@ export default Component.extend(
       "selectedContent.[]",
       "mainCollection.[]",
       "errorsCollection.[]",
-      function() {
-        return this._collections.map(identifier => {
+      function () {
+        return this._collections.map((identifier) => {
           return {
             identifier,
-            content: this.selectKit.modifyContentForCollection(identifier)
+            content: this.selectKit.modifyContentForCollection(identifier),
           };
         });
       }
@@ -318,7 +321,7 @@ export default Component.extend(
       return (
         filter.length > 0 &&
         content &&
-        !content.map(c => this.getValue(c)).includes(filter) &&
+        !content.map((c) => this.getValue(c)).includes(filter) &&
         !makeArray(this.value).includes(filter)
       );
     },
@@ -394,7 +397,7 @@ export default Component.extend(
     _onChangeWrapper(value, items) {
       this.selectKit.set("filter", null);
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (
           !this.selectKit.valueProperty &&
           this.selectKit.noneItem === value
@@ -408,7 +411,7 @@ export default Component.extend(
 
         if (this.multiSelect) {
           items = items.filter(
-            i =>
+            (i) =>
               i !== this.newItem &&
               i !== this.noneItem &&
               this.getValue(i) !== null
@@ -466,7 +469,9 @@ export default Component.extend(
       }
 
       let none = this.selectKit.options.none;
-      if (isNone(none) && !this.selectKit.options.allowAny) return null;
+      if (isNone(none) && !this.selectKit.options.allowAny) {
+        return null;
+      }
 
       if (
         isNone(none) &&
@@ -545,7 +550,7 @@ export default Component.extend(
       let content = this.content || [];
       if (filter) {
         filter = this._normalize(filter);
-        content = content.filter(c => {
+        content = content.filter((c) => {
           const name = this._normalize(this.getName(c));
           return name && name.indexOf(filter) > -1;
         });
@@ -569,7 +574,7 @@ export default Component.extend(
 
       let content = [];
 
-      return Promise.resolve(this.search(filter)).then(result => {
+      return Promise.resolve(this.search(filter)).then((result) => {
         content = content.concat(makeArray(result));
         content = this.selectKit.modifyContent(content).filter(Boolean);
 
@@ -614,7 +619,7 @@ export default Component.extend(
               ? this.itemForValue(this.value, this.mainCollection)
               : this.mainCollection.firstObject,
           isLoading: false,
-          hasNoContent
+          hasNoContent,
         });
 
         this._safeAfterRender(() => {
@@ -743,7 +748,7 @@ export default Component.extend(
 
       this.selectKit.setProperties({
         isExpanded: false,
-        filter: null
+        filter: null,
       });
     },
 
@@ -773,8 +778,7 @@ export default Component.extend(
 
         const verticalOffset = this.multiSelect ? 0 : 3;
 
-        /* global Popper:true */
-        this.popper = Popper.createPopper(anchor, popper, {
+        this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
           strategy: placementStrategy,
           placement: this.selectKit.options.placement,
@@ -782,8 +786,8 @@ export default Component.extend(
             {
               name: "offset",
               options: {
-                offset: [0, verticalOffset]
-              }
+                offset: [0, verticalOffset],
+              },
             },
             {
               name: "applySmallScreenOffset",
@@ -794,7 +798,7 @@ export default Component.extend(
                   let { x } = state.elements.reference.getBoundingClientRect();
                   state.modifiersData.popperOffsets.x = -x + 10;
                 }
-              }
+              },
             },
             {
               name: "applySmallScreenMaxWidth",
@@ -810,14 +814,15 @@ export default Component.extend(
                     if (this.multiSelect) {
                       state.styles.popper.width = `${this.element.offsetWidth}px`;
                     } else {
-                      state.styles.popper.width = `${innerModal.clientWidth -
-                        20}px`;
+                      state.styles.popper.width = `${
+                        innerModal.clientWidth - 20
+                      }px`;
                     }
                   }
                 } else {
                   state.styles.popper.width = `${window.innerWidth - 20}px`;
                 }
-              }
+              },
             },
             {
               name: "sameWidth",
@@ -829,13 +834,13 @@ export default Component.extend(
               },
               effect: ({ state }) => {
                 state.elements.popper.style.minWidth = `${state.elements.reference.offsetWidth}px`;
-              }
+              },
             },
             {
               name: "positionWrapper",
               phase: "afterWrite",
               enabled: true,
-              fn: data => {
+              fn: (data) => {
                 const wrapper = this.element.querySelector(
                   ".select-kit-wrapper"
                 );
@@ -863,16 +868,16 @@ export default Component.extend(
                   wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
                 }
-              }
-            }
-          ]
+              },
+            },
+          ],
         });
       }
 
       this.selectKit.setProperties({
         isExpanded: true,
         isFilterExpanded:
-          this.selectKit.options.filterable || this.selectKit.options.allowAny
+          this.selectKit.options.filterable || this.selectKit.options.allowAny,
       });
 
       this.triggerSearch();
@@ -966,7 +971,7 @@ export default Component.extend(
         this.actions.onChange =
           this.attrs.onSelect ||
           this.actions.onSelect ||
-          (value => this.set("value", value));
+          ((value) => this.set("value", value));
       }
     },
 
@@ -983,7 +988,7 @@ export default Component.extend(
         allowUncategorized: "options.allowUncategorized",
         none: "options.none",
         rootNone: "options.none",
-        isDisabled: "options.isDisabled",
+        disabled: "options.disabled",
         rootNoneLabel: "options.none",
         showFullTitle: "options.showFullTitle",
         title: "options.translatedNone",
@@ -991,10 +996,10 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
-        castInteger: "options.castInteger"
+        castInteger: "options.castInteger",
       };
 
-      Object.keys(migrations).forEach(from => {
+      Object.keys(migrations).forEach((from) => {
         const to = migrations[from];
         if (this.get(from) && !this.get(to)) {
           this._deprecated(
@@ -1004,6 +1009,6 @@ export default Component.extend(
           this.set(to, this.get(from));
         }
       });
-    }
+    },
   }
 );

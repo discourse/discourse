@@ -237,5 +237,4 @@ describe CategoryList do
       end
     end
   end
-
 end

@@ -14,7 +14,7 @@
           <input id="choose-topic-{{t.id}}" {{action "chooseTopic" t}} type="radio" name="choose_topic_id">
           {{raw "topic-status" topic=t}}
           <span class="topic-title">
-            {{t.title}}
+            {{replace-emoji t.fancy_title}}
           </span>
           <span class="topic-categories">
             {{bound-category-link t.category recursive=true hideParent=true}}

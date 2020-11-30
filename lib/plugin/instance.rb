@@ -148,22 +148,33 @@ class Plugin::Instance
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def replace_flags(settings: ::FlagSettings.new)
+  def replace_flags(settings: ::FlagSettings.new, score_type_names: [])
     next_flag_id = ReviewableScore.types.values.max + 1
 
-    yield(settings, next_flag_id)
+    yield(settings, next_flag_id) if block_given?
 
     reloadable_patch do |plugin|
       ::PostActionType.replace_flag_settings(settings)
       ::ReviewableScore.reload_types
+      ::ReviewableScore.add_new_types(score_type_names)
     end
   end
 
   def whitelist_staff_user_custom_field(field)
+    Discourse.deprecate("whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.", drop_from: "2.6")
+    allow_staff_user_custom_field(field)
+  end
+
+  def allow_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
   def whitelist_public_user_custom_field(field)
+    Discourse.deprecate("whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.", drop_from: "2.6")
+    allow_public_user_custom_field(field)
+  end
+
+  def allow_public_user_custom_field(field)
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
@@ -179,6 +190,33 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom search order. Example usage:
+  #   Search.advanced_order(:chars) do |posts|
+  #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+  #   end
+  def register_search_advanced_order(trigger, &block)
+    Search.advanced_order(trigger, &block)
+  end
+
+  # Allows to define custom search filters. Example usage:
+  #   Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
+  #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+  #   end
+  def register_search_advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, &block)
+  end
+
+  # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
+  # Example usage:
+  #   register_search_topic_eager_load do |opts|
+  #     %i(example_table)
+  #   end
+  # OR
+  #   register_search_topic_eager_load(%i(example_table))
+  def register_search_topic_eager_load(tables = nil, &block)
+    Search.custom_topic_eager_load(tables, &block)
+  end
+
   # Request a new size for topic thumbnails
   # Will respect plugin enabled setting is enabled
   # Size should be an array with two elements [max_width, max_height]
@@ -191,8 +229,8 @@ class Plugin::Instance
 
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
-      AvatarLookup.lookup_columns << column
-      AvatarLookup.lookup_columns.uniq!
+      UserLookup.lookup_columns << column
+      UserLookup.lookup_columns.uniq!
     end
   end
 
@@ -247,7 +285,7 @@ class Plugin::Instance
       hidden_method_name = :"#{method_name}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(callback, options) do |*args|
+      klass.public_send(callback, **options) do |*args|
         public_send(hidden_method_name, *args) if plugin.enabled?
       end
 
@@ -255,11 +293,25 @@ class Plugin::Instance
     end
   end
 
-  # Add a post_custom_fields_whitelister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_whitelister(&block)
+    Discourse.deprecate("topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.", drop_from: "2.6")
+    topic_view_post_custom_fields_allowlister(&block)
+  end
+
+  # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
+  def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
-      ::TopicView.add_post_custom_fields_whitelister do |user|
+      ::TopicView.add_post_custom_fields_allowlister do |user|
         plugin.enabled? ? block.call(user) : []
+      end
+    end
+  end
+
+  # Allows to add additional user_ids to the list of people notified when doing a post revision
+  def add_post_revision_notifier_recipients(&block)
+    reloadable_patch do |plugin|
+      ::PostActionNotifier.add_post_revision_notifier_recipients do |post_revision|
+        plugin.enabled? ? block.call(post_revision) : []
       end
     end
   end
@@ -737,6 +789,76 @@ class Plugin::Instance
     end
   end
 
+  def add_api_key_scope(resource, action)
+    DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
+  end
+
+  # Register a new UserApiKey scope, and its allowed routes. Scope will be prefixed
+  # with the (parametetized) plugin name followed by a colon.
+  #
+  # For example, if discourse-awesome-plugin registered this:
+  #
+  # add_user_api_key_scope(:read_my_route,
+  #   methods: :get,
+  #   actions: "mycontroller#myaction",
+  #   formats: :ics,
+  #   parameters: :testparam
+  # )
+  #
+  # The scope registered would be `discourse-awesome-plugin:read_my_route`
+  #
+  # Multiple matchers can be attached by supplying an array of parameter hashes
+  #
+  # See UserApiKeyScope::SCOPES for more examples
+  # And lib/route_matcher.rb for the route matching logic
+  def add_user_api_key_scope(scope_name, matcher_parameters)
+    raise ArgumentError.new("scope_name must be a symbol") if !scope_name.is_a?(Symbol)
+    matcher_parameters = [matcher_parameters] if !matcher_parameters.is_a?(Array)
+
+    prefixed_scope_name = :"#{(name || directory_name).parameterize}:#{scope_name}"
+    DiscoursePluginRegistry.register_user_api_key_scope_mapping(
+      {
+        prefixed_scope_name => matcher_parameters&.map { |m| RouteMatcher.new(**m) }
+      }, self)
+  end
+
+  # Register a route which can be authenticated using an api key or user api key
+  # in a query parameter rather than a header. For example:
+  #
+  # add_api_parameter_route(
+  #   methods: :get,
+  #   actions: "users#bookmarks",
+  #   formats: :ics
+  # )
+  #
+  # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
+  # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
+  def add_api_parameter_route(method: nil, methods: nil,
+                              route: nil, actions: nil,
+                              format: nil, formats: nil)
+
+    if Array(format).include?("*")
+      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7")
+      # Old API used * as wildcard. New api uses `nil`
+      format = nil
+    end
+
+    # Backwards compatibility with old parameter names:
+    if method || route || format
+      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7")
+      methods ||= method
+      actions ||= route
+      formats ||= format
+    end
+
+    DiscoursePluginRegistry.register_api_parameter_route(
+      RouteMatcher.new(
+        methods: methods,
+        actions: actions,
+        formats: formats
+      ), self)
+  end
+
   protected
 
   def self.js_path
@@ -764,8 +886,8 @@ class Plugin::Instance
 
     locales.each do |locale, opts|
       opts = opts.dup
-      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
-      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
+      opts[:client_locale_file] = Dir["#{root_path}/config/locales/client*.#{locale}.yml"].first || ""
+      opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first || ""
       opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
@@ -838,5 +960,9 @@ class Plugin::Instance
       return [locale, filename] if File.exist?(filename)
     end
     nil
+  end
+
+  def register_permitted_bulk_action_parameter(name)
+    DiscoursePluginRegistry.register_permitted_bulk_action_parameter(name, self)
   end
 end

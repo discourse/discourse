@@ -5,6 +5,6 @@ export default Component.extend({
   actions: {
     remove() {
       this.removeAction(this.member);
-    }
-  }
+    },
+  },
 });

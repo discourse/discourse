@@ -19,9 +19,5 @@ export default Mixin.create({
       this.modal.send("closeModal");
       this.set("panels", []);
     },
-
-    onSelectPanel(panel) {
-      this.set("selectedPanel", panel);
-    }
-  }
+  },
 });

@@ -172,6 +172,8 @@ RSpec.configure do |config|
   config.include IntegrationHelpers, type: :request
   config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
+  config.include SidekiqHelpers
+  config.include UploadsHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!
@@ -213,9 +215,18 @@ RSpec.configure do |config|
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
-    SiteSetting.provider = SiteSettings::LocalProcessProvider.new
+    SiteSetting.provider = TestLocalProcessProvider.new
 
     WebMock.disable_net_connect!
+  end
+
+  class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
+    attr_accessor :current_site
+
+    def initialize
+      super
+      self.current_site = "test"
+    end
   end
 
   class DiscourseMockRedis < MockRedis
@@ -254,6 +265,13 @@ RSpec.configure do |config|
   end
 
   config.before :each, &TestSetup.method(:test_setup)
+
+  config.around :each do |example|
+    before_event_count = DiscourseEvent.events.values.sum(&:count)
+    example.run
+    after_event_count = DiscourseEvent.events.values.sum(&:count)
+    expect(before_event_count).to eq(after_event_count), "DiscourseEvent registrations were not cleaned up"
+  end
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation

@@ -18,7 +18,20 @@ class HighlightJsController < ApplicationController
       # note, this can be slightly optimised by caching the bundled file, it cuts down on N reads
       # our nginx config caches this so in practical terms it does not really matter and keeps
       # code simpler
-      highlight_js = HighlightJs.bundle(SiteSetting.highlighted_languages.split("|"))
+      languages = SiteSetting.highlighted_languages.split('|')
+
+      # TODO: some languages require to be loaded before others
+      # this limitation should be fixed in highlight js 11, remove it when available
+      prepended_languages = ['csharp', 'c', 'c-like']
+      prepended_languages.each do |lang|
+        if languages.include?(lang)
+          languages.insert(0, languages.delete(lang))
+        else
+          languages.insert(0, lang)
+        end
+      end
+
+      highlight_js = HighlightJs.bundle(languages)
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate
       response.headers["Content-Length"] = highlight_js.bytesize.to_s

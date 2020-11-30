@@ -144,6 +144,11 @@ class PostRevisor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
 
+    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit?
+      @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
+      return false
+    end
+
     @version_changed = false
     @post_successfully_saved = true
 
@@ -157,6 +162,10 @@ class PostRevisor
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
+
+    if @post.incoming_email&.imap_uid
+      @post.incoming_email&.update(imap_sync: true)
+    end
 
     old_raw = @post.raw
 
@@ -188,8 +197,13 @@ class PostRevisor
       PostLocker.new(@post, @editor).lock
     end
 
-    # We log staff edits to posts
-    if @editor.staff? && @editor.id != @post.user_id && @fields.has_key?('raw') && !@opts[:skip_staff_log]
+    # We log staff/group moderator edits to posts
+    if (
+      (@editor.staff? || (@post.is_category_description? && guardian.can_edit_category_description?(@post.topic.category))) &&
+      @editor.id != @post.user_id &&
+      @fields.has_key?('raw') &&
+      !@opts[:skip_staff_log]
+    )
       StaffActionLogger.new(@editor).log_post_edit(
         @post,
         old_raw: old_raw
@@ -377,6 +391,7 @@ class PostRevisor
     @post.extract_quoted_post_numbers
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post.link_post_uploads
     @post.save_reply_relationships
 
     # post owner changed
@@ -627,6 +642,10 @@ class PostRevisor
 
   def successfully_saved_post_and_topic
     @post_successfully_saved && !@topic_changes.errored?
+  end
+
+  def guardian
+    @guardian ||= Guardian.new(@editor)
   end
 
 end

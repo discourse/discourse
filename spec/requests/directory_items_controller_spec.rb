@@ -50,6 +50,7 @@ describe DirectoryItemsController do
 
       expect(json['directory_items'].length).to eq(4)
       expect(json['meta']['total_rows_directory_items']).to eq(4)
+      expect(json['meta']['load_more_directory_items']).to include('.json')
     end
 
     it "fails when the directory is disabled" do
@@ -57,6 +58,25 @@ describe DirectoryItemsController do
 
       get '/directory_items.json', params: { period: 'all' }
       expect(response).not_to be_successful
+    end
+
+    it "sort username with asc as a parameter" do
+      get '/directory_items.json', params: { asc: true, order: 'username', period: 'all' }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      names = json['directory_items'].map { |item| item['user']['username'] }
+      expect(names).to eq(names.sort)
+    end
+
+    it "sort username without asc as a parameter" do
+      get '/directory_items.json', params: { order: 'username', period: 'all' }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      names = json['directory_items'].map { |item| item['user']['username'] }
+
+      expect(names).to eq(names.sort.reverse)
     end
 
     it "finds user by name" do
@@ -118,6 +138,15 @@ describe DirectoryItemsController do
       sign_in(user)
       get '/directory_items.json', params: { period: 'all', group: group.name }
       expect(response.status).to eq(403)
+    end
+
+    it "does not force-include self in group-filtered results" do
+      me = Fabricate(:user)
+      DirectoryItem.refresh!
+      sign_in(me)
+
+      get '/directory_items.json', params: { period: 'all', group: group.name }
+      expect(response.parsed_body['directory_items'].length).to eq(2)
     end
   end
 end

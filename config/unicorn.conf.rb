@@ -4,6 +4,7 @@
 
 if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   require_relative '../lib/discourse_logstash_logger'
+  require_relative '../lib/unicorn_logstash_patch'
   logger DiscourseLogstashLogger.logger(uri: ENV['LOGSTASH_UNICORN_URI'], type: :unicorn)
 end
 
@@ -101,77 +102,135 @@ before_fork do |server, worker|
         Demon::Sidekiq.kill("USR1")
         old_handler.call
       end
+    end
 
-      class ::Unicorn::HttpServer
-        alias :master_sleep_orig :master_sleep
+    if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+      puts "Starting up EmailSync demon"
+      Demon::EmailSync.start
+      Signal.trap("SIGTSTP") do
+        STDERR.puts "#{Time.now}: Issuing stop to EmailSync"
+        Demon::EmailSync.stop
+      end
+    end
 
-        def max_rss
-          rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
-            .split("\n")
-            .map(&:to_i)
-            .max
+    class ::Unicorn::HttpServer
+      alias :master_sleep_orig :master_sleep
 
-          rss ||= 0
+      def max_sidekiq_rss
+        rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
+          .split("\n")
+          .map(&:to_i)
+          .max
 
-          rss * 1024
-        end
+        rss ||= 0
 
-        def max_allowed_size
-          [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes
-        end
+        rss * 1024
+      end
 
-        def out_of_memory?
-          max_rss > max_allowed_size
-        end
+      def max_allowed_sidekiq_rss
+        [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes
+      end
 
-        def force_kill_rogue_sidekiq
-          info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
-          info.split("\n").each do |row|
-            pid, mem = row.split(" ").map(&:to_i)
-            if pid > 0 && (mem * 1024) > max_allowed_size
-              Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
-              Process.kill("KILL", pid) rescue nil
-            end
+      def force_kill_rogue_sidekiq
+        info = `ps -eo pid,rss,args | grep sidekiq | grep -v grep | awk '{print $1,$2}'`
+        info.split("\n").each do |row|
+          pid, mem = row.split(" ").map(&:to_i)
+          if pid > 0 && (mem * 1024) > max_allowed_sidekiq_rss
+            Rails.logger.warn "Detected rogue Sidekiq pid #{pid} mem #{mem * 1024}, killing"
+            Process.kill("KILL", pid) rescue nil
           end
         end
+      end
 
-        def check_sidekiq_heartbeat
-          @sidekiq_heartbeat_interval ||= 30.minutes
-          @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
+      def check_sidekiq_heartbeat
+        @sidekiq_heartbeat_interval ||= 30.minutes
+        @sidekiq_next_heartbeat_check ||= Time.now.to_i + @sidekiq_heartbeat_interval
 
-          if @sidekiq_next_heartbeat_check < Time.now.to_i
+        if @sidekiq_next_heartbeat_check < Time.now.to_i
 
-            last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-            restart = false
+          last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
+          restart = false
 
-            if out_of_memory?
-              Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(max_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
-              restart = true
-            end
-
-            if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
-              STDERR.puts "Sidekiq heartbeat test failed, restarting"
-              Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
-
-              restart = true
-            end
-            @sidekiq_next_heartbeat_check = Time.now.to_i + @sidekiq_heartbeat_interval
-
-            if restart
-              Demon::Sidekiq.restart
-              sleep 10
-              force_kill_rogue_sidekiq
-            end
-            Discourse.redis.close
+          sidekiq_rss = max_sidekiq_rss
+          if sidekiq_rss > max_allowed_sidekiq_rss
+            Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(sidekiq_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
+            restart = true
           end
+
+          if last_heartbeat < Time.now.to_i - @sidekiq_heartbeat_interval
+            STDERR.puts "Sidekiq heartbeat test failed, restarting"
+            Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
+
+            restart = true
+          end
+          @sidekiq_next_heartbeat_check = Time.now.to_i + @sidekiq_heartbeat_interval
+
+          if restart
+            Demon::Sidekiq.restart
+            sleep 10
+            force_kill_rogue_sidekiq
+          end
+          Discourse.redis.close
+        end
+      end
+
+      def max_email_sync_rss
+        return 0 if Demon::EmailSync.demons.empty?
+
+        email_sync_pids = Demon::EmailSync.demons.map { |uid, demon| demon.pid }
+        return 0 if email_sync_pids.empty?
+
+        rss = `ps -eo pid,rss,args | grep '#{email_sync_pids.join('|')}' | grep -v grep | awk '{print $2}'`
+          .split("\n")
+          .map(&:to_i)
+          .max
+
+        (rss || 0) * 1024
+      end
+
+      def max_allowed_email_sync_rss
+        [ENV['UNICORN_EMAIL_SYNC_MAX_RSS'].to_i, 500].max.megabytes
+      end
+
+      def check_email_sync_heartbeat
+        # Skip first check to let process warm up
+        @email_sync_next_heartbeat_check ||= (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
+
+        return if @email_sync_next_heartbeat_check > Time.now.to_i
+        @email_sync_next_heartbeat_check = (Time.now + Demon::EmailSync::HEARTBEAT_INTERVAL).to_i
+
+        restart = false
+
+        # Restart process if it does not respond anymore
+        last_heartbeat_ago = Time.now.to_i - Discourse.redis.get(Demon::EmailSync::HEARTBEAT_KEY).to_i
+        if last_heartbeat_ago > Demon::EmailSync::HEARTBEAT_INTERVAL.to_i
+          STDERR.puts("EmailSync heartbeat test failed (last heartbeat was #{last_heartbeat_ago}s ago), restarting")
+          restart = true
         end
 
-        def master_sleep(sec)
+        # Restart process if memory usage is too high
+        email_sync_rss = max_email_sync_rss
+        if email_sync_rss > max_allowed_email_sync_rss
+          STDERR.puts("EmailSync is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(email_sync_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
+          restart = true
+        end
+
+        Demon::EmailSync.restart if restart
+      end
+
+      def master_sleep(sec)
+        sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+        if sidekiqs > 0
           Demon::Sidekiq.ensure_running
           check_sidekiq_heartbeat
-
-          master_sleep_orig(sec)
         end
+
+        if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
+          Demon::EmailSync.ensure_running
+          check_email_sync_heartbeat
+        end
+
+        master_sleep_orig(sec)
       end
     end
 

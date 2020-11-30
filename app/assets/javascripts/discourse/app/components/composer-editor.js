@@ -1,27 +1,21 @@
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
-import { debounce, later, next, schedule, throttle } from "@ember/runloop";
+import { run, debounce, later, next, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import userSearch from "discourse/lib/user-search";
 import discourseComputed, {
   observes,
-  on
+  on,
 } from "discourse-common/utils/decorators";
 import {
   linkSeenMentions,
-  fetchUnseenMentions
+  fetchUnseenMentions,
 } from "discourse/lib/link-mentions";
 import {
-  linkSeenCategoryHashtags,
-  fetchUnseenCategoryHashtags
-} from "discourse/lib/link-category-hashtags";
-import {
-  linkSeenTagHashtags,
-  fetchUnseenTagHashtags
-} from "discourse/lib/link-tag-hashtag";
+  linkSeenHashtags,
+  fetchUnseenHashtags,
+} from "discourse/lib/link-hashtags";
 import Composer from "discourse/models/composer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
-import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -29,23 +23,25 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import {
   tinyAvatar,
   formatUsername,
-  clipboardData,
+  clipboardHelpers,
   caretPosition,
-  inCodeBlock
+  inCodeBlock,
 } from "discourse/lib/utilities";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   validateUploadedFiles,
   authorizesOneOrMoreImageExtensions,
   getUploadMarkdown,
-  displayErrorForUpload
+  displayErrorForUpload,
 } from "discourse/lib/uploads";
+import bootbox from "bootbox";
 
 import {
   cacheShortUploadUrl,
-  resolveAllShortUrls
+  resolveAllShortUrls,
 } from "pretty-text/upload-short-url";
 import { isTesting } from "discourse-common/config/environment";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -53,7 +49,7 @@ const uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
   uploadHandlers.push({
     extensions,
-    method
+    method,
   });
 }
 
@@ -85,7 +81,10 @@ export default Component.extend({
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
     } else {
-      const key = authorizesOneOrMoreImageExtensions(this.currentUser.staff)
+      const key = authorizesOneOrMoreImageExtensions(
+        this.currentUser.staff,
+        this.siteSettings
+      )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
       return `composer.${key}`;
@@ -160,7 +159,7 @@ export default Component.extend({
             return quotedPost.primary_group_name;
           }
         }
-      }
+      },
     };
   },
 
@@ -174,7 +173,7 @@ export default Component.extend({
       term,
       topicId,
       categoryId,
-      includeGroups: true
+      includeGroups: true,
     });
   },
 
@@ -186,15 +185,17 @@ export default Component.extend({
     if (this.siteSettings.enable_mentions) {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: term => this.userSearchTerm.call(this, term),
+        dataSource: (term) => this.userSearchTerm.call(this, term),
         key: "@",
-        transformComplete: v => v.username || v.name,
-        afterComplete() {
+        transformComplete: (v) => v.username || v.name,
+        afterComplete: (value) => {
+          this.composer.set("reply", value);
+
           // ensures textarea scroll position is correct
           schedule("afterRender", () => $input.blur().focus());
         },
-        triggerRule: textarea =>
-          !inCodeBlock(textarea.value, caretPosition(textarea))
+        triggerRule: (textarea) =>
+          !inCodeBlock(textarea.value, caretPosition(textarea)),
       });
     }
 
@@ -251,7 +252,7 @@ export default Component.extend({
       return EmberObject.create({
         failed: true,
         reason,
-        lastShownAt: lastValidatedAt
+        lastShownAt: lastValidatedAt,
       });
     }
   },
@@ -265,7 +266,7 @@ export default Component.extend({
     // and add order nr to the next one: [Uplodading: test.png(1)...]
     const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?"
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
     const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
@@ -313,13 +314,15 @@ export default Component.extend({
   },
 
   _initInputPreviewSync($input, $preview) {
-    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.on(event, this, this._resetShouldBuildScrollMap);
     });
 
     schedule("afterRender", () => {
       $input.on("touchstart mouseenter", () => {
-        if (!$preview.is(":visible")) return;
+        if (!$preview.is(":visible")) {
+          return;
+        }
         $preview.off("scroll");
 
         $input.on("scroll", () => {
@@ -349,13 +352,13 @@ export default Component.extend({
   _teardownInputPreviewSync() {
     [
       $(this.element.querySelector(".d-editor-input")),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    ].forEach($element => {
+      $(this.element.querySelector(".d-editor-preview-wrapper")),
+    ].forEach(($element) => {
       $element.off("mouseenter touchstart");
       $element.off("scroll");
     });
 
-    REBUILD_SCROLL_MAP_EVENTS.forEach(event => {
+    REBUILD_SCROLL_MAP_EVENTS.forEach((event) => {
       this.appEvents.off(event, this, this._resetShouldBuildScrollMap);
     });
   },
@@ -371,7 +374,7 @@ export default Component.extend({
         "font-size": $input.css("font-size"),
         "font-family": $input.css("font-family"),
         "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space")
+        "white-space": $input.css("white-space"),
       })
       .appendTo("body");
 
@@ -381,7 +384,7 @@ export default Component.extend({
     $input
       .val()
       .split("\n")
-      .forEach(text => {
+      .forEach((text) => {
         linesMap.push(numberOfLines);
 
         if (text.length === 0) {
@@ -494,7 +497,9 @@ export default Component.extend({
   },
 
   _syncPreviewAndEditorScroll($input, $preview, scrollMap) {
-    if (scrollMap.length < 1) return;
+    if (scrollMap.length < 1) {
+      return;
+    }
 
     let scrollTop;
     const previewScrollTop = $preview.scrollTop();
@@ -504,7 +509,7 @@ export default Component.extend({
     } else {
       const lineHeight = parseFloat($input.css("line-height"));
       scrollTop =
-        lineHeight * scrollMap.findIndex(offset => offset > previewScrollTop);
+        lineHeight * scrollMap.findIndex((offset) => offset > previewScrollTop);
     }
 
     $input.stop(true).animate({ scrollTop }, 100, "linear");
@@ -520,46 +525,13 @@ export default Component.extend({
     });
   },
 
-  _renderUnseenCategoryHashtags($preview, unseen) {
-    fetchUnseenCategoryHashtags(unseen).then(() => {
-      linkSeenCategoryHashtags($preview);
-    });
-  },
-
-  _renderUnseenTagHashtags($preview, unseen) {
-    fetchUnseenTagHashtags(unseen).then(() => {
-      linkSeenTagHashtags($preview);
-    });
-  },
-
-  _loadInlineOneboxes(inline) {
-    applyInlineOneboxes(inline, ajax, {
-      categoryId: this.get("composer.category.id"),
-      topicId: this.get("composer.topic.id")
-    });
-  },
-
-  _loadOneboxes(oneboxes) {
-    const post = this.get("composer.post");
-    let refresh = false;
-
-    // If we are editing a post, we'll refresh its contents once.
-    if (post && !post.get("refreshedPost")) {
-      refresh = true;
-      post.set("refreshedPost", true);
-    }
-
-    Object.values(oneboxes).forEach(onebox => {
-      onebox.forEach($onebox => {
-        load({
-          elem: $onebox,
-          refresh,
-          ajax,
-          categoryId: this.get("composer.category.id"),
-          topicId: this.get("composer.topic.id")
-        });
+  _renderUnseenHashtags($preview) {
+    const unseen = linkSeenHashtags($preview);
+    if (unseen.length > 0) {
+      fetchUnseenHashtags(unseen).then(() => {
+        linkSeenHashtags($preview);
       });
-    });
+    }
   },
 
   _warnMentionedGroups($preview) {
@@ -573,8 +545,8 @@ export default Component.extend({
             {
               name: name,
               user_count: $e.data("mentionable-user-count"),
-              max_mentions: $e.data("max-mentions")
-            }
+              max_mentions: $e.data("max-mentions"),
+            },
           ]);
           found.push(name);
         }
@@ -630,7 +602,7 @@ export default Component.extend({
         this.setProperties({
           uploadProgress: 0,
           isUploading: false,
-          isCancellable: false
+          isCancellable: false,
         });
       }
       if (removePlaceholder) {
@@ -653,17 +625,20 @@ export default Component.extend({
     $element.fileupload({
       url: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       dataType: "json",
-      pasteZone: $element
+      pasteZone: $element,
     });
 
-    $element.on("fileuploadpaste", e => {
+    $element.on("fileuploadpaste", (e) => {
       this._pasted = true;
 
       if (!$(".d-editor-input").is(":focus")) {
         return;
       }
 
-      const { canUpload, canPasteHtml, types } = clipboardData(e, true);
+      const { canUpload, canPasteHtml, types } = clipboardHelpers(e, {
+        siteSettings: this.siteSettings,
+        canUpload: true,
+      });
 
       if (!canUpload || canPasteHtml || types.includes("text/plain")) {
         e.preventDefault();
@@ -676,13 +651,15 @@ export default Component.extend({
       // Limit the number of simultaneous uploads
       if (max > 0 && data.files.length > max) {
         bootbox.alert(
-          I18n.t("post.errors.too_many_dragged_and_dropped_files", { max })
+          I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            count: max,
+          })
         );
         return false;
       }
 
       // Look for a matching file upload handler contributed from a plugin
-      const matcher = handler => {
+      const matcher = (handler) => {
         const ext = handler.extensions.join("|");
         const regex = new RegExp(`\\.(${ext})$`, "i");
         return regex.test(data.files[0].name);
@@ -699,79 +676,94 @@ export default Component.extend({
       const isPrivateMessage = this.get("composer.privateMessage");
 
       data.formData = { type: "composer" };
-      if (isPrivateMessage) data.formData.for_private_message = true;
-      if (this._pasted) data.formData.pasted = true;
+      if (isPrivateMessage) {
+        data.formData.for_private_message = true;
+      }
+      if (this._pasted) {
+        data.formData.pasted = true;
+      }
 
       const opts = {
         user: this.currentUser,
+        siteSettings: this.siteSettings,
         isPrivateMessage,
         allowStaffToUploadAnyFileInPm: this.siteSettings
-          .allow_staff_to_upload_any_file_in_pm
+          .allow_staff_to_upload_any_file_in_pm,
       };
 
       const isUploading = validateUploadedFiles(data.files, opts);
 
-      this.setProperties({ uploadProgress: 0, isUploading });
+      run(() => {
+        this.setProperties({ uploadProgress: 0, isUploading });
+      });
 
       return isUploading;
     });
 
     $element.on("fileuploadprogressall", (e, data) => {
-      this.set(
-        "uploadProgress",
-        parseInt((data.loaded / data.total) * 100, 10)
-      );
+      run(() => {
+        this.set(
+          "uploadProgress",
+          parseInt((data.loaded / data.total) * 100, 10)
+        );
+      });
     });
 
     $element.on("fileuploadsend", (e, data) => {
-      this._pasted = false;
-      this._validUploads++;
+      run(() => {
+        this._pasted = false;
+        this._validUploads++;
 
-      this._setUploadPlaceholderSend(data);
+        this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
+        this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
-      if (data.xhr && data.originalFiles.length === 1) {
-        this.set("isCancellable", true);
-        this._xhr = data.xhr();
-      }
+        if (data.xhr && data.originalFiles.length === 1) {
+          this.set("isCancellable", true);
+          this._xhr = data.xhr();
+        }
+      });
     });
 
     $element.on("fileuploaddone", (e, data) => {
-      let upload = data.result;
-      this._setUploadPlaceholderDone(data);
-      if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = uploadMarkdownResolvers.reduce(
-          (md, resolver) => resolver(upload) || md,
-          getUploadMarkdown(upload)
-        );
+      run(() => {
+        let upload = data.result;
+        this._setUploadPlaceholderDone(data);
+        if (!this._xhr || !this._xhr._userCancelled) {
+          const markdown = uploadMarkdownResolvers.reduce(
+            (md, resolver) => resolver(upload) || md,
+            getUploadMarkdown(upload)
+          );
 
-        cacheShortUploadUrl(upload.short_url, upload);
-        this.appEvents.trigger(
-          "composer:replace-text",
-          this.uploadPlaceholder.trim(),
-          markdown
-        );
-        this._resetUpload(false);
-      } else {
-        this._resetUpload(true);
-      }
+          cacheShortUploadUrl(upload.short_url, upload);
+          this.appEvents.trigger(
+            "composer:replace-text",
+            this.uploadPlaceholder.trim(),
+            markdown
+          );
+          this._resetUpload(false);
+        } else {
+          this._resetUpload(true);
+        }
+      });
     });
 
     $element.on("fileuploadfail", (e, data) => {
-      this._setUploadPlaceholderDone(data);
-      this._resetUpload(true);
+      run(() => {
+        this._setUploadPlaceholderDone(data);
+        this._resetUpload(true);
 
-      const userCancelled = this._xhr && this._xhr._userCancelled;
-      this._xhr = null;
+        const userCancelled = this._xhr && this._xhr._userCancelled;
+        this._xhr = null;
 
-      if (!userCancelled) {
-        displayErrorForUpload(data);
-      }
+        if (!userCancelled) {
+          displayErrorForUpload(data, this.siteSettings);
+        }
+      });
     });
 
     if (this.site.mobileView) {
-      $("#reply-control .mobile-file-upload").on("click.uploader", function() {
+      $("#reply-control .mobile-file-upload").on("click.uploader", function () {
         // redirect the click on the hidden file input
         $("#mobile-uploader").click();
       });
@@ -791,13 +783,8 @@ export default Component.extend({
     // All matches are whitespace tolerant as long it's still valid markdown.
     // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
     const imageScaleRegex = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
-    $preview.off("click", ".scale-btn").on("click", ".scale-btn", e => {
-      const index = parseInt(
-        $(e.target)
-          .parent()
-          .attr("data-image-index"),
-        10
-      );
+    $preview.off("click", ".scale-btn").on("click", ".scale-btn", (e) => {
+      const index = parseInt($(e.target).parent().attr("data-image-index"), 10);
 
       const scale = e.target.attributes["data-scale"].value;
       const matchingPlaceholder = this.get("composer.reply").match(
@@ -806,22 +793,24 @@ export default Component.extend({
 
       if (matchingPlaceholder) {
         const match = matchingPlaceholder[index];
-        if (!match) {
-          return;
+
+        if (match) {
+          const replacement = match.replace(
+            imageScaleRegex,
+            `![$1|$2, ${scale}%$4]($5)`
+          );
+
+          this.appEvents.trigger(
+            "composer:replace-text",
+            matchingPlaceholder[index],
+            replacement,
+            { regex: imageScaleRegex, index }
+          );
         }
-
-        const replacement = match.replace(
-          imageScaleRegex,
-          `![$1|$2, ${scale}%$4]($5)`
-        );
-
-        this.appEvents.trigger(
-          "composer:replace-text",
-          matchingPlaceholder[index],
-          replacement,
-          { regex: imageScaleRegex, index }
-        );
       }
+
+      e.preventDefault();
+      return;
     });
   },
 
@@ -850,8 +839,9 @@ export default Component.extend({
       );
     });
 
-    if (this._enableAdvancedEditorPreviewSync())
+    if (this._enableAdvancedEditorPreviewSync()) {
       this._teardownInputPreviewSync();
+    }
   },
 
   showUploadSelector(toolbarEvent) {
@@ -888,7 +878,7 @@ export default Component.extend({
         icon: "far-comment",
         sendAction: this.importQuote,
         title: "composer.quote_post_title",
-        unshift: true
+        unshift: true,
       });
 
       if (this.allowUpload && this.uploadIcon && !this.site.mobileView) {
@@ -897,7 +887,7 @@ export default Component.extend({
           group: "insertions",
           icon: this.uploadIcon,
           title: "upload",
-          sendAction: this.showUploadModal
+          sendAction: this.showUploadModal,
         });
       }
 
@@ -907,7 +897,7 @@ export default Component.extend({
         icon: "cog",
         title: "composer.options",
         sendAction: this.onExpandPopupMenuOptions.bind(this),
-        popupMenu: true
+        popupMenu: true,
       });
     },
 
@@ -927,77 +917,37 @@ export default Component.extend({
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
 
-      // Paint category hashtags
-      const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
-      if (unseenCategoryHashtags.length) {
-        debounce(
-          this,
-          this._renderUnseenCategoryHashtags,
-          $preview,
-          unseenCategoryHashtags,
-          450
-        );
-      }
-
-      // Paint tag hashtags
-      if (this.siteSettings.tagging_enabled) {
-        const unseenTagHashtags = linkSeenTagHashtags($preview);
-        if (unseenTagHashtags.length) {
-          debounce(
-            this,
-            this._renderUnseenTagHashtags,
-            $preview,
-            unseenTagHashtags,
-            450
-          );
-        }
+      // Paint category and tag hashtags
+      const unseenHashtags = linkSeenHashtags($preview);
+      if (unseenHashtags.length > 0) {
+        debounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes
-      debounce(
-        this,
-        () => {
-          const oneboxes = {};
-          const inlineOneboxes = {};
+      const paintFunc = () => {
+        const post = this.get("composer.post");
+        let refresh = false;
 
-          // Oneboxes = `a.onebox` -> `a.onebox-loading` -> `aside.onebox`
-          // Inline Oneboxes = `a.inline-onebox-loading` -> `a.inline-onebox`
+        //If we are editing a post, we'll refresh its contents once.
+        if (post && !post.get("refreshedPost")) {
+          refresh = true;
+        }
 
-          let loadedOneboxes = $preview.find(
-            `aside.onebox, a.${LOADING_ONEBOX_CSS_CLASS}, a.inline-onebox`
-          ).length;
+        const paintedCount = loadOneboxes(
+          $preview[0],
+          ajax,
+          this.get("composer.topic.id"),
+          this.get("composer.category.id"),
+          this.siteSettings.max_oneboxes_per_post,
+          refresh
+        );
 
-          $preview.find(`a.onebox, a.inline-onebox-loading`).each((_, link) => {
-            const $link = $(link);
-            const text = $link.text();
-            const isInline = $link.attr("class") === "inline-onebox-loading";
-            const m = isInline ? inlineOneboxes : oneboxes;
+        if (refresh && paintedCount > 0) {
+          post.set("refreshedPost", true);
+        }
+      };
 
-            if (loadedOneboxes < this.siteSettings.max_oneboxes_per_post) {
-              if (m[text] === undefined) {
-                m[text] = [];
-                loadedOneboxes++;
-              }
-              m[text].push(link);
-            } else {
-              if (m[text] !== undefined) {
-                m[text].push(link);
-              } else if (isInline) {
-                $link.removeClass("inline-onebox-loading");
-              }
-            }
-          });
-
-          if (Object.keys(oneboxes).length > 0) {
-            this._loadOneboxes(oneboxes);
-          }
-
-          if (Object.keys(inlineOneboxes).length > 0) {
-            this._loadInlineOneboxes(inlineOneboxes);
-          }
-        },
-        450
-      );
+      debounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);
@@ -1014,6 +964,6 @@ export default Component.extend({
 
       this.trigger("previewRefreshed", $preview[0]);
       this.afterRefresh($preview);
-    }
-  }
+    },
+  },
 });

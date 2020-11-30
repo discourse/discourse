@@ -2,16 +2,26 @@ import getURL from "discourse-common/lib/get-url";
 // Initialize the message bus to receive messages.
 import userPresent from "discourse/lib/user-presence";
 import { handleLogoff } from "discourse/lib/ajax";
-import { isProduction } from "discourse-common/config/environment";
+import { isProduction, isTesting } from "discourse-common/config/environment";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
+const CONNECTIVITY_ERROR_CLASS = "message-bus-offline";
+
+function updateConnectivityIndicator(stat) {
+  if (stat === "error") {
+    document.documentElement.classList.add(CONNECTIVITY_ERROR_CLASS);
+  } else {
+    document.documentElement.classList.remove(CONNECTIVITY_ERROR_CLASS);
+  }
+}
 
 function ajax(opts) {
   if (opts.complete) {
     const oldComplete = opts.complete;
-    opts.complete = function(xhr, stat) {
+    opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
+      updateConnectivityIndicator(stat);
     };
   } else {
     opts.complete = handleLogoff;
@@ -26,7 +36,7 @@ export default {
 
   initialize(container) {
     // We don't use the message bus in testing
-    if (Discourse.testing) {
+    if (isTesting()) {
       return;
     }
 
@@ -64,9 +74,10 @@ export default {
     messageBus.baseUrl =
       siteSettings.long_polling_base_url.replace(/\/$/, "") + "/";
 
+    messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
+
     if (messageBus.baseUrl !== "/") {
-      // zepto compatible, 1 param only
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         opts.headers["X-Shared-Session-Key"] = $(
           "meta[name=shared_session_key]"
@@ -77,7 +88,7 @@ export default {
         return ajax(opts);
       };
     } else {
-      messageBus.ajax = function(opts) {
+      messageBus.ajax = function (opts) {
         opts.headers = opts.headers || {};
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
@@ -90,7 +101,6 @@ export default {
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;
-      messageBus.enableLongPolling = true;
     }
-  }
+  },
 };

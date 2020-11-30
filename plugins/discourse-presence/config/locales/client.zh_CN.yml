@@ -1,14 +1,15 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_CN:
   js:
     presence:
-      replying: "正在回复"
-      editing: "正在编辑"
+      replying:
+        other: "正在回复"
+      editing:
+        other: "正在编辑"
       replying_to_topic:
         other: "正在回复"

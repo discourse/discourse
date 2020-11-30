@@ -32,7 +32,7 @@ import Component from "@ember/component";
 **/
 import {
   renderedConnectorsFor,
-  buildArgsWithDeprecations
+  buildArgsWithDeprecations,
 } from "discourse/lib/plugin-connectors";
 
 export default Component.extend({
@@ -55,5 +55,5 @@ export default Component.extend({
       );
       this.set("connectors", renderedConnectorsFor(name, args, this));
     }
-  }
+  },
 });

@@ -9,7 +9,6 @@ class BasicGroupSerializer < ApplicationSerializer
              :mentionable_level,
              :messageable_level,
              :visibility_level,
-             :automatic_membership_email_domains,
              :primary_group,
              :title,
              :grant_trust_level,
@@ -31,6 +30,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :is_group_owner,
              :members_visibility_level,
              :can_see_members,
+             :can_admin_group,
              :publish_read_state
 
   def include_display_name?
@@ -51,10 +51,6 @@ class BasicGroupSerializer < ApplicationSerializer
     staff?
   end
 
-  def include_automatic_membership_email_domains?
-    scope.is_admin?
-  end
-
   def include_has_messages?
     staff? || scope.can_see_group_messages?(object)
   end
@@ -73,6 +69,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def include_is_group_owner?
     owner_group_ids.present?
+  end
+
+  def can_admin_group
+    scope.can_admin_group?(object)
+  end
+
+  def include_can_admin_group?
+    scope.can_admin_group?(object)
   end
 
   def is_group_owner

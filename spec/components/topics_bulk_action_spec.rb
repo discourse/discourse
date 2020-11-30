@@ -59,14 +59,59 @@ describe TopicsBulkAction do
 
   describe "change_category" do
     fab!(:category) { Fabricate(:category) }
+    fab!(:fist_post) { Fabricate(:post, topic: topic) }
 
     context "when the user can edit the topic" do
-      it "changes the category and returns the topic_id" do
-        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
-        topic_ids = tba.perform!
-        expect(topic_ids).to eq([topic.id])
-        topic.reload
-        expect(topic.category).to eq(category)
+      context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
+        before do
+          SiteSetting.create_revision_on_bulk_topic_moves = true
+        end
+
+        it "changes the category, creates a post revision and returns the topic_id" do
+          old_category_id = topic.category_id
+          tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
+          topic_ids = tba.perform!
+          expect(topic_ids).to eq([topic.id])
+          topic.reload
+          expect(topic.category).to eq(category)
+
+          revision = topic.first_post.revisions.last
+          expect(revision).to be_present
+          expect(revision.modifications).to eq ({ "category_id" => [old_category_id, category.id] })
+        end
+
+        it "doesn't do anything when category stays the same" do
+          tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: topic.category_id)
+          topic_ids = tba.perform!
+          expect(topic_ids).to be_empty
+
+          topic.reload
+          revision = topic.first_post.revisions.last
+          expect(revision).to be_nil
+        end
+      end
+
+      context "with 'create_revision_on_bulk_topic_moves' setting disabled" do
+        before do
+          SiteSetting.create_revision_on_bulk_topic_moves = false
+        end
+
+        it "changes the category, doesn't create a post revision and returns the topic_id" do
+          tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
+          topic_ids = tba.perform!
+          expect(topic_ids).to eq([topic.id])
+          topic.reload
+          expect(topic.category).to eq(category)
+
+          revision = topic.first_post.revisions.last
+          expect(revision).to be_nil
+        end
+
+        it "doesn't do anything when category stays the same" do
+          tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: topic.category_id)
+          topic_ids = tba.perform!
+          expect(topic_ids).to be_empty
+        end
       end
     end
 
@@ -305,4 +350,38 @@ describe TopicsBulkAction do
       end
     end
   end
+
+  describe "remove_tags" do
+    fab!(:tag1)  { Fabricate(:tag) }
+    fab!(:tag2)  { Fabricate(:tag) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_level_to_tag_topics = 0
+      topic.tags = [tag1, tag2]
+    end
+
+    it "can remove all tags" do
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'remove_tags')
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.size).to eq(0)
+    end
+
+    context "when user can't edit topic" do
+      before do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+      end
+
+      it "doesn't remove the tags" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'remove_tags')
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        topic.reload
+        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+      end
+    end
+  end
+
 end

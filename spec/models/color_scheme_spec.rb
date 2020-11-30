@@ -21,12 +21,15 @@ describe ColorScheme do
     theme.save!
 
     href = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
+    colors_href = Stylesheet::Manager.color_scheme_stylesheet_details(scheme.id, "all", nil)
 
     ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'bbb' }])
 
     href2 = Stylesheet::Manager.stylesheet_data(:desktop_theme, theme.id)[0][:new_href]
+    colors_href2 = Stylesheet::Manager.color_scheme_stylesheet_details(scheme.id, "all", nil)
 
     expect(href).not_to eq(href2)
+    expect(colors_href).not_to eq(colors_href2)
   end
 
   describe "new" do
@@ -81,6 +84,32 @@ describe ColorScheme do
       it "returns the base color for an attribute" do
         expect(ColorScheme.hex_for_name('second_one')).to eq base_colors[:second_one]
       end
+    end
+  end
+
+  describe "is_dark?" do
+    it "works as expected" do
+      scheme = ColorScheme.create_from_base(name: 'Tester')
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: '333333' }, { name: 'secondary', hex: 'DDDDDD' }])
+      expect(scheme.is_dark?).to eq(false)
+
+      ColorSchemeRevisor.revise(scheme, colors: [{ name: 'primary', hex: 'F8F8F8' }, { name: 'secondary', hex: '232323' }])
+      expect(scheme.is_dark?).to eq(true)
+    end
+
+    it "does not break in scheme without colors" do
+      scheme = ColorScheme.create(name: "No Bueno")
+      expect(scheme.is_dark?).to eq(nil)
+    end
+  end
+
+  describe "is_wcag?" do
+    it "works as expected" do
+      expect(ColorScheme.create_from_base(name: 'Nope').is_wcag?).to eq(nil)
+      expect(ColorScheme.create_from_base(name: 'Nah', base_scheme_id: "Dark").is_wcag?).to eq(false)
+
+      expect(ColorScheme.create_from_base(name: 'Yup', base_scheme_id: "WCAG").is_wcag?).to eq(true)
+      expect(ColorScheme.create_from_base(name: 'Yup', base_scheme_id: "WCAG Dark").is_wcag?).to eq(true)
     end
   end
 end

@@ -68,7 +68,7 @@ module DiscourseNarrativeBot
     end
 
     def fake_delay
-      sleep(rand(2..3)) if Rails.env.production?
+      sleep(rand(1.0..2.0)) if Rails.env.production?
     end
 
     def bot_mentioned?(post)

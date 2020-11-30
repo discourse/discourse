@@ -59,21 +59,20 @@ class PostCreator
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
     # If we don't do this we introduce a rather risky dependency
     @user = user
-    @opts = opts || {}
-    opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
-    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
-    opts.delete(:reply_to_post_number) unless opts[:topic_id]
-    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
-    @guardian = opts[:guardian] if opts[:guardian]
-
     @spam = false
+    @opts = opts || {}
+
+    opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
+    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
+
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
 
   def pg_clean_up(str)
     str.gsub("\u0000", "")
   end
 
-  # True if the post was considered spam
   def spam?
     @spam
   end
@@ -83,7 +82,7 @@ class PostCreator
   end
 
   def guardian
-    @guardian ||= Guardian.new(@user)
+    @guardian ||= @opts[:guardian] || Guardian.new(@user)
   end
 
   def valid?
@@ -110,7 +109,7 @@ class PostCreator
         return false
       end
 
-      # Make sure none of the users have muted the creator
+      # Make sure none of the users have muted or ignored the creator
       users = User.where(username_lower: names).pluck(:id, :username).to_h
 
       User
@@ -128,6 +127,23 @@ class PostCreator
         errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
       end
 
+      # Is Allowed PM users list enabled for any recipients?
+      users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
+
+      # If any of the users has allowed_pm_users enabled check to see if the creator
+      # is in their list
+      if users_with_allowed_pms.any?
+        users_sender_can_pm = allowed_pms_enabled(users)
+          .where("allowed_pm_users.allowed_pm_user_id" => @user.id.to_i)
+          .pluck(:id).uniq
+
+        # If not in the list add an error
+        users_not_allowed = users_with_allowed_pms - users_sender_can_pm
+        users_not_allowed.each do |id|
+          errors.add(:base, I18n.t(:not_accepting_pms, username: users[id]))
+        end
+      end
+
       return false if errors[:base].present?
     end
 
@@ -140,6 +156,19 @@ class PostCreator
       if @topic.present? && @opts[:archetype] == Archetype.private_message
         errors.add(:base, I18n.t(:create_pm_on_existing_topic))
         return false
+      end
+
+      if guardian.affected_by_slow_mode?(@topic)
+        tu = TopicUser.find_by(user: @user, topic: @topic)
+
+        if tu&.last_posted_at
+          threshold = tu.last_posted_at + @topic.slow_mode_seconds.seconds
+
+          if DateTime.now < threshold
+            errors.add(:base, I18n.t(:slow_mode_enabled))
+            return false
+          end
+        end
       end
 
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
@@ -185,11 +214,10 @@ class PostCreator
         create_embedded_topic
         @post.link_post_uploads
         update_uploads_secure_status
+        delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
-        unarchive_message
-        if !@opts[:import_mode]
-          DraftSequence.next!(@user, draft_key)
-        end
+        unarchive_message if !@opts[:import_mode]
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode]
         @post.save_reply_relationships
       end
     end
@@ -335,7 +363,8 @@ class PostCreator
         :closed, true, Discourse.system_user,
         message: I18n.t(
           'topic_statuses.autoclosed_message_max_posts',
-          count: SiteSetting.auto_close_messages_post_count
+          count: SiteSetting.auto_close_messages_post_count,
+          locale: SiteSetting.default_locale
         )
       )
     elsif !is_private_message &&
@@ -347,9 +376,15 @@ class PostCreator
         :closed, true, Discourse.system_user,
         message: I18n.t(
           'topic_statuses.autoclosed_topic_max_posts',
-          count: SiteSetting.auto_close_topics_post_count
+          count: SiteSetting.auto_close_topics_post_count,
+          locale: SiteSetting.default_locale
         )
       )
+
+      if SiteSetting.auto_close_topics_create_linked_topic?
+        # enqueue a job to create a linked topic
+        Jobs.enqueue_in(5.seconds, :create_linked_topic, post_id: @post.id)
+      end
     end
   end
 
@@ -385,6 +420,15 @@ class PostCreator
   def update_uploads_secure_status
     return if !SiteSetting.secure_media?
     @post.update_uploads_secure_status
+  end
+
+  def delete_owned_bookmarks
+    return if !@post.topic_id
+    BookmarkManager.new(@user).destroy_for_topic(
+      Topic.with_deleted.find(@post.topic_id),
+      { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply] },
+      @opts
+    )
   end
 
   def handle_spam
@@ -431,6 +475,17 @@ class PostCreator
   end
 
   private
+
+  def allowed_pms_enabled(users)
+    User
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
+      .where("
+        user_options.user_id IS NOT NULL AND
+        user_options.user_id IN (:user_ids) AND
+        user_options.enable_allowed_pm_users
+      ", user_ids: users.keys)
+  end
 
   def create_topic
     return if @topic
@@ -560,10 +615,12 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:new_user]
+      @post.custom_fields[Post::NOTICE] = { type: Post.notices[:new_user] }
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-      @post.custom_fields[Post::NOTICE_ARGS] = last_post_time.iso8601
+      @post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:returning_user],
+        last_posted_at: last_post_time.iso8601
+      }
     end
   end
 
@@ -584,7 +641,8 @@ class PostCreator
                       @topic.id,
                       posted: true,
                       last_read_post_number: @post.post_number,
-                      highest_seen_post_number: @post.post_number)
+                      highest_seen_post_number: @post.post_number,
+                      last_posted_at: Time.zone.now)
 
     # assume it took us 5 seconds of reading time to make a post
     PostTiming.record_timing(topic_id: @post.topic_id,

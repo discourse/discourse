@@ -13,5 +13,5 @@ export default DiscourseRoute.extend({
 
   afterModel(result) {
     DiscourseURL.routeTo(result.url, { replaceURL: true });
-  }
+  },
 });

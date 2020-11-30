@@ -25,6 +25,6 @@ export default Controller.extend({
 
     cancel() {
       this.transitionToRoute("account-created.index");
-    }
-  }
+    },
+  },
 });

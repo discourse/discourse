@@ -12,9 +12,9 @@ module Jobs
       MiniScheduler::Stat.purge_old
       Draft.cleanup!
       UserAuthToken.cleanup!
-      Upload.reset_unknown_extensions!
       Email::Cleaner.delete_rejected!
       Notification.purge_old!
+      Bookmark.cleanup!
     end
   end
 end

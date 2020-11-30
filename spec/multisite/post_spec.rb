@@ -8,13 +8,11 @@ RSpec.describe 'Multisite Post', type: :multisite do
     let(:upload2) { Fabricate(:upload_s3) }
     let(:upload3) { Fabricate(:upload_s3) }
 
-    it "correctly identifies all upload urls" do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secret key"
-      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+    before do
+      setup_s3
+    end
 
+    it "correctly identifies all upload urls" do
       upload3.url.sub!(RailsMultisite::ConnectionManagement.current_db, "secondsite")
       upload3.save!
 

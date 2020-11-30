@@ -8,7 +8,13 @@ class S3Helper
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
 
-  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
+  ##
+  # Controls the following:
+  #
+  # * cache time for secure-media URLs
+  # * expiry time for S3 presigned URLs, which include backup downloads and
+  #   any upload that has a private ACL (e.g. secure uploads)
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 300
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)
@@ -222,9 +228,9 @@ class S3Helper
   end
 
   def download_file(filename, destination_path, failure_message = nil)
-    unless object(filename).download_file(destination_path)
-      raise failure_message&.to_s || "Failed to download file"
-    end
+    object(filename).download_file(destination_path)
+  rescue => err
+    raise failure_message&.to_s || "Failed to download #{filename} because #{err.message.length > 0 ? err.message : err.class.to_s}"
   end
 
   def s3_client

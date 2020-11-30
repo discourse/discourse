@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 es:
   js:
@@ -20,7 +19,6 @@ es:
           insert: Insertar
           advanced_mode: Modo avanzado
           simple_mode: Modo simple
-          format_description: "Formato usado para mostrar la fecha al usuario. Use «\\T\\Z» para mostrar la zona horaria del usuario en palabras (Europa/París)"
           timezones_title: Zonas horarias que se muestran
           timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.
           recurring_title: Recurrencia

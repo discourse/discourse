@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ja:
   js:
@@ -95,9 +94,6 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "このリンクをTwitterで共有する"
-      facebook: "このリンクをFacebookで共有する"
-      email: "このリンクをメールで送る"
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
       private_topic: "このトピックを %{when} にダイレクトメッセージとして送る"
@@ -131,7 +127,6 @@ ja:
         disabled: "このバナー%{when}を削除すると、各ページの最上部に表示しません。"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
-    bootstrap_mode_enabled: "簡単にサイトを立ち上げられるように、ブートストラップモードにしました。\nすべての新規ユーザーはトラストレベル1、毎日のサマリーメールが有効な状態です。この設定は%{min_users}が参加した時に自動的に無効になります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
@@ -190,9 +185,9 @@ ja:
     or: "あるいは"
     now: "たった今"
     read_more: "もっと読む"
-    more: "増やす"
+    more: "もっと読む"
     less: "減らす"
-    never: "never"
+    never: "決して"
     every_30_minutes: "30分毎"
     every_hour: "毎時"
     daily: "毎日"
@@ -238,11 +233,14 @@ ja:
       remove: "ブックマークを削除"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
       save: "保存"
+      search: "検索"
       reminders:
         later_today: "今日中"
         tomorrow: "明日"
         next_week: "来週"
         later_this_week: "今週中"
+        start_of_next_business_week: "月曜日"
+        start_of_next_business_week_alt: "来週の月曜日"
         next_month: "来月"
     drafts:
       resume: "続ける"
@@ -435,10 +433,6 @@ ja:
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
       member_added: "追加済み"
-      add_members:
-        title: "メンバーを追加する"
-        description: "このグループのメンバーシップを管理する"
-        usernames: "ユーザー名"
       requests:
         title: "リクエスト"
         reason: "理由"
@@ -457,6 +451,11 @@ ja:
           title: 交流
           posting: 投稿
           notification: 通知
+        email:
+          title: "Eメール"
+          credentials:
+            username: "ユーザー名"
+            password: "パスワード"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -611,7 +610,7 @@ ja:
       title: IPアドレスを検索
       hostname: ホスト名
       location: 現在地
-      location_not_found: （不明）
+      location_not_found: '（不明）'
       organisation: 組織
       phone: 電話
       other_accounts: "同じIPアドレスを持つアカウント:"
@@ -695,7 +694,6 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結状態です。"
       suspended_permanently: "このユーザーは凍結されています"
       suspended_reason: "理由: "
-      github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
       mailing_list_mode:
         label: "メーリングリストモード"
@@ -783,25 +781,20 @@ ja:
         choose_new: "新規パスワードを決定"
         choose: "パスワードを決定"
       second_factor_backup:
-        title: "ツーファクターバックアップコード"
         regenerate: "API キーを再生成"
         disable: "利用できません"
         enable: "利用できます"
         enable_long: "バックアップコードを有効にします"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
-        remaining_codes: "<strong>%{count}</strong> 個のバックアップコードが残っています。"
         use: "バックアップコードを使用"
         codes:
           title: "バックアップコードが作られました"
       second_factor:
-        title: "2段階認証"
         confirm_password_description: "続行するにはパスワードを入力してください"
         name: "名前"
         label: "コード"
         show_key_description: "手動入力"
-        oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
-        enforced_notice: "このサイトにアクセスするには2段階認証を有効にする必要があります。"
         disable: "利用できません"
         save: "保存"
         edit: "編集"
@@ -879,10 +872,8 @@ ja:
         title: "もう一度パスワードを入力してください。"
       auth_tokens:
         title: "最近使用した端末"
-        ip: "IP"
         details: "詳細"
         log_out_all: "すべてログアウトする"
-        active: "動作中"
         not_you: "あなたではない？"
         show_all: "すべてを見る(%{count})"
         show_few: "表示件数を少なくする"
@@ -981,14 +972,10 @@ ja:
         links_tab: "リンク"
         link_created_at: "作成者"
         link_groups: グループ
-        create: "招待を送る"
-        generate_link: "招待リンクをコピー"
-        link_generated: "招待リンクが生成されました！"
         valid_for: "招待リンクはこのメールアドレスにだけ有効です。%{email}"
         invite_link:
           success: "招待リンクが生成されました！"
         bulk_invite:
-          none: "まだ誰も招待していません。個々に招待するか、<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSVファイルをアップロード</a>して、まとめて招待しましょう。"
           success: "ファイルは無事にアップロードされました。処理が完了したらメッセージでお知らせします。"
           error: "申し訳ありません、ファイルはCSV形式である必要があります。"
       password:
@@ -1127,8 +1114,6 @@ ja:
       disable: "削除された投稿を表示する"
     private_message_info:
       title: "メッセージ"
-      invite: "他の人を招待する..."
-      edit: "追加、削除"
       leave_message: "本当にメッセージから離れますか？"
       remove_allowed_user: "このメッセージから %{name} を削除してもよろしいですか？"
       remove_allowed_group: "このメッセージから %{name} を削除してもよろしいですか？"
@@ -1158,13 +1143,11 @@ ja:
       link_label: "ログインリンクをメールする"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b> にアカウントはありません"
-      confirm_title: "%{site_name}へ"
+      confirm_title: '%{site_name}へ'
     login:
       title: "ログイン"
       username: "ユーザ名"
       password: "パスワード"
-      second_factor_title: "２段階認証"
-      second_factor_backup_title: "2段階バックアップ"
       second_factor_backup_description: "バックアップコードを入力: "
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
@@ -1180,10 +1163,8 @@ ja:
       awaiting_approval: "アカウントはまだスタッフに承認されていません。承認され次第メールにてお知らせいたします。"
       requires_invite: "申し訳ありませんが、このフォーラムは招待制です。"
       not_activated: "まだログインできません。<b>%{sentTo}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
-      not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
       resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
-      omniauth_disallow_totp: "あなたのアカウントは２段階認証が有効になっています。ログインにはパスワードが必要です。"
       resend_title: "アクティベーションメールの再送"
       change_email: "メールアドレスの変更"
       provide_new_email: "新しいメールアドレスを設定します。このあと、確認のメールを送信します。"
@@ -1192,7 +1173,6 @@ ja:
       sent_activation_email_again_generic: "アクティベーションメールを送りました。届くのに少し時間がかかるかもしれません。スパムフォルダーも確認してください。"
       to_continue: "ログインしてください"
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
-      forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
       google_oauth2:
         name: "Google"
@@ -1218,7 +1198,6 @@ ja:
       accept_invite: "招待に応じる"
       success: "あなたのアカウントは作成されて、ログインされました。"
       name_label: "氏名"
-      password_label: "パスワードを設定"
       optional_description: "(任意)"
     password_reset:
       continue: "%{site_name} に進む"
@@ -1297,7 +1276,6 @@ ja:
         post_length: "投稿は%{min}文字以上必要です。"
         try_like: " %{heart} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
-        tags_missing: "少なくとも %{count} つのタグが必要です。"
       save_edit: "編集内容を保存"
       reply_original: "オリジナルトピックへ返信"
       reply_here: "ここに返信"
@@ -1354,7 +1332,6 @@ ja:
         reply: 返信
         edit: 編集
         reply_to_post:
-          label: "%{postUsername}による投稿%{postNumber}に返信する"
           desc: 特定の投稿に返信する
         reply_as_new_topic:
           label: トピックのリンクを付けて返信
@@ -1379,9 +1356,6 @@ ja:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span>%{username}, %{username2} 、他 %{count} 人</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1431,7 +1405,6 @@ ja:
       title: "トピック、投稿、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
-      searching: "検索中..."
       post_format: "#%{post_number} %{username}から"
       more_results: "検索結果が多数あります。検索条件を絞ってください。"
       cant_find: "探しているものが見つかりませんか？"
@@ -1439,7 +1412,6 @@ ja:
       or_search_google: "あるいは、Google検索で試してみてください:"
       search_google: "Google検索で試してみてください:"
       search_google_button: "Google"
-      search_google_title: "サイトを検索"
       context:
         user: "@%{username}の投稿を検索"
         category: "#%{category} から検索する"
@@ -1459,7 +1431,7 @@ ja:
           label: タグ
         filters:
           title: タイトルが一致するもの
-          likes: 「いいね！」したもの
+          likes: '「いいね！」したもの'
           posted: 投稿済
           watching: ウォッチ中
           tracking: 追跡中
@@ -1480,8 +1452,6 @@ ja:
           noreplies: 返信がまったくない
           single_user: 一人しか参加者がいない
         post:
-          count:
-            label: 投稿数の下限
           time:
             label: 投稿されたタイミング
             before: より前
@@ -1525,12 +1495,10 @@ ja:
         new: "新しいトピックはありません。"
         read: "まだトピックを一つも読んでいません。"
         posted: "トピックは一つもありません。"
-        latest: "最新のトピックはありません。"
         bookmarks: "ブックマークしたトピックはありません。"
         category: "%{category} トピックはありません。"
         top: "トップトピックはありません。"
         educate:
-          new: '<p>新しいトピックがここに表示されます。</p><p>デフォルトでは新しいトピックがある場合に2日間、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span>が表示されます。</p><p>設定は<a href="%{userPrefsUrl}">プロフィール設定</a>から変更できます。</p>'
           unread: '<p>新しいトピックがここに表示されます。</p><p>未読のトピックがある場合は、<span class="badge new-posts badge-notification">1</span>が表示されます。 もし、</p><ul><li>トピックを作る</li><li>トピックに返信</li><li>トピックを4分以上読む</li></ul><p>などを行った場合、トピックを追跡してそれぞれのトピックの下にある通知の設定を経由してウォッチします。</p><p><a href="%{userPrefsUrl}">プロフィール</a>から変更できます。</p>'
       bottom:
         latest: "最新のトピックは以上です。"
@@ -1594,7 +1562,6 @@ ja:
       read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1つの未読 </a>} other { are <a href='{basePath}/unread'># つの未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'>1 つの新着</a> トピック} other { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'># つの新着</a> トピック} } が残っています、あるいは {CATEGORY, select, true { {catLink}の他のトピックを見てみてください。} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
-      suggest_create_topic: "新しいトピックを作成しませんか?"
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
@@ -1669,6 +1636,7 @@ ja:
           "2_8": "このカテゴリを追跡しているので、新たな返信のカウント数が表示されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
           "2_2": "このトピックを追跡しているので、新たな返信のカウント数が表示されます。"
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"
@@ -1740,7 +1708,6 @@ ja:
       feature_topic:
         title: "トピックを特集"
         pin: "%{categoryLink} カテゴリのトップに表示する"
-        confirm_pin: "既に %{count} トピックを固定表示しています。固定表示が多すぎると、新規あるいは匿名ユーザの負担になる場合があります。このカテゴリにおいてさらに固定表示設定してもよいですか？"
         unpin: "%{categoryLink} カテゴリのトップからトピックを削除"
         unpin_until: "%{categoryLink} カテゴリのトップからこのトピックを削除するか、<strong>%{until}</strong> まで待つ。"
         pin_note: "ユーザはトピックを個別に固定表示解除することができます。"
@@ -1749,7 +1716,6 @@ ja:
         already_pinned:
           other: "%{categoryLink}で固定表示されているトピック: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "このトピックをすべてのトピックリストのトップに表示する"
-        confirm_pin_globally: "全体で既に %{count} トピックを固定表示しています。固定表示が多すぎると、新規あるいは匿名ユーザの負担になる場合があります。このカテゴリにおいてさらに固定表示設定してもよいですか？"
         unpin_globally: "トピック一覧のトップからこのトピックを削除します"
         unpin_globally_until: "このトピックをすべてのトピックリストのトップから削除するか、<strong>%{until}</strong> まで待つ。"
         global_pin_note: "ユーザはトピックを個別に固定表示解除することができます。"
@@ -1920,28 +1886,12 @@ ja:
         grant_badge: "バッジを付与"
         delete_topic: "トピック削除"
       actions:
-        flag: "通報"
-        undo:
-          off_topic: "通報を取り消す"
-          spam: "通報を取り消す"
-          inappropriate: "通報を取り消す"
-          bookmark: "ブックマークを取り消す"
-          like: "「いいね！」を取り消す"
-        people:
-          off_topic: "関係無い話題として通報"
-          spam: "スパムとして通報"
-          inappropriate: "不適切な発言として通報"
-          notify_moderators: "モデレータに通知"
-          notify_user: "メッセージを送信しました。"
-          bookmark: "これをブックマークしました。"
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "スパム報告として通報しました"
           inappropriate: "不適切であると報告されています"
           notify_moderators: "スタッフによる確認が必要として通報しました"
           notify_user: "このユーザにメッセージを送信しました"
-          bookmark: "この投稿をブックマークしました"
-          like: "あなたが「いいね！」しました"
       merge:
         confirm:
           other: "これらの%{count}の投稿を統合したいですか?"
@@ -2063,7 +2013,6 @@ ja:
     flagging:
       title: "報告していただきありがとうございます。"
       action: "投稿を通報"
-      take_action: "アクションをする"
       notify_action: "メッセージ"
       official_warning: "運営スタッフからの警告"
       delete_spammer: "スパムの削除"
@@ -2125,7 +2074,6 @@ ja:
       unlisted:
         help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
-    posts_long: "このトピックには%{number}個の投稿があります"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
       low {with a high like to post ratio}
@@ -2143,7 +2091,6 @@ ja:
     likes: "いいね！"
     likes_lowercase:
       other: "いいね！"
-    likes_long: "このトピックには%{number}つ「いいね！」がついています"
     users: "ユーザ"
     users_lowercase:
       other: "ユーザ"
@@ -2294,9 +2241,9 @@ ja:
         posting:
           name: 投稿
     tagging:
-      all_tags: "全てのタグ"
+      all_tags: "すべてのタグ"
       other_tags: "他のタグ"
-      selector_all_tags: "全てのタグ"
+      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       changed: "タグを変更しました:"
       tags: "タグ"
@@ -2328,13 +2275,11 @@ ja:
         title: "タグのグループ"
         new: "新しいグループ"
         parent_tag_label: "親タグ:"
-        parent_tag_placeholder: "任意"
         new_name: "新しいタグのグループ"
         save: "保存する"
         delete: "削除する"
         confirm_delete: "このタググループを削除してもよろしいですか？"
         everyone_can_use: "全員がタグを使用できます。"
-        usable_only_by_staff: "タグは全員に表示されますが、スタッフのみ使用できます。"
       topics:
         none:
           unread: "未読のトピックはありません。"
@@ -2344,14 +2289,6 @@ ja:
           latest: "最新のトピックはありません。"
           bookmarks: "ブックマークしたトピックはありません。"
           top: "トップトピックはありません。"
-        bottom:
-          latest: "最新のトピックは以上です。"
-          posted: "投稿のあるトピックは以上です。"
-          read: "既読のトピックは以上です。"
-          new: "新着トピックは以上です。"
-          unread: "未読のトピックは以上です。"
-          top: "トップトピックは以上です。"
-          bookmarks: "ブックマーク済みのトピックは以上です。"
     invite:
       custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
       custom_message_placeholder: "メッセージを入力"
@@ -2439,7 +2376,6 @@ ja:
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "だれでも"
-              staff: "グループオーナーとスタッフ"
           membership:
             automatic: 自動
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
@@ -2593,7 +2529,6 @@ ja:
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
           body: "本文"
-          none_selected: "編集するメールテンプレートを選択してください。"
           revert: "変更を元に戻す"
           revert_confirm: "本当に変更を元に戻しますか?"
         theme:
@@ -2790,7 +2725,6 @@ ja:
             change_readonly_mode: "閲覧専用モードに変更する"
             backup_download: "バックアップをダウンロード"
             backup_destroy: "バックアップを消去"
-            disabled_second_factor: "2段階認証を無効にする"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -2804,7 +2738,6 @@ ja:
           domain: "ドメイン"
         screened_ips:
           title: "スクリーン対象IP"
-          description: '参加中のIPアドレス。IPアドレスをホワイトリストに追加するには "許可" を利用してください。'
           delete_confirm: "%{ip_address} のルールを削除してもよろしいですか？"
           roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
@@ -2888,7 +2821,6 @@ ja:
         suspend_duration: "ユーザを何日間凍結しますか?"
         suspend_reason_label: "アカウントを凍結する理由を説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
         suspend_reason: "理由"
-        suspend_reason_placeholder: "凍結理由"
         suspend_message: "メールメッセージ"
         suspended_by: "凍結したユーザ"
         silence_reason: "理由"
@@ -2921,12 +2853,11 @@ ja:
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
-        like_count: 「いいね！」付けた/もらった数
+        like_count: '「いいね！」付けた/もらった数'
         last_100_days: "過去100日に"
         private_topics_count: プライベートトピックの数
         posts_read_count: 読んだ投稿数
         post_count: 投稿数
-        second_factor_enabled: 2段階認証を有効にする
         topics_entered: 閲覧したトピックの数
         flags_given_count: 通報した数
         flags_received_count: 通報された数
@@ -3125,7 +3056,7 @@ ja:
         delete_confirm: このバッジを削除してもよろしいですか？
         revoke: 取り消す
         reason: 理由
-        expand: "&hellipを展開"
+        expand: '&hellipを展開'
         revoke_confirm: このバッジを取り消しますか？
         edit_badges: バッジを編集する
         grant_badge: バッジを付与
@@ -3166,10 +3097,10 @@ ja:
             other: "<b>%{count}</b>個のバッジが付与されています"
           sample: "サンプル："
           grant:
-            with: "<span class=\"username\">%{username}</span>"
-            with_post: "<span class=\"username\">%{username}</span> for post in %{link}"
-            with_post_time: "<span class=\"username\">%{username}</span> for post in %{link} at <span class=\"time\">%{time}</span>"
-            with_time: "<span class=\"username\">%{username}</span> at <span class=\"time\">%{time}</span>"
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "絵文字"
         help: "各ユーザが利用できる絵文字を追加します。 (ちょっとしたコツ: ドラッグアンドドロップで複数のファイルを一度にアップロードできます)"
@@ -3189,9 +3120,6 @@ ja:
         add_host: "ホストの追加"
         settings: "埋め込みの設定"
         embed_truncate: "埋め込まれた投稿を削除する"
-        embed_whitelist_selector: "埋め込みで許可される要素のCSSセレクタ"
-        embed_blacklist_selector: "埋め込みから削除された要素のCSSセレクタ"
-        embed_classname_whitelist: "許可されたCSSクラス名"
         save: "埋め込みの設定を保存"
       permalink:
         title: "パーマリンク"
@@ -3202,7 +3130,6 @@ ja:
         post_title: "投稿"
         category_id: "カテゴリID"
         category_title: "カテゴリ"
-        external_url: "外部URL"
         delete_confirm: このパーマリンクを削除してもよろしいですか？
         form:
           label: "新規:"

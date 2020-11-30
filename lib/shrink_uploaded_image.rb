@@ -28,7 +28,12 @@ class ShrinkUploadedImage
     end
 
     # Neither #dup or #clone provide a complete copy
-    original_upload = Upload.find(upload.id)
+    original_upload = Upload.find_by(id: upload.id)
+    unless original_upload
+      log "Upload is missing"
+      return false
+    end
+
     ww, hh = ImageSizer.resize(w, h)
 
     # A different upload record that matches the sha1 of the downsized image

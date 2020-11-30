@@ -1,5 +1,3 @@
-/*global I18n:true */
-
 // Instantiate the object
 var I18n = I18n || {};
 
@@ -256,7 +254,7 @@ I18n.toHumanSize = function(number, options) {
 
   options = this.prepareOptions(options, {
     precision: precision,
-    format: "%n%u",
+    format: this.t("number.human.storage_units.format"),
     delimiter: ""
   });
 
@@ -323,7 +321,7 @@ I18n.enableVerboseLocalization = function() {
     if (!current) {
       current = keys[scope] = ++counter;
       var message = "Translation #" + current + ": " + scope;
-      if (!_.isEmpty(value)) {
+      if (value && Object.keys(value).length > 0) {
         message += ", parameters: " + JSON.stringify(value);
       }
       // eslint-disable-next-line no-console

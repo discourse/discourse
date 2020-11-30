@@ -4,15 +4,6 @@ require 'listen'
 
 module Stylesheet
   class Watcher
-    REDIS_KEY = "dev_last_used_theme_id"
-
-    def self.theme_id=(v)
-      Discourse.redis.set(REDIS_KEY, v)
-    end
-
-    def self.theme_id
-      (Discourse.redis.get(REDIS_KEY) || SiteSetting.default_theme_id).to_i
-    end
 
     def self.watch(paths = nil)
       watcher = new(paths)
@@ -70,18 +61,16 @@ module Stylesheet
               paths.map! do |long|
                 plugin_name = nil
                 plugins_paths.each do |plugin_path|
-                  if long.include?(plugin_path)
+                  if long.include?("#{plugin_path}/")
                     plugin_name = File.basename(plugin_path)
                     break
                   end
                 end
 
                 target = nil
-                if !plugin_name
-                  target_match = long.match(/admin|desktop|mobile|publish/)
-                  if target_match&.length
-                    target = target_match[0]
-                  end
+                target_match = long.match(/admin|desktop|mobile|publish/)
+                if target_match&.length
+                  target = target_match[0]
                 end
 
                 {
@@ -106,19 +95,29 @@ module Stylesheet
       targets = target ? [target] : ["desktop", "mobile", "admin"]
       Stylesheet::Manager.clear_core_cache!(targets)
       message = targets.map! do |name|
-        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+        msgs = []
+        active_themes.each do |theme_id|
+          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+        end
+        msgs
       end.flatten!
       MessageBus.publish '/file-change', message
     end
 
-    def plugin_assets_refresh(plugin_name)
+    def plugin_assets_refresh(plugin_name, target)
       Stylesheet::Manager.clear_plugin_cache!(plugin_name)
-      targets = [plugin_name]
-      targets.push("#{plugin_name}_mobile") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :mobile)
-      targets.push("#{plugin_name}_desktop") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, :desktop)
-
+      targets = []
+      if target.present?
+        targets.push("#{plugin_name}_#{target.to_s}") if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target.to_sym)
+      else
+        targets.push(plugin_name)
+      end
       message = targets.map! do |name|
-        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
+        msgs = []
+        active_themes.each do |theme_id|
+          msgs << Stylesheet::Manager.stylesheet_data(name.to_sym, theme_id)
+        end
+        msgs
       end.flatten!
       MessageBus.publish '/file-change', message
     end
@@ -131,7 +130,7 @@ module Stylesheet
       end
 
       if path[:plugin_name]
-        plugin_assets_refresh(path[:plugin_name])
+        plugin_assets_refresh(path[:plugin_name], path[:target])
       else
         core_assets_refresh(path[:target])
       end
@@ -144,5 +143,10 @@ module Stylesheet
         end
       end
     end
+
+    def active_themes
+      @active_themes ||= Theme.user_selectable.pluck(:id)
+    end
+
   end
 end

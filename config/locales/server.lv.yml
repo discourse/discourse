@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 lv:
   dates:
@@ -15,9 +14,20 @@ lv:
       short: "%d-%m-%Y"
       short_no_year: "%B %-d"
   date:
-    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
-    <<: *datetime_formats
-  time:
+    month_names:
+    - null
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tēmas"
@@ -33,9 +43,6 @@ lv:
   errors: &errors
     messages:
       exclusion: ir rezervēts
-  activemodel:
-    errors:
-      <<: *errors
   not_in_group:
     join_group: "Pievienoties grupai"
   likes: "Patīk"
@@ -116,17 +123,10 @@ lv:
     needs_approval:
       title: "Nepieciešama apstiprināšana"
   post_action_types:
-    off_topic:
-      long_form: "ziņot par šo kā novirzīšanos no tēmas"
     spam:
       title: "Spams"
-      long_form: "ziņot par šo kā spamu"
-    inappropriate:
-      long_form: "ziņot par šo kā nepiedienīgu"
     bookmark:
       title: "Grāmatzīmes"
-    like:
-      long_form: "patika ieraksts"
   topic_flag_types:
     spam:
       title: "Spams"
@@ -149,7 +149,7 @@ lv:
   user_api_key:
     read: "izlasīts"
     otp_confirmation:
-      confirm_title: "Turpināt %{site_name}"
+      confirm_title: Turpināt %{site_name}
   reports:
     default:
       labels:
@@ -359,10 +359,6 @@ lv:
             placeholder: "vards@piemers.com"
       corporate:
         title: "Organizācija"
-      colors:
-        title: "Tēma"
-      themes_further_reading:
-        title: "Dizaini"
       homepage:
         fields:
           homepage_style:
@@ -405,3 +401,8 @@ lv:
         title: "Noraidīt"
       delete_user:
         title: "Dzēst lietotāju."
+  time:
+    <<: *datetime_formats
+  activemodel:
+    errors:
+      <<: *errors

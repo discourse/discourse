@@ -83,7 +83,7 @@ class DecoratorHelper {
    * ```
    **/
   cooked(cooked) {
-    return new PostCooked({ cooked });
+    return new PostCooked({ cooked }, this);
   }
 
   /**
