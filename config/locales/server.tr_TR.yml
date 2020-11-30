@@ -216,7 +216,6 @@ tr_TR:
   email_template_cant_be_modified: "Bu e-posta şablonu değiştirilemez"
   invalid_whisper_access: "Fısıltılar etkin değil veya fısıltı yayınları oluşturma erişiminiz yok"
   not_in_group:
-    title_topic: "Bu konuyu görebilmek için bir grupta olmalısınız."
     title_category: "Bu kategoriyi görebilmek için bir grupta olmalısınız."
     request_membership: "Üyelik İste"
     join_group: "Gruba katıl"

@@ -1,10 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, currentURL } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   updateCurrentUser,
   acceptance,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Tags", function (needs) {
@@ -179,6 +179,28 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tags/c/faq/4/planters/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "planters",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+
     server.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
@@ -250,6 +272,15 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#delete-tag"), "can't delete tag");
   });
 
+  test("can filter tags page by category", async function (assert) {
+    await visit("/tag/planters");
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click('.category-breadcrumb .category-row[data-name="faq"]');
+
+    assert.equal(currentURL(), "/tags/c/faq/4/planters");
+  });
+
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
@@ -276,5 +307,12 @@ acceptance("Tag info", function (needs) {
       queryAll(".tag-info .synonyms-list .tag-box").length === 1,
       "removed a synonym"
     );
+  });
+
+  test("composer will not set tags if user cannot create them", async function (assert) {
+    await visit("/tag/planters");
+    await click("#create-topic");
+    const composer = this.container.lookup("controller:composer");
+    assert.equal(composer.model.tags, null);
   });
 });

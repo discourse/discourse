@@ -1,5 +1,4 @@
-import Service from "@ember/service";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
 import updateTabCount from "discourse/lib/update-tab-count";
 

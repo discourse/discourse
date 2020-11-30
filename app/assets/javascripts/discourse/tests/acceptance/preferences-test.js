@@ -1,5 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   visit,
   currentURL,
@@ -12,6 +10,8 @@ import I18n from "I18n";
 import {
   acceptance,
   updateCurrentUser,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import User from "discourse/models/user";

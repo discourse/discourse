@@ -1,9 +1,9 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Managing Group Interaction Settings", function (needs) {

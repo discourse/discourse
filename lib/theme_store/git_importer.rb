@@ -35,7 +35,7 @@ class ThemeStore::GitImporter
 
     Discourse::Utils.execute_command(chdir: @temp_folder) do |runner|
       commit_hash = runner.exec("git", "rev-parse", "HEAD").strip
-      commits_behind = runner.exec("git", "rev-list", "#{hash}..HEAD", "--count").strip
+      commits_behind = runner.exec("git", "rev-list", "#{hash}..HEAD", "--count").strip rescue -1
     end
 
     [commit_hash, commits_behind]

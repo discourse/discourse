@@ -151,6 +151,15 @@ export default Controller.extend({
 
   hasTranslations: notEmpty("translations"),
 
+  @discourseComputed(
+    "model.remote_theme.local_version",
+    "model.remote_theme.remote_version",
+    "model.remote_theme.commits_behind"
+  )
+  hasOverwrittenHistory(localVersion, remoteVersion, commitsBehind) {
+    return localVersion !== remoteVersion && commitsBehind === -1;
+  },
+
   @discourseComputed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
     return errorMessage && !updating;

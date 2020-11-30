@@ -185,7 +185,8 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       if (controller.get("list.draft")) {
         this.openTopicDraft(controller.get("list"));
       } else {
-        this.controllerFor("composer")
+        const composerController = this.controllerFor("composer");
+        composerController
           .open({
             categoryId: controller.get("category.id"),
             action: Composer.CREATE_TOPIC,
@@ -194,7 +195,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
           })
           .then(() => {
             // Pre-fill the tags input field
-            if (controller.get("model.id")) {
+            if (composerController.canEditTags && controller.get("model.id")) {
               const composerModel = this.controllerFor("composer").get("model");
               composerModel.set(
                 "tags",

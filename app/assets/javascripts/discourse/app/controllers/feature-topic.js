@@ -1,7 +1,6 @@
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { categoryLinkHTML } from "discourse/helpers/category-link";

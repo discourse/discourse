@@ -4,13 +4,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
 import EmberObject from "@ember/object";
-import { escapeExpression } from "discourse/lib/utilities";
 import { ajax } from "discourse/lib/ajax";
 import round from "discourse/lib/round";
 import {
   fillMissingDates,
   formatUsername,
   toNumber,
+  escapeExpression,
 } from "discourse/lib/utilities";
 import { number, durationTiny } from "discourse/lib/formatter";
 import { renderAvatar } from "discourse/helpers/user-avatar";

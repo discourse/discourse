@@ -96,4 +96,15 @@ module("Unit | Utility | url", function () {
       "https://www.discourse.org/mailto:foo"
     );
   });
+
+  test("routeTo redirects secure media URLS because they are server side only", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+    DiscourseURL.routeTo("/secure-media-uploads/original/1X/test.pdf");
+    assert.ok(
+      DiscourseURL.redirectTo.calledWith(
+        "/secure-media-uploads/original/1X/test.pdf"
+      )
+    );
+  });
 });

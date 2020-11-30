@@ -1492,7 +1492,7 @@ nl:
     search_hint: "gebruikersnaam, e-mailadres of IP-adres"
     create_account:
       disclaimer: "Door te registreren gaat u akkoord met het <a href='%{privacy_link}' target='blank'>privacybeleid</a> en de <a href='%{tos_link}' target='blank'>servicevoorwaarden</a>."
-      title: "Nieuwe account maken"
+      title: "Nieuw account maken"
       failed: "Er is iets misgegaan; mogelijk is het e-mailadres al geregistreerd. Probeer de koppeling 'Wachtwoord vergeten'."
     forgot_password:
       title: "Wachtwoord herinitialiseren"
@@ -4510,7 +4510,7 @@ nl:
           user_api: "Gebruikers-API"
           uncategorized: "Overige"
           backups: "Back-ups"
-          login: "Gebruikersnaam"
+          login: "Inloggen"
           plugins: "Plug-ins"
           user_preferences: "Gebruikersvoorkeuren"
           tags: "Tags"

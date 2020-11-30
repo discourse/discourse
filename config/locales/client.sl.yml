@@ -3577,6 +3577,7 @@ sl:
           mobile: "Mobilno"
           settings: "Nastavitve"
           preview: "Predogled"
+          auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           collapse: Skrči
           uploads: "Prenosi"
           upload: "Prenesi"

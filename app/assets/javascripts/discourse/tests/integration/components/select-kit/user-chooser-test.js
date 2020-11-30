@@ -1,33 +1,40 @@
-import componentTest from "discourse/tests/helpers/component-test";
-import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-testSelectKitModule("user-chooser");
+discourseModule("Integration | Component | select-kit/user-chooser", function (
+  hooks
+) {
+  setupRenderingTest(hooks);
 
-function template() {
-  return `{{user-chooser value=value}}`;
-}
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-componentTest("displays usernames", {
-  template: template(),
+  componentTest("displays usernames", {
+    template: `{{user-chooser value=value}}`,
 
-  beforeEach() {
-    this.set("value", ["bob", "martin"]);
-  },
+    beforeEach() {
+      this.set("value", ["bob", "martin"]);
+    },
 
-  async test(assert) {
-    assert.equal(this.subject.header().name(), "bob,martin");
-  },
-});
+    async test(assert) {
+      assert.equal(this.subject.header().name(), "bob,martin");
+    },
+  });
 
-componentTest("can remove a username", {
-  template: template(),
+  componentTest("can remove a username", {
+    template: `{{user-chooser value=value}}`,
 
-  beforeEach() {
-    this.set("value", ["bob", "martin"]);
-  },
+    beforeEach() {
+      this.set("value", ["bob", "martin"]);
+    },
 
-  async test(assert) {
-    await this.subject.deselectItem("bob");
-    assert.equal(this.subject.header().name(), "martin");
-  },
+    async test(assert) {
+      await this.subject.deselectItem("bob");
+      assert.equal(this.subject.header().name(), "martin");
+    },
+  });
 });

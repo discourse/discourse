@@ -19,7 +19,7 @@ widgetTest("single, not selected", {
   },
 
   test(assert) {
-    assert.ok(queryAll("li .d-icon-far-circle:eq(0)").length === 1);
+    assert.ok(queryAll("li .d-icon-far-circle:nth-of-type(1)").length === 1);
   },
 });
 
@@ -32,7 +32,7 @@ widgetTest("single, selected", {
   },
 
   test(assert) {
-    assert.ok(queryAll("li .d-icon-circle:eq(0)").length === 1);
+    assert.ok(queryAll("li .d-icon-circle:nth-of-type(1)").length === 1);
   },
 });
 
@@ -48,7 +48,7 @@ widgetTest("multi, not selected", {
   },
 
   test(assert) {
-    assert.ok(queryAll("li .d-icon-far-square:eq(0)").length === 1);
+    assert.ok(queryAll("li .d-icon-far-square:nth-of-type(1)").length === 1);
   },
 });
 
@@ -64,6 +64,8 @@ widgetTest("multi, selected", {
   },
 
   test(assert) {
-    assert.ok(queryAll("li .d-icon-far-check-square:eq(0)").length === 1);
+    assert.ok(
+      queryAll("li .d-icon-far-check-square:nth-of-type(1)").length === 1
+    );
   },
 });

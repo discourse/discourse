@@ -1763,6 +1763,12 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      plus_subcategories_title:
+        one: "%{name} and one subcategory"
+        other: "%{name} and %{count} subcategories"
+      plus_subcategories:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
 
     select_kit:
       default_header_text: Select...
@@ -2961,6 +2967,17 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: "This color has been used by another category"
       security: "Security"
+      security_add_group: "Add a group"
+      permissions:
+        group: "Group"
+        see: "See"
+        reply: "Reply"
+        create: "Create"
+        no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
+        everyone_has_access: "This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the \"everyone\" group."
+        toggle_reply: "Toggle Reply permission"
+        toggle_full: "Toggle Create permission"
+        inherited: "This permission is inherited from \"everyone\""
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -3735,6 +3752,10 @@ en:
               sync_sso: Synchronize a user using SSO.
               show: Obtain information about an user.
               check_emails: List user emails.
+              update: Update user profile information.
+              log_out: Log out all sessions for a user.
+              anonymize: Anonymize user accounts.
+              delete: Delete user accounts.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
@@ -4056,6 +4077,7 @@ en:
           check_for_updates: "Check for Updates"
           updating: "Updating..."
           up_to_date: "Theme is up-to-date, last checked:"
+          has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
           no_settings: "This theme has no settings."

@@ -46,6 +46,7 @@ end
 def better(line)
   line = remove_prefix(line)
   line = escape_brackets(line)
+  line = remove_pull_request(line)
   line[0] = '\#' if line[0] == '#'
   if line[0]
     line[0] = line[0].capitalize
@@ -64,6 +65,10 @@ def escape_brackets(line)
     .gsub(">", ">`")
     .gsub("[", "`[")
     .gsub("]", "]`")
+end
+
+def remove_pull_request(line)
+  line.gsub(/ \(\#\d+\)$/, "")
 end
 
 def split_comments(text)

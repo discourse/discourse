@@ -231,6 +231,11 @@ describe SearchController do
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
 
+    it "does not raise 500 with an empty term" do
+      get "/search/query.json", params: { term: "in:first", type_filter: "topic", search_for_id: true }
+      expect(response.status).to eq(200)
+    end
+
     context 'rate limited' do
       it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2

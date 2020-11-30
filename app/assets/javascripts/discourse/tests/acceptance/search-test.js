@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  queryAll,
+  exists,
+  acceptance,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 
 acceptance("Search - Anonymous", function (needs) {
@@ -189,7 +191,9 @@ acceptance("Search - with tagging enabled", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", 16);
 
-    const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
+    const tags = queryAll(
+      ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
+    )
       .text()
       .trim();
 

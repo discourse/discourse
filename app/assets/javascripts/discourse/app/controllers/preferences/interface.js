@@ -1,7 +1,5 @@
 import I18n from "I18n";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { setDefaultHomepage } from "discourse/lib/utilities";
+import Controller, { inject } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
 import {
@@ -15,6 +13,7 @@ import {
   safariHacksDisabled,
   isiPad,
   iOSWithVisualViewport,
+  setDefaultHomepage,
 } from "discourse/lib/utilities";
 import { computed } from "@ember/object";
 import { reads } from "@ember/object/computed";

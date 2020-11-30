@@ -39,6 +39,7 @@ it:
   title: "Discourse"
   topics: "Argomenti"
   posts: "messaggi"
+  views: "visualizzazioni"
   loading: "Caricamento"
   powered_by_html: 'Fornito da <a href="https://www.discourse.org">Discourse</a>, si consiglia di abilitare JavaScript'
   sign_up: "Iscriviti"
@@ -196,6 +197,11 @@ it:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non puoi abilitare i caricamenti S3 perché sono già abilitati a livello globale e l'abilitazione dei caricamenti S3 a livello di sito potrebbe causare problemi critici con i caricamenti"
       cors_origins_should_not_have_trailing_slash: "Non aggiungere la barra finale (/) alle origini CORS."
     conflicting_google_user_id: 'Il Google Account ID per questo account è stato modificato; per motivi di sicurezza è richiesto l''intervendo dello staff. Si prega di contattare lo staff e indirizzarli a <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché non è stato trovato il server '%{hostname}'. Nel tuo post apparirà solo un link senza anteprima. :cry:"
+      error_response: "Purtroppo è stato impossibile creare un'anteprima per questa pagina, perché il server ha dato un codice d'errore %{status_code}. Nel tuo post apparirà solo un link senza anteprima. :cry:"
+  word_connector:
+    comma: ", "
   invite:
     expired: "Il tuo token di invito è scaduto. <a href='%{base_url}/about'>Contatta lo staff</a>."
     not_found: "Il token del tuo invito non è valido. Per favore <a href='%{base_url}/about'>contatta lo staff</a>."
@@ -251,7 +257,6 @@ it:
   email_template_cant_be_modified: "Questo modello di email non può essere modificato."
   invalid_whisper_access: "I sussurri non sono abilitati oppure non hai i permessi per creare sussurri"
   not_in_group:
-    title_topic: "Devi essere membro di un gruppo per vedere questo argomento."
     title_category: "Devi essere in un gruppo per vedere questa categoria."
     request_membership: "Richiedi di Iscrizione"
     join_group: "Unisciti al Gruppo"
@@ -1302,11 +1307,13 @@ it:
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
-    sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su sidekiq qui</a>.'
+    sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su Sidekiq qui</a>.'
     queue_size_warning: "Il numero di job in coda è %{queue_size}, il che è alto. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
     memory_warning: "Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
     google_oauth2_config_warning: 'Il server è configurato per permettere l''iscrizione e il login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni segui questa guida</a>.'
     facebook_config_warning: 'Il server è configurato per consentire l''iscrizione e il login con Facebook (enable_facebook_logins), ma l''app id e l''app secret non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vedi questa guida per saperne di più</a> .'
+    twitter_config_warning: 'Il server è configurato per consentire la registrazione e l''accesso con Twitter (enable_twitter_logins), ma la chiave e i valori segreti non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del Sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vedi questa guida per saperne di più</a>.'
+    github_config_warning: 'Il server è configurato per consentire la registrazione e l''accesso con GitHub (enable_github_logins), ma l''id client e i valori segreti non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del Sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vedi questa guida per saperne di più</a>.'
     s3_config_warning: 'Il server è configurato per caricare file su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Impostazioni sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi "How to set up image uploads to S3?" per saperne di più</a>'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Vai a <a href="%{base_path}/admin/site_settings">Impostazioni sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vedi ""How to set up image uploads to S3?" per saperne di più</a>'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini di grandi dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo gestore di pacchetti preferito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">scarica l''ultima versione</a> .'
@@ -1318,6 +1325,7 @@ it:
     missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
     bad_favicon_url: "Impossibile caricare la favicon.. Controlla le impostazioni della favicon in <a href='%{base_path}/admin/site_settings'>Impostazioni sito</a> ."
     deprecated_api_usage: "Abbiamo rilevato una richiesta API che sta utilizzando un metodo di autenticazione obsoleto. Si prega di aggiornare la richiesta API per utilizzare <a href='https://meta.discourse.org/t/-/22706'>l'autenticazione HTTP headers</a>. Dopo l'aggiornamento questo messaggio potrebbe richiedere 24 ore per scomparire."
+    update_mail_receiver: "Abbiamo rilevato una versione obsoleta del destinatario della posta. Clicca <a href='https://meta.discourse.org/t/-/133491'>qui</a> per le istruzioni di aggiornamento. Dopo l'aggiornamento, questo messaggio potrebbe richiedere 24 ore per scomparire."
     poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica il la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore di servizi."
     poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a>."
     force_https_warning: "Il tuo sito web utilizza SSL. Ma ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> non è ancora abilitato nelle impostazioni del tuo sito."
@@ -1330,6 +1338,7 @@ it:
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     default_locale: "La lingua di default di questa istanza di Discourse. Puoi rimpiazzare il testo delle categorie e argomenti generati dal sistema in <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalizza / Testo </a>."
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
+    set_locale_from_accept_language_header: "imposta la lingua dell'interfaccia per gli utenti anonimi dalla lingua delle intestazioni del loro browser web"
     support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra."
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
@@ -1388,6 +1397,10 @@ it:
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella vista mobile."
     show_pinned_excerpt_desktop: "Mostra estratti sugli argomenti appuntati nella vista desktop."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
+    blocked_onebox_domains: "Un elenco di domini che non saranno mai trasformati in onebox."
+    allowed_inline_onebox_domains: "Un elenco di domini che saranno trasformati in onebox in forma di miniatura se collegati senza un titolo"
+    enable_inline_onebox_on_all_domains: "Ignora l'impostazione del sito inline_onebox_domain_allowlist e consenti onebox in linea per tutti i domini."
+    force_custom_user_agent_hosts: "Host per i quali utilizzare l'user agent onebox personalizzato su tutte le richieste. (Particolarmente utile per gli host che limitano l'accesso da parte dell'user agent)."
     max_oneboxes_per_post: "Numero massimo di oneboxe in un messaggio."
     logo: "L'immagine del logo in alto a sinistra del tuo sito. Utilizzare un'immagine rettangolare ampia con un'altezza di 120 e un rapporto di forma superiore a 3: 1. Se lasciato vuoto, verrà mostrato il testo del titolo del sito."
     logo_small: "La piccola immagine del logo in alto a sinistra del tuo sito, vista quando scorri verso il basso. Usa un'immagine quadrata di 120 × 120. Se lasciato vuoto, verrà mostrato un simbolo Home."
@@ -1406,6 +1419,7 @@ it:
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato oggetto personalizzabile per e-mail standard. Vedi <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
+    enforce_second_factor: "Impone agli utenti di abilitare l'autenticazione a due fattori. Seleziona \"all\" per applicarlo a tutti gli utenti. Seleziona \"staff\" per applicarlo solo agli utenti staff."
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti i social login, ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
     same_site_cookies: "Utilizza gli stessi cookie del sito, si eliminano tutti i vettori Cross Site Request Forgery nei browser supportati (Lax o Strict). Avviso: Strict lavorerà solo su siti che forzano l'accesso e utilizzano SSO."
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
@@ -1450,6 +1464,7 @@ it:
     moderators_manage_categories_and_groups: "Permetti ai moderatori di gestire categorie e gruppi"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_allowlist: "Gli amministratori possono effettuare il login solo se usano un indirizzo IP definito nell'elenco degli IP schermati (Admin > Logs > IP schermati)."
+    allowed_onebox_iframes: "Un elenco dei domini iframe src permessi tramite gli incorporamenti di Onebox. `*` permetterà tutti i motori Onebox predefiniti."
     allowed_iframes: "Un elenco di prefissi di dominio src iframe che discourse può consentire in modo sicuro nei messaggi"
     slow_down_crawler_user_agents: "Agenti utente di crawler Web che devono essere limitati in frequenza in robots.txt utilizzando la direttiva di ritardo della scansione"
     slow_down_crawler_rate: "Se viene specificato slow_down_crawler_user_agents, tale frequenza verrà applicata a tutti i crawler (numero di secondi di ritardo tra le richieste)"
@@ -1491,11 +1506,14 @@ it:
     min_username_length: "Lunghezza minima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più brevi di questo, il tuo sito si romperà!"
     max_username_length: "Lunghezza massima di un nome utente in caratteri. ATTENZIONE: se utenti o gruppi già esistenti hanno nomi più lunghi di questo, il tuo sito si romperà!"
     unicode_usernames: "Consenti ai nomi utente e nomi di gruppo di contenere lettere e numeri Unicode."
+    allowed_unicode_username_characters: "Espressione regolare per consentire solo alcuni caratteri Unicode all'interno dei nomi utente. Lettere e numeri ASCII saranno sempre consentiti e non è necessario includerli nell'elenco consentito."
     reserved_usernames: "Nomi utenti per i quali l'iscrizione non è consentita. Il simbolo del carattere jolly * può essere utilizzato per abbinare qualsiasi carattere zero o più volte."
     min_password_length: "Minima lunghezza della password."
     min_admin_password_length: "Lunghezza minima password Amministratore."
     password_unique_characters: "Numero minimo di caratteri unici che una password deve avere."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
+    external_auth_skip_create_confirm: Quando ti registri tramite autenticazione esterna, salta il popup di creazione account. Utilizzalo al meglio insieme a sso_overrides_email, sso_overrides_username e sso_overrides_name.
+    external_auth_immediately: "Reindirizza automaticamente al sistema di login esterno senza l'interazione dell'utente. Questo ha effetto solo quando login_required è true e esiste un solo metodo di autenticazione esterno"
     enable_sso: "Abilita il single sign on da sito esterno (ATTENZIONE: L'INDIRIZZO EMAIL DEGLI UTENTI *DEVE* ESSERE VALIDATO DAL SITO ESTERNO!)"
     verbose_sso_logging: "Registra la diagnostica dettagliata SSO su <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider. È necessario che sia impostata l'opzione sso_provider_secrets"
@@ -1504,7 +1522,12 @@ it:
     sso_provider_secrets: "Un elenco di coppie dominio-secret che utilizzano Discourse come provider SSO. Assicurati che l'SSO secret sia di almeno 10 caratteri. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi dominio o solo una parte di esso (ad esempio *. Esempio.com)."
     sso_overrides_bio: "Sovrascrive la biografia utente nel profilo utente ed impedisce agli utenti di cambiarla"
     sso_overrides_groups: "Sincronizza tutte le appartenenze ai gruppi manuali con i gruppi specificati nell'attributo SSO dei gruppi (ATTENZIONE: se non si specificano i gruppi, l'appartenenza al gruppo manuale verrà cancellata per l'utente)"
+    sso_overrides_email: "Sovrascrive l'email locale con l'email del sito esterno dal payload SSO ad ogni accesso e impedisce le modifiche locali. Si applica a tutti i provider di autenticazione. (ATTENZIONE: possono verificarsi discrepanze dovute alla normalizzazione delle email locali)"
+    sso_overrides_username: "Sovrascrive il nome utente locale con il nome utente del sito esterno dal payload SSO ad ogni accesso e previene le modifiche locali. Si applica a tutti i provider di autenticazione. (ATTENZIONE: possono verificarsi discrepanze a causa di differenze nella lunghezza/requisiti del nome utente)"
+    sso_overrides_name: "Sovrascrive il nome completo locale con il nome completo del sito esterno dal payload SSO ad ogni accesso e impedisce modifiche locali. Si applica a tutti i provider di autenticazione."
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con l'avatar del sito esterno dal payload SSO. Se abilitato, gli utenti non potranno caricare avatar su Discourse."
+    sso_overrides_location: "Sovrascrive la posizione utente con la posizione esterna dal payload SSO e impedisce le modifiche locali."
+    sso_overrides_website: "Sovrascrive il sito web dell'utente con la posizione esterna dal payload SSO e impedisce le modifiche locali."
     sso_overrides_profile_background: "Sostituisce lo sfondo del profilo utente con l'avatar del sito esterno dal payload SSO."
     sso_overrides_card_background: "Sostituisce lo sfondo della scheda utente con l'avatar del sito esterno dal payload SSO."
     sso_not_approved_url: "Ridirigi a questa URL gli account SSO non approvati"
@@ -1522,10 +1545,15 @@ it:
     twitter_consumer_key: "Consumer Key per l'autenticazione Twitter, registrata su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer secret per l'autenticazione Twitter, registrato su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_facebook_logins: "Abilita l'autenticazione di Facebook, richiede facebook_app_id e facebook_app_secret. Vedi <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurazione dell'accesso a Facebook per Discourse</a> ."
+    facebook_app_id: "Id dell'app per l'autenticazione e la condivisione di Facebook, registrata su <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret per l'autenticazione di Facebook, registrato su <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Abilita l'autenticazione GitHub, richiede github_client_id e github_client_secret. Vedi <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
+    github_client_id: "Client id per l'autenticazione di GitHub, registrato su <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Client secret per l'autenticazione di GitHub, registrato su <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Consentire agli utenti di autenticarsi utilizzando Discord?"
     discord_client_id: 'ID client Discord (Te ne serve uno? Visita <a href="https://discordapp.com/developers/applications/me">il portale per sviluppatori Discord</a> )'
     discord_secret: "Secret Key di Discord"
+    discord_trusted_guilds: 'Consenti solo ai membri di queste gilde di Discord di accedere tramite Discord. Usa l''ID numerico per la gilda. Per ulteriori informazioni, controlla le istruzioni <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">qui</a>. Lascia vuoto per consentire qualsiasi gilda.'
     enable_backups: "Consenti agli amministratori di creare backup del forum"
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
@@ -1534,6 +1562,7 @@ it:
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     s3_endpoint: "L'endpoint può essere modificato per eseguire il backup su un servizio compatibile S3 come DigitalOcean Spaces o Minio. ATTENZIONE: lasciare vuoto se si utilizza AWS S3."
     s3_configure_tombstone_policy: "Abilita la cancellazione automatica per i caricamenti in \"tombstone\". IMPORTANTE: se disabilitato, nessuno spazio verrà recuperato dopo aver eliminato i caricamenti."
+    s3_disable_cleanup: "Impedisci la rimozione dei vecchi backup da S3 quando ci sono più backup del massimo consentito."
     enable_s3_inventory: "Genera rapporti e verifica i caricamenti utilizzando l'inventario Amazon S3. IMPORTANTE: richiede credenziali S3 valide (sia l'access key id che la secret access key)."
     backup_time_of_day: "Ora del giorno in UTC in cui eseguire il backup."
     backup_with_uploads: "Includi i caricamenti nei backup programmati. Se disabilitata verrà eseguito il backup del solo database."
@@ -1557,12 +1586,14 @@ it:
     max_bookmarks_per_day: "Massimo numero di segnalibri per utente al giorno."
     max_edits_per_day: "Massimo numero di modifiche per utente al giorno."
     max_topics_per_day: "Massimo numero di argomenti che un utente può creare al giorno."
+    max_personal_messages_per_day: "Numero massimo di nuovi argomenti di messaggi personali che un utente può creare al giorno."
     max_invites_per_day: "Numero massimo di inviti che un utente può inviare in un giorno."
     max_topic_invitations_per_day: "Numero massimo di inviti ad argomenti che un utente può inviare al giorno."
     max_logins_per_ip_per_hour: "Numero massimo di accessi consentiti per indirizzo Ip per ora"
     max_logins_per_ip_per_minute: "Numero massimo di accessi consentiti per indirizzo IP per minuto"
     max_post_deletions_per_minute: "Numero massimo di post che un utente può eliminare al minuto."
     max_post_deletions_per_day: "Numero massimo di post che un utente può eliminare al giorno."
+    invite_link_max_redemptions_limit: "Il numero massimo di riscatti consentiti per i link di invito non può essere superiore a questo valore."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che scatena un allarme agli amministratori. Un valore pari a 0 disabilita questa caratteristica. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che scatena un allarme agli amministratori. Un valore pari a 0 disabilita questa caratteristica. NOTA: richiede un riavvio."
     categories_topics: "Numero di argomenti da mostrare nella pagina /categories. Se impostato su 0, proverà automaticamente a trovare un valore per mantenere simmetriche le due colonne (categorie e argomenti)."
@@ -1631,7 +1662,14 @@ it:
     min_trust_to_send_messages: "Il livello di esperienza minimo richiesto per creare nuovi messaggi personali."
     min_trust_to_flag_posts: "Il Livello Esperienza minimo richiesto per segnalare messaggi"
     min_trust_to_post_links: "Il Livello Esperienza minimo richiesto per includere collegamenti nei messaggi"
+    min_trust_to_post_embedded_media: "Il livello minimo di esperienza richiesto per incorporare elementi multimediali in un messaggio"
+    min_trust_level_to_allow_profile_background: "Il livello minimo di esperienza richiesto per caricare uno sfondo del profilo"
+    min_trust_level_to_allow_user_card_background: "Il livello minimo di esperienza richiesto per caricare uno sfondo nella scheda utente"
+    min_trust_level_to_allow_invite: "Il livello minimo di esperienza richiesto per invitare gli utenti"
+    min_trust_level_to_allow_ignore: "Il livello minimo di fiducia richiesto per ignorare utenti"
+    allowed_link_domains: "Domini che gli utenti possono collegare nei messaggi anche se non hanno il Livello di Esperienza appropriato per pubblicare collegamenti"
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
+    newuser_max_embedded_media: "Quanti elementi multimediali incorporati un nuovo utente può aggiungere a un messaggio."
     newuser_max_attachments: "Quanti allegati può aggiungere ad un messaggio un nuovo utente."
     newuser_max_mentions_per_post: "Massimo numero di menzioni ad un @nome che un utente può fare in un messaggio."
     newuser_max_replies_per_topic: "Numero massimo di risposte che un nuovo utente può inviare in un singolo argomento, prima che qualcuno risponda."
@@ -1653,6 +1691,7 @@ it:
     desktop_category_page_style: "Stile visuale per la pagina /categorie."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico dei distintivi relativi alle categorie."
+    default_dark_mode_color_scheme_id: "Lo schema di colori usato in modalità scuro."
     max_image_size_kb: "La dimensione massima di un&#39;allegato immagine in KB.  Deve essere configurato anche in nginx (client_max_body_size) / apache o proxy. Le immagini più grandi di questa e più piccole di client_max_body_size verranno ridimensionate per adattarsi al caricamento."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
@@ -3261,7 +3300,7 @@ it:
 
       ## [Termini di Servizio](#tos)
 
-      Sì, l'avvocatese è noioso, ma ci dobbiamo proteggere &ndash; e, per estensione, proteggere anche te ed i tuoi dati &ndash; contro persone non amichevoli. Abbiamo dei [Termini di Servizio](%{base_path}/tos) che descrivono il tuo (e il nostro) comportamento ed i diritti che riguardano i contenuti, la privacy e le leggi. Per poter usare questo servizio, devi accettare i nostri [TDS](%{base_path}/tos)
+      Sì, l'avvocatese è noioso, ma ci dobbiamo proteggere &ndash; e, per estensione, proteggere anche te ed i tuoi dati &ndash; contro persone non amichevoli. Abbiamo dei [Termini di Servizio](%{base_path}/tos) che descrivono il tuo (e il nostro) comportamento ed i diritti che riguardano i contenuti, la privacy e le leggi. Per poter usare questo servizio, devi accettare i nostri [TOS](%{base_path}/tos)
   tos_topic:
     title: "Termini del Servizio"
   privacy_topic:

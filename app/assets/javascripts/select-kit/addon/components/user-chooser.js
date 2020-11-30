@@ -1,7 +1,6 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
-import {
-  default as userSearch,
+import userSearch, {
   skipSearch,
   eagerCompleteSearch,
 } from "discourse/lib/user-search";

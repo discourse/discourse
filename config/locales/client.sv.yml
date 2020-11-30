@@ -1627,6 +1627,12 @@ sv:
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
+      plus_subcategories_title:
+        one: "%{name} och en underkategori"
+        other: "%{name} och %{count} underkategorier"
+      plus_subcategories:
+        one: "+ %{count} underkategori"
+        other: "+ %{count} underkategorier"
     select_kit:
       default_header_text: Välj...
       no_content: Inga matchningar hittades
@@ -2729,6 +2735,17 @@ sv:
       change_in_category_topic: "Redigera beskrivning"
       already_used: "Den här färgen används redan av en annan kategori"
       security: "Säkerhet"
+      security_add_group: "Lägg till en grupp"
+      permissions:
+        group: "Grupp"
+        see: "Se"
+        reply: "Svara"
+        create: "Skapa"
+        no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
+        everyone_has_access: "Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”."
+        toggle_reply: "Slå på/av behörighet att svara"
+        toggle_full: "Slå på/av behörighet att skapa"
+        inherited: "Denna behörighet ärvs från \"alla\""
       special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
@@ -3782,6 +3799,7 @@ sv:
           check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar..."
           up_to_date: "Temat är uppdaterat, senaste kontroll:"
+          has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
           add: "Lägg till"
           theme_settings: "Inställningar för tema"
           no_settings: "Detta tema har inga inställningar."

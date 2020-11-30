@@ -38,6 +38,12 @@ module("Unit | Utility | to-markdown", function () {
     assert.equal(toMarkdown(html), markdown);
   });
 
+  test("converts a link which is an attachment", function (assert) {
+    let html = `<a class="attachment" href="https://discourse.org/pdfs/stuff.pdf">stuff.pdf</a>`;
+    let markdown = `[stuff.pdf|attachment](https://discourse.org/pdfs/stuff.pdf)`;
+    assert.equal(toMarkdown(html), markdown);
+  });
+
   test("put raw URL instead of converting the link", function (assert) {
     let url = "https://discourse.org";
     const html = () => `<a href="${url}">${url}</a>`;

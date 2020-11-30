@@ -1,9 +1,8 @@
-import { later, run } from "@ember/runloop";
+import { later, run, throttle, schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
 import { ajax } from "discourse/lib/ajax";
-import { throttle, schedule } from "@ember/runloop";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import {
   nextTopicUrl,

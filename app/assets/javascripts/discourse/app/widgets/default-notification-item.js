@@ -3,7 +3,6 @@ import { isEmpty } from "@ember/utils";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import DiscourseURL from "discourse/lib/url";
 import { h } from "virtual-dom";
 import { emojiUnescape } from "discourse/lib/text";
 import {
@@ -11,10 +10,9 @@ import {
   escapeExpression,
   formatUsername,
 } from "discourse/lib/utilities";
-import { setTransientHeader } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, setTransientHeader } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 
 export const DefaultNotificationItem = createWidget(

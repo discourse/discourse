@@ -1,42 +1,44 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["inline-edit"],
 
-  checked: null,
-  checkedInternal: null,
+  buffer: null,
+  bufferModelId: null,
 
-  init() {
+  didReceiveAttrs() {
     this._super(...arguments);
 
-    this.set("checkedInternal", this.checked);
+    if (this.modelId !== this.bufferModelId) {
+      // HACK: The condition above ensures this method is called only when its
+      // attributes are changed (i.e. only when `checked` changes).
+      //
+      // Reproduction steps: navigate to theme #1, switch to theme #2 from the
+      // left-side panel, then switch back to theme #1 and click on the <input>
+      // element wrapped by this component. It will call `didReceiveAttrs` even
+      // though none of the attributes have changed (only `buffer` does).
+      this.setProperties({
+        buffer: this.checked,
+        bufferModelId: this.modelId,
+      });
+    }
   },
 
-  @observes("checked")
-  checkedChanged() {
-    this.set("checkedInternal", this.checked);
+  @discourseComputed("checked", "buffer")
+  changed(checked, buffer) {
+    return !!checked !== !!buffer;
   },
 
-  @discourseComputed("labelKey")
-  label(key) {
-    return I18n.t(key);
+  @action
+  apply() {
+    this.set("checked", this.buffer);
+    this.action();
   },
 
-  @discourseComputed("checked", "checkedInternal")
-  changed(checked, checkedInternal) {
-    return !!checked !== !!checkedInternal;
-  },
-
-  actions: {
-    cancelled() {
-      this.set("checkedInternal", this.checked);
-    },
-
-    finished() {
-      this.set("checked", this.checkedInternal);
-      this.action();
-    },
+  @action
+  cancel() {
+    this.set("buffer", this.checked);
   },
 });

@@ -1,8 +1,7 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll, exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 import { isEmpty } from "@ember/utils";
 import { click, fillIn } from "@ember/test-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (queryAll(selector).hasClass("is-expanded")) {
@@ -249,7 +248,9 @@ export default function selectKit(selector) {
 
     rowByIndex(index) {
       return rowHelper(
-        queryAll(selector).find(".select-kit-row:eq(" + index + ")")
+        queryAll(selector).find(
+          ".select-kit-row:nth-of-type(" + (index + 1) + ")"
+        )
       );
     },
 
@@ -285,7 +286,7 @@ export default function selectKit(selector) {
       await click(
         queryAll(selector)
           .find(".select-kit-header")
-          .find(`[data-value=${value}]`)
+          .find(`[data-value="${value}"]`)
       );
     },
 

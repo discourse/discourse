@@ -207,6 +207,7 @@ class ApplicationController < ActionController::Base
       403,
       include_ember: true,
       custom_message: e.custom_message,
+      custom_message_params: e.custom_message_params,
       group: e.group
     )
   end

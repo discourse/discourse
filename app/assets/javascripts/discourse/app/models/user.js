@@ -1,5 +1,4 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import getURL from "discourse-common/lib/get-url";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { A } from "@ember/array";
 import { isEmpty } from "@ember/utils";
@@ -22,14 +21,13 @@ import UserDraftsStream from "discourse/models/user-drafts-stream";
 import Group from "discourse/models/group";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "discourse/lib/preload-store";
-import { defaultHomepage } from "discourse/lib/utilities";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
 import deprecated from "discourse-common/lib/deprecated";
 import Site from "discourse/models/site";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { escapeExpression } from "discourse/lib/utilities";
 import { getOwner } from "discourse-common/lib/get-owner";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 

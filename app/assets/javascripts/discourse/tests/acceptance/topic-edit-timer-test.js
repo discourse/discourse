@@ -1,12 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { skip } from "qunit";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   updateCurrentUser,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Topic - Edit timer", function (needs) {
   needs.user();

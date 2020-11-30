@@ -1,7 +1,6 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Users Badges", function (needs) {
   needs.user();

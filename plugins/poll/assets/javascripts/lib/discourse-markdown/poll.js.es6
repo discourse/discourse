@@ -403,10 +403,9 @@ function ii(a, b, c, d, x, s, t) {
 }
 
 function md51(s) {
-  // Converts the string to UTF-8 "bytes" when necessary
-  if (/[\x80-\xFF]/.test(s)) {
-    s = unescape(encodeURI(s));
-  }
+  // Converts the string to UTF-8 "bytes"
+  s = unescape(encodeURI(s));
+
   var n = s.length,
     state = [1732584193, -271733879, -1732584194, 271733878],
     i;

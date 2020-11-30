@@ -1,4 +1,4 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";

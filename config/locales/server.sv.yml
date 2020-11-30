@@ -39,6 +39,7 @@ sv:
   title: "Discourse"
   topics: "Ämnen"
   posts: "inlägg"
+  views: "visningar"
   loading: "Laddar"
   powered_by_html: 'Drivs av <a href="https://www.discourse.org">Discourse</a>, visas bäst med JavaScript aktiverat'
   sign_up: "Registrera dig"
@@ -196,6 +197,14 @@ sv:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
       cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
     conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
+      error_response: "Tyvärr kunde vi inte generera en förhandsvisning för den här webbsidan eftersom webbservern returnerade felkoden %{status_code}. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
+      missing_data:
+        one: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-tagg inte kunde hittas: %{missing_attributes}"
+        other: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-taggar inte kunde hittas: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
@@ -251,7 +260,6 @@ sv:
   email_template_cant_be_modified: "Den här e-postmallen kan inte ändras"
   invalid_whisper_access: "Antingen är viskningar inte aktiverade eller så har du inte behörighet för att skapa viskningsinlägg"
   not_in_group:
-    title_topic: "Du måste vara i en grupp för att se detta ämne."
     title_category: "Du måste vara i en grupp för att se denna kategori."
     request_membership: "Begär medlemskap"
     join_group: "Gå med i grupp"
@@ -854,6 +862,7 @@ sv:
       others: "Ingen aktivitet."
     no_bookmarks:
       self: "Du har inga bokmärkta inlägg; med bokmärken kan du snabbt hänvisa till ett specifikt inlägg."
+      search: "Det hittades inga bokmärken med den angivna sökfrågan."
       others: "Inga bokmärken."
     no_likes_given:
       self: "Du har inte gillat några inlägg."
@@ -1388,6 +1397,7 @@ sv:
     enable_inline_onebox_on_all_domains: "Ignorera webbplatsinställningen inline_onebox_domain_allowlist och tillåt infogad onebox på alla domäner."
     force_custom_user_agent_hosts: "Värdar för vilka anpassad användaragent för onebox ska användas vid alla förfrågningar. (särskilt användbart för värdar som begränsar åtkomst av användaragent)."
     max_oneboxes_per_post: "Maximalt antal oneboxar i ett inlägg."
+    facebook_app_access_token: "En token genererad från ditt Facebook-app-ID och hemlighet. Används för att skapa Instagram oneboxes."
     logo: "Logotypen i övre vänstra hörnet av hemsidan. Använd en bred rektangulär bild med en höjd på 120 och storleksförhållande större än 3:1. Om detta lämnas tomt kommer sidans titeltext att visas."
     logo_small: "Den lilla logotypen som visas i övre vänstra hörnet av hemsidan när man rullar ned. Använd en fyrkantig bild 120 x 120. Om detta lämnas tomt kommer hemsidans teckenbild visas."
     digest_logo: "Den alternativa logotypen som används överst i din webbplats sammanfattning som skickas via e-post. Den bör ha en bred rektangulär form. Använd inte en SVG-bild. Om detta lämnas tomt kommer bilden från inställningen `logo` att användas."
@@ -1669,6 +1679,7 @@ sv:
     min_trust_level_to_allow_profile_background: "Lägsta förtroendenivå som krävs för att ladda upp en profilbakgrund"
     min_trust_level_to_allow_user_card_background: "Lägsta förtroendenivå som krävs för att ladda upp en bakgrund på användarkort"
     min_trust_level_to_allow_invite: "Lägsta förtroendenivå som krävs för att bjuda in användare"
+    min_trust_level_to_allow_ignore: "Lägsta förtroendenivå som krävs för att ignorera användare"
     allowed_link_domains: "Domäner som användare kan länka till även om de inte har tillräcklig förtroendenivå för att kunna publicera länkar"
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
     newuser_max_embedded_media: "Hur många inbäddade media objekt en ny användare kan lägga till i ett inlägg."

@@ -1,11 +1,14 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  queryAll,
+  exists,
+  acceptance,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 function selectText(selector) {
@@ -28,7 +31,7 @@ acceptance("Topic", function (needs) {
 
   test("Reply as new topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("button.share:eq(0)");
+    await click("button.share:nth-of-type(1)");
     await click(".reply-as-new-topic a");
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -47,7 +50,7 @@ acceptance("Topic", function (needs) {
 
   test("Reply as new message", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click("button.share:eq(0)");
+    await click("button.share:nth-of-type(1)");
     await click(".reply-as-new-topic a");
 
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -133,8 +136,8 @@ acceptance("Topic", function (needs) {
       "it does not show the wiki icon"
     );
 
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.show-post-admin-menu");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
     assert.ok(queryAll("a.wiki").length === 1, "it shows the wiki icon");
@@ -215,7 +218,7 @@ acceptance("Topic", function (needs) {
 
   test("Deleting a topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
     await click(".toggle-admin-menu");
     assert.ok(exists(".topic-admin-recover"), "it shows the recover button");
@@ -224,7 +227,7 @@ acceptance("Topic", function (needs) {
   test("Deleting a popular topic displays confirmation modal", async function (assert) {
     this.siteSettings.min_topic_views_for_delete_confirm = 10;
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
     assert.ok(
       visible(".delete-topic-confirm-modal"),

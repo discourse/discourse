@@ -1736,6 +1736,16 @@ pl_PL:
         few: "%{count} tematy w tej kategorii"
         many: "%{count} tematów w tej kategorii"
         other: "%{count} tematów w tej kategorii"
+      plus_subcategories_title:
+        one: "%{name} i jedna podkategoria"
+        few: "%{name} i %{count} podkategorie"
+        many: "%{name} i %{count} podkategorii"
+        other: "%{name} i %{count} podkategorii"
+      plus_subcategories:
+        one: "+ %{count} podkategoria"
+        few: "+ %{count} podkategorie"
+        many: "+ %{count} podkategorii"
+        other: "+ %{count} podkategorii"
     select_kit:
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
@@ -2938,6 +2948,17 @@ pl_PL:
       change_in_category_topic: "Edytuj opis"
       already_used: "Ten kolor jest używany przez inną kategorię"
       security: "Bezpieczeństwo"
+      security_add_group: "Dodaj grupę"
+      permissions:
+        group: "Grupa"
+        see: "Zobacz"
+        reply: "Odpowiedz"
+        create: "Utwórz"
+        no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
+        everyone_has_access: "Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie \"wszyscy\"."
+        toggle_reply: "Przełącz uprawnienie do odpowiedzi"
+        toggle_full: "Przełącz uprawnienie do tworzenia"
+        inherited: "To uprawnienie jest dziedziczone po \"wszystkich\""
       special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
@@ -4049,6 +4070,7 @@ pl_PL:
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
+          has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
           theme_settings: "Ustawienia tematu"
           no_settings: "Ten temat nie ma żanych ustawień"

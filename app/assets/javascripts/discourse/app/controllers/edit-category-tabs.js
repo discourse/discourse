@@ -7,6 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import { readOnly } from "@ember/object/computed";
 import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { underscore } from "@ember/string";
 
 export default Controller.extend({
   selectedTab: "general",
@@ -67,6 +68,11 @@ export default Controller.extend({
           categoryName: name,
         })
       : I18n.t("category.create");
+  },
+
+  @discourseComputed("selectedTab")
+  selectedTabTitle(tab) {
+    return I18n.t(`category.${underscore(tab)}`);
   },
 
   actions: {

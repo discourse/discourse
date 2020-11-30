@@ -1,5 +1,3 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -7,6 +5,8 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
   updateCurrentUser,
+  queryAll,
+  exists,
 } from "discourse/tests/helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
@@ -61,7 +61,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(queryAll(".users-input .item:eq(0)").text(), "codinghorror");
+    assert.equal(
+      queryAll(".users-input .item:nth-of-type(1)").text(),
+      "codinghorror"
+    );
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0
@@ -344,7 +347,10 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_private_message");
 
-    assert.equal(queryAll(".users-input .item:eq(0)").text(), "uwe_keim");
+    assert.equal(
+      queryAll(".users-input .item:nth-of-type(1)").text(),
+      "uwe_keim"
+    );
     assert.ok(
       queryAll(".d-editor-input").val().indexOf("Continuing the discussion") >=
         0
