@@ -127,6 +127,14 @@ createWidget("post-filtered-replies", {
         this.attach("poster-name", attrs.posts[0]),
         this.attach("filter-show-all", attrs),
       ];
+    } else {
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies.viewing_subset")
+        ),
+        this.attach("filter-show-all", attrs),
+      ];
     }
   },
 });

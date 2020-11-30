@@ -628,12 +628,19 @@ createWidget("post-article", {
   toggleReplyAbove(goToPost = "false") {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
-    // jump directly on mobile
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const post = this.findAncestorModel();
+      const controller = this.register.lookup("controller:topic");
+      return post
+        .get("topic.postStream")
+        .filterUpwards(this.attrs.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
 
-    if (
-      this.attrs.mobileView ||
-      this.siteSettings.enable_filtered_replies_view
-    ) {
+    // jump directly on mobile
+    if (this.attrs.mobileView) {
       const topicUrl = this._getTopicUrl();
       if (topicUrl) {
         DiscourseURL.routeTo(`${topicUrl}/${replyPostNumber}`);

@@ -28,6 +28,7 @@ export default RestModel.extend({
   postsWithPlaceholders: null,
   timelineLookup: null,
   filterRepliesToPostNumber: null,
+  filterUpwardsPostID: null,
 
   init() {
     this._identityMap = {};
@@ -44,6 +45,7 @@ export default RestModel.extend({
       userFilters: [],
       summary: false,
       filterRepliesToPostNumber: false,
+      filterUpwardsPostID: false,
       loaded: false,
       loadingAbove: false,
       loadingBelow: false,
@@ -119,10 +121,16 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @discourseComputed("summary", "userFilters.[]", "filterRepliesToPostNumber")
-  streamFilters(summary) {
+  @discourseComputed(
+    "summary",
+    "userFilters.[]",
+    "filterRepliesToPostNumber",
+    "filterUpwardsPostID"
+  )
+  streamFilters() {
     const result = {};
-    if (summary) {
+
+    if (this.summary) {
       result.filter = "summary";
     }
 
@@ -134,6 +142,11 @@ export default RestModel.extend({
     if (this.filterRepliesToPostNumber) {
       result.replies_to_post_number = this.filterRepliesToPostNumber;
     }
+
+    if (this.filterUpwardsPostID) {
+      result.filter_upwards_post_id = this.filterUpwardsPostID;
+    }
+
     return result;
   },
 
@@ -205,33 +218,35 @@ export default RestModel.extend({
   },
 
   cancelFilter() {
-    this.setProperties({ summary: false, filterRepliesToPostNumber: false });
+    this.setProperties({
+      summary: false,
+      filterRepliesToPostNumber: false,
+      filterUpwardsPostID: false,
+    });
     this.userFilters.clear();
   },
 
-  toggleSummary() {
-    this.userFilters.clear();
-    this.set("filterRepliesToPostNumber", false);
-    this.toggleProperty("summary");
-    const opts = {};
+  showSummary() {
+    this.cancelFilter();
+    this.set("summary", true);
 
-    if (!this.summary) {
-      opts.filter = "none";
-    }
-
-    return this.refresh(opts).then(() => {
-      if (this.summary) {
-        this.jumpToSecondVisible();
-      }
+    return this.refresh({}).then(() => {
+      this.jumpToSecondVisible();
     });
   },
 
   enableRepliesFilter(postNumber) {
-    this.userFilters.clear();
-    this.setProperties({
-      summary: false,
-      filterRepliesToPostNumber: postNumber,
+    this.cancelFilter();
+    this.set("filterRepliesToPostNumber", postNumber);
+
+    return this.refresh().then(() => {
+      this.jumpToSecondVisible();
     });
+  },
+
+  filterUpwards(postID) {
+    this.cancelFilter();
+    this.set("filterUpwardsPostID", postID);
 
     return this.refresh().then(() => {
       this.jumpToSecondVisible();
@@ -249,7 +264,11 @@ export default RestModel.extend({
   // Filter the stream to a particular user.
   toggleParticipant(username) {
     const userFilters = this.userFilters;
-    this.setProperties({ summary: false, filterRepliesToPostNumber: false });
+    this.setProperties({
+      summary: false,
+      filterRepliesToPostNumber: false,
+      filterUpwardsPostID: false,
+    });
 
     let jump = false;
     if (userFilters.includes(username)) {

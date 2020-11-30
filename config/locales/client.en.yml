@@ -2921,6 +2921,7 @@ en:
       filtered_replies:
         viewing: "Viewing %{reply_count} replies to"
         viewing_posts_by: "Viewing %{post_count} posts by"
+        viewing_subset: "Some replies are collapsed"
         viewing_summary: "Viewing a summary of this topic"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
