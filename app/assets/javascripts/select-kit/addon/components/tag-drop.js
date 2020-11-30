@@ -96,6 +96,10 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   noTagsLabel: i18n("tagging.selector_no_tags"),
 
+  modifyComponentForRow() {
+    return "tag-row";
+  },
+
   shortcuts: computed("tagId", function () {
     const shortcuts = [];
 
