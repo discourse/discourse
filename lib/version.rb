@@ -4,8 +4,6 @@ module Discourse
   VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
   VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
 
-  VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
-
   # work around reloader
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:

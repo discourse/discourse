@@ -236,16 +236,6 @@ RSpec.describe ListController do
         expect(response.status).to eq(404)
       end
 
-      it 'should return the right response when user does not belong to group' do
-        Fabricate(:private_message_topic, allowed_groups: [group])
-
-        group.remove(user)
-
-        get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
-
-        expect(response.status).to eq(404)
-      end
-
       it 'should return the right response' do
         topic = Fabricate(:private_message_topic, allowed_groups: [group])
         get "/topics/private-messages-group/#{user.username}/#{group.name}.json"

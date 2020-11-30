@@ -455,7 +455,6 @@ class TopicsController < ApplicationController
     params.require(:duration) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_see!(topic)
     guardian.ensure_can_moderate!(topic)
 
     options = {

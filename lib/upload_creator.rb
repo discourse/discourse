@@ -447,14 +447,4 @@ class UploadCreator
     @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
-  def add_metadata!
-    @upload.for_private_message = true if @opts[:for_private_message]
-    @upload.for_group_message   = true if @opts[:for_group_message]
-    @upload.for_theme           = true if @opts[:for_theme]
-    @upload.for_export          = true if @opts[:for_export]
-    @upload.for_site_setting    = true if @opts[:for_site_setting]
-    @upload.for_gravatar        = true if @opts[:for_gravatar]
-    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
-  end
-
 end

@@ -125,6 +125,7 @@ describe Middleware::AnonymousCache do
         expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
       end
     end
+  end
 
   context 'background request rate limit' do
     it 'will rate limit background requests' do
