@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import I18n from "I18n";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | Widget | post", function (hooks) {

@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import getUrl from "discourse-common/lib/get-url";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
+import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { schedule } from "@ember/runloop";
 
 jQuery.fn.wiggle = function (times, duration) {
   if (times > 0) {

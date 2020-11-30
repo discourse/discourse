@@ -1,6 +1,6 @@
-import { gt, equal } from "@ember/object/computed";
+import { COMPONENTS, THEMES } from "admin/models/theme";
+import { equal, gt } from "@ember/object/computed";
 import Component from "@ember/component";
-import { THEMES, COMPONENTS } from "admin/models/theme";
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 

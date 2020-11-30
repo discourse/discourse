@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import { dasherize } from "@ember/string";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   router: service(),

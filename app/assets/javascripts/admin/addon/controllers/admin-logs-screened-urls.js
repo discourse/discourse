@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
+import ScreenedUrl from "admin/models/screened-url";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import ScreenedUrl from "admin/models/screened-url";
 
 export default Controller.extend({
   loading: false,

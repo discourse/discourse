@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
+import I18n from "I18n";
 
 const TIME_FORMAT = "LLL";
 const DATE_FORMAT = "LL";

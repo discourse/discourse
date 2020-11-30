@@ -1,4 +1,4 @@
-import { not, and } from "@ember/object/computed";
+import { and, not } from "@ember/object/computed";
 import Controller from "@ember/controller";
 export default Controller.extend({
   noOperationIsRunning: not("model.isOperationRunning"),

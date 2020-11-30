@@ -1,12 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import DiscourseURL, { userPath } from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 
 export default Controller.extend(PasswordValidation, {

@@ -2,7 +2,8 @@
   "extends": "eslint-config-discourse",
   "rules": {
     "discourse-ember/global-ember": 2,
-    "no-duplicate-imports": 2
+    "no-duplicate-imports": 2,
+    "sort-imports": 2
   },
   "globals": {
     "moduleFor": "off",

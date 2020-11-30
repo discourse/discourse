@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
-import { mapRoutes } from "discourse/mapping-router";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { mapRoutes } from "discourse/mapping-router";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | avatar-selector", function (hooks) {

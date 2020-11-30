@@ -1,8 +1,8 @@
 import AdminEmailLogsController from "admin/controllers/admin-email-logs";
-import discourseDebounce from "discourse/lib/debounce";
-import IncomingEmail from "admin/models/incoming-email";
-import { observes } from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import IncomingEmail from "admin/models/incoming-email";
+import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
 export default AdminEmailLogsController.extend({
   @observes("filter.{status,from,to,subject}")

@@ -1,14 +1,14 @@
-import { test } from "qunit";
 import {
-  relativeAge,
   autoUpdatingRelativeAge,
-  updateRelativeAge,
-  number,
-  longDate,
   durationTiny,
+  longDate,
+  number,
+  relativeAge,
+  updateRelativeAge,
 } from "discourse/lib/formatter";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
+import { test } from "qunit";
 
 function formatMins(mins, opts = {}) {
   let dt = new Date(new Date() - mins * 60 * 1000);

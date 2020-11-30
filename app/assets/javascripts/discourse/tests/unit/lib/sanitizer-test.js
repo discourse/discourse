@@ -1,5 +1,5 @@
-import { test, module } from "qunit";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { module, test } from "qunit";
 import { hrefAllowed } from "pretty-text/sanitizer";
 
 module("Unit | Utility | sanitizer", function () {

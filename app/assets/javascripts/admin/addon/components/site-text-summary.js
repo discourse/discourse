@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import { on } from "discourse-common/utils/decorators";
 import highlightHTML from "discourse/lib/highlight-html";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["site-text"],

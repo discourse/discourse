@@ -1,11 +1,11 @@
+import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import I18n from "I18n";
-import { avatarImg } from "discourse/widgets/post";
-import { dateNode } from "discourse/helpers/node";
 import RawHtml from "discourse/widgets/raw-html";
+import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
+import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
-import { escapeExpression, formatUsername } from "discourse/lib/utilities";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 

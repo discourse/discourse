@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller, { inject } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),

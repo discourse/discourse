@@ -1,5 +1,5 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentURL } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Unknown", function (needs) {

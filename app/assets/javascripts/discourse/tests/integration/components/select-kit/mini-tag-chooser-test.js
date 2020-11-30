@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule(
   "Integration | Component | select-kit/mini-tag-chooser",

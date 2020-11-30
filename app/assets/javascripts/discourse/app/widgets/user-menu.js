@@ -1,6 +1,6 @@
-import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { later } from "@ember/runloop";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",

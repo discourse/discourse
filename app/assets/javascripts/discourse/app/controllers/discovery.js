@@ -1,7 +1,7 @@
-import { alias, not, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
+import { alias, equal, not } from "@ember/object/computed";
 import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
 import { observes } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 

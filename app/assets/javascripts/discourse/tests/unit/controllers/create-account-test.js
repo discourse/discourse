@@ -1,6 +1,6 @@
-import { test } from "qunit";
 import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 discourseModule("Unit | Controller | create-account", function () {
   test("basicUsernameValidation", async function (assert) {

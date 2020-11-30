@@ -1,7 +1,7 @@
-import { test, module } from "qunit";
-import { load } from "pretty-text/oneboxer";
-import { ajax } from "discourse/lib/ajax";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
+import { module, test } from "qunit";
+import { ajax } from "discourse/lib/ajax";
+import { load } from "pretty-text/oneboxer";
 import { stringToHTML } from "discourse/tests/helpers/html-helper";
 
 function loadOnebox(element) {

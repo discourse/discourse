@@ -1,11 +1,11 @@
-import I18n from "I18n";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
-import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse/lib/debounce";
+import { i18n } from "discourse/lib/computed";
 
 export default Controller.extend(CanCheckEmails, {
   model: null,

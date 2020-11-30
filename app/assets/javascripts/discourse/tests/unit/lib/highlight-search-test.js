@@ -1,6 +1,6 @@
 import highlightSearch, { CLASS_NAME } from "discourse/lib/highlight-search";
-import { fixture } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
+import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | highlight-search", function () {
   test("highlighting text", function (assert) {

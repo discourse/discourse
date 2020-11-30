@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import Controller from "@ember/controller";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
+import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PermissionType from "discourse/models/permission-type";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
-import DiscourseURL from "discourse/lib/url";
 import { readOnly } from "@ember/object/computed";
-import PermissionType from "discourse/models/permission-type";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import { underscore } from "@ember/string";
 
 export default Controller.extend({

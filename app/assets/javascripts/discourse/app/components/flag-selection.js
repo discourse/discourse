@@ -1,5 +1,5 @@
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
+import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 
 // Mostly hacks because `flag.hbs` didn't use `radio-button`

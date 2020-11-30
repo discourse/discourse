@@ -1,47 +1,47 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { run, debounce, later, next, schedule, throttle } from "@ember/runloop";
-import Component from "@ember/component";
-import userSearch from "discourse/lib/user-search";
+import {
+  authorizesOneOrMoreImageExtensions,
+  displayErrorForUpload,
+  getUploadMarkdown,
+  validateUploadedFiles,
+} from "discourse/lib/uploads";
+import {
+  cacheShortUploadUrl,
+  resolveAllShortUrls,
+} from "pretty-text/upload-short-url";
+import {
+  caretPosition,
+  clipboardHelpers,
+  formatUsername,
+  inCodeBlock,
+  tinyAvatar,
+} from "discourse/lib/utilities";
+import { debounce, later, next, run, schedule, throttle } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
-  linkSeenMentions,
-  fetchUnseenMentions,
-} from "discourse/lib/link-mentions";
-import {
-  linkSeenHashtags,
   fetchUnseenHashtags,
+  linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
+import {
+  fetchUnseenMentions,
+  linkSeenMentions,
+} from "discourse/lib/link-mentions";
+import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  tinyAvatar,
-  formatUsername,
-  clipboardHelpers,
-  caretPosition,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
-import {
-  validateUploadedFiles,
-  authorizesOneOrMoreImageExtensions,
-  getUploadMarkdown,
-  displayErrorForUpload,
-} from "discourse/lib/uploads";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-
-import {
-  cacheShortUploadUrl,
-  resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
+
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import userSearch from "discourse/lib/user-search";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 

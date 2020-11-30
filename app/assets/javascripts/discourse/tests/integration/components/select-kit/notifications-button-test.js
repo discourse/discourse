@@ -1,10 +1,10 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule(
   "Integration | Component | select-kit/notifications-button",

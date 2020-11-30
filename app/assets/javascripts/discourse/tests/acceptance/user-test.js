@@ -1,10 +1,10 @@
-import { visit, currentRouteName, click } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("User Routes", function (needs) {
   needs.user();

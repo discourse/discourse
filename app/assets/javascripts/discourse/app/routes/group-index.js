@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
+import I18n from "I18n";
 import { action } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   titleToken() {

@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { ajax } from "discourse/lib/ajax";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 

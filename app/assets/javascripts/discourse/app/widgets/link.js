@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default createWidget("link", {
   tagName: "a",

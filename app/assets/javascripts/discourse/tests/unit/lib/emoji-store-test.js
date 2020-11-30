@@ -1,5 +1,5 @@
-import { test } from "qunit";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 discourseModule("Unit | Utility | emoji-emojiStore", function (hooks) {
   hooks.beforeEach(function () {

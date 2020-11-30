@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Group from "discourse/models/group";
 
 module("Unit | Model | group", function () {

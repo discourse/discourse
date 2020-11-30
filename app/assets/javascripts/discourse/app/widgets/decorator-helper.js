@@ -1,7 +1,7 @@
 import Connector from "discourse/widgets/connector";
-import { h } from "virtual-dom";
 import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
+import { h } from "virtual-dom";
 
 class DecoratorHelper {
   constructor(widget, attrs, state) {

@@ -1,12 +1,12 @@
-import { moduleFor } from "ember-qunit";
-import { test } from "qunit";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import Topic from "discourse/models/topic";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+import { moduleFor } from "ember-qunit";
+import { next } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { test } from "qunit";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [

@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
+import { test } from "qunit";
 
 acceptance("Invite Accept", function (needs) {
   needs.settings({ full_name_required: true });

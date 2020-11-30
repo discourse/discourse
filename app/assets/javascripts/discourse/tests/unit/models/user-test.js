@@ -1,9 +1,9 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import User from "discourse/models/user";
-import Group from "discourse/models/group";
 import * as ajaxlib from "discourse/lib/ajax";
+import { module, test } from "qunit";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {

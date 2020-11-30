@@ -1,5 +1,5 @@
-import { scheduleOnce } from "@ember/runloop";
 import { getOwner } from "@ember/application";
+import { scheduleOnce } from "@ember/runloop";
 
 export default class ComponentConnector {
   constructor(widget, componentName, opts, trackedProperties) {

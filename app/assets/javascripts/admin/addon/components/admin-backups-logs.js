@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseDebounce from "discourse/lib/debounce";
 import { observes, on } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
+import discourseDebounce from "discourse/lib/debounce";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["admin-backups-logs"],

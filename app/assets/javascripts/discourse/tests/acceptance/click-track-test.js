@@ -1,5 +1,5 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit, currentURL } from "@ember/test-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Click Track", function (needs) {

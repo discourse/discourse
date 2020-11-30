@@ -1,10 +1,10 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import I18n from "I18n";
 import Topic from "discourse/models/topic";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const buildTopic = function (archetype) {
   return Topic.create({

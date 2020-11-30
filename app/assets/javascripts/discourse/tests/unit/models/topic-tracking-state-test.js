@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
-import TopicTrackingState from "discourse/models/topic-tracking-state";
-import createStore from "discourse/tests/helpers/create-store";
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
 
 module("Unit | Model | topic-tracking-state", function (hooks) {

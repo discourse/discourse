@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
 

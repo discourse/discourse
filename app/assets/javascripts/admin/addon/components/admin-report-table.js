@@ -1,7 +1,7 @@
+import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias } from "@ember/object/computed";
-import Component from "@ember/component";
 
 const PAGES_LIMIT = 8;
 

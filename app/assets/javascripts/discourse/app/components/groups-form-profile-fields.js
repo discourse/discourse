@@ -1,12 +1,12 @@
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import Group from "discourse/models/group";
 import I18n from "I18n";
+import discourseDebounce from "discourse/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { not } from "@ember/object/computed";
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Group from "discourse/models/group";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseDebounce from "discourse/lib/debounce";
-import EmberObject from "@ember/object";
 
 export default Component.extend({
   disableSave: null,

@@ -1,8 +1,8 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import createStore from "discourse/tests/helpers/create-store";
-import RestModel from "discourse/models/rest";
+import { module, test } from "qunit";
 import RestAdapter from "discourse/adapters/rest";
+import RestModel from "discourse/models/rest";
+import createStore from "discourse/tests/helpers/create-store";
+import sinon from "sinon";
 
 module("Unit | Model | rest-model", function () {
   test("munging", function (assert) {

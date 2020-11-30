@@ -1,5 +1,5 @@
-import { createWidget } from "discourse/widgets/widget";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("footer-nav", {
   tagName: "div.footer-nav-widget",

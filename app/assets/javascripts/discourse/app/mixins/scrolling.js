@@ -1,6 +1,6 @@
-import { scheduleOnce } from "@ember/runloop";
-import discourseDebounce from "discourse/lib/debounce";
 import Mixin from "@ember/object/mixin";
+import discourseDebounce from "discourse/lib/debounce";
+import { scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 /**

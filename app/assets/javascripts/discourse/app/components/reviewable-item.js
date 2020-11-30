@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
-import optionalService from "discourse/lib/optional-service";
-import showModal from "discourse/lib/show-modal";
-import { dasherize } from "@ember/string";
-import { set } from "@ember/object";
+import Component from "@ember/component";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { dasherize } from "@ember/string";
+import discourseComputed from "discourse-common/utils/decorators";
+import optionalService from "discourse/lib/optional-service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { set } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 let _components = {};
 

@@ -1,7 +1,7 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
-import { makeArray } from "discourse-common/lib/helpers";
 import { computed } from "@ember/object";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-group-chooser"],

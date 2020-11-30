@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({

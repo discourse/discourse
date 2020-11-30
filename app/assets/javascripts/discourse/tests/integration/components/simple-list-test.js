@@ -1,11 +1,11 @@
+import { click, fillIn, triggerKeyEvent } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { click, triggerKeyEvent, fillIn } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);

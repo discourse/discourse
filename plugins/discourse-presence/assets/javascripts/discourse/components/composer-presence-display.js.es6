@@ -1,18 +1,18 @@
-import Component from "@ember/component";
+import {
+  CLOSED,
+  COMPOSER_TYPE,
+  EDITING,
+  KEEP_ALIVE_DURATION_SECONDS,
+  REPLYING,
+} from "discourse/plugins/discourse-presence/discourse/lib/presence";
 import { cancel, throttle } from "@ember/runloop";
-import { gt, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import {
-  REPLYING,
-  CLOSED,
-  EDITING,
-  COMPOSER_TYPE,
-  KEEP_ALIVE_DURATION_SECONDS,
-} from "discourse/plugins/discourse-presence/discourse/lib/presence";
+import { gt, readOnly } from "@ember/object/computed";
+import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   // Passed in variables

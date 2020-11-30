@@ -1,9 +1,9 @@
 import { alias, reads } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "table",

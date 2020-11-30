@@ -1,8 +1,8 @@
-import { test, module } from "qunit";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
+import { module, test } from "qunit";
 import { Promise } from "rsvp";
 import pretender from "discourse/tests/helpers/create-pretender";
 

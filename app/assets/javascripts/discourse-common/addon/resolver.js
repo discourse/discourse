@@ -1,7 +1,7 @@
+import { classify, dasherize } from "@ember/string";
+import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { classify, dasherize } from "@ember/string";
 
 const _options = {};
 

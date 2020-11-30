@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Post from "discourse/models/post";
 import User from "discourse/models/user";
 import { deepMerge } from "discourse-common/lib/object";

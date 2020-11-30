@@ -1,28 +1,28 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { reads, equal, not, or, and } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
+import { and, equal, not, or, reads } from "@ember/object/computed";
 import { cancel, later, next, throttle } from "@ember/runloop";
-import RestModel from "discourse/models/rest";
-import Topic from "discourse/models/topic";
-import { throwAjaxError } from "discourse/lib/ajax-error";
-import { QUOTE_REGEXP } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
+  emailValid,
   escapeExpression,
   tinyAvatar,
-  emailValid,
 } from "discourse/lib/utilities";
-import { propertyNotEqual } from "discourse/lib/computed";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import { QUOTE_REGEXP } from "discourse/lib/quote";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
+import deprecated from "discourse-common/lib/deprecated";
+import { isEmpty } from "@ember/utils";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { throwAjaxError } from "discourse/lib/ajax-error";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",

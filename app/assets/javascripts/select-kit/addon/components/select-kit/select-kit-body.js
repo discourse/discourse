@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import { computed } from "@ember/object";
 import { bind } from "@ember/runloop";
+import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/select-kit/select-kit-body";
 
 export default Component.extend({

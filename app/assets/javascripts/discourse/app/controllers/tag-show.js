@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import NavItem from "discourse/models/nav-item";
 import FilterModeMixin from "discourse/mixins/filter-mode";
-import { queryParams } from "discourse/controllers/discovery-sortable";
+import I18n from "I18n";
+import NavItem from "discourse/models/nav-item";
+import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
+import { queryParams } from "discourse/controllers/discovery-sortable";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(BulkTopicSelection, FilterModeMixin, {

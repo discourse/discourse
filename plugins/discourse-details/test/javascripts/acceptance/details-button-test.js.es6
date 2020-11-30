@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 

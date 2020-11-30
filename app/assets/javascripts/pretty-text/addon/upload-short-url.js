@@ -1,5 +1,5 @@
-import { debounce } from "@ember/runloop";
 import I18n from "I18n";
+import { debounce } from "@ember/runloop";
 
 let _cache = {};
 

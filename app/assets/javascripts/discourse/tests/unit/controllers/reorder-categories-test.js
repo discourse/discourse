@@ -1,7 +1,7 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import EmberObject from "@ember/object";
 import createStore from "discourse/tests/helpers/create-store";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 discourseModule("Unit | Controller | reorder-categories", function () {
   test("reorder set unique position number", function (assert) {

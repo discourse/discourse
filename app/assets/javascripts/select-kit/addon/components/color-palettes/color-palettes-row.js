@@ -1,6 +1,6 @@
-import { escapeExpression } from "discourse/lib/utilities";
 import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 import { computed } from "@ember/object";
+import { escapeExpression } from "discourse/lib/utilities";
 import layout from "select-kit/templates/components/color-palettes/color-palettes-row";
 
 export default SelectKitRowComponent.extend({

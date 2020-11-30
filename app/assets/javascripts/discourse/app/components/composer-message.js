@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Component.extend({

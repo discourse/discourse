@@ -1,11 +1,11 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
-import { extractError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
-import I18n from "I18n";
+import { extractError } from "discourse/lib/ajax-error";
+import { isEmpty } from "@ember/utils";
 
 export default Controller.extend(ModalFunctionality, {
   loading: false,

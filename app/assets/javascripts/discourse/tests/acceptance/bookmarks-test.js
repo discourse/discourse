@@ -1,13 +1,13 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
   loggedInUser,
   queryAll,
-  exists,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 async function openBookmarkModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
