@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const EMAIL_LEVELS = {

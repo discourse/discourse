@@ -1,6 +1,6 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
   _slug: null,

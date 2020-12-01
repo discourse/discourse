@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { alias } from "@ember/object/computed";
+import discourseDebounce from "discourse/lib/debounce";
+import { isEmpty } from "@ember/utils";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   filter: null,

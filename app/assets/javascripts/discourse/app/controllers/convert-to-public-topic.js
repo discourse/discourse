@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   publicCategoryId: null,

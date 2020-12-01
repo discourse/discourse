@@ -1,8 +1,8 @@
-import { equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import discourseDebounce from "discourse/lib/debounce";
-import { observes } from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: controller(),

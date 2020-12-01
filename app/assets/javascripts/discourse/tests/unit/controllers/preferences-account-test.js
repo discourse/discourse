@@ -1,6 +1,6 @@
+import EmberObject from "@ember/object";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import EmberObject from "@ember/object";
 
 discourseModule("Unit | Controller | preferences/account", function () {
   test("updating of associated accounts", function (assert) {

@@ -1,8 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import { action } from "@ember/object";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   adminUserIndex: controller(),

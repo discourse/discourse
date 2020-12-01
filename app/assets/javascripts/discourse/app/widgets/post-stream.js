@@ -1,14 +1,14 @@
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { debounce } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import transformPost from "discourse/lib/transform-post";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import { isTesting } from "discourse-common/config/environment";
 import { avatarFor } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import { debounce } from "@ember/runloop";
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
+import { isTesting } from "discourse-common/config/environment";
+import transformPost from "discourse/lib/transform-post";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {

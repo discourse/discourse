@@ -1,7 +1,7 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import createStore from "discourse/tests/helpers/create-store";
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
+import createStore from "discourse/tests/helpers/create-store";
+import sinon from "sinon";
 
 module("Unit | Model | category", function () {
   test("slugFor", function (assert) {

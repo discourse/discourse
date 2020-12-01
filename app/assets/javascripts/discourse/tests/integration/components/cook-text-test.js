@@ -1,10 +1,10 @@
-import {
-  queryAll,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { resetCache } from "pretty-text/upload-short-url";
 

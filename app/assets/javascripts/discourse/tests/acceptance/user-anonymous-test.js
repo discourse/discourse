@@ -1,10 +1,10 @@
-import { visit, currentURL, currentRouteName } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("User Anonymous", function () {
   test("Root URL", async function (assert) {

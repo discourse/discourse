@@ -1,6 +1,6 @@
-import { isEmpty } from "@ember/utils";
+import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 import { htmlHelper } from "discourse-common/lib/helpers";
-import { iconHTML, convertIconClass } from "discourse-common/lib/icon-library";
+import { isEmpty } from "@ember/utils";
 
 export default htmlHelper(function ({ icon, image }) {
   if (!isEmpty(image)) {

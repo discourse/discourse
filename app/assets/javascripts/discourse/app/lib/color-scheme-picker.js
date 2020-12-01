@@ -1,6 +1,6 @@
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");

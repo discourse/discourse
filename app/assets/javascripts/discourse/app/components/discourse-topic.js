@@ -1,11 +1,11 @@
-import { alias } from "@ember/object/computed";
 import { later, schedule, scheduleOnce, throttle } from "@ember/runloop";
-import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
-import Scrolling from "discourse/mixins/scrolling";
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
+import Scrolling from "discourse/mixins/scrolling";
+import { alias } from "@ember/object/computed";
 import { observes } from "discourse-common/utils/decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;

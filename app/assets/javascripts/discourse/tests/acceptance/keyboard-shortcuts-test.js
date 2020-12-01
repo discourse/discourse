@@ -1,6 +1,6 @@
-import { triggerKeyEvent, visit, currentURL } from "@ember/test-helpers";
-import { test } from "qunit";
+import { currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Keyboard Shortcuts", function (needs) {
   needs.pretender((server, helper) => {

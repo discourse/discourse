@@ -1,11 +1,11 @@
-import { next, run } from "@ember/runloop";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
-import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
+import { next, run } from "@ember/runloop";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { h } from "virtual-dom";
+import { isTesting } from "discourse-common/config/environment";
+import showModal from "discourse/lib/show-modal";
+import { smallUserAtts } from "discourse/widgets/actions-summary";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;

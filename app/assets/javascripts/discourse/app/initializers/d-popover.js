@@ -1,7 +1,7 @@
 import {
-  showPopover,
-  hidePopover,
   POPOVER_SELECTORS,
+  hidePopover,
+  showPopover,
 } from "discourse/lib/d-popover";
 
 export default {

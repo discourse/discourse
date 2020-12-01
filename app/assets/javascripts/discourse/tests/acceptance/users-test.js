@@ -1,6 +1,6 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {

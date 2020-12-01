@@ -1,6 +1,6 @@
+import { ButtonClass } from "discourse/widgets/button";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { ButtonClass } from "discourse/widgets/button";
 
 createWidget(
   "post-admin-menu-button",

@@ -1,7 +1,7 @@
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import { Promise } from "rsvp";
 
 const _extraItems = [];
 

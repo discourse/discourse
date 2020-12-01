@@ -1,7 +1,7 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import DiscourseURL from "discourse/lib/url";
-import sinon from "sinon";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import sinon from "sinon";
 
 let testMouseTrap;
 

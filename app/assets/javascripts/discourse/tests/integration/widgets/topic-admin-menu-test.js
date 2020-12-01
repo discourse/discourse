@@ -1,9 +1,9 @@
-import { exists, discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import Topic from "discourse/models/topic";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import Category from "discourse/models/category";
+import Topic from "discourse/models/topic";
 
 const createArgs = (topic) => {
   return {

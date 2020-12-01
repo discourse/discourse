@@ -1,32 +1,32 @@
 import {
-  resetSettings,
-  currentSettings,
-} from "discourse/tests/helpers/site-settings";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
-import { createHelperContext } from "discourse-common/lib/helpers";
-import { buildResolver } from "discourse-common/resolver";
-import createPretender, {
-  pretenderHelpers,
-  applyDefaultHandlers,
-} from "discourse/tests/helpers/create-pretender";
-import { flushMap } from "discourse/models/store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import {
-  resetSite,
   applyPretender,
   exists,
+  resetSite,
 } from "discourse/tests/helpers/qunit-helpers";
-import PreloadStore from "discourse/lib/preload-store";
-import User from "discourse/models/user";
-import Session from "discourse/models/session";
-import { clearAppEventsCache } from "discourse/services/app-events";
-import QUnit from "qunit";
-import MessageBus from "message-bus-client";
-import deprecated from "discourse-common/lib/deprecated";
-import sinon from "sinon";
+import createPretender, {
+  applyDefaultHandlers,
+  pretenderHelpers,
+} from "discourse/tests/helpers/create-pretender";
+import {
+  currentSettings,
+  resetSettings,
+} from "discourse/tests/helpers/site-settings";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setApplication, setResolver } from "@ember/test-helpers";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import MessageBus from "message-bus-client";
+import PreloadStore from "discourse/lib/preload-store";
+import QUnit from "qunit";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import Session from "discourse/models/session";
+import User from "discourse/models/user";
 import bootbox from "bootbox";
+import { buildResolver } from "discourse-common/resolver";
+import { clearAppEventsCache } from "discourse/services/app-events";
+import { createHelperContext } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
+import { flushMap } from "discourse/models/store";
+import sinon from "sinon";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;

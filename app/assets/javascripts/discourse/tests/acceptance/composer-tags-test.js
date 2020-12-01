@@ -1,11 +1,11 @@
-import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
-import { test } from "qunit";
-import Category from "discourse/models/category";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import Category from "discourse/models/category";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Composer - Tags", function (needs) {
   needs.user();

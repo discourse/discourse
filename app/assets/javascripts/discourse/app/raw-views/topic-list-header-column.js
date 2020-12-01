@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({

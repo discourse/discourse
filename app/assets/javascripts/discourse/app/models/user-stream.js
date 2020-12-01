@@ -1,12 +1,12 @@
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { A } from "@ember/array";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
+import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
-import { Promise } from "rsvp";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
+import { url } from "discourse/lib/computed";
 
 export default RestModel.extend({
   loaded: false,

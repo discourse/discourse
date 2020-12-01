@@ -1,13 +1,13 @@
-import EmberObject from "@ember/object";
-import { debounce, later } from "@ember/runloop";
-import Component from "@ember/component";
-import { observes } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
 import PanEvents, {
-  SWIPE_VELOCITY,
   SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
+import { debounce, later } from "@ember/runloop";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import { observes } from "discourse-common/utils/decorators";
+import showModal from "discourse/lib/show-modal";
 
 const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;

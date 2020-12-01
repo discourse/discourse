@@ -1,5 +1,5 @@
-import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import Component from "@ember/component";
 import layout from "select-kit/templates/components/topic-notifications-button";
 
 export default Component.extend({

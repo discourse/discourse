@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import { click } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);

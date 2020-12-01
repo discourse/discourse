@@ -1,7 +1,7 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Notifications filter", function (needs) {
   needs.user();

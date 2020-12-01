@@ -1,8 +1,8 @@
-import { test } from "qunit";
 import {
-  discourseModule,
   currentUser,
+  discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 discourseModule("Unit | Service | document-title", function (hooks) {
   hooks.beforeEach(function () {

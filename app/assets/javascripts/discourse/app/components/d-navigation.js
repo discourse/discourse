@@ -1,9 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import NavItem from "discourse/models/nav-item";
-import { inject as service } from "@ember/service";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import NavItem from "discourse/models/nav-item";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),

@@ -1,4 +1,4 @@
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {

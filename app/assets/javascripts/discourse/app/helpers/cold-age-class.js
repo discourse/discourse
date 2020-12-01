@@ -1,4 +1,4 @@
-import { registerUnbound, helperContext } from "discourse-common/lib/helpers";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 
 function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch

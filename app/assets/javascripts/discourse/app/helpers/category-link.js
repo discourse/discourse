@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { get } from "@ember/object";
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
-import { isRTL } from "discourse/lib/text-direction";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
+import I18n from "I18n";
 import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { isRTL } from "discourse/lib/text-direction";
 
 let _renderer = defaultCategoryLinkRenderer;
 

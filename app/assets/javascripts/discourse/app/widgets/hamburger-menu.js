@@ -1,12 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { later } from "@ember/runloop";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
+import { h } from "virtual-dom";
+import { later } from "@ember/runloop";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const flatten = (array) => [].concat.apply([], array);
 

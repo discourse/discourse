@@ -1,12 +1,12 @@
-import { cancel, later, schedule } from "@ember/runloop";
-import MountWidget from "discourse/components/mount-widget";
-import { observes } from "discourse-common/utils/decorators";
-import Docking from "discourse/mixins/docking";
 import PanEvents, {
-  SWIPE_VELOCITY,
   SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
+import { cancel, later, schedule } from "@ember/runloop";
+import Docking from "discourse/mixins/docking";
+import MountWidget from "discourse/components/mount-widget";
+import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {

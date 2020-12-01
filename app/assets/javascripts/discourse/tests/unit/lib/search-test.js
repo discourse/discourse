@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
-import I18n from "I18n";
+import { module, test } from "qunit";
 import {
-  translateResults,
   searchContextDescription,
+  translateResults,
 } from "discourse/lib/search";
+import I18n from "I18n";
 
 module("Unit | Utility | search", function () {
   test("unescapesEmojisInBlurbs", function (assert) {

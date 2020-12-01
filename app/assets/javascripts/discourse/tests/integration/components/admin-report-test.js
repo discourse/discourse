@@ -1,13 +1,13 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import pretender from "discourse/tests/helpers/create-pretender";
 import { click } from "@ember/test-helpers";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 discourseModule("Integration | Component | admin-report", function (hooks) {
   setupRenderingTest(hooks);

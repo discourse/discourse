@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
-import Post from "discourse/models/post";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
+import LoadMore from "discourse/mixins/load-more";
+import Post from "discourse/models/post";
+import bootbox from "bootbox";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
-import bootbox from "bootbox";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   _initialize: on("init", function () {

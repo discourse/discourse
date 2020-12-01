@@ -1,20 +1,20 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { or } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
-  translateResults,
-  searchContextDescription,
   getSearchKey,
   isValidSearchTerm,
+  searchContextDescription,
+  translateResults,
 } from "discourse/lib/search";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { escapeExpression } from "discourse/lib/utilities";
-import { setTransient } from "discourse/lib/page-tracker";
 import Composer from "discourse/models/composer";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import { escapeExpression } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import { or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { setTransient } from "discourse/lib/page-tracker";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },

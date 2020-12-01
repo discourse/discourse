@@ -1,21 +1,21 @@
-import { skip, test } from "qunit";
 import {
-  escapeExpression,
-  emailValid,
-  extractDomainFromUrl,
-  avatarUrl,
-  getRawSize,
   avatarImg,
-  initializeDefaultHomepage,
-  defaultHomepage,
-  setDefaultHomepage,
+  avatarUrl,
   caretRowCol,
-  setCaretPosition,
-  toAsciiPrintable,
-  slugify,
+  defaultHomepage,
+  emailValid,
+  escapeExpression,
+  extractDomainFromUrl,
   fillMissingDates,
+  getRawSize,
   inCodeBlock,
+  initializeDefaultHomepage,
+  setCaretPosition,
+  setDefaultHomepage,
+  slugify,
+  toAsciiPrintable,
 } from "discourse/lib/utilities";
+import { skip, test } from "qunit";
 import Handlebars from "handlebars";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 

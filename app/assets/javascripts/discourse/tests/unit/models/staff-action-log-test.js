@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import StaffActionLog from "admin/models/staff-action-log";
 
 module("Unit | Model | staff-action-log", function () {

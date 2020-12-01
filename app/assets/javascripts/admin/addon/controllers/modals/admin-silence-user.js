@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import Controller from "@ember/controller";
 import PenaltyController from "admin/mixins/penalty-controller";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 
 export default Controller.extend(PenaltyController, {
   silenceUntil: null,

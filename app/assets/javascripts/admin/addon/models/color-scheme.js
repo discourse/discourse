@@ -1,11 +1,11 @@
-import I18n from "I18n";
 import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
-import discourseComputed from "discourse-common/utils/decorators";
-import { not } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { not } from "@ember/object/computed";
 
 const ColorScheme = EmberObject.extend({
   init() {

@@ -1,5 +1,5 @@
-import { alias, sort } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, sort } from "@ember/object/computed";
 
 export default Controller.extend({
   user: controller(),

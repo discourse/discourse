@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
-import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",

@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { observes } from "discourse-common/utils/decorators";
 import {
+  chooseDarker,
   createPreviewComponent,
   darkLightDiff,
-  chooseDarker,
 } from "wizard/lib/preview";
+import I18n from "I18n";
+import { observes } from "discourse-common/utils/decorators";
 
 const LOREM = `
 Lorem ipsum dolor sit amet, consectetur adipiscing.

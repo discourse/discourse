@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import { notEmpty, and } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
-import Controller from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
+import { and, notEmpty } from "@ember/object/computed";
+import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import { propertyNotEqual, setting, fmt } from "discourse/lib/computed";
-import { userPath } from "discourse/lib/url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
-import bootbox from "bootbox";
+import { userPath } from "discourse/lib/url";
 
 export default Controller.extend(CanCheckEmails, {
   adminTools: service(),

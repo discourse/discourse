@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { slugify, toAsciiPrintable } from "discourse/lib/utilities";
 import Component from "@ember/component";
-import { toAsciiPrintable, slugify } from "discourse/lib/utilities";
+import discourseComputed from "discourse-common/utils/decorators";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {

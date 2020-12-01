@@ -1,8 +1,8 @@
+import { cancel, debounce, next } from "@ember/runloop";
+import { isLTR, isRTL, siteDir } from "discourse/lib/text-direction";
 import I18n from "I18n";
 import TextField from "@ember/component/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
-import { siteDir, isRTL, isLTR } from "discourse/lib/text-direction";
-import { next, debounce, cancel } from "@ember/runloop";
 
 const DEBOUNCE_MS = 500;
 

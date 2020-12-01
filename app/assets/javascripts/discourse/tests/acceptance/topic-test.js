@@ -1,15 +1,15 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import I18n from "I18n";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function selectText(selector) {
   const range = document.createRange();

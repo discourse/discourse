@@ -1,15 +1,15 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject, { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { alias, sort } from "@ember/object/computed";
 import Archetype from "discourse/models/archetype";
 import PostActionType from "discourse/models/post-action-type";
-import Singleton from "discourse/mixins/singleton";
-import RestModel from "discourse/models/rest";
-import TrustLevel from "discourse/models/trust-level";
 import PreloadStore from "discourse/lib/preload-store";
+import RestModel from "discourse/models/rest";
+import Singleton from "discourse/mixins/singleton";
+import TrustLevel from "discourse/models/trust-level";
 import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { isEmpty } from "@ember/utils";
 
 const Site = RestModel.extend({
   isReadOnly: alias("is_readonly"),

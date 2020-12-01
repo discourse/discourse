@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
 module("Unit | Utility | parseBBCodeTag", function () {

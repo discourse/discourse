@@ -1,5 +1,5 @@
-import highlightSearch from "discourse/components/highlight-search";
 import deprecated from "discourse-common/lib/deprecated";
+import highlightSearch from "discourse/components/highlight-search";
 
 export default highlightSearch.extend({
   init() {

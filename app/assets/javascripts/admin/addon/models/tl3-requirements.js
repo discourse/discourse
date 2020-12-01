@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default EmberObject.extend({
   @discourseComputed("days_visited", "time_period")

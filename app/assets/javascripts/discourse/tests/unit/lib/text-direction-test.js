@@ -1,5 +1,5 @@
-import { test, module } from "qunit";
-import { isRTL, isLTR } from "discourse/lib/text-direction";
+import { isLTR, isRTL } from "discourse/lib/text-direction";
+import { module, test } from "qunit";
 
 module("Unit | Utility | text-direction", function () {
   test("isRTL", function (assert) {

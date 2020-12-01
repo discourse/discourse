@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { gt } from "@ember/object/computed";
-import Component from "@ember/component";
 
 export default Component.extend({
   tagName: "",

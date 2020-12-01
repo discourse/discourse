@@ -1,8 +1,8 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 export default Controller.extend(PeriodComputationMixin, {
   @discourseComputed

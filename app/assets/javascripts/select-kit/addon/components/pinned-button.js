@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import layout from "select-kit/templates/components/pinned-button";
 

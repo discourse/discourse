@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
-import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
-import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseRoute from "discourse/routes/discourse";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import OpenComposer from "discourse/mixins/open-composer";
+import PreloadStore from "discourse/lib/preload-store";
+import Site from "discourse/models/site";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
-import PreloadStore from "discourse/lib/preload-store";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
-import Site from "discourse/models/site";
+import { next } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {

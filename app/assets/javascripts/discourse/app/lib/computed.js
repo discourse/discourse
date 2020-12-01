@@ -1,6 +1,6 @@
-import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import { computed } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 
 function addonFmt(str, formats) {

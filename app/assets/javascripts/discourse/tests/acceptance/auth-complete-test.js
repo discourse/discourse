@@ -1,5 +1,5 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentRouteName } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Auth Complete", function (needs) {

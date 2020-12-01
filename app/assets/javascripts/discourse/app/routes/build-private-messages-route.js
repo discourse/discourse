@@ -1,7 +1,7 @@
 import I18n from "I18n";
+import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import UserAction from "discourse/models/user-action";
 
 // A helper to build a user topic list route
 export default (viewName, path, channel) => {

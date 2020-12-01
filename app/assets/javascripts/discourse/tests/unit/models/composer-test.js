@@ -1,18 +1,18 @@
-import { test } from "qunit";
-import EmberObject from "@ember/object";
 import {
-  discourseModule,
+  CREATE_TOPIC,
+  EDIT,
+  PRIVATE_MESSAGE,
+  REPLY,
+} from "discourse/models/composer";
+import {
   currentUser,
+  discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
-import {
-  EDIT,
-  REPLY,
-  CREATE_TOPIC,
-  PRIVATE_MESSAGE,
-} from "discourse/models/composer";
+import EmberObject from "@ember/object";
 import Post from "discourse/models/post";
 import createStore from "discourse/tests/helpers/create-store";
+import { test } from "qunit";
 
 function createComposer(opts) {
   opts = opts || {};

@@ -1,13 +1,13 @@
-import { test, module } from "qunit";
 import getURL, {
-  setupURL,
-  setupS3CDN,
+  getAbsoluteURL,
   getURLWithCDN,
   isAbsoluteURL,
-  getAbsoluteURL,
   setPrefix,
+  setupS3CDN,
+  setupURL,
   withoutPrefix,
 } from "discourse-common/lib/get-url";
+import { module, test } from "qunit";
 
 module("Unit | Utility | get-url", function () {
   test("isAbsoluteURL", function (assert) {

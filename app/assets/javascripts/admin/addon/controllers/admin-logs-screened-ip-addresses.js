@@ -1,12 +1,12 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
-import { outputExportResult } from "discourse/lib/export-result";
-import { exportEntity } from "discourse/lib/export-csv";
-import ScreenedIpAddress from "admin/models/screened-ip-address";
-import { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import ScreenedIpAddress from "admin/models/screened-ip-address";
 import bootbox from "bootbox";
+import discourseDebounce from "discourse/lib/debounce";
+import { exportEntity } from "discourse/lib/export-csv";
+import { observes } from "discourse-common/utils/decorators";
+import { outputExportResult } from "discourse/lib/export-result";
 
 export default Controller.extend({
   loading: false,

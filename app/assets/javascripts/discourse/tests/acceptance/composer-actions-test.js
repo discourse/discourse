@@ -1,18 +1,18 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
-  updateCurrentUser,
-  queryAll,
   exists,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import { _clearSnapshots } from "select-kit/components/composer-actions";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import { test } from "qunit";
+import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", function (needs) {
   needs.user();

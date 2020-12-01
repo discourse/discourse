@@ -1,6 +1,6 @@
-import { test, module } from "qunit";
-import UserAction from "discourse/models/user-action";
+import { module, test } from "qunit";
 import User from "discourse/models/user";
+import UserAction from "discourse/models/user-action";
 
 module("Unit | Model | user-stream", function () {
   test("basics", function (assert) {

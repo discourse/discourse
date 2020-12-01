@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
-import Permalink from "admin/models/permalink";
-import { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import Permalink from "admin/models/permalink";
 import bootbox from "bootbox";
+import discourseDebounce from "discourse/lib/debounce";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   loading: false,

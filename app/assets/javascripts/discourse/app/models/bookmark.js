@@ -1,16 +1,16 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import Category from "discourse/models/category";
-import User from "discourse/models/user";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { longDate } from "discourse/lib/formatter";
-import { none } from "@ember/object/computed";
-import { computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
+import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import getURL from "discourse-common/lib/get-url";
+import { longDate } from "discourse/lib/formatter";
+import { none } from "@ember/object/computed";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,

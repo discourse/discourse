@@ -1,7 +1,7 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click, fillIn } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Review", function (needs) {
   needs.user();

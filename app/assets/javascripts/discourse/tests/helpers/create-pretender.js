@@ -1,5 +1,5 @@
-import User from "discourse/models/user";
 import Pretender from "pretender";
+import User from "discourse/models/user";
 
 export function parsePostData(query) {
   const result = {};

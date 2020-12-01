@@ -1,10 +1,10 @@
 import {
-  emojis,
   aliases,
-  searchAliases,
-  translations,
-  tonableEmojis,
+  emojis,
   replacements,
+  searchAliases,
+  tonableEmojis,
+  translations,
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 

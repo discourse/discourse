@@ -1,16 +1,16 @@
+import {
+  NEW_PRIVATE_MESSAGE_KEY,
+  NEW_TOPIC_KEY,
+} from "discourse/models/composer";
 import { A } from "@ember/array";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import { Promise } from "rsvp";
-import {
-  NEW_TOPIC_KEY,
-  NEW_PRIVATE_MESSAGE_KEY,
-} from "discourse/models/composer";
 import { escapeExpression } from "discourse/lib/utilities";
+import { url } from "discourse/lib/computed";
 
 export default RestModel.extend({
   loaded: false,

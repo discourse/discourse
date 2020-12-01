@@ -1,5 +1,5 @@
-import { debounce } from "@ember/runloop";
 import Controller from "@ember/controller";
+import { debounce } from "@ember/runloop";
 let lastSearch;
 
 export default Controller.extend({

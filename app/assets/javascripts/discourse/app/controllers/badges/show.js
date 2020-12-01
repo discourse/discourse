@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject from "@ember/object";
-import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Badge from "discourse/models/badge";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import UserBadge from "discourse/models/user-badge";
 
 export default Controller.extend({
   application: controller(),

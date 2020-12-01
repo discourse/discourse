@@ -1,9 +1,9 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click } from "@ember/test-helpers";
-import { test } from "qunit";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { action } from "@ember/object";
+import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import hbs from "htmlbars-inline-precompile";
+import { test } from "qunit";
 
 const PREFIX = "javascripts/single-test/connectors";
 

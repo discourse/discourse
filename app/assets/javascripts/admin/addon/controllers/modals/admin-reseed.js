@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";

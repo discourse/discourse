@@ -1,5 +1,5 @@
-import { test, module } from "qunit";
-import { setResolverOption, buildResolver } from "discourse-common/resolver";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
+import { module, test } from "qunit";
 
 let originalTemplates;
 let resolver;

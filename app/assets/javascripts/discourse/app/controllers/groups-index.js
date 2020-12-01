@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
-import { debounce } from "@ember/runloop";
-import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { action } from "@ember/object";
+import { debounce } from "@ember/runloop";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: controller(),

@@ -1,10 +1,10 @@
-import { isEmpty } from "@ember/utils";
 import { cancel, debounce, schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { searchForTerm } from "discourse/lib/search";
 import { bind } from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import { prefixProtocol } from "discourse/lib/url";
+import { searchForTerm } from "discourse/lib/search";
 
 export default Controller.extend(ModalFunctionality, {
   _debounced: null,

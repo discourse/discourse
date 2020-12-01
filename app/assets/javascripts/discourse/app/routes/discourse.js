@@ -1,6 +1,6 @@
-import { once } from "@ember/runloop";
 import Composer from "discourse/models/composer";
 import Route from "@ember/routing/route";
+import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
 
 const DiscourseRoute = Route.extend({
