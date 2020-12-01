@@ -7,8 +7,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
-  userIsMemberOrAbove: gte("model.trust_level", 2),
-  ignoredEnabled: or("userIsMemberOrAbove", "model.staff"),
+
+  userCanIgnore: gte(
+    "model.trust_level",
+    "siteSettings.min_trust_level_to_allow_ignore"
+  ),
+
+  ignoredEnabled: or("userCanIgnore", "model.staff"),
+
   allowPmUsersEnabled: and(
     "model.user_option.enable_allowed_pm_users",
     "model.user_option.allow_private_messages"
