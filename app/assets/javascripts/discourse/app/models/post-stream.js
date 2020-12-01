@@ -219,69 +219,44 @@ export default RestModel.extend({
 
   cancelFilter() {
     this.setProperties({
+      userFilters: [],
       summary: false,
       filterRepliesToPostNumber: false,
       filterUpwardsPostID: false,
     });
-    this.userFilters.clear();
+  },
+
+  refreshAndJumptoSecondVisible() {
+    return this.refresh({}).then(() => {
+      if (this.posts && this.posts.length > 1) {
+        DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
+      }
+    });
   },
 
   showSummary() {
     this.cancelFilter();
     this.set("summary", true);
-
-    return this.refresh({}).then(() => {
-      this.jumpToSecondVisible();
-    });
+    return this.refreshAndJumptoSecondVisible();
   },
 
   enableRepliesFilter(postNumber) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
-
-    return this.refresh().then(() => {
-      this.jumpToSecondVisible();
-    });
+    return this.refreshAndJumptoSecondVisible();
   },
 
   filterUpwards(postID) {
     this.cancelFilter();
     this.set("filterUpwardsPostID", postID);
-
-    return this.refresh().then(() => {
-      this.jumpToSecondVisible();
-    });
-  },
-
-  jumpToSecondVisible() {
-    const posts = this.posts;
-    if (posts.length > 1) {
-      const secondPostNum = posts[1].get("post_number");
-      DiscourseURL.jumpToPost(secondPostNum);
-    }
+    return this.refreshAndJumptoSecondVisible();
   },
 
   // Filter the stream to a particular user.
-  toggleParticipant(username) {
-    const userFilters = this.userFilters;
-    this.setProperties({
-      summary: false,
-      filterRepliesToPostNumber: false,
-      filterUpwardsPostID: false,
-    });
-
-    let jump = false;
-    if (userFilters.includes(username)) {
-      userFilters.removeObject(username);
-    } else {
-      userFilters.addObject(username);
-      jump = true;
-    }
-    return this.refresh().then(() => {
-      if (jump) {
-        this.jumpToSecondVisible();
-      }
-    });
+  filterParticipant(username) {
+    this.cancelFilter();
+    this.userFilters.addObject(username);
+    return this.refreshAndJumptoSecondVisible();
   },
 
   /**

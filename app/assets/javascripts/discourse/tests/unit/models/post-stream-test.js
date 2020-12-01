@@ -232,7 +232,7 @@ module("Unit | Model | post-stream", function () {
     postStream.cancelFilter();
     assert.ok(!postStream.get("summary"), "summary is cancelled");
 
-    postStream.toggleParticipant(participant);
+    postStream.filterParticipant(participant);
     postStream.cancelFilter();
     assert.blank(
       postStream.get("userFilters"),
@@ -282,7 +282,7 @@ module("Unit | Model | post-stream", function () {
     );
   });
 
-  test("toggleParticipant", function (assert) {
+  test("filterParticipant", function (assert) {
     const postStream = buildStream(1236);
     sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -292,17 +292,14 @@ module("Unit | Model | post-stream", function () {
       "by default no participants are toggled"
     );
 
-    postStream.toggleParticipant(participant.username);
+    postStream.filterParticipant(participant.username);
     assert.ok(
       postStream.get("userFilters").includes("eviltrout"),
       "eviltrout is in the filters"
     );
 
-    postStream.toggleParticipant(participant.username);
-    assert.blank(
-      postStream.get("userFilters"),
-      "toggling the participant again removes them"
-    );
+    postStream.cancelFilter();
+    assert.blank(postStream.get("userFilters"), "cancelFilter clears");
   });
 
   test("streamFilters", function (assert) {
@@ -327,7 +324,7 @@ module("Unit | Model | post-stream", function () {
     );
     assert.ok(!postStream.get("hasNoFilters"), "now there are filters present");
 
-    postStream.toggleParticipant(participant.username);
+    postStream.filterParticipant(participant.username);
     assert.deepEqual(
       postStream.get("streamFilters"),
       {

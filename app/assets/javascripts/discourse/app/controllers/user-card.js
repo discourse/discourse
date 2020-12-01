@@ -5,9 +5,9 @@ export default Controller.extend({
   topic: controller(),
 
   actions: {
-    togglePosts(user) {
+    filterPosts(user) {
       const topicController = this.topic;
-      topicController.send("toggleParticipant", user);
+      topicController.send("filterParticipant", user);
     },
 
     showUser(user) {

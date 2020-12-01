@@ -269,7 +269,7 @@ export default createWidget("post-stream", {
       prevPost = post;
     }
 
-    if (Object.keys(attrs.streamFilters).length > 0) {
+    if (attrs.streamFilters && Object.keys(attrs.streamFilters).length > 0) {
       result.push(
         this.attach("post-filtered-replies", {
           posts: postArray,

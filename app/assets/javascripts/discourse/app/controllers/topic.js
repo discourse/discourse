@@ -876,9 +876,9 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    toggleParticipant(user) {
+    filterParticipant(user) {
       this.get("model.postStream")
-        .toggleParticipant(user.get("username"))
+        .filterParticipant(user.get("username"))
         .then(() => this.updateQueryParams);
     },
 
