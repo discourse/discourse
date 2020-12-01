@@ -1,5 +1,5 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias, gte, or, and } from "@ember/object/computed";
+import { alias, or, and } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -8,10 +8,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
 
-  userCanIgnore: gte(
-    "model.trust_level",
-    "siteSettings.min_trust_level_to_allow_ignore"
-  ),
+  @discourseComputed("model.trust_level")
+  userCanIgnore(trustLevel) {
+    return trustLevel >= this.siteSettings.min_trust_level_to_allow_ignore;
+  },
 
   ignoredEnabled: or("userCanIgnore", "model.staff"),
 

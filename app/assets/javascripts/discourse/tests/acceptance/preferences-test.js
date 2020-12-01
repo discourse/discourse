@@ -481,11 +481,13 @@ acceptance(
 );
 
 acceptance("Ignored users", function (needs) {
-  needs.user({ trust_level: 0, moderator: false, admin: false });
+  needs.user();
   needs.settings({ min_trust_level_to_allow_ignore: 1 });
 
   test("when trust level < min level to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+
     assert.ok(
       !exists(".user-ignore"),
       "it does not show the list of ignored users"
@@ -493,14 +495,14 @@ acceptance("Ignored users", function (needs) {
   });
 
   test("when trust level >= min level to ignore", async function (assert) {
-    updateCurrentUser({ trust_level: 1 });
     await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 1 });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 
   test("staff can always see ignored users", async function (assert) {
-    updateCurrentUser({ moderator: true });
     await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ moderator: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 });
