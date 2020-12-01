@@ -143,10 +143,10 @@ es:
         enabled: "archivado %{when}"
         disabled: "desarchivado %{when}"
       pinned:
-        enabled: "destacado %{when}"
-        disabled: "sin destacar %{when}"
+        enabled: "fijado %{when}"
+        disabled: "desfijado %{when}"
       pinned_globally:
-        enabled: "destacado globalmente %{when}"
+        enabled: "fijado globalmente %{when}"
         disabled: "sin destacar %{when}"
       visible:
         enabled: "listado %{when}"
@@ -956,7 +956,7 @@ es:
       ignored_users: "Ignorados"
       ignored_users_instructions: "Omitir todas las publicaciones, notificaciones y mensajes personales de estos usuarios."
       tracked_topics_link: "Mostrar"
-      automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
+      automatically_unpin_topics: "Desfijar temas automáticamente cuando los leo por completo."
       apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
@@ -1627,6 +1627,9 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
+      plus_subcategories_title:
+        one: "%{name} y una subcategoría"
+        other: "%{name} y %{count} subcategorías"
     select_kit:
       default_header_text: Seleccionar...
       no_content: No se encontraron coincidencias
@@ -3475,6 +3478,9 @@ es:
               sync_sso: Sincronizar usuario usando SSO.
               show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
+              update: Actualizar información del perfil de usuario.
+              anonymize: Anonimizar cuentas de usuario.
+              delete: Eliminar cuentas de usuario.
       web_hooks:
         title: "Webhooks"
         none: "Ahora mismo no hay webhooks."

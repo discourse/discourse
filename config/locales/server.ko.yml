@@ -190,6 +190,13 @@ ko:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
       cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
     conflicting_google_user_id: '이 계정의 Google 계정 ID가 변경되었습니다. 보안상의 이유로 직원의 개입이 필요합니다. 직원에게 연락하여 <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "죄송합니다. '%{hostname}'서버를 찾을 수 없어 웹 페이지에 대한 미리보기를 생성 할 수 없습니다. 미리보기 대신 게시물에 링크만 표시됩니다. :cry:"
+      error_response: "죄송합니다. 웹 서버에서 오류 코드 %{status_code} 를 반환했기 때문에 웹 페이지에 대한 미리보기를 생성 할 수 없습니다. 미리보기 대신 게시물에 링크만 표시됩니다. :cry:"
+      missing_data:
+        other: "죄송합니다. 다음 oEmbed / OpenGraph 태그를 찾을 수 없어 웹 페이지에 대한 미리보기를 생성 할 수 없습니다: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
@@ -245,6 +252,7 @@ ko:
   email_template_cant_be_modified: "이 이메일 템플릿은 수정할 수 없습니다"
   invalid_whisper_access: "속삭임이 활성화되어 있지 않거나 속삭임 게시물을 작성할 수있는 권한이 없습니다"
   not_in_group:
+    title_topic: "이 항목을 보려면 '%{group}' 그룹의 가입을 요청해야 합니다."
     title_category: "이 카테고리를 보려면 그룹에 속해 있어야합니다."
     request_membership: "회원 신청"
     join_group: "그룹 참여하기"

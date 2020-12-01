@@ -254,6 +254,7 @@ zh_CN:
   email_template_cant_be_modified: "该邮件模板不能被修改"
   invalid_whisper_access: "没有启用密语或者是你无权创建密语帖子"
   not_in_group:
+    title_topic: "你需要请求加入 `%{group}` 群组才能查看此主题。"
     title_category: "你必须在群组中才能看到这个分类。"
     request_membership: "申请会员"
     join_group: "加入群组"

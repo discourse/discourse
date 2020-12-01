@@ -272,6 +272,7 @@ he:
   email_template_cant_be_modified: "לא ניתן לערוך את תבנית הדוא״ל הזו"
   invalid_whisper_access: "או שלחישות אינן פעילות או שאין לך גישה ליצור פוסטים של לחישות"
   not_in_group:
+    title_topic: "עליך לבקש חברות בקבוצה ‚%{group}’ כדי לצפות בנושא הזה."
     title_category: "עליך להיות בקבוצה כדי לצפות בקטגוריה זו."
     request_membership: "בקשת חברות"
     join_group: "הצטרפות לקבוצה"

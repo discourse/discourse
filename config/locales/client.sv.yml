@@ -3484,6 +3484,10 @@ sv:
               sync_sso: Synkronisera en användare genom SSO.
               show: Erhåll information om en användare.
               check_emails: Lista användares e-post.
+              update: Uppdatera information om användarprofil.
+              log_out: Logga ut alla sessioner för en användare.
+              anonymize: Anonymisera användarkonton.
+              delete: Ta bort användarkonton.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
       web_hooks:

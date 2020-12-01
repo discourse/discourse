@@ -260,6 +260,7 @@ sv:
   email_template_cant_be_modified: "Den här e-postmallen kan inte ändras"
   invalid_whisper_access: "Antingen är viskningar inte aktiverade eller så har du inte behörighet för att skapa viskningsinlägg"
   not_in_group:
+    title_topic: "Du måste begära medlemskap i gruppen '%{group}' för att se detta ämne."
     title_category: "Du måste vara i en grupp för att se denna kategori."
     request_membership: "Begär medlemskap"
     join_group: "Gå med i grupp"

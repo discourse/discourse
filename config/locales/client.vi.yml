@@ -3352,6 +3352,9 @@ vi:
               sync_sso: Đồng bộ hóa người dùng bằng SSO.
               show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
+              update: Cập nhật thông tin hồ sơ người dùng.
+              anonymize: Ẩn danh tài khoản người dùng.
+              delete: Xóa tài khoản người dùng.
       web_hooks:
         title: "Webhooks"
         none: "Không có webhook nào ngay bây giờ."

@@ -713,6 +713,7 @@ sl:
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
+    min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
