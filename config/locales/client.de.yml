@@ -3480,6 +3480,10 @@ de:
               sync_sso: Synchronisieren Sie einen Benutzer mit SSO.
               show: Informationen über einen Benutzer abrufen.
               check_emails: Benutzer-E-Mails auflisten.
+              update: Benutzerprofil Informationen aktualisieren.
+              log_out: Alle Sitzungen für einen Benutzer abmelden.
+              anonymize: Benutzerkonten anonymisieren.
+              delete: Benutzerkonten löschen.
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
       web_hooks:

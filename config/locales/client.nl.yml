@@ -1296,6 +1296,7 @@ nl:
         link_redemption_stats: "Inwisselingen"
         link_groups: Groepen
         link_expires_at: Verloopt
+        create: "Uitnodigen"
         copy_link: "Koppeling tonen"
         generate_link: "Uitnodigingskoppeling maken"
         link_generated: "Hier is uw uitnodigingskoppeling!"
@@ -1626,6 +1627,12 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
+      plus_subcategories_title:
+        one: "%{name} en één subcategorie"
+        other: "%{name} en %{count} subcategorieën"
+      plus_subcategories:
+        one: "+ %{count} subcategorie"
+        other: "+ %{count} subcategorieën"
     select_kit:
       default_header_text: Selecteren...
       no_content: Geen overeenkomsten gevonden
@@ -2541,6 +2548,7 @@ nl:
         no_save_draft: "Nee, concept opslaan"
         yes_value: "Ja, bewerking negeren"
       abandon:
+        title: "Concept afbreken"
         confirm: "Weet u zeker dat u uw bericht wilt afbreken?"
         no_value: "Nee, behouden"
         no_save_draft: "Nee, concept opslaan"
@@ -2727,6 +2735,17 @@ nl:
       change_in_category_topic: "Omschrijving wijzigen"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       security: "Beveiliging"
+      security_add_group: "Een groep toevoegen"
+      permissions:
+        group: "Groep"
+        see: "Bekijken"
+        reply: "Antwoorden"
+        create: "Aanmaken"
+        no_groups_selected: "Er is geen toegang tot groepen verleend; deze categorie is alleen zichtbaar voor stafleden."
+        everyone_has_access: "Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en aanmaken. Verwijder een of meer van de verleende toestemmingen voor de groep 'iedereen' om toestemmingen te beperken."
+        toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
+        toggle_full: "Toestemming Aanmaken in-/uitschakelen"
+        inherited: "Deze toestemming is overgenomen van 'iedereen'"
       special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan geen beveiligingsinstellingen bevatten."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij is bedoeld als de standaardcategorie voor nieuwe topics die geen selecteerde categorie hebben. Als u dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als u de naam of omschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
@@ -3465,6 +3484,12 @@ nl:
               sync_sso: Een gebruiker synchroniseren via SSO.
               show: Informatie over een gebruiker verkrijgen.
               check_emails: E-mailadressen van gebruiker weergeven.
+              update: Gebruikersprofielgegevens bijwerken.
+              log_out: Alle sessies voor een gebruiker afmelden.
+              anonymize: Gebruikersaccounts anonimiseren.
+              delete: Gebruikersaccounts verwijderen.
+            email:
+              receive_emails: Deze scope met de e-mailontvanger combineren om inkomende e-mails te verwerken.
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3704,6 +3729,7 @@ nl:
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
           color_scheme_user_selectable: "Kleurenschema kan door gebruikers worden geselecteerd"
+          auto_update: "Automatisch bijwerken wanneer Discourse wordt bijgewerkt"
           color_scheme: "Kleurenpalet"
           default_light_scheme: "Licht (standaard)"
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
@@ -3777,6 +3803,7 @@ nl:
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
+          has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
           theme_settings: "Thema-instellingen"
           no_settings: "Dit thema heeft geen instellingen."
@@ -4470,6 +4497,7 @@ nl:
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"
+        history: "Wijzigingsoverzicht bekijken"
         reset: "terugzetten"
         none: "geen"
       site_settings:

@@ -3463,6 +3463,9 @@ it:
               sync_sso: Sincronizza un utente usando SSO.
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
+              update: Aggiorna le informazioni del profilo utente.
+              anonymize: Anonimizza gli account utente.
+              delete: Elimina account utente.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
       web_hooks:

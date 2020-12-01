@@ -272,6 +272,7 @@ pl_PL:
   email_template_cant_be_modified: "Ten szablon e-mail nie może być zmodyfikowany"
   invalid_whisper_access: "Albo szepty nie są włączone, albo nie masz dostępu do tworzenia wpisów szeptanych"
   not_in_group:
+    title_topic: "Aby wyświetlić ten temat, musisz poprosić o członkostwo w grupie '%{group}'."
     title_category: "Musisz być w grupie, aby zobaczyć tę kategorię."
     request_membership: "Poproś o członkostwo"
     join_group: "Dołącz do grupy"

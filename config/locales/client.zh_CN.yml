@@ -3350,6 +3350,10 @@ zh_CN:
               sync_sso: 使用 SSO 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
+              update: 更新用户个人资料信息。
+              log_out: 注销用户的所有会话。
+              anonymize: 匿名用户帐户。
+              delete: 删除用户帐户。
             email:
               receive_emails: 将此范围与邮件收件人结合起来处理传入的电子邮件。
       web_hooks:
@@ -3663,6 +3667,7 @@ zh_CN:
           check_for_updates: "检查更新"
           updating: "更新…"
           up_to_date: "主题已经是最新版本，上次检查："
+          has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
           theme_settings: "主题设置"
           no_settings: "这个主题内没有设置"

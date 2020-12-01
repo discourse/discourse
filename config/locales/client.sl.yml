@@ -2744,6 +2744,17 @@ sl:
       change_in_category_topic: "Uredi opis"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
+      security_add_group: "Dodaj skupino"
+      permissions:
+        group: "Skupina"
+        see: "Glej"
+        reply: "Odgovori"
+        create: "Ustvari"
+        no_groups_selected: "Dostop ni bil odobren nobeni skupini; ta kategorija bo vidna samo osebju."
+        everyone_has_access: "Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«."
+        toggle_reply: "Preklopi dovoljenje za odgovor"
+        toggle_full: "Preklopi dovoljenje za ustvarjanje"
+        inherited: "To dovoljenje je podedovano od \"vsi\""
       special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
       uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more imeti varnostnih nastavitev."
       uncategorized_general_warning: 'Ta kategorija je posebna. Uporabi se kot privzeta kategorija za teme brez kategorije. Če hočete onemogočiti takšen način in hočete obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če hočete spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'

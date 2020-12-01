@@ -3751,6 +3751,10 @@ pl_PL:
               sync_sso: Synchronizuj użytkownika za pomocą logowania SSO.
               show: Uzyskaj informacje o użytkowniku.
               check_emails: Lista adresów e-mail użytkowników.
+              update: Zaktualizuj informacje o profilu użytkownika.
+              log_out: Wyloguj wszystkie sesje użytkownika.
+              anonymize: Anonimizuj konta użytkowników.
+              delete: Usuń konta użytkowników.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
       web_hooks:
