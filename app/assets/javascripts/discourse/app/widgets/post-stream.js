@@ -168,7 +168,7 @@ createWidget("filter-show-all", {
   },
 
   click() {
-    this.sendWidgetAction("cancelFilter");
+    this.sendWidgetAction("cancelFilter", this.attrs.streamFilters);
   },
 });
 

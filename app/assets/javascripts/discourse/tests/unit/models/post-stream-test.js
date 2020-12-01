@@ -302,6 +302,64 @@ module("Unit | Model | post-stream", function () {
     assert.blank(postStream.get("userFilters"), "cancelFilter clears");
   });
 
+  test("filterReplies", function (assert) {
+    const postStream = buildStream(1234),
+      store = postStream.store;
+
+    postStream.appendPost(
+      store.createRecord("post", { id: 2, post_number: 3 })
+    );
+
+    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      false,
+      "by default no replies are filtered"
+    );
+
+    postStream.filterReplies(3);
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      3,
+      "postNumber is in the filters"
+    );
+
+    postStream.cancelFilter();
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      false,
+      "cancelFilter clears"
+    );
+  });
+
+  test("filterUpwards", function (assert) {
+    const postStream = buildStream(1234),
+      store = postStream.store;
+
+    postStream.appendPost(
+      store.createRecord("post", { id: 2, post_number: 3 })
+    );
+
+    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+
+    assert.equal(
+      postStream.get("filterUpwardsPostID"),
+      false,
+      "by default filter is false"
+    );
+
+    postStream.filterUpwards(2);
+    assert.equal(postStream.get("filterUpwardsPostID"), 2, "filter is set");
+
+    postStream.cancelFilter();
+    assert.equal(
+      postStream.get("filterUpwardsPostID"),
+      false,
+      "filter cleared"
+    );
+  });
+
   test("streamFilters", function (assert) {
     const postStream = buildStream(1237);
     sinon.stub(postStream, "refresh").returns(Promise.resolve());
@@ -331,6 +389,24 @@ module("Unit | Model | post-stream", function () {
         username_filters: "eviltrout",
       },
       "streamFilters contains the username we filtered"
+    );
+
+    postStream.filterUpwards(2);
+    assert.deepEqual(
+      postStream.get("streamFilters"),
+      {
+        filter_upwards_post_id: 2,
+      },
+      "streamFilters contains only the post ID"
+    );
+
+    postStream.filterReplies(1);
+    assert.deepEqual(
+      postStream.get("streamFilters"),
+      {
+        replies_to_post_number: 1,
+      },
+      "streamFilters contains only the last filter"
     );
   });
 

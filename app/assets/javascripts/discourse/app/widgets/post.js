@@ -441,7 +441,7 @@ createWidget("post-contents", {
     const controller = this.register.lookup("controller:topic");
     post
       .get("topic.postStream")
-      .enableRepliesFilter(this.attrs.post_number)
+      .filterReplies(this.attrs.post_number)
       .then(() => {
         controller.updateQueryParams();
       });

@@ -240,7 +240,7 @@ export default RestModel.extend({
     return this.refreshAndJumptoSecondVisible();
   },
 
-  enableRepliesFilter(postNumber) {
+  filterReplies(postNumber) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
     return this.refreshAndJumptoSecondVisible();
