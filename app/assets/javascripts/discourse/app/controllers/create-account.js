@@ -99,16 +99,6 @@ export default Controller.extend(
       return authOptions && !canEditName;
     },
 
-    @discourseComputed
-    fullnameRequired() {
-      return this.get("siteSettings.full_name_required");
-    },
-
-    @discourseComputed
-    fullnameOptional() {
-      return this.get("siteSettings.enable_names");
-    },
-
     @discourseComputed("authOptions.auth_provider")
     passwordRequired(authProvider) {
       return isEmpty(authProvider);

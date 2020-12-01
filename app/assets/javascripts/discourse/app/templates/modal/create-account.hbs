@@ -63,12 +63,12 @@
                   <td><label>{{i18n "user.username.instructions"}}</label></td>
                 </tr>
 
-                {{#if fullnameOptional}}
+                {{#if siteSettings.enable_names}}
                   <tr class="input">
                     <td class="label">
                       <label for="new-account-name">
                         {{i18n "user.name.title"}}
-                        {{#if fullnameRequired}}
+                        {{#if siteSettings.full_name_required}}
                           {{~#if userFields~}}
                             <span class="required">*</span>
                           {{/if}}
