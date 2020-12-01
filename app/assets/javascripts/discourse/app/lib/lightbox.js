@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import loadScript from "discourse/lib/load-script";
 import {
   escapeExpression,
   isAppWebview,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
+import I18n from "I18n";
+import User from "discourse/models/user";
+import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import User from "discourse/models/user";
 
 export default function (elem, siteSettings) {
   if (!elem) {

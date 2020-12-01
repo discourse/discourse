@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
+import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
 
 registerUnbound("theme-i18n", (themeId, key, params) => {

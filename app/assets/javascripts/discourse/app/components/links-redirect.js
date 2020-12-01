@@ -1,5 +1,5 @@
-import Component from "@ember/component";
 import ClickTrack from "discourse/lib/click-track";
+import Component from "@ember/component";
 
 export default Component.extend({
   didInsertElement() {

@@ -1,7 +1,7 @@
-import { not } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { not } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
 
 export default Controller.extend(bufferedProperty("model"), {

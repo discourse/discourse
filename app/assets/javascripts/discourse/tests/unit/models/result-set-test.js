@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import ResultSet from "discourse/models/result-set";
 import createStore from "discourse/tests/helpers/create-store";
 

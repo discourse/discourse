@@ -1,6 +1,6 @@
+import EmberObject from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import EmberObject from "@ember/object";
 import { fmt } from "discourse/lib/computed";
 
 export default EmberObject.extend({

@@ -1,9 +1,9 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { later, schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import I18n from "I18n";
+import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 /*global Resumable:true */
 

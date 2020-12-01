@@ -1,9 +1,9 @@
-import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 import { isPresent } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
 import layout from "select-kit/templates/components/multi-select";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],

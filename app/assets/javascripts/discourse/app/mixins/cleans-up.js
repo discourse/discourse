@@ -1,5 +1,5 @@
-import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
+import { on } from "@ember/object/evented";
 
 // Include this mixin if you want to be notified when the dom should be
 // cleaned (usually on route change.)

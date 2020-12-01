@@ -1,9 +1,9 @@
-import { cleanDOM } from "discourse/lib/clean-dom";
 import {
-  startPageTracking,
-  resetPageTracking,
   googleTagManagerPageChanged,
+  resetPageTracking,
+  startPageTracking,
 } from "discourse/lib/page-tracker";
+import { cleanDOM } from "discourse/lib/clean-dom";
 import { viewTrackingRequired } from "discourse/lib/ajax";
 
 export default {

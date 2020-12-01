@@ -1,18 +1,18 @@
-import I18n from "I18n";
-import { schedule, next } from "@ember/runloop";
+import { REMINDER_TYPES, formattedReminderTime } from "discourse/lib/bookmark";
 import { and, or } from "@ember/object/computed";
-import { action } from "@ember/object";
-import { isPresent, isEmpty } from "@ember/utils";
+import { isEmpty, isPresent } from "@ember/utils";
+import { next, schedule } from "@ember/runloop";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Controller from "@ember/controller";
-import { Promise } from "rsvp";
+import I18n from "I18n";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { ajax } from "discourse/lib/ajax";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import bootbox from "bootbox";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed

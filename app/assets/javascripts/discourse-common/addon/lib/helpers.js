@@ -1,6 +1,6 @@
-import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
+import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 
 export function makeArray(obj) {

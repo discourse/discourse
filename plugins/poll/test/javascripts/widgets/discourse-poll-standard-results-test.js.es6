@@ -1,8 +1,8 @@
-import EmberObject from "@ember/object";
 import {
   moduleForWidget,
   widgetTest,
 } from "discourse/tests/helpers/widget-test";
+import EmberObject from "@ember/object";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 moduleForWidget("discourse-poll-standard-results");

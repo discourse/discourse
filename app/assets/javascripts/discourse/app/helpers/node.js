@@ -1,5 +1,5 @@
+import { longDate, number, relativeAge } from "discourse/lib/formatter";
 import { h } from "virtual-dom";
-import { relativeAge, longDate, number } from "discourse/lib/formatter";
 
 export function dateNode(dt) {
   if (typeof dt === "string") {

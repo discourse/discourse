@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Sharing from "discourse/lib/sharing";
 
 module("Unit | Utility | sharing", function (hooks) {

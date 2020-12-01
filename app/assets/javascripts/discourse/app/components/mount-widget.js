@@ -1,11 +1,11 @@
 import { cancel, scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
 import { diff, patch } from "virtual-dom";
-import { WidgetClickHook } from "discourse/widgets/hooks";
 import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
-import { getRegister } from "discourse-common/lib/get-owner";
+import Component from "@ember/component";
 import DirtyKeys from "discourse/lib/dirty-keys";
+import { WidgetClickHook } from "discourse/widgets/hooks";
 import { camelize } from "@ember/string";
+import { getRegister } from "discourse-common/lib/get-owner";
 
 let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {

@@ -1,9 +1,9 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
 import { deepMerge } from "discourse-common/lib/object";
+import { userPath } from "discourse/lib/url";
 
 export default DiscourseRoute.extend({
   titleToken() {

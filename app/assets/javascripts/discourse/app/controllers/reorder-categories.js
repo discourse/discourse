@@ -1,12 +1,12 @@
-import { sort } from "@ember/object/computed";
-import Evented from "@ember/object/evented";
-import EmberObjectProxy from "@ember/object/proxy";
-import Controller from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import BufferedProxy from "ember-buffered-proxy/proxy";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import BufferedProxy from "ember-buffered-proxy/proxy";
+import Controller from "@ember/controller";
+import EmberObjectProxy from "@ember/object/proxy";
+import Evented from "@ember/object/evented";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { sort } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, Evented, {
   init() {

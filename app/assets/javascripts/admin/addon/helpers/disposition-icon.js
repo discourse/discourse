@@ -1,5 +1,5 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Helper from "@ember/component/helper";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Helper.extend({
   compute([disposition]) {

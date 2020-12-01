@@ -1,20 +1,20 @@
 import {
-  visit,
-  currentURL,
-  currentRouteName,
-  click,
-  fillIn,
-} from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import {
   acceptance,
-  updateCurrentUser,
-  queryAll,
   exists,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  fillIn,
+  visit,
+} from "@ember/test-helpers";
+import I18n from "I18n";
 import User from "discourse/models/user";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 function preferencesPretender(server, helper) {
   server.post("/u/second_factors.json", () => {

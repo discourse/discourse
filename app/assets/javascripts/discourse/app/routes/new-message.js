@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { next } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
-import User from "discourse/models/user";
 import Group from "discourse/models/group";
+import I18n from "I18n";
+import User from "discourse/models/user";
 import bootbox from "bootbox";
 import cookie from "discourse/lib/cookie";
+import { next } from "@ember/runloop";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {

@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
+import { test } from "qunit";
 
 acceptance("Admin - Users List", function (needs) {
   needs.user();

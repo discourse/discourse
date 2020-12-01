@@ -1,14 +1,14 @@
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
-import I18n from "I18n";
-import { run } from "@ember/runloop";
 import {
   acceptance,
   controllerFor,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import showModal from "discourse/lib/show-modal";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import I18n from "I18n";
 import hbs from "htmlbars-inline-precompile";
+import { run } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {
   let _translations;

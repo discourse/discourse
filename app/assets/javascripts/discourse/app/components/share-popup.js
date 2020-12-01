@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { scheduleOnce, later } from "@ember/runloop";
-import Component from "@ember/component";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { longDateNoYear } from "discourse/lib/formatter";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import { later, scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import I18n from "I18n";
 import Sharing from "discourse/lib/sharing";
-import { nativeShare } from "discourse/lib/pwa-utils";
 import { alias } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { longDateNoYear } from "discourse/lib/formatter";
+import { nativeShare } from "discourse/lib/pwa-utils";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default Component.extend({
   elementId: "share-link",

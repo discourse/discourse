@@ -1,21 +1,21 @@
-import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import Composer from "discourse/models/composer";
-import showModal from "discourse/lib/show-modal";
 import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import {
-  resetParams,
   queryParams,
+  resetParams,
 } from "discourse/controllers/discovery-sortable";
-import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import DiscourseRoute from "discourse/routes/discourse";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import I18n from "I18n";
+import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
+import { makeArray } from "discourse-common/lib/helpers";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   navMode: "latest",

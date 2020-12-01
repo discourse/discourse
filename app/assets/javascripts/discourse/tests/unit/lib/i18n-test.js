@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import I18n from "I18n";
 
 module("Unit | Utility | i18n", function (hooks) {

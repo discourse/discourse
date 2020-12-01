@@ -1,13 +1,13 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { alias, or, gt, not, and } from "@ember/object/computed";
-import EmberObject, { set, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
 import Controller, { inject } from "@ember/controller";
+import EmberObject, { computed, set } from "@ember/object";
+import { alias, and, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,

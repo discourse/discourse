@@ -1,4 +1,4 @@
-import { reads, and } from "@ember/object/computed";
+import { and, reads } from "@ember/object/computed";
 import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/combo-box/combo-box-header";

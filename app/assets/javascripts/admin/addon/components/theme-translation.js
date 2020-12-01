@@ -1,7 +1,7 @@
-import { alias } from "@ember/object/computed";
-import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
+import Component from "@ember/component";
 import SettingComponent from "admin/mixins/setting-component";
+import { alias } from "@ember/object/computed";
 
 export default Component.extend(BufferedContent, SettingComponent, {
   layoutName: "admin/templates/components/site-setting",

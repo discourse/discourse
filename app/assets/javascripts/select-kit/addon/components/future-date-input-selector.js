@@ -1,10 +1,10 @@
+import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
+import ComboBoxComponent from "select-kit/components/combo-box";
+import DatetimeMixin from "select-kit/components/future-date-input-selector/mixin";
 import I18n from "I18n";
 import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import ComboBoxComponent from "select-kit/components/combo-box";
-import { CLOSE_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
-import DatetimeMixin from "select-kit/components/future-date-input-selector/mixin";
 
 const TIMEFRAME_BASE = {
   enabled: () => true,

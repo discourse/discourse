@@ -1,19 +1,19 @@
 import {
-  run,
   cancel,
-  schedule,
-  later,
   debounce,
+  later,
+  run,
+  schedule,
   throttle,
 } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import afterTransition from "discourse/lib/after-transition";
-import positioningWorkaround from "discourse/lib/safari-hacks";
-import { headerHeight } from "discourse/components/site-header";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
+import afterTransition from "discourse/lib/after-transition";
+import { headerHeight } from "discourse/components/site-header";
 import { iOSWithVisualViewport } from "discourse/lib/utilities";
+import positioningWorkaround from "discourse/lib/safari-hacks";
 
 const START_EVENTS = "touchstart mousedown";
 const DRAG_EVENTS = "touchmove mousemove";

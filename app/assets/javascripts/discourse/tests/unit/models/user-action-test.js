@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import UserAction from "discourse/models/user-action";
 
 module("Unit | Model | user-action", function () {

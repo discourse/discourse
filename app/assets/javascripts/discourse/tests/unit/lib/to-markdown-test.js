@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import toMarkdown from "discourse/lib/to-markdown";
 
 module("Unit | Utility | to-markdown", function () {

@@ -1,17 +1,17 @@
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import DiscourseURL from "discourse/lib/url";
-import Category from "discourse/models/category";
+import {
+  ALL_CATEGORIES_ID,
+  NO_CATEGORIES_ID,
+} from "select-kit/components/category-drop";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import {
-  NO_CATEGORIES_ID,
-  ALL_CATEGORIES_ID,
-} from "select-kit/components/category-drop";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { set } from "@ember/object";
 import sinon from "sinon";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function initCategories(context) {
   const categories = context.site.categoriesList;

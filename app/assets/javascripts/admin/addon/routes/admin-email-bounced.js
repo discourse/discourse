@@ -1,5 +1,5 @@
-import showModal from "discourse/lib/show-modal";
 import AdminEmailLogs from "admin/routes/admin-email-logs";
+import showModal from "discourse/lib/show-modal";
 
 export default AdminEmailLogs.extend({
   status: "bounced",

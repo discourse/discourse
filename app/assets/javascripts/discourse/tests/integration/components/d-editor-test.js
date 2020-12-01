@@ -1,20 +1,20 @@
+import { click, fillIn } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { next } from "@ember/runloop";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
-  setTextareaSelection,
   getTextareaSelection,
+  setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import { fillIn, click } from "@ember/test-helpers";
+import I18n from "I18n";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
+import { next } from "@ember/runloop";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);

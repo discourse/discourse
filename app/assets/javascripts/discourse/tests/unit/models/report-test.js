@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Report from "admin/models/report";
 import { setPrefix } from "discourse-common/lib/get-url";
 

@@ -1,8 +1,8 @@
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Controller from "@ember/controller";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { empty } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(bufferedProperty("model"), {

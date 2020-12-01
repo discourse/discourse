@@ -1,5 +1,5 @@
+import { convertIconClass, iconNode } from "discourse-common/lib/icon-library";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode, convertIconClass } from "discourse-common/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
 
 createWidget("avatar-flair", {

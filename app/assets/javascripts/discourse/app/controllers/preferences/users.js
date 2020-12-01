@@ -1,9 +1,9 @@
-import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
+import { alias, and, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
+import { makeArray } from "discourse-common/lib/helpers";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),

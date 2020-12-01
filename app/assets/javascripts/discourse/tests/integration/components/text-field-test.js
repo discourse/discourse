@@ -1,13 +1,13 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
 import I18n from "I18n";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import { fillIn } from "@ember/test-helpers";
+import sinon from "sinon";
 
 discourseModule("Integration | Component | text-field", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,7 +1,7 @@
-import { moduleFor } from "ember-qunit";
-import { test } from "qunit";
 import Badge from "discourse/models/badge";
 import { mapRoutes } from "discourse/mapping-router";
+import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 
 moduleFor("controller:admin-user-badges", {
   beforeEach() {

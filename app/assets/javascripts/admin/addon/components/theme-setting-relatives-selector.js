@@ -1,5 +1,5 @@
-import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
+import Component from "@ember/component";
 import SettingComponent from "admin/mixins/setting-component";
 
 export default Component.extend(BufferedContent, SettingComponent, {

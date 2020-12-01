@@ -1,8 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
 

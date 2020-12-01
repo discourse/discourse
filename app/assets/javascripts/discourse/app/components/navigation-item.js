@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(FilterModeMixin, {
   tagName: "li",

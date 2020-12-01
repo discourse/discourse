@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
   tagName: "",

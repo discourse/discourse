@@ -1,5 +1,5 @@
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();

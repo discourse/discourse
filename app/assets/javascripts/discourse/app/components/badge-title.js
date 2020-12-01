@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 

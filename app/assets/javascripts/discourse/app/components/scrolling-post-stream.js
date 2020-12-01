@@ -1,7 +1,7 @@
+import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { debounce, next, scheduleOnce } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import MountWidget from "discourse/components/mount-widget";
-import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";

@@ -1,11 +1,11 @@
-import { click, visit, currentURL } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
-  updateCurrentUser,
   acceptance,
-  queryAll,
   exists,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("Tags", function (needs) {
   needs.user();

@@ -1,12 +1,12 @@
 import EmberObject, { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 import { deepEqual } from "discourse-common/lib/object";
-import DiscourseURL from "discourse/lib/url";
+import { isEmpty } from "@ember/utils";
 
 function isNew(topic) {
   return (

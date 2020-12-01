@@ -1,6 +1,6 @@
+import Controller from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
 import { isPresent } from "@ember/utils";
 
 export default Controller.extend({

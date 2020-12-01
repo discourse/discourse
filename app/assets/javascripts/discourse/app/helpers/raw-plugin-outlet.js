@@ -1,6 +1,6 @@
-import { rawConnectorsFor } from "discourse/lib/plugin-connectors";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { htmlSafe } from "@ember/template";
+import { rawConnectorsFor } from "discourse/lib/plugin-connectors";
 
 RawHandlebars.registerHelper("raw-plugin-outlet", function (args) {
   const connectors = rawConnectorsFor(args.hash.name);

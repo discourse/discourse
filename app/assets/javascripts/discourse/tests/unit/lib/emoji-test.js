@@ -1,8 +1,8 @@
-import { test } from "qunit";
-import { emojiSearch } from "pretty-text/emoji";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { emojiUnescape } from "discourse/lib/text";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { emojiSearch } from "pretty-text/emoji";
+import { emojiUnescape } from "discourse/lib/text";
+import { test } from "qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 discourseModule("Unit | Utility | emoji", function () {
   test("emojiUnescape", function (assert) {

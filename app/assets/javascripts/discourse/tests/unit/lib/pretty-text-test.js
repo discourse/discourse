@@ -1,15 +1,15 @@
-import { skip, test, module } from "qunit";
-import { buildQuote } from "discourse/lib/quote";
-import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import { module, skip, test } from "qunit";
+import Post from "discourse/models/post";
+import { buildQuote } from "discourse/lib/quote";
+import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
-import { deepMerge } from "discourse-common/lib/object";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const rawOpts = {
   siteSettings: {

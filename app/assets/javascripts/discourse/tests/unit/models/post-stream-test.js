@@ -1,11 +1,11 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
-import createStore from "discourse/tests/helpers/create-store";
-import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import User from "discourse/models/user";
+import createStore from "discourse/tests/helpers/create-store";
 import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 
 function buildStream(id, stream) {
   const store = createStore();

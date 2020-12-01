@@ -1,19 +1,19 @@
-import I18n from "I18n";
+import { alias, equal, gt, not, or } from "@ember/object/computed";
 import discourseComputed, {
-  on,
   observes,
+  on,
 } from "discourse-common/utils/decorators";
-import { alias, gt, not, or, equal } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
-import { sanitizeAsync } from "discourse/lib/text";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import Post from "discourse/models/post";
 import Category from "discourse/models/category";
-import { computed } from "@ember/object";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Post from "discourse/models/post";
 import bootbox from "bootbox";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { computed } from "@ember/object";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { sanitizeAsync } from "discourse/lib/text";
 
 function customTagArray(fieldName) {
   return computed(fieldName, function () {

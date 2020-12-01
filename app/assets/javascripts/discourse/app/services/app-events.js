@@ -1,6 +1,6 @@
-import deprecated from "discourse-common/lib/deprecated";
 import Evented from "@ember/object/evented";
 import Service from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _events = {};
 

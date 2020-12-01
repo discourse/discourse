@@ -1,8 +1,8 @@
+import { cancel, debounce, later } from "@ember/runloop";
+import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce, cancel, later } from "@ember/runloop";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { setCaretPosition, caretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.

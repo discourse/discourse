@@ -1,5 +1,5 @@
-import { later } from "@ember/runloop";
 import Component from "@ember/component";
+import { later } from "@ember/runloop";
 import { on } from "@ember/object/evented";
 
 export default Component.extend({

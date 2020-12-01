@@ -1,12 +1,12 @@
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
-import { next, schedule } from "@ember/runloop";
-import offsetCalculator from "discourse/lib/offset-calculator";
-import LockOn from "discourse/lib/lock-on";
-import { defaultHomepage } from "discourse/lib/utilities";
-import User from "discourse/models/user";
 import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
+import { next, schedule } from "@ember/runloop";
+import EmberObject from "@ember/object";
+import LockOn from "discourse/lib/lock-on";
 import Session from "discourse/models/session";
+import User from "discourse/models/user";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
 
 const rewrites = [];

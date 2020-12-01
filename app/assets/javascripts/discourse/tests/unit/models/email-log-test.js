@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
 

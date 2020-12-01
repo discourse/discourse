@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
 import {
-  translateResults,
   getSearchKey,
   isValidSearchTerm,
+  translateResults,
 } from "discourse/lib/search";
-import PreloadStore from "discourse/lib/preload-store";
 import { getTransient, setTransient } from "discourse/lib/page-tracker";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
+import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default DiscourseRoute.extend({

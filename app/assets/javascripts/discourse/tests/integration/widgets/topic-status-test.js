@@ -1,10 +1,10 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 
 discourseModule("Integration | Component | Widget | topic-status", function (

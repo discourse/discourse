@@ -1,14 +1,14 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import DiscourseURL from "discourse/lib/url";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import MessageBus from "message-bus-client";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({

@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 
 discourseModule("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);

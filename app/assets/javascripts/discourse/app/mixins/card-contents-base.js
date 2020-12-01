@@ -1,12 +1,12 @@
 import { alias, match } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
+import afterTransition from "discourse/lib/after-transition";
 import { escapeExpression } from "discourse/lib/utilities";
 import headerOutletHeights from "discourse/lib/header-outlet-height";
 import { inject as service } from "@ember/service";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default Mixin.create({
   router: service(),

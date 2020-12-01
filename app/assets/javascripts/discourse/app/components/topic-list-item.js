@@ -1,13 +1,13 @@
-import I18n from "I18n";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { alias } from "@ember/object/computed";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { on } from "@ember/object/evented";
+import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export function showEntrance(e) {
   let target = $(e.target);

@@ -1,9 +1,9 @@
 import {
-  exists,
   acceptance,
+  exists,
   invisible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit, currentRouteName } from "@ember/test-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Login Required", function (needs) {

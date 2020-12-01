@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { equal } from "@ember/object/computed";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 
 const CUSTOM_REASON_KEY = "custom";
 

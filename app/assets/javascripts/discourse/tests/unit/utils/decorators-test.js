@@ -1,7 +1,7 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { afterRender } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { afterRender } from "discourse-common/utils/decorators";
 import componentTest from "discourse/tests/helpers/component-test";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { moduleForComponent } from "ember-qunit";
 
 const fooComponent = Component.extend({

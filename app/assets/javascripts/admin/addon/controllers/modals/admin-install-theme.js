@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import { equal, match, alias } from "@ember/object/computed";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, equal, match } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { THEMES, COMPONENTS } from "admin/models/theme";
-import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { set } from "@ember/object";
 
 const MIN_NAME_LENGTH = 4;

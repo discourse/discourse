@@ -1,8 +1,8 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
+import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 import componentTest from "discourse/tests/helpers/component-test";
-import Theme, { THEMES, COMPONENTS } from "admin/models/theme";
+import { moduleForComponent } from "ember-qunit";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 moduleForComponent("themes-list", { integration: true });
 

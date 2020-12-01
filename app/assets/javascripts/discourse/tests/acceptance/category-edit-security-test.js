@@ -1,8 +1,8 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Category Edit - security", function (needs) {
   needs.user();

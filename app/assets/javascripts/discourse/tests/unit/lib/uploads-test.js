@@ -1,18 +1,18 @@
+import * as Utilities from "discourse/lib/utilities";
+import {
+  allowsAttachments,
+  allowsImages,
+  authorizedExtensions,
+  getUploadMarkdown,
+  isImage,
+  validateUploadedFiles,
+} from "discourse/lib/uploads";
+import I18n from "I18n";
+import User from "discourse/models/user";
+import bootbox from "bootbox";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
 import { test } from "qunit";
-import I18n from "I18n";
-import {
-  validateUploadedFiles,
-  authorizedExtensions,
-  isImage,
-  allowsImages,
-  allowsAttachments,
-  getUploadMarkdown,
-} from "discourse/lib/uploads";
-import * as Utilities from "discourse/lib/utilities";
-import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import bootbox from "bootbox";
 
 discourseModule("Unit | Utility | uploads", function () {
   test("validateUploadedFiles", function (assert) {

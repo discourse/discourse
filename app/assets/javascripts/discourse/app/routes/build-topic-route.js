@@ -1,17 +1,17 @@
-import { isEmpty } from "@ember/utils";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
 import {
   changeSort,
-  resetParams,
   queryParams,
+  resetParams,
 } from "discourse/controllers/discovery-sortable";
-import { defaultHomepage } from "discourse/lib/utilities";
-import Session from "discourse/models/session";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import { inject as service } from "@ember/service";
 import { deepEqual } from "discourse-common/lib/object";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import { inject as service } from "@ember/service";
 
 // A helper to build a topic route for a filter
 function filterQueryParams(params, defaultParams) {

@@ -1,11 +1,11 @@
+import Component from "@ember/component";
+import Group from "discourse/models/group";
 import I18n from "I18n";
+import PermissionType from "discourse/models/permission-type";
+import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import Component from "@ember/component";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import PermissionType from "discourse/models/permission-type";
-import Group from "discourse/models/group";
-import bootbox from "bootbox";
 
 export default Component.extend(bufferedProperty("model"), {
   tagName: "",

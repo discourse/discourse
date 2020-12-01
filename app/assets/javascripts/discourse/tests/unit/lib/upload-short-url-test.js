@@ -1,12 +1,12 @@
-import { test, module } from "qunit";
 import {
   lookupCachedUploadUrl,
-  resolveAllShortUrls,
   resetCache,
+  resolveAllShortUrls,
 } from "pretty-text/upload-short-url";
+import { module, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { ajax } from "discourse/lib/ajax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { settled } from "@ember/test-helpers";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {

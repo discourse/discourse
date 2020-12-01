@@ -1,6 +1,6 @@
 import Site from "discourse/models/site";
-import deprecated from "discourse-common/lib/deprecated";
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _connectorCache;
 let _rawConnectorCache;
