@@ -1,5 +1,5 @@
 import { makeArray } from "discourse-common/lib/helpers";
-import { alias, gte, or, and } from "@ember/object/computed";
+import { alias, or, and } from "@ember/object/computed";
 import { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -7,8 +7,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   ignoredUsernames: alias("model.ignored_usernames"),
-  userIsMemberOrAbove: gte("model.trust_level", 2),
-  ignoredEnabled: or("userIsMemberOrAbove", "model.staff"),
+
+  @discourseComputed("model.trust_level")
+  userCanIgnore(trustLevel) {
+    return trustLevel >= this.siteSettings.min_trust_level_to_allow_ignore;
+  },
+
+  ignoredEnabled: or("userCanIgnore", "model.staff"),
+
   allowPmUsersEnabled: and(
     "model.user_option.enable_allowed_pm_users",
     "model.user_option.allow_private_messages"

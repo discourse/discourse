@@ -1,6 +1,6 @@
 import { Promise } from "rsvp";
 import { isEmpty } from "@ember/utils";
-import { later } from "@ember/runloop";
+import { run, later } from "@ember/runloop";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import HeaderComponent from "discourse/components/site-header";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
@@ -44,7 +44,9 @@ export function currentUser() {
 }
 
 export function updateCurrentUser(properties) {
-  User.current().setProperties(properties);
+  run(() => {
+    User.current().setProperties(properties);
+  });
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead

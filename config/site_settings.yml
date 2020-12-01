@@ -1422,6 +1422,7 @@ trust:
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
+    client: true
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
