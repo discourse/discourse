@@ -242,7 +242,6 @@ registerButton("replies", (attrs, state, siteSettings) => {
 
   if (siteSettings.enable_filtered_replies_view) {
     action = "filterRepliesView";
-    icon = "far-comment";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled

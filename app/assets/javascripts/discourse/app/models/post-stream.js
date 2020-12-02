@@ -234,21 +234,22 @@ export default RestModel.extend({
     });
   },
 
+  refreshInPlaceAndJump(opts = {}) {
+    return this.refresh({ refreshInPlace: true }).then(() => {
+      if (opts.triggerStreamRefresh) {
+        this.appEvents.trigger("post-stream:refresh");
+      }
+      if (this.posts && this.posts.length > 1) {
+        const post_number = this.posts[1].get("post_number");
+        DiscourseURL.jumpToPost(post_number);
+        this.appEvents.trigger("post:highlight", post_number);
+      }
+    });
+  },
+
   showSummary() {
     this.cancelFilter();
     this.set("summary", true);
-    return this.refreshAndJumptoSecondVisible();
-  },
-
-  filterReplies(postNumber) {
-    this.cancelFilter();
-    this.set("filterRepliesToPostNumber", postNumber);
-    return this.refreshAndJumptoSecondVisible();
-  },
-
-  filterUpwards(postID) {
-    this.cancelFilter();
-    this.set("filterUpwardsPostID", postID);
     return this.refreshAndJumptoSecondVisible();
   },
 
@@ -257,6 +258,18 @@ export default RestModel.extend({
     this.cancelFilter();
     this.userFilters.addObject(username);
     return this.refreshAndJumptoSecondVisible();
+  },
+
+  filterReplies(postNumber) {
+    this.cancelFilter();
+    this.set("filterRepliesToPostNumber", postNumber);
+    return this.refreshInPlaceAndJump({ triggerStreamRefresh: true });
+  },
+
+  filterUpwards(postID) {
+    this.cancelFilter();
+    this.set("filterUpwardsPostID", postID);
+    return this.refreshInPlaceAndJump();
   },
 
   /**
@@ -285,8 +298,10 @@ export default RestModel.extend({
     }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
-    this.set("loadingFilter", true);
-    this.set("loadingNearPost", opts.nearPost);
+    if (!opts.refreshInPlace) {
+      this.set("loadingFilter", true);
+      this.set("loadingNearPost", opts.nearPost);
+    }
 
     opts = deepMerge(opts, this.streamFilters);
 
