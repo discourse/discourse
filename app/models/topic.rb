@@ -368,7 +368,7 @@ class Topic < ActiveRecord::Base
     self.last_post_user_id ||= user_id
   end
 
-  def inherit_auto_close_from_category
+  def inherit_auto_close_from_category(timer_type: :close)
     if !self.closed &&
        !@ignore_category_auto_close &&
        self.category &&
@@ -379,7 +379,7 @@ class Topic < ActiveRecord::Base
       duration = based_on_last_post ? self.category.auto_close_hours : nil
 
       self.set_or_create_timer(
-        TopicTimer.types[:close],
+        TopicTimer.types[timer_type],
         self.category.auto_close_hours,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
@@ -902,6 +902,7 @@ class Topic < ActiveRecord::Base
                               action_code: opts[:action_code],
                               no_bump: opts[:bump].blank?,
                               topic_id: self.id,
+                              silent: opts[:silent],
                               skip_validations: true,
                               custom_fields: opts[:custom_fields],
                               import_mode: opts[:import_mode])
@@ -1299,12 +1300,13 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil)
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, silent: nil)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
     topic_timer_options.merge!(user: by_user) unless public_topic_timer
+    topic_timer_options.merge!(silent: silent) if silent
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
 
