@@ -5,7 +5,6 @@ module Jobs
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
       state = !!args[:state]
-      opts = { silent: args[:silent] }
       timer_type = args[:silent] ? :silent_close : :close
 
       if topic_timer.blank? || topic_timer.execute_at > Time.zone.now
@@ -27,7 +26,7 @@ module Jobs
             by_user: Discourse.system_user
           )
         else
-          topic.update_status('autoclosed', state, user, opts)
+          topic.update_status('autoclosed', state, user, { silent: args[:silent] })
         end
 
         topic.inherit_auto_close_from_category(timer_type: timer_type) if state == false

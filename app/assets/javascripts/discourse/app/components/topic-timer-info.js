@@ -126,7 +126,10 @@ export default Component.extend({
   },
 
   _noticeKey() {
-    const statusType = this.statusType;
+    let statusType = this.statusType;
+    if (statusType === "silent_close") {
+      statusType = "close";
+    }
 
     if (this.basedOnLastPost) {
       return `topic.status_update_notice.auto_${statusType}_based_on_last_post`;
