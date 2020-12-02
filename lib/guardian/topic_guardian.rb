@@ -79,6 +79,7 @@ module TopicGuardian
 
     return true if is_admin?
     return true if is_moderator? && can_create_post?(topic)
+    return true if is_category_group_moderator?(topic.category)
 
     # can't edit topics in secured categories where you don't have permission to create topics
     # except for a tiny edge case where the topic is uncategorized and you are trying
