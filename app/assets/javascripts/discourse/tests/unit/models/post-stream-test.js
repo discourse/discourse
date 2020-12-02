@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import AppEvents from "discourse/services/app-events";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
 import { Promise } from "rsvp";
@@ -14,6 +15,7 @@ function buildStream(id, stream) {
   if (stream) {
     ps.set("stream", stream);
   }
+  ps.appEvents = AppEvents.create();
   return ps;
 }
 
