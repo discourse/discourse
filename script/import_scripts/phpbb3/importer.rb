@@ -34,6 +34,8 @@ module ImportScripts::PhpBB3
 
       import_users
       import_anonymous_users if @settings.import_anonymous_users
+      import_groups
+      import_user_groups
       import_mapped_categories
       import_categories
       import_posts
@@ -105,6 +107,46 @@ module ImportScripts::PhpBB3
           rescue => e
             log_error("Failed to map anonymous user with ID #{row[:user_id]}", e)
           end
+        end
+      end
+    end
+
+    def import_groups
+      puts '', 'creating groups'
+      rows = @database.fetch_groups
+
+      create_groups(rows) do |row|
+        next if row[:group_type] == 3
+
+        group_name = if @settings.site_name.present?
+          "#{@settings.site_name}_#{row[:group_name]}"
+        else
+          row[:group_name]
+        end[0..19].gsub(/[^a-zA-Z0-9\-_. ]/, '_')
+
+        {
+          id: @settings.prefix(row[:group_id]),
+          name: group_name,
+          full_name: row[:group_name],
+          bio_raw: @importers.text_processor.process_raw_text(row[:group_desc])
+        }
+      end
+    end
+
+    def import_user_groups
+      puts '', 'creating user groups'
+      rows = @database.fetch_group_users
+
+      rows.each do |row|
+        group_id = @lookup.group_id_from_imported_group_id(@settings.prefix(row[:group_id]))
+        next if !group_id
+
+        user_id = @lookup.user_id_from_imported_user_id(@settings.prefix(row[:user_id]))
+
+        begin
+          GroupUser.find_or_create_by(user_id: user_id, group_id: group_id, owner: row[:group_leader])
+        rescue => e
+          log_error("Failed to add user #{row[:user_id]} to group #{row[:group_id]}", e)
         end
       end
     end

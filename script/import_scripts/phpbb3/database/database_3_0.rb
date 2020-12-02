@@ -53,6 +53,20 @@ module ImportScripts::PhpBB3
       SQL
     end
 
+    def fetch_groups
+      query(<<-SQL)
+        SELECT g.group_id, g.group_type, g.group_name, g.group_desc
+        FROM #{@table_prefix}groups g
+      SQL
+    end
+
+    def fetch_group_users
+      query(<<-SQL)
+        SELECT ug.group_id, ug.user_id, ug.group_leader
+        FROM #{@table_prefix}user_group ug
+      SQL
+    end
+
     def fetch_categories
       query(<<-SQL)
         SELECT f.forum_id, f.parent_id, f.forum_name, f.forum_desc, x.first_post_time
