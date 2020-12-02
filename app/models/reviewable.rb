@@ -6,7 +6,7 @@ class Reviewable < ActiveRecord::Base
   class InvalidAction < StandardError
     def initialize(action_id, klass)
       @action_id, @klass = action_id, klass
-      super("Can't peform `#{action_id}` on #{klass.name}")
+      super("Can't perform `#{action_id}` on #{klass.name}")
     end
   end
 
