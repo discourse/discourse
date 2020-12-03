@@ -60,11 +60,9 @@ class UrlHelper
     self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
   end
 
-  # Prevents double URL encode
-  # https://stackoverflow.com/a/37599235
   def self.escape_uri(uri)
     return uri if s3_presigned_url?(uri)
-    UrlHelper.encode_component(CGI.unescapeHTML(UrlHelper.unencode(uri)))
+    Addressable::URI.normalized_encode(uri)
   end
 
   def self.rails_route_from_url(url)
