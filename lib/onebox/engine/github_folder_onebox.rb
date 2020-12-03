@@ -7,8 +7,13 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      matches_regexp Regexp.new(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com[\:\d]*(\/\w*){2}\/tree/)
+      matches_regexp Regexp.new(/^https?:\/\/(?:www\.)?(?:(?:\w)+\.)?(github)\.com[\:\d]*(\/[^\/]+){2}/)
       always_https
+
+      def self.priority
+        # This engine should have lower priority than the other Github engines
+        150
+      end
 
       private
 
@@ -20,11 +25,30 @@ module Onebox
         display_path = extract_path(og.url, max_length)
         display_description = clean_description(og.description, og.title, max_length)
 
+        title = og.title
+
+        fragment = Addressable::URI.parse(url).fragment
+        if fragment
+          fragment = Addressable::URI.unencode(fragment)
+
+          if html_doc.css('.Box.md')
+            # For links to markdown docs
+            node = html_doc.css('a.anchor').find { |n| n['href'] == "##{fragment}" }
+            subtitle = node&.parent&.text
+          elsif html_doc.css('.Box.rdoc')
+            # For links to rdoc docs
+            node = html_doc.css('h3').find { |n| n['id'] == "user-content-#{fragment.downcase}" }
+            subtitle = node&.css('text()')&.first&.text
+          end
+
+          title = "#{title} - #{subtitle}" if subtitle
+        end
+
         {
           link: og.url,
           path_link: url,
           image: og.image,
-          title: og.title,
+          title: Onebox::Helpers.truncate(title, 250),
           path: display_path,
           description: display_description,
           favicon: get_favicon
@@ -34,6 +58,9 @@ module Onebox
       def extract_path(root, max_length)
         path = url.split('#')[0].split('?')[0]
         path = path["#{root}/tree/".length..-1]
+
+        return unless path
+
         path.length > max_length ? path[-max_length..-1] : path
       end
 
