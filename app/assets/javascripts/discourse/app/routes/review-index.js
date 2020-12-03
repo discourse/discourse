@@ -32,6 +32,7 @@ export default DiscourseRoute.extend({
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
       filterUsername: meta.username,
+      filterReviewedBy: meta.reviewed_by,
       filterFromDate: isPresent(meta.from_date) ? moment(meta.from_date) : null,
       filterToDate: isPresent(meta.to_date) ? moment(meta.to_date) : null,
       filterSortOrder: meta.sort_order,
