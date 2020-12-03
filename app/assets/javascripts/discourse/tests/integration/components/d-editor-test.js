@@ -459,13 +459,13 @@ third line`
 
       textarea.selectionStart = 0;
 
-      await click("button.quote");
+      await click("button.blockquote");
 
       assert.equal(this.value, "> one\n> \n> two\n> \n> three");
       assert.equal(textarea.selectionStart, 0);
       assert.equal(textarea.selectionEnd, 25);
 
-      await click("button.quote");
+      await click("button.blockquote");
       assert.equal(this.value, "one\n\ntwo\n\nthree");
     },
   });
@@ -481,7 +481,7 @@ third line`
       textarea.selectionStart = 6;
       textarea.selectionEnd = 10;
 
-      await click("button.quote");
+      await click("button.blockquote");
       assert.equal(this.value, "one\n\n\n> \n> two");
     },
   });
@@ -490,12 +490,12 @@ third line`
     textarea.selectionStart = 6;
     textarea.selectionEnd = 9;
 
-    await click("button.quote");
+    await click("button.blockquote");
     assert.equal(this.value, "hello\n\n> wor\n\nld.");
     assert.equal(textarea.selectionStart, 7);
     assert.equal(textarea.selectionEnd, 12);
 
-    await click("button.quote");
+    await click("button.blockquote");
 
     assert.equal(this.value, "hello\n\nwor\n\nld.");
     assert.equal(textarea.selectionStart, 7);
@@ -504,7 +504,7 @@ third line`
     textarea.selectionStart = 15;
     textarea.selectionEnd = 15;
 
-    await click("button.quote");
+    await click("button.blockquote");
     assert.equal(this.value, "hello\n\nwor\n\nld.\n\n> Blockquote");
   });
 
