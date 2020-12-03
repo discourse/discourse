@@ -8,11 +8,27 @@ require 'mocha/api'
 
 require_relative "support/html_spec_helper"
 
-# Monkey-patch fakeweb to support Ruby 2.4+.
-# See https://github.com/chrisk/fakeweb/pull/59.
 module FakeWeb
+  # Monkey-patch fakeweb to support Ruby 2.4+.
+  # See https://github.com/chrisk/fakeweb/pull/59.
   class StubSocket
     def close; end
+  end
+
+  # Monkey-patch to use Addressable::URI (rather than URI) to parse uris
+  class Registry
+    def normalize_uri(uri)
+      return uri if uri.is_a?(Regexp)
+      normalized_uri =
+        case uri
+        when URI then uri
+        when String
+          uri = 'http://' + uri unless uri.match('^https?://')
+          URI.parse(Addressable::URI.parse(uri).normalize.to_s)
+        end
+      normalized_uri.query = sort_query_params(normalized_uri.query)
+      normalized_uri.normalize
+    end
   end
 end
 

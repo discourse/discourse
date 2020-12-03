@@ -27,7 +27,7 @@ module Onebox
     def self.fetch_html_doc(url, headers = nil)
       response = (fetch_response(url, nil, nil, headers) rescue nil)
       doc = Nokogiri::HTML(response)
-      uri = URI(url)
+      uri = Addressable::URI.parse(url)
 
       ignore_canonical_tag = doc.at('meta[property="og:ignore_canonical"]')
       should_ignore_canonical = IGNORE_CANONICAL_DOMAINS.map { |hostname| uri.hostname.match?(hostname) }.any?
@@ -35,8 +35,9 @@ module Onebox
       unless (ignore_canonical_tag && ignore_canonical_tag['content'].to_s == 'true') || should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
-        if canonical_link && "#{URI(canonical_link).host}#{URI(canonical_link).path}" != "#{uri.host}#{uri.path}"
-          response = (fetch_response(canonical_link, nil, nil, headers) rescue nil)
+        canonical_uri = Addressable::URI.parse(canonical_link)
+        if canonical_link && "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
+          response = (fetch_response(canonical_uri.to_s, nil, nil, headers) rescue nil)
           doc = Nokogiri::HTML(response) if response
         end
       end
