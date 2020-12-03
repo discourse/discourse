@@ -1050,7 +1050,8 @@ class TopicsController < ApplicationController
       @topic_view,
       scope: guardian,
       root: false,
-      include_raw: !!params[:include_raw]
+      include_raw: !!params[:include_raw],
+      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id]
     )
 
     respond_to do |format|

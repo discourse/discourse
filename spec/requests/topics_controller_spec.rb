@@ -2114,8 +2114,11 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
 
           body = response.parsed_body
-          ids = body["post_stream"]["posts"].map { |p| p["id"] }
 
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
           expect(ids).to eq([post.id, post2.id, post3.id, post4.id])
         end
       end
@@ -2135,8 +2138,11 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
 
           body = response.parsed_body
-          ids = body["post_stream"]["posts"].map { |p| p["id"] }
 
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
           # includes topic OP, current post and subsequent posts
           # but only one level of parents, respecting default max_reply_history = 1
           expect(ids).to eq([post.id, post4.id, post5.id, post6.id])
