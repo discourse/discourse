@@ -104,7 +104,7 @@ class Toolbar {
     }
 
     this.addButton({
-      id: "quote",
+      id: "blockquote",
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
