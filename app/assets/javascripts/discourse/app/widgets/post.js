@@ -126,12 +126,10 @@ createWidget("reply-to-tab", {
   },
 
   html(attrs, state) {
-    if (state.loading) {
-      return I18n.t("loading");
-    }
+    const icon = state.loading ? h("div.spinner.small") : iconNode("share");
 
     return [
-      iconNode("share"),
+      icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,

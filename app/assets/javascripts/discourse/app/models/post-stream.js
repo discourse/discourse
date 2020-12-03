@@ -253,9 +253,12 @@ export default RestModel.extend({
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
     return this.refresh({ refreshInPlace: true }).then(() => {
+      const element = document.querySelector(`#post_${postNumber}`);
+
       // order is important, we need to get the offset before triggering a refresh
-      const element = document.querySelector(`#post_${postNumber}`),
-        originalTopOffset = element.getBoundingClientRect().top;
+      const originalTopOffset = element
+        ? element.getBoundingClientRect().top
+        : null;
 
       this.appEvents.trigger("post-stream:refresh");
       DiscourseURL.jumpToPost(postNumber, {
@@ -278,12 +281,14 @@ export default RestModel.extend({
     return this.refresh({ refreshInPlace: true }).then(() => {
       this.appEvents.trigger("post-stream:refresh");
 
-      const postNumber = this.posts[1].get("post_number");
-      DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
+      if (this.posts && this.posts.length > 1) {
+        const postNumber = this.posts[1].get("post_number");
+        DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
 
-      schedule("afterRender", () => {
-        highlightPost(postNumber);
-      });
+        schedule("afterRender", () => {
+          highlightPost(postNumber);
+        });
+      }
     });
   },
 
@@ -341,6 +346,7 @@ export default RestModel.extend({
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
+    this.cancelFilter();
     const postId = post.get("id"),
       stream = this.stream,
       idx = stream.indexOf(postId),
@@ -384,6 +390,7 @@ export default RestModel.extend({
 
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
+    this.cancelFilter();
     const postId = post.get("id"),
       stream = this.stream,
       idx = stream.indexOf(postId);
