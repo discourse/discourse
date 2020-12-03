@@ -772,6 +772,9 @@ posting:
   shared_drafts_category:
     type: category
     default: ""
+  shared_drafts_min_trust_level:
+    default: "staff"
+    enum: "TrustLevelAndStaffSetting"
   post_edit_time_limit:
     default: 1440
     max: 10080

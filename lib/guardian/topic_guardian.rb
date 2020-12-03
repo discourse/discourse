@@ -22,7 +22,12 @@ module TopicGuardian
   alias :can_moderate_topic? :can_review_topic?
 
   def can_create_shared_draft?
-    is_staff? && SiteSetting.shared_drafts_enabled?
+    return false unless SiteSetting.shared_drafts_enabled?
+
+    return is_admin? if SiteSetting.shared_drafts_min_trust_level.to_s == 'admin'
+    return is_staff? if SiteSetting.shared_drafts_min_trust_level.to_s == 'staff'
+
+    @user.has_trust_level?(SiteSetting.shared_drafts_min_trust_level.to_i)
   end
 
   def can_create_whisper?
@@ -34,7 +39,7 @@ module TopicGuardian
   end
 
   def can_publish_topic?(topic, category)
-    is_staff? && can_see?(topic) && can_create_topic?(category)
+    can_create_shared_draft? && can_see?(topic) && can_create_topic_on_category?(category)
   end
 
   # Creating Methods
@@ -90,6 +95,16 @@ module TopicGuardian
     )
       return false if !can_create_topic_on_category?(topic.category)
     end
+
+    # Editing a shared draft.
+    return true if (
+      !topic.archived &&
+      !topic.private_message? &&
+      topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+      can_see_category?(topic.category) &&
+      can_create_shared_draft? &&
+      can_create_post?(topic)
+    )
 
     # TL4 users can edit archived topics, but can not edit private messages
     return true if (

@@ -139,6 +139,14 @@ module PostGuardian
       return false
     end
 
+    return true if (
+      can_see_post?(post) &&
+      can_create_post?(post.topic) &&
+      post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+      can_see_category?(post.topic.category) &&
+      can_create_shared_draft?
+    )
+
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return can_create_post?(post.topic)
     end
