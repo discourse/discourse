@@ -10,8 +10,10 @@ import { deepMerge } from "discourse-common/lib/object";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
+import { highlightPost } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { loadTopicView } from "discourse/models/topic";
+import { schedule } from "@ember/runloop";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -234,19 +236,6 @@ export default RestModel.extend({
     });
   },
 
-  refreshInPlaceAndJump(opts = {}) {
-    return this.refresh({ refreshInPlace: true }).then(() => {
-      if (opts.triggerStreamRefresh) {
-        this.appEvents.trigger("post-stream:refresh");
-      }
-      if (this.posts && this.posts.length > 1) {
-        const post_number = this.posts[1].get("post_number");
-        DiscourseURL.jumpToPost(post_number);
-        this.appEvents.trigger("post:highlight", post_number);
-      }
-    });
-  },
-
   showSummary() {
     this.cancelFilter();
     this.set("summary", true);
@@ -263,13 +252,39 @@ export default RestModel.extend({
   filterReplies(postNumber) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
-    return this.refreshInPlaceAndJump({ triggerStreamRefresh: true });
+    return this.refresh({ refreshInPlace: true }).then(() => {
+      // order is important, we need to get the offset before triggering a refresh
+      const element = document.querySelector(`#post_${postNumber}`),
+        originalTopOffset = element.getBoundingClientRect().top;
+
+      this.appEvents.trigger("post-stream:refresh");
+      DiscourseURL.jumpToPost(postNumber, {
+        originalTopOffset,
+      });
+
+      const replyPostNumbers = this.posts.map((p) => p.post_number);
+      replyPostNumbers.splice(0, 2);
+      schedule("afterRender", () => {
+        replyPostNumbers.forEach((postNum) => {
+          highlightPost(postNum);
+        });
+      });
+    });
   },
 
   filterUpwards(postID) {
     this.cancelFilter();
     this.set("filterUpwardsPostID", postID);
-    return this.refreshInPlaceAndJump();
+    return this.refresh({ refreshInPlace: true }).then(() => {
+      this.appEvents.trigger("post-stream:refresh");
+
+      const postNumber = this.posts[1].get("post_number");
+      DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
+
+      schedule("afterRender", () => {
+        highlightPost(postNumber);
+      });
+    });
   },
 
   /**
