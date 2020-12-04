@@ -146,6 +146,7 @@ class Demon::Base
       return
     end
 
+    Process.setproctitle("discourse #{self.class.prefix}")
     monitor_parent
     establish_app
     after_fork
