@@ -320,8 +320,8 @@ export default RestModel.extend({
     // TODO: if we have all the posts in the filter, don't go to the server for them.
     if (!opts.refreshInPlace) {
       this.set("loadingFilter", true);
-      this.set("loadingNearPost", opts.nearPost);
     }
+    this.set("loadingNearPost", opts.nearPost);
 
     opts = deepMerge(opts, this.streamFilters);
 
