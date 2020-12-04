@@ -16,7 +16,7 @@ acceptance("Local Dates - composer", function (needs) {
 
     await fillIn(
       ".d-editor-input",
-      '[date=2017-10-23 time=01:30:00 displayedTimezone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
+      '[date=2017-10-23 time=01:30:00 displayedTimezone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone=" Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
     );
 
     assert.equal(getAttr("date"), "2017-10-23", "it has the correct date");
