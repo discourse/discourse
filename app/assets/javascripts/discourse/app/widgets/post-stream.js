@@ -86,18 +86,20 @@ createWidget("posts-filtered-notice", {
             reply_count: sourcePost.reply_count,
           })
         ),
-        h(
-          "span.filtered-avatar",
-          avatarFor.call(this, "small", {
-            template: sourcePost.avatar_template,
+        h("span.filtered-user-row", [
+          h(
+            "span.filtered-avatar",
+            avatarFor.call(this, "small", {
+              template: sourcePost.avatar_template,
+              username: sourcePost.username,
+              url: sourcePost.usernameUrl,
+            })
+          ),
+          this.attach("filter-jump-to-post", {
             username: sourcePost.username,
-            url: sourcePost.usernameUrl,
-          })
-        ),
-        this.attach("filter-jump-to-post", {
-          username: sourcePost.username,
-          postNumber: filters.replies_to_post_number,
-        }),
+            postNumber: filters.replies_to_post_number,
+          }),
+        ]),
         this.attach("filter-show-all", attrs),
       ];
     } else if (filters.filter && filters.filter === "summary") {

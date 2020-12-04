@@ -1137,4 +1137,8 @@ a.mention-group {
   .filtered-replies-show-all {
     margin-left: 1em;
   }
+
+  .filtered-user-row {
+    @include ellipsis;
+  }
 }
