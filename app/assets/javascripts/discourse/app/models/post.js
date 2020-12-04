@@ -343,6 +343,7 @@ const Post = RestModel.extend({
             bookmark_id: savedData.id,
           });
           resolve({ closedWithoutSaving: false });
+          this.appEvents.trigger("page:bookmark-post-toggled", this);
           this.appEvents.trigger("post-stream:refresh", { id: this.id });
         },
         afterDelete: (topicBookmarked) => {
