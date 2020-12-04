@@ -346,7 +346,6 @@ export default RestModel.extend({
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
-    this.cancelFilter();
     const postId = post.get("id"),
       stream = this.stream,
       idx = stream.indexOf(postId),
@@ -375,13 +374,13 @@ export default RestModel.extend({
           } else {
             delete this.get("gaps.before")[postId];
           }
-          this.stream.arrayContentDidChange();
           this.postsWithPlaceholders.arrayContentDidChange(
             origIdx,
             0,
             posts.length
           );
           post.set("hasGap", false);
+          this.gapExpanded();
         });
       }
     }
@@ -390,7 +389,6 @@ export default RestModel.extend({
 
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
-    this.cancelFilter();
     const postId = post.get("id"),
       stream = this.stream,
       idx = stream.indexOf(postId);
@@ -399,10 +397,20 @@ export default RestModel.extend({
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
         delete this.get("gaps.after")[postId];
-        this.stream.arrayContentDidChange();
+        this.gapExpanded();
       });
     }
     return Promise.resolve();
+  },
+
+  gapExpanded() {
+    this.appEvents.trigger("post-stream:refresh");
+
+    // resets the reply count in posts-filtered-notice
+    // because once a gap has been expanded that count is no longer exact
+    if (this.streamFilters && this.streamFilters.replies_to_post_number) {
+      this.set("streamFilters.replies_to_post_number", false);
+    }
   },
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.

@@ -63,11 +63,11 @@ addWidgetCleanCallback("post-stream", () => {
   _heights = {};
 });
 
-createWidget("post-filtered-replies", {
-  buildKey: (attrs) => `post-filtered-replies-${attrs.id}`,
+createWidget("posts-filtered-notice", {
+  buildKey: (attrs) => `posts-filtered-notice-${attrs.id}`,
 
   buildClasses() {
-    return ["filtered-replies-overlay"];
+    return ["posts-filtered-notice"];
   },
 
   html(attrs) {
@@ -275,7 +275,7 @@ export default createWidget("post-stream", {
       attrs.gaps
     ) {
       result.push(
-        this.attach("post-filtered-replies", {
+        this.attach("posts-filtered-notice", {
           posts: postArray,
           streamFilters: attrs.streamFilters,
         })
