@@ -258,7 +258,9 @@ registerButton("replies", (attrs, state, siteSettings) => {
     icon,
     className: "show-replies",
     titleOptions: { count: replyCount },
-    title: "post.has_replies",
+    title: siteSettings.enable_filtered_replies_view
+      ? "post.filtered_replies_hint"
+      : "post.has_replies",
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
