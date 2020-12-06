@@ -1037,7 +1037,7 @@ describe PrettyText do
     end
 
     it "replaces some glyphs that are not in the emoji range" do
-      expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
+      expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
     end
 
     it "replaces digits" do
