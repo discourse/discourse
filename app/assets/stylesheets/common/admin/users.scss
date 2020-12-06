@@ -151,10 +151,11 @@
     align-items: flex-start;
     .field,
     .value {
-      width: unset;
+      width: 100%;
     }
+
     .select-kit {
-      width: 300px;
+      width: 100%;
     }
   }
 
