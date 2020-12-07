@@ -647,8 +647,7 @@ class UsersController < ApplicationController
         success: true,
         active: user.active?,
         message: activation.message,
-        user_id: user.id
-      }
+      }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
@@ -658,9 +657,8 @@ class UsersController < ApplicationController
 
       render json: {
         success: true,
-        active: user.active?,
-        message: activation.success_message,
-        user_id: user.id
+        active: false,
+        message: activation.success_message
       }
     else
       errors = user.errors.to_hash

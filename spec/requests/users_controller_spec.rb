@@ -762,6 +762,18 @@ describe UsersController do
           json = response.parsed_body
           expect(json['active']).to be_falsey
           expect(json['message']).to eq(I18n.t("login.activate_email", email: post_user_params[:email]))
+          expect(json['user_id']).not_to be_present
+
+          existing.destroy!
+          expect {
+            post_user
+          }.to change { User.count }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+
+          expect(json['active']).to be_falsey
+          expect(json['message']).to eq(I18n.t("login.activate_email", email: post_user_params[:email]))
+          expect(json['user_id']).not_to be_present
         end
       end
     end
