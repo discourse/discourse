@@ -45,8 +45,7 @@ module Onebox
         end
 
         {
-          link: og.url,
-          path_link: url,
+          link: url,
           image: og.image,
           title: Onebox::Helpers.truncate(title, 250),
           path: display_path,

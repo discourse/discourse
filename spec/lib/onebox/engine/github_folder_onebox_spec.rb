@@ -38,7 +38,7 @@ describe Onebox::Engine::GithubFolderOnebox do
     end
 
     it "extracts subtitles when linking to docs" do
-      expect(@onebox.to_html).to include("<a href='https://github.com/discourse/discourse' target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>")
+      expect(@onebox.to_html).to include("<a href='https://github.com/discourse/discourse#setting-up-discourse' target=\"_blank\" rel=\"noopener\">discourse/discourse - Setting up Discourse</a>")
     end
   end
 
