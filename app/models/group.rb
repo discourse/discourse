@@ -750,7 +750,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.short_path
+    flair_icon.presence || flair_upload&.url
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
