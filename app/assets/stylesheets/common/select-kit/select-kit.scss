@@ -170,8 +170,10 @@
     }
 
     .discourse-tag,
+    .discourse-tag:visited,
+    .discourse-tag:hover,
     .discourse-tag-count {
-      color: var(--primary);
+      color: var(--primary-high);
     }
 
     &.create-color-row {
