@@ -66,12 +66,17 @@ export default (filterArg, params) => {
           parts.pop();
         }
 
-        return Category.reloadBySlugPath(parts.join("/")).then((result) => {
-          const record = this.store.createRecord("category", result.category);
-          record.setupGroupsAndPermissions();
-          this.site.updateCategory(record);
-          return { category: record, modelParams };
-        });
+        return Category.reloadBySlugPath(parts.join("/"))
+          .then((result) => {
+            const record = this.store.createRecord("category", result.category);
+            record.setupGroupsAndPermissions();
+            this.site.updateCategory(record);
+            return { category: record, modelParams };
+          })
+          .catch(() => {
+            // afterModel will call replaceWith(/404)
+            return null;
+          });
       }
 
       if (category) {
