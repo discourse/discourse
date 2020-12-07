@@ -11,37 +11,44 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
 //header_primary
-$header_primary-low: dark-light-diff(
-  $header_primary,
-  $header_background,
-  90%,
-  -78%
-) !default;
-$header_primary-low-mid: dark-light-diff(
-  $header_primary,
-  $header_background,
-  70%,
-  -45%
-) !default;
+// $header_primary-low: dark-light-diff(
+//   $header_primary,
+//   $header_background,
+//   90%,
+//   -78%
+// ) !default;
 
-$header_primary-medium: dark-light-diff(
-  $header_primary,
-  $header_background,
-  50%,
-  -35%
-) !default;
-$header_primary-high: dark-light-diff(
-  $header_primary,
-  $header_background,
-  30%,
-  -25%
-) !default;
-$header_primary-very-high: dark-light-diff(
-  $header_primary,
-  $header_background,
-  15%,
-  -10%
-) !default;
+// $header_primary-low-mid: dark-light-diff(
+//   $header_primary,
+//   $header_background,
+//   70%,
+//   -45%
+// ) !default;
+
+// $header_primary-medium: dark-light-diff(
+//   $header_primary,
+//   $header_background,
+//   50%,
+//   -35%
+// ) !default;
+// $header_primary-high: dark-light-diff(
+//   $header_primary,
+//   $header_background,
+//   30%,
+//   -25%
+// ) !default;
+// $header_primary-very-high: dark-light-diff(
+//   $header_primary,
+//   $header_background,
+//   15%,
+//   -10%
+// ) !default;
+
+$header_primary-low: blend-header-primary-background(10%) !default;
+$header_primary-low-mid: blend-header-primary-background(35%) !default;
+$header_primary-medium: blend-header-primary-background(55%) !default;
+$header_primary-high: blend-header-primary-background(70%) !default;
+$header_primary-very-high: blend-header-primary-background(90%) !default;
 
 //secondary
 $secondary-low: dark-light-diff($secondary, $primary, 70%, -70%) !default;
