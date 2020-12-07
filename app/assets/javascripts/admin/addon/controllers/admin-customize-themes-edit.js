@@ -64,5 +64,9 @@ export default Controller.extend({
         }
       }
     },
+
+    goBack() {
+      this.replaceRoute(this.showRouteName, this.model.id);
+    },
   },
 });
