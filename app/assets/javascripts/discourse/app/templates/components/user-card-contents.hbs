@@ -142,7 +142,11 @@
             </div>
           {{else}}
             {{#if this.user.bio_excerpt}}
-              <div class="bio">{{html-safe this.user.bio_excerpt}}</div>
+              <div class="bio">
+                {{#html-with-links}}
+                  {{html-safe this.user.bio_excerpt}}
+                {{/html-with-links}}
+              </div>
             {{/if}}
           {{/if}}
         </div>
