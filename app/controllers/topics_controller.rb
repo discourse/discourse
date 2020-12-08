@@ -445,6 +445,11 @@ class TopicsController < ApplicationController
     params.permit(:time, :based_on_last_post, :category_id)
     params.require(:status_type)
 
+    if params[:time] && !(Float(params[:time]) rescue nil)
+      time = Time.find_zone("UTC").parse(params[:time])
+      raise Discourse::InvalidParameters.new(:time) if time < Time.current
+    end
+
     status_type =
       begin
         TopicTimer.types.fetch(params[:status_type].to_sym)
