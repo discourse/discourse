@@ -1756,10 +1756,13 @@ describe Topic do
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 19, 5, 0))
-      expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '2013-11-19 5:00', by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "sets a validation error when give a timestamp of an invalid format" do

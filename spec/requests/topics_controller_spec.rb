@@ -2932,6 +2932,19 @@ RSpec.describe TopicsController do
       end
     end
 
+    context 'when time is in the past' do
+      it 'returns an error' do
+        freeze_time
+        sign_in(admin)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: Time.current - 1.day,
+          status_type: TopicTimer.types[1]
+        }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context 'when logged in as an admin' do
       before do
         freeze_time
