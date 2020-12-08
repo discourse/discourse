@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import Category from "discourse/models/category";
-import { readOnly, or, equal, gte } from "@ember/object/computed";
+import { equal, gte, or, readOnly } from "@ember/object/computed";
 import { i18n, setting } from "discourse/lib/computed";
+import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
 import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
 
@@ -81,11 +81,13 @@ export default ComboBoxComponent.extend(TagsMixin, {
   }),
 
   noTagsUrl: computed("firstCategory", "secondCategory", function () {
-    let url = "/tags";
+    let url;
     if (this.currentCategory) {
-      url += `/c/${Category.slugFor(this.currentCategory)}/${
+      url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
         this.currentCategory.id
       }`;
+    } else {
+      url = "/tag";
     }
     return getURL(`${url}/${NONE_TAG_ID}`);
   }),
@@ -93,6 +95,10 @@ export default ComboBoxComponent.extend(TagsMixin, {
   allTagsLabel: i18n("tagging.selector_all_tags"),
 
   noTagsLabel: i18n("tagging.selector_no_tags"),
+
+  modifyComponentForRow() {
+    return "tag-row";
+  },
 
   shortcuts: computed("tagId", function () {
     const shortcuts = [];

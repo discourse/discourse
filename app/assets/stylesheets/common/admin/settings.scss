@@ -15,6 +15,14 @@
           margin-bottom: 6px;
         }
       }
+      .history-icon {
+        opacity: 0;
+        transition: opacity 0.3s;
+        color: var(--primary-medium);
+      }
+      &:hover .history-icon {
+        opacity: 1;
+      }
     }
     .setting-value {
       float: left;

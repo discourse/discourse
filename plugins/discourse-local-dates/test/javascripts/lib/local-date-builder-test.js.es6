@@ -11,16 +11,14 @@ const LONDON = "Europe/London";
 
 module("lib:local-date-builder");
 
-const sandbox = sinon.createSandbox();
-
 function freezeTime({ date, timezone }, cb) {
   date = date || "2020-01-22 10:34";
   const newTimezone = timezone || PARIS;
   const previousZone = moment.tz.guess();
   const now = moment.tz(date, newTimezone).valueOf();
 
-  sandbox.useFakeTimers(now);
-  sandbox.stub(moment.tz, "guess");
+  sinon.useFakeTimers(now);
+  sinon.stub(moment.tz, "guess");
   moment.tz.guess.returns(newTimezone);
   moment.tz.setDefault(newTimezone);
 
@@ -28,7 +26,7 @@ function freezeTime({ date, timezone }, cb) {
 
   moment.tz.guess.returns(previousZone);
   moment.tz.setDefault(previousZone);
-  sandbox.restore();
+  sinon.restore();
 }
 
 QUnit.assert.buildsCorrectDate = function (options, expected, message) {
@@ -63,7 +61,7 @@ QUnit.assert.buildsCorrectDate = function (options, expected, message) {
   }
 };
 
-test("date", (assert) => {
+test("date", function (assert) {
   freezeTime({ date: "2020-03-11" }, () => {
     assert.buildsCorrectDate(
       { date: "2020-03-22", timezone: PARIS },
@@ -73,7 +71,7 @@ test("date", (assert) => {
   });
 });
 
-test("date and time", (assert) => {
+test("date and time", function (assert) {
   assert.buildsCorrectDate(
     { date: "2020-04-11", time: "11:00" },
     { formated: "April 11, 2020 1:00 PM" },
@@ -87,7 +85,7 @@ test("date and time", (assert) => {
   );
 });
 
-test("option[format]", (assert) => {
+test("option[format]", function (assert) {
   freezeTime({ date: "2020-03-11" }, () => {
     assert.buildsCorrectDate(
       { format: "YYYY" },
@@ -97,7 +95,7 @@ test("option[format]", (assert) => {
   });
 });
 
-test("option[displayedTimezone]", (assert) => {
+test("option[displayedTimezone]", function (assert) {
   freezeTime({}, () => {
     assert.buildsCorrectDate(
       { displayedTimezone: SYDNEY },
@@ -131,7 +129,7 @@ test("option[displayedTimezone]", (assert) => {
   });
 });
 
-test("option[timezone]", (assert) => {
+test("option[timezone]", function (assert) {
   freezeTime({}, () => {
     assert.buildsCorrectDate(
       { timezone: SYDNEY, displayedTimezone: PARIS },
@@ -141,7 +139,7 @@ test("option[timezone]", (assert) => {
   });
 });
 
-test("option[recurring]", (assert) => {
+test("option[recurring]", function (assert) {
   freezeTime({ date: "2020-04-06 06:00", timezone: LAGOS }, () => {
     assert.buildsCorrectDate(
       {
@@ -221,7 +219,7 @@ test("option[recurring]", (assert) => {
   });
 });
 
-test("option[countown]", (assert) => {
+test("option[countown]", function (assert) {
   freezeTime({ date: "2020-03-21 23:59" }, () => {
     assert.buildsCorrectDate(
       {
@@ -249,7 +247,7 @@ test("option[countown]", (assert) => {
   });
 });
 
-test("option[calendar]", (assert) => {
+test("option[calendar]", function (assert) {
   freezeTime({ date: "2020-03-23 23:00" }, () => {
     assert.buildsCorrectDate(
       { date: "2020-03-22", time: "23:59", timezone: PARIS },
@@ -330,7 +328,7 @@ test("option[calendar]", (assert) => {
   });
 });
 
-test("previews", (assert) => {
+test("previews", function (assert) {
   freezeTime({ date: "2020-03-22" }, () => {
     assert.buildsCorrectDate(
       { timezone: PARIS },

@@ -14,6 +14,7 @@ export default {
         whisper: 4,
       },
       groups: [
+        { id: 0, name: "everyone" },
         { id: 1, name: "admins" },
         { id: 2, name: "moderators" },
         { id: 3, name: "staff" },

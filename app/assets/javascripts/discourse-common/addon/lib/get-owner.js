@@ -1,5 +1,5 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { getOwner as emberGetOwner, setOwner } from "@ember/application";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _default = {};
 

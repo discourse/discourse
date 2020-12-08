@@ -1,6 +1,6 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
 import LocalDateBuilder from "../lib/local-date-builder";
+import showModal from "discourse/lib/show-modal";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 const DATE_TEMPLATE = `
   <span>

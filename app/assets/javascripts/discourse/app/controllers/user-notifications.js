@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
 import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 

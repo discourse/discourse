@@ -1,11 +1,11 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
 import { propertyEqual } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
 export default Component.extend({
   // Arguments:

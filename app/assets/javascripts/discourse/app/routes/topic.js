@@ -1,15 +1,14 @@
-import { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { cancel, later, schedule } from "@ember/runloop";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
-import { setTopicId } from "discourse/lib/topic-list-tracker";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
+import { setTopicId } from "discourse/lib/topic-list-tracker";
+import showModal from "discourse/lib/show-modal";
 
 const SCROLL_DELAY = 500;
-
-import showModal from "discourse/lib/show-modal";
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),

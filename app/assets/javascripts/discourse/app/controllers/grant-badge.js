@@ -1,13 +1,12 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { extractError } from "discourse/lib/ajax-error";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import GrantBadgeController from "discourse/mixins/grant-badge-controller";
+import Controller, { inject } from "@ember/controller";
 import Badge from "discourse/models/badge";
+import GrantBadgeController from "discourse/mixins/grant-badge-controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import UserBadge from "discourse/models/user-badge";
 import { all } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   topicController: inject("topic"),

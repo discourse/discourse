@@ -173,6 +173,7 @@ class Search
     @blurb_length = @opts[:blurb_length]
     @valid = true
     @page = @opts[:page]
+    @search_all_pms = false
 
     term = term.to_s.dup
 
@@ -188,10 +189,10 @@ class Search
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
-      @original_term = PG::Connection.escape_string(@term)
+      @original_term = Search.escape_string(@term)
     end
 
-    if @search_pms || @opts[:type_filter] == 'private_messages'
+    if @search_pms || @search_all_pms || @opts[:type_filter] == 'private_messages'
       @opts[:type_filter] = "private_messages"
       @search_context ||= @guardian.user
 
@@ -265,14 +266,11 @@ class Search
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
-        begin
-          if route = Discourse.route_for(@term)
-            if route[:controller] == "topics" && route[:action] == "show"
-              topic_id = (route[:id] || route[:topic_id]).to_i
-              single_topic(topic_id) if topic_id > 0
-            end
+        if route = Discourse.route_for(@term)
+          if route[:controller] == "topics" && route[:action] == "show"
+            topic_id = (route[:id] || route[:topic_id]).to_i
+            single_topic(topic_id) if topic_id > 0
           end
-        rescue ActionController::RoutingError
         end
       end
     end
@@ -329,6 +327,10 @@ class Search
           )
         SQL
     end
+  end
+
+  advanced_filter(/^in:all-pms$/i) do |posts|
+    posts.private_posts if @guardian.is_admin?
   end
 
   advanced_filter(/^in:tagged$/i) do |posts|
@@ -728,6 +730,9 @@ class Search
       elsif word =~ /^in:personal-direct$/i
         @search_pms = true
         nil
+      elsif word =~ /^in:all-pms$/i
+        @search_all_pms = true
+        nil
       elsif word =~ /^personal_messages:(.+)$/i
         if user = User.find_by_username($1)
           @search_pms = true
@@ -933,7 +938,11 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            @guardian.is_admin? ? posts.private_posts_for_user(@search_context) : posts
+            if @guardian.is_admin? && !@search_all_pms
+              posts.private_posts_for_user(@search_context)
+            else
+              posts
+            end
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -1100,14 +1109,17 @@ class Search
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{term}')"
-    tsquery = "REPLACE(#{tsquery}::text, '&', '#{PG::Connection.escape_string(joiner)}')::tsquery" if joiner
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{self.escape_string(term)}')"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
 
   def self.set_tsquery_weight_filter(term, weight_filter)
-    term = term.gsub("'", "''")
-    "''#{PG::Connection.escape_string(term)}'':*#{weight_filter}"
+    "'#{self.escape_string(term)}':*#{weight_filter}"
+  end
+
+  def self.escape_string(term)
+    PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 
   def ts_query(ts_config = nil, weight_filter: nil)
@@ -1237,7 +1249,7 @@ class Search
 
   def posts_scope(default_scope = Post.all)
     if SiteSetting.use_pg_headlines_for_excerpt
-      search_term = @term.present? ? PG::Connection.escape_string(@term) : nil
+      search_term = @term.present? ? Search.escape_string(@term) : nil
       ts_config = default_ts_config
 
       default_scope

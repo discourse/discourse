@@ -97,17 +97,13 @@ class DestroyTask
   end
 
   def destroy_stats
-    ApplicationRequest.destroy_all
-    IncomingLink.destroy_all
-    UserVisit.destroy_all
-    UserProfileView.destroy_all
-    user_profiles = UserProfile.all
-    user_profiles.each do |user_profile|
-      user_profile.views = 0
-      user_profile.save!
-    end
-    PostAction.unscoped.destroy_all
-    EmailLog.destroy_all
+    ApplicationRequest.delete_all
+    IncomingLink.delete_all
+    UserVisit.delete_all
+    UserProfileView.delete_all
+    UserProfile.update_all(views: 0)
+    PostAction.unscoped.delete_all
+    EmailLog.delete_all
   end
 
   private

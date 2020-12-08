@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { propertyNotEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { propertyNotEqual } from "discourse/lib/computed";
 
 const ColorSchemeColor = EmberObject.extend({
   @on("init")

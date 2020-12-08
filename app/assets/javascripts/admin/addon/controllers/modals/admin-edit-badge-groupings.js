@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import Controller from "@ember/controller";
 import { A } from "@ember/array";
-import { ajax } from "discourse/lib/ajax";
+import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { observes } from "discourse-common/utils/decorators";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   @observes("model")

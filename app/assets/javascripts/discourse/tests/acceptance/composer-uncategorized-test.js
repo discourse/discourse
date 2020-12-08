@@ -1,7 +1,11 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance(
   "Composer disabled, uncategorized not allowed when any topic_template present",
@@ -12,7 +16,7 @@ acceptance(
       allow_uncategorized_topics: false,
     });
 
-    test("Disable body until category is selected", async (assert) => {
+    test("Disable body until category is selected", async function (assert) {
       await visit("/");
       await click("#create-topic");
       assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -35,7 +39,7 @@ acceptance(
       await categoryChooser.selectRowByValue(2);
 
       assert.ok(
-        find(".d-editor-textarea-wrapper.disabled").length === 0,
+        queryAll(".d-editor-textarea-wrapper.disabled").length === 0,
         "textarea is enabled"
       );
 
@@ -44,7 +48,7 @@ acceptance(
       await categoryChooser.selectRowByIndex(0);
 
       assert.ok(
-        find(".d-editor-textarea-wrapper.disabled").length === 0,
+        queryAll(".d-editor-textarea-wrapper.disabled").length === 0,
         "textarea is still enabled"
       );
     });
@@ -78,7 +82,7 @@ acceptance(
         },
       ],
     });
-    test("Enable composer/body if no topic templates present", async (assert) => {
+    test("Enable composer/body if no topic templates present", async function (assert) {
       await visit("/");
       await click("#create-topic");
       assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -87,7 +91,7 @@ acceptance(
         "category errors are hidden by default"
       );
       assert.ok(
-        find(".d-editor-textarea-wrapper.disabled").length === 0,
+        queryAll(".d-editor-textarea-wrapper.disabled").length === 0,
         "textarea is enabled"
       );
 

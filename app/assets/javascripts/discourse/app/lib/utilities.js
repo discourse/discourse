@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
-import toMarkdown from "discourse/lib/to-markdown";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
+import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
+import { escape } from "pretty-text/sanitizer";
+import { helperContext } from "discourse-common/lib/helpers";
+import toMarkdown from "discourse/lib/to-markdown";
 
 let _defaultHomepage;
 

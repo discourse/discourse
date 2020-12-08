@@ -269,6 +269,14 @@ class Upload < ActiveRecord::Base
     get_dimension(:thumbnail_height)
   end
 
+  def target_image_quality(local_path, test_quality)
+    @file_quality ||= Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i rescue 0
+
+    if @file_quality == 0 || @file_quality > test_quality
+      test_quality
+    end
+  end
+
   def self.sha1_from_short_path(path)
     if path =~ /(\/uploads\/short-url\/)([a-zA-Z0-9]+)(\..*)?/
       self.sha1_from_base62_encoded($2)

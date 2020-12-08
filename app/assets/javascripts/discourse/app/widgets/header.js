@@ -1,17 +1,17 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { get } from "@ember/object";
-import { schedule } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { avatarImg } from "discourse/widgets/post";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applySearchAutocomplete } from "discourse/lib/search";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { ajax } from "discourse/lib/ajax";
+import { applySearchAutocomplete } from "discourse/lib/search";
+import { avatarImg } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { schedule } from "@ember/runloop";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const _extraHeaderIcons = [];
 

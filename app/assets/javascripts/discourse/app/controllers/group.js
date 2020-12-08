@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
-import { readOnly } from "@ember/object/computed";
-import deprecated from "discourse-common/lib/deprecated";
+import EmberObject, { action } from "@ember/object";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
 const Tab = EmberObject.extend({
   init() {

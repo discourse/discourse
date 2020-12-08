@@ -1003,10 +1003,6 @@ th:
         link_created_at: "สร้างเมื่อ"
         link_groups: กลุ่ม
         link_expires_at: หมดอายุ
-        create: "ส่งคำเชิญ"
-        copy_link: "คัดลอกลิงก์"
-        generate_link: "คัดลอกลิงก์การเชิญชวน"
-        link_generated: "สร้างลิงก์การเชิญชวนสำเร็จแล้ว!"
         valid_for: "ลิงก์คำเชิญใช้งานได้กับที่อยู่อีเมลนี้เท่านั้น: %{email}"
         invite_link:
           title: "ลิงก์คำเชิญ"
@@ -1218,7 +1214,6 @@ th:
       sent_activation_email_again_generic: "เราส่งอีเมลยืนยันตัวตนใหม่ไปแล้ว กรุณารอสักครู่และตรวจสอบในถังขยะอีเมลของคุณ"
       to_continue: "กรุณาเข้าสู่ระบบ"
       preferences: "คุณจำเป็นต้องเข้าสู่ระบบเพื่อเปลี่ยนการตั้งค่าผู้ใช้ของคุณได้"
-      forgot: "ฉันจำรายละเอียดบัญชีของตัวเองไม่ได้"
       not_approved: "บัญชีของคุณยังไม่ได้รับการยืนยัน คุณจะได้รับการแจ้งเตือนทางอีเมลเมื่อคุณสามารถเข้าสู่ระบบได้"
       google_oauth2:
         name: "กูเกิล"
@@ -1401,7 +1396,6 @@ th:
           label: "กระทู้ใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
-          desc: "ร่างกระทู้ที่สามารถเห็นแค่ทีมงาน"
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
     notifications:
@@ -1424,9 +1418,6 @@ th:
       posted: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
-      liked_2: "<span>%{username}, %{username2}</span>%{description}"
-      liked_many:
-        other: "<span>%{username}, %{username2} และอื่นๆอีก %{count}</span>%{description}"
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"

@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { extractDomainFromUrl } from "discourse/lib/utilities";
 import EmberObject from "@ember/object";
-import { isAbsoluteURL } from "discourse-common/lib/get-url";
+import I18n from "I18n";
+import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { extractDomainFromUrl } from "discourse/lib/utilities";
+import { isAbsoluteURL } from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   adminWebHooks: controller(),

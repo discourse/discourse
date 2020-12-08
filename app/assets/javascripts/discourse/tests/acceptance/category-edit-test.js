@@ -1,71 +1,98 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  acceptance,
+  queryAll,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import sinon from "sinon";
+import { test } from "qunit";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("Can open the category modal", async (assert) => {
+  test("Editing the category", async function (assert) {
     await visit("/c/bug");
 
-    await click(".edit-category");
-    assert.ok(visible(".d-modal"), "it pops up a modal");
+    await click("button.edit-category");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it jumps to the correct screen"
+    );
 
-    await click("button.modal-close");
-    assert.ok(!visible(".d-modal"), "it closes the modal");
-  });
-
-  test("Editing the category", async (assert) => {
-    await visit("/c/bug");
-
-    await click(".edit-category");
-
-    assert.equal(find(".d-modal .badge-category").text(), "bug");
+    assert.equal(queryAll(".badge-category").text(), "bug");
     await fillIn("input.category-name", "testing");
-    assert.equal(find(".d-modal .badge-category").text(), "testing");
+    assert.equal(queryAll(".badge-category").text(), "testing");
 
     await fillIn("#edit-text-color", "#ff0000");
 
     await click(".edit-category-topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click(".edit-category-settings");
+    await click("#save-category");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it stays on the edit screen"
+    );
+
+    await visit("/c/bug/edit/settings");
     const searchPriorityChooser = selectKit("#category-search-priority");
     await searchPriorityChooser.expand();
     await searchPriorityChooser.selectRowByValue(1);
 
     await click("#save-category");
-
-    assert.ok(!visible(".d-modal"), "it closes the modal");
     assert.equal(
-      DiscourseURL.redirectedTo,
-      "/c/bug/1",
-      "it does one of the rare full page redirects"
+      currentURL(),
+      "/c/bug/edit/settings",
+      "it stays on the edit screen"
+    );
+
+    sinon.stub(DiscourseURL, "routeTo");
+
+    await click(".edit-category-security a");
+    assert.ok(
+      DiscourseURL.routeTo.calledWith("/c/bug/edit/security"),
+      "tab routing works"
     );
   });
 
-  test("Error Saving", async (assert) => {
-    await visit("/c/bug");
+  test("Index Route", async function (assert) {
+    await visit("/c/bug/edit");
+    assert.equal(
+      currentURL(),
+      "/c/bug/edit/general",
+      "it redirects to the general tab"
+    );
+  });
 
-    await click(".edit-category");
-    await click(".edit-category-settings");
+  test("Slugless Route", async function (assert) {
+    await visit("/c/1-category/edit");
+    assert.equal(
+      currentURL(),
+      "/c/1-category/edit/general",
+      "it goes to the general tab"
+    );
+    assert.equal(queryAll("input.category-name").val(), "bug");
+  });
+
+  test("Error Saving", async function (assert) {
+    await visit("/c/bug/edit/settings");
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
-    assert.ok(visible("#modal-alert"));
-    assert.equal(find("#modal-alert").html(), "duplicate email");
+
+    assert.ok(visible(".bootbox"));
+    assert.equal(queryAll(".bootbox .modal-body").html(), "duplicate email");
+
+    await click(".bootbox .btn-primary");
+    assert.ok(!visible(".bootbox"));
   });
 
-  test("Subcategory list settings", async (assert) => {
-    const categoryChooser = selectKit(
-      ".edit-category-tab-general .category-chooser"
-    );
-
-    await visit("/c/bug");
-    await click(".edit-category");
-    await click(".edit-category-settings a");
+  test("Subcategory list settings", async function (assert) {
+    await visit("/c/bug/edit/settings");
 
     assert.ok(
       !visible(".subcategory-list-style-field"),
@@ -79,11 +106,15 @@ acceptance("Category Edit", function (needs) {
       "subcategory list style is shown if show subcategory list is checked"
     );
 
-    await click(".edit-category-general");
+    await visit("/c/bug/edit/general");
+
+    const categoryChooser = selectKit(
+      ".edit-category-tab-general .category-chooser"
+    );
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(3);
 
-    await click(".edit-category-settings a");
+    await visit("/c/bug/edit/settings");
 
     assert.ok(
       !visible(".show-subcategory-list-field"),

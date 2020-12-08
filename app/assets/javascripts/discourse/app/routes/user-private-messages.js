@@ -1,6 +1,6 @@
+import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import Draft from "discourse/models/draft";
-import Composer from "discourse/models/composer";
 
 export default DiscourseRoute.extend({
   renderTemplate() {

@@ -13,7 +13,7 @@ const defaultOpts = buildOptions({
   getURL: (url) => url,
 });
 
-test("details", (assert) => {
+test("details", function (assert) {
   const cooked = (input, expected, text) => {
     assert.equal(
       new PrettyText(defaultOpts).cook(input),

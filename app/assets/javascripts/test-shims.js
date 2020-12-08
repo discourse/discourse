@@ -17,20 +17,42 @@ define("ember-qunit", () => {
     moduleForComponent: window.moduleForComponent,
   };
 });
+define("htmlbars-inline-precompile", () => {
+  return {
+    default: function (str) {
+      return Ember.HTMLBars.compile(str[0]);
+    },
+  };
+});
+
 let _app;
 define("@ember/test-helpers", () => {
-  return {
-    setResolver: window.setResolver,
+  let helpers = {
     setApplication(app) {
       _app = app;
     },
     getApplication() {
       return _app;
     },
-    visit() {
-      return window.visit(...arguments);
+    async settled() {
+      // No-op in pre ember-cli environment
     },
+    TestModuleForComponent: window.TestModuleForComponent,
   };
+  [
+    "click",
+    "visit",
+    "currentURL",
+    "currentRouteName",
+    "fillIn",
+    "setResolver",
+  ].forEach((attr) => {
+    helpers[attr] = function () {
+      return window[attr](...arguments);
+    };
+  });
+  helpers.triggerKeyEvent = window.keyEvent;
+  return helpers;
 });
 define("pretender", () => {
   return { default: window.Pretender };

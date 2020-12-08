@@ -1,5 +1,7 @@
 import EmberObject, { set } from "@ember/object";
 import componentTest from "helpers/component-test";
+import { moduleForComponent } from "ember-qunit";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 moduleForComponent("invite-panel", { integration: true });
 
@@ -17,6 +19,6 @@ componentTest("can_invite_via_email", {
 
   async test(assert) {
     await fillIn(".invite-user-input", "eviltrout@example.com");
-    assert.ok(find(".send-invite:disabled").length === 0);
+    assert.ok(queryAll(".send-invite:disabled").length === 0);
   },
 });

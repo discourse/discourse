@@ -1,12 +1,12 @@
-import { cancel, later, schedule } from "@ember/runloop";
-import MountWidget from "discourse/components/mount-widget";
-import { observes } from "discourse-common/utils/decorators";
-import Docking from "discourse/mixins/docking";
 import PanEvents, {
-  SWIPE_VELOCITY,
   SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
+import { cancel, later, schedule } from "@ember/runloop";
+import Docking from "discourse/mixins/docking";
+import MountWidget from "discourse/components/mount-widget";
+import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
@@ -209,6 +209,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
     // Allow first notification to be dismissed on a click anywhere
     if (
+      this.currentUser &&
       !this.get("currentUser.read_first_notification") &&
       !this.get("currentUser.enforcedSecondFactor")
     ) {
@@ -216,6 +217,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         if (
           !e.target.closest("#current-user") &&
           !e.target.closest(".ring-backdrop") &&
+          this.currentUser &&
           !this.get("currentUser.read_first_notification") &&
           !this.get("currentUser.enforcedSecondFactor")
         ) {
@@ -225,10 +227,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           );
         }
       };
-      // TODO: re-enable event listener
-      //      document.addEventListener("click", this._dismissFirstNotification, {
-      //        once: true
-      //      });
+      document.addEventListener("click", this._dismissFirstNotification, {
+        once: true,
+      });
     }
   },
 
@@ -347,11 +348,19 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           height = winHeight - menuTop;
         }
 
+        const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
+          heightProp = isIPadApp ? "max-height" : "height",
+          iPadOffset = 10;
+
+        if (isIPadApp) {
+          height = winHeight - menuTop - iPadOffset;
+        }
+
         if ($panelBody.prop("style").height !== "100%") {
           $panelBody.height("100%");
         }
-        if (style.top !== menuTop + "px" || style.height !== height) {
-          $panel.css({ top: menuTop + "px", height });
+        if (style.top !== menuTop + "px" || style[heightProp] !== height) {
+          $panel.css({ top: menuTop + "px", [heightProp]: height });
           $(".header-cloak").css({ top: menuTop + "px" });
         }
         $("body").removeClass("drop-down-mode");

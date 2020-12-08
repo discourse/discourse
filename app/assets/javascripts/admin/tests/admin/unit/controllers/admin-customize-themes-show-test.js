@@ -1,7 +1,7 @@
+import Theme from "admin/models/theme";
+import { mapRoutes } from "discourse/mapping-router";
 import { moduleFor } from "ember-qunit";
 import { test } from "qunit";
-import { mapRoutes } from "discourse/mapping-router";
-import Theme from "admin/models/theme";
 
 moduleFor("controller:admin-customize-themes-show", {
   beforeEach() {

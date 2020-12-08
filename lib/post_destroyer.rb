@@ -66,7 +66,7 @@ class PostDestroyer
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
-    if @user.staff? || delete_removed_posts_after < 1 || post_is_reviewable?
+    if delete_removed_posts_after < 1 || post_is_reviewable? || Guardian.new(@user).can_moderate_topic?(topic) || permanent?
       perform_delete
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
@@ -86,7 +86,7 @@ class PostDestroyer
   end
 
   def recover
-    if (@user.staff? || post_is_reviewable?) && @post.deleted_at
+    if (post_is_reviewable? || Guardian.new(@user).can_moderate_topic?(@post.topic)) && @post.deleted_at
       staff_recovered
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
@@ -140,9 +140,10 @@ class PostDestroyer
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
   # show up in the topic
+  # Permanent option allows to hard delete.
   def perform_delete
     Post.transaction do
-      @post.trash!(@user)
+      permanent? ? @post.destroy! : @post.trash!(@user)
       if @post.topic
         make_previous_post_the_last_one
         mark_topic_changed
@@ -162,7 +163,9 @@ class PostDestroyer
         end
       end
 
-      @post.topic.trash!(@user) if @post.topic && @post.is_first_post?
+      if @post.topic && @post.is_first_post?
+        permanent? ? @post.topic.destroy! : @post.topic.trash!(@user)
+      end
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
@@ -178,8 +181,12 @@ class PostDestroyer
 
     update_imap_sync(@post, true) if @post.topic&.deleted_at
     feature_users_in_the_topic if @post.topic
-    @post.publish_change_to_clients! :deleted if @post.topic
-    TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
+    @post.publish_change_to_clients!(permanent? ? :destroyed : :deleted) if @post.topic
+    TopicTrackingState.send(permanent? ? :publish_destroy : :publish_delete, @post.topic) if @post.topic && @post.post_number == 1
+  end
+
+  def permanent?
+    @opts[:permanent] && @user == @post.user && @post.topic.private_message?
   end
 
   # When a user 'deletes' their own post. We just change the text.
@@ -221,6 +228,8 @@ class PostDestroyer
   private
 
   def post_is_reviewable?
+    return true if @user.staff?
+
     topic = @post.topic || Topic.with_deleted.find(@post.topic_id)
     Guardian.new(@user).can_review_topic?(topic) && Reviewable.exists?(target: @post)
   end
@@ -245,7 +254,7 @@ class PostDestroyer
       .limit(1)
       .first
 
-    if last_post.present? && @post.topic.present?
+    if last_post.present?
       topic = @post.topic
       topic.last_posted_at = last_post.created_at
       topic.last_post_user_id = last_post.user_id
@@ -268,7 +277,9 @@ class PostDestroyer
 
   def trash_public_post_actions
     if public_post_actions = PostAction.publics.where(post_id: @post.id)
-      public_post_actions.each { |pa| pa.trash!(@user) }
+      public_post_actions.each { |pa| permanent? ? pa.destroy! : pa.trash!(@user) }
+
+      return if permanent?
 
       @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
       @post.save_custom_fields

@@ -1,17 +1,17 @@
-import I18n from "I18n";
-import { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { or, not, and } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
+import { and, not, or } from "@ember/object/computed";
 import DiscourseURL from "discourse/lib/url";
-import RestModel from "discourse/models/rest";
+import I18n from "I18n";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import discourseComputed from "discourse-common/utils/decorators";
-import { loadTopicView } from "discourse/models/topic";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
 import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { loadTopicView } from "discourse/models/topic";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -734,6 +734,12 @@ export default RestModel.extend({
           this.removePosts([existing]);
         });
     }
+    return Promise.resolve();
+  },
+
+  triggerDestroyedPost(postId) {
+    const existing = this._identityMap[postId];
+    this.removePosts([existing]);
     return Promise.resolve();
   },
 

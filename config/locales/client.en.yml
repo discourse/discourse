@@ -318,6 +318,7 @@ en:
         next_business_day: "Next business day"
         tomorrow: "Tomorrow"
         next_week: "Next week"
+        post_local_date: "Date in post"
         later_this_week: "Later this week"
         start_of_next_business_week: "Monday"
         start_of_next_business_week_alt: "Next Monday"
@@ -336,6 +337,7 @@ en:
     drafts:
       resume: "Resume"
       remove: "Remove"
+      remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
       new_private_message: "New private message draft"
       topic_reply: "Draft reply"
@@ -358,6 +360,8 @@ en:
 
     preview: "preview"
     cancel: "cancel"
+
+    deleting: "Deleting..."
 
     save: "Save Changes"
     saving: "Saving..."
@@ -453,6 +457,7 @@ en:
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User"
+      filtered_reviewed_by: "Reviewed By"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -560,6 +565,7 @@ en:
           one: "You have <strong>%{count}</strong> post pending."
           other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
+      example_username: "username"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -1386,13 +1392,13 @@ en:
         link_redemption_stats: "Redemptions"
         link_groups: Groups
         link_expires_at: Expires
-        create: "Send Invite"
-        copy_link: "Copy Link"
-        generate_link: "Copy Invite Link"
-        link_generated: "Invite link generated successfully!"
+        create: "Invite"
+        copy_link: "Show Link"
+        generate_link: "Create Invite Link"
+        link_generated: "Here's your invite link!"
         valid_for: "Invite link is only valid for this email address: %{email}"
-        single_user: "Single User"
-        multiple_user: "Multiple Users"
+        single_user: "Invite by email"
+        multiple_user: "Invite by link"
         invite_link:
           title: "Invite Link"
           success: "Invite link generated successfully!"
@@ -1400,7 +1406,7 @@ en:
           max_redemptions_allowed_label: "How many people are allowed to register using this link?"
           expires_at: "When will this invite link expire?"
         bulk_invite:
-          none: "You haven't invited anyone here yet. Send individual invites, or invite many people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
+          none: "No invitations to display on this page."
           text: "Bulk Invite"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
@@ -1690,7 +1696,6 @@ en:
       sent_activation_email_again_generic: "We sent another activation email. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
-      forgot: "I don't recall my account details"
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
@@ -1759,6 +1764,12 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      plus_subcategories_title:
+        one: "%{name} and one subcategory"
+        other: "%{name} and %{count} subcategories"
+      plus_subcategories:
+        one: "+ %{count} subcategory"
+        other: "+ %{count} subcategories"
 
     select_kit:
       default_header_text: Select...
@@ -1923,9 +1934,7 @@ en:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
-        title: "This topic is in slow mode."
-        body: "After submitting a post, you'll need to wait %{duration} before being able to post again."
-        error: "You recently posted on this topic, which is in slow mode. Please wait so other users can have their chance to participate."
+        error: "This topic is in slow mode. In order to promote thoughtful, considered discussion you may only post once every %{duration}."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -1956,7 +1965,7 @@ en:
           label: "New Topic"
         shared_draft:
           label: "Shared Draft"
-          desc: "Draft a topic that will only be visible to staff"
+          desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
@@ -1988,10 +1997,10 @@ en:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
+      liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span>%{username}, %{username2} and %{count} others</span> %{description}"
+        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
+        other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -2197,6 +2206,9 @@ en:
         choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
         remove_tags: "Remove Tags"
+        progress:
+          one: "Progress: <strong>%{count}</strong> topic"
+          other: "Progress: <strong>%{count}</strong> topics"
 
       none:
         unread: "You have no unread topics."
@@ -2319,9 +2331,9 @@ en:
 
       slow_mode_update:
         title: "Slow Mode"
-        select: "Duration:"
-        description: "Users will have to wait to be able to post again."
-        save: "Save"
+        select: "Users may only post in this topic once every:"
+        description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
+        save: "Enable"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"
@@ -2757,6 +2769,7 @@ en:
         yes_value: "Yes, discard edit"
 
       abandon:
+        title: "Abandon Draft"
         confirm: "Are you sure you want to abandon your post?"
         no_value: "No, keep"
         no_save_draft: "No, save draft"
@@ -2813,9 +2826,14 @@ en:
         unlock_post_description: "allow the poster to edit this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
+        delete_topic_confirm_modal: "This topic currently has over %{minViews} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+        delete_topic_confirm_modal_yes: "Yes, delete this topic"
+        delete_topic_confirm_modal_no: "No, keep this topic"
+        delete_topic_error: "An error occurred while deleting this topic"
         delete_topic: "delete topic"
         add_post_notice: "Add Staff Notice"
-        remove_post_notice: "Remove Staff Notice"
+        change_post_notice: "Change Staff Notice"
+        delete_post_notice: "Delete Staff Notice"
         remove_timer: "remove timer"
 
       actions:
@@ -2908,6 +2926,7 @@ en:
       edit: "Edit"
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
+      back: "Back to category"
       general: "General"
       settings: "Settings"
       topic_template: "Topic Template"
@@ -2917,7 +2936,7 @@ en:
       tags_placeholder: "(Optional) list of allowed tags"
       tags_tab_description: "Tags and tag groups specified above will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
-      manage_tag_groups_link: "Manage tag groups here."
+      manage_tag_groups_link: "Manage tag groups"
       allow_global_tags_label: "Also allow other tags"
       tag_group_selector_placeholder: "(Optional) Tag group"
       required_tag_group_description: "Require new topics to have tags from a tag group:"
@@ -2949,6 +2968,17 @@ en:
       change_in_category_topic: "Edit Description"
       already_used: "This color has been used by another category"
       security: "Security"
+      security_add_group: "Add a group"
+      permissions:
+        group: "Group"
+        see: "See"
+        reply: "Reply"
+        create: "Create"
+        no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
+        everyone_has_access: "This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the \"everyone\" group."
+        toggle_reply: "Toggle Reply permission"
+        toggle_full: "Toggle Create permission"
+        inherited: "This permission is inherited from \"everyone\""
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -3474,6 +3504,7 @@ en:
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."
       custom_message_placeholder: "Enter your custom message"
+      approval_not_required: "User will be auto-approved as soon as they will accept this invite."
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
@@ -3722,6 +3753,12 @@ en:
               sync_sso: Synchronize a user using SSO.
               show: Obtain information about an user.
               check_emails: List user emails.
+              update: Update user profile information.
+              log_out: Log out all sessions for a user.
+              anonymize: Anonymize user accounts.
+              delete: Delete user accounts.
+            email:
+              receive_emails: Combine this scope with the mail-receiver to process incoming emails.
 
       web_hooks:
         title: "Webhooks"
@@ -3967,6 +4004,7 @@ en:
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme_user_selectable: "Color scheme can be selected by users"
+          auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
@@ -4040,6 +4078,7 @@ en:
           check_for_updates: "Check for Updates"
           updating: "Updating..."
           up_to_date: "Theme is up-to-date, last checked:"
+          has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
           no_settings: "This theme has no settings."
@@ -4503,7 +4542,14 @@ en:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Suspension Reason"
+        suspend_reason_title: "Suspension Reason"
+        suspend_reasons:
+          not_listening_to_staff: "Would not listen to staff feedback"
+          consuming_staff_time: "Consumed disproportionate amounts of staff time"
+          combatative: "Too combatative"
+          in_wrong_place: "In the wrong place"
+          no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
+          custom: "Custom..."
         suspend_message: "Email Message"
         suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
         suspended_by: "Suspended by"
@@ -4748,6 +4794,7 @@ en:
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"
+        history: "View change history"
         reset: "reset"
         none: "none"
       site_settings:

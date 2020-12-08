@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   tagName: "section",

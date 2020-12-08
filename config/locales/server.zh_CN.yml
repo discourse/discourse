@@ -39,6 +39,7 @@ zh_CN:
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
+  views: "浏览"
   loading: "载入中"
   powered_by_html: '由 <a href="https://www.discourse.org">Discourse</a>提供支持，启用 JavaScript 以获得最佳体验'
   sign_up: "注册"
@@ -56,7 +57,7 @@ zh_CN:
     compile_error:
       unrecognized_extension: "无法识别的文件扩展名：%{extension}"
     import_error:
-      generic: 导入该主题时发生错误
+      generic: 导入该主题时发生了错误
       about_json: "导入错误：about.json不存在或无效。你确定这是一个Discourse主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 的修改包含无效值：%{errors}"
@@ -140,6 +141,9 @@ zh_CN:
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
+      is_invalid_meaningful: "似乎不清楚，大多数字眼都包含重复的字母？"
+      is_invalid_unpretentious: "似乎不清楚，一个或多个单词很长？"
+      is_invalid_quiet: "似乎不清楚，你是要用全部大写字母输入吗？"
       invalid_timezone: "“%{tz}”不是一个有效的时区"
       contains_censored_words: "包含了以下敏感词:%{censored_words}"
       less_than: 必须小于 %{count}
@@ -176,6 +180,7 @@ zh_CN:
       default_tags_already_selected: "你不能选择一个已经被使用在其它列表中的标签。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
       enable_s3_uploads_is_required: "除非已启用上传到 S3，否则你无法存储到S3。"
+      page_publishing_requirements: "如果启用了安全媒体，则无法启用页面发布。"
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
       s3_bucket_reused: "你不可以将同一个 bucket 同时用作 ‘s3_upload_bucket’ 和 ‘s3_backup_bucket’。请选择一个不同的 bucket 或为每个 bucket 使用不同的路径。"
       secure_media_requirements: "在启用安全媒体之前，必须先启用S3上传。"
@@ -185,7 +190,15 @@ zh_CN:
       second_factor_cannot_be_enforced_with_sso_enabled: "如果启用了 SSO，则无法强制启用 2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
+      cors_origins_should_not_have_trailing_slash: "你不应该将尾随斜线 (/) 添加到 Cross Origins。"
     conflicting_google_user_id: '此账户的Google账户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并指引他们前往<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 “%{hostname}”。你的帖子中只会显示链接，而不是预览。 :cry:"
+      error_response: "抱歉，我们无法为此网页生成预览，因为该服务器返回错误代码 %{status_code}。你的帖子中只会显示链接，而不是预览。 :cry:"
+      missing_data:
+        other: "抱歉，我们无法为该网页生成预览，因为找不到 oEmbed / OpenGraph 标签： %{missing_attributes}"
+  word_connector:
+    comma: "， "
   invite:
     expired: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
     not_found: "你的邀请码不正确。请<a href='%{base_url}/about'>联系工作人员</a>。"
@@ -214,7 +227,11 @@ zh_CN:
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入到此主题：%{group_names}。"
     user_exists: "抱歉，用户已经被邀请过了。你只可以邀请一个用户到一个主题中一次。"
-    not_allowed: "对不起，该用户无法被邀请。"
+    muted_invitee: "抱歉，该用户忽略了你。"
+    muted_topic: "抱歉，该用户忽略了该主题。"
+    receiver_does_not_allow_pm: "抱歉，该用户不允许你向他们发送私人消息。"
+    sender_does_not_allow_pm: "对不起，你不允许该用户给你发送私人信息。"
+    receiver_does_not_allow_other_user_pm: "抱歉，该用户不允许现有的参与者向他们发送私人消息。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应该是一个 .tar.gz 存档文件。"
@@ -237,7 +254,7 @@ zh_CN:
   email_template_cant_be_modified: "该邮件模板不能被修改"
   invalid_whisper_access: "没有启用密语或者是你无权创建密语帖子"
   not_in_group:
-    title_topic: "你必须在群组中才能看到这个主题。"
+    title_topic: "你需要请求加入 `%{group}` 群组才能查看此主题。"
     title_category: "你必须在群组中才能看到这个分类。"
     request_membership: "申请会员"
     join_group: "加入群组"
@@ -336,6 +353,7 @@ zh_CN:
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   edit_conflict: "该帖子由其他用户编辑，你的更改无法再保存。"
   revert_version_same: "目前的版本和你想要回退至的版本一样。"
+  cannot_edit_on_slow_mode: "这个主题正处于满速模式中。为了鼓励优质的讨论，当前不允许编辑旧的发帖。"
   excerpt_image: "图片"
   bookmarks:
     errors:
@@ -818,6 +836,7 @@ zh_CN:
       others: "无活动。"
     no_bookmarks:
       self: "你没有收藏帖子；收藏可让你快速查阅特定帖子。"
+      search: "在所提供的搜索查询中没有找到书签。"
       others: "没有收藏。"
     no_likes_given:
       self: "你还没有点赞任何帖子。"
@@ -1295,6 +1314,7 @@ zh_CN:
     max_post_length: "帖子允许的最大字符数"
     topic_featured_link_enabled: "允许发链接帖。"
     show_topic_featured_link_in_digest: "在摘要邮件中显示主题特色链接。"
+    min_topic_views_for_delete_confirm: "当主题被删除时，它必须低于最低浏览量才会弹出确认对话框"
     min_topic_title_length: "标题允许的最少字符数"
     max_topic_title_length: "标题允许的最大字符数"
     min_personal_message_title_length: "私信标题允许的最小字符数"
@@ -1350,6 +1370,7 @@ zh_CN:
     enable_inline_onebox_on_all_domains: "忽略inline_onebox_domain_allowlist设置，并允许所有域名的行内onebox。"
     force_custom_user_agent_hosts: "在所有请求上使用自定义 onebox 用户代理的主机。（对于限制用户代理访问的主机尤其有用）。"
     max_oneboxes_per_post: "帖子中最多的 Onebox 数量。"
+    facebook_app_access_token: "从你的 Facebook 应用程序 ID 和密钥生成的令牌。用于生成 Instagram oneboxes。"
     logo: "你网站左上角的商标图像。使用高120且宽高比大于3:1的宽矩形图像。如果留空，将显示网站的标题文本。"
     logo_small: "出现在你站点左上角的小号的商标图像，滚动后可见。使用方形120×120的图像。如果留空，将显示一个主页图标。"
     digest_logo: "邮件摘要顶部所使用的备用商标图像。使用宽矩形的图像。不要使用SVG图像。 如果留空，将使用`logo`设置中的图像。"
@@ -1365,7 +1386,7 @@ zh_CN:
     twitter_summary_large_image: "Twitter卡片的“摘要大图”（宽度至少应为280，高度至少为150）。如果留空，则使用opengraph_image生成常规卡片元数据。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "以竖线分割的自定义邮件标头列表。"
-    email_subject: "标准邮件的自定义主题格式。参见<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "自定义邮件标题的格式。参见<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "为用户提供关于他们为什么不能访问特定主题的更多细节。注意：这是不安全的，因为用户将知道一个 URL 是否链接到一个有效的主题。"
     enforce_second_factor: "强制用户启用双重验证。选择“all”以强制所有用户启用。选择“staff”仅强制管理人员。"
     force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！你检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
@@ -1378,6 +1399,7 @@ zh_CN:
     enable_personal_messages: "允许信任等级1（可以另外选择发送私信的信任等级）的用户创建私信和回复私信。注意：管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
+    enable_chunked_encoding: "启用服务器的区块编码响应。此功能可用于大多数设置，但一些代理可能会缓存，导致响应延迟"
     long_polling_base_url: "用于长轮询的基本 URL（当使用 CDN 分发动态内容时，确保将此设为源站地址）例如：http://origin.site.com"
     long_polling_interval: "当没有数据向客户端发送时服务器端应等待的时间（仅对已登录用户有效）"
     polling_interval: "当不再长轮询时，已登录的客户端多久应该轮询一次，以毫秒为单位"
@@ -1409,13 +1431,14 @@ zh_CN:
     pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     persistent_sessions: "用户将在浏览器被关闭后保持登录状态"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
-    ga_universal_tracking_code: "Google Universal Analytics(analytics.js) 跟踪代码ID，例如：UA-12345678-9; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics(analytics.js) 域名，例如：mysite.com;参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "启用 Google Universal Analytics(analytics.js) 跨域跟踪。指向这些域的传出链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨域跟踪指南。</a>"
+    ga_version: "要使用的 Google Universal Analytics 版本：v3(analytics.js)，v4(gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics 域名，例如: mysite.com; 参见 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "启用 Google Universal Analytics 跨域跟踪。指向这些域的传出链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨域跟踪指南。</a>"
     gtm_container_id: "Google Tag Manager的容器id。例如：GTM-ABCDEF。<br/>注意：由GTM加载的第三方脚本需要被添加到“content security policy script src”列表。"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "允许版主管理分类和群组"
-    cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
+    cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
     use_admin_ip_allowlist: "当使用的IP地址在已屏蔽IP列表（管理>日志>已屏蔽的IP）中时，只有管理员能够登录。"
     blocked_ip_blocks: "不应被Discourse爬取的私有IP屏蔽列表"
     allowed_internal_hosts: "可以安全地进行onebox或其它用途的爬取的内网主机列表"
@@ -1507,9 +1530,6 @@ zh_CN:
     enable_twitter_logins: "启用Twitter身份验证，需要twitter_consumer_key和twitter_consumer_secret。请参阅<a href='https://meta.discourse.org/t/13395'target='_blank'>为Discourse配置Twitter登录（和丰富的嵌入内容）</a>。"
     twitter_consumer_key: "Twitter身份验证的消费者Key，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上注册"
     twitter_consumer_secret: "Twitter身份验证的客户secret，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上注册"
-    enable_instagram_logins: "启用 Instagram 验证，需要 instagram_consumer_key 和 instagram_consumer_secret"
-    instagram_consumer_key: "Instagram 验证的 Consumer key"
-    instagram_consumer_secret: "Instagram 验证的 Consumer secret"
     enable_facebook_logins: "启用Facebook身份验证，需要facebook_app_id和facebook_app_secret。请参阅<a href='https://meta.discourse.org/t/13394'target='_blank'>配置Facebook登录Discourse</a>。"
     facebook_app_id: "在 <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>注册用于Facebook 认证和分享app id。"
     facebook_app_secret: "用于Facebook身份验证的应用程序secret，在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上注册"
@@ -1552,7 +1572,7 @@ zh_CN:
     max_bookmarks_per_day: "每用户每天能收藏的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
-    max_personal_messages_per_day: "用户每天可以创建的最大消息数。"
+    max_personal_messages_per_day: "用户每天可以创建的新个人消息主题的最大数量。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登录次数。"
@@ -1586,6 +1606,8 @@ zh_CN:
     selectable_avatars: "用户可以选择的头像列表。"
     allow_all_attachments_for_group_messages: "允许群组私信中包含任何邮件附件。"
     png_to_jpg_quality: "转换 JPG 文件的质量（1 是最低，99 最高，100 禁用）。"
+    recompress_original_jpg_quality: "上传的图片文件质量(1 是最低，99 最高，100 禁用)。"
+    image_preview_jpg_quality: "缩放图像文件的质量(1是最低质量, 99是最佳质量, 100是禁用)。"
     allow_staff_to_upload_any_file_in_pm: "允许管理人员在私信中上传任意文件。"
     strip_image_metadata: "剥离图像元数据。"
     min_ratio_to_crop: "用于裁剪高图像的比率。输入宽/高值。"
@@ -1629,6 +1651,8 @@ zh_CN:
     min_trust_to_post_embedded_media: "在帖子中嵌入媒体项目所需的最低信任等级"
     min_trust_level_to_allow_profile_background: "上传用户资料背景所需的最低信任等级"
     min_trust_level_to_allow_user_card_background: "上传用户卡片背景所需的最低信任等级"
+    min_trust_level_to_allow_invite: "可邀请用户的最低信任等级"
+    min_trust_level_to_allow_ignore: "忽略用户所需的最低信任级别"
     allowed_link_domains: "即使用户没有发布链接的信任等级也被视为链接的域名。"
     newuser_max_links: "一个访问者可以添加到一个帖子里的链接数量。"
     newuser_max_embedded_media: "新用户能够在帖子中嵌入多少个媒体项目。"
@@ -1709,10 +1733,10 @@ zh_CN:
     incoming_email_prefer_html: "传入电子邮件使用HTML而不是文本。"
     strip_incoming_email_lines: "移除入站邮件每行的首尾空格"
     disable_emails: "阻止Discourse发送任何类型的电子邮件。 选择“yes”为所有用户禁用邮件。选择“non-staff”仅为非管理人员用户禁用邮件。"
-    strip_images_from_short_emails: "忽略邮件中小于 2800 字节的图片"
+    strip_images_from_short_emails: "从小于 2800 字节的邮件中剥离图片"
     short_email_length: "缩短后的邮件长度（Bytes）"
     display_name_on_email_from: "在邮件的来源中显示全名"
-    unsubscribe_via_email: "允许用户在发送的邮件“退订”来退订邮件订阅，“退订”可在主题或正文中。"
+    unsubscribe_via_email: "允许用户通过发送邮件的方式退订邮件，发送退订邮件可在其标题或正文中包含“unsubscribe”"
     unsubscribe_via_email_footer: "在发出的邮件底部附上退订链接"
     delete_email_logs_after_days: "在（N）天后删除邮件日志。设置为 0 无限期保留"
     disallow_reply_by_email_after_days: "在（N）天后拒绝通过电子邮件回复。0无限期保留"
@@ -1845,7 +1869,7 @@ zh_CN:
     show_copy_button_on_codeblocks: "为代码块添加复制到用户剪切板的按钮。该功能不支持IE浏览器。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用程序是必需的。"
     embed_topics_list: "主题列表支持HTML嵌入"
-    embed_set_canonical_url: "为嵌入到主题的嵌入内容设置规范URL。"
+    embed_set_canonical_url: "为嵌入到主题的内容设置规范 URL。"
     embed_truncate: "截断嵌入的帖子。"
     embed_unlisted: "直到一个用户回复前，导入的主题不会被列出。"
     embed_support_markdown: "为嵌入式帖子支持Markdown格式。"
@@ -1874,6 +1898,7 @@ zh_CN:
     notify_about_queued_posts_after: "如果有帖子等待了这些小时后仍未处理，给所有版主发送通知。设置为0禁用这些通知。"
     auto_close_messages_post_count: "私信中贴子数上限，达到后自动关闭私信（0 为禁用）"
     auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题 ( 0 为禁用 )"
+    auto_close_topics_create_linked_topic: "根据 “主题中贴子数上限” 设置自动关闭主题后，创建一个新的链接主题"
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     max_allowed_message_recipients: "私信允许的最大收件人数。"
     watched_words_regular_expressions: "监视词是正则表达式。"
@@ -1882,6 +1907,7 @@ zh_CN:
     returning_user_notice_tl: "查看回归用户发帖通知所需的最低信任级别。"
     returning_users_days: "在用户被认为回归之前应该经过多少天。"
     review_media_unless_trust_level: "工作人员将会审核信任等级较低的用户所发布含有嵌入多媒体的内容。"
+    blur_tl0_flagged_posts_media: "模糊标记帖子图像以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
     show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
@@ -1944,6 +1970,7 @@ zh_CN:
     governing_law: "适用法律"
     city_for_disputes: "争议之城"
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
+    shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
     base_font: "网站标题使用的字体。主题可以通过 `--heading-font-family` CSS 自定义属性来覆盖。"
@@ -1957,6 +1984,7 @@ zh_CN:
     gravatar_login_url: "供用户登录到 Gravatar 服务，基于 gravatar_base_url 的相对链接"
     share_quote_buttons: "确定分享对话框中出现的按钮及其显示顺序。"
     share_quote_visibility: "确定何时显示引用分享按钮：从不，仅匿名用户或所有用户。 "
+    create_revision_on_bulk_topic_moves: "当主题批量移动到新类别时，为第一篇帖子创建修订版本。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -2130,7 +2158,7 @@ zh_CN:
     missing_user_field: "你还没有填写完所有用户字段"
     auth_complete: "验证已经完成。"
     click_to_continue: "点击这里继续。"
-    already_logged_in: "喔，看起来你正尝试接受一个本该是给其他用户的邀请。如果你不是%{current_user}，请退出登录再重试。"
+    already_logged_in: "抱歉！这个邀请只用于尚未拥有账户的新用户。"
     second_factor_title: "双重认证"
     second_factor_description: "请输入你的APP验证码："
     second_factor_backup_description: "请输入备用码："
@@ -2157,7 +2185,7 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       too_long: "太长"
-      characters: "必须仅包含数字、字母、破折号、点和下划线"
+      characters: "只能使用数字、字母、短横线、小数点和下划线"
       unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
@@ -2169,6 +2197,7 @@ zh_CN:
       not_allowed: "本站不允许使用该邮箱服务商提供的电子邮箱，请使用其它邮箱地址。"
       blocked: "不被允许。"
       revoked: "在%{date}之前不发送邮件至“%{email}”"
+      does_not_exist: "N/A"
     ip_address:
       blocked: "不允许从你的 IP 地址注册新用户。"
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
@@ -2181,6 +2210,8 @@ zh_CN:
       same_ip_address: "同一IP地址(%{ip_address})如其他用户"
       inactive_user: "非活跃用户"
     email_in_spam_header: "用户的第一封电子邮件已被标记为垃圾邮件"
+    already_silenced: "用户已被 %{staff} 在 %{time_ago} 静音。"
+    already_suspended: "用户已被 %{staff} 在 %{time_ago} 封禁。"
   reviewables_reminder:
     submitted:
       other: "项目提交于1%{count}小时前。[请审核](%{base_path}/review)。"
@@ -3340,7 +3371,7 @@ zh_CN:
     file_missing: "抱歉，你必须选择一个文件上传。"
     empty: "抱歉，但是你提交的文件是空的。"
     png_to_jpg_conversion_failure_message: "从PNG转换为JPG时发生错误。"
-    optimize_failure_message: "优化上传的图像时出现错误。"
+    optimize_failure_message: "优化上传的图像时出现了错误。"
     attachments:
       too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
@@ -4090,6 +4121,7 @@ zh_CN:
             label: "欢迎主题"
             description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社区？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
             one_paragraph: "请限制你的欢迎私信至一段话。"
+            extra_description: "如果你不确定，可以跳过此步骤，稍后编辑你的欢迎主题。"
       privacy:
         title: "访问"
         description: "<p>你的社区对所有人开放，还在是限制会员、邀请或审批？你可以随意设置为私有的然后切换到公开的。</p>"
@@ -4347,6 +4379,11 @@ zh_CN:
       %{keys}
 
       目前不需要采取任何行动，但是，每隔几年对所有重要凭证进行周期性更新是一种良好的安全做法。
+  create_linked_topic:
+    topic_title_with_sequence:
+      other: "%{topic_title} (第 %{count} 部分)"
+    post_raw: "延续 %{parent_url} 的讨论。\n\n之前的讨论：\n\n%{previous_topics}"
+    small_action_post_raw: "在 %{new_title} 继续讨论。"
   activemodel:
     errors:
       <<: *errors

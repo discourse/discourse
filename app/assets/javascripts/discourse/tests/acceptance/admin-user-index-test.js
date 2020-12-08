@@ -1,7 +1,7 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
@@ -38,29 +38,32 @@ acceptance("Admin - User Index", function (needs) {
     });
   });
 
-  test("can edit username", async (assert) => {
+  test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.equal(find(".display-row.username .value").text().trim(), "sam");
+    assert.equal(queryAll(".display-row.username .value").text().trim(), "sam");
 
     // Trying cancel.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
-    assert.equal(find(".display-row.username .value").text().trim(), "sam");
+    assert.equal(queryAll(".display-row.username .value").text().trim(), "sam");
 
     // Doing edit.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
-    assert.equal(find(".display-row.username .value").text().trim(), "new-sam");
+    assert.equal(
+      queryAll(".display-row.username .value").text().trim(),
+      "new-sam"
+    );
   });
 
-  test("will clear unsaved groups when switching user", async (assert) => {
+  test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
     assert.equal(
-      find(".display-row.username .value").text().trim(),
+      queryAll(".display-row.username .value").text().trim(),
       "sam",
       "the name should be correct"
     );
@@ -73,13 +76,13 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/1/eviltrout");
 
     assert.equal(
-      find(".display-row.username .value").text().trim(),
+      queryAll(".display-row.username .value").text().trim(),
       "eviltrout",
       "the name should be correct"
     );
 
     assert.equal(
-      find('.group-chooser span[title="Macdonald"]').length,
+      queryAll('.group-chooser span[title="Macdonald"]').length,
       0,
       "group should not be set"
     );

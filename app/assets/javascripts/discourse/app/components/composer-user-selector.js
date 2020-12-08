@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   showSelector: true,

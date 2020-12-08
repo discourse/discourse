@@ -863,14 +863,10 @@ sw:
         links_tab: "Viungo"
         link_created_at: "Imetengenezwa"
         link_groups: Makundi
-        create: "Tuma Mualiko"
-        generate_link: "Nakili Kiungo cha Mualiko"
-        link_generated: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         bulk_invite:
-          none: "Haujamwalika mtu yoyote hapa. Tuma mwaliko mmoja mmoja kwa watu, au tuma mialiko kwa watu wengi kwa <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>kupakia faili la CSV </a>."
           success: "Faili limepakiwa kwa mafanikio, utapewa taarifa kwa kupitia Meseji mchakato utakapo kamilika"
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -1083,7 +1079,6 @@ sw:
       sent_activation_email_again: "Tumekutumia barua pepe nyingine ya uanzishaji kwenye <b>%{currentEmail}</b>. Inaweza kuchukua dakika chache kufika; angalia pia folda la barua taka."
       to_continue: "Tafadhali Ingia"
       preferences: "Unahitaji uwe umeingia kubadilisha mapendekezo ya mtumiaji."
-      forgot: "Sikumbuki taarifa zangu za akaunti"
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
@@ -1270,7 +1265,6 @@ sw:
           label: "Mada Mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
-          desc: "Mswadajaribio wa mada utakao onekana kwa wasaidizi tu"
     notifications:
       tooltip:
         regular:
@@ -1290,10 +1284,6 @@ sw:
       posted: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       edited: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       liked: "<span>%{jina la mtumiaji}</span> %{maelezo}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} na %{count} mwingine </span> %{description}"
-        other: "<span>%{username}, %{username2} na %{count} wengine</span> %{description}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       invited_to_private_message: "<p><span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -2925,7 +2915,6 @@ sw:
         suspend_reason_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe <b>utaonyeshwa kwa kila mtumiaji</b> kwenye taarifa binafsi za huyo mtu na ataonyeshwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason_hidden_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe utaonyeshwa kwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason: "Sababu"
-        suspend_reason_placeholder: "Sababu ya kusitisha kwa mda mfupi"
         suspend_message: "Tuma Ujumbe kwa Barua Pepe"
         suspend_message_placeholder: "Sio lazima, ila unaweza kutoa sababu za ziada kuhusiana na sitisho na itatumwa kwa mtumiaji."
         suspended_by: "Amesitishwa kwa mda mfupi na"

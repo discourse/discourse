@@ -1,7 +1,7 @@
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
-import { setupLazyLoading } from "discourse/lib/lazy-load-images";
 import { setTextDirections } from "discourse/lib/text-direction";
+import { setupLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {

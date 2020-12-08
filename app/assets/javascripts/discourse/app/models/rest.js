@@ -1,8 +1,8 @@
-import { warn } from "@ember/debug";
-import { equal } from "@ember/object/computed";
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
+import { equal } from "@ember/object/computed";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { warn } from "@ember/debug";
 
 const RestModel = EmberObject.extend({
   isNew: equal("__state", "new"),

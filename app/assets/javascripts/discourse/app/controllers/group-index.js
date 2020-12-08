@@ -1,9 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { gt } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseDebounce from "discourse/lib/debounce";
 import { action } from "@ember/object";
+import discourseDebounce from "discourse/lib/debounce";
+import { gt } from "@ember/object/computed";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   application: controller(),

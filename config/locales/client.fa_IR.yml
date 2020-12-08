@@ -302,6 +302,7 @@ fa_IR:
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
+      remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
@@ -320,6 +321,7 @@ fa_IR:
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "لغو"
+    deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در حال ذخیره..."
     saved: "ذخیره شد!"
@@ -553,6 +555,7 @@ fa_IR:
       member_requested: "درخواست شده در"
       add_members:
         input_placeholder: "نام‌کاربری یا ایمیل"
+        notify_users: "اطلاع رسانی به کاربران"
       requests:
         title: "درخواست ها"
         reason: "دلیل"
@@ -858,6 +861,7 @@ fa_IR:
       suspended_notice: "این کاربر تا %{date} در وضعیت معلق است."
       suspended_permanently: "این کاربر معلق شده."
       suspended_reason: "دلیل: "
+      github_profile: "GitHub"
       email_activity_summary: "چکیده‌ی فعالیت"
       mailing_list_mode:
         label: "حالت لیست ایمیل"
@@ -888,6 +892,7 @@ fa_IR:
       muted_categories: "بی‌صدا"
       muted_categories_instructions: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید و آن ها در دسته بندی ها و یا صفحه تازه ها نمایش داده نخواهند شد."
       muted_categories_instructions_dont_hide: "شما درباره هیچ اتفاقی در این دسته بندی آگاهسازی دریافت نمیکنید."
+      regular_categories: "عادی"
       no_category_access: "به عنوان یک مدیر دسترسی محدودی به این دسته بندی دارید، ذخیره سازی غیر فعال است."
       delete_account: "حساب‌کاربری من را پاک کن"
       delete_account_confirm: "آیا مطمئنید که می‌خواهید شناسه‌تان را برای همیشه پاک کنید؟ برگشتی در کار نیست!"
@@ -897,6 +902,7 @@ fa_IR:
       admin_delete: "پاک کردن"
       users: "کاربران"
       muted_users: "بی‌صدا"
+      allowed_pm_users: "مجاز"
       ignored_users: "صرف نظر شده"
       tracked_topics_link: "نمایش"
       automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم."
@@ -1186,14 +1192,10 @@ fa_IR:
         links_tab: "پیوندها"
         link_created_at: "ساخته شده"
         link_groups: گروه ها
-        create: "ارسال دعوتنامه "
-        generate_link: "کپی لینک دعوت"
-        link_generated: "لینک دعوت با موفقیت ایجاد شد!"
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
         invite_link:
           success: "لینک دعوت با موفقیت ایجاد شد!"
         bulk_invite:
-          none: "هنوز کسی را دعوت نکرده‌اید. افراد را یکی یکی یا یک جا با <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>فایل CSV</a> دعوت کنید."
           success: "فایل با موفقیت بارگذاری شد٬ وقتی که پروسه تمام شد به شما را از طریق پیام اطلاع می دهیم. "
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
           confirmation_message: "میخواهید به همه ی افراد فایل اپلود شده دعوتنامه بفرستید"
@@ -1426,7 +1428,6 @@ fa_IR:
       sent_activation_email_again_generic: "یک ایمیل فعالسازی دیگر فرستادیم. رسیدن آن ممکن است چند دقیقه طول بکشد؛ لطفا پوشه‌ی اسپم را هم چک کنید."
       to_continue: "لطفا وارد شوید"
       preferences: "شما باید وارد شوید تا بتوانید تنظیمات کاربری خود را تغییر بدهید."
-      forgot: "من اطلاعات حساب کاربری خود را به یاد نمی‌آورم"
       not_approved: "حساب کاربری شما هنوز تایید نشده. بعد از تایید با ایمیل به شما اطلاع داده خواهد شد."
       google_oauth2:
         name: "گوگل"
@@ -1635,7 +1636,6 @@ fa_IR:
           label: "موضوع جدید"
         shared_draft:
           label: "درفت اشتراکی"
-          desc: "درفت یک مبحث که تنها توسط کارکنان قابل مشاهده است"
         toggle_topic_bump:
           label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
@@ -1660,10 +1660,6 @@ fa_IR:
       posted: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
-      liked_2: "<span>%{username}،%{username2}</span>%{description}"
-      liked_many:
-        one: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
-        other: "<span>%{username}،%{username2}و %{count} دیگر</span>%{description}"
       liked_consolidated_description:
         one: "%{count}نوشته ی شما را پسندید"
         other: "%{count}نوشته ی شما را پسندید"
@@ -1838,6 +1834,9 @@ fa_IR:
         choose_append_tags: "انتخاب برچسب‌های جدید برای افزودن به این موضوعات:"
         changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
         remove_tags: "حذف برچسب‌ها"
+        progress:
+          one: "پیشرفت: <strong>%{count}</strong> موضوع"
+          other: "پیشرفت: <strong>%{count}</strong> موضوع"
       none:
         unread: "موضوع خوانده نشده‌ای ندارید."
         new: "شما هیچ موضوع تازه‌ای ندارید"
@@ -1924,8 +1923,6 @@ fa_IR:
       jump_reply_down: رفتن به پاسخ بعدی
       deleted: "موضوع پاک شده است"
       slow_mode_update:
-        select: "مدت زمان"
-        save: "ذخیره"
         remove: "غیرفعال"
         durations:
           15_minutes: "۱۵ دقیقه"
@@ -2318,9 +2315,13 @@ fa_IR:
         unlock_post_description: "اجازه به فرستنده پست برای ویرایش پست"
         delete_topic_disallowed_modal: "شما دسترسی برای حذف این مبحث را ندارید. اگر واقعاً می‌خواهید حذف شود، یک علامت همراه دلیل برای خبردار کردن مدیر ثبت کنید."
         delete_topic_disallowed: "شما مجاز به حذف این تاپیک نمی‌باشید"
+        delete_topic_confirm_modal_yes: "بله، این موضوع را حذف کنید."
+        delete_topic_confirm_modal_no: "خیر، این موضوع را نگه دار"
+        delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
         add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
-        remove_post_notice: "اطلاعیه کارکنان را پاک کنید"
+        change_post_notice: "تغییر اطلاعیه همکاران"
+        delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
       actions:
         people:
@@ -2391,6 +2392,7 @@ fa_IR:
       edit: "ویرایش"
       edit_dialog_title: "ویرایش: %{categoryName}"
       view: "نمایش موضوعات در دسته‌بندی"
+      back: "بازگشت به دسته‌بندی"
       general: "عمومی"
       settings: "تنظیمات"
       topic_template: "قالب موضوع"
@@ -2398,7 +2400,6 @@ fa_IR:
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
       tag_groups_placeholder: "(اختیاری) لیست برچسب‌های قابل استفاده‌ی گروه"
-      manage_tag_groups_link: "مدیریت گروه‌های برچسب اینجا"
       allow_global_tags_label: "اجازه‌ی برچسب‌های دیگر را هم بده"
       topic_featured_link_allowed: "اجازه‌ی لینک‌های برجسته در این دسته‌بندی"
       delete: "حذف دسته‌بندی"
@@ -2426,6 +2427,12 @@ fa_IR:
       change_in_category_topic: "ویرایش توضیحات"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
       security: "امنیت"
+      security_add_group: "افزودن گروه"
+      permissions:
+        group: "گروه"
+        see: "دیدن"
+        reply: "پاسخ"
+        create: "ایجاد"
       special_warning: "اخطار: این دسته‌بندی از پیش تعریف شده است و تنظیمات امینتی آن قابل تغییر نیست. اگر شما نمی‌خواهید از این دسته‌بندی استفاده کنید، به جای تغییر کاربرد حذفش کنید."
       images: "تصاویر"
       email_in: "آدرس ایمیل های دریافتی سفارشی:"
@@ -3604,7 +3611,6 @@ fa_IR:
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
-        suspend_reason_placeholder: "دلیل تعلیق شدن"
         suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
@@ -3782,6 +3788,7 @@ fa_IR:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
+        history: "مشاهده تاریخچه تغییر"
         reset: "بازنشانی"
         none: "هیچی"
       site_settings:

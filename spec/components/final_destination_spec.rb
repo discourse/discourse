@@ -463,7 +463,7 @@ describe FinalDestination do
       expect(fd(fragment_url).escape_url.to_s).to eq(fragment_url)
 
       expect(fd("https://eviltrout.com?s=180&#038;d=mm&#038;r=g").escape_url.to_s)
-        .to eq("https://eviltrout.com?s=180&d=mm&r=g")
+        .to eq("https://eviltrout.com?s=180&#038;d=mm&%23038;r=g")
 
       expect(fd("http://example.com/?a=\11\15").escape_url.to_s).to eq("http://example.com/?a=%09%0D")
 

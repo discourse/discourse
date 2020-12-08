@@ -30,7 +30,7 @@ class ReviewablesController < ApplicationController
       additional_filters: additional_filters.reject { |_, v| v.blank? }
     }
 
-    %i[priority username from_date to_date type sort_order].each do |filter_key|
+    %i[priority username reviewed_by from_date to_date type sort_order].each do |filter_key|
       filters[filter_key] = params[filter_key]
     end
 

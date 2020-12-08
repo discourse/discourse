@@ -1,7 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
-import showModal from "discourse/lib/show-modal";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -51,6 +51,7 @@ export default DiscourseRoute.extend({
             userInvitedShow: this.controllerFor("user-invited-show"),
           },
         });
+        panels.reverse();
       }
 
       showModal("share-and-invite", {
@@ -65,7 +66,7 @@ export default DiscourseRoute.extend({
       const panels = [
         {
           id: "invite-link",
-          title: "user.invited.generate_link",
+          title: "user.invited.invite_link.title",
           model: {
             inviteModel: this.currentUser,
             userInvitedShow: this.controllerFor("user-invited-show"),

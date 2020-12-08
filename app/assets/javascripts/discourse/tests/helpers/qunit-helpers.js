@@ -1,52 +1,52 @@
-import { Promise } from "rsvp";
-import { isEmpty } from "@ember/utils";
-import { later } from "@ember/runloop";
-import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import HeaderComponent from "discourse/components/site-header";
-import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { resetPluginApi } from "discourse/lib/plugin-api";
+import QUnit, { module } from "qunit";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
-import { clearHTMLCache } from "discourse/helpers/custom-html";
-import { flushMap } from "discourse/models/store";
-import { clearRewrites } from "discourse/lib/url";
-import { initSearchData } from "discourse/widgets/search-menu";
-import { resetDecorators } from "discourse/widgets/widget";
-import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
-import { resetTopicTitleDecorators } from "discourse/components/topic-title";
-import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
-import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
-import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
-import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
-import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
-import User from "discourse/models/user";
-import { mapRoutes } from "discourse/mapping-router";
+import { clearRewrites, setURLContainer } from "discourse/lib/url";
 import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import { setURLContainer } from "discourse/lib/url";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import bootbox from "bootbox";
-import { moduleFor } from "ember-qunit";
-import QUnit, { module } from "qunit";
-import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import { later, run } from "@ember/runloop";
+import HeaderComponent from "discourse/components/site-header";
+import { Promise } from "rsvp";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
-import { getApplication } from "@ember/test-helpers";
 import deprecated from "discourse-common/lib/deprecated";
+import { flushMap } from "discourse/models/store";
+import { getApplication } from "@ember/test-helpers";
+import { initSearchData } from "discourse/widgets/search-menu";
+import { isEmpty } from "@ember/utils";
+import { mapRoutes } from "discourse/mapping-router";
+import { moduleFor } from "ember-qunit";
+import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import { resetDecorators } from "discourse/widgets/widget";
+import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
+import { resetPluginApi } from "discourse/lib/plugin-api";
+import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
+import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
+import { resetTopicTitleDecorators } from "discourse/components/topic-title";
+import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
+import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
+import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import sinon from "sinon";
+import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
 }
 
 export function updateCurrentUser(properties) {
-  User.current().setProperties(properties);
+  run(() => {
+    User.current().setProperties(properties);
+  });
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
@@ -61,41 +61,11 @@ export function loggedInUser() {
 
 export function fakeTime(timeString, timezone = null, advanceTime = false) {
   let now = moment.tz(timeString, timezone);
-  return sandbox.useFakeTimers({
+  return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
   });
 }
-
-const Plugin = $.fn.modal;
-const Modal = Plugin.Constructor;
-
-function AcceptanceModal(option, _relatedTarget) {
-  return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
-      {},
-      Modal.DEFAULTS,
-      $this.data(),
-      typeof option === "object" && option
-    );
-
-    if (!data) {
-      $this.data("bs.modal", (data = new Modal(this, options)));
-    }
-    data.$body = $("#ember-testing");
-
-    if (typeof option === "string") {
-      data[option](_relatedTarget);
-    } else if (options.show) {
-      data.show(_relatedTarget);
-    }
-  });
-}
-
-bootbox.$body = $("#ember-testing");
-$.fn.modal = AcceptanceModal;
 
 let _pretenderCallbacks = {};
 
@@ -127,18 +97,41 @@ export function controllerModule(name, args = {}) {
   });
 }
 
-export function discourseModule(name, hooks) {
+export function discourseModule(name, options) {
+  // deprecated(
+  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+  //   { since: "2.6.0" }
+  // );
+
+  if (typeof options === "function") {
+    module(name, function (hooks) {
+      hooks.beforeEach(function () {
+        this.container = getOwner(this);
+        this.registry = this.container.registry;
+
+        this.owner = this.container;
+        this.siteSettings = currentSettings();
+      });
+
+      this.moduleName = name;
+
+      options.call(this, hooks);
+    });
+
+    return;
+  }
+
   module(name, {
     beforeEach() {
       this.container = getOwner(this);
       this.siteSettings = currentSettings();
-      if (hooks && hooks.beforeEach) {
-        hooks.beforeEach.call(this);
+      if (options && options.beforeEach) {
+        options.beforeEach.call(this);
       }
     },
     afterEach() {
-      if (hooks && hooks.afterEach) {
-        hooks.afterEach.call(this);
+      if (options && options.afterEach) {
+        options.afterEach.call(this);
       }
     },
   });
@@ -146,6 +139,11 @@ export function discourseModule(name, hooks) {
 
 export function addPretenderCallback(name, fn) {
   if (name && fn) {
+    if (_pretenderCallbacks[name]) {
+      // eslint-disable-next-line no-console
+      throw `There is already a pretender callback with module name (${name}).`;
+    }
+
     _pretenderCallbacks[name] = fn;
   }
 }
@@ -159,7 +157,7 @@ export function acceptance(name, optionsOrCallback) {
     callback = optionsOrCallback;
   } else if (typeof optionsOrCallback === "object") {
     deprecated(
-      "The second parameter to `acceptance` should be a function that encloses your tests.",
+      `${name}: The second parameter to \`acceptance\` should be a function that encloses your tests.`,
       { since: "2.6.0" }
     );
     options = optionsOrCallback;
@@ -168,6 +166,7 @@ export function acceptance(name, optionsOrCallback) {
   addPretenderCallback(name, options.pretend);
 
   let loggedIn = false;
+  let mobileView = false;
   let siteChanges;
   let settingChanges;
   let userChanges;
@@ -180,7 +179,7 @@ export function acceptance(name, optionsOrCallback) {
       HeaderComponent.reopen({ examineDockHeader: function () {} });
 
       resetExtraClasses();
-      if (options.mobileView) {
+      if (mobileView) {
         forceMobile();
       }
 
@@ -266,6 +265,9 @@ export function acceptance(name, optionsOrCallback) {
     settings(changes) {
       settingChanges = changes;
     },
+    mobileView() {
+      mobileView = true;
+    },
   };
 
   if (options.loggedIn) {
@@ -276,6 +278,9 @@ export function acceptance(name, optionsOrCallback) {
   }
   if (options.settings) {
     needs.settings(options.settings);
+  }
+  if (options.mobileView) {
+    needs.mobileView();
   }
 
   if (callback) {
@@ -360,4 +365,29 @@ export async function selectDate(selector, date) {
 
     resolve();
   });
+}
+
+export function queryAll() {
+  return window.find(...arguments);
+}
+
+export function invisible(selector) {
+  const $items = queryAll(selector + ":visible");
+  return (
+    $items.length === 0 ||
+    $items.css("opacity") !== "1" ||
+    $items.css("visibility") === "hidden"
+  );
+}
+
+export function visible(selector) {
+  return queryAll(selector + ":visible").length > 0;
+}
+
+export function count(selector) {
+  return queryAll(selector).length;
+}
+
+export function exists(selector) {
+  return count(selector) > 0;
 }

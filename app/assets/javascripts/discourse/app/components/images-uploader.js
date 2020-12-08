@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import UploadMixin from "discourse/mixins/upload";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend(UploadMixin, {
   type: "avatar",

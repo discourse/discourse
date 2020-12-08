@@ -580,6 +580,22 @@ RSpec.describe SessionController do
       expect(response.body).to include(I18n.t('sso.blank_id_error'))
     end
 
+    it 'can handle invalid sso email validation errors' do
+      SiteSetting.blocked_email_domains = "test.com"
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = '123'
+      sso.username = 'sam'
+
+      messages = track_log_messages(level: Logger::WARN) do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
+
+      expect(messages.length).to eq(0)
+      expect(response.status).to eq(500)
+      expect(response.body).to include(I18n.t("sso.email_error", email: ERB::Util.html_escape("test@test.com")))
+    end
+
     it 'can handle invalid sso external ids due to banned word' do
       sso = get_sso("/")
       sso.email = "test@test.com"
@@ -1750,6 +1766,44 @@ RSpec.describe SessionController do
       expect(response.status).to eq(302)
       expect(session[:current_user_id]).to be_blank
       expect(response.cookies["_t"]).to be_blank
+    end
+
+    it 'returns the redirect URL in the body for XHR requests' do
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to be_blank
+      expect(response.cookies["_t"]).to be_blank
+
+      expect(response.parsed_body["redirect_url"]).to eq("/")
+    end
+
+    it 'redirects to /login for SSO' do
+      SiteSetting.sso_url = "https://example.com/sso"
+      SiteSetting.enable_sso = true
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/login")
+    end
+
+    it 'allows plugins to manipulate redirect URL' do
+      callback = -> (data) do
+        data[:redirect_url] = "/myredirect/#{data[:user].username}"
+      end
+
+      DiscourseEvent.on(:before_session_destroy, &callback)
+
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/myredirect/#{user.username}")
+    ensure
+      DiscourseEvent.off(:before_session_destroy, &callback)
     end
   end
 

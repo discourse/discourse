@@ -1,11 +1,17 @@
-import { reads, bool } from "@ember/object/computed";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
-import Category from "discourse/models/category";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { bool, reads } from "@ember/object/computed";
 import { isEmpty, isNone } from "@ember/utils";
+import Category from "discourse/models/category";
+import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
-import { setting } from "discourse/lib/computed";
 import layout from "select-kit/templates/components/category-row";
+import { setting } from "discourse/lib/computed";
+
+function htmlToText(encodedString) {
+  const elem = document.createElement("textarea");
+  elem.innerHTML = encodedString;
+  return elem.value;
+}
 
 export default SelectKitRowComponent.extend({
   layout,
@@ -33,7 +39,11 @@ export default SelectKitRowComponent.extend({
     "description",
     "categoryName",
     function () {
-      return this.descriptionText || this.description || this.categoryName;
+      if (this.category) {
+        return htmlToText(
+          this.descriptionText || this.description || this.categoryName
+        );
+      }
     }
   ),
 

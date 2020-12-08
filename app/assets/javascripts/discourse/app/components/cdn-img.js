@@ -1,6 +1,6 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({

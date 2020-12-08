@@ -1,11 +1,12 @@
 import EmberObject, { get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
 import { deepEqual } from "discourse-common/lib/object";
+import { isEmpty } from "@ember/utils";
 
 function isNew(topic) {
   return (
@@ -147,6 +148,17 @@ const TopicTrackingState = EmberObject.extend({
         delete old.deleted;
       }
       tracker.incrementMessageCount();
+    });
+
+    this.messageBus.subscribe("/destroy", (msg) => {
+      tracker.incrementMessageCount();
+      const currentRoute = DiscourseURL.router.currentRoute.parent;
+      if (
+        currentRoute.name === "topic" &&
+        parseInt(currentRoute.params.id, 10) === msg.topic_id
+      ) {
+        DiscourseURL.redirectTo("/");
+      }
     });
   },
 

@@ -1,4 +1,6 @@
-//! moment.js language configuration
+//! moment.js locale configuration
+//! locale : Uyghur (China) [ug-cn]
+//! author: boyaq : https://github.com/boyaq
 
 ;(function (global, factory) {
    typeof exports === 'object' && typeof module !== 'undefined'
@@ -7,6 +9,7 @@
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
 
+    //! moment.js locale configuration
 
     var ugCn = moment.defineLocale('ug-cn', {
         months: 'يانۋار_فېۋرال_مارت_ئاپرېل_ماي_ئىيۇن_ئىيۇل_ئاۋغۇست_سېنتەبىر_ئۆكتەبىر_نويابىر_دېكابىر'.split(
@@ -26,7 +29,7 @@
             L: 'YYYY-MM-DD',
             LL: 'YYYY-يىلىM-ئاينىڭD-كۈنى',
             LLL: 'YYYY-يىلىM-ئاينىڭD-كۈنى، HH:mm',
-            LLLL: 'dddd، YYYY-يىلىM-ئاينىڭD-كۈنى، HH:mm'
+            LLLL: 'dddd، YYYY-يىلىM-ئاينىڭD-كۈنى، HH:mm',
         },
         meridiemParse: /يېرىم كېچە|سەھەر|چۈشتىن بۇرۇن|چۈش|چۈشتىن كېيىن|كەچ/,
         meridiemHour: function (hour, meridiem) {
@@ -67,7 +70,7 @@
             nextWeek: '[كېلەركى] dddd [سائەت] LT',
             lastDay: '[تۆنۈگۈن] LT',
             lastWeek: '[ئالدىنقى] dddd [سائەت] LT',
-            sameElse: 'L'
+            sameElse: 'L',
         },
         relativeTime: {
             future: '%s كېيىن',
@@ -83,7 +86,7 @@
             M: 'بىر ئاي',
             MM: '%d ئاي',
             y: 'بىر يىل',
-            yy: '%d يىل'
+            yy: '%d يىل',
         },
 
         dayOfMonthOrdinalParse: /\d{1,2}(-كۈنى|-ئاي|-ھەپتە)/,
@@ -109,8 +112,8 @@
         week: {
             // GB/T 7408-1994《数据元和交换格式·信息交换·日期和时间表示法》与ISO 8601:1988等效
             dow: 1, // Monday is the first day of the week.
-            doy: 7 // The week that contains Jan 1st is the first week of the year.
-        }
+            doy: 7, // The week that contains Jan 1st is the first week of the year.
+        },
     });
 
     return ugCn;

@@ -1,11 +1,15 @@
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
 
-  test("list words in groups", async (assert) => {
+  test("list words in groups", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
 
     assert.ok(exists(".watched-words-list"));
@@ -17,7 +21,7 @@ acceptance("Admin - Watched Words", function (needs) {
     await fillIn(".admin-controls .controls input[type=text]", "li");
 
     assert.equal(
-      find(".watched-words-list .watched-word").length,
+      queryAll(".watched-words-list .watched-word").length,
       1,
       "When filtering, show words even if checkbox is unchecked."
     );
@@ -42,7 +46,7 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.ok(!exists(".watched-words-list .watched-word"), "Empty word list.");
   });
 
-  test("add words", async (assert) => {
+  test("add words", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
 
     click(".show-words-checkbox");
@@ -51,7 +55,7 @@ acceptance("Admin - Watched Words", function (needs) {
     await click(".watched-word-form button");
 
     let found = [];
-    $.each(find(".watched-words-list .watched-word"), (index, elem) => {
+    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
       if ($(elem).text().trim() === "poutine") {
         found.push(true);
       }
@@ -59,13 +63,13 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.equal(found.length, 1);
   });
 
-  test("remove words", async (assert) => {
+  test("remove words", async function (assert) {
     await visit("/admin/logs/watched_words/action/block");
     await click(".show-words-checkbox");
 
     let word = null;
 
-    $.each(find(".watched-words-list .watched-word"), (index, elem) => {
+    $.each(queryAll(".watched-words-list .watched-word"), (index, elem) => {
       if ($(elem).text().trim() === "anise") {
         word = elem;
       }
@@ -73,6 +77,6 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await click("#" + $(word).attr("id"));
 
-    assert.equal(find(".watched-words-list .watched-word").length, 2);
+    assert.equal(queryAll(".watched-words-list .watched-word").length, 2);
   });
 });

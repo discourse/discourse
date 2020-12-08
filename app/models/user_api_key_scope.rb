@@ -12,7 +12,10 @@ class UserApiKeyScope < ActiveRecord::Base
       RouteMatcher.new(methods: :get, actions: 'notifications#index'),
       RouteMatcher.new(methods: :put, actions: 'notifications#mark_read')
     ],
-    session_info: [ RouteMatcher.new(methods: :get, actions: 'session#current') ],
+    session_info: [
+      RouteMatcher.new(methods: :get, actions: 'session#current'),
+      RouteMatcher.new(methods: :get, actions: 'users#topic_tracking_state')
+    ],
     bookmarks_calendar: [ RouteMatcher.new(methods: :get, actions: 'users#bookmarks', formats: :ics, params: %i[username]) ]
   }
 

@@ -1,17 +1,17 @@
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import { notEmpty } from "@ember/object/computed";
-import { Promise } from "rsvp";
 /* global Pikaday:true */
-import { propertyNotEqual } from "discourse/lib/computed";
-import loadScript from "discourse/lib/load-script";
 import computed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
 import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { isEmpty } from "@ember/utils";
+import loadScript from "discourse/lib/load-script";
+import { notEmpty } from "@ember/object/computed";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   timeFormat: "HH:mm:ss",

@@ -1,10 +1,9 @@
+import Controller, { inject } from "@ember/controller";
+import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import Controller from "@ember/controller";
 import { Promise } from "rsvp";
-import { inject } from "@ember/controller";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import Bookmark from "discourse/models/bookmark";
 
 export default Controller.extend({
   application: inject(),

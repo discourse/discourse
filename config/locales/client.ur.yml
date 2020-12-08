@@ -1088,14 +1088,10 @@ ur:
         links_tab: "لنکس"
         link_created_at: "بنایا گیا"
         link_groups: گروپس
-        create: "دعوت بھیجیں"
-        generate_link: "دعوت لنک کاپی کریں"
-        link_generated: "دعوت لنک کامیابی سے بن گیا!"
         valid_for: "دعوت لنک صرف اِس اِی میل اِیڈریس کے لئے درست ہے:%{email}"
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"
         bulk_invite:
-          none: "آپ نے یہاں ابھی تک کسی کو بھی مدعو نہیں کیا۔ انفرادی طار پر دعوت نامے ارسال کریں، یا <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ایک CSV فائل اَپ لوڈ کرکے</a> ایک وقت میں ہی بہت سے لوگوں کو دعوت دیں۔"
           success: "فائل کامیابی سے اَپ لوڈ کر دی گئی، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
           error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
           confirmation_message: "آپ اَپ لوڈ شدہ فائل میں موجود سبھی کو دعوت نامے ایمیل کرنے لگے ہیں۔"
@@ -1316,7 +1312,6 @@ ur:
       sent_activation_email_again_generic: "ہم نے ایک اور ایکٹیویشن اِی میل بھیجی ہے۔ اسے پہنچنے میں چند منٹ لگ سکتے ہیں؛ اپنے سپیم فولڈر کو چیک کرنا نہ بھولیے گا۔"
       to_continue: "برائے مہربانی لاگ اِن کریں"
       preferences: "آپ کا اپنی صارف ترجیحات کو تبدیل کرنے کے لیے لاگ اِن ہونا ضروری ہے۔"
-      forgot: "مجھے اپنے اکاؤنٹ کی تفصیلات یاد نہیں ہیں"
       not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گو اِی میل کے ذریعے آپ کو مطلع کر دیا جائے گا۔"
       google_oauth2:
         name: "گُوگَل"
@@ -1531,7 +1526,6 @@ ur:
           label: "نیا ٹاپک"
         shared_draft:
           label: "مشترکہ ڈرافٹ"
-          desc: "ایک ٹاپک ڈرافٹ کریں جو صرف سٹاف کو نظر آسکے"
         toggle_topic_bump:
           label: "ٹاپک بَمپ ٹَوگل کریں"
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
@@ -1556,10 +1550,6 @@ ur:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username2}، %{username} اور %{count} مزید</span> %{description}"
-        other: "<span>%{username2}، %{username} اور %{count} مزید</span> %{description}"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -2217,7 +2207,6 @@ ur:
         delete_topic_disallowed: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔"
         delete_topic: "ٹاپک حذف کریں"
         add_post_notice: "اسٹاف نوٹِس شامل کریں"
-        remove_post_notice: "اسٹاف نوٹِس ہٹائیں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
         people:
@@ -2289,7 +2278,6 @@ ur:
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
       tags_placeholder: "(اختیاری) اجازت والے ٹیگز کی فہرست"
       tag_groups_placeholder: "(اختیاری) اجازت والے ٹیگ گروپس کی فہرست"
-      manage_tag_groups_link: "ٹیگ گروپس کا انتظام یہاں کریں"
       allow_global_tags_label: "دوسرے ٹیگز کی بھی اجازت دیں"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں لنکس کو اجازت دیں"
       delete: "زمرہ حذف کریں"
@@ -3639,7 +3627,6 @@ ur:
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
-        suspend_reason_placeholder: "وجہ معطلی"
         suspend_message: "اِی مَیل پیغام"
         suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"

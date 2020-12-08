@@ -1,6 +1,6 @@
-import getURL from "discourse-common/lib/get-url";
 import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
 
 let _renderer = defaultRenderTag;

@@ -349,9 +349,9 @@ describe TopicEmbed do
     let(:invalid_url) { 'http://source.com/#double#anchor' }
     let(:contents) { "hello world new post <a href='/hello'>hello</a>" }
 
-    it "does not attempt absolutizing on a bad URI" do
+    it "handles badly formed URIs" do
       raw = TopicEmbed.absolutize_urls(invalid_url, contents)
-      expect(raw).to eq(contents)
+      expect(raw).to eq("hello world new post <a href=\"http://source.com/hello\">hello</a>")
     end
   end
 

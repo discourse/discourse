@@ -115,6 +115,17 @@ describe DiscourseTagging do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user3)).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
+
+        it 'should not hide group tags to member of group' do
+          tags = DiscourseTagging.hidden_tag_names(Guardian.new(user)).to_a
+          expect(sorted_tag_names(tags)).to eq([])
+        end
+
+        it 'should hide group tags to non-member of group' do
+          other_user = Fabricate(:user)
+          tags = DiscourseTagging.hidden_tag_names(Guardian.new(other_user)).to_a
+          expect(sorted_tag_names(tags)).to eq([hidden_tag.name])
+        end
       end
 
       context 'with required tags from tag group' do
@@ -585,6 +596,14 @@ describe DiscourseTagging do
     it "can add existing tag with wrong case" do
       expect {
         expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name.upcase])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "removes target tag name from synonyms if present " do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag1.name, tag2.name])).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)

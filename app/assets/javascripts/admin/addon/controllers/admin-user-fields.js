@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import { gte, sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
-const MAX_FIELDS = 20;
+const MAX_FIELDS = 30;
 
 export default Controller.extend({
   fieldTypes: null,

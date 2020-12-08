@@ -273,7 +273,13 @@ export class Tag {
 
         if (attr.href && text !== attr.href) {
           text = text.replace(/\n{2,}/g, "\n");
-          return "[" + text + "](" + attr.href + ")";
+
+          let linkModifier = "";
+          if (attr.class && attr.class.includes("attachment")) {
+            linkModifier = "|attachment";
+          }
+
+          return "[" + text + linkModifier + "](" + attr.href + ")";
         }
 
         return text;
@@ -654,6 +660,7 @@ function trimUnwanted(html) {
   const body = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
   html = body ? body[1] : html;
   html = html.replace(/\r|\n|&nbsp;/g, " ");
+  html = html.replace(/\u00A0/g, " "); // trim no-break space
 
   let match;
   while ((match = html.match(/<[^\s>]+[^>]*>\s{2,}<[^\s>]+[^>]*>/))) {

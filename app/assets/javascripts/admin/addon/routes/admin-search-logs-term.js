@@ -1,5 +1,5 @@
-import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { fillMissingDates } from "discourse/lib/utilities";
 import { translateResults } from "discourse/lib/search";

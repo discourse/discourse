@@ -185,9 +185,9 @@ ja:
     or: "あるいは"
     now: "たった今"
     read_more: "もっと読む"
-    more: "増やす"
+    more: "もっと読む"
     less: "減らす"
-    never: "never"
+    never: "決して"
     every_30_minutes: "30分毎"
     every_hour: "毎時"
     daily: "毎日"
@@ -239,6 +239,8 @@ ja:
         tomorrow: "明日"
         next_week: "来週"
         later_this_week: "今週中"
+        start_of_next_business_week: "月曜日"
+        start_of_next_business_week_alt: "来週の月曜日"
         next_month: "来月"
     drafts:
       resume: "続ける"
@@ -970,14 +972,10 @@ ja:
         links_tab: "リンク"
         link_created_at: "作成者"
         link_groups: グループ
-        create: "招待を送る"
-        generate_link: "招待リンクをコピー"
-        link_generated: "招待リンクが生成されました！"
         valid_for: "招待リンクはこのメールアドレスにだけ有効です。%{email}"
         invite_link:
           success: "招待リンクが生成されました！"
         bulk_invite:
-          none: "まだ誰も招待していません。個々に招待するか、<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSVファイルをアップロード</a>して、まとめて招待しましょう。"
           success: "ファイルは無事にアップロードされました。処理が完了したらメッセージでお知らせします。"
           error: "申し訳ありません、ファイルはCSV形式である必要があります。"
       password:
@@ -1175,7 +1173,6 @@ ja:
       sent_activation_email_again_generic: "アクティベーションメールを送りました。届くのに少し時間がかかるかもしれません。スパムフォルダーも確認してください。"
       to_continue: "ログインしてください"
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
-      forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
       google_oauth2:
         name: "Google"
@@ -1359,9 +1356,6 @@ ja:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span>%{username}, %{username2} 、他 %{count} 人</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2247,9 +2241,9 @@ ja:
         posting:
           name: 投稿
     tagging:
-      all_tags: "全てのタグ"
+      all_tags: "すべてのタグ"
       other_tags: "他のタグ"
-      selector_all_tags: "全てのタグ"
+      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       changed: "タグを変更しました:"
       tags: "タグ"
@@ -2827,7 +2821,6 @@ ja:
         suspend_duration: "ユーザを何日間凍結しますか?"
         suspend_reason_label: "アカウントを凍結する理由を説明してください。ここに書いた理由は、このユーザのプロファイルページにおいて<b>全員が閲覧可能な状態</b>で公開されます。またこのユーザがログインを試みた際にも表示されます。"
         suspend_reason: "理由"
-        suspend_reason_placeholder: "凍結理由"
         suspend_message: "メールメッセージ"
         suspended_by: "凍結したユーザ"
         silence_reason: "理由"

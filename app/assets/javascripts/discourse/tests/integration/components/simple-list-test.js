@@ -1,85 +1,96 @@
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
-moduleForComponent("simple-list", { integration: true });
+import { click, fillIn, triggerKeyEvent } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 
-componentTest("adding a value", {
-  template: "{{simple-list values=values}}",
+discourseModule("Integration | Component | simple-list", function (hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.set("values", "vinkas\nosama");
-  },
+  componentTest("adding a value", {
+    template: "{{simple-list values=values}}",
 
-  async test(assert) {
-    assert.ok(
-      find(".add-value-btn[disabled]").length,
-      "while loading the + button is disabled"
-    );
+    beforeEach() {
+      this.set("values", "vinkas\nosama");
+    },
 
-    await fillIn(".add-value-input", "penar");
-    await click(".add-value-btn");
+    async test(assert) {
+      assert.ok(
+        queryAll(".add-value-btn[disabled]").length,
+        "while loading the + button is disabled"
+      );
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+      await fillIn(".add-value-input", "penar");
+      await click(".add-value-btn");
 
-    assert.ok(
-      find(".values .value[data-index='2'] .value-input")[0].value === "penar",
-      "it sets the correct value for added item"
-    );
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
 
-    await fillIn(".add-value-input", "eviltrout");
-    await keyEvent(".add-value-input", "keydown", 13); // enter
+      assert.ok(
+        queryAll(".values .value[data-index='2'] .value-input")[0].value ===
+          "penar",
+        "it sets the correct value for added item"
+      );
 
-    assert.ok(
-      find(".values .value").length === 4,
-      "it adds the value when keying Enter"
-    );
-  },
-});
+      await fillIn(".add-value-input", "eviltrout");
+      await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
 
-componentTest("removing a value", {
-  template: "{{simple-list values=values}}",
+      assert.ok(
+        queryAll(".values .value").length === 4,
+        "it adds the value when keying Enter"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("values", "vinkas\nosama");
-  },
+  componentTest("removing a value", {
+    template: "{{simple-list values=values}}",
 
-  async test(assert) {
-    await click(".values .value[data-index='0'] .remove-value-btn");
+    beforeEach() {
+      this.set("values", "vinkas\nosama");
+    },
 
-    assert.ok(
-      find(".values .value").length === 1,
-      "it removes the value from the list of values"
-    );
+    async test(assert) {
+      await click(".values .value[data-index='0'] .remove-value-btn");
 
-    assert.ok(
-      find(".values .value[data-index='0'] .value-input")[0].value === "osama",
-      "it removes the correct value"
-    );
-  },
-});
+      assert.ok(
+        queryAll(".values .value").length === 1,
+        "it removes the value from the list of values"
+      );
 
-componentTest("delimiter support", {
-  template: "{{simple-list values=values inputDelimiter='|'}}",
+      assert.ok(
+        queryAll(".values .value[data-index='0'] .value-input")[0].value ===
+          "osama",
+        "it removes the correct value"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("values", "vinkas|osama");
-  },
+  componentTest("delimiter support", {
+    template: "{{simple-list values=values inputDelimiter='|'}}",
 
-  async test(assert) {
-    await fillIn(".add-value-input", "eviltrout");
-    await click(".add-value-btn");
+    beforeEach() {
+      this.set("values", "vinkas|osama");
+    },
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+    async test(assert) {
+      await fillIn(".add-value-input", "eviltrout");
+      await click(".add-value-btn");
 
-    assert.ok(
-      find(".values .value[data-index='2'] .value-input")[0].value ===
-        "eviltrout",
-      "it adds the correct value"
-    );
-  },
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
+
+      assert.ok(
+        queryAll(".values .value[data-index='2'] .value-input")[0].value ===
+          "eviltrout",
+        "it adds the correct value"
+      );
+    },
+  });
 });

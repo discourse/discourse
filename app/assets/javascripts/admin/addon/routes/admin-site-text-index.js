@@ -1,6 +1,6 @@
 import Route from "@ember/routing/route";
-import showModal from "discourse/lib/show-modal";
 import { getProperties } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default Route.extend({
   queryParams: {

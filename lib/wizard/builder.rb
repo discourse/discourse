@@ -39,7 +39,7 @@ class Wizard
 
       @wizard.append_step('forum-title') do |step|
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
-        step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
+        step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
         step.add_field(id: 'short_site_description', type: 'text', required: false, value: SiteSetting.short_site_description)
 
         step.on_update do |updater|
@@ -58,8 +58,7 @@ class Wizard
           step.disabled = true
           step.description_vars = { topic_title: I18n.t("discourse_welcome_topic.title") }
         else
-          step.add_field(id: 'welcome', type: 'textarea', required: true, value: introduction.get_summary)
-
+          step.add_field(id: 'welcome', type: 'textarea', required: false, value: introduction.get_summary)
           step.on_update do |updater|
             value = updater.fields[:welcome].strip
 

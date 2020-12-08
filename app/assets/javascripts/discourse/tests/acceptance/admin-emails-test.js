@@ -1,6 +1,6 @@
-import { visit } from "@ember/test-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const EMAIL = `
 From: "somebody" <somebody@example.com>
@@ -27,14 +27,14 @@ acceptance("Admin - Emails", function (needs) {
     });
   });
 
-  test("shows selected and elided text", async (assert) => {
+  test("shows selected and elided text", async function (assert) {
     await visit("/admin/email/advanced-test");
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.equal(find(".text pre").text(), "Hello, this is a test!");
+    assert.equal(queryAll(".text pre").text(), "Hello, this is a test!");
     assert.equal(
-      find(".elided pre").text(),
+      queryAll(".elided pre").text(),
       "---\n\nThis part should be elided."
     );
   });

@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import discourseDebounce from "discourse/lib/debounce";
-import { setting } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import Mixin from "@ember/object/mixin";
 import User from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
+import { isEmpty } from "@ember/utils";
+import { setting } from "discourse/lib/computed";
 
 export default Mixin.create({
   uniqueUsernameValidation: null,

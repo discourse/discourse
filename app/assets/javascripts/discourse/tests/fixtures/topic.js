@@ -374,7 +374,7 @@ export default {
           uploaded_avatar_id: 40181,
           created_at: "2013-02-05T21:32:47.649Z",
           cooked:
-            '<p>The application strings <a href="https://github.com/discourse/discourse/blob/master/config/locales/en.yml" rel="nofollow">are externalized</a>, so localization should be entirely possible with enough translation effort.</p>',
+            '<p>The application strings <a href="https://github.com/discourse/discourse/blob/master/config/locales/en.yml" rel="nofollow">are externalized</a>, so localization should be entirely possible with enough translation effort.</p><p>Link for unknown-test: <a href="/c/category-does-not-exist/99999" data-for-test="category-404">link</a></p>',
           post_number: 2,
           post_type: 1,
           updated_at: "2013-02-06T10:15:27.965Z",
@@ -5174,7 +5174,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          notice_type: "new-user",
+          notice: { type: "new_user" }
         },
       ],
       stream: [25, 26, 27],
@@ -5583,6 +5583,7 @@ export default {
     details: {
       notification_level: 3,
       notifications_reason_id: 1,
+      can_delete: true,
       can_edit: true,
       can_create_post: true,
       can_move_posts: true,
@@ -5593,6 +5594,7 @@ export default {
       can_archive_topic: true,
       can_split_merge_topic: true,
       can_edit_staff_notes: true,
+      can_moderate_category: true,
       participants: [
         {
           id: 3,

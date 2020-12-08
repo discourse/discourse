@@ -861,14 +861,10 @@ et:
         links_tab: "Viited"
         link_created_at: "Loodud"
         link_groups: Grupid
-        create: "Saada kutse"
-        generate_link: "Kopeeri viide kutsele"
-        link_generated: "Kutse link edukalt genereeritud!"
         valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         bulk_invite:
-          none: "Sa pole veel kedagi siia kutsunud. Saada üksikuid kutseid või paljudele korraga <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laadides üles CSV faili</a>."
           success: "Fail edukalt üles laetud. Sulle saabub teade, kui protsess on lõpule jõudnud."
           error: "Vabandust, fail peab olema CSV vormingus."
       password:
@@ -1066,7 +1062,6 @@ et:
       sent_activation_email_again: "Saatsime sulle aktiveerimise meili aadressile <b>%{currentEmail}</b>. Selle kohalejõudmine võib võtta mõne minuti; kontrolli kindlasti ka spämmikausta."
       to_continue: "Palun logi sisse"
       preferences: "Oma kasutajaeelistuste muutmiseks pead olema sisse logitud."
-      forgot: "Ma ei mäleta oma konto üksikasju"
       not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
       google_oauth2:
         name: "Google"
@@ -1249,7 +1244,6 @@ et:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2871,7 +2865,6 @@ et:
         suspend_duration: "Kauaks see kasutaja peatatakse?"
         suspend_reason_label: "Peatamise põhjus? See tekst <b>on nähtav kõigile</b> selle kasutaja profiililehel, samuti kuvatakse kasutajale, kui ta üritab sisse logida. Tee lühidalt."
         suspend_reason: "Põhjus"
-        suspend_reason_placeholder: "Peatamise põhjus"
         suspended_by: "Peatati kasutaja poolt"
         silence_reason: "Põhjus"
         silenced_by: "Vaigistaja"

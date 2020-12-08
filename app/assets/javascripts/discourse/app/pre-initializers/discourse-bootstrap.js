@@ -1,18 +1,18 @@
-import PreloadStore from "discourse/lib/preload-store";
-import I18n from "I18n";
-import Session from "discourse/models/session";
-import RSVP from "rsvp";
 import {
-  setEnvironment,
-  isTesting,
-  isProduction,
   isDevelopment,
+  isProduction,
+  isTesting,
+  setEnvironment,
 } from "discourse-common/config/environment";
-import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
+import RSVP from "rsvp";
+import Session from "discourse/models/session";
 import deprecated from "discourse-common/lib/deprecated";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
 import { setURLContainer } from "discourse/lib/url";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
 
 export default {
   name: "discourse-bootstrap",
@@ -95,7 +95,7 @@ export default {
     session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
     if (isDevelopment()) {
-      setIconList(setupData.svgIconList);
+      setIconList(JSON.parse(setupData.svgIconList));
     }
 
     if (setupData.s3BaseUrl) {

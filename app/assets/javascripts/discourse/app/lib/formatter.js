@@ -1,5 +1,5 @@
-import { helperContext } from "discourse-common/lib/helpers";
 import I18n from "I18n";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));

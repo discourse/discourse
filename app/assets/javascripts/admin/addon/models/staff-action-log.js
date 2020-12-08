@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
-import { escapeExpression } from "discourse/lib/utilities";
+import I18n from "I18n";
 import RestModel from "discourse/models/rest";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { escapeExpression } from "discourse/lib/utilities";
 
 function format(label, value, escape = true) {
   return value

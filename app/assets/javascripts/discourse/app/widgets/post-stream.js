@@ -1,9 +1,9 @@
-import { debounce } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import transformPost from "discourse/lib/transform-post";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { createWidget } from "discourse/widgets/widget";
+import { debounce } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
+import transformPost from "discourse/lib/transform-post";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {

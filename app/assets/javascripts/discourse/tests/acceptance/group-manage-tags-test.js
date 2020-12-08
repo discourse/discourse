@@ -1,38 +1,43 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
+  count,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
-acceptance("Managing Group Tag Notification Defaults");
-test("As an anonymous user", async (assert) => {
-  await visit("/g/discourse/manage/tags");
+acceptance("Managing Group Tag Notification Defaults", function () {
+  test("As an anonymous user", async function (assert) {
+    await visit("/g/discourse/manage/tags");
 
-  assert.ok(
-    count(".group-members tr") > 0,
-    "it should redirect to members page for an anonymous user"
-  );
+    assert.ok(
+      count(".group-members tr") > 0,
+      "it should redirect to members page for an anonymous user"
+    );
+  });
 });
 
-acceptance("Managing Group Tag Notification Defaults", { loggedIn: true });
+acceptance("Managing Group Tag Notification Defaults", function (needs) {
+  needs.user();
 
-test("As an admin", async (assert) => {
-  await visit("/g/discourse/manage/tags");
+  test("As an admin", async function (assert) {
+    await visit("/g/discourse/manage/tags");
 
-  assert.ok(
-    find(".groups-notifications-form .tag-chooser").length === 5,
-    "it should display tag inputs"
-  );
-});
+    assert.ok(
+      queryAll(".groups-notifications-form .tag-chooser").length === 5,
+      "it should display tag inputs"
+    );
+  });
 
-test("As a group owner", async (assert) => {
-  updateCurrentUser({ moderator: false, admin: false });
+  test("As a group owner", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false });
 
-  await visit("/g/discourse/manage/tags");
+    await visit("/g/discourse/manage/tags");
 
-  assert.ok(
-    find(".groups-notifications-form .tag-chooser").length === 5,
-    "it should display tag inputs"
-  );
+    assert.ok(
+      queryAll(".groups-notifications-form .tag-chooser").length === 5,
+      "it should display tag inputs"
+    );
+  });
 });

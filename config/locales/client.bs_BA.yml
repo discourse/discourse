@@ -1291,13 +1291,7 @@ bs_BA:
         link_redemption_stats: "Opozivi"
         link_groups: Grupa
         link_expires_at: Ističe
-        create: "Email pozivnica"
-        copy_link: "Kopiraj link"
-        generate_link: "Kopiraj link za pozivnicu"
-        link_generated: "Link pozivnice je uspješno generisan!"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
-        single_user: "Jedan korisnik"
-        multiple_user: "Više korisnika"
         invite_link:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
@@ -1305,7 +1299,6 @@ bs_BA:
           max_redemptions_allowed_label: "Koliko se ljudi smije registrirati putem ovog linka?"
           expires_at: "Kada će ovaj link za pozivnicu isteći?"
         bulk_invite:
-          none: "Još nikoga niste pozvali ovdje. Pošaljite pojedinačne pozivnice ili pozovite mnogo ljudi odjednom <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>prijenosom CSV datoteke</a>."
           text: "Skupna pozivnica"
           success: "Fajl je uspješno učitan, dobit će te ukratko obavijest o progresu."
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1554,7 +1547,6 @@ bs_BA:
       sent_activation_email_again_generic: "Poslali smo još jean e-mail za aktivaciju. Može potrajati nekoliko minuta da stigne; obavezno proverite svoj spam folder."
       to_continue: "Molimo prijavite se"
       preferences: "Morate biti ulogovani kako bi mjenjali vaše postavke"
-      forgot: "Ne sjećam se svojih detalja korisničkog imena"
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
@@ -1773,7 +1765,6 @@ bs_BA:
           label: "Nova tema"
         shared_draft:
           label: "Dijeljena skica"
-          desc: "Skiciraj temu koja će biti vidljiva samo administratorima"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
@@ -1800,11 +1791,6 @@ bs_BA:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} and %{count} ostali</span> %{description}"
-        few: "<span>%{username}, %{username2} i ostalih %{count}</span> %{description}"
-        other: "<span>%{username}, %{username2} i ostalih %{count} </span> %{description}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"
@@ -2489,7 +2475,6 @@ bs_BA:
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
         add_post_notice: "Dodaj obavještenje moderatora"
-        remove_post_notice: "Ukloni obavijest osoblja"
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -2581,7 +2566,6 @@ bs_BA:
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opcionalno) lista dozvoljenih grupa oznaka"
-      manage_tag_groups_link: "Upravljajte grupama oznaka ovdje."
       allow_global_tags_label: "Takođe dozvolite druge oznake"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       delete: "Delete Category"
@@ -4013,7 +3997,6 @@ bs_BA:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Zašto suspendirate? Ovaj tekst će biti prikazan korisniku kada se pokušaju prijaviti."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Razlog suspenzije"
         suspend_message: "Email Message"
         suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i on će biti poslan e-poštom korisniku."
         suspended_by: "Suspended by"

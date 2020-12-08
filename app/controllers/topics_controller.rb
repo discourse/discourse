@@ -112,6 +112,7 @@ class TopicsController < ApplicationController
             'not in group',
             ex.obj,
             custom_message: 'not_in_group.title_topic',
+            custom_message_params: { group: group.name },
             group: group
           )
         end

@@ -16,10 +16,10 @@ describe Stylesheet::Importer do
     parent_category = Fabricate(:category)
     category = Fabricate(:category, parent_category_id: parent_category.id, uploaded_background: background)
 
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}")
 
     GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-    expect(compile_css("category_backgrounds")).to include("body.category-#{category.slug},body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
+    expect(compile_css("category_backgrounds")).to include("body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}")
   end
 
   it "applies S3 CDN to background category images" do

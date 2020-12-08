@@ -149,6 +149,7 @@ cs:
     share:
       post: "příspěvek #%{postNumber}"
       close: "zavřít"
+      url: "Zkopírujte a sdílejte URL adresu."
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
@@ -180,6 +181,7 @@ cs:
       banner:
         enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
         disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+    topic_admin_menu: "Akce tématu."
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
@@ -954,14 +956,10 @@ cs:
         links_tab: "Odkazy"
         link_created_at: "Vytvořený"
         link_groups: Skupiny
-        create: "Poslat pozvánku"
-        generate_link: "Zkopírovat odkaz na pozvánku"
-        link_generated: "Odkaz pozvánky byl úspěšně vygenerován!"
         valid_for: "Odkaz pozvánky je platný pouze pro tuto emailovou adresu: %{email}"
         invite_link:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
         bulk_invite:
-          none: "Nikoho jste zatím nepozval. Můžete poslat individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrát CSV soubor</a> a pozvat tak několik lidí najednou."
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
           error: "Omlouváme se, soubor by měl být ve formátu CSV."
       password:
@@ -1194,7 +1192,6 @@ cs:
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>%{currentEmail}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       to_continue: "Přihlaš se, prosím"
       preferences: "Pro to, aby jsi mohl měnit své uživatelské nastavení, se musíš přihlásit."
-      forgot: "Nevybavuju si podrobnosti svého účtu"
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
@@ -1394,7 +1391,6 @@ cs:
           label: "Nové téma"
         shared_draft:
           label: "Sdílený koncept"
-          desc: "Navrhnout téma, které uvidí pouze redakce"
         toggle_topic_bump:
           label: "Přepnout zvýraznění tématu"
           desc: "Odpovědět bez ovlivnění data poslední odpovědi"
@@ -1421,12 +1417,6 @@ cs:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        few: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        many: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
-        other: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3298,7 +3288,6 @@ cs:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Důvod vyloučení"
         suspend_message: "e-mailová zpráva"
         suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Suspended by"

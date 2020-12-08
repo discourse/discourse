@@ -56,7 +56,6 @@ gl:
     compile_error:
       unrecognized_extension: "Extensión de ficheiro non recoñecida: %{extension}"
     import_error:
-      generic: Produciuse un erro mentres se importaba este tema
       about_json: "Erro importante: about.json non existe ou non é válido. Seguro que este é un tema de Discourse?"
       about_json_values: "about.json contén valores non válidos: %{errors}"
       modifier_values: "os modificadores about.json coteñen valores non válidos: %{errors}"
@@ -204,7 +203,6 @@ gl:
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
-    not_allowed: "Este usuario non pode ser invitado."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode iniciar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -227,7 +225,6 @@ gl:
   email_template_cant_be_modified: "Este modelo de correo electrónico non pode ser modificado."
   invalid_whisper_access: "Ou bisbar non está habilitado ou non o tes permitido facer."
   not_in_group:
-    title_topic: "Debes estar no grupo para ver este tema."
     title_category: "Debes estar no grupo para ver esta categoría."
     request_membership: "Solicitar ser membro"
     join_group: "Unirse ao grupo"
@@ -1490,7 +1487,6 @@ gl:
     google_oauth2_prompt: "Unha listaxe opcional delimitada por valores de cadea que especifica se o servidor solicita ao usuario a reautenticación e o consentimento. Revisa <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para os valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limiatará o inicio de sesión. Revisa <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para máis detalles."
     enable_twitter_logins: "Habilitar a autenticación con Twitter require twitter_consumer_key e twitter_consumer_secret. Revisa <a href='https://meta.discourse.org/t/13395' target='_blank'>a configuración do inicio de sesión mediante Twitter (e insercións) para Discourse</a>."
-    enable_instagram_logins: "Habilitar a autención con Instagram require instagram_consumer_key e instagram_consumer_secret"
     enable_facebook_logins: "Habilitar a autenticación con Facebook require facebook_app_id e facebook_app_secret. Revisa <a href='https://meta.discourse.org/t/13394' target='_blank'>a configuración do inicio de sesión mediante Facebook para Discourse</a>."
     facebook_app_secret: "Chave secreta para a autenticación mediante Facebook, rexistrada en <a href='https://developers.facebook.com/apps/' target='_blank'> https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Permitir aos usuarios a autenticación mediante Discord?"
@@ -1525,7 +1521,6 @@ gl:
     max_bookmarks_per_day: "Número máximo de marcadores por usuario e día."
     max_edits_per_day: "Número máximo de edicións por usuario e día."
     max_topics_per_day: "Número máximo de temas que un usuario pode crear por día."
-    max_personal_messages_per_day: "Número máximo de mensaxes que un usuario pode crear por día."
     max_invites_per_day: "Número máximo de invitacións que un usuario pode enviar por días."
     max_topic_invitations_per_day: "Número máximo de invitacións a un tema que un usuario pode enviar por día."
     max_logins_per_ip_per_hour: "Número máximo de inicios de sesión permitidos por enderezo IP por hora"
@@ -3006,7 +3001,6 @@ gl:
     file_missing: "Sentímolo, debes facilitar un ficheiro para subir."
     empty: "Sentímolo, mais o ficheiro que facilitaches está baleiro."
     png_to_jpg_conversion_failure_message: "Produciuse un erro ao converter de PNG a JPG."
-    optimize_failure_message: "Produciuse un erro ao optimizar a imaxe subida."
     attachments:
       too_large: "Sentímolo, o ficheiro que tentas subir é demasiado grande (o tamaño máximo é de %{max_size_kb} KB)."
     images:

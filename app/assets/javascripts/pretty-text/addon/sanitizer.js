@@ -71,7 +71,7 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
-export function sanitize(text, whiteLister) {
+export function sanitize(text, allowLister) {
   if (!text) {
     return "";
   }
@@ -79,9 +79,9 @@ export function sanitize(text, whiteLister) {
   // Allow things like <3 and <_<
   text = text.replace(/<([^A-Za-z\/\!]|$)/g, "&lt;$1");
 
-  const whiteList = whiteLister.getWhiteList(),
-    allowedHrefSchemes = whiteLister.getAllowedHrefSchemes(),
-    allowedIframes = whiteLister.getAllowedIframes();
+  const allowList = allowLister.getAllowList(),
+    allowedHrefSchemes = allowLister.getAllowedHrefSchemes(),
+    allowedIframes = allowLister.getAllowedIframes();
   let extraHrefMatchers = null;
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
@@ -94,12 +94,12 @@ export function sanitize(text, whiteLister) {
   }
 
   let result = xss(text, {
-    whiteList: whiteList.tagList,
+    whiteList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
 
     onIgnoreTagAttr(tag, name, value) {
-      const forTag = whiteList.attrList[tag];
+      const forTag = allowList.attrList[tag];
       if (forTag) {
         const forAttr = forTag[name];
         if (
@@ -134,7 +134,7 @@ export function sanitize(text, whiteLister) {
           return attr(name, value);
         }
 
-        const custom = whiteLister.getCustom();
+        const custom = allowLister.getCustom();
         for (let i = 0; i < custom.length; i++) {
           const fn = custom[i];
           if (fn(tag, name, value)) {

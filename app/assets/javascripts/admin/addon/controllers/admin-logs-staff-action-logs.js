@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
-import { scheduleOnce } from "@ember/runloop";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import I18n from "I18n";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Controller.extend({
   queryParams: ["filters"],

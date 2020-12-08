@@ -1,6 +1,6 @@
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Create Account - external auth", function (needs) {
   needs.hooks.beforeEach(() => {
@@ -20,7 +20,7 @@ acceptance("Create Account - external auth", function (needs) {
       .removeChild(document.getElementById("data-authentication"));
   });
 
-  test("when skip is disabled (default)", async (assert) => {
+  test("when skip is disabled (default)", async function (assert) {
     await visit("/");
 
     assert.ok(

@@ -1,14 +1,14 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
-import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
+import BackupStatus from "admin/models/backup-status";
+import DiscourseRoute from "discourse/routes/discourse";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import getURL from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 

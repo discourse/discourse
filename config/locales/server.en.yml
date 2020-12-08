@@ -46,6 +46,7 @@ en:
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
+  views: "views"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   sign_up: "Sign Up"
@@ -64,7 +65,7 @@ en:
     compile_error:
       unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
-      generic: An error occured while importing that theme
+      generic: An error occurred while importing that theme
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
@@ -149,6 +150,9 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      is_invalid_meaningful: "seems unclear, most of the words contain the same letters over and over?"
+      is_invalid_unpretentious: "seems unclear, one or more words is very long?"
+      is_invalid_quiet: "seems unclear, did you mean to enter it in ALL CAPS?"
       invalid_timezone: "'%{tz}' is not a valid timezone"
       contains_censored_words: "contains the following censored words: %{censored_words}"
       less_than: must be less than %{count}
@@ -190,6 +194,7 @@ en:
       default_tags_already_selected: "You cannot select a tag used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
       enable_s3_uploads_is_required: "You cannot enable inventory to S3 unless you've enabled the S3 uploads."
+      page_publishing_requirements: "Page publishing cannot be enabled if secure media is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
@@ -199,7 +204,18 @@ en:
       second_factor_cannot_be_enforced_with_sso_enabled: "You cannot enforce 2FA if SSO is enabled."
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
+      cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
+      error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      missing_data:
+        one:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
+        other:  "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
+
+  word_connector:
+    # Connects words with a comma. Example: "foo, bar"
+    comma: ", "
 
   activemodel:
     errors:
@@ -236,7 +252,11 @@ en:
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
-    not_allowed: "Sorry, that user can't be invited."
+    muted_invitee: "Sorry, that user muted you."
+    muted_topic: "Sorry, that user muted this topic."
+    receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
+    sender_does_not_allow_pm: "Sorry, you do not allow that user to send you private messages."
+    receiver_does_not_allow_other_user_pm: "Sorry, that user does not allow an existing participant to send them private messages."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -261,7 +281,7 @@ en:
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
-    title_topic: "You must be in a group to see this topic."
+    title_topic: "You need to request membership to the '%{group}' group to see this topic."
     title_category: "You must be in a group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
@@ -383,6 +403,7 @@ en:
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   edit_conflict: "That post was edited by another user and your changes can no longer be saved."
   revert_version_same: "The current version is same as the version you are trying to revert to."
+  cannot_edit_on_slow_mode: "This topic is in slow mode. To encourage thoughtful, considered discussion, editing old posts is not currently allowed."
 
   excerpt_image: "image"
 
@@ -933,6 +954,7 @@ en:
       others: "No activity."
     no_bookmarks:
       self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
+      search: "No bookmarks found with the provided search query."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -1423,6 +1445,7 @@ en:
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
+    min_topic_views_for_delete_confirm: "Minimum amount of views a topic must have for a confirmation popup to appear when it gets deleted"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_personal_message_title_length: "Minimum allowed title length for a message in characters"
@@ -1479,6 +1502,7 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
+    facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
@@ -1510,6 +1534,7 @@ en:
     enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_long_polling: "Message bus used for notification can use long polling"
+    enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
@@ -1546,9 +1571,10 @@ en:
     pending_users_reminder_delay: "Notify moderators if new users have been waiting for approval for longer than this many hours. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
+    ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Allow moderators to manage categories and groups"
@@ -1659,10 +1685,6 @@ en:
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
 
-    enable_instagram_logins: "Enable Instagram authentication, requires instagram_consumer_key and instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key for Instagram authentication"
-    instagram_consumer_secret: "Consumer secret Instagram authentication"
-
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret. See <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_id: "App id for Facebook authentication and sharing, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret for Facebook authentication, registered at <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
@@ -1713,7 +1735,7 @@ en:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_personal_messages_per_day: "Maximum number of messages users can create per day."
+    max_personal_messages_per_day: "Maximum number of new personal message topics a user can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
 
@@ -1758,6 +1780,8 @@ en:
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
+    recompress_original_jpg_quality: "Quality of uploaded image files (1 is lowest quality, 99 is best quality, 100 to disable)."
+    image_preview_jpg_quality: "Quality of resized image files (1 is lowest quality, 99 is best quality, 100 to disable)."
 
     allow_staff_to_upload_any_file_in_pm: "Allow staff members to upload any files in PM."
 
@@ -1815,6 +1839,8 @@ en:
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
+    min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
+    min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
@@ -2103,7 +2129,7 @@ en:
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
     embed_topics_list: "Support HTML embedding of topics lists"
-    embed_set_canonical_url: "Set the canonical URL for embeded topics to the embeded content's URL."
+    embed_set_canonical_url: "Set the canonical URL for embedded topics to the embedded content's URL."
     embed_truncate: "Truncate the embedded posts."
     embed_unlisted: "Imported topics will be unlisted until a user replies."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
@@ -2137,6 +2163,7 @@ en:
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
+    auto_close_topics_create_linked_topic: "Create a new linked topic when a topic is auto-closed based on 'auto close topics post count' setting"
 
     code_formatting_style: "Code button in composer will default to this code formatting style"
 
@@ -2148,6 +2175,7 @@ en:
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
+    blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
 
@@ -2224,6 +2252,7 @@ en:
     city_for_disputes: "City for Disputes"
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
+    shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
@@ -2243,6 +2272,8 @@ en:
 
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
+
+    create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
 
     errors:
       invalid_email: "Invalid email address."
@@ -2449,7 +2480,7 @@ en:
     missing_user_field: "You have not completed all the user fields"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
-    already_logged_in: "Oops, looks like you are attempting to accept an invitation for another user. If you are not %{current_user}, please log out and try again."
+    already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."
     second_factor_title: "Two-Factor Authentication"
     second_factor_description: "Please enter the required authentication code from your app:"
     second_factor_backup_description: "Please enter one of your backup codes:"
@@ -2491,6 +2522,7 @@ en:
       not_allowed: "is not allowed from that email provider. Please use another email address."
       blocked: "is not allowed."
       revoked: "Won't be sending emails to '%{email}' until %{date}."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
@@ -2503,6 +2535,8 @@ en:
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
     email_in_spam_header: "User's first email was flagged as spam"
+    already_silenced: "User was already silenced by %{staff} %{time_ago}."
+    already_suspended: "User was already suspended by %{staff} %{time_ago}."
 
   reviewables_reminder:
     submitted:
@@ -3864,7 +3898,7 @@ en:
     file_missing: "Sorry, you must provide a file to upload."
     empty: "Sorry, but the file you provided is empty."
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
-    optimize_failure_message: "An error occured while optimizing the uploaded image."
+    optimize_failure_message: "An error occurred while optimizing the uploaded image."
     attachments:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
@@ -4651,6 +4685,7 @@ en:
               </ul>
               <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
+            extra_description: "If you are not sure, you can skip this step and edit your welcome topic later."
 
       privacy:
         title: "Access"
@@ -4933,3 +4968,10 @@ en:
       %{keys}
 
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.
+
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Part %{count})"
+      other: "%{topic_title} (Part %{count})"
+    post_raw: "Continuing the discussion from %{parent_url}.\n\nPrevious discussions:\n\n%{previous_topics}"
+    small_action_post_raw: "Continue discussion at %{new_title}."

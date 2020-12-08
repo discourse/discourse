@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { debounce } from "@ember/runloop";
 import Controller from "@ember/controller";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { debounce } from "@ember/runloop";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const { get } = Ember;
 

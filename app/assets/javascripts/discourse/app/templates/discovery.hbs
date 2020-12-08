@@ -3,7 +3,9 @@
 {{else}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
-    {{category-read-only-banner category=category readOnly=navigationCategory.cannotCreateTopicOnCategory}}
+    {{#unless viewingCategoriesList}}
+      {{category-read-only-banner category=category readOnly=navigationCategory.cannotCreateTopicOnCategory}}
+    {{/unless}}
   </div>
 
   <div class="list-controls">

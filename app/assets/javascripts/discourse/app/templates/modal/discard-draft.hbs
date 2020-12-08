@@ -1,0 +1,10 @@
+{{#d-modal-body}}
+  <div class="instructions">
+    {{i18n descriptionKey}}
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button label=discardKey class="btn-danger" action=(action "_destroyDraft")}}
+  {{d-button label=saveKey action=(action "_saveDraft")}}
+</div>

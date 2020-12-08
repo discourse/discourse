@@ -1,8 +1,8 @@
-import { notEmpty } from "@ember/object/computed";
-import { action } from "@ember/object";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import UploadMixin from "discourse/mixins/upload";
+import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { notEmpty } from "@ember/object/computed";
 
 const DEFAULT_GROUP = "default";
 

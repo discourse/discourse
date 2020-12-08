@@ -234,15 +234,6 @@ function logQUnit() {
   QUnit.done(function (context) {
     console.log("\n");
 
-    if (testErrors.length) {
-      console.log("Test Errors");
-      console.log("----------------------------------------------");
-      testErrors.forEach((e) => {
-        console.error(e);
-      });
-      console.log("\n");
-    }
-
     console.log("Slowest tests");
     console.log("----------------------------------------------");
     let ary = Object.keys(durations).map((key) => ({
@@ -253,6 +244,17 @@ function logQUnit() {
     ary.slice(0, 30).forEach((pair) => {
       console.log(pair.key + ": " + pair.value + "ms");
     });
+
+    console.log("\n");
+
+    if (testErrors.length) {
+      console.log("Test Errors");
+      console.log("----------------------------------------------");
+      testErrors.forEach((e) => {
+        console.error(e);
+      });
+      console.log("\n");
+    }
 
     var stats = [
       "Time: " + context.runtime + "ms",

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import User from "discourse/models/user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import User from "discourse/models/user";
 
 export default Component.extend({
   item: null,

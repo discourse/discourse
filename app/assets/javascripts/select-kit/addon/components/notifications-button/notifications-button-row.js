@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { readOnly } from "@ember/object/computed";
-import { computed } from "@ember/object";
 import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
+import I18n from "I18n";
+import { computed } from "@ember/object";
 import { escapeExpression } from "discourse/lib/utilities";
+import { readOnly } from "@ember/object/computed";
 
 export default DropdownSelectBoxRowComponent.extend({
   classNames: ["notifications-button-row"],

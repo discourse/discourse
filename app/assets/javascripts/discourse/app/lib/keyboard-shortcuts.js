@@ -1,14 +1,13 @@
-import { later, run } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import Composer from "discourse/models/composer";
-import { minimumOffset } from "discourse/lib/offset-calculator";
-import { ajax } from "discourse/lib/ajax";
-import { throttle, schedule } from "@ember/runloop";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { later, run, schedule, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
+import Composer from "discourse/models/composer";
+import DiscourseURL from "discourse/lib/url";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { ajax } from "discourse/lib/ajax";
+import { minimumOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -118,6 +117,8 @@ export default {
   },
 
   teardown() {
+    this.keyTrapper.reset();
+    this.keyTrapper = null;
     this.container = null;
   },
 

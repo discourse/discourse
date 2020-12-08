@@ -1,7 +1,7 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, visit } from "@ember/test-helpers";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("CategoryChooser", function (needs) {
   needs.user();
@@ -9,7 +9,7 @@ acceptance("CategoryChooser", function (needs) {
     allow_uncategorized_topics: false,
   });
 
-  test("does not display uncategorized if not allowed", async (assert) => {
+  test("does not display uncategorized if not allowed", async function (assert) {
     const categoryChooser = selectKit(".category-chooser");
 
     await visit("/");
@@ -19,7 +19,7 @@ acceptance("CategoryChooser", function (needs) {
     assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
   });
 
-  test("prefill category when category_id is set", async (assert) => {
+  test("prefill category when category_id is set", async function (assert) {
     await visit("/new-topic?category_id=1");
 
     assert.equal(selectKit(".category-chooser").header().value(), 1);

@@ -1,139 +1,148 @@
-import { moduleForComponent } from "ember-qunit";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import componentTest from "discourse/tests/helpers/component-test";
-moduleForComponent("value-list", { integration: true });
 
-componentTest("adding a value", {
-  template: "{{value-list values=values}}",
+discourseModule("Integration | Component | value-list", function (hooks) {
+  setupRenderingTest(hooks);
 
-  skip: true,
+  componentTest("adding a value", {
+    template: "{{value-list values=values}}",
 
-  beforeEach() {
-    this.set("values", "vinkas\nosama");
-  },
+    skip: true,
 
-  async test(assert) {
-    await selectKit().expand();
-    await selectKit().fillInFilter("eviltrout");
-    await selectKit().keyboard("enter");
+    beforeEach() {
+      this.set("values", "vinkas\nosama");
+    },
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+    async test(assert) {
+      await selectKit().expand();
+      await selectKit().fillInFilter("eviltrout");
+      await selectKit().keyboard("enter");
 
-    assert.deepEqual(
-      this.values,
-      "vinkas\nosama\neviltrout",
-      "it adds the value to the list of values"
-    );
-  },
-});
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
 
-componentTest("removing a value", {
-  template: "{{value-list values=values}}",
+      assert.deepEqual(
+        this.values,
+        "vinkas\nosama\neviltrout",
+        "it adds the value to the list of values"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("values", "vinkas\nosama");
-  },
+  componentTest("removing a value", {
+    template: "{{value-list values=values}}",
 
-  async test(assert) {
-    await click(".values .value[data-index='0'] .remove-value-btn");
+    beforeEach() {
+      this.set("values", "vinkas\nosama");
+    },
 
-    assert.ok(
-      find(".values .value").length === 1,
-      "it removes the value from the list of values"
-    );
+    async test(assert) {
+      await click(".values .value[data-index='0'] .remove-value-btn");
 
-    assert.equal(this.values, "osama", "it removes the expected value");
+      assert.ok(
+        queryAll(".values .value").length === 1,
+        "it removes the value from the list of values"
+      );
 
-    await selectKit().expand();
+      assert.equal(this.values, "osama", "it removes the expected value");
 
-    assert.ok(
-      find(".select-kit-collection li.select-kit-row span.name")[0]
-        .innerText === "vinkas",
-      "it adds the removed value to choices"
-    );
-  },
-});
+      await selectKit().expand();
 
-componentTest("selecting a value", {
-  template: "{{value-list values=values choices=choices}}",
+      assert.ok(
+        queryAll(".select-kit-collection li.select-kit-row span.name")[0]
+          .innerText === "vinkas",
+        "it adds the removed value to choices"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({
-      values: "vinkas\nosama",
-      choices: ["maja", "michael"],
-    });
-  },
+  componentTest("selecting a value", {
+    template: "{{value-list values=values choices=choices}}",
 
-  async test(assert) {
-    await selectKit().expand();
-    await selectKit().selectRowByValue("maja");
+    beforeEach() {
+      this.setProperties({
+        values: "vinkas\nosama",
+        choices: ["maja", "michael"],
+      });
+    },
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+    async test(assert) {
+      await selectKit().expand();
+      await selectKit().selectRowByValue("maja");
 
-    assert.deepEqual(
-      this.values,
-      "vinkas\nosama\nmaja",
-      "it adds the value to the list of values"
-    );
-  },
-});
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
 
-componentTest("array support", {
-  template: "{{value-list values=values inputType='array'}}",
+      assert.deepEqual(
+        this.values,
+        "vinkas\nosama\nmaja",
+        "it adds the value to the list of values"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("values", ["vinkas", "osama"]);
-  },
+  componentTest("array support", {
+    template: "{{value-list values=values inputType='array'}}",
 
-  async test(assert) {
-    this.set("values", ["vinkas", "osama"]);
+    beforeEach() {
+      this.set("values", ["vinkas", "osama"]);
+    },
 
-    await selectKit().expand();
-    await selectKit().fillInFilter("eviltrout");
-    await selectKit().keyboard("enter");
+    async test(assert) {
+      this.set("values", ["vinkas", "osama"]);
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+      await selectKit().expand();
+      await selectKit().fillInFilter("eviltrout");
+      await selectKit().keyboard("enter");
 
-    assert.deepEqual(
-      this.values,
-      ["vinkas", "osama", "eviltrout"],
-      "it adds the value to the list of values"
-    );
-  },
-});
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
 
-componentTest("delimiter support", {
-  template: "{{value-list values=values inputDelimiter='|'}}",
+      assert.deepEqual(
+        this.values,
+        ["vinkas", "osama", "eviltrout"],
+        "it adds the value to the list of values"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("values", "vinkas|osama");
-  },
+  componentTest("delimiter support", {
+    template: "{{value-list values=values inputDelimiter='|'}}",
 
-  skip: true,
+    beforeEach() {
+      this.set("values", "vinkas|osama");
+    },
 
-  async test(assert) {
-    await selectKit().expand();
-    await selectKit().fillInFilter("eviltrout");
-    await selectKit().keyboard("enter");
+    skip: true,
 
-    assert.ok(
-      find(".values .value").length === 3,
-      "it adds the value to the list of values"
-    );
+    async test(assert) {
+      await selectKit().expand();
+      await selectKit().fillInFilter("eviltrout");
+      await selectKit().keyboard("enter");
 
-    assert.deepEqual(
-      this.values,
-      "vinkas|osama|eviltrout",
-      "it adds the value to the list of values"
-    );
-  },
+      assert.ok(
+        queryAll(".values .value").length === 3,
+        "it adds the value to the list of values"
+      );
+
+      assert.deepEqual(
+        this.values,
+        "vinkas|osama|eviltrout",
+        "it adds the value to the list of values"
+      );
+    },
+  });
 });

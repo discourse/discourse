@@ -37,13 +37,14 @@ class RateLimiter
     "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{type}"
   end
 
-  def initialize(user, type, max, secs, global: false)
+  def initialize(user, type, max, secs, global: false, aggressive: false)
     @user = user
     @type = type
     @key = build_key(type)
     @max = max
     @secs = secs
     @global = global
+    @aggressive = aggressive
   end
 
   def clear!
@@ -79,13 +80,38 @@ class RateLimiter
     PERFORM_LUA_SHA = Digest::SHA1.hexdigest(PERFORM_LUA)
   end
 
+  unless defined? PERFORM_LUA_AGGRESSIVE
+    PERFORM_LUA_AGGRESSIVE = <<~LUA
+      local now = tonumber(ARGV[1])
+      local secs = tonumber(ARGV[2])
+      local max = tonumber(ARGV[3])
+
+      local key = KEYS[1]
+
+      local return_val = 0
+
+      if ((tonumber(redis.call("LLEN", key)) < max) or
+          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) > secs) then
+        return_val = 1
+      else
+        return_val = 0
+      end
+
+      redis.call("LPUSH", key, now)
+      redis.call("LTRIM", key, 0, max - 1)
+      redis.call("EXPIRE", key, secs * 2)
+
+      return return_val
+    LUA
+
+    PERFORM_LUA_AGGRESSIVE_SHA = Digest::SHA1.hexdigest(PERFORM_LUA_AGGRESSIVE)
+  end
+
   def performed!(raise_error: true)
     return true if rate_unlimited?
     now = Time.now.to_i
 
-    if ((max || 0) <= 0) ||
-       (eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0)
-
+    if ((max || 0) <= 0) || rate_limiter_allowed?(now)
       raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type) if raise_error
       false
     else
@@ -120,6 +146,20 @@ class RateLimiter
   end
 
   private
+
+  def rate_limiter_allowed?(now)
+
+    lua, lua_sha = nil
+    if @aggressive
+      lua = PERFORM_LUA_AGGRESSIVE
+      lua_sha = PERFORM_LUA_AGGRESSIVE_SHA
+    else
+      lua = PERFORM_LUA
+      lua_sha = PERFORM_LUA_SHA
+    end
+
+    eval_lua(lua, lua_sha, [prefixed_key], [now, @secs, @max]) == 0
+  end
 
   def prefixed_key
     if @global

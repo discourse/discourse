@@ -1,23 +1,22 @@
-import I18n from "I18n";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { setDefaultHomepage } from "discourse/lib/utilities";
-import discourseComputed from "discourse-common/utils/decorators";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import Controller, { inject } from "@ember/controller";
+import {
+  iOSWithVisualViewport,
+  isiPad,
+  safariHacksDisabled,
+  setDefaultHomepage,
+} from "discourse/lib/utilities";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { reload } from "discourse/helpers/page-reloader";
-import {
-  safariHacksDisabled,
-  isiPad,
-  iOSWithVisualViewport,
-} from "discourse/lib/utilities";
+import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import I18n from "I18n";
 import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reads } from "@ember/object/computed";
+import { reload } from "discourse/helpers/page-reloader";
 
 const USER_HOMES = {
   1: "latest",

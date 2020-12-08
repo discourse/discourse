@@ -1,6 +1,6 @@
-import { next } from "@ember/runloop";
-import { defaultHomepage } from "discourse/lib/utilities";
 import buildStaticRoute from "discourse/routes/build-static-route";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { next } from "@ember/runloop";
 
 const ForgotPasswordRoute = buildStaticRoute("password-reset");
 

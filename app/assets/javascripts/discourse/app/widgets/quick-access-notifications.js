@@ -1,6 +1,6 @@
+import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { ajax } from "discourse/lib/ajax";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 
 createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   buildKey: () => "quick-access-notifications",

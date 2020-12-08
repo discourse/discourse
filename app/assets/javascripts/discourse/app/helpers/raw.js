@@ -1,4 +1,4 @@
-import { registerUnbound, helperContext } from "discourse-common/lib/helpers";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { htmlSafe } from "@ember/template";
 

@@ -17,7 +17,7 @@ const rule = {
 };
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "summary",
     "summary[title]",
     "details",

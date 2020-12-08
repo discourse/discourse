@@ -1,5 +1,5 @@
+import { LOADING_ONEBOX_CSS_CLASS, load } from "pretty-text/oneboxer";
 import { applyInlineOneboxes } from "pretty-text/inline-oneboxer";
-import { load, LOADING_ONEBOX_CSS_CLASS } from "pretty-text/oneboxer";
 
 export function loadOneboxes(
   container,

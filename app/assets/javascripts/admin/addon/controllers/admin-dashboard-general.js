@@ -1,14 +1,13 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import { setting } from "discourse/lib/computed";
+import Controller, { inject } from "@ember/controller";
 import AdminDashboard from "admin/models/admin-dashboard";
-import Report from "admin/models/report";
+import I18n from "I18n";
 import PeriodComputationMixin from "admin/mixins/period-computation";
+import Report from "admin/models/report";
 import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
+import { makeArray } from "discourse-common/lib/helpers";
+import { setting } from "discourse/lib/computed";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {

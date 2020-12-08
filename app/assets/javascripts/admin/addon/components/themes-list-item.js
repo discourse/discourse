@@ -1,10 +1,10 @@
-import { gt, and } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
+import { and, gt } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import Component from "@ember/component";
 import { escape } from "pretty-text/sanitizer";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
+import { schedule } from "@ember/runloop";
 
 const MAX_COMPONENTS = 4;
 

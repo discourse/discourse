@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import I18n from "I18n";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["hook-event"],

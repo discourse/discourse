@@ -1,4 +1,9 @@
-{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories}}
+{{bread-crumbs categories=categories category=category noSubcategories=noSubcategories tag=tag additionalTags=additionalTags}}
+
+{{#unless additionalTags}}
+  {{!-- nav bar doesn't work with tag intersections --}}
+  {{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+{{/unless}}
 
 {{#if showCategoryAdmin}}
   {{categories-admin-dropdown
@@ -9,14 +14,29 @@
   }}
 {{/if}}
 
-{{navigation-bar navItems=navItems filterMode=filterMode category=category}}
+{{#if category}}
+  {{#unless tag}}
+    {{!-- don't show category notification menu on tag pages --}}
+    {{#if showCategoryNotifications}}
+      {{category-notifications-button
+        value=category.notification_level
+        category=category
+        onChange=(action "changeCategoryNotificationLevel")
+      }}
+    {{/if}}
+  {{/unless}}
+{{/if}}
 
-{{#if showCategoryNotifications}}
-  {{category-notifications-button
-    value=category.notification_level
-    category=category
-    onChange=(action "changeCategoryNotificationLevel")
-  }}
+{{#if tag}}
+  {{#if tagNotification}}
+    {{#unless additionalTags}}
+      {{!-- don't show tag notification menu on tag intersections --}}
+      {{tag-notifications-button
+        onChange=changeTagNotificationLevel
+        value=tagNotification.notification_level
+      }}
+    {{/unless}}
+  {{/if}}
 {{/if}}
 
 {{plugin-outlet name="before-create-topic-button"
@@ -32,12 +52,24 @@
   disabled=createTopicButtonDisabled
   label=createTopicLabel
   btnClass=createTopicClass
+  canCreateTopicOnTag=canCreateTopicOnTag
 }}
 
-{{#if showCategoryEdit}}
-  {{d-button
-    class="btn-default edit-category"
-    action=editCategory
-    icon="wrench"
-    label="category.edit"}}
+{{#if category}}
+  {{#unless tag}}
+    {{!-- don't show category edit button on tag pages --}}
+    {{#if showCategoryEdit}}
+      {{d-button
+        class="btn-default edit-category"
+        action=editCategory
+        icon="wrench"
+        label="category.edit"}}
+    {{/if}}
+  {{/unless}}
+{{/if}}
+
+{{#if tag}}
+  {{#if showToggleInfo}}
+    {{d-button icon="tag" class="btn-default" label="tagging.info" action=toggleInfo id="show-tag-info"}}
+  {{/if}}
 {{/if}}

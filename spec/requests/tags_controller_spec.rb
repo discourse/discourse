@@ -123,6 +123,8 @@ describe TagsController do
 
   describe '#show' do
     fab!(:tag) { Fabricate(:tag, name: 'test') }
+    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
       get "/tag/test.json"
@@ -162,6 +164,15 @@ describe TagsController do
       expect(response.status).to eq(200)
     end
 
+    it "handles special tag 'none'" do
+      SiteSetting.allow_staff_to_tag_pms = true
+
+      sign_in(admin)
+
+      get "/tag/none.json"
+      expect(response.parsed_body['topic_list']['topics'].length).to eq(1)
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) {
         Fabricate(
@@ -192,6 +203,13 @@ describe TagsController do
         expect(topic_ids).to include(topic_in_category.id)
         expect(topic_ids).to_not include(topic_out_of_category.id)
         expect(topic_ids).to_not include(topic_in_category_without_tag.id)
+      end
+
+      it "should produce the right next topic URL" do
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json?per_page=1"
+
+        expect(response.parsed_body['topic_list']['more_topics_url'])
+          .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
       end
     end
 

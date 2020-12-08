@@ -54,7 +54,6 @@ ar:
     compile_error:
       unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
     import_error:
-      generic: حدث عُطل أثناء استيراد هذه السمة
       about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
       about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
       modifier_values: "تحتوي مُعدّلات about.json قيم غير صالحة: %{errors}"
@@ -704,6 +703,9 @@ ar:
       title: "إعجاب"
       description: "أُعجَب بهذا المنشور"
       short_description: "أُعجَب بهذا المنشور"
+  draft:
+    sequence_conflict_error:
+      description: "أنت تُحرّر المسودّة في نافذة أخرى. من فضلك أعِد تحميل هذه الصفحة."
   user_activity:
     no_bookmarks:
       others: "لا علامات."
@@ -1074,9 +1076,6 @@ ar:
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
     google_oauth2_client_id: "رقم التعريف لتطبيق جوجل الخاص بك"
     google_oauth2_client_secret: "الرقم السري لتطبيق جوجل الخاص بك."
-    enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق حساب انستغرام."
-    instagram_consumer_key: "مفتاح المستهلك لنظام تسجيل الدخول بحساب انستجرام."
-    instagram_consumer_secret: "رقم المستهلك السري لنظام تسجيل الدخول بحساب انستجرام."
     allow_restore: "تسمح استعادة، والتي يمكن أن تحل محل ALL بيانات الموقع! ترك كاذبة إلا إذا كنت تخطط لاستعادة نسخة احتياطية"
     maximum_backups: "أكبر قدر ممكن من النسخ الاحتياطي للحفاظ على القرص. يتم حذف النسخ الاحتياطية القديمة تلقائيا"
     automatic_backups_enabled: "فعل النسخ الإحتياطي التلقائي بشكل متكرر كما هو محدد."
@@ -1095,7 +1094,6 @@ ar:
     max_bookmarks_per_day: "الحدّ الأقصى اليومي من العلامات لكلّ مستخدم."
     max_edits_per_day: "الحدّ الأقصى اليومي من عمليات التعديل لكلّ مستخدم."
     max_topics_per_day: "الحدّ الأقصى اليومي من المواضيع التي يمكن للمستخدم فتحها."
-    max_personal_messages_per_day: "الحدّ الأقصى اليومي من الرسائل التي يمكن للمستخدم كتابتها."
     max_invites_per_day: "الحدّ الأقصى اليومي من الدعوات التي يمكن للمستخدم إرسالها."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
     alert_admins_if_errors_per_minute: "عدد الأعطال اللازم حصولها كلّ دقيقة لإعلان التحذير لمدير الموقع. قيمة ”٠“ تعطّل هذه الميزة. ملاحظة: عليك إعادة تشغيل البرمجية."
@@ -1691,25 +1689,25 @@ ar:
       name: كاتب سيرة ذاتية
     anniversary:
       name: الذكرى السنوية
-      description: انت الأن عضو بالمجتمع من سنة كاملة و نشرت علي الاقل مرة واحدة.
+      description: عضو نشط لسنة كاملة، ونشرت شيئًا مرة على الأقلّ
     nice_post:
-      name: رد رائع
-      description: تلقيت 10 أعجابات على الرد
+      name: ردّ رائع
+      description: استلمت 10 إعجابات على أحد ردودك
     good_post:
-      name: رد ممتاز
-      description: تلقيت 25 إعجابا على الرد
+      name: ردّ ممتاز
+      description: استلمت 25 إعجابًا على أحد ردودك
     great_post:
-      name: رد عظيم
-      description: تلقيت 50 إعجابا على الرد
+      name: ردّ عظيم
+      description: استلمت 50 إعجابًا على أحد ردودك
     nice_topic:
       name: موضوع رائع
-      description: تلقيت 10 إعجابات على الموضوع
+      description: استلمت 10 إعجابات على أحد مواضيعك
     good_topic:
       name: موضوع ممتاز
-      description: تلقيت 25 اعجابا على الموضوع
+      description: استلمت 25 إعجابًا على أحد مواضيعك
     great_topic:
       name: موضوع عظيم
-      description: تلقيت 50 إعجابا على الموضوع
+      description: استلمت 50 إعجابًا على أحد مواضيعك
     nice_share:
       name: مشاركة رائعة
       description: لقد شاركت المنشور مع 25 زائر مختلف
@@ -1722,10 +1720,8 @@ ar:
       name: مشاركة عظيمة
       description: لقد شاركت المنشور مع 1000 زائر مختلف
     first_like:
-      name: أول إعجاب
-      description: لقد اعجبت بمنشور
-      long_description: |
-        تُمنح هذة الشارة عند اول مرة تعجب بمنشور :heart: . الاعجاب بالمنشورات هو اسلوب ممتاز لكي تخبر رفاقك اعضاء المجتمع ان ما نشروة شئ مفيد او مثير او مرح. انشر الحب بالمجتمع!
+      name: أوّل إعجاب
+      description: أعجبتك مشاركة
     first_flag:
       name: أول بلاغ
       description: لقد ابلغت عن منشور

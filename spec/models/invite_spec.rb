@@ -164,10 +164,11 @@ describe Invite do
 
         it 'resets expiry of a resent invite' do
           SiteSetting.invite_expiry_days = 2
-          invite.update!(expires_at: 10.days.ago)
+          invite.update!(invalidated_at: 10.days.ago, expires_at: 10.days.ago)
           expect(invite).to be_expired
 
           invite.resend_invite
+          expect(invite.invalidated_at).to be_nil
           expect(invite).not_to be_expired
         end
 

@@ -1,5 +1,5 @@
-import { match } from "@ember/object/computed";
 import Component from "@ember/component";
+import { match } from "@ember/object/computed";
 export default Component.extend({
   allTime: true,
   tagName: "tr",

@@ -168,8 +168,8 @@ export function setup(helper) {
     md.block.bbcode.ruler.push("quotes", rule);
   });
 
-  helper.whiteList(["img[class=avatar]"]);
-  helper.whiteList({
+  helper.allowList(["img[class=avatar]"]);
+  helper.allowList({
     custom(tag, name, value) {
       if (tag === "aside" && name === "class") {
         return (
