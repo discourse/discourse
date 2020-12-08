@@ -66,6 +66,7 @@ const DiscourseLocation = EmberObject.extend({
     let url = withoutPrefix(this.location.pathname);
     const search = this.location.search || "";
     url += search;
+    url = url.replace(/\/\//g, "/"); // remove extra slashes
     return url;
   },
 
