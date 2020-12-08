@@ -469,6 +469,7 @@ pl_PL:
       topic: "Temat:"
       filtered_topic: "Przefiltrowałeś do przeglądalnej zawartości w jednym temacie."
       filtered_user: "Użytkownik"
+      filtered_reviewed_by: "Sprawdzony przez"
       show_all_topics: "pokaż wszystkie tematy"
       deleted_post: "(wpis usunięty)"
       deleted_user: "(użytkownik usunięty)"
@@ -1940,7 +1941,7 @@ pl_PL:
           label: "Nowy temat"
         shared_draft:
           label: "Udostępniony projekt"
-          desc: "Opracuj temat, który będzie widoczny tylko dla zespołu zarządzającego"
+          desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
           label: "Przełącz wypukłość tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"

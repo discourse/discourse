@@ -411,6 +411,7 @@ nl:
       topic: "Topic:"
       filtered_topic: "U hebt op beoordeelbare inhoud in één topic gefilterd."
       filtered_user: "Gebruiker"
+      filtered_reviewed_by: "Beoordeeld door"
       show_all_topics: "alle topics tonen"
       deleted_post: "(bericht verwijderd)"
       deleted_user: "(gebruiker verwijderd)"
@@ -1815,7 +1816,7 @@ nl:
           label: "Nieuw topic"
         shared_draft:
           label: "Gedeeld concept"
-          desc: "Een concepttopic maken dat alleen zichtbaar is voor stafleden"
+          desc: "Een concepttopic maken dat alleen zichtbaar is voor toegestane gebruikers"
         toggle_topic_bump:
           label: "Topicbump in-/uitschakelen"
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"

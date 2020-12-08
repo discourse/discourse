@@ -1529,7 +1529,6 @@ pt:
           label: "Novo Tópico"
         shared_draft:
           label: "Rascunho Partilhado"
-          desc: "Escrever um rascunho de tópico que só pode ser visível pela equipa do site"
         toggle_topic_bump:
           label: "Alterar possibilidade de bump de tópico"
           desc: "Responder sem alterar a data de última resposta"

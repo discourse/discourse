@@ -1970,6 +1970,7 @@ zh_CN:
     governing_law: "适用法律"
     city_for_disputes: "争议之城"
     shared_drafts_category: "为主题草稿指定分类以启用共享草稿功能。此分类中的主题将从管理人员的主题列表中删除。"
+    shared_drafts_min_trust_level: "允许用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示用户同意提示。"
     push_notifications_icon: "在通知中所使用的图标。推荐使用一个96×96的单色且为透明背景的PNG图像。"
     base_font: "网站标题使用的字体。主题可以通过 `--heading-font-family` CSS 自定义属性来覆盖。"

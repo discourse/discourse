@@ -1998,6 +1998,7 @@ sv:
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
+    shared_drafts_min_trust_level: "Tillåt användare att se och redigera delade utkast."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."

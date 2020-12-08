@@ -1709,7 +1709,6 @@ fi:
           label: "Uusi ketju"
         shared_draft:
           label: "Jaettu luonnos"
-          desc: "Luonnostele ketju, joka näkyy vain henkilökunnalle"
         toggle_topic_bump:
           label: "Ketjun nosto päälle/pois"
           desc: "Vastaa muuttamatta ketjun viimeisin viesti -aikaleimaa"

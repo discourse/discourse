@@ -1769,6 +1769,7 @@ pt_BR:
     governing_law: "Lei Aplicável"
     city_for_disputes: "Cidade para Disputas"
     shared_drafts_category: "Habilitar o recurso Rascunhos Compartilhados, designando uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão suprimidos das listas de tópicos para usuários da staff."
+    shared_drafts_min_trust_level: "Permitir usuários visualizar e editar os Rascunhos Compartilhas"
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
     short_title: "O título abreviado será usado na tela inicial do usuário, no iniciador ou em outros locais onde o espaço possa ser limitado. Deveria ser limitado a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Escolher relatórios para serem exibidos como métricas de atividade na guia geral."

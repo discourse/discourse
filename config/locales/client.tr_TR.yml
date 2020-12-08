@@ -1596,7 +1596,6 @@ tr_TR:
           label: "Yeni Konu"
         shared_draft:
           label: "Paylaşılan Taslak"
-          desc: "Sadece görevli tarafından görülebilecek bir konu tasarla"
         toggle_topic_bump:
           label: "Konu detaylarını değiştir"
           desc: "Son cevap tarihini değiştirmeden yanıtla"

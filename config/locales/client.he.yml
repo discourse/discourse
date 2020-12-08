@@ -469,6 +469,7 @@ he:
       topic: "נושא:"
       filtered_topic: "סיננת לתוכן שממתין לסקירה בנושא מסוים."
       filtered_user: "משתמש"
+      filtered_reviewed_by: "נסקר על ידי"
       show_all_topics: "להציג את כל הנושאים"
       deleted_post: "(פוסט נמחק)"
       deleted_user: "(משתמש נמחק)"
@@ -1941,7 +1942,7 @@ he:
           label: "נושא חדש"
         shared_draft:
           label: "טיוטה משותפת"
-          desc: "יצירת טיוטה לנושא שרק חברי הסגל יוכלו לראות"
+          desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"

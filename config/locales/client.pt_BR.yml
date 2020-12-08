@@ -1693,7 +1693,6 @@ pt_BR:
           label: "Novo Tópico"
         shared_draft:
           label: "Rascunho Compartilhado"
-          desc: "Elabore um tópico que será visível somente para a staff"
         toggle_topic_bump:
           label: "Alternar promoção de tópico"
           desc: "Responder sem alterar a data da última resposta"
