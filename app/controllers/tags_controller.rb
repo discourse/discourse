@@ -409,8 +409,6 @@ class TagsController < ::ApplicationController
   end
 
   def construct_url_with(action, opts)
-    method = url_method(opts)
-
     page_params =
       case action
       when :prev
@@ -421,13 +419,13 @@ class TagsController < ::ApplicationController
         raise "unreachable"
       end
 
-    if page_params.include?(:category_slug_path_with_id)
-      opts = opts.dup
-      opts.delete(:category)
-    end
+    opts = opts.merge(page_params)
+    opts.delete(:category) if opts.include?(:category_slug_path_with_id)
+
+    method = url_method(opts)
 
     begin
-      url = public_send(method, opts.merge(page_params))
+      url = public_send(method, opts)
     rescue ActionController::UrlGenerationError
       raise Discourse::NotFound
     end
@@ -451,6 +449,7 @@ class TagsController < ::ApplicationController
       q: params[:q]
     )
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
+    options[:per_page] = params[:per_page].to_i.clamp(1, 30) if params[:per_page].present?
 
     if params[:tag_id] == 'none'
       options.delete(:tags)

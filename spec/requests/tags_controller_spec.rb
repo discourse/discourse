@@ -204,6 +204,13 @@ describe TagsController do
         expect(topic_ids).to_not include(topic_out_of_category.id)
         expect(topic_ids).to_not include(topic_in_category_without_tag.id)
       end
+
+      it "should produce the right next topic URL" do
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json?per_page=1"
+
+        expect(response.parsed_body['topic_list']['more_topics_url'])
+          .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
+      end
     end
 
     context "with a subcategory in the path" do
