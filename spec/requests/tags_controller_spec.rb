@@ -206,9 +206,7 @@ describe TagsController do
       end
 
       it "should produce the right next topic URL" do
-        TopicQuery.any_instance.stubs(:per_page_setting).returns(1)
-
-        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json"
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json?per_page=1"
 
         expect(response.parsed_body['topic_list']['more_topics_url'])
           .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
