@@ -66,17 +66,12 @@ export default (filterArg, params) => {
           parts.pop();
         }
 
-        return Category.reloadBySlugPath(parts.join("/"))
-          .then((result) => {
-            const record = this.store.createRecord("category", result.category);
-            record.setupGroupsAndPermissions();
-            this.site.updateCategory(record);
-            return { category: record, modelParams };
-          })
-          .catch(() => {
-            // afterModel will call replaceWith(/404)
-            return null;
-          });
+        return Category.reloadBySlugPath(parts.join("/")).then((result) => {
+          const record = this.store.createRecord("category", result.category);
+          record.setupGroupsAndPermissions();
+          this.site.updateCategory(record);
+          return { category: record, modelParams };
+        });
       }
 
       if (category) {
@@ -244,18 +239,6 @@ export default (filterArg, params) => {
     },
 
     actions: {
-      error(err) {
-        const json = err.jqXHR.responseJSON;
-        if (json && json.extras && json.extras.html) {
-          this.controllerFor("discovery").set(
-            "errorHtml",
-            err.jqXHR.responseJSON.extras.html
-          );
-        } else {
-          this.replaceWith("exception");
-        }
-      },
-
       setNotification(notification_level) {
         this.currentModel.setNotification(notification_level);
       },
