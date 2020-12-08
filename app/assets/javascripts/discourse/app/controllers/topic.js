@@ -886,7 +886,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     filterParticipant(user) {
       this.get("model.postStream")
-        .filterParticipant(user.get("username"))
+        .filterParticipant(user.username)
         .then(() => this.updateQueryParams);
     },
 

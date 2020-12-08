@@ -225,6 +225,7 @@ export default RestModel.extend({
       summary: false,
       filterRepliesToPostNumber: false,
       filterUpwardsPostID: false,
+      mixedHiddenPosts: false,
     });
   },
 
@@ -409,7 +410,7 @@ export default RestModel.extend({
     // resets the reply count in posts-filtered-notice
     // because once a gap has been expanded that count is no longer exact
     if (this.streamFilters && this.streamFilters.replies_to_post_number) {
-      this.set("streamFilters.replies_to_post_number", false);
+      this.set("streamFilters.mixedHiddenPosts", true);
     }
   },
 

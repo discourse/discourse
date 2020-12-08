@@ -73,7 +73,15 @@ createWidget("posts-filtered-notice", {
   html(attrs) {
     const filters = attrs.streamFilters;
 
-    if (filters.replies_to_post_number) {
+    if (filters.filter_upwards_post_id || filters.mixedHiddenPosts) {
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies.viewing_subset")
+        ),
+        this.attach("filter-show-all", attrs),
+      ];
+    } else if (filters.replies_to_post_number) {
       const sourcePost = attrs.posts.findBy(
         "post_number",
         filters.replies_to_post_number
@@ -129,15 +137,9 @@ createWidget("posts-filtered-notice", {
         this.attach("poster-name", attrs.posts[0]),
         this.attach("filter-show-all", attrs),
       ];
-    } else {
-      return [
-        h(
-          "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies.viewing_subset")
-        ),
-        this.attach("filter-show-all", attrs),
-      ];
     }
+
+    return [];
   },
 });
 
@@ -274,7 +276,7 @@ export default createWidget("post-stream", {
     if (
       attrs.streamFilters &&
       Object.keys(attrs.streamFilters).length &&
-      attrs.gaps
+      (Object.keys(before).length > 0 || Object.keys(after).length > 0)
     ) {
       result.push(
         this.attach("posts-filtered-notice", {
