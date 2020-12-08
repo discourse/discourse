@@ -283,20 +283,6 @@ span.post-count {
   padding: 15px 0;
 }
 
-// mobile has no fixed width on topic-body so overflow: hidden causes problems
-// .topic-body {
-//   overflow: visible;
-//   .cooked {
-//     overflow: visible;
-//   }
-// }
-
-// instead, for mobile we set overflow hidden on the post's #main-outlet
-// this prevents image overflow on deeply nested blockquotes, lists, etc
-// [class*="archetype-"] #main-outlet {
-//   overflow: hidden;
-// }
-
 .quote-button.visible {
   z-index: z("tooltip");
 }
