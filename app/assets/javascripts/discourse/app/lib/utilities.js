@@ -110,14 +110,17 @@ export function highlightPost(postNumber) {
     return;
   }
   const element = container.querySelector(".topic-body");
-  if (!element) {
+  if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
-  element.addEventListener("animationend", () => {
+
+  const removeHighlighted = function () {
     element.classList.remove("highlighted");
-  });
+    element.removeEventListener("animationend", removeHighlighted);
+  };
+  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {
