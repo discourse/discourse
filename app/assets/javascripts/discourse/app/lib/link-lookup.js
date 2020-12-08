@@ -1,5 +1,9 @@
-const _warned = {};
+let _warned = {};
 const NO_RESULT = [false, null];
+
+export function reset() {
+  _warned = {};
+}
 
 export default class LinkLookup {
   constructor(links) {
@@ -11,7 +15,10 @@ export default class LinkLookup {
       return NO_RESULT;
     }
 
-    const normalized = href.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const normalized = href
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .replace(/\/$/, "");
     if (_warned[normalized]) {
       return NO_RESULT;
     }
