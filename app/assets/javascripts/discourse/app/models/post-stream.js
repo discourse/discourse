@@ -265,7 +265,7 @@ export default RestModel.extend({
         originalTopOffset,
       });
 
-      const replyPostNumbers = this.posts.map((p) => p.post_number);
+      const replyPostNumbers = this.posts.mapBy("post_number");
       replyPostNumbers.splice(0, 2);
       schedule("afterRender", () => {
         replyPostNumbers.forEach((postNum) => {

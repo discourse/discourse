@@ -109,7 +109,7 @@ export function highlightPost(postNumber) {
   if (!container) {
     return;
   }
-  const element = container.querySelector(`.topic-body`);
+  const element = container.querySelector(".topic-body");
   if (!element) {
     return;
   }
