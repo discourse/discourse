@@ -1344,6 +1344,7 @@ class Topic < ActiveRecord::Base
         topic_timer.execute_at = timestamp
       end
     end
+
     if topic_timer.execute_at
       if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
         topic_timer.user = by_user
