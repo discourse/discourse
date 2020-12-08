@@ -262,7 +262,8 @@ export default {
               description: "Original Poster, Most Recent Poster",
               user_id: 19
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 21792,
@@ -321,7 +322,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 8300
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 3071,
@@ -380,7 +382,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 8810
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 26875,
@@ -439,7 +442,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 14448
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 31001,
@@ -481,7 +485,8 @@ export default {
               description: "Original Poster, Most Recent Poster",
               user_id: 19
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 29176,
@@ -543,7 +548,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 1
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 26192,
@@ -592,7 +598,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 32
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 20883,
@@ -637,7 +644,8 @@ export default {
               description: "Frequent Poster",
               user_id: 1995
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 13534,
@@ -696,7 +704,8 @@ export default {
               description: "Frequent Poster",
               user_id: 8385
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 4859,
@@ -755,7 +764,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 7301
             }
-          ]
+          ],
+          tags: []
         },
         {
           id: 7220,
@@ -814,7 +824,8 @@ export default {
               description: "Most Recent Poster",
               user_id: 19
             }
-          ]
+          ],
+          tags: []
         }
       ]
     }
@@ -1331,7 +1342,8 @@ export default {
         last_poster_username: null,
         category_id: 10,
         pinned_globally: false,
-        posters: []
+        posters: [],
+        tags: []
       },
       {
         id: 15772,
@@ -1365,7 +1377,8 @@ export default {
         last_poster_username: null,
         category_id: 10,
         pinned_globally: false,
-        posters: []
+        posters: [],
+        tags: []
       },
       {
         id: 12170,
@@ -1395,7 +1408,8 @@ export default {
         last_poster_username: null,
         category_id: 7,
         pinned_globally: false,
-        posters: []
+        posters: [],
+        tags: []
       },
       {
         id: 2507,
@@ -1425,7 +1439,8 @@ export default {
         last_poster_username: null,
         category_id: 7,
         pinned_globally: false,
-        posters: []
+        posters: [],
+        tags: []
       }
     ],
     users: [
