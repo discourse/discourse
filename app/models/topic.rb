@@ -1339,13 +1339,11 @@ class Topic < ActiveRecord::Base
         topic_timer.execute_at = num_hours.hours.from_now if num_hours > 0
       else
         timestamp = utc.parse(time)
-        raise Discourse::InvalidParameters unless timestamp
+        raise Discourse::InvalidParameters unless timestamp && timestamp > utc.now
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.errors.add(:execute_at, :invalid) if timestamp < utc.now
       end
     end
-
     if topic_timer.execute_at
       if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
         topic_timer.user = by_user
