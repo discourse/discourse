@@ -1,14 +1,16 @@
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
+import Component from "@ember/component";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { on, observes } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Category from "discourse/models/category";
-import bootbox from "bootbox";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(bufferedProperty("host"), {
   editToggled: false,

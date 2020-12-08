@@ -11,7 +11,8 @@ class SearchController < ApplicationController
   end
 
   def show
-    @search_term = params.permit(:q)[:q]
+    permitted_params = params.permit(:q, :page)
+    @search_term = permitted_params[:q]
 
     # a q param has been given but it's not in the correct format
     # eg: ?q[foo]=bar
@@ -28,6 +29,12 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("string contains null byte")
     end
 
+    page = permitted_params[:page]
+    # check for a malformed page parameter
+    if page && (!page.is_a?(String) || page.to_i.to_s != page)
+      raise Discourse::InvalidParameters
+    end
+
     rate_limit_errors = rate_limit_search
 
     discourse_expires_in 1.minute
@@ -36,8 +43,8 @@ class SearchController < ApplicationController
       type_filter: 'topic',
       guardian: guardian,
       blurb_length: 300,
-      page: if params[:page].to_i <= 10
-              [params[:page].to_i, 1].max
+      page: if page.to_i <= 10
+              [page.to_i, 1].max
             end
     }
 
@@ -166,9 +173,13 @@ class SearchController < ApplicationController
   protected
 
   def site_overloaded?
-    (queue_time = request.env['REQUEST_QUEUE_SECONDS']) &&
-      (GlobalSetting.disable_search_queue_threshold > 0) &&
-      (queue_time > GlobalSetting.disable_search_queue_threshold)
+    queue_time = request.env['REQUEST_QUEUE_SECONDS']
+    if queue_time
+      threshold = GlobalSetting.disable_search_queue_threshold.to_f
+      threshold > 0 && queue_time > threshold
+    else
+      false
+    end
   end
 
   def rate_limit_search

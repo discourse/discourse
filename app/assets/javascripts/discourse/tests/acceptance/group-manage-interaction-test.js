@@ -1,15 +1,16 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Managing Group Interaction Settings", function (needs) {
   needs.user();
   needs.settings({ email_in: true });
 
-  test("As an admin", async (assert) => {
+  test("As an admin", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: true,
@@ -19,37 +20,37 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/alternative-group/manage/interaction");
 
     assert.equal(
-      find(".groups-form-visibility-level").length,
+      queryAll(".groups-form-visibility-level").length,
       1,
       "it should display visibility level selector"
     );
 
     assert.equal(
-      find(".groups-form-mentionable-level").length,
+      queryAll(".groups-form-mentionable-level").length,
       1,
       "it should display mentionable level selector"
     );
 
     assert.equal(
-      find(".groups-form-messageable-level").length,
+      queryAll(".groups-form-messageable-level").length,
       1,
       "it should display messageable level selector"
     );
 
     assert.equal(
-      find(".groups-form-incoming-email").length,
+      queryAll(".groups-form-incoming-email").length,
       1,
       "it should display incoming email input"
     );
 
     assert.equal(
-      find(".groups-form-default-notification-level").length,
+      queryAll(".groups-form-default-notification-level").length,
       1,
       "it should display default notification level input"
     );
   });
 
-  test("As a group owner", async (assert) => {
+  test("As a group owner", async function (assert) {
     updateCurrentUser({
       moderator: false,
       admin: false,
@@ -59,31 +60,31 @@ acceptance("Managing Group Interaction Settings", function (needs) {
     await visit("/g/discourse/manage/interaction");
 
     assert.equal(
-      find(".groups-form-visibility-level").length,
+      queryAll(".groups-form-visibility-level").length,
       0,
       "it should not display visibility level selector"
     );
 
     assert.equal(
-      find(".groups-form-mentionable-level").length,
+      queryAll(".groups-form-mentionable-level").length,
       1,
       "it should display mentionable level selector"
     );
 
     assert.equal(
-      find(".groups-form-messageable-level").length,
+      queryAll(".groups-form-messageable-level").length,
       1,
       "it should display messageable level selector"
     );
 
     assert.equal(
-      find(".groups-form-incoming-email").length,
+      queryAll(".groups-form-incoming-email").length,
       0,
       "it should not display incoming email input"
     );
 
     assert.equal(
-      find(".groups-form-default-notification-level").length,
+      queryAll(".groups-form-default-notification-level").length,
       1,
       "it should display default notification level input"
     );

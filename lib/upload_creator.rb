@@ -7,9 +7,9 @@ class UploadCreator
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
   ALLOWED_SVG_ELEMENTS ||= %w{
-    circle clippath defs ellipse feGaussianBlur filter g line linearGradient
+    circle clipPath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
-    textpath tref tspan use
+    textPath tref tspan use
   }.each(&:freeze)
 
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor
@@ -56,7 +56,7 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           clean_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if convert_png_to_jpeg?
+          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           downsize!        if should_downsize?
 
           return @upload   if is_still_too_big?
@@ -126,7 +126,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
-        @upload.animated = FastImage.animated?(@file)
+        @upload.animated = animated?(@file)
       end
 
       add_metadata!
@@ -177,6 +177,25 @@ class UploadCreator
     end
   end
 
+  def animated?(file)
+    OptimizedImage.ensure_safe_paths!(file.path)
+
+    # TODO - find out why:
+    #   FastImage.animated?(@file)
+    # doesn't seem to identify all animated gifs
+    @frame_count ||= begin
+      command = [
+        "identify",
+        "-format", "%n\\n",
+        file.path
+      ]
+
+      frames = Discourse::Utils.execute_command(*command).to_i rescue 1
+    end
+
+    @frame_count > 1
+  end
+
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
   def convert_png_to_jpeg?
@@ -202,11 +221,16 @@ class UploadCreator
     from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
     to = OptimizedImage.prepend_decoder!(to)
 
+    opts = {}
+    desired_quality = [SiteSetting.png_to_jpg_quality, SiteSetting.recompress_original_jpg_quality].compact.min
+    target_quality = @upload.target_image_quality(from, desired_quality)
+    opts = { quality: target_quality } if target_quality
+
     begin
-      execute_convert(from, to)
+      execute_convert(from, to, opts)
     rescue
       # retry with debugging enabled
-      execute_convert(from, to, true)
+      execute_convert(from, to, opts.merge(debug: true))
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -237,7 +261,7 @@ class UploadCreator
       execute_convert(from, to)
     rescue
       # retry with debugging enabled
-      execute_convert(from, to, true)
+      execute_convert(from, to, { debug: true })
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -245,20 +269,26 @@ class UploadCreator
     extract_image_info!
   end
 
-  def execute_convert(from, to, debug = false)
+  def execute_convert(from, to, opts = {})
     command = [
       "convert",
       from,
       "-auto-orient",
       "-background", "white",
       "-interlace", "none",
-      "-flatten",
-      "-quality", SiteSetting.png_to_jpg_quality.to_s
+      "-flatten"
     ]
-    command << "-debug" << "all" if debug
+    command << "-debug" << "all" if opts[:debug]
+    command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
     Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
+  end
+
+  def should_alter_quality?
+    return false if animated?(@file)
+
+    @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
   end
 
   def should_downsize?
@@ -341,6 +371,8 @@ class UploadCreator
   end
 
   def should_crop?
+    return false if @opts[:type] == 'custom_emoji' && animated?(@file)
+
     TYPES_TO_CROP.include?(@opts[:type])
   end
 

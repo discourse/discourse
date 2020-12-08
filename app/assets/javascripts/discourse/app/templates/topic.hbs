@@ -17,7 +17,7 @@
       {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
-            {{private-message-glyph shouldShow=model.isPrivateMessage}}
+            {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
 
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
 
@@ -65,9 +65,10 @@
                   href=pmPath
                   title="topic_statuses.personal_message.title"
                   ariaLabel="user.messages.inbox"
+                  tagName=""
                 }}
               {{else}}
-                {{private-message-glyph shouldShow=model.isPrivateMessage}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -215,8 +216,7 @@
                 rebakePost=(action "rebakePost")
                 changePostOwner=(action "changePostOwner")
                 grantBadge=(action "grantBadge")
-                addNotice=(action "addNotice")
-                removeNotice=(action "removeNotice")
+                changeNotice=(action "changeNotice")
                 lockPost=(action "lockPost")
                 unlockPost=(action "unlockPost")
                 unhidePost=(action "unhidePost")
@@ -300,7 +300,7 @@
                   removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if showSelectedPostsAtBottom}}
-                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                <div class="selected-posts {{unless multiSelect "hidden"}} {{if showSelectedPostsAtBottom "hidden"}}">
                   {{selected-posts
                     selectedPostsCount=selectedPostsCount
                     canSelectAll=canSelectAll

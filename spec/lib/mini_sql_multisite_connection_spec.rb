@@ -5,27 +5,38 @@ require 'rails_helper'
 describe MiniSqlMultisiteConnection do
 
   describe "after_commit" do
-    it "runs callbacks after outermost transaction is committed" do
+    it "works for 'fake' (joinable) transactions" do
       outputString = "1"
 
-      # Main transaction
       ActiveRecord::Base.transaction do
         outputString += "2"
+        DB.exec("SELECT 1")
+        ActiveRecord::Base.transaction do
+          DB.exec("SELECT 2")
+          outputString += "3"
+          DB.after_commit { outputString += "6" }
+          outputString += "4"
+        end
+        DB.after_commit { outputString += "7" }
+        outputString += "5"
+      end
 
-          # Nested transaction
-          ActiveRecord::Base.transaction do
+      expect(outputString).to eq("1234567")
+    end
+
+    it "works for real (non-joinable) transactions" do
+      outputString = "1"
+
+      ActiveRecord::Base.transaction(requires_new: true, joinable: false) do
+        outputString += "2"
+        DB.exec("SELECT 1")
+          ActiveRecord::Base.transaction(requires_new: true) do
+            DB.exec("SELECT 2")
             outputString += "3"
-
-              DB.after_commit do
-                outputString += "6"
-              end
-              outputString += "4"
+            DB.after_commit { outputString += "6" }
+            outputString += "4"
           end
-
-          DB.after_commit do
-            outputString += "7"
-          end
-
+          DB.after_commit { outputString += "7" }
           outputString += "5"
       end
 

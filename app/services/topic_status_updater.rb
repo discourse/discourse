@@ -11,7 +11,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       updated = change(status, opts)
       if updated
         highest_post_number = topic.highest_post_number
-        create_moderator_post_for(status, opts[:message])
+        create_moderator_post_for(status, opts)
         update_read_state_for(status, highest_post_number)
       end
     end
@@ -49,6 +49,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     if @topic_status_update
       if status.manually_closing_topic? || status.closing_topic?
         topic.delete_topic_timer(TopicTimer.types[:close])
+        topic.delete_topic_timer(TopicTimer.types[:silent_close])
       elsif status.manually_opening_topic? || status.opening_topic?
         topic.delete_topic_timer(TopicTimer.types[:open])
       end
@@ -65,8 +66,9 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     result
   end
 
-  def create_moderator_post_for(status, message = nil)
-    topic.add_moderator_post(user, message || message_for(status), options_for(status))
+  def create_moderator_post_for(status, opts)
+    message = opts[:message]
+    topic.add_moderator_post(user, message || message_for(status), options_for(status, opts))
     topic.reload
   end
 
@@ -110,9 +112,10 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
     end
   end
 
-  def options_for(status)
+  def options_for(status, opts = {})
     { bump: status.opening_topic?,
       post_type: Post.types[:small_action],
+      silent: opts[:silent],
       action_code: status.action_code }
   end
 

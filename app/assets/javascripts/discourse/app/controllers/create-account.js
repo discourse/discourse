@@ -1,27 +1,27 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { A } from "@ember/array";
-import { isEmpty } from "@ember/utils";
-import { notEmpty } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { setting } from "discourse/lib/computed";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
-import NameValidation from "discourse/mixins/name-validation";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import { userPath } from "discourse/lib/url";
-import { findAll } from "discourse/models/login-method";
+import { A } from "@ember/array";
 import EmberObject from "@ember/object";
-import User from "discourse/models/user";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import NameValidation from "discourse/mixins/name-validation";
+import PasswordValidation from "discourse/mixins/password-validation";
 import { Promise } from "rsvp";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import User from "discourse/models/user";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
+import UsernameValidation from "discourse/mixins/username-validation";
+import { ajax } from "discourse/lib/ajax";
+import { emailValid } from "discourse/lib/utilities";
+import { findAll } from "discourse/models/login-method";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { notEmpty } from "@ember/object/computed";
+import { setting } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -97,14 +97,6 @@ export default Controller.extend(
     @discourseComputed("authOptions", "authOptions.can_edit_name")
     nameDisabled(authOptions, canEditName) {
       return authOptions && !canEditName;
-    },
-
-    @discourseComputed
-    fullnameRequired() {
-      return (
-        this.get("siteSettings.full_name_required") ||
-        this.get("siteSettings.enable_names")
-      );
     },
 
     @discourseComputed("authOptions.auth_provider")

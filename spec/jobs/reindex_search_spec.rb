@@ -3,8 +3,10 @@
 require 'rails_helper'
 
 describe Jobs::ReindexSearch do
-  before { SearchIndexer.enable }
-  after { SearchIndexer.disable }
+  before do
+    SearchIndexer.enable
+    Jobs.run_immediately!
+  end
 
   let(:locale) { 'fr' }
   # This works since test db has a small record less than limit.

@@ -1,8 +1,8 @@
+import Component from "@ember/component";
 import I18n from "I18n";
+import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
-import Component from "@ember/component";
-import bootbox from "bootbox";
 
 export default Component.extend({
   editorId: reads("fieldName"),

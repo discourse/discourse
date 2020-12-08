@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cookAsync } from "discourse/lib/text";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
-import { readOnly } from "@ember/object/computed";
 import bootbox from "bootbox";
+import { cookAsync } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { readOnly } from "@ember/object/computed";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   init() {

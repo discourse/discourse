@@ -1,7 +1,7 @@
-import { schedule } from "@ember/runloop";
+import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
-import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
+import { schedule } from "@ember/runloop";
 
 const categoryHashtags = {};
 const tagHashtags = {};

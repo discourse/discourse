@@ -163,8 +163,8 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
 
     raw_info = DB.query_hash <<~SQL
       SELECT table_name, column_name, is_nullable, character_maximum_length, column_default
-      FROM information_schema.columns 
-      WHERE table_schema='public' 
+      FROM information_schema.columns
+      WHERE table_schema='public'
       AND (
         #{lookup_sql}
       )

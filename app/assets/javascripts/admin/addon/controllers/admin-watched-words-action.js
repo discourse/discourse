@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { or } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
+import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
-import { fmt } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { fmt } from "discourse/lib/computed";
+import { or } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   adminWatchedWords: controller(),

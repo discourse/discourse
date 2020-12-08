@@ -178,7 +178,7 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    [:name, :color_scheme_id, :user_selectable, :enabled].each do |field|
+    [:name, :color_scheme_id, :user_selectable, :enabled, :auto_update].each do |field|
       if theme_params.key?(field)
         @theme.public_send("#{field}=", theme_params[field])
       end
@@ -266,15 +266,6 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
-  def diff_local_changes
-    theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless theme
-    changes = theme.remote_theme&.diff_local_changes
-    respond_to do |format|
-      format.json { render json: changes || {} }
-    end
-  end
-
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
@@ -297,6 +288,10 @@ class Admin::ThemesController < Admin::AdminController
 
   def ban_in_allowlist_mode!
     raise Discourse::InvalidAccess if !GlobalSetting.allowed_theme_ids.nil?
+  end
+
+  def ban_for_remote_theme!
+    raise Discourse::InvalidAccess if @theme.remote_theme
   end
 
   def add_relative_themes!(kind, ids)
@@ -344,6 +339,7 @@ class Admin::ThemesController < Admin::AdminController
           :user_selectable,
           :component,
           :enabled,
+          :auto_update,
           settings: {},
           translations: {},
           theme_fields: [:name, :target, :value, :upload_id, :type_id],
@@ -357,6 +353,7 @@ class Admin::ThemesController < Admin::AdminController
     return unless fields = theme_params[:theme_fields]
 
     ban_in_allowlist_mode!
+    ban_for_remote_theme!
 
     fields.each do |field|
       @theme.set_field(

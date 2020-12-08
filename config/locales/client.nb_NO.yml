@@ -951,14 +951,10 @@ nb_NO:
         links_tab: "Lenker"
         link_created_at: "Opprettet"
         link_groups: Grupper
-        create: "Send Invitasjon"
-        generate_link: "Kopier invitasjonslenke"
-        link_generated: "Invitasjonslenke har blitt generert!"
         valid_for: "Invitasjonslenke er kun gyldig for denne e-postadressen: %{email}"
         invite_link:
           success: "Invitasjonslenke har blitt generert!"
         bulk_invite:
-          none: "Du har ikke invitert noen ennå. Sende enkeltsående invitasjoner, eller inviter mange samtidig ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp ei CSV-fil</a>."
           success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
           error: "Beklager, fila må være i CSV-format."
       password:
@@ -1171,7 +1167,6 @@ nb_NO:
       sent_activation_email_again: "Vi sendte deg en ny aktiverings-e-post på <b>%{currentEmail}</b>. Det kan ta noen minutter før den kommer frem; ikke glem å sjekke søppelpostmappen."
       to_continue: "Logg inn"
       preferences: "Du må være innlogget for å endre brukerinnstillinger."
-      forgot: "I husker ikke mine kontodetaljer"
       not_approved: "Kontoen din har ikke blitt godkjent ennå. Du vil få beskjed via e-post når du er klar til å logge inn."
       google_oauth2:
         name: "Google"
@@ -1358,7 +1353,6 @@ nb_NO:
           label: "Nytt emne"
         shared_draft:
           label: "Delt kladd"
-          desc: "Lag et emneutkast som kun er synlig for staben"
         toggle_topic_bump:
           label: "Slå på/av at emnet flyttes øverst"
     notifications:
@@ -1380,10 +1374,6 @@ nb_NO:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} og én annen</span> %{description}"
-        other: "<span>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3201,7 +3191,6 @@ nb_NO:
         suspend_reason_label: "Hvorfor stenger du ute brukeren? Denne teksten <b>vil være synlig for alle</b> på denne brukerens profilside og vil bli vist til brukeren når vedkommende forsøker å logge inn. Fatt deg i korthet."
         suspend_reason_hidden_label: "Hvorfor stenger du ute brukeren? Denne teksten vil bli vist til brukeren når vedkommende prøver å logge inn. Fatt deg i korthet."
         suspend_reason: "Begrunnelse"
-        suspend_reason_placeholder: "Bannlysningsgrunn"
         suspend_message: "E-postmelding"
         suspend_message_placeholder: "Alternativt, kan du detaljere bannlysningen og det vil bli sendt per e-post til brukeren."
         suspended_by: "Utestengt av"

@@ -1,5 +1,5 @@
-import { computed } from "@ember/object";
 import FilterComponent from "admin/components/report-filters/filter";
+import { computed } from "@ember/object";
 
 export default FilterComponent.extend({
   classNames: ["group-filter"],

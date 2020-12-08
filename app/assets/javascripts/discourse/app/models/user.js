@@ -1,37 +1,35 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { A } from "@ember/array";
-import { isEmpty } from "@ember/utils";
-import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { get, computed, getProperties } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
-import RestModel from "discourse/models/rest";
-import Bookmark from "discourse/models/bookmark";
-import UserStream from "discourse/models/user-stream";
-import UserPostsStream from "discourse/models/user-posts-stream";
-import Singleton from "discourse/mixins/singleton";
-import { longDate } from "discourse/lib/formatter";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
-import UserActionStat from "discourse/models/user-action-stat";
-import UserAction from "discourse/models/user-action";
-import UserDraftsStream from "discourse/models/user-drafts-stream";
-import Group from "discourse/models/group";
-import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "discourse/lib/preload-store";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
-import Category from "discourse/models/category";
-import { Promise } from "rsvp";
-import deprecated from "discourse-common/lib/deprecated";
-import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { escapeExpression } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { equal, gt, or } from "@ember/object/computed";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { A } from "@ember/array";
+import Badge from "discourse/models/badge";
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
+import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import Singleton from "discourse/mixins/singleton";
+import Site from "discourse/models/site";
+import UserAction from "discourse/models/user-action";
+import UserActionStat from "discourse/models/user-action-stat";
+import UserBadge from "discourse/models/user-badge";
+import UserDraftsStream from "discourse/models/user-drafts-stream";
+import UserPostsStream from "discourse/models/user-posts-stream";
+import UserStream from "discourse/models/user-stream";
+import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { isEmpty } from "@ember/utils";
+import { longDate } from "discourse/lib/formatter";
+import { url } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -729,41 +727,29 @@ const User = RestModel.extend({
     });
   },
 
-  @observes("muted_category_ids")
-  updateMutedCategories() {
-    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  @discourseComputed("muted_category_ids")
+  mutedCategories(mutedCategoryIds) {
+    return Category.findByIds(mutedCategoryIds);
   },
 
-  @observes("regular_category_ids")
-  updateRegularCategories() {
-    this.set(
-      "regularCategories",
-      Category.findByIds(this.regular_category_ids)
-    );
+  @discourseComputed("regular_category_ids")
+  regularCategories(regularCategoryIds) {
+    return Category.findByIds(regularCategoryIds);
   },
 
-  @observes("tracked_category_ids")
-  updateTrackedCategories() {
-    this.set(
-      "trackedCategories",
-      Category.findByIds(this.tracked_category_ids)
-    );
+  @discourseComputed("tracked_category_ids")
+  trackedCategories(trackedCategoryIds) {
+    return Category.findByIds(trackedCategoryIds);
   },
 
-  @observes("watched_category_ids")
-  updateWatchedCategories() {
-    this.set(
-      "watchedCategories",
-      Category.findByIds(this.watched_category_ids)
-    );
+  @discourseComputed("watched_category_ids")
+  watchedCategories(watchedCategoryIds) {
+    return Category.findByIds(watchedCategoryIds);
   },
 
-  @observes("watched_first_post_category_ids")
-  updateWatchedFirstPostCategories() {
-    this.set(
-      "watchedFirstPostCategories",
-      Category.findByIds(this.watched_first_post_category_ids)
-    );
+  @discourseComputed("watched_first_post_category_ids")
+  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
+    return Category.findByIds(wachedFirstPostCategoryIds);
   },
 
   @discourseComputed("can_delete_account")

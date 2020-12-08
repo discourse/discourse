@@ -1,14 +1,16 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { debounce } from "@ember/runloop";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
-import { escapeExpression } from "discourse/lib/utilities";
-import { convertIconClass } from "discourse-common/lib/icon-library";
-import { ajax } from "discourse/lib/ajax";
-import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { convertIconClass } from "discourse-common/lib/icon-library";
+import { debounce } from "@ember/runloop";
+import { escapeExpression } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],

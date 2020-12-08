@@ -235,7 +235,7 @@ describe 'tags' do
     end
   end
 
-  path '/tags/{name}.json' do
+  path '/tag/{name}.json' do
 
     get 'Get a specific tag' do
       tags 'Tags'

@@ -103,6 +103,8 @@ es:
           step: Intervalo
         poll_public:
           label: Mostrar quién votó
+        poll_title:
+          label: Título (opcional)
         poll_options:
           label: Ingresa una opción de la encuesta por línea
         automatic_close:

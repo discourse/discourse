@@ -9,6 +9,13 @@ class TranslationOverride < ActiveRecord::Base
       topic_title_url_encoded
       site_title_url_encoded
       context
+
+      site_name
+      optional_re
+      optional_pm
+      optional_cat
+      optional_tags
+      topic_title
     }
   }
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor

@@ -30,7 +30,7 @@ RSpec.describe Jobs::MigrateGroupFlairImages do
     group.reload
     upload = Upload.last
     expect(group.flair_upload).to eq(upload)
-    expect(group.flair_url).to eq(upload.short_path)
+    expect(group.flair_url).to eq(upload.url)
     expect(group[:flair_url]).to eq(nil)
   end
 

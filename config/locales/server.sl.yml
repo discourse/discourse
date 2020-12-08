@@ -64,6 +64,9 @@ sl:
       has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
+      is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
+      is_invalid_unpretentious: "zdi se nejasno, ena ali več besed je zelo dolga?"
+      is_invalid_quiet: "zdi se nejasno, ali ste ga mislili vnesti z VELIKIMI ZAČETNICAMI?"
       less_than: mora biti manj kot %{count}
       less_than_or_equal_to: mora biti manj ali enako kot %{count}
       not_a_number: ni številka
@@ -710,6 +713,7 @@ sl:
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
+    min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -846,13 +850,14 @@ sl:
     missing_user_field: "Niste vnesli vseh uporabniških podatkov."
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
-    already_logged_in: "Izgleda da hočete sprejeti povabilo od drugega uporabnika. Če niste %{current_user}, se odjavite in poskusite ponovno."
     second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
     second_factor_backup_description: "Vnesite eno od vaših rezervnih potrditvenih kod:"
     invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
     second_factor_toggle:
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
   user:
+    email:
+      does_not_exist: "N/A"
     ip_address:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:

@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import IncomingEmail from "admin/models/incoming-email";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import discourseComputed from "discourse-common/utils/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 

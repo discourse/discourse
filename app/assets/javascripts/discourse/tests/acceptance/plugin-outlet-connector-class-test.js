@@ -1,12 +1,14 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { action } from "@ember/object";
+import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import hbs from "htmlbars-inline-precompile";
+import { test } from "qunit";
 
 const PREFIX = "javascripts/single-test/connectors";
-acceptance("Plugin Outlet - Connector Class", {
-  beforeEach() {
+
+acceptance("Plugin Outlet - Connector Class", function (needs) {
+  needs.hooks.beforeEach(() => {
     extraConnectorClass("user-profile-primary/hello", {
       actions: {
         sayHello() {
@@ -43,47 +45,47 @@ acceptance("Plugin Outlet - Connector Class", {
 
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hello`
-    ] = Ember.HTMLBars.compile(
-      `<span class='hello-username'>{{model.username}}</span>
+    ] = hbs`<span class='hello-username'>{{model.username}}</span>
         <button class='say-hello' {{action "sayHello"}}></button>
-        <span class='hello-result'>{{hello}}</span>`
-    );
+        <span class='hello-result'>{{hello}}</span>`;
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hi`
-    ] = Ember.HTMLBars.compile(
-      `<button class='say-hi' {{action "sayHi"}}></button>
-        <span class='hi-result'>{{hi}}</span>`
-    );
+    ] = hbs`<button class='say-hi' {{action "sayHi"}}></button>
+        <span class='hi-result'>{{hi}}</span>`;
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/dont-render`
-    ] = Ember.HTMLBars.compile(`I'm not rendered!`);
-  },
+    ] = hbs`I'm not rendered!`;
+  });
 
-  afterEach() {
+  needs.hooks.afterEach(() => {
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
     delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
-  },
-});
+  });
 
-test("Renders a template into the outlet", async (assert) => {
-  await visit("/u/eviltrout");
-  assert.ok(
-    find(".user-profile-primary-outlet.hello").length === 1,
-    "it has class names"
-  );
-  assert.ok(
-    !find(".user-profile-primary-outlet.dont-render").length,
-    "doesn't render"
-  );
+  test("Renders a template into the outlet", async function (assert) {
+    await visit("/u/eviltrout");
+    assert.ok(
+      queryAll(".user-profile-primary-outlet.hello").length === 1,
+      "it has class names"
+    );
+    assert.ok(
+      !queryAll(".user-profile-primary-outlet.dont-render").length,
+      "doesn't render"
+    );
 
-  await click(".say-hello");
-  assert.equal(
-    find(".hello-result").text(),
-    "hello!",
-    "actions delegate properly"
-  );
+    await click(".say-hello");
+    assert.equal(
+      queryAll(".hello-result").text(),
+      "hello!",
+      "actions delegate properly"
+    );
 
-  await click(".say-hi");
-  assert.equal(find(".hi-result").text(), "hi!", "actions delegate properly");
+    await click(".say-hi");
+    assert.equal(
+      queryAll(".hi-result").text(),
+      "hi!",
+      "actions delegate properly"
+    );
+  });
 });

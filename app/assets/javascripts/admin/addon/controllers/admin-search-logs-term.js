@@ -1,6 +1,6 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
 import { DEFAULT_PERIOD } from "admin/controllers/admin-search-logs-index";
+import I18n from "I18n";
 
 export default Controller.extend({
   loading: false,

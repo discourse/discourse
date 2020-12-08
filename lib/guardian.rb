@@ -94,6 +94,9 @@ class Guardian
   end
 
   def is_category_group_moderator?(category)
+    return false unless category
+    return false unless authenticated?
+
     @is_category_group_moderator ||= begin
       SiteSetting.enable_category_group_moderation? &&
         category.present? &&
@@ -353,7 +356,7 @@ class Guardian
     !SiteSetting.enable_sso &&
     SiteSetting.enable_local_logins &&
     (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
+      (!SiteSetting.must_approve_users? && @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)) ||
       is_staff?
     ) &&
     (groups.blank? || is_admin? || groups.all? { |g| can_edit_group?(g) })
@@ -383,7 +386,7 @@ class Guardian
       end
     end
 
-    user.has_trust_level?(TrustLevel[2])
+    user.has_trust_level?(SiteSetting.min_trust_level_to_allow_invite.to_i)
   end
 
   def can_invite_via_email?(object)
@@ -484,7 +487,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
+    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i)
   end
 
   def allowed_theme_repo_import?(repo)
@@ -520,7 +523,8 @@ class Guardian
   end
 
   def can_publish_page?(topic)
-    return false unless SiteSetting.enable_page_publishing?
+    return false if !SiteSetting.enable_page_publishing?
+    return false if SiteSetting.secure_media?
     return false if topic.blank?
     return false if topic.private_message?
     return false unless can_see_topic?(topic)

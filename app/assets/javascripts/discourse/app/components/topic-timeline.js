@@ -1,8 +1,9 @@
-import { next } from "@ember/runloop";
-import MountWidget from "discourse/components/mount-widget";
 import Docking from "discourse/mixins/docking";
+import MountWidget from "discourse/components/mount-widget";
+import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
+import outletHeights from "discourse/lib/header-outlet-height";
 
 const headerPadding = () => {
   let topPadding = parseInt($("#main-outlet").css("padding-top"), 10) + 3;
@@ -67,13 +68,16 @@ export default MountWidget.extend(Docking, {
 
     const prev = this.dockAt;
     const posTop = headerPadding() + info.offset();
-    const pos = posTop + timelineHeight;
+    const pos = posTop + timelineHeight - outletHeights();
 
     this.dockBottom = false;
     if (posTop < topicTop) {
       this.dockAt = parseInt(topicTop, 10);
     } else if (pos > topicBottom + footerHeight) {
-      this.dockAt = parseInt(topicBottom - timelineHeight + footerHeight, 10);
+      this.dockAt = parseInt(
+        topicBottom - timelineHeight + footerHeight + outletHeights(),
+        10
+      );
       this.dockBottom = true;
       if (this.dockAt < 0) {
         this.dockAt = 0;

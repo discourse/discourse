@@ -10,6 +10,15 @@ describe InvitesController do
     fab!(:invite) { Fabricate(:invite) }
     fab!(:user) { Fabricate(:coding_horror) }
 
+    it 'does not work for logged in users' do
+      sign_in(Fabricate(:user))
+      get "/invites/#{invite.invite_key}"
+
+      expect(response.status).to eq(200)
+      body = response.body
+      expect(CGI.unescapeHTML(body)).to include(I18n.t("login.already_logged_in"))
+    end
+
     it "returns error if invite not found" do
       get "/invites/nopeNOPEnope"
 

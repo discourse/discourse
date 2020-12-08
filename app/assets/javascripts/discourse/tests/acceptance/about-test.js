@@ -1,9 +1,9 @@
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 
 acceptance("About", function () {
-  test("viewing", async (assert) => {
+  test("viewing", async function (assert) {
     await visit("/about");
 
     assert.ok($("body.about-page").length, "has body class");

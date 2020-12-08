@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Theme from "admin/models/theme";
 
 module("model:theme");

@@ -10,7 +10,7 @@ export function setup(helper) {
   });
 
   // we need a custom callback for style handling
-  helper.whiteList({
+  helper.allowList({
     custom: function (tag, attr, val) {
       if (tag !== "th" && tag !== "td") {
         return false;
@@ -28,7 +28,7 @@ export function setup(helper) {
     },
   });
 
-  helper.whiteList([
+  helper.allowList([
     "table",
     "tbody",
     "thead",

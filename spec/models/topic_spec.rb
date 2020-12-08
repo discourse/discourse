@@ -694,6 +694,7 @@ describe Topic do
           it 'fails with an error message' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.muted_invitee"))
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -729,6 +730,7 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
           end
 
           it 'should succeed for staff even when not allowed' do
@@ -743,14 +745,16 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
           it 'should raise error if target_user has not allowed any of the other participants' do
-            user2.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
 
             expect { pm.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
           end
         end
       end
@@ -2215,6 +2219,29 @@ describe Topic do
     end
   end
 
+  context "per day personal message limit" do
+    before do
+      SiteSetting.max_personal_messages_per_day = 1
+      SiteSetting.max_topics_per_day = 0
+      SiteSetting.max_topics_in_first_day = 0
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.clear_all!
+      RateLimiter.disable
+    end
+
+    it "limits according to max_personal_messages_per_day" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      expect {
+        create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+  end
+
   describe ".count_exceeds_minimun?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
@@ -2317,14 +2344,18 @@ describe Topic do
     user.admin = true
     @topic_status_event_triggered = false
 
-    DiscourseEvent.on(:topic_status_updated) do
+    blk = Proc.new do
       @topic_status_event_triggered = true
     end
+
+    DiscourseEvent.on(:topic_status_updated, &blk)
 
     topic.update_status('closed', true, user)
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &blk)
   end
 
   it 'allows users to normalize counts' do

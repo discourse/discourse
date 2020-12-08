@@ -142,6 +142,7 @@ module Discourse
     attr_reader :obj
     attr_reader :opts
     attr_reader :custom_message
+    attr_reader :custom_message_params
     attr_reader :group
 
     def initialize(msg = nil, obj = nil, opts = nil)
@@ -150,6 +151,7 @@ module Discourse
       @opts = opts || {}
       @obj = obj
       @custom_message = opts[:custom_message] if @opts[:custom_message]
+      @custom_message_params = opts[:custom_message_params] if @opts[:custom_message_params]
       @group = opts[:group] if @opts[:group]
     end
   end
@@ -325,7 +327,6 @@ module Discourse
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500), # Custom icon implemented in client
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
-    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, icon: "fab-instagram"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord")
   ]
 
@@ -413,7 +414,7 @@ module Discourse
     unless uri.is_a?(URI)
       uri = begin
         URI(uri)
-      rescue URI::Error
+      rescue ArgumentError, URI::Error
       end
     end
 
@@ -449,6 +450,10 @@ module Discourse
   ]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+    end
+
     if key == USER_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
       Discourse.redis.set(key, 1)
     else
@@ -498,6 +503,10 @@ module Discourse
   end
 
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
+      Sidekiq.unpause! if Sidekiq.paused?
+    end
+
     Discourse.redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
@@ -506,7 +515,6 @@ module Discourse
   def self.enable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       enable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
     end
 
     true
@@ -515,7 +523,6 @@ module Discourse
   def self.disable_pg_force_readonly_mode
     RailsMultisite::ConnectionManagement.each_connection do
       disable_readonly_mode(PG_FORCE_READONLY_MODE_KEY)
-      Sidekiq.unpause!
     end
 
     true

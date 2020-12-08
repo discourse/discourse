@@ -1,15 +1,15 @@
-import Session from "discourse/models/session";
-import KeyValueStore from "discourse/lib/key-value-store";
-import Store from "discourse/models/store";
-import DiscourseLocation from "discourse/lib/discourse-location";
-import SearchService from "discourse/services/search";
 import TopicTrackingState, {
   startTracking,
 } from "discourse/models/topic-tracking-state";
-import ScreenTrack from "discourse/lib/screen-track";
-import Site from "discourse/models/site";
-import User from "discourse/models/user";
+import DiscourseLocation from "discourse/lib/discourse-location";
+import KeyValueStore from "discourse/lib/key-value-store";
 import MessageBus from "message-bus-client";
+import ScreenTrack from "discourse/lib/screen-track";
+import SearchService from "discourse/services/search";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
+import Store from "discourse/models/store";
+import User from "discourse/models/user";
 
 const ALL_TARGETS = ["controller", "component", "route", "model", "adapter"];
 

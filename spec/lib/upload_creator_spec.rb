@@ -123,11 +123,19 @@ RSpec.describe UploadCreator do
     end
 
     describe 'converting to jpeg' do
+      def image_quality(path)
+        local_path = File.join(Rails.root, 'public', path)
+        Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i
+      end
+
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
 
       let(:small_filename) { "logo.png" }
       let(:small_file) { file_from_fixtures(small_filename) }
+
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
 
       before do
         SiteSetting.png_to_jpg_quality = 1
@@ -167,6 +175,39 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
         expect(upload.original_filename).to eq('should_be_jpeg.jpg')
+      end
+
+      context "jpeg image quality settings" do
+        before do
+          SiteSetting.png_to_jpg_quality = 75
+          SiteSetting.recompress_original_jpg_quality = 40
+          SiteSetting.image_preview_jpg_quality = 10
+        end
+
+        it 'should alter the image quality' do
+          upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
+
+          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+
+          upload.create_thumbnail!(100, 100)
+          upload.reload
+
+          expect(image_quality(upload.optimized_images.first.url)).to eq(SiteSetting.image_preview_jpg_quality)
+        end
+
+        it 'should not convert animated images' do
+          expect do
+            UploadCreator.new(animated_file, animated_filename,
+              force_optimize: true
+            ).create_for(user.id)
+          end.to change { Upload.count }.by(1)
+
+          upload = Upload.last
+
+          expect(upload.extension).to eq('gif')
+          expect(File.extname(upload.url)).to eq('.gif')
+          expect(upload.original_filename).to eq('animated.gif')
+        end
       end
     end
 
@@ -400,6 +441,21 @@ RSpec.describe UploadCreator do
             expect(result.original_sha1).not_to eq(nil)
           end
         end
+      end
+    end
+
+    context 'custom emojis' do
+      let(:animated_filename) { "animated.gif" }
+      let(:animated_file) { file_from_fixtures(animated_filename) }
+
+      it 'should not be cropped if animated' do
+        upload = UploadCreator.new(animated_file, animated_filename,
+          force_optimize: true,
+          type: 'custom_emoji'
+        ).create_for(user.id)
+
+        expect(upload.animated).to eq(true)
+        expect(FastImage.size(Discourse.store.path_for(upload))).to eq([320, 320])
       end
     end
   end

@@ -1,11 +1,11 @@
-import { later } from "@ember/runloop";
-import discourseDebounce from "discourse/lib/debounce";
 import {
-  safariHacksDisabled,
   iOSWithVisualViewport,
+  safariHacksDisabled,
 } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";
+import { later } from "@ember/runloop";
 
 // TODO: remove calcHeight once iOS 13 adoption > 90%
 // In iOS 13 and up we use visualViewport API to calculate height

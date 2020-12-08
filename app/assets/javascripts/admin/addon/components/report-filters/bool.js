@@ -1,5 +1,5 @@
-import { action } from "@ember/object";
 import FilterComponent from "admin/components/report-filters/filter";
+import { action } from "@ember/object";
 
 export default FilterComponent.extend({
   checked: false,

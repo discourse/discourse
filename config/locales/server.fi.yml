@@ -56,7 +56,6 @@ fi:
     compile_error:
       unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
-      generic: Teeman tuomisessa tapahtui virhe
       about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
@@ -219,7 +218,6 @@ fi:
   email_template_cant_be_modified: "Tätä sähköpostipohjaa ei voi muokata"
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
   not_in_group:
-    title_topic: "Täytyy kuulua ryhmään, jotta näkee tämän ketjun."
     title_category: "Täytyy kuulua ryhmään, jotta näkee tämän alueen."
     request_membership: "Hae jäsenyyttä"
     join_group: "Liity ryhmään"
@@ -1451,9 +1449,6 @@ fi:
     enable_twitter_logins: "Ota käyttöön Twitter-tunnistautuminen, vaaditaan twitter_consumer_key ja twitter_consumer_secret. Katso <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Twitter-tunnistautumisen consumer key, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Twitter-tunnistautumisen consumer secret, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Ota Instagram-autentikaatio käyttöön, vaatimuksena instagram_consumer_key ja instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key Instagram-autentikaatioon"
-    instagram_consumer_secret: "Consumer secret Instagram-autentikaatioon"
     enable_facebook_logins: "Ota käyttöön Facebook-tunnistautuminen, vaaditaan facebook_app_id ja facebook_app_secret. Katso <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "Facebook-tunnistautumisen app secret, joka rekisteröidään palvelussa <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "Salli käyttäjien kirjautua Discordin avulla?"
@@ -1489,7 +1484,6 @@ fi:
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Kuinka monta ketjua käyttäjä voi aloittaa päivässä."
-    max_personal_messages_per_day: "Kuinka monta yksityisviestiketjua käyttäjä voi aloittaa päivässä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
@@ -2013,7 +2007,6 @@ fi:
     missing_user_field: "Et ole täyttänyt kaikkia kenttiä"
     auth_complete: "Todentaminen suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
-    already_logged_in: "Hups, näyttää siltä, että yrität hyväksyä kutsun käyttäjänä, jolle sitä ei lähetetty. Jos et ole %{current_user}, kirjaudu ulos ja yritä uudestaan."
     second_factor_description: "Syötä vaadittava todennuskoodi sovelluksestasi:"
     second_factor_backup_description: "Syötä yksi varmuuskoodeistasi"
     invalid_second_factor_code: "Todennuskoodi ei kelpaa. Yhtä koodia voi käyttää vain kerran."

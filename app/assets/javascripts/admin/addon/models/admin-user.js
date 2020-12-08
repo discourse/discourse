@@ -1,16 +1,16 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { filter, or, gt, lt, not } from "@ember/object/computed";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { ajax } from "discourse/lib/ajax";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import Group from "discourse/models/group";
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import { filter, gt, lt, not, or } from "@ember/object/computed";
+import Group from "discourse/models/group";
+import I18n from "I18n";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual } from "discourse/lib/computed";
 
 const wrapAdmin = (user) => (user ? AdminUser.create(user) : null);
 
@@ -352,28 +352,17 @@ const AdminUser = User.extend({
       type: "PUT",
     })
       .then((result) => this.setProperties(result.unsilence))
-      .catch((e) => {
-        const error = I18n.t("admin.user.unsilence_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      })
       .finally(() => this.set("silencingUser", false));
   },
 
   silence(data) {
     this.set("silencingUser", true);
+
     return ajax(`/admin/users/${this.id}/silence`, {
       type: "PUT",
       data,
     })
       .then((result) => this.setProperties(result.silence))
-      .catch((e) => {
-        const error = I18n.t("admin.user.silence_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      })
       .finally(() => this.set("silencingUser", false));
   },
 

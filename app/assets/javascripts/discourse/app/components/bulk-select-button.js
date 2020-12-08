@@ -1,5 +1,5 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import { schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({

@@ -258,16 +258,27 @@ describe Email::MessageBuilder do
     end
 
     context "when use_site_subject is true" do
-      let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'mystery', use_site_subject: true) }
+      let(:templated_builder) { Email::MessageBuilder.new(to_address, template: 'user_notifications.user_replied', use_site_subject: true, topic_title: "Topic Title") }
 
       it "can use subject override" do
-        override = TranslationOverride.create(
-          locale: I18n.locale,
-          translation_key: "mystery.subject_template",
-          value: "my customized subject"
+        override = TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.subject_template",
+          "my customized subject"
         )
-        I18n.expects(:t).with("mystery.subject_template", templated_builder.template_args).returns(override.value)
+        override.save!
         expect(templated_builder.subject).to eq(override.value)
+      end
+
+      it "can use interpolation arguments in the override" do
+        SiteSetting.email_prefix = 'some email prefix'
+        override = TranslationOverride.upsert!(
+          I18n.locale,
+          "user_notifications.user_replied.subject_template",
+          "[%{site_name}] %{topic_title} my customized subject"
+        ).save!
+        expect(templated_builder.subject).to match("some email prefix")
+        expect(templated_builder.subject).to match("customized subject")
       end
     end
 

@@ -1,6 +1,6 @@
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 
 const keySelector = "meta[name=discourse_theme_ids]";
 

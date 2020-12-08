@@ -1,14 +1,14 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { performEmojiUnescape, buildEmojiUrl } from "pretty-text/emoji";
-import WhiteLister from "pretty-text/white-lister";
-import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import loadScript from "discourse/lib/load-script";
-import { formatUsername } from "discourse/lib/utilities";
+import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import AllowLister from "pretty-text/allow-lister";
 import { Promise } from "rsvp";
-import { htmlSafe } from "@ember/template";
-import { helperContext } from "discourse-common/lib/helpers";
 import Session from "discourse/models/session";
+import { formatUsername } from "discourse/lib/utilities";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { helperContext } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
+import loadScript from "discourse/lib/load-script";
+import { sanitize as textSanitize } from "pretty-text/sanitizer";
 
 function getOpts(opts) {
   let context = helperContext();
@@ -49,7 +49,7 @@ export function generateCookFunction(options) {
 }
 
 export function sanitize(text, options) {
-  return textSanitize(text, new WhiteLister(options));
+  return textSanitize(text, new AllowLister(options));
 }
 
 export function sanitizeAsync(text, options) {

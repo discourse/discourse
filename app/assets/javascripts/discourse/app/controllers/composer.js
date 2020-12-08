@@ -1,34 +1,36 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { and, or, alias, reads } from "@ember/object/computed";
-import { cancel, debounce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import { buildQuote } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
-import Composer from "discourse/models/composer";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { escapeExpression } from "discourse/lib/utilities";
+import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
+import Controller, { inject } from "@ember/controller";
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, or, reads } from "@ember/object/computed";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { emojiUnescape } from "discourse/lib/text";
-import { shortDate } from "discourse/lib/formatter";
-import { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
+import { cancel, debounce, run } from "@ember/runloop";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import DiscourseURL from "discourse/lib/url";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
-import EmberObject, { computed, action } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
 import bootbox from "bootbox";
-import { cannotPostAgain } from "discourse/helpers/slow-mode";
+import { buildQuote } from "discourse/lib/quote";
+import deprecated from "discourse-common/lib/deprecated";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
+import { inject as service } from "@ember/service";
+import { shortDate } from "discourse/lib/formatter";
+import showModal from "discourse/lib/show-modal";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -648,13 +650,28 @@ export default Controller.extend({
     }
 
     const topic = composer.topic;
+    const slowModePost =
+      topic && topic.slow_mode_seconds && topic.user_last_posted_at;
+    const notEditing = this.get("model.action") !== "edit";
 
-    if (topic && topic.slow_mode_seconds && topic.user_last_posted_at) {
-      if (cannotPostAgain(topic.slow_mode_seconds, topic.user_last_posted_at)) {
-        const message = I18n.t("composer.slow_mode.error");
+    // Editing a topic in slow mode is directly handled by the backend.
+    if (slowModePost && notEditing) {
+      if (
+        cannotPostAgain(
+          this.currentUser,
+          topic.slow_mode_seconds,
+          topic.user_last_posted_at
+        )
+      ) {
+        const message = I18n.t("composer.slow_mode.error", {
+          duration: durationTextFromSeconds(topic.slow_mode_seconds),
+        });
 
         bootbox.alert(message);
         return;
+      } else {
+        // Edge case where the user tries to post again immediately.
+        topic.set("user_last_posted_at", new Date().toISOString());
       }
     }
 
@@ -1079,46 +1096,36 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    const keyPrefix =
-      this.model.action === "edit" ? "post.abandon_edit" : "post.abandon";
-
     let promise = new Promise((resolve, reject) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        bootbox.dialog(I18n.t(keyPrefix + ".confirm"), [
-          {
-            label: differentDraft
-              ? I18n.t(keyPrefix + ".no_save_draft")
-              : I18n.t(keyPrefix + ".no_value"),
-            callback: () => {
-              // cancel composer without destroying draft on new draft context
-              if (differentDraft) {
+        const controller = showModal("discard-draft", {
+          model: this.model,
+          modalClass: "discard-draft-modal",
+          title: "post.abandon.title",
+        });
+        controller.setProperties({
+          differentDraft,
+          onDestroyDraft: () => {
+            this.destroyDraft()
+              .then(() => {
                 this.model.clearState();
                 this.close();
+              })
+              .finally(() => {
                 resolve();
-              }
+              });
+          },
+          onSaveDraft: () => {
+            // cancel composer without destroying draft on new draft context
+            if (differentDraft) {
+              this.model.clearState();
+              this.close();
+              resolve();
+            }
 
-              reject();
-            },
+            reject();
           },
-          {
-            label: I18n.t(keyPrefix + ".yes_value"),
-            class: "btn-danger",
-            callback: (result) => {
-              if (result) {
-                this.destroyDraft()
-                  .then(() => {
-                    this.model.clearState();
-                    this.close();
-                  })
-                  .finally(() => {
-                    resolve();
-                  });
-              } else {
-                resolve();
-              }
-            },
-          },
-        ]);
+        });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
@@ -1181,7 +1188,8 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+        let method = isTesting() ? run : debounce;
+        this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }
   },

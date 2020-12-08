@@ -1,11 +1,11 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import Category from "discourse/models/category";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import Category from "discourse/models/category";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Composer - Tags", function (needs) {
   needs.user();
@@ -16,7 +16,7 @@ acceptance("Composer - Tags", function (needs) {
   });
   needs.site({ can_tag_topics: true });
 
-  test("staff bypass tag validation rule", async (assert) => {
+  test("staff bypass tag validation rule", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
@@ -33,7 +33,7 @@ acceptance("Composer - Tags", function (needs) {
     assert.notEqual(currentURL(), "/");
   });
 
-  test("users do not bypass tag validation rule", async (assert) => {
+  test("users do not bypass tag validation rule", async function (assert) {
     await visit("/");
     await click("#create-topic");
 

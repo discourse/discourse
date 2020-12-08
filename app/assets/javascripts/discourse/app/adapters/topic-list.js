@@ -1,7 +1,7 @@
-import getURL from "discourse-common/lib/get-url";
-import { ajax } from "discourse/lib/ajax";
-import RestAdapter from "discourse/adapters/rest";
 import PreloadStore from "discourse/lib/preload-store";
+import RestAdapter from "discourse/adapters/rest";
+import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse-common/lib/get-url";
 
 export function finderFor(filter, params) {
   return function () {

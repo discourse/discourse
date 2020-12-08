@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { get } from "@ember/object";
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
-import { isRTL } from "discourse/lib/text-direction";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import Category from "discourse/models/category";
+import I18n from "I18n";
 import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { isRTL } from "discourse/lib/text-direction";
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -54,8 +54,11 @@ export function categoryBadgeHTML(category, opts) {
   const depth = (opts.depth || 1) + 1;
   if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
+    const lastSubcategory = !opts.depth;
     opts.depth = depth;
-    return categoryBadgeHTML(parentCategory, opts) + _renderer(category, opts);
+    const parentBadges = categoryBadgeHTML(parentCategory, opts);
+    opts.lastSubcategory = lastSubcategory;
+    return parentBadges + _renderer(category, opts);
   }
 
   return _renderer(category, opts);
@@ -182,6 +185,12 @@ function defaultCategoryLinkRenderer(category, opts) {
   let afterBadgeWrapper = "";
   if (opts.topicCount && categoryStyle === "box") {
     afterBadgeWrapper += buildTopicCount(opts.topicCount);
+  }
+  if (opts.plusSubcategories && opts.lastSubcategory) {
+    afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
+      "category_row.plus_subcategories",
+      { count: opts.plusSubcategories }
+    )}</span>`;
   }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

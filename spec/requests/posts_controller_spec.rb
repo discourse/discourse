@@ -45,6 +45,28 @@ shared_examples 'finding and showing post' do
       get url
       expect(response.status).to eq(200)
     end
+
+    context "category group moderator" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      let(:user_gm) { group_user.user }
+      let(:group) { group_user.group }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        sign_in(user_gm)
+      end
+
+      it "can find posts in the allowed category" do
+        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        get url
+        expect(response.status).to eq(200)
+      end
+
+      it "can't find posts outside of the allowed category" do
+        get url
+        expect(response.status).to eq(404)
+      end
+    end
   end
 end
 
@@ -446,21 +468,6 @@ describe PostsController do
         post.reload
         expect(post.raw).to eq('edited body')
         expect(UserHistory.where(action: UserHistory.actions[:post_edit]).count).to eq(1)
-      end
-
-      it "can not update other posts within the primary category topic" do
-        second_post = Fabricate(:post, user: user, topic: topic)
-
-        put "/posts/#{second_post.id}.json", params: update_params
-        expect(response.status).to eq(403)
-      end
-
-      it "can not update other first posts of topics in the same category" do
-        second_topic_in_category = Fabricate(:topic, category: category)
-        post_in_second_topic = Fabricate(:post, user: user, topic: second_topic_in_category)
-
-        put "/posts/#{post_in_second_topic.id}.json", params: update_params
-        expect(response.status).to eq(403)
       end
 
       it "can not update category descriptions in other categories" do
@@ -1907,21 +1914,17 @@ describe PostsController do
     it 'can create and remove notices as a moderator' do
       sign_in(moderator)
 
-      put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+      raw_notice = "Hello *world*!\n\nhttps://github.com/discourse/discourse"
+      put "/posts/#{public_post.id}/notice.json", params: { notice: raw_notice }
 
       expect(response.status).to eq(200)
-      public_post.reload
-      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
-      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
-      expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+      expect(public_post.reload.custom_fields[Post::NOTICE]).to eq("type" => Post.notices[:custom], "raw" => raw_notice, "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }))
       expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
       put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
       expect(response.status).to eq(200)
-      public_post.reload
-      expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
-      expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+      expect(public_post.reload.custom_fields[Post::NOTICE]).to eq(nil)
       expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_destroy]).count).to eq(1)
     end
 
@@ -1938,20 +1941,16 @@ describe PostsController do
       end
 
       it 'can create and remove notices as a group moderator' do
-        put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello *world*!\n\nhttps://github.com/discourse/discourse" }
+        raw_notice = "Hello *world*!\n\nhttps://github.com/discourse/discourse"
+        put "/posts/#{public_post.id}/notice.json", params: { notice: raw_notice }
 
         expect(response.status).to eq(200)
-        public_post.reload
-        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(Post.notices[:custom])
-        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to include('<p>Hello <em>world</em>!</p>')
-        expect(public_post.custom_fields[Post::NOTICE_ARGS]).not_to include('onebox')
+        expect(public_post.reload.custom_fields[Post::NOTICE]).to eq("type" => Post.notices[:custom], "raw" => raw_notice, "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }))
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
 
         expect(response.status).to eq(200)
-        public_post.reload
-        expect(public_post.custom_fields[Post::NOTICE_TYPE]).to eq(nil)
-        expect(public_post.custom_fields[Post::NOTICE_ARGS]).to eq(nil)
+        expect(public_post.reload.custom_fields[Post::NOTICE]).to eq(nil)
       end
 
       it 'prevents a group moderator from altering notes outside of their category' do

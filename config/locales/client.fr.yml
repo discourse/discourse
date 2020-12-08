@@ -287,6 +287,7 @@ fr:
         next_business_day: "Prochain jour ouvré"
         tomorrow: "Demain"
         next_week: "Semaine prochaine"
+        post_local_date: "Date venant du message"
         later_this_week: "Plus tard cette semaine"
         start_of_next_business_week: "Lundi"
         start_of_next_business_week_alt: "Lundi prochain"
@@ -603,6 +604,8 @@ fr:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
           description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
+          watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
+          tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
         tags:
           title: Étiquettes
           long_title: "Notifications par défaut des étiquettes"
@@ -1241,13 +1244,7 @@ fr:
         link_redemption_stats: "Utilisations"
         link_groups: Groupes
         link_expires_at: Expire
-        create: "Envoyer une invitation"
-        copy_link: "Copier le lien"
-        generate_link: "Copier le lien d'invitation"
-        link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
-        single_user: "Un utilisateur"
-        multiple_user: "Plusieurs utilisateurs"
         invite_link:
           title: "Lien d'invitation"
           success: "Lien d'invitation généré avec succés !"
@@ -1255,7 +1252,6 @@ fr:
           max_redemptions_allowed_label: "Combien de personnes peuvent s'inscrire en utilisant ce lien ?"
           expires_at: "Quand ce lien va-t-il expirer ?"
         bulk_invite:
-          none: "Vous n'avez encore invité personne. Envoyez des invitations individuelles ou à plusieurs personnes en même temps en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV.</a>"
           text: "Invitation en masse"
           success: "Le fichier a été correctement importé. Vous serez notifié par message direct lorsque le traitement sera terminé."
           error: "Désolé, le fichier doit être au format CSV."
@@ -1502,7 +1498,6 @@ fr:
       sent_activation_email_again_generic: "Nous avons envoyé un autre courriel d'activation. Il se peut que cela prenne quelques minutes pour arriver ; vérifier aussi votre spam."
       to_continue: "Veuillez vous connecter"
       preferences: "Vous devez être connecté pour modifier vos préférences utilisateur."
-      forgot: "J'ai oublié les détails de mon compte"
       not_approved: "Votre compte n'a pas encore été approuvé. Vous serez notifié par courriel lorsque vous pourrez vous connecter."
       google_oauth2:
         name: "Google"
@@ -1726,7 +1721,6 @@ fr:
           label: "Nouveau sujet"
         shared_draft:
           label: "Brouillon partagé"
-          desc: "Créer un brouillon de sujet qui ne sera visible qu'aux responsables"
         toggle_topic_bump:
           label: "Basculer l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"
@@ -1754,10 +1748,6 @@ fr:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} et %{count} autre</span> %{description}"
-        other: "<span>%{username}, %{username2} et %{count} autres</span> %{description}"
       liked_consolidated_description:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
@@ -2455,8 +2445,7 @@ fr:
         delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
         delete_topic: "supprimer le sujet"
-        add_post_notice: "Ajouter une note pour les responsables"
-        remove_post_notice: "Retirer la note pour les responsables"
+        add_post_notice: "Afficher une note des responsables"
         remove_timer: "supprimer la planification"
       actions:
         people:
@@ -2551,7 +2540,6 @@ fr:
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
       tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés au dessus ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes d'étiquettes autorisées"
-      manage_tag_groups_link: "Gérer les groupes d'étiquettes ici."
       allow_global_tags_label: "Permettre aussi d'autres étiquettes"
       tag_group_selector_placeholder: "(Facultatif) Groupe d'étiquettes"
       required_tag_group_description: "Exiger que les nouveaux sujets aient des étiquettes d'un groupe d’étiquettes :"
@@ -4008,7 +3996,6 @@ fr:
         suspend_reason_label: "Pourquoi suspendez-vous ? Ce texte <b>sera visible par tout le monde</b> sur la page du profil de cet utilisateur et sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason_hidden_label: "Pourquoi le suspendez-vous ? Ce texte sera affiché à l'utilisateur quand il essaie de se connecter. Soyez bref."
         suspend_reason: "Raison"
-        suspend_reason_placeholder: "Raison de la suspension"
         suspend_message: "Message courriel"
         suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par courriel."
         suspended_by: "Suspendu par"

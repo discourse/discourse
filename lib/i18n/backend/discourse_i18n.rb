@@ -20,7 +20,9 @@ module I18n
       # force explicit loading
       def load_translations(*filenames)
         unless filenames.empty?
-          filenames.flatten.each { |filename| load_file(filename) }
+          self.class.sort_locale_files(filenames.flatten).each do |filename|
+            load_file(filename)
+          end
         end
       end
 
@@ -30,6 +32,13 @@ module I18n
         rescue I18n::InvalidPluralizationData => e
           raise e if I18n.fallbacks[locale] == [locale]
           throw(:exception, e)
+        end
+      end
+
+      def self.sort_locale_files(files)
+        files.sort_by do |filename|
+          matches = /(?:client|server)-([1-9]|[1-9][0-9]|100)\..+\.yml/.match(filename)
+          matches&.[](1)&.to_i || 0
         end
       end
 

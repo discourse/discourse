@@ -1,10 +1,13 @@
+import {
+  escapeExpression,
+  isAppWebview,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import I18n from "I18n";
-import loadScript from "discourse/lib/load-script";
-import { escapeExpression } from "discourse/lib/utilities";
-import { renderIcon } from "discourse-common/lib/icon-library";
-import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import User from "discourse/models/user";
+import loadScript from "discourse/lib/load-script";
+import { renderIcon } from "discourse-common/lib/icon-library";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 export default function (elem, siteSettings) {
   if (!elem) {

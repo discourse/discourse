@@ -1,5 +1,5 @@
+import { observes, on } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
-import { on, observes } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 export default Controller.extend(ModalFunctionality, {

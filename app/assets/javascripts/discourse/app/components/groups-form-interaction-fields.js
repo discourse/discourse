@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import { or } from "@ember/object/computed";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { or } from "@ember/object/computed";
 
 export default Component.extend({
   init() {

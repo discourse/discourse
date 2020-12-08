@@ -1,15 +1,17 @@
-import { moduleForComponent } from "ember-qunit";
+import { click, fillIn } from "@ember/test-helpers";
+import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
+import { moduleForComponent } from "ember-qunit";
 
 function checkSelectKitIsNotExpanded(selector) {
-  if (find(selector).hasClass("is-expanded")) {
+  if (queryAll(selector).hasClass("is-expanded")) {
     // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be collapsed but it is expanded.");
   }
 }
 
 function checkSelectKitIsNotCollapsed(selector) {
-  if (!find(selector).hasClass("is-expanded")) {
+  if (!queryAll(selector).hasClass("is-expanded")) {
     // eslint-disable-next-line no-console
     console.warn("You expected select-kit to be expanded but it is collapsed.");
   }
@@ -29,7 +31,7 @@ async function selectKitFillInFilter(filter, selector) {
   checkSelectKitIsNotCollapsed(selector);
   await fillIn(
     `${selector} .filter-input`,
-    find(`${selector} .filter-input`).val() + filter
+    queryAll(`${selector} .filter-input`).val() + filter
   );
 }
 
@@ -55,11 +57,11 @@ async function selectKitSelectNoneRow(selector) {
 
 async function selectKitSelectRowByIndex(index, selector) {
   checkSelectKitIsNotCollapsed(selector);
-  await click(find(`${selector} .select-kit-row`).eq(index));
+  await click(queryAll(`${selector} .select-kit-row`).eq(index));
 }
 
 async function keyboardHelper(value, target, selector) {
-  target = find(selector).find(target || ".filter-input");
+  target = queryAll(selector).find(target || ".filter-input");
 
   if (value === "selectAll") {
     // special casing the only one not working with triggerEvent
@@ -198,27 +200,27 @@ export default function selectKit(selector) {
     },
 
     isExpanded() {
-      return find(selector).hasClass("is-expanded");
+      return queryAll(selector).hasClass("is-expanded");
     },
 
     isFocused() {
-      return find(selector).hasClass("is-focused");
+      return queryAll(selector).hasClass("is-focused");
     },
 
     isHidden() {
-      return find(selector).hasClass("is-hidden");
+      return queryAll(selector).hasClass("is-hidden");
     },
 
     header() {
-      return headerHelper(find(selector).find(".select-kit-header"));
+      return headerHelper(queryAll(selector).find(".select-kit-header"));
     },
 
     filter() {
-      return filterHelper(find(selector).find(".select-kit-filter"));
+      return filterHelper(queryAll(selector).find(".select-kit-filter"));
     },
 
     rows() {
-      return find(selector).find(".select-kit-row");
+      return queryAll(selector).find(".select-kit-row");
     },
 
     displayedContent() {
@@ -234,32 +236,34 @@ export default function selectKit(selector) {
 
     rowByValue(value) {
       return rowHelper(
-        find(selector).find('.select-kit-row[data-value="' + value + '"]')
+        queryAll(selector).find('.select-kit-row[data-value="' + value + '"]')
       );
     },
 
     rowByName(name) {
       return rowHelper(
-        find(selector).find('.select-kit-row[data-name="' + name + '"]')
+        queryAll(selector).find('.select-kit-row[data-name="' + name + '"]')
       );
     },
 
     rowByIndex(index) {
       return rowHelper(
-        find(selector).find(".select-kit-row:eq(" + index + ")")
+        queryAll(selector).find(
+          ".select-kit-row:nth-of-type(" + (index + 1) + ")"
+        )
       );
     },
 
     el() {
-      return find(selector);
+      return queryAll(selector);
     },
 
     noneRow() {
-      return rowHelper(find(selector).find(".select-kit-row.none"));
+      return rowHelper(queryAll(selector).find(".select-kit-row.none"));
     },
 
     validationMessage() {
-      const validationMessage = find(selector).find(".validation-message");
+      const validationMessage = queryAll(selector).find(".validation-message");
 
       if (validationMessage.length) {
         return validationMessage.html().trim();
@@ -269,16 +273,20 @@ export default function selectKit(selector) {
     },
 
     selectedRow() {
-      return rowHelper(find(selector).find(".select-kit-row.is-selected"));
+      return rowHelper(queryAll(selector).find(".select-kit-row.is-selected"));
     },
 
     highlightedRow() {
-      return rowHelper(find(selector).find(".select-kit-row.is-highlighted"));
+      return rowHelper(
+        queryAll(selector).find(".select-kit-row.is-highlighted")
+      );
     },
 
     async deselectItem(value) {
       await click(
-        find(selector).find(".select-kit-header").find(`[data-value=${value}]`)
+        queryAll(selector)
+          .find(".select-kit-header")
+          .find(`[data-value="${value}"]`)
       );
     },
 

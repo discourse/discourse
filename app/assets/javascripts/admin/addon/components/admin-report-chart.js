@@ -1,8 +1,8 @@
-import { makeArray } from "discourse-common/lib/helpers";
 import { debounce, schedule } from "@ember/runloop";
 import Component from "@ember/component";
-import { number } from "discourse/lib/formatter";
 import loadScript from "discourse/lib/load-script";
+import { makeArray } from "discourse-common/lib/helpers";
+import { number } from "discourse/lib/formatter";
 
 export default Component.extend({
   classNames: ["admin-report-chart"],

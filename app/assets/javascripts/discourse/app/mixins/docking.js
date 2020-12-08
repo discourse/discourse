@@ -1,5 +1,5 @@
+import { debounce, later } from "@ember/runloop";
 import Mixin from "@ember/object/mixin";
-import { later, debounce } from "@ember/runloop";
 
 const helper = {
   offset() {

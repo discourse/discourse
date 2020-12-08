@@ -39,6 +39,7 @@ fa_IR:
   title: "Discourse"
   topics: "موضوعات"
   posts: "فرسته‌ها"
+  views: "بازدیدها"
   loading: "بارگیری..."
   powered_by_html: 'قدرت گرفته از <a href="https://www.discourse.org">دیسکورس</a>، بهترین نمایش با جاوا اسکریپت فعال.'
   sign_up: "ثبت نام"
@@ -56,7 +57,6 @@ fa_IR:
     compile_error:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
-      generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -131,6 +131,8 @@ fa_IR:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
       second_factor_cannot_be_enforced_with_sso_enabled: "اگر SSO فعال باشد، نمی‌توانید 2FA را اجرا کنید."
+  word_connector:
+    comma: "، "
   invite:
     expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
@@ -594,6 +596,7 @@ fa_IR:
       short_description: "پسندیدن این فرسته"
   user_activity:
     no_bookmarks:
+      search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       others: "نشانه‌گذاری وجود ندارد"
     no_likes_given:
       self: "شما هیچ فرسته‌ای را نپسندیده‌اید."
@@ -990,9 +993,6 @@ fa_IR:
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_id: "Client ID برای نرم افزار گوگل شما. "
     google_oauth2_client_secret: "Client secret برای بر نرم افزار گوگل شما. "
-    enable_instagram_logins: "فعالسازی ورود با اینستاگرام، نیازمند \ninstagram_consumer_key and instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key اینستاگرام"
-    instagram_consumer_secret: "Consumer secret اینستاگرام"
     allow_restore: "اجازه بازیابی بده، که می‌تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
     automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
@@ -1015,7 +1015,6 @@ fa_IR:
     max_bookmarks_per_day: "حداکثر تعداد نشانک هر کاربر در روز"
     max_edits_per_day: "حداکثر تعداد ویرایش هر کاربر در روز"
     max_topics_per_day: "حداکثر تعداد موضوعاتی که هر کاربر در روز می توانند ایجاد کند"
-    max_personal_messages_per_day: "حداکثر تعداد پیام هایی که هر کاربر در روز می توانند ایجاد کند"
     max_invites_per_day: "حداکثر تعداد دعوت‌نامه‌هایی که هر کاربر در روز می توانند ارسال کند"
     max_topic_invitations_per_day: "حداکثر تعداد دعوت‌‌نامه‌هایی که یک کاربر می‌تواند برای عناوین در یک روز ارسال کند."
     max_logins_per_ip_per_hour: "حداکثر تعداد ورود به ازای هر آیپی در ساعت"
@@ -1386,7 +1385,6 @@ fa_IR:
     email_too_long: "ایمیل شما بسیار طولانی است. ایمیل باکس ها نباید بیش از 254 نویسه و نام دامنه نباید بیش از 253 نویسه باشد."
     reserved_username: "این نام کاربری مجاز نیست."
     missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
-    already_logged_in: "به نظر می‌رسد می‌خواهید دعوت کاربری دیگری را تایید کنید. اگر کاربر %{current_user} نیستید لطفا خارج شده و دوباره وارد سایت شوید."
     second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
     second_factor_toggle:
       backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"

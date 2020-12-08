@@ -1,10 +1,14 @@
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
-
-moduleForComponent("date-input", { integration: true });
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 
 function dateInput() {
-  return find(".date-picker");
+  return queryAll(".date-picker");
 }
 
 function setDate(date) {
@@ -21,46 +25,50 @@ function noop() {}
 
 const DEFAULT_DATE = moment("2019-01-29");
 
-componentTest("default", {
-  template: `{{date-input date=date}}`,
+discourseModule("Integration | Component | date-input", function (hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE });
-  },
+  componentTest("default", {
+    template: `{{date-input date=date}}`,
 
-  test(assert) {
-    assert.equal(dateInput().val(), "January 29, 2019");
-  },
-});
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE });
+    },
 
-componentTest("prevents mutations", {
-  template: `{{date-input date=date onChange=onChange}}`,
+    test(assert) {
+      assert.equal(dateInput().val(), "January 29, 2019");
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", noop);
-  },
+  componentTest("prevents mutations", {
+    template: `{{date-input date=date onChange=onChange}}`,
 
-  async test(assert) {
-    await click(dateInput());
-    await pika(2019, 0, 2);
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE });
+      this.set("onChange", noop);
+    },
 
-    assert.ok(this.date.isSame(DEFAULT_DATE));
-  },
-});
+    async test(assert) {
+      await click(dateInput());
+      await pika(2019, 0, 2);
 
-componentTest("allows mutations through actions", {
-  template: `{{date-input date=date onChange=onChange}}`,
+      assert.ok(this.date.isSame(DEFAULT_DATE));
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", setDate);
-  },
+  componentTest("allows mutations through actions", {
+    template: `{{date-input date=date onChange=onChange}}`,
 
-  async test(assert) {
-    await click(dateInput());
-    await pika(2019, 0, 2);
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE });
+      this.set("onChange", setDate);
+    },
 
-    assert.ok(this.date.isSame(moment("2019-01-02")));
-  },
+    async test(assert) {
+      await click(dateInput());
+      await pika(2019, 0, 2);
+
+      assert.ok(this.date.isSame(moment("2019-01-02")));
+    },
+  });
 });

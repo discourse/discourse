@@ -1,8 +1,8 @@
+import { ajax } from "discourse/lib/ajax";
+import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { schedule } from "@ember/runloop";
-import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
-import { formatUsername } from "discourse/lib/utilities";
 
 let maxGroupMention;
 

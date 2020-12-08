@@ -1584,6 +1584,30 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe 'when topic is allowed to a group' do
+      let(:group) { Fabricate(:group, public_admission: true) }
+      let(:category) do
+        Fabricate(:category_with_definition).tap do |category|
+          category.set_permissions(group => :full)
+          category.save!
+        end
+      end
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        SiteSetting.detailed_404 = true
+      end
+
+      it 'shows a descriptive error message containing the group name' do
+        get "/t/#{topic.id}.json"
+
+        html = CGI.unescapeHTML(response.parsed_body["extras"]["html"])
+        expect(response.status).to eq(403)
+        expect(html).to include(I18n.t('not_in_group.title_topic', group: group.name))
+        expect(html).to include(I18n.t('not_in_group.join_group'))
+      end
+    end
+
     it 'correctly renders canoicals' do
       get "/t/#{topic.id}", params: { slug: topic.slug }
 

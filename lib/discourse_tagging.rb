@@ -32,7 +32,7 @@ module DiscourseTagging
 
       # tag names which are visible, but not usable, by *some users*
       readonly_tags = DiscourseTagging.readonly_tag_names(guardian)
-      # tags names which are not visibile or usuable by *some users*
+      # tags names which are not visibile or usuable by this user
       hidden_tags = DiscourseTagging.hidden_tag_names(guardian)
 
       # tag names which ARE permitted by *this user*
@@ -43,7 +43,6 @@ module DiscourseTagging
       # restricted tags
       if permitted_tags.present?
         readonly_tags = readonly_tags - permitted_tags
-        hidden_tags = hidden_tags - permitted_tags
       end
 
       # visible, but not usable, tags this user is trying to use
@@ -373,7 +372,7 @@ module DiscourseTagging
   end
 
   def self.hidden_tag_names(guardian = nil)
-    guardian&.is_staff? ? [] : hidden_tags_query.pluck(:name)
+    guardian&.is_staff? ? [] : hidden_tags_query.pluck(:name) - permitted_tag_names(guardian)
   end
 
   # most restrictive level of tag groups
@@ -392,7 +391,7 @@ module DiscourseTagging
   def self.permitted_group_ids(guardian = nil)
     group_ids = [Group::AUTO_GROUPS[:everyone]]
 
-    if guardian.authenticated?
+    if guardian&.authenticated?
       group_ids.concat(guardian.user.groups.pluck(:id))
     end
 
@@ -482,6 +481,7 @@ module DiscourseTagging
   # tags that failed to be added, with errors on each Tag.
   def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
     tag_names = DiscourseTagging.tags_for_saving(synonym_names, Guardian.new(Discourse.system_user)) || []
+    tag_names -= [target_tag.name]
     existing = Tag.where_name(tag_names).all
     target_tag.synonyms << existing
     (tag_names - target_tag.synonyms.map(&:name)).each do |name|

@@ -4,4 +4,8 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-vi: 
+vi:
+  site_settings:
+    details_enabled: 'Bật tính năng chi tiết. Nếu bạn thay đổi điều này, bạn phải rebake tất cả các bài viết với: "rake posts:rebake".'
+  details:
+    excerpt_details: "(bấm để biết thêm chi tiết)"

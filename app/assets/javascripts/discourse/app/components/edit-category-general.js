@@ -1,12 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { not } from "@ember/object/computed";
+import { cancel, later } from "@ember/runloop";
+import Category from "discourse/models/category";
 import { action } from "@ember/object";
-import { later, cancel } from "@ember/runloop";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import Category from "discourse/models/category";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { not } from "@ember/object/computed";
 
 export default buildCategoryPanel("general", {
   init() {
@@ -106,9 +106,13 @@ export default buildCategoryPanel("general", {
     return Category.list().filterBy("parent_category_id", categoryId);
   },
 
-  @discourseComputed("category.isUncategorizedCategory", "category.id")
-  showDescription(isUncategorizedCategory, categoryId) {
-    return !isUncategorizedCategory && categoryId;
+  @discourseComputed(
+    "category.isUncategorizedCategory",
+    "category.id",
+    "category.topic_url"
+  )
+  showDescription(isUncategorizedCategory, categoryId, topicUrl) {
+    return !isUncategorizedCategory && categoryId && topicUrl;
   },
 
   @action

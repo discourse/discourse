@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
+import { ajax } from "discourse/lib/ajax";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
 **/
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import RestModel from "discourse/models/rest";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 const TopicDetails = RestModel.extend({
   loaded: false,

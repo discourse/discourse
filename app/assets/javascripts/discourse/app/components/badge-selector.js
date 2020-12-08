@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import Component from "@ember/component";
 import discourseComputed, {
-  on,
   observes,
+  on,
 } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 const { makeArray } = Ember;
 

@@ -56,7 +56,6 @@ tr_TR:
     compile_error:
       unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
-      generic: Bu temayı içe aktarırken bir hata oluştu
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       unpack_failed: "Dosya çözülemedi"
@@ -217,7 +216,6 @@ tr_TR:
   email_template_cant_be_modified: "Bu e-posta şablonu değiştirilemez"
   invalid_whisper_access: "Fısıltılar etkin değil veya fısıltı yayınları oluşturma erişiminiz yok"
   not_in_group:
-    title_topic: "Bu konuyu görebilmek için bir grupta olmalısınız."
     title_category: "Bu kategoriyi görebilmek için bir grupta olmalısınız."
     request_membership: "Üyelik İste"
     join_group: "Gruba katıl"
@@ -1428,9 +1426,6 @@ tr_TR:
     enable_twitter_logins: "Twitter kimlik doğrulamasını etkinleştir, twitter_consumer_key ve twitter_consumer_secret gerektirir. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse için Twitter girişini (ve zengin yerleştirmeleri) yapılandırma sayfasına göz atın</a> ."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer key'"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer secret'"
-    enable_instagram_logins: "Instagram doğrulamasını etkinleştir, instagram_consumer_key ve instagram_consumer_secret gereklidir"
-    instagram_consumer_key: "Instagram kimlik doğrulaması için 'consumer key'"
-    instagram_consumer_secret: "'consumer secret' Instagram kimlik doğrulaması"
     enable_facebook_logins: "Facebook kimlik doğrulamasını etkinleştir, facebook_app_id ve facebook_app_secret gerektirir. Bkz. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse için Facebook oturumunu yapılandırma</a> ."
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps adresinde</a> kayıtlı Facebook kimlik doğrulaması için uygulama sırrı"
     enable_discord_logins: "Kullanıcıların Discord kullanarak kimlik doğrulamasına izin verilsin mi?"
@@ -1467,7 +1462,6 @@ tr_TR:
     max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla imleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
-    max_personal_messages_per_day: "Bir günde kullanıcıların oluşturabileceği en fazla ileti sayısı"
     max_invites_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla davet sayısı."
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
@@ -2000,7 +1994,6 @@ tr_TR:
     missing_user_field: "Kullanıcı alanlarının tamamını doldurmadınız"
     auth_complete: "Kimlik doğrulama işlemi tamamlandı."
     click_to_continue: "Devam etmek için buraya tıklayın."
-    already_logged_in: "Hata! Başka bir kullanıcı için daveti kabul etmeye çalıştığınız anlaşılıyor. %{current_user} değilseniz, lütfen çıkış yapın ve tekrar deneyin."
     second_factor_description: "Lütfen uygulamanıza gerekli kimlik doğrulama kodunu girin:"
     second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
     invalid_second_factor_code: "Geçersiz kimlik doğrulama kodu. Her kod yalnızca bir kez kullanılabilir."

@@ -1,9 +1,9 @@
-import { on } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
-import UserAction from "discourse/models/user-action";
-import { Promise } from "rsvp";
 import EmberObject from "@ember/object";
+import { Promise } from "rsvp";
+import UserAction from "discourse/models/user-action";
+import { ajax } from "discourse/lib/ajax";
+import { on } from "discourse-common/utils/decorators";
+import { url } from "discourse/lib/computed";
 
 export default EmberObject.extend({
   loaded: false,

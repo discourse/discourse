@@ -1,7 +1,7 @@
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import { Promise } from "rsvp";
 
 const _extraItems = [];
 
@@ -55,6 +55,15 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         className: "activity",
       },
     ];
+
+    if (this.currentUser.can_invite_to_forum) {
+      defaultItems.push({
+        icon: "user-plus",
+        href: `${this.attrs.path}/invited`,
+        content: I18n.t("user.invited.title"),
+        className: "invites",
+      });
+    }
 
     defaultItems.push(
       {

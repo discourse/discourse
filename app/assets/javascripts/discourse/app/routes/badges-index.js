@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
 import Badge from "discourse/models/badge";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 
 export default DiscourseRoute.extend({

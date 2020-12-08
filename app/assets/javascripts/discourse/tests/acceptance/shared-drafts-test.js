@@ -1,18 +1,18 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
-acceptance("Shared Drafts", { loggedIn: true });
+acceptance("Shared Drafts", function () {
+  test("Viewing", async function (assert) {
+    await visit("/t/some-topic/9");
+    assert.ok(queryAll(".shared-draft-controls").length === 1);
+    let categoryChooser = selectKit(".shared-draft-controls .category-chooser");
+    assert.equal(categoryChooser.header().value(), "3");
 
-test("Viewing", async (assert) => {
-  await visit("/t/some-topic/9");
-  assert.ok(find(".shared-draft-controls").length === 1);
-  let categoryChooser = selectKit(".shared-draft-controls .category-chooser");
-  assert.equal(categoryChooser.header().value(), "3");
+    await click(".publish-shared-draft");
+    await click(".bootbox .btn-primary");
 
-  await click(".publish-shared-draft");
-  await click(".bootbox .btn-primary");
-
-  assert.ok(find(".shared-draft-controls").length === 0);
+    assert.ok(queryAll(".shared-draft-controls").length === 0);
+  });
 });

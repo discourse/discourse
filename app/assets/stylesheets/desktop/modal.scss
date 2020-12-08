@@ -48,28 +48,6 @@
   }
 }
 
-.edit-category-modal {
-  .modal-body {
-    position: relative;
-    height: 420px;
-  }
-
-  .edit-category-tab-general {
-    .category-chooser {
-      width: 434px;
-    }
-  }
-
-  .disable_info_wrap {
-    .cannot_delete_reason {
-      top: -100px;
-      right: 4px;
-      max-width: 380px;
-      min-width: 300px;
-    }
-  }
-}
-
 .choose-topic-modal {
   .modal-body {
     position: relative;
@@ -115,5 +93,11 @@
         margin-bottom: 9px;
       }
     }
+  }
+}
+
+.change-post-notice-modal {
+  .modal-body {
+    min-width: 450px;
   }
 }

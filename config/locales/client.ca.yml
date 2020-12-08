@@ -1174,15 +1174,10 @@ ca:
         links_tab: "Enllaços"
         link_created_at: "Creat"
         link_groups: Grups
-        create: "Envia la invitació"
-        generate_link: "Copia l'enllaç d'invitació"
-        link_generated: "Enllaç d'invitació generat emb èxit!"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
-        single_user: "Usuari únic"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         bulk_invite:
-          none: "Encara no heu convidat ningú aquí. Envieu invitacions individuals o convideu molta gent d'un sol cop <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviant un fitxer CSV</a>."
           success: "Fitxer carregat amb èxit. Us notificarem amb un missatge quan s'hagi completat el procés."
           error: "El fitxer hauria de tenir format CSV."
           confirmation_message: "Esteu a punt d'enviar invitacions a tothom en el fitxer pujat. "
@@ -1418,7 +1413,6 @@ ca:
       sent_activation_email_again_generic: "S'ha enviat un altre correu d'activació. Pot trigar uns quants minuts a arribar; comproveu la carpeta de correu brossa."
       to_continue: "Inicieu la sessió"
       preferences: "Cal que inicieu la sessió per a canviar les preferències d'usuari."
-      forgot: "No recordo els detalls del meu compte"
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
@@ -1636,7 +1630,6 @@ ca:
           label: "Tema nou"
         shared_draft:
           label: "Esborrany compartit"
-          desc: "Esborrany d'un tema que sols serà visible a l'equip responsable"
         toggle_topic_bump:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
@@ -1661,10 +1654,6 @@ ca:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} i %{count} altre</span> %{description}"
-        other: "<span>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -2325,7 +2314,6 @@ ca:
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
         add_post_notice: "Afegeix un avís a l'equip responsable"
-        remove_post_notice: "Elimina l'avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -2401,7 +2389,6 @@ ca:
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
-      manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
       tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
       required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"
@@ -3777,7 +3764,6 @@ ca:
         suspend_reason_label: "Per què suspeneu aquest usuari? Aquest text <b>serà visible per a tothom</b> en el perfil de l'usuari, i es mostrarà a l'usuari quan vulgui iniciar la sessió. Sigueu breu."
         suspend_reason_hidden_label: "Per què suspeneu aquest usuari? Aquest text es mostrarà a l'usuari quan intenti iniciar la sessió. Sigueu breu. "
         suspend_reason: "Motiu"
-        suspend_reason_placeholder: "Raó de la suspensió"
         suspend_message: "Missatge de correu"
         suspend_message_placeholder: "Opcionalment, doneu més informació sobre la suspensió i s'enviarà per correu a l'usuari."
         suspended_by: "Suspès per"

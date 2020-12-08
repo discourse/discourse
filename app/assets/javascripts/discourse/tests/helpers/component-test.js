@@ -1,12 +1,37 @@
 import EmberObject from "@ember/object";
-import createStore from "discourse/tests/helpers/create-store";
-import { autoLoadModules } from "discourse/initializers/auto-load-modules";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
+import { TestModuleForComponent } from "@ember/test-helpers";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
-import Session from "discourse/models/session";
+import { autoLoadModules } from "discourse/initializers/auto-load-modules";
+import createStore from "discourse/tests/helpers/create-store";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import { test } from "qunit";
+
+export function setupRenderingTest(hooks) {
+  let testModule;
+
+  hooks.before(function () {
+    const name = this.moduleName.split("|").pop();
+    testModule = new TestModuleForComponent(name, {
+      integration: true,
+    });
+  });
+
+  hooks.beforeEach(function () {
+    testModule.setContext(this);
+    return testModule.setup(...arguments);
+  });
+
+  hooks.afterEach(function () {
+    return testModule.teardown(...arguments);
+  });
+
+  hooks.after(function () {
+    testModule = null;
+  });
+}
 
 export default function (name, opts) {
   opts = opts || {};

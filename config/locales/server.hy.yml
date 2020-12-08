@@ -54,7 +54,6 @@ hy:
     bad_color_scheme: "Անհնար է թարմացնել թեման, անվավեր գունապնակ"
     other_error: "Թեման թարմացնելիս ինչ-որ բան այնպես չէ ընթացել"
     import_error:
-      generic: Այդ թեման ներմուծելիս տեղի է ունեցել սխալ
       about_json_values: "about.json -ը պարունակում է անվավեր արժեքներ. %{errors}"
       git: "git ռեպոզիտորիայի կլոնավորման սխալ, հասանելիությունը մերժված է, կամ ռեպոզիտորիան գտնված չէ"
       unpack_failed: "Ֆայլի բացումը ձախողվեց"
@@ -1260,9 +1259,6 @@ hy:
     enable_twitter_logins: "Միացնել Twitter նույնականացումը, պահանջում է requires twitter_consumer_key և twitter_consumer_secret: Այցելեք <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter մուտքի (և rich զետեղումների) կարգավորում Discourse -ի համար</a>:"
     twitter_consumer_key: "Twitter նույնականացման համարսՍպառողի key, որը գրանցված է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Հաճախորդի գաղտնի արժեքը Twitter-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Միացնել Instagram նույնականացումը, պահանջում է instagram_consumer_key և instagram_consumer_secret"
-    instagram_consumer_key: "Հաճախորդի բանալին Instagram-ով վավերականացման համար"
-    instagram_consumer_secret: "Սպառողի գաղտնի արժեքի Instagram նույնականացում"
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
@@ -1296,7 +1292,6 @@ hy:
     max_bookmarks_per_day: "Յուրաքանչյուր օգտատիրոջ յուրաքանչյուր օրվա էջանշումների առավելագույն քանակը:"
     max_edits_per_day: "Յուրաքանչյուր օրվա յուրաքանչյուր օգտատիրոջ խմբագրումների առավելագույն քանակը"
     max_topics_per_day: "Թեմաների առավելագույն քանակը, որ օգտատերը կարող է ստեղծել յուրաքանչյուր օր:"
-    max_personal_messages_per_day: "Հաղորդագրությունների առավելագույն քանակը, որ օգտատերերը կարող են ստեղծել յուրաքանչյուր օր"
     max_invites_per_day: "Հրավերների առավելագույն քանակը, որ օգտատերը կարող է ուղարկել յուրաքանչյուր օր:"
     max_topic_invitations_per_day: "Թեմայի հրավերների առավելագույն քանակը, որ օգտատերը կարող է ուղարկել ամեն օր:"
     max_logins_per_ip_per_hour: "Յուրաքանչյուր IP հասցեից յուրաքանչյուր ժամվա մեջ թույլատրված մուտքերի առավելագույն քանակը"
@@ -1768,7 +1763,6 @@ hy:
     missing_user_field: "Դուք դեռևս չեք լրացրել օգտատիրոջ բոլոր դաշտերը"
     auth_complete: "Նույնականացումը ավարտված է:"
     click_to_continue: "Շարունակելու համար սեղմեք այստեղ:"
-    already_logged_in: "Օյ, կարծես թե Դուք փորձում եք ընդունել մեկ այլ օգտատիրոջ համար նախատեսված հրավեր: Եթե Դուք %{current_user} -ը չեք, խնդրում ենք դուրս գրվել և փորձել կրկին:"
     second_factor_description: "Խնդրում ենք մուտքագրել պահանջված նույնականացման կոդը Ձեր հավելվածից՝"
     second_factor_backup_description: "Խնդրում ենք մուտքագրել Ձեր պահուստային կոդերից որևէ մեկը՝"
     invalid_second_factor_code: "Անվավեր նույնականացման կոդ: Յուրաքանչյուր կոդ կարող է օգտագործվել միայն մեկ անգամ:"

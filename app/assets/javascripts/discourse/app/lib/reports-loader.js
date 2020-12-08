@@ -1,5 +1,5 @@
-import { run } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
+import { run } from "@ember/runloop";
 const { debounce } = run;
 
 let _queue = [];

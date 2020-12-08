@@ -1,5 +1,5 @@
-import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(371, 124, {
   tab: null,

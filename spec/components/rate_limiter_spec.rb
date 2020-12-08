@@ -38,6 +38,48 @@ describe RateLimiter do
       RateLimiter.disable
     end
 
+    context 'aggressive rate limiter' do
+
+      it 'can operate correctly and totally stop limiting' do
+
+        freeze_time
+
+        # 2 requests every 30 seconds
+        limiter = RateLimiter.new(nil, "test", 2, 30, global: true, aggressive: true)
+        limiter.clear!
+
+        limiter.performed!
+        limiter.performed!
+
+        freeze_time 29.seconds.from_now
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        # in aggressive mode both these ^^^ count as an attempt
+        freeze_time 29.seconds.from_now
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        expect do
+          limiter.performed!
+        end.to raise_error(RateLimiter::LimitExceeded)
+
+        freeze_time 31.seconds.from_now
+
+        limiter.performed!
+        limiter.performed!
+
+      end
+    end
+
     context 'global rate limiter' do
 
       it 'can operate in global mode' do

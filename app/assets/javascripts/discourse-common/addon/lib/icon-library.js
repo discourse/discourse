@@ -1,6 +1,7 @@
 import I18n from "I18n";
-import { h } from "virtual-dom";
 import attributeHook from "discourse-common/lib/attribute-hook";
+import { h } from "virtual-dom";
+import { isDevelopment } from "discourse-common/config/environment";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 let _renderers = [];
@@ -114,8 +115,12 @@ export function setIconList(iconList) {
   _iconList = iconList;
 }
 
+export function isExistingIconId(id) {
+  return _iconList && _iconList.indexOf(id) >= 0;
+}
+
 function warnIfMissing(id) {
-  if (warnMissingIcons && _iconList && _iconList.indexOf(id) === -1) {
+  if (warnMissingIcons && isDevelopment() && !isExistingIconId(id)) {
     console.warn(`The icon "${id}" is missing from the SVG subset.`); // eslint-disable-line no-console
   }
 }

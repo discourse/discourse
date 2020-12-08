@@ -1,6 +1,6 @@
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
 import { addPretenderCallback } from "discourse/tests/helpers/qunit-helpers";
+import componentTest from "discourse/tests/helpers/component-test";
+import { moduleForComponent } from "ember-qunit";
 
 export function moduleForWidget(name, options = {}) {
   let fullName = `widget:${name}`;

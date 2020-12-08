@@ -750,7 +750,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.short_path
+    flair_icon.presence || flair_upload&.url
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
@@ -815,6 +815,11 @@ class Group < ActiveRecord::Base
       username: self.email_username,
       password: self.email_password
     }
+  end
+
+  def imap_enabled?
+    return false if !SiteSetting.enable_imap
+    imap_config.values.compact.length == imap_config.keys.length
   end
 
   def email_username_regex

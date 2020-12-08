@@ -1103,14 +1103,10 @@ da:
         links_tab: "Links"
         link_created_at: "Oprettet"
         link_groups: grupper
-        create: "Send invitation"
-        generate_link: "Kopier invitations-link"
-        link_generated: "Invitiationslinket blev genereret!"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         invite_link:
           success: "Invitiationslinket blev genereret!"
         bulk_invite:
-          none: "Du har ikke inviteret noget endnu. Send individuelle invitationer eller inviter mange på en gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en CSV-fil</a>."
           success: "Fil uploaded successfuldt, du vil blive meddelt via en beskede når processen er fuldendt."
           error: "Desværre, filen skal være CSV format."
           confirmation_message: "Du er ved at sende email invitationer til alle i den uploadede fil."
@@ -1331,7 +1327,6 @@ da:
       sent_activation_email_again_generic: "Vi har sendt en anden aktiveringsemail. Det kan tage et par minutter, før det ankommer; husk at checke din spam-mappe."
       to_continue: "Log venligst ind"
       preferences: "Du skal være logget ind for at ændre præferencer."
-      forgot: "Jeg kan ikke huske min kontos detaljer"
       not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google_oauth2:
         name: "Google"
@@ -1542,7 +1537,6 @@ da:
           label: "Nyt emne"
         shared_draft:
           label: "Delt Kladde"
-          desc: "Lav en kladde til et emne, der kun er synligt for hjælperteam"
         toggle_topic_bump:
           label: "Slå emne 'bump' til/fra"
           desc: "Svar uden at ændre den seneste svardato"
@@ -1567,10 +1561,6 @@ da:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} og %{count} anden</span> %{description}"
-        other: "<span>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated_description:
         one: "kunne godt lide %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -2226,7 +2216,6 @@ da:
         delete_topic_disallowed: "du har ikke tilladelse til at slette dette emne"
         delete_topic: "slet emne"
         add_post_notice: "Tilføj Hjælperteam Notits"
-        remove_post_notice: "Fjern Hjælperteam Notits"
         remove_timer: "fjern timer"
       actions:
         people:
@@ -2298,7 +2287,6 @@ da:
       tags_allowed_tag_groups: "Begræns disse tag grupper til denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
-      manage_tag_groups_link: "Administrer tag grupper her."
       allow_global_tags_label: "Tillad også andre tags"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"
@@ -3636,7 +3624,6 @@ da:
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason_hidden_label: "Hvorfor suspenderer du? Teksten er synlig for  denne bruger, når de prøver et log ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
-        suspend_reason_placeholder: "Årsag til suspension"
         suspend_message: "Email Besked"
         suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"

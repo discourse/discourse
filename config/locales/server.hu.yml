@@ -56,7 +56,6 @@ hu:
     compile_error:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
-      generic: Hiba történt a téma importálásákor
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
@@ -745,10 +744,13 @@ hu:
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
+    auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
     company_name: "Cégnév"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
@@ -1322,6 +1324,10 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (%{count}. rész)"
+      other: "%{topic_title} (%{count}. rész)"
   activemodel:
     errors:
       <<: *errors

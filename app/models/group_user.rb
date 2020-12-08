@@ -196,6 +196,7 @@ end
 #  updated_at         :datetime         not null
 #  owner              :boolean          default(FALSE), not null
 #  notification_level :integer          default(2), not null
+#  first_unread_pm_at :datetime         not null
 #
 # Indexes
 #

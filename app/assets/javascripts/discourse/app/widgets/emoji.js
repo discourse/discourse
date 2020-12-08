@@ -1,6 +1,6 @@
-import { createWidget } from "discourse/widgets/widget";
-import { emojiUrlFor, emojiUnescape } from "discourse/lib/text";
+import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export function replaceEmoji(str) {

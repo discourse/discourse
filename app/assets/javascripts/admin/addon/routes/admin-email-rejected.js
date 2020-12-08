@@ -1,5 +1,5 @@
-import showModal from "discourse/lib/show-modal";
 import AdminEmailIncomings from "admin/routes/admin-email-incomings";
+import showModal from "discourse/lib/show-modal";
 
 export default AdminEmailIncomings.extend({
   status: "rejected",

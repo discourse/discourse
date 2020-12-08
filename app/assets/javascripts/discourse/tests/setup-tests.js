@@ -1,31 +1,59 @@
 import {
-  resetSettings,
+  applyPretender,
+  exists,
+  resetSite,
+} from "discourse/tests/helpers/qunit-helpers";
+import createPretender, {
+  applyDefaultHandlers,
+  pretenderHelpers,
+} from "discourse/tests/helpers/create-pretender";
+import {
   currentSettings,
+  resetSettings,
 } from "discourse/tests/helpers/site-settings";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupURL, setupS3CDN } from "discourse-common/lib/get-url";
-import { createHelperContext } from "discourse-common/lib/helpers";
-import { buildResolver } from "discourse-common/resolver";
-import createPretender, {
-  pretenderHelpers,
-  applyDefaultHandlers,
-} from "discourse/tests/helpers/create-pretender";
-import { flushMap } from "discourse/models/store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import DiscourseURL from "discourse/lib/url";
-import {
-  resetSite,
-  applyPretender,
-} from "discourse/tests/helpers/qunit-helpers";
-import PreloadStore from "discourse/lib/preload-store";
-import User from "discourse/models/user";
-import Session from "discourse/models/session";
-import { clearAppEventsCache } from "discourse/services/app-events";
-import QUnit from "qunit";
-import MessageBus from "message-bus-client";
-import deprecated from "discourse-common/lib/deprecated";
-import sinon from "sinon";
 import { setApplication, setResolver } from "@ember/test-helpers";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import MessageBus from "message-bus-client";
+import PreloadStore from "discourse/lib/preload-store";
+import QUnit from "qunit";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import Session from "discourse/models/session";
+import User from "discourse/models/user";
+import bootbox from "bootbox";
+import { buildResolver } from "discourse-common/resolver";
+import { clearAppEventsCache } from "discourse/services/app-events";
+import { createHelperContext } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
+import { flushMap } from "discourse/models/store";
+import sinon from "sinon";
+
+const Plugin = $.fn.modal;
+const Modal = Plugin.Constructor;
+
+function AcceptanceModal(option, _relatedTarget) {
+  return this.each(function () {
+    var $this = $(this);
+    var data = $this.data("bs.modal");
+    var options = $.extend(
+      {},
+      Modal.DEFAULTS,
+      $this.data(),
+      typeof option === "object" && option
+    );
+
+    if (!data) {
+      $this.data("bs.modal", (data = new Modal(this, options)));
+    }
+    data.$body = $("#ember-testing");
+
+    if (typeof option === "string") {
+      data[option](_relatedTarget);
+    } else if (options.show) {
+      data.show(_relatedTarget);
+    }
+  });
+}
 
 export default function setupTests(app, container) {
   setResolver(buildResolver("discourse").create({ namespace: app }));
@@ -45,6 +73,8 @@ export default function setupTests(app, container) {
   app.setupForTesting();
   app.SiteSettings = currentSettings();
   app.start();
+  bootbox.$body = $("#ember-testing");
+  $.fn.modal = AcceptanceModal;
 
   // disable logster error reporting
   if (window.Logster) {
@@ -67,12 +97,36 @@ export default function setupTests(app, container) {
       return server;
     },
   });
+  Object.defineProperty(window, "sandbox", {
+    get() {
+      deprecated(
+        "Accessing the global variable `sandbox` is deprecated. Import `sinon` instead",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return sinon;
+    },
+  });
+  Object.defineProperty(window, "exists", {
+    get() {
+      deprecated(
+        "Accessing the global function `exists` is deprecated. Import it instead.",
+        {
+          since: "2.6.0.beta.4",
+          dropFrom: "2.6.0",
+        }
+      );
+      return exists;
+    },
+  });
 
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
     server = createPretender;
-    applyDefaultHandlers(server);
     server.handlers = [];
+    applyDefaultHandlers(server);
 
     server.prepareBody = function (body) {
       if (body && typeof body === "object") {
@@ -97,7 +151,8 @@ export default function setupTests(app, container) {
       const error =
         "Unhandled request in test environment: " + path + " (" + verb + ")";
 
-      window.console.error(error);
+      // eslint-disable-next-line no-console
+      console.error(error);
       throw new Error(error);
     };
 
@@ -118,24 +173,18 @@ export default function setupTests(app, container) {
       site,
     });
 
-    DiscourseURL.redirectedTo = null;
-    DiscourseURL.redirectTo = function (url) {
-      DiscourseURL.redirectedTo = url;
-    };
-
     PreloadStore.reset();
 
-    window.sandbox = sinon;
-    window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
-    window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
-    window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "screenNotFull");
+    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
+    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Unless we ever need to test this, let's leave it off.
     $.fn.autocomplete = function () {};
   });
 
   QUnit.testDone(function () {
-    window.sandbox.restore();
+    sinon.restore();
 
     // Destroy any modals
     $(".modal-backdrop").remove();
@@ -148,7 +197,6 @@ export default function setupTests(app, container) {
 
     MessageBus.unsubscribe("*");
     server = null;
-    window.Mousetrap.reset();
   });
 
   // Load ES6 tests

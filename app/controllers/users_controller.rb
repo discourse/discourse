@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited, :invite_links
+    :bookmarks, :invited, :invite_links, :check_sso_email
   ]
 
   skip_before_action :check_xhr, only: [
@@ -202,6 +202,22 @@ class UsersController < ApplicationController
       unconfirmed_emails: unconfirmed_emails,
       associated_accounts: user.associated_accounts
     }
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: 403
+  end
+
+  def check_sso_email
+    user = fetch_user_from_params(include_inactive: true)
+
+    unless user == current_user
+      guardian.ensure_can_check_sso_email!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
+
+    email = user&.single_sign_on_record&.external_email
+    email = I18n.t("user.email.does_not_exist") if email.blank?
+
+    render json: { email: email }
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
@@ -631,8 +647,7 @@ class UsersController < ApplicationController
         success: true,
         active: user.active?,
         message: activation.message,
-        user_id: user.id
-      }
+      }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
@@ -642,9 +657,8 @@ class UsersController < ApplicationController
 
       render json: {
         success: true,
-        active: user.active?,
-        message: activation.success_message,
-        user_id: user.id
+        active: false,
+        message: activation.success_message
       }
     else
       errors = user.errors.to_hash
@@ -1526,7 +1540,9 @@ class UsersController < ApplicationController
         if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
-            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+            no_results_help: I18n.t(
+              params[:q].present? ? "user_activity.no_bookmarks.search" : "user_activity.no_bookmarks.self"
+            )
           }
         else
           page = params[:page].to_i + 1
@@ -1586,7 +1602,6 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
-      :ignored_usernames,
       :allowed_pm_usernames,
       :theme_ids,
       :locale,

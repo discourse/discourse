@@ -1,11 +1,11 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
+import UtilsMixin from "select-kit/mixins/utils";
+import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isPresent } from "@ember/utils";
-import { computed } from "@ember/object";
-import { not } from "@ember/object/computed";
-import UtilsMixin from "select-kit/mixins/utils";
 import layout from "select-kit/templates/components/select-kit/select-kit-filter";
+import { not } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   layout,

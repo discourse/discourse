@@ -1,32 +1,31 @@
-import I18n from "I18n";
-import { isPresent, isEmpty } from "@ember/utils";
-import { or, and, not, alias } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { next, schedule, later } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import { alias, and, not, or } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { isEmpty, isPresent } from "@ember/utils";
+import { later, next, schedule } from "@ember/runloop";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
-import DiscourseURL from "discourse/lib/url";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import Post from "discourse/models/post";
-import { buildQuote } from "discourse/lib/quote";
+import { Promise } from "rsvp";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
-import discourseDebounce from "discourse/lib/debounce";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { userPath } from "discourse/lib/url";
-import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
-import { Promise } from "rsvp";
-import { escapeExpression } from "discourse/lib/utilities";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
+import discourseDebounce from "discourse/lib/debounce";
+import { escapeExpression } from "discourse/lib/utilities";
+import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
+import showModal from "discourse/lib/show-modal";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let customPostMessageCallbacks = {};
 
@@ -857,20 +856,15 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showGrantBadgeModal");
     },
 
-    addNotice(post) {
+    changeNotice(post) {
       return new Promise(function (resolve, reject) {
-        const modal = showModal("add-post-notice");
-        modal.setProperties({ post, resolve, reject });
+        const modal = showModal("change-post-notice", { model: post });
+        modal.setProperties({
+          resolve,
+          reject,
+          notice: post.notice ? post.notice.raw : "",
+        });
       });
-    },
-
-    removeNotice(post) {
-      return post.updatePostField("notice", null).then(() =>
-        post.setProperties({
-          notice_type: null,
-          notice_args: null,
-        })
-      );
     },
 
     toggleParticipant(user) {
@@ -1295,7 +1289,20 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopic() {
-    this.model.destroy(this.currentUser);
+    if (
+      this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
+    ) {
+      this.deleteTopicModal();
+    } else {
+      this.model.destroy(this.currentUser);
+    }
+  },
+
+  deleteTopicModal() {
+    showModal("delete-topic-confirm", {
+      model: this.model,
+      title: "topic.actions.delete",
+    });
   },
 
   retryOnRateLimit(times, promise, topicId) {
@@ -1408,6 +1415,12 @@ export default Controller.extend(bufferedProperty("model"), {
           case "deleted": {
             postStream
               .triggerDeletedPost(data.id)
+              .then(() => refresh({ id: data.id }));
+            break;
+          }
+          case "destroyed": {
+            postStream
+              .triggerDestroyedPost(data.id)
               .then(() => refresh({ id: data.id }));
             break;
           }

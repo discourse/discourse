@@ -1,90 +1,99 @@
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
-moduleForComponent("image-uploader", { integration: true });
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 
-componentTest("with image", {
-  template:
-    "{{image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}",
+discourseModule("Integration | Component | image-uploader", function (hooks) {
+  setupRenderingTest(hooks);
 
-  async test(assert) {
-    assert.equal(
-      find(".d-icon-far-image").length,
-      1,
-      "it displays the upload icon"
-    );
+  componentTest("with image", {
+    template:
+      "{{image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}",
 
-    assert.equal(
-      find(".d-icon-far-trash-alt").length,
-      1,
-      "it displays the trash icon"
-    );
+    async test(assert) {
+      assert.equal(
+        queryAll(".d-icon-far-image").length,
+        1,
+        "it displays the upload icon"
+      );
 
-    assert.equal(
-      find(".placeholder-overlay").length,
-      0,
-      "it does not display the placeholder image"
-    );
+      assert.equal(
+        queryAll(".d-icon-far-trash-alt").length,
+        1,
+        "it displays the trash icon"
+      );
 
-    await click(".image-uploader-lightbox-btn");
+      assert.equal(
+        queryAll(".placeholder-overlay").length,
+        0,
+        "it does not display the placeholder image"
+      );
 
-    assert.equal(
-      $(".mfp-container").length,
-      1,
-      "it displays the image lightbox"
-    );
-  },
-});
+      await click(".image-uploader-lightbox-btn");
 
-componentTest("without image", {
-  template: "{{image-uploader}}",
+      assert.equal(
+        $(".mfp-container").length,
+        1,
+        "it displays the image lightbox"
+      );
+    },
+  });
 
-  test(assert) {
-    assert.equal(
-      find(".d-icon-far-image").length,
-      1,
-      "it displays the upload icon"
-    );
+  componentTest("without image", {
+    template: "{{image-uploader}}",
 
-    assert.equal(
-      find(".d-icon-far-trash-alt").length,
-      0,
-      "it does not display trash icon"
-    );
+    test(assert) {
+      assert.equal(
+        queryAll(".d-icon-far-image").length,
+        1,
+        "it displays the upload icon"
+      );
 
-    assert.equal(
-      find(".image-uploader-lightbox-btn").length,
-      0,
-      "it does not display the button to open image lightbox"
-    );
-  },
-});
+      assert.equal(
+        queryAll(".d-icon-far-trash-alt").length,
+        0,
+        "it does not display trash icon"
+      );
 
-componentTest("with placeholder", {
-  template: "{{image-uploader placeholderUrl='/images/avatar.png'}}",
+      assert.equal(
+        queryAll(".image-uploader-lightbox-btn").length,
+        0,
+        "it does not display the button to open image lightbox"
+      );
+    },
+  });
 
-  test(assert) {
-    assert.equal(
-      find(".d-icon-far-image").length,
-      1,
-      "it displays the upload icon"
-    );
+  componentTest("with placeholder", {
+    template: "{{image-uploader placeholderUrl='/images/avatar.png'}}",
 
-    assert.equal(
-      find(".d-icon-far-trash-alt").length,
-      0,
-      "it does not display trash icon"
-    );
+    test(assert) {
+      assert.equal(
+        queryAll(".d-icon-far-image").length,
+        1,
+        "it displays the upload icon"
+      );
 
-    assert.equal(
-      find(".image-uploader-lightbox-btn").length,
-      0,
-      "it does not display the button to open image lightbox"
-    );
+      assert.equal(
+        queryAll(".d-icon-far-trash-alt").length,
+        0,
+        "it does not display trash icon"
+      );
 
-    assert.equal(
-      find(".placeholder-overlay").length,
-      1,
-      "it displays the placeholder image"
-    );
-  },
+      assert.equal(
+        queryAll(".image-uploader-lightbox-btn").length,
+        0,
+        "it does not display the button to open image lightbox"
+      );
+
+      assert.equal(
+        queryAll(".placeholder-overlay").length,
+        1,
+        "it displays the placeholder image"
+      );
+    },
+  });
 });

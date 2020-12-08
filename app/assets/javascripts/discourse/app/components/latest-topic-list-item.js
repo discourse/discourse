@@ -1,8 +1,8 @@
-import Component from "@ember/component";
 import {
-  showEntrance,
   navigateToTopic,
+  showEntrance,
 } from "discourse/components/topic-list-item";
+import Component from "@ember/component";
 
 export default Component.extend({
   attributeBindings: ["topic.id:data-topic-id"],

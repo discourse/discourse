@@ -606,6 +606,7 @@ end
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
 #  enabled          :boolean          default(TRUE), not null
+#  auto_update      :boolean          default(TRUE), not null
 #
 # Indexes
 #

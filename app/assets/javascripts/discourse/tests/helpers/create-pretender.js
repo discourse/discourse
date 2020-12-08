@@ -1,5 +1,5 @@
-import User from "discourse/models/user";
 import Pretender from "pretender";
+import User from "discourse/models/user";
 
 export function parsePostData(query) {
   const result = {};
@@ -88,46 +88,44 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/tags", () => {
-    return [
-      200,
-      { "Content-Type": "application/json" },
-      {
-        tags: [
-          { id: "eviltrout", count: 1 },
-          { id: "planned", text: "planned", count: 7, pm_count: 0 },
-          { id: "private", text: "private", count: 0, pm_count: 7 },
+    return response({
+      tags: [
+        { id: "eviltrout", count: 1 },
+        { id: "planned", text: "planned", count: 7, pm_count: 0 },
+        { id: "private", text: "private", count: 0, pm_count: 7 },
+      ],
+      extras: {
+        tag_groups: [
+          {
+            id: 2,
+            name: "Ford Cars",
+            tags: [
+              { id: "Escort", text: "Escort", count: 1, pm_count: 0 },
+              { id: "focus", text: "focus", count: 3, pm_count: 0 },
+            ],
+          },
+          {
+            id: 1,
+            name: "Honda Cars",
+            tags: [
+              { id: "civic", text: "civic", count: 4, pm_count: 0 },
+              { id: "accord", text: "accord", count: 2, pm_count: 0 },
+            ],
+          },
+          {
+            id: 1,
+            name: "Makes",
+            tags: [
+              { id: "ford", text: "ford", count: 5, pm_count: 0 },
+              { id: "honda", text: "honda", count: 6, pm_count: 0 },
+            ],
+          },
         ],
-        extras: {
-          tag_groups: [
-            {
-              id: 2,
-              name: "Ford Cars",
-              tags: [
-                { id: "Escort", text: "Escort", count: 1, pm_count: 0 },
-                { id: "focus", text: "focus", count: 3, pm_count: 0 },
-              ],
-            },
-            {
-              id: 1,
-              name: "Honda Cars",
-              tags: [
-                { id: "civic", text: "civic", count: 4, pm_count: 0 },
-                { id: "accord", text: "accord", count: 2, pm_count: 0 },
-              ],
-            },
-            {
-              id: 1,
-              name: "Makes",
-              tags: [
-                { id: "ford", text: "ford", count: 5, pm_count: 0 },
-                { id: "honda", text: "honda", count: 6, pm_count: 0 },
-              ],
-            },
-          ],
-        },
       },
-    ];
+    });
   });
+
+  pretender.delete("/bookmarks/:id", () => response({}));
 
   pretender.get("/tags/filter/search", () => {
     return response({ results: [{ text: "monkey", count: 1 }] });
@@ -279,12 +277,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/t/:id/recover", success);
   pretender.put("/t/:id/publish", success);
 
-  pretender.get("/permalink-check.json", () => {
-    return response({
-      found: false,
-      html: "<div class='page-not-found'>not found</div>",
-    });
-  });
+  pretender.get("/permalink-check.json", () => response({ found: false }));
 
   pretender.delete("/draft.json", success);
   pretender.post("/draft.json", success);
@@ -316,6 +309,10 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/categories_and_latest.json"])
   );
 
+  pretender.get("/c/bug/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/1/show.json"])
+  );
+
   pretender.put("/categories/:category_id", (request) => {
     const category = parsePostData(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
@@ -325,6 +322,18 @@ export function applyDefaultHandlers(pretender) {
     }
 
     return response({ category });
+  });
+
+  pretender.post("/categories", () => {
+    return response({
+      category: {
+        id: 11,
+        name: "testing",
+        color: "0088CC",
+        text_color: "FFFFFF",
+        slug: "testing",
+      },
+    });
   });
 
   pretender.get("/draft.json", (request) => {
@@ -454,11 +463,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.put("/posts/:post_id", (request) => {
     const data = parsePostData(request.requestBody);
     if (data.post.raw === "this will 409") {
-      return [
-        409,
-        { "Content-Type": "application/json" },
-        { errors: ["edit conflict"] },
-      ];
+      return response(409, { errors: ["edit conflict"] });
     }
     data.post.id = request.params.post_id;
     data.post.version = 2;

@@ -1,5 +1,5 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
+import { registerUnbound } from "discourse-common/lib/helpers";
 
 registerUnbound("topic-link", (topic, args) => {
   const title = topic.get("fancyTitle");

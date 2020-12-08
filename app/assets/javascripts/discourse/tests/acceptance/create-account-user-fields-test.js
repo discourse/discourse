@@ -1,6 +1,10 @@
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Create Account - User Fields", function (needs) {
   needs.site({
@@ -26,7 +30,7 @@ acceptance("Create Account - User Fields", function (needs) {
     ],
   });
 
-  test("create account with user fields", async (assert) => {
+  test("create account with user fields", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
 
@@ -35,7 +39,10 @@ acceptance("Create Account - User Fields", function (needs) {
 
     await click(".modal-footer .btn-primary");
     assert.ok(exists("#modal-alert"), "it shows the required field alert");
-    assert.equal(find("#modal-alert").text(), "Please enter an email address");
+    assert.equal(
+      queryAll("#modal-alert").text(),
+      "Please enter an email address"
+    );
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
@@ -55,12 +62,12 @@ acceptance("Create Account - User Fields", function (needs) {
     );
 
     await click(".modal-footer .btn-primary");
-    assert.equal(find("#modal-alert")[0].style.display, "");
+    assert.equal(queryAll("#modal-alert")[0].style.display, "");
 
     await fillIn(".user-field input[type=text]:first", "Barky");
     await click(".user-field input[type=checkbox]");
 
     await click(".modal-footer .btn-primary");
-    assert.equal(find("#modal-alert")[0].style.display, "none");
+    assert.equal(queryAll("#modal-alert")[0].style.display, "none");
   });
 });

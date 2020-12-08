@@ -1,10 +1,10 @@
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed, action } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
-import { guidFor } from "@ember/object/internals";
+import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
+import { guidFor } from "@ember/object/internals";
 import layout from "select-kit/templates/components/select-kit/select-kit-row";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default Component.extend(UtilsMixin, {
   layout,

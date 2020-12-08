@@ -960,6 +960,19 @@ describe CookedPostProcessor do
       expect(doc.css('img').first['srcset']).to_not eq(nil)
     end
 
+    it "does not optimize animated images" do
+      upload.update!(animated: true)
+      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
+
+      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp.post_process
+
+      doc = Nokogiri::HTML5::fragment(cpp.html)
+      expect(doc.css('.lightbox-wrapper').size).to eq(1)
+      expect(doc.css('img').first['src']).to include(upload.url)
+      expect(doc.css('img').first['srcset']).to eq(nil)
+    end
+
     it "optimizes images in quotes" do
       post = Fabricate(:post, raw: <<~MD)
         [quote]

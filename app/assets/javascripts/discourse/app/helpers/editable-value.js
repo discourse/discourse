@@ -1,5 +1,5 @@
-import { get } from "@ember/object";
 import Helper from "@ember/component/helper";
+import { get } from "@ember/object";
 
 export function formatCurrency([reviewable, fieldId]) {
   // The field `category_id` corresponds to `category`

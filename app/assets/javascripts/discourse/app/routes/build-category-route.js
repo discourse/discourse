@@ -1,19 +1,19 @@
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
+import { Promise, all } from "rsvp";
+import {
+  changeSort,
+  queryParams,
+  resetParams,
+} from "discourse/controllers/discovery-sortable";
 import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
-import {
-  changeSort,
-  resetParams,
-  queryParams,
-} from "discourse/controllers/discovery-sortable";
-import TopicList from "discourse/models/topic-list";
-import PermissionType from "discourse/models/permission-type";
-import CategoryList from "discourse/models/category-list";
 import Category from "discourse/models/category";
-import { Promise, all } from "rsvp";
+import CategoryList from "discourse/models/category-list";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import PermissionType from "discourse/models/permission-type";
+import TopicList from "discourse/models/topic-list";
 
 // A helper function to create a category route with parameters
 export default (filterArg, params) => {
@@ -66,12 +66,17 @@ export default (filterArg, params) => {
           parts.pop();
         }
 
-        return Category.reloadBySlugPath(parts.join("/")).then((result) => {
-          const record = this.store.createRecord("category", result.category);
-          record.setupGroupsAndPermissions();
-          this.site.updateCategory(record);
-          return { category: record, modelParams };
-        });
+        return Category.reloadBySlugPath(parts.join("/"))
+          .then((result) => {
+            const record = this.store.createRecord("category", result.category);
+            record.setupGroupsAndPermissions();
+            this.site.updateCategory(record);
+            return { category: record, modelParams };
+          })
+          .catch(() => {
+            // afterModel will call replaceWith(/404)
+            return null;
+          });
       }
 
       if (category) {

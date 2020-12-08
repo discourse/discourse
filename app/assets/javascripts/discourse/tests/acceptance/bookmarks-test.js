@@ -1,11 +1,13 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
   loggedInUser,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 async function openBookmarkModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
@@ -37,7 +39,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Bookmarks modal opening", async (assert) => {
+  test("Bookmarks modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     assert.ok(
@@ -46,7 +48,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Bookmarks modal selecting reminder type", async (assert) => {
+  test("Bookmarks modal selecting reminder type", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await openBookmarkModal();
@@ -77,7 +79,7 @@ acceptance("Bookmarking", function (needs) {
     ]);
   });
 
-  test("Saving a bookmark with a reminder", async (assert) => {
+  test("Saving a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Check this out later");
@@ -96,7 +98,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["tomorrow"]);
   });
 
-  test("Opening the options panel and remembering the option", async (assert) => {
+  test("Opening the options panel and remembering the option", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".bookmark-options-button");
@@ -117,7 +119,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["none"]);
   });
 
-  test("Saving a bookmark with no reminder or name", async (assert) => {
+  test("Saving a bookmark with no reminder or name", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#save-bookmark");
@@ -135,7 +137,7 @@ acceptance("Bookmarking", function (needs) {
     assert.deepEqual(steps, ["none"]);
   });
 
-  test("Deleting a bookmark with a reminder", async (assert) => {
+  test("Deleting a bookmark with a reminder", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click("#tap_tile_tomorrow");
@@ -153,7 +155,7 @@ acceptance("Bookmarking", function (needs) {
 
     assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
     assert.ok(
-      find(".bootbox.modal")
+      queryAll(".bootbox.modal")
         .text()
         .includes(I18n.t("bookmarks.confirm_delete")),
       "it shows delete confirmation message"
@@ -167,7 +169,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Cancelling saving a bookmark", async (assert) => {
+  test("Cancelling saving a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal();
     await click(".d-modal-cancel");
@@ -177,7 +179,7 @@ acceptance("Bookmarking", function (needs) {
     );
   });
 
-  test("Editing a bookmark", async (assert) => {
+  test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
     let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
@@ -187,17 +189,17 @@ acceptance("Bookmarking", function (needs) {
 
     await openEditBookmarkModal();
     assert.equal(
-      find("#bookmark-name").val(),
+      queryAll("#bookmark-name").val(),
       "Test name",
       "it should prefill the bookmark name"
     );
     assert.equal(
-      find("#bookmark-custom-date > input").val(),
+      queryAll("#bookmark-custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      find("#bookmark-custom-time").val(),
+      queryAll("#bookmark-custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
     );

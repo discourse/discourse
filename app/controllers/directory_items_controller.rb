@@ -29,9 +29,9 @@ class DirectoryItemsController < ApplicationController
     order = params[:order] || DirectoryItem.headings.first
     dir = params[:asc] ? 'ASC' : 'DESC'
     if DirectoryItem.headings.include?(order.to_sym)
-      result = result.order("directory_items.#{order} #{dir}")
+      result = result.order("directory_items.#{order} #{dir}, directory_items.id")
     elsif params[:order] === 'username'
-      result = result.order("users.#{order} #{dir}")
+      result = result.order("users.#{order} #{dir}, directory_items.id")
     end
 
     if period_type == DirectoryItem.period_types[:all]
@@ -71,7 +71,7 @@ class DirectoryItemsController < ApplicationController
     load_more_directory_items_json = "#{load_more_uri.path}.json?#{load_more_uri.query}"
 
     # Put yourself at the top of the first page
-    if result.present? && current_user.present? && page == 0
+    if result.present? && current_user.present? && page == 0 && !params[:group].present?
 
       position = result.index { |r| r.user_id == current_user.id }
 

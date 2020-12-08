@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import getUrl from "discourse-common/lib/get-url";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
+import getUrl from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import { schedule } from "@ember/runloop";
 
 jQuery.fn.wiggle = function (times, duration) {
   if (times > 0) {
@@ -98,13 +98,15 @@ export default Component.extend({
 
   autoFocus() {
     schedule("afterRender", () => {
-      const $invalid = $(".wizard-field.invalid:eq(0) .wizard-focusable");
+      const $invalid = $(
+        ".wizard-field.invalid:nth-of-type(1) .wizard-focusable"
+      );
 
       if ($invalid.length) {
         return $invalid.focus();
       }
 
-      $(".wizard-focusable:eq(0)").focus();
+      $(".wizard-focusable:nth-of-type(1)").focus();
     });
   },
 
@@ -166,15 +168,10 @@ export default Component.extend({
         const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
         if (unwarned.length) {
           unwarned.forEach((w) => (alreadyWarned[w] = true));
-          return window.swal(
-            {
-              customClass: "wizard-warning",
-              title: "",
-              text: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#6699ff",
-            },
+          return window.bootbox.confirm(
+            unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
+            I18n.t("no_value"),
+            I18n.t("yes_value"),
             (confirmed) => {
               if (confirmed) {
                 this.advance();

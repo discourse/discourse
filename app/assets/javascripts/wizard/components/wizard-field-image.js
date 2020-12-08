@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { getToken } from "wizard/lib/ajax";
-import { getOwner } from "discourse-common/lib/get-owner";
+import I18n from "I18n";
 import { dasherize } from "@ember/string";
+import discourseComputed from "discourse-common/utils/decorators";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { getToken } from "wizard/lib/ajax";
+import getUrl from "discourse-common/lib/get-url";
 
 export default Component.extend({
   classNames: ["wizard-image-row"],
@@ -48,13 +48,7 @@ export default Component.extend({
         message = response.jqXHR.responseJSON.errors.join("\n");
       }
 
-      window.swal({
-        customClass: "wizard-warning",
-        title: "",
-        text: message,
-        type: "warning",
-        confirmButtonColor: "#6699ff",
-      });
+      window.bootbox.alert(message);
       this.set("uploading", false);
     });
   },

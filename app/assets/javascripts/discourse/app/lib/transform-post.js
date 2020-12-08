@@ -140,12 +140,10 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 
-  if (post.notice_type) {
-    postAtts.noticeType = post.notice_type;
-    if (postAtts.noticeType === "custom") {
-      postAtts.noticeMessage = post.notice_args;
-    } else if (postAtts.noticeType === "returning_user") {
-      postAtts.noticeTime = new Date(post.notice_args);
+  if (post.notice) {
+    postAtts.notice = post.notice;
+    if (postAtts.notice.type === "returning_user") {
+      postAtts.notice.lastPostedAt = new Date(post.notice.last_posted_at);
     }
   }
 
@@ -258,6 +256,7 @@ export default function transformPost(
     postAtts.showFlagDelete =
       !postAtts.canDelete &&
       postAtts.yours &&
+      postAtts.canFlag &&
       currentUser &&
       !currentUser.staff;
   } else {

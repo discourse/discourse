@@ -270,7 +270,7 @@ class S3Inventory
 
   def inventory_configuration
     filter_prefix = type
-    filter_prefix = File.join(bucket_folder_path, filter_prefix) if bucket_folder_path.present?
+    filter_prefix = bucket_folder_path if bucket_folder_path.present?
 
     {
       destination: {

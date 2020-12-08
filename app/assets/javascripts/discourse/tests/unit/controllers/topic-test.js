@@ -1,12 +1,12 @@
-import { moduleFor } from "ember-qunit";
-import { test } from "qunit";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import Topic from "discourse/models/topic";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import User from "discourse/models/user";
 import { Promise } from "rsvp";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+import { moduleFor } from "ember-qunit";
+import { next } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { test } from "qunit";
 
 moduleFor("controller:topic", "controller:topic", {
   needs: [
@@ -60,6 +60,34 @@ test("editTopic", function (assert) {
     controller.get("editingTopic"),
     "cancelling edit mode reverts the property value"
   );
+});
+
+test("deleteTopic", function (assert) {
+  const model = Topic.create();
+  let destroyed = false;
+  let modalDisplayed = false;
+  model.destroy = () => {
+    destroyed = true;
+    return Promise.resolve();
+  };
+  const controller = this.subject({
+    model,
+    siteSettings: {
+      min_topic_views_for_delete_confirm: 5,
+    },
+    deleteTopicModal: () => {
+      modalDisplayed = true;
+    },
+  });
+
+  model.set("views", 10000);
+  controller.send("deleteTopic");
+  assert.not(destroyed, "don't destroy popular topic");
+  assert.ok(modalDisplayed, "display confirmation modal for popular topic");
+
+  model.set("views", 3);
+  controller.send("deleteTopic");
+  assert.ok(destroyed, "destroy not popular topic");
 });
 
 test("toggleMultiSelect", function (assert) {

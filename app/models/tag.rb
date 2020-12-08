@@ -120,9 +120,8 @@ class Tag < ActiveRecord::Base
     tag_names_with_counts.map { |row| row.tag_name }
   end
 
-  def self.pm_tags(limit_arg: nil, guardian: nil, allowed_user: nil)
+  def self.pm_tags(limit: 1000, guardian: nil, allowed_user: nil)
     return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
-    limit = limit_arg || SiteSetting.max_tags_in_filter_list
     user_id = allowed_user.id
 
     DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
@@ -143,6 +142,7 @@ class Tag < ActiveRecord::Base
                                AND gu.group_id = tg.group_id
        )
        GROUP BY tags.name
+       ORDER BY count DESC
        LIMIT #{limit}
     SQL
   end
@@ -152,7 +152,7 @@ class Tag < ActiveRecord::Base
   end
 
   def full_url
-    "#{Discourse.base_url}/tag/#{self.name}"
+    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
   def index_search

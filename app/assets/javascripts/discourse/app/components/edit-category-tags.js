@@ -1,4 +1,4 @@
-import { empty, and } from "@ember/object/computed";
+import { and, empty } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 
 export default buildCategoryPanel("tags", {

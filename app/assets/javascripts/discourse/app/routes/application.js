@@ -1,19 +1,19 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
-import { setting } from "discourse/lib/computed";
-import logout from "discourse/lib/logout";
-import showModal from "discourse/lib/show-modal";
-import OpenComposer from "discourse/mixins/open-composer";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import mobile from "discourse/lib/mobile";
+import Composer from "discourse/models/composer";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import OpenComposer from "discourse/mixins/open-composer";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { userPath } from "discourse/lib/url";
-import Composer from "discourse/models/composer";
+import getURL from "discourse-common/lib/get-url";
+import logout from "discourse/lib/logout";
+import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
-import bootbox from "bootbox";
+import { setting } from "discourse/lib/computed";
+import showModal from "discourse/lib/show-modal";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -203,13 +203,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get("id")).then((atts) => {
-        const model = this.store.createRecord("category", atts.category);
-        model.setupGroupsAndPermissions();
-        this.site.updateCategory(model);
-        showModal("edit-category", { model });
-        this.controllerFor("edit-category").set("selectedTab", "general");
-      });
+      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
     },
 
     checkEmail(user) {
@@ -284,7 +278,9 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _handleLogout() {
     if (this.currentUser) {
-      this.currentUser.destroySession().then(() => logout());
+      this.currentUser
+        .destroySession()
+        .then((response) => logout({ redirect: response["redirect_url"] }));
     }
   },
 });

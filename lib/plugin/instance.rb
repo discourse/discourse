@@ -588,11 +588,13 @@ class Plugin::Instance
 
       # Automatically include all ES6 JS and hbs files
       root_path = "#{root_dir_name}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js') if transpile_js
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{root_dir_name}/admin/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true) if transpile_js
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
@@ -886,8 +888,8 @@ class Plugin::Instance
 
     locales.each do |locale, opts|
       opts = opts.dup
-      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
-      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
+      opts[:client_locale_file] = Dir["#{root_path}/config/locales/client*.#{locale}.yml"].first || ""
+      opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first || ""
       opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]

@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseDebounce from "discourse/lib/debounce";
+import { cancel, later } from "@ember/runloop";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import Category from "discourse/models/category";
-import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
-import { SEPARATOR } from "discourse/lib/category-hashtags";
 import { Promise } from "rsvp";
-import { later, cancel } from "@ember/runloop";
+import { SEPARATOR } from "discourse/lib/category-hashtags";
+import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
+import discourseDebounce from "discourse/lib/debounce";
+import getURL from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
 
 let cache = {};

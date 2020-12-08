@@ -828,14 +828,10 @@ lv:
         links_tab: "Saites"
         link_created_at: "Radīts"
         link_groups: Grupas
-        create: "Nosūtīt ielūgumu"
-        generate_link: "Kopēt ielūguma saiti"
-        link_generated: "Ielūguma saite gatava!"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"
         bulk_invite:
-          none: "Jūs vēl šeit neesat nevienu ielūdzis. Nosūtiet atsevišķus ielūgumus vai ielūdziet daudzus lietotājus vienlaicīgi,<a href='https://meta.discourse.org/t/send-bulk-invites/16468'> augšupielādējot CSV failu</a>"
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
@@ -1029,7 +1025,6 @@ lv:
       sent_activation_email_again: "Mēs nosūtijām vēl vienu aktivācijas epastu uz <b>%{currentEmail}</b>. Tas var pienākt dažu minūšu laikā; atcerieties pārbaudīt jūsu surogātpasta mapi."
       to_continue: "Lūdzu ieejiet"
       preferences: "Jums ir jāieiet, lai izmainītu savus iestatījumus."
-      forgot: "Es nevaru atcerēties sava konta informāciju."
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
