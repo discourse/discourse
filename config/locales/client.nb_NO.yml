@@ -1353,7 +1353,6 @@ nb_NO:
           label: "Nytt emne"
         shared_draft:
           label: "Delt kladd"
-          desc: "Lag et emneutkast som kun er synlig for staben"
         toggle_topic_bump:
           label: "Slå på/av at emnet flyttes øverst"
     notifications:

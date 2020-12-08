@@ -1423,7 +1423,6 @@ zh_TW:
           label: "新增話題"
         shared_draft:
           label: "共享草稿"
-          desc: "建立只有管理員可見的話題草稿"
         toggle_topic_bump:
           label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"

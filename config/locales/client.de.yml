@@ -732,13 +732,13 @@ de:
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
-      flair_url: "Avatar-Hintergrund"
+      flair_url: "Avatar-Flair Bild"
       flair_upload_description: "Verwende quadratische Bilder, die nicht kleiner als 20 x 20 Pixel sind."
-      flair_bg_color: "Avatar-Hintergrundfarbe"
+      flair_bg_color: "Avatar-Flair Hintergrundfarbe"
       flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
-      flair_color: "Avatar-Hintergrundfarbe"
+      flair_color: "Avatar-Flair Farbe"
       flair_color_placeholder: "(Optoinal) Hex-Farbwert"
-      flair_preview_icon: "Vorschau-Icon"
+      flair_preview_icon: "Vorschau Symbol"
       flair_preview_image: "Vorschaubild"
       flair_type:
         icon: "Wähle ein Symbol"
@@ -1815,7 +1815,6 @@ de:
           label: "Neues Thema"
         shared_draft:
           label: "Gemeinsame Vorlage"
-          desc: "Entwerfe ein Thema, das nur für das Team sichtbar ist."
         toggle_topic_bump:
           label: "Bump des Themas umschalten"
           desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"

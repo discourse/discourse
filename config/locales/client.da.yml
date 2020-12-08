@@ -1537,7 +1537,6 @@ da:
           label: "Nyt emne"
         shared_draft:
           label: "Delt Kladde"
-          desc: "Lav en kladde til et emne, der kun er synligt for hjælperteam"
         toggle_topic_bump:
           label: "Slå emne 'bump' til/fra"
           desc: "Svar uden at ændre den seneste svardato"

@@ -1630,7 +1630,6 @@ ca:
           label: "Tema nou"
         shared_draft:
           label: "Esborrany compartit"
-          desc: "Esborrany d'un tema que sols serà visible a l'equip responsable"
         toggle_topic_bump:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"

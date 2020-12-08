@@ -1265,7 +1265,6 @@ sw:
           label: "Mada Mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
-          desc: "Mswadajaribio wa mada utakao onekana kwa wasaidizi tu"
     notifications:
       tooltip:
         regular:

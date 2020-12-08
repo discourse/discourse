@@ -411,6 +411,7 @@ it:
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
       filtered_user: "Utente"
+      filtered_reviewed_by: "Revisionato da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
       deleted_user: "(utente eliminato)"
@@ -1809,7 +1810,6 @@ it:
           label: "Nuovo Argomento"
         shared_draft:
           label: "Bozza Condivisa"
-          desc: "Prepara la bozza di un argomento che sarà visibile solo allo Staff"
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"

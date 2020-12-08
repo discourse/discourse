@@ -1765,7 +1765,6 @@ bs_BA:
           label: "Nova tema"
         shared_draft:
           label: "Dijeljena skica"
-          desc: "Skiciraj temu koja će biti vidljiva samo administratorima"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"

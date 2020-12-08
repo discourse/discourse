@@ -1951,6 +1951,7 @@ it:
     governing_law: "Diritto applicabile"
     city_for_disputes: "Sede per eventuali controversie"
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
+    shared_drafts_min_trust_level: "Consenti agli utenti di visualizzare e modificare le bozze condivise."
     push_notifications_prompt: "Visualizza richiesta di consenso dell'utente."
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'tente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_general_tab_activity_metrics: "Scegli i report da visualizzare come metriche di attività nella scheda generale."
