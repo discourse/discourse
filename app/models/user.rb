@@ -1240,7 +1240,7 @@ class User < ActiveRecord::Base
   end
 
   def email
-    primary_email.email
+    primary_email&.email
   end
 
   def email=(new_email)
