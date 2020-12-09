@@ -56,6 +56,7 @@ const Group = RestModel.extend({
       members.pushObjects(
         result.members.map((member) => {
           member.owner = ownerIds.has(member.id);
+          member.primary = member.primary_group_name === this.name;
           return User.create(member);
         })
       );

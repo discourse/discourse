@@ -11,7 +11,7 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  content: computed("member.owner", function () {
+  content: computed("member.owner", "member.primary", function () {
     const items = [
       {
         id: "removeMember",
@@ -41,6 +41,28 @@ export default DropdownSelectBoxComponent.extend({
             username: this.get("member.username"),
           }),
           icon: "shield-alt",
+        });
+      }
+    }
+
+    if (this.currentUser.staff) {
+      if (this.member.primary) {
+        items.push({
+          id: "removePrimary",
+          name: I18n.t("groups.members.remove_primary"),
+          description: I18n.t("groups.members.remove_primary_description", {
+            username: this.get("member.username"),
+          }),
+          icon: "id-card",
+        });
+      } else {
+        items.push({
+          id: "makePrimary",
+          name: I18n.t("groups.members.make_primary"),
+          description: I18n.t("groups.members.make_primary_description", {
+            username: this.get("member.username"),
+          }),
+          icon: "id-card",
         });
       }
     }
