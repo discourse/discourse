@@ -1237,6 +1237,33 @@ describe Report do
     end
   end
 
+  describe ".cache" do
+    let(:exception_report) { Report.find("exception_test", wrap_exceptions_in_test: true) }
+    let(:valid_report) { Report.find("valid_test", wrap_exceptions_in_test: true) }
+
+    before(:each) do
+      class Report
+        def self.report_exception_test(report)
+          report.data = x
+        end
+
+        def self.report_valid_test(report)
+          report.data = "success!"
+        end
+      end
+    end
+
+    it "caches exception reports for 1 minute" do
+      Discourse.cache.expects(:write).with(Report.cache_key(exception_report), exception_report.as_json, { expires_in: 1.minute })
+      Report.cache(exception_report)
+    end
+
+    it "caches valid reports for 35 minutes" do
+      Discourse.cache.expects(:write).with(Report.cache_key(valid_report), valid_report.as_json, { expires_in: 35.minutes })
+      Report.cache(valid_report)
+    end
+  end
+
   describe "top_uploads" do
     context "with no data" do
       it "works" do
