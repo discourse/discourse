@@ -223,7 +223,8 @@ class Report
     Discourse.cache.read(cache_key(report))
   end
 
-  def self.cache(report, duration)
+  def self.cache(report)
+    duration = report.error == :exception ? 1.minute : 35.minutes
     Discourse.cache.write(cache_key(report), report.as_json, expires_in: duration)
   end
 

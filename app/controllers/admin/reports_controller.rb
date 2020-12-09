@@ -42,7 +42,7 @@ class Admin::ReportsController < Admin::AdminController
           report = Report.find(report_type, args)
 
           if (report_params[:cache]) && report
-            Report.cache(report, cache_duration_for(report))
+            Report.cache(report)
           end
 
           if report.blank?
@@ -80,7 +80,7 @@ class Admin::ReportsController < Admin::AdminController
       raise Discourse::NotFound if report.blank?
 
       if (params[:cache])
-        Report.cache(report, cache_duration_for(report))
+        Report.cache(report)
       end
 
       render_json_dump(report: report)
@@ -88,10 +88,6 @@ class Admin::ReportsController < Admin::AdminController
   end
 
   private
-
-  def cache_duration_for(report)
-    report.error == :exception ? 1.minute : 35.minutes
-  end
 
   def parse_params(report_params)
     begin
