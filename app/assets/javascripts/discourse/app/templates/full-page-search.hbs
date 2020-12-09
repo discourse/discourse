@@ -112,8 +112,8 @@
                 </div>
 
                 <div class="blurb container">
-                  <span class="date" title={{raw-date result.created_at}}>
-                    {{format-age result.created_at}}
+                  <span class="date">
+                    {{format-date result.created_at format="tiny"}}
                     {{#if result.blurb}}
                       -
                     {{/if}}
