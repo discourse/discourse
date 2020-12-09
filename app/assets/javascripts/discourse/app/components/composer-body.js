@@ -45,7 +45,7 @@ export default Component.extend(KeyEnterEscape, {
 
   @discourseComputed("composer.action")
   prefixedComposerAction(action) {
-    return `composer-action-${action}`;
+    return action ? `composer-action-${action}` : "";
   },
 
   @discourseComputed("currentUser.primary_group_name")
