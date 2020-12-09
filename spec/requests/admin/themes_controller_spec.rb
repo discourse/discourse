@@ -378,12 +378,28 @@ describe Admin::ThemesController do
         theme: {
           theme_fields: [
             { name: 'scss', target: 'common', value: '' },
-            { name: 'test', target: 'common', value: 'filename.jpg', upload_id: 4 }
+            { name: 'header', target: 'common', value: 'filename.jpg', upload_id: 4 }
           ]
         }
       }
 
       expect(response.status).to eq(403)
+    end
+
+    it 'allows zip-imported theme fields to be locally edited' do
+      r = RemoteTheme.create!(remote_url: "")
+      theme.update!(remote_theme_id: r.id)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'header', target: 'common', value: 'filename.jpg', upload_id: 4 }
+          ]
+        }
+      }
+
+      expect(response.status).to eq(200)
     end
 
     it 'updates a child theme' do
