@@ -369,7 +369,7 @@ class UserMerger
 
   def log_merge
     logger = StaffActionLogger.new(@acting_user || Discourse.system_user)
-    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email)
+    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email || "")
   end
 
   def update_user_id(table_name, opts = {})
