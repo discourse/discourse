@@ -99,27 +99,41 @@ module Oneboxer
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
+      next if onebox.blank?
 
-      if onebox
-        parsed_onebox = Nokogiri::HTML5::fragment(onebox)
-        next unless parsed_onebox.children.count > 0
+      parsed_onebox = Nokogiri::HTML5::fragment(onebox)
+      next if parsed_onebox.children.blank?
 
-        if element&.parent&.node_name&.downcase == "p" &&
-           element.parent.children.count == 1 &&
-           HTML5_BLOCK_ELEMENTS.include?(parsed_onebox.children[0].node_name.downcase)
+      if element&.parent&.node_name&.downcase == "p" && parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
+        if element.parent.children.count == 1
+          # Replace whole paragraph with onebox if it contains only the URL
           element = element.parent
+        else
+          # Otherwise, split the paragraph and insert the onebox in the middle
+          parent = element.parent
+          siblings = parent.children
+          element_idx = siblings.find_index(element)
+
+          if element_idx == 0
+            parent.children = siblings[element_idx + 1..siblings.size]
+            parent.add_previous_sibling(parsed_onebox)
+          elsif element_idx == siblings.size - 1
+            parent.children = siblings[0..element_idx - 1]
+            parent.add_next_sibling(parsed_onebox)
+          else
+            parent_rest = parent.dup
+
+            parent.children = siblings[0..element_idx - 1]
+            parent_rest.children = siblings[element_idx + 1..siblings.size]
+
+            parent.add_next_sibling(parent_rest)
+            parent.add_next_sibling(parsed_onebox)
+          end
         end
-
-        changed = true
-        element.swap parsed_onebox.to_html
       end
-    end
 
-    # strip empty <p> elements
-    doc.css("p").each do |p|
-      if p.children.empty? && doc.children.count > 1
-        p.remove
-      end
+      element.replace parsed_onebox
+      changed = true
     end
 
     Result.new(doc, changed)

@@ -300,4 +300,27 @@ describe Oneboxer do
     end
   end
 
+  describe '#apply' do
+    it 'generates valid HTML' do
+      raw = "Before Onebox\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML.strip
+        <p>Before Onebox<br>
+        </p><div>onebox</div><p><br>
+        After Onebox</p>
+      HTML
+
+      raw = "Before Onebox\nhttps://example.com\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML.strip
+        <p>Before Onebox<br>
+        </p><div>onebox</div><p><br>
+        </p><div>onebox</div><p><br>
+        After Onebox</p>
+      HTML
+    end
+  end
+
 end
