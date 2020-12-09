@@ -900,6 +900,23 @@ describe PrettyText do
       expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
     end
 
+    describe "#convert_vimeo_iframes" do
+      it "converts <iframe> to <a>" do
+        html = <<~HTML
+          <p>This is a Vimeo link:</p>
+          <iframe width="640" height="360" src="https://player.vimeo.com/video/1" data-original-href="https://vimeo.com/1" frameborder="0" allowfullscreen="" seamless="seamless" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<iframe')
+        expect(md).to match_html(<<~HTML)
+          <p>This is a Vimeo link:</p>
+          <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
+        HTML
+      end
+    end
+
     describe "#strip_secure_media" do
       before do
         setup_s3
