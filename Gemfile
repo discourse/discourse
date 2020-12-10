@@ -98,7 +98,7 @@ gem 'mustache'
 gem 'nokogiri'
 gem 'css_parser', require: false
 
-gem 'omniauth'
+gem 'omniauth', github: 'omniauth/omniauth', branch: '2_0-indev'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'omniauth-github'
