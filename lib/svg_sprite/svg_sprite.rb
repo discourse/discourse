@@ -94,7 +94,6 @@ module SvgSprite
     "far-clipboard",
     "far-clock",
     "far-comment",
-    "far-comments",
     "far-copyright",
     "far-dot-circle",
     "far-edit",

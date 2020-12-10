@@ -88,7 +88,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   usernameClass: (username) => (username ? `user-card-${username}` : ""),
 
   @discourseComputed("username", "topicPostCount")
-  filterPostsLabel(username, count) {
+  togglePostsLabel(username, count) {
     return I18n.t("topic.filter_to", { username, count });
   },
 
@@ -210,8 +210,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       this._close();
     },
 
-    filterPosts() {
-      this.filterPosts(this.user);
+    togglePosts() {
+      this.togglePosts(this.user);
       this._close();
     },
 

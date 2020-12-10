@@ -233,15 +233,9 @@ registerButton("wiki-edit", (attrs) => {
 
 registerButton("replies", (attrs, state, siteSettings) => {
   const replyCount = attrs.replyCount;
+
   if (!replyCount) {
     return;
-  }
-
-  let action = "toggleRepliesBelow",
-    icon = state.repliesShown ? "chevron-up" : "chevron-down";
-
-  if (siteSettings.enable_filtered_replies_view) {
-    action = "filterRepliesView";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -254,16 +248,14 @@ registerButton("replies", (attrs, state, siteSettings) => {
   }
 
   return {
-    action,
-    icon,
+    action: "toggleRepliesBelow",
     className: "show-replies",
+    icon: state.repliesShown ? "chevron-up" : "chevron-down",
     titleOptions: { count: replyCount },
-    title: siteSettings.enable_filtered_replies_view
-      ? "post.filtered_replies_hint"
-      : "post.has_replies",
+    title: "post.has_replies",
     labelOptions: { count: replyCount },
-    label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
-    iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
+    label: "post.has_replies",
+    iconRight: true,
   };
 });
 
@@ -583,10 +575,7 @@ export default createWidget("post-menu", {
     const contents = [
       h(
         "nav.post-controls.clearfix" +
-          (this.state.collapsed ? ".collapsed" : ".expanded") +
-          (siteSettings.enable_filtered_replies_view
-            ? ".replies-button-visible"
-            : ""),
+          (this.state.collapsed ? ".collapsed" : ".expanded"),
         postControls
       ),
     ];

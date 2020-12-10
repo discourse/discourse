@@ -146,7 +146,6 @@ const DiscourseURL = EmberObject.extend({
       }
 
       lockon = new LockOn(selector, {
-        originalTopOffset: opts.originalTopOffset,
         finished() {
           _transitioning = false;
           lockon = null;
