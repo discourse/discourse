@@ -6,6 +6,8 @@ import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 
+const DEBOUNCE_DELAY = 50;
+
 function findTopView($posts, viewportTop, postsWrapperTop, min, max) {
   if (max < min) {
     return min;
@@ -309,13 +311,13 @@ export default MountWidget.extend({
   },
 
   _debouncedScroll() {
-    debounce(this, this._scrollTriggered, 10);
+    debounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
   },
 
   didInsertElement() {
     this._super(...arguments);
-    const debouncedScroll = () => debounce(this, this._scrollTriggered, 10);
-
+    const debouncedScroll = () =>
+      debounce(this, this._scrollTriggered, DEBOUNCE_DELAY);
     this._previouslyNearby = {};
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
