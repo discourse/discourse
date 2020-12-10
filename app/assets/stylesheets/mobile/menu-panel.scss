@@ -8,7 +8,7 @@
   }
 }
 .header-cloak {
-  height: 100%;
+  height: 100vh;
   width: 100vw;
   position: fixed;
   background-color: black;
@@ -33,5 +33,6 @@
 }
 
 .panel-body-contents {
+  // 2em padding very useful for iOS Safari's overlayed bottom nav
   padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
 }
