@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { alias } from "@ember/object/computed";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { observes } from "discourse-common/utils/decorators";
 
@@ -48,10 +48,16 @@ export default Controller.extend({
   },
 
   @observes("filter")
-  filterContent: discourseDebounce(function () {
-    this.filterContentNow();
-    this.set("filtered", !isEmpty(this.filter));
-  }, INPUT_DELAY),
+  filterContent() {
+    discourseDebounce(
+      this,
+      function () {
+        this.filterContentNow();
+        this.set("filtered", !isEmpty(this.filter));
+      },
+      INPUT_DELAY
+    );
+  },
 
   actions: {
     clearFilter() {

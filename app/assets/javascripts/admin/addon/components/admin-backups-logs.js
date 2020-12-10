@@ -1,7 +1,7 @@
 import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend({
@@ -33,9 +33,7 @@ export default Component.extend({
     }
   },
 
-  @on("init")
-  @observes("logs.[]")
-  _updateFormattedLogs: discourseDebounce(function () {
+  _updateFormattedLogsFunc: function () {
     const logs = this.logs;
     if (logs.length === 0) {
       return;
@@ -57,7 +55,13 @@ export default Component.extend({
     this.renderLogs();
 
     scheduleOnce("afterRender", this, this._scrollDown);
-  }, 150),
+  },
+
+  @on("init")
+  @observes("logs.[]")
+  _updateFormattedLogs() {
+    discourseDebounce(this, this._updateFormattedLogsFunc, 150);
+  },
 
   renderLogs() {
     const formattedLogs = this.formattedLogs;

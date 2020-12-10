@@ -5,7 +5,7 @@ import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Invite from "discourse/models/invite";
 import bootbox from "bootbox";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -26,13 +26,19 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
-  _searchTermChanged: discourseDebounce(function () {
-    Invite.findInvitedBy(
-      this.user,
-      this.filter,
-      this.searchTerm
-    ).then((invites) => this.set("model", invites));
-  }, INPUT_DELAY),
+  _searchTermChanged() {
+    discourseDebounce(
+      this,
+      function () {
+        Invite.findInvitedBy(
+          this.user,
+          this.filter,
+          this.searchTerm
+        ).then((invites) => this.set("model", invites));
+      },
+      INPUT_DELAY
+    );
+  },
 
   inviteRedeemed: equal("filter", "redeemed"),
   invitePending: equal("filter", "pending"),

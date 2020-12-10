@@ -6,7 +6,7 @@ import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import loadScript from "discourse/lib/load-script";
 import { notEmpty } from "@ember/object/computed";
@@ -56,18 +56,24 @@ export default Component.extend({
   },
 
   @observes("markup")
-  _renderPreview: discourseDebounce(function () {
-    const markup = this.markup;
+  _renderPreview() {
+    discourseDebounce(
+      this,
+      function () {
+        const markup = this.markup;
 
-    if (markup) {
-      cookAsync(markup).then((result) => {
-        this.set("currentPreview", result);
-        schedule("afterRender", () =>
-          this.$(".preview .discourse-local-date").applyLocalDates()
-        );
-      });
-    }
-  }, INPUT_DELAY),
+        if (markup) {
+          cookAsync(markup).then((result) => {
+            this.set("currentPreview", result);
+            schedule("afterRender", () =>
+              this.$(".preview .discourse-local-date").applyLocalDates()
+            );
+          });
+        }
+      },
+      INPUT_DELAY
+    );
+  },
 
   @computed("date", "toDate", "toTime")
   isRange(date, toDate, toTime) {
