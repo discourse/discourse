@@ -636,11 +636,11 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw))
         .where("similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2", title: title, raw: raw)
     else
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title))
         .where("similarity(topics.title, :title) > 0.2", title: title)
     end
   end

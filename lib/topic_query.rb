@@ -146,7 +146,7 @@ class TopicQuery
 
         # strip out users in groups you already belong to
         target_users = target_users
-          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', my_group_ids])}")
+          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{DB.sql_fragment('gu.group_id IN (?)', my_group_ids)}")
           .where('gu.group_id IS NULL')
       end
 
@@ -1014,7 +1014,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_users ta2
           ON topics.id = ta2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['ta2.user_id IN (?)', user_ids])}
+          AND #{DB.sql_fragment('ta2.user_id IN (?)', user_ids)}
         ")
     end
 
@@ -1023,7 +1023,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_groups tg2
           ON topics.id = tg2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['tg2.group_id IN (?)', group_ids])}
+          AND #{DB.sql_fragment('tg2.group_id IN (?)', group_ids)}
         ")
     end
 
@@ -1046,7 +1046,7 @@ class TopicQuery
             LEFT JOIN group_users gu
             ON gu.user_id = #{@user.id.to_i}
             AND gu.group_id = _tg.group_id
-            WHERE #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', group_ids])}
+            WHERE #{DB.sql_fragment('gu.group_id IN (?)', group_ids)}
           ) tg ON topics.id = tg.topic_id
         ")
         .where("tg.topic_id IS NOT NULL")
