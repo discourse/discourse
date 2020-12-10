@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { run } from "@ember/runloop";
+const { debounce } = run;
 
 let _queue = [];
 let _processing = 0;
@@ -32,7 +33,7 @@ export default {
 
     _queue.push({ runnable: () => callback, type, params });
 
-    discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
+    debounce(this, this._processQueue, DEBOUNCING_DELAY);
   },
 
   _processQueue() {
@@ -49,7 +50,7 @@ export default {
 
     // if queue has still jobs after splice, we request a future processing
     if (_queue.length > 0) {
-      discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
+      debounce(this, this._processQueue, DEBOUNCING_DELAY);
     }
 
     let reports = {};
@@ -78,7 +79,7 @@ export default {
       .finally(() => {
         _processing--;
 
-        discourseDebounce(this, this._processQueue, DEBOUNCING_DELAY);
+        debounce(this, this._processQueue, DEBOUNCING_DELAY);
       });
   },
 

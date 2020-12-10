@@ -1,6 +1,5 @@
+import { debounce, later } from "@ember/runloop";
 import Mixin from "@ember/object/mixin";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { later } from "@ember/runloop";
 
 const helper = {
   offset() {
@@ -16,7 +15,7 @@ export default Mixin.create({
   init() {
     this._super(...arguments);
     this.queueDockCheck = () => {
-      discourseDebounce(this, this.safeDockCheck, 5);
+      debounce(this, this.safeDockCheck, 5);
     };
   },
 

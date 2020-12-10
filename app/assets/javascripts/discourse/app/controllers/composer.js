@@ -6,7 +6,7 @@ import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { cancel, run } from "@ember/runloop";
+import { cancel, debounce, run } from "@ember/runloop";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -22,7 +22,6 @@ import { Promise } from "rsvp";
 import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -1163,11 +1162,7 @@ export default Controller.extend({
         // in test debounce is Ember.run, this will cause
         // an infinite loop
         if (!isTesting()) {
-          this._saveDraftDebounce = discourseDebounce(
-            this,
-            this._saveDraft,
-            2000
-          );
+          this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
         }
       } else {
         this._saveDraftPromise = model.saveDraft().finally(() => {
@@ -1193,7 +1188,7 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        let method = isTesting() ? run : discourseDebounce;
+        let method = isTesting() ? run : debounce;
         this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }

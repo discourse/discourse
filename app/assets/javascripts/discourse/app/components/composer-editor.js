@@ -15,6 +15,7 @@ import {
   inCodeBlock,
   tinyAvatar,
 } from "discourse/lib/utilities";
+import { debounce, later, next, run, schedule, throttle } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
@@ -27,14 +28,12 @@ import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { later, next, run, schedule, throttle } from "@ember/runloop";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
@@ -906,7 +905,7 @@ export default Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        discourseDebounce(
+        debounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -921,7 +920,7 @@ export default Component.extend({
       // Paint category and tag hashtags
       const unseenHashtags = linkSeenHashtags($preview);
       if (unseenHashtags.length > 0) {
-        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
+        debounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes
@@ -948,7 +947,7 @@ export default Component.extend({
         }
       };
 
-      discourseDebounce(this, paintFunc, 450);
+      debounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);
