@@ -41,6 +41,10 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
     return this.getItems().filterBy("read", false).length > 0;
   },
 
+  showDoNotDisturb() {
+    return true;
+  },
+
   _findStaleItemsInStore() {
     return this.store.findStale(
       "notification",

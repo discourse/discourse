@@ -1,0 +1,12 @@
+.do-not-disturb {
+  flex: 0 0 100%;
+  #do-not-disturb-link {
+  }
+
+  #do-not-disturb-popup {
+    display: none;
+    position: fixed;
+    right: 500px;
+  }
+}
+
