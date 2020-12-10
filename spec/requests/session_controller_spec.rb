@@ -1779,13 +1779,18 @@ RSpec.describe SessionController do
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it 'redirects to /login for SSO' do
+    it 'redirects to /login when SSO and login_required' do
       SiteSetting.sso_url = "https://example.com/sso"
       SiteSetting.enable_sso = true
 
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/")
 
+      SiteSetting.login_required = true
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
       expect(response.parsed_body["redirect_url"]).to eq("/login")
     end
