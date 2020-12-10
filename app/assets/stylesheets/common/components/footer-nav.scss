@@ -20,6 +20,7 @@ body.footer-nav-visible {
   }
 
   .posts-filtered-notice {
+    transition: all linear 0.1s;
     bottom: $footer-nav-height + 15;
   }
 }
