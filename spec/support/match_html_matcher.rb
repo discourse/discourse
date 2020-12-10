@@ -3,9 +3,7 @@
 require 'nokogiri/xml/parse_options'
 RSpec::Matchers.define :match_html do |expected|
   match do |actual|
-    a = make_canonical_html(expected).to_html.gsub(/\s+/, " ").strip
-    b = make_canonical_html(actual).to_html.gsub(/\s+/, " ").strip
-    a.eql? b
+    make_canonical_html(expected).eql? make_canonical_html(actual)
   end
 
   failure_message do |actual|
@@ -17,7 +15,17 @@ RSpec::Matchers.define :match_html do |expected|
   end
 
   def make_canonical_html(html)
-    Nokogiri::HTML5(html) { |config| config[:options] = Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::COMPACT }
+    doc = Nokogiri::HTML5(html) do |config|
+      config[:options] = Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::COMPACT
+    end
+
+    doc.traverse do |node|
+      if node.node_name&.downcase == "text"
+        node.content = node.content.gsub(/\s+/, ' ').strip
+      end
+    end
+
+    doc.to_html
   end
 
 end
