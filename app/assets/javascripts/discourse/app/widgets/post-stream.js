@@ -1,7 +1,7 @@
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { createWidget } from "discourse/widgets/widget";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { debounce } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
 import transformPost from "discourse/lib/transform-post";
 
@@ -41,7 +41,7 @@ export function cloak(post, component) {
   _heights[post.id] = $post.outerHeight();
 
   component.dirtyKeys.keyDirty(`post-${post.id}`);
-  discourseDebounce(component, "queueRerender", 1000);
+  debounce(component, "queueRerender", 1000);
 }
 
 export function uncloak(post, component) {

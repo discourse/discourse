@@ -1,8 +1,7 @@
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, debounce, schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { bind } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { prefixProtocol } from "discourse/lib/url";
 import { searchForTerm } from "discourse/lib/search";
@@ -178,7 +177,7 @@ export default Controller.extend(ModalFunctionality, {
       }
     },
     search() {
-      this._debounced = discourseDebounce(this, this.triggerSearch, 400);
+      this._debounced = debounce(this, this.triggerSearch, 400);
     },
   },
 });

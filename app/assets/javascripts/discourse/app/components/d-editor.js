@@ -5,13 +5,13 @@ import {
   inCodeBlock,
   safariHacksDisabled,
 } from "discourse/lib/utilities";
+import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { later, next, schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import I18n from "I18n";
 import Mousetrap from "mousetrap";
@@ -19,7 +19,6 @@ import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
 import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
 import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
@@ -415,7 +414,7 @@ export default Component.extend({
     if (isTesting()) {
       this._updatePreview();
     } else {
-      discourseDebounce(this, this._updatePreview, 30);
+      debounce(this, this._updatePreview, 30);
     }
   },
 

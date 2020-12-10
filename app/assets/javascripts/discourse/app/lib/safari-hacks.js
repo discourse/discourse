@@ -3,7 +3,7 @@ import {
   safariHacksDisabled,
 } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";
 import { later } from "@ember/runloop";
 
@@ -145,9 +145,7 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = function (evt) {
-    discourseDebounce(this, blurredNow, evt, INPUT_DELAY);
-  };
+  var blurred = discourseDebounce(blurredNow, INPUT_DELAY);
 
   var positioningHack = function (evt) {
     let _this = this;
@@ -216,19 +214,13 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = function () {
-    discourseDebounce(
-      this,
-      function () {
-        attachTouchStart(fixedElement, lastTouched);
+  const checkForInputs = discourseDebounce(function () {
+    attachTouchStart(fixedElement, lastTouched);
 
-        $fixedElement.find("input[type=text],textarea").each(function () {
-          attachTouchStart(this, positioningHack);
-        });
-      },
-      100
-    );
-  };
+    $fixedElement.find("input[type=text],textarea").each(function () {
+      attachTouchStart(this, positioningHack);
+    });
+  }, 100);
 
   positioningWorkaround.touchstartEvent = function (element) {
     var triggerHack = positioningHack.bind(element);

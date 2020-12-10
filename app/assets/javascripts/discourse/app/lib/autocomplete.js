@@ -1,8 +1,7 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel, debounce, later } from "@ember/runloop";
 import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Site from "discourse/models/site";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 /**
@@ -423,7 +422,7 @@ export default function (options) {
 
   $(this).on("keyup.autocomplete", function (e) {
     if (options.debounced) {
-      discourseDebounce(this, performAutocomplete, e, INPUT_DELAY);
+      debounce(this, performAutocomplete, e, INPUT_DELAY);
     } else {
       performAutocomplete(e);
     }

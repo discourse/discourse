@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { convertIconClass } from "discourse-common/lib/icon-library";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { debounce } from "@ember/runloop";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
@@ -34,7 +34,7 @@ export default Component.extend({
   @observes("model.flair_icon")
   _loadSVGIcon(flairIcon) {
     if (flairIcon) {
-      discourseDebounce(this, this._loadIcon, 1000);
+      debounce(this, this._loadIcon, 1000);
     }
   },
 
