@@ -1755,10 +1755,6 @@ jquery-color@3.0.0-alpha.1:
   resolved "https://registry.yarnpkg.com/jquery-color/-/jquery-color-3.0.0-alpha.1.tgz#0c00ed91251bac45fc4ff3143939f434ef46d188"
   integrity sha512-UjsdBsWuehWLfnXfL4JZtxGbRB2eUz6Rhn3qxBKaVR3Qwm7fQlY1y/Va0o7GzDwGJnOvYKc3H+i2k7bC1yGcJg==
 
-"jquery-resize@https://github.com/cowboy/jquery-resize/":
-  version "0.0.0"
-  resolved "https://github.com/cowboy/jquery-resize/#21ae0ec06d751a408165a1714963173c2db6adfa"
-
 jquery-tags-input@1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/jquery-tags-input/-/jquery-tags-input-1.3.5.tgz#1c89cb95c61983ad14386d30a006920476b93ed7"
