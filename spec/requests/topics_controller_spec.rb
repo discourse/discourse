@@ -2096,6 +2096,77 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe '#show filters' do
+      let(:post) { Fabricate(:post) }
+      let(:topic) { post.topic }
+
+      describe 'filter by replies to a post' do
+        let!(:post2) { Fabricate(:post, topic: topic) }
+        let!(:post3) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
+        let!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
+        let!(:post5) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            replies_to_post_number: post2.post_number
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          expect(ids).to eq([post.id, post2.id, post3.id, post4.id])
+        end
+      end
+
+      describe 'filter upwards by post id' do
+        let!(:post2) { Fabricate(:post, topic: topic) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+        let!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post3.post_number) }
+        let!(:post5) { Fabricate(:post, topic: topic, reply_to_post_number: post4.post_number) }
+        let!(:post6) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            filter_upwards_post_id: post5.id
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          # includes topic OP, current post and subsequent posts
+          # but only one level of parents, respecting default max_reply_history = 1
+          expect(ids).to eq([post.id, post4.id, post5.id, post6.id])
+        end
+
+        it 'should respect max_reply_history site setting' do
+          SiteSetting.max_reply_history = 2
+
+          get "/t/#{topic.id}.json", params: {
+            filter_upwards_post_id: post5.id
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+
+          # includes 2 levels of replies (post3 and post4)
+          expect(ids).to eq([post.id, post3.id, post4.id, post5.id, post6.id])
+        end
+      end
+
+    end
+
     context "when 'login required' site setting has been enabled" do
       before { SiteSetting.login_required = true }
 

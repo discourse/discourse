@@ -421,10 +421,27 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    toggleSummary() {
+    showSummary() {
       return this.get("model.postStream")
-        .toggleSummary()
+        .showSummary()
         .then(() => {
+          this.updateQueryParams();
+        });
+    },
+
+    cancelFilter(previousFilters) {
+      this.get("model.postStream").cancelFilter();
+      this.get("model.postStream")
+        .refresh()
+        .then(() => {
+          if (previousFilters) {
+            if (previousFilters.replies_to_post_number) {
+              this._jumpToPostNumber(previousFilters.replies_to_post_number);
+            }
+            if (previousFilters.filter_upwards_post_id) {
+              this._jumpToPostId(previousFilters.filter_upwards_post_id);
+            }
+          }
           this.updateQueryParams();
         });
     },
@@ -867,9 +884,9 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    toggleParticipant(user) {
+    filterParticipant(user) {
       this.get("model.postStream")
-        .toggleParticipant(user.get("username"))
+        .filterParticipant(user.username)
         .then(() => this.updateQueryParams);
     },
 

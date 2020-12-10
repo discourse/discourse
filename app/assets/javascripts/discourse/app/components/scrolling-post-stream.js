@@ -45,7 +45,8 @@ export default MountWidget.extend({
       "selectedQuery",
       "selectedPostsCount",
       "searchService",
-      "showReadIndicator"
+      "showReadIndicator",
+      "streamFilters"
     );
   },
 
