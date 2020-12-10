@@ -382,6 +382,7 @@ zh_CN:
       topic: "主题："
       filtered_topic: "您正在选择性地查看这一主题中的可审核内容。"
       filtered_user: "用户"
+      filtered_reviewed_by: "审核者"
       show_all_topics: "显示所有主题"
       deleted_post: "(已删除的帖子)"
       deleted_user: "(已删除的用户)"
@@ -1752,7 +1753,7 @@ zh_CN:
           label: "新主题"
         shared_draft:
           label: "共享草稿"
-          desc: "起草一个只对管理人员可见的主题"
+          desc: "起草一个只对允许的用户可见的主题"
         toggle_topic_bump:
           label: "切换主题顶帖"
           desc: "回复但不改变最新回复的日期"

@@ -170,7 +170,7 @@ module Oneboxer
   end
 
   def self.onebox_raw(url, opts = {})
-    url = URI(url).to_s
+    url = UrlHelper.escape_uri(url).to_s
     local_onebox(url, opts) || external_onebox(url)
   rescue => e
     # no point warning here, just cause we have an issue oneboxing a url
@@ -191,7 +191,7 @@ module Oneboxer
       when "list"    then local_category_html(url, route)
       end
 
-    html = html.presence || "<a href='#{url}'>#{url}</a>"
+    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
     { onebox: html, preview: html }
   end
 

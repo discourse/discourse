@@ -17,7 +17,7 @@ class WatchedWord < ActiveRecord::Base
     self.word = self.class.normalize_word(self.word)
   end
 
-  validates :word,   presence: true, uniqueness: true, length: { maximum: 50 }
+  validates :word,   presence: true, uniqueness: true, length: { maximum: 100 }
   validates :action, presence: true
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION

@@ -382,6 +382,7 @@ ko:
       topic: "글:"
       filtered_topic: "한 글에서 검토 가능한 콘텐츠로 필터링했습니다."
       filtered_user: "사용자"
+      filtered_reviewed_by: "검토자"
       show_all_topics: "모든 글 보기"
       deleted_post: "(게시물 삭제됨)"
       deleted_user: "(사용자 삭제됨)"
@@ -1752,7 +1753,7 @@ ko:
           label: "새 글"
         shared_draft:
           label: "공유 초안"
-          desc: "관리자만 볼 수있는 글 초안 작성"
+          desc: "허용된 사용자만 볼 수 있는 글 초안 작성"
         toggle_topic_bump:
           label: "글 범프 전환"
           desc: "최신 회신 날짜를 변경하지 않고 회신"
@@ -2727,7 +2728,7 @@ ko:
     flagging:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "글 신고했습니다"
-      take_action: "조치 수행..."
+      take_action: "조치하기..."
       take_action_options:
         default:
           title: "조치하기"
@@ -3670,6 +3671,7 @@ ko:
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
           up_to_date: "테마가 최신입니다, 마지막으로 체크한 일시:"
+          has_overwritten_history: "강제 푸시로 Git 기록을 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"
           theme_settings: "테마 설정"
           no_settings: "이 테마에는 설정이 없습니다."
@@ -3769,7 +3771,7 @@ ko:
             description: "글 삭제 등에 사용되는 강조색"
           success:
             name: "성공"
-            description: "동작이 성공적으로 수행되었음을 알립니다."
+            description: "작업이 성공했음을 나타내는데 사용됩니다."
           love:
             name: "사랑"
             description: "좋아요 버튼 색"

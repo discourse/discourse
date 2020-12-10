@@ -1391,7 +1391,6 @@ cs:
           label: "Nové téma"
         shared_draft:
           label: "Sdílený koncept"
-          desc: "Navrhnout téma, které uvidí pouze redakce"
         toggle_topic_bump:
           label: "Přepnout zvýraznění tématu"
           desc: "Odpovědět bez ovlivnění data poslední odpovědi"

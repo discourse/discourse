@@ -202,6 +202,14 @@ describe Tag do
     end
   end
 
+  context "full_url" do
+    let(:tag) { Fabricate(:tag, name: "🚀") }
+
+    it "percent encodes emojis" do
+      expect(tag.full_url).to eq("http://test.localhost/tag/%F0%9F%9A%80")
+    end
+  end
+
   context "synonyms" do
     let(:synonym) { Fabricate(:tag, target_tag: tag) }
 

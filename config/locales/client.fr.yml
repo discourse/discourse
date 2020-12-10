@@ -1721,7 +1721,6 @@ fr:
           label: "Nouveau sujet"
         shared_draft:
           label: "Brouillon partagé"
-          desc: "Créer un brouillon de sujet qui ne sera visible qu'aux responsables"
         toggle_topic_bump:
           label: "Basculer l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"

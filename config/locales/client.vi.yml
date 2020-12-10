@@ -1749,7 +1749,6 @@ vi:
           label: "Chủ đề Mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
-          desc: "Soạn thảo một chủ đề sẽ chỉ hiển thị cho nhân viên"
         toggle_topic_bump:
           label: "Chuyển đổi phần mở rộng chủ đề"
           desc: "Trả lời mà không thay đổi ngày trả lời gần nhất"

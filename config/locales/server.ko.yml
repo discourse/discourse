@@ -141,7 +141,9 @@ ko:
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
       is_invalid: "문장이 불분명합니다."
+      is_invalid_meaningful: "불분명해 보이지만, 대부분의 단어에 같은 문자가 계속해서 포함되어 있습니까?"
       is_invalid_unpretentious: "명확하지 않은 것 같습니다. 하나 이상의 단어가 매우 깁니다."
+      is_invalid_quiet: "명확하지 않은 것 같습니다. 모두 대문자로 입력 하시겠습니까?"
       invalid_timezone: "&#39;%{tz}&#39;은 (는) 유효한 시간대가 아닙니다"
       contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
       less_than: '%{count}보다 작아야 함'
@@ -1340,15 +1342,15 @@ ko:
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
     allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 글을 허용합니다. allow_duplicate_topic_titles는 false 여야합니다."
-    unique_posts_mins: "같은 컨텐츠를 다시 글 할 수 있는 기간(분)"
+    unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 글을 작성하기 위해서 필요한 시간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
     site_description: "이 사이트를 한 문장으로 설명해 주세요. 설명 메타태그에 사용됩니다."
     short_site_description: "홈페이지의 제목 태그에 사용 된 간단한 설명입니다."
     contact_email: "이 사이트를 담당하는 주요 담당자의 이메일 주소입니다. 긴급한 문제에 대한 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식뿐만 아니라 중요한 알림에 사용됩니다."
     contact_url: "이 사이트의 연락처 URL. 긴급한 문제에 대해서는 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식에 사용됩니다."
-    crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
-    download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경. 이미지가 깨지는 것을 막을 수 있습니다."
+    crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
+    download_remote_images_to_local: "원격 이미지를 다운로드하여 로컬 이미지로 변환합니다. 이렇게 하면 이미지가 손상되지 않습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
     editing_grace_period: "글 작성 후, 편집해도 히스토리에 남기지 않는 시간 (단위: 초)"
@@ -1569,15 +1571,15 @@ ko:
     top_topics_formula_least_likes_per_post_multiplier: "인기 토픽 계산 공식에서 포스트당 최소 좋아요 가중치 설정: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rebake_old_posts_count: "15분마다 HTML로 리빌드할 옛날 포스트의 수"
     enable_safe_mode: "사용자가 안전 모드로 들어가 플러그인을 디버깅 할 수 있도록합니다."
-    rate_limit_create_topic: "사용자가 글타래를 생성하고 난 후 다음 글타래를 생성할 때 까지의 대기 기간(초)"
-    rate_limit_create_post: "사용자가 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
-    rate_limit_new_user_create_topic: "새로운 사용자 글타래를 생성하고 난 후 다음 글타래를 생성할 때 까지의 대기 기간(초)"
-    rate_limit_new_user_create_post: "새로운 사용자 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
+    rate_limit_create_topic: "글을 작성 후 다른 글을 작성하기 위해서는 (n)초 동안 기다려야 합니다."
+    rate_limit_create_post: "사용자가 댓글 작성 후 다른 댓글을 작성하기 위해서는 (n)초를 기다려야합니다."
+    rate_limit_new_user_create_topic: "새로 가입한 사용자가 글을 작성 후 다른 글을 작성하기 위해서는 (n)초를 기다려야합니다."
+    rate_limit_new_user_create_post: "새로 가입한 사용자가 댓글을 작성 후 다른 댓글을 작성하기 위해서는 (n)초를 기다려야합니다."
     max_likes_per_day: "사용자가 하루동안 할 수 있는 최대 좋아요 개수"
     max_flags_per_day: "사용자가 하루동안 할 수 있는 최대 신고 개수"
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
-    max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
+    max_topics_per_day: "사용자가 하루에 작성 할 수 있는 최대 글 수입니다."
     max_personal_messages_per_day: "사용자가 하루에 작성 할 수있는 최대 새 개인 메시지 수입니다."
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
@@ -1614,7 +1616,7 @@ ko:
     png_to_jpg_quality: "변환된 JPG 파일의 퀄리티(1은 최하, 99는 최상, 100은 해제)"
     recompress_original_jpg_quality: "업로드된 이미지 파일의 품질 (1은 최저 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
     image_preview_jpg_quality: "크기가 조정된 이미지 파일의 품질 (1은 가장 낮은 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
-    allow_staff_to_upload_any_file_in_pm: "운영진이 보내는 개인메시지에 모든 파일 첨부 허용"
+    allow_staff_to_upload_any_file_in_pm: "관리자는 개인메시지에 파일 첨부를 허용합니다."
     strip_image_metadata: "스트립 이미지 메타 데이터."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율. 너비 / 높이의 결과를 입력하십시오."
     simultaneous_uploads: "글 작성기에서 끌어서 놓을 수 있는 최대 파일 수"
@@ -1658,6 +1660,7 @@ ko:
     min_trust_level_to_allow_profile_background: "프로필 배경을 업로드하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_user_card_background: "사용자 카드 배경을 업로드하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_invite: "사용자를 초대하는 데 필요한 최소 회원 등급"
+    min_trust_level_to_allow_ignore: "사용자를 무시하는데 필요한 최소 회원등급"
     allowed_link_domains: "링크를 삽입 할 수 있는 레벨이 아닌 사용자가 연결할 수 있는 도메인"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_embedded_media: "새 사용자가 게시물에 추가 할 수있는 미디어 항목 수입니다."
@@ -1667,7 +1670,7 @@ ko:
     max_mentions_per_post: "글 당 사용할 수 있는 최대 @name 알림의 수"
     max_users_notified_per_group_mention: "그룹이 멘션을 받으면 알림을 받는 최대사용자의 수(최대치에 도달하면 알림이 전송되지 않음)"
     enable_mentions: "사용자가 다른 사용자를 언급 할 수 있도록합니다."
-    create_thumbnails: "글의 너무 큰 크기의 이미지는 thumnails와 lightbox를 만든다."
+    create_thumbnails: "게시물에 맞지 않는 큰 이미지는 썸네일 이미지와 라이트 박스 이미지를 만듭니다."
     email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 글의 변경하고 완료할 수 있는 기회를 준다."
     personal_email_time_window_seconds: "개인 메시지 알림 이메일을 보내기 전에 사용자가 메시지를 편집하고 마무리 할 수 있도록 (n) 초 동안 기다리십시오."
     email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
@@ -3481,13 +3484,13 @@ ko:
 
       사이트 운영자는 조건에 따라 다른 서비스를 제공 할 수 있습니다. 이 약관은 사이트 이용에만 적용됩니다.
 
-      건너 뛰기:
+      바로가기:
 
-      - [Important Terms](#heading--important-terms)
-      - [Your Permission to Use the Forum](#heading--permission)
-      - [Conditions for Use of the Forum](#heading--conditions)
-      - [Acceptable Use](#heading--acceptable-use)
-      - [Content Standards](#heading--content-standards)
+      - [중요 용어](#heading--important-terms)
+      - [사이트 사용 권한](#heading--permission)
+      - [사이트 이용 조건](#heading--conditions)
+      - [허용되는 사용](#heading--acceptable-use)
+      - [콘텐츠 표준](#heading--content-standards)
       - [Enforcement](#heading--enforcement)
       - [Your Account](#heading--your-account)
       - [Your Content](#heading--your-content)
@@ -3535,21 +3538,21 @@ ko:
 
       7. 사용자님은 이 사이트와 제휴하거나 이 사이트의 보증을 받았다고 거짓으로 암시해서는 안됩니다.
 
-      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+      8. 다른 웹 페이지의 포럼에있는 이미지 또는 기타 하이퍼 텍스트가 아닌 콘텐츠에 하이퍼 링크를 사용할 수 없습니다.
 
-      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
+      9. 포럼에서 다운로드 한 자료의 소유권을 나타내는 표시를 제거 할 수 없습니다.
 
-      10. You may not show any part of the forum on other websites with `<iframe>`.
+      10. `<iframe>`을 사용하여 다른 웹 사이트를 표시 할 수 없습니다.
 
-      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
+      11. 사이트의 보안 또는 접근 제한을 비활성화, 회피 또는 우회 할 수 없습니다.
 
-      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
+      12. 불합리한 양의 요청 또는 포럼 기반 정보 시스템에 불합리한 부하를 부과하도록 설계된 요청으로 사이트의 인프라에 부담을 주어서는 안됩니다.
 
-      13. You may not impersonate others through the forum.
+      13. 사이트를 통해 다른 사람을 사칭 할 수 없습니다.
 
-      14. You may not encourage or help anyone in violation of these terms.
+      14. 이 약관을 위반하는 사람을 격려하거나 도울 수 없습니다.
 
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">콘텐츠 표준</a></h2>
 
       1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
 

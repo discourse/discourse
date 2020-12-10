@@ -4,7 +4,6 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def self.can_attributes
     [:can_move_posts,
-     :can_edit,
      :can_delete,
      :can_recover,
      :can_remove_allowed_users,
@@ -24,7 +23,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_moderate_category]
   end
 
+  # NOTE: `can_edit` is defined as an attribute because we explicitly want
+  # it returned even if it has a value of `false`
   attributes(
+    :can_edit,
     :notification_level,
     :notifications_reason_id,
     *can_attributes,
@@ -87,16 +89,19 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     define_method(ca) { true }
   end
 
+  # NOTE: A Category Group Moderator moving a topic to a different category
+  # may result in the 'can_edit?' result changing from `true` to `false`.
+  # Explictly returning a `false` value is required to update the client UI.
+  def can_edit
+    scope.can_edit?(object.topic)
+  end
+
   def include_can_review_topic?
     scope.can_review_topic?(object.topic)
   end
 
   def include_can_move_posts?
     scope.can_move_posts?(object.topic)
-  end
-
-  def include_can_edit?
-    scope.can_edit?(object.topic)
   end
 
   def include_can_delete?

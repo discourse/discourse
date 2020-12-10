@@ -411,6 +411,7 @@ sv:
       topic: "Ämne:"
       filtered_topic: "Du har filtrerat för granskning av innehåll i ett enskilt ämne."
       filtered_user: "Användare"
+      filtered_reviewed_by: "Granskade av"
       show_all_topics: "visa alla ämnen"
       deleted_post: "(inlägg raderat)"
       deleted_user: "(användare raderad)"
@@ -1815,7 +1816,7 @@ sv:
           label: "Nytt ämne"
         shared_draft:
           label: "Delat utkast"
-          desc: "Utarbeta ett ämne som endast är synligt för personalen"
+          desc: "Skapa ett utkast av ett ämne vilket enbart kommer vara synligt för tillåtna användare"
         toggle_topic_bump:
           label: "Växla ämnesknuff"
           desc: "Svara utan att ändra senaste svarsdatum"

@@ -1828,7 +1828,6 @@ sl:
           label: "Nova tema"
         shared_draft:
           label: "Skupen osnutek"
-          desc: "Ustvari osnutek teme, ki bo viden samo osebju"
         toggle_topic_bump:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"

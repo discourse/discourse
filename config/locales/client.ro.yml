@@ -1487,8 +1487,6 @@ ro:
           desc: Răspundeți subiectului, nu unei anumite postări
         create_topic:
           label: "Discuție nouă"
-        shared_draft:
-          desc: "Pregătește o ciornă a unei discuții care va fi vizibilă doar pentru personal"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
       reload: "Reîncarcă"

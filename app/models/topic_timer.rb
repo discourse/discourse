@@ -50,7 +50,8 @@ class TopicTimer < ActiveRecord::Base
       delete: 4,
       reminder: 5,
       bump: 6,
-      delete_replies: 7
+      delete_replies: 7,
+      silent_close: 8
     )
   end
 
@@ -97,6 +98,10 @@ class TopicTimer < ActiveRecord::Base
   end
   alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
+  def cancel_auto_silent_close_job
+    Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
+  end
+
   def cancel_auto_publish_to_category_job
     Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_timer_id: id)
   end
@@ -139,6 +144,16 @@ class TopicTimer < ActiveRecord::Base
 
     Jobs.enqueue_at(time, :toggle_topic_closed,
       topic_timer_id: id,
+      state: true
+    )
+  end
+
+  def schedule_auto_silent_close_job(time)
+    topic.update_status('closed', false, user) if topic&.closed
+
+    Jobs.enqueue_at(time, :toggle_topic_closed,
+      topic_timer_id: id,
+      silent: true,
       state: true
     )
   end

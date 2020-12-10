@@ -173,7 +173,6 @@ class Emoji
       end
 
       replacements["\u{2639}"] = 'frowning'
-      replacements["\u{263A}"] = 'slight_smile'
       replacements["\u{263B}"] = 'slight_smile'
       replacements["\u{2661}"] = 'heart'
       replacements["\u{2665}"] = 'heart'

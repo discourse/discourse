@@ -4,7 +4,7 @@ import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
-import { debounce } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
@@ -46,7 +46,7 @@ export function cloak(post, component) {
   _heights[post.id] = $post.outerHeight();
 
   component.dirtyKeys.keyDirty(`post-${post.id}`);
-  debounce(component, "queueRerender", 1000);
+  discourseDebounce(component, "queueRerender", 1000);
 }
 
 export function uncloak(post, component) {

@@ -7,9 +7,9 @@ class UploadCreator
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
   ALLOWED_SVG_ELEMENTS ||= %w{
-    circle clippath defs ellipse feGaussianBlur filter g line linearGradient
+    circle clipPath defs ellipse feGaussianBlur filter g line linearGradient
     marker path polygon polyline radialGradient rect stop style svg text
-    textpath tref tspan use
+    textPath tref tspan use
   }.each(&:freeze)
 
   include ActiveSupport::Deprecation::DeprecatedConstantAccessor

@@ -112,6 +112,59 @@ describe TopicTrackingState do
     end
   end
 
+  describe '#publish_unmuted' do
+    let(:user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:second_user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:third_user) do
+      Fabricate(:user, last_seen_at: Date.today)
+    end
+    let(:post) do
+      create_post(user: user)
+    end
+
+    it 'can correctly publish unmuted' do
+      Fabricate(:topic_tag, topic: topic)
+      SiteSetting.mute_all_categories_by_default = true
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 1)
+      CategoryUser.create!(category: topic.category, user: second_user, notification_level: 1)
+      TagUser.create!(tag: topic.tags.first, user: third_user, notification_level: 1)
+      TagUser.create!(tag: topic.tags.first, user: Fabricate(:user), notification_level: 0)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_unmuted(topic)
+      end
+
+      unmuted_message = messages.find { |message| message.data["message_type"] == "unmuted" }
+      expect(unmuted_message.user_ids.sort).to eq([user.id, second_user.id, third_user.id].sort)
+      expect(unmuted_message.data["topic_id"]).to eq(topic.id)
+      expect(unmuted_message.data["message_type"]).to eq(described_class::UNMUTED_MESSAGE_TYPE)
+    end
+
+    it 'should not publish any message when notification level is not muted' do
+      SiteSetting.mute_all_categories_by_default = true
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 0)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_unmuted(topic)
+      end
+      unmuted_messages = messages.select { |message| message.data["message_type"] == "unmuted" }
+
+      expect(unmuted_messages).to eq([])
+    end
+
+    it 'should not publish any message when the user was not seen in the last 7 days' do
+      TopicUser.find_by(topic: topic, user: post.user).update(notification_level: 1)
+      post.user.update(last_seen_at: 8.days.ago)
+      messages = MessageBus.track_publish("/latest") do
+        TopicTrackingState.publish_unmuted(topic)
+      end
+      unmuted_messages = messages.select { |message| message.data["message_type"] == "unmuted" }
+      expect(unmuted_messages).to eq([])
+    end
+  end
+
   describe '#publish_private_message' do
     fab!(:admin) { Fabricate(:admin) }
 

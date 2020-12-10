@@ -1812,7 +1812,6 @@ es:
           label: "Crear tema"
         shared_draft:
           label: "Borrador compartido"
-          desc: "Crea un borrador que solo será visible por el staff"
         toggle_topic_bump:
           label: "Alternar bump del tema"
           desc: "Responder sin alterar la fecha de última respuesta"

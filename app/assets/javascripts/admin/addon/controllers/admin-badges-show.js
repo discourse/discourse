@@ -56,6 +56,11 @@ export default Controller.extend(bufferedProperty("model"), {
     return modelQuery && modelQuery.trim().length > 0;
   },
 
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
+  },
+
   @observes("model.id")
   _resetSaving: function () {
     this.set("saving", false);

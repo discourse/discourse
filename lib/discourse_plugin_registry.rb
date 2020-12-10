@@ -131,8 +131,8 @@ class DiscoursePluginRegistry
         next if each_options[:admin]
       end
 
-      Dir.glob("#{root}/**/*") do |f|
-        yield f, ext
+      Dir.glob("#{root}/**/*.#{ext}") do |f|
+        yield f
       end
     end
   end

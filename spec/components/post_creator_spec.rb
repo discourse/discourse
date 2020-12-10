@@ -581,6 +581,36 @@ describe PostCreator do
     end
   end
 
+  context 'silent' do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it 'silent do not mess up the public view' do
+      freeze_time DateTime.parse('2010-01-01 12:00')
+
+      first = PostCreator.new(
+        user,
+        topic_id: topic.id,
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
+
+      PostCreator.new(user,
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        silent: true,
+        post_type: Post.types[:regular],
+        raw: 'this is a whispered reply').create
+
+      topic.reload
+
+      # silent post should not muck up that number
+      expect(topic.last_posted_at).to eq_time(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
+    end
+  end
+
   context 'uniqueness' do
 
     fab!(:topic) { Fabricate(:topic, user: user) }
