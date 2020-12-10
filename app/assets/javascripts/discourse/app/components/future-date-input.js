@@ -17,6 +17,7 @@ export default Component.extend({
   isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
+  labelClasses: null,
   displayNumberInput: or("isBasedOnLastPost", "isBasedOnDuration"),
 
   init() {

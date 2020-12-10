@@ -2334,6 +2334,7 @@ en:
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         save: "Enable"
+        enabled_until: "(Optional) Enabled until:"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"

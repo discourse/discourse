@@ -837,8 +837,10 @@ Topic.reopenClass({
     return ajax(`/t/id_for/${slug}`);
   },
 
-  setSlowMode(topicId, seconds) {
+  setSlowMode(topicId, seconds, enabledUntil) {
     const data = { seconds };
+    data.enabled_until = enabledUntil;
+
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
   },
 });
