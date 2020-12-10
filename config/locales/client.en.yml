@@ -2736,6 +2736,7 @@ en:
       has_replies:
         one: "%{count} Reply"
         other: "%{count} Replies"
+      has_replies_count: "%{count}"
 
       unknown_user: "(unknown/deleted user)"
       has_likes_title:
@@ -2746,6 +2747,10 @@ en:
       has_likes_title_you:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
+
+      filtered_replies_hint:
+        one: "View this post and its reply"
+        other: "View this post and its %{count} replies"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -2916,6 +2921,14 @@ en:
           edit_bookmark:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
+
+      filtered_replies:
+        viewing: "Viewing %{reply_count} replies to"
+        viewing_posts_by: "Viewing %{post_count} posts by"
+        viewing_subset: "Some replies are collapsed"
+        viewing_summary: "Viewing a summary of this topic"
+        post_number: "%{username}, post #%{post_number}"
+        show_all: "Show all"
 
     category:
       can: "can&hellip; "

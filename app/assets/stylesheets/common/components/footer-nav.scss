@@ -18,6 +18,11 @@ body.footer-nav-visible {
     margin-bottom: env(safe-area-inset-bottom);
     padding-bottom: 0px;
   }
+
+  .posts-filtered-notice {
+    transition: all linear 0.1s;
+    bottom: $footer-nav-height + 15;
+  }
 }
 
 .footer-nav {

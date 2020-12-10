@@ -101,6 +101,10 @@ export default function transformPost(
   const postTypes = site.post_types;
   const topic = post.topic;
   const details = topic.get("details");
+  const filteredUpwardsPostID = topic.get("postStream.filterUpwardsPostID");
+  const filteredRepliesPostNumber = topic.get(
+    "postStream.filterRepliesToPostNumber"
+  );
 
   const postAtts = transformBasicPost(post);
 
@@ -131,9 +135,13 @@ export default function transformPost(
   postAtts.isWarning = topic.is_warning;
   postAtts.links = post.get("internalLinks");
   postAtts.replyDirectlyBelow =
-    nextPost && nextPost.reply_to_post_number === post.post_number;
+    nextPost &&
+    nextPost.reply_to_post_number === post.post_number &&
+    post.post_number !== filteredRepliesPostNumber;
   postAtts.replyDirectlyAbove =
-    prevPost && post.reply_to_post_number === prevPost.post_number;
+    prevPost &&
+    post.id !== filteredUpwardsPostID &&
+    post.reply_to_post_number === prevPost.post_number;
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
