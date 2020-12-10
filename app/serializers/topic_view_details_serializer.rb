@@ -20,6 +20,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
      :can_archive_topic,
      :can_split_merge_topic,
      :can_edit_staff_notes,
+     :can_toggle_topic_visibility,
      :can_moderate_category]
   end
 
@@ -142,6 +143,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
 
   def include_can_edit_tags?
     !scope.can_edit?(object.topic) && scope.can_edit_tags?(object.topic)
+  end
+
+  def include_can_toggle_topic_visibility?
+    scope.can_toggle_topic_visibility?(object.topic)
   end
 
   def can_perform_action_available_to_group_moderators?
