@@ -53,12 +53,11 @@ export default (filterArg, params) => {
       const { category, modelParams } = model;
 
       if (
+        (!params || params.no_subcategories === undefined) &&
         category.default_list_filter === "none" &&
-        filterArg === "default" &&
-        modelParams &&
-        modelParams.id !== "all"
+        filterArg === "default"
       ) {
-        this.replaceWith("discovery.categoryNone", {
+        return this.replaceWith("discovery.categoryNone", {
           category,
           category_slug_path_with_id: modelParams.category_slug_path_with_id,
         });
