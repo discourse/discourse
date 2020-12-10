@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   has_many :group_requests, dependent: :delete_all
   has_many :muted_user_records, class_name: 'MutedUser', dependent: :delete_all
   has_many :ignored_user_records, class_name: 'IgnoredUser', dependent: :delete_all
+  has_many :do_not_disturb_timings, dependent: :delete_all
 
   # dependent deleting handled via before_destroy (special cases)
   has_many :user_actions
@@ -1356,6 +1357,11 @@ class User < ActiveRecord::Base
 
   def encoded_username(lower: false)
     UrlHelper.encode_component(lower ? username_lower : username)
+  end
+
+  def do_not_disturb?
+    now = Time.current
+    do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now).exists?
   end
 
   protected

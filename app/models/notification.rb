@@ -282,7 +282,8 @@ class Notification < ActiveRecord::Base
   end
 
   def send_email
-    NotificationEmailer.process_notification(self) if !skip_send_email
+    return if skip_send_email || user.do_not_disturb? # TODO: 'shelve' emails rather than skipping them entirely
+    NotificationEmailer.process_notification(self)
   end
 
 end

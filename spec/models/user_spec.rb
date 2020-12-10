@@ -2481,4 +2481,20 @@ describe User do
       end
     end
   end
+
+  describe "#do_not_disturb?" do
+    before do
+      freeze_time
+    end
+
+    it "is true when a dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.current, ends_at: Time.current + 1.day)
+      expect(user.do_not_disturb?).to eq(true)
+    end
+
+    it "is false when no dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.current - 2.day, ends_at: Time.current - 1.minute)
+      expect(user.do_not_disturb?).to eq(false)
+    end
+  end
 end

@@ -464,6 +464,8 @@ class PostAlerter
   end
 
   def push_notification(user, payload)
+    return if user.do_not_disturb?
+
     if user.push_subscriptions.exists?
       Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
     end
