@@ -14,11 +14,10 @@ module Jobs
       serializer_opts = { root: false, scope: guardian }
 
       if user = UserMerger.new(user, target_user, current_user).merge!
-        sleep(10)
         user_json = AdminDetailedUserSerializer.new(user, serializer_opts).as_json
-        ::MessageBus.publish '/merge_user', { success: 'OK' }.merge(merged: true, user: user_json)
+        ::MessageBus.publish '/merge_user', { success: 'OK' }.merge(merged: true, user: user_json), user_ids: [current_user.id]
       else
-        ::MessageBus.publish '/merge_user', { failed: 'FAILED' }.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json)
+        ::MessageBus.publish '/merge_user', { failed: 'FAILED' }.merge(user: AdminDetailedUserSerializer.new(@user, serializer_opts).as_json), user_ids: [current_user.id]
       end
     end
   end

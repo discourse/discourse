@@ -4652,17 +4652,6 @@ en:
             cancel: "Cancel"
 
         merging_user: "Merging user..."
-        merge_user:
-          updating_username: "Updating username..."
-          changing_post_ownership: "Changing post ownership..."
-          merging_given_daily_likes: "Merging given daily likes..."
-          merging_post_timings: "Merging post timings..."
-          merging_user_visits: "Merging user visits..."
-          updating_site_settings: "Updating site settings..."
-          updating_user_stats: "Updating user stats..."
-          merging_user_attributes: "Merging user attributes..."
-          updating_user_ids: "Updating user ids..."
-          deleting_source_user: "Deleting source user..."
         merge_failed: "There was an error while merging the users."
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."

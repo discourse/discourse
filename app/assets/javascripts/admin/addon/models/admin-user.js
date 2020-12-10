@@ -507,7 +507,6 @@ const AdminUser = User.extend({
     })
       .then((response) => {
         if (response.success) {
-          // const messageBus = container.lookup("message-bus:main");
           messageBus.subscribe("/merge_user", (data) => {
             if (data.merged) {
               if (/^\/admin\/users\/list\//.test(location)) {

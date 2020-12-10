@@ -33,7 +33,7 @@ class UserMerger
   def update_username
     return if @source_user.username == @target_user.username
 
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_username") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_username") }, user_ids: [@acting_user.id] if @acting_user
     UsernameChanger.update_username(user_id: @source_user.id,
                                     old_username: @source_user.username,
                                     new_username: @target_user.username,
@@ -49,7 +49,7 @@ class UserMerger
 
     return if posts.count == 0
 
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.changing_post_ownership") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.changing_post_ownership") }, user_ids: [@acting_user.id] if @acting_user
 
     last_topic_id = nil
     post_ids = []
@@ -78,7 +78,7 @@ class UserMerger
   end
 
   def merge_given_daily_likes
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_given_daily_likes") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_given_daily_likes") }, user_ids: [@acting_user.id] if @acting_user
 
     sql = <<~SQL
       INSERT INTO given_daily_likes AS g (user_id, likes_given, given_date, limit_reached)
@@ -112,7 +112,7 @@ class UserMerger
   end
 
   def merge_post_timings
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_post_timings") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_post_timings") }, user_ids: [@acting_user.id] if @acting_user
 
     update_user_id(:post_timings, conditions: ["x.topic_id = y.topic_id",
                                                "x.post_number = y.post_number"])
@@ -128,7 +128,7 @@ class UserMerger
   end
 
   def merge_user_visits
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_visits") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_visits") }, user_ids: [@acting_user.id] if @acting_user
 
     update_user_id(:user_visits, conditions: "x.visited_at = y.visited_at")
 
@@ -146,7 +146,7 @@ class UserMerger
   end
 
   def update_site_settings
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_site_settings") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_site_settings") }, user_ids: [@acting_user.id] if @acting_user
 
     SiteSetting.all_settings(true).each do |setting|
       if setting[:type] == "username" && setting[:value] == @source_user.username
@@ -156,7 +156,7 @@ class UserMerger
   end
 
   def update_user_stats
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_stats") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_stats") }, user_ids: [@acting_user.id] if @acting_user
 
     # topics_entered
     DB.exec(<<~SQL, target_user_id: @target_user.id)
@@ -212,7 +212,7 @@ class UserMerger
   end
 
   def merge_user_attributes
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_attributes") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.merging_user_attributes") }, user_ids: [@acting_user.id] if @acting_user
 
     DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
       UPDATE users AS t
@@ -255,7 +255,7 @@ class UserMerger
   end
 
   def update_user_ids
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_ids") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.updating_user_ids") }, user_ids: [@acting_user.id] if @acting_user
 
     Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
@@ -378,7 +378,7 @@ class UserMerger
   end
 
   def delete_source_user
-    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.deleting_source_user") }
+    ::MessageBus.publish '/merge_user', { message: I18n.t("admin.user.merge_user.deleting_source_user") }, user_ids: [@acting_user.id] if @acting_user
 
     @source_user.reload
 
