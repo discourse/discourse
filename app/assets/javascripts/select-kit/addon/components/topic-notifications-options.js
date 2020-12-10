@@ -13,8 +13,6 @@ export default NotificationsButtonComponent.extend({
     showCaret: true,
   },
 
-  i18nPrefix: "topic.notifications",
-
   i18nPostfix: computed("topic.archetype", function () {
     return this.topic.archetype === "private_message" ? "_pm" : "";
   }),

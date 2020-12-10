@@ -113,7 +113,7 @@
 
                 <div class="blurb container">
                   <span class="date">
-                    {{format-age result.created_at}}
+                    {{format-date result.created_at format="tiny"}}
                     {{#if result.blurb}}
                       -
                     {{/if}}

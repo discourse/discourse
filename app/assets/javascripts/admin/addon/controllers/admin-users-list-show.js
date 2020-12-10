@@ -4,7 +4,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 
 export default Controller.extend(CanCheckEmails, {
@@ -32,9 +32,9 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @observes("listFilter")
-  _filterUsers: discourseDebounce(function () {
-    this.resetFilters();
-  }, INPUT_DELAY),
+  _filterUsers() {
+    discourseDebounce(this, this.resetFilters, INPUT_DELAY);
+  },
 
   resetFilters() {
     this._page = 1;

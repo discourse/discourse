@@ -1109,3 +1109,36 @@ a.mention-group {
   bottom: -2px;
   right: 15px;
 }
+
+.posts-filtered-notice {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: var(--tertiary-low);
+  bottom: 0;
+  padding: 1em;
+  margin-top: 0.5em;
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(
+    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
+      (0.8em * 2)
+  );
+
+  .filtered-avatar {
+    margin: 0 0.5em;
+    + .names {
+      flex: inherit;
+    }
+  }
+
+  .filtered-replies-show-all {
+    margin-left: 1em;
+  }
+
+  .filtered-user-row {
+    @include ellipsis;
+  }
+}

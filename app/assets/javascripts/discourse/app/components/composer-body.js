@@ -1,16 +1,10 @@
-import {
-  cancel,
-  debounce,
-  later,
-  run,
-  schedule,
-  throttle,
-} from "@ember/runloop";
+import { cancel, later, run, schedule, throttle } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import afterTransition from "discourse/lib/after-transition";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { headerHeight } from "discourse/components/site-header";
 import { iOSWithVisualViewport } from "discourse/lib/utilities";
 import positioningWorkaround from "discourse/lib/safari-hacks";
@@ -45,7 +39,7 @@ export default Component.extend(KeyEnterEscape, {
 
   @discourseComputed("composer.action")
   prefixedComposerAction(action) {
-    return `composer-action-${action}`;
+    return action ? `composer-action-${action}` : "";
   },
 
   @discourseComputed("currentUser.primary_group_name")
@@ -76,7 +70,7 @@ export default Component.extend(KeyEnterEscape, {
         return;
       }
 
-      debounce(this, this.debounceMove, 300);
+      discourseDebounce(this, this.debounceMove, 300);
     });
   },
 

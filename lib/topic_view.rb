@@ -771,6 +771,44 @@ class TopicView
       @contains_gaps = true
     end
 
+    # Filter replies
+    if @replies_to_post_number.present?
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.post_number = :post_number
+        OR posts.reply_to_post_number = :post_number', { post_number: @replies_to_post_number.to_i })
+
+      @contains_gaps = true
+    end
+
+    # Filtering upwards
+    if @filter_upwards_post_id.present?
+      post = Post.find(@filter_upwards_post_id)
+      post_ids = DB.query_single(<<~SQL, post_id: post.id, topic_id: post.topic_id)
+      WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
+            SELECT p.id, p.reply_to_post_number FROM posts AS p
+              WHERE p.id = :post_id
+            UNION
+              SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
+                WHERE breadcrumb.reply_to_post_number = p.post_number
+                  AND p.topic_id = :topic_id
+          )
+      SELECT id from breadcrumb
+      WHERE id <> :post_id
+      ORDER by id
+      SQL
+
+      post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
+      post_ids.push(post.id)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.id IN (:post_ids)
+        OR posts.id > :max_post_id', { post_ids: post_ids, max_post_id: post_ids.max })
+
+      @contains_gaps = true
+    end
+
     # Deleted
     # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
     # copy the filter for has_deleted? method

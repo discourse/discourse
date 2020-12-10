@@ -104,6 +104,25 @@ export function postUrl(slug, topicId, postNumber) {
   return url;
 }
 
+export function highlightPost(postNumber) {
+  const container = document.querySelector(`#post_${postNumber}`);
+  if (!container) {
+    return;
+  }
+  const element = container.querySelector(".topic-body");
+  if (!element || element.classList.contains("highlighted")) {
+    return;
+  }
+
+  element.classList.add("highlighted");
+
+  const removeHighlighted = function () {
+    element.classList.remove("highlighted");
+    element.removeEventListener("animationend", removeHighlighted);
+  };
+  element.addEventListener("animationend", removeHighlighted);
+}
+
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
   const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;

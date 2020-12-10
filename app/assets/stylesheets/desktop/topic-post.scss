@@ -208,8 +208,12 @@ nav.post-controls {
       background: var(--primary-low);
     }
     .d-icon {
-      margin-left: 5px;
+      margin-right: 5px;
       font-size: $font-down-1;
+    }
+    .d-button-label + .d-icon {
+      margin-left: 5px;
+      margin-right: 0;
     }
   }
 }

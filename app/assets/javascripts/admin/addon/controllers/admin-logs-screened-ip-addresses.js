@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 import bootbox from "bootbox";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { exportEntity } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
 import { outputExportResult } from "discourse/lib/export-result";
@@ -13,13 +13,17 @@ export default Controller.extend({
   filter: null,
   savedIpAddress: null,
 
-  @observes("filter")
-  show: discourseDebounce(function () {
+  _debouncedShow() {
     this.set("loading", true);
     ScreenedIpAddress.findAll(this.filter).then((result) => {
       this.setProperties({ model: result, loading: false });
     });
-  }, INPUT_DELAY),
+  },
+
+  @observes("filter")
+  show() {
+    discourseDebounce(this, this._debouncedShow, INPUT_DELAY);
+  },
 
   actions: {
     allow(record) {

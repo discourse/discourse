@@ -12,6 +12,7 @@ class TopicTrackingState
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
+  UNMUTED_MESSAGE_TYPE = "unmuted"
 
   attr_accessor :user_id,
                 :topic_id,
@@ -100,6 +101,25 @@ class TopicTrackingState
     message = {
       topic_id: topic.id,
       message_type: MUTED_MESSAGE_TYPE,
+    }
+    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+  end
+
+  def self.publish_unmuted(topic)
+    return if !SiteSetting.mute_all_categories_by_default
+    user_ids = User
+      .joins(DB.sql_fragment("LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id", category_id: topic.category_id))
+      .joins(DB.sql_fragment("LEFT JOIN topic_users ON topic_users.user_id = users.id AND topic_users.topic_id = :topic_id",  topic_id: topic.id))
+      .joins("LEFT JOIN tag_users ON tag_users.user_id = users.id AND tag_users.tag_id IN (#{topic.tag_ids.join(",").presence || 'NULL'})")
+      .where("category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0")
+      .where("users.last_seen_at > ?", 7.days.ago)
+      .order("users.last_seen_at DESC")
+      .limit(100)
+      .pluck(:id)
+    return if user_ids.blank?
+    message = {
+      topic_id: topic.id,
+      message_type: UNMUTED_MESSAGE_TYPE,
     }
     MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
   end
