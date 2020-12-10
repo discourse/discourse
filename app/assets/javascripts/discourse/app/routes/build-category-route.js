@@ -101,11 +101,14 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition, modelParams) {
-      const listFilter = `c/${Category.slugFor(category)}/${
-          category.id
-        }/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(modelParams, params),
-        extras = { cached: this.isPoppedState(transition) };
+      const findOpts = filterQueryParams(modelParams, params);
+      const extras = { cached: this.isPoppedState(transition) };
+
+      let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
+      if (findOpts.no_subcategories) {
+        listFilter += "/none";
+      }
+      listFilter += `/l/${this.filter(category)}`;
 
       return findTopicList(
         this.store,
