@@ -466,8 +466,10 @@ const TopicTrackingState = EmberObject.extend({
     return new Set(result);
   },
 
-  countCategoryByState(type, categoryId, tagId) {
-    const subcategoryIds = this.getSubCategoryIds(categoryId);
+  countCategoryByState(type, categoryId, tagId, noSubcategories) {
+    const subcategoryIds = noSubcategories
+      ? new Set()
+      : this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
     let filter = type === "new" ? isNew : isUnread;
@@ -485,12 +487,17 @@ const TopicTrackingState = EmberObject.extend({
     ).length;
   },
 
-  countNew(categoryId, tagId) {
-    return this.countCategoryByState("new", categoryId, tagId);
+  countNew(categoryId, tagId, noSubcategories) {
+    return this.countCategoryByState("new", categoryId, tagId, noSubcategories);
   },
 
-  countUnread(categoryId, tagId) {
-    return this.countCategoryByState("unread", categoryId, tagId);
+  countUnread(categoryId, tagId, noSubcategories) {
+    return this.countCategoryByState(
+      "unread",
+      categoryId,
+      tagId,
+      noSubcategories
+    );
   },
 
   forEachTracked(fn) {
@@ -548,20 +555,20 @@ const TopicTrackingState = EmberObject.extend({
     return sum;
   },
 
-  lookupCount(name, category, tagId) {
+  lookupCount(name, category, tagId, noSubcategories) {
     if (name === "latest") {
       return (
-        this.lookupCount("new", category, tagId) +
-        this.lookupCount("unread", category, tagId)
+        this.lookupCount("new", category, tagId, noSubcategories) +
+        this.lookupCount("unread", category, tagId, noSubcategories)
       );
     }
 
     let categoryId = category ? get(category, "id") : null;
 
     if (name === "new") {
-      return this.countNew(categoryId, tagId);
+      return this.countNew(categoryId, tagId, noSubcategories);
     } else if (name === "unread") {
-      return this.countUnread(categoryId, tagId);
+      return this.countUnread(categoryId, tagId, noSubcategories);
     } else {
       const categoryName = name.split("/")[1];
       if (categoryName) {
