@@ -20,42 +20,7 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
 
-    serialize(modelParams) {
-      if (!modelParams.category_slug_path_with_id) {
-        if (modelParams.id === "none") {
-          const category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-          ].join("/");
-          const category = Category.findBySlugPathWithID(
-            category_slug_path_with_id
-          );
-          this.replaceWith("discovery.categoryNone", {
-            category,
-            category_slug_path_with_id,
-          });
-        } else if (modelParams.id === "all") {
-          modelParams.category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-          ].join("/");
-        } else {
-          modelParams.category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-            modelParams.id,
-          ]
-            .filter((x) => x)
-            .join("/");
-        }
-      }
-
-      return modelParams;
-    },
-
     model(modelParams) {
-      modelParams = this.serialize(modelParams);
-
       const category = Category.findBySlugPathWithID(
         modelParams.category_slug_path_with_id
       );
