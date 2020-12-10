@@ -104,39 +104,50 @@ module Oneboxer
       parsed_onebox = Nokogiri::HTML5::fragment(onebox)
       next if parsed_onebox.children.blank?
 
-      if element&.parent&.node_name&.downcase == "p" && parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
-        if element.parent.children.count == 1
-          # Replace whole paragraph with onebox if it contains only the URL
-          element = element.parent
-        else
-          # Otherwise, split the paragraph and insert the onebox in the middle
-          parent = element.parent
-          siblings = parent.children
-          element_idx = siblings.find_index(element)
-
-          if element_idx == 0
-            parent.children = siblings[element_idx + 1..siblings.size]
-            parent.add_previous_sibling(parsed_onebox)
-          elsif element_idx == siblings.size - 1
-            parent.children = siblings[0..element_idx - 1]
-            parent.add_next_sibling(parsed_onebox)
-          else
-            parent_rest = parent.dup
-
-            parent.children = siblings[0..element_idx - 1]
-            parent_rest.children = siblings[element_idx + 1..siblings.size]
-
-            parent.add_next_sibling(parent_rest)
-            parent.add_next_sibling(parsed_onebox)
-          end
-        end
-      end
-
-      element.replace parsed_onebox
       changed = true
+
+      parent = element.parent
+      if parent&.node_name&.downcase == "p" &&
+        parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
+
+        siblings = parent.children
+        element_idx = siblings.find_index(element)
+        before_idx = first_significant_element_index(siblings, element_idx - 1, -1)
+        after_idx = first_significant_element_index(siblings, element_idx + 1, +1)
+
+        if before_idx < 0 && after_idx >= siblings.size
+          parent.replace parsed_onebox
+        elsif before_idx < 0
+          parent.children = siblings[after_idx..siblings.size]
+          parent.add_previous_sibling(parsed_onebox)
+        elsif after_idx >= siblings.size
+          parent.children = siblings[0..before_idx]
+          parent.add_next_sibling(parsed_onebox)
+        else
+          parent_rest = parent.dup
+
+          parent.children = siblings[0..before_idx]
+          parent_rest.children = siblings[after_idx..siblings.size]
+
+          parent.add_next_sibling(parent_rest)
+          parent.add_next_sibling(parsed_onebox)
+        end
+      else
+        element.replace parsed_onebox
+      end
     end
 
     Result.new(doc, changed)
+  end
+
+  def self.first_significant_element_index(elements, index, step)
+    while index >= 0 && index < elements.size &&
+      (elements[index].node_name.downcase == "br" ||
+        (elements[index].node_name.downcase == "text" && elements[index].to_html.strip.blank?))
+      index = index + step
+    end
+
+    index
   end
 
   def self.is_previewing?(user_id)
