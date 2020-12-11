@@ -168,6 +168,8 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:id])
     category = Category.find(params[:destination_category_id])
 
+    raise Discourse::InvalidParameters if category.id == SiteSetting.shared_drafts_category.to_i
+
     guardian.ensure_can_publish_topic!(topic, category)
     topic = TopicPublisher.new(topic, current_user, category.id).publish!
 

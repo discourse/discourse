@@ -3535,6 +3535,11 @@ RSpec.describe TopicsController do
           expect(result.category_id).to eq(category.id)
           expect(result.visible).to eq(true)
         end
+
+        it 'fails if the destination category is the shared drafts category' do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: shared_drafts_category.id }
+          expect(response.status).to eq(400)
+        end
       end
     end
   end

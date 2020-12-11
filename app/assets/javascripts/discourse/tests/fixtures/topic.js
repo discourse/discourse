@@ -4031,6 +4031,7 @@ export default {
     archetype: "regular",
     slug: "this-is-a-test-topic",
     category_id: 24,
+    is_shared_draft: true,
     word_count: 15,
     deleted_at: null,
     user_id: 1,

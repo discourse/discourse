@@ -172,6 +172,8 @@ module TopicGuardian
       return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?
     end
 
+    return false if topic.shared_draft && !can_create_shared_draft?
+
     category = topic.category
     can_see_category?(category) &&
       (!category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) || topic.user == user)
