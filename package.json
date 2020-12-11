@@ -20,7 +20,6 @@
     "intersection-observer": "^0.5.1",
     "jquery": "3.5.1",
     "jquery-color": "3.0.0-alpha.1",
-    "jquery-resize": "https://github.com/cowboy/jquery-resize/",
     "jquery-tags-input": "1.3.5",
     "jquery.autoellipsis": "https://github.com/pvdspek/jquery.autoellipsis",
     "magnific-popup": "1.1.0",
