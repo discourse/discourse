@@ -10,7 +10,7 @@
     flex: 0 0 100%;
     margin-left: 0.5em;
     font-size: $font-down-3;
-    margin-top: 0.5em;
+    margin-top: 0.3em;
     color: var(--primary-medium);
   }
 }
@@ -23,6 +23,10 @@
     align-items: center;
     cursor: pointer;
     padding: 0.5em 0;
+
+    &:hover {
+      background-color: var(--tertiary-low);
+    }
 
     label {
       margin-bottom: 0;

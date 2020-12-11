@@ -2,11 +2,17 @@ import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   duration: null,
   error: null,
   saving: false,
+
+  @discourseComputed("saving", "duration")
+  saveDisabled(saving, duration) {
+    return saving || duration === null;
+  },
 
   @action
   setDuration(duration) {

@@ -412,6 +412,17 @@ table {
   }
 }
 
+.avatar-do-not-disturb {
+  position: absolute;
+  width: 1em;
+  left: 1px;
+  bottom: -8px;
+
+  .d-icon-discourse-snooze {
+    color: var(--tertiary) !important;
+  }
+}
+
 .ring-backdrop-spotlight {
   position: absolute;
   width: 80px;
