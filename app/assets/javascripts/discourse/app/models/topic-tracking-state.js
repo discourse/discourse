@@ -468,7 +468,7 @@ const TopicTrackingState = EmberObject.extend({
 
   countCategoryByState(type, categoryId, tagId, noSubcategories) {
     const subcategoryIds = noSubcategories
-      ? new Set()
+      ? new Set([categoryId])
       : this.getSubCategoryIds(categoryId);
     const mutedCategoryIds =
       this.currentUser && this.currentUser.muted_category_ids;
