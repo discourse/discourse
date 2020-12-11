@@ -90,4 +90,18 @@ describe TopicList do
       end
     end
   end
+
+  describe "#preload_key" do
+    let(:category) { Fabricate(:category) }
+
+    it "generates correct key for categories" do
+      topic_list = TopicList.new('latest', nil, nil, category: category, category_id: category.id)
+      expect(topic_list.preload_key).to eq("topic_list_c/#{category.slug}/#{category.id}/l/latest")
+    end
+
+    it "generates correct key for 'no subcategories' option" do
+      topic_list = TopicList.new('latest', nil, nil, category: category, category_id: category.id, no_subcategories: true)
+      expect(topic_list.preload_key).to eq("topic_list_c/#{category.slug}/#{category.id}/none/l/latest")
+    end
+  end
 end
