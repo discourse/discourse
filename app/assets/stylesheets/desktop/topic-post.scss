@@ -643,7 +643,7 @@ blockquote {
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: z("dropdown");
+  z-index: z("dropdown") + 1; // 1 higher than .select-posts
   box-shadow: shadow("card");
   padding: 0.714em;
   margin-bottom: 5px;
