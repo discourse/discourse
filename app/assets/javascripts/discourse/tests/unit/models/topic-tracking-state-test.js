@@ -290,6 +290,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     };
 
     assert.equal(state.countNew(1), 1);
+    assert.equal(state.countNew(1, undefined, true), 0);
     assert.equal(state.countNew(1, "missing-tag"), 0);
     assert.equal(state.countNew(2), 1);
     assert.equal(state.countNew(3), 0);
