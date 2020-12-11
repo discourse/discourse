@@ -16,9 +16,7 @@ module TopicQueryParams
 
     # hacky columns get special handling
     options[:topic_ids] = param_to_integer_list(:topic_ids)
-    if options[:no_subcategories] == 'true'
-      options[:no_subcategories] = true
-    end
+    options[:no_subcategories] = options[:no_subcategories] == 'true' if options[:no_subcategories].present?
 
     options
   end
