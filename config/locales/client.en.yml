@@ -3521,6 +3521,20 @@ en:
 
     image_removed: "(image removed)"
 
+    do_not_disturb:
+      title: "Pause notifications for..."
+      save: "Save"
+      pause: "Pause notifications"
+      unpause: "Unpause notifications"
+      remaining: "%{remaining} remaining"
+      options:
+        half_hour: "30 minutes"
+        one_hour: "1 hour"
+        two_hours: "2 hours"
+        tomorrow: "Until tomorrow"
+        custom: "Custom"
+
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."

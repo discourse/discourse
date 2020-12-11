@@ -1360,8 +1360,12 @@ class User < ActiveRecord::Base
   end
 
   def do_not_disturb?
+    active_do_not_disturb_timings.exists?
+  end
+
+  def active_do_not_disturb_timings
     now = Time.current
-    do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now).exists?
+    do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now)
   end
 
   protected
