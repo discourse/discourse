@@ -30,6 +30,10 @@ export default Controller.extend(ModalFunctionality, {
       .then((response) => {
         this.send("closeModal");
         this.currentUser.set("do_not_disturb_until", response.ends_at);
+        this.appEvents.trigger(
+          "do-not-disturb:changed",
+          this.currentUser.do_not_disturb_until
+        );
       })
       .catch((e) => {
         this.set("error", e[0]);

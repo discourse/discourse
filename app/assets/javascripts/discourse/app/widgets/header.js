@@ -320,6 +320,10 @@ export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
 
+  init() {
+    this.appEvents.on("do-not-disturb:changed", this, "scheduleRerender");
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,
