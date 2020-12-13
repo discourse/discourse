@@ -737,6 +737,10 @@ class ImportScripts::Base
       WHERE u1.user_id = user_stats.user_id
         AND user_stats.topic_count <> sub.topic_count
     SQL
+
+    puts "", "Updating user digest_attempted_at..."
+
+    DB.exec("UPDATE user_stats SET digest_attempted_at = now() WHERE digest_attempted_at IS NULL")
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method

@@ -285,7 +285,7 @@ class BulkImport::Base
     user_id topics_entered time_read days_visited posts_read_count
     likes_given likes_received new_since read_faq
     first_post_created_at post_count topic_count bounce_score
-    reset_bounce_score_after
+    reset_bounce_score_after digest_attempted_at
   }
 
   USER_PROFILE_COLUMNS ||= %i{
@@ -435,7 +435,6 @@ class BulkImport::Base
     user_email[:updated_at] ||= user_email[:created_at]
     user_email[:email] ||= random_email
     user_email[:email].downcase!
-
     user_email
   end
 
@@ -451,11 +450,12 @@ class BulkImport::Base
     user_stat[:post_count] ||= 0
     user_stat[:topic_count] ||= 0
     user_stat[:bounce_score] ||= 0
+    user_stat[:digest_attempted_at] ||= NOW
     user_stat
   end
 
   def process_user_profile(user_profile)
-    user_profile[:bio_raw]    = (user_profile[:bio_raw].presence || "").scrub.strip.presence
+    user_profile[:bio_raw] = (user_profile[:bio_raw].presence || "").scrub.strip.presence
     user_profile[:bio_cooked] = pre_cook(user_profile[:bio_raw]) if user_profile[:bio_raw].present?
     user_profile[:views] ||= 0
     user_profile
@@ -494,7 +494,7 @@ class BulkImport::Base
     topic[:closed] ||= false
     topic[:views] ||= 0
     topic[:created_at] ||= NOW
-    topic[:bumped_at]  ||= topic[:created_at]
+    topic[:bumped_at] ||= topic[:created_at]
     topic[:updated_at] ||= topic[:created_at]
     topic
   end
