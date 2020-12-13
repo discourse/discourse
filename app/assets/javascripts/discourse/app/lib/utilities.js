@@ -59,7 +59,13 @@ export function avatarUrl(template, size) {
 
 export function getRawSize(size) {
   const pixelRatio = window.devicePixelRatio || 1;
-  return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
+  let rawSize = 1;
+  if (pixelRatio > 1.1 && pixelRatio < 2.1) {
+    rawSize = 2;
+  } else if (pixelRatio >= 2.1) {
+    rawSize = 3;
+  }
+  return size * rawSize;
 }
 
 export function avatarImg(options, customGetURL) {
