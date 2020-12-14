@@ -62,7 +62,7 @@ class ListController < ApplicationController
         if @category.id == SiteSetting.shared_drafts_category.to_i
           # On shared drafts, show the destination category
           list.topics.each do |t|
-            t.includes_destination_category = true
+            t.includes_destination_category = t.shared_draft.present?
           end
         else
           # When viewing a non-shared draft category, find topics whose

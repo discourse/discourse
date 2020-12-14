@@ -619,15 +619,23 @@ class TopicQuery
     viewing_shared = category_id && category_id == drafts_category_id
     can_create_shared = guardian.can_create_shared_draft?
 
-    if can_create_shared && options[:destination_category_id]
-      destination_category_id = get_category_id(options[:destination_category_id])
-      topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
-      result.where(id: topic_ids)
-    elsif can_create_shared && viewing_shared
-      result.includes(:shared_draft).references(:shared_draft)
-    else
-      result.where('topics.category_id != ?', drafts_category_id)
+    if can_create_shared
+      if options[:destination_category_id]
+        destination_category_id = get_category_id(options[:destination_category_id])
+        topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+
+        return result.where(id: topic_ids)
+      end
+
+      if viewing_shared
+        return result.includes(:shared_draft).references(:shared_draft)
+      end
+
+    elsif viewing_shared
+      return result.joins('LEFT OUTER JOIN shared_drafts sd ON sd.topic_id = topics.id').where('sd.id IS NULL')
     end
+
+    result.where('topics.category_id != ?', drafts_category_id)
   end
 
   def apply_ordering(result, options)
