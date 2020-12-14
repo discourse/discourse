@@ -99,6 +99,7 @@ module ImportScripts::PhpBB3
 
       poll_data = PollData.new(row[:poll_title], row[:poll_max_options], row[:poll_end])
       poll_raw = @poll_importer.create_raw(row[:topic_id], poll_data)
+      return if poll_data.options.size < 2
 
       mapped_post[:raw] = poll_raw << "\n\n" << mapped_post[:raw]
       poll_data
