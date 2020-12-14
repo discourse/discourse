@@ -52,7 +52,7 @@ export default Controller.extend(bufferedProperty("model"), {
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
-  queryParams: ["filter", "username_filters"],
+  queryParams: ["filter", "username_filters", "replies_to_post_number"],
   loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
@@ -64,6 +64,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _progressIndex: null,
   hasScrolled: null,
   username_filters: null,
+  replies_to_post_number: null,
   filter: null,
   quoteState: null,
 

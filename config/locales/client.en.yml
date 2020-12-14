@@ -2753,6 +2753,8 @@ en:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
 
+      in_reply_to: "Load parent post"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."

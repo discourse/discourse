@@ -46,7 +46,8 @@ export default RestModel.extend({
       stream: [],
       userFilters: [],
       summary: false,
-      filterRepliesToPostNumber: false,
+      filterRepliesToPostNumber:
+        parseInt(this.get("topic.replies_to_post_number"), 10) || false,
       filterUpwardsPostID: false,
       loaded: false,
       loadingAbove: false,

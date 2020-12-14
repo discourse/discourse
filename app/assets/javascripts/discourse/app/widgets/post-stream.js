@@ -170,7 +170,7 @@ createWidget("filter-show-all", {
   },
 
   html() {
-    return [iconNode("far-comments"), I18n.t("post.filtered_replies.show_all")];
+    return [iconNode("arrows-alt-v"), I18n.t("post.filtered_replies.show_all")];
   },
 
   click() {
