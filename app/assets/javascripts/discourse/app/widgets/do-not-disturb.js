@@ -1,8 +1,8 @@
 import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
+import { publishDoNotDisturbOffFor } from "discourse/lib/do-not-disturb";
 import showModal from "discourse/lib/show-modal";
 
 export default createWidget("do-not-disturb", {
@@ -31,11 +31,7 @@ export default createWidget("do-not-disturb", {
 
   click() {
     if (this.currentUser.do_not_disturb_until) {
-      ajax({
-        url: "/do-not-disturb",
-        type: "DELETE",
-      }).then(() => {
-        this.currentUser.set("do_not_disturb_until", false);
+      publishDoNotDisturbOffFor(this.currentUser).then(() => {
         this.scheduleRerender();
       });
     } else {

@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import { publishDoNotDisturbOnFor } from "discourse/lib/do-not-disturb";
 
 export default Controller.extend(ModalFunctionality, {
   duration: null,
@@ -21,19 +21,9 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   save() {
-    this.set("saving", true);
-    ajax({
-      url: "/do-not-disturb",
-      type: "POST",
-      data: { duration: this.duration },
-    })
-      .then((response) => {
+    publishDoNotDisturbOnFor(this.currentUser, this.duration)
+      .then(() => {
         this.send("closeModal");
-        this.currentUser.set("do_not_disturb_until", response.ends_at);
-        this.appEvents.trigger(
-          "do-not-disturb:changed",
-          this.currentUser.do_not_disturb_until
-        );
       })
       .catch((e) => {
         this.set("error", e[0]);

@@ -136,7 +136,7 @@ function isIdle() {
 }
 
 // Call-in point from message bus
-function onNotification(data, siteSettings) {
+function onNotification(data, siteSettings, user) {
   if (!liveEnabled) {
     return;
   }
@@ -144,6 +144,9 @@ function onNotification(data, siteSettings) {
     return;
   }
   if (!isIdle()) {
+    return;
+  }
+  if (user.do_not_disturb_until) {
     return;
   }
   if (keyValueStore.getItem("notifications-disabled")) {

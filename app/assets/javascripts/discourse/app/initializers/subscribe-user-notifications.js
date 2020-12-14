@@ -12,6 +12,7 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
+import { updateDoNotDisturbStatus } from "discourse/lib/do-not-disturb";
 
 export default {
   name: "subscribe-user-notifications",
@@ -113,6 +114,10 @@ export default {
         user.notification_channel_position
       );
 
+      bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
+        updateDoNotDisturbStatus(user, data.ends_at);
+      });
+
       const site = container.lookup("site:main");
       const siteSettings = container.lookup("site-settings:main");
       const router = container.lookup("router:main");
@@ -130,7 +135,7 @@ export default {
 
       if (!isTesting()) {
         bus.subscribe(alertChannel(user), (data) =>
-          onNotification(data, siteSettings)
+          onNotification(data, siteSettings, user)
         );
         initDesktopNotifications(bus, appEvents);
 

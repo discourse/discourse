@@ -629,6 +629,11 @@ class User < ActiveRecord::Base
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
 
+  def publish_do_not_disturb(ends_at: nil)
+    # turning DND off if ends_at is nil
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at }, user_ids: [id])
+  end
+
   def password=(password)
     # special case for passwordless accounts
     unless password.blank?

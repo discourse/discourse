@@ -492,7 +492,7 @@ class ApplicationController < ActionController::Base
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
-  def fetch_user_from_params(opts = il, eager_load = [])
+  def fetch_user_from_params(opts = nil, eager_load = [])
     opts ||= {}
     user = if params[:username]
       username_lower = params[:username].downcase.chomp('.json')

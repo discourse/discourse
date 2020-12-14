@@ -414,12 +414,19 @@ table {
 
 .avatar-do-not-disturb {
   position: absolute;
-  width: 1em;
-  left: 1px;
-  bottom: -8px;
+  display: flex;
+  align-items: center;
+  width: 1.25em;
+  left: 2px;
+  bottom: -1px;
+  background-color: var(--tertiary-med-or-tertiary);
+  border-radius: 50%;
+  height: 1.25em;
 
-  .d-icon-moon {
-    color: var(--tertiary) !important;
+  .d-icon.d-icon-moon {
+    color: var(--tertiary-or-white) !important;
+    line-height: unset;
+    font-size: .875em;
   }
 }
 
