@@ -179,18 +179,24 @@ class ImportScripts::Base
     results.each do |result|
       g = yield(result)
 
-      if g.nil? || group_id_from_imported_group_id(g[:id])
+      if g.nil?
         skipped += 1
       else
-        new_group = create_group(g, g[:id])
-        created_group(new_group)
+        import_id = g.dig(:custom_fields, :import_id) || g[:id]
 
-        if new_group.valid?
-          add_group(g[:id].to_s, new_group)
-          created += 1
+        if group_id_from_imported_group_id(import_id)
+          skipped += 1
         else
-          failed += 1
-          puts "Failed to create group id #{g[:id]} #{new_group.name}: #{new_group.errors.full_messages}"
+          new_group = create_group(g, import_id)
+          created_group(new_group)
+
+          if new_group.valid?
+            add_group(g[:id].to_s, new_group)
+            created += 1
+          else
+            failed += 1
+            puts "Failed to create group id #{g[:id]} #{new_group.name}: #{new_group.errors.full_messages}"
+          end
         end
       end
 
@@ -266,7 +272,7 @@ class ImportScripts::Base
       if u.nil?
         skipped += 1
       else
-        import_id = u[:id]
+        import_id = u.dig(:custom_fields, :import_id) || u[:id]
 
         if user_id_from_imported_user_id(import_id)
           skipped += 1
@@ -417,25 +423,31 @@ class ImportScripts::Base
       params = yield(c)
 
       # block returns nil to skip
-      if params.nil? || category_id_from_imported_category_id(params[:id])
+      if params.nil?
         skipped += 1
       else
-        # Basic massaging on the category name
-        params[:name] = "Blank" if params[:name].blank?
-        params[:name].strip!
-        params[:name] = params[:name][0..49]
+        import_id = params.dig(:custom_fields, :import_id) || params[:id]
 
-        # make sure categories don't go more than 2 levels deep
-        if params[:parent_category_id]
-          top = Category.find_by_id(params[:parent_category_id])
-          top = top.parent_category while top && !top.parent_category.nil?
-          params[:parent_category_id] = top.id if top
+        if category_id_from_imported_category_id(import_id)
+          skipped += 1
+        else
+          # Basic massaging on the category name
+          params[:name] = "Blank" if params[:name].blank?
+          params[:name].strip!
+          params[:name] = params[:name][0..49]
+
+          # make sure categories don't go more than 2 levels deep
+          if params[:parent_category_id]
+            top = Category.find_by_id(params[:parent_category_id])
+            top = top.parent_category while top && !top.parent_category.nil?
+            params[:parent_category_id] = top.id if top
+          end
+
+          new_category = create_category(params, import_id)
+          created_category(new_category)
+
+          created += 1
         end
-
-        new_category = create_category(params, params[:id])
-        created_category(new_category)
-
-        created += 1
       end
 
       print_status(created + skipped, total, get_start_time("categories"))
@@ -512,7 +524,8 @@ class ImportScripts::Base
       if params.nil?
         skipped += 1
       else
-        import_id = params.delete(:id).to_s
+        import_id = params.dig(:custom_fields, :import_id) || params[:id].to_s
+        params.delete[:id]
 
         if post_id_from_imported_post_id(import_id)
           skipped += 1
