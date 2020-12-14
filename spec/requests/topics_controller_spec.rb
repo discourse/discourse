@@ -2105,6 +2105,8 @@ RSpec.describe TopicsController do
         let!(:post3) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
         let!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
         let!(:post5) { Fabricate(:post, topic: topic) }
+        let!(:quote_reply) { Fabricate(:basic_reply, user: user, topic: topic) }
+        let!(:post_reply) { PostReply.create(post_id: post2.id, reply_post_id: quote_reply.id) }
 
         it 'should return the right posts' do
           get "/t/#{topic.id}.json", params: {
@@ -2119,7 +2121,7 @@ RSpec.describe TopicsController do
           expect(body.has_key?("related_messages")).to eq(false)
 
           ids = body["post_stream"]["posts"].map { |p| p["id"] }
-          expect(ids).to eq([post.id, post2.id, post3.id, post4.id])
+          expect(ids).to eq([post.id, post2.id, post3.id, post4.id, quote_reply.id])
         end
       end
 
