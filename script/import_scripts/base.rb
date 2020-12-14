@@ -525,7 +525,6 @@ class ImportScripts::Base
         skipped += 1
       else
         import_id = params.dig(:custom_fields, :import_id) || params[:id].to_s
-        params.delete[:id]
 
         if post_id_from_imported_post_id(import_id)
           skipped += 1
@@ -563,6 +562,7 @@ class ImportScripts::Base
   STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
 
   def create_post(opts, import_id)
+    opts = opts.dup.tap { |o| o.delete(:id) }
     user = User.find(opts[:user_id])
     post_create_action = opts.delete(:post_create_action)
     opts = opts.merge(skip_validations: true)
