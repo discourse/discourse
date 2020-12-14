@@ -119,22 +119,24 @@ createWidget("posts-filtered-notice", {
         this.attach("filter-show-all", attrs),
       ];
     } else if (filters.username_filters) {
+      const firstUserPost = attrs.posts[1],
+        userPostsCount = parseInt(attrs.filteredPostsCount, 10) - 1;
       return [
         h(
           "span.filtered-replies-viewing",
           I18n.t("post.filtered_replies.viewing_posts_by", {
-            post_count: attrs.posts.length,
+            post_count: userPostsCount,
           })
         ),
         h(
           "span.filtered-avatar",
           avatarFor.call(this, "small", {
-            template: attrs.posts[0].avatar_template,
-            username: attrs.posts[0].username,
-            url: attrs.posts[0].usernameUrl,
+            template: firstUserPost.avatar_template,
+            username: firstUserPost.username,
+            url: firstUserPost.usernameUrl,
           })
         ),
-        this.attach("poster-name", attrs.posts[0]),
+        this.attach("poster-name", firstUserPost),
         this.attach("filter-show-all", attrs),
       ];
     }
@@ -282,6 +284,7 @@ export default createWidget("post-stream", {
         this.attach("posts-filtered-notice", {
           posts: postArray,
           streamFilters: attrs.streamFilters,
+          filteredPostsCount: attrs.filteredPostsCount,
         })
       );
     }
