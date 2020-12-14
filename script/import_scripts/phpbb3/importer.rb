@@ -78,10 +78,9 @@ module ImportScripts::PhpBB3
         rows = rows.to_a.uniq { |row| row[:user_id] }
         break if rows.size < 1
 
-        next if all_records_exist?(:users, importer.map_users_to_import_ids(rows))
-
         create_users(rows, total: total_count, offset: offset) do |row|
           begin
+            next if user_id_from_imported_user_id(@settings.prefix(row[:user_id]))
             importer.map_user(row)
           rescue => e
             log_error("Failed to map user with ID #{row[:user_id]}", e)
@@ -100,10 +99,9 @@ module ImportScripts::PhpBB3
         rows, last_username = @database.fetch_anonymous_users(last_username)
         break if rows.size < 1
 
-        next if all_records_exist?(:users, importer.map_anonymous_users_to_import_ids(rows))
-
         create_users(rows, total: total_count, offset: offset) do |row|
           begin
+            next if user_id_from_imported_user_id(@settings.prefix(row[:post_username]))
             importer.map_anonymous_user(row)
           rescue => e
             log_error("Failed to map anonymous user with ID #{row[:user_id]}", e)
@@ -196,6 +194,7 @@ module ImportScripts::PhpBB3
         @settings.category_mapping[key] = @lookup.category_id_from_imported_category_id(@settings.prefix(value.join(",")))
       end
 
+      puts ""
       puts "category_mapping = #{@settings.category_mapping.inspect}"
       puts "tags_mapping = #{@settings.tags_mapping.inspect}"
     end
@@ -221,10 +220,9 @@ module ImportScripts::PhpBB3
         rows, last_post_id = @database.fetch_posts(last_post_id)
         break if rows.size < 1
 
-        next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
-
         create_posts(rows, total: total_count, offset: offset) do |row|
           begin
+            next if post_id_from_imported_post_id(@settings.prefix(row[:post_id]))
             importer.map_post(row)
           rescue => e
             log_error("Failed to map post with ID #{row[:post_id]}", e)
@@ -243,10 +241,9 @@ module ImportScripts::PhpBB3
         rows, last_msg_id = @database.fetch_messages(last_msg_id)
         break if rows.size < 1
 
-        next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
-
         create_posts(rows, total: total_count, offset: offset) do |row|
           begin
+            next if post_id_from_imported_post_id(@settings.prefix("pm:#{row[:msg_id]}"))
             importer.map_message(row)
           rescue => e
             log_error("Failed to map message with ID #{row[:msg_id]}", e)
