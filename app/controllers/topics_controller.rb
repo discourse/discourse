@@ -420,6 +420,8 @@ class TopicsController < ApplicationController
       guardian.ensure_can_close_topic!(@topic)
     when 'archived'
       guardian.ensure_can_archive_topic!(@topic)
+    when 'visible'
+      guardian.ensure_can_toggle_topic_visibility!(@topic)
     else
       guardian.ensure_can_moderate!(@topic)
     end

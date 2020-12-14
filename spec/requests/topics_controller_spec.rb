@@ -948,6 +948,28 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(topic.reload.pinned_at).to eq(nil)
       end
+
+      it 'should allow a group moderator to unlist a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'visible', enabled: 'false'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.visible).to eq(false)
+        expect(topic.posts.last.action_code).to eq('visible.disabled')
+      end
+
+      it 'should allow a group moderator to list an unlisted topic' do
+        topic.update!(visible: false)
+
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'visible', enabled: 'true'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.visible).to eq(true)
+        expect(topic.posts.last.action_code).to eq('visible.enabled')
+      end
     end
   end
 
