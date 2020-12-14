@@ -37,6 +37,10 @@ describe Topic do
         end
 
         describe 'when title contains censored words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             ['pineapple', 'pen'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
 
@@ -88,6 +92,10 @@ describe Topic do
 
       describe 'blocked words' do
         describe 'when title contains watched words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             Fabricate(:watched_word, word: 'pineapple', action: WatchedWord.actions[:block])
 
