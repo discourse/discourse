@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Jobs::UnsilenceUsers do
+describe Jobs::TurnOffDoNotDisturb do
   it "published a message to the client when do not disturb has ended" do
     freeze_time
     user = Fabricate(:user)

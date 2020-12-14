@@ -422,6 +422,7 @@ table {
   background-color: var(--tertiary-med-or-tertiary);
   border-radius: 50%;
   height: 1.25em;
+  z-index: 1002;
 
   .d-icon.d-icon-moon {
     color: var(--tertiary-or-white) !important;
