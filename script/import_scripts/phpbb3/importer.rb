@@ -263,7 +263,11 @@ module ImportScripts::PhpBB3
         break if rows.size < 1
 
         create_bookmarks(rows, total: total_count, offset: offset) do |row|
-          importer.map_bookmark(row)
+          begin
+            importer.map_bookmark(row)
+          rescue => e
+            log_error("Failed to map bookmark (#{row[:user_id]}, #{row[:topic_first_post_id]})", e)
+          end
         end
       end
     end
