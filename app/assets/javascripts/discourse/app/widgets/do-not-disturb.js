@@ -14,7 +14,7 @@ export default createWidget("do-not-disturb", {
         .to(moment(this.currentUser.do_not_disturb_until))
         .split("in ")[1];
       return [
-        iconNode("discourse-snooze"),
+        iconNode("far-moon"),
         h("span#do-not-disturb-link", I18n.t("do_not_disturb.unpause")),
         h(
           "span#do-not-disturb-time-remaining",
@@ -23,7 +23,7 @@ export default createWidget("do-not-disturb", {
       ];
     } else {
       return [
-        iconNode("discourse-snooze"),
+        iconNode("far-moon"),
         h("span#do-not-disturb-link", I18n.t("do_not_disturb.pause")),
       ];
     }

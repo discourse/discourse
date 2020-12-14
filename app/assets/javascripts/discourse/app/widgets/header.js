@@ -65,9 +65,7 @@ createWidget("header-notifications", {
     ];
 
     if (user.do_not_disturb_until) {
-      contents.push(
-        h("div.avatar-do-not-disturb", iconNode("discourse-snooze"))
-      );
+      contents.push(h("div.avatar-do-not-disturb", iconNode("moon")));
     } else {
       const unreadNotifications = user.get("unread_notifications");
       if (!!unreadNotifications) {
