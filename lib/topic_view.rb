@@ -773,10 +773,12 @@ class TopicView
 
     # Filter replies
     if @replies_to_post_number.present?
+      post_id = filtered_post_id(@replies_to_post_number.to_i)
       @filtered_posts = @filtered_posts.where('
         posts.post_number = 1
         OR posts.post_number = :post_number
-        OR posts.reply_to_post_number = :post_number', { post_number: @replies_to_post_number.to_i })
+        OR posts.reply_to_post_number = :post_number
+        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
 
       @contains_gaps = true
     end
