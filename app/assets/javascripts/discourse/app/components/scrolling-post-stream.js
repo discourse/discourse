@@ -41,6 +41,7 @@ export default MountWidget.extend({
     return this.getProperties(
       "posts",
       "canCreatePost",
+      "filteredPostsCount",
       "multiSelect",
       "gaps",
       "selectedQuery",
