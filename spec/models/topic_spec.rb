@@ -9,6 +9,10 @@ describe Topic do
   fab!(:another_user) { Fabricate(:user) }
   fab!(:trust_level_2) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
+  after do
+    WordWatcher.clear_cache!
+  end
+
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
