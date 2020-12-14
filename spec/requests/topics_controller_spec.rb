@@ -3227,6 +3227,54 @@ RSpec.describe TopicsController do
         expect(topic.slow_mode_seconds).to eq(3600)
       end
     end
+
+    context 'auto-disable slow mode' do
+      before { sign_in(admin) }
+
+      let(:timestamp) { 1.week.from_now.to_formatted_s(:iso8601) }
+
+      it 'sets a topic timer to clear the slow mode automatically' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+        execute_at = created_timer.execute_at.to_formatted_s(:iso8601)
+
+        expect(execute_at).to eq(timestamp)
+      end
+
+      it 'deletes the topic timer' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '0', enabled_until: timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+
+        expect(created_timer).to be_nil
+      end
+
+      it 'updates the existing timer' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        updated_timestamp = 1.hour.from_now.to_formatted_s(:iso8601)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: updated_timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+        execute_at = created_timer.execute_at.to_formatted_s(:iso8601)
+
+        expect(execute_at).to eq(updated_timestamp)
+      end
+    end
   end
 
   describe '#invite' do

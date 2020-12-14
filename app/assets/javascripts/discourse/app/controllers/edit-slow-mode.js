@@ -14,6 +14,7 @@ export default Controller.extend(ModalFunctionality, {
   minutes: null,
   seconds: null,
   saveDisabled: false,
+  enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
 
   init() {
@@ -99,7 +100,7 @@ export default Controller.extend(ModalFunctionality, {
       this._parseValue(this.seconds)
     );
 
-    Topic.setSlowMode(this.model.id, seconds)
+    Topic.setSlowMode(this.model.id, seconds, this.enabledUntil)
       .catch(popupAjaxError)
       .then(() => {
         this.set("model.slow_mode_seconds", seconds);

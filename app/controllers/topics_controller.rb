@@ -938,9 +938,20 @@ class TopicsController < ApplicationController
 
   def set_slow_mode
     topic = Topic.find(params[:topic_id])
+    slow_mode_type = TopicTimer.types[:clear_slow_mode]
+    timer = TopicTimer.find_by(topic: topic, status_type: slow_mode_type)
 
     guardian.ensure_can_moderate!(topic)
     topic.update!(slow_mode_seconds: params[:seconds])
+    enabled = params[:seconds].to_i > 0
+
+    time = enabled && params[:enabled_until].present? ? params[:enabled_until] : nil
+
+    topic.set_or_create_timer(
+      slow_mode_type,
+      time,
+      by_user: timer&.user
+    )
 
     head :ok
   end
