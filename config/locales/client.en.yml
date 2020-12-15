@@ -2752,6 +2752,11 @@ en:
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
+      filtered_replies_viewing:
+          one: "Viewing %{count} reply to"
+          other: "Viewing %{count} replies to"
+
+      in_reply_to: "Load parent post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -2924,7 +2929,6 @@ en:
             description: "Edit the bookmark name or change the reminder date and time"
 
       filtered_replies:
-        viewing: "Viewing %{reply_count} replies to"
         viewing_posts_by: "Viewing %{post_count} posts by"
         viewing_subset: "Some replies are collapsed"
         viewing_summary: "Viewing a summary of this topic"

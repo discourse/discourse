@@ -90,8 +90,8 @@ createWidget("posts-filtered-notice", {
       return [
         h(
           "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies.viewing", {
-            reply_count: sourcePost.reply_count,
+          I18n.t("post.filtered_replies_viewing", {
+            count: sourcePost.reply_count,
           })
         ),
         h("span.filtered-user-row", [
@@ -170,7 +170,7 @@ createWidget("filter-show-all", {
   },
 
   html() {
-    return [iconNode("far-comments"), I18n.t("post.filtered_replies.show_all")];
+    return [iconNode("arrows-alt-v"), I18n.t("post.filtered_replies.show_all")];
   },
 
   click() {

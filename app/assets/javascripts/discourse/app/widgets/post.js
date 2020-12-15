@@ -120,7 +120,7 @@ createWidget("select-post", {
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
-
+  title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
   },

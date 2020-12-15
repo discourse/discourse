@@ -728,7 +728,6 @@ posting:
   enable_filtered_replies_view:
     default: false
     client: true
-    hidden: true
   title_prettify:
     default: true
     locale_default:
