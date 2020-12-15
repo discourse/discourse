@@ -141,16 +141,13 @@ class Demon::Base
   end
 
   def run
-    if @pid = fork
-      write_pid_file
-      return
+    @pid = fork do
+      Process.setproctitle("discourse #{self.class.prefix}")
+      monitor_parent
+      establish_app
+      after_fork
     end
-
-    Process.setproctitle("discourse #{self.class.prefix}")
-    monitor_parent
-    establish_app
-    after_fork
-    exit 0 # Otherwise execution will return to wherever `start` was called
+    write_pid_file
   end
 
   def already_running?
