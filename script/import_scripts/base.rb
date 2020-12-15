@@ -606,10 +606,15 @@ class ImportScripts::Base
           skipped += 1
           puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
         else
-          result = BookmarkManager.new(user).create(post_id: post.id)
+          begin
+            manager = BookmarkManager.new(user)
+            bookmark = manager.create(post_id: post.id)
 
-          created += 1 if result.errors.none?
-          skipped += 1 if result.errors.any?
+            created += 1 if manager.errors.none?
+            skipped += 1 if manager.errors.any?
+          rescue
+            skipped += 1
+          end
         end
       end
 
