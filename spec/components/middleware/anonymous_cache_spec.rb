@@ -26,6 +26,10 @@ describe Middleware::AnonymousCache do
       it "is false if it has an auth cookie" do
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
       end
+
+      it "is false for srv/status routes" do
+        expect(new_helper("PATH_INFO" => "/srv/status").cacheable?).to eq(false)
+      end
     end
 
     context "per theme cache" do
