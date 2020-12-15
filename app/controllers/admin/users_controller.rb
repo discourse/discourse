@@ -489,7 +489,10 @@ class Admin::UsersController < Admin::AdminController
 
   def anonymize
     guardian.ensure_can_anonymize_user!(@user)
-    if user = UserAnonymizer.new(@user, current_user).make_anonymous
+    opts = {}
+    opts[:anonymize_ip] = params[:anonymize_ip] if params[:anonymize_ip].present?
+
+    if user = UserAnonymizer.new(@user, current_user, opts).make_anonymous
       render json: success_json.merge(username: user.username)
     else
       render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
