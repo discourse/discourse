@@ -10,7 +10,7 @@ describe DoNotDisturbTiming do
       freeze_time
       timing = DoNotDisturbTiming.new(user: user, starts_at: Time.current, ends_at: Time.current - 1.hour)
       timing.valid?
-      expect(timing.errors).to be_empty
+      expect(timing.errors[:ends_at]).to be_present
     end
   end
 end
