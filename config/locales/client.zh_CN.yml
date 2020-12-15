@@ -1629,7 +1629,6 @@ zh_CN:
       options: "选项"
       whisper: "密语"
       unlist: "隐藏"
-      blockquote_text: "引用"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
       toggle_unlisted: "显示/隐藏于主题列表"
@@ -1698,8 +1697,8 @@ zh_CN:
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
       link_url_placeholder: "粘贴 URL 或键入以搜索主题"
-      quote_title: "引用"
-      quote_text: "引用"
+      blockquote_title: "引用"
+      blockquote_text: "引用"
       code_title: "预格式化文本"
       code_text: "预格式化文本将缩进 4 格"
       paste_code_text: "输入或粘贴代码"
@@ -2072,6 +2071,7 @@ zh_CN:
         select: "用户只能在这个主题中发言一次："
         description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
         save: "启用"
+        enabled_until: "(可选)在以下日期之前启用："
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
@@ -2426,12 +2426,15 @@ zh_CN:
       unread: "未读帖子"
       has_replies:
         other: "%{count} 回复"
+      has_replies_count: "%{count}"
       unknown_user: "（未知或已删除的用户）"
       has_likes_title:
         other: "%{count}人赞了该贴"
       has_likes_title_only_you: "你赞了这个帖子"
       has_likes_title_you:
         other: "你和另外的%{count}人赞了帖"
+      filtered_replies_hint:
+        other: "查看此帖子及其 %{count} 个回复"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -2579,6 +2582,13 @@ zh_CN:
           edit_bookmark:
             name: "编辑收藏"
             description: "编辑收藏名称或修改提醒的日期和时间"
+      filtered_replies:
+        viewing: "查看 %{reply_count} 个回复"
+        viewing_posts_by: "查看 %{post_count} 个帖子"
+        viewing_subset: "一些回复已被折叠"
+        viewing_summary: "查看此主题的摘要"
+        post_number: "%{username}，帖子 #%{post_number}"
+        show_all: "显示全部"
     category:
       can: "能够&hellip; "
       none: "（未分类）"
@@ -2636,10 +2646,10 @@ zh_CN:
         reply: "回复"
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理员可见。"
-        everyone_has_access: "这个分类是公开的，任何人都可以看到，回复和创建帖子。要限制权限，请删除“所有人”组的一个或多个权限。"
+        everyone_has_access: '这个分类是公开的，任何人都可以看到，回复和创建帖子。要限制权限，请删除“所有人”组的一个或多个权限。'
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
-        inherited: "此权限继承自 “所有人”"
+        inherited: '此权限继承自 “所有人”'
       special_warning: "警告：这是一个预设的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       uncategorized_security_warning: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类。这个分类没有安全设置。"
       uncategorized_general_warning: '这个分类是特殊的。它用作未选择分类的新主题的默认分类。如果你想要避免此行为并强制选择分类，<a href="%{settingLink}">请在此处禁用该设置</a>。如果你要修改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
@@ -4451,6 +4461,7 @@ zh_CN:
         image: 图片
         icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
         image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则 URL 会覆盖图标）"
+        read_only_setting_help: "自定义文本"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询

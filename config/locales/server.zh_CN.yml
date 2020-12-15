@@ -1672,6 +1672,7 @@ zh_CN:
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（不同字符数，非英语字符算作多个）。"
     allow_uppercase_posts: "允许标题和内容全大写"
     max_consecutive_replies: "在阻止添加其他回复之前，用户必须在主题中连续发布的帖子数。"
+    enable_filtered_replies_view: "(n) 回复按钮应折叠所有其他帖子，并仅显示选定的回复。"
     title_fancy_entities: "将常见的ASCII字符转换为主题标题中的花哨HTML实体，ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</A>"
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度。"
     desktop_category_page_style: "/categories 页面的视觉样式。"
@@ -2173,6 +2174,18 @@ zh_CN:
   admin:
     email:
       sent_test: "已发送！"
+    user:
+      merge_user:
+        updating_username: "正在更新用户名..."
+        changing_post_ownership: "更改帖子所有权..."
+        merging_given_daily_likes: "正在合并每日喜欢..."
+        merging_post_timings: "正在合并帖子发布时间..."
+        merging_user_visits: "正在合并用户访问..."
+        updating_site_settings: "正在更新站点设置..."
+        updating_user_stats: "正在更新用户统计信息..."
+        merging_user_attributes: "正在合并用户属性..."
+        updating_user_ids: "正在更新用户ID ..."
+        deleting_source_user: "正在删除源用户..."
   user:
     deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
     deactivated_by_staff: "被管理人员禁用"

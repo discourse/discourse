@@ -1977,6 +1977,7 @@ ko:
     governing_law: "준거법"
     city_for_disputes: "분쟁의 도시"
     shared_drafts_category: "주제 초안의 범주를 지정하여 공유 초안 기능을 사용하십시오. 이 범주의 주제는 직원 사용자의 주제 목록에서 표시되지 않습니다."
+    shared_drafts_min_trust_level: "사용자가 공유 초안을 보고 편집할 수 있도록 허용합니다."
     push_notifications_prompt: "사용자 동의 프롬프트를 표시합니다."
     push_notifications_icon: "알림 모서리에 나타나는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG 이미지를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는`--font-family` CSS 사용자 정의 속성을 통해 재정의 할 수 있습니다."
@@ -2178,6 +2179,18 @@ ko:
   admin:
     email:
       sent_test: "전송됨!"
+    user:
+      merge_user:
+        updating_username: "사용자명 업데이트 중..."
+        changing_post_ownership: "글 작성자 변경 중..."
+        merging_given_daily_likes: "일일 좋아요 병합 중..."
+        merging_post_timings: "게시 시간 병합 중..."
+        merging_user_visits: "사용자 방문 병합 중..."
+        updating_site_settings: "사이트 설정 업데이트 중..."
+        updating_user_stats: "사용자 통계 업데이트 중..."
+        merging_user_attributes: "사용자 속성 병합 중..."
+        updating_user_ids: "사용자 ID 업데이트 중..."
+        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "&#39;%{email}&#39;에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"

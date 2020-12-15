@@ -1187,7 +1187,6 @@ id:
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
-      blockquote_text: "Blok Kutipan"
       add_warning: "Ini adalah peringatan resmi."
       similar_topics: "Topik anda mirip dengan..."
       reference_topic_title: "RE: %{title}"
@@ -1232,8 +1231,7 @@ id:
       link_dialog_title: "Sisipkan Tautan"
       link_optional_text: "judul opsional"
       link_url_placeholder: "Tempel URL atau ketik untuk mencari topik"
-      quote_title: "Blok Kutipan"
-      quote_text: "Blok Kutipan"
+      blockquote_text: "Blok Kutipan"
       code_title: "Teks terformat"
       paste_code_text: "ketik atau tempel kode di sini"
       upload_title: "Unggah"

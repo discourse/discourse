@@ -94,7 +94,7 @@ pl_PL:
     incoming:
       default_subject: "Ten temat wymaga tytułu"
       show_trimmed_content: "Pokaż skróconą zawartość"
-      maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników zarejestrowanych przez email."
+      maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników etapowych zarejestrowanych przez email."
       no_subject: "(brak tematu)"
       no_body: "(brak treści wpisu)"
       missing_attachment: "(Brakuje załącznika %{filename})"
@@ -1817,6 +1817,7 @@ pl_PL:
     body_min_entropy: "Minimalna entropia treści wpisu (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     allow_uppercase_posts: "Zezwól na same wielkie litery w tytule tematu lub treści wpisu."
     max_consecutive_replies: "Liczba wpisów, które użytkownik musi wykonać w jednym rzędzie w temacie, zanim nie będzie można dodać kolejnej odpowiedzi."
+    enable_filtered_replies_view: "przycisk (n) odpowiedzi powinien zwinąć wszystkie inne posty i pokazywać tylko wybrane odpowiedzi."
     title_fancy_entities: "Konwertuj typowe znaki ASCII na fantazyjne jednostki HTML w tytułach tematów, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
@@ -1886,8 +1887,8 @@ pl_PL:
     delete_email_logs_after_days: "Usuń logi email po (N) dniach. 0 by trzymać w nieskończoność"
     disallow_reply_by_email_after_days: "Nie zezwalaj na wiadomości e-mail po (N) dniach. 0, aby zachować na czas nieokreślony"
     max_emails_per_day_per_user: "Maksymalna liczba maili, jakie użytkownik może wysłać w ciągu dnia. 0 wyłącza ograniczenie."
-    enable_staged_users: "Automatycznie twórz wystawianych użytkowników podczas przetwarzania przychodzących emaili."
-    maximum_staged_users_per_email: "Maksymalna liczba wystawionych stworzonych użytkowników podczas przetwarzania przychodzących emaili."
+    enable_staged_users: "Automatycznie twórz użytkowników etapowych podczas przetwarzania przychodzących wiadomości e-mail."
+    maximum_staged_users_per_email: "Maksymalna liczba użytkowników etapowych utworzonych podczas przetwarzania przychodzącej wiadomości e-mail."
     auto_generated_allowlist: "Lista adresów e-mail, które nie będą sprawdzane pod kątem zawartości generowanej automatycznie. Przykład: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Odrzucaj maile przychodzące zidentyfikowane jako wysłane automatycznie."
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
@@ -2375,6 +2376,18 @@ pl_PL:
   admin:
     email:
       sent_test: "wysłany!"
+    user:
+      merge_user:
+        updating_username: "Aktualizuję nazwę użytkownika ..."
+        changing_post_ownership: "Zmiana właściciela wpisu..."
+        merging_given_daily_likes: "Łączenie oddanych dziennych polubień..."
+        merging_post_timings: "Łączenie czasów postów..."
+        merging_user_visits: "Łączenie odwiedzin użytkownika..."
+        updating_site_settings: "Aktualizowanie ustawień strony..."
+        updating_user_stats: "Aktualizowanie statystyk użytkownika..."
+        merging_user_attributes: "Łączenie atrybutów użytkownika..."
+        updating_user_ids: "Aktualizuję identyfikatory użytkowników..."
+        deleting_source_user: "Usuwanie użytkownika źródłowego..."
   user:
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
@@ -2410,7 +2423,7 @@ pl_PL:
       domain_not_allowed: "Błędny adres strony internetowej. Dozwolone domeny: %{domains}"
     auto_rejected: "Odrzucono automatycznie ze względu na wiek. Zobacz ustawienia auto_handle_queued_age witryny."
     destroy_reasons:
-      unused_staged_user: "Nieużywany użytkownik wystawiony"
+      unused_staged_user: "Nieużywany użytkownik etapowy"
       fixed_primary_email: "Ustalony główny adres e-mail wystawionego użytkownika"
       same_ip_address: "Taki sam adres IP (%{ip_address}) jak inni użytkownicy"
       inactive_user: "Nieaktywny użytkownik"
@@ -4554,7 +4567,7 @@ pl_PL:
       fast_typer: "Nowy użytkownik wpisał swój pierwszy post podejrzanie szybko, co sugeruje zachowanie bota lub spamera. Zobacz `min_first_post_typing_time`."
       auto_silence_regexp: "Nowy użytkownik, którego pierwszy post pasuje do ustawienia `auto_silence_first_post_regex`."
       watched_word: "Ten post zawierał obserwowane słowo. Zobacz listę <a href='%{base_url}/admin/logs/watched_words'>obserwowanych słów</a>."
-      staged: "Nowe tematy i posty dla użytkowników przejściowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
+      staged: "Nowe tematy i posty dla użytkowników etapowych muszą zostać zatwierdzone przez personel. Zobacz `approve_unless_staged`."
       category: "Posty w tej kategorii wymagają ręcznego zatwierdzenia przez personel. Zobacz ustawienia kategorii."
       must_approve_users: "Wszyscy nowi użytkownicy muszą zostać zatwierdzeni przez personel. Zobacz `must_approve_users`."
       invite_only: "Wszyscy nowi użytkownicy powinni zostać zaproszeni. Zobacz `invite_only`."

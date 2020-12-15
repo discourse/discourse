@@ -1625,7 +1625,6 @@ vi:
       options: "Lựa chọn"
       whisper: "nói chuyện"
       unlist: "chưa được liệt kê"
-      blockquote_text: "Trích dẫn"
       add_warning: "Đây là một cảnh báo chính thức"
       toggle_whisper: "Chuyển chế độ Nói chuyện"
       toggle_unlisted: "Chuyển sang chế độ Không công khai"
@@ -1694,8 +1693,7 @@ vi:
       link_dialog_title: "Chèn liên kết"
       link_optional_text: "tiêu đề tùy chọn"
       link_url_placeholder: "Dán URL hoặc nhập vào chủ đề tìm kiếm"
-      quote_title: "Trích dẫn"
-      quote_text: "Trích dẫn"
+      blockquote_text: "Trích dẫn"
       code_title: "Văn bản định dạng trước"
       code_text: "lùi đầu dòng bằng 4 dấu cách"
       paste_code_text: "gõ hoặc dẫn code vào đây"
@@ -2631,10 +2629,10 @@ vi:
         reply: "Trả lời"
         create: "Tạo"
         no_groups_selected: "Không có nhóm nào được cấp quyền truy cập; danh mục này sẽ chỉ hiển thị cho nhân viên."
-        everyone_has_access: "Danh mục này là công khai, mọi người đều có thể xem, trả lời và tạo bài viết. Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm \"mọi người\"."
+        everyone_has_access: 'Danh mục này là công khai, mọi người đều có thể xem, trả lời và tạo bài viết. Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
         toggle_reply: "Chuyển đổi quyền Trả lời"
         toggle_full: "Chuyển đổi quyền Tạo"
-        inherited: "Sự cho phép này được thừa hưởng từ “tất cả mọi người”"
+        inherited: 'Sự cho phép này được thừa hưởng từ “tất cả mọi người”'
       special_warning: "Cảnh báo: Đây là chuyên mục có sẵn nên bạn không thể chỉnh sửa các thiết lập bảo mật. Nếu bạn muốn sử dụng chuyên mục này, hãy xóa nó thay vì tái sử dụng."
       uncategorized_security_warning: "Danh mục này là đặc biệt. Nó được thiết kế như một khu vực tổ chức cho các chủ đề không có danh mục; nó không thể có cài đặt bảo mật."
       uncategorized_general_warning: 'Danh mục này là đặc biệt. Nó được sử dụng làm danh mục mặc định cho các chủ đề mới chưa chọn danh mục. Nếu bạn muốn ngăn hành vi này và buộc lựa chọn danh mục, <a href="%{settingLink}">vui lòng tắt cài đặt tại đây</a>. Nếu bạn muốn thay đổi tên hoặc mô tả, hãy chuyển đến <a href="%{customizeLink}">Tùy chỉnh / Nội dung Văn bản</a>.'

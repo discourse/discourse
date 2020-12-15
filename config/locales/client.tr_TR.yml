@@ -1483,7 +1483,6 @@ tr_TR:
       options: "Seçenekler"
       whisper: "fısıltı"
       unlist: "listelenmedi"
-      blockquote_text: "Blok-alıntı"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıldamayı Aç/Kapa"
       toggle_unlisted: "Listelenmemiş değişiklik"
@@ -1549,8 +1548,7 @@ tr_TR:
       link_dialog_title: "Hyperlink ekle"
       link_optional_text: "isteğe bağlı başlık"
       link_url_placeholder: "Arama konularına bir URL yapıştırın veya yazın"
-      quote_title: "Blok-alıntı"
-      quote_text: "Blok-alıntı"
+      blockquote_text: "Blok-alıntı"
       code_title: "Önceden biçimlendirilmiş yazı"
       code_text: "paragraf girintisi 4 boşluktan oluşan, önceden biçimlendirilen yazı"
       paste_code_text: "kodu buraya gir veya yapıştır"
@@ -4088,6 +4086,7 @@ tr_TR:
         image: Görsel
         icon_help: "Font Awesome simge adı girin (normal simgeler için 'far-' önünü ve marka simgeleri için 'fab-' kullanın)"
         image_help: "Görüntünün URL'sini gir (her ikisi de ayarlanmışsa, simge alanını geçersiz kıl)"
+        read_only_setting_help: "Metni özelleştir"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu hedefleri gönderileri
         auto_revoke: Günlük iptal sorgusunu çalıştır
