@@ -1103,4 +1103,21 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#anonymize" do
+    it "will make the user anonymous" do
+      put "/admin/users/#{user.id}/anonymize.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+    end
+
+    it "supports `anonymize_ip`" do
+      Jobs.run_immediately!
+      sl = Fabricate(:search_log, user_id: user.id)
+      put "/admin/users/#{user.id}/anonymize.json?anonymize_ip=127.0.0.2"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+      expect(sl.reload.ip_address).to eq('127.0.0.2')
+    end
+  end
+
 end
