@@ -304,6 +304,7 @@ fr:
     drafts:
       resume: "Reprendre"
       remove: "Supprimer"
+      remove_confirmation: "Êtes-vous sûr de vouloir supprimer ce brouillon?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
@@ -322,6 +323,7 @@ fr:
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
     cancel: "annuler"
+    deleting: "Suppression en cours..."
     save: "Sauvegarder"
     saving: "Sauvegarde en cours…"
     saved: "Sauvegardé !"
@@ -406,6 +408,7 @@ fr:
       topic: "Sujet :"
       filtered_topic: "Vous avez restreint au contenu vérifiable dans un seul sujet."
       filtered_user: "Utilisateur"
+      filtered_reviewed_by: "Vérifié par"
       show_all_topics: "afficher tous les sujets"
       deleted_post: "(message supprimé)"
       deleted_user: "(utilisateur supprimé)"
@@ -507,6 +510,7 @@ fr:
           one: "Vous avez <strong>%{count}</strong> message en attente."
           other: "Vous avez <strong>%{count}</strong> messages en attente."
         ok: "OK"
+      example_username: "nom d'utilisateur"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vous</a> avez démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -606,9 +610,12 @@ fr:
           description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
           watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
           tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
+          watching_first_post_categories_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet dans ces catégories."
+          muted_categories_instructions: "Les utilisateurs ne seront notifiés en rien des nouveaux sujets de ces catégories et ces derniers n'apparaîtront pas dans les pages Catégories ou Récents."
         tags:
           title: Étiquettes
           long_title: "Notifications par défaut des étiquettes"
+          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification d'étiquettes seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
         logs:
           title: "Journaux"
           when: "Date"
@@ -882,6 +889,7 @@ fr:
       suspended_notice: "L'utilisateur est suspendu jusqu'au %{date}."
       suspended_permanently: "Cet utilisateur est suspendu."
       suspended_reason: "Raison :"
+      github_profile: "GitHub"
       email_activity_summary: "Résumé d'activité"
       mailing_list_mode:
         label: "Liste de diffusion"
@@ -1488,8 +1496,10 @@ fr:
       awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par courriel lors de l'activation."
       requires_invite: "Désolé, l'accès à ce forum est sur invitation seulement."
       not_activated: "Vous ne pouvez pas vous encore vous connecter. Nous avons envoyé un courriel d'activation à <b>%{sentTo}</b>. Veuillez suivre les instructions afin d'activer votre compte."
+      not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
       admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
+      omniauth_disallow_totp: "L'authentification à deux facteurs est activée sur votre compte. Veuillez vous connecter avec votre mot de passe."
       resend_title: "Renvoyer le courriel d'activation"
       change_email: "Changer l'adresse courriel"
       provide_new_email: "Donnez une nouvelle adresse et nous allons renvoyer votre courriel de confirmation."
@@ -1530,6 +1540,7 @@ fr:
       accept_invite: "Accepter l'invitation"
       success: "Votre compte a été créé et vous êtes maintenant connecté."
       name_label: "Nom"
+      password_label: "Mot de passe"
       optional_description: "(facultatif)"
     password_reset:
       continue: "Continuer vers %{site_name}"
@@ -1604,7 +1615,6 @@ fr:
       options: "Options"
       whisper: "murmure"
       unlist: "invisible"
-      blockquote_text: "Citation"
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Basculer murmure"
       toggle_unlisted: "Basculer la visibilité"
@@ -1670,8 +1680,8 @@ fr:
       link_dialog_title: "Insérer le lien"
       link_optional_text: "titre optionnel"
       link_url_placeholder: "Collez une URL ou tapez pour rechercher des sujets"
-      quote_title: "Citation"
-      quote_text: "Citation"
+      blockquote_title: "Citation"
+      blockquote_text: "Citation"
       code_title: "Texte préformaté"
       code_text: "texte préformaté indenté par 4 espaces"
       paste_code_text: "saisir ou coller le code ici"
@@ -1724,6 +1734,7 @@ fr:
         toggle_topic_bump:
           label: "Basculer l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"
+      ignore: "Ignorer"
     notifications:
       tooltip:
         regular:
@@ -1762,6 +1773,7 @@ fr:
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Nouveau sujet</span> %{description}"
       membership_request_accepted: "Adhésion acceptée dans « %{group_name} »"
+      votes_released: "%{description} - terminé"
       group_message_summary:
         one: "%{count} message dans la boîte de réception de %{group_name}"
         other: "%{count} messages dans la boîte de réception de %{group_name}"
@@ -1800,6 +1812,7 @@ fr:
         liked_consolidated: "nouveaux J'aime"
         post_approved: "message approuvé"
         membership_request_consolidated: "nouvelles demandes d'adhésion"
+        reaction: "nouvelle réaction"
     upload_selector:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
@@ -1883,10 +1896,20 @@ fr:
           noreplies: n'ont aucune réponse
           single_user: contiennent un unique utilisateur
         post:
+          min:
+            placeholder: minimum
+          max:
+            placeholder: maximum
           time:
             label: Date
             before: avant
             after: après
+        views:
+          label: Vues
+        min_views:
+          placeholder: minimum
+        max_views:
+          placeholder: maximum
     hamburger_menu: "aller à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: "retour"
@@ -1924,6 +1947,9 @@ fr:
         choose_append_tags: "Choisissez de nouvelles étiquettes à ajouter à ces sujets :"
         changed_tags: "Les étiquettes de ces sujets ont été modifiées."
         remove_tags: "Supprimer les étiquettes"
+        progress:
+          one: "Progression : <strong>%{count}</strong> sujet"
+          other: "Progression : <strong>%{count}</strong> sujets"
       none:
         unread: "Vous n'avez aucun sujet non lu."
         new: "Vous n'avez aucun nouveau sujet."
@@ -2017,6 +2043,19 @@ fr:
       jump_reply_up: aller à des réponses précédentes
       jump_reply_down: aller à des réponses ultérieures
       deleted: "Ce sujet a été supprimé"
+      slow_mode_update:
+        hours: "Heures :"
+        minutes: "Minutes :"
+        seconds: "Secondes :"
+        durations:
+          15_minutes: "15 minutes"
+          1_hour: "1 heure"
+          4_hours: "4 heures"
+          1_day: "1 jour"
+          1_week: "1 semaine"
+          custom: "Durée personnalisée"
+      slow_mode_notice:
+        duration: "Vous devez attendre %{duration} entre les messages de ce sujet"
       topic_status_update:
         title: "Planifier une action"
         save: "Planifier"
@@ -2571,6 +2610,9 @@ fr:
       change_in_category_topic: "Modifier la description"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
       security: "Sécurité"
+      security_add_group: "Ajouter un groupe"
+      permissions:
+        group: "Groupe"
       special_warning: "Avertissement : cette catégorie est une catégorie pré-remplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez là au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas changer ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez changer cela et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser / Contenu</a>.'

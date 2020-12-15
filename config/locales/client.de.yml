@@ -411,6 +411,7 @@ de:
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
       filtered_user: "Benutzer"
+      filtered_reviewed_by: "Überprüft von"
       show_all_topics: "Zeige alle Themen"
       deleted_post: "(Beitrag gelöscht)"
       deleted_user: "(Benutzer gelöscht)"
@@ -1688,7 +1689,6 @@ de:
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
-      blockquote_text: "Blockquote"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Sichtbarkeit umschalten"
@@ -1760,8 +1760,8 @@ de:
       link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
       link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
-      quote_title: "Zitat"
-      quote_text: "Zitat"
+      blockquote_title: "Blockquote"
+      blockquote_text: "Blockquote"
       code_title: "Vorformatierter Text"
       code_text: "vorformatierten Text mit 4 Leerzeichen einrücken"
       paste_code_text: "Tippe oder füge den Code hier ein"
@@ -1815,6 +1815,7 @@ de:
           label: "Neues Thema"
         shared_draft:
           label: "Gemeinsame Vorlage"
+          desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
           label: "Bump des Themas umschalten"
           desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"
@@ -2520,6 +2521,7 @@ de:
       has_replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
+      has_replies_count: "%{count}"
       unknown_user: "(unbekannt/gelöschter Benutzer)"
       has_likes_title:
         one: "dieser Beitrag gefällt %{count} Person"
@@ -2528,6 +2530,9 @@ de:
       has_likes_title_you:
         one: "dir und einer weiteren Person gefällt dieser Beitrag"
         other: "dir und %{count} weiteren Personen gefällt dieser Beitrag"
+      filtered_replies_hint:
+        one: "Diesen Beitrag und seine Antwort ansehen"
+        other: "Diesen Beitrag und seine %{count} Antworten ansehen"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -2684,6 +2689,13 @@ de:
           edit_bookmark:
             name: "Lesezeichen bearbeiten"
             description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
+      filtered_replies:
+        viewing: "Zeige %{reply_count} Antworten an"
+        viewing_posts_by: "Zeige %{post_count} Beiträge von"
+        viewing_subset: "Einige Antworten sind reduziert"
+        viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
+        post_number: "%{username}, Beitrag #%{post_number}"
+        show_all: "Alle anzeigen"
     category:
       can: "kann&hellip; "
       none: "(keine Kategorie)"
@@ -2741,10 +2753,10 @@ de:
         reply: "Antworte"
         create: "Erstelle"
         no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für Mitarbeiter sichtbar."
-        everyone_has_access: "Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe \"Jeder\" erteilt wurden, um die Berechtigungen einzuschränken."
+        everyone_has_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe "Jeder" erteilt wurden, um die Berechtigungen einzuschränken.'
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
-        inherited: "Diese Berechtigung wird von \"jedem\" vererbt"
+        inherited: 'Diese Berechtigung wird von "jedem" vererbt'
       special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen / Textinhalte</a> geändert werden.'
@@ -3426,8 +3438,8 @@ de:
         none_selected: "Wähle eine Gruppe, um loszulegen"
         no_custom_groups: "Erstelle eine neue benutzerdefinierte Gruppe"
       api:
-        generate_master: "Master API Key erzeugen"
-        none: "Es gibt momentan keine aktiven API-Keys"
+        generate_master: "Master API Schlüssel erzeugen"
+        none: "Es gibt momentan keine aktiven API Schlüssel"
         user: "Benutzer"
         title: "API"
         key: "Schlüssel"
@@ -3436,7 +3448,7 @@ de:
         last_used: Zuletzt verwendet
         never_used: (nie)
         generate: "Erzeugen"
-        undo_revoke: "Widerrufen zurückziehen"
+        undo_revoke: "Widerruf rückgängig machen"
         revoke: "Widerrufen"
         all_users: "Alle Benutzer"
         active_keys: "Aktive API Schlüssel"
@@ -3453,7 +3465,7 @@ de:
         save: Speichern
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
-        delete: Endgültig gelöscht
+        delete: Endgültig löschen
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
         use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
@@ -4315,7 +4327,7 @@ de:
         last_100_days: "in den letzten 100 Tagen"
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
-        post_count: Erstelle Beiträge
+        post_count: Erstellte Beiträge
         second_factor_enabled: Zwei-Faktor-Authentifizierung aktiviert
         topics_entered: Betrachtete Themen
         flags_given_count: Gemachte Meldungen
@@ -4360,13 +4372,13 @@ de:
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
-          other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
+          other: "Benutzer können nicht gelöscht werden, wenn sie Beiträge haben. Lösche zuerst alle Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge älter als %{count} Tage können nicht gelöscht werden.)"
         cant_delete_all_posts:
           one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag (die „delete_user_max_post_age“ Einstellung)."
           other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage (die „delete_user_max_post_age“ Einstellung)."
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat (die „delete_all_posts_max“ Einstellung)."
-          other: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (die „delete_all_posts_max“ Einstellung)."
+          other: "Es können nicht alle Beiträge gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (siehe „delete_all_posts_max“ Einstellung)."
         delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird. <br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
@@ -4388,7 +4400,7 @@ de:
         reset_bounce_score:
           label: "Zurücksetzen"
           title: "Anzahl unzustellbarer E-Mails auf 0 zurücksetzen"
-        visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten"
+        visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten."
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         silence_explanation: "Ein stummgeschalteter Benutzer kann keine Beiträge schreiben oder Themen beginnen."
@@ -4586,6 +4598,7 @@ de:
         image: Bild
         icon_help: "Gib einen Font Awesome Icon Namen ein (benutze für reguläre Icons das Präfix 'far-' und für Marken-Icons 'fab-')"
         image_help: "Gebe die URL eines Bildes ein (überschreibt Symbol Feld wenn beide aktiv sind)"
+        read_only_setting_help: "Anpassen von Text"
         query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus

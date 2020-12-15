@@ -1700,6 +1700,7 @@ sv:
     body_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för ett inläggs innehåll."
     allow_uppercase_posts: "Tillåt enbart versaler i ämnets rubrik eller innehåll."
     max_consecutive_replies: "Antal inlägg som en användare måste göra i rad inom ett ämne innan användaren hindras lägga till ytterligare ett svar."
+    enable_filtered_replies_view: "(n)-svarsknappen bör förminska alla andra inlägg och bara visa valda svar."
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     desktop_category_page_style: "Visuell stil för /kategorier-sidan."
@@ -2220,6 +2221,18 @@ sv:
   admin:
     email:
       sent_test: "skickat!"
+    user:
+      merge_user:
+        updating_username: "Uppdaterar användarnamn..."
+        changing_post_ownership: "Ändrar äganderätt till inlägget..."
+        merging_given_daily_likes: "Sammanslagning av dagliga gillanden..."
+        merging_post_timings: "Sammanslagning av tidpunkter för inlägg..."
+        merging_user_visits: "Sammanslagning av användarbesök..."
+        updating_site_settings: "Uppdaterar webbplatsinställningar..."
+        updating_user_stats: "Uppdaterar användarstatistik..."
+        merging_user_attributes: "Sammanslagning av användarattribut..."
+        updating_user_ids: "Uppdaterar användar-id..."
+        deleting_source_user: "Tar bort källanvändare..."
   user:
     deactivated: "Inaktiverades på grund av för många studsade e-postmeddelanden till '%{email}'."
     deactivated_by_staff: "Avaktiverades av personalen"

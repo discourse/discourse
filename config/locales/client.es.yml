@@ -1685,7 +1685,6 @@ es:
       options: "Opciones"
       whisper: "susurrar"
       unlist: "invisible"
-      blockquote_text: "Cita"
       add_warning: "Esta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar susurro"
       toggle_unlisted: "Visible/Invisible"
@@ -1757,8 +1756,7 @@ es:
       link_dialog_title: "Insertar hipervínculo"
       link_optional_text: "título opcional"
       link_url_placeholder: "Copia una URL o escribe para buscar temas"
-      quote_title: "Cita"
-      quote_text: "Cita"
+      blockquote_text: "Cita"
       code_title: "Texto preformateado"
       code_text: "texto preformateado con sangría de 4 espacios"
       paste_code_text: "escribe o pega el código aquí"
@@ -2738,10 +2736,10 @@ es:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Ningún grupo tiene acceso. Esta categoría solo será visible por el staff."
-        everyone_has_access: "Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos»."
+        everyone_has_access: 'Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos».'
         toggle_reply: "Alternar el permiso para responder"
         toggle_full: "Alternar el permiso para crear temas"
-        inherited: "Este permiso está heredado de «todos»"
+        inherited: 'Este permiso está heredado de «todos»'
       special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no pueden ser editadas. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">por favor, desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'

@@ -7,6 +7,12 @@
 fa_IR:
   js:
     presence:
+      replying:
+        one: "در حال نوشتن پاسخ"
+        other: "در حال نوشتن پاسخ"
+      editing:
+        one: "در حال ویرایش"
+        other: "در حال ویرایش"
       replying_to_topic:
-        one: "پاسخ دادن"
+        one: "در حال نوشتن پاسخ"
         other: "پاسخ دادن"

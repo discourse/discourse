@@ -1700,6 +1700,7 @@ de:
     body_min_entropy: "Für den Text neuer Beiträge minimal erforderliche Entropie (einzigartige Zeichen)."
     allow_uppercase_posts: "Beiträge oder Titel von Themen mit ausschließlich Großschreibweise erlauben."
     max_consecutive_replies: "Anzahl an aufeinanderfolgenden Beiträgen, die ein Benutzer in einem Thema schreiben kann, bevor eine weitere Antwort verhindert wird."
+    enable_filtered_replies_view: "(n) Antwortschaltfläche sollte alle anderen Beiträge einklappen und nur die ausgewählten Antworten anzeigen."
     title_fancy_entities: "Konvertiere HTML-Entitäten in Themen-Überschriften, nach dem Smarty-Pants-Schema <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimale Länge eines Titels, bevor nach ähnlichen Titeln gesucht wird."
     desktop_category_page_style: "Visueller Stil für die /categories Seite"
@@ -1998,6 +1999,7 @@ de:
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Vorlagen“, indem du eine Kategorie für Themen-Vorlagen bestimmst. Themen in dieser Kategorie werden unterdrückt in der Themen Liste für Team Mitarbeiter."
+    shared_drafts_min_trust_level: "Ermöglichen Sie Benutzern das Anzeigen und Bearbeiten von freigegebenen Entwürfen."
     push_notifications_prompt: "Zeige eine Aufforderung zur Benutzerzustimmung an."
     push_notifications_icon: "Das Abzeichensymbol, das in der Benachrichtigungsecke angezeigt wird. Ein 96 × 96 monochromatisches PNG mit Transparenz wird empfohlen."
     base_font: "Basisschriftart für die meisten Texte auf der Website. Themes können über die `--font-family` CSS-benutzerdefinierte Eigenschaft überschrieben werden."
@@ -2219,6 +2221,18 @@ de:
   admin:
     email:
       sent_test: "gesendet!"
+    user:
+      merge_user:
+        updating_username: "Aktualisiere Benutzername..."
+        changing_post_ownership: "Ändern des Beitragbesitzers ..."
+        merging_given_daily_likes: "Zusammenführen gegebener täglicher Likes ..."
+        merging_post_timings: "Beitragszeiten zusammenführen ..."
+        merging_user_visits: "Zusammenführen von Benutzerbesuchen ..."
+        updating_site_settings: "Site-Einstellungen aktualisieren..."
+        updating_user_stats: "Aktualisiere Benutzerstatistik..."
+        merging_user_attributes: "Benutzerattribute zusammenführen..."
+        updating_user_ids: "Aktualisiere Benutzer-Ids..."
+        deleting_source_user: "Lösche Quellbenutzer..."
   user:
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
     deactivated_by_staff: "Deaktiviert vom Team"

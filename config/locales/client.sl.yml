@@ -1705,7 +1705,6 @@ sl:
       options: "Možnosti"
       whisper: "šepet"
       unlist: "izločeno"
-      blockquote_text: "Citirano"
       add_warning: "To je uradno opozorilo."
       toggle_whisper: "Preklopi šepet"
       toggle_unlisted: "Preklopi izločeno"
@@ -1778,8 +1777,7 @@ sl:
       link_dialog_title: "Vstavi povezavo"
       link_optional_text: "neobvezen naslov"
       link_url_placeholder: "Za iskanje po temah prilepite ali vpišite URL"
-      quote_title: "Citiraj"
-      quote_text: "Citirano"
+      blockquote_text: "Citirano"
       code_title: "Predoblikovano besedilo"
       code_text: "zamakni predoblikovano besedilo s 4 presledki"
       paste_code_text: "vpiši ali prilepi kodo"
@@ -2750,10 +2748,10 @@ sl:
         reply: "Odgovori"
         create: "Ustvari"
         no_groups_selected: "Dostop ni bil odobren nobeni skupini; ta kategorija bo vidna samo osebju."
-        everyone_has_access: "Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«."
+        everyone_has_access: 'Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«.'
         toggle_reply: "Preklopi dovoljenje za odgovor"
         toggle_full: "Preklopi dovoljenje za ustvarjanje"
-        inherited: "To dovoljenje je podedovano od \"vsi\""
+        inherited: 'To dovoljenje je podedovano od "vsi"'
       special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
       uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more imeti varnostnih nastavitev."
       uncategorized_general_warning: 'Ta kategorija je posebna. Uporabi se kot privzeta kategorija za teme brez kategorije. Če hočete onemogočiti takšen način in hočete obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če hočete spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
