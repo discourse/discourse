@@ -114,7 +114,7 @@ export function createData(store) {
     );
   };
 
-  let topic = createTopic();
+  let topic = createTopic({ tags: ["example", "apple"] });
   topic.setProperties({
     details: EmberObject.create({
       can_create_post: true,
