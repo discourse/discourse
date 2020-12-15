@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import NavItem from "discourse/models/nav-item";
 
 let topicId = 2000000;
@@ -114,9 +115,14 @@ export function createData(store) {
   };
 
   let topic = createTopic();
-  topic.set("category", categories[0]);
-  topic.get("details").setProperties({
-    can_create_post: true,
+  topic.setProperties({
+    details: EmberObject.create({
+      can_create_post: true,
+      can_invite_to: false,
+      can_delete: false,
+      can_close_topic: false,
+    }),
+    category: categories[0],
     suggested_topics: [topic, topic, topic],
   });
 
