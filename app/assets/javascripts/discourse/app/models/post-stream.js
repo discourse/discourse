@@ -254,6 +254,10 @@ export default RestModel.extend({
   filterReplies(postNumber) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
+    this.appEvents.trigger("post-stream:filter-replies", {
+      topic_id: this.get("topic.id"),
+      post_number: postNumber,
+    });
     return this.refresh({ refreshInPlace: true }).then(() => {
       const element = document.querySelector(`#post_${postNumber}`);
 
@@ -280,6 +284,10 @@ export default RestModel.extend({
   filterUpwards(postID) {
     this.cancelFilter();
     this.set("filterUpwardsPostID", postID);
+    this.appEvents.trigger("post-stream:filter-upwards", {
+      topic_id: this.get("topic.id"),
+      post_id: postID,
+    });
     return this.refresh({ refreshInPlace: true }).then(() => {
       this.appEvents.trigger("post-stream:refresh");
 
