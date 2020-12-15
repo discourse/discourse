@@ -861,6 +861,15 @@ class Plugin::Instance
       ), self)
   end
 
+  # Register a new demon process to be forked by the Unicorn master.
+  # The demon_class should inherit from Demon::Base.
+  # With great power comes great responsibility - this method should
+  # be used with extreme caution. See `config/unicorn.conf.rb`.
+  def register_demon_process(demon_class)
+    raise "Not a demon class" if !demon_class.ancestors.include?(Demon::Base)
+    DiscoursePluginRegistry.demon_processes << demon_class
+  end
+
   protected
 
   def self.js_path

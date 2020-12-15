@@ -150,6 +150,7 @@ class Demon::Base
     monitor_parent
     establish_app
     after_fork
+    exit 0 # Otherwise execution will return to wherever `start` was called
   end
 
   def already_running?
