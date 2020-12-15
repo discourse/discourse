@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDoNotDisturbTimings < ActiveRecord::Migration[6.0]
   def change
     create_table :do_not_disturb_timings do |t|
