@@ -11,7 +11,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @discourseComputed("saving", "duration")
   saveDisabled(saving, duration) {
-    return saving || duration === null;
+    return saving || !duration;
   },
 
   @action
