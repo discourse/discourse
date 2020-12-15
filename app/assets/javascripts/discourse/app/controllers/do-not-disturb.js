@@ -26,7 +26,7 @@ export default Controller.extend(ModalFunctionality, {
         this.send("closeModal");
       })
       .catch((e) => {
-        this.set("error", e[0]);
+        this.set("error", e.jqXHR.responseJSON.errors[0]);
       })
       .finally(() => {
         this.set("saving", false);

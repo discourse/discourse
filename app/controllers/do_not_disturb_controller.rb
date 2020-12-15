@@ -12,7 +12,7 @@ class DoNotDisturbController < ApplicationController
       ends_at_from_minutes(duration_minutes) :
       ends_at_from_string(params[:duration])
 
-t   new_timing = current_user.do_not_disturb_timings.new(starts_at: Time.current, ends_at: ends_at)
+    new_timing = current_user.do_not_disturb_timings.new(starts_at: Time.current, ends_at: ends_at)
 
     if new_timing.save
       current_user.publish_do_not_disturb(ends_at: ends_at)

@@ -13,6 +13,9 @@
       {{i18n "do_not_disturb.options.tomorrow"}}
     {{/tap-tile}}
   {{/tap-tile-grid}}
+  {{#if error}}
+    <div class="alert">{{error}}</div>
+  {{/if}}
 {{/d-modal-body}}
 <div class="modal-footer">
   {{d-button

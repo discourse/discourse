@@ -13,7 +13,7 @@ export function publishDoNotDisturbOnFor(user, duration) {
         updateDoNotDisturbStatus(user, response.ends_at);
         return resolve();
       })
-      .catch(reject);
+      .catch((error) => reject(error));
   });
 }
 
