@@ -15,6 +15,7 @@ class DoNotDisturbController < ApplicationController
 t   new_timing = current_user.do_not_disturb_timings.new(starts_at: Time.current, ends_at: ends_at)
 
     if new_timing.save
+      current_user.publish_do_not_disturb(ends_at: ends_at)
       render json: { ends_at: ends_at }
     else
       render json: { errors: new_timing.errors.full_messages }, status: 400

@@ -14,17 +14,22 @@ export default createWidget("do-not-disturb", {
         .to(moment(this.currentUser.do_not_disturb_until))
         .split("in ")[1];
       return [
-        iconNode("far-moon"),
-        h("span#do-not-disturb-link", I18n.t("do_not_disturb.unpause")),
-        h(
-          "span#do-not-disturb-time-remaining",
-          I18n.t("do_not_disturb.remaining", { remaining: remainingTime })
-        ),
+        h("div.do-not-disturb-inner-container", [
+          h("div.do-not-disturb-background", iconNode("moon")),
+
+          h("span.do-not-disturb-label", [
+            h("span", I18n.t("do_not_disturb.label")),
+            h(
+              "span.time-remaining",
+              I18n.t("do_not_disturb.remaining", { remaining: remainingTime })
+            ),
+          ]),
+        ]),
       ];
     } else {
       return [
         iconNode("far-moon"),
-        h("span#do-not-disturb-link", I18n.t("do_not_disturb.pause")),
+        h("span.do-not-disturb-label", I18n.t("do_not_disturb.label")),
       ];
     }
   },

@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 export function publishDoNotDisturbOnFor(user, duration) {
   return new Promise(function (resolve, reject) {
     ajax({
-      url: "/do-not-disturb",
+      url: "/do-not-disturb.json",
       type: "POST",
       data: { duration: duration },
     })
@@ -20,7 +20,7 @@ export function publishDoNotDisturbOnFor(user, duration) {
 export function publishDoNotDisturbOffFor(user) {
   return new Promise(function (resolve, reject) {
     ajax({
-      url: "/do-not-disturb",
+      url: "/do-not-disturb.json",
       type: "DELETE",
     })
       .then(() => {

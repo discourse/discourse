@@ -3522,10 +3522,9 @@ en:
     image_removed: "(image removed)"
 
     do_not_disturb:
-      title: "Pause notifications for..."
+      title: "Do not disturb for..."
       save: "Save"
-      pause: "Pause notifications"
-      unpause: "Unpause notifications"
+      label: "Do not disturb"
       remaining: "%{remaining} remaining"
       options:
         half_hour: "30 minutes"
