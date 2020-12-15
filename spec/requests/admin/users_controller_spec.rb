@@ -1117,7 +1117,6 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body['username']).to be_present
       expect(sl.reload.ip_address).to eq('127.0.0.2')
-      expect(1).to eq(2)
     end
   end
 
