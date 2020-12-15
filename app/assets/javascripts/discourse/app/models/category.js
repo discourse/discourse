@@ -495,12 +495,6 @@ Category.reopenClass({
   },
 
   reloadCategoryWithPermissions(params, store, site) {
-    if (params.slug && params.slug.match(/^\d+-category/)) {
-      const id = parseInt(params.slug, 10);
-      return this.reloadById(id).then((result) =>
-        this._includePermissions(result.category, store, site)
-      );
-    }
     return this.reloadBySlugPath(params.slug).then((result) =>
       this._includePermissions(result.category, store, site)
     );

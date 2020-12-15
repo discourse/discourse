@@ -1185,4 +1185,36 @@ describe Category do
     end
   end
 
+  describe "#find_by_slug_path" do
+    it 'works for categories with slugs' do
+      category = Fabricate(:category, slug: 'cat1')
+
+      expect(Category.find_by_slug_path(['cat1'])).to eq(category)
+    end
+
+    it 'works for categories without slugs' do
+      SiteSetting.slug_generation_method = 'none'
+
+      category = Fabricate(:category, slug: 'cat1')
+
+      expect(Category.find_by_slug_path(["#{category.id}-category"])).to eq(category)
+    end
+
+    it 'works for subcategories with slugs' do
+      category = Fabricate(:category, slug: 'cat1')
+      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+
+      expect(Category.find_by_slug_path(['cat1', 'cat2'])).to eq(subcategory)
+    end
+
+    it 'works for subcategories without slugs' do
+      SiteSetting.slug_generation_method = 'none'
+
+      category = Fabricate(:category, slug: 'cat1')
+      subcategory = Fabricate(:category, slug: 'cat2', parent_category: category)
+
+      expect(Category.find_by_slug_path(['cat1', "#{subcategory.id}-category"])).to eq(subcategory)
+      expect(Category.find_by_slug_path(["#{category.id}-category", "#{subcategory.id}-category"])).to eq(subcategory)
+    end
+  end
 end
