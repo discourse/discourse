@@ -11,7 +11,7 @@ class WatchedWord < ActiveRecord::Base
     )
   end
 
-  MAX_WORDS_PER_ACTION = 1000
+  MAX_WORDS_PER_ACTION = 2000
 
   before_validation do
     self.word = self.class.normalize_word(self.word)
