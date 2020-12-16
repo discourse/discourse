@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 
@@ -46,6 +47,8 @@ export default Component.extend({
       { name: I18n.t("groups.alias_levels.owners_mods_and_admins"), value: 4 },
       { name: I18n.t("groups.alias_levels.everyone"), value: 99 },
     ];
+
+    this.watchingNotificationLevel = NotificationLevels.WATCHING;
   },
 
   membersVisibilityLevel: or(
@@ -61,6 +64,11 @@ export default Component.extend({
   mentionableLevel: or(
     "model.mentionable_level",
     "aliasLevelOptions.firstObject.value"
+  ),
+
+  defaultNotificationLevel: or(
+    "model.default_notification_level",
+    "watchingNotificationLevel"
   ),
 
   @discourseComputed(
