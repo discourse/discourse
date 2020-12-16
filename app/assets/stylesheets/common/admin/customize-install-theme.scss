@@ -65,8 +65,8 @@
   padding: 0px 0px 10px 20px;
   width: calc(100% - 200px);
   input[type="file"] {
-    width: unset;
-    max-width: 100%;
+    width: 100%;
+    overflow: hidden; // Chrome needs this
   }
 }
 
