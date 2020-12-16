@@ -77,8 +77,8 @@ module SidekiqHelpers
       matched_job ||= args.all? do |key, value|
         value = value.to_s if value.is_a?(Symbol)
 
-        if key == :at && !job_args.has_key?(:at)
-          value == job_args[:enqueued_at]
+        if key == :at
+          value.to_f == (job_args[:at] || job_args[:enqueued_at]).to_f
         else
           value == job_args[key]
         end
