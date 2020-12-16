@@ -14,8 +14,14 @@ import:
   # Set this if you import multiple phpBB forums into a single Discourse forum.
   site_name:
 
-  # Category and tag mappings
-  category_mapping:
+  # Create new categories
+  new_categories:
+
+  # Category mappings
+  category_mappings:
+
+  # Tag mappings
+  tag_mappings:
 
   # Rank to trust level mapping
   rank_mapping:

@@ -27,16 +27,13 @@ module ImportScripts::PhpBB3
     def execute
       puts '', "importing from phpBB #{@php_config[:phpbb_version]}"
 
-      if @settings.category_mapping.present?
-        puts "category mapping is present. enabling tagging"
-        SiteSetting.tagging_enabled = true
-      end
+      SiteSetting.tagging_enabled = true if @settings.tag_mappings.present?
 
       import_users
       import_anonymous_users if @settings.import_anonymous_users
       import_groups
       import_user_groups
-      import_mapped_categories
+      import_new_categories
       import_categories
       import_posts
       import_private_messages if @settings.import_private_messages
@@ -156,47 +153,18 @@ module ImportScripts::PhpBB3
       end
     end
 
-    def import_mapped_categories
-      puts '', 'creating mapped categories'
+    def import_new_categories
+      puts '', 'creating new categories'
 
-      # Build an array of mapped categories and their ancestors. It is later
-      # used to ensure that parent categories are created before children
-      # categories.
-      mapped_categories = []
-      @settings.category_mapping.each do |_, value|
-        next if value == :skip
-        value.length.times.each do |idx|
-          mapped_categories << value[0..idx]
-        end
-      end
-      mapped_categories.uniq!
-      mapped_categories.sort! do |a, b|
-        a.length == b.length ? a.join <=> b.join : a.length <=> b.length
-      end
+      create_categories(@settings.new_categories) do |row|
+        next if row == "SKIP"
 
-      # Create mapped categories
-      mapped_category_ids = {}
-      res = create_categories(mapped_categories) do |row|
-        *parent_categories, category_name = row
         {
-          id: @settings.prefix(row.join(",")),
-          name: category_name,
-          parent_category_id: mapped_category_ids[parent_categories],
-          post_create_action: proc do |category|
-            mapped_category_ids[row] = category.id
-          end
+          id: @settings.prefix(row[:forum_id]),
+          name: row[:name],
+          parent_category_id: @lookup.category_id_from_imported_category_id(@settings.prefix(row[:parent_id]))
         }
       end
-
-      # Replace mapped category names with their ID
-      @settings.category_mapping.each do |key, value|
-        next if value == :skip
-        @settings.category_mapping[key] = @lookup.category_id_from_imported_category_id(@settings.prefix(value.join(",")))
-      end
-
-      puts ""
-      puts "category_mapping = #{@settings.category_mapping.inspect}"
-      puts "tags_mapping = #{@settings.tags_mapping.inspect}"
     end
 
     def import_categories
@@ -205,7 +173,8 @@ module ImportScripts::PhpBB3
       importer = @importers.category_importer
 
       create_categories(rows) do |row|
-        next if @settings.category_mapping[row[:forum_id]] == :skip
+        next if @settings.category_mappings[row[:forum_id].to_s] == 'SKIP'
+
         importer.map_category(row)
       end
     end

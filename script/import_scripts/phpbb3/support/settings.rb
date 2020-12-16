@@ -8,13 +8,14 @@ module ImportScripts::PhpBB3
   class Settings
     def self.load(filename)
       yaml = YAML::load_file(filename)
-      Settings.new(yaml)
+      Settings.new(yaml.deep_stringify_keys.with_indifferent_access)
     end
 
     attr_reader :site_name
 
-    attr_reader :category_mapping
-    attr_reader :tags_mapping
+    attr_reader :new_categories
+    attr_reader :category_mappings
+    attr_reader :tag_mappings
     attr_reader :rank_mapping
 
     attr_reader :import_anonymous_users
@@ -45,7 +46,9 @@ module ImportScripts::PhpBB3
 
       @site_name = import_settings['site_name']
 
-      @category_mapping, @tags_mapping = setup_mappings(import_settings['category_mapping'])
+      @new_categories = import_settings['new_categories']
+      @category_mappings = import_settings['category_mappings']
+      @tag_mappings = import_settings['tag_mappings']
       @rank_mapping = import_settings['rank_mapping']
 
       @import_anonymous_users = import_settings['anonymous_users']
@@ -74,7 +77,7 @@ module ImportScripts::PhpBB3
     end
 
     def prefix(val)
-      @site_name.present? ? "#{@site_name}:#{val}" : val
+      @site_name.present? && val.present? ? "#{@site_name}:#{val}" : val
     end
 
     def trust_level_for_posts(rank, trust_level: 0)
@@ -85,56 +88,6 @@ module ImportScripts::PhpBB3
       end
 
       trust_level
-    end
-
-    private
-
-    def setup_mappings(filename)
-      return {} if !filename
-
-      category_mapping = {}
-      tags_mapping = {}
-
-      File.open(filename) do |file|
-        csv = CSV.parse(file)
-        header = csv.shift
-        csv.each do |row|
-          row = header.zip(row).to_h
-          if !row.has_key?("ID") || row["ID"].blank? ||
-             !row.has_key?("Map to Discourse category or SKIP") || !row.has_key?("Subcategory") ||
-             !row.has_key?("Tags")
-            raise "ID, parent and subcategory or tags are missing: #{row.inspect}"
-          end
-
-          id = row["ID"].to_i
-          category_1 = (row["Map to Discourse category or SKIP"] || "").strip
-          category_2 = (row["Subcategory"] || "").strip
-          category = [category_1, category_2].filter(&:present?)
-          skip = category.any? { |cat| cat.upcase == "SKIP" }
-
-          if !skip && category_1.blank? && category_2.present?
-            raise "parent category is undefined for category ID = #{id}"
-          end
-
-          if skip
-            category_mapping[id] = :skip
-          elsif category.present?
-            category_mapping[id] = category
-          end
-
-          tags = (row["Tags"] || "").split(",").map(&:strip).compact
-
-          if skip && tags.present?
-            raise "category is skipped, but tags are still present"
-          end
-
-          if tags.present?
-            tags_mapping[id] = tags
-          end
-        end
-      end
-
-      [category_mapping, tags_mapping]
     end
   end
 
