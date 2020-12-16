@@ -192,6 +192,10 @@ $box-shadow: (
   @return srgb-scale($primary, $secondary, $percent);
 }
 
+@function blend-header-primary-background($percent) {
+  @return srgb-scale($header_primary, $header_background, $percent);
+}
+
 @function dark-light-diff(
   $adjusted-color,
   $comparison-color,
