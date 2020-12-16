@@ -627,7 +627,7 @@ describe TopicView do
 
     subject { TopicView.new(topic.id, evil_trout).page_title }
 
-    context "post_number and author's username" do
+    context "when a post number is specified" do
       context "admins" do
         it "see post number and username for all posts" do
           title = TopicView.new(topic.id, admin, post_number: 0).page_title
@@ -651,6 +651,9 @@ describe TopicView do
 
           title = TopicView.new(topic.id, evil_trout, post_number: 2).page_title
           expect(title).to eq("#{topic.title} - #2 by #{post1.user.username}")
+        end
+
+        it "see only post number for whisper posts" do
           title = TopicView.new(topic.id, evil_trout, post_number: 3).page_title
           expect(title).to eq("#{topic.title} - #3")
           post2 = Fabricate(:post, topic: topic)
