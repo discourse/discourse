@@ -2317,16 +2317,26 @@ describe UsersController do
       end
 
       it 'can successfully pick a gravatar' do
+        gravatar = Fabricate(:upload)
+        user.user_avatar.update_columns(gravatar_upload_id: gravatar.id)
 
-        user.user_avatar.update_columns(gravatar_upload_id: upload.id)
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: gravatar.id, type: "gravatar"
+        }
 
+        expect(response.status).to eq(200)
+        expect(user.reload.uploaded_avatar_id).to eq(gravatar.id)
+        expect(user.user_avatar.reload.gravatar_upload_id).to eq(gravatar.id)
+      end
+
+      it 'raises an error if a user selects their upload as a gravatar' do
         put "/u/#{user.username}/preferences/avatar/pick.json", params: {
           upload_id: upload.id, type: "gravatar"
         }
 
-        expect(response.status).to eq(200)
-        expect(user.reload.uploaded_avatar_id).to eq(upload.id)
-        expect(user.user_avatar.reload.gravatar_upload_id).to eq(upload.id)
+        expect(response.status).to eq(422)
+        expect(user.reload.uploaded_avatar_id).to be_nil
+        expect(user.user_avatar.reload.gravatar_upload_id).to be_nil
       end
 
       it 'can not pick uploads that were not created by user' do
@@ -2337,6 +2347,15 @@ describe UsersController do
         }
 
         expect(response.status).to eq(403)
+      end
+
+      it 'raises an error with an invalid type' do
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: upload.id, type: "missing-type"
+        }
+        expect(response.status).to eq(422)
+        expect(user.reload.uploaded_avatar_id).to be_nil
+        expect(user.user_avatar.reload.custom_upload_id).to be_nil
       end
 
       it 'can successfully pick a custom avatar' do

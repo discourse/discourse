@@ -1111,17 +1111,8 @@ class UsersController < ApplicationController
     type = params[:type]
     upload_id = params[:upload_id]
 
-    if SiteSetting.sso_overrides_avatar
-      return render json: failed_json, status: 422
-    end
-
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
-    end
-
-    upload = Upload.find_by(id: upload_id)
+    success, upload = valid_upload?(user, type, upload_id)
+    return render json: failed_json, status: 422 unless success
 
     # old safeguard
     user.create_user_avatar unless user.user_avatar
@@ -1129,7 +1120,6 @@ class UsersController < ApplicationController
     guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
 
     if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
       if !upload
         return render_json_error I18n.t("avatar.missing")
       end
@@ -1557,6 +1547,19 @@ class UsersController < ApplicationController
   end
 
   private
+
+  # Returns a tuple [success, upload]. If `success` is true there will be an `upload`
+  def valid_upload?(user, type, upload_id)
+    return false if SiteSetting.sso_overrides_avatar
+    return true if upload_id.nil?
+    return false unless AVATAR_TYPES_WITH_UPLOAD.include?(type)
+    return false if type != "gravatar" && !SiteSetting.allow_uploaded_avatars?
+
+    upload = Upload.find_by(id: upload_id)
+    return false if type == "gravatar" && user.id == upload.user_id
+
+    [true, upload]
+  end
 
   def password_reset_find_user(token, committing_change:)
     if EmailToken.valid_token_format?(token)
