@@ -2,6 +2,6 @@
 
 Fabricator(:do_not_disturb_timing) do
   user
-  starts_at { Time.current }
-  ends_at { Time.current + 1.hour }
+  starts_at { Time.zone.now }
+  ends_at { 1.hour.from_now }
 end

@@ -958,6 +958,37 @@ const User = RestModel.extend({
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
   },
+
+  enterDoNotDisturbFor(duration) {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "POST",
+      data: { duration },
+    }).then((response) => {
+      return this.updateDoNotDisturbStatus(response.ends_at);
+    });
+  },
+
+  leaveDoNotDisturb() {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "DELETE",
+    }).then(() => {
+      this.updateDoNotDisturbStatus(null);
+    });
+  },
+
+  updateDoNotDisturbStatus(ends_at) {
+    this.set("do_not_disturb_until", ends_at);
+    this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
+  },
+
+  isInDoNotDisturb() {
+    return (
+      this.do_not_disturb_until &&
+      new Date(this.do_not_disturb_until) >= new Date()
+    );
+  },
 });
 
 User.reopenClass(Singleton, {

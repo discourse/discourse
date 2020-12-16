@@ -194,12 +194,29 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     }
   },
 
+  listenForDoNotDisturbChanges() {
+    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+      this.queueRerender();
+    } else {
+      later(
+        this,
+        () => {
+          this.listenForDoNotDisturbChanges();
+        },
+        10000
+      );
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", this, "setTopic");
     this.appEvents.on("header:hide-topic", this, "setTopic");
+
+    this.appEvents.on("do-not-disturb:changed", this, "notificationsChanged");
+    this.listenForDoNotDisturbChanges();
 
     this.dispatch("notifications:changed", "user-notifications");
     this.dispatch("header:keyboard-trigger", "header");

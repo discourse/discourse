@@ -22,16 +22,15 @@ describe DoNotDisturbController do
 
     it 'works properly with integer minute durations' do
       freeze_time
-      now = Time.current
       post "/do-not-disturb.json", params: { duration: 30 }
 
       expect(response.status).to eq(200)
-      expect(user.do_not_disturb_timings.last.ends_at).to eq_time(now + 30.minutes)
+      expect(user.do_not_disturb_timings.last.ends_at).to eq_time(30.minutes.from_now)
     end
 
     it 'works properly with integer minute durations' do
       post "/do-not-disturb.json", params: { duration: -30 }
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(422)
       expect(response.parsed_body).to eq({ "errors" => ["Ends at is invalid"] })
     end
 

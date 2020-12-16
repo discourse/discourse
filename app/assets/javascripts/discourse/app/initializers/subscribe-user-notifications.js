@@ -12,7 +12,6 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { isTesting } from "discourse-common/config/environment";
-import { updateDoNotDisturbStatus } from "discourse/lib/do-not-disturb";
 
 export default {
   name: "subscribe-user-notifications",
@@ -115,7 +114,7 @@ export default {
       );
 
       bus.subscribe(`/do-not-disturb/${user.get("id")}`, (data) => {
-        updateDoNotDisturbStatus(user, data.ends_at);
+        user.updateDoNotDisturbStatus(data.ends_at);
       });
 
       const site = container.lookup("site:main");

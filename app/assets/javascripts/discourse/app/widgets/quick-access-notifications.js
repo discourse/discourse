@@ -5,6 +5,7 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   buildKey: () => "quick-access-notifications",
   emptyStatePlaceholderItemKey: "notifications.empty",
+  showDoNotDisturb: true,
 
   markReadRequest() {
     return ajax("/notifications/mark-read", { type: "PUT" });
@@ -39,10 +40,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
 
   hasUnread() {
     return this.getItems().filterBy("read", false).length > 0;
-  },
-
-  showDoNotDisturb() {
-    return true;
   },
 
   _findStaleItemsInStore() {

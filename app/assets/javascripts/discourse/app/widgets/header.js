@@ -64,7 +64,7 @@ createWidget("header-notifications", {
       ),
     ];
 
-    if (user.do_not_disturb_until) {
+    if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
       const unreadNotifications = user.get("unread_notifications");
@@ -317,10 +317,6 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
-
-  init() {
-    this.appEvents.on("do-not-disturb:changed", this, "scheduleRerender");
-  },
 
   defaultState() {
     let states = {

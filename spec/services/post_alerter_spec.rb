@@ -741,7 +741,7 @@ describe PostAlerter do
                            push_url: "https://site2.com/push")
       end
 
-      Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.current, ends_at: Time.current + 1.day)
+      Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end

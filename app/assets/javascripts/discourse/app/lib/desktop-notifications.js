@@ -146,7 +146,7 @@ function onNotification(data, siteSettings, user) {
   if (!isIdle()) {
     return;
   }
-  if (user.do_not_disturb_until) {
+  if (user.isInDoNotDisturb()) {
     return;
   }
   if (keyValueStore.getItem("notifications-disabled")) {

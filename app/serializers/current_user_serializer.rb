@@ -240,6 +240,6 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def do_not_disturb_until
-    object.active_do_not_disturb_timings&.first&.ends_at
+    object.active_do_not_disturb_timings.maximum(:ends_at)
   end
 end

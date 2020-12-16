@@ -630,7 +630,6 @@ class User < ActiveRecord::Base
   end
 
   def publish_do_not_disturb(ends_at: nil)
-    # turning DND off if ends_at is nil
     MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at }, user_ids: [id])
   end
 
@@ -1369,7 +1368,7 @@ class User < ActiveRecord::Base
   end
 
   def active_do_not_disturb_timings
-    now = Time.current
+    now = Time.zone.now
     do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now)
   end
 
