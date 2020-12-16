@@ -15,6 +15,10 @@ class Poll < ActiveRecord::Base
     number: 2,
   }
 
+  class << self
+    undef open
+  end
+
   enum status: {
     open: 0,
     closed: 1,
