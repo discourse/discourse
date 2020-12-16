@@ -43,10 +43,12 @@ export default createWidget("do-not-disturb", {
 
     this.saving = true;
     if (this.currentUser.do_not_disturb_until) {
-      return this.currentUser.leaveDoNotDisturb();
+      return this.currentUser.leaveDoNotDisturb().then(() => {
+        this.saving = false;
+      });
     } else {
+      this.saving = false;
       return showModal("do-not-disturb");
     }
-    this.saving = false;
   },
 });
