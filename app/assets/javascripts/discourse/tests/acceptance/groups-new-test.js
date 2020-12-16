@@ -74,5 +74,12 @@ acceptance("New Group - Authenticated", function (needs) {
       0,
       "it should disable the membership requests checkbox"
     );
+
+    assert.ok(
+      queryAll(".groups-form-default-notification-level .selected-name .name")
+        .text()
+        .trim() === I18n.t("groups.notifications.watching.title"),
+      "it has a default selection for notification level"
+    );
   });
 });
