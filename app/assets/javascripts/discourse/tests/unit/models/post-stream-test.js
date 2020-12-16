@@ -320,7 +320,7 @@ module("Unit | Model | post-stream", function () {
       "by default no replies are filtered"
     );
 
-    postStream.filterReplies(3);
+    postStream.filterReplies(3, 2);
     assert.equal(
       postStream.get("filterRepliesToPostNumber"),
       3,
