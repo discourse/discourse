@@ -251,12 +251,13 @@ export default RestModel.extend({
     return this.refreshAndJumptoSecondVisible();
   },
 
-  filterReplies(postNumber) {
+  filterReplies(postNumber, postId) {
     this.cancelFilter();
     this.set("filterRepliesToPostNumber", postNumber);
     this.appEvents.trigger("post-stream:filter-replies", {
       topic_id: this.get("topic.id"),
       post_number: postNumber,
+      post_id: postId,
     });
     return this.refresh({ refreshInPlace: true }).then(() => {
       const element = document.querySelector(`#post_${postNumber}`);

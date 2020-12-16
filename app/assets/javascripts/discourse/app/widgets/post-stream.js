@@ -175,6 +175,10 @@ createWidget("filter-show-all", {
 
   click() {
     this.sendWidgetAction("cancelFilter", this.attrs.streamFilters);
+    this.appEvents.trigger(
+      "post-stream:filter-show-all",
+      this.attrs.streamFilters
+    );
   },
 });
 
