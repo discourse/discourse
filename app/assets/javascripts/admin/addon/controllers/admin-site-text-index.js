@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import { debounce } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 let lastSearch;
 
 export default Controller.extend({
@@ -28,14 +28,14 @@ export default Controller.extend({
     toggleOverridden() {
       this.toggleProperty("overridden");
       this.set("searching", true);
-      debounce(this, this._performSearch, 400);
+      discourseDebounce(this, this._performSearch, 400);
     },
 
     search() {
       const q = this.q;
       if (q !== lastSearch) {
         this.set("searching", true);
-        debounce(this, this._performSearch, 400);
+        discourseDebounce(this, this._performSearch, 400);
         lastSearch = q;
       }
     },

@@ -1,10 +1,11 @@
 import { alias, or } from "@ember/object/computed";
-import { debounce, next, schedule } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { next, schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { isTesting } from "discourse-common/config/environment";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
@@ -22,7 +23,7 @@ export default Component.extend({
     }
 
     if (this.get("composer.titleLength") > 0) {
-      debounce(this, this._titleChanged, 10);
+      discourseDebounce(this, this._titleChanged, 10);
     }
   },
 
@@ -83,7 +84,7 @@ export default Component.extend({
         this._checkForUrl()
       );
     } else {
-      debounce(this, this._checkForUrl, 500);
+      discourseDebounce(this, this._checkForUrl, 500);
     }
   },
 
