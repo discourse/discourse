@@ -621,8 +621,47 @@ describe TopicView do
   context "page_title" do
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:op_post) { Fabricate(:post, topic: topic) }
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:whisper) { Fabricate(:post, topic: topic, post_type: Post.types[:whisper]) }
 
     subject { TopicView.new(topic.id, evil_trout).page_title }
+
+    context "post_number and author's username" do
+      context "admins" do
+        it "see post number and username for all posts" do
+          title = TopicView.new(topic.id, admin, post_number: 0).page_title
+          expect(title).to eq(topic.title)
+          title = TopicView.new(topic.id, admin, post_number: 1).page_title
+          expect(title).to eq(topic.title)
+
+          title = TopicView.new(topic.id, admin, post_number: 2).page_title
+          expect(title).to eq("#{topic.title} - #2 by #{post1.user.username}")
+          title = TopicView.new(topic.id, admin, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3 by #{whisper.user.username}")
+        end
+      end
+
+      context "regular users" do
+        it "see post number and username for regular posts" do
+          title = TopicView.new(topic.id, evil_trout, post_number: 0).page_title
+          expect(title).to eq(topic.title)
+          title = TopicView.new(topic.id, evil_trout, post_number: 1).page_title
+          expect(title).to eq(topic.title)
+
+          title = TopicView.new(topic.id, evil_trout, post_number: 2).page_title
+          expect(title).to eq("#{topic.title} - #2 by #{post1.user.username}")
+          title = TopicView.new(topic.id, evil_trout, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3")
+          post2 = Fabricate(:post, topic: topic)
+          topic.reload
+          title = TopicView.new(topic.id, evil_trout, post_number: 3).page_title
+          expect(title).to eq("#{topic.title} - #3")
+          title = TopicView.new(topic.id, evil_trout, post_number: 4).page_title
+          expect(title).to eq("#{topic.title} - #4 by #{post2.user.username}")
+        end
+      end
+    end
 
     context "uncategorized topic" do
       context "topic_page_title_includes_category is false" do
