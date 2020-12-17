@@ -13,6 +13,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   widget: "header",
   docAt: null,
   dockedHeader: null,
+  _listenToDoNotDisturbLoop: null,
   _animate: false,
   _isPanning: false,
   _panMenuOrigin: "right",
@@ -195,10 +196,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   listenForDoNotDisturbChanges() {
-    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+    if (this.currentUser && !this.currentUser.isInDoNotDisturb()) {
       this.queueRerender();
     } else {
-      later(
+      this._listenToDoNotDisturbLoop = later(
         this,
         () => {
           this.listenForDoNotDisturbChanges();
@@ -267,6 +268,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("dom:clean", this, "_cleanDom");
 
     cancel(this._scheduledRemoveAnimate);
+    cancel(this._listenToDoNotDisturbLoop);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
 
     document.removeEventListener("click", this._dismissFirstNotification);

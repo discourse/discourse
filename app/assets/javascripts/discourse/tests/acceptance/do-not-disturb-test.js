@@ -7,7 +7,7 @@ import {
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
-acceptance("Turning on do not disturb", function (needs) {
+acceptance("Do not disturb", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/do-not-disturb.json", () => {
