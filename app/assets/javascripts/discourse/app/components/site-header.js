@@ -215,8 +215,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
     this.appEvents.on("header:show-topic", this, "setTopic");
     this.appEvents.on("header:hide-topic", this, "setTopic");
-
-    this.appEvents.on("do-not-disturb:changed", this, "notificationsChanged");
+    this.appEvents.on("do-not-disturb:changed", () => this.queueRerender());
     this.listenForDoNotDisturbChanges();
 
     this.dispatch("notifications:changed", "user-notifications");
