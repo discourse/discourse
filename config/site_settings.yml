@@ -1605,7 +1605,7 @@ onebox:
     type: list
     list_type: compact
   enable_inline_onebox_on_all_domains:
-    default: false
+    default: true
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
