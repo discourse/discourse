@@ -7,6 +7,16 @@ class Search
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.preload(results, object)
+    if @preload
+      @preload.each { |preload| preload.call(results, object) }
+    end
+  end
+
   def self.per_facet
     5
   end
@@ -164,7 +174,7 @@ class Search
   end
 
   attr_accessor :term
-  attr_reader :clean_term
+  attr_reader :clean_term, :guardian
 
   def initialize(term, opts = nil)
     @opts = opts || {}
@@ -281,6 +291,8 @@ class Search
       topics = @results.posts.map(&:topic)
       Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
     end
+
+    Search.preload(@results, self)
 
     @results
   end
