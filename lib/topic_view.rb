@@ -178,6 +178,23 @@ class TopicView
 
   def page_title
     title = @topic.title
+    if @post_number > 1
+      title += " - "
+      post = @topic.posts.find_by(post_number: @post_number)
+      author = post&.user
+      if author && @guardian.can_see_post?(post)
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number_by_user",
+          post_number: @post_number,
+          username: author.username
+        )
+      else
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number",
+          post_number: @post_number
+        )
+      end
+    end
     if SiteSetting.topic_page_title_includes_category
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
         title += " - #{@topic.category.name}"
