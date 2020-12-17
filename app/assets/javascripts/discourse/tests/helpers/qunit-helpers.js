@@ -205,9 +205,11 @@ export function acceptance(name, optionsOrCallback) {
 
       getApplication().reset();
       this.container = getOwner(this);
-      updateCurrentUser({
-        appEvents: this.container.lookup("service:app-events"),
-      });
+      if (loggedIn) {
+        updateCurrentUser({
+          appEvents: this.container.lookup("service:app-events"),
+        });
+      }
       setURLContainer(this.container);
       setDefaultOwner(this.container);
 
