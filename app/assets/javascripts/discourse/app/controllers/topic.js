@@ -52,7 +52,7 @@ export default Controller.extend(bufferedProperty("model"), {
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
-  queryParams: ["filter", "username_filters"],
+  queryParams: ["filter", "username_filters", "replies_to_post_number"],
   loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
@@ -64,6 +64,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _progressIndex: null,
   hasScrolled: null,
   username_filters: null,
+  replies_to_post_number: null,
   filter: null,
   quoteState: null,
 
@@ -110,10 +111,21 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed("model.postStream.loaded", "model.category_id")
-  showSharedDraftControls(loaded, categoryId) {
+  @discourseComputed(
+    "model.postStream.loaded",
+    "model.category_id",
+    "model.is_shared_draft"
+  )
+  showSharedDraftControls(loaded, categoryId, isSharedDraft) {
     let draftCat = this.site.shared_drafts_category_id;
-    return loaded && draftCat && categoryId && draftCat === categoryId;
+
+    return (
+      loaded &&
+      draftCat &&
+      categoryId &&
+      draftCat === categoryId &&
+      isSharedDraft
+    );
   },
 
   @discourseComputed("site.mobileView", "model.posts_count")
@@ -421,10 +433,27 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    toggleSummary() {
+    showSummary() {
       return this.get("model.postStream")
-        .toggleSummary()
+        .showSummary()
         .then(() => {
+          this.updateQueryParams();
+        });
+    },
+
+    cancelFilter(previousFilters) {
+      this.get("model.postStream").cancelFilter();
+      this.get("model.postStream")
+        .refresh()
+        .then(() => {
+          if (previousFilters) {
+            if (previousFilters.replies_to_post_number) {
+              this._jumpToPostNumber(previousFilters.replies_to_post_number);
+            }
+            if (previousFilters.filter_upwards_post_id) {
+              this._jumpToPostId(previousFilters.filter_upwards_post_id);
+            }
+          }
           this.updateQueryParams();
         });
     },
@@ -867,9 +896,9 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    toggleParticipant(user) {
+    filterParticipant(user) {
       this.get("model.postStream")
-        .toggleParticipant(user.get("username"))
+        .filterParticipant(user.username)
         .then(() => this.updateQueryParams);
     },
 

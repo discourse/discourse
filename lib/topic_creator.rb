@@ -56,8 +56,10 @@ class TopicCreator
   private
 
   def create_shared_draft(topic)
-    return unless @opts[:shared_draft] && @opts[:category].present?
-    SharedDraft.create(topic_id: topic.id, category_id: @opts[:category])
+    return if @opts[:shared_draft].blank? || @opts[:shared_draft] == 'false'
+
+    category_id = @opts[:category].blank? ? SiteSetting.shared_drafts_category.to_i : @opts[:category]
+    SharedDraft.create(topic_id: topic.id, category_id: category_id)
   end
 
   def create_warning(topic)

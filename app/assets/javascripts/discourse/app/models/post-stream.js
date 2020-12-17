@@ -10,8 +10,10 @@ import { deepMerge } from "discourse-common/lib/object";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
+import { highlightPost } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { loadTopicView } from "discourse/models/topic";
+import { schedule } from "@ember/runloop";
 
 export default RestModel.extend({
   _identityMap: null,
@@ -27,6 +29,8 @@ export default RestModel.extend({
   stagingPost: null,
   postsWithPlaceholders: null,
   timelineLookup: null,
+  filterRepliesToPostNumber: null,
+  filterUpwardsPostID: null,
 
   init() {
     this._identityMap = {};
@@ -42,6 +46,9 @@ export default RestModel.extend({
       stream: [],
       userFilters: [],
       summary: false,
+      filterRepliesToPostNumber:
+        parseInt(this.get("topic.replies_to_post_number"), 10) || false,
+      filterUpwardsPostID: false,
       loaded: false,
       loadingAbove: false,
       loadingBelow: false,
@@ -117,16 +124,30 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @discourseComputed("summary", "userFilters.[]")
-  streamFilters(summary) {
+  @discourseComputed(
+    "summary",
+    "userFilters.[]",
+    "filterRepliesToPostNumber",
+    "filterUpwardsPostID"
+  )
+  streamFilters() {
     const result = {};
-    if (summary) {
+
+    if (this.summary) {
       result.filter = "summary";
     }
 
     const userFilters = this.userFilters;
     if (!isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
+    }
+
+    if (this.filterRepliesToPostNumber) {
+      result.replies_to_post_number = this.filterRepliesToPostNumber;
+    }
+
+    if (this.filterUpwardsPostID) {
+      result.filter_upwards_post_id = this.filterUpwardsPostID;
     }
 
     return result;
@@ -200,49 +221,84 @@ export default RestModel.extend({
   },
 
   cancelFilter() {
-    this.set("summary", false);
-    this.userFilters.clear();
+    this.setProperties({
+      userFilters: [],
+      summary: false,
+      filterRepliesToPostNumber: false,
+      filterUpwardsPostID: false,
+      mixedHiddenPosts: false,
+    });
   },
 
-  toggleSummary() {
-    this.userFilters.clear();
-    this.toggleProperty("summary");
-    const opts = {};
-
-    if (!this.summary) {
-      opts.filter = "none";
-    }
-
-    return this.refresh(opts).then(() => {
-      if (this.summary) {
-        this.jumpToSecondVisible();
+  refreshAndJumptoSecondVisible() {
+    return this.refresh({}).then(() => {
+      if (this.posts && this.posts.length > 1) {
+        DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
       }
     });
   },
 
-  jumpToSecondVisible() {
-    const posts = this.posts;
-    if (posts.length > 1) {
-      const secondPostNum = posts[1].get("post_number");
-      DiscourseURL.jumpToPost(secondPostNum);
-    }
+  showSummary() {
+    this.cancelFilter();
+    this.set("summary", true);
+    return this.refreshAndJumptoSecondVisible();
   },
 
   // Filter the stream to a particular user.
-  toggleParticipant(username) {
-    const userFilters = this.userFilters;
-    this.set("summary", false);
+  filterParticipant(username) {
+    this.cancelFilter();
+    this.userFilters.addObject(username);
+    return this.refreshAndJumptoSecondVisible();
+  },
 
-    let jump = false;
-    if (userFilters.includes(username)) {
-      userFilters.removeObject(username);
-    } else {
-      userFilters.addObject(username);
-      jump = true;
-    }
-    return this.refresh().then(() => {
-      if (jump) {
-        this.jumpToSecondVisible();
+  filterReplies(postNumber, postId) {
+    this.cancelFilter();
+    this.set("filterRepliesToPostNumber", postNumber);
+    this.appEvents.trigger("post-stream:filter-replies", {
+      topic_id: this.get("topic.id"),
+      post_number: postNumber,
+      post_id: postId,
+    });
+    return this.refresh({ refreshInPlace: true }).then(() => {
+      const element = document.querySelector(`#post_${postNumber}`);
+
+      // order is important, we need to get the offset before triggering a refresh
+      const originalTopOffset = element
+        ? element.getBoundingClientRect().top
+        : null;
+
+      this.appEvents.trigger("post-stream:refresh");
+      DiscourseURL.jumpToPost(postNumber, {
+        originalTopOffset,
+      });
+
+      const replyPostNumbers = this.posts.mapBy("post_number");
+      replyPostNumbers.splice(0, 2);
+      schedule("afterRender", () => {
+        replyPostNumbers.forEach((postNum) => {
+          highlightPost(postNum);
+        });
+      });
+    });
+  },
+
+  filterUpwards(postID) {
+    this.cancelFilter();
+    this.set("filterUpwardsPostID", postID);
+    this.appEvents.trigger("post-stream:filter-upwards", {
+      topic_id: this.get("topic.id"),
+      post_id: postID,
+    });
+    return this.refresh({ refreshInPlace: true }).then(() => {
+      this.appEvents.trigger("post-stream:refresh");
+
+      if (this.posts && this.posts.length > 1) {
+        const postNumber = this.posts[1].get("post_number");
+        DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
+
+        schedule("afterRender", () => {
+          highlightPost(postNumber);
+        });
       }
     });
   },
@@ -273,7 +329,9 @@ export default RestModel.extend({
     }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
-    this.set("loadingFilter", true);
+    if (!opts.refreshInPlace) {
+      this.set("loadingFilter", true);
+    }
     this.set("loadingNearPost", opts.nearPost);
 
     opts = deepMerge(opts, this.streamFilters);
@@ -327,13 +385,13 @@ export default RestModel.extend({
           } else {
             delete this.get("gaps.before")[postId];
           }
-          this.stream.arrayContentDidChange();
           this.postsWithPlaceholders.arrayContentDidChange(
             origIdx,
             0,
             posts.length
           );
           post.set("hasGap", false);
+          this.gapExpanded();
         });
       }
     }
@@ -350,10 +408,20 @@ export default RestModel.extend({
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
         delete this.get("gaps.after")[postId];
-        this.stream.arrayContentDidChange();
+        this.gapExpanded();
       });
     }
     return Promise.resolve();
+  },
+
+  gapExpanded() {
+    this.appEvents.trigger("post-stream:refresh");
+
+    // resets the reply count in posts-filtered-notice
+    // because once a gap has been expanded that count is no longer exact
+    if (this.streamFilters && this.streamFilters.replies_to_post_number) {
+      this.set("streamFilters.mixedHiddenPosts", true);
+    }
   },
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.

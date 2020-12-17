@@ -291,7 +291,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def ban_for_remote_theme!
-    raise Discourse::InvalidAccess if @theme.remote_theme
+    raise Discourse::InvalidAccess if @theme.remote_theme&.is_git?
   end
 
   def add_relative_themes!(kind, ids)

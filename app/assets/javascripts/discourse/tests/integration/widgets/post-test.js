@@ -937,10 +937,10 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
 
   componentTest("topic map - has summary", {
     template:
-      '{{mount-widget widget="post" args=args toggleSummary=(action "toggleSummary")}}',
+      '{{mount-widget widget="post" args=args showSummary=(action "showSummary")}}',
     beforeEach() {
       this.set("args", { showTopicMap: true, hasTopicSummary: true });
-      this.on("toggleSummary", () => (this.summaryToggled = true));
+      this.on("showSummary", () => (this.summaryToggled = true));
     },
     async test(assert) {
       assert.equal(queryAll(".toggle-summary").length, 1);

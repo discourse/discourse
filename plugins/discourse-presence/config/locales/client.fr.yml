@@ -7,6 +7,12 @@
 fr:
   js:
     presence:
+      replying:
+        one: "en train de répondre"
+        other: "en train de répondre"
+      editing:
+        one: "en train de modifier"
+        other: "en train de modifier"
       replying_to_topic:
         one: "en train de répondre"
         other: "en train de répondre"

@@ -446,7 +446,7 @@ class SessionController < ApplicationController
 
     sso = SiteSetting.enable_sso
     only_one_authenticator = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-    if sso || only_one_authenticator
+    if SiteSetting.login_required && (sso || only_one_authenticator)
       # In this situation visiting most URLs will start the auth process again
       # Go to the `/login` page to avoid an immediate redirect
       redirect_url ||= path("/login")

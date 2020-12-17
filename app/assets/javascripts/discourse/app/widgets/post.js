@@ -120,18 +120,16 @@ createWidget("select-post", {
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
-
+  title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
   },
 
   html(attrs, state) {
-    if (state.loading) {
-      return I18n.t("loading");
-    }
+    const icon = state.loading ? h("div.spinner.small") : iconNode("share");
 
     return [
-      iconNode("share"),
+      icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
@@ -436,6 +434,17 @@ createWidget("post-contents", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
+  filterRepliesView() {
+    const post = this.findAncestorModel();
+    const controller = this.register.lookup("controller:topic");
+    post
+      .get("topic.postStream")
+      .filterReplies(post.post_number, post.id)
+      .then(() => {
+        controller.updateQueryParams();
+      });
+  },
+
   toggleRepliesBelow(goToPost = "false") {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
@@ -616,6 +625,17 @@ createWidget("post-article", {
 
   toggleReplyAbove(goToPost = "false") {
     const replyPostNumber = this.attrs.reply_to_post_number;
+
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const post = this.findAncestorModel();
+      const controller = this.register.lookup("controller:topic");
+      return post
+        .get("topic.postStream")
+        .filterUpwards(this.attrs.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
 
     // jump directly on mobile
     if (this.attrs.mobileView) {

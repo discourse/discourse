@@ -41,7 +41,14 @@ export default class LockOn {
     }
 
     const { top } = element.getBoundingClientRect();
-    const offset = top + window.scrollY;
+    let offset = top + window.scrollY;
+    if (this.options.originalTopOffset) {
+      // if element's original top offset is in the bottom half of the viewport
+      // jump to it, otherwise respect the offset
+      if (window.innerHeight / 2.25 > this.options.originalTopOffset) {
+        return offset - this.options.originalTopOffset;
+      }
+    }
 
     return offset - minimumOffset();
   }
@@ -116,6 +123,11 @@ export default class LockOn {
     if (!within(4, top, this.previousTop) || !within(4, window.scrollY, top)) {
       window.scrollTo(window.pageXOffset, top);
       this.previousTop = top;
+    }
+
+    // Stop early when maintaining the original offset
+    if (this.options.originalTopOffset) {
+      return this.clearLock();
     }
 
     // Stop after a little while

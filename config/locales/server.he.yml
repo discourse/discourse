@@ -2354,6 +2354,18 @@ he:
   admin:
     email:
       sent_test: "נשלח!"
+    user:
+      merge_user:
+        updating_username: "שם המשתמש מעודכן…"
+        changing_post_ownership: "הבעלות על הפוסט מתחלפת…"
+        merging_given_daily_likes: "הלייקים היומיים שחולקו ממוזגים…"
+        merging_post_timings: "תזמוני הפוסטים ממוזגים…"
+        merging_user_visits: "ביקורי המשתמש מתמזגים…"
+        updating_site_settings: "הגדרות האתר מתמזגות…"
+        updating_user_stats: "סטטיסטיקת המשתמש מתעדכנת…"
+        merging_user_attributes: "מאפייני המשתמש מתמזגים…"
+        updating_user_ids: "מזהי המשתמש מתעדכנים…"
+        deleting_source_user: "משתמש המקור נמחק…"
   user:
     deactivated: "הושבת בעקבות מיילים רבים מידי שהוחזרו ל '%{email}'."
     deactivated_by_staff: "הושבת על ידי הצוות"

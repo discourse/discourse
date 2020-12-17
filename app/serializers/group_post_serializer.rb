@@ -11,7 +11,8 @@ class GroupPostSerializer < ApplicationSerializer
              :url,
              :category_id,
              :post_number,
-             :topic_id
+             :topic_id,
+             :post_type
 
   has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :topic, serializer: BasicTopicSerializer, embed: :object

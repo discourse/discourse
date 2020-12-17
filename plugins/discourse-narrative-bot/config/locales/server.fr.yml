@@ -12,6 +12,7 @@ fr:
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
     discourse_narrative_bot_welcome_post_type: "Type de message de bienvenue envoyé par l'assistant Discourse"
     discourse_narrative_bot_welcome_post_delay: "Attendre (n) seconde(s) avant d'envoyer le message de bienvenue de l'assistant Discourse"
+    discourse_narrative_bot_skip_tutorials: "Tutoriels de l'assistant Discourse à ignorer"
   badges:
     certified:
       name: Certifié
@@ -27,6 +28,8 @@ fr:
     bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
     tl2_promotion_message:
       subject_template: "Maintenant que vous avez été promu, il est temps d’en apprendre davantage sur certaines fonctionnalités avancées !"
+      text_body_template: |
+        Répondez à ce message par `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
     timeout:
       message: |-
         Hey @%{username}, je viens voir si tout va bien car je n'ai pas eu de vos nouvelles depuis un moment.
@@ -42,6 +45,9 @@ fr:
       trigger: "Jet"
       invalid: |-
         Je suis désolé, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
+      not_enough_dice:
+        one: "Je n'ai que %{count} dé(s). [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
+        other: "Je n'ai que %{count} dés. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de face](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pour un dé non truqué est de 120 ?
       results: |-
@@ -182,6 +188,23 @@ fr:
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
           Avez-vous oublié d'aimer :heart: mon [message ?](%{url}) :crying_cat_face:
+        not_found: |-
+          Il semblerait que vous n'ayez pas téléversé d'image, j'en ai donc choisi une qui vous fera _certainement_ plaisir.
+
+          `%{image_url}`
+
+          Essayez de téléverser cette image, ou de coller le lien sur une nouvelle ligne vide !
+      likes:
+        instructions: |-
+          Voici une photo de licorne :
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Si vous l'aimez (et qui n'aime pas les licornes ?) allez-y, appuyez sur le bouton _J'aime_ :heart: sous ce message pour me le faire savoir.
+        reply: |-
+          Merci d'avoir apprécié mon message !
+        not_found: |-
+          Avez-vous oublié _d'aimer_ :heart: mon [message ?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Pouvez-vous faire quelques mots en **gras** ou en _italique_ dans votre réponse ?
@@ -261,6 +284,8 @@ fr:
         reply: |-
           [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
+        not_found: |-
+          Oh non, mon _sale_ message n'a pas encore été signalé comme inapproprié. :worried: Pouvez-vous le signaler comme inapproprié à l'aide du ** drapeau ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.

@@ -64,7 +64,11 @@ class TopicList < DraftableList
 
   def preload_key
     if @category
-      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      if @opts[:no_subcategories]
+        "topic_list_#{@category.url.sub(/^\//, '')}/none/l/#{@filter}"
+      else
+        "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      end
     else
       "topic_list_#{@filter}"
     end

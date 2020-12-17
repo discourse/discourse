@@ -1008,7 +1008,7 @@ export default Controller.extend({
         this.model.set("categoryId", opts.topicCategoryId);
       }
 
-      if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
+      if (opts.topicTags && this.site.can_tag_topics) {
         let tags = escapeExpression(opts.topicTags)
           .split(",")
           .slice(0, this.siteSettings.max_tags_per_topic);

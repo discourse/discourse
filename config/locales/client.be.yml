@@ -755,7 +755,6 @@ be:
     composer:
       more_emoji: "яшчэ ..."
       options: "Налады"
-      blockquote_text: "цытата"
       posting_not_on_topic: "На якую тэму Вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
       similar_topics: "Ваша тэма падобная на ..."
@@ -796,8 +795,7 @@ be:
       link_dialog_title: "ўставіць гіперспасылку"
       link_optional_text: "неабавязкова назву"
       link_url_placeholder: "Устаўце URL адрас альбо тып для пошуку тэмаў"
-      quote_title: "цытата"
-      quote_text: "цытата"
+      blockquote_text: "цытата"
       code_title: "Папярэдне фарматаваны тэкст"
       paste_code_text: "увядзіце ці ўстаўце код тут"
       upload_title: "спампаваць"

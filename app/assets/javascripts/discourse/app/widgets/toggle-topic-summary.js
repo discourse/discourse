@@ -39,7 +39,7 @@ export default createWidget("toggle-topic-summary", {
       this.attach("button", {
         className: "btn btn-primary",
         label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
-        action: "toggleSummary",
+        action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
       }),
     ];
   },

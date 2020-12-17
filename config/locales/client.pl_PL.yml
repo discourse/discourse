@@ -1808,7 +1808,6 @@ pl_PL:
       options: "Opcje"
       whisper: "szept"
       unlist: "nie widoczny"
-      blockquote_text: "Cytat"
       add_warning: "To jest oficjalne ostrzeżenie."
       toggle_whisper: "Przełącz szept"
       toggle_unlisted: "Przycisk ukrywania"
@@ -1886,8 +1885,8 @@ pl_PL:
       link_dialog_title: "Wstaw odnośnik"
       link_optional_text: "opcjonalny tytuł"
       link_url_placeholder: "Wklej adres URL lub wpisz, aby wyszukać tematy"
-      quote_title: "Cytat"
-      quote_text: "Cytat"
+      blockquote_title: "Cytat blokowy"
+      blockquote_text: "Cytat"
       code_title: "Tekst sformatowany"
       code_text: "Sformatowany blok tekstu poprzedź 4 spacjami"
       paste_code_text: "wpisz lub wklej tutaj kod"
@@ -2311,6 +2310,7 @@ pl_PL:
         select: "Użytkownicy mogą publikować w tym temacie tylko raz na:"
         description: "Aby promować przemyślaną dyskusję w popularnych lub spornych dyskusjach, użytkownicy muszą poczekać przed ponownym opublikowaniem odpowiedzi w tym temacie."
         save: "Włącz"
+        enabled_until: "(Opcjonalnie) Włączone do:"
         remove: "Wyłącz"
         hours: "Godziny:"
         minutes: "Minuty:"
@@ -2713,6 +2713,7 @@ pl_PL:
         few: "%{count} odpowiedzi"
         many: "%{count} odpowiedzi"
         other: "%{count} odpowiedzi"
+      has_replies_count: "%{count}"
       unknown_user: "(nieznany/usunięty użytkownik)"
       has_likes_title:
         one: "%{count} osoba lajkuje ten wpis"
@@ -2725,6 +2726,11 @@ pl_PL:
         few: "ty i %{count} inne osoby polubiły ten wpis"
         many: "ty i %{count} innych osób polubiło ten wpis"
         other: "ty i %{count} innych osób polubiło ten wpis"
+      filtered_replies_hint:
+        one: "Zobacz ten post i jego odpowiedź"
+        few: "Zobacz ten post i jego %{count} odpowiedzi"
+        many: "Zobacz ten post i jego %{count} odpowiedzi"
+        other: "Zobacz ten post i jego %{count} odpowiedzi"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -2899,6 +2905,13 @@ pl_PL:
           edit_bookmark:
             name: "Edytuj zakładkę"
             description: "Edytuj nazwę zakładki lub zmień datę i godzinę przypomnienia"
+      filtered_replies:
+        viewing: "Przeglądanie %{reply_count} odpowiedzi do"
+        viewing_posts_by: "Przeglądanie %{post_count} postów autorstwa"
+        viewing_subset: "Niektóre odpowiedzi są zwinięte"
+        viewing_summary: "Przeglądanie podsumowania tego tematu"
+        post_number: "%{username}, post #%{post_number}"
+        show_all: "Pokaż wszystkie"
     category:
       can: "może&hellip; "
       none: "(brak kategorii)"
@@ -2956,10 +2969,10 @@ pl_PL:
         reply: "Odpowiedz"
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
-        everyone_has_access: "Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie \"wszyscy\"."
+        everyone_has_access: 'Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie "wszyscy".'
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
-        inherited: "To uprawnienie jest dziedziczone po \"wszystkich\""
+        inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
       special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
@@ -3712,7 +3725,7 @@ pl_PL:
         undo_revoke: "Cofnij unieważnienie"
         revoke: "Unieważnij"
         all_users: "Wszyscy użytkownicy"
-        active_keys: "Aktywuj klucze API"
+        active_keys: "Aktywne klucze API"
         manage_keys: Zarządzaj kluczami
         show_details: Detale
         description: Opis
@@ -4503,7 +4516,7 @@ pl_PL:
           staff: "Zespół"
           suspended: "Zawieszeni"
           silenced: "Wyciszony"
-          staged: "Wystawiany na scenie"
+          staged: "Etapowi"
         approved: "Zatwierdzam?"
         titles:
           active: "Aktywni użytkownicy"
@@ -4519,7 +4532,7 @@ pl_PL:
           moderators: "Moderatoratorzy"
           silenced: "Wyciszeni użytkownicy"
           suspended: "Zawieszone konta"
-          staged: "Wystawieni użytkownicy"
+          staged: "Użytkownicy etapowi"
         not_verified: "Niezweryfikowany"
         check_email:
           title: "Wyświetl adres email tego użytkownika"
@@ -4571,7 +4584,7 @@ pl_PL:
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Zawieszony?"
-        staged: "Wystawiony?"
+        staged: "Etapowy?"
         show_admin_profile: "Admin"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: "Zaloguj się na to konto"
@@ -4875,6 +4888,7 @@ pl_PL:
         image: Grafika
         icon_help: "Wprowadź nazwę ikony Font Awesome (użyj prefiksu \"far-\" dla zwykłych ikon i \"fab-\" dla ikon marek)"
         image_help: "Wprowadź adres URL obrazu (zastępuje pole ikony, jeśli oba są ustawione)"
+        read_only_setting_help: "Dostosuj tekst"
         query: Zapytanie odznaki (SQL)
         target_posts: Wpisy powiązane z odznaką
         auto_revoke: Codziennie uruchamiaj zapytanie odbierające odznakę

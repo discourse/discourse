@@ -14,9 +14,11 @@ describe Jobs::ExportUserArchive do
   }
   let(:component) { raise 'component not set' }
 
+  let(:admin) { Fabricate(:admin) }
   let(:category) { Fabricate(:category_with_definition) }
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: category.id) }
   let(:topic) { Fabricate(:topic, category: category) }
+  let(:post) { Fabricate(:post, user: user, topic: topic) }
 
   def make_component_csv
     data_rows = []
@@ -35,8 +37,6 @@ describe Jobs::ExportUserArchive do
   end
 
   context '#execute' do
-    let(:post) { Fabricate(:post, user: user) }
-
     before do
       _ = post
       user.user_profile.website = 'https://doe.example.com/john'
@@ -46,6 +46,9 @@ describe Jobs::ExportUserArchive do
         'HTTP_USER_AGENT' => 'MyWebBrowser',
         'REQUEST_PATH' => '/some_path/456852',
       }).log_on_user(user, {}, {})
+
+      # force a nonstandard post action
+      PostAction.new(user: user, post: post, post_action_type_id: 5).save
     end
 
     after do
@@ -210,7 +213,6 @@ describe Jobs::ExportUserArchive do
   context 'badges' do
     let(:component) { 'badges' }
 
-    let(:admin) { Fabricate(:admin) }
     let(:badge1) { Fabricate(:badge) }
     let(:badge2) { Fabricate(:badge, multiple_grant: true) }
     let(:badge3) { Fabricate(:badge, multiple_grant: true) }
@@ -351,11 +353,64 @@ describe Jobs::ExportUserArchive do
     end
   end
 
+  context 'flags' do
+    let(:component) { 'flags' }
+    let(:other_post) { Fabricate(:post, user: admin) }
+    let(:post3) { Fabricate(:post) }
+    let(:post4) { Fabricate(:post) }
+
+    it 'correctly exports flags' do
+      result0 = PostActionCreator.notify_moderators(user, other_post, "helping out the admins")
+      PostActionCreator.spam(user, post3)
+      PostActionDestroyer.destroy(user, post3, :spam)
+      PostActionCreator.inappropriate(user, post3)
+      result3 = PostActionCreator.off_topic(user, post4)
+      result3.reviewable.perform(admin, :agree_and_keep)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(4)
+
+      expect(data[0]['post_id']).to eq(other_post.id.to_s)
+      expect(data[0]['flag_type']).to eq('notify_moderators')
+      expect(data[0]['related_post_id']).to eq(result0.post_action.related_post_id.to_s)
+
+      expect(data[1]['flag_type']).to eq('spam')
+      expect(data[2]['flag_type']).to eq('inappropriate')
+      expect(data[1]['deleted_at']).to_not be_empty
+      expect(data[1]['deleted_by']).to eq('self')
+      expect(data[2]['deleted_at']).to be_empty
+
+      expect(data[3]['post_id']).to eq(post4.id.to_s)
+      expect(data[3]['flag_type']).to eq('off_topic')
+      expect(data[3]['deleted_at']).to be_empty
+    end
+  end
+
+  context 'likes' do
+    let(:component) { 'likes' }
+    let(:other_post) { Fabricate(:post, user: admin) }
+    let(:post3) { Fabricate(:post) }
+
+    it 'correctly exports likes' do
+      PostActionCreator.like(user, other_post)
+      PostActionCreator.like(user, post3)
+      PostActionCreator.like(admin, post3)
+      PostActionDestroyer.destroy(user, post3, :like)
+
+      data, csv_out = make_component_csv
+      expect(data.length).to eq(2)
+
+      expect(data[0]['post_id']).to eq(other_post.id.to_s)
+      expect(data[1]['post_id']).to eq(post3.id.to_s)
+      expect(data[1]['deleted_at']).to_not be_empty
+      expect(data[1]['deleted_by']).to eq('self')
+    end
+  end
+
   context 'queued posts' do
     let(:component) { 'queued_posts' }
     let(:reviewable_post) { Fabricate(:reviewable_queued_post, topic: topic, created_by: user) }
     let(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic, category: category, created_by: user) }
-    let(:admin) { Fabricate(:admin) }
 
     it 'correctly exports queued posts' do
       SiteSetting.tagging_enabled = true

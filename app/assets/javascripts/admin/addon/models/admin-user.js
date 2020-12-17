@@ -9,6 +9,7 @@ import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import messageBus from "message-bus-client";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 
@@ -493,7 +494,7 @@ const AdminUser = User.extend({
     const user = this;
     const location = document.location.pathname;
 
-    bootbox.dialog(I18n.t("admin.user.merging_user"));
+    const bootboxDiv = bootbox.dialog(I18n.t("admin.user.merging_user"));
     let formData = { context: location };
 
     if (opts && opts.targetUsername) {
@@ -504,20 +505,25 @@ const AdminUser = User.extend({
       type: "POST",
       data: formData,
     })
-      .then((data) => {
-        if (data.merged) {
-          if (/^\/admin\/users\/list\//.test(location)) {
-            DiscourseURL.redirectTo(location);
-          } else {
-            DiscourseURL.redirectTo(
-              `/admin/users/${data.user.id}/${data.user.username}`
-            );
-          }
+      .then((response) => {
+        if (response.success) {
+          messageBus.subscribe("/merge_user", (data) => {
+            if (data.merged) {
+              if (/^\/admin\/users\/list\//.test(location)) {
+                DiscourseURL.redirectTo(location);
+              } else {
+                DiscourseURL.redirectTo(
+                  `/admin/users/${data.user.id}/${data.user.username}`
+                );
+              }
+            } else if (data.message) {
+              bootboxDiv.find(".modal-body").html(data.message);
+            } else if (data.failed) {
+              bootbox.alert(I18n.t("admin.user.merge_failed"));
+            }
+          });
         } else {
           bootbox.alert(I18n.t("admin.user.merge_failed"));
-          if (data.user) {
-            user.setProperties(data.user);
-          }
         }
       })
       .catch(() => {

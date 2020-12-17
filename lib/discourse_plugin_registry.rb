@@ -68,6 +68,7 @@ class DiscoursePluginRegistry
   define_register :vendored_pretty_text, Set
   define_register :vendored_core_pretty_text, Set
   define_register :seedfu_filter, Set
+  define_register :demon_processes, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields

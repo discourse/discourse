@@ -20,42 +20,7 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
 
-    serialize(modelParams) {
-      if (!modelParams.category_slug_path_with_id) {
-        if (modelParams.id === "none") {
-          const category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-          ].join("/");
-          const category = Category.findBySlugPathWithID(
-            category_slug_path_with_id
-          );
-          this.replaceWith("discovery.categoryNone", {
-            category,
-            category_slug_path_with_id,
-          });
-        } else if (modelParams.id === "all") {
-          modelParams.category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-          ].join("/");
-        } else {
-          modelParams.category_slug_path_with_id = [
-            modelParams.parentSlug,
-            modelParams.slug,
-            modelParams.id,
-          ]
-            .filter((x) => x)
-            .join("/");
-        }
-      }
-
-      return modelParams;
-    },
-
     model(modelParams) {
-      modelParams = this.serialize(modelParams);
-
       const category = Category.findBySlugPathWithID(
         modelParams.category_slug_path_with_id
       );
@@ -88,12 +53,11 @@ export default (filterArg, params) => {
       const { category, modelParams } = model;
 
       if (
+        (!params || params.no_subcategories === undefined) &&
         category.default_list_filter === "none" &&
-        filterArg === "default" &&
-        modelParams &&
-        modelParams.id !== "all"
+        filterArg === "default"
       ) {
-        this.replaceWith("discovery.categoryNone", {
+        return this.replaceWith("discovery.categoryNone", {
           category,
           category_slug_path_with_id: modelParams.category_slug_path_with_id,
         });
@@ -137,11 +101,14 @@ export default (filterArg, params) => {
     },
 
     _retrieveTopicList(category, transition, modelParams) {
-      const listFilter = `c/${Category.slugFor(category)}/${
-          category.id
-        }/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(modelParams, params),
-        extras = { cached: this.isPoppedState(transition) };
+      const findOpts = filterQueryParams(modelParams, params);
+      const extras = { cached: this.isPoppedState(transition) };
+
+      let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
+      if (findOpts.no_subcategories) {
+        listFilter += "/none";
+      }
+      listFilter += `/l/${this.filter(category)}`;
 
       return findTopicList(
         this.store,

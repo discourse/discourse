@@ -201,7 +201,7 @@
     {{/d-section}}
   {{/if}}
 
-  {{#unless model.remote_theme}}
+  {{#unless model.remote_theme.is_git}}
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
       {{#if model.hasEditedFields}}

@@ -1,4 +1,5 @@
 import { module, test } from "qunit";
+import AppEvents from "discourse/services/app-events";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
 import { Promise } from "rsvp";
@@ -14,6 +15,7 @@ function buildStream(id, stream) {
   if (stream) {
     ps.set("stream", stream);
   }
+  ps.appEvents = AppEvents.create();
   return ps;
 }
 
@@ -232,7 +234,7 @@ module("Unit | Model | post-stream", function () {
     postStream.cancelFilter();
     assert.ok(!postStream.get("summary"), "summary is cancelled");
 
-    postStream.toggleParticipant(participant);
+    postStream.filterParticipant(participant);
     postStream.cancelFilter();
     assert.blank(
       postStream.get("userFilters"),
@@ -282,7 +284,7 @@ module("Unit | Model | post-stream", function () {
     );
   });
 
-  test("toggleParticipant", function (assert) {
+  test("filterParticipant", function (assert) {
     const postStream = buildStream(1236);
     sinon.stub(postStream, "refresh").returns(Promise.resolve());
 
@@ -292,16 +294,71 @@ module("Unit | Model | post-stream", function () {
       "by default no participants are toggled"
     );
 
-    postStream.toggleParticipant(participant.username);
+    postStream.filterParticipant(participant.username);
     assert.ok(
       postStream.get("userFilters").includes("eviltrout"),
       "eviltrout is in the filters"
     );
 
-    postStream.toggleParticipant(participant.username);
-    assert.blank(
-      postStream.get("userFilters"),
-      "toggling the participant again removes them"
+    postStream.cancelFilter();
+    assert.blank(postStream.get("userFilters"), "cancelFilter clears");
+  });
+
+  test("filterReplies", function (assert) {
+    const postStream = buildStream(1234),
+      store = postStream.store;
+
+    postStream.appendPost(
+      store.createRecord("post", { id: 2, post_number: 3 })
+    );
+
+    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      false,
+      "by default no replies are filtered"
+    );
+
+    postStream.filterReplies(3, 2);
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      3,
+      "postNumber is in the filters"
+    );
+
+    postStream.cancelFilter();
+    assert.equal(
+      postStream.get("filterRepliesToPostNumber"),
+      false,
+      "cancelFilter clears"
+    );
+  });
+
+  test("filterUpwards", function (assert) {
+    const postStream = buildStream(1234),
+      store = postStream.store;
+
+    postStream.appendPost(
+      store.createRecord("post", { id: 2, post_number: 3 })
+    );
+
+    sinon.stub(postStream, "refresh").returns(Promise.resolve());
+
+    assert.equal(
+      postStream.get("filterUpwardsPostID"),
+      false,
+      "by default filter is false"
+    );
+
+    postStream.filterUpwards(2);
+    assert.equal(postStream.get("filterUpwardsPostID"), 2, "filter is set");
+
+    postStream.cancelFilter();
+    assert.equal(
+      postStream.get("filterUpwardsPostID"),
+      false,
+      "filter cleared"
     );
   });
 
@@ -327,13 +384,31 @@ module("Unit | Model | post-stream", function () {
     );
     assert.ok(!postStream.get("hasNoFilters"), "now there are filters present");
 
-    postStream.toggleParticipant(participant.username);
+    postStream.filterParticipant(participant.username);
     assert.deepEqual(
       postStream.get("streamFilters"),
       {
         username_filters: "eviltrout",
       },
       "streamFilters contains the username we filtered"
+    );
+
+    postStream.filterUpwards(2);
+    assert.deepEqual(
+      postStream.get("streamFilters"),
+      {
+        filter_upwards_post_id: 2,
+      },
+      "streamFilters contains only the post ID"
+    );
+
+    postStream.filterReplies(1);
+    assert.deepEqual(
+      postStream.get("streamFilters"),
+      {
+        replies_to_post_number: 1,
+      },
+      "streamFilters contains only the last filter"
     );
   });
 

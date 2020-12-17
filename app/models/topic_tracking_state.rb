@@ -12,6 +12,7 @@ class TopicTrackingState
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
+  UNMUTED_MESSAGE_TYPE = "unmuted"
 
   attr_accessor :user_id,
                 :topic_id,
@@ -100,6 +101,21 @@ class TopicTrackingState
     message = {
       topic_id: topic.id,
       message_type: MUTED_MESSAGE_TYPE,
+    }
+    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+  end
+
+  def self.publish_unmuted(topic)
+    return if !SiteSetting.mute_all_categories_by_default
+    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
+      .where("users.last_seen_at > ?", 7.days.ago)
+      .order("users.last_seen_at DESC")
+      .limit(100)
+      .pluck(:id)
+    return if user_ids.blank?
+    message = {
+      topic_id: topic.id,
+      message_type: UNMUTED_MESSAGE_TYPE,
     }
     MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
   end

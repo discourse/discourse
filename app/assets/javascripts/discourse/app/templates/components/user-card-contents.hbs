@@ -81,9 +81,9 @@
             <li>
               {{d-button
               class="btn-default"
-              action=(action "togglePosts" this.user)
+              action=(action "filterPosts" this.user)
               icon="filter"
-              translatedLabel=this.togglePostsLabel}}
+              translatedLabel=this.filterPostsLabel}}
             </li>
           {{/if}}
           {{#if this.hasUserFilters}}

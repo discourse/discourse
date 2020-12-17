@@ -670,6 +670,11 @@ aside.onebox.stackexchange .onebox-body {
       margin-right: 0.5em;
     }
   }
+  &.category-onebox {
+    border: 1px solid var(--primary-low);
+    padding-left: calc(1em - 5px);
+    margin-left: 5px;
+  }
 }
 
 .onebox.gfycat p {

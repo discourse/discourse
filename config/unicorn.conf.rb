@@ -82,7 +82,7 @@ before_fork do |server, worker|
 
     sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
     if sidekiqs > 0
-      puts "Starting up #{sidekiqs} supervised sidekiqs"
+      server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
       require 'demon/sidekiq'
       Demon::Sidekiq.after_fork do
@@ -105,12 +105,17 @@ before_fork do |server, worker|
     end
 
     if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
-      puts "Starting up EmailSync demon"
+      server.logger.info "starting up EmailSync demon"
       Demon::EmailSync.start
       Signal.trap("SIGTSTP") do
         STDERR.puts "#{Time.now}: Issuing stop to EmailSync"
         Demon::EmailSync.stop
       end
+    end
+
+    DiscoursePluginRegistry.demon_processes.each do |demon_class|
+      server.logger.info "starting #{demon_class.prefix} demon"
+      demon_class.start
     end
 
     class ::Unicorn::HttpServer
@@ -228,6 +233,10 @@ before_fork do |server, worker|
         if ENV['DISCOURSE_ENABLE_EMAIL_SYNC_DEMON'] == 'true'
           Demon::EmailSync.ensure_running
           check_email_sync_heartbeat
+        end
+
+        DiscoursePluginRegistry.demon_processes.each do |demon_class|
+          demon_class.ensure_running
         end
 
         master_sleep_orig(sec)

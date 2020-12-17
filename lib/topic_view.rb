@@ -178,6 +178,23 @@ class TopicView
 
   def page_title
     title = @topic.title
+    if @post_number > 1
+      title += " - "
+      post = @topic.posts.find_by(post_number: @post_number)
+      author = post&.user
+      if author && @guardian.can_see_post?(post)
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number_by_user",
+          post_number: @post_number,
+          username: author.username
+        )
+      else
+        title += I18n.t(
+          "inline_oneboxer.topic_page_title_post_number",
+          post_number: @post_number
+        )
+      end
+    end
     if SiteSetting.topic_page_title_includes_category
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
         title += " - #{@topic.category.name}"
@@ -767,6 +784,46 @@ class TopicView
         posts.post_number = 1
         OR posts.user_id IN (SELECT u.id FROM users u WHERE u.username_lower IN (?))
       ', usernames)
+
+      @contains_gaps = true
+    end
+
+    # Filter replies
+    if @replies_to_post_number.present?
+      post_id = filtered_post_id(@replies_to_post_number.to_i)
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.post_number = :post_number
+        OR posts.reply_to_post_number = :post_number
+        OR posts.id IN (SELECT pr.reply_post_id FROM post_replies pr WHERE pr.post_id = :post_id)', { post_number: @replies_to_post_number.to_i, post_id: post_id })
+
+      @contains_gaps = true
+    end
+
+    # Filtering upwards
+    if @filter_upwards_post_id.present?
+      post = Post.find(@filter_upwards_post_id)
+      post_ids = DB.query_single(<<~SQL, post_id: post.id, topic_id: post.topic_id)
+      WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
+            SELECT p.id, p.reply_to_post_number FROM posts AS p
+              WHERE p.id = :post_id
+            UNION
+              SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
+                WHERE breadcrumb.reply_to_post_number = p.post_number
+                  AND p.topic_id = :topic_id
+          )
+      SELECT id from breadcrumb
+      WHERE id <> :post_id
+      ORDER by id
+      SQL
+
+      post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
+      post_ids.push(post.id)
+
+      @filtered_posts = @filtered_posts.where('
+        posts.post_number = 1
+        OR posts.id IN (:post_ids)
+        OR posts.id > :max_post_id', { post_ids: post_ids, max_post_id: post_ids.max })
 
       @contains_gaps = true
     end

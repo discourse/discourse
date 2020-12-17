@@ -1830,7 +1830,6 @@ en:
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
-      blockquote_text: "Blockquote"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
@@ -1908,8 +1907,8 @@ en:
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
       link_url_placeholder: "Paste a URL or type to search topics"
-      quote_title: "Blockquote"
-      quote_text: "Blockquote"
+      blockquote_title: "Blockquote"
+      blockquote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
       paste_code_text: "type or paste code here"
@@ -2334,6 +2333,7 @@ en:
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         save: "Enable"
+        enabled_until: "(Optional) Enabled until:"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"
@@ -2737,6 +2737,7 @@ en:
       has_replies:
         one: "%{count} Reply"
         other: "%{count} Replies"
+      has_replies_count: "%{count}"
 
       unknown_user: "(unknown/deleted user)"
       has_likes_title:
@@ -2747,6 +2748,15 @@ en:
       has_likes_title_you:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
+
+      filtered_replies_hint:
+        one: "View this post and its reply"
+        other: "View this post and its %{count} replies"
+      filtered_replies_viewing:
+          one: "Viewing %{count} reply to"
+          other: "Viewing %{count} replies to"
+
+      in_reply_to: "Load parent post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -2918,6 +2928,13 @@ en:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
 
+      filtered_replies:
+        viewing_posts_by: "Viewing %{post_count} posts by"
+        viewing_subset: "Some replies are collapsed"
+        viewing_summary: "Viewing a summary of this topic"
+        post_number: "%{username}, post #%{post_number}"
+        show_all: "Show all"
+
     category:
       can: "can&hellip; "
       none: "(no category)"
@@ -2975,10 +2992,10 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_has_access: "This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the \"everyone\" group."
+        everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
-        inherited: "This permission is inherited from \"everyone\""
+        inherited: 'This permission is inherited from "everyone"'
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'

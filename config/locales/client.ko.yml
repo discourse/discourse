@@ -185,17 +185,17 @@ ko:
       other: "링크"
     faq: "자주하는 질문"
     guidelines: "가이드라인"
-    privacy_policy: "개인보호 정책"
-    privacy: "개인정보처리방침"
-    tos: "서비스 이용약관"
+    privacy_policy: "개인 정보 보호 정책"
+    privacy: "개인 정보 처리 방침"
+    tos: "서비스 약관"
     rules: "규칙"
-    conduct: "윤리 강령"
-    mobile_view: "모바일로 보기"
-    desktop_view: "PC로 보기"
+    conduct: "행동 강령"
+    mobile_view: "모바일 보기"
+    desktop_view: "데스크톱 보기"
     you: "사용자님"
     or: "또는"
     now: "방금"
-    read_more: "더보기"
+    read_more: "더 보기"
     more: "더 보기"
     less: "덜"
     never: "전혀"
@@ -258,14 +258,14 @@ ko:
         never: "절대"
         when_reminder_sent: "알림이 전송되면"
         on_owner_reply: "이 글에 댓글을 작성한 후"
-      search_placeholder: "이름, 글 제목 또는 글 내용으로 북마크 검색"
+      search_placeholder: "이름, 글 제목 또는 내용으로 북마크 검색"
       search: "검색"
       reminders:
         later_today: "오늘 나중에"
         next_business_day: "다음 영업일"
         tomorrow: "내일"
         next_week: "다음 주"
-        post_local_date: "게시물의 날짜"
+        post_local_date: "게시 날짜"
         later_this_week: "이번 주말"
         start_of_next_business_week: "월요일"
         start_of_next_business_week_alt: "다음주 월요일"
@@ -1629,7 +1629,6 @@ ko:
       options: "옵션"
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
-      blockquote_text: "인용구"
       add_warning: "경고 메시지"
       toggle_whisper: "귀속말 켜고 끄기"
       toggle_unlisted: "목록제외 켜고 끄기"
@@ -1698,8 +1697,8 @@ ko:
       link_dialog_title: "하이퍼링크 삽입"
       link_optional_text: "선택적 제목"
       link_url_placeholder: "글을 검색하려면 URL을 붙여 넣거나 입력하세요."
-      quote_title: "인용구"
-      quote_text: "인용구"
+      blockquote_title: "인용구"
+      blockquote_text: "인용구"
       code_title: "코드"
       code_text: "미리 서식이 지정된 텍스트를 4칸 들여쓰기"
       paste_code_text: "여기에 코드를 입력하거나 붙여 넣습니다."
@@ -2072,6 +2071,7 @@ ko:
         select: "사용자는 이 글에 한 번 씩만 댓글을 작성 할 수 있습니다."
         description: "빠르게 진행되거나 논쟁이되는 대화에서 신중한 대화를 유도하기위해 사용자는이 글에 추가로 글을 작성하기 위해서는 기다려야합니다."
         save: "활성화"
+        enabled_until: "(선택 사항) 다음 시점까지 사용:"
         remove: "비활성화"
         hours: "시간:"
         minutes: "분:"
@@ -2426,12 +2426,15 @@ ko:
       unread: "읽지 않은 포스트"
       has_replies:
         other: "%{count}개의 댓글"
+      has_replies_count: "%{count}"
       unknown_user: "(알 수 없음/삭제된 사용자)"
       has_likes_title:
         other: "%{count}명이 이 글을 좋아합니다"
       has_likes_title_only_you: "당신이 이 글을 좋아합니다."
       has_likes_title_you:
         other: "당신 외 %{count}명이 이 글을 좋아합니다"
+      filtered_replies_hint:
+        other: "이 글과 %{count}개의 댓글 보기"
       errors:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
@@ -2579,6 +2582,11 @@ ko:
           edit_bookmark:
             name: "북마크 수정"
             description: "북마크 이름을 수정하거나 알림 날짜 및 시간을 변경하십시오."
+      filtered_replies:
+        viewing_subset: "몇 개의 댓글이 접혀 있습니다."
+        viewing_summary: "이 글의 요약 보기"
+        post_number: "%{username}, 글 #%{post_number}"
+        show_all: "모두 보기"
     category:
       can: "허용"
       none: "(카테고리 없음)"
@@ -2636,10 +2644,10 @@ ko:
         reply: "댓글"
         create: "만들기"
         no_groups_selected: "접근 권한이 부여된 그룹이 없습니다. 이 카테고리는 관리자만 볼 수 있습니다."
-        everyone_has_access: "이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 작성 하고, 글을 쓸 수 있습니다. 사용 권한을 제한하려면 \"everyone\" 그룹에 부여된 사용 권한 중 하나 이상을 제거해야 합니다."
+        everyone_has_access: '이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 작성 하고, 글을 쓸 수 있습니다. 사용 권한을 제한하려면 "everyone" 그룹에 부여된 사용 권한 중 하나 이상을 제거해야 합니다.'
         toggle_reply: "토글 댓글 권한"
         toggle_full: "토글 생성 권한"
-        inherited: "이 권한은 \"everyone\" 으로부터 상속됩니다."
+        inherited: '이 권한은 "everyone" 으로부터 상속됩니다.'
       special_warning: "경고: 이 카테고리는 사전 생성된 카테고리이기 때문에 보안 설정 변경이 불가합니다. 이 카테고리를 사용하고 싶지 않다면, 수정하지말고 삭제하세요."
       uncategorized_security_warning: "이 카테고리는 특별합니다. 카테고리가없는 주제의 보관 영역으로 사용됩니다. 보안 설정을 가질 수 없습니다."
       uncategorized_general_warning: '이 카테고리는 특별합니다. 카테고리를 선택하지 않은 새 주제의 기본 카테고리로 사용됩니다. 이 동작을 방지하고 범주를 강제로 선택 <a href="%{settingLink}">하려면 여기에서 설정을 비활성화하십시오</a> . 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 정의 / 텍스트 내용으로 이동하십시오</a> .'
@@ -4451,6 +4459,7 @@ ko:
         image: 이미지
         icon_help: "Font Awesome 아이콘 이름을 입력하십시오 (일반 아이콘에는 접두사 &#39;far-&#39;, 브랜드 아이콘에는 &#39;fab-&#39;사용)"
         image_help: "이미지의 URL을 입력하세요 (둘 다 설정된 경우 아이콘 필드보다 우선함)"
+        read_only_setting_help: "사용자 정의 텍스트"
         query: 배지 쿼리(SQL)
         target_posts: 글들을 대상으로 하는 쿼리
         auto_revoke: 회수 쿼리를 매일 실행

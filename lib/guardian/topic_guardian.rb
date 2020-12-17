@@ -146,6 +146,10 @@ module TopicGuardian
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
+  def can_toggle_topic_visibility?(topic)
+    can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
+  end
+
   def can_convert_topic?(topic)
     return false unless SiteSetting.enable_personal_messages?
     return false if topic.blank?
@@ -171,6 +175,8 @@ module TopicGuardian
     if topic.private_message?
       return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?
     end
+
+    return false if topic.shared_draft && !can_create_shared_draft?
 
     category = topic.category
     can_see_category?(category) &&

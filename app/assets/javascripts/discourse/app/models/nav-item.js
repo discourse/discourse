@@ -75,12 +75,13 @@ const NavItem = EmberObject.extend({
     "name",
     "category",
     "tagId",
+    "noSubcategories",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId) {
+  count(name, category, tagId, noSubcategories) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category, tagId);
+      return state.lookupCount(name, category, tagId, noSubcategories);
     }
   },
 });

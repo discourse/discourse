@@ -227,6 +227,10 @@ input {
   }
 }
 
+::placeholder {
+  text-overflow: ellipsis;
+}
+
 .input {
   &-prepend,
   &-append {

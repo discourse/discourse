@@ -97,8 +97,6 @@ def dependencies
       source: 'highlight.js/build/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery-resize/jquery.ba-resize.js'
-    }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {

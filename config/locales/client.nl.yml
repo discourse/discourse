@@ -1689,7 +1689,6 @@ nl:
       options: "Opties"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
-      blockquote_text: "Citaat"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluistermodus in-/uitschakelen"
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
@@ -1761,8 +1760,7 @@ nl:
       link_dialog_title: "Hyperlink invoegen"
       link_optional_text: "optionele titel"
       link_url_placeholder: "Plak een URL of typ om topics te zoeken"
-      quote_title: "Citaat"
-      quote_text: "Citaat"
+      blockquote_text: "Citaat"
       code_title: "Vooraf opgemaakte tekst"
       code_text: "vooraf opgemaakte tekst met 4 spaties laten inspringen"
       paste_code_text: "typ of plak hier code"
@@ -2743,10 +2741,10 @@ nl:
         reply: "Antwoorden"
         create: "Aanmaken"
         no_groups_selected: "Er is geen toegang tot groepen verleend; deze categorie is alleen zichtbaar voor stafleden."
-        everyone_has_access: "Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en aanmaken. Verwijder een of meer van de verleende toestemmingen voor de groep 'iedereen' om toestemmingen te beperken."
+        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en aanmaken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
         toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
         toggle_full: "Toestemming Aanmaken in-/uitschakelen"
-        inherited: "Deze toestemming is overgenomen van 'iedereen'"
+        inherited: 'Deze toestemming is overgenomen van ''iedereen'''
       special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan geen beveiligingsinstellingen bevatten."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij is bedoeld als de standaardcategorie voor nieuwe topics die geen selecteerde categorie hebben. Als u dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als u de naam of omschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'

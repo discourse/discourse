@@ -1689,7 +1689,6 @@ sv:
       options: "Alternativ"
       whisper: "viska"
       unlist: "avlistad"
-      blockquote_text: "Citat"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
       toggle_unlisted: "Växla olistad"
@@ -1761,8 +1760,8 @@ sv:
       link_dialog_title: "Infoga hyperlänk"
       link_optional_text: "valfri rubrik"
       link_url_placeholder: "Klistra in en URL eller skriv för att söka ämnen"
-      quote_title: "Citat"
-      quote_text: "Citat"
+      blockquote_title: "Citat"
+      blockquote_text: "Citat"
       code_title: "Förformatterad text"
       code_text: "indentera förformatterad text med 4 mellanslag"
       paste_code_text: "skriv eller klistra in din kod här"
@@ -2152,6 +2151,7 @@ sv:
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
         save: "Aktivera"
+        enabled_until: "(Valfritt) Aktiverad till:"
         remove: "Inaktivera"
         hours: "Timmar:"
         minutes: "Minuter:"
@@ -2522,6 +2522,7 @@ sv:
       has_replies:
         one: "%{count} svar"
         other: "%{count} svar"
+      has_replies_count: "%{count}"
       unknown_user: "(okänd/raderad användare)"
       has_likes_title:
         one: "%{count} person gillade detta inlägg"
@@ -2530,6 +2531,9 @@ sv:
       has_likes_title_you:
         one: "du och %{count} annan person gillade det här inlägget"
         other: "du och %{count} andra personer gillade det här inlägget"
+      filtered_replies_hint:
+        one: "Visa detta inlägg och dess svar"
+        other: "Visa detta inlägg och dess %{count} svar"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -2686,6 +2690,13 @@ sv:
           edit_bookmark:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
+      filtered_replies:
+        viewing: "Visar %{reply_count} svar på"
+        viewing_posts_by: "Visar %{post_count} inlägg av"
+        viewing_subset: "Vissa svar har förminskats"
+        viewing_summary: "Visar en sammanfattning av detta ämne"
+        post_number: "%{username}, inlägg nr %{post_number}"
+        show_all: "Visa alla"
     category:
       can: "can&hellip; "
       none: "(ingen kategori)"
@@ -2743,10 +2754,10 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_has_access: "Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”."
+        everyone_has_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
-        inherited: "Denna behörighet ärvs från \"alla\""
+        inherited: 'Denna behörighet ärvs från "alla"'
       special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
@@ -4592,6 +4603,7 @@ sv:
         image: Bild
         icon_help: "Ange ett FA-ikonnamn (använd prefix 'far-' för reguljära ikoner samt 'fab-' för varumärkesikoner)"
         image_help: "Ange URL till bilden (ersätter ikonfältet om båda är angivna)"
+        read_only_setting_help: "Anpassa text"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg
         auto_revoke: Kör återkallelsesökning dagligen
