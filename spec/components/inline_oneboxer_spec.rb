@@ -148,6 +148,7 @@ describe InlineOneboxer do
     end
 
     it "will not crawl domains that aren't allowlisted" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end

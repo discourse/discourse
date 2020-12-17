@@ -42,6 +42,9 @@ class InlineOneboxer
             opts[:post_author] = post_author_for_title(topic, post_number)
           end
           return onebox_for(url, topic.title, opts)
+        else
+          # not permitted to see topic
+          return nil
         end
       end
     end
