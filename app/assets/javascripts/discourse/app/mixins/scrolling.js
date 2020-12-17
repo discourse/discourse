@@ -41,16 +41,19 @@ const Scrolling = Mixin.create({
       if (microLib.activeTransition) {
         return;
       }
+
       return scheduleOnce("afterRender", this, "scrolled");
     };
 
     if (opts.debounce) {
-      onScrollMethod = () => {
+      let debouncedScrollMethod = () => {
         discourseDebounce(this, onScrollMethod, opts.debounce);
       };
-    }
 
-    ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
+      ScrollingDOMMethods.bindOnScroll(debouncedScrollMethod, opts.name);
+    } else {
+      ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
+    }
   },
 
   screenNotFull: () => ScrollingDOMMethods.screenNotFull(),
