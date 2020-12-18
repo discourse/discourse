@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
 import { observes } from "discourse-common/utils/decorators";
@@ -37,9 +37,15 @@ export default Controller.extend({
   },
 
   @observes("nameInput")
-  _setName: discourseDebounce(function () {
-    this.set("name", this.nameInput);
-  }, 500),
+  _setName() {
+    discourseDebounce(
+      this,
+      function () {
+        this.set("name", this.nameInput);
+      },
+      500
+    );
+  },
 
   @observes("model.canLoadMore")
   _showFooter: function () {

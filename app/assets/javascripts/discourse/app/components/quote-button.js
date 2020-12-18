@@ -9,7 +9,7 @@ import Sharing from "discourse/lib/sharing";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import { schedule } from "@ember/runloop";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -183,10 +183,9 @@ export default Component.extend({
 
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
-    const onSelectionChanged = discourseDebounce(
-      () => this._selectionChanged(),
-      wait
-    );
+    const onSelectionChanged = () => {
+      discourseDebounce(this, this._selectionChanged, wait);
+    };
 
     $(document)
       .on("mousedown.quote-button", (e) => {

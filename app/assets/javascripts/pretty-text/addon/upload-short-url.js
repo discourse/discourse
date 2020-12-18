@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { debounce } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 let _cache = {};
 
@@ -184,7 +184,7 @@ export function resolveAllShortUrls(ajax, siteSettings, scope, opts) {
     shortUploadElements = scope.querySelectorAll(attributes);
     if (shortUploadElements.length > 0) {
       // this is carefully batched so we can do a leading debounce (trigger right away)
-      return debounce(
+      return discourseDebounce(
         null,
         _loadShortUrls,
         shortUploadElements,

@@ -1,5 +1,5 @@
 import Mixin from "@ember/object/mixin";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
@@ -41,14 +41,19 @@ const Scrolling = Mixin.create({
       if (microLib.activeTransition) {
         return;
       }
+
       return scheduleOnce("afterRender", this, "scrolled");
     };
 
     if (opts.debounce) {
-      onScrollMethod = discourseDebounce(onScrollMethod, opts.debounce);
-    }
+      let debouncedScrollMethod = () => {
+        discourseDebounce(this, onScrollMethod, opts.debounce);
+      };
 
-    ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
+      ScrollingDOMMethods.bindOnScroll(debouncedScrollMethod, opts.name);
+    } else {
+      ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
+    }
   },
 
   screenNotFull: () => ScrollingDOMMethods.screenNotFull(),

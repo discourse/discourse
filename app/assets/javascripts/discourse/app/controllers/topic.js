@@ -18,7 +18,7 @@ import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
@@ -1529,15 +1529,22 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: discourseDebounce(function (postNumber) {
-    const $post = $(`.topic-post article#post_${postNumber}`);
+  _scrollToPost(postNumber) {
+    discourseDebounce(
+      this,
+      function () {
+        const $post = $(`.topic-post article#post_${postNumber}`);
 
-    if ($post.length === 0 || isElementInViewport($post)) {
-      return;
-    }
+        if ($post.length === 0 || isElementInViewport($post)) {
+          return;
+        }
 
-    $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
-  }, 500),
+        $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
+      },
+      postNumber,
+      500
+    );
+  },
 
   unsubscribe() {
     // never unsubscribe when navigating from topic to topic

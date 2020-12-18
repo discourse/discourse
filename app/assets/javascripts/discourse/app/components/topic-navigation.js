@@ -3,9 +3,10 @@ import PanEvents, {
   SWIPE_VELOCITY,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import { debounce, later } from "@ember/runloop";
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { later } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 
@@ -53,7 +54,7 @@ export default Component.extend(PanEvents, {
   },
 
   _checkSize() {
-    debounce(this, this._performCheckSize, 300, true);
+    discourseDebounce(this, this._performCheckSize, 300, true);
   },
 
   // we need to store this so topic progress has something to init with
