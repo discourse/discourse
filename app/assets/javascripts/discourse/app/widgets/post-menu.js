@@ -558,7 +558,11 @@ export default createWidget("post-menu", {
 
     const repliesButton = this.attachButton("replies", attrs);
     if (repliesButton) {
-      postControls.push(repliesButton);
+      if (!this.site.mobileView) {
+        postControls.push(repliesButton);
+      } else {
+        visibleButtons.splice(-1, 0, repliesButton);
+      }
     }
 
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
