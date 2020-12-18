@@ -14,7 +14,7 @@ describe Search do
       SiteSetting.default_locale = 'zh_CN'
 
       tokenized = Search.prepare_data("monkey 吃香蕉 in a loud volume")
-      expect(tokenized).to eq("monkey 吃 香蕉 loud")
+      expect(tokenized).to eq("monkey 吃 香蕉 in a loud volume")
     end
   end
 
