@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class AdminUserIndexQuery
-
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
-    @query = initialize_query_with_order(klass.joins(:primary_email))
+    @query = initialize_query_with_order(klass)
     @trust_levels = trust_levels
   end
 
@@ -62,7 +61,8 @@ class AdminUserIndexQuery
     end
 
     query = klass
-      .includes(:totps)
+      .includes(:totps, :primary_email, :alternate_emails)
+      .joins(:primary_email)
       .order(order.reject(&:blank?).join(","))
 
     unless params[:stats].present? && params[:stats] == false

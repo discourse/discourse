@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminUserListSerializer < BasicUserSerializer
-
   attributes :email,
              :secondary_emails,
              :active,
@@ -106,9 +105,7 @@ class AdminUserListSerializer < BasicUserSerializer
   end
 
   def include_second_factor_enabled?
-    !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins &&
-      object.has_any_second_factor_methods_enabled?
+    object.has_any_second_factor_methods_enabled?
   end
 
   def second_factor_enabled

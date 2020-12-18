@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
   has_many :reviewable_scores, dependent: :destroy
   has_many :invites, foreign_key: :invited_by_id, dependent: :destroy
+  has_many :alternate_emails, -> { where(primary: false) }, class_name: 'UserEmail', dependent: :destroy
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -1263,7 +1264,7 @@ class User < ActiveRecord::Base
   end
 
   def secondary_emails
-    self.user_emails.secondary.pluck(:email)
+    self.alternate_emails.pluck(:email)
   end
 
   def unconfirmed_emails
