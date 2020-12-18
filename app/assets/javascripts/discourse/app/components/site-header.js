@@ -6,6 +6,7 @@ import PanEvents, {
 import { cancel, later, schedule } from "@ember/runloop";
 import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
+import { isTesting } from "discourse-common/config/environment";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -199,6 +200,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     if (this.currentUser && !this.currentUser.isInDoNotDisturb()) {
       this.queueRerender();
     } else {
+      cancel(this._listenToDoNotDisturbLoop);
       this._listenToDoNotDisturbLoop = later(
         this,
         () => {
@@ -216,7 +218,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.on("header:show-topic", this, "setTopic");
     this.appEvents.on("header:hide-topic", this, "setTopic");
     this.appEvents.on("do-not-disturb:changed", () => this.queueRerender());
-    this.listenForDoNotDisturbChanges();
+
+    if (!isTesting()) {
+      this.listenForDoNotDisturbChanges();
+    }
 
     this.dispatch("notifications:changed", "user-notifications");
     this.dispatch("header:keyboard-trigger", "header");
