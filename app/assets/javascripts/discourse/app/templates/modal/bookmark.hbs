@@ -38,7 +38,7 @@
       {{#if userHasTimezoneSet}}
         {{#tap-tile-grid activeTile=selectedReminderType as |grid|}}
           {{#if showLaterToday}}
-            {{#tap-tile icon="far-moon" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
+            {{#tap-tile icon="angle-right" tileId=reminderTypes.LATER_TODAY activeTile=grid.activeTile onChange=(action "selectReminderType")}}
               <div class="tap-tile-title">{{i18n "bookmarks.reminders.later_today"}}</div>
               <div class="tap-tile-date">{{laterTodayFormatted}}</div>
             {{/tap-tile}}

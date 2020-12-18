@@ -373,6 +373,24 @@ describe Notification do
     end
   end
 
+  describe "do not disturb" do
+    it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
+      user = Fabricate(:user)
+      notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      NotificationEmailer.expects(:process_notification).with(notification)
+      notification.save!
+    end
+
+    it "doesn't call NotificationEmailer.process_notification when user is in 'do not disturb'" do
+      freeze_time
+      user = Fabricate(:user)
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+
+      notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      NotificationEmailer.expects(:process_notification).with(notification).never
+      notification.save!
+    end
+  end
 end
 
 # pulling this out cause I don't want an observer

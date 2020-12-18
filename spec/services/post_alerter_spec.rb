@@ -731,6 +731,21 @@ describe PostAlerter do
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
 
+    it "pushes nothing when the user is in 'do not disturb'" do
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+      2.times do |i|
+        UserApiKey.create!(user_id: evil_trout.id,
+                           client_id: "xxx#{i}",
+                           application_name: "iPhone#{i}",
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                           push_url: "https://site2.com/push")
+      end
+
+      Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+
+      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+    end
+
     it "correctly pushes notifications if configured correctly" do
       Jobs.run_immediately!
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"

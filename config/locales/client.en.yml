@@ -932,7 +932,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: "Note: You have to change this setting on every browser you use."
+        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled when in "do not disturb", regardless of this setting.'
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -3537,6 +3537,19 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     image_removed: "(image removed)"
+
+    do_not_disturb:
+      title: "Do not disturb for..."
+      save: "Save"
+      label: "Do not disturb"
+      remaining: "%{remaining} remaining"
+      options:
+        half_hour: "30 minutes"
+        one_hour: "1 hour"
+        two_hours: "2 hours"
+        tomorrow: "Until tomorrow"
+        custom: "Custom"
+
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

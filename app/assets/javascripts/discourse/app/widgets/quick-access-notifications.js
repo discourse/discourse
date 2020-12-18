@@ -5,6 +5,7 @@ import { createWidgetFrom } from "discourse/widgets/widget";
 createWidgetFrom(QuickAccessPanel, "quick-access-notifications", {
   buildKey: () => "quick-access-notifications",
   emptyStatePlaceholderItemKey: "notifications.empty",
+  showDoNotDisturb: true,
 
   markReadRequest() {
     return ajax("/notifications/mark-read", { type: "PUT" });

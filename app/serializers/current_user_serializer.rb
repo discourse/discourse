@@ -49,7 +49,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :title_count_mode,
              :timezone,
              :featured_topic,
-             :skip_new_user_tips
+             :skip_new_user_tips,
+             :do_not_disturb_until,
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }
@@ -236,5 +237,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def featured_topic
     object.user_profile.featured_topic
+  end
+
+  def do_not_disturb_until
+    object.active_do_not_disturb_timings.maximum(:ends_at)
   end
 end

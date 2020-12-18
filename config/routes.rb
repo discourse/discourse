@@ -960,6 +960,9 @@ Discourse::Application.routes.draw do
 
     get "/permalink-check", to: 'permalinks#check'
 
+    post "/do-not-disturb" => "do_not_disturb#create"
+    delete "/do-not-disturb" => "do_not_disturb#destroy"
+
     get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
   end
 end

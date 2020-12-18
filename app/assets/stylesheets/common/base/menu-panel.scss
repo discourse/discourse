@@ -65,6 +65,8 @@
     display: flex;
     flex: 1 0 0%; // safari height fix
     margin-top: 0.5em;
+    flex-wrap: wrap;
+
     .show-all {
       flex: 1 1 auto;
       button {
@@ -236,7 +238,7 @@
         color: var(--primary);
       }
 
-      span.double-user, 
+      span.double-user,
       // e.g., "username, username2"
       span.multi-user
       // e.g., "username, username2, and n others"
@@ -247,7 +249,7 @@
         white-space: nowrap;
       }
 
-      span.multi-user 
+      span.multi-user
       // e.g., "username, username2, and n others"
       {
         span.multi-username:nth-of-type(2) {

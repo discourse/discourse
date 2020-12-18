@@ -148,6 +148,7 @@ module SvgSprite
     "minus",
     "minus-circle",
     "mobile-alt",
+    "moon",
     "paint-brush",
     "paper-plane",
     "pencil-alt",
