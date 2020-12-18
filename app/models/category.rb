@@ -801,10 +801,13 @@ class Category < ActiveRecord::Base
 
     query =
       slug_path.inject(nil) do |parent_id, slug|
-        Category.where(
-          slug: slug,
-          parent_category_id: parent_id,
-        ).select(:id)
+        category = Category.where(slug: slug, parent_category_id: parent_id)
+
+        if match_id = /^(\d+)-category/.match(slug).presence
+          category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
+        end
+
+        category.select(:id)
       end
 
     Category.find_by_id(query)
