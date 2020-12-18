@@ -106,9 +106,12 @@ span.badge-posts {
       display: flex;
       align-items: center;
       .show-replies {
+        margin-left: auto;
         display: flex;
-        padding: 8px;
         font-size: $font-up-1;
+        + .reply {
+          margin-left: 0;
+        }
         .d-icon {
           padding-left: 8px;
         }
