@@ -22,6 +22,7 @@ const SortOrders = [
   { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
   { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
   { name: I18n.t("search.latest_topic"), id: 4, term: "order:latest_topic" },
+  { name: I18n.t("search.oldest_topic"), id: 5, term: "order:oldest" },
 ];
 const PAGE_LIMIT = 10;
 

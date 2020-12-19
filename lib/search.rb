@@ -986,6 +986,19 @@ class Search
           )
           .order("created_at DESC")
       end
+    elsif @order == :oldest
+      posts = posts.reorder("topics.bumped_at ASC")
+
+      if aggregate_search
+        posts = posts.select("topics.bumped_at topic_bumped_at")
+
+        aggregate_relation = aggregate_relation
+          .select(
+            "MIN(subquery.post_number) post_number",
+            "MAX(subquery.topic_bumped_at) topic_bumped_at"
+          )
+          .order("topic_bumped_at ASC")
+      end
     elsif @order == :latest_topic
       posts = posts.order("topics.created_at DESC")
 

@@ -1424,6 +1424,34 @@ describe Search do
       ])
     end
 
+    it 'can order by oldest updated topic' do
+      first_ts = 2.months.ago
+      second_ts = 2.days.ago
+      third_ts = 2.minutes.ago
+
+      freeze_time first_ts
+      topic = Fabricate(:topic)
+      topic2 = Fabricate(:topic)
+      topic3 = Fabricate(:topic)
+      post = Fabricate(:post, raw: 'Topic', topic: topic)
+      post2 = Fabricate(:post, raw: 'Topic', topic: topic2)
+      post3 = Fabricate(:post, raw: 'Topic', topic: topic3)
+      freeze_time second_ts
+      post3b = Fabricate(:post, raw: 'no match to search', topic: topic3)
+      freeze_time third_ts
+      post1b = Fabricate(:post, raw: 'no match to search', topic: topic)
+
+      [topic, topic2, topic3].each(&:reset_bumped_at)
+
+      puts topic.bumped_at, topic2.bumped_at, topic3.bumped_at
+
+      expect(Search.execute('Topic order:oldest').posts.map(&:id)).to eq([
+        post2.id,
+        post3.id,
+        post.id
+      ])
+    end
+
     it 'can filter by topic views' do
       topic = Fabricate(:topic, views: 100)
       topic2 = Fabricate(:topic, views: 200)
