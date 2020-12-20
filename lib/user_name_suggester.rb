@@ -110,6 +110,14 @@ module UserNameSuggester
 
     if SiteSetting.unicode_usernames
       name.unicode_normalize!
+
+      # TODO: Jan 2022, review if still needed
+      # see: https://meta.discourse.org/t/unicode-username-with-as-the-final-char-leads-to-an-error-loading-profile-page/173182
+      if name.include?('Σ')
+        ctx = MiniRacer::Context.new
+        name = ctx.eval("#{name.inspect}.toLowerCase()")
+        ctx.dispose
+      end
     else
       name = ActiveSupport::Inflector.transliterate(name)
     end
