@@ -617,7 +617,14 @@ class Search
   end
 
   advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/i) do |posts, match|
-    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck_first(:id)
+    username = match.downcase
+
+    user_id = User.where(staged: false).where(username_lower: username).pluck_first(:id)
+
+    if !user_id && username == "me"
+      user_id = @guardian.user&.id
+    end
+
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
