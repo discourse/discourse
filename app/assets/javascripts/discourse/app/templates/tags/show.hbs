@@ -48,7 +48,7 @@
           {{#unless loading}}
             {{#if list.topics}}
               {{#discovery-topics-list model=list refresh=(action "refresh")}}
-                {{bulk-select-button selected=selected action=(action "refresh")}}
+                {{bulk-select-button selected=selected action=(action "refresh") category=category}}
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
