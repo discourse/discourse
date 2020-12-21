@@ -1221,7 +1221,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp"
     refresh: true
     type: list
     list_type: compact
