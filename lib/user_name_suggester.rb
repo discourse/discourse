@@ -115,7 +115,7 @@ module UserNameSuggester
       # see: https://meta.discourse.org/t/unicode-username-with-as-the-final-char-leads-to-an-error-loading-profile-page/173182
       if name.include?('Σ')
         ctx = MiniRacer::Context.new
-        name = ctx.eval("#{name.inspect}.toLowerCase()")
+        name = ctx.eval("#{name.to_s.to_json}.toLowerCase()")
         ctx.dispose
       end
     else
