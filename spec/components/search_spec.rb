@@ -542,6 +542,19 @@ describe Search do
       expect(post.headline.include?('elephant')).to eq(false)
     end
 
+    it "does not truncate topic title when applying highlights" do
+      SiteSetting.use_pg_headlines_for_excerpt = true
+
+      topic = reply.topic
+      topic.update!(title: "#{'very ' * 7}long topic title with our search term in the middle of the title")
+
+      result = Search.execute('search term')
+
+      expect(result.posts.first.topic_title_headline).to eq(<<~TITLE.chomp)
+      Very very very very very very very long topic title with our <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">search</span> <span class=\"#{Search::HIGHLIGHT_CSS_CLASS}\">term</span> in the middle of the title
+      TITLE
+    end
+
     it "limits the search headline to #{Search::GroupedSearchResults::BLURB_LENGTH} characters" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 

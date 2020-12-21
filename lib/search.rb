@@ -1279,7 +1279,7 @@ class Search
             #{ts_config},
             t1.fancy_title,
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
-            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'', HighlightAll=true'
           ) AS topic_title_headline",
           "TS_HEADLINE(
             #{ts_config},
