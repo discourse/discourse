@@ -168,6 +168,38 @@ module("Unit | Utility | sanitizer", function () {
     );
   });
 
+  test("autoplay videos must be muted", function (assert) {
+    let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay src="http://example.com/music.mp4"/>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay muted><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.notOk(
+      pt
+        .sanitize(
+          `<p>Hey</p><video><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+  });
+
   test("poorly formed ids on headings", function (assert) {
     let pt = new PrettyText(buildOptions({ siteSettings: {} }));
     assert.equal(
