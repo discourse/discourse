@@ -225,7 +225,7 @@ export const DEFAULT_LIST = [
   "track[srclang]",
   "ul",
   "video",
-  "video[autoplay]",
+  // video[autoplay] handled by sanitizer.js
   "video[controls]",
   "video[controlslist]",
   "video[crossorigin]",
