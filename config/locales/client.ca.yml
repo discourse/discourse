@@ -809,7 +809,6 @@ ca:
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         disable: "Desactiva les notificacions"
         enable: "Activa les notificacions"
-        each_browser_note: "Nota: cal canviar aquesta configuració en cada navegador que feu servir."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"

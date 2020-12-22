@@ -51,6 +51,9 @@ zh_CN:
   remove_posts_deleted_by_author: "被作者删除"
   redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果你仍想继续，请选择以下链接。"
   on_another_topic: "在另外的主题中"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} 由 %{username}"
   themes:
     bad_color_scheme: "无法更新主题，无效的调色板"
     other_error: "更新主题时出错"
@@ -1672,7 +1675,7 @@ zh_CN:
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（不同字符数，非英语字符算作多个）。"
     allow_uppercase_posts: "允许标题和内容全大写"
     max_consecutive_replies: "在阻止添加其他回复之前，用户必须在主题中连续发布的帖子数。"
-    enable_filtered_replies_view: "(n) 回复按钮应折叠所有其他帖子，并仅显示选定的回复。"
+    enable_filtered_replies_view: '"(n) 回复"按钮会折叠所有其他帖子，只显示当前帖子及其回复。'
     title_fancy_entities: "将常见的ASCII字符转换为主题标题中的花哨HTML实体，ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</A>"
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度。"
     desktop_category_page_style: "/categories 页面的视觉样式。"

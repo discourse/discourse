@@ -51,6 +51,9 @@ it:
   remove_posts_deleted_by_author: "Cancellato dall'autore"
   redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   on_another_topic: "Su un altro argomento"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} di %{username}"
   themes:
     bad_color_scheme: "Impossibile aggiornare il tema, paletta dei colori non valida"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"

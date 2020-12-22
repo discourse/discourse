@@ -51,6 +51,9 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
+  inline_oneboxer:
+    topic_page_title_post_number: "Nr %{post_number}"
+    topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
   themes:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
@@ -1700,7 +1703,7 @@ sv:
     body_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för ett inläggs innehåll."
     allow_uppercase_posts: "Tillåt enbart versaler i ämnets rubrik eller innehåll."
     max_consecutive_replies: "Antal inlägg som en användare måste göra i rad inom ett ämne innan användaren hindras lägga till ytterligare ett svar."
-    enable_filtered_replies_view: "(n)-svarsknappen bör förminska alla andra inlägg och bara visa valda svar."
+    enable_filtered_replies_view: '(n)-svarsknappen förminskar alla andra inlägg och visar bara det aktuella inlägget och dess svar.'
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     desktop_category_page_style: "Visuell stil för /kategorier-sidan."

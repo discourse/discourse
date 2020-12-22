@@ -828,7 +828,7 @@ ko:
         perm_denied_expl: "알림을 허가하지 않으셨군요. 브라우저 설정을 통해서 알림을 허용해주세요."
         disable: "알림 비활성화"
         enable: "알림 활성화"
-        each_browser_note: "참고: 사용하는 모든 브라우저에서 이 설정을 변경해야 합니다."
+        each_browser_note: '참고: 사용하는 모든 브라우저에서 이 설정을 변경해야합니다. 이 설정에 관계없이 "방해 금지"에있는 경우 모든 알림이 비활성화됩니다.'
         consent_prompt: "내 글에 댓글이 달리면 실시간으로 알림을 받으시겠습니까?"
       dismiss: "읽음"
       dismiss_notifications: "모두 읽음"
@@ -2435,6 +2435,9 @@ ko:
         other: "당신 외 %{count}명이 이 글을 좋아합니다"
       filtered_replies_hint:
         other: "이 글과 %{count}개의 댓글 보기"
+      filtered_replies_viewing:
+        other: "댓글 %{count}개 보기"
+      in_reply_to: "상위 게시물 로드"
       errors:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
@@ -2583,6 +2586,7 @@ ko:
             name: "북마크 수정"
             description: "북마크 이름을 수정하거나 알림 날짜 및 시간을 변경하십시오."
       filtered_replies:
+        viewing_posts_by: "%{post_count} 개의 게시물 보기"
         viewing_subset: "몇 개의 댓글이 접혀 있습니다."
         viewing_summary: "이 글의 요약 보기"
         post_number: "%{username}, 글 #%{post_number}"
@@ -3143,6 +3147,17 @@ ko:
     safe_mode:
       enabled: "안전모드가 활성화 되었습니다. 안전모드를 종료하려면 이 웹브라우저창을 닫아야 합니다."
     image_removed: "(이미지 제거됨)"
+    do_not_disturb:
+      title: "방해 금지..."
+      save: "저장"
+      label: "방해 금지"
+      remaining: "%{remaining} 남음"
+      options:
+        half_hour: "30분"
+        one_hour: "1시간"
+        two_hours: "2시간"
+        tomorrow: "내일까지"
+        custom: "사용자 정의"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -3368,6 +3383,8 @@ ko:
               log_out: 사용자의 모든 세션을 로그 아웃합니다.
               anonymize: 사용자 계정을 익명화합니다.
               delete: 사용자 계정을 삭제합니다.
+            email:
+              receive_emails: 이 범위를 메일 수신자와 결합하여 수신 이메일을 처리하십시오.
       web_hooks:
         title: "Webhook"
         none: "현재 webhook이 없습니다."
@@ -4132,7 +4149,9 @@ ko:
         suspend_reason_title: "정지 이유"
         suspend_reasons:
           not_listening_to_staff: "관리자의 조치를 따르지 않음"
+          consuming_staff_time: "스태프의 불균형 한 시간 사용"
           combatative: "분란 조장"
+          in_wrong_place: "잘못된 곳에서"
           no_constructive_purpose: "반대나 분란 조장의 목적 이외에는 다른 긍정적인 목적이 없습니다."
           custom: "사용자 지정..."
         suspend_message: "이메일 메시지"

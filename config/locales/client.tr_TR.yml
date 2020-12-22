@@ -792,7 +792,6 @@ tr_TR:
         perm_denied_expl: "Bildirimler için izinleri reddettin. Bildirimlere, tarayıcı ayarlarından izin verebilirsin. "
         disable: "Bildirimleri Devre Dışı Bırak"
         enable: "Bildirimleri Etkinleştir"
-        each_browser_note: "Not: Bu ayarı kullandığın her tarayıcıda değiştirmelisin."
         consent_prompt: "Gönderilerine cevap verildiğinde anlık bildirim almak ister misin?"
       dismiss: "Yoksay"
       dismiss_notifications: "Tümünü Yoksay"

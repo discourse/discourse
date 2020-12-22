@@ -51,6 +51,9 @@ he:
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   redirect_warning: "לא הצלחנו לאמת שהקישור שבחרת אכן פורסם לפורום. כדי להמשיך בכל אופן, נא לבחור בקישור שלהלן."
   on_another_topic: "בנושא אחר"
+  inline_oneboxer:
+    topic_page_title_post_number: "מס׳ %{post_number}"
+    topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
   themes:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
@@ -1796,6 +1799,7 @@ he:
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
     max_consecutive_replies: "מספר הפוסטים שמשתמש עושה ברצף בתוך נושא בטרם החלת איסור על הוספת תגובות."
+    enable_filtered_replies_view: 'הכפתור „(n) תגובות” מצמצם את כל הפוסטים האחרים ומציג רק את הפוסט הנוכחי ואת התגובות עליו.'
     title_fancy_entities: "המרת תווי ASCII נפוצים ליישויות HTML מהודרות בכותרות הנושאים, בסגנון SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
     desktop_category_page_style: "סגנון ויזואלי לדף /categories."

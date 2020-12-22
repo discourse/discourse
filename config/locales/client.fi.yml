@@ -835,7 +835,6 @@ fi:
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
-        each_browser_note: "Huom: Asetus on säädettävä erikseen jokaisessa selaimessa, jota käytät."
         consent_prompt: "Haluatko liveilmoituksia kun muut vastaavat viesteihisi?"
       dismiss: "Unohda"
       dismiss_notifications: "Unohda kaikki"

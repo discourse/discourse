@@ -27,7 +27,7 @@ fr:
   discourse_narrative_bot:
     bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
     tl2_promotion_message:
-      subject_template: "Maintenant que vous avez été promu, il est temps d’en apprendre davantage sur certaines fonctionnalités avancées !"
+      subject_template: "Maintenant que vous avez été promu, il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
       text_body_template: |
         Répondez à ce message par `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
     timeout:
@@ -82,7 +82,7 @@ fr:
         quote: "Les erreurs sont toujours pardonnables, si l'on a le courage de les admettre."
         author: "Bruce Lee"
       "10":
-        quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteind."
+        quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteint."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: %{quote} __ &mdash; %{author}
@@ -320,7 +320,7 @@ fr:
         alt: "Certificat d'accomplissement"
     advanced_user_narrative:
       reset_trigger: "tutoriel avancé"
-      cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
+      cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé"
       title: ":arrow_up: Fonctionnalités utilisateur avancé"
       start_message: |-
         En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.

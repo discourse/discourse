@@ -582,7 +582,6 @@ et:
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
         disable: "Keela teavitused"
         enable: "Luba teavitused"
-        each_browser_note: "Märkus: see säte tuleb muuta igas kasutusel olevas brauseris."
       dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"

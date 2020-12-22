@@ -869,7 +869,7 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: "Notera: Du måste ändra denna inställning i varje webbläsare du använder."
+        each_browser_note: 'Obs! Du måste ändra den här inställningen i varje webbläsare du använder. Alla meddelanden kommer att inaktiveras när du är i ”stör ej”, oavsett denna inställning.'
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
@@ -2534,6 +2534,10 @@ sv:
       filtered_replies_hint:
         one: "Visa detta inlägg och dess svar"
         other: "Visa detta inlägg och dess %{count} svar"
+      filtered_replies_viewing:
+        one: "Visar %{count} svar på"
+        other: "Visar %{count} svar på"
+      in_reply_to: "Ladda överordnat inlägg"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -2691,7 +2695,6 @@ sv:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
       filtered_replies:
-        viewing: "Visar %{reply_count} svar på"
         viewing_posts_by: "Visar %{post_count} inlägg av"
         viewing_subset: "Vissa svar har förminskats"
         viewing_summary: "Visar en sammanfattning av detta ämne"
@@ -3274,6 +3277,17 @@ sv:
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
+    do_not_disturb:
+      title: "Stör ej för..."
+      save: "Spara"
+      label: "Stör ej"
+      remaining: "%{remaining} kvar"
+      options:
+        half_hour: "30 minuter"
+        one_hour: "1 timme"
+        two_hours: "2 timmar"
+        tomorrow: "Tills imorgon"
+        custom: "Anpassad"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

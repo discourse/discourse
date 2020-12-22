@@ -869,7 +869,6 @@ nl:
         perm_denied_expl: "U hebt toestemming voor meldingen geweigerd. Sta meldingen toe via uw browserinstellingen."
         disable: "Meldingen uitschakelen"
         enable: "Meldingen inschakelen"
-        each_browser_note: "Opmerking: u moet deze instelling in elke browser die u gebruikt wijzigen."
         consent_prompt: "Wilt u livemeldingen ontvangen als mensen op uw berichten antwoorden?"
       dismiss: "Negeren"
       dismiss_notifications: "Alle verwijderen"

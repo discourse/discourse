@@ -25,7 +25,10 @@ ja:
         millions: "%{number}M"
     dates:
       time: "H:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY年M月"
+      long_no_year: "M/D, HH:mm"
       long_no_year_no_time: "M月D日"
       full_no_year_no_time: "M月D日"
       long_with_year: "YYYY年M月D日 H:mm"
@@ -94,6 +97,10 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "投稿 #%{postNumber}"
       close: "閉じる"
+      twitter: "Twitterで共有"
+      facebook: "Facebookで共有"
+      email: "メールで送信"
+      url: "URLをコピーして共有"
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
       private_topic: "このトピックを %{when} にダイレクトメッセージとして送る"
@@ -125,8 +132,12 @@ ja:
       banner:
         enabled: "この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。"
         disabled: "このバナー%{when}を削除すると、各ページの最上部に表示しません。"
+      forwarded: "上記のメールを転送しました"
+    topic_admin_menu: "トピックアクション"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
+    bootstrap_mode_enabled:
+      other: "簡単にサイトを立ち上げられるように、ブートストラップモードにしました。\nすべての新規ユーザーはトラストレベル1となり、毎日のサマリーメールが有効な状態です。この設定は%{count}名のユーザーが参加した時に自動的に無効になります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
@@ -228,23 +239,49 @@ ja:
       help:
         bookmark: "クリックするとトピックの最初の投稿をブックマークします"
         unbookmark: "クリックするとトピック内の全てのブックマークを削除します"
+        unbookmark_with_reminder: "クリックして、このトピックのすべてのブックマークとリマインダーを削除します。このトピックのリマインダーは %{reminder_at} です。"
     bookmarks:
+      created: "%{name} の投稿をブックマークしました。"
       not_bookmarked: "この投稿をブックマークする"
+      created_with_reminder: "%{name} の投稿を %{date} のリマインダー付きでブックマークしました。"
       remove: "ブックマークを削除"
+      delete: "ブックマークを削除"
+      confirm_delete: "このブックマークを削除してもよろしいですか？リマインダーも削除されます。"
       confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
       save: "保存"
+      no_timezone: 'まだタイムゾーンを設定していないためリマインダーを設定することはできません。<a href="%{basePath}/my/preferences/profile">プロフィール</a>にて設定してください。'
+      invalid_custom_datetime: "入力された日時が無効です。もう一度やり直してください。"
+      list_permission_denied: "このユーザーのブックマークを表示する権限がありません。"
+      no_user_bookmarks: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
+      auto_delete_preference:
+        label: "自動的に削除"
+        never: "一切なし"
+        when_reminder_sent: "リマインダーが送信されたとき"
+        on_owner_reply: "このトピックに返信した後"
+      search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       reminders:
         later_today: "今日中"
+        next_business_day: "翌営業日"
         tomorrow: "明日"
         next_week: "来週"
+        post_local_date: "投稿日時"
         later_this_week: "今週中"
         start_of_next_business_week: "月曜日"
         start_of_next_business_week_alt: "来週の月曜日"
         next_month: "来月"
+        custom: "カスタムの日付と時刻"
+        none: "リマインダーは必要ありません"
+        today_with_time: "今日は %{time}"
+        tomorrow_with_time: "明日は %{time}"
+        at_time: "%{date_time} に"
+        existing_reminder: "このブックマークに %{at_date_time} に送信されるリマインダーが設定されています"
+    copy_codeblock:
+      copied: "コピーしました！"
     drafts:
       resume: "続ける"
       remove: "削除"
+      remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
       new_private_message: "プライベートメッセージの下書き"
       topic_reply: "返信の下書き"
@@ -260,6 +297,7 @@ ja:
       other: "%{count} 件の新規トピックがあります。"
     preview: "プレビュー"
     cancel: "キャンセル"
+    deleting: "削除中..."
     save: "変更を保存"
     saving: "保存中..."
     saved: "保存しました"
@@ -284,8 +322,14 @@ ja:
       install_banner: "<a href>このデバイスに%{title}をインストール</a>しますか？"
     choose_topic:
       none_found: "トピックが見つかりませんでした。"
+      title:
+        search: "トピックの検索"
+        placeholder: "ここにトピックのタイトル、URL、IDを入力してください"
     choose_message:
       none_found: "メッセージは見つかりませんでした。"
+      title:
+        search: "メッセージの検索"
+        placeholder: "ここにメッセージのタイトル、URL、IDを入力してください"
     review:
       order_by: "順"
       in_reply_to: "こちらへの回答"
@@ -297,8 +341,14 @@ ja:
         total: "合計"
         min_score_visibility: "表示の最小スコア"
         score_to_hide: "投稿を非表示にするスコア"
+        take_action_bonus:
+          name: "とった行動"
+        user_accuracy_bonus:
+          name: "ユーザーの精度"
         trust_level_bonus:
           name: "トラストレベル"
+        type_bonus:
+          name: "タイプボーナス"
       claim:
         title: "トピックを要請する"
       unclaim:
@@ -319,10 +369,12 @@ ja:
       title: "レビュー"
       topic: "トピック:"
       filtered_user: "ユーザー"
+      filtered_reviewed_by: "レビューアー："
       show_all_topics: "すべてのトピックを表示"
       deleted_post: "(削除されたポスト)"
       deleted_user: "(削除されたユーザー)"
       user:
+        website: "ウェブサイト"
         username: "ユーザー名"
         email: "Eメール"
         name: "名前"
@@ -362,6 +414,7 @@ ja:
           created_at: "作られた"
         priority:
           title: "最小の優先度"
+          low: "(任意)"
           medium: "普通"
           high: "高い"
       conversation:
@@ -376,21 +429,30 @@ ja:
       statuses:
         pending:
           title: "保留中"
+        approved:
+          title: "承認済み"
         rejected:
           title: "拒否されたメール"
         ignored:
           title: "無視する"
         deleted:
           title: "削除済み"
+        reviewed:
+          title: "(すべてレビュー済み)"
         all:
           title: "(すべて)"
       types:
+        reviewable_queued_topic:
+          title: "キューに入れられたトピック"
+        reviewable_queued_post:
+          title: "キューに登録された投稿"
         reviewable_user:
           title: "ユーザー"
       approval:
         title: "この投稿は承認が必要です"
         description: "新しい投稿はモデレータによる承認が必要です。しばらくお待ち下さい。"
         ok: "OK"
+      example_username: "ユーザ名"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> を作成"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> を作成"
@@ -406,6 +468,7 @@ ja:
       sent_by_user: "<a href='%{userUrl}'>%{user}</a> が送信"
       sent_by_you: "<a href='%{userUrl}'>あなた</a> が送信"
     directory:
+      username: "ユーザ名"
       filter_name: "ユーザー名でフィルタ"
       title: "ユーザー"
       likes_given: "与えた"
@@ -422,6 +485,7 @@ ja:
       days_visited_long: "閲覧された日数"
       posts_read: "既読"
       posts_read_long: "投稿の閲覧数"
+      last_updated: "最終更新："
       total_rows:
         other: "%{count}人のユーザー"
     group_histories:
@@ -433,12 +497,20 @@ ja:
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
       member_added: "追加済み"
+      member_requested: "リクエスト日時："
+      add_members:
+        title: "メンバーを %{group_name}に追加"
+        usernames: "ユーザー名またはメールアドレスを入力してください"
+        input_placeholder: "ユーザー名またはメール"
+        notify_users: "ユーザーに通知"
       requests:
         title: "リクエスト"
         reason: "理由"
         accept: "受け入れ"
         accepted: "受け入れられました"
         deny: "拒否"
+        denied: "拒否されました"
+        handle: "メンバーシップリクエストを処理する"
       manage:
         title: "管理"
         name: "名前"
@@ -453,12 +525,25 @@ ja:
           notification: 通知
         email:
           title: "Eメール"
+          status: "IMAP経由で %{old_emails} / %{total_emails} のメールを同期しました。"
           credentials:
+            smtp_server: "SMTPサーバー"
+            smtp_port: "SMTPポート"
+            smtp_ssl: "SMTP に SSL を使用する"
+            imap_server: "IMAP サーバ"
+            imap_port: "IMAP ポート"
+            imap_ssl: "IMAPにSSLを使用する"
             username: "ユーザー名"
             password: "パスワード"
+          mailboxes:
+            synchronized: "同期されたメールボックス"
+            none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
+            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
+        categories:
+          long_title: "カテゴリのデフォルト通知"
         logs:
           title: "ログ"
           when: "いつ"
@@ -469,6 +554,8 @@ ja:
           details: "詳細"
           from: "発信元"
           to: "宛先"
+      permissions:
+        title: "権限"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
       empty:
@@ -567,6 +654,7 @@ ja:
       flair_preview_icon: "アイコンプレビュー"
       flair_preview_image: "画像プレビュー"
       flair_type:
+        icon: "アイコンを選択してください"
         image: "画像のアップロード"
     user_action_groups:
       "1": "「いいね！」 "
@@ -600,6 +688,7 @@ ja:
       latest_by: "最新投稿: "
       toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ:"
+      muted: "ミュートされたカテゴリ"
       topic_sentence:
         other: "%{count}トピック群"
       topic_stat_sentence_week:
@@ -624,6 +713,7 @@ ja:
       copied: "コピーしました"
     user_fields:
       none: "(オプションを選択)"
+      required: '"%{name}" の値を入力してください'
     user:
       said: "%{username}:"
       profile: "プロフィール"
@@ -647,14 +737,19 @@ ja:
         ignore_duration_save: "無視する"
         ignore_no_users: "無視するユーザーはいません。"
         ignore_option: "無視する"
+        add_ignored_user: "追加..."
         mute_option: "通知しない"
         normal_option: "通常"
       activity_stream: "アクティビティ"
       preferences: "設定"
       feature_topic_on_profile:
+        open_search: "新規トピックを選択"
+        title: "トピックを選択"
+        search_label: "タイトルでトピックを検索"
         save: "保存"
         clear:
           title: "クリア"
+      use_current_timezone: "現在のタイムゾーンを使用"
       profile_hidden: "このユーザーの公開プロフィールは非公開です"
       expand_profile: "開く"
       collapse_profile: "折りたたむ"
@@ -673,19 +768,25 @@ ja:
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         disable: "通知を無効にする"
         enable: "通知を有効にする"
-        each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
       dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       first_notification: "最初の通知です! 始めるために選択してください。"
       dynamic_favicon: "ブラウザのアイコンに件数を表示する"
+      skip_new_user_tips:
+        skip_link: "これらのヒントをスキップ"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトテーマにする"
+      color_schemes:
+        default_description: "デフォルト"
+        undo: "リセット"
+      dark_mode: "ダークモード"
       text_size_default_on_all_devices: "これをすべての端末のデフォルトのテキストサイズにする"
       allow_private_messages: "他のユーザーが私にパーソナルメッセージを送信できるようにする"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       change: "変更"
+      featured_topic: "注目のトピック"
       moderator: "%{user} はモデレータです"
       admin: "%{user} は管理者です"
       moderator_tooltip: "このユーザーはモデレータです"
@@ -694,6 +795,7 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結状態です。"
       suspended_permanently: "このユーザーは凍結されています"
       suspended_reason: "理由: "
+      github_profile: "GitHub"
       email_activity_summary: "アクティビティの情報"
       mailing_list_mode:
         label: "メーリングリストモード"
@@ -750,6 +852,7 @@ ja:
         deleted_posts: "削除された投稿"
         suspensions: "凍結"
         warnings_received: "警告"
+        rejected_posts: "拒否された投稿"
       messages:
         all: "すべて"
         inbox: "受信ボックス"
@@ -781,19 +884,28 @@ ja:
         choose_new: "新規パスワードを決定"
         choose: "パスワードを決定"
       second_factor_backup:
+        title: "2要素バックアップコード"
         regenerate: "API キーを再生成"
         disable: "利用できません"
         enable: "利用できます"
         enable_long: "バックアップコードを有効にします"
+        copy_to_clipboard: "クリップボードにコピー"
         copy_to_clipboard_error: "クリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
+        download_backup_codes: "バックアップコードのダウンロード"
         use: "バックアップコードを使用"
         codes:
           title: "バックアップコードが作られました"
       second_factor:
+        title: "2段階認証"
+        disable_all: "すべて無効"
+        forgot_password: "パスワードを忘れましたか？"
         confirm_password_description: "続行するにはパスワードを入力してください"
         name: "名前"
         label: "コード"
+        rate_limit: "別の認証コードを試す前に、しばらくお待ちください。"
+        enable_description: |
+          サポートされているアプリ (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) でこのQRコードをスキャンし、認証コードを入力します。
         show_key_description: "手動入力"
         disable: "利用できません"
         save: "保存"

@@ -896,7 +896,6 @@ bs_BA:
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         disable: "Isključi obavjesti"
         enable: "Uključi obavijesti"
-        each_browser_note: "Napomena: Ovu opciju morate promjeniti na svakom pregledniku."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"

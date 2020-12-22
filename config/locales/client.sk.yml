@@ -651,7 +651,6 @@ sk:
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
-        each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
       dismiss_notifications: "Zahodiť všetko"

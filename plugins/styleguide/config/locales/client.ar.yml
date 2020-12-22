@@ -52,8 +52,6 @@ ar:
           title: "حالات المواضيع"
         topic_list:
           title: "قائمة المواضيع"
-        latest_topic_list:
-          title: "قائمة المواضيع الحديثة"
         footer_message:
           title: "رسالة التذييل"
         signup_cta:

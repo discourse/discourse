@@ -788,7 +788,6 @@ gl:
         perm_denied_expl: "Denegaches o permiso para notificacións no teu navegador. Modifica os axustes para recibir notificacións no teu navegador."
         disable: "Desactivar as notificacións"
         enable: "Activar as notificacións"
-        each_browser_note: "Nota: Tes que cambiar este axuste en cadanseu navegador que utilices."
         consent_prompt: "Queres recibir notificacións intantáneas cando lean as túas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
