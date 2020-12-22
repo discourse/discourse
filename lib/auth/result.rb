@@ -52,6 +52,13 @@ class Auth::Result
     @email&.downcase
   end
 
+  def email_valid=(val)
+    if !val.in? [true, false, nil]
+      raise ArgumentError, "email_valid should be boolean or nil"
+    end
+    @email_valid = !!val
+  end
+
   def failed?
     !!@failed
   end
