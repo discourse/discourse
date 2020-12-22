@@ -223,7 +223,7 @@ describe UserDestroyer do
       let!(:second_post) { Fabricate(:post, user: @user, topic: topic) }
       let!(:category) { Fabricate(:category, user: @user, topic_id: topic.id) }
 
-      it 'changes author of first category post to system user and still delete second post' do
+      it 'changes author of first category post to system user and still deletes second post' do
         UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
 
         expect(first_post.reload.deleted_at).to eq(nil)
