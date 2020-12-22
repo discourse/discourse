@@ -165,34 +165,22 @@ class GlobalSetting
 
   def self.get_redis_replica_host
     return redis_replica_host if redis_replica_host.present?
-    if respond_to?(:redis_slave_host) && redis_slave_host.present?
-      Discourse.deprecate("redis_slave_host is deprecated, use redis_replica_host instead")
-      redis_slave_host
-    end
+    redis_slave_host if respond_to?(:redis_slave_host) && redis_slave_host.present?
   end
 
   def self.get_redis_replica_port
     return redis_replica_port if redis_replica_port.present?
-    if respond_to?(:redis_slave_port) && redis_slave_port.present?
-      Discourse.deprecate("redis_slave_port is deprecated, use redis_replica_port instead")
-      redis_slave_port
-    end
+    redis_slave_port if respond_to?(:redis_slave_port) && redis_slave_port.present?
   end
 
   def self.get_message_bus_redis_replica_host
     return message_bus_redis_replica_host if message_bus_redis_replica_host.present?
-    if respond_to?(:message_bus_redis_slave_host) && message_bus_redis_slave_host.present?
-      Discourse.deprecate("message_bus_redis_slave_host is deprecated, use message_bus_redis_replica_host")
-      message_bus_redis_slave_host
-    end
+    message_bus_redis_slave_host if respond_to?(:message_bus_redis_slave_host) && message_bus_redis_slave_host.present?
   end
 
   def self.get_message_bus_redis_replica_port
     return message_bus_redis_replica_port if message_bus_redis_replica_port.present?
-    if respond_to?(:message_bus_redis_slave_port) && message_bus_redis_slave_port.present?
-      Discourse.deprecate("message_bus_redis_slave_port is deprecated, use message_bus_redis_replica_port")
-      message_bus_redis_slave_port
-    end
+    message_bus_redis_slave_port if respond_to?(:message_bus_redis_slave_port) && message_bus_redis_slave_port.present?
   end
 
   def self.redis_config
