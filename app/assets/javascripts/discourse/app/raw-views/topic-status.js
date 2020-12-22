@@ -58,6 +58,14 @@ export default EmberObject.extend({
       results.push({ icon: "far-eye-slash", key: "unlisted" });
     }
 
+    if (
+      this.showPrivateMessageIcon &&
+      topic.isPrivateMessage &&
+      !topic.is_warning
+    ) {
+      results.push({ icon: "envelope", key: "personal_message" });
+    }
+
     results.forEach((result) => {
       result.title = I18n.t(`topic_statuses.${result.key}.help`);
       if (

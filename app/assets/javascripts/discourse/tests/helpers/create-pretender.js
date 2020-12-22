@@ -219,31 +219,15 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "posts") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-      });
-    } else if (request.queryParams.q === "evil") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-        tags: [
-          {
-            id: 6,
-            name: "eviltrout",
-          },
-        ],
-      });
+    if (request.queryParams.q === "discourse") {
+      return response(fixturesByUrl["/search.json"]);
+    } else if (request.queryParams.q === "discourse in:personal") {
+      const fixtures = fixturesByUrl["/search.json"];
+      fixtures.topics.firstObject.archetype = "private_message";
+      return response(fixtures);
+    } else {
+      return response({});
     }
-
-    return response({});
   });
 
   pretender.put("/u/eviltrout.json", () => response({ user: {} }));

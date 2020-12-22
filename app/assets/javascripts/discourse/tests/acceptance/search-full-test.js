@@ -105,10 +105,24 @@ acceptance("Search - Full Page", function (needs) {
     assert.ok(queryAll(".fps-topic").length === 0, "has no results");
     assert.ok(queryAll(".no-results-suggestion .google-search-form"));
 
-    await fillIn(".search-query", "posts");
+    await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
     assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+  });
+
+  test("search for personal messages", async function (assert) {
+    await visit("/search");
+
+    await fillIn(".search-query", "discourse in:personal");
+    await click(".search-cta");
+
+    assert.ok(queryAll(".fps-topic").length === 1, "has one post");
+
+    assert.ok(
+      queryAll(".topic-status .personal_message").length === 1,
+      "shows the right icon"
+    );
   });
 
   test("escape search term", async function (assert) {
