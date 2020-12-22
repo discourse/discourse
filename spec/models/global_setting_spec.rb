@@ -67,13 +67,13 @@ describe GlobalSetting do
   end
 
   describe '.redis_config' do
-    describe 'when replica config is not present' do
+    describe 'when slave config is not present' do
       it "should not set any connector" do
         expect(GlobalSetting.redis_config[:connector]).to eq(nil)
       end
     end
 
-    describe 'when replica config is present' do
+    describe 'when slave config is present' do
       before do
         GlobalSetting.reset_redis_config!
       end
@@ -83,8 +83,8 @@ describe GlobalSetting do
       end
 
       it "should set the right connector" do
-        GlobalSetting.expects(:redis_replica_port).returns(6379).at_least_once
-        GlobalSetting.expects(:redis_replica_host).returns('0.0.0.0').at_least_once
+        GlobalSetting.expects(:redis_slave_port).returns(6379).at_least_once
+        GlobalSetting.expects(:redis_slave_host).returns('0.0.0.0').at_least_once
 
         expect(GlobalSetting.redis_config[:connector]).to eq(RailsFailover::Redis::Connector)
       end
