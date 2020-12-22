@@ -128,6 +128,10 @@ describe UserNameSuggester do
     context "with Unicode usernames enabled" do
       before { SiteSetting.unicode_usernames = true }
 
+      it "normalizes unicode usernames with Σ to lowercase" do
+        expect(UserNameSuggester.suggest('ΣΣ\'"ΣΣ')).to eq('σς_σς')
+      end
+
       it "does not transliterate" do
         expect(UserNameSuggester.suggest("Jørn")).to eq('Jørn')
       end
