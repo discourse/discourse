@@ -473,16 +473,16 @@ en:
 
       - Who would be interested in this? Why does it matter? What kind of responses do you want?
 
-      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category (or tag).
 
       For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     "new-reply": |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
-      - Does your reply improve the conversation in some way?
-
       - Be kind to your fellow community members.
+      
+      - Does your reply improve the conversation?
 
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
