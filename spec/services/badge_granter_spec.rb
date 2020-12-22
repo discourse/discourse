@@ -208,6 +208,12 @@ describe BadgeGranter do
       expect(Notification.where(user_id: user.id).count).to eq(0)
     end
 
+    it "handles deleted badge" do
+      freeze_time
+      user_badge = BadgeGranter.grant(nil, user, created_at: 1.year.ago)
+      expect(user_badge).to eq(nil)
+    end
+
     it "doesn't grant disabled badges" do
       freeze_time
       badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze, enabled: false)
