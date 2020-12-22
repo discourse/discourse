@@ -52,7 +52,7 @@ class UserDestroyer
           end
 
           if post.is_first_post? && category_topic_ids.include?(post.topic_id)
-            post.update(user: Discourse.system_user)
+            post.update!(user: Discourse.system_user)
           else
             PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
           end
