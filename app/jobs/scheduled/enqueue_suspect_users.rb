@@ -19,9 +19,16 @@ module Jobs
         .where("user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1")
         .joins("LEFT OUTER JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User'")
         .where('r.id IS NULL')
-        .joins('LEFT OUTER JOIN user_custom_fields ucf ON users.id = ucf.user_id')
-        .group('users.id, ucf.id')
-        .having('ucf.id IS NULL OR NOT bool_or(ucf.name = ?)', 'import_id')
+        .joins(
+          <<~SQL
+            LEFT OUTER JOIN (
+              SELECT user_id
+              FROM user_custom_fields
+              WHERE user_custom_fields.name = 'import_id'
+            ) AS ucf ON ucf.user_id = users.id
+          SQL
+        )
+        .where('ucf.user_id IS NULL')
         .limit(10)
 
       users.each do |user|
