@@ -87,7 +87,7 @@
                   {{/if}}
 
                   <a href={{result.url}} {{action "logClick" result.topic_id}} class="search-link">
-                    {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
+                    {{raw "topic-status" topic=result.topic showPrivateMessageIcon=true}}
                     <span class="topic-title">
                       {{#if result.useTopicTitleHeadline}}
                         {{html-safe result.topicTitleHeadline}}
