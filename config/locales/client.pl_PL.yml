@@ -951,7 +951,6 @@ pl_PL:
         perm_denied_expl: "Odmówiłeś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
-        each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na twój wpis?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
@@ -2731,6 +2730,12 @@ pl_PL:
         few: "Zobacz ten post i jego %{count} odpowiedzi"
         many: "Zobacz ten post i jego %{count} odpowiedzi"
         other: "Zobacz ten post i jego %{count} odpowiedzi"
+      filtered_replies_viewing:
+        one: "Przeglądanie %{count} odpowiedzi do"
+        few: "Przeglądanie %{count} odpowiedzi do"
+        many: "Przeglądanie %{count} odpowiedzi do"
+        other: "Przeglądanie %{count} odpowiedzi do"
+      in_reply_to: "Załaduj post nadrzędny"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -2906,7 +2911,6 @@ pl_PL:
             name: "Edytuj zakładkę"
             description: "Edytuj nazwę zakładki lub zmień datę i godzinę przypomnienia"
       filtered_replies:
-        viewing: "Przeglądanie %{reply_count} odpowiedzi do"
         viewing_posts_by: "Przeglądanie %{post_count} postów autorstwa"
         viewing_subset: "Niektóre odpowiedzi są zwinięte"
         viewing_summary: "Przeglądanie podsumowania tego tematu"
@@ -3541,6 +3545,17 @@ pl_PL:
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     image_removed: "(obraz usunięty)"
+    do_not_disturb:
+      title: "Nie przeszkadzać przez..."
+      save: "Zapisz"
+      label: "Nie przeszkadzać"
+      remaining: "%{remaining} pozostało"
+      options:
+        half_hour: "30 minut"
+        one_hour: "1 godzina"
+        two_hours: "2 godziny"
+        tomorrow: "Do jutra"
+        custom: "Niestandardowe"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

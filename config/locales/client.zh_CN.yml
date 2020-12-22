@@ -828,7 +828,7 @@ zh_CN:
         perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器以启用通知提醒。"
         disable: "停用通知"
         enable: "启用通知"
-        each_browser_note: "注意：你必须在你使用的所用浏览器中更改这项设置。"
+        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。无论此设置如何，在 “请勿打扰” 状态下，所有通知都将被禁用。'
         consent_prompt: "有回复时是否接收通知？"
       dismiss: "忽略"
       dismiss_notifications: "忽略所有"
@@ -2435,6 +2435,9 @@ zh_CN:
         other: "你和另外的%{count}人赞了帖"
       filtered_replies_hint:
         other: "查看此帖子及其 %{count} 个回复"
+      filtered_replies_viewing:
+        other: "查看 %{count} 个回复"
+      in_reply_to: "加载父帖子"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -2583,7 +2586,6 @@ zh_CN:
             name: "编辑收藏"
             description: "编辑收藏名称或修改提醒的日期和时间"
       filtered_replies:
-        viewing: "查看 %{reply_count} 个回复"
         viewing_posts_by: "查看 %{post_count} 个帖子"
         viewing_subset: "一些回复已被折叠"
         viewing_summary: "查看此主题的摘要"
@@ -3140,6 +3142,17 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
     image_removed: "(图像被移除)"
+    do_not_disturb:
+      title: "请勿打扰..."
+      save: "保存"
+      label: "请勿打扰"
+      remaining: "剩余 %{remaining}"
+      options:
+        half_hour: "30分钟"
+        one_hour: "1 小时"
+        two_hours: "2 小时"
+        tomorrow: "直到明天"
+        custom: "自定义"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

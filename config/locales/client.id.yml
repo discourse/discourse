@@ -704,7 +704,6 @@ id:
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
-        each_browser_note: "Catatan : Anda harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"

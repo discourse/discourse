@@ -4,4 +4,73 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ja: 
+ja:
+  js:
+    styleguide:
+      title: "スタイルガイド"
+      welcome: "開始するには、左側のメニューからセクションを選択します。"
+      categories:
+        atoms: Atoms
+        molecules: Molecules
+        organisms: Organisms
+      sections:
+        typography:
+          title: "Typography"
+          example: "Discourseへようこそ"
+        date_time_inputs:
+          title: "日付/時刻の入力"
+        font_scale:
+          title: "フォントシステム"
+        colors:
+          title: "色"
+        icons:
+          title: "アイコン"
+          full_list: "Font Awesome Icons の全リストを見る"
+        input_fields:
+          title: "入力フィールド"
+        buttons:
+          title: "ボタン"
+        dropdowns:
+          title: "ドロップダウン"
+        categories:
+          title: "カテゴリ"
+        navigation:
+          title: "ナビゲーション"
+        navigation_bar:
+          title: "ナビゲーションバー"
+        categories_list:
+          title: "カテゴリ一覧"
+        topic_link:
+          title: "トピックリンク"
+        topic_list_item:
+          title: "トピックリスト項目"
+        topic_statuses:
+          title: "トピックのステータス"
+        topic_list:
+          title: "トピックリスト"
+        basic_topic_list:
+          title: "基本トピックリスト"
+        footer_message:
+          title: "フッターメッセージ"
+        signup_cta:
+          title: "サインアップCTA"
+        topic_timer_info:
+          title: "トピックタイマー"
+        topic_footer_buttons:
+          title: "トピックフッターボタン"
+        topic_notifications:
+          title: "トピック通知"
+        post:
+          title: "投稿"
+        topic_map:
+          title: "トピックマップ"
+        site_header:
+          title: "サイトヘッダー"
+        suggested_topics:
+          title: "関連トピック"
+        post_menu:
+          title: "投稿メニュー"
+        header_icons:
+          title: "ヘッダーアイコン"
+        spinners:
+          title: "スピナー"

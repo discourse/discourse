@@ -869,7 +869,6 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
-        each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -3240,6 +3239,17 @@ it:
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
     image_removed: "(immagine rimossa)"
+    do_not_disturb:
+      title: "Non disturbare per..."
+      save: "Salva"
+      label: "Non disturbare"
+      remaining: "%{remaining} rimanenti"
+      options:
+        half_hour: "30 minuti"
+        one_hour: "un'ora"
+        two_hours: "due ore"
+        tomorrow: "Fino a domani"
+        custom: "Personalizzato"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

@@ -951,7 +951,7 @@ he:
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
         disable: "כבוי התראות"
         enable: "אפשר התראות"
-        each_browser_note: "הערה: עליך לשנות הגדרה זו עבור כל דפדפן בנפרד."
+        each_browser_note: 'הערה: עליך לשנות הגדרה זו בכל דפדפן שבו אתה משתמש. כל ההודעות יושבתו במצב "אל תפריע", ללא קשר להגדרה זו.'
         consent_prompt: "האם ברצונך לקבל התראות כשאנשים מגיבים לפוסטים שלך?"
       dismiss: "דחה"
       dismiss_notifications: "בטלו הכל"
@@ -2727,6 +2727,17 @@ he:
         two: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         many: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
         other: "אתם ו %{count} אנשים אחרים אהבתם את הפוסט הזה"
+      filtered_replies_hint:
+        one: "הצגת הפוסט הזה ואת התגובה עליו"
+        two: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
+        many: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
+        other: "הצגת הפוסט הזה ואת %{count} התגובות עליו"
+      filtered_replies_viewing:
+        one: "מוצגת תגובה %{count} אל"
+        two: "מוצגות %{count} תגובות אל"
+        many: "מוצגות %{count} תגובות אל"
+        other: "מוצגות %{count} תגובות אל"
+      in_reply_to: "טעינת הפוסט ההורה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -2901,6 +2912,12 @@ he:
           edit_bookmark:
             name: "עריכת סימנייה"
             description: "עריכת שם הסימנייה או החלפת מועד התזכורת"
+      filtered_replies:
+        viewing_posts_by: "מוצגים %{post_count} פוסטים מאת"
+        viewing_subset: "חלק מהתגובות מצומצמות"
+        viewing_summary: "מוצג סיכום של הפוסט הזה"
+        post_number: "%{username}, פוסט מס׳ %{post_number}"
+        show_all: "להציג הכול"
     category:
       can: "יכול&hellip; "
       none: "(ללא קטגוריה)"
@@ -3530,6 +3547,17 @@ he:
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
     image_removed: "(התמונה הוסרה)"
+    do_not_disturb:
+      title: "לא להפריע למשך…"
+      save: "שמירה"
+      label: "לא להפריע"
+      remaining: "%{remaining} נותרו"
+      options:
+        half_hour: "חצי שעה"
+        one_hour: "שעה"
+        two_hours: "שעתיים"
+        tomorrow: "עד מחר"
+        custom: "מותאם"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

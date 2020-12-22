@@ -51,6 +51,9 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
+  inline_oneboxer:
+    topic_page_title_post_number: "nº %{post_number}"
+    topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
   themes:
     bad_color_scheme: "No se puede actualizar el tema, paleta de colores inválida"
     other_error: "Algo salió mal al actualizar el tema"
@@ -2208,6 +2211,18 @@ es:
   admin:
     email:
       sent_test: "¡enviado!"
+    user:
+      merge_user:
+        updating_username: "Actualizando nombre de usuario..."
+        changing_post_ownership: "Cambiando la propiedad de la publicación ..."
+        merging_given_daily_likes: "Fusionando los me gusta diarios dados..."
+        merging_post_timings: "Fusionando tiempos de publicación ..."
+        merging_user_visits: "Fusionando visitas de usuarios..."
+        updating_site_settings: "Actualizando ajustes del sitio..."
+        updating_user_stats: "Actualizando estadísticas de los usuarios..."
+        merging_user_attributes: "Fusionando atributos de usuario..."
+        updating_user_ids: "Actualizando identificadores de usuario..."
+        deleting_source_user: "Eliminando usuario de origen..."
   user:
     deactivated: "Ha sido desactivado debido a muchos correod electrónicos rechazados a «%{email}»."
     deactivated_by_staff: "Desactivado por el staff"

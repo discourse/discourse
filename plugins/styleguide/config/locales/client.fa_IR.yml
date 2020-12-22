@@ -50,8 +50,6 @@ fa_IR:
           title: "وضعیت‌های سرفصل"
         topic_list:
           title: "فهرست موضوعات"
-        latest_topic_list:
-          title: "آخرین فهرست موضوعات"
         footer_message:
           title: "پیام پاورقی"
         signup_cta:

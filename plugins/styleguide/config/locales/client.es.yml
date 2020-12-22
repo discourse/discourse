@@ -53,8 +53,6 @@ es:
           title: "Estados de los temas"
         topic_list:
           title: "Lista de temas"
-        latest_topic_list:
-          title: "Lista de temas recientes"
         footer_message:
           title: "Mensaje de pie de página"
         signup_cta:

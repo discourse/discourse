@@ -658,7 +658,6 @@ cs:
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         disable: "Vypnout upozornění"
         enable: "Povolit upozornění"
-        each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
         consent_prompt: "Chcete dostávat upozornění v reálném čase, když někdo odpoví na vaše příspěvky?"
       dismiss: "Označit jako přečtené"
       dismiss_notifications: "Označit vše jako přečtené"

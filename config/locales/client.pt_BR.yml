@@ -845,7 +845,6 @@ pt_BR:
         perm_denied_expl: "Você negou permissão para notificações. Permita notificações nas configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
-        each_browser_note: "Obs.: Você deve modificar esta configuração em todos os navegadores que você usa."
         consent_prompt: "Você quer notificações ao vivo quando as pessoas respondem às suas postagens?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar Tudo"

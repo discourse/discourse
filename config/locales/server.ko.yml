@@ -51,6 +51,9 @@ ko:
   remove_posts_deleted_by_author: "글쓴이에 의해 삭제된 글"
   redirect_warning: "선택한 링크가 실제로 포럼에 게시되어 있는지 확인할 수 없습니다. 계속 진행하려면 아래 링크를 선택하십시오."
   on_another_topic: "다른 주제에"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "%{username}님의 글 #%{post_number}"
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 표를 업데이트 할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"

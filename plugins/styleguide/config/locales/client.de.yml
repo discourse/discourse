@@ -53,8 +53,6 @@ de:
           title: "Themenstatus"
         topic_list:
           title: "Themenliste"
-        latest_topic_list:
-          title: "Aktuelle Themen"
         footer_message:
           title: "Fußzeile"
         signup_cta:

@@ -53,8 +53,8 @@ pl_PL:
           title: "Statusy tematów"
         topic_list:
           title: "Lista tematów"
-        latest_topic_list:
-          title: "Lista Ostatnich Tematów"
+        basic_topic_list:
+          title: "Podstawowa lista tematów"
         footer_message:
           title: "Wiadomość w stopce"
         signup_cta:
@@ -69,6 +69,8 @@ pl_PL:
           title: "Wpis"
         topic_map:
           title: "Mapa tematu"
+        site_header:
+          title: "Nagłówek witryny"
         suggested_topics:
           title: "Sugerowane tematy"
         post_menu:

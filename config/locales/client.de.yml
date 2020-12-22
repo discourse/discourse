@@ -869,7 +869,7 @@ de:
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
-        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser einzeln ändern."
+        each_browser_note: 'Hinweis: Du musst diese Einstellung in jedem von Dir verwendeten Browser ändern. Alle Benachrichtigungen werden deaktiviert, wenn "Nicht stören" angezeigt wird, unabhängig von dieser Einstellung.'
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
@@ -2151,6 +2151,7 @@ de:
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um eine durchdachte Diskussion in schnellen oder umstrittenen Diskussionen zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut posten."
         save: "Aktivieren"
+        enabled_until: "(Optional) Aktiviert bis:"
         remove: "Deaktivieren"
         hours: "Stunden:"
         minutes: "Minuten:"
@@ -2533,6 +2534,10 @@ de:
       filtered_replies_hint:
         one: "Diesen Beitrag und seine Antwort ansehen"
         other: "Diesen Beitrag und seine %{count} Antworten ansehen"
+      filtered_replies_viewing:
+        one: "Zeige %{count} Antwort an"
+        other: "Zeige %{count} Antworten an"
+      in_reply_to: "Übergeordneten Beitrag laden"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -2690,7 +2695,6 @@ de:
             name: "Lesezeichen bearbeiten"
             description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
       filtered_replies:
-        viewing: "Zeige %{reply_count} Antworten an"
         viewing_posts_by: "Zeige %{post_count} Beiträge von"
         viewing_subset: "Einige Antworten sind reduziert"
         viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
@@ -3269,6 +3273,17 @@ de:
     safe_mode:
       enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
+    do_not_disturb:
+      title: "Nicht stören für..."
+      save: "Speichern"
+      label: "Nicht stören"
+      remaining: "%{remaining} verbleibend"
+      options:
+        half_hour: "30 Minuten"
+        one_hour: "1 Stunde"
+        two_hours: "2 Stunden"
+        tomorrow: "Bis morgen"
+        custom: "Benutzerdefiniert"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
