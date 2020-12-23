@@ -32,7 +32,7 @@ class UserDestroyer
       Draft.where(user_id: user.id).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
 
-      category_topic_ids = Category.all.pluck(:topic_id).compact
+      category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
 
       if opts[:delete_posts]
         user.posts.each do |post|
