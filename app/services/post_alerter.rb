@@ -467,7 +467,7 @@ class PostAlerter
     return if user.do_not_disturb?
 
     if user.push_subscriptions.exists?
-      Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
+      Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes, :send_push_notification, user_id: user.id, payload: payload)
     end
 
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
