@@ -1019,17 +1019,25 @@ class Search
       )
       SQL
 
+      category_search_priority = <<~SQL
+      (
+        CASE categories.search_priority
+        WHEN #{Searchable::PRIORITIES[:very_high]}
+        THEN 3
+        WHEN #{Searchable::PRIORITIES[:very_low]}
+        THEN 1
+        ELSE 2
+        END
+      )
+      SQL
+
       category_priority_weights = <<~SQL
       (
         CASE categories.search_priority
-        WHEN #{Searchable::PRIORITIES[:very_low]}
-        THEN #{SiteSetting.category_search_priority_very_low_weight}
         WHEN #{Searchable::PRIORITIES[:low]}
         THEN #{SiteSetting.category_search_priority_low_weight}
         WHEN #{Searchable::PRIORITIES[:high]}
         THEN #{SiteSetting.category_search_priority_high_weight}
-        WHEN #{Searchable::PRIORITIES[:very_high]}
-        THEN #{SiteSetting.category_search_priority_very_high_weight}
         ELSE
           CASE WHEN topics.closed
           THEN 0.9
@@ -1048,9 +1056,9 @@ class Search
 
       posts =
         if aggregate_search
-          posts.order("MAX(#{data_ranking}) DESC")
+          posts.order("MAX(#{category_search_priority}) DESC", "MAX(#{data_ranking}) DESC")
         else
-          posts.order("#{data_ranking} DESC")
+          posts.order("#{category_search_priority} DESC", "#{data_ranking} DESC")
         end
 
       posts = posts.order("topics.bumped_at DESC")
