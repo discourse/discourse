@@ -212,6 +212,23 @@ describe UserDestroyer do
       end
     end
 
+    context 'user created category' do
+      let!(:topic) { Fabricate(:topic, user: @user) }
+      let!(:first_post) { Fabricate(:post, user: @user, topic: topic) }
+      let!(:second_post) { Fabricate(:post, user: @user, topic: topic) }
+      let!(:category) { Fabricate(:category, user: @user, topic_id: topic.id) }
+
+      it 'changes author of first category post to system user and still deletes second post' do
+        UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
+
+        expect(first_post.reload.deleted_at).to eq(nil)
+        expect(first_post.user_id).to eq(Discourse.system_user.id)
+
+        expect(second_post.reload.deleted_at).not_to eq(nil)
+        expect(second_post.user_id).to eq(nil)
+      end
+    end
+
     context 'user has no posts, but user_stats table has post_count > 0' do
       before do
         # out of sync user_stat data shouldn't break UserDestroyer
