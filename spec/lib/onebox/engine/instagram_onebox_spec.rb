@@ -18,6 +18,12 @@ describe Onebox::Engine::InstagramOnebox do
     expect(onebox_klass.name).to eq(described_class.name)
   end
 
+  it 'oneboxes tv links' do
+    tv_link = "https://www.instagram.com/tv/CIlM7UzMgXO/?hl=en"
+    onebox_klass = Onebox::Matcher.new(tv_link).oneboxed
+    expect(onebox_klass.name).to eq(described_class.name)
+  end
+
   context 'with access token' do
     let(:api_link) { "https://graph.facebook.com/v9.0/instagram_oembed?url=#{link}&access_token=#{access_token}" }
 

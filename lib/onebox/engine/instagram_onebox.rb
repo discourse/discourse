@@ -7,11 +7,11 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      matches_regexp(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/p\/[a-zA-Z\d_-]+/)
+      matches_regexp(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/(?:p|tv)\/[a-zA-Z\d_-]+/)
       always_https
 
       def clean_url
-        url.scan(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/p\/[a-zA-Z\d_-]+/).flatten.first
+        url.scan(/^https?:\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/?(?:.*)\/(?:p|tv)\/[a-zA-Z\d_-]+/).flatten.first
       end
 
       def data
