@@ -286,7 +286,7 @@ module Onebox
         return image_html    if is_image?
         return embedded_html if is_embedded?
         return card_html     if is_card?
-        return article_html  if has_text?
+        return article_html  if (has_text? || is_image_article?)
       end
 
       def is_card?
@@ -301,8 +301,15 @@ module Onebox
       end
 
       def has_text?
-        !Onebox::Helpers.blank?(data[:title]) &&
-        !Onebox::Helpers.blank?(data[:description])
+        has_title? && !Onebox::Helpers.blank?(data[:description])
+      end
+
+      def has_title?
+        !Onebox::Helpers.blank?(data[:title])
+      end
+
+      def is_image_article?
+        has_title? && has_image?
       end
 
       def is_image?
