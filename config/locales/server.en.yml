@@ -2903,9 +2903,11 @@ en:
     tl2_promotion_message:
       subject_template: "Congratulations on your trust level promotion!"
       text_body_template: |
-        We’ve promoted you up a [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        We’ve promoted you up another [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        We invite you to keep getting involved – we enjoy having you around.
+        As an experienced user, you might appreciate [this list of handy tips and tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        
+        We invite you to keep getting involved – we enjoy having you around. 
 
     backup_succeeded:
       title: "Backup Succeeded"
