@@ -106,4 +106,27 @@ describe Stylesheet::Compiler do
     end
 
   end
+
+  describe "indexes" do
+    it "include all SCSS files in their respective folders" do
+      refs = []
+
+      Dir.glob(Rails.root.join('app/assets/stylesheets/**/*/')).each do |dir|
+        Dir.glob("#{dir}_index.scss").each do |indexfile|
+          contents = File.read indexfile
+
+          files = Dir["#{dir}*.scss"]
+          files -= Dir["#{dir}_index.scss"]
+          files.each do |path|
+            filename = File.basename(path, ".scss")
+            if !contents.match(/@import "#{filename}";/)
+              refs << "#{filename} import missing in #{indexfile}"
+            end
+          end
+        end
+      end
+
+      expect(refs).to eq([])
+    end
+  end
 end
