@@ -5,6 +5,7 @@ import sinon from "sinon";
 const UTC = "Etc/UTC";
 const SYDNEY = "Australia/Sydney";
 const LOS_ANGELES = "America/Los_Angeles";
+const NEW_YORK = "America/New_York";
 const PARIS = "Europe/Paris";
 const LAGOS = "Africa/Lagos";
 const LONDON = "Europe/London";
@@ -215,6 +216,21 @@ test("option[recurring]", function (assert) {
         formated: "April 13, 2020 11:00 AM",
       },
       "it works to the minute"
+    );
+  });
+
+  freezeTime({ date: "2020-12-28 09:16" }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2021-01-24",
+        time: "08:30",
+        recurring: "1.weeks",
+        timezone: NEW_YORK,
+      },
+      {
+        formated: "January 24, 2021 2:30 PM",
+      },
+      "it works for a future date"
     );
   });
 });
