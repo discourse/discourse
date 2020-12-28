@@ -133,7 +133,6 @@ GEM
     fast_xs (0.8.0)
     fastimage (2.2.0)
     ffi (1.14.2)
-    flamegraph (0.9.5)
     fspath (3.1.2)
     gc_tracer (1.5.1)
     globalid (0.4.2)
@@ -265,7 +264,7 @@ GEM
       nio4r (~> 2.0)
     r2 (0.2.7)
     rack (2.2.3)
-    rack-mini-profiler (2.2.1)
+    rack-mini-profiler (2.3.0)
       rack (>= 1.2.0)
     rack-protection (2.1.0)
       rack
@@ -472,7 +471,6 @@ DEPENDENCIES
   fast_blank
   fast_xs
   fastimage
-  flamegraph
   gc_tracer
   highline
   htmlentities
@@ -559,4 +557,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.1.4
+   2.2.2
