@@ -102,10 +102,6 @@ export default createWidget("quick-access-panel", {
     let bottomItems = [];
 
     if (!this.hideBottomItems()) {
-      if (this.showDoNotDisturb) {
-        bottomItems.push(this.attach("do-not-disturb"));
-      }
-
       bottomItems.push(
         // intentionally a link so it can be ctrl clicked
         this.attach("link", {

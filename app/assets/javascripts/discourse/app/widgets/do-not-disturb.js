@@ -5,7 +5,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import showModal from "discourse/lib/show-modal";
 
 export default createWidget("do-not-disturb", {
-  tagName: "div.btn.do-not-disturb-btn",
+  tagName: "li.do-not-disturb-btn",
   saving: false,
 
   html() {
@@ -16,9 +16,8 @@ export default createWidget("do-not-disturb", {
         .slice(1)
         .join(" "); // The first word is "in" and we don't want that.
       return [
-        h("div.do-not-disturb-inner-container", [
-          h("div.do-not-disturb-background", iconNode("moon")),
-
+        h("a.do-not-disturb-inner-container", [
+          iconNode("toggle-on"),
           h("span.do-not-disturb-label", [
             h("span", I18n.t("do_not_disturb.label")),
             h(
@@ -30,8 +29,10 @@ export default createWidget("do-not-disturb", {
       ];
     } else {
       return [
-        iconNode("far-moon"),
-        h("span.do-not-disturb-label", I18n.t("do_not_disturb.label")),
+        h("a.do-not-disturb-inner-container", [
+          iconNode("toggle-off"),
+          h("span.do-not-disturb-label", I18n.t("do_not_disturb.label")),
+        ]),
       ];
     }
   },

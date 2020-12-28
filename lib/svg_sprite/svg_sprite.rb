@@ -190,6 +190,8 @@ module SvgSprite
     "thumbtack",
     "times",
     "times-circle",
+    "toggle-off",
+    "toggle-on",
     "trash-alt",
     "tv",
     "undo",

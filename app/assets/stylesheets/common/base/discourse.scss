@@ -424,7 +424,7 @@ table {
 }
 
 .do-not-disturb-background {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   width: 1.25em;
@@ -433,45 +433,40 @@ table {
   height: 1.25em;
 
   .d-icon.d-icon-moon {
+    display: block !important;
     color: var(--tertiary-or-white) !important;
     line-height: unset;
     font-size: 0.875em;
-    margin: 0;
+    margin: 0 !important;
   }
 }
 
-.do-not-disturb-btn {
+.user-menu .quick-access-panel .do-not-disturb-btn {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 0.5em;
+  background: var(--secondary);
 
   .do-not-disturb-inner-container {
     display: flex;
+    width: 100%;
     align-items: center;
 
     .do-not-disturb-label {
       display: flex;
-      flex-direction: column;
-      padding-top: 2px;
-      margin-left: 0.6em;
+      align-items: center;
     }
 
     .time-remaining {
       text-align: left;
       font-size: $font-down-3;
-      margin-top: 0.3em;
+      margin-left: 0.75em;
       color: var(--primary-medium);
     }
-    .do-not-disturb-background {
-      width: 1.75em;
-      height: 1.75em;
 
-      .d-icon-far-moon {
-        margin-right: 0;
-      }
+    .d-icon-toggle-on {
+      color: var(--tertiary);
     }
   }
 }
