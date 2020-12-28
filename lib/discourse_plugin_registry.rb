@@ -162,6 +162,7 @@ class DiscoursePluginRegistry
       elsif opts == :color_definitions
         self.color_definition_stylesheets[plugin_directory_name] = asset
       elsif opts == :variables
+        Discourse.deprecate(":variables is deprecated", drop_from: "2.7")
         self.sass_variables << asset
       else
         self.stylesheets[plugin_directory_name] ||= Set.new
