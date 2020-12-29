@@ -192,7 +192,7 @@ class AdminDashboardData
 
   def s3_cdn_check
     if (GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads) && SiteSetting.Upload.s3_cdn_url.blank?
-      I18n.t('dashboard.s3_config_warning')
+      I18n.t('dashboard.s3_cdn_warning')
     end
   end
 
