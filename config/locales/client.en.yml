@@ -2753,8 +2753,8 @@ en:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
       filtered_replies_viewing:
-          one: "Viewing %{count} reply to"
-          other: "Viewing %{count} replies to"
+        one: "Viewing %{count} reply to"
+        other: "Viewing %{count} replies to"
 
       in_reply_to: "Load parent post"
 
@@ -3174,7 +3174,7 @@ en:
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
+      This topic has {count, plural, one {# reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
         med {with a very high like to post ratio}
         high {with an extremely high like to post ratio}
@@ -3549,7 +3549,6 @@ en:
         two_hours: "2 hours"
         tomorrow: "Until tomorrow"
         custom: "Custom"
-
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4607,7 +4606,7 @@ en:
           description: "users with penalties cannot reach TL3"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
-        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
+        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {# post} other {# posts}} and {TOPICS, plural, one {# topic} other {# topics}}. Are you sure?"
         silence: "Silence"
         unsilence: "Unsilence"
         silenced: "Silenced?"

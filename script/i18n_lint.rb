@@ -31,7 +31,8 @@ class LocaleFileValidator
     invalid_relative_image_sources: "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:",
     invalid_interpolation_key_format: "The following keys use {{key}} instead of %{key} for interpolation keys:",
     wrong_pluralization_keys: "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
-    invald_one_keys: "The following keys contain the number 1 instead of the interpolation key %{count}:"
+    invalid_one_keys: "The following keys contain the number 1 instead of the interpolation key %{count}:",
+    invalid_message_format_one_key: "The following keys use 'one {1 foo}' instead of the generic 'one {# foo}':",
   }
 
   PLURALIZATION_KEYS = ['zero', 'one', 'two', 'few', 'many', 'other']
@@ -81,6 +82,7 @@ class LocaleFileValidator
     @errors[:invalid_relative_links] = []
     @errors[:invalid_relative_image_sources] = []
     @errors[:invalid_interpolation_key_format] = []
+    @errors[:invalid_message_format_one_key] = []
 
     each_translation(yaml) do |key, value|
       if value.match?(/href\s*=\s*["']\/[^\/]|\]\(\/[^\/]/i)
@@ -93,6 +95,10 @@ class LocaleFileValidator
 
       if value.match?(/{{.+?}}/) && !key.end_with?("_MF")
         @errors[:invalid_interpolation_key_format] << key
+      end
+
+      if key.end_with?("_MF") && value.match?(/one {1.*?}/)
+        @errors[:invalid_message_format_one_key] << key
       end
     end
   end
@@ -110,7 +116,7 @@ class LocaleFileValidator
 
   def validate_pluralizations(yaml)
     @errors[:wrong_pluralization_keys] = []
-    @errors[:invald_one_keys] = []
+    @errors[:invalid_one_keys] = []
 
     each_pluralization(yaml) do |key, hash|
       # ignore errors from some ActiveRecord messages
@@ -120,7 +126,7 @@ class LocaleFileValidator
 
       one_value = hash['one']
       if one_value && one_value.include?('1') && !one_value.match?(/%{count}|{{count}}/)
-        @errors[:invald_one_keys] << key
+        @errors[:invalid_one_keys] << key
       end
     end
   end
