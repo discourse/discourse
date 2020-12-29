@@ -90,7 +90,8 @@ GEM
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
     cppjieba_rb (0.3.3)
-    crack (0.4.4)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     css_parser (1.7.1)
       addressable
