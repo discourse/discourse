@@ -11,6 +11,7 @@ class S3Inventory
   CSV_ETAG_INDEX ||= 2
   INVENTORY_PREFIX ||= "inventory"
   INVENTORY_VERSION ||= "1"
+  INVENTORY_LAG ||= 2.days
 
   def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
     @s3_helper = s3_helper
@@ -237,7 +238,7 @@ class S3Inventory
       symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
       return [] if symlink_file.blank?
 
-      @inventory_date = symlink_file.last_modified - 1.day
+      @inventory_date = symlink_file.last_modified - INVENTORY_LAG
       log "Downloading symlink file to tmp directory..."
       failure_message = "Failed to download symlink file to tmp directory."
       filename = File.join(tmp_directory, File.basename(symlink_file.key))
