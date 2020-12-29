@@ -477,7 +477,7 @@ pl_PL:
 
       - Kto będzie tym zainteresowany? Dlaczego temat jest istotny? Jakiego rodzaju odpowiedzi oczekujesz?
 
-      - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce.
+      - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii (lub tagu) o pokrewnej tematyce.
 
       Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](%{base_path}/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
     "new-reply": |
@@ -1820,6 +1820,7 @@ pl_PL:
     body_min_entropy: "Minimalna entropia treści wpisu (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     allow_uppercase_posts: "Zezwól na same wielkie litery w tytule tematu lub treści wpisu."
     max_consecutive_replies: "Liczba wpisów, które użytkownik musi wykonać w jednym rzędzie w temacie, zanim nie będzie można dodać kolejnej odpowiedzi."
+    enable_filtered_replies_view: 'Przycisk "(n) odpowiedzi" zwija wszystkie pozostałe posty i pokazuje tylko bieżący post i jego odpowiedzi.'
     title_fancy_entities: "Konwertuj typowe znaki ASCII na fantazyjne jednostki HTML w tytułach tematów, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
     desktop_category_page_style: "Styl wizualny dla strony kategorii."
@@ -2058,6 +2059,7 @@ pl_PL:
     blur_tl0_flagged_posts_media: "Rozmyj oflagowane obrazy z postów, aby ukryć potencjalną zawartość dla dorosłych (NSFW)."
     enable_page_publishing: "Zezwól personelowi na publikowanie tematów pod nowymi adresami URL z własnym stylem."
     show_published_pages_login_required: "Anonimowi użytkownicy mogą przeglądać opublikowane strony, nawet gdy wymagane jest zalogowanie."
+    skip_auto_delete_reply_likes: "Podczas automatycznego usuwania starych odpowiedzi pomiń usuwanie postów z taką lub większą liczbą polubień."
     default_email_digest_frequency: "Domyślnie, jak często użytkownicy otrzymują emaile podsumowujące."
     default_include_tl0_in_digests: "Domyślnie uwzględniaj wpisy od nowych użytkowników w podsumowaniach mailowych. Użytkownicy mogą dokonywać zmian w swoich ustawieniach."
     default_email_level: "Ustaw domyślny poziom powiadomień e-mail dla zwykłych tematów."
@@ -2767,9 +2769,11 @@ pl_PL:
     tl2_promotion_message:
       subject_template: "Gratulujemy awansu na następny poziom zaufania!"
       text_body_template: |
-        Awansowaliśmy Twój [poziom zaufania](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Awansowaliśmy Cię na kolejny [poziom zaufania] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Zapraszamy do dalszego angażowania się — cieszymy się, że jesteś w pobliżu.
+        Jako doświadczony użytkownik możesz docenić [tą listę przydatnych porad i sztuczek] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Zapraszamy do angażowania się — cieszymy się, że jesteś w pobliżu.
     backup_succeeded:
       title: "Kopia zapasowa została utworzona "
       subject_template: "Kopia zapasowa jest gotowa"

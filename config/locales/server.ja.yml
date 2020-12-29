@@ -240,16 +240,6 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    "new-topic": |
-      %{site_name} へようこそ。 **新しい投稿をありがとうございます！**
-
-      - タイトルは声に出して読んでみた時に関心を惹くように聞こえますか？適切な要約になっていますか？
-
-      - 誰がこれに興味を持ちますか？なぜ問題ですか？どのような反応を期待しますか？
-
-      - 他の人が*見つけ*やすいよう、一般的な単語を使ってください。関連するトピックとまとめるため、カテゴリを選んでください。
-
-      その他、[我々のコミュニティガイドラインをご覧ください](%{base_path}/guidelines)。 この案内は初めの %{education_posts_text}だけ表示されます。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
 
@@ -977,6 +967,7 @@ ja:
     enable_emoji: "絵文字を有効にする"
     emoji_set: "How would you like your emoji?"
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
+    skip_auto_delete_reply_likes: "古い返信を自動的に削除する場合は、この数以上のいいねの投稿の削除をスキップしてください。"
     default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
     tagging_enabled: "トピックでタグを有効にしますか？"
     tag_style: "カテゴリバッジのスタイル"

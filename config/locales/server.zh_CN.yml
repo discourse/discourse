@@ -408,25 +408,25 @@ zh_CN:
     until_posts:
       other: "%{count} 个帖子"
     "new-topic": |
-      欢迎来到 %{site_name} &mdash; **衷心感谢你参与讨论！**
+      欢迎使用 %{site_name} &mdash; **感谢你开始新的对话！**
 
-      - 标题是否清晰明了地描述了主题？看起来有意思么？
+      - 如果你大声朗读出标题，听起来有趣吗？能否很好地概括内容？
 
-      - 谁会感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
+      - 谁会对此感兴趣？为什么会感兴趣？你想得到怎样的回应？
 
-      - 选择常用的词句以便别人能找到你的主题。若想要给主题和类似主题分组，选择一个分类。
+      - 在你的主题中包含常用词，以便其他人能够“找到”它。要将你的主题与相关的主题关联，请选择一个分类（或标签）。
 
-      更多的帮助信息，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只在你发布前 %{education_posts_text}时显示。
+      更多内容，请[请参阅我们的社区准则](%{base_path}/guidelines)。该面板仅在你的前 %{education_posts_text}出现。
     "new-reply": |
       欢迎来到%{site_name} &mdash; **感谢你的贡献！**
 
-      - 你的回复是否以某种方式改善了讨论？
+      - 请对其他社区成员保持友善。
 
-      - 请给予其他社区成员同等的尊重。
+      - 你的回复是否有益于交流？
 
-      - 欢迎有建设性的批评，但是请批判观点，而不是人身攻击。
+      - 欢迎有建设性的批评，但是请对事不对人。
 
-      欲查看更多，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在你发表前 %{education_posts_text}时显示。
+      更多内容，[请查看我们的社区准则](%{base_path}/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
       ### 想更改你的头像吗?
 
@@ -1914,6 +1914,7 @@ zh_CN:
     blur_tl0_flagged_posts_media: "模糊标记帖子图像以隐藏潜在的 NSFW 内容。"
     enable_page_publishing: "允许工作人员使用自定义样式主题将主题发布到新的链接。"
     show_published_pages_login_required: "即使要求登录，匿名用户也可以查看公开的页面。"
+    skip_auto_delete_reply_likes: "当自动删除旧回复时，不删除多于或等于此赞数的帖子。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
     default_email_level: "设置常规主题的默认电子邮件通知级别。"
@@ -2506,9 +2507,11 @@ zh_CN:
     tl2_promotion_message:
       subject_template: "恭喜！你的信任等级提升了！"
       text_body_template: |
-        我们提升了你的[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
+        我们已经为你提升到另一个[信任等级](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)！
 
-        诚邀你继续参与到社区当中，很荣幸能与你同行。
+        作为经验丰富的用户，您可能会喜欢[这个方便实用的技巧清单](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
+
+        希望你能够继续活跃 —— 感谢你的参与。
     backup_succeeded:
       title: "备份成功"
       subject_template: "备份成功完成"

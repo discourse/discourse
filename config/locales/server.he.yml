@@ -477,15 +477,15 @@ he:
 
       - את מי היא עשויה לעניין? מה התכלית שלה? אילו תגובות רצויות בעיניך?
 
-      - כדאי לכלול מילים שמשתמשים בהן הרבה בנושא כדי שאחרים יוכלו *למצוא* אותו. כדי לקבץ את הנושא שלך לנושאים קשורים, יש לבחור בקטגוריה.
+      - כדאי לכלול מילים שמשתמשים בהן הרבה בנושא כדי שאחרים יוכלו *למצוא* אותו. כדי לקבץ את הנושא שלך לנושאים קשורים, יש לבחור בקטגוריה (או תגית).
 
       למידע נוסף, [יש לעיין בהנחיות הקהילה שלנו](%{base_path}/guidelines). חלונית זו תופיע רק עבור %{education_posts_text} הראשונים שלך.
     "new-reply": |
       ברוך בואך אל %{site_name} &mdash; ** תודה על תרומתך! **
 
-      - האם התגובה שלך משפרת את השיחה בדרך כלשהיא?
-
       - מוטב להציג את פניך היפות לחברים בקהילה
+
+      - האם התגובה שלך משפרת את השיחה בדרך כלשהיא?
 
       - ביקורת בונה היא רצויה, אבל חשוב לזכור לבקר *רעיונות*, לא אנשים.
 
@@ -1409,6 +1409,7 @@ he:
     github_config_warning: 'השרת מוגדר לאפשר הרשמה דרך GitHub‏ (enable_github_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     s3_config_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_upload_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
     s3_backup_config_warning: 'השרת מוגדר להעלות גיבויים ל־S3, אך לפחות אחת מההגדרות הבאות חסרה: s3_access_key_id,‏ s3_secret_access_key,‏ s3_use_iam_profile, או s3_backup_bucket. עליך לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ניתן לעיין בעמוד „איך להגדיר העלאת תמונות ל־S3?” כדי ללמוד עוד</a>.'
+    s3_cdn_warning: 'השרת מוגדר להעלות קבצים ל־S3, אך לא מוגדר CDN של S3. זה יכול להוביל לעלויות S3 גבוהות ולביצועים ירודים של האתר. <a href="https://meta.discourse.org/t/-/148916" target="_blank">ניתן לעיין בעמוד „שימוש באחסון אובייקטים להעלאות” למידע נוסף</a>.'
     image_magick_warning: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
     failing_emails_warning: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
@@ -2038,6 +2039,7 @@ he:
     blur_tl0_flagged_posts_media: "לטשטש פוסטים שסומנו בדגל כדי להסתיר תוכן שעוי להיות פוגעני."
     enable_page_publishing: "לאפשר לחברי סגל לפרסם נושאים לכתובות חדשות עם סגנון עצמאי."
     show_published_pages_login_required: "משתמשים אלמוניים יכולים לראות דפים שפורסמו, אפילו כשנדרשת כניסה למערכת."
+    skip_auto_delete_reply_likes: "בעת מחיקה אוטומטית של תגובות ישנות, לדלג על פוסטים עם כמות כזאת או יותר של לייקים."
     default_email_digest_frequency: "באיזו תדירות משתמשים יקבלו סיכומי מיילים כברירת מחדל."
     default_include_tl0_in_digests: "כללו פוסטים ממשתמשים חדשים בדוא\"ל מסכם כברירת מחדל. משתמשים יוכלו לשנות זאת בהעדפות האישיות."
     default_email_level: "הגדרת רמת ההתראה בדוא״ל כבררת מחדל לנושאים רגילים."
@@ -2739,9 +2741,11 @@ he:
     tl2_promotion_message:
       subject_template: "ברכותינו על התקדמותך בסולם דרגות האמון!"
       text_body_template: |
-        קידמנו אותך בסולם [דרגות האמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        קידמנו אותך ב[דרגת אמון](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) נוספת!
 
-        אנו מעודדים אותך להמשיך ולגלות מעורבות – נוכחותך חשובה לנו.
+        בזכות היכולות המתקדמות שרכשת, יכול להיות ש[רשימת העצות והתכסיסים השימושיים](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) תעניין אותך.
+
+        מזמינים אותך להמשיך ולהשתתף בפעילות - נוכחותך חשובה לנו.
     backup_succeeded:
       title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."

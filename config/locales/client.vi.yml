@@ -2571,6 +2571,8 @@ vi:
           edit_bookmark:
             name: "Chỉnh sửa dấu trang"
             description: "Chỉnh sửa tên dấu trang hoặc thay đổi ngày giờ lời nhắc"
+      filtered_replies:
+        show_all: "Hiển thị tất cả"
     category:
       can: "can&hellip;"
       none: "(không danh mục)"
@@ -3127,6 +3129,14 @@ vi:
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
     image_removed: "(hình ảnh đã bị xóa)"
+    do_not_disturb:
+      save: "Lưu lại"
+      label: "Không làm phiền"
+      options:
+        half_hour: "30 phút"
+        one_hour: "1 tiếng"
+        two_hours: "2 tiếng"
+        tomorrow: "Cho tới ngày mai"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -4006,6 +4016,7 @@ vi:
           title: "Log lỗi"
       watched_words:
         title: "Từ đã xem"
+        search: "Tìm kiếm"
         clear_filter: "Xóa"
         show_words: "hiển thị từ"
         download: Tải xuống

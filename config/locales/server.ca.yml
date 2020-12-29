@@ -345,26 +345,6 @@ ca:
     until_posts:
       one: "%{count} publicació"
       other: "%{count} publicacions"
-    "new-topic": |
-      Us donem la benvinguda a %{site_name} &mdash; **gràcies per obrir una nova conversa!**
-
-      - El títol sona interessant si el llegiu en veu alta? És un bon resum?
-
-      - Qui pot interessar-s'hi? Per què és important? Quina mena de reaccions voleu?
-
-      - Incloeu mots emprats sovint en el tema perquè la resta el puguin *trobar*. Per a agrupar el vostre tema amb altres relacionats, trieu una categoria.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís sols apareixerà per al vostre primer %{education_posts_text}.
-    "new-reply": |
-      Benvingut a %{site_name}. **Gràcies per col·laborar!**
-
-      - La vostra resposta millora d'alguna manera la conversa?
-
-      - Siguem amables amb la resta de membres de la comunitat.
-
-      - Les crítiques constructives són benvingudes, però per a criticar *idees* no pas persones.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà en el vostre primer/la vostra primera %{education_posts_text}.
     avatar: |
       ### Què us sembla si poseu una fotografia per al vostre compte?
 

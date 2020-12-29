@@ -366,26 +366,6 @@ fi:
     until_posts:
       one: "ensimmäisen viestisi"
       other: "%{count} ensimmäistä viestiäsi"
-    "new-topic": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
-
-      - Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Onko se hyvä kiteytys?
-
-      - Ketä tämä ketju voisi kiinnostaa? Mikä on sen merkitys? Minkälaisia vastauksia odotat?
-
-      - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
-
-      Saadaksesi lisätietoa, [käy tutkimassa ohjeet](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
-    "new-reply": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
-
-      - Parantaako vastauksesi keskustelua jollain tapaa?
-
-      - Ole ystävällinen muille käyttäjille.
-
-      - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
-
-      Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
       ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 

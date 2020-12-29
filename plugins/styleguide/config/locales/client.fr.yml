@@ -35,6 +35,8 @@ fr:
           title: "Listes déroulantes"
         categories:
           title: "Catégories"
+        bread_crumbs:
+          title: "Fils d'Ariane"
         navigation:
           title: "Navigation"
         navigation_bar:

@@ -235,26 +235,6 @@ ro:
       one: "o postare"
       few: "%{count} postări"
       other: "%{count} de postări"
-    "new-topic": |
-      Bun venit pe %{site_name} &mdash; **îți mulțumim că ai început o nouă conversație!**
-
-      - Atunci când îl citești cu voce tare, titlul sună interesant ? Rezumă bine conținutul?
-
-      - Cine ar fi interesat de subiectul ăsta? De ce e el important? Ce fel de răspunsuri vrei?
-
-      - Include în subiect cuvinte folosite în mod obișnuit pentru a le da altora posibilitatea să îl *găsească*. Pentru a grupa subiectul tău laolaltă cu alte subiecte asemănătoare, alege o anumită categorie.
-
-      Pentru mai multe îndrumări, [citește ghidul comunității](%{base_path}/guidelines). Această secțiune de pagină va apărea doar pentru prima/primele %{education_posts_text}.
-    "new-reply": |
-      Bine ai venit la %{site_name} &mdash; **Îți mulțumim pentru contribuție!**
-
-      - Răspunsul tău îmbunătațește discuția în vreun fel?
-
-      - Fii amabil cu membrii comunității.
-
-      - Critica constructivă e binevenită, critică *ideea*, nu oamenii.
-
-      Pentru detalii, [verifică regulile comune](%{base_path}/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
     avatar: |
       ### Ce zici de o poză atașată contului tău?
 

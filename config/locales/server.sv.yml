@@ -429,21 +429,21 @@ sv:
       one: "%{count} inlägg"
       other: "%{count} inlägg"
     "new-topic": |
-      Välkommen till %{site_name} &mdash; **tack för att du startade ett nytt samtal!**
+      Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation**
 
-      - Låter rubriken intressant om du läser det högt? Är det en bra sammanfattning?
+      - Låter rubriken intressant om du läser den högt? Ger det en bra sammanfattning?
 
       - Vem skulle kunna vara intresserad av detta? Varför är det viktigt? Vad för typ av svar förväntar du dig?
 
-      - Inkludera vanligt förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori.
+      - Inkludera vanliga förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori (eller tagg).
 
       För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
     "new-reply": |
       Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
 
-      - Bidrar ditt svar till samtalet på något sätt?
-
       - Var snäll mot andra medlemmar.
+
+      - Bidrar ditt svar till samtalet på något sätt?
 
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
@@ -1315,6 +1315,7 @@ sv:
     github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
     s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
+    s3_cdn_warning: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
@@ -1942,6 +1943,7 @@ sv:
     blur_tl0_flagged_posts_media: "Diffusera flaggade inläggsbilder för att dölja innehåll som kanske är bäst att inte visa på arbetet."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
+    skip_auto_delete_reply_likes: "När gamla svar tas bort automatiskt, hoppa över att radera inlägg med det här antalet gillningar eller mer."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
     default_include_tl0_in_digests: "Omfatta som standard inlägg från nya användare i sammanfattningar som skickas via e-post. Användare kan ändra detta i sina inställningar."
     default_email_level: "Ställ in standardnivå för e-postmeddelanden för vanliga ämnen."
@@ -2565,9 +2567,11 @@ sv:
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
-        Vi har gett dig en högre [förtroendenivå](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Vi har uppgraderat dig till en annan [tillitsnivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Vi hoppas att du fortsätter att engagera dig - vi tycker om att ha dig här!
+        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Vi välkomnar dig att fortsätta engagera dig — vi tycker om att ha dig i närheten.
     backup_succeeded:
       title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"

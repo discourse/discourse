@@ -257,26 +257,6 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    "new-topic": |
-      Vítejte na %{site_name} &mdash; **díky za nové téma!**
-
-      - Zní název zajímavě, když si jej přečtete nahlas? Je to dobré shrnutí daného tématu?
-
-      - Koho by to mohlo zajímat? Proč na tom záleží? Jaké typy odpovědí očekáváte?
-
-      - Používejte ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Zařaďte své téma do vhodné kategorie.
-
-      Více se dozvíte v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    "new-reply": |
-      Vítejte na %{site_name} &mdash; **díky za přispěvek!**
-
-      - Přispívá nějak vaše odpověď k diskuzi?
-
-      - Buďte na ostatní členy komunity milí.
-
-      - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
-
-      Další doporučení máme v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     avatar: |
       ### Nechcete si nastavit svůj profilový obrázek?
 

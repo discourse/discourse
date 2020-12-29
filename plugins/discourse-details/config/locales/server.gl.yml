@@ -7,3 +7,5 @@
 gl:
   site_settings:
     details_enabled: 'Activar a función de detalles. Se cambias isto, debes rebocar todas as publicacións con: "publicacións de rake: rebote".'
+  details:
+    excerpt_details: "(faga clic para máis detalles)"

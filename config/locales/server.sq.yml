@@ -159,26 +159,6 @@ sq:
     until_posts:
       one: "%{count} postim"
       other: "%{count} postime"
-    "new-topic": |
-      Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
-
-      - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
-
-      - Kush do të tërhiqej nga kjo temë? Përse ka rëndësi? Çfarë reagimi prisni?
-
-      - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
-
-      Për më tepër, [lexoni porositë e bashkësisë](%{base_path}/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
-    "new-reply": |
-      Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
-
-      - Jini të sjellshëm me anëtarët e tjerë të faqes.
-
-      - Kritikat janë të mirëpritura, ama mundohuni të kritikoni *idetë* e jo anëtarët.
-
-      - A i shton diçka diskutimit përgjigja juaj?
-
-      Për më shumë, shikoni [udhëzimet e faqes](%{base_path}/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
   activerecord:
     attributes:
       category:

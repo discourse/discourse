@@ -424,26 +424,6 @@ es:
     until_posts:
       one: "%{count} post"
       other: "%{count} publicaciones"
-    "new-topic": |
-      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
-
-      - ¿El título suena interesante si lo lees en voz alta? ¿Es un buen resumen de lo que trata?
-
-      - ¿Quién estaría interesado en leer esto? ¿Por qué es importante? ¿Qué tipo de respuestas quisieras suscitar?
-
-      - Incluye palabras de uso frecuente en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría.
-
-      Para más información, [visita nuestras directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
-    "new-reply": |
-      Bienvenido a %{site_name} &mdash; **¡gracias por contribuir a la conversación!**
-
-      - ¿Tu respuesta mejora la conversación de alguna forma, aunque sea un poco?
-
-      - Sé amable con tus compañeros, miembros de la comunidad.
-
-      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no a las personas.
-
-      Para más consejos, [visita las directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     avatar: |
       ### ¿Que tal si agregas una imagen para tu cuenta?
 
@@ -2547,10 +2527,6 @@ es:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
-      text_body_template: |
-        Te hemos subido al siguiente [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
-
-        Te invitamos a que sigas participando en la comunidad. Nos gusta tenerte por aquí.
     backup_succeeded:
       title: "Copia de respaldo realizada con éxito"
       subject_template: "La copia de respaldo se completó exitosamente"

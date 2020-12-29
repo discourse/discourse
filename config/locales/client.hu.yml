@@ -2344,6 +2344,17 @@ hu:
       dismiss: "Elvet"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
+    do_not_disturb:
+      title: "Ne zavarjanak..."
+      save: "Mentés"
+      label: "Ne zavarjanak"
+      remaining: "%{remaining} van hátra"
+      options:
+        half_hour: "30 percig"
+        one_hour: "1 óráig"
+        two_hours: "2 óráig"
+        tomorrow: "Holnapig"
+        custom: "Egyéni"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

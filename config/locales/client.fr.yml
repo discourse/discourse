@@ -1031,7 +1031,7 @@ fr:
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
         enable_description: |
           Scannez ce code QR en utilisant une application compatible (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et entrez votre code d'authentification.
-        disable_description: "Veuillez saisir le code d'authentification générer par l'application"
+        disable_description: "Veuillez saisir le code d'authentification généré par l'application"
         show_key_description: "Saisir manuellement"
         short_description: |
           Protéger votre compte avec des codes de sécurité à usage unique.
@@ -1780,7 +1780,7 @@ fr:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       slow_mode:
-        error: "Ce sujet est en mode ralenti. Afin de favoriser une discussion réfléchie, vous ne pouvez publier qu'une fois tous les %{duration}."
+        error: "Ce sujet est en mode ralenti. Afin de favoriser une discussion réfléchie, vous ne pouvez publier qu'une fois toutes les %{duration}."
       admin_options_title: "Paramètres optionnels pour ce sujet"
       composer_actions:
         reply: Répondre
@@ -2052,6 +2052,7 @@ fr:
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
         educate:
+          new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
           unread: '<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class="badge new-posts badge-notification">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
         latest: "Il n'y a plus de sujets à lire."
@@ -3247,7 +3248,7 @@ fr:
         delete: "Supprimer"
         confirm_delete: "Êtes-vous sûr de vouloir supprimer ce groupe d'étiquettes ?"
         everyone_can_use: "Les étiquettes peuvent être utilisées par tout le monde"
-        usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivantes peuvent les utiliser"
+        usable_only_by_groups: "Les étiquettes sont visibles par tous, mais seuls les groupes suivants peuvent les utiliser"
         visible_only_to_groups: "Les étiquettes sont uniquement visibles pour les groupes suivants"
       topics:
         none:

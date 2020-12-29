@@ -46,6 +46,9 @@ sl:
   submit: "Pošlji"
   anonymous: "Anonimni"
   on_another_topic: "Na drugi temi"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -194,26 +197,6 @@ sl:
       two: "%{count} prispevka"
       few: "%{count} prispevki"
       other: "%{count} prispevkov"
-    "new-topic": |
-      Dobrodošli na %{site_name} &mdash; **hvala za novo temo!**
-
-      - Ali je naslov teme dovolj zanimiv, če ga preberete naglas? Ali je dober povzetek vsebine?
-
-      - Koga bo to zanimalo? Zakaj je pomembno? Kakšne odzive želite?
-
-      - Uporabite splošno uporabljane izraze in tako omogočite da ostali uporabniki *najdejo* vašo temo. Izberite ustrezno kategorijo za vašo temo.
-
-      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
-    "new-reply": |
-      Dobrodošli na %{site_name} &mdash; **hvala za vaš prispevek!**
-
-      - Ali vaš odgovor prispeva k boljši razpravi?
-
-      - Bodite prijazni do ostalih uporabnikov v skupnosti.
-
-      - Konstruktivna kritika je dobrodošla, vendar kritiziraj *ideje* in ne oseb.
-
-      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
     avatar: |
       ### Dodaj sliko svojemu profilu?
 
@@ -714,6 +697,8 @@ sl:
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
     min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
+    enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
+    shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -855,6 +840,18 @@ sl:
     invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
     second_factor_toggle:
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
+  admin:
+    user:
+      merge_user:
+        updating_username: "Posodabljanje uporabniškega imena ..."
+        changing_post_ownership: "Spreminjanje lastništva objave ..."
+        merging_given_daily_likes: "Združevanje danih dnevnih všečkov ..."
+        merging_user_visits: "Združevanje obiskov uporabnikov ..."
+        updating_site_settings: "Posodabljanje nastavitev mesta..."
+        updating_user_stats: "Posodabljanje uporabniške statistike ..."
+        merging_user_attributes: "Združevanje uporabniških atributov..."
+        updating_user_ids: "Posodabljanje uporabniških ID-jev ..."
+        deleting_source_user: "Brisanje izvornega uporabnika..."
   user:
     email:
       does_not_exist: "N/A"

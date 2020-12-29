@@ -365,26 +365,6 @@ pt_BR:
     until_posts:
       one: "%{count} mensagem"
       other: "%{count} mensagens"
-    "new-topic": |
-      Bem vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversa!**
-
-      - O título parece interessante se você ler em voz alta? É um bom resumo?
-
-      - Quem estaria interessado nisto? Por que é relevante? Que tipo de resposta você quer?
-
-      - Incluir palavras geralmente usadas no seu tópico para que outros possam *encontrar*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
-
-      Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
-    "new-reply": |
-      Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
-
-      - Sua resposta melhora a conversa de alguma forma?
-
-      - Seja gentil aos seus companheiros membros da comunidade.
-
-      - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
-
-      Para mais, [veja nosso guia da comunidade](%{base_path}/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -1731,7 +1711,7 @@ pt_BR:
     default_other_notification_level_when_replying: "Nível de notificação padrão global quando o usuário responde a um tópico."
     default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a resposta de cotação para texto realçado por padrão."
-    default_other_enable_defer: "Habilitar a funcionalidade de tópico adiar por padrão."
+    default_other_enable_defer: "Habilitar a funcionalidade de adiar tópico por padrão."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do navegador por padrão."
     default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
     default_topics_automatic_unpin: "Desvincular tópicos automaticamente quando o usuário alcança a parte inferior por padrão."

@@ -286,26 +286,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    "new-topic": |
-      Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
-
-      - Høres tittelen interessant ut hvis du leser den høyt? Er den en god oppsummering?
-
-      - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
-
-      - Bruk relevante begrep i emnet slik at andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
-
-      [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
-
-      - Forbedrer innlegget ditt samtalen på noen måte?
-
-      - Vær snill mot andre brukere.
-
-      - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
-
-      For mer informasjon [se retningslinjene våre](%{base_path}/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     avatar: |
       ### Hva med et bilde på kontoen din?
 

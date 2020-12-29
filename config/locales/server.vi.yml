@@ -235,28 +235,6 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
-    "new-topic": |2
-
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã đăng cuộc thảo luận mới!**
-
-      - Bạn có cảm thấy tiêu đề có thú vị không khi bạn đọc to nó? Đó có phải là một đoạn tóm tắt tốt không?
-
-      - Những ai sẽ hứng thú với cuộc thảo luận này? Tại sao đó lại trở thành vấn đề? Bạn muốn những loại phản hồi thế nào?
-
-      - Sử dụng những từ khóa phổ biến để người khác có thể tìm thấy chủ đề của bạn dễ hơn. Để nhóm chủ đề của bạn với các chủ đề liên quan khác, hãy chọn chuyên mục cho chủ đề của mình.
-
-      Xem thêm, [hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện vào lần đầu %{education_posts_text}.
-    "new-reply": |2
-
-      Chào mừng bạn đến với %{site_name} &mdash; **cám ơn vì đã đóng góp!**
-
-      - Câu trả lời của bạn có làm cuộc thảo luận tốt hơn về mặt nào đó?
-
-      - Hãy đối xử tốt với các thành viên khác trong cộng đồng của bạn.
-
-      - Lời phê bình mang tính đóng góp cũng được chào đón, nhưng bạn nên phê bình *ý tưởng* chứ không phải con người.
-
-      [Đọc hướng dẫn cộng đồng](%{base_path}/guidelines) để có thêm thông tin. Bảng này chỉ xuất hiện cho bài viết đầu tiên của bạn %{education_posts_text}.
   activerecord:
     attributes:
       category:
