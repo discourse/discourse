@@ -25,8 +25,9 @@ acceptance("Do not disturb", function (needs) {
 
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
 
-    await click(".do-not-disturb-btn");
+    await click(".do-not-disturb");
 
     assert.ok(exists(".do-not-disturb-modal"), "modal to choose time appears");
 
@@ -54,14 +55,13 @@ acceptance("Do not disturb", function (needs) {
 
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
-
-    assert.ok(
-      queryAll(".do-not-disturb-btn .time-remaining")[0].textContent ===
-        "an hour remaining",
-      "The remaining time is displayed"
+    await click(".menu-links-row .user-preferences-link");
+    assert.equal(
+      queryAll(".do-not-disturb .relative-date")[0].textContent,
+      "1h"
     );
 
-    await click(".do-not-disturb-btn");
+    await click(".do-not-disturb");
 
     assert.ok(
       queryAll(".do-not-disturb-background").length === 0,

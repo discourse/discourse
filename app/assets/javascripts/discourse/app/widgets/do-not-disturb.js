@@ -1,29 +1,22 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
+import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import showModal from "discourse/lib/show-modal";
 
 export default createWidget("do-not-disturb", {
-  tagName: "li.do-not-disturb-btn",
+  tagName: "li.do-not-disturb",
   saving: false,
 
   html() {
     if (this.currentUser.isInDoNotDisturb()) {
-      let remainingTime = moment()
-        .to(moment(this.currentUser.do_not_disturb_until))
-        .split(" ")
-        .slice(1)
-        .join(" "); // The first word is "in" and we don't want that.
       return [
         h("a.do-not-disturb-inner-container", [
           iconNode("toggle-on"),
           h("span.do-not-disturb-label", [
             h("span", I18n.t("do_not_disturb.label")),
-            h(
-              "span.time-remaining",
-              I18n.t("do_not_disturb.remaining", { remaining: remainingTime })
-            ),
+            dateNode(this.currentUser.do_not_disturb_until),
           ]),
         ]),
       ];

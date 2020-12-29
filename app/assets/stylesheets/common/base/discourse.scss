@@ -424,7 +424,7 @@ table {
 }
 
 .do-not-disturb-background {
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 1.25em;
@@ -433,7 +433,7 @@ table {
   height: 1.25em;
 
   .d-icon.d-icon-moon {
-    display: block !important;
+    display: block;
     color: var(--tertiary-or-white) !important;
     line-height: unset;
     font-size: 0.875em;
@@ -441,7 +441,7 @@ table {
   }
 }
 
-.user-menu .quick-access-panel .do-not-disturb-btn {
+.user-menu .quick-access-panel li.do-not-disturb {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
@@ -458,11 +458,17 @@ table {
       align-items: center;
     }
 
-    .time-remaining {
+    .relative-date {
       text-align: left;
       font-size: $font-down-3;
+      padding-top: 3px;
       margin-left: 0.75em;
       color: var(--primary-medium);
+    }
+
+    .d-icon-toggle-off,
+    .d-icon-toggle-on {
+      padding-top: 0;
     }
 
     .d-icon-toggle-on {
