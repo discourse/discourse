@@ -2309,6 +2309,29 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it 'ignores the upload if picking a system avatar' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "system"
+        }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.uploaded_avatar_id).to eq(nil)
+      end
+
+      it 'raises an error if the type is invalid' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "x"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
       it 'can successfully pick the system avatar' do
         put "/u/#{user.username}/preferences/avatar/pick.json"
 

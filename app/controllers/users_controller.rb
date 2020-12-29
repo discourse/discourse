@@ -1108,33 +1108,37 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    type = params[:type]
-    upload_id = params[:upload_id]
-
     if SiteSetting.sso_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    type = params[:type]
+
+    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != 'system'
+    if invalid_type
+      return render json: failed_json, status: 422
     end
 
-    upload = Upload.find_by(id: upload_id)
-
-    # old safeguard
-    user.create_user_avatar unless user.user_avatar
-
-    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
-      if !upload
-        return render_json_error I18n.t("avatar.missing")
+    if type.blank? || type == 'system'
+      upload_id = nil
+    else
+      if !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
       end
 
-      if type == "gravatar"
+      upload_id = params[:upload_id]
+      upload = Upload.find_by(id: upload_id)
+
+      if upload.nil?
+        return render_json_error I18n.t('avatar.missing')
+      end
+
+      # old safeguard
+      user.create_user_avatar unless user.user_avatar
+
+      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
+
+      if type == 'gravatar'
         user.user_avatar.gravatar_upload_id = upload_id
       else
         user.user_avatar.custom_upload_id = upload_id
