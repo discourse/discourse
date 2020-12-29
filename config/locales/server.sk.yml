@@ -242,28 +242,6 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
-    "new-topic": |2
-
-      Víitajte na %{site_name} &mdash; **Ďakujeme za založenie novej konverzácie!**
-
-      - Znie titulok zaujímavo ak ho čítate nahlas ? Zodpovedá obsahu ?
-
-      - Koho by to mohlo zaujímať ? Prečo je to dôležité ? Akú reakciu očakávate ?
-
-      - Vložte často používane slová vo vašej téme aby ju ostatní vedeli "nájsť". Pre zlúčenie vašej témy so súvisiacimi témami vyberte kategóriu .
-
-      Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
-    "new-reply": |2
-
-      Vitajte na %{site_name} &mdash; **Ďakujeme za príspevok!**
-
-      - Vylepší vaša odpoveď nejakým spôsobom diskusiu ?
-
-      - Buďte ohľaduplní k ostatným členom komunity.
-
-      - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
-
-      Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
     avatar: |2
 
       ### Čo takto nastaviť svoj profilový obrázok?

@@ -144,6 +144,9 @@ fr:
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
+      is_invalid_meaningful: "ne semble pas clair, la plupart des mots contiennent les mêmes lettres répétées."
+      is_invalid_unpretentious: "ne semble pas clair, un ou plusieurs mots sont très longs ?"
+      is_invalid_quiet: "ne semble pas clair, vouliez-vous le saisir en MAJUSCULES ?"
       invalid_timezone: "« %{tz} » n'est pas fuseau horaire valide"
       contains_censored_words: "contient les mots censurés suivants : %{censored_words}"
       less_than: doit être inférieure à %{count}
@@ -189,6 +192,7 @@ fr:
       s3_backup_requires_s3_settings: "Il n'est pas possible d'utiliser le lieu de sauvegarde S3 sans renseigner le '%{setting_name}'."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour 's3_upload_bucket' and 's3_backup_bucket'. Choisir un autre bucket ou utiliser un chemin d'accès différent pour chaque bucket."
       secure_media_requirements: "L'envoi de fichiers sur S3 doit être activé avant d'activer la sécurisation des médias."
+      share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions sociales sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
       second_factor_cannot_be_enforced_with_sso_enabled: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque SSO est activé."
@@ -431,19 +435,19 @@ fr:
 
       - Qui pourrait être intéressé par cette conversation ? Pourquoi est-elle importante ? Quel genre de réponses attendez-vous ?
 
-      - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie.
+      - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie (ou une étiquette).
 
-      Pour plus d'informations, [jetez un œil sur la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
+      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     "new-reply": |
       Bienvenue sur %{site_name} &mdash; **merci de contribuer !**
 
-      - Votre réponse améliore-t-elle la discussion ?
-
       - Soyez respectueux envers les membres de la communauté.
+
+      - Votre réponse améliore-t-elle la discussion ?
 
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les gens.
 
-      Pour plus d'informations, [consulter la charte de la communauté](%{base_path}/guidelines). Cet encart apparaîtra pour vos premiers %{education_posts_text}.
+      Pour plus d'informations, [consultez la charte de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -1324,6 +1328,7 @@ fr:
     sidekiq_warning: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi de courriels, sont exécutées de manière asynchrone par Sidekiq. Assurez-vous d''avoir au moins un processus Sidekiq en exécution. <a href="https://github.com/mperham/sidekiq">En savoir plus sur Sidekiq</a>.'
     queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou qu'ils ne sont pas assez nombreux pour traiter efficacement les tâches."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
+    google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
@@ -1408,8 +1413,10 @@ fr:
     show_pinned_excerpt_desktop: "Afficher les extraits des sujets épinglés en vue bureau."
     post_onebox_maxlength: "Longueur maximale en caractères d'un message Discourse intégré comme Onebox."
     blocked_onebox_domains: "Une liste de domaines que ne seront jamais transformés en Onebox."
+    allowed_inline_onebox_domains: "Une liste de domaines qui seront transformés en Onebox s'ils ont été insérés sans titre"
     force_custom_user_agent_hosts: "Domaines pour lesquels utiliser un agent utilisateur personnalisé pour les requêtes de Onebox. (Cela est utile pour les domaines limitant les accès par agent utilisateur.)"
     max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
+    facebook_app_access_token: "Un jeton généré à partir de votre identifiant d'application Facebook et de votre secret. Utilisé pour générer des Onebox Instagram."
     logo: "L'image de votre logo située en haut à gauche de votre site. Utilisez une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360. Si vous laissez ce champ vide, le nom de votre site apparaîtra."
     logo_small: "La petite image logo affichée en haut à gauche du site quand la page est défilée vers le bas. Utilisez une image carrée de 120 x 120. Si vous laissez ce champ vide, une icône de maison sera affichée."
     digest_logo: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Utilisez une image rectangulaire et suffisamment large. N'utilisez pas une image SVG. Si vous laissez ce champ vide, l'image du paramètre `logo` sera utilisée."
@@ -1435,6 +1442,7 @@ fr:
     enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages directs et à y répondre (configurable via le niveau de confiance minimum pour envoyer des messages directs). Notez que les responsables peuvent toujours envoyer des messages directs."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
+    enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne pour la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon, ce qui peut les retarder"
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
@@ -1470,11 +1478,15 @@ fr:
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Activer le suivi de plusieurs domaines pour Google Universal Analytics. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=fr' target='_blank'>Configurer le suivi de plusieurs domaines</a>."
+    gtm_container_id: "Identifiant de conteneur Google Tag Manager, par exemple : GTM-ABCDEF. <br/>Note : les scripts tiers chargés par GTM devront peut-être être ajoutés à la liste d'autorisation 'content security policy script src'."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Autoriser les modérateurs à gérer les catégories et les groupes"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     use_admin_ip_allowlist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP sous surveillance (Administration > Journaux > IP sous surveillance)."
+    blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
+    allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
+    allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION ! CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'exploration web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisation est définie."
     slow_down_crawler_user_agents: "Agents utilisateurs des robots d'indexation qui devraient être limités dans robots.txt avec la commande Crawl-delay"
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents est défini, ce taux s'appliquera à tous les robots d'indexation (nombre de secondes d'attente entre requêtes)"
@@ -1526,6 +1538,7 @@ fr:
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
     password_unique_characters: "Nombre minimum de caractères uniques qu'un mot de passe doit avoir."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font partie des 10 000 les plus utilisés."
+    external_auth_skip_create_confirm: Lors de l'inscription via une authentification externe, ignorer la fenêtre contextuelle de création de compte. À utiliser de préférence avec sso_overrides_email, sso_overrides_username et sso_overrides_name.
     external_auth_immediately: "Rediriger automatiquement vers le système de connexion externe sans interaction de l'utilisateur. Cela ne prend effet que lorsque login_required est activé et qu'il n'y a qu'une seule méthode d'authentification externe"
     enable_sso: "Activer l'authentification unique via un site externe (ATTENTION : LES ADRESSES COURRIEL *DOIVENT* ÊTRE VALIDÉES PAR LE SITE EXTERNE !)"
     verbose_sso_logging: "Conserver les diagnostics étendus liés au SSO dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1555,7 +1568,11 @@ fr:
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et facebook_app_secret. Voir <a href='https://meta.discourse.org/t/13394' target='_blank'>Configurer Facebook login pour Discourse</a>."
+    facebook_app_id: "Identifiant d'application pour l'authentification et le partage Facebook, enregistré sur <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Activer l'authentification GitHub, nécessite github_client_id et github_client_secret. Voir <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurer la connexion GitHub pour Discourse</a>."
+    github_client_id: "Identifiant du client pour l'authentification GitHub, enregistré sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Clé secrète du client pour l'authentification GitHub, enregistrée sur <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permettre aux utilisateurs de s'authentifier via Discord ?"
     discord_client_id: 'Identifiant de l''utilisateur Discord (en cas de besoin, le créer via <a href="https://discordapp.com/developers/applications/me">le portail de développement Discord</a>)'
     discord_secret: "Clé secrète Discord"
@@ -1726,6 +1743,7 @@ fr:
     log_anonymizer_details: "Conserver les détails d'un utilisateur rendu anonyme dans les journaux. Si vous vous conformerez au RGPD, vous devez désactiver cette fonction."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur `newuser_spam_host_threshold` messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs ne seront jamais empêchés de créer des messages contenant des liens vers ces domaines."
+    staff_like_weight: "Le poids à accorder aux J'aime provenant d'un responsable (les autres J'aime ont un poids de 1)."
     topic_view_duration_hours: "Compter la vue d'un sujet une seule fois par IP ou par utilisateur toutes les N heures"
     user_profile_view_duration_hours: "Compter la vue d'un profil d'utilisateur une seule fois par IP ou par utilisateur qui visite toutes les N heures"
     levenshtein_distance_spammer_emails: "Une adresse courriel sera attribuée à un spammeur connu même si elle diffère par ce nombre de caractères."
@@ -1799,6 +1817,8 @@ fr:
     enable_imap_idle: "Utiliser le mécanisme IMAP IDLE pour attendre de nouveaux courriels."
     enable_smtp: "Activer SMTP pour l'envoi de notifications pour les messages de groupe."
     imap_polling_period_mins: "La durée en minutes entre chaque vérification des comptes IMAP pour les nouveaux courriels."
+    imap_polling_old_emails: "Le nombre maximum d'anciens courriels (traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée (0 pour tous)."
+    imap_polling_new_emails: "Le nombre maximum de nouveaux courriels (non traités) à mettre à jour chaque fois qu'une boîte IMAP est interrogée."
     imap_batch_import_email: "Le nombre minimum de nouveaux courriels qui déclenchent le mode d'importation (désactive les alertes de messages)."
     email_prefix: "Le [label] qui sera utilisé dans le sujet des courriels. Par défaut il prend la valeur de 'title'."
     email_site_title: "Le titre du site utilisé comme expéditeur pour les courriels du site. Par défaut il prend la valeur de 'title'. Si votre 'title' utilise des caractères interdits dans les courriels, utilisez ce paramètre."
@@ -1867,6 +1887,8 @@ fr:
     topic_page_title_includes_category: "La <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>balise title</a> de la page du sujet comprend le nom de la catégorie."
     native_app_install_banner_ios: "Affiche la bannière de l'application DiscourseHub sur les appareils iOS aux utilisateurs habitués (niveau de confiance 1 ou supérieur)."
     native_app_install_banner_android: "Affiche la bannière de l'application DiscourseHub sur les appareils Android aux utilisateurs habitués (niveau de confiance 1 ou supérieur)."
+    app_association_android: "Contenu de <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilisé par l'API Digital Asset Links de Google."
+    app_association_ios: "Contenu de <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilisé pour créer des Universal Links entre ce site et des applications iOS."
     share_anonymized_statistics: "Partager les statistiques d'utilisation anonymes."
     auto_handle_queued_age: "Gérer automatiquement les éléments qui attendent d'être examinés après ce nombre de jours. Les signalements seront ignorés. Les messages et les utilisateurs en file d'attente seront rejetés. Réglez à 0 pour désactiver cette fonction."
     svg_icon_subset: "Ajouter des icônes supplémentaires FontAwesome 5 que vous souhaitez inclure dans vos médias. Utilisez le préfixe « fa- » pour les icônes solides, « far- » pour les icônes normales et « fab- » pour les icônes de marques."
@@ -1883,9 +1905,11 @@ fr:
     show_copy_button_on_codeblocks: "Ajouter un bouton aux blocs de codes pour copier leur contenu dans le presse-papier de l'utilisateur. Cette fonctionnalité n'est pas disponible avec Internet Explorer."
     embed_any_origin: "Autoriser le contenu intégré quelque soit son origine. Cela est nécessaire pour les applications mobiles utilisant du HTML statique."
     embed_topics_list: "Permettre l'intégration HTML des listes de sujets"
+    embed_set_canonical_url: "Configurer l'URL canonique des sujets intégrés à l'URL du contenu intégré."
     embed_truncate: "Tronquer les messages embarqués."
     embed_unlisted: "Les sujets importés seront invisibles jusqu'à ce qu'un utilisateur réponde."
     embed_support_markdown: "Permettre la mise en forme Markdown pour les messages intégrés."
+    allowed_embed_selectors: "Une liste séparée par des virgules des éléments CSS autorisés à être intégrés."
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à intégrer."
     embed_username_required: "Un nom d'utilisateur est nécessaire pour la création du sujet."
@@ -1919,6 +1943,7 @@ fr:
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autorisez les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
     show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées même quand la connexion est nécessaire."
+    skip_auto_delete_reply_likes: "Lorsque vous supprimez automatiquement des réponses anciennes , ignorez la suppression des messages avec ce nombre de J'aime ou plus."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
     default_email_level: "Définissez le niveau de notification courriel par défaut pour les sujets standards."
@@ -1990,6 +2015,8 @@ fr:
     gravatar_name: "Nom du fournisseur Gravatar"
     gravatar_base_url: "URL de base de l'API du fournisseur Gravatar"
     gravatar_login_url: "URL relative à gravatar_base_url qui permet à l'utilisateur de se connecter au service Gravatar"
+    share_quote_buttons: "Choisissez les éléments qui apparaissent dans le bouton de partage de citation, ainsi que leur ordre."
+    share_quote_visibility: "Choisissez quand afficher le bouton de partage de citation : jamais, uniquement aux utilisateurs anonymes ou à tous les utilisateurs. "
     create_revision_on_bulk_topic_moves: "Créer une révision pour les premiers messages lorsque les sujets sont déplacés en masse dans une nouvelle catégorie."
     errors:
       invalid_email: "Adresse courriel invalide."
@@ -2247,6 +2274,8 @@ fr:
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
       inactive_user: "Utilisateur inactif"
     email_in_spam_header: "Le premier courriel de l'utilisateur a été signalé comme spam"
+    already_silenced: "L'utilisateur a déjà été mis sous silence par %{staff} %{time_ago}."
+    already_suspended: "L'utilisateur a déjà été suspendu par %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Ces éléments ont été soumis il y a plus de %{count} heure. [Veuillez les passer en revue](%{base_path}/review)."
@@ -2887,6 +2916,14 @@ fr:
     spam_post_blocked:
       title: "Message spam bloqué"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
+      text_body_template: |
+        Ceci est un message automatique.
+
+        Le nouvel utilisateur [%{username}](%{user_url}) a tenté de créer de multiples messages avec des liens vers %{domains}, mais ces messages ont été bloqués pour éviter le spam. Cet utilisateur est toujours capable de créer des messages qui ne contiennent pas de liens vers %{domains}.
+
+        Veuillez [vérifier cet utilisateur](%{user_url}).
+
+        Ceci peut être modifié via les options `newuser_spam_host_threshold` et `allowed_spam_host_domains`. Envisagez d'ajouter %{domains} à la liste d'autorisation s'ils doivent être exemptés.
     unsilenced:
       title: "Mise sous silence annulée"
       subject_template: "Compte débloqué"
@@ -3455,6 +3492,11 @@ fr:
     latte: "Latte"
     summer: "Été"
     dark_rose: "Rose foncé"
+    wcag: "WCAG Clair"
+    wcag_theme_name: "WCAG Clair"
+    wcag_dark: "WCAG Sombre"
+    wcag_dark_theme_name: "WCAG Sombre"
+    default_theme_name: "Par défaut"
     light_theme_name: "Clair"
     dark_theme_name: "Sombre"
     neutral_theme_name: "Neutre"

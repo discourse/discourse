@@ -869,6 +869,7 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
+        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando in "non disturbare", indipendentemente da questa impostazione.'
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -1627,6 +1628,12 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
+      plus_subcategories_title:
+        one: "%{name} e una sottocategoria"
+        other: "%{name} e %{count} sottocategorie"
+      plus_subcategories:
+        one: "+ %{count} sottocategoria"
+        other: "+ %{count} sottocategorie"
     select_kit:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
@@ -1753,6 +1760,7 @@ it:
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
       link_url_placeholder: "Incolla un URL o digita per cercare argomenti"
+      blockquote_title: "Citazione"
       blockquote_text: "Citazione"
       code_title: "Testo preformattato"
       code_text: "rientra il testo preformattato di 4 spazi"
@@ -1807,6 +1815,7 @@ it:
           label: "Nuovo Argomento"
         shared_draft:
           label: "Bozza Condivisa"
+          desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
@@ -2513,6 +2522,7 @@ it:
       has_replies:
         one: "%{count} Risposta"
         other: "%{count} Risposte"
+      has_replies_count: "%{count}"
       unknown_user: "(utente sconosciuto / eliminato)"
       has_likes_title:
         one: "Una persona ha messo \"Mi piace\" a questo messaggio"
@@ -2521,6 +2531,10 @@ it:
       has_likes_title_you:
         one: "tu e un'altra persona avete messo \"Mi piace\" a questo messaggio"
         other: "tu e altre %{count} persone avete messo \"Mi piace\" a questo messaggio"
+      filtered_replies_hint:
+        one: "Visualizza questo messaggio e la sua risposta"
+        other: "Visualizza questo messaggio e le sue %{count} risposte"
+      in_reply_to: "Carica post padre"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -2677,6 +2691,10 @@ it:
           edit_bookmark:
             name: "Modifica Segnalibro"
             description: "Modifica il nome del segnalibro o modifica la data e l'ora del promemoria"
+      filtered_replies:
+        viewing_posts_by: "Visualizzazione di %{post_count} messaggi di"
+        post_number: "%{username}, messaggio n. %{post_number}"
+        show_all: "Mostra tutto"
     category:
       can: "può&hellip;"
       none: "(nessuna categoria)"
@@ -2727,6 +2745,17 @@ it:
       change_in_category_topic: "Modifica Descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       security: "Sicurezza"
+      security_add_group: "Aggiungi un gruppo"
+      permissions:
+        group: "Gruppo"
+        see: "Vedi"
+        reply: "Rispondi"
+        create: "Crea"
+        no_groups_selected: "Nessun gruppo ha ottenuto l'accesso; questa categoria sarà visibile solo allo staff."
+        everyone_has_access: 'Questa categoria è pubblica, tutti possono vedere, rispondere e creare messaggi. Per limitare i permessi, rimuovere uno o più permessi concessi al gruppo "tutti".'
+        toggle_reply: "Attiva/Disattiva permesso di risposta"
+        toggle_full: "Attiva/Disattiva permesso di creazione"
+        inherited: 'Questo permesso è ereditato da "tutti"'
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
@@ -3473,6 +3502,7 @@ it:
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
               update: Aggiorna le informazioni del profilo utente.
+              log_out: Disconnetti tutte le sessioni per un utente.
               anonymize: Anonimizza gli account utente.
               delete: Elimina account utente.
             email:
@@ -4578,6 +4608,7 @@ it:
         image: Immagine
         icon_help: "Inserisci il nome di un'icona Font Awesome (usa il prefisso 'far-' per le icone Regular e 'fab-' per le icone Brands)"
         image_help: "Inserisci l'URL dell'immagine (sovrascrive il campo icona, se entrambi sono impostati)"
+        read_only_setting_help: "Personalizza testo"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente

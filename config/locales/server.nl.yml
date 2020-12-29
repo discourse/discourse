@@ -410,26 +410,6 @@ nl:
     until_posts:
       one: "%{count} bericht"
       other: "%{count} berichten"
-    "new-topic": |
-      Welkom op %{site_name} &ndash; **bedankt voor het starten van een nieuwe conversatie!**
-
-      - Klinkt de titel interessant als u deze hardop leest? Is het een goede samenvatting?
-
-      - Wie zou hierin geïnteresseerd zijn? Waarom is het van belang? Wat voor reacties verwacht u te krijgen?
-
-      - Gebruik algemeen gebruikte woorden, zodat anderen uw topic kunnen *vinden*. Selecteer een categorie om uw topic met verwante topics te groeperen.
-
-      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
-    "new-reply": |
-      Welkom op %{site_name} &ndash; **bedankt voor uw bijdrage!**
-
-      - Levert uw antwoord een nuttige bijdrage aan de conversatie, hoe klein dan ook?
-
-      - Wees aardig voor de andere gemeenschapsleden.
-
-      - Opbouwende kritiek is welkom, maar geef kritiek op *ideeën*, niet op mensen.
-
-      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
     avatar: |
       ### Wat dacht u van een afbeelding voor uw account?
 
@@ -2330,10 +2310,6 @@ nl:
       subject_template: "Welkom bij %{site_name}!"
     tl2_promotion_message:
       subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
-      text_body_template: |
-        We hebben uw [vertrouwensniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) gepromoveerd!
-
-        We nodigen u uit om mee te blijven doen – we vinden het leuk om u in de buurt te hebben.
     backup_succeeded:
       title: "Back-up geslaagd"
       subject_template: "Back-up voltooid"

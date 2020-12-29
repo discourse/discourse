@@ -428,26 +428,6 @@ it:
     until_posts:
       one: "%{count} messaggio"
       other: "%{count} messaggi"
-    "new-topic": |
-      Benvenuto su %{site_name} &mdash; **grazie per voler iniziare una nuova conversazione!**
-
-      - Il titolo ti sembra interessante se lo leggi ad alta voce? E' un buon riassunto?
-
-      - Chi potrebbe esserne interessato? Perché è importante? Che tipo di risposte vorresti?
-
-      - Includi parole comunemente usate nel tuo argomento in modo che gli altri possano *trovarlo*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria.
-
-      Per maggiori informazioni, [leggi le linee guida della comunità](%{base_path}/guidelines). Questo pannello sarà visualizzato solo per i tuoi primi %{education_posts_text}.
-    "new-reply": |
-      Benvenuto su %{site_name} &mdash; **grazie per il tuo contributo!**
-
-      - La tua risposta migliora in qualche modo la conversazione?
-
-      - Sii gentile con gli altri membri della comunità.
-
-      - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
-
-      Per maggiori informazioni, [leggi le linee guida della nostra comunità](%{base_path}/guidelines). Questo pannello sarà visualizzato soltanto per i tuoi primi %{education_posts_text}.
     avatar: |
       ### Che ne dici di aggiungere un'immagine al tuo account?
 
@@ -1707,6 +1687,7 @@ it:
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico dei distintivi relativi alle categorie."
     default_dark_mode_color_scheme_id: "Lo schema di colori usato in modalità scuro."
+    dark_mode_none: "Nessuno"
     max_image_size_kb: "La dimensione massima di un&#39;allegato immagine in KB.  Deve essere configurato anche in nginx (client_max_body_size) / apache o proxy. Le immagini più grandi di questa e più piccole di client_max_body_size verranno ridimensionate per adattarsi al caricamento."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
@@ -1780,6 +1761,7 @@ it:
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."
     email_total_attachment_size_limit_kb: "Dimensione massima dei files allegati alle email in uscita. Imposta a 0 per disabilitare l'invio di allegati."
     post_excerpts_in_emails: "Nelle emails di notifica, invia sempre un estratto invece del messaggio completo"
+    delete_rejected_email_after_days: "Elimina le email rifiutate più vecchie di (n) giorni."
     manual_polling_enabled: "Push delle email utilizzando le API per le risposte email."
     pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
     pop3_polling_ssl: "Usa SSL per la connessione al server POP3 (raccomandato)."

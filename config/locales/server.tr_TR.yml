@@ -357,26 +357,6 @@ tr_TR:
     until_posts:
       one: "%{count} gönderi"
       other: "%{count} gönderi"
-    "new-topic": |
-      %{site_name} topluluğuna hoş geldiniz &mdash; **yeni bir sohbet başlattığınız için teşekkür ederiz! **
-
-      - Yüksek sesle okuduğunuzda başlık ilgi çekici geliyor mu? İyi bir özet mi?
-
-      - Bununla kim ilgilenirdi? Neden önemli? Ne gibi cevaplar almayı diliyorsunuz?
-
-      - Diğerlerinin de kolayca *bulabilmesi * için konunuzun içerisine sıkça kullanılan kelimeler dahil edin. Konunuzun benzer konularla gruplanması için bir kategori seçin.
-
-      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
-    "new-reply": |
-      %{site_name} topluluğuna hoş geldiniz &mdash; **katılımınız için teşekkür ederiz!**
-
-      - Cevabınız sohbeti bir şekilde geliştiriyor mu?
-
-      - Topluluğun diğer üyelerine karşı nazik olun.
-
-      - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
-
-      Daha fazlası için, [topluluk yönergelerimize bakın](%{base_path}/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
     avatar: |
       ### Hesabınız için bir resime ne dersiniz?
 

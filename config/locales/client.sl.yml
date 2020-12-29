@@ -438,6 +438,7 @@ sl:
       title: "Pregled"
       topic: "Tema:"
       filtered_user: "Uporabnik"
+      filtered_reviewed_by: "Pregledal"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -2553,6 +2554,7 @@ sl:
         two: "%{count} odgovora"
         few: "%{count} odgovore"
         other: "%{count} odgovorov"
+      has_replies_count: "%{count}"
       has_likes_title:
         one: "%{count} uporabniku je prispevek všeč"
         two: "%{count} uporabnikoma je prispevek všeč"
@@ -2564,6 +2566,11 @@ sl:
         two: "vam in %{count} drugima uporabnikoma je prispevek všeč"
         few: "vam in %{count} drugim uporabnikom je prispevek všeč"
         other: "vam in %{count} drugim uporabnikom je prispevek všeč"
+      filtered_replies_hint:
+        one: "Oglejte si to objavo in njen odgovor"
+        two: "Oglejte si to objavo in njena %{count} odgovora"
+        few: "Oglejte si to objavo in njene %{count} odgovore"
+        other: "Oglejte si to objavo in njenih %{count} odgovorov"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -2697,6 +2704,12 @@ sl:
       bookmarks:
         created: "Ustvarjeno"
         name: "Polno ime"
+      filtered_replies:
+        viewing_posts_by: "Ogled %{post_count} objav avtorja"
+        viewing_subset: "Nekateri odgovori so strnjeni"
+        viewing_summary: "Ogled povzetka te teme"
+        post_number: "%{username}, objava #%{post_number}"
+        show_all: "Pokaži vse"
     category:
       can: "lahko&hellip; "
       none: "(brez kategorije)"
@@ -3303,6 +3316,17 @@ sl:
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
+    do_not_disturb:
+      title: "Ne moti za ..."
+      save: "Shrani"
+      label: "Ne moti"
+      remaining: "%{remaining} preostalo"
+      options:
+        half_hour: "30 minut"
+        one_hour: "1 ura"
+        two_hours: "2 uri"
+        tomorrow: "Do jutri"
+        custom: "Po meri"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -4102,6 +4126,7 @@ sl:
         icon: Ikona
         image: Slika
         image_help: "Vnesi URL do slike (ima prednost pred ikono)"
+        read_only_setting_help: "Prilagodite besedilo"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami
         trigger: Sproži

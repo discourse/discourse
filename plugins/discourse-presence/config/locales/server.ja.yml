@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ja: 
+ja:
+  site_settings:
+    presence_enabled: "現在のトピックに現在返信している、または現在編集しているユーザーを表示しますか？"
+    presence_max_users_shown: "表示されるユーザーの最大数。"

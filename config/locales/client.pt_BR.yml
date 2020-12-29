@@ -856,7 +856,7 @@ pt_BR:
       allow_private_messages: "Permitir que outros usuários me enviem mensagens pessoais"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Habilitar resposta citando o texto destacado"
-      enable_defer: "Habilitar adiar para marcar tópicos não lidos"
+      enable_defer: "Habilitar adiar para marcar tópicos como não lidos"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -1930,7 +1930,7 @@ pt_BR:
         title: "Editar"
       defer:
         help: "Marcar como não lido"
-        title: "Delegar"
+        title: "Adiar"
       feature_on_profile:
         help: "Adicionar um link para este tópico em seu cartão de usuário e perfil"
         title: "Recurso no Perfil"
@@ -2318,8 +2318,8 @@ pt_BR:
       show_full: "Exibir mensagem completa"
       show_hidden: "Ver o conteúdo ignorado."
       deleted_by_author:
-        one: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} hora a exceto se forem sinalizadas)"
-        other: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} horas a exceto se forem sinalizadas)"
+        one: "(postagem retirada pelo autor, será automaticamente excluída em %{count} hora a menos que seja sinalizada)"
+        other: "(postagem retirada pelo autor, será automaticamente excluída em %{count} horas a menos que seja sinalizada)"
       collapse: "colapso"
       expand_collapse: "expandir/encolher"
       locked: "um membro da equipe bloqueou este post de ser editado"

@@ -407,28 +407,16 @@ ko:
   education:
     until_posts:
       other: "글 %{count}개"
-    "new-topic": |2
+    "new-topic": |
+      %{site_name} &mdash;에 오신 것을 환영합니다. **새로운 대화를 시작해 주셔서 감사합니다!**
 
-      %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
+      - 제목을 소리 내어 읽었을 때 흥미롭게 들리나요? 잘 요약되었나요?
 
-      - 제목을 큰소리로 읽어봤을 때 흥미롭게 들리던가요? 좋은 요약문인가요?
+      - 누가 관심을 가질까요? 왜 중요한가요? 어떤 종류의 응답을 원하시나요?
 
-      - 누가 무엇때문에 관심을 보일까요? 어떤 대답을 듣고 싶나요?
-
-      - 사람들이 *검색*할 수 있도록 토픽에 흔히 사용하는 단어를 집어넣으세요. 관련 토픽과 같이 엮으려면 해당 카테고리를 선택하시고요.
+      - 다른 사람들이 찾을 수 있도록 주제에 자주 사용되는 단어를 포함하세요. 주제를 관련 주제로 그룹화하려면 카테고리 (또는 태그)를 선택하십시오.
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)을 참조하세요.
-    "new-reply": |2
-
-      %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
-
-      - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
-
-      - 당신의 커뮤니티 회원에게 예의를 갖춰주세요.
-
-      - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
-
-      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)를 참조하여 주세요.
     avatar: |2
 
       ### 계정에 사진을 걸어두는 건 어떠세요?
@@ -2540,10 +2528,6 @@ ko:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
-      text_body_template: |
-        [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)으로 승격했습니다.
-
-        앞으로도 많은 참여를 부탁드립니다 - 사용자님들과 함께하는 것이 즐겁습니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"

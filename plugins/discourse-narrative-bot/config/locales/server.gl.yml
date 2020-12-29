@@ -5,26 +5,111 @@
 # https://translate.discourse.org/
 
 gl:
+  site_settings:
+    discourse_narrative_bot_enabled: "Activar o Discourse Narrative Bot (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Desactivar a publicación de benvida do Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Nomes de usuario que o Discourse Narrative Bot debería ignorar"
+    discourse_narrative_bot_disable_public_replies: "Desactivar as respostas públicas do Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Tipo de publicación de benvida que o Discourse Narrative Bot debería enviar"
+    discourse_narrative_bot_welcome_post_delay: "Esperar (n) segundos antes de enviar a publicación de benvida do Discourse Narrative Bot"
+    discourse_narrative_bot_skip_tutorials: "Titoriais do Discourse Narrative Bot que se poden saltar"
+  badges:
+    certified:
+      name: Certificado
+      description: "Completou o noso novo titorial de usuario"
+      long_description: |
+        Está insignia conséguese tras completar correctamente o titorial interactivo do novo usuario. Tivo a iniciativa de aprender as ferramentas básicas de discusión e agora ten a certificación!
+    licensed:
+      name: Licenciado
+      description: "Completou o noso titorial avanzado de usuario"
+      long_description: |
+        Esta insignia conséguese tras completar correctamente o titorial interactivo avanzado de novo usuario. Adquiriu as ferramentas avanzadas de discusión — e agora está totalmente licenciado!
   discourse_narrative_bot:
+    bio: "Ola, eu non son unha persoa real. Son un bot que pode instruílo sobre este sitio. Para interactuar comigo, envíeme unha mensaxe ou mención **`@%{discobot_username}`** en calquera sitio."
+    tl2_promotion_message:
+      subject_template: "Agora que foi promocionado, é o momento de aprender sobre algunhas funcionalidades avanzadas!"
+      text_body_template: |
+        Responda a esta mensaxe con `@%{discobot_username} %{reset_trigger}` para atopar máis info sobre o que podo facer.
+    timeout:
+      message: |-
+        Ei @%{username}, un saúdo porque hai tempo que non se sabe nada de vostede.
+
+        - Para continuar, respóndame en calquera momento.
+
+        - Se quere saltar este paso, diga %{skip_trigger}`.
+
+        - Para volver comezar, diga `%{reset_trigger}`.
+
+        Mais se prefire que non, tamén está ben. Eu son un robot. Non se van ferir os meus sentimentos. :sob:
+    dice:
+      trigger: "pregar"
+      invalid: |-
+        Laméntoo, é matematicamente imposíbel lograr esa combinación de dados :confounded:
+      not_enough_dice:
+        one: "Só teño %{count} dado. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Seino!"
+        other: "Só teño %{count} dados. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Seino!"
+      out_of_range: |-
+        Sabía que [o número máximo de lados] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado matematicamente equitativo é 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "cita"
+      "1":
+        quote: "No medio das dificultades atópase a oportunidade"
+        author: "Albert Einstein"
+      "2":
+        quote: "A liberdade non merece ese nome se non implica a liberdade de errar."
+        author: "Mahatma Gandhi"
+      "3":
+        quote: "Non chores porque terminou, sorrí porque ocorreu."
+        author: "Dr Seuss"
+      "4":
+        quote: "Se queres que algo se faga ben, faino ti mesmo."
+        author: "Charles-Guillaume Étienne"
+      "5":
+        quote: "Se cres que podes, terás medio camiño feito."
+        author: "Theodore Roosevelt"
+      "6":
+        quote: "A vida é coma unha caixa de bombóns. Nunca sabes que che vai tocar."
+        author: "A nai de Forrest Gump"
+      "7":
+        quote: "Un pequeno paso para un home, un salto xigante para a humanidade."
+        author: "Neil Armstrong"
+      "8":
+        quote: "Cada día fai unha cousa que che arrepíe."
+        author: "Eleanor Roosevelt"
+      "9":
+        quote: "As equivocacións son sempre esquecíbeis, se un ten a coraxe para admitilas."
+        author: "Bruce Lee"
+      "10":
+        quote: "Sempre que a mente dun home poida concibilo e crer niso, pode conseguirse."
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
+      trigger: "fortuna"
       answers:
-        "1": "It is certain"
-        "2": "It is decidedly so"
-        "3": "Without a doubt"
-        "4": "Yes definitely"
-        "5": "You may rely on it"
-        "6": "As I see it, yes"
-        "7": "Most likely"
-        "8": "Outlook good"
+        "1": "É certo"
+        "2": "De certo que é así"
+        "3": "Sen dúbida"
+        "4": "Si, desde logo"
+        "5": "Podes confiar niso"
+        "6": "Tal como o vexo, si"
+        "7": "Máis seguro"
+        "8": "O panorama é bo"
         "9": "Si"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
-        "12": "Ask again later"
-        "13": "Better not tell you now"
-        "14": "Cannot predict now"
-        "15": "Concentrate and ask again"
-        "16": "Don't count on it"
-        "17": "My reply is no"
-        "18": "My sources say no"
-        "19": "Outlook not so good"
-        "20": "Very doubtful"
+        "10": "As trazas apuntan a que si"
+        "11": "Resposta confusa, ténteo de novo"
+        "12": "Pregunte outra vez máis tarde"
+        "13": "Mellor que non cho diga agora"
+        "14": "Non o podo predicir agora"
+        "15": "Concéntrese e pregunte outra vez"
+        "16": "Non conte con iso"
+        "17": "A miña resposta é non"
+        "18": "As miñas fontes din que non"
+        "19": "O panorama non se ve ben"
+        "20": "Moi dubidoso"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "arrrincar"

@@ -428,26 +428,6 @@ de:
     until_posts:
       one: "%{count} Beitrag"
       other: "%{count} Beiträge"
-    "new-topic": |
-      Willkommen bei %{site_name} &mdash; **danke, dass du ein neues Thema erstellst!**
-
-      - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
-
-      - Wer sollte sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art Antworten wünschst du dir?
-
-      - Verwende gebräuchliche, gut definierte Wörter, damit dein Thema *gefunden* werden kann. Wähle eine Kategorie, um es mit ähnlichen Themen zu gruppieren.
-
-      Mehr Tipps findest du in [unseren Community-Richtlinien](%{base_path}/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
-    "new-reply": |
-      Willkommen bei %{site_name} &mdash; **Danke für deinen Beitrag zum Thema!**
-
-      - Fügt dein Beitrag dem Gespräch etwas Neues hinzu, und sei es auch wenig?
-
-      - Behandle deine Gesprächspartner mit demselben Respekt, den du von ihnen erwartest.
-
-      - Kritik ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
-
-      Beachte bitte auch [unsere Richtlinien](%{base_path}/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
     avatar: |
       ### Wie wär’s mit einem Bild für dein Konto?
 
@@ -2619,10 +2599,6 @@ de:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "Herzlichen Glückwunsch zur Beförderung deiner Vertrauensstufe!"
-      text_body_template: |
-        Wir haben dich auf eine höhere [Vertrauensstufe](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) befördert!
-
-        Wir laden dich ein, dich weiter zu engagieren und freuen uns, dich bei uns zu haben.
     backup_succeeded:
       title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"

@@ -224,26 +224,6 @@ sw:
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
-    "new-topic": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuanzisha majadiliano mapya!**
-
-      - Je kichwa cha habari ni kizuri ukikisoma kwa sauti? Je Muhtasari ni nzuri?
-
-      - Nani angependa kusoma hiki? Kwa nini ni muhimu? Unategemea upate majibu ya aina gani?
-
-      - Tumia maneno ambayo yanatumika mara kwa mara kwenye mada zako ili watu wengine waweze *kupata* ulichoandika. Kuweka mada yako pamoja na zingine zinazoendana na yako, chagua kategoria.
-
-      Kwa taarifa zaidi, [angalia mwongozo wa jamii yetu](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} ya kwanza tu.
-    "new-reply": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuchangia!**
-
-      - Jibu lako linaendeleza majadiliano kwa njia moja au nyingine?
-
-      - Kuwa mstaarabu na wanachama wenzako.
-
-      - Ukosoaji Unaendeleza unakaribishwa, ila kosoa *fikra au wazo*, sio watu.
-
-      Kwa mengine zaidi, [angalia mwongozo wa jamii](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} tu.
     avatar: |2
        ### Unaonaje ukiongeza picha kwenye akaunti yako?
 

@@ -387,26 +387,6 @@ gl:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicacións"
-    "new-topic": |
-      Benvido/a a %{site_name} &mdash; **grazas por iniciares unha nova conversa!**
-
-      - Se o les en voz alta, soa ben o seu título? É un bo resumo do que trata?
-
-      - Quen terá interese por ler isto? Por que é importante? A que tipo de respostas queres dar pé?
-
-      - Inclúe palabras de uso frecuente no teu tema para facilitar que poida ser atopado. Para agrupalo con outros temas relacionados, selecciona unha categoría.
-
-      Para máis información, [visita as directrices da nosa comunidade](%{base_path}/directrices). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
-    "new-reply": |
-      Benvido/a a %{site_name} &mdash; **grazas pola túa contribución!**
-
-      - Dalgún xeito a túa resposta mellora a conversa?
-
-      - Sé amable cos demais membros da comunidade.
-
-      - A crítica construtiva é benvida, mais lembra criticar as ideas non as persoas.
-
-      Para máis información, [visita as directrices da nosa comunidade](%{base_path}/directrices). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
     avatar: |
       ### Que tal se lle engades unha imaxe á túa conta?
 
@@ -1274,6 +1254,7 @@ gl:
     memory_warning: "O teu servidor estase a executar con menos de 1 GB da memoria total. Recoméndase ao menos unha memoria de 1 GB."
     s3_config_warning: 'O servidor está configurado para subir ficheiros a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_backup_config_warning: 'O servidor está configurado para subir copias de seguranza a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
+    s3_cdn_warning: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
     image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instálao utilizando o teu administrador de paquetes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descarga a última versión</a>.'
     failing_emails_warning: 'Hai %{num_failed_jobs} tarefas de correo electrónico que fallaron. Comproba o teu app.yml e asegúrate de que os axustes do servidor de correo son correctos. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira as tarefas que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
