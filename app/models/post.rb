@@ -1174,4 +1174,5 @@ end
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
 #  index_posts_on_user_id_and_created_at     (user_id,created_at)
+#  index_posts_user_and_likes                (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #
