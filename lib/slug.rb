@@ -6,19 +6,18 @@ module Slug
   CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
   MAX_LENGTH = 255
 
-  def self.for(string, default = 'topic', max_length = MAX_LENGTH)
+  def self.for(string, default = 'topic', max_length = MAX_LENGTH, method: nil)
     string = string.gsub(/:([\w\-+]+(?::t\d)?):/, '') if string.present? # strip emoji strings
-
-    if SiteSetting.slug_generation_method == 'encoded'
-      max_length = 9999 # do not truncate encoded slugs
-    end
+    method = (method || SiteSetting.slug_generation_method || :ascii).to_sym
+    max_length = 9999 if method == :encoded # do not truncate encoded slugs
 
     slug =
-      case (SiteSetting.slug_generation_method || :ascii).to_sym
+      case method
       when :ascii then self.ascii_generator(string)
       when :encoded then self.encoded_generator(string)
       when :none then self.none_generator(string)
       end
+
     slug = self.prettify_slug(slug, max_length: max_length)
     (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
   end
