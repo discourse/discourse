@@ -88,7 +88,7 @@ class Topic < ActiveRecord::Base
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
     end
 
-    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?) }
+    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?, local: true) }
 
     infos.sort_by! { |i| -i[:width] * i[:height] }
   end
@@ -123,7 +123,7 @@ class Topic < ActiveRecord::Base
     end
 
     raw_url = thumbnail&.optimized_image&.url || image_upload&.url
-    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?)
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
   end
 
   def featured_users

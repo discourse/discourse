@@ -76,8 +76,9 @@ class UrlHelper
     url[/x-amz-(algorithm|credential)/i].present?
   end
 
-  def self.cook_url(url, secure: false)
-    return url unless is_local(url)
+  def self.cook_url(url, secure: false, local: nil)
+    local = is_local(url) if local.nil?
+    return url if !local
 
     url = secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
