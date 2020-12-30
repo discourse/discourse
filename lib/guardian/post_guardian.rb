@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#mixin for all guardian methods dealing with post permissions
+# mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
   def unrestricted_link_posting?
@@ -104,7 +104,6 @@ module PostGuardian
     user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
-  # Creating Method
   def can_create_post?(parent)
     return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
 
@@ -115,7 +114,6 @@ module PostGuardian
     )
   end
 
-  # Editing Method
   def can_edit_post?(post)
     if Discourse.static_doc_topic_ids.include?(post.topic_id) && !is_admin?
       return false
@@ -181,7 +179,6 @@ module PostGuardian
     post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
   end
 
-  # Deleting Methods
   def can_delete_post?(post)
     return false if !can_see_post?(post)
 
@@ -198,11 +195,11 @@ module PostGuardian
     can_moderate
   end
 
-  # Recovery Method
   def can_recover_post?(post)
     return false unless post
 
-    topic = Topic.with_deleted.find(post.topic_id) if post.topic_id
+    # PERF, vast majority of the time topic will not be deleted
+    topic = (post.topic || Topic.with_deleted.find(post.topic_id)) if post.topic_id
 
     if can_moderate_topic?(topic)
       !!post.deleted_at
