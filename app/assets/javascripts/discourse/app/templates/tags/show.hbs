@@ -47,7 +47,7 @@
         <div id="list-area">
           {{#unless loading}}
             {{#if list.topics}}
-              {{#discovery-topics-list model=list refresh=(action "refresh")}}
+              {{#discovery-topics-list model=list refresh=(action "refresh")  as |discoveryTopicList|}}
                 {{bulk-select-button selected=selected action=(action "refresh") category=category}}
                 {{topic-list
                   topics=list.topics
@@ -59,6 +59,7 @@
                   order=order
                   ascending=ascending
                   changeSort=(action "changeSort")
+                  onScroll=discoveryTopicList.saveScrollPosition
                   scrollOnLoad=true
                 }}
               {{/discovery-topics-list}}
