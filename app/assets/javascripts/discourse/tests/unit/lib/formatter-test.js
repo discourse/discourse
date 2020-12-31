@@ -143,6 +143,22 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
     assert.equal(formatDays(500), shortDateYear(500));
     assert.equal(formatDays(365 * 2 + 1), shortDateYear(365 * 2 + 1)); // one leap year
 
+    assert.equal(formatMins(-1), "1m");
+    assert.equal(formatMins(-2), "2m");
+    assert.equal(formatMins(-60), "1h");
+    assert.equal(formatHours(-4), "4h");
+    assert.equal(formatHours(-23), "23h");
+    assert.equal(formatHours(-23.5), "1d");
+    assert.equal(formatDays(-1), "1d");
+    assert.equal(formatDays(-14), "14d");
+    assert.equal(formatDays(-15), shortDateYear(-15));
+    assert.equal(formatDays(-92), shortDateYear(-92));
+    assert.equal(formatDays(-364), shortDateYear(-364));
+    assert.equal(formatDays(-365), shortDateYear(-365));
+    assert.equal(formatDays(-366), shortDateYear(-366)); // leap year
+    assert.equal(formatDays(-500), shortDateYear(-500));
+    assert.equal(formatDays(-365 * 2 - 1), shortDateYear(-365 * 2 - 1)); // one leap year
+
     var originalValue = this.siteSettings.relative_date_duration;
     this.siteSettings.relative_date_duration = 7;
     assert.equal(formatDays(7), "7d");

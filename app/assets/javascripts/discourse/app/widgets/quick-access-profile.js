@@ -24,7 +24,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   },
 
   itemHtml(item) {
-    return this.attach("quick-access-item", item);
+    const widgetType = item.widget || "quick-access-item";
+    return this.attach(widgetType, item);
   },
 
   _getItems() {
@@ -79,6 +80,8 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         className: "preferences",
       }
     );
+    defaultItems.push({ widget: "do-not-disturb" });
+
     return defaultItems;
   },
 
