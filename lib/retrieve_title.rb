@@ -65,7 +65,7 @@ module RetrieveTitle
       end
       if !encoding && content_type = _response['content-type']&.strip&.downcase
         if content_type =~ /charset="?([a-z0-9_-]+)"?/
-          encoding = $1
+          encoding = Regexp.last_match(1)
           if !Encoding.list.map(&:name).map(&:downcase).include?(encoding)
             encoding = nil
           end
