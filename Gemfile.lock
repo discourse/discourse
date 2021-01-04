@@ -127,9 +127,11 @@ GEM
     exifr (1.3.9)
     fabrication (2.21.1)
     fakeweb (1.3.0)
-    faraday (1.2.0)
+    faraday (1.3.0)
+      faraday-net_http (~> 1.0)
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
+    faraday-net_http (1.0.0)
     fast_blank (1.0.0)
     fast_xs (0.8.0)
     fastimage (2.2.0)
