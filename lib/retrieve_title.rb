@@ -9,9 +9,9 @@ module RetrieveTitle
     # If there was a connection error, do nothing
   end
 
-  def self.extract_title(html)
+  def self.extract_title(html, encoding = nil)
     title = nil
-    if doc = Nokogiri::HTML5(html)
+    if doc = Nokogiri::HTML5(html, nil, encoding)
 
       title = doc.at('title')&.inner_text
 
@@ -54,6 +54,7 @@ module RetrieveTitle
 
     current = nil
     title = nil
+    encoding = nil
 
     fd.get do |_response, chunk, uri|
 
@@ -62,9 +63,17 @@ module RetrieveTitle
       else
         current = chunk
       end
+      if !encoding && content_type = _response['content-type']&.strip&.downcase
+        if content_type =~ /charset="?([a-z0-9_-]+)"?/
+          encoding = $1
+          if !Encoding.list.map(&:name).map(&:downcase).include?(encoding)
+            encoding = nil
+          end
+        end
+      end
 
       max_size = max_chunk_size(uri) * 1024
-      title = extract_title(current)
+      title = extract_title(current, encoding)
       throw :done if title || max_size < current.length
     end
     title
