@@ -295,7 +295,7 @@ export default function (options) {
 
     if (isInput || options.treatAsTextarea) {
       return createPopper(me[0], div[0], {
-        placement: "auto-start",
+        placement: "bottom-start",
         strategy: "fixed",
       });
     }
