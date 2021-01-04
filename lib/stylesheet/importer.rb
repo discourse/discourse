@@ -21,10 +21,6 @@ module Stylesheet
     def self.register_imports!
       @special_imports = {}
 
-      register_import "theme_field" do
-        Import.new("#{theme_dir(@theme_id)}/theme_field.scss", source: @theme_field)
-      end
-
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
@@ -118,28 +114,6 @@ module Stylesheet
         Import.new("theme_colors.scss", source: contents)
       end
 
-      register_import "theme_variables" do
-        contents = +""
-
-        theme&.all_theme_variables&.each do |field|
-          if field.type_id == ThemeField.types[:theme_upload_var]
-            if upload = field.upload
-              url = upload_cdn_path(upload.url)
-              contents << "$#{field.name}: unquote(\"#{url}\");\n"
-            end
-          else
-            contents << to_scss_variable(field.name, field.value)
-          end
-        end
-
-        theme&.included_settings&.each do |name, value|
-          next if name == "theme_uploads"
-          contents << to_scss_variable(name, value)
-        end
-
-        Import.new("theme_variable.scss", source: contents)
-      end
-
       register_import "category_backgrounds" do
         contents = +""
         Category.where('uploaded_background_id IS NOT NULL').each do |c|
@@ -182,9 +156,10 @@ module Stylesheet
       resolved_ids = Theme.transform_ids([theme_id])
 
       if resolved_ids
-        contents << " @import \"theme_variables\";"
+        theme = Theme.find_by_id(theme_id)
+        contents << theme.scss_variables
         Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
-          contents << "// Color definitions from #{Theme.find_by_id(theme_id)&.name}\n\n"
+          contents << "// Color definitions from #{theme.name}\n\n"
           contents << row.value
         end
       end
@@ -201,14 +176,12 @@ module Stylesheet
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
-      @theme_field = options[:theme_field]
       @color_scheme_id = options[:color_scheme_id]
 
       if @theme && !@theme_id
         # make up an id so other stuff does not bail out
         @theme_id = @theme.id || -1
       end
-      @importable_theme_fields = {}
     end
 
     def import_files(files)
@@ -224,7 +197,6 @@ module Stylesheet
 
     def theme_import(target, attr)
       fields = theme.list_baked_fields(target, attr)
-
       fields.map do |field|
         value = field.value
         if value.present?
@@ -246,43 +218,6 @@ module Stylesheet
         @theme = (@theme_id && Theme.find(@theme_id)) || :nil
       end
       @theme == :nil ? nil : @theme
-    end
-
-    def theme_dir(import_theme_id)
-      "theme_#{import_theme_id}"
-    end
-
-    def extract_theme_id(path)
-      path[/^theme_([0-9]+)\//, 1]
-    end
-
-    def importable_theme_fields(import_theme_id)
-      return {} unless theme && import_theme = Theme.find(import_theme_id)
-      @importable_theme_fields[import_theme_id] ||= begin
-        hash = {}
-        import_theme.theme_fields.where(target_id: Theme.targets[:extra_scss]).each do |field|
-          hash[field.name] = field.value
-        end
-        hash
-      end
-    end
-
-    def match_theme_import(path, parent_path)
-      # Only allow importing theme stylesheets from within stylesheets in the same theme
-      return false unless theme && import_theme_id = extract_theme_id(parent_path) # Could be a child theme
-      parent_dir, _ = File.split(parent_path)
-
-      # Could be relative to the importing file, or relative to the root of the theme directory
-      search_paths = [parent_dir, theme_dir(import_theme_id)].uniq
-      search_paths.each do |search_path|
-        resolved = Pathname.new("#{search_path}/#{path}").cleanpath.to_s # Remove unnecessary ./ and ../
-        next unless resolved.start_with?("#{theme_dir(import_theme_id)}/")
-        resolved_within_theme = resolved.sub(/^theme_[0-9]+\//, "")
-        if importable_theme_fields(import_theme_id).keys.include?(resolved_within_theme)
-          return resolved, importable_theme_fields(import_theme_id)[resolved_within_theme]
-        end
-      end
-      false
     end
 
     def category_css(category)
@@ -309,21 +244,11 @@ module Stylesheet
       contents
     end
 
-    def to_scss_variable(name, value)
-      escaped = SassC::Script::Value::String.quote(value, sass: true)
-      "$#{name}: unquote(#{escaped});\n"
-    end
-
     def imports(asset, parent_path)
       if callback = Importer.special_imports[asset]
         instance_eval(&callback)
       else
-        path, source = match_theme_import(asset, parent_path)
-        if path && source
-          Import.new(path, source: source)
-        else
-          Import.new(asset + ".scss")
-        end
+        Import.new(asset + ".scss")
       end
     end
   end

@@ -285,7 +285,7 @@ describe Stylesheet::Manager do
       let(:scheme) { ColorScheme.base }
 
       it "includes theme color definitions in color scheme" do
-        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile(force: true)
         expect(stylesheet).to include("--special: rebeccapurple")
       end
 

@@ -13,7 +13,7 @@ module Stylesheet
 
       if Importer.special_imports[asset.to_s]
         filename = "theme_#{options[:theme_id]}.scss"
-        file += " @import \"theme_variables\";" if Importer::THEME_TARGETS.include?(asset.to_s)
+        file += options[:theme_variables].to_s if options[:theme_variables]
         file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
@@ -33,6 +33,9 @@ module Stylesheet
     def self.compile(stylesheet, filename, options = {})
       source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map"
 
+      load_paths = [Stylesheet::Common::ASSET_ROOT]
+      load_paths += options[:load_paths] if options[:load_paths]
+
       engine = SassC::Engine.new(stylesheet,
                                  importer: Importer,
                                  filename: filename,
@@ -43,7 +46,7 @@ module Stylesheet
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
                                  color_scheme_id: options[:color_scheme_id],
-                                 load_paths: [Stylesheet::Common::ASSET_ROOT])
+                                 load_paths: load_paths)
 
       result = engine.render
 

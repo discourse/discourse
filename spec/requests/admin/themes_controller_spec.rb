@@ -342,7 +342,7 @@ describe Admin::ThemesController do
 
       child_theme = Fabricate(:theme, component: true)
 
-      upload = Fabricate(:upload)
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(Discourse.system_user.id)
 
       put "/admin/themes/#{theme.id}.json", params: {
         theme: {
