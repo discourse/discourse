@@ -1379,6 +1379,10 @@ class User < ActiveRecord::Base
     do_not_disturb_timings.where('starts_at <= ? AND ends_at > ?', now, now)
   end
 
+  def do_not_disturb_until
+    active_do_not_disturb_timings.maximum(:ends_at)
+  end
+
   protected
 
   def badge_grant

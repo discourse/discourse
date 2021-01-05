@@ -3,9 +3,9 @@
 class NotificationEmailer
 
   class EmailUser
-    attr_reader :notification
+    attr_reader :notification, :no_delay
 
-    def initialize(notification)
+    def initialize(notification, no_delay = false)
       @notification = notification
     end
 
@@ -98,11 +98,11 @@ class NotificationEmailer
     end
 
     def default_delay
-      SiteSetting.email_time_window_mins.minutes
+      no_delay ? 0 : SiteSetting.email_time_window_mins.minutes
     end
 
     def private_delay
-      SiteSetting.personal_email_time_window_seconds
+      no_delay ? 0 : SiteSetting.personal_email_time_window_seconds
     end
 
     def post_type
@@ -123,10 +123,11 @@ class NotificationEmailer
     @disabled = false
   end
 
-  def self.process_notification(notification)
+  def self.process_notification(notification, no_delay: false)
+    notification.update(processed: true)
     return if @disabled
 
-    email_user   = EmailUser.new(notification)
+    email_user   = EmailUser.new(notification, no_delay)
     email_method = Notification.types[notification.notification_type]
 
     email_user.public_send(email_method) if email_user.respond_to? email_method

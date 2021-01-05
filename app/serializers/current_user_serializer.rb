@@ -238,8 +238,4 @@ class CurrentUserSerializer < BasicUserSerializer
   def featured_topic
     object.user_profile.featured_topic
   end
-
-  def do_not_disturb_until
-    object.active_do_not_disturb_timings.maximum(:ends_at)
-  end
 end
