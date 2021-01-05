@@ -2057,7 +2057,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？浏览%{catLink}的其他主题或%{latestLink}。"
       read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此主题的最新帖子。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
+      read_more_MF: "还有{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1个未读主题</a>} other {<a href='{basePath}/unread'>#个未读主题</a> }}{BOTH, select, true{和} false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/new'>#1个新主题</a>} other{<a href='{basePath}/new'>#个新主题 </a>}}, 或者{CATEGORY,select,true{浏览其它的{catLink}主题} false{{latestLink}} other{}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 浏览所有分类
       browse_all_tags: 浏览所有标签
@@ -2754,7 +2754,7 @@ zh_CN:
       notify_action: "私信"
       official_warning: "正式警告"
       delete_spammer: "删除垃圾发布者"
-      delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} 和 {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}，删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，并将其邮件地址 <b>{email}</b>加入黑名单。你确定该用户是垃圾广告发布者吗？"
+      delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} 和 {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}，并且删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，同时将其邮件地址 <b>{email}</b>加入永久的黑名单。你确定该用户是垃圾内容制造者吗？"
       yes_delete_spammer: "是的，删除垃圾内容发布者"
       ip_address_missing: "（N/A）"
       hidden_email_address: "（隐藏）"

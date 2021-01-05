@@ -1977,7 +1977,6 @@ pt_BR:
       read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
-      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas as categorias
       view_latest_topics: ver últimos tópicos
@@ -2625,7 +2624,6 @@ pt_BR:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Apagar Spammer"
-      delete_confirm_MF: "Você está prestes a remover {POSTS, plural, one {<b>1</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>{ip_address}</b>, e adicionando o e-mail dele <b>{e-mail}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(escondido)"
@@ -2692,12 +2690,6 @@ pt_BR:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-      low {com uma proporção alta de curtidas}
-      med {com uma proporção muito alta de curtidas}
-      high {com uma proporção extremamente alta de curtidas}
-      other {}}
     original_post: "Resposta original"
     views: "Visualizações"
     views_lowercase:
@@ -3977,7 +3969,6 @@ pt_BR:
         clear_penalty_history:
           title: "Limpar Histórico de Penalidades"
           description: "usuários com penalidades não podem alcançar TL3"
-        delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
         silence: "Silenciar"
         unsilence: "Remover silenciamento"
         silenced: "Silenciado?"

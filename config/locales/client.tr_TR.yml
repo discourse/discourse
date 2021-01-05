@@ -1875,7 +1875,6 @@ tr_TR:
       read_more_in_category: "Daha fazlası için %{catLink} kategorisine göz atabilir ya da %{latestLink}yebilirsin."
       read_more: "Daha fazla okumak mı istiyorsun? %{catLink} ya da %{latestLink}."
       unread_indicator: "Bu konunun son mesajını henüz hiç üye okumamış."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 okunmamış mesaj</a> } other { <a href='{basePath}/unread'># okunmamış mesaj</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='{basePath}/new'>1 yeni</a> konu} other { {BOTH, select, true{ve } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} } var. {CATEGORY, select, true {{catLink} kategorisine} false {{latestLink}} other {}} göz atabilirsin."
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: Son konuları görüntüle
       jump_reply_up: Önceki cevaba geç
@@ -2490,7 +2489,6 @@ tr_TR:
       notify_action: "Mesaj"
       official_warning: "Resmi uyarı"
       delete_spammer: "İstenmeyen e-postayı göndereni sil"
-      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>1</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>1</b> konusunu} other {<b>#</b> konusunu}} silmek üzeresin, ayrıca kullanıcının hesabı kaldırılacak, giriş yaptığı <b>{ip_address}</b> IP adresinden giriş yapması engellenecek ve <b>{email}</b> e-posta adresi kalıcı yasaklı listesine eklenecek. Bu kullanıcının gerçekten bir spamcı olduğuna emin misin?"
       yes_delete_spammer: "Evet, İstenmeyen E-postayı Göndereni Sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -2557,12 +2555,6 @@ tr_TR:
         title: "Bu konu kişisel bir mesajdır"
         help: "Bu konu kişisel bir mesajdır"
     posts: "Gönderiler"
-    posts_likes_MF: |
-      Bu konuda {count, plural, one {1 cevap} other {# cevap}} {ratio, select,
-      low {ve yüksek beğeni/gönderi oranı}
-      med {ve çok yüksek beğeni/gönderi oranı}
-      high {ve aşırı yüksek beğeni/gönderi oranı}
-      other {}} var
     original_post: "Orjinal Gönderi"
     views: "Görüntülenenler"
     views_lowercase:
@@ -3809,7 +3801,6 @@ tr_TR:
         clear_penalty_history:
           title: "Ceza Geçmişini Temizle"
           description: "ceza puanı olan kullanıcılar TL3'e ulaşamaz"
-        delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresin. Emin misin?"
         silence: "Sustur"
         unsilence: "Susturma"
         silenced: "Susturuldu?"

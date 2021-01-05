@@ -1803,7 +1803,6 @@ da:
       toggle_information: "vis/skjul emne detaljer"
       read_more_in_category: "Mere læsestof? Se andre emner i %{catLink} eller %{latestLink}."
       read_more: "Mere læsestof? %{catLink} eller %{latestLink}."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
       jump_reply_up: hop til tidligere svar
@@ -2398,7 +2397,6 @@ da:
       notify_action: "Besked"
       official_warning: "Officiel Advarsel"
       delete_spammer: "Slet spammer"
-      delete_confirm_MF: "Du er ved at slette <b>{posts}</b> indlæg og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} oprettet af denne bruger, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>{ip_address}</b> og tilføje deres e-mail-adresse <b>{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?"
       yes_delete_spammer: "Ja, slet spammer"
       ip_address_missing: "(Ikke tilgængelig)"
       hidden_email_address: "(skjult)"
@@ -2465,12 +2463,6 @@ da:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
     posts: "Indlæg"
-    posts_likes_MF: |
-      Dette emne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med et højt like pr. indlæg forhold}
-      med {med et meget højt like pr. indlæg forhold}
-      high {med et ekstremt højt like pr. indlæg forhold}
-      other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
     views_lowercase:
@@ -3646,7 +3638,6 @@ da:
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er ved at slette {POSTS, plural, one {1 post} other {# posts}} og {TOPICS, plural, one {1 topic} other {# topics}}. Er du sikker?"
         silence: "Mådehold (silence)"
         unsilence: "Fjern mådeholdenhed (unsilence)"
         silenced: "Mådeholdt (silenced)?"

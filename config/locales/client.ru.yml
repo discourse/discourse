@@ -2297,7 +2297,7 @@ ru:
       read_more_in_category: "Хотите почитать что-нибудь ещё? Можно посмотреть темы в %{catLink} или %{latestLink}."
       read_more: "Хотите почитать что-нибудь ещё? %{catLink} или %{latestLink}."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
-      read_more_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитанная</a> } few { <a href='{basePath}/unread'># непрочитанные</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 новая</a> тема} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новые</a> темы} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># непрочитанная</a> } few { <a href='{basePath}/unread'># непрочитанные</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новая</a> тема} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новые</a> темы} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Просмотреть все разделы
       browse_all_tags: Просмотреть все теги
@@ -3081,7 +3081,7 @@ ru:
       notify_action: "Сообщение"
       official_warning: "Официальное предупреждение"
       delete_spammer: "Удалить спамера"
-      delete_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {<b>1</b> сообщение} few {<b>#</b> сообщения} other {<b>#</b> сообщений}} и {TOPICS, plural, one {<b>1</b> тему} few {<b>#</b> темы} other {<b>#</b> тем}} этого пользователя, а так же удалить его учётную запись, добавить его IP-адрес <b>{ip_address}</b> и его почтовый адрес <b>{email}</b> в чёрный список. Вы действительно уверены, что этот пользователь - спамер?"
+      delete_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {<b>#</b> сообщение} few {<b>#</b> сообщения} other {<b>#</b> сообщений}} и {TOPICS, plural, one {<b>#</b> тему} few {<b>#</b> темы} other {<b>#</b> тем}} этого пользователя, а так же удалить его учётную запись, добавить его IP-адрес <b>{ip_address}</b> и его почтовый адрес <b>{email}</b> в чёрный список. Вы действительно уверены, что этот пользователь - спамер?"
       yes_delete_spammer: "Да, удалить спамера"
       ip_address_missing: "(не доступен)"
       hidden_email_address: "(скрыто)"
@@ -3159,7 +3159,7 @@ ru:
         help: "Эта тема является личным сообщением"
     posts: "Сообщ."
     posts_likes_MF: |
-      В этой теме {count, plural, one {1 сообщение} few {# сообщения} other {# сообщений}} {ratio, select,
+      В этой теме {count, plural, one {# сообщение} few {# сообщения} other {# сообщений}} {ratio, select,
       low {с высоким рейтингом симпатий}
       med {с очень высоким рейтингом симпатий}
       high {с чрезвычайно высоким рейтингом симпатий}
@@ -4584,7 +4584,7 @@ ru:
         clear_penalty_history:
           title: "Очистить историю нарушений"
           description: "Пользователи с нарушениями не могут достичь 3 уровня доверия"
-        delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} few {# сообщения} other {# сообщений}} и {TOPICS, plural, one {1 тему} few {# темы} other {# тем}}. Вы уверены?"
+        delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {# сообщение} few {# сообщения} other {# сообщений}} и {TOPICS, plural, one {# тему} few {# темы} other {# тем}}. Вы уверены?"
         silence: "Заблокировать"
         unsilence: "Разблокировать"
         silenced: "Заблокирован?"

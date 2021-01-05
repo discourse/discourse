@@ -542,8 +542,6 @@ sk:
     mute_topic: "Stíšiť všetky upozornenia pre túto tému, %{link}"
     unwatch_category: "Prestať pozerať všetky témy v kategórii %{category}"
     mailing_list_mode: "Vypnúť režim mailing listu"
-    all: "Neposielajte mi žiadne maily zo stránky %{sitename}"
-    not_found_description: "Ľutujeme, nedokázali sme Vás odhlásiť. Je možné, že platnosť odkazu vo Vašom emaile vypršala."
     log_out: "Odhlásiť sa"
     digest_frequency:
       never: "nikdy"
@@ -988,7 +986,6 @@ sk:
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: "Vymazať návrhy staršie ako (n) dní."
-    prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
     emoji_set: "Aké emoji chcete mať?"

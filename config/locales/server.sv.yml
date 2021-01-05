@@ -935,9 +935,7 @@ sv:
     mute_topic: "Tysta alla aviseringar för det här ämnet, %{link}"
     unwatch_category: "Sluta bevaka alla ämnen i %{category}"
     mailing_list_mode: "Stäng av utskicksläge"
-    all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: "Tyvärr kunde vi inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
     submit: "Spara inställningar"
     digest_frequency:
@@ -1914,7 +1912,6 @@ sv:
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
-    prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor. VARNING: det kommer att förhindra alla webbplatsens tillgångar som inte är bilder och som lagts upp som bilagor från att fungera."
     secure_media: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ämnet för säkra media i Meta</a>.'
     secure_media_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure media max email embed image size kb'."
     secure_media_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra media i e-post är aktiverad, 'secure media allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."

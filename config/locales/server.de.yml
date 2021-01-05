@@ -935,9 +935,7 @@ de:
     mute_topic: "Alle Benachrichtigungen für dieses Thema stummschalten, %{link}"
     unwatch_category: "Themen in %{category} nicht mehr beobachten"
     mailing_list_mode: "Mailinglisten-Modus ausschalten"
-    all: "Sende mir keine E-Mail mehr von %{sitename}"
     different_user_description: "Du bist gerade als ein anderer Benutzer angemeldet als der, an den die Zusammenfassung gesendet wurde. Bitte melde dich ab oder beginne den anonymen Modus und versuche es erneut."
-    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Kann es sein, dass der Link aus deiner E-Mail abgelaufen ist?"
     log_out: "Abmelden"
     submit: "Präferenzen speichern"
     digest_frequency:
@@ -1913,7 +1911,6 @@ de:
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die mehr als (n) Tage alt sind."
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
-    prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
     secure_media: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, Zips und andere). Wenn „Login erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienhochladungen in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein tiefes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">das Secure Media Thema auf Meta</a> für Details.'
     secure_media_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung 'Secure Media max E-Mail eingebettete Bildgröße kb'."
     secure_media_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung \"Sichere Medien ermöglichen das Einbetten in E-Mails\" aktiviert ist. Ohne diese Einstellung hat diese Einstellung keine Auswirkung."

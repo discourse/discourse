@@ -492,9 +492,7 @@ sw:
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
-    all: "Usinitumie barua yoyote kutoka %{sitename}"
     different_user_description: "Umeingia kama mtu mwingine tofauti na mtu tuliyemtumia barua pepe. Tafadhali toka, au ingia kwenye hali-tumizi ya mtu asiyejulikana, na jaribu tena."
-    not_found_description: "Samahani hatujaona kujiengua. Inawezekana kiungo kwenye barua pepe yako kimepita mda?"
     log_out: "Toka"
     digest_frequency:
       never: "kamwe"

@@ -2280,7 +2280,6 @@ uk:
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в %{catLink} або %{latestLink}."
       read_more: "Хочете почитати ще? %{catLink} або %{latestLink}."
       unread_indicator: "Жоден учасник ще не прочитав останній пост цієї теми."
-      read_more_MF: "У вас залишилося { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'>1 нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Переглянути всі категорії
       browse_all_tags: Переглянути всі теги
@@ -3031,7 +3030,6 @@ uk:
       notify_action: "Повідомлення"
       official_warning: "Офіційне попередження"
       delete_spammer: "Видалити спамера"
-      delete_confirm_MF: "Ви збираєтеся видалити {POSTS, plural, one {<b>1</b> повідомлення} other {<b>#</b> повідомлень}} та {TOPICS, plural, one {<b>1</b> тему} other {<b>#</b> теми}} цього користувача, а також видалити його обліковий запис, додати його IP адресу <b>{ip_address}</b> та його поштову адресу <b>{email}</b> в чорный список. Ви дійсно впевнені, що ваші помисли чисті та дії не продиктовані гнівом?"
       yes_delete_spammer: "Так, видалити спамера"
       ip_address_missing: "(не доступно)"
       hidden_email_address: "(приховано)"
@@ -3108,12 +3106,6 @@ uk:
         title: "Ця тема є особистим повідомленням"
         help: "Ця тема є особистим повідомленням"
     posts: "Дописи"
-    posts_likes_MF: |
-      В цій темі {count, plural, one {1 повідомлення} other {# повідомлень}} {ratio, select,
-      low {з високим рейтингом симпатій}
-      med {з дуже високим рейтингом симпатій}
-      high {з надзвичайно високим рейтингом симпатій}
-      other {}}
     original_post: "Перший допис"
     views: "Перегляди"
     views_lowercase:
@@ -4506,7 +4498,6 @@ uk:
         clear_penalty_history:
           title: "Очистити Історію Штрафів"
           description: "користувачі зі штрафами не можуть досягти TL3"
-        delete_all_posts_confirm_MF: "Ви збираєтеся видалити {POSTS, plural, one {1 повідомлення} other {# повідомлень}} та {TOPICS, plural, one {1 тему} other {# тем}}. Ви впевнені?"
         silence: "Відключити"
         unsilence: "Підключити"
         silenced: "Відключений?"

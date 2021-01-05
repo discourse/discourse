@@ -2137,7 +2137,6 @@ de:
       read_more_in_category: "Möchtest du mehr lesen? Entdecke andere Themen in %{catLink} oder %{latestLink}."
       read_more: "Möchtest du mehr lesen? %{catLink} oder %{latestLink}."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
-      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='{basePath}/unread'>ein ungelesenes</a> Thema } other {hast <a href='{basePath}/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'># neue</a> Themen} }. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle Kategorien durchsehen
       browse_all_tags: Alle Tags durchsuchen
@@ -2863,7 +2862,6 @@ de:
       notify_action: "Nachricht"
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
-      delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
@@ -2931,7 +2929,11 @@ de:
         help: "Dieses Thema ist eine persönliche Nachricht"
     posts: "Beiträge"
     posts_likes_MF: |
-      Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
+      Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
+        low {mit einem hohen Verhältnis von Likes zu Beiträgen}
+        med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
+        high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
+        other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
     views_lowercase:
@@ -4310,7 +4312,7 @@ de:
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
           description: "Benutzer mit Strafen können TL3 nicht erreichen"
-        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
+        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {# Beitrag} other {# Beiträge}} und {TOPICS, plural, one {# Thema} other {# Themen}} löschen. Bist du dir sicher?"
         silence: "Stummschalten"
         unsilence: "Stummschaltung aufheben"
         silenced: "Stummgeschaltet?"

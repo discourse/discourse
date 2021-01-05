@@ -529,9 +529,7 @@ ro:
     mute_topic: "Setează pe silențios toate notificările cu privire la acest subiect, %{link}"
     unwatch_category: "Încetează să urmărești activ toate subiectele din categoria %{category}"
     mailing_list_mode: "Dezactivează modul mailing list"
-    all: "Nu îmi trimite nici un mail de la %{sitename}"
     different_user_description: "Pe moment, ești înregistrat cu un nume de utilizator diferit de cel căruia i-am trimis email. Te rugăm sa ieși sau să intri în modul anonim, și apoi să încerci din nou."
-    not_found_description: "Ne pare rău, nu am putut găsi acest link de dezabonare. Poate că linkul de dezabonare pe care l-ai primit pe email a expirat?"
     log_out: "Ieșire"
     digest_frequency:
       never: "niciodată"
@@ -1072,7 +1070,6 @@ ro:
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: "șterge drafturile mai vechi de (n) zile."
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
-    prevent_anons_from_downloading_files: "Blochează utilizatorii anonimi de la descărcarea de atașamente. ATENȚIE: aceasta va face ca toate resursele site-ului care sunt postate ca atașamente să nu mai meargă."
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     enable_emoji: "Activează emoji"
     emoji_set: "Cum ți-ar placea să fie emoji tăi?"

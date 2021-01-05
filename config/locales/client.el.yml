@@ -2024,7 +2024,6 @@ el:
       read_more_in_category: "Θέλεις να διαβάσεις περισσότερα; Βρες άλλα νήματα στο %{catLink} ή %{latestLink}."
       read_more: "Θέλεις να διαβασεις περισσότερα; %{catLink} ή %{latestLink}."
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
-      read_more_MF: "Έχεις { UNREAD, plural, =0 {} one { μόνο <a href='{basePath}/unread'>1 αδιάβαστο</a> } other { <a href='{basePath}/unread'># αδιάβαστα</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{και } false {έχεις } other{}} <a href='{basePath}/new'>1 νέο</a> νήμα} other { {BOTH, select, true{και } false {έχεις } other{}} <a href='{basePath}/new'># νέα</a> νήματα} } ακόμη ή {CATEGORY, select, true {περιηγήσου σε άλλα νήματα {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
       browse_all_tags: Περιηγηθείτε σε όλες τις ετικέτες
@@ -2678,7 +2677,6 @@ el:
       notify_action: "Μήνυμα"
       official_warning: "Επίσημη Προειδοποίηση"
       delete_spammer: "Διαγραφή Ανεπιθύμητου"
-      delete_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {<b>1</b> ανάρτηση} other {<b>#</b> αναρτήσεις}} και{TOPICS,plural, one {<b>1</b> νήμα} other {<b>#</b> νήματα}} από το χρήστη, να διαγράψεις τον λογαριασμό του, να απαγορεύσεις τις εγγραφές από τη διεύθυνση IP <b>{ip_address}</b> και να πρόσθεσεις την διεύθυνση email <b>{email}</b> στην λίστα ανεπιθύμητων. Είσαι βέβαιος πως αυτός ο χρήστης είναι ανεπιθύμητος;"
       yes_delete_spammer: "Ναι, σβήσε τον ανεπιθύμητο χρήστη"
       ip_address_missing: "(μη διαθέσιμο)"
       hidden_email_address: "(κρυφό)"
@@ -2745,17 +2743,6 @@ el:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
     posts: "Αναρτήσεις"
-    posts_likes_MF: |2
-
-      Αυτό το νήμα έχει {count, plural, one {1 απάντηση} other {# απαντήσεις}} {ratio, select,
-
-      low {με μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      med {με πολύ μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      high {με εξαιρετικά μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      other {}}
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
     views_lowercase:
@@ -4078,7 +4065,6 @@ el:
         clear_penalty_history:
           title: "Καθαρισμός ιστορικού ποινών"
           description: "χρήστες με ποινές δε μπορούν να φτάσουν στο ΕΕ3"
-        delete_all_posts_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {1 ανάρτηση} other {# αναρτήσεις}} and {TOPICS, plural, one {1 νήμα} other {# νήματα}}. Είσαι σίγουρος;"
         silence: "Σίγαση"
         unsilence: "Αναίρεση Σίγασης"
         silenced: "Σε Σιγή;"

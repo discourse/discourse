@@ -603,9 +603,7 @@ pt:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
     mailing_list_mode: "Desligar modo de lista de distribuição"
-    all: "Não me mandar email de %{sitename}"
     different_user_description: "Está ligado como um utilizador diferente do que aquele para o qual enviamos email. Por favor saia, ou entre em modo anónimo, e tente novamente."
-    not_found_description: "Pedimos desculpa, não conseguimos cancelar a sua subscrição. É possível que a ligação no seu email tenha expirado?"
     log_out: "Sair"
     digest_frequency:
       never: "nunca"
@@ -1146,7 +1144,6 @@ pt:
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
-    prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"

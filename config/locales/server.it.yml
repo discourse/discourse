@@ -924,9 +924,7 @@ it:
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
     mailing_list_mode: "Disabilita la modalità mailing list"
-    all: "Non inviare alcuna email da %{sitename}"
     different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
-    not_found_description: "Spiacenti, non siamo riusciti a trovare questa cancellazione. È possibile che il collegamento nell'email sia scaduto?"
     log_out: "Disconnetti"
     submit: "Salva preferenze"
     digest_frequency:
@@ -1858,7 +1856,6 @@ it:
     show_create_topics_notice: "Se il sito ha meno di 5 argomenti pubblici, mostra un avviso chiedendo agli amministratori di creare qualche argomento."
     delete_drafts_older_than_n_days: "Elimina bozze più vecchie di (n) giorni."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
-    prevent_anons_from_downloading_files: "Impedire agli utenti anonimi di scaricare gli allegati. ATTENZIONE: questo impedirà a qualsiasi risorsa del sito pubblicata come allegato di funzionare ad eccezione delle immagini."
     secure_media: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se “login richiesto” è attivato, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">l''argomento sui media sicuri su Meta</a>.'
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
     enable_emoji: "Attiva gli emoji"

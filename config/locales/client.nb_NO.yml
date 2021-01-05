@@ -1592,7 +1592,6 @@ nb_NO:
       toggle_information: "vis/skjul detaljer for emnet"
       read_more_in_category: "Vil du lese mer? Les andre emner i %{catLink} eller %{latestLink}."
       read_more: "Vil du lese mer? %{catLink} eller %{latestLink}."
-      read_more_MF: "Det { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulest</a> } other { finnes <a href='{basePath}/unread'># uleste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {finnes } other{}} <a href='{basePath}/new'>1 nytt</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } igjen, eller {CATEGORY, select, true {se andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       jump_reply_up: hopp til tidligere svar
@@ -2122,7 +2121,6 @@ nb_NO:
       notify_action: "Melding"
       official_warning: "Offisiell advarsel"
       delete_spammer: "Slett spammer"
-      delete_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?"
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
@@ -2186,12 +2184,6 @@ nb_NO:
       unlisted:
         help: "Dette emnet er ikke synlig; det vil ikke vises i lister over emner, og er kun tilgjengelig via en direkte lenke"
     posts: "Innlegg"
-    posts_likes_MF: |
-      Dette emnet har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med mange likes i forhold til innlegg}
-      med {med veldig mange likes i forhold til innlegg}
-      high {med ekstremt mange likes i forhold til innlegg}
-      other {}}
     original_post: "Originalt innlegg"
     views: "Visninger"
     views_lowercase:
@@ -3210,7 +3202,6 @@ nb_NO:
         clear_penalty_history:
           title: "Fjern straffehistorikk"
           description: "brukere med straffer kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {1 innlegg} other {# innlegg}} og {TOPICS, plural, one {1 emne} other {# emner}}. Er du sikker?"
         silence: "Demp"
         unsilence: "Opphev demping"
         silenced: "Dempet?"

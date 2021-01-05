@@ -2297,7 +2297,6 @@ he:
       read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב %{catLink} או %{latestLink}."
       read_more: "רוצה לקרוא עוד? %{catLink} or %{latestLink}."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
-      read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 שלא נקרא</a> } other { <a href='{basePath}/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='{basePath}/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='{basePath}/new'>#</a> נושאים חדשים} } נותרים, או {CATEGORY, select, true {עיין בנושאים אחרים ב־{catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: עיינו בכל הקטגוריות
       browse_all_tags: עיון בכל התגיות
@@ -3081,7 +3080,6 @@ he:
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
-      delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
@@ -3158,12 +3156,6 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
     posts: "פוסטים"
-    posts_likes_MF: |
-      לנושא זה יש {count, plural, one {תגובה 1} other {# תגובות}} {ration, select,
-      low {עם יחס גבוה של לייקים לפוסט}
-      med {עם יחס גבוה מאוד של לייקים לפוסט}
-      high {עם יחס גבוה בצורה יוצאת דופן של לייקים לפוסט}
-      other {}}
     original_post: "פוסט מקורי"
     views: "צפיות"
     views_lowercase:
@@ -4594,7 +4586,6 @@ he:
         clear_penalty_history:
           title: "מחיקת היסטוריית עונשין"
           description: "משתמשים עם עונשין לא יכולים להגיע לדרגת אמון 3"
-        delete_all_posts_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט אחד} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} other {־# נושאים}}. להמשיך?"
         silence: "השתקה"
         unsilence: "ביטול השתקה"
         silenced: "בהשתקה?"

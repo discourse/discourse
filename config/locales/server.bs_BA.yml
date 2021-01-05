@@ -710,7 +710,6 @@ bs_BA:
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:

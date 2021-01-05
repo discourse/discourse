@@ -931,9 +931,7 @@ es:
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
     mailing_list_mode: "Desactivar el modo lista de correo"
-    all: "No enviarme ningún correo electrónico desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Por favor, cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
-    not_found_description: "Lo sentimos, no pudimos encontrar esta cancelación de suscripción. ¿Es posible que el enlace de tu correo electrónico haya caducado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -1883,7 +1881,6 @@ es:
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
-    prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto que no sea una imagen."
     secure_media: 'Limita el acceso a los medios subidos (imágenes, video, audio). Si está habilitado «inicio de sesión requerido», solo los usuarios que hayan iniciado sesión pueden acceder a los medios subidos. En caso contrario, se limitará el acceso únicamente a los medios subidos en mensajes privados. ADVERTENCIA: se deben habilitar las subidas S3 antes de poder habilitar esta configuración. Ver <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> para más detalles.'
     secure_media_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente serían quitadas de los correos electrónicos si su tamaño es menor que la configuración de 'secure media max email embed image size kb'."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» deshabilitará completamente el slug."

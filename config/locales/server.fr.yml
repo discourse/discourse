@@ -155,8 +155,8 @@ fr:
       not_an_integer: doit être un entier
       odd: doit être impair
       record_invalid: ! "Validation échouée : %{errors}"
-      max_emojis: "limité à %{max_emojis_count} emojis"
-      emojis_disabled: "emoji indisponibles"
+      max_emojis: "ne peut pas contenir plus de %{max_emojis_count} émojis"
+      emojis_disabled: "ne peut pas contenir des émojis"
       ip_address_already_screened: "est déjà inclus dans une règle existante"
       restrict_dependent_destroy:
         one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
@@ -403,8 +403,8 @@ fr:
         other: "Les utilisateurs suivants sont déjà membres de ce groupe : %{username}"
       invalid_domain: "« %{domain} » n'est pas un domaine valide."
       invalid_incoming_email: "« %{email} » n'est pas une adresse courriel valide."
-      email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
-      email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
+      email_already_used_in_group: "« %{email} » est déjà utilisée par le groupe « %{group_name} »."
+      email_already_used_in_category: "« %{email} » est déjà utilisée par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
       adding_too_many_users: "Un maximum de %{limit} utilisateurs peuvent être ajoutés à la fois"
@@ -555,7 +555,7 @@ fr:
         custom_emoji:
           attributes:
             name:
-              taken: est déjà utilisé par un autre emoji
+              taken: est déjà utilisé par un autre émoji
         topic_timer:
           attributes:
             execute_at:
@@ -626,8 +626,8 @@ fr:
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
       invalid_email_in: "« %{email} » n'est pas une adresse courriel valide."
-      email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
-      email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
+      email_already_used_in_group: "« %{email} » est déjà utilisée par le groupe « %{group_name} »."
+      email_already_used_in_category: "« %{email} » est déjà utilisée par la catégorie « %{category_name} »."
       description_incomplete: "Le message de description de la catégorie doit contenir au moins un paragraphe."
       permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente : %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
@@ -831,7 +831,7 @@ fr:
     activated: "Désolé, ce compte a déjà été activé."
     admin_confirm:
       title: "Confirmer le compte administrateur"
-      description: "Êtes-vous sûr de vouloir <b>%{target_username} (%{target_email})</b> comme administrateur ?"
+      description: "Êtes-vous sûr de vouloir que <b>%{target_username} (%{target_email})</b> soit un administrateur ?"
       grant: "Accorder l'accès administrateur"
       complete: "<b>%{target_username}</b> est maintenant un administrateur."
       back_to: "Retourner à %{title}"
@@ -855,8 +855,8 @@ fr:
       short_description: 'Une transgression de <a href="%{base_path}/guidelines">notre charte communautaire</a>'
     notify_user:
       title: "Envoyer un message à @%{username}"
-      description: "J'aimerais parler à cette personne directement et personnellement au sujet de leur message."
-      short_description: "J'aimerais parler à cette personne directement et personnellement au sujet de leur message."
+      description: "J'aimerais parler à cette personne directement et personnellement au sujet de son message."
+      short_description: "J'aimerais parler à cette personne directement et personnellement au sujet de son message."
       email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -954,9 +954,7 @@ fr:
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets dans %{category}"
     mailing_list_mode: "Désactiver la liste de diffusion"
-    all: "Ne pas m'envoyer de courriel de %{sitename}"
     different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
-    not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre courriel soit expiré."
     log_out: "Déconnexion"
     submit: "Sauvegarder les préférences"
     digest_frequency:
@@ -1299,7 +1297,7 @@ fr:
         device: Appareil
         os: Système d'exploitation
         login_time: Heure de connexion
-      description: "Détails de nouveaux identifiants qui ont des différences suspectes avec les précédents."
+      description: "Détails des nouvelles connexions qui diffèrent de manière suspecte avec les connexions précédentes."
     staff_logins:
       title: "Connexions des administrateurs"
       labels:
@@ -1329,8 +1327,12 @@ fr:
     queue_size_warning: "Il y a %{queue_size} tâches dans la file d'attente, ce qui est assez élevé. Cela peut indiquer un problème avec les processus Sidekiq ou qu'ils ne sont pas assez nombreux pour traiter efficacement les tâches."
     memory_warning: "Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé."
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les valeurs de l''identifiant client et le secret client ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">paramètres du site</a> et configurez ces valeurs. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
+    facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
+    twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
+    github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
+    s3_cdn_warning: 'Le serveur est configuré pour télécharger des fichiers vers S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et des performances du site moindres. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Voir «Using Object Storage for Uploads» pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="%{base_path}/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
@@ -1346,7 +1348,7 @@ fr:
     force_https_warning: "Votre site web utiliser le SSL. Mais `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` n'est pas encore activé dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
-    watched_word_regexp_error: "L'expression régulière pour les mots surveillés %{action} n'est pas valide. Vérifiez vos <a href='%{base_path}/admin/logs/watched_words'>paramètres de mots surveillés</a> ou désactivez le paramètre de site 'watched words regular expressions'"
+    watched_word_regexp_error: "L'expression régulière pour les mots surveillés %{action} n'est pas valide. Vérifiez vos <a href='%{base_path}/admin/logs/watched_words'>paramètres de mots surveillés</a> ou désactivez le paramètre de site 'watched words regular expressions'."
   site_settings:
     display_local_time_in_user_card: "Afficher le temps local selon le fuseau horaire de l'utilisateur quand sa carte est ouverte."
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
@@ -1365,7 +1367,7 @@ fr:
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
     min_personal_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
-    max_emojis_in_title: "Nombre maximum d'emojis permis dans le titre d'un sujet"
+    max_emojis_in_title: "Nombre maximum d'émojis permis dans le titre d'un sujet"
     min_search_term_length: "Longueur minimale en caractères du terme à rechercher"
     search_tokenize_chinese_japanese_korean: "Forcer la recherche à segmenter les textes chinois, japonais et coréens même sur des sites n'utilisant pas ces langues par défaut."
     search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indexation des messages les plus récents en premier"
@@ -1414,6 +1416,7 @@ fr:
     post_onebox_maxlength: "Longueur maximale en caractères d'un message Discourse intégré comme Onebox."
     blocked_onebox_domains: "Une liste de domaines que ne seront jamais transformés en Onebox."
     allowed_inline_onebox_domains: "Une liste de domaines qui seront transformés en Onebox s'ils ont été insérés sans titre"
+    enable_inline_onebox_on_all_domains: "Ignorer le paramètre inline_onebox_domain_allowlist et permettre des Onebox en ligne pour tous les domaines."
     force_custom_user_agent_hosts: "Domaines pour lesquels utiliser un agent utilisateur personnalisé pour les requêtes de Onebox. (Cela est utile pour les domaines limitant les accès par agent utilisateur.)"
     max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
     facebook_app_access_token: "Un jeton généré à partir de votre identifiant d'application Facebook et de votre secret. Utilisé pour générer des Onebox Instagram."
@@ -1421,6 +1424,9 @@ fr:
     logo_small: "La petite image logo affichée en haut à gauche du site quand la page est défilée vers le bas. Utilisez une image carrée de 120 x 120. Si vous laissez ce champ vide, une icône de maison sera affichée."
     digest_logo: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Utilisez une image rectangulaire et suffisamment large. N'utilisez pas une image SVG. Si vous laissez ce champ vide, l'image du paramètre `logo` sera utilisée."
     mobile_logo: "L'image de votre logo utilisée sur la version mobile de votre site. Utilisez une image rectangulaire avec une hauteur de 120 et une largeur de plus que 360. Si vous laissez ce champ vide, l'image du paramètre `logo` sera utilisée."
+    logo_dark: "Alternative au paramètre 'logo' pour le mode sombre."
+    logo_small_dark: "Alternative au paramètre 'logo small' pour le mode sombre."
+    mobile_logo_dark: "Alternative au paramètre 'mobile logo' pour le mode sombre."
     large_icon: "Image utilisée comme base pour d'autres icônes de métadonnées. Elle devrait idéalement être plus grande que 512 x 512. Si vous laissez ce champ vide, logo_small sera utilisé."
     manifest_icon: "Image utilisée comme logo / image de démarrage sur Android. Elle sera automatiquement redimensionnée en 512 × 512. Si vous laissez ce champ vide, large_icon sera utilisée."
     favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a> . Pour fonctionner correctement sur un CDN, il doit être au format PNG. Il sera redimensionné en 32x32. Si vous laissez ce champ vide, large_icon sera utilisée."
@@ -1715,6 +1721,7 @@ fr:
     desktop_category_page_style: "Style visuel de la page /categories."
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
     category_style: "Style visuel pour les badges de catégorie."
+    default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
     max_image_size_kb: "La taille maximale des images envoyées en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy. Les images plus grandes que cette taille et plus petites que client_max_body_size seront redimensionnées à l'envoi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre « * » pour autoriser tous les types)"
@@ -1917,14 +1924,13 @@ fr:
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: "Supprimer les brouillons plus vieux que (n) jours."
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode spécial de lancement (mettre à 0 pour désactiver)"
-    prevent_anons_from_downloading_files: "Empêcher le téléchargement de pièces jointes par les visiteurs. ATTENTION : cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « login required » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement pour les médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Voir <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour plus d''informations.'
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
-    enable_emoji: "Activer les emojis"
-    enable_emoji_shortcuts: "Les textes de smiley courants :) :p :( seront convertis en emojis"
-    emoji_set: "Comment aimeriez-vous vos emoji ?"
-    emoji_autocomplete_min_chars: "Nombre minimum de caractères nécessaires pour invoquer la fenêtre contextuelle d'emoji"
-    enable_inline_emoji_translation: "Active la traduction d'emojis en ligne (non précédés par une espace ou une ponctuation)"
+    enable_emoji: "Activer les émojis"
+    enable_emoji_shortcuts: "Les textes de smiley courants :) :p :( seront convertis en émojis"
+    emoji_set: "Comment aimeriez-vous votre émoji ?"
+    emoji_autocomplete_min_chars: "Nombre minimum de caractères nécessaires pour activer la fenêtre contextuelle d'émojis"
+    enable_inline_emoji_translation: "Active la traduction d'émojis en ligne (non précédés par une espace ou une ponctuation)"
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
     approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
@@ -1932,6 +1938,7 @@ fr:
     notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, envoyer un courriel à tous les modérateurs. Désactiver ces courriels en indiquant 0."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
+    auto_close_topics_create_linked_topic: "Créer un nouveau sujet lié lorsqu'un sujet est fermé automatiquement par l'activation du paramètre 'auto close topics post count'"
     code_formatting_style: "Le bouton Code de l'éditeur utilisera ce style de mise en forme par défaut"
     max_allowed_message_recipients: "Nombre maximum de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
@@ -1967,6 +1974,7 @@ fr:
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories mises sous silence par défaut."
     default_categories_watching_first_post: "Liste des catégories dont le premier message de chaque nouveau sujet sera surveillé par défaut."
+    default_categories_regular: "Liste des catégories qui ne sont pas mises sous silence par défaut. Utile lorsque le paramètre `mute_all_categories_by_default` est activé."
     mute_all_categories_by_default: "Définir le niveau des notifications de toutes les catégories à silencieux. Cela demande aux utilisateurs de sélectionner explicitement les catégories qui peuvent apparaître sur leurs pages « Récents » et « Catégories ». Si vous souhaitez revoir les valeurs par défaut pour les utilisateurs anonymes, veuillez renseigner les paramètres « default_categories_ »."
     default_tags_watching: "Liste des étiquettes qui sont surveillées par défaut."
     default_tags_tracking: "Liste des étiquettes qui sont suivies par défaut."
@@ -4086,10 +4094,10 @@ fr:
       long_description: |
         Ce badge est accordé quand vous avez reçu 500 J'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
     first_emoji:
-      name: Premier Emoji
-      description: A utilisé un emoji dans un message
+      name: Premier émoji
+      description: A utilisé un émoji dans un message
       long_description: |
-        Ce badge est accordé la première fois que vous ajoutez un emoji à votre message :thumbsup:. Les emojis vous permettent de transmettre de l'émotion dans vos messages, du bonheur :smiley: à la tristesse :anguished: en passant par la colère :angry: et tout le reste :sunglasses:. Il suffit de taper : (deux-points) ou d'appuyer sur le bouton de la barre d'outils Emoji dans l'éditeur et de choisir parmi des centaines de choix :ok_hand:
+        Ce badge est accordé la première fois que vous ajoutez un émoji à votre message :thumbsup:. Les émojis vous permettent de transmettre de l'émotion dans vos messages, du bonheur :smiley: à la tristesse :anguished: en passant par la colère :angry: et tout le reste :sunglasses:. Il suffit de taper : (deux-points) ou d'appuyer sur le bouton de la barre d'outils Émoji dans l'éditeur et de choisir parmi des centaines de choix :ok_hand:
     first_mention:
       name: Première mention
       description: A mentionné un utilisateur dans un message
@@ -4224,7 +4232,7 @@ fr:
                 label: "Privé"
                 description: "Seuls les utilisateurs connectés peuvent accéder à cette communauté"
           privacy_options:
-            description: "Comment est-ce que les nouveaux utilisateurs s'inscrivent pour un compte ?"
+            description: "Comment les nouveaux utilisateurs peuvent-ils créer un compte ?"
             choices:
               open:
                 label: "Les utilisateurs peuvent s'inscrire eux-mêmes."
@@ -4238,7 +4246,7 @@ fr:
           contact_email:
             label: "Courriel"
             placeholder: "nom@exemple.com"
-            description: "Adresse courriel de la personne ou groupe responsable de cette communauté. Elle est utilisée pour des notifications critiques comme des signalements non réglés, des mises à jour de sécurité et sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> pour des contacts urgents."
+            description: "Adresse courriel de la personne ou groupe responsable de cette communauté. Elle est utilisée pour des notifications critiques comme des signalements non traités, des mises à jour de sécurité et sur la page <a href='%{base_path}/about' target='_blank'>À propos</a> pour des contacts urgents."
           contact_url:
             label: "Page web"
             placeholder: "https://www.exemple.com/contacter-nous"
@@ -4284,10 +4292,10 @@ fr:
         fields:
           favicon:
             label: "Icône du navigateur"
-            description: "L'image d'icône utilisée pour représenter votre site dans les navigateurs Web présente bien dans les petites tailles. Les extensions d’image recommandées sont PNG ou JPG. Nous utiliserons le logo carré par défaut."
+            description: "L'image d'icône utilisée pour représenter votre site dans les navigateurs Web et qui s'affiche correctement en petites tailles. Les extensions d’image recommandées sont PNG ou JPG. Nous utiliserons le logo carré par défaut."
           large_icon:
             label: "Grande icône"
-            description: "Icône d’image utilisée pour représenter votre site sur des appareils modernes, de bonne qualité pour les grandes tailles. Idéalement plus grand que 512 × 512. Nous utiliserons le logo carré par défaut."
+            description: "Icône d’image utilisée pour représenter votre site sur des appareils modernes et qui s'affiche correctement en grandes tailles. Idéalement plus grand que 512 × 512. Nous utiliserons le logo carré par défaut."
       homepage:
         description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"
@@ -4309,8 +4317,8 @@ fr:
               categories_boxes_with_topics:
                 label: "Boîtes catégorie avec sujets"
       emoji:
-        title: "Emoji"
-        description: "Quel style d'emoji préférez-vous pour votre communauté ? Vous pouvez ajouter des emojis supplémentaires dans Administration, Personnaliser, Emoji."
+        title: "Émoji"
+        description: "Quel style d'émoji préférez-vous pour votre communauté ? Vous pouvez ajouter des émojis supplémentaires dans Administration, Personnaliser, Émoji."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."
@@ -4364,7 +4372,7 @@ fr:
       post_count: "Les premiers messages de chaque utilisateur doivent être approuvés par un responsable. Voir `approve_post_count`."
       trust_level: "Les réponses d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_unless_trust_level`."
       new_topics_unless_trust_level: "Les sujets d'utilisateurs dont le niveau de confiance est bas doivent être approuvées par un responsable. Voir `approve_new_topics_unless_trust_level`."
-      fast_typer: "Un nouvel utilisateur a tapé son premier message avec une rapidité suspecte, un comportement suspect de bot ou de spammeur. Voir `min_first_post_typing_time`."
+      fast_typer: "Le nouvel utilisateur a écrit son premier message avec une rapidité suspecte, un comportement typique des robots et spammeurs. Voir `min_first_post_typing_time`."
       auto_silence_regexp: "Nouvel utilisateur dont le premier message correspond au paramètre `auto_silence_first_post_regex`."
       watched_word: "Ce message comprenait un mot surveillé. Voir votre <a href='%{base_url}/admin/logs/watched_words'>liste de mots surveillés</a> ."
       staged: "Les nouveaux sujets et messages des utilisateurs distants doivent être approuvés par un responsable. Voir `approve_unless_staged`."

@@ -1865,7 +1865,6 @@ ja:
       toggle_information: "トピックの詳細を切り替え"
       read_more_in_category: "もっと読みたいですか？%{catLink}あるいは%{latestLink}の他のトピックを見てみてください。"
       read_more: "もっと見たいですか？%{catLink}あるいは%{latestLink}があります。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1つの未読 </a>} other { are <a href='{basePath}/unread'># つの未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'>1 つの新着</a> トピック} other { {BOTH, select, true{と } false {} other{}} <a href='{basePath}/new'># つの新着</a> トピック} } が残っています、あるいは {CATEGORY, select, true { {catLink}の他のトピックを見てみてください。} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
       jump_reply_up: 以前の返信へジャンプ
@@ -2380,12 +2379,6 @@ ja:
       unlisted:
         help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "オリジナルの投稿"
     views: "閲覧"
     views_lowercase:

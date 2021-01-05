@@ -658,9 +658,7 @@ nb_NO:
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
-    all: "Ikke send meg noen e-poster fra %{sitename}"
     different_user_description: "Du er allerede logget inn som en annen bruker enn den vi sendte e-posten til. Vennligst logg ut eller bytt til anonym modus før du prøver igjen."
-    not_found_description: "Beklager, vi klarte ikke finne denne avmeldingen. Det kan tenkes lenken i e-posten har gått ut på dato?"
     log_out: "Logg ut"
     digest_frequency:
       never: "aldri"

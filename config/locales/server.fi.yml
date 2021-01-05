@@ -859,9 +859,7 @@ fi:
     mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
-    all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
-    not_found_description: "Pahoittelut, tätä tilauksen perumista ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
@@ -1724,7 +1722,6 @@ fi:
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
-    prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit kuten :) :p :( muunnetaan emojeiksi"

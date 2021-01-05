@@ -904,9 +904,7 @@ ko:
     mute_topic: "%{link} 이 토픽에 대한 모든 알림끄기"
     unwatch_category: "%{category} 카테고리의 모든 토픽 주시 중단하기"
     mailing_list_mode: "메일링 리스트 모드 끄기"
-    all: "%{sitename}에서 오는 메일은 전부 받지 않기"
     different_user_description: "우리가 메일을 보낸 사용자가 아닌 다른 사용자로 로그인되어 있습니다. 로그아웃하시거나, 익명 모드를 켜시고 다시 시도해주세요."
-    not_found_description: "죄송합니다. 구독 해지할 수 없습니다. 이메일의 구독해지 링크 기한이 만료되지는 않았나요?"
     log_out: "로그아웃"
     submit: "환경 설정 저장"
     digest_frequency:
@@ -1880,7 +1878,6 @@ ko:
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
-    prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
     secure_media: '모든 업로드 (이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. &quot;로그인 필요&quot;가 활성화 된 경우 로그인 한 사용자 만 업로드에 액세스 할 수 있습니다. 그렇지 않으면 개인 메시지 및 개인 범주의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고 :이 설정은 복잡하며 관리에 대한 깊은 이해가 필요합니다. 세부 사항 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">은 메타에</a> 대한 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">보안 매체 주제</a> 를 참조하십시오.'
     secure_media_allow_embed_images_in_emails: "크기가 '이메일에 포함을 허용하는 보안 미디어 kb 크기' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지를 포함 할 수 있습니다."
     secure_media_max_email_embed_image_size_kb: "'이메일에 포함을 허용하는 보안 미디어' 설정이 활성화 된 경우 이메일에 포함되는 보안 이미지의 크기 제한입니다. 해당 설정을 사용하지 않으면 이 설정이 적용되지 않습니다."

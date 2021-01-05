@@ -246,23 +246,23 @@ fr:
           Uh oh, je ne vois aucun signet sur ce sujet ! Avez-vous trouvé le bouton signet sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:
         instructions: |-
-          Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
+          Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [émoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un émoji** à votre réponse ? N'importe lequel sera bien:
 
           - Tapez `:) ;) :D :P :O`
 
-          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji `:tada:`
+          - Tapez <kbd>:</kbd> puis complétez le nom de l'émoji `:tada:`
 
-          - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
+          - Appuyez sur le bouton émoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
           C'est :sparkles: _emojitastic !_ :sparkles:
         not_found: |-
-          Oops, je ne vois pas aucun emoji dans votre réponse ? Oh non ! :sob:
+          Oops, je ne vois pas aucun émoji dans votre réponse ? Oh non ! :sob:
 
-          Essayez de taper <kbd>:</kbd> pour faire apparaître la sélection d'emoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
+          Essayez de taper <kbd>:</kbd> pour faire apparaître la sélection d'émoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
 
-          Ou appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
+          Ou appuyez sur le bouton émoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
 
-          (Si vous êtes sur un appareil mobile, vous pouvez aussi entrer l'emoji directement depuis votre clavier.)
+          (Si vous êtes sur un appareil mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
           Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son nom d'utilisateur pour le mentionner.
@@ -292,11 +292,11 @@ fr:
 
           Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
         hidden_message: |-
-          Comment avez-vous manqué ce capybara ? :clin d&#39;œil:
+          Comment avez-vous manqué ce capybara ? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Avez-vous remarqué que vous êtes maintenant de retour au début ? Nourrissez ce pauvre capybara affamé en **répondant avec l&#39;emoji `%{search_answer}` ** et vous serez automatiquement conduit à la fin.
+          Avez-vous remarqué que vous êtes maintenant de retour au début ? Nourrissez ce pauvre capybara affamé en **répondant avec l'émoji `%{search_answer}`** et vous serez automatiquement conduit à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 
