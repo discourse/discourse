@@ -52,7 +52,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     subject.execute(args)
     incoming = IncomingEmail.find_by(post_id: post.id, user_id: post.user_id, topic_id: post.topic_id)
     expect(incoming.to_addresses).to eq("test@test.com")
-    expect(incoming.subject).to eq("Re: This is a test topic 0")
+    expect(incoming.subject).to include("Re: This is a test topic")
     expect(incoming.from_address).to eq("discourseteam@ponyexpress.com")
   end
 
