@@ -28,6 +28,27 @@ class IncomingEmail < ActiveRecord::Base
       )
     SQL
   end
+
+  def to_addresses=(to)
+    if to&.is_a?(Array)
+      to = to.map(&:downcase).join(";")
+    end
+    super(to)
+  end
+
+  def cc_addresses=(cc)
+    if cc&.is_a?(Array)
+      cc = cc.map(&:downcase).join(";")
+    end
+    super(cc)
+  end
+
+  def from_address=(from)
+    if from&.is_a?(Array)
+      from = from.first
+    end
+    super(from)
+  end
 end
 
 # == Schema Information
