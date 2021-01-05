@@ -312,17 +312,13 @@ export function applyDefaultHandlers(pretender) {
     return response({ category });
   });
 
-  pretender.post("/categories", () => {
-    return response({
-      category: {
-        id: 11,
-        name: "testing",
-        color: "0088CC",
-        text_color: "FFFFFF",
-        slug: "testing",
-      },
-    });
-  });
+  pretender.post("/categories", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
+
+  pretender.get("/c/testing/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
 
   pretender.get("/draft.json", (request) => {
     if (request.queryParams.draft_key === "new_topic") {
