@@ -1,4 +1,5 @@
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import Controller from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -106,6 +107,7 @@ export default Controller.extend({
               notification_level: NotificationLevels.REGULAR,
             });
             this.site.updateCategory(model);
+            this.transitionToRoute("editCategory", Category.slugFor(model));
           }
         })
         .catch((error) => {
