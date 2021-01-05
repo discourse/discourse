@@ -97,7 +97,7 @@ class LocaleFileValidator
         @errors[:invalid_interpolation_key_format] << key
       end
 
-      if key.end_with?("_MF") && value.match?(/one {1.*?}/)
+      if key.end_with?("_MF") && value.match?(/one {.*?1.*?}/)
         @errors[:invalid_message_format_one_key] << key
       end
     end

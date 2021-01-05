@@ -199,7 +199,7 @@ RSpec.describe EmailController do
         navigate_to_unsubscribe
 
         expect(body).to include("You are not receiving summary emails")
-        expect(body).to include("Don&#39;t send me any mail from Discourse")
+        expect(body).to include("Don’t send me any mail from Discourse")
       end
 
       it 'hides unsubscribe from all checkbox when user already unsubscribed' do
