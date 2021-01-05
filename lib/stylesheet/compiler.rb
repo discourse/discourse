@@ -9,16 +9,16 @@ module Stylesheet
   class Compiler
 
     def self.compile_asset(asset, options = {})
+      file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
 
       if Importer.special_imports[asset.to_s]
         filename = "theme_#{options[:theme_id]}.scss"
-        file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
         file += " @import \"theme_variables\";" if Importer::THEME_TARGETS.include?(asset.to_s)
         file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
         path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
-        file = File.read path
+        file += File.read path
 
         if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
