@@ -1554,4 +1554,35 @@ var bar = 'bar';
       </div></p>`
     );
   });
+
+  test("typographer arrows", function (assert) {
+    const enabledTypographer = {
+      siteSettings: { enable_markdown_typographer: true },
+    };
+
+    // Replace arrows
+    assert.cookedOptions(
+      "--> <--",
+      enabledTypographer,
+      "<p> \u2192 \u2190 </p>"
+    );
+    assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
+    assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
+    assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+
+    // Don't replace arrows
+    assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
+    assert.cookedOptions(
+      "(<--not an arrow)",
+      enabledTypographer,
+      "<p>(&lt;–not an arrow)</p>"
+    );
+    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
+    assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions("-->asd", enabledTypographer, "<p>–&gt;asd</p>");
+    assert.cookedOptions(" -->asd ", enabledTypographer, "<p>–&gt;asd</p>");
+    assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
+  });
 });
