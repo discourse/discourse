@@ -904,9 +904,7 @@ nl:
     mute_topic: "Alle meldingen voor dit topic negeren, %{link}"
     unwatch_category: "Geen topics in %{category} meer in de gaten houden"
     mailing_list_mode: "Mailinglijstmodus uitschakelen"
-    all: "Mij geen e-mail van %{sitename} sturen"
     different_user_description: "U bent momenteel aangemeld als een andere gebruiker dan die we een e-mail hebben gestuurd. Meld u af, of open de anonieme modus, en probeer het opnieuw."
-    not_found_description: "Sorry, we konden u niet uitschrijven. Is het mogelijk dat de koppeling in uw e-mail is verlopen?"
     log_out: "Afmelden"
     submit: "Voorkeuren opslaan"
     digest_frequency:
@@ -1846,7 +1844,6 @@ nl:
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding tonen waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
-    prevent_anons_from_downloading_files: "Voorkomen dat anonieme gebruikers bijlagen downloaden. WAARSCHUWING: hierdoor zullen websiteonderdelen anders dan afbeeldingen die als bijlage zijn geplaatst niet werken."
     secure_media: 'Beperkt toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf’s, zips en andere). Als ‘aanmelding vereist’ is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is toegang beperkt tot media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist grondige kennis van beheer. Zie <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">het topic over beveiligde media op Meta</a> voor details.'
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"

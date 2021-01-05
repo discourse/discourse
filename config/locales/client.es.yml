@@ -2135,7 +2135,6 @@ es:
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
       read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas las categorías
       browse_all_tags: Ver todas las etiquetas
@@ -2861,7 +2860,6 @@ es:
       notify_action: "Mensaje"
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
-      delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} y {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} de este usuario, eliminar su cuenta, bloquear registros desde su dirección IP <b>{ip_address}</b>, y añadir su dirección de correo electrónico <b>{email}</b> a la lista de bloqueo permanente. ¿Estás seguro de que este usuario es un spammer?"
       yes_delete_spammer: "Sí, eliminar spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -2928,12 +2926,6 @@ es:
         title: "Este tema es un mensaje personal"
         help: "Este tema es un mensaje personal"
     posts: "Publicaciones"
-    posts_likes_MF: |
-      Este tema tiene {count, plural, one {1 respuesta} other {# respuestas}} {ratio, select,
-        low {con una proporción de me gusta por publicación elevada}
-        med {con una proporción de me gusta por publicación bastante elevada}
-        high {con una proporción de me gusta por publicación elevadísima}
-        other {}}
     original_post: "Publicación original"
     views: "Vistas"
     views_lowercase:
@@ -4295,7 +4287,6 @@ es:
         clear_penalty_history:
           title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
-        delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Estás seguro?"
         silence: "Silenciar"
         unsilence: "Dejar de silenciar"
         silenced: "¿Silenciado?"

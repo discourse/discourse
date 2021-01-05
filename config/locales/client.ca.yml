@@ -1899,7 +1899,6 @@ ca:
       read_more_in_category: "Voleu llegir-ne més? Navegueu per altres temes a %{catLink} o %{latestLink}."
       read_more: "Voleu llegir-ne més? %{catLink} o %{latestLink}."
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no llegit</a> } other { are <a href='{basePath}/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nou</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nous</a> temes} } restants, or {CATEGORY, select, true {navegueu per altres temes en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mira els temes més recents
       jump_reply_up: salta a la resposta anterior
@@ -2502,7 +2501,6 @@ ca:
       notify_action: "Missatge"
       official_warning: "Avís oficial"
       delete_spammer: "Suprimeix generador de brossa"
-      delete_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {<b>1</b> publicació} other {<b>#</b> publicacions}} and {TOPICS, plural, one {<b>1</b> tema} other {<b>#</b> temes}} d'aquest usuari, suprimir el seu compte, blocar identificacions des de l'adreça IP <b>{ip_address}</b> i afegir l'adreça de correu electrònic <b>{email}</b> a una llista de bloqueig permanent. Esteu segur que aquest usuari realment genera brossa?"
       yes_delete_spammer: "Sí, suprimeix generador de brossa"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(amagat)"
@@ -2569,12 +2567,6 @@ ca:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
-    posts_likes_MF: |
-      Aquest tema té {count, plural, one {1 resposta} other {# respostes}} {ratio, select,
-      low {amb una proporció alta de 'm'agrada' per publicació}
-      med {amb una proporció molt alta de 'm'agrada' per publicació}
-      high {amb una proporció extremament alta de 'm'agrada' per publicació}
-      other {}}
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -3786,7 +3778,6 @@ ca:
         clear_penalty_history:
           title: "Neteja l'historial de penalitzacions"
           description: "els usuaris amb penalitzacions no poden assolir el nivell de confiança 3"
-        delete_all_posts_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {1 publicació} other {# publicacions}} i {TOPICS, plural, one {1 tema} other {# temes}}. Esteu segur?"
         silence: "Silencia"
         unsilence: "Desfés el silenciament"
         silenced: "Silenciat?"

@@ -353,12 +353,12 @@ it:
       none_found: "Nessun argomento trovato."
       title:
         search: "Cerca un argomento"
-        placeholder: "digita qui il titolo dell&#39;argomento, l&#39;URL o l&#39;id"
+        placeholder: "digita qui il titolo dell'argomento, l'URL o l'id"
     choose_message:
       none_found: "Nessun messaggio trovato."
       title:
         search: "Cerca un messaggio"
-        placeholder: "digita qui il titolo del messaggio, l&#39;URL o l&#39;id"
+        placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
     review:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
@@ -2137,7 +2137,6 @@ it:
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
@@ -2534,6 +2533,9 @@ it:
       filtered_replies_hint:
         one: "Visualizza questo messaggio e la sua risposta"
         other: "Visualizza questo messaggio e le sue %{count} risposte"
+      filtered_replies_viewing:
+        one: "Visualizzazione di %{count} risposta a"
+        other: "Visualizzazione di %{count} risposte a"
       in_reply_to: "Carica post padre"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
@@ -2858,7 +2860,6 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
-      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>1</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>1</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dall'indirizzo IP<b>{ip_address}</b>, e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco nero permanente. Sei veramente sicuro che questo utente sia uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -2925,8 +2926,6 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
-    posts_likes_MF: |
-      Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
     views: "Visite"
     views_lowercase:
@@ -4305,7 +4304,6 @@ it:
         clear_penalty_history:
           title: "Cancella la storia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello Esperienza 3"
-        delete_all_posts_confirm_MF: "Stai per cancellare {POSTS, plural, one {1 messaggio} other {# messaggi}} e {TOPICS, plural, one {1 argomento} other {# argomenti}}. Sei sicuro?"
         silence: "Silenzio"
         unsilence: "Non in silenzio"
         silenced: "Silenziato?"

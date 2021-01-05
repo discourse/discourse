@@ -1913,7 +1913,6 @@ fa_IR:
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در %{catLink} یا %{latestLink} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ %{catLink} یا %{latestLink}."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
       jump_reply_up: رفتن به جدید ترین پاسخ
@@ -2507,7 +2506,6 @@ fa_IR:
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
-      delete_confirm_MF: "شما در حال حذف {POSTS, plural, one {<b>1</b> نوشته} other {<b>#</b> نوشته}} و {TOPICS, plural, one {<b>1</b> موضوع} other {<b>#</b> موضوع}} از این کاربر هستید، حذف حساب کاربری و جلوگیری از ثبت نام با آیپی <b>{ip_address}</b> و ایمیل <b>{email}</b> که به لیست دائمی سیاه منتقل می‌شوند. ادامه می‌دهید؟"
       yes_delete_spammer: "بله، هرزنگار پاک شود"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2574,12 +2572,6 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
-    posts_likes_MF: |
-      این موضوع دارای {count, plural, one {1 پاسخ} other {# پاسخ}} است {ratio, select,
-      low {و مورد پسند دیگران واقع شده است}
-      med {و بسیار مورد پسند دیگران واقع شده است}
-      high {و به شدت مورد پسند دیگران واقع شده است}
-      other {}}
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
@@ -3616,7 +3608,6 @@ fa_IR:
         delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
         delete_posts_progress: "درحال حذف فرسته‌ها..."
         penalty_post_edit: "ویرایش فرسته"
-        delete_all_posts_confirm_MF: "شما در حال حذف {POSTS, plural, one {1 نوشته} other {# نوشته}} and {TOPICS, plural, one {1 نوشته} other {# موضوع}} هستید. ادامه می‌دهید؟"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
         suspended: "تعلیق شد؟"

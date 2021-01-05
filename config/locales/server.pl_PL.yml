@@ -312,10 +312,10 @@ pl_PL:
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "%{count}odpowiedź"
-      few: "%{count}odpowiedzi"
-      many: "%{count}odpowiedzi"
-      other: "%{count}odpowiedzi"
+      one: "%{count} odpowiedź"
+      few: "%{count} odpowiedzi"
+      many: "%{count} odpowiedzi"
+      other: "%{count} odpowiedzi"
     likes:
       one: "%{count} polubienie"
       few: "%{count} polubienia"
@@ -1052,7 +1052,7 @@ pl_PL:
     mailing_list_mode: "Wyłącz tryb listy mailingowej"
     all: "Nie wysyłaj mi żadnych wiadomości z %{sitename}"
     different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano wysłaliśmy emaila. proszę wyloguj się, lub przejść do trybu incognito i spróbuj ponownie."
-    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać. Możliwe, że link wysłany w wiadomości email wygasł."
+    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać z subskrypcji. Możliwe, że link wysłany w wiadomości email wygasł."
     log_out: "Wyloguj"
     submit: "Zapisz ustawienia"
     digest_frequency:
@@ -1430,6 +1430,7 @@ pl_PL:
     github_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     s3_config_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
     s3_backup_config_warning: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
+    s3_cdn_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
     image_magick_warning: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
     failing_emails_warning: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
     subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
@@ -2030,7 +2031,7 @@ pl_PL:
     show_create_topics_notice: "Jeśli na stronie jest mniej niż 5 publicznych tematów, pokaż powiadomienie proszące adminów, aby stworzyli nowe tematy."
     delete_drafts_older_than_n_days: "Usuń projekty starsze niż (n) dni."
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
-    prevent_anons_from_downloading_files: "Zapobiegaj pobieraniu załączników przez anonimowych użytkowników. Ostrzeżenie: wszystkie dodane załączniku nie będące obrazkami nie będą działały."
+    prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_media: 'Ogranicza dostęp do WSZYSTKICH przesłanych plików (obrazów, wideo, audio, tekstu, plików PDF, zip i innych). Jeśli opcja „wymagane logowanie” jest włączona, tylko zalogowani użytkownicy mają dostęp do przesyłanych plików. W przeciwnym razie dostęp będzie ograniczony tylko do przesłanych multimediów w wiadomościach prywatnych i kategoriach prywatnych. OSTRZEŻENIE: to ustawienie jest złożone i wymaga głębokiego zrozumienia administracyjnego. Zobacz <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ten artykuł</a>, aby dowiedzieć się więcej.'
     secure_media_allow_embed_images_in_emails: "Umożliwia osadzanie bezpiecznych obrazów, które normalnie byłyby redagowane w wiadomościach e-mail, jeśli ich rozmiar jest mniejszy niż ustawienie'secure media max email embed image size kb'."
     secure_media_max_email_embed_image_size_kb: "Limit rozmiaru dla zabezpieczonych obrazów, które zostaną osadzone w wiadomości e-mail, gdy włączone jest ustawienie 'secure media allow embed in emails'. Bez tego ustawienia podany limit nie ma zastosowania."
@@ -3192,7 +3193,7 @@ pl_PL:
     Aby zrezygnować z tych maili, [naciśnij tutaj](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PW] "
-  email_from: "%{user_name}z%{site_name}"
+  email_from: "%{user_name} z %{site_name}"
   user_notifications:
     previous_discussion: "Poprzednie odpowiedzi"
     reached_limit:

@@ -2137,7 +2137,6 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{catLink} eller %{latestLink}."
       read_more: "Vill du läsa mer? %{catLink} eller %{latestLink}."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
-      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Bläddra bland alla kategorier
       browse_all_tags: Bläddra bland alla taggar
@@ -2863,7 +2862,6 @@ sv:
       notify_action: "Meddelande"
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
-      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>1</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>1</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
       hidden_email_address: "(dold)"
@@ -2931,11 +2929,11 @@ sv:
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
     posts_likes_MF: |
-      Detta ämne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med ett högt förhållande mellan gillningar och inlägg}
-      med {med ett väldigt högt förhållande mellan gillningar och inlägg}
-      high {med ett extremt högt förhållande mellan gillningar och inlägg}
-      other {}}
+      Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
+        low {med ett högt förhållande mellan gillningar/inlägg}
+        med {med ett mycket högt förhållande mellan gillningar/inlägg}
+        high {med ett extremt högt förhållande mellan gillningar/inlägg}
+        other {}}
     original_post: "Originalinlägg"
     views: "Visningar"
     views_lowercase:
@@ -4314,7 +4312,7 @@ sv:
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
-        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {1 inlägg} other {# inlägg}} och {TOPICS, plural, one {1 ämne} other {# ämnen}}. Är du säker?"
+        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?"
         silence: "Tysta"
         unsilence: "Otysta"
         silenced: "Tystad?"

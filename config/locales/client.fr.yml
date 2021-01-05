@@ -121,7 +121,7 @@ fr:
       close: "fermer"
       twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
-      email: "Envoyer par e-mail"
+      email: "Envoyer par courriel"
       url: "Copier et partager l'URL"
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
@@ -610,20 +610,21 @@ fr:
         categories:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
-          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
+          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification de catégorie seront définis à ces valeurs par défaut. Ils pourront les modifier par la suite."
           watched_categories_instructions: "Surveiller automatiquement tous les sujets de ces catégories. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
           tracked_categories_instructions: "Suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_categories_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet dans ces catégories."
           regular_categories_instructions: "Si ces catégories sont mises sous silence, elles ne le seront pas pour les membres de groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
-          muted_categories_instructions: "Les utilisateurs ne seront notifiés en rien des nouveaux sujets de ces catégories et ces derniers n'apparaîtront pas dans les pages Catégories ou Récents."
+          muted_categories_instructions: "Les utilisateurs ne seront pas notifiés des nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur les pages des catégories et des sujets récents."
         tags:
           title: Étiquettes
           long_title: "Notifications par défaut des étiquettes"
-          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification d'étiquettes seront définis à ces valeurs par défaut. Ensuite, ils pourront les modifier."
+          description: "Lorsque des utilisateurs sont ajoutés à ce groupe, leurs paramètres de notification d'étiquettes seront définis à ces valeurs par défaut. Ils pourront les modifier par la suite."
           watched_tags_instructions: "Surveiller automatiquement tous les sujets avec ces étiquettes. Les membres du groupe seront notifiés de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté de leur sujet."
           tracked_tags_instructions: "Suivre automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté de leur sujet."
           watching_first_post_tags_instructions: "Les utilisateurs seront notifiés du premier message de chaque sujet avec ces étiquettes."
           regular_tags_instructions: "Si ces étiquettes sont mises sous silence, elles ne le seront pas pour les membres de groupe. Les utilisateurs seront avertis s'ils sont mentionnés ou si quelqu'un leur répond."
+          muted_tags_instructions: "Les utilisateurs ne seront pas notifiés des nouveaux sujets avec ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
         logs:
           title: "Journaux"
           when: "Date"
@@ -731,7 +732,7 @@ fr:
           description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Nous ne serez jamais notifié de quoi que ce soit à propos des messages dans ce groupe."
+          description: "Vous ne recevrez aucune notification concernant les messages de ce groupe."
       flair_url: "Image de la vignette d'avatar"
       flair_upload_description: "Utilisez des images carrées d'une taille minimum de 20px par 20px."
       flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
@@ -775,6 +776,7 @@ fr:
       latest_by: "dernier sujet de"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
+      muted: "Catégories mises sous silence"
       topic_sentence:
         one: "%{count} sujet"
         other: "%{count} sujets"
@@ -830,7 +832,7 @@ fr:
         ignore_duration_save: "Ignorer"
         ignore_duration_note: "Veuillez noter que les utilisateurs ne seront plus ignorés une fois le délai passé."
         ignore_duration_time_frame_required: "Veuillez sélectionner un intervalle de temps"
-        ignore_no_users: "Vous n'avez aucun utilisateur ignoré."
+        ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
         add_ignored_user: "Ajouter…"
@@ -879,15 +881,18 @@ fr:
         not_first_time: "Pas votre première fois ?"
         skip_link: "Ignorer ces conseils"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
+      color_scheme_default_on_all_devices: "Définir comme jeux de couleurs par défaut sur tous mes appareils"
+      color_scheme: "Jeu de couleurs"
       color_schemes:
         default_description: "Par défaut"
+        disable_dark_scheme: "Désactivé"
         dark_instructions: "Vous pouvez prévisualiser le jeu de couleurs du mode sombre en basculant le mode sombre de votre appareil."
         undo: "Réinitialiser"
         regular: "Normal"
         dark: "Mode sombre"
         default_dark_scheme: "(par défaut)"
       dark_mode: "Mode sombre"
-      dark_mode_enable: "Activer le jeu de couleurs automatique du mode sombre"
+      dark_mode_enable: "Activer le mode sombre automatiquement"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -920,20 +925,21 @@ fr:
       watched_tags: "Surveillées"
       watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets avec ces étiquettes. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_tags: "Suivies"
-      tracked_tags_instructions: "Vous allez suivre automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
+      tracked_tags_instructions: "Vous suivrez automatiquement tous les sujets avec ces étiquettes. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       muted_tags: "Silencieuses"
-      muted_tags_instructions: "Vous ne serez notifié de rien concernant les nouveaux sujets avec ces étiquettes, et ils n'apparaîtront pas dans la liste des sujets récents."
+      muted_tags_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets avec ces étiquettes et ces sujets n'apparaîtront pas sur la page des sujets récents."
       watched_categories: "Surveillées"
       watched_categories_instructions: "Vous surveillerez automatiquement tous les sujets de ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_categories: "Suivies"
-      tracked_categories_instructions: "Vous allez suivre automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
+      tracked_categories_instructions: "Vous suivrez automatiquement tous les sujets dans ces catégories. Le nombre de nouveaux messages apparaîtra à côté du sujet."
       watched_first_post_categories: "Surveiller les nouveaux sujets"
       watched_first_post_categories_instructions: "Vous serez notifié du premier message de chaque sujet dans ces catégories."
       watched_first_post_tags: "Surveiller les nouveaux sujets"
       watched_first_post_tags_instructions: "Vous serez notifié du premier message de chaque sujet avec ces étiquettes."
       muted_categories: "Silencieuses"
-      muted_categories_instructions: "Vous ne serez pas notifié des nouveaux sujets de ces catégories et ils n'apparaîtront pas dans les pages Catégories ou Récents."
-      muted_categories_instructions_dont_hide: "Vous ne serez pas notifié des nouveaux sujets de ces catégories."
+      muted_categories_instructions: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur les pages des catégories et des sujets récents."
+      muted_categories_instructions_dont_hide: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories."
+      regular_categories: "Normal"
       regular_categories_instructions: "Vous verrez ces catégories dans les listes de sujets « Récents » et « Top »."
       no_category_access: "En tant que modérateur votre accès à la catégorie est limitée, la sauvegarde est désactivée."
       delete_account: "Supprimer mon compte"
@@ -994,7 +1000,7 @@ fr:
         success: "(courriel envoyé)"
         in_progress: "(courriel en cours d'envoi)"
         error: "(erreur)"
-        emoji: "emoji de cadenas"
+        emoji: "émoji de cadenas"
         action: "Envoyer un courriel de réinitialisation du mot de passe"
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
@@ -1201,7 +1207,7 @@ fr:
       title_count_mode:
         title: "Le titre de la page en arrière-plan affiche le nombre de :"
         notifications: "Nouvelles notifications"
-        contextual: "Nouveau contenu de page"
+        contextual: "Nouveau contenu de la page"
       like_notification_frequency:
         title: "Notifier lors d'un J'aime"
         always: "Toujours"
@@ -1507,7 +1513,7 @@ fr:
     email_login:
       link_label: "M'envoyer un lien de connexion par courriel"
       button_label: "par courriel"
-      emoji: "emoji de cadenas"
+      emoji: "émoji de cadenas"
       complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
       complete_email: "Si un compte correspond à l'adresse courriel <b>%{email}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
       complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un courriel avec un lien pour vous connecter."
@@ -1584,7 +1590,7 @@ fr:
         backup_code: "Utilisez plutôt un code de secours"
     invites:
       accept_title: "Invitation"
-      emoji: "emoji d'enveloppe"
+      emoji: "émoji d'enveloppe"
       welcome_to: "Bienvenue sur %{site_name} !"
       invited_by: "Vous avez été invité par :"
       social_login_available: "Vous pourrez aussi vous connecter avec un réseau social utilisant cette adresse."
@@ -1652,7 +1658,7 @@ fr:
       errors:
         to_before_from: "La date de fin doit être postérieure à celle de début."
     emoji_picker:
-      filter_placeholder: Rechercher un emoji
+      filter_placeholder: Rechercher un émoji
       smileys_&_emotion: Frimousses et émotions
       people_&_body: Personnes et corps
       animals_&_nature: Animaux et nature
@@ -1669,7 +1675,7 @@ fr:
       medium_tone: Teint moyen
       medium_dark_tone: Teint légèrement foncé
       dark_tone: Teint foncé
-      default: Emojis personnalisés
+      default: Émojis personnalisés
     shared_drafts:
       title: "Brouillons partagés"
       notice: "Ce sujet n'est visible que pour ceux qui peuvent voir la catégorie <b>%{category}</b>."
@@ -1678,7 +1684,7 @@ fr:
       confirm_publish: "Êtes-vous sûr de vouloir publier ce brouillon ?"
       publishing: "Sujet en cours de publication..."
     composer:
-      emoji: "Emoji :)"
+      emoji: "Émoji :)"
       more_emoji: "plus…"
       options: "Options"
       whisper: "murmure"
@@ -1726,7 +1732,7 @@ fr:
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
       title: "ou appuyez sur Ctrl+Entrée"
-      users_placeholder: "Ajouter un utilisateur"
+      users_placeholder: "Ajoutez un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
       title_or_link_placeholder: "Entrez un titre, ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
@@ -2130,7 +2136,6 @@ fr:
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans %{catLink} ou %{latestLink}."
       read_more: "Vous voulez en lire plus ? %{catLink} ou %{latestLink}."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
-      read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='{basePath}/unread'>1 sujet non lu</a> } other { a <a href='{basePath}/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='{basePath}/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
       browse_all_categories: Voir toutes les catégories
       browse_all_tags: Parcourir toutes les étiquettes
@@ -2276,10 +2281,10 @@ fr:
           description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
         muted_pm:
           title: "Silencieux"
-          description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
+          description: "Vous ne recevrez aucune notification concernant ce message."
         muted:
           title: "Silencieux"
-          description: "Vous ne serez jamais notifié de rien concernant ce sujet, et il n'apparaîtra pas des les derniers sujets."
+          description: "Vous ne recevrez aucune notification concernant ce sujet et il n'apparaîtra pas sur la page des sujets récents."
       actions:
         title: "Actions"
         recover: "Annuler la suppression du sujet"
@@ -2313,7 +2318,7 @@ fr:
         help: "Retirer l'épingle de ce sujet afin qu'il n'apparaisse plus en tête de votre liste de sujet"
       share:
         title: "Partager"
-        extended_title: "Partager ce lien"
+        extended_title: "Partager un lien"
         help: "partager ce sujet"
       print:
         title: "Imprimer"
@@ -2798,13 +2803,13 @@ fr:
           description: "Vous serez averti de nouveaux sujets dans cette catégorie mais pas de réponses aux sujets."
         tracking:
           title: "Suivre"
-          description: "Vous allez suivre automatiquement tous les sujets dans ces catégories. Vous serez notifié lorsque quelqu'un vous mentionne ou vous répond, et le nombre de nouvelles réponses sera affiché."
+          description: "Vous suivrez automatiquement tous les sujets dans ces catégories. Vous serez notifié lorsque quelqu'un vous mentionne ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Vous ne serez jamais notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
+          description: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur la page des sujets récents."
       search_priority:
         label: "Priorité dans les résultats de recherche"
         options:
@@ -2856,7 +2861,6 @@ fr:
       notify_action: "Message"
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
-      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>1</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>1</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(masqué)"
@@ -2924,15 +2928,11 @@ fr:
         help: "Ce sujet est un message direct"
     posts: "Messages"
     posts_likes_MF: |
-      Ce sujet a {count, plural, one {1 réponse} other {# réponses}} {ratio, select,
-
-      low {avec un ratio élevé de J'aime par message}
-
-      med {avec un ratio très élevé de J'aime par message}
-
-      high {avec un ratio extrêmement élevé de J'aime par message}
-
-      other {}}
+      Ce sujet a {count, plural, one {# réponse} other {# réponses}} {ratio, select,
+       low {avec un ratio élevé de J'aime par message}
+       med {avec un ratio très élevé de J'aime par message}
+       high {avec un ratio extrêmement élevé de J'aime par message}
+       other {}}
     original_post: "Message original"
     views: "Vues"
     views_lowercase:
@@ -3227,13 +3227,13 @@ fr:
           description: "Vous serez averti de nouveaux sujets avec cette étiquette mais pas de réponses aux sujets."
         tracking:
           title: "Suivre"
-          description: "Vous allez suivre automatiquement tous les sujets avec cette étiquette. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
+          description: "Vous suivrez automatiquement tous les sujets avec cette étiquette. Le nombre de messages non lus et nouveaux apparaîtra à côté du sujet."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un vous mentionne ou répond à votre message."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification sur des nouveaux sujets avec cette étiquette, et ils n’apparaîtront pas dans l'onglet non lus."
+          description: "Vous ne recevrez aucune notification concernant des nouveaux sujets avec cette étiquette et ces sujets n’apparaîtront pas sur votre page des sujets non lus."
       groups:
         title: "Groupes d'étiquettes"
         about: "Ajoutez les étiquettes à des groupes pour les gérer plus facilement."
@@ -3720,7 +3720,7 @@ fr:
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"
-          themes_intro_emoji: "emoji de femme artiste"
+          themes_intro_emoji: "émoji de femme artiste"
           beginners_guide_title: "Guide d'utilisation des thèmes de Discourse pour débutants"
           developers_guide_title: "Guide de développement de thèmes pour Discourse"
           browse_themes: "Parcourir les thèmes de la communauté"
@@ -3749,6 +3749,7 @@ fr:
           hide_unused_fields: "Masquer les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
+          color_scheme_user_selectable: "Le jeu de couleurs peut être sélectionné par les utilisateurs"
           auto_update: "Mettre à jour automatiquement lorsque Discours est mis à jour"
           color_scheme: "Palette de couleurs"
           default_light_scheme: "Clair (par défaut)"
@@ -4281,7 +4282,7 @@ fr:
           combatative: "Trop agressif"
           in_wrong_place: "Au mauvais endroit"
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
-          custom: "Personnalisé..."
+          custom: "Personnalisé…"
         suspend_message: "Message courriel"
         suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par courriel."
         suspended_by: "Suspendu par"
@@ -4307,7 +4308,7 @@ fr:
         clear_penalty_history:
           title: "Effacer historique des pénalités"
           description: "les utilisateurs ayant des pénalités ne peuvent pas atteindre le niveau de confiance 3"
-        delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {1 message} other {# messages}} et {TOPICS, plural, one {1 sujet} other {# sujets}}. Êtes-vous sûr ?"
+        delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Êtes-vous sûr ?"
         silence: "Mettre sous silence"
         unsilence: "Ne plus mettre sous silence"
         silenced: "Mis sous silence ?"
@@ -4643,7 +4644,7 @@ fr:
             with_time: <span class="username">%{username}</span> à <span class="time">%{time}</span>
         badge_intro:
           title: "Choisissez un badge existant ou créez-en un nouveau pour commencer"
-          emoji: "emoji de femme étudiante"
+          emoji: "émoji de femme étudiante"
           what_are_badges_title: "Que sont les badges ?"
           badge_query_examples_title: "Exemple de requête de badge"
         mass_award:
@@ -4656,15 +4657,15 @@ fr:
           success: Votre CSV a été envoyé et les utilisateurs recevront leur badge rapidement.
           replace_owners: Supprimer le badge des détenteurs précédents
       emoji:
-        title: "Emoji"
-        help: "Ajoutez de nouveaux emojis qui seront disponibles pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"
-        add: "Ajouter un nouvel emoji"
+        title: "Émoji"
+        help: "Ajoutez de nouveaux émojis qui seront disponibles pour tout le monde. (Conseil : glisser-déposer plusieurs fichiers en même temps)"
+        add: "Ajouter un nouvel émoji"
         uploading: "Envoi en cours…"
         name: "Nom"
         group: "Groupe"
         image: "Image"
-        alt: "aperçu de l'emoji personnalisé"
-        delete_confirm: "Êtes-vous sûr de vouloir supprimer l'emoji :%{name}: ?"
+        alt: "aperçu de l'émoji personnalisé"
+        delete_confirm: "Êtes-vous sûr de vouloir supprimer l'émoji :%{name}: ?"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Êtes-vous sûr de vouloir supprimer cet hôte ?"

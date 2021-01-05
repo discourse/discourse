@@ -15,6 +15,7 @@ ar:
       short_no_year: "%-d %B"
       date_only: "%-d %B %Y"
       long: "%-d %B %Y، %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names:
     - null
@@ -38,6 +39,7 @@ ar:
   title: "دِسكورس"
   topics: "المواضيع"
   posts: "المشاركات"
+  views: "المشاهدات"
   loading: "يُحمّل"
   powered_by_html: 'تدعمه <a href="http://www.discourse.org">دِسكورس </a>، يفضّل عرضه بتفعيل جافاسكربت'
   sign_up: "سجّل حسابًا"
@@ -48,18 +50,29 @@ ar:
   anonymous: "مجهول"
   remove_posts_deleted_by_author: "حذفها الكاتب"
   redirect_warning: "تعذّر تأكيد أنّ الرابط الذي حدّدته نُشر في هذا المنتدى حقًا. مع ذلك إن أردت المواصلة، فحدّد الرابط أسفله."
+  on_another_topic: "في موضوع آخر"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} بواسطة %{username}"
   themes:
     bad_color_scheme: "تعذّر تحديث السمة، مخطّط الألوان غير صالح"
     other_error: "حدث خطب ما أثناء تحديث السمة"
     compile_error:
       unrecognized_extension: "امتداد الملف غير مفهوم: %{extension}"
     import_error:
+      generic: حدث عُطل أثناء استيراد هذه السمة
       about_json: "عُطل أثناء الاستيراد: about.json غير موجود، أو غير صالح. أمتأكّد بأنّ هذه سمة دِسكورس حقًا؟"
       about_json_values: "يحتوي about.json قيم غير صالحة: %{errors}"
       modifier_values: "تحتوي مُعدّلات about.json قيم غير صالحة: %{errors}"
       git: "حدث عُطل أثناء استنساخ مستودع غِت، الوصول ممنوع أو لم يُوجد المستودع"
+      unpack_failed: "فشل فك ضغط الملف"
       file_too_big: "الملف غير المضغوط كبير جدًا."
       unknown_file_type: "لا يظهر بأنّ الملف الذي رفعته سمة دِسكورس صالحة."
+    errors:
+      component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد من قبل المستخدم"
+      component_no_default: "مكونات السمة لا يمكن أن تكون السمة الافتراضية"
+      component_no_color_scheme: "مكونات السمة لا يمكن أن تحتوي على لوحات الألوان"
+      no_multilevels_components: "السمات ذات السمات الفرعية لا يمكن أن تكون موضوعات فرعية نفسها"
     settings_errors:
       invalid_yaml: "ملف YAML الذي قُدّم غير صالح."
       data_type_not_a_number: "ضبط النوع ”%{name}“ غير مدعوم. الأنواع المدعومة هي: الأعداد الصحيحة ”integer“ والقيم المنطقية ”bool“ والقوائم ”list“ والتعدادات ”enum“ والرفع ”upload“"
@@ -726,9 +739,7 @@ ar:
     mute_topic: "اكتم كلّ إشعارات هذا الموضوع، %{link}"
     unwatch_category: "ألغِ مراقبة كلّ الموضوعات في %{category}"
     mailing_list_mode: "الغاء وضعية قائمة المراسلات"
-    all: "لا ترسل إليّ أيّ بريد من %{sitename}"
     different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج ثم الدخول مرة أخرى والمحاولة مجدداً."
-    not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
     log_out: "تسجيل خروج"
     digest_frequency:
       never: "أبدا"
@@ -1218,7 +1229,6 @@ ar:
     embed_username_required: "إسم المستخدم مطلوب لإضافة مقالة"
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: "حذف المسودات مضى عليها أكثر من (ن) يوما."
-    prevent_anons_from_downloading_files: "امنع المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع اصول نشره كمرفقات من العمل."
     slug_generation_method: "اختر طريقه توليد سبيكه . 'مشفره' سوف تقوم بتوليد سلسله مئويه مشفره.'لاشي' سوف يعطل السبيكه"
     enable_emoji: "فعّل الإيموجي"
     emoji_set: "كيف تريد أن تبدو الإيموجي؟"

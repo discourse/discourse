@@ -509,9 +509,7 @@ ja:
     mute_topic: "%{link}通知をミュートにする"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
     mailing_list_mode: "メーリンリストモードを無効にする"
-    all: "%{sitename}からのメールを私に送信しないでください。"
     different_user_description: "電子メールで送信したものとは別のユーザーとしてログインしています。 ログアウトするか、匿名モードになり、もう一度やり直してください。"
-    not_found_description: "申し訳ありませんが購読解除に失敗しました。メールのリンクの有効期限が切れていませんか？"
     log_out: "ログアウト"
     digest_frequency:
       never: "追跡しない"
@@ -962,7 +960,6 @@ ja:
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: "(n) 日間経過したドラフトを削除"
-    prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
     slug_generation_method: "slugを生成するメソッドを選択。 'encode'はパーセントエンコードされた文字列を生成します。 'none'は、slugを無効にします"
     enable_emoji: "絵文字を有効にする"
     emoji_set: "How would you like your emoji?"

@@ -1439,7 +1439,6 @@ et:
       toggle_information: "lülita teema üksikasjad ümber"
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid %{catLink} või %{latestLink}."
       read_more: "Soovid veel lugeda? %{catLink} või %{latestLink}."
-      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 lugemata</a> } other { are <a href='{basePath}/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
       jump_reply_up: hüppa varasema vastuse juurde
@@ -1912,7 +1911,6 @@ et:
       notify_action: "Sõnum"
       official_warning: "Ametlik hoiatus"
       delete_spammer: "Kustuta spämmija"
-      delete_confirm_MF: "Oled kustutamas {POSTS, plural, one {<b>1</b> postitust} other {<b>#</b> postitust}} ja {TOPICS, plural, one {<b>1</b> teemat} other {<b>#</b> teemat}} sellelt kasutajalt, eemaldamas tema kontot, blokeerimas registreerumisi tema IP-aadressilt <b>{ip_address}</b>, ja lisamas tema meiliaddressi <b>{email}</b> püsiva blokeeringu loetellu. Oled kindel, et see kasutaja on tõesti spämmija?"
       yes_delete_spammer: "Jah, kustuta spämmija"
       ip_address_missing: "(asjassepuutumatu)"
       hidden_email_address: "(peidetud)"
@@ -1976,12 +1974,6 @@ et:
       unlisted:
         help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
-    posts_likes_MF: |
-      Selles teemas on {count, plural, one {1 vastus} other {# vastust}} {ratio, select,
-      low {kõrge meeldimiste / postituste suhtega}
-      med {väga kõrge meeldimiste / postituste suhtega}
-      high {eriti kõrge meeldimiste / postituste suhtega}
-      other {}}
     original_post: "Algne postitus"
     views: "Vaatamisi"
     views_lowercase:
@@ -2870,7 +2862,6 @@ et:
         delete_all_posts: "Kustuta kõik postitused"
         penalty_post_edit: "Muuda postitust"
         penalty_post_none: "Ära tee midagi"
-        delete_all_posts_confirm_MF: "Sa oled kustutamas {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Oled Sa kindel?"
         silence: "Vaigista"
         unsilence: "Eemalda vaigistud"
         silenced: "Vaigistatud?"

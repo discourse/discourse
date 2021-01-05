@@ -910,7 +910,7 @@ zh_CN:
     mailing_list_mode: "停用邮件列表模式"
     all: "不要从%{sitename}给我发送任何邮件"
     different_user_description: "你当前登录的账户与我们所发送邮件的用户不符。请登出，或进入隐私模式，然后重试。"
-    not_found_description: "对不起，我们找不到这个退订链接。有可能你的邮件中的链接已经过期？"
+    not_found_description: "抱歉，我们未能找到此退订。或许是因为你的邮件中的链接是很久以前的并且过期了？"
     log_out: "退出登录"
     submit: "保存设置"
     digest_frequency:
@@ -1288,6 +1288,7 @@ zh_CN:
     github_config_warning: '设置允许使用GitHub（enable_github_logins）登录，但没有设置 client id 和 secret。前往<a href="%{base_path}/admin/site_settings">站点设置</a>更新设置。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
     s3_config_warning: '服务器被配置为上传文件到s3，但以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
     s3_backup_config_warning: '服务器被配置为上传备份到S3，但是以下的值中有未被设定的项目：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。到<a href="%{base_path}/admin/site_settings">站点设置</a>中更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">看看“参考如何设置图片上传至 S3？”以了解更多</a>。'
+    s3_cdn_warning: '服务器配置为将文件上传到 S3，但没有配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。 <a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅 “使用对象存储进行上传” 了解更多信息</a>.'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是ImageMagick没有被安装。用你最喜爱的包管理器安装ImageMagick或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '有%{num_failed_jobs}个邮件任务失败。请检查app.yml文件是否正确配置了邮件服务器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看Sidekiq中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
@@ -1885,7 +1886,7 @@ zh_CN:
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     delete_drafts_older_than_n_days: "删除超过 n 天的草稿。"
     bootstrap_mode_min_users: "禁用摘要模式的用户数下限（0 为禁用）。"
-    prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
+    prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_media: '限制所有上传文件（图像、视频、音频、文本、可移植文档格式（pdf）、压缩文件等）的访问。如启用“login required”，那么只有已登录的用户才可以访问上传的文件。否则只对私信和私有分类中的媒体上传进行限制。注意：此设置很复杂且需要深入的管理认识。更详细的内容参阅<a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">官方论坛中的媒体安全话题</a>。'
     secure_media_allow_embed_images_in_emails: "如果图像小于‘secure media max email embed image size kb’的设置，则允许通过邮件编辑嵌入安全的图像。"
     secure_media_max_email_embed_image_size_kb: "如果启用了‘secure media allow embed in emails’设置，限制大小之内的安全图像将被嵌入到邮件；如无启用，则本设置无效。"

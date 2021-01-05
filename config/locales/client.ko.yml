@@ -2057,7 +2057,6 @@ ko:
       read_more_in_category: "더 읽을거리가 필요하신가요? %{catLink} 또는 %{latestLink}를 살펴보세요."
       read_more: "%{catLink} 또는 %{latestLink}에서 더 많은 글을 찾으실 수 있습니다."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
-      read_more_MF: "아직 { UNREAD, plural, =0 {} one {<a href='{basePath}/unread'>1개의 읽지않은 글</a> } other {<a href='{basePath}/unread'>#개의 읽지않은 글</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{과 } false {} other{}} <a href='{basePath}/new'>1개의 새로운</a> 글} other { {BOTH, select, true{과 } false {} other{}} <a href='{basePath}/new'>#개의 새로운</a> 글} }이 있습니다. 아니면 {CATEGORY, select, true {{catLink} 카테고리의 다른 글도 살펴보세요.} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 모든 카테고리 보기
       browse_all_tags: 모든 태그 보기
@@ -2754,7 +2753,6 @@ ko:
       notify_action: "메시지 보내기"
       official_warning: "공식 경고"
       delete_spammer: "네, 스패머 회원을 삭제합니다"
-      delete_confirm_MF: "지금 이 사용자의 {POSTS, plural, one {<b>1</b>개의 포스트} other {<b>#</b> 개의 포스트}} 와 {TOPICS, plural, one {<b>1</b>개의 토픽} other {<b>#</b>개의 토픽}} 을 삭제하고, 계정을 삭제한 다음 IP 주소<b>{ip_address}</b>에서의 가입 시도를 차단하며, 이메일 주소<b>{email}</b> 를 영구 정지 목록에 추가하려고 합니다. 이 사용자가 스패머인 것이 확실합니까?"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -2816,17 +2814,6 @@ ko:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
     posts: "글"
-    posts_likes_MF: |2
-
-      이 토픽에는 {ratio, select,
-
-      low {포스트 대비 높은 좋아요를 받은}
-
-      med {포스트 대비 매우 높은 좋아요를 받은}
-
-      high {포스트 대비 엄청나게 높은 좋아요를 받은}
-
-      other {}} {count, plural, one {1 개} other {# 개의 답글이 있습니다.}}
     original_post: "원본 글"
     views: "조회수"
     views_lowercase:
@@ -4179,7 +4166,6 @@ ko:
         clear_penalty_history:
           title: "명확한 페널티 기록"
           description: "위약금이있는 사용자는 TL3에 도달 할 수 없습니다"
-        delete_all_posts_confirm_MF: " {POSTS, plural, one {1개의 포스트} other {#개의 포스트}} 와 {TOPICS, plural, one {1개의 토픽} other {#개의 토픽}}을 삭제하려고 합니다. 정말로 삭제할까요?"
         silence: "쓰기 금지"
         unsilence: "쓰기 금지 해제"
         silenced: "쓰기 금지?"

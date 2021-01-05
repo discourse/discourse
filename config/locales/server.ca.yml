@@ -824,9 +824,7 @@ ca:
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
     mailing_list_mode: "Apaga el mode de llista de correu"
-    all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment heu iniciat la sessió amb una identitat diferent d'aquella a la qual hem enviat un correu. Tanqueu la sessió o entreu anònimament, i torneu a provar-ho."
-    not_found_description: "No hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç en el vostre correu?"
     log_out: "Tanca la sessió"
     submit: "Desa les preferències"
     digest_frequency:
@@ -1691,7 +1689,6 @@ ca:
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
-    prevent_anons_from_downloading_files: "Impedeix que els usuaris anònims puguin descarregar fitxers adjunts. ATENCIÓ: Això impedirà que funcioni cap fitxer que no sigui una imatge publicat com a adjunt."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."

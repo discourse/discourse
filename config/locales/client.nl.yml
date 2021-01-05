@@ -2135,7 +2135,6 @@ nl:
       read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in %{catLink} bladeren, of de %{latestLink}."
       read_more: "Wilt u meer lezen? %{catLink} of %{latestLink}."
       unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
-      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle categorieën bekijken
       browse_all_tags: Alle tags bekijken
@@ -2846,7 +2845,6 @@ nl:
       notify_action: "Bericht"
       official_warning: "Officiële waarschuwing"
       delete_spammer: "Spammer verwijderen"
-      delete_confirm_MF: "U gaat {POSTS, plural, one {<b>1</b> bericht} other {<b>#</b> berichten}} en {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} van deze gebruiker verwijderen, zijn/haar account verwijderen, nieuwe registraties vanaf het IP-adres <b>{ip_address}</b> blokkeren en het e-mailadres <b>{email}</b> op een permanente blokkeerlijst zetten. Weet u zeker dat deze gebruiker een spammer is?"
       yes_delete_spammer: "Ja, spammer verwijderen"
       ip_address_missing: "(N.v.t.)"
       hidden_email_address: "(verborgen)"
@@ -2913,12 +2911,6 @@ nl:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
-    posts_likes_MF: |
-      Dit topic heeft {count, plural, one {1 antwoord} other {# antwoorden}} {ratio, select,
-      low {met een hoge verhouding likes per bericht}
-      med {met een erg hoge verhouding likes per bericht}
-      high {met een zeer hoge verhouding likes per bericht}
-      other {}}
     original_post: "Oorspronkelijke bericht"
     views: "Weergaven"
     views_lowercase:
@@ -4286,7 +4278,6 @@ nl:
         clear_penalty_history:
           title: "Minpuntengeschiedenis wissen"
           description: "gebruikers met minpunten kunnen geen TL3 bereiken"
-        delete_all_posts_confirm_MF: "U gaat {POSTS, plural, one {1 bericht} other {# berichten}} en {TOPICS, plural, one {1 topic} other {# topics}} verwijderen. Weet u het zeker?"
         silence: "Dempen"
         unsilence: "Dempen opheffen"
         silenced: "Gedempt?"

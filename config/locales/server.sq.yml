@@ -378,7 +378,6 @@ sq:
     title: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
-    all: "Mos më dërgoni më email nga %{sitename}"
     log_out: "Shkëputu"
     digest_frequency:
       never: "asnjëherë"
@@ -797,7 +796,6 @@ sq:
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"

@@ -2081,7 +2081,6 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaile muita alueen %{catLink} ketjuja tai %{latestLink}."
       read_more: "Haluatko lukea lisää? Selaa aluetta %{catLink} tai katsele %{latestLink}."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
-      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 ketju</a>, jossa on viestejä } other { <a href='{basePath}/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='{basePath}/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Selaa keskustelualueita
       browse_all_tags: Selaa kaikkia tunnisteita
@@ -2807,7 +2806,6 @@ fi:
       notify_action: "Viesti"
       official_warning: "Virallinen varoitus"
       delete_spammer: "Poista roskapostittaja"
-      delete_confirm_MF: "Olet poistamassa {POSTS, plural, one {<b>1</b> viestin} other {<b>#</b> viestiä}} ja {TOPICS, plural, one {<b>1</b> ketjun} other {<b>#</b> ketjua}} tältä käyttäjältä, poistamassa käyttäjätilin, estämässä uusien tunnusten luonnin IP-osoitteestaan <b>{ip_address}</b> ja lisäämässä sähköpostiosoitteensa <b>{email}</b> pysyvälle estolistalle. Oletko varma, että käyttäjä todella on roskapostittaja?"
       yes_delete_spammer: "Kyllä, poista roskapostittaja"
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
@@ -2874,12 +2872,6 @@ fi:
         title: "Tämä ketju on yksityiskeskustelu"
         help: "Tämä ketju on yksityiskeskustelu"
     posts: "Viestejä"
-    posts_likes_MF: |
-      Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}} {ratio, select,
-      low {, joilla on suuri määrä tykkäyksiä suhteessa viestien määrään}
-      med {, joilla on erittäin suuri määrä tykkäyksiä suhteessa viestien määrään}
-      high {, joilla on äärimmäisen suuri määrä tykkäyksiä suhteessa viestien määrään}
-      other {}}
     original_post: "Aloitusviesti"
     views: "Katseluita"
     views_lowercase:
@@ -4201,7 +4193,6 @@ fi:
         clear_penalty_history:
           title: "Pyyhi rangaistushistoria"
           description: "käyttäjä jota on rangaistu ei voi nousta lt3:lle"
-        delete_all_posts_confirm_MF: "Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?"
         silence: "Hiljennä"
         unsilence: "Kumoa hiljennys"
         silenced: "Hiljennetty?"

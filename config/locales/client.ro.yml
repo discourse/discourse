@@ -1724,7 +1724,6 @@ ro:
       toggle_information: "comută între detaliile subiectului"
       read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din %{catLink} sau %{latestLink}."
       read_more: "Vrei să citești mai multe subiecte? %{catLink} sau %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Există <a href='{basePath}/unread'>un subiect necitit</a> } other { Sunt <a href='{basePath}/unread'># subiecte necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {există } other{}} <a href='{basePath}/new'>un subiect nou</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='{basePath}/new'># subiecte noi</a>} } rămas(e), sau {CATEGORY, select, true {răsfoiți alte subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
       jump_reply_up: sări la un răspuns mai vechi
@@ -2247,7 +2246,6 @@ ro:
       notify_action: "Mesaj"
       official_warning: "Avertizare oficială"
       delete_spammer: "Șterge spammer"
-      delete_confirm_MF: "Ești pe cale să ștergi {POSTS, plural, one {<b>1</b> postare} other {<b>#</b> postări}} și {TOPICS, plural, one {<b>1</b> subiect} other {<b>#</b> subiecte}} de la acest utilizator, și să îi ștergi contul, blochezi înscrierile de pe IP-ul lui <b>{ip_address}</b>, și să îi adăugi adresa de email <b>{email}</b> pe lista celor blocate permanent. Ești sigur că acest utilizator este spammer?"
       yes_delete_spammer: "Da, șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
@@ -2316,12 +2314,6 @@ ro:
       unlisted:
         help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
-    posts_likes_MF: |
-      Acest subiect are {count, plural, one {1 răspuns} other {# răspunsuri}} {ratio, select,
-      low {cu o rată înaltă de aprecieri pe postare}
-      med {cu o foarte înaltă de aprecieri pe postare}
-      high {cu o rată extrem de înaltă de aprecieri pe postare}
-      other {}}
     original_post: "Postare inițială"
     views: "Vizualizări"
     views_lowercase:
@@ -3230,7 +3222,6 @@ ro:
         penalty_post_delete: "Șterge postarea"
         penalty_post_edit: "Modifică postarea"
         penalty_post_none: "Nu face nimic"
-        delete_all_posts_confirm_MF: "Ești pe cale să ștergi {POSTS, plural, one {1 postare} other {# postări}} și {TOPICS, plural, one {1 subiect} other {# subiecte}}. Ești sigur?"
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Suspendat?"

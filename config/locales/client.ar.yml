@@ -2392,7 +2392,6 @@ ar:
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في %{catLink} أو %{latestLink}."
       read_more: "أتريد قراءة المزيد؟ %{catLink} أو %{latestLink}."
       unread_indicator: "لم يقرأ أيّ عضو بعد آخر مشاركة في هذا الموضوع."
-      read_more_MF: "{UNREAD, plural, zero {} one {تبقى <a href='{basePath}/unread'>موضوع واحد غير مقروء</a>} two {تبقى <a href='{basePath}/unread'>موضوعان غير مقروءان</a>} few {تبقت <a href='{basePath}/unread'># مواضيع غير مقروءة</a>} many {تبقى <a href='{basePath}/unread'># موضوعا غير مقروء</a>} other {تبقى <a href='{basePath}/unread'># موضوع غير مقروء</a>}} {BOTH, select, true { و} false {} other {}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='{basePath}/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: تصفّح كلّ الفئات
       browse_all_tags: تصفّح كلّ الوسوم
@@ -3209,7 +3208,6 @@ ar:
       notify_action: "رسالة"
       official_warning: "تحذير رسمي"
       delete_spammer: "احذف ناشر السبام"
-      delete_confirm_MF: "{posts, plural,\n zero {ليس للمستخدم أيّة مشاركات}\n other {}\n}\n{topics, plural,\n zero {\n {posts, plural,\n zero {أو مواضيع.}\n other {ليس للمستخدم أيّة مواضيع.}\n }\n }\n other {{posts, plural, zero{.} other{}}}\n}\nأنت على وشك\n{posts, plural,\n zero {{topics, plural, zero {} other {حذف}}}\n other {حذف}\n}\n{posts, plural,\n zero {}\n one {مشاركة واحدة}\n two {مشاركتين}\n few {# مشاركات}\n many {# مشاركة}\n other {# مشاركة}\n}\n{posts, plural, zero {} other {{topics, plural, zero {} other {و}}}}\n{topics, plural,\n zero {}\n one {موضوع واحد}\n two {موضوعين}\n few {# مواضيع}\n many {# موضوعًا}\n other {# موضوع}\n}\n{posts, plural,\n zero {{topics, plural, zero {} other {له، و}}}\n other {{topics, plural, zero {له، و} other {للمستخدم، و}}}\n}\nإزالة حسابه، ومنع التّسجيل من عنوان IP هذا <b>{ip_address}</b>، وإضافة عنوان البريد الإلكترونيّ <b>{email}</b> إلى قائمة منع دائم. أمتأكّد حقًّا من أنّ هذا المستخدم ناشر سخام؟"
       yes_delete_spammer: "نعم، احذف ناشر السخام"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفي)"
@@ -3296,12 +3294,6 @@ ar:
         title: "هذا الموضوع رسالة شخصية"
         help: "هذا الموضوع رسالة شخصية"
     posts: "منشورات"
-    posts_likes_MF: |
-      {count, plural, zero {ليس في هذا الموضوع أي ردّ} one {في هذا الموضوع ردّ واحد} two {في هذا الموضوع ردّان} few {في هذا الموضوع # ردود} many {في هذا الموضوع # ردًا} other {في هذا الموضوع # ردّ}} {ratio, select,
-      low {ونسبة الإعجاب إلى المشاركة عالية}
-      med {ونسبة الإعجاب إلى المشاركة عالية جدًا}
-      high {ونسبة الإعجاب إلى المشاركة مهولة}
-      other {}}
     original_post: "المنشور الاصلي"
     views: "المشاهدات"
     views_lowercase:
@@ -4483,7 +4475,6 @@ ar:
         penalty_post_actions: "ما الذي تريد فعله بالمشاركة المرتبطة؟"
         penalty_post_delete: "حذف الموضوع"
         penalty_post_edit: "تعديل الموضوع"
-        delete_all_posts_confirm_MF: "أنت على وشك {POSTS, plural, zero {عدم حذف شيء} one {حذف مشاركة واحدة} two {حذف مشاركتين} few {حذف # مشاركات} many {حذف # مشاركة} other {حذف # مشاركة}}{TOPICS, plural, zero {} one { وموضوع واحد} two { وموضوعين} few { و# مواضيع} many {و# موضوعا} other {و# موضوع}}. أمتأكد؟"
         silence: "صامت"
         silenced: "صامت؟"
         moderator: "مراقب؟"

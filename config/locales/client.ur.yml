@@ -1794,7 +1794,6 @@ ur:
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
       jump_reply_up: اِس سے پرانے جواب پر جائیں
@@ -2387,7 +2386,6 @@ ur:
       notify_action: "پیغام"
       official_warning: "آفیشل انتباہ"
       delete_spammer: "سپیم کرنے والے کو حذف کریں"
-      delete_confirm_MF: "آپ اِس صارف سے {POSTS, plural, one {<b>1</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>1</b> ٹاپک} other {<b>#</b> ٹاپکس}} حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{email}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
       yes_delete_spammer: "جی ہاں، سپیم کرنے والے کو حذف کریں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2454,12 +2452,6 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
-    posts_likes_MF: |
-      اِس ٹاپک {count, plural, one {کا 1 جواب} other {کے # جوابات ہیں}} {ratio, select,
-      low {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
-      med {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
-      high {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
-      other {}}
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -3649,7 +3641,6 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ {POSTS, plural, one {1 پوسٹ} other {# پوسٹس}} and {TOPICS, plural, one {1 ٹاپک} other {# ٹاپکس}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"

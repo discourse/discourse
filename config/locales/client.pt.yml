@@ -1773,7 +1773,6 @@ pt:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Pretende ler mais? Procure outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {pesquise outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pesquisar em todas as categorias
       view_latest_topics: ver os tópicos mais recentes
       jump_reply_up: avançar para resposta mais recente
@@ -2261,7 +2260,6 @@ pt:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Eliminar Spammer"
-      delete_confirm_MF: "Está prestes a eliminar {POSTS, plural, one {<b>1</b> publicação} other {<b>#</b> publicações}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste utilizador, remover a conta do mesmo, bloquear registos a partir do endereço de IP <b>{ip_address}</b> correspondente, e adicionar o endereço de e-mail <b>{email}</b> dos mesmos a uma lista negra permanente. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -2325,17 +2323,6 @@ pt:
       unlisted:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
     posts: "Publicações"
-    posts_likes_MF: |2
-
-      Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-
-      low {com uma proporção de gostos para publicações alta}
-
-      med {com uma proporção de gostos para publicações muito alta}
-
-      high {com uma proporção de gostos para publicações extremamente alta}
-
-      other {}}
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -3150,7 +3137,6 @@ pt:
         silence_reason: "Motivo"
         delete_all_posts: "Eliminar todas as publicações"
         penalty_post_edit: "Editar a mensagem"
-        delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
         moderator: "Moderador?"
         admin: "Administração?"
         suspended: "Suspendido?"

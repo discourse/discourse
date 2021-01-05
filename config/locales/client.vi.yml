@@ -382,6 +382,7 @@ vi:
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
       filtered_user: "Người dùng"
+      filtered_reviewed_by: "Xét bởi"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -827,6 +828,7 @@ vi:
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
+        each_browser_note: 'Lưu ý: Bạn phải thay đổi cài đặt này trên mọi trình duyệt bạn sử dụng. Tất cả thông báo sẽ bị tắt khi ở chế độ "không làm phiền", bất kể cài đặt này là gì.'
         consent_prompt: "Bạn có muốn thông báo trực tiếp khi mọi người trả lời bài đăng của bạn không?"
       dismiss: "Hủy bỏ"
       dismiss_notifications: "Bỏ qua tất cả"
@@ -1252,6 +1254,7 @@ vi:
         link_redemption_stats: "Đổi thưởng"
         link_groups: Nhóm
         link_expires_at: Hết hạn
+        create: "Mời"
         copy_link: "Hiển thị liên kết"
         generate_link: "Tạo liên kết mời"
         link_generated: "Đây là liên kết mời của bạn!"
@@ -1572,6 +1575,10 @@ vi:
     category_row:
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
+      plus_subcategories_title:
+        other: "%{name} và %{count} danh mục phụ"
+      plus_subcategories:
+        other: "+ %{count} danh mục phụ"
     select_kit:
       default_header_text: Chọn...
       no_content: Không tìm thấy
@@ -1692,6 +1699,7 @@ vi:
       link_dialog_title: "Chèn liên kết"
       link_optional_text: "tiêu đề tùy chọn"
       link_url_placeholder: "Dán URL hoặc nhập vào chủ đề tìm kiếm"
+      blockquote_title: "Blockquote"
       blockquote_text: "Trích dẫn"
       code_title: "Văn bản định dạng trước"
       code_text: "lùi đầu dòng bằng 4 dấu cách"
@@ -1746,6 +1754,7 @@ vi:
           label: "Chủ đề Mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
+          desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
         toggle_topic_bump:
           label: "Chuyển đổi phần mở rộng chủ đề"
           desc: "Trả lời mà không thay đổi ngày trả lời gần nhất"
@@ -2050,7 +2059,6 @@ vi:
       read_more_in_category: "Muốn đọc nữa? Xem qua các chủ đề khác trong %{catLink} hoặc %{latestLink}"
       read_more: "Muốn đọc nữa? %{catLink} hoặc %{latestLink}"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
-      read_more_MF: "Có { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 chủ đề chưa đọc</a> } other { <a href='{basePath}/unread'># chủ đề chưa đọc</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{và } false {} other{}} <a href='{basePath}/new'>1 chủ đề mới</a>} other { {BOTH, select, true{và } false {} other{}} <a href='{basePath}/new'># chủ đề mới</a>} }, hoặc {CATEGORY, select, true {xem những chủ đề khác ở mục {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Duyệt tất cả các hạng mục
       browse_all_tags: Duyệt qua tất cả các thẻ
@@ -2064,6 +2072,7 @@ vi:
         select: "Người dùng chỉ có thể đăng trong chủ đề này một lần mỗi lần:"
         description: "Người dùng phải đợi trước khi đăng lại chủ đề này để người khác có thời gian trả lời"
         save: "Bật"
+        enabled_until: "(Tùy chọn) Bật cho đến khi:"
         remove: "Tắt"
         hours: "Giờ:"
         minutes: "Phút:"
@@ -2418,12 +2427,18 @@ vi:
       unread: "Bài viết chưa đọc"
       has_replies:
         other: "%{count} Trả lời"
+      has_replies_count: "%{count}"
       unknown_user: "(người dùng không xác định / đã xóa)"
       has_likes_title:
         other: "%{count} người thích bài viết này"
       has_likes_title_only_you: "bạn đã like bài viết này"
       has_likes_title_you:
         other: "bạn và %{count} người khác đã like bài viết này"
+      filtered_replies_hint:
+        other: "Xem bài đăng này và %{count} câu trả lời của nó"
+      filtered_replies_viewing:
+        other: "Xem %{count} câu trả lời cho"
+      in_reply_to: "Tải bài đăng gốc"
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
@@ -2572,6 +2587,10 @@ vi:
             name: "Chỉnh sửa dấu trang"
             description: "Chỉnh sửa tên dấu trang hoặc thay đổi ngày giờ lời nhắc"
       filtered_replies:
+        viewing_posts_by: "Đang xem %{post_count} bài viết của"
+        viewing_subset: "Một số câu trả lời bị thu gọn"
+        viewing_summary: "Xem tóm tắt về chủ đề này"
+        post_number: "%{username}, bài số #%{post_number}"
         show_all: "Hiển thị tất cả"
     category:
       can: "can&hellip;"
@@ -2736,7 +2755,6 @@ vi:
       notify_action: "Tin nhắn"
       official_warning: "Cảnh báo chính thức"
       delete_spammer: "Xóa người Spam"
-      delete_confirm_MF: "Bạn sắp xóa {POSTS, plural, other {<b>#</b> bài viết}} và {TOPICS, plural, other {<b>#</b> bài viết}} từ người dùng này, xóa tài khoản của họ, chặn đăng ký khỏi địa chỉ IP của họ <b>{ip_address}</b>và thêm địa chỉ email <b>{email}</b> vào danh sách chặn vĩnh viễn. Bạn có chắc người dùng này thực sự là người gửi thư rác không?"
       yes_delete_spammer: "Có, xóa người spam"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ẩn)"
@@ -2798,17 +2816,6 @@ vi:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
     posts: "Bài viết"
-    posts_likes_MF: |2
-
-      Chủ đề này có {count, plural, one {1 reply} other {# replies}} {ratio, select,
-
-      low {with a high like to post ratio}
-
-      med {with a very high like to post ratio}
-
-      high {with an extremely high like to post ratio}
-
-      other {}}
     original_post: "Bài viết gốc"
     views: "Lượt xem"
     views_lowercase:
@@ -3130,13 +3137,16 @@ vi:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
     image_removed: "(hình ảnh đã bị xóa)"
     do_not_disturb:
+      title: "Không làm phiền..."
       save: "Lưu lại"
       label: "Không làm phiền"
+      remaining: "còn lại %{remaining}"
       options:
         half_hour: "30 phút"
         one_hour: "1 tiếng"
         two_hours: "2 tiếng"
         tomorrow: "Cho tới ngày mai"
+        custom: "Tùy biến"
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -3359,6 +3369,7 @@ vi:
               show: Nhận thông tin về người dùng.
               check_emails: Liệt kê các email của người dùng.
               update: Cập nhật thông tin hồ sơ người dùng.
+              log_out: Đăng xuất tất cả
               anonymize: Ẩn danh tài khoản người dùng.
               delete: Xóa tài khoản người dùng.
       web_hooks:
@@ -4101,7 +4112,6 @@ vi:
         clear_penalty_history:
           title: "Xóa lịch sử hình phạt"
           description: "người dùng bị phạt không thể đạt đến TL3"
-        delete_all_posts_confirm_MF: "Bạn sắp xóa {POSTS, plural, one {1 bài đăng} other {# bài đăng}} và {TOPICS, plural, one {1 chủ đề} other {# chủ đề}}. . Bạn có chắc không?"
         silence: "Im lặng"
         unsilence: "Không im lặng"
         silenced: "Im lặng?"

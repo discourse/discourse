@@ -2296,7 +2296,7 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{catLink} lub %{latestLink}."
       read_more: "Chcesz przeczytać więcej? %{catLink} lub %{latestLink}."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
-      read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 nieprzeczytany</a> temat } other { <a href='{basePath}/unread'># nieprzeczytanych</a> tematów } }{ NEW, plural, =0 {} one { {BOTH, select, true{ oraz} false {} other{}} <a href='{basePath}/new'>1 nowy</a> temat} other { {BOTH, select, true{oraz } false {} other{}}<a href='{basePath}/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przejrzyj inne tematy w {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># nieprzeczytany</a> temat } other { <a href='{basePath}/unread'># nieprzeczytanych</a> tematów } }{ NEW, plural, =0 {} one { {BOTH, select, true{ oraz} false {} other{}} <a href='{basePath}/new'># nowy</a> temat} other { {BOTH, select, true{oraz } false {} other{}}<a href='{basePath}/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przejrzyj inne tematy w {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
@@ -2793,10 +2793,10 @@ pl_PL:
             many: "Tak i bezpośrednie odpowiedzi %{count}"
             other: "Tak i %{count} bezpośrednich odpowiedzi"
           all_replies:
-            one: "Tak i odpowiedź %{count}"
-            few: "Tak i wszystkie odpowiedzi %{count}"
-            many: "Tak i wszystkie odpowiedzi %{count}"
-            other: "Tak i wszystkie %{count} odpowiedzi "
+            one: "Tak i %{count} odpowiedź"
+            few: "Tak i wszystkie %{count} odpowiedzi"
+            many: "Tak i wszystkie %{count} odpowiedzi"
+            other: "Tak i wszystkie %{count} odpowiedzi"
           just_the_post: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
         wiki: "Włącz tryb Wiki"
@@ -3080,7 +3080,7 @@ pl_PL:
       notify_action: "Wiadomość"
       official_warning: "Oficjalne ostrzeżenie"
       delete_spammer: "Usuń spamera"
-      delete_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {<b>1</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>1</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?"
+      delete_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {<b>#</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>#</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?"
       yes_delete_spammer: "Tak, usuń spamera"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
@@ -3158,10 +3158,10 @@ pl_PL:
         help: "Ten temat jest wiadomością prywatną"
     posts: "Wpisy"
     posts_likes_MF: |
-      Ten temat ma {count, plural, one {1 odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
-        low {z wysokim współczynnikiem polubień postów}
-        med {z bardzo wysokim współczynnikiem polubień postów}
-        high {z ekstremalnie wysokim współczynnikiem polubień postów}
+      Ten temat ma {count, plural, one {# odpowiedź} few {# odpowiedzi} many {# odpowiedzi} other {# odpowiedzi}} {ratio, select,
+        low {z wysokim stosunkiem polubień na post}
+        med {z bardzo wysokim stosunkiem polubień na post}
+        high {z ekstremalnie wysokim stosunkiem polubień na post}
         other {}}
     original_post: "Oryginalny wpis"
     views: "Odsłony"
@@ -4593,7 +4593,7 @@ pl_PL:
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
           description: "użytkownicy z karami nie mogą otrzymać TL3"
-        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {1 post} few {# wpisy} many {# postów} other {# wpisów}} i {TOPICS, plural, one {1 temat} few {# tematy} many {# tematów} other {# tematów}}. Czy jesteś pewien?"
+        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {# post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {# temat} few {# tematy} many {# tematów} other {# tematów}}. Jesteś pewien?"
         silence: "Wycisz"
         unsilence: "Cofnij wyciszenie"
         silenced: "Wyciszony?"
