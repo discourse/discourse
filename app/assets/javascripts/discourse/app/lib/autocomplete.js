@@ -187,7 +187,11 @@ export default function (options) {
             " " +
             text.substring(completeEnd + 1, text.length);
           me.val(text);
-          setCaretPosition(me[0], completeStart + 1 + term.length);
+          let newCaretPos = completeStart + 1 + term.length;
+          if (options.key) {
+            newCaretPos++;
+          }
+          setCaretPosition(me[0], newCaretPos);
 
           if (options && options.afterComplete) {
             options.afterComplete(text);
@@ -276,8 +280,7 @@ export default function (options) {
     div = $(options.template({ options: autocompleteOptions }));
 
     let ul = div.find("ul");
-    selectedOption = 0;
-    markSelected();
+    selectedOption = -1;
     ul.find("li").click(function () {
       selectedOption = ul.find("li").index(this);
       completeTerm(autocompleteOptions[selectedOption]);
@@ -549,7 +552,6 @@ export default function (options) {
       // Keyboard codes! So 80's.
       switch (e.which) {
         case keys.enter:
-        case keys.tab:
           if (!autocompleteOptions) {
             return true;
           }
