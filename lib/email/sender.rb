@@ -173,7 +173,7 @@ module Email
         end
       end
 
-      if reply_key.present? && @message.header['Reply-To'] =~ /\<([^\>]+)\>/
+      if reply_key.present? && @message.header['Reply-To'].to_s =~ /\<([^\>]+)\>/
         email = Regexp.last_match[1]
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
