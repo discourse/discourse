@@ -24,7 +24,7 @@ RSpec.describe Admin::UsersController do
 
     context 'when showing emails' do
       it "returns email for all the users" do
-        get "/admin/users/list.json", params: { show_emails: "true" }
+        get "/admin/users/list.json", params: { show_emails: "tRue" }
         expect(response.status).to eq(200)
         data = response.parsed_body
         data.each do |user|
