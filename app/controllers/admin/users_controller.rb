@@ -30,7 +30,7 @@ class Admin::UsersController < Admin::AdminController
     users = ::AdminUserIndexQuery.new(params).find_users
 
     opts = {}
-    if params[:show_emails].downcase == "true"
+    if params[:show_emails]&.downcase == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
     end
