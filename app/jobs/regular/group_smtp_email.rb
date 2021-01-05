@@ -20,7 +20,7 @@ module Jobs
       # Basically, we should never be sending this notification for the first
       # post in a topic.
       if post.is_first_post?
-        ImapSyncLog.warn("Aborting SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}, the post is the OP and should not send a notification.", group)
+        ImapSyncLog.warn("Aborting SMTP email for post #{post.id} in topic #{post.topic_id} to #{email}, the post is the OP and should not send an email.", group)
         return
       end
 
