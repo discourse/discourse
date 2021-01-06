@@ -15,4 +15,25 @@ export default SelectKitFilterComponent.extend({
     }
     return isEmpty(placeholder) ? "" : I18n.t(placeholder);
   },
+
+  actions: {
+    onPaste(event) {
+      const data = event.originalEvent.clipboardData;
+
+      if (!data) {
+        return;
+      }
+
+      const parts = data.getData("text").split("|").filter(Boolean);
+
+      if (parts.length > 1) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        this.selectKit.append(parts);
+
+        return false;
+      }
+    },
+  },
 });

@@ -29,6 +29,31 @@ export default SelectKitComponent.extend({
     );
   },
 
+  append(values) {
+    const existingItems = values
+      .map((value) => {
+        const defaultItem = this.defaultItem(value, value);
+        const existingItem =
+          this.findValue(this.mainCollection, defaultItem) ||
+          this.findName(this.mainCollection, defaultItem);
+        if (!existingItem) {
+          if (this.validateCreate(value, this.content)) {
+            return value;
+          }
+        } else if (this.validateSelect(existingItem)) {
+          return this.getValue(existingItem);
+        }
+      })
+      .filter(Boolean);
+
+    const newValues = makeArray(this.value).concat(existingItems);
+    const newContent = makeArray(this.selectedContent).concat(
+      makeArray(existingItems)
+    );
+
+    this.selectKit.change(newValues, newContent);
+  },
+
   deselect(item) {
     this.clearErrors();
 
