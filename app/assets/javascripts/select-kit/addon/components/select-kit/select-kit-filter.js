@@ -47,6 +47,8 @@ export default Component.extend(UtilsMixin, {
   },
 
   actions: {
+    onPaste() {},
+
     onInput(event) {
       this.selectKit.onInput(event);
       return true;
