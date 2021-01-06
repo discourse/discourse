@@ -94,6 +94,19 @@ export default function (options) {
   let div = null;
   let prevTerm = null;
 
+  // By default, when the autcomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
+  if (!("autoSelectFirstSuggestion" in options)) {
+    options.autoSelectFirstSuggestion = true;
+  }
+
   // input is handled differently
   const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
@@ -280,7 +293,12 @@ export default function (options) {
     div = $(options.template({ options: autocompleteOptions }));
 
     let ul = div.find("ul");
-    selectedOption = -1;
+    if (options.autoSelectFirstSuggestion) {
+      selectedOption = 0;
+      markSelected();
+    } else {
+      selectedOption = -1;
+    }
     ul.find("li").click(function () {
       selectedOption = ul.find("li").index(this);
       completeTerm(autocompleteOptions[selectedOption]);
@@ -553,6 +571,7 @@ export default function (options) {
       switch (e.which) {
         case keys.enter:
           if (!autocompleteOptions) {
+            closeAutocomplete();
             return true;
           }
           if (
@@ -585,6 +604,7 @@ export default function (options) {
           markSelected();
           return false;
         case keys.backSpace:
+          autocompleteOptions = null;
           completeEnd = cp;
           cp--;
 
@@ -608,6 +628,7 @@ export default function (options) {
           updateAutoComplete(dataSource(term, options));
           return true;
         default:
+          autocompleteOptions = null;
           completeEnd = cp;
           return true;
       }
