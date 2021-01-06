@@ -125,6 +125,13 @@ export default Controller.extend(ModalFunctionality, {
     return privateChecked && checkPrivate && publicKey;
   },
 
+  onClose() {
+    this.setProperties({
+      warning: null,
+      duplicateRemoteThemeWarningShown: false,
+    });
+  },
+
   actions: {
     uploadLocaleFile() {
       this.set("localFile", $("#file-input")[0].files[0]);
@@ -167,6 +174,26 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (this.remote || this.popular) {
+        const duplicate = this.themesController.model.content.find((theme) => {
+          const url = theme.remote_theme && theme.remote_theme.remote_url;
+          return (
+            url &&
+            this.uploadUrl &&
+            url.replace(/\.git$/, "") ===
+              this.uploadUrl.trim().replace(/\.git$/, "")
+          );
+        });
+        if (duplicate && !this.duplicateRemoteThemeWarningShown) {
+          const warning = I18n.t(
+            "admin.customize.theme.duplicate_remote_theme",
+            { name: duplicate.name }
+          );
+          this.setProperties({
+            warning,
+            duplicateRemoteThemeWarningShown: true,
+          });
+          return;
+        }
         options.data = {
           remote: this.uploadUrl,
           branch: this.branch,
