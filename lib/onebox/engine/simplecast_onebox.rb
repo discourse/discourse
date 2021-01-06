@@ -8,6 +8,7 @@ module Onebox
 
       matches_regexp(/https?:\/\/(.+)?simplecast.com\/(episodes|s)\/.*/)
       always_https
+      requires_iframe_origins("https://embed.simplecast.com")
 
       def to_html
         get_oembed.html
