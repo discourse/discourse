@@ -5,8 +5,6 @@ require "rails_helper"
 describe Jobs::ProcessShelvedNotifications do
   fab!(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
-  let(:notification) { Notification.create!(read: false, user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, data: '[]', notification_type: Notification.types[:mentioned], created_at: 0.days.from_now)
-  }
 
   it "removes all past do not disturb timings" do
     future = Fabricate(:do_not_disturb_timing, ends_at: 1.day.from_now)
