@@ -2512,19 +2512,18 @@ RSpec.describe TopicsController do
       expect(response.media_type).to eq('application/rss+xml')
     end
 
-    it 'renders rss even if post is deleted' do
-      topic.posts.map(&:destroy)
-      get "/t/foo/#{topic.id}.rss"
-      expect(response.status).to eq(200)
-      expect(response.media_type).to eq('application/rss+xml')
-    end
-
     it 'renders rss of the topic correctly with subfolder' do
       set_subfolder "/forum"
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(200)
       expect(response.body).to_not include("/forum/forum")
       expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
+    end
+
+    it 'returns 404 when posts are deleted' do
+      topic.posts.map(&:trash!)
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(404)
     end
   end
 

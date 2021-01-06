@@ -842,6 +842,7 @@ class TopicsController < ApplicationController
   def feed
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
+    raise Discourse::NotFound if @topic_view.posts.blank?
     render 'topics/show', formats: [:rss]
   end
 
