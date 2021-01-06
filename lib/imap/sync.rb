@@ -300,18 +300,66 @@ module Imap
       update_topic_tags(email, incoming_email, opts)
     end
 
-    def update_topic_archived_state(email, incoming_email, opts = {})
-      topic = incoming_email.topic
+    module ImapHandler; end
+    module ImapAction; end
 
-      topic_is_archived = topic.group_archived_messages.size > 0
-      email_is_archived = !email['LABELS'].include?('\\Inbox') && !email['LABELS'].include?('INBOX')
+    def update_topic_archived_state(mailbox_email, incoming_email)
+      ImapHandler::TopicArchiveState.new(@group, mailbox_email, incoming_email).handle
+    end
 
-      if topic_is_archived && !email_is_archived
-        ImapSyncLog.debug("Unarchiving topic ID #{topic.id}, email was unarchived", @group)
-        GroupArchivedMessage.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
-      elsif !topic_is_archived && email_is_archived
-        ImapSyncLog.debug("Archiving topic ID #{topic.id}, email was archived", @group)
-        GroupArchivedMessage.archive!(@group.id, topic, skip_imap_sync: true)
+    class ImapHandler::Base
+      def initialize(group)
+        @group = group
+      end
+
+      def act(action_klass, *run_args)
+        action_klass.new(@group).run(*run_args)
+      end
+    end
+
+    class ImapAction::Base
+      def initialize(group)
+        @group = group
+      end
+
+      def run
+        raise NotImplementedError
+      end
+    end
+
+    class ImapHandler::TopicArchiveState < ImapHandler::Base
+      class ImapAction::TopicArchivedByMailbox < ImapAction::Base
+        def run(topic)
+          ImapSyncLog.debug("Archiving topic ID #{topic.id}, email was archived", @group)
+          GroupArchivedMessage.archive!(@group.id, topic, skip_imap_sync: true)
+        end
+      end
+      class ImapAction::TopicArchivedByDiscourse < ImapAction::Base
+        def run(topic)
+          ImapSyncLog.debug("Unarchiving topic ID #{topic.id}, email was unarchived", @group)
+          GroupArchivedMessage.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
+        end
+      end
+
+      delegate :topic, to: :@incoming_email
+
+      def initialize(group, mailbox_email, incoming_email)
+        super(group)
+        @mailbox_email = mailbox_email
+        @incoming_email = incoming_email
+      end
+
+      def handle
+        topic_is_archived = topic.group_archived_messages.size > 0
+
+        # TODO: This is provider specific! \\Inbox and INBOX are Gmail conventions.
+        email_is_archived = !email['LABELS'].include?('\\Inbox') && !email['LABELS'].include?('INBOX')
+
+        if topic_is_archived && !email_is_archived
+          act(ImapAction::TopicArchivedByDiscourse, topic)
+        elsif !topic_is_archived && email_is_archived
+          act(ImapAction::TopicArchivedByMailbox, topic)
+        end
       end
     end
 
