@@ -495,6 +495,7 @@ describe Notification do
         expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
         notification = Notification.last
+        expect(notification.processed).to eq(true)
         expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
 
         data = notification.data_hash
@@ -505,6 +506,17 @@ describe Notification do
         expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
         expect(Notification.last.data_hash[:count]).to eq(5)
+      end
+
+      it 'consolidates membership requests with "processed" false if user is in DND' do
+        user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
+
+        create_membership_request_notification
+        create_membership_request_notification
+
+        notification = Notification.last
+        expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
+        expect(notification.processed).to eq(false)
       end
     end
   end
@@ -528,6 +540,21 @@ describe Notification do
       Notification.purge_old!
 
       expect(Notification.where(user_id: user.id).pluck(:id)).to contain_exactly(notification4.id, notification3.id)
+    end
+  end
+
+  describe "processed" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "is false after creation when the user is in do not disturb" do
+      user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
+      notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      expect(notification.processed).to be(false)
+    end
+
+    it "is true after creation when the user isn't in do not disturb" do
+      notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      expect(notification.processed).to be(true)
     end
   end
 end

@@ -7,6 +7,7 @@ class NotificationEmailer
 
     def initialize(notification, no_delay = false)
       @notification = notification
+      @no_delay = no_delay
     end
 
     def group_mentioned

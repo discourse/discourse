@@ -44,8 +44,7 @@ class NotificationConsolidator
       consolidated_notification.update!(
           data: data_hash.to_json,
           read: false,
-          updated_at: timestamp,
-          processed: true
+          updated_at: timestamp
       )
       notification.destroy!
     end
@@ -68,8 +67,7 @@ class NotificationConsolidator
         user_id: notification.user_id,
         data: data.to_json,
         updated_at: timestamp,
-        created_at: timestamp,
-        processed: true
+        created_at: timestamp
       )
 
       notifications.destroy_all
