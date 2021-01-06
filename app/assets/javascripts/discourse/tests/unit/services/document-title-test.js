@@ -42,7 +42,7 @@ discourseModule("Unit | Service | document-title", function (hooks) {
     assert.equal(document.title, "test notifications");
   });
 
-  test("it doesn't displays notification counts for users in do not disturb", function (assert) {
+  test("it doesn't display notification counts for users in do not disturb", function (assert) {
     this.documentTitle.currentUser = currentUser();
 
     const date = new Date();
