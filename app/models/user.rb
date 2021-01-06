@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_one :anonymous_user_master, class_name: 'AnonymousUser', dependent: :destroy
   has_one :anonymous_user_shadow, ->(record) { where(active: true) }, foreign_key: :master_user_id, class_name: 'AnonymousUser', dependent: :destroy
   has_one :invited_user, dependent: :destroy
+  has_one :user_notification_schedule, dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
