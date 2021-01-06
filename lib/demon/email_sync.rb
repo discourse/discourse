@@ -38,23 +38,24 @@ class Demon::EmailSync < ::Demon::Base
 
         while @running && group.reload.imap_mailbox_name.present? do
           ImapSyncLog.debug("Processing mailbox for group #{group.name} in db #{db}", group)
-          status = syncer.process(
-            idle: syncer.can_idle? && status && status[:remaining] == 0,
-            old_emails_limit: status && status[:remaining] > 0 ? 0 : nil,
-          )
 
-          if !syncer.can_idle? && status[:remaining] == 0
-            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group)
+          last_process_remaining_to_sync = (status && status[:remaining]) || 0
 
-            # Thread goes into sleep for a bit so it is better to return any
-            # connection back to the pool.
-            ActiveRecord::Base.connection_handler.clear_active_connections!
+          begin
+            status = syncer.process(
+              last_process_remaining_to_sync: last_process_remaining_to_sync
+            )
+          rescue ImapServerDisconnected
+            @running = false
+            @disconnected = true
+          end
 
-            sleep SiteSetting.imap_polling_period_mins.minutes
+          if !syncer.can_idle? && last_process_remaining_to_sync.zero? && @running
+            syncer.wait_without_idle
           end
         end
 
-        syncer.disconnect!
+        syncer.disconnect! if !@disconnected
       end
     end
   end

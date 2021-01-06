@@ -4,71 +4,134 @@ require 'net/imap'
 
 module Imap
   class Sync
+    delegate :connect!, to: :@provider
+    delegate :disconnect!, to: :@provider
+    delegate :disconnected?, to: :@provider
+
+    class ImapServerDisconnected < StandardError; end
+
     def initialize(group, opts = {})
       @group = group
       @provider = Imap::Providers::Detector.init_with_detected_provider(@group.imap_config)
       connect!
     end
 
-    def connect!
-      @provider.connect!
-    end
-
-    def disconnect!
-      @provider.disconnect!
-    end
-
-    def disconnected?
-      @provider.disconnected?
-    end
-
     def can_idle?
-      SiteSetting.enable_imap_idle && @provider.can?('IDLE')
+      @can_idle ||= SiteSetting.enable_imap_idle && @provider.can?('IDLE')
     end
 
-    def process(idle: false, import_limit: nil, old_emails_limit: nil, new_emails_limit: nil)
-      raise 'disconnected' if disconnected?
+    def process(last_process_remaining_to_sync: 0, import_limit: nil)
+      raise ImapServerDisconnected if disconnected?
 
-      import_limit     ||= SiteSetting.imap_batch_import_email
-      old_emails_limit ||= SiteSetting.imap_polling_old_emails
-      new_emails_limit ||= SiteSetting.imap_polling_new_emails
+      set_email_limits(last_process_remaining_to_sync, import_limit)
+
+      # TODO: Use `Net::IMAP.encode_utf7(@group.imap_mailbox_name)`?
+      @mailbox = @provider.open_mailbox(@group.imap_mailbox_name)
+
+      # TODO: Make this an obviously destructive action in the UI, and possibly add
+      # more functionality here. We do NOT want people doing this generally.
+      reset_sync_if_mailbox_changed!
+
+      # IDLE works nicer than sleeping because we can immediately continue
+      # if a new email comes in, but it must be supported, and the last
+      # process should not have any emails remaining (because we only want to
+      # wait if we know we had nothing left to do)
+      wait_for_mail_with_idle(last_process_remaining_to_sync)
 
       # IMAP server -> Discourse (download): discovers updates to old emails
       # (synced emails) and fetches new emails.
+      remaining_to_sync = sync_to_discourse
 
-      # TODO: Use `Net::IMAP.encode_utf7(@group.imap_mailbox_name)`?
-      @status = @provider.open_mailbox(@group.imap_mailbox_name)
+      # Discourse -> IMAP server (upload): syncs updated flags and labels.
+      sync_to_server
 
-      if @status[:uid_validity] != @group.imap_uid_validity
-        # If UID validity changes, the whole mailbox must be synchronized (all
-        # emails are considered new and will be associated to existent topics
-        # in Email::Reciever by matching Message-Ids).
-        ImapSyncLog.warn("UIDVALIDITY = #{@status[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for mailbox #{@group.imap_mailbox_name}", @group)
-        @group.imap_last_uid = 0
-      end
+      { remaining: remaining_to_sync }
+    end
 
-      if idle && !can_idle?
+    def wait_for_mail_without_idle
+      idle_polling_mins = SiteSetting.imap_polling_period_mins.minutes.to_i
+      ImapSyncLog.debug("Going to sleep for #{idle_polling_mins} seconds to wait for new emails", @group)
+
+      # Thread goes into sleep for a bit so it is better to return any
+      # connection back to the pool.
+      ActiveRecord::Base.connection_handler.clear_active_connections!
+
+      sleep idle_polling_mins
+    end
+
+    private
+
+    def set_email_limits(last_process_remaining_to_sync, import_limit)
+      @import_limit ||= SiteSetting.imap_batch_import_email
+      @new_emails_limit = SiteSetting.imap_polling_new_emails
+
+      # a limit of 0 means all emails
+      @old_emails_limit = last_process_remaining_to_sync > 0 ? 0 : SiteSetting.imap_polling_old_emails
+    end
+
+    def reset_sync_if_mailbox_changed!
+      return if @mailbox[:uid_validity] == @group.imap_uid_validity
+
+      # If UID validity changes, the whole mailbox must be synchronized (all
+      # emails are considered new and will be associated to existent topics
+      # in Email::Reciever by matching Message-Ids).
+      ImapSyncLog.warn("UIDVALIDITY = #{@mailbox[:uid_validity]} does not match expected #{@group.imap_uid_validity}, invalidating IMAP cache and resyncing emails for mailbox #{@group.imap_mailbox_name}", @group)
+      @group.imap_last_uid = 0
+    end
+
+    def wait_for_mail_with_idle(last_process_remaining_to_sync)
+      return if last_process_remaining_to_sync > 0
+
+      if !can_idle?
         ImapSyncLog.warn("IMAP server for group cannot IDLE or imap idle site setting is disabled", @group)
-        idle = false
+        return
       end
 
-      if idle
-        raise 'IMAP IDLE is disabled' if !SiteSetting.enable_imap_idle
+      # Thread goes into sleep and it is better to return any connection
+      # back to the pool.
+      ActiveRecord::Base.connection_handler.clear_active_connections!
 
-        # Thread goes into sleep and it is better to return any connection
-        # back to the pool.
-        ActiveRecord::Base.connection_handler.clear_active_connections!
+      idle_polling_mins = SiteSetting.imap_polling_period_mins.minutes.to_i
+      ImapSyncLog.debug("Going IDLE for #{idle_polling_mins} seconds to wait for more work", @group)
 
-        idle_polling_mins = SiteSetting.imap_polling_period_mins.minutes.to_i
-        ImapSyncLog.debug("Going IDLE for #{idle_polling_mins} seconds to wait for more work", @group)
-
-        @provider.imap.idle(idle_polling_mins) do |resp|
-          if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
-            @provider.imap.idle_done
-          end
+      @provider.imap.idle(idle_polling_mins) do |resp|
+        if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == 'EXISTS'
+          @provider.imap.idle_done
         end
       end
+    end
 
+    def sync_to_discourse
+      all_old_uids_size, old_uids, all_new_uids_size, new_uids = fetch_mail_uids
+      import_mode = @import_limit > -1 && new_uids.size > @import_limit
+
+      # if there are no old_uids that is OK, this could indicate that some
+      # UIDs have been sent to the trash
+      process_old_uids(old_uids)
+
+      # will do nothing if there are no new_uids, meaning that no new mail
+      # has come in that we do not know about. sizes are used to keep track
+      # of where we are up to in processing for the group.
+      process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
+
+      all_new_uids_size - new_uids.size
+    end
+
+    def sync_to_server
+      return if !SiteSetting.enable_imap_write
+
+      to_sync = IncomingEmail.where(imap_sync: true, imap_group_id: @group.id)
+      if to_sync.size > 0
+        @provider.open_mailbox(@group.imap_mailbox_name, write: true)
+        to_sync.each do |incoming_email|
+          ImapSyncLog.debug("Updating email on IMAP server for incoming email ID = #{incoming_email.id}, UID = #{incoming_email.imap_uid}", @group)
+          update_email(incoming_email)
+          incoming_email.update(imap_sync: false)
+        end
+      end
+    end
+
+    def fetch_mail_uids
       # Fetching UIDs of old (already imported into Discourse, but might need
       # update) and new (not downloaded yet) emails.
       if @group.imap_last_uid == 0
@@ -93,42 +156,18 @@ module Imap
         imap_new_emails: all_new_uids_size
       )
 
-      import_mode = import_limit > -1 && new_uids.size > import_limit
-      old_uids = old_uids.sample(old_emails_limit).sort! if old_emails_limit > -1
-      new_uids = new_uids[0..new_emails_limit - 1] if new_emails_limit > 0
+      old_uids = old_uids.sample(@old_emails_limit).sort! if @old_emails_limit > -1
+      new_uids = new_uids[0..@new_emails_limit - 1] if @new_emails_limit > 0
 
-      # if there are no old_uids that is OK, this could indicate that some
-      # UIDs have been sent to the trash
-      process_old_uids(old_uids)
-
-      if new_uids.present?
-        process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
-      end
-
-      # Discourse -> IMAP server (upload): syncs updated flags and labels.
-      sync_to_server
-
-      { remaining: all_new_uids_size - new_uids.size }
+      [all_old_uids_size, old_uids, all_new_uids_size, new_uids]
     end
-
-    def update_topic(email, incoming_email, opts = {})
-      return if !incoming_email ||
-                incoming_email.imap_sync ||
-                !incoming_email.topic ||
-                incoming_email.post&.post_number != 1
-
-      update_topic_archived_state(email, incoming_email, opts)
-      update_topic_tags(email, incoming_email, opts)
-    end
-
-    private
 
     def process_old_uids(old_uids)
       ImapSyncLog.debug("Syncing #{old_uids.size} randomly-selected old emails", @group)
       emails = old_uids.empty? ? [] : @provider.emails(old_uids, ['UID', 'FLAGS', 'LABELS', 'ENVELOPE'])
       emails.each do |email|
         incoming_email = IncomingEmail.find_by(
-          imap_uid_validity: @status[:uid_validity],
+          imap_uid_validity: @mailbox[:uid_validity],
           imap_uid: email['UID'],
           imap_group_id: @group.id
         )
@@ -145,13 +184,13 @@ module Imap
 
           if incoming_email
             incoming_email.update(
-              imap_uid_validity: @status[:uid_validity],
+              imap_uid_validity: @mailbox[:uid_validity],
               imap_uid: email['UID'],
               imap_group_id: @group.id
             )
             update_topic(email, incoming_email, mailbox_name: @group.imap_mailbox_name)
           else
-            ImapSyncLog.warn("Could not find old email (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']})", @group)
+            ImapSyncLog.warn("Could not find old email (UIDVALIDITY = #{@mailbox[:uid_validity]}, UID = #{email['UID']})", @group)
           end
         end
       end
@@ -166,7 +205,7 @@ module Imap
       # can just remove the imap details from the IncomingEmail table and if they end up back in the
       # original mailbox then they will be picked up in a future resync.
       existing_incoming = IncomingEmail.includes(:post).where(
-        imap_group_id: @group.id, imap_uid_validity: @status[:uid_validity]
+        imap_group_id: @group.id, imap_uid_validity: @mailbox[:uid_validity]
       ).where.not(imap_uid: nil)
 
       existing_uids = existing_incoming.map(&:imap_uid)
@@ -205,6 +244,8 @@ module Imap
     end
 
     def process_new_uids(new_uids, import_mode, all_old_uids_size, all_new_uids_size)
+      return if new_uids.blank?
+
       ImapSyncLog.debug("Syncing #{new_uids.size} new emails (oldest first)", @group)
 
       emails = @provider.emails(new_uids, ['UID', 'FLAGS', 'LABELS', 'RFC822'])
@@ -224,7 +265,7 @@ module Imap
             allow_auto_generated: true,
             import_mode: import_mode,
             destinations: [@group],
-            imap_uid_validity: @status[:uid_validity],
+            imap_uid_validity: @mailbox[:uid_validity],
             imap_uid: email['UID'],
             imap_group_id: @group.id
           )
@@ -232,12 +273,16 @@ module Imap
 
           update_topic(email, receiver.incoming_email, mailbox_name: @group.imap_mailbox_name)
         rescue Email::Receiver::ProcessingError => e
-          ImapSyncLog.warn("Could not process (UIDVALIDITY = #{@status[:uid_validity]}, UID = #{email['UID']}): #{e.message}", @group)
+          ImapSyncLog.warn("Could not process (UIDVALIDITY = #{@mailbox[:uid_validity]}, UID = #{email['UID']}): #{e.message}", @group)
         end
 
+        # TODO: Not so nice to have to write to this table so many times...
+        # another case for a separate table, and not just columns on group.
+        # We need to keep track of this count but I think it might be better
+        # to write to a less trafficked table.
         processed += 1
         @group.update_columns(
-          imap_uid_validity: @status[:uid_validity],
+          imap_uid_validity: @mailbox[:uid_validity],
           imap_last_uid: email['UID'],
           imap_old_emails: all_old_uids_size + processed,
           imap_new_emails: all_new_uids_size - processed
@@ -245,18 +290,14 @@ module Imap
       end
     end
 
-    def sync_to_server
-      return if !SiteSetting.enable_imap_write
+    def update_topic(email, incoming_email, opts = {})
+      return if !incoming_email ||
+                incoming_email.imap_sync ||
+                !incoming_email.topic ||
+                incoming_email.post&.post_number != 1
 
-      to_sync = IncomingEmail.where(imap_sync: true, imap_group_id: @group.id)
-      if to_sync.size > 0
-        @provider.open_mailbox(@group.imap_mailbox_name, write: true)
-        to_sync.each do |incoming_email|
-          ImapSyncLog.debug("Updating email on IMAP server for incoming email ID = #{incoming_email.id}, UID = #{incoming_email.imap_uid}", @group)
-          update_email(incoming_email)
-          incoming_email.update(imap_sync: false)
-        end
-      end
+      update_topic_archived_state(email, incoming_email, opts)
+      update_topic_tags(email, incoming_email, opts)
     end
 
     def update_topic_archived_state(email, incoming_email, opts = {})
