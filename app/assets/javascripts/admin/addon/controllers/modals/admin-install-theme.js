@@ -126,10 +126,16 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   onClose() {
-    this.setProperties({
-      warning: null,
-      duplicateRemoteThemeWarningShown: false,
-    });
+    this.set("duplicateRemoteThemeWarning", null);
+  },
+
+  themeHasSameUrl(theme, url) {
+    const themeUrl = theme.remote_theme && theme.remote_theme.remote_url;
+    return (
+      themeUrl &&
+      url &&
+      url.replace(/\.git$/, "") === themeUrl.replace(/\.git$/, "")
+    );
   },
 
   actions: {
@@ -174,24 +180,15 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (this.remote || this.popular) {
-        const duplicate = this.themesController.model.content.find((theme) => {
-          const url = theme.remote_theme && theme.remote_theme.remote_url;
-          return (
-            url &&
-            this.uploadUrl &&
-            url.replace(/\.git$/, "") ===
-              this.uploadUrl.trim().replace(/\.git$/, "")
-          );
-        });
-        if (duplicate && !this.duplicateRemoteThemeWarningShown) {
+        const duplicate = this.themesController.model.content.find((theme) =>
+          this.themeHasSameUrl(theme, this.uploadUrl)
+        );
+        if (duplicate && !this.duplicateRemoteThemeWarning) {
           const warning = I18n.t(
             "admin.customize.theme.duplicate_remote_theme",
             { name: duplicate.name }
           );
-          this.setProperties({
-            warning,
-            duplicateRemoteThemeWarningShown: true,
-          });
+          this.set("duplicateRemoteThemeWarning", warning);
           return;
         }
         options.data = {

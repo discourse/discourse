@@ -103,9 +103,9 @@
 
 {{#unless popular}}
   <div class="modal-footer">
-    {{#if warning}}
+    {{#if duplicateRemoteThemeWarning}}
       <div class="install-theme-warning">
-        ⚠️ {{warning}}
+        ⚠️ {{duplicateRemoteThemeWarning}}
       </div>
     {{/if}}
     {{d-button action=(action "installTheme") disabled=installDisabled class="btn btn-primary" label=submitLabel}}
