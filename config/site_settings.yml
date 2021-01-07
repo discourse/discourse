@@ -1719,10 +1719,10 @@ rate_limits:
     min: 1
     default: 6
   max_post_deletions_per_minute:
-    min: 1
+    min: 0
     default: 2
   max_post_deletions_per_day:
-    min: 1
+    min: 0
     default: 10
   invite_link_max_redemptions_limit:
     min: 2

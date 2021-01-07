@@ -1,5 +1,4 @@
-{{#d-section class="navigation-container"}}
-  {{add-category-tag-classes category=category}}
+ {{add-category-tag-classes category=category tagName=""}}
 
   <section class="category-heading">
     {{#if category.uploaded_logo.url}}
@@ -16,17 +15,18 @@
     {{plugin-outlet name="category-heading" args=(hash category=category)}}
   </section>
 
-  <div class="category-navigation">
-    {{d-navigation
-      category=category
-      filterMode=filterMode
-      noSubcategories=noSubcategories
-      canCreateTopic=canCreateTopic
-      createTopic=(route-action "createTopic")
-      createTopicDisabled=cannotCreateTopicOnCategory
-      hasDraft=draft
-      editCategory=(route-action "editCategory" category)}}
+{{#d-section class="navigation-container category-navigation"}}
 
-    {{plugin-outlet name="category-navigation" args=(hash category=category)}}
-  </div>
+  {{d-navigation
+    category=category
+    filterMode=filterMode
+    noSubcategories=noSubcategories
+    canCreateTopic=canCreateTopic
+    createTopic=(route-action "createTopic")
+    createTopicDisabled=cannotCreateTopicOnCategory
+    hasDraft=draft
+    editCategory=(route-action "editCategory" category)}}
+
+  {{plugin-outlet name="category-navigation" args=(hash category=category)}}
+
 {{/d-section}}

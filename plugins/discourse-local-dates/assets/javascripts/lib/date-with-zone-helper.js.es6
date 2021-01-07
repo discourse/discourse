@@ -10,7 +10,7 @@ const { getProperties } = Ember;
   - isDST() allows to know if a date in a specified timezone is currently under DST
   - datetimeWithZone(timezone) returns a new moment object with timezone applied
   - datetime returns the moment object
-  - repetitionsBetweenDates(duration, date) return the number of repertitions of
+  - unitRepetitionsBetweenDates(duration, date) return the number of repertitions of
   duration between two dates, eg for duration: "1.weeks", "2.months"...
 */
 export default class DateWithZoneHelper {
@@ -35,11 +35,18 @@ export default class DateWithZoneHelper {
     return this.datetime.tz(this.localTimezone).isDST();
   }
 
-  repetitionsBetweenDates(duration, date) {
+  unitRepetitionsBetweenDates(duration, date) {
     const [count, unit] = duration.split(".");
-    const diff = this.datetime.diff(date, unit);
-    const repetitions = diff / parseInt(count, 10);
-    return Math.abs((Math.round(repetitions * 10) / 10).toFixed(1));
+    // get the diff in the specified units with decimals
+    const diff = Math.abs(this.datetime.diff(date, unit, true));
+    // get integer count of duration in diff, eg: 4 hours diff is 2 for 2.hours duration
+    const integer = Math.trunc(diff / count);
+    // get fractional to define if we have to add one "duration"
+    const fractional = (diff / count) % 1;
+
+    return (
+      integer * parseInt(count, 10) + (fractional > 0 ? parseInt(count, 10) : 0)
+    );
   }
 
   add(count, unit) {

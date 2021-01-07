@@ -82,6 +82,11 @@ export default Service.extend({
 
     let displayCount = this._displayCount();
     let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+
+    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+      document.title = title;
+      return;
+    }
     if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }

@@ -42,6 +42,22 @@ discourseModule("Unit | Service | document-title", function (hooks) {
     assert.equal(document.title, "test notifications");
   });
 
+  test("it doesn't display notification counts for users in do not disturb", function (assert) {
+    this.documentTitle.currentUser = currentUser();
+
+    const date = new Date();
+    date.setHours(date.getHours() + 1);
+    this.documentTitle.currentUser.do_not_disturb_until = date.toUTCString();
+
+    this.documentTitle.currentUser.dynamic_favicon = false;
+    this.documentTitle.setTitle("test notifications");
+    this.documentTitle.updateNotificationCount(5);
+    assert.equal(document.title, "test notifications");
+    this.documentTitle.setFocus(false);
+    this.documentTitle.updateNotificationCount(6);
+    assert.equal(document.title, "test notifications");
+  });
+
   test("it doesn't increment background context counts when focused", function (assert) {
     this.documentTitle.setTitle("background context");
     this.documentTitle.setFocus(true);

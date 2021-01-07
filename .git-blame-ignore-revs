@@ -45,7 +45,7 @@ bf88410126f73aab47b7e694e3c5b46453cec1b6
 ce3fe2f4c4ddf166949ee3cec3d9ecbf9108ab52
 
 # REFACTOR: Move qunit tests to a different directory structure
-bc97c79a35d8acd283d4d8b79aa079bce9d127c6
+445d6ba45fe954fb7de11ce7b1392232160e2b63
 
 # REFACTOR: Move javascript tests inside discourse app
 23f24bfb510edb25b18b6a0d5485270c88df9b24

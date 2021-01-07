@@ -112,6 +112,7 @@ export default Component.extend(
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
+          append: bind(this, this.append),
 
           onOpen: bind(this, this._onOpenWrapper),
           onClose: bind(this, this._onCloseWrapper),
@@ -538,6 +539,10 @@ export default Component.extend(
     deselect() {
       this.clearErrors();
       this.selectKit.change(null, null);
+    },
+
+    append() {
+      // do nothing on general case
     },
 
     search(filter) {

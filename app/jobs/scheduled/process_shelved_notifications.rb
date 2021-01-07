@@ -16,7 +16,11 @@ module Jobs
       notification_ids = DB.query_single(sql, now: now)
 
       Notification.where(id: notification_ids).each do |notification|
-        NotificationEmailer.process_notification(notification, no_delay: true)
+        begin
+          NotificationEmailer.process_notification(notification, no_delay: true)
+        rescue
+          Rails.logger.warn("Failed to process notification with ID #{notification.id}")
+        end
       end
 
       DB.exec("DELETE FROM do_not_disturb_timings WHERE ends_at < :now", now: now)
