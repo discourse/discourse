@@ -61,7 +61,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("does not show option to disable dark mode by default", async function (assert) {
     await visit("/u/eviltrout/preferences/interface");
-    assert.equal($(".control-group.dark-mode").length, 0);
+    assert.ok(!exists(".control-group.dark-mode"), "option not visible");
   });
 
   test("shows light/dark color scheme pickers", async function (assert) {
@@ -72,8 +72,8 @@ acceptance("User Preferences - Interface", function (needs) {
     ]);
 
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok($(".light-color-scheme").length, "has regular dropdown");
-    assert.ok($(".dark-color-scheme").length, "has dark color scheme dropdown");
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+    assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
   });
 
   test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
@@ -85,7 +85,7 @@ acceptance("User Preferences - Interface", function (needs) {
     site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok($(".light-color-scheme").length, "has regular dropdown");
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
 
     assert.equal(
       selectKit(".light-color-scheme .select-kit").header().value(),
@@ -121,12 +121,12 @@ acceptance("User Preferences - Interface", function (needs) {
 
     await visit("/u/eviltrout/preferences/interface");
 
-    assert.ok($(".light-color-scheme").length, "has regular dropdown");
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
     assert.equal(selectKit(".theme .select-kit").header().value(), 2);
 
     await selectKit(".light-color-scheme .select-kit").expand();
     assert.equal(
-      $(".light-color-scheme .select-kit .select-kit-row").length,
+      queryAll(".light-color-scheme .select-kit .select-kit-row").length,
       2
     );
 
@@ -151,7 +151,7 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
 
       assert.ok(
-        $(".control-group.dark-mode").length,
+        exists(".control-group.dark-mode"),
         "it has the option to disable dark mode"
       );
     });
@@ -161,7 +161,7 @@ acceptance(
       site.set("user_color_schemes", []);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.equal($(".control-group.color-scheme").length, 0);
+      assert.ok(!exists(".control-group.color-scheme"));
     });
 
     test("light color scheme picker", async function (assert) {
@@ -169,10 +169,9 @@ acceptance(
       site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok($(".light-color-scheme").length, "has regular picker dropdown");
-      assert.equal(
-        $(".dark-color-scheme").length,
-        0,
+      assert.ok(exists(".light-color-scheme"), "has regular picker dropdown");
+      assert.ok(
+        !exists(".dark-color-scheme"),
         "does not have a dark color scheme picker"
       );
     });
@@ -196,18 +195,15 @@ acceptance(
       };
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok($(".light-color-scheme").length, "has regular dropdown");
-      assert.ok(
-        $(".dark-color-scheme").length,
-        "has dark color scheme dropdown"
-      );
+      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
       assert.equal(
-        $(".dark-color-scheme .selected-name").data("value"),
+        queryAll(".dark-color-scheme .selected-name").data("value"),
         session.userDarkSchemeId,
         "sets site default as selected dark scheme"
       );
-      assert.equal(
-        $(".control-group.dark-mode").length,
+      assert.ok(
+        !exists(".control-group.dark-mode"),
         0,
         "it does not show disable dark mode checkbox"
       );

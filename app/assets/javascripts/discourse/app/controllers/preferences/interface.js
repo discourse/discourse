@@ -33,7 +33,6 @@ const TITLE_COUNT_MODES = ["notifications", "contextual"];
 export default Controller.extend({
   currentThemeId: -1,
   previewingColorScheme: false,
-  selectedColorSchemeId: null,
   selectedDarkColorSchemeId: null,
   preferencesController: inject("preferences"),
   makeColorSchemeDefault: true,
@@ -160,7 +159,7 @@ export default Controller.extend({
 
     const currentThemeColorSchemeId = userThemes.findBy("id", themeId)
       .color_scheme_id;
-    return userColorSchemes.find((cs) => cs.id === currentThemeColorSchemeId);
+    return userColorSchemes.findBy("id", currentThemeColorSchemeId);
   },
 
   showColorSchemeNoneItem: not("currentSchemeCanBeSelected"),
