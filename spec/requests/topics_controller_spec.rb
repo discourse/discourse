@@ -2521,7 +2521,7 @@ RSpec.describe TopicsController do
     end
 
     it 'returns 404 when posts are deleted' do
-      topic.posts.map(&:trash!)
+      topic.posts.each(&:trash!)
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
     end
