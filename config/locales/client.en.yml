@@ -471,8 +471,8 @@ en:
 
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flag)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flags)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (of last flag)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (of last %{count} flags)"
         agreed:
           one: "%{count}% agree"
           other: "%{count}% agree"
