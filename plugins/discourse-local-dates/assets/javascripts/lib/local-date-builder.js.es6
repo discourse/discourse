@@ -48,7 +48,7 @@ export default class LocalDateBuilder {
     });
 
     if (this.recurring && moment().isAfter(localDate.datetime)) {
-      const [count, type] = this.recurring.split(".");
+      const type = this.recurring.split(".")[1];
 
       const repetitionsForType = localDate.unitRepetitionsBetweenDates(
         this.recurring,
