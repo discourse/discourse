@@ -179,7 +179,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     columns = Category.columns.map(&:name)
     imported_ids = []
-    parent_ids = []
     last_id = Category.unscoped.maximum(:id) || 1
 
     sql = "COPY categories (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
