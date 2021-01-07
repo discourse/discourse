@@ -947,7 +947,7 @@ en:
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
       color_schemes:
-        default_description: "Default"
+        default_description: "Theme default"
         disable_dark_scheme: "Same as regular"
         dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
         undo: "Reset"

@@ -29,14 +29,14 @@
       {{/if}}
       <div class="controls">
         {{combo-box
-                content=userSelectableColorSchemes
-                value=selectedColorSchemeId
-                onChange=(action "loadColorScheme")
-                options=(hash
-                  translatedNone=selectedColorSchemeNoneLabel
-                )
-
-              }}
+          content=userSelectableColorSchemes
+          value=selectedColorSchemeId
+          onChange=(action "loadColorScheme")
+          options=(hash
+            translatedNone=selectedColorSchemeNoneLabel
+            autoInsertNoneItem=showColorSchemeNoneItem
+          )
+        }}
       </div>
     </div>
     {{#if showDarkColorSchemeSelector}}
