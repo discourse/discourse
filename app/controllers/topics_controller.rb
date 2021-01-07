@@ -840,7 +840,7 @@ class TopicsController < ApplicationController
   end
 
   def feed
-    raise Discourse::NotFound if Post.where(topic_id: params[:topic_id]).count == 0
+    raise Discourse::NotFound if !Post.exists?(topic_id: params[:topic_id])
 
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
