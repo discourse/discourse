@@ -4088,7 +4088,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
-          duplicate_remote_theme: "The theme component “%{name}” is already installed, would you like to install another copy?"
+          duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           about_theme: "About"
           license: "License"
           version: "Version:"
