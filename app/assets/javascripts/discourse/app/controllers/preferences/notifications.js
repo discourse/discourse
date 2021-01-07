@@ -15,6 +15,7 @@ export default Controller.extend({
       "like_notification_frequency",
       "allow_private_messages",
       "enable_allowed_pm_users",
+      "user_notification_schedule",
     ];
 
     this.likeNotificationFrequencies = [

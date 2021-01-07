@@ -59,6 +59,7 @@ let userFields = [
   "watching_first_post_tags",
   "date_of_birth",
   "primary_group_id",
+  "user_notification_schedule",
 ];
 
 export function addSaveableUserField(fieldName) {

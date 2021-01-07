@@ -49,6 +49,26 @@ class UserUpdater
     :skip_new_user_tips
   ]
 
+  NOTIFICATION_SCHEDULE_ATTR = {
+    user_notification_schedule: [
+      :enabled,
+      :day_0_start_time,
+      :day_1_start_time,
+      :day_2_start_time,
+      :day_3_start_time,
+      :day_4_start_time,
+      :day_5_start_time,
+      :day_6_start_time,
+      :day_0_end_time,
+      :day_1_end_time,
+      :day_2_end_time,
+      :day_3_end_time,
+      :day_4_end_time,
+      :day_5_end_time,
+      :day_6_end_time,
+    ]
+  }
+
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
@@ -80,6 +100,11 @@ class UserUpdater
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
+    end
+
+    if attributes[:user_notification_schedule]
+      user_notification_schedule = user.user_notification_schedule || UserNotificationSchedule.new(user: user)
+      user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
     old_user_name = user.name.present? ? user.name : ""
@@ -170,7 +195,7 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
+      if (saved = (!save_options || user.user_option.save) && user_notification_schedule.save && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(

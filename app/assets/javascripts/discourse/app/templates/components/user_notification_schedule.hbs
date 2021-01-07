@@ -1,0 +1,78 @@
+<div class="control-group notification-schedule">
+  <label class="control-label">{{i18n "user.notification_schedule.title"}}</label>
+  {{preference-checkbox
+      labelKey="user.notification_schedule.label"
+      checked=model.user_notification_schedule.enabled}}
+
+  {{#if model.user_notification_schedule.enabled}}
+    <div class="instruction">{{i18n "user.notification_schedule.tip"}}</div>
+
+    <table class="notification-schedule-table">
+      <tbody>
+        {{user-notification-schedule-day
+          day="monday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_0_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "0")
+          endTimeOptions=day0EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_0_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_0_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="tuesday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_1_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "1")
+          endTimeOptions=day1EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_1_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_1_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="wednesday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_2_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "2")
+          endTimeOptions=day2EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_2_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_2_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="thursday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_3_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "3")
+          endTimeOptions=day3EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_3_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_3_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="friday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_4_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "4")
+          endTimeOptions=day4EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_4_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_4_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="saturday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_5_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "5")
+          endTimeOptions=day5EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_5_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_5_end_time))
+        }}
+        {{user-notification-schedule-day
+          day="sunday"
+          startTimeOptions=startTimeOptions
+          startTimeValue=model.user_notification_schedule.day_6_start_time
+          onChangeStartTime=(action "startingTimeChangedForDay" "6")
+          endTimeOptions=day6EndTimeOptions
+          endTimeValue=model.user_notification_schedule.day_6_end_time
+          onChangeEndTime=(action (mut model.user_notification_schedule.day_6_end_time))
+        }}
+      </tbody>
+    </table>
+  {{/if}}
+</div>
