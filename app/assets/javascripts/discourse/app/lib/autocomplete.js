@@ -569,6 +569,7 @@ export default function (options) {
 
       // Keyboard codes! So 80's.
       switch (e.which) {
+        case keys.tab:
         case keys.enter:
           if (!autocompleteOptions) {
             closeAutocomplete();
