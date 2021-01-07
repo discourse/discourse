@@ -59,6 +59,7 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    Theme.expire_site_cache! if saved_change_to_color_scheme_id?
     notify_with_scheme = saved_change_to_color_scheme_id?
 
     reload

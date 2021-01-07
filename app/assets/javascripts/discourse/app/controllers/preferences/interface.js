@@ -11,11 +11,11 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import { not, reads } from "@ember/object/computed";
 import I18n from "I18n";
 import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { reads } from "@ember/object/computed";
 import { reload } from "discourse/helpers/page-reloader";
 
 const USER_HOMES = {
@@ -41,10 +41,7 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
 
-    this.setProperties({
-      selectedColorSchemeId: this.session.userColorSchemeId,
-      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
-    });
+    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
   },
 
   @discourseComputed("makeThemeDefault")
@@ -151,6 +148,23 @@ export default Controller.extend({
     "user.color_schemes.default_description"
   ),
 
+  @discourseComputed(
+    "userSelectableThemes",
+    "userSelectableColorSchemes",
+    "themeId"
+  )
+  currentSchemeCanBeSelected(userThemes, userColorSchemes, themeId) {
+    if (!userThemes) {
+      return false;
+    }
+
+    const currentThemeColorSchemeId = userThemes.findBy("id", themeId)
+      .color_scheme_id;
+    return userColorSchemes.find((cs) => cs.id === currentThemeColorSchemeId);
+  },
+
+  showColorSchemeNoneItem: not("currentSchemeCanBeSelected"),
+
   @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
     return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
@@ -213,6 +227,17 @@ export default Controller.extend({
     },
     get() {
       return this.get("model.user_option.dark_scheme_id") === -1 ? false : true;
+    },
+  }),
+
+  selectedColorSchemeId: computed({
+    set(key, value) {
+      return value;
+    },
+    get() {
+      return this.currentSchemeCanBeSelected
+        ? this.session.userColorSchemeId
+        : null;
     },
   }),
 

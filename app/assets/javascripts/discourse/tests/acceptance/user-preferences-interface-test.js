@@ -5,6 +5,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import I18n from "I18n";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -73,6 +74,63 @@ acceptance("User Preferences - Interface", function (needs) {
     await visit("/u/eviltrout/preferences/interface");
     assert.ok($(".light-color-scheme").length, "has regular dropdown");
     assert.ok($(".dark-color-scheme").length, "has dark color scheme dropdown");
+  });
+
+  test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
+    let site = Site.current();
+    site.set("user_themes", [
+      { id: 1, name: "Cool Theme", color_scheme_id: null },
+    ]);
+
+    site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
+
+    await visit("/u/eviltrout/preferences/interface");
+    assert.ok($(".light-color-scheme").length, "has regular dropdown");
+
+    assert.equal(
+      selectKit(".light-color-scheme .select-kit").header().value(),
+      null
+    );
+    assert.equal(
+      selectKit(".light-color-scheme .select-kit").header().label(),
+      I18n.t("user.color_schemes.default_description")
+    );
+  });
+
+  test("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
+    let meta = document.createElement("meta");
+    meta.name = "discourse_theme_ids";
+    meta.content = "2";
+    document.getElementsByTagName("head")[0].appendChild(meta);
+
+    let site = Site.current();
+    site.set("user_themes", [
+      { theme_id: 1, name: "Cool Theme", color_scheme_id: 2, default: true },
+      {
+        theme_id: 2,
+        name: "Some Other Theme",
+        color_scheme_id: 3,
+        default: false,
+      },
+    ]);
+
+    site.set("user_color_schemes", [
+      { id: 2, name: "Cool Breeze" },
+      { id: 3, name: "Dark Night" },
+    ]);
+
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert.ok($(".light-color-scheme").length, "has regular dropdown");
+    assert.equal(selectKit(".theme .select-kit").header().value(), 2);
+
+    await selectKit(".light-color-scheme .select-kit").expand();
+    assert.equal(
+      $(".light-color-scheme .select-kit .select-kit-row").length,
+      2
+    );
+
+    document.querySelector("meta[name='discourse_theme_ids']").remove();
   });
 });
 
