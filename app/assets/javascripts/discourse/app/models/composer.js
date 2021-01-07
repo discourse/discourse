@@ -536,6 +536,11 @@ const Composer = RestModel.extend({
       return reply.length;
     }
 
+    const commentsRegexp = /<!--(.*?)-->/gm;
+    while (commentsRegexp.test(reply)) {
+      reply = reply.replace(commentsRegexp, "");
+    }
+
     while (QUOTE_REGEXP.test(reply)) {
       // make it global so we can strip as many quotes at once
       // keep in mind nested quotes mean we still need a loop here
