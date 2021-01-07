@@ -233,6 +233,21 @@ test("option[recurring]", function (assert) {
       "it works for a future date"
     );
   });
+
+  freezeTime({ date: "2021-01-08 11:16" }, () => {
+    assert.buildsCorrectDate(
+      {
+        date: "2021-01-05",
+        time: "14:00",
+        recurring: "2.hours",
+        timezone: NEW_YORK,
+      },
+      {
+        formated: "Today 12:00 PM",
+      },
+      "it works with hours"
+    );
+  });
 });
 
 test("option[countown]", function (assert) {

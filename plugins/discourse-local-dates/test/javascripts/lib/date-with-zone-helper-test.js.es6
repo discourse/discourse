@@ -28,7 +28,7 @@ test("#format", function (assert) {
   assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
-test("#repetitionsBetweenDates", function (assert) {
+test("#unitRepetitionsBetweenDates", function (assert) {
   let date;
 
   date = buildDateHelper({
@@ -39,7 +39,7 @@ test("#repetitionsBetweenDates", function (assert) {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.hour",
       moment.tz("2020-02-15 15:36", SYDNEY)
     ),
@@ -55,7 +55,7 @@ test("#repetitionsBetweenDates", function (assert) {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:36", PARIS)
     ),
@@ -71,7 +71,7 @@ test("#repetitionsBetweenDates", function (assert) {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:37", PARIS)
     ),
@@ -87,11 +87,11 @@ test("#repetitionsBetweenDates", function (assert) {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
-      "2.minute",
+    date.unitRepetitionsBetweenDates(
+      "2.minutes",
       moment.tz("2020-02-15 15:41", PARIS)
     ),
-    2.5,
+    6,
     "it correctly finds difference with a multiplicator"
   );
 });
