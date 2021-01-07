@@ -50,12 +50,12 @@ export default class LocalDateBuilder {
     if (this.recurring && moment().isAfter(localDate.datetime)) {
       const [count, type] = this.recurring.split(".");
 
-      const repetitionsForType = localDate.repetitionsBetweenDates(
+      const repetitionsForType = localDate.unitRepetitionsBetweenDates(
         this.recurring,
         moment.tz(this.localTimezone)
       );
 
-      localDate = localDate.add(repetitionsForType + parseInt(count, 10), type);
+      localDate = localDate.add(repetitionsForType, type);
     }
 
     const previews = this._generatePreviews(localDate, displayedTimezone);
