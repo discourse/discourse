@@ -194,6 +194,55 @@ describe UserUpdater do
       expect(user.user_option.theme_ids).to eq([theme.id, child.id])
     end
 
+    let(:schedule_attrs) {
+      {
+        enabled: true,
+        day_0_start_time: 30,
+        day_0_end_time: 60,
+        day_1_start_time: 30,
+        day_1_end_time: 60,
+        day_2_start_time: 30,
+        day_2_end_time: 60,
+        day_3_start_time: 30,
+        day_3_end_time: 60,
+        day_4_start_time: 30,
+        day_4_end_time: 60,
+        day_5_start_time: 30,
+        day_5_end_time: 60,
+        day_6_start_time: 30,
+        day_6_end_time: 60,
+      }
+    }
+
+    it "allows users to create their notification schedule when it doesn't exist previously" do
+      user = Fabricate(:user)
+      expect(user.user_notification_schedule).to be_nil
+      updater = UserUpdater.new(acting_user, user)
+
+      updater.update(user_notification_schedule: schedule_attrs)
+      user.reload
+      expect(user.user_notification_schedule.enabled).to eq(true)
+      expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+      expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+      expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+      expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+    end
+
+    it "allows users to update their notification schedule" do
+      user = Fabricate(:user)
+      UserNotificationSchedule.create({
+        user: user,
+      }.merge(UserNotificationSchedule::DEFAULT))
+      updater = UserUpdater.new(acting_user, user)
+      updater.update(user_notification_schedule: schedule_attrs)
+      user.reload
+      expect(user.user_notification_schedule.enabled).to eq(true)
+      expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+      expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+      expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+      expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+    end
+
     context 'when sso overrides bio' do
       it 'does not change bio' do
         SiteSetting.sso_url = "https://www.example.com/sso"

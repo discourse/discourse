@@ -23,5 +23,8 @@ class CreateUserNotificationSchedules < ActiveRecord::Migration[6.0]
 
     add_index :user_notification_schedules, [:user_id]
     add_index :user_notification_schedules, [:enabled]
+
+    add_column :do_not_disturb_timings, :scheduled, :boolean, default: false
+    add_index :do_not_disturb_timings, [:scheduled]
   end
 end

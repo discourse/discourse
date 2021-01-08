@@ -49,8 +49,11 @@ export default Component.extend({
       if (!am && hours !== 12) {
         hours = hours - 12;
       }
+      const amPm = I18n.t(
+        `user.notification_schedule.${am ? "morning" : "afternoon"}`
+      );
       timeOptions.push({
-        name: `${hours}:${minutes} ${am ? "AM" : "PM"}`,
+        name: `${hours}:${minutes} ${amPm}`,
         value: timeInMin,
       });
     }
@@ -59,6 +62,7 @@ export default Component.extend({
 
   @action
   startingTimeChangedForDay(dayIndex, val) {
+    val = parseInt(val, 10);
     this.model.set(
       `user_notification_schedule.day_${dayIndex}_start_time`,
       val
@@ -110,6 +114,7 @@ export default Component.extend({
   },
 
   _buildEndTimeOptionsFor(startTime) {
+    startTime = parseInt(startTime, 10);
     if (startTime === -1) {
       return null;
     }

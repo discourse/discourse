@@ -20,4 +20,28 @@ class UserNotificationSchedule < ActiveRecord::Base
     day_6_start_time: 480,
     day_6_end_time: 1020
   }
+
+  validate :has_valid_times
+  validates :enabled, inclusion: { in: [ true, false ] }
+
+  scope :enabled, -> { where(enabled: true) }
+
+  def has_valid_times
+    7.times do |n|
+      start_key = "day_#{n}_start_time"
+      end_key = "day_#{n}_end_time"
+
+      if self[start_key].nil? || self[start_key] > 1410 || self[start_key] < -1
+        errors.add(start_key, "is invalid")
+      end
+
+      if self[end_key].nil? || self[end_key] > 1440
+        errors.add(end_key, "is invalid")
+      end
+
+      if self[start_key] && self[end_key] && self[start_key] > self[end_key]
+        errors.add(start_key, "is after end time")
+      end
+    end
+  end
 end

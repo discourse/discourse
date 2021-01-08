@@ -195,7 +195,7 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_notification_schedule.save && user_profile.save && user.save) &&
+      if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(
