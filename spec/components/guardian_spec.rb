@@ -2081,6 +2081,11 @@ describe Guardian do
         expect(Guardian.new(user).can_delete?(post)).to be_truthy
       end
 
+      it 'returns false when self deletions are disabled' do
+        SiteSetting.max_post_deletions_per_day = 0
+        expect(Guardian.new(user).can_delete?(post)).to be_falsey
+      end
+
       it "returns false when trying to delete another user's own post" do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
@@ -2119,7 +2124,6 @@ describe Guardian do
         it "doesn't allow a regular user to delete it" do
           expect(Guardian.new(post.user).can_delete?(post)).to be_falsey
         end
-
       end
 
     end
