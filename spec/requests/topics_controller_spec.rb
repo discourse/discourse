@@ -2519,6 +2519,12 @@ RSpec.describe TopicsController do
       expect(response.body).to_not include("/forum/forum")
       expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
     end
+
+    it 'returns 404 when posts are deleted' do
+      topic.posts.each(&:trash!)
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#invite_group' do
