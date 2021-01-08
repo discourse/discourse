@@ -1,7 +1,7 @@
 {
-  "name": "admin",
+  "name": "discourse-widget-hbs",
   "version": "1.0.0",
-  "description": "Discourse's admin section",
+  "description": "Support for Discourse's inline `hbs` compiler for widgets",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [
@@ -17,14 +17,14 @@
   "dependencies": {
     "ember-auto-import": "^1.5.3",
     "ember-cli-babel": "^7.13.0",
-    "ember-cli-htmlbars": "^4.2.0",
-    "xss": "^1.0.8"
+    "ember-cli-htmlbars": "^4.2.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",
     "@glimmer/component": "^1.0.0",
     "babel-eslint": "^10.0.3",
     "broccoli-asset-rev": "^3.0.0",
+    "broccoli-stew": "^3.0.0",
     "ember-cli": "~3.15.2",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-eslint": "^5.1.0",
@@ -42,12 +42,13 @@
     "ember-try": "^1.4.0",
     "eslint-plugin-ember": "^7.7.1",
     "eslint-plugin-node": "^10.0.0",
+    "handlebars": "^4.7.6",
     "loader.js": "^4.7.0"
   },
   "engines": {
     "node": "8.* || >= 10.*"
   },
   "ember": {
-    "edition": "default"
+    "edition": "octane"
   }
 }
