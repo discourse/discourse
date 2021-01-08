@@ -203,6 +203,15 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when the self deletions are disabled" do
+        SiteSetting.max_post_deletions_per_day = 0
+        post = Fabricate(:post, user: user, topic: topic, post_number: 3)
+        sign_in(user)
+
+        delete "/posts/#{post.id}.json"
+        expect(response).to be_forbidden
+      end
+
       it "uses a PostDestroyer" do
         post = Fabricate(:post, topic_id: topic.id, post_number: 3)
         sign_in(moderator)
@@ -300,6 +309,15 @@ describe PostsController do
     describe 'when logged in' do
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)
+        sign_in(user)
+
+        put "/posts/#{post.id}/recover.json"
+        expect(response).to be_forbidden
+      end
+
+      it "raises an error when self deletion/recovery is disabled" do
+        SiteSetting.max_post_deletions_per_day = 0
+        post = Fabricate(:post, user: user, topic: topic, post_number: 3)
         sign_in(user)
 
         put "/posts/#{post.id}/recover.json"
