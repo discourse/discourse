@@ -1337,6 +1337,29 @@ describe User do
 
   end
 
+  describe '#avatar_template' do
+    it 'uses the small logo if the user is the system user' do
+      logo_small_url = UrlHelper.absolute(SiteSetting.logo_small.url)
+
+      expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
+    end
+
+    it 'uses the system user avatar if the logo is nil' do
+      SiteSetting.logo_small = nil
+      system_user = Discourse.system_user
+      expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
+
+      expect(Discourse.system_user.avatar_template).to eq(expected)
+    end
+
+    it 'uses the regular avatar for other users' do
+      user = Fabricate(:user)
+      expected = User.avatar_template(user.username, user.uploaded_avatar_id)
+
+      expect(user.avatar_template).to eq(expected)
+    end
+  end
+
   describe "update_posts_read!" do
     context "with a UserVisit record" do
       let!(:user) { Fabricate(:user) }
