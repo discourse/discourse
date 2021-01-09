@@ -70,6 +70,8 @@ class ContentSecurityPolicy
         next if uri.host.nil? # Ignore same-domain scripts (theme-javascripts)
         next if uri.path.nil? # Ignore raw hosts
 
+        uri.query = nil # CSP should not include query part of url
+
         uri_string = uri.to_s.sub(/^\/\//, '') # Protocol-less CSP should not have // at beginning of URL
 
         auto_script_src_extension[:script_src] << uri_string
