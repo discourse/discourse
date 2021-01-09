@@ -132,6 +132,11 @@ label {
     align-self: center;
     margin-right: 4px;
   }
+  a {
+    // flex removes whitespace characters between text nodes and elements
+    // so we need to add it back
+    margin: 0 0.25em;
+  }
 }
 
 input {
