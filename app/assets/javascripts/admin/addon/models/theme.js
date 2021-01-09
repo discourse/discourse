@@ -253,6 +253,11 @@ const Theme = RestModel.extend({
     }
   },
 
+  @discourseComputed("recentlyInstalled", "component", "hasParents")
+  warnUnassignedComponent(recent, component, hasParents) {
+    return recent && component && !hasParents;
+  },
+
   removeChildTheme(theme) {
     const childThemes = this.childThemes;
     childThemes.removeObject(theme);
