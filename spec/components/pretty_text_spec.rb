@@ -641,16 +641,16 @@ describe PrettyText do
         html = <<~EOS
           <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
         EOS
-        expect(PrettyText.excerpt(html, 10, strip_broken_emoji: false)).to eq(":bike: :ca&hellip;")
+        expect(PrettyText.excerpt(html, 10, strip_truncated_emoji_code: false)).to eq(":bike: :ca&hellip;")
 
-        expect(PrettyText.excerpt(html, 7, strip_broken_emoji: true)).to eq(":bike: &hellip;")
-        expect(PrettyText.excerpt(html, 8, strip_broken_emoji: true)).to eq(":bike: &hellip;")
-        expect(PrettyText.excerpt(html, 9, strip_broken_emoji: true)).to eq(":bike: &hellip;")
-        expect(PrettyText.excerpt(html, 10, strip_broken_emoji: true)).to eq(":bike: &hellip;")
-        expect(PrettyText.excerpt(html, 11, strip_broken_emoji: true)).to eq(":bike: &hellip;")
-        expect(PrettyText.excerpt(html, 12, strip_broken_emoji: true)).to eq(":bike: :cat: &hellip;")
-        expect(PrettyText.excerpt(html, 13, strip_broken_emoji: true)).to eq(":bike: :cat: &hellip;")
-        expect(PrettyText.excerpt(html, 14, strip_broken_emoji: true)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 7, strip_truncated_emoji_code: true)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 8, strip_truncated_emoji_code: true)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 9, strip_truncated_emoji_code: true)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 10, strip_truncated_emoji_code: true)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 11, strip_truncated_emoji_code: true)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 12, strip_truncated_emoji_code: true)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 13, strip_truncated_emoji_code: true)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 14, strip_truncated_emoji_code: true)).to eq(":bike: :cat: &hellip;")
       end
     end
 
