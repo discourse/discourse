@@ -13,6 +13,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     options || {}
     @strip_links = options[:strip_links] == true
     @strip_images = options[:strip_images] == true
+    @strip_truncated_emoji_code = options[:strip_truncated_emoji_code] == true
     @text_entities = options[:text_entities] == true
     @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
@@ -207,7 +208,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
-      @excerpt << encode.call(string[0..length]) if truncate
+      @excerpt << encode.call(string[0..length]) if truncate && !truncated_emoji_code?(string)
       @excerpt << (@text_entities ? "..." : "&hellip;")
       @excerpt << "</a>" if @in_a
       @excerpt << after_string if after_string
@@ -217,5 +218,13 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @excerpt << encode.call(string)
     @excerpt << after_string if after_string
     @current_length += string.length if count_it
+  end
+
+  def truncated_emoji_code?(string)
+    @strip_truncated_emoji_code && emoji?(string)
+  end
+
+  def emoji?(string)
+    string.match?(/:\w+:/)
   end
 end

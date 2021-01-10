@@ -486,7 +486,7 @@ class Post < ActiveRecord::Base
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, post: self)
+    Post.excerpt(cooked, SiteSetting.topic_excerpt_maxlength, strip_links: true, strip_images: true, strip_truncated_emoji_code: true, post: self)
   end
 
   def is_first_post?
