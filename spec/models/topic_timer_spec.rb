@@ -258,4 +258,39 @@ RSpec.describe TopicTimer, type: :model do
       })).to eq(true)
     end
   end
+
+  describe "runnable?" do
+    it "returns false if execute_at > now" do
+      topic_timer = Fabricate.build(:topic_timer,
+                                    execute_at: Time.zone.now + 1.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+
+      expect(topic_timer.runnable?).to eq(false)
+    end
+
+    it "returns false if timer is deleted" do
+      topic_timer = Fabricate.create(:topic_timer,
+                                    execute_at: Time.zone.now - 1.hour,
+                                    created_at: Time.zone.now - 2.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+      topic_timer.trash!
+
+      expect(topic_timer.runnable?).to eq(false)
+    end
+
+    it "returns true if execute_at < now" do
+      topic_timer = Fabricate.build(:topic_timer,
+                                    execute_at: Time.zone.now - 1.hour,
+                                    created_at: Time.zone.now - 2.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+
+      expect(topic_timer.runnable?).to eq(true)
+    end
+  end
 end

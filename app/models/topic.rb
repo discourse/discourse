@@ -576,11 +576,15 @@ class Topic < ActiveRecord::Base
   end
 
   def private_message?
-    archetype == Archetype.private_message
+    self.archetype == Archetype.private_message
   end
 
   def regular?
     self.archetype == Archetype.default
+  end
+
+  def open?
+    !self.closed?
   end
 
   MAX_SIMILAR_BODY_LENGTH ||= 200
