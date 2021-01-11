@@ -13,12 +13,8 @@
       {{i18n "do_not_disturb.options.tomorrow"}}
     {{/tap-tile}}
   {{/tap-tile-grid}}
+
+  <a href {{ action navigateToNotificationSchedule }}>
+    {{i18n "do_not_disturb.set_schedule"}}
+  </a>
 {{/d-modal-body}}
-<div class="modal-footer">
-  {{d-button
-    label="do_not_disturb.save"
-    action=(action "save")
-    class="btn-primary"
-    disabled=saveDisabled
-  }}
-</div>

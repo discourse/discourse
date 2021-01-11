@@ -3556,7 +3556,6 @@ en:
 
     do_not_disturb:
       title: "Do not disturb for..."
-      save: "Save"
       label: "Do not disturb"
       remaining: "%{remaining} remaining"
       options:
@@ -3565,6 +3564,7 @@ en:
         two_hours: "2 hours"
         tomorrow: "Until tomorrow"
         custom: "Custom"
+      set_schedule: "Set a notification schedule"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
