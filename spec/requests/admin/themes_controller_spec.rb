@@ -551,6 +551,18 @@ describe Admin::ThemesController do
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
     end
+
+    it 'prevents converting the default theme to a component' do
+      SiteSetting.default_theme_id = theme.id
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: { component: true }
+      }
+
+      # should this error message be localized? InvalidParameters :component
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include('component')
+    end
   end
 
   describe '#destroy' do
