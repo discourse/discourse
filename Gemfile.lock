@@ -431,7 +431,7 @@ GEM
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.13.1)
+    uniform_notifier (1.13.2)
     webmock (3.11.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
