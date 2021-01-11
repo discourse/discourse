@@ -373,9 +373,6 @@ ur:
         name: "نام"
         fields: "فیلڈز"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگ)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگز)"
         agreed:
           one: "%{count}٪ متفق"
           other: "%{count}٪ متفق"

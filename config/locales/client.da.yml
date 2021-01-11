@@ -377,9 +377,6 @@ da:
         name: "Navn"
         fields: "Felter"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlet markering)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlede markeringer)"
         agreed:
           one: "%{count}% er enige"
           other: "%{count}% er enige"

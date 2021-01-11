@@ -638,7 +638,7 @@ class User < ActiveRecord::Base
   end
 
   def publish_do_not_disturb(ends_at: nil)
-    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at }, user_ids: [id])
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
   end
 
   def password=(password)
@@ -869,7 +869,11 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template
-    self.class.avatar_template(username, uploaded_avatar_id)
+    if id == Discourse::SYSTEM_USER_ID && SiteSetting.logo_small
+      UrlHelper.absolute(SiteSetting.logo_small.url)
+    else
+      self.class.avatar_template(username, uploaded_avatar_id)
+    end
   end
 
   # The following count methods are somewhat slow - definitely don't use them in a loop.

@@ -239,6 +239,7 @@ describe ContentSecurityPolicy do
 
       theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
         <script src='https://example.com/myscript.js'></script>
+        <script src='https://example.com/myscript2.js?with=query'></script>
         <script src='//example2.com/protocol-less-script.js'></script>
         <script src='domain-only.com'></script>
         <script>console.log('inline script')</script>
@@ -248,6 +249,8 @@ describe ContentSecurityPolicy do
       theme.save!
 
       expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript2.js')
+      expect(parse(theme_policy)['script-src']).not_to include('?')
       expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
       expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
       expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)

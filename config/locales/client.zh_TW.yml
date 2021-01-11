@@ -333,8 +333,6 @@ zh_TW:
         name: "名稱"
         fields: "欄位"
       user_percentage:
-        summary:
-          other: "%{agreed}, %{disagreed}, %{ignored} (共%{count}則檢舉)"
         agreed:
           other: "%{count}%同意"
         disagreed:

@@ -32,6 +32,13 @@ describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
+  describe "slug" do
+    it "converts to lower" do
+      category = Category.create!(name: "Hello World", slug: "Hello-World", user: user)
+      expect(category.slug).to eq("hello-world")
+    end
+  end
+
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(everyone: :full)

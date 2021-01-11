@@ -336,8 +336,6 @@ th:
         email: "อีเมล"
         name: "ชื่อ"
       user_percentage:
-        summary:
-          other: "%{agreed},%{disagreed},%{ignored} (%{count}ธงทั้งหมด)"
         agreed:
           other: "%{count}% เห็นด้วย"
         disagreed:

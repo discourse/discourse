@@ -448,12 +448,6 @@ sl:
         email: "E-naslov"
         name: "Polno ime"
         fields: "Polja"
-      user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          two: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
       topics:
         topic: "Tema"
         reviewable_count: "Število"
@@ -916,7 +910,6 @@ sl:
       color_scheme_default_on_all_devices: "Nastavi privzete barvne sheme v vseh mojih napravah"
       color_scheme: "Barvna shema"
       color_schemes:
-        default_description: "Privzeto"
         disable_dark_scheme: "Enako kot običajna"
         dark_instructions: "Barvno shemo temnega načina si lahko ogledate tako, da napravo preklopite v temni način."
         undo: "Ponastavi"
@@ -3296,7 +3289,6 @@ sl:
     invite:
       custom_message: "Naredite vaše povabilo bolj osebno tako da napišete <a href>osebno sporočilo</a>."
       custom_message_placeholder: "Vnesi sporočilo po meri"
-      approval_not_required: "Uporabnik bo samodejno odobren takoj, ko bo sprejel to povabilo."
       custom_message_template_forum: "Pridruži se našemu forumu!"
       custom_message_template_topic: "Zdi se mi, da vam bo ta tema všeč!"
     forced_anonymous: "Zaradi visoke obremenitve je to prikazano vsem tako kot bi videl neprijavljen uporabnik."

@@ -416,9 +416,6 @@ pt_BR:
         name: "Nome"
         fields: "Campos"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalização no total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalizações no total)"
         agreed:
           one: "%{count}% concorda"
           other: "%{count}% concordam"

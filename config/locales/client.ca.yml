@@ -407,9 +407,6 @@ ca:
         name: "Nom"
         fields: "Camps"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} bandera en total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} banderes en total)"
         agreed:
           one: "El %{count}% hi està d'acord"
           other: "El %{count}% hi està d'acord"
@@ -817,7 +814,6 @@ ca:
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
-        default_description: "Per defecte"
         disable_dark_scheme: "Igual que habitualment"
         dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
         undo: "Restableix"

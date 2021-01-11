@@ -599,7 +599,7 @@ fa_IR:
       email_title: 'موضوع "%{title}" نیاز به توجه مدیر دارد. '
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: "<p>این فرسته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
+    user_must_edit: "<p>این نوشته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
   archetypes:
     regular:
       title: "موضوع عادی"

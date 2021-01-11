@@ -41,25 +41,25 @@ gl:
         title: "Vota"
         label: "Vota agora!"
       show-results:
-        title: "Mostrar os resultados da votación"
-        label: "Mostrar os resultados"
+        title: "Amosar os resultados da votación"
+        label: "Amosar os resultados"
       hide-results:
-        title: "Volver aos teus votos"
+        title: "Volver aos seus votos"
         label: "Amosar o voto"
       group-results:
         title: "Agrupar votos por campo de usuario"
-        label: "Amosar detalle"
+        label: "Amosar en detalle"
       export-results:
         title: "Exportar os resultados da votación"
         label: "Exportar"
       open:
         title: "Abrir a enquisa"
         label: "Abrir"
-        confirm: "Confirmas a apertura da enquisa?"
+        confirm: "Confirma a apertura da enquisa?"
       close:
         title: "Pechar a enquisa"
         label: "Pechar"
-        confirm: "Confirmas o peche desta enquisa?"
+        confirm: "Confirma o peche desta enquisa?"
       automatic_close:
         closes_in: "Pechará en <strong>%{timeLeft}</strong>."
         age: "Pechado desde <strong>%{age}</strong>"
@@ -90,7 +90,7 @@ gl:
           always: Sempre visíbel
           vote: Votación en marcha
           closed: Cando peche
-          staff: Soamente persoal
+          staff: Soamente ao grupo
         poll_groups:
           label: Grupos permitidos
         poll_chart_type:

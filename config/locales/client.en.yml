@@ -3537,7 +3537,7 @@ en:
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."
       custom_message_placeholder: "Enter your custom message"
-      approval_not_required: "User will be auto-approved as soon as they will accept this invite."
+      approval_not_required: "User will be auto-approved as soon as they accept this invite."
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
@@ -4104,6 +4104,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           about_theme: "About"
           license: "License"
           version: "Version:"

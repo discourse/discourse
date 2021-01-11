@@ -1746,8 +1746,8 @@ en:
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
 
-    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
-    max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
+    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute. Set to 0 to disable post deletions."
+    max_post_deletions_per_day: "Maximum number of posts a user can delete per day. Set to 0 to disable post deletions."
 
     invite_link_max_redemptions_limit: "Maximum redemptions allowed for invite links can't be more than this value."
 

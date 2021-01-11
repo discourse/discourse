@@ -185,14 +185,19 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    # Can't delete posts in archived topics unless you are staff
     can_moderate = can_moderate_topic?(post.topic)
-    return false if !can_moderate && post.topic&.archived?
+    return true if can_moderate
+
+    # Can't delete posts in archived topics unless you are staff
+    return false if post.topic&.archived?
 
     # You can delete your own posts
-    return !post.user_deleted? if is_my_own?(post)
+    if is_my_own?(post)
+      return false if (SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1)
+      return true if !post.user_deleted?
+    end
 
-    can_moderate
+    false
   end
 
   def can_recover_post?(post)
@@ -200,12 +205,14 @@ module PostGuardian
 
     # PERF, vast majority of the time topic will not be deleted
     topic = (post.topic || Topic.with_deleted.find(post.topic_id)) if post.topic_id
+    return true if can_moderate_topic?(topic) && !!post.deleted_at
 
-    if can_moderate_topic?(topic)
-      !!post.deleted_at
-    else
-      is_my_own?(post) && post.user_deleted && !post.deleted_at
+    if is_my_own?(post)
+      return false if (SiteSetting.max_post_deletions_per_minute < 1 || SiteSetting.max_post_deletions_per_day < 1)
+      return true if post.user_deleted && !post.deleted_at
     end
+
+    false
   end
 
   def can_delete_post_action?(post_action)

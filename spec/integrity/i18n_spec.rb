@@ -24,7 +24,6 @@ def is_yaml_compatible?(english, translated)
 end
 
 describe "i18n integrity checks" do
-
   it 'has an i18n key for each Trust Levels' do
     TrustLevel.all.each do |ts|
       expect(ts.name).not_to match(/translation missing/)
@@ -98,16 +97,46 @@ describe "i18n integrity checks" do
         end
 
         unless path["transliterate"]
-
           it "is compatible with english" do
             expect(is_yaml_compatible?(english_yaml, yaml)).to eq(true)
           end
-
         end
-
       end
+    end
+  end
+end
 
+describe "fallbacks" do
+  before do
+    I18n.backend = I18n::Backend::DiscourseI18n.new
+    I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
+    I18n.reload!
+    I18n.init_accelerator!
+  end
+
+  it "finds the fallback translation" do
+    I18n.backend.store_translations(:en, test: "en test")
+
+    I18n.with_locale("pl_PL") do
+      expect(I18n.t("test")).to eq("en test")
     end
   end
 
+  context "in a multi-threaded environment" do
+    it "finds the fallback translation" do
+      I18n.backend.store_translations(:en, test: "en test")
+
+      thread = Thread.new do
+        I18n.with_locale("pl_PL") do
+          expect(I18n.t("test")).to eq("en test")
+        end
+      end
+
+      begin
+        thread.join
+      ensure
+        thread.exit
+      end
+    end
+  end
 end

@@ -636,6 +636,22 @@ describe PrettyText do
       end
     end
 
+    context "emojis" do
+      it "should remove broken emoji" do
+        html = <<~EOS
+          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
+        EOS
+        expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 9)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 10)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 11)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 12)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 13)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 14)).to eq(":bike: :cat: &hellip;")
+      end
+    end
+
     it "should have an option to strip links" do
       expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq("cnn")
     end
