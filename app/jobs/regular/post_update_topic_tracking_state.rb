@@ -3,8 +3,6 @@
 module Jobs
   class PostUpdateTopicTrackingState < ::Jobs::Base
 
-    sidekiq_options queue: 'critical'
-
     def execute(args)
       post = Post.find_by(id: args[:post_id])
 
