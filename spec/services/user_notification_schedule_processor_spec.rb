@@ -129,7 +129,7 @@ describe UserNotificationScheduleProcessor do
       travel_to Time.new(2020, 12, 31, 1, 0, 0, "+00:00") do
         MessageBus.expects(:publish).with(
           "/do-not-disturb/#{user.id}",
-          { ends_at: Time.new(2020, 12, 31, 7, 59, 0, "+00:00") },
+          { ends_at: Time.new(2020, 12, 31, 7, 59, 0, "+00:00").httpdate },
           user_ids: [user.id]
         )
         UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(schedule)
