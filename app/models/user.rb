@@ -637,7 +637,7 @@ class User < ActiveRecord::Base
   end
 
   def publish_do_not_disturb(ends_at: nil)
-    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at }, user_ids: [id])
+    MessageBus.publish("/do-not-disturb/#{id}", { ends_at: ends_at&.httpdate }, user_ids: [id])
   end
 
   def password=(password)
