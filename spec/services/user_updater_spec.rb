@@ -214,33 +214,43 @@ describe UserUpdater do
       }
     }
 
-    it "allows users to create their notification schedule when it doesn't exist previously" do
-      user = Fabricate(:user)
-      expect(user.user_notification_schedule).to be_nil
-      updater = UserUpdater.new(acting_user, user)
+    context 'with user_notification_schedule' do
+      fab!(:user) { Fabricate(:user) }
 
-      updater.update(user_notification_schedule: schedule_attrs)
-      user.reload
-      expect(user.user_notification_schedule.enabled).to eq(true)
-      expect(user.user_notification_schedule.day_0_start_time).to eq(30)
-      expect(user.user_notification_schedule.day_0_end_time).to eq(60)
-      expect(user.user_notification_schedule.day_6_start_time).to eq(30)
-      expect(user.user_notification_schedule.day_6_end_time).to eq(60)
-    end
+      it "allows users to create their notification schedule when it doesn't exist previously" do
+        expect(user.user_notification_schedule).to be_nil
+        updater = UserUpdater.new(acting_user, user)
 
-    it "allows users to update their notification schedule" do
-      user = Fabricate(:user)
-      UserNotificationSchedule.create({
-        user: user,
-      }.merge(UserNotificationSchedule::DEFAULT))
-      updater = UserUpdater.new(acting_user, user)
-      updater.update(user_notification_schedule: schedule_attrs)
-      user.reload
-      expect(user.user_notification_schedule.enabled).to eq(true)
-      expect(user.user_notification_schedule.day_0_start_time).to eq(30)
-      expect(user.user_notification_schedule.day_0_end_time).to eq(60)
-      expect(user.user_notification_schedule.day_6_start_time).to eq(30)
-      expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+        updater.update(user_notification_schedule: schedule_attrs)
+        user.reload
+        expect(user.user_notification_schedule.enabled).to eq(true)
+        expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+        expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+      end
+
+      it "allows users to update their notification schedule" do
+        UserNotificationSchedule.create({
+          user: user,
+        }.merge(UserNotificationSchedule::DEFAULT))
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(user_notification_schedule: schedule_attrs)
+        user.reload
+        expect(user.user_notification_schedule.enabled).to eq(true)
+        expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+        expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+        expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+      end
+
+      it "processes the schedule and do_not_disturb_timings are created" do
+        updater = UserUpdater.new(acting_user, user)
+
+        expect {
+          updater.update(user_notification_schedule: schedule_attrs)
+        }.to change { user.do_not_disturb_timings.count }.by(4)
+      end
     end
 
     context 'when sso overrides bio' do

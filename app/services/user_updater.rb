@@ -209,7 +209,13 @@ class UserUpdater
       return saved
     end
 
-    DiscourseEvent.trigger(:user_updated, user) if saved
+    if saved
+      if user_notification_schedule
+        user_notification_schedule.create_do_not_disturb_timings(delete_existing: true)
+      end
+      DiscourseEvent.trigger(:user_updated, user)
+    end
+
     saved
   end
 

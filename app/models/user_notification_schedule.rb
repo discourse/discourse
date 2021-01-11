@@ -26,6 +26,13 @@ class UserNotificationSchedule < ActiveRecord::Base
 
   scope :enabled, -> { where(enabled: true) }
 
+  def create_do_not_disturb_timings(delete_existing: false)
+    user.do_not_disturb_timings.destroy_all if delete_existing
+    UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(self)
+  end
+
+  private
+
   def has_valid_times
     7.times do |n|
       start_key = "day_#{n}_start_time"

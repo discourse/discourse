@@ -5,8 +5,12 @@ module Jobs
     every 1.day
 
     def execute(args)
-      UserNotificationSchedule.enabled.each do |schedule|
-        UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(schedule)
+      UserNotificationSchedule.enabled.includes(:user).each do |schedule|
+        begin
+          schedule.create_do_not_disturb_timings
+        rescue
+          Rails.logger.warn("Failed to process user_notification_schedule with ID #{schedule.id}")
+        end
       end
     end
   end
