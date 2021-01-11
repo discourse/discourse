@@ -242,9 +242,9 @@ GEM
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
-    omniauth-oauth2 (1.7.0)
+    omniauth-oauth2 (1.7.1)
       oauth2 (~> 1.4)
-      omniauth (~> 1.9)
+      omniauth (>= 1.9, < 3)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
