@@ -1,10 +1,82 @@
+import EmberObject, { action } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
+const daysMap = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
+
+const Day = EmberObject.extend({
+  id: null,
   startTimeOptions: null,
+  model: null,
+
+  @action
+  onChangeStartTime(val) {
+    this.startingTimeChangedForDay(val);
+  },
+
+  @action
+  onChangeEndTime(val) {
+    this.set(`model.user_notification_schedule.day_${this.id}_end_time`, val);
+  },
+
+  @discourseComputed(
+    "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time"
+  )
+  startTimeValue(schedule) {
+    return schedule[`day_${this.id}_start_time`];
+  },
+
+  @discourseComputed(
+    "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_start_time"
+  )
+  endTimeOptions(schedule) {
+    return this.buildEndTimeOptionsFor(schedule[`day_${this.id}_start_time`]);
+  },
+
+  @discourseComputed(
+    "model.user_notification_schedule.day_{0,1,2,3,4,5,6}_end_time"
+  )
+  endTimeValue(schedule) {
+    return schedule[`day_${this.id}_end_time`];
+  },
+
+  startingTimeChangedForDay(val) {
+    val = parseInt(val, 10);
+    this.model.set(`user_notification_schedule.day_${this.id}_start_time`, val);
+    if (
+      val !== "-1" &&
+      this.model.user_notification_schedule[`day_${this.id}_end_time`] <= val
+    ) {
+      this.model.set(
+        `user_notification_schedule.day_${this.id}_end_time`,
+        val + 30
+      );
+    }
+  },
+
+  buildEndTimeOptionsFor(startTime) {
+    startTime = parseInt(startTime, 10);
+    if (startTime === -1) {
+      return null;
+    }
+    return this.buildTimeOptions(startTime + 30, {
+      includeNone: false,
+      showMidnight: true,
+    });
+  },
+});
+
+export default Component.extend({
+  days: null,
 
   didInsertElement() {
     this._super(...arguments);
@@ -15,6 +87,19 @@ export default Component.extend({
         showMidnight: false,
       })
     );
+
+    this.set("days", []);
+    for (let i = 0; i < 7; i++) {
+      this.days.pushObject(
+        Day.create({
+          id: i,
+          day: daysMap[i],
+          model: this.model,
+          buildTimeOptions: this.buildTimeOptions,
+          startTimeOptions: this.startTimeOptions,
+        })
+      );
+    }
   },
 
   buildTimeOptions(startAt, opts = { includeNone: false, showMidnight: true }) {
@@ -58,69 +143,5 @@ export default Component.extend({
       });
     }
     return timeOptions;
-  },
-
-  @action
-  startingTimeChangedForDay(dayIndex, val) {
-    val = parseInt(val, 10);
-    this.model.set(
-      `user_notification_schedule.day_${dayIndex}_start_time`,
-      val
-    );
-    if (
-      val !== "-1" &&
-      this.model.user_notification_schedule[`day_${dayIndex}_end_time`] < val
-    ) {
-      this.model.set(
-        `user_notification_schedule.day_${dayIndex}_end_time`,
-        val + 30
-      );
-    }
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_0_start_time")
-  day0EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_1_start_time")
-  day1EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_2_start_time")
-  day2EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_3_start_time")
-  day3EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_4_start_time")
-  day4EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_5_start_time")
-  day5EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  @discourseComputed("model.user_notification_schedule.day_6_start_time")
-  day6EndTimeOptions(startTime) {
-    return this._buildEndTimeOptionsFor(startTime);
-  },
-
-  _buildEndTimeOptionsFor(startTime) {
-    startTime = parseInt(startTime, 10);
-    if (startTime === -1) {
-      return null;
-    }
-    return this.buildTimeOptions(startTime + 30, {
-      includeNone: false,
-      showMidnight: true,
-    });
   },
 });
