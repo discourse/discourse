@@ -220,6 +220,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def emoji?(string)
-    string.match?(/^:\w+:$/)
+    string.match?(/\A:\w+:\Z/)
   end
 end
