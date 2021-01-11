@@ -35,7 +35,6 @@ acceptance("Do not disturb", function (needs) {
     assert.ok(tiles.length === 4, "There are 4 duration choices");
 
     await click(tiles[0]);
-    await click(".modal-footer .btn.btn-primary");
 
     assert.ok(
       queryAll(".do-not-disturb-modal")[0].style.display === "none",
