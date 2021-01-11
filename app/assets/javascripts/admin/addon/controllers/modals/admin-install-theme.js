@@ -26,7 +26,6 @@ export default Controller.extend(ModalFunctionality, {
   checkPrivate: match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
-  urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
@@ -76,12 +75,15 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed("privateChecked")
+  urlPlaceholder(privateChecked) {
+    return privateChecked
+      ? "git@github.com:discourse/sample_theme.git"
+      : "https://github.com/discourse/sample_theme";
+  },
+
   @observes("privateChecked")
   privateWasChecked() {
-    this.privateChecked
-      ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
-      : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
-
     const checked = this.privateChecked;
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
@@ -126,7 +128,15 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   onClose() {
-    this.set("duplicateRemoteThemeWarning", null);
+    this.setProperties({
+      duplicateRemoteThemeWarning: null,
+      privateChecked: false,
+      privateKey: null,
+      localFile: null,
+      uploadUrl: null,
+      publicKey: null,
+      branch: null,
+    });
   },
 
   themeHasSameUrl(theme, url) {
