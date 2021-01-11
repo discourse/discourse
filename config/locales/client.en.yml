@@ -468,6 +468,7 @@ en:
         email: "Email"
         name: "Name"
         fields: "Fields"
+        reject_reason: "Reason"
 
       user_percentage:
         summary:
@@ -566,6 +567,9 @@ en:
           other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
       example_username: "username"
+      reject_reason: 
+        title: "Why do you want to reject user?"
+        send_email: "Send rejection email"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"

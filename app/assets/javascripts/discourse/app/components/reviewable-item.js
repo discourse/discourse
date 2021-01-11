@@ -110,6 +110,10 @@ export default Component.extend({
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
           type: "PUT",
+          data: {
+            send_email: reviewable.sendEmail,
+            reject_reason: reviewable.rejectReason,
+          },
         }
       )
         .then((result) => {
@@ -222,11 +226,20 @@ export default Component.extend({
       }
 
       let msg = action.get("confirm_message");
+      let require_reject_reason = action.get("require_reject_reason");
       if (msg) {
         bootbox.confirm(msg, (answer) => {
           if (answer) {
             return this._performConfirmed(action);
           }
+        });
+      } else if (require_reject_reason) {
+        showModal("reject-reason-reviewable", {
+          title: "review.reject_reason.title",
+          model: this.reviewable,
+        }).setProperties({
+          performConfirmed: this._performConfirmed.bind(this),
+          action: action,
         });
       } else {
         return this._performConfirmed(action);

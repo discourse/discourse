@@ -179,7 +179,7 @@ class ReviewablesController < ApplicationController
   end
 
   def perform
-    args = { version: params[:version].to_i }
+    args = { version: params[:version].to_i, reject_reason: params[:reject_reason], send_email: params[:send_email] == "true" }
 
     result = nil
     begin
