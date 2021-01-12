@@ -112,7 +112,7 @@ class RateLimiter
     now = Time.now.to_i
 
     if ((max || 0) <= 0) || rate_limiter_allowed?(now)
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type) if raise_error
+      raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type) if raise_error
       false
     else
       true
@@ -173,20 +173,22 @@ class RateLimiter
     Discourse.redis.without_namespace
   end
 
-  def seconds_to_wait
-    @secs - age_of_oldest
+  def seconds_to_wait(now)
+    @secs - age_of_oldest(now)
   end
 
-  def age_of_oldest
+  def age_of_oldest(now)
     # age of oldest event in buffer, in seconds
-    Time.now.to_i - redis.lrange(prefixed_key, -1, -1).first.to_i
+    now - redis.lrange(prefixed_key, -1, -1).first.to_i
   end
 
   def is_under_limit?
+    now = Time.now.to_i
+
     # number of events in buffer less than max allowed? OR
     (redis.llen(prefixed_key) < @max) ||
-    # age bigger or equal than sliding window size?
-    (age_of_oldest >= @secs)
+    # age bigger than silding window size?
+    (age_of_oldest(now) >= @secs)
   end
 
   def rate_unlimited?
