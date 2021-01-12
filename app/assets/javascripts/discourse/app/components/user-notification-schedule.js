@@ -116,12 +116,9 @@ export default Component.extend({
     for (let timeInMin = startAt; timeInMin <= 1440; timeInMin += 30) {
       let hours = Math.floor(timeInMin / 60);
       let minutes = timeInMin % 60;
-      let am = timeInMin < 720;
+
       if (minutes === 0) {
         minutes = "00";
-      }
-      if (hours === 0) {
-        hours = "12";
       }
       if (hours === 24) {
         if (opts.showMidnight) {
@@ -132,14 +129,8 @@ export default Component.extend({
         }
         break;
       }
-      if (!am && hours !== 12) {
-        hours = hours - 12;
-      }
-      const amPm = I18n.t(
-        `user.notification_schedule.${am ? "morning" : "afternoon"}`
-      );
       timeOptions.push({
-        name: `${hours}:${minutes} ${amPm}`,
+        name: moment().set("hour", hours).set("minute", minutes).format("LT"),
         value: timeInMin,
       });
     }

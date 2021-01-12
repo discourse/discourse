@@ -917,8 +917,6 @@ en:
         saturday: "Saturday"
         sunday: "Sunday"
         to: "to"
-        morning: "AM"
-        afternoon: "PM"
       activity_stream: "Activity"
       preferences: "Preferences"
       feature_topic_on_profile:
