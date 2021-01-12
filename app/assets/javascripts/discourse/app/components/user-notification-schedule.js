@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 
-const daysMap = [
+const DAYS = [
   "monday",
   "tuesday",
   "wednesday",
@@ -89,17 +89,18 @@ export default Component.extend({
     );
 
     this.set("days", []);
-    for (let i = 0; i < 7; i++) {
+
+    DAYS.forEach((day, index) => {
       this.days.pushObject(
         Day.create({
-          id: i,
-          day: daysMap[i],
+          id: index,
+          day,
           model: this.model,
           buildTimeOptions: this.buildTimeOptions,
           startTimeOptions: this.startTimeOptions,
         })
       );
-    }
+    });
   },
 
   buildTimeOptions(startAt, opts = { includeNone: false, showMidnight: true }) {
