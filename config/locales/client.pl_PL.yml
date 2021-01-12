@@ -481,11 +481,6 @@ pl_PL:
         name: "Imię"
         fields: "Pola"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} flaga ogółem)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (%{count} flagi ogółem)"
-          many: "%{agreed}, %{disagreed}, %{ignored} (%{count} flag ogółem)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} flag ogółem)"
         agreed:
           one: "%{count}% zgadza się"
           few: "%{count}% zgadza się"
@@ -966,7 +961,6 @@ pl_PL:
       color_scheme_default_on_all_devices: "Ustaw domyślne schematy kolorów na wszystkich moich urządzeniach"
       color_scheme: "Schemat kolorów"
       color_schemes:
-        default_description: "Domyślny"
         disable_dark_scheme: "Taki sam jak zwykły"
         dark_instructions: "Możesz wyświetlić podgląd schematu kolorów trybu ciemnego, przełączając tryb ciemny urządzenia."
         undo: "Przywróć"
@@ -3534,7 +3528,6 @@ pl_PL:
     invite:
       custom_message: "Nadaj swojemu zaproszeniu bardziej osobisty charakter, pisząc <a href>niestandardowej wiadomości</a>."
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
-      approval_not_required: "Użytkownik zostanie automatycznie zatwierdzony, gdy tylko zaakceptuje to zaproszenie."
       custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
       custom_message_template_topic: "Hej, pomyślałem że spodoba Ci się ten temat !"
     forced_anonymous: "Ze względu na ekstremalne obciążenie jest to tymczasowo pokazywane wszystkim, tak jak zobaczy to gość."
@@ -4085,6 +4078,7 @@ pl_PL:
           install_upload: "Z twojego urządzenia"
           install_git_repo: "Z repozytorium git"
           install_create: "Stwórz nowy"
+          duplicate_remote_theme: "Komponent motywu ”%{name}” jest już zainstalowany. Czy na pewno chcesz zainstalować inną kopię?"
           about_theme: "O stronie"
           license: "Licencja"
           version: "Wersja:"

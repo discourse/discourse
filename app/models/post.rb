@@ -529,6 +529,7 @@ class Post < ActiveRecord::Base
     self.hidden = true
     self.hidden_at = Time.zone.now
     self.hidden_reason_id = reason
+    self.skip_unique_check = true
     save!
 
     Topic.where(

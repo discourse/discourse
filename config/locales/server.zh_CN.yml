@@ -1581,8 +1581,6 @@ zh_CN:
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登录次数。"
     max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登录次数。"
-    max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。"
-    max_post_deletions_per_day: "用户每天可以删除的最大帖子数。"
     invite_link_max_redemptions_limit: "邀请链接所允许的最大兑换量不能超过这个数值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"

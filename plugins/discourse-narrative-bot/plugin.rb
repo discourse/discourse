@@ -302,7 +302,9 @@ after_initialize do
                   discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
                   reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
 
-      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last.user
+      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
+      recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
+      return if recipient.nil?
 
       PostCreator.create!(
         ::DiscourseNarrativeBot::Base.new.discobot_user,

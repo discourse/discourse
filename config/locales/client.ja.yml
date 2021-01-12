@@ -388,8 +388,6 @@ ja:
         name: "名前"
         fields: "広場"
       user_percentage:
-        summary:
-          other: "%{agreed}、 %{disagreed}、 %{ignored} (トータルフラグ %{count})"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -822,7 +820,6 @@ ja:
       color_scheme_default_on_all_devices: "すべてのデバイスでデフォルトの配色を設定する"
       color_scheme: "配色"
       color_schemes:
-        default_description: "デフォルト"
         disable_dark_scheme: "通常と同じ"
         dark_instructions: "デバイスをダークモードに切り替えることで、ダークモードの配色をプレビューできます。"
         undo: "リセット"
@@ -1141,6 +1138,7 @@ ja:
         largest: "最大"
       title_count_mode:
         notifications: "新しい通知"
+        contextual: "新しいページのコンテンツ"
       like_notification_frequency:
         title: "いいねされた時に通知"
         always: "常時"
@@ -1425,12 +1423,19 @@ ja:
       reset: "パスワードをリセット"
       complete_username: "<b>%{username}</b>,アカウントにパスワード再設定メールを送りました。"
       complete_email: "<b>%{email}</b>宛にパスワード再設定メールを送信しました。"
+      complete_username_found: "<b>%{username}</b> に一致するアカウントが見つかりました。まもなく、パスワードのリセット方法が記載されたメールが届きます。"
+      complete_email_found: "<b>%{email}</b> に一致するアカウントが見つかりました。まもなく、パスワードのリセット方法が記載されたメールが届きます。"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
+      help: "メールが届かない？最初に迷惑メールフォルダを確認してください。<p>使用したメールアドレスがわかりませんか？メールアドレスを入力すると、存在するかどうかをお知らせします。</p><p>アカウントのメールアドレスにアクセスできなくなった場合は、スタッフにご連絡ください。<a href='%{basePath}/about'> </a></p>"
       button_ok: "OK"
       button_help: "ヘルプ"
     email_login:
       link_label: "ログインリンクをメールする"
+      button_label: "メール"
+      emoji: "絵文字をロックする"
+      complete_username: "アカウントがユーザー名 <b>%{username}</b>と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
+      complete_email: "アカウントが <b>%{email}</b>と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_username_found: "<b>%{username}</b> に一致するアカウントが見つかりました。まもなく、ログインリンクが記載されたメールが届きます。"
       complete_email_found: "<b>%{email}</b> に一致するアカウントが見つかりました。まもなく、ログインリンクが記載されたメールが届きます。"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
@@ -1497,8 +1502,15 @@ ja:
       github:
         name: "GitHub"
         title: "GitHub"
+      discord:
+        name: "Discord"
+        title: "Discord"
+      second_factor_toggle:
+        totp: "代わりに認証アプリを使用する"
+        backup_code: "代わりにバックアップコードを使用する"
     invites:
       accept_title: "招待"
+      emoji: "封筒の絵文字"
       welcome_to: "%{site_name}へようこそ!"
       invited_by: "あなたは招待されました:"
       social_login_available: "このメールアドレスを使ってソーシャルログインすることも可能です。"
@@ -1506,6 +1518,7 @@ ja:
       accept_invite: "招待に応じる"
       success: "あなたのアカウントは作成されて、ログインされました。"
       name_label: "氏名"
+      password_label: "パスワード"
       optional_description: "(任意)"
     password_reset:
       continue: "%{site_name} に進む"
@@ -1513,6 +1526,7 @@ ja:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (旧EmojiOne)"
       win10: "Win10"
       google_classic: "Google Classic"
       facebook_messenger: "Facebookメッセンジャー"
@@ -1521,12 +1535,22 @@ ja:
       categories_with_featured_topics: "おすすめのトピックのカテゴリ"
       categories_and_latest_topics: "カテゴリと最新トピック"
       categories_and_top_topics: "カテゴリーと人気トピック"
+      categories_boxes: "サブカテゴリのあるボックス"
+      categories_boxes_with_topics: "注目のトピックのあるボックス"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
+      enter: "Enter"
     conditional_loading_section:
       loading: 読み込み中...
+    category_row:
+      topic_count:
+        other: "このカテゴリ内の %{count} 件のトピック"
+      plus_subcategories_title:
+        other: "%{name} および %{count} 個のサブカテゴリ"
+      plus_subcategories:
+        other: "+ %{count} 個のサブカテゴリ"
     select_kit:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
@@ -1537,11 +1561,23 @@ ja:
         other: "%{count}アイテムまで選択できます。"
       min_content_not_reached:
         other: "少なくとも%{count}アイテムを選択してください。"
+      invalid_selection_length:
+        other: "選択は%{count}文字以上必要です。"
+      components:
+        categories_admin_dropdown:
+          title: "カテゴリの管理"
     date_time_picker:
       from: 発信元
       to: 宛先
+      errors:
+        to_before_from: "終了日には、開始日よりも後でなければなりません。"
     emoji_picker:
       filter_placeholder: 絵文字を探す
+      smileys_&_emotion: スマイリーと感情
+      people_&_body: 人と体
+      animals_&_nature: 動物と自然
+      food_&_drink: 食べ物と飲み物
+      travel_&_places: 旅行と場所
       activities: 活動
       objects: オブジェクト
       symbols: シンボル
@@ -1555,6 +1591,9 @@ ja:
       dark_tone: ダークスキントーン
       default: カスタム絵文字
     shared_drafts:
+      title: "共有ドラフト"
+      notice: "このトピックは、 <b>%{category}</b> カテゴリを表示できる人にのみ表示されます。"
+      publish: "共有ドラフトの公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピック公開中..."
     composer:
@@ -1570,19 +1609,25 @@ ja:
       saved_local_draft_tip: "ローカルに保存しました"
       similar_topics: "このトピックに似ているものは..."
       drafts_offline: "オフラインの下書き"
+      edit_conflict: "競合の編集"
       group_mentioned:
         other: "%{group}へのメンションで、 約<a href='%{group_link}'>%{count} 人</a> へ通知されます。よろしいですか？"
       cannot_see_mention:
         category: "%{username}にメンションしましたが、このカテゴリへのアクセス権がないため通知されません。このカテゴリへのアクセス権があるグループにメンバー追加してください。"
         private: "%{username}にメンションしましたが、このパーソナルメッセージを見ることができないため通知されません。このパーソナルメッセージに招待してください。"
       duplicate_link: "<b>%{domain}</b> については、すでに<b>@%{username}</b> が <a href='%{post_url}'>%{ago}</a> 前に投稿しています。再び投稿してよろしいですか？"
+      reference_topic_title: "RE: %{title}"
       error:
         title_missing: "タイトルを入力してください。"
         title_too_short: "タイトルは%{min}文字以上必要です。"
         title_too_long: "タイトルは最長で%{max}未満です。"
+        post_missing: "空白の投稿はできません"
         post_length: "投稿は%{min}文字以上必要です。"
         try_like: " %{heart} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
+        tags_missing:
+          other: "少なくとも %{count} つのタグが必要です。"
+        topic_template_not_modified: "トピックテンプレートを編集して、トピックに詳細を追加してください。"
       save_edit: "編集内容を保存"
       reply_original: "オリジナルトピックへ返信"
       reply_here: "ここに返信"
@@ -1590,6 +1635,8 @@ ja:
       cancel: "キャンセル"
       create_topic: "トピックを作る"
       create_pm: "メッセージ"
+      create_shared_draft: "共有ドラフトを作成"
+      edit_shared_draft: "共有ドラフトの編集"
       title: "Ctrl+Enterでも投稿できます"
       users_placeholder: "追加するユーザ"
       title_placeholder: "トピックのタイトルを入力してください。"
@@ -1617,6 +1664,8 @@ ja:
       link_description: "リンクの説明をここに入力"
       link_dialog_title: "ハイパーリンクの挿入"
       link_optional_text: "タイトル(オプション)"
+      link_url_placeholder: "トピックを検索するためにURLを貼り付けるか入力してください"
+      blockquote_title: "引用"
       blockquote_text: "引用"
       code_title: "整形済みテキスト"
       code_text: "4文字スペースでインデント"
@@ -1636,6 +1685,7 @@ ja:
       admin_options_title: "このトピックの詳細設定"
       composer_actions:
         reply: 返信
+        draft: 下書き
         edit: 編集
         reply_to_post:
           desc: 特定の投稿に返信する
@@ -1650,6 +1700,8 @@ ja:
           desc: 特定の投稿ではなく、トピックに返信する
         create_topic:
           label: "新規トピック"
+        shared_draft:
+          label: "共有ドラフト"
     notifications:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "通知を読み込むことができませんでした。"

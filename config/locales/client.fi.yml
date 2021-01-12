@@ -422,9 +422,6 @@ fi:
         name: "Nimi"
         fields: "Kentät"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} lippu kaikkiaan)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} lippua kaikkiaan)"
         agreed:
           one: "%{count}% samaa mieltä"
           other: "%{count}% samaa mieltä"
@@ -3201,7 +3198,6 @@ fi:
     invite:
       custom_message: "Tee kutsusta persoonallisempi kirjoittamalla <a href>yksilöllinen viesti</a>."
       custom_message_placeholder: "Kirjoita henkilökohtainen viestisi"
-      approval_not_required: "Käyttäjä hyväksytään automaattisesti heti, kun hän hyväksyy tämän kutsun."
       custom_message_template_forum: "Hei, sinun pitäisi liittyä tälle palstalle!"
       custom_message_template_topic: "Hei, ajattelin, että voisit tykätä tästä ketjusta!"
     forced_anonymous: "Rajun kuormituksen vuoksi tämä näytetään väliaikaisesti kaikille niin kuin uloskirjautunut käyttäjä näkee sen."

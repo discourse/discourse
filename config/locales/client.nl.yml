@@ -423,9 +423,6 @@ nl:
         name: "Naam"
         fields: "Velden"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} totale markering)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} totale markeringen)"
         agreed:
           one: "%{count}% akkoord"
           other: "%{count}% akkoord"
@@ -883,7 +880,6 @@ nl:
       color_scheme_default_on_all_devices: "Standaard kleurenschema(’s) op al mijn apparaten instellen"
       color_scheme: "Kleurenschema"
       color_schemes:
-        default_description: "Standaard"
         disable_dark_scheme: "Hetzelfde als normaal"
         dark_instructions: "U kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van uw apparaat om te schakelen."
         undo: "Terugzetten"
@@ -3240,7 +3236,6 @@ nl:
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
-      approval_not_required: "Gebruiker wordt automatisch goedgekeurd zodra hij of zij deze uitnodiging accepteert."
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."

@@ -423,9 +423,6 @@ it:
         name: "Nome"
         fields: "Campi"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} segnalazione in totale)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} segnalazioni in totale)"
         agreed:
           one: "%{count}% a favore"
           other: "%{count}% a favore"
@@ -884,7 +881,6 @@ it:
       color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
       color_schemes:
-        default_description: "Predefinito"
         disable_dark_scheme: "Come di norma"
         dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
         undo: "Reimposta"
@@ -3255,7 +3251,6 @@ it:
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
-      approval_not_required: "L'utente sarà approvato automaticamente non appena accetterà questo invito."
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."

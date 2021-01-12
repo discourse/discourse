@@ -423,9 +423,6 @@ es:
         name: "Nombre"
         fields: "Campos"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored}, (%{count} reporte en total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} reportes totales)"
         agreed:
           one: "%{count}% de acuerdo"
           other: "%{count}% de acuerdo"
@@ -883,7 +880,6 @@ es:
       color_scheme_default_on_all_devices: "Establecer la combinación de colores como predeterminadas en todos mis dispositivos"
       color_scheme: "Combinación de colores"
       color_schemes:
-        default_description: "Predeterminado"
         disable_dark_scheme: "Igual que regular"
         dark_instructions: "Puedes previsualizar el esquema de colores del modo oscuro activando o desactivando el modo oscuro de tu dispositivo."
         undo: "Restablecer"
@@ -3255,7 +3251,6 @@ es:
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Ingresa tu mensaje personalizado"
-      approval_not_required: "Se aprobará automáticamente el usuario en cuanto acepte esta invitación."
       custom_message_template_forum: "¡Hey, deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, creemos que este tema te va a encantar!"
     forced_anonymous: "Debido a una carga extrema, esto se está mostrando temporalmente a todos como lo vería un usuario que no haya iniciado sesión."

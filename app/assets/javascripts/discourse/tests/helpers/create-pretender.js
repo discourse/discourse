@@ -664,6 +664,17 @@ export function applyDefaultHandlers(pretender) {
     return response(200, { site_text: result });
   });
 
+  pretender.get("/admin/themes", () => {
+    return response(200, { themes: [], extras: {} });
+  });
+
+  pretender.post("/admin/themes/generate_key_pair", () => {
+    return response(200, {
+      private_key: "privateKey",
+      public_key: "publicKey",
+    });
+  });
+
   pretender.get("/tag_groups", () => response(200, { tag_groups: [] }));
 
   pretender.get("/admin/users/1.json", () => {

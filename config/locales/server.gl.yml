@@ -199,13 +199,13 @@ gl:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non podes deshabilitar o inicio de sesión local se se aplica 2FA. Deshabilita 2FA antes de deshabilitar os inicios de sesión locais."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non podes habilitar as cargas S3 porque xa están habilitadas globalmente e habilitar este nivel de sitio podería provocar problemas críticos coas cargas."
       cors_origins_should_not_have_trailing_slash: "Non debe engadir a barra final (/) ás orixes de CORS."
-    conflicting_google_user_id: 'A ID de Google para esta conta cambiou; requírese a intervención do equipo por razóns de seguridade. Contacta con el e envíalle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    conflicting_google_user_id: 'O ID da conta de Google desta conta cambiou; requírese a intervención do grupo por razóns de seguranza. Contacte con el e envíelle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sentímolo, non se puido xerar unha visualización desta páxina web porque non se puido atopar o servidor «%{hostname}». En lugar dunha visualización previa, só aparecerá unha ligazón na súa publicación. :cry:"
       error_response: "Sentímolo, non se puido xerar unha visualización desta páxina web porque o servidor devolveu un código de erro %{status_code}. En lugar dunha visualización previa, só aparecerá unha ligazón na súa publicación. :cry:"
       missing_data:
-        one: "Sentímolo, non se puido xerar unha visualización desta páxina web porque a seguinte etiqueta incorporada / OpenGraph non se puido atopar:%{missing_attributes}"
-        other: "Sentímolo, non se puido xerar unha visualización desta páxina web porque as seguintes etiquetas incorporadas / OpenGraph non se puideron atopar:%{missing_attributes}."
+        one: "Sentímolo, non se puido xerar unha visualización desta páxina web porque a seguinte etiqueta oEmbed / OpenGraph non se puido atopar: %{missing_attributes}"
+        other: "Sentímolo, non se puido xerar unha visualización desta páxina web porque as seguintes etiquetas oEmbed / OpenGraph non se puideron atopar: %{missing_attributes}."
   word_connector:
     comma: ", "
   invite:
@@ -433,11 +433,11 @@ gl:
 
       - Soa ben o seu título, se o le en voz alta? É un bo resumo do que trata?
 
-      - Quen terría interese en ler isto? Por que é importante? A que tipo de respostas queres dar pé?
+      - A quen lle interesaría ler isto? Por que é importante? A que tipo de respostas quere dar pé?
 
       - Inclúa palabras de uso frecuente no seu tema para facilitar que poida ser *atopado*. Para agrupalo con outros temas relacionados, seleccione unha categoría (ou etiqueta).
 
-      Para saber máis, [visite as directrices da nosa comunidade](%{base_path}/guidelines). Este panel só aparecerá nas súas primeiras %{education_posts_text}.
+      Para saber máis, [visite as normas da nosa comunidade](%{base_path}/guidelines). Este panel só lle aparecerá na primeira conversa %{education_posts_text}.
     "new-reply": |
       Dámoslle a benvida a %{site_name} &mdash; **grazas por contribuír!**
 
@@ -447,7 +447,7 @@ gl:
 
       - A crítica construtiva é benvida pero critique as *ideas*, non as persoas.
 
-      Para saber máis, [consulte as nosas directrices da comunidade] (%{base_path}/guidelines). Este panel só aparecerá nas súas priemiras %{education_posts_text}.
+      Para saber máis, [consulte as nosas normas da comunidade] (%{base_path}/guidelines). Este panel só lle aparecerá nas súas primieras conversas %{education_posts_text}.
     avatar: |
       ### Que tal se lle engades unha imaxe á túa conta?
 
@@ -551,7 +551,7 @@ gl:
         web_hook:
           attributes:
             payload_url:
-              invalid: "O URL non é válido; debería incluír http:// or https://. Non está permitido ningún espazo en branco."
+              invalid: "O URL non é válido. O URL debería incluír http:// ou https://. Non está permitido ningún espazo en branco."
         custom_emoji:
           attributes:
             name:
@@ -598,21 +598,21 @@ gl:
 
       Parabéns! :confetti_ball:
 
-      Se podes ver este tema é porque fuches promovido recentemente a usuario **habitual** (nivel de confianza 3).
+      Se pode ver este tema é porque foi promovido recentemente a usuario **habitual** (nivel de confianza 3).
 
-      Agora podes &hellip;
+      Agora pode &hellip;
 
       * Editar o título de calquera tema
       * Cambiar a categoría de calquera tema
-      * As túas ligazóns ([deixarán automaticamente de levar a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
-      * Acceder á categoría privada Sala VIP só visible para usuarios cun nivel de confianza 3 ou superior
-      * Agochar o correo elixo cunha soa denuncia
+      * As súas ligazóns serán fiábeis (retirarase [a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
+      * Acceder á categoría privada Sala VIP só visíbel para usuarios cun nivel de confianza 3 ou superior
+      * Agochar o lixo cunha soa alerta
 
-      Consulta aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrate de saudares.
+      Consulte aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrese de saudar.
 
-      Grazas por seres parte importante da comunidade!
+      Grazas por ser parte importante da comunidade!
 
-      (Para máis información sobre os niveis de confianza, [mira este tema][trust]. Repara en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
+      (Para máis información sobre os niveis de confianza, [mire este tema][trust]. Repare en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LER PRIMEIRO: Guía rápida de inicio para administradores"
@@ -852,7 +852,7 @@ gl:
     inappropriate:
       title: "Inapropiado"
       description: 'Esta publicación ten contido que unha persoa razoable podería considerar ofensivo, abusivo ou supor unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>.'
-      short_description: 'Unha violación das<a href="%{base_path}/guidelines">directrices da nosa comunidade</a> '
+      short_description: 'Unha violación das <a href="%{base_path}/guidelines">normas da nosa comunidade</a>'
     notify_user:
       title: "Enviar unha mensaxe a @%{username}"
       description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
@@ -921,7 +921,7 @@ gl:
       title: "Inapropiado"
       description: 'Este tema ten contido que unha persoa razoable podería considerar ofensivo, abusivo ou supor unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>.'
       long_form: "denunciou isto como inapropiado"
-      short_description: 'Unha violación das<a href="%{base_path}/guidelines">directrices da nosa comunidade</a> '
+      short_description: 'Unha violación das <a href="%{base_path}/guidelines">normas da nosa comunidade</a>'
     notify_moderators:
       title: "Algo máis"
       description: 'Este tema require da atención do equipo con base nas <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">os termos de servizo</a> ou por calquera outro motivo non listado enriba.'
@@ -1325,27 +1325,27 @@ gl:
       description: "Usuarios que foron silenciados e/ou ignorados por moitos outros usuarios."
   dashboard:
     rails_env_warning: "O teu servidor está a executarse en modo %{env}."
-    host_names_warning: "O teu ficheiro config/database.yml file está a usar o nome do servidor localhost predefinido. Actualízao para utilizar o nome do servidor do teu sitio."
-    sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, caso do envío de correos electrónicos, están a ser realizadas de forma asíncrona por sidekiq. Asegúrate de que, ao menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprende máis sobre Sidekiq aquí</a>.'
+    host_names_warning: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
+    sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, caso do envío de correos electrónicos, están a ser realizadas de forma asíncrona por sidekiq. Asegúrese de que, cando menos un proceso de sidekiq está en execución. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda máis sobre Sidekiq aquí</a>.'
     queue_size_warning: "O número de tarefas na cola é %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou tes que engadir máis traballadores de Sidekiq."
     memory_warning: "O teu servidor estase a executar con menos de 1 GB da memoria total. Recoméndase ao menos unha memoria de 1 GB."
     google_oauth2_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Google OAuth2 (enable_google_oauth2_logins) pero o id do cliente e os valores do segredo de cliente non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte esta guía para saber máis</a>.'
     facebook_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Facebook (enable_facebook_logins) pero o id da aplicación e os segredos da aplicación non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulte esta guía para saber máis</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Twitter (enable_twitter_logins), pero a clave e o segredo non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulte esta guía para saber máis</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os segredos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
+    github_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
     s3_config_warning: 'O servidor está configurado para subir ficheiros a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_backup_config_warning: 'O servidor está configurado para subir copias de seguranza a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_cdn_warning: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
-    image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instálao utilizando o teu administrador de paquetes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descarga a última versión</a>.'
-    failing_emails_warning: 'Hai %{num_failed_jobs} tarefas de correo electrónico que fallaron. Comproba o teu app.yml e asegúrate de que os axustes do servidor de correo son correctos. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira as tarefas que fallaron en Sidekiq</a>.'
+    image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instáleo utilizando o administrador de paquetes que lle guste ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descargue a última versión</a>.'
+    failing_emails_warning: 'Hai %{num_failed_jobs} procesos de correo electrónico que fallaron. Comprobe o seu app.yml e asegúrese de que a configuración do servidor de correo é correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Revise os procesos que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
     email_polling_errored_recently:
-      one: "A sondaxe do correo electrónico xerou  un erro nas últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
-      other: "A sondaxe do correo electrónico xerou %{count} erros nas últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
+      one: "A recollida do correo electrónico xerou un erro nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
+      other: "A recollida do correo electrónico xerou %{count} erros nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
     missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionaches unha chave API que se utiliza para verificar as mensaxes de webhook."
-    bad_favicon_url: "Erro ao cargar a favicona. Comproba a súa configuración en <a href='%{base_path}/admin/site_settings'>Axustes do sitio</a>."
-    deprecated_api_usage: "Detectamos unha solicitude de API utilizando un método de autenticación obsoleto. Actualíceo para utilizar unha autenticación <a href='https://meta.discourse.org/t/-/22706'>baseada nunha cabeceira</a>. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer. "
-    update_mail_receiver: "Detectamos unha versión desactualizada do receptor de correo. Preme <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para actualizar as instrucións. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
+    bad_favicon_url: "Erro ao cargar favicon. Comprobe a configuración sobre favicon en <a href='%{base_path}/admin/site_settings'>Configuración do sitio</a>."
+    deprecated_api_usage: "Detéctase unha consulta de API utilizando un método de autenticación obsoleto. Actualíceo para utilizar <a href='https://meta.discourse.org/t/-/22706'>autenticación baseada nunha cabeceira</a>. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
+    update_mail_receiver: "Detéctase unha versión desactualizada do receptor de correo. Prema <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para actualizar as instrucións. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
     poll_pop3_timeout: "A conexión ao servidor POP3 está a superar o tempo de espera. Non se puido recuperar o correo electrónico entrante. Comproba os teus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a> e o provedor do servizo."
     poll_pop3_auth_error: "A conexión ao servidor POP3 está a fallar por un erro na autenticación. Comproba os teus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a>."
     force_https_warning: "O teu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda habilitado nos axuste do teu sitio."
@@ -1431,14 +1431,14 @@ gl:
     logo_small_dark: "Alternativa de esquema escuro para o axuste do «logo pequeno»."
     mobile_logo_dark: "Alternativa de esquema escuro para o axuste de «logo para móbil»."
     large_icon: " Imaxe utilizada como base para outras iconas de metadatos. O ideal sería que fose maior que 512 x 512. Se se deixa en branco, utilizarase logo_small."
-    manifest_icon: " Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
-    favicon: "Unha favicona para o teu sitio, mira <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
+    manifest_icon: "Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
+    favicon: "Un favicon para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
     twitter_summary_large_image: "A 'imaxe grande de resumo' da tarxeta de Twitter (debe ter ao menos 280 de largura e ao menos 150 de altura). Se se deixa en branco, xeraranse metadatos de tarxetas normais utilizando opengraph_image."
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de correos electrónicos personalizados separados por barras"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Mira <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     enforce_second_factor: "Obriga aos usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «grupo» para forzalo en usuarios do grupo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: ¡NON actives esta opción a non ser que verifiques completamente a configuración e esta funcione correctamente en todas partes! Comprobaches tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
@@ -1487,10 +1487,10 @@ gl:
     ga_universal_tracking_code: "Id de código de seguimento de Google Universal Analytics, por exemplo: UA-12345678-9; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome de dominio de Google Universal Analytics, por exemplo: mysite.com; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
-    gtm_container_id: "Id do contedor de Google Tag Manager. por exemplo: GTM-ABCDEF. <br/>Nota: Pode ser que teñan que estar listados os guións de terceiros cargados con GTM no «guión de pantalla da norma de seguranza de contido\"."
-    enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún  webcrawler is detected. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    gtm_container_id: "Id do contedor de Google Tag Manager. por exemplo: GTM-ABCDEF. <br/>Nota: Pode ser que teñan que estar listados os guións de terceiros cargados con GTM no «pantalla de guión da norma de seguranza de contido\"."
+    enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir aos moderadores administrar categorías e grupos"
-    cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadeiro para activar CORS."
+    cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese establecer como verdadeira para activar CORS."
     use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
     blocked_ip_blocks: "Unha lista de bloques IP privados que Discourse nunca debería rastrexar"
     allowed_internal_hosts: "Unha lista de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
@@ -1530,7 +1530,7 @@ gl:
     email_token_valid_hours: "Os códigos para restablecer o contrasinal ou activar a conta son válidos durante (n) horas."
     enable_badges: "Activar o sistema de insignias"
     enable_whispers: "Permitir que os membros do equipo se comuniquen entre eles por privado dentro dos temas."
-    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, podes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
+    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
     blocked_email_domains: "Unha lista formatada por tubarías de dominios de correo electrónico nos que non se lles permite aos usuarios rexistrar contas. Exemplo: mailinator.com | trashmail.net"
     allowed_email_domains: "Unha lista formatada por tubarías de dominios de correo electrónico cos que os usuarios DEBEN rexistrar contas. AVISO: Non se permitirán os usuarios con dominios de correo electrónico distintos aos da lista."
     auto_approve_email_domains: "Os usuarios con enderezos electrónicos desta listaxe de dominios serán automaticamente aprobados."
@@ -1553,9 +1553,9 @@ gl:
     external_auth_skip_create_confirm: Ao rexistrarse cun método de autenticación externo, saltar a ventá emerxente de creación de conta. Utilízase mellor xunto con sso_overrides_email, sso_overrides_username e sso_overrides_name.
     external_auth_immediately: "Redirecciona automaticamente ao sistema de inicio de sesión externo sen a interacción do usuario. Isto só ten efecto cando login_required é verdadeiro e só hai un método de autenticación externo"
     enable_sso: "Habilitar o inicio de sesión único a través dun sitio externo (AVISO: OS ENDEREZOS DE CORREO ELECTRÓNICO DOS USUARIOS *TEÑEN* QUE SER VALIDADOS NO SITIO EXTERNO!)"
-    verbose_sso_logging: " Rexistrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementar o protocolo do provedor de SSO de Discourse no /session/sso_provider endpoint, require que se configure sso_provider_secrets"
-    sso_url: "URL do extremo para o inicio de sesión único (debe incluír http:// ou https://)"
+    verbose_sso_logging: "Rexistrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_sso_provider: "Implementar o protocolo do fornecedor de SSO de Discourse no punto de destino /session/sso_provider, require que se defina sso_provider_secrets"
+    sso_url: "URL do destino para o inicio de sesión único (debe incluír http:// ou https://)"
     sso_secret: "Cadea secreta utilizada para autenticar criptograficamente a información do SSO, asegúrate de que teña 10 caracteres ou máis"
     sso_provider_secrets: "Unha listaxe de pares de dominios secretos que utiliza Discourse como provedor de SSO. Asegúrate de que a clave secreta SSO teña 10 caracteres ou máis. O símbolo do comodín * pódese utilizar para facer coincidir calquera dominio ou só unha parte del (por exemplo, * .exemplo.com)."
     sso_overrides_bio: "Sobrescribe a biografía do usuario no seu perfil e deshabilita a posibilidade de cambiala"
@@ -1629,8 +1629,6 @@ gl:
     max_topic_invitations_per_day: "Número máximo de invitacións a un tema que un usuario pode enviar por día."
     max_logins_per_ip_per_hour: "Número máximo de inicios de sesión permitidos por enderezo IP por hora"
     max_logins_per_ip_per_minute: "Número máximo de inicios de sesión permitidos por enderezo IP por minuto"
-    max_post_deletions_per_minute: "Número máximo de publicacións que un usuario pode eliminar por minuto."
-    max_post_deletions_per_day: "Número máximo de publicacións que un usuario pode eliminar por día."
     invite_link_max_redemptions_limit: "O número máximo de trocos permitidos para as ligazóns de invitación non pode ser superior a este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."
@@ -3579,10 +3577,365 @@ gl:
     Editar a primeira publicación deste tema para cambiar o contido da páxina %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/directrices"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Este é unha praza civilizada para a discusión pública](#civilized)
+
+      Por favor, trate este foro de discusión co mesmo respecto co que trataría un parque público. Tamén nós somos un recurso comunitario compartido; un lugar para compartir capacidades, coñecementos e intereses mediante unha conversa fluída.
+
+      Estas non son regras duras e fulminantes, apenas normas para axudar ao xuízo humano da nosa comunidade e manter este como un lugar limpo e ben iluminado para o discurso público civilizado.
+
+      <a name="improve"></a>
+
+      ##[Mellorar a discusión](#improve)
+
+      Axude a facer desta unha gran praza de discusión, traballando sempre para mellorar a discusión nalgún aspecto, por mais pequeno que sexa. Se non está seguro de que a súa publicación sumará á conversa, pense no que quere dicirr e ténteo novamente máis tarde.
+
+      Os temas aquí discutidos son importantes para nós, e queremos que actúe como se tamén fosen importantes para vostede. Respecte os temas e as pesoas que os discuten, mesmo que discorde con algo do que se está a dicir.
+
+      Unha forma de mellorar a discusión é descubrir outras que xa están a acontecer. Dedique tempo a navegar polos temas aquí antes de responder ou iniciar o seu prorio, e terá mais oportunidades de atopar a outros que compartan os seus intereses.
+
+      <a name="agreeable"></a>
+
+      ## [Sexa conciliador, mesmo cando está en desacordo](#agreeable)
+
+      Pode querer responder a algo co que está en desacordo. Moi ben. Mas lembre que se trata de _criticar ideas, non persoas_. Por favor, evite:
+
+      * Alcumar
+      * Ataques ad hominem
+      * Responder ao ton dunha mensaxe en vez ao seu contido real
+      * Reaccionar emocionalmente
+
+      En vez diso, forneza contra-argumentos fundamentados que melloran a conversa.
+
+      <a name="participate"></a>
+
+      ## [A súa participación conta](#participate)
+
+      As conversas que aquí temos estabelecen o ton para os novos que chegan. Axude a marcar o futuro desta comunidade, escollendo participar en discusións que fan deste foro un lugar interesante para estar &mdash; e evitando aqueles que non.
+
+      Discourse fornece ferramentas que lle permiten á comunidade identificar colectivamente as mellores (e as peores) contribucións: marcadores de favoritos, valoracións, alertas, respostas, edicións e así. Utilice estas ferramentas para mellorar a súa propia experiencia, e a de todos os outros tamen.
+
+      Deixemos a nosa comunidade mellor do que a atopamos.
+
+      <a name="flag-problems"></a>
+
+      ## [Se ve un problema, sináleo](#flag-problems)
+
+      Os moderadores teñen unha autoridade especial; eles son responsábeis deste foro. Mas vostede tamén o é. Coa súa axuda, os moderadores poden ser facilitadores da comunidade, e non só porteiros ou policías.
+
+      Cando vexa un mal comportamento, non responda. Alimenta o mal comportamento recoñecéndoo, consume a súa enerxía, e desperdiza o tempo de todos. _Só sinalíceo_. De se acumular alertas suficientes, tomaranse medidas, automaticamente ou por intervención de moderadores.
+
+      Co fin de manter a nosa comunidade, os moderadores resérvanse o dereito de retirar calquera contido e calquera conta de usuario, por calquera razón, en calquera momento. Os moderadores non visualizan previamente as mensaxes novas; os moderadores e operadores do sitio non asumen ningunha responsabilidade por ningún contido publicado pela comunidade.
+
+      <a name="be-civil"></a>
+
+      ## [Sexa sempre cívico](#be-civil)
+
+      Nada sabota unha conversa saudábel como a rudeza:
+
+      * Sexa cívico. Non publique nada que unha persoa razoábel podería consider ofensivo, abusivo, ou discurso de odio.
+      * Mantéeñao limpo. Non publique nada obsceno ou sexualmente explícito.
+      * Respecte ao outro. Non acose nin regañe a ninguén, non ridiculice persoas nin expoña información privada.
+      * Respecte o noso foro. Non publique lixo nin se permita vandalizar o foro de ningunha outra forma.
+
+      Estes non son termos concretos com definicións precisas &mdash; evite mesmo a _aparencia_ de calquera destas cousas. Se non está seguro, pregúntese como se sentiría se a súa publicación aparecese na primeira páxina do New York Times.
+
+      Este é un fóro público, e os motores de busca indexan estas discusións. Manteña o idioma, as ligazóns e as imaxes aptas para a familia e os amigos.
+
+      <a name="keep-tidy"></a>
+
+      ## [Limpeza e orde no foro](#keep-tidy)
+
+      Faga o esforzo de colocar as cousas no lugar adecuado, para que poidamos pasar máis tempo a discutir e menos tempo a limpar. Por iso:
+
+      * Non inicie un tema na categoría errada.
+      * Non repetir a mesma cousa en múltiplos temas.
+      * Non publicar respostas sen contido.
+      * Non desviar un tema cambiando o foco central a medio camiño.
+      * Non asine as súas publicacións &mdash; cada publicación ten xa a súa información de perfil anexada a el.
+
+      En vez de publicar «+1 » ou «Concordo», use o botón de valoración. En vez de desviar un tema a unha dirección radicalmente diferente, utilice a opción Responder como Tema Ligado.
+
+      <a name="stealing"></a>
+
+      ## [Publique só a súa produción](#stealing)
+
+      Non pode publicar nada dixital que pertenza a outra persoa sen autorización. Non pode publicar descricións, ligazóns ou métodos para roubar a propiedade intelectual de ninguén (software, vídeo, son, imaxes), nin para infrinxir calquera outra lei.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Este sitio é operado polo seu [amábel grupo local](%{base_path}/about) e por *vostede*, a comunidade. Se tiver algunha pregunta sobre como deberían funcionar as cousas, abra un novo tema en [categoría comentario do sitio](%{base_path}/c/site-feedback) e discutámolo! De haber algún asunto crítico ou urxente que non se poida tratar cun metatema ou alerta, contacte con nós a través da [páxina do grupo](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Termos do servizo](#tos)
+
+      Desde logo, os legalismos son aborrecidos pero debemos protexernos a nós mesmos &ndash; e por extensión a vostede e os seus datos &ndash; contra xente hostil. Temos uns [Termos de servizo](%{base_path}/tos) que describen o seu (e o noso) comportamento e dereitos relativos ao contido, normas de privacidade e legalidade. Para utilizar este servizo, debe estar de acordo en cumprir cos nosos [TOS](%{base_path}/tos).
   tos_topic:
     title: "Termos do servizo"
+    body: |
+      Estes termos rexen a utilización do foro da Internet en <%{base_url}>. Para utilizar o foro, debe concordar nestes termos con %{company_name}, a empresa que dirixe o foro.
+
+      A empresa pode ofrecer outros produtos e servizos, con distintos termos. Estes termos aplícanse só á utilización do foro.
+
+      Saltar a:
+
+      - [Termos importantes](#heading--important-terms)
+      - [Permiso para utilizar o foro](#heading--permission)
+      - [Condición de utilización do foro](#heading--conditions)
+      - [Utilización aceptábel](#heading--acceptable-use)
+      - [Normas de contido](#heading--content-standards)
+      - [Cumprimento da legalidade](#heading--enforcement)
+      - [A súa conta](#heading--your-account)
+      - [O seu contido](#heading--your-content)
+      - [A súa responsabilidade](#heading--responsibility)
+      - [Exencións de responsabilidade](#heading--disclaimers)
+      - [Límites de responsabilidade](#heading--liability)
+      - [Opinión](#heading--feedback)
+      - [Terminación](#heading--termination)
+      - [Disputas](#heading--disputes)
+      - [Termos xerais](#heading--general)
+      - [Contacto](#heading--contact)
+      - [Cambios](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Termos importantes</a></h2>
+
+      ***Estes termos inclúen unha serie de disposicións importantes que afectan os seus dereitos e responsabilidades, tales como as exencións en [Exencións de responsabilidade]](#heading--disclaimers), límites da responsabilidade da empresa para con vostede en [Límites de responsabilidade](#heading--liability), o seu acordo para cubrir a empresa por danos causados pola súa mala utilización do foro en [A súa responsibilidade](#heading--responsibility), e un acordo para arbitrar disputas en [Disputas](#heading--disputes).***
+
+
+      <h2 id="heading--permission"><a href="#heading--permission">Permiso para utilizar o foro</a></h2>
+
+      Suxeito a estes termos, a empresa dálle permiso para utilizar o foro. Todos precisan de concordar con estes termos para utilizar o foro.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Condicións de utilización do foro</a></h2>
+
+      O seu permiso para utilizar o foro está suxeito ás seguintes condicións:
+
+      1. Debe ter polo menos trece anos de idade.
+
+      2. No pode utilizar o foro se a empresa o contacta directamente para lle dicir que non pode.
+
+      3. Debe utilizar o foro de acordo con [Utilización aceptábel](#heading--acceptable-use) e [Normas de contido](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Utilización aceptábel</a></h2>
+
+      1. Non se pode infrinxir a lei usando o foro.
+
+      2. Non pode utilizar ou tentar utilizar a conta doutro no foro sen a súa autorización específica.
+
+      3. Non pode comprar, vender, ou doutra forma negociar nomes de usuario ou outros identificadores únicos no foro.
+
+      4. Non pode enviar anuncios, cadeas de mensaxes ou outras solicitudes a través do foro, nin utilizar o foro para recoller enderezos ou outros datos persoais para listas de correo comerciais ou bases de datos.
+
+      5. Non pode automatizar o acceso ao foro, ou monitorizar o foro, como por exemplo cunha "araña de web", complemento do navegador, ou outro programa de computador que non sexa un navegador de web. Pode rastrear o foro para indexalo nun motor de busca aberto ao público, se xestiona algún.
+
+      6. Non pode utilizar o foro para enviar correo electrónico a listas de distribución, grupos de noticias, ou pseudónimos de correo en grupo.
+
+      7. Non pode dar a entender falsamente que é afiliado ou está apoiado pola empresa.
+
+      8. Non pode estabelecer hiperligacións a imaxes ou outros contidos non hipertextuais do foro noutras páxinas web.
+
+      9. Non pode retirar ningunha marca que mostre a propiedade exclusiva de materiais que descargue do foro.
+
+      10. Non pode amosar calquera parte do foro noutros sitios web con `<iframe>`.
+
+      11. Non pode desactivar, evitar, ou rodear calquera restrición de seguranza ou de acceso ao foro.
+
+      12. Non pode sobrecargar a infraestrutura do foro cun volume desmesurado de consultas, ou consultas destinadas a supoñer unha carga desmesurada nos sistemas de información subxacentes ao foro.
+
+      13. Non pode facerse pasar por outros a través do foro.
+
+      14. Non pode animar ou axudar a ninguén para a violación destes termos.
+
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Normas de contido</a></h2>
+
+      1. Non pode enviar contidos ao foro que sexan ilegais, ofensivos, ou de calquera outra forma daniños para terceiros. Isto inclúe contido que sexa acosador, inapropiado ou abusivo.
+
+      2. Non pode enviar ao foro contido que viole a lei, infrinxa os dereitos de propiedade intelectual de ninguén, viole a privacidade de ninguén ou rompa os acordos que teña con outros.
+
+      3. Non pode enviar contido ao foro que conteña código informático malicioso, tal como virus informáticos ou software espía.
+
+      4. Non pode enviar contido ao foro como mera lugar de referencia, para manter un enderezo específico, nome de usuario ou outro identificador único.
+
+      5. Non pode utilizar o foro para divulgar informacións que non teña o dereito de divulgar, como informacións confidenciais ou persoais doutros.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Cumprimento da legalidade</a></h2>
+
+      A empresa pode investigar e procesar xudicialmente as violacións destes termos en toda a extensión legal. A empresa pode notificar e cooperar coas autoridades responsábeis de aplicar a lei na persecución de violacións da lei e destes termos.
+
+      A empresa resérvase o dereito a cambiar, redactar e eliminar o contido no foro por calquera razón. Se cre que alguén someteu contido ao foro violand estes termos, [contacte con nós inmediatamente](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">A súa conta</a></h2>
+
+      Debe crear e iniciar sesión nunha conta para utilizar algunhas funcionalidades do foro.
+
+      Para crear unha conta, debe fornecer algunhas informacións sobre vostede mesmo. Se crea unha conta, concorda con fornecer, como mínimo, un enderezo de correo electrónico válido, e con manter ese enderezo actualizado. Pode pechar a súa conta en calquera momento, enviando un correo a <%{contact_email}>.
+
+      Concorda en ser responsábel de toda acción que se produza utilizando a súa conta, autorizada ou non por vostede mesmoi, ata que a peche ou notifique á empresa que a súa conta foi manipulada. Esta de acordo con notificarlle inmediatamente á empresa se sospeita que a súa conta foi comprometida. Concorda en seleccionar un contrasinal seguro para a súa conta, e mantelo en segredo.
+
+      A empresa pode restrinxir, suspender ou pechar a súa conta no foro, conforme a súa política de tratamento de peticións de cesamentos relacionados con dereitos de autor ou se a empresa cre razoabelmente que rompeu algunha regra destes termos.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">O seu contido</a></h2>
+
+      Nada nestes termos dá á empresa ningún dereito de propiedaade sobre a propiedade intelectual que comparta co foro, tal como informació da súa conta, mensaxes, ou outros contidos que envíe ao foro. Nada nestes termos lle dá a vostede ningún dereito de propiedade sobre a propiedade intelectual da empresa, tampouco.
+
+      Entre vostede e a empresa, vostede é o único responsábel do contido que envíe ao foro. Está de acordo en non suxerir implicitamente que o contido que envía ao fórum está patrocinado ou aprobado pola empresa. Estes termos non obrigan a empresa a almacenar, manter ou fornecer copias do contido que vostede envía, e a cambialo, de acordo con estes termos.
+
+      O contido que envía ao foro perténcelle, e é o usuario quen decide cal o permiso que dar a outros para facelo. Mais, como mínimo, concede permiso á empresa para fornecer o contido que envía ao foro a outros usuarios do foro. Esa licenza especial permítelle á empresa copiar, publicar, e analizar o contido que somete ao fórum.
+
+      Cando o contido que envía se retira do foro, sexa pola súa vontade ou pola empresa, a licenza especial da empresa termina cando a última copia desaparece das copias de seguranza, caches e outros sistemas de empresa. Outras licenzas que vostede aplique ao contido que envía, tales como as licenzas [Creative Commons](https://creativecommons.org), poden continuar vixente logo de que retire o seu contido. Esas licenzas poden dar a outros, ou á propia empresa, o dereito de compartir novamente o seu contido no foro.
+
+      Outros que reciben o contido que envía ao foro poden violar os termos en que licenciou o seu contido. Concorda con que a empresa non será responsábel ante vostede desas violacións ou polas súas consecuencias.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">A súa responsabilidade</a></h2>
+
+      Concorda en indemnizar a empresa de reclamacións legais feitas por terceiros relacionadas coa súa violación destes termos, ou violación destes termos por terceiros que utilicen a súa conta no foro. Tanto vostede como a empresa acordan notificar á outra parte de calquera reclamación legal polas cales poida ter que indemnizar a empresa o máis rapidamente posíbel. Se a empresa non o notificase prontamente dunha reclamación legal, vostede non terá que indemnizar a empresa por danos dos quese podería defender ou ter mitigado co aviso inmediato. O cliente concorda en permitir que a empresa teña o control da investigación, defensa e resolución de reclamacións legais polas cales vostede tería que indemnizar a empresa, e cooperar con eses esforzos. A empresa concorda en non acordar ningunha resolución que admita a súa culpa ou impoña obrigas sen o seu acordo previo.
+
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Exencións de responsabilidade</a></h2>
+
+      ***Acepta todo o risco de utilizar o foro e o contido do foro. Tanto canto a lei o permita, a empresa e as súas auxiliares fornecer fornecen o foro tal como está, sen ningunha garantía.***
+
+      O foro pode hiperligar e integrar foros e servizos xestionados por outros. A empresa non ofrece ningunha garantía sobre os servizos xestionados por terceiros, ou contidos que estes poidan fornecer. A utilización de servizos xestionados por outros pode estar rexida por outros termos entre vostede e o servizo en funcionamento.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Límites de responsabilidade</a></h2>
+
+      ***Nin a empresa nin as súas auxiliares serán responsábeis ante vostede por danos causados pola quebra de contrato que o seu persoal non puidese prever razoabelmente cando vostede aceptou estes termos.***
+
+      *** Na medida en que a lei o permita, a responsabilidade ante vostede por reclamacións de calquera tipo relacionadas co foro ou contido do foro estará limitada a $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Opinión</a></h2>
+
+      A empresa agradece os seus comentarios e suxestións sobre o foro. Consulte a sección [Contact](#heading--contact) seguinte para ver formas de poñerse en contacto connosco.
+
+      Está de acordo con que a empresa será libre de actuar con base nos seus comentarios e suxestións, e que a empresa non terá que notificarlle que os seus comentarios foron utilizados, obter o seu permiso para os utilizar, ou pagarlle. Concorda en non enviar comentarios ou suxestións que crea que poidan ser confidenciais ou privados, da súa propiedade, ou da de outros.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Terminación</a></h2>
+
+      Tanto vostede como a empresa poden pór fin ao acordo escrito nestes termos en calquera momento. Cando o noso acordo termine, o permiso para utilizar o foro tamén termina.
+
+      As disposicións seguintes sobreviven ao fin do noso acordo: [O seu contido](#heading--your-content), [Opinión](#heading--feedback), [A súa responsabilidade](#heading--responsibility), [Exencións de responsabilidade](#heading--disclaimers), [Límites de responsabilidade](#heading--liability), e [Termos xerais](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputas</a></h2>
+
+      %{governing_law} rexerá calquera disputa relacionada con estes termos ou a súa utilización do foro.
+
+      Vostede e a empresa concordan en solicitar ordes xudiciais relacionadas con estes termos só nos xulgados de %{city_for_disputes}. Nin o cliente nin a empresa se oporán á xurisdición, foro ou venia neses tribunais.
+
+      ***Alén de solicitar unha orde xudicial ou para demandas ao abeiro da Lei de fraude e abuso informático, o cliente e a empresa resolverán calquera disputa a través de arbitraxe vinculante da Asociación Americana de Arbitraxe. A arbitraxe seguirá as Regras de arbitraxe comercial da AAA e os procedementos suplementarios para conflitos relacionados co consumidor. A arbitraxe acontecerá en %{city_for_disputes}. Resolverá calquera disputa como individuo, e non como parte dunha acción colectiva ou outro procedemento representativo, quere como queixoso quere como membro da clase. Ningún árbitraxe consolidará calquera disputa con ningunha outra arbitraxe sen a autorización da empresa.***
+
+      Calquera decisión arbitral incluirá os custos da arbitraxe, honorarios razoábeis dos avogados, e custos razoábeis para as testemuñas. Vostede e a empresa poden introducir as decisións arbitrais en calquera tribunal con xurisdición.
+
+      <h2 id="heading--general"><a href="#heading--general">Termos xerais</a></h2>
+
+      Se unha disposición destes termos for inaplicábel tal como está escrita, pero puidese ser cambiada para facela cumpríbel, esa disposición debe ser modificada na medida mínima necesaria para volvela aplicábel. En caso contrario, esa disposición deberá ser suprimida.
+
+      Non pode traspasar o seu acordo coa empresa. A empresa pode traspasar o seu acordo a calquera filial da empresa, a calquera outra empresa que obteña o control da empresa, ou a calquera outra empresa que compre bens da empresa relacionados co foro. Calquera tentativa de cesión contra estes termos non ten ningún efecto legal.
+
+      Nin o exercicio de calquera dereito ao abrigo do presente acordo, nin a renuncia a calquera ruptura do presente acordo, renuncia a calquera outra ruptura do presente acordo.
+
+      Estes termos incorporan todos os termos do acordo entre o cliente e a empresa sobre a utilización do foro. Estes termos substitúen enteiramente calquera dos outros acordos sobre a utilización por vostede do foro, escritos ou non.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contacto</a></h2>
+
+      Pode enviar notificar a empresa nestes termos, e enviar preguntas á empresa, en <%{contact_email}>.
+
+      A empresa pode notificalo ao abeito destes termos utilizando o enderezo de correo electrónico que forneceu para a súa conta no foro, ou publicando unha mensaxe na páxina inicial do foro ou na páxina da súa conta.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Cambios</a>></h2>
+
+      A empresa actualizou por última vez estes termos o 12 de xullo de 2018, e pode actualizar estes termos outra vez. A empresa publicará todas as actualizacións no foro. Para actualizacións que conteñan alteracións substanciais, a empresa concorda en enviarlle un correo, no caso de que crease unha conta e fornecese un enderezo de correo válido. A empresa pode tamén anunciar actualizacións con mensaxes especiais ou alertas no foro.
+
+      Unha vez que reciba unha actualización destes termos, deberá estar de acordo cos novos termos co fin de continuar a utilizar o foro.
   privacy_topic:
     title: "Política de privacidade"
+    body: |
+      <a name="collect"></a>
+
+      ## [Que información colleitamos?](#collect)
+
+      Colleitamos información súa cando se rexistra no noso sitio e compilamos datos cando participa no foro lendo, escribindo e avaliando o contido que se comparte aquí.
+
+      Cando se rexistre no noso sitio, pediráselle que introduza o seu nome e enderezo de correo electrónico. No entanto, pode visitar o sitio sen rexistrarse. O seu enderezo de correo electrónico comprobarase mediante un correo electrónico que contén unha ligazón de único uso. Se esa ligazón se visita, sabemos que vostede controla ese enderezo de correo electrónico.
+
+      Cando se rexistra e publica, rexistramos o enderezo IP de onde se orixinou o envío. Tamén podemos conservar os rexistros do servidor que inclúen o enderezo IP de cada solicitude ao noso servidor.
+
+      <a name="use"></a>
+
+      ##[Que facemos coa súa información?](#use)
+
+      Calquera información que compilemos de vostede pode ser utilizada dunha das seguintes maneiras:
+
+      * Para personalizar a súa experiencia &mdash; a súa información axúdanos a responder mellor ás súas necesidades individuais.
+      * Para mellorar o noso sitio web&mdash; esforzámonos a cotío por mellorar a nosa proposta a sitios web baseándonos na información e nos comentarios que recibimos de vostede.
+      * Para mellorar o servizo de atención ao cliente &mdash; a súa información axúdanos a responder máis eficazmente as peticións de servizo ao cliente e ás súas necesidades de asistencia.
+      * Para enviar correos electrónicos periódicos &mdash; O enderezo de correo electrónico que nos proporcione pode utilizarse para enviarlle información, notificacións que solicite sobre cambios en temas ou en respostas do seu nome de usuario, respostas a consultas e/ou outras peticións e cuestións.
+
+      <a name="protect"></a>
+
+      ## [Como protexemos esta información súa?](#protect)
+
+      Implementamos una variedade de medidas de seguranza para asegurar a súa información persoal cando entra, envía o accede á súa información persoal.
+
+      <a name="data-retention"></a>
+
+      ## [Cal é súa política de retención de datos?](#data-retention)
+
+      Faremos en boa fe, esforzos para..:
+
+      * Conservar os rexistros do servidor que conteñan o enderezo IP de todas as solicitudes a este servidor non máis de 90 días.
+      * Conservar os enderezos IP asociados aos usuarios rexistrados e coas súas mensaxes non máis de 5 anos.
+
+      <a name="cookies"></a>
+
+      ## [Usamos rastros?](#cookies)
+
+      Sí. Os rastros son pequenos ficheiros que un sitio ou o seu fornecedor de servizos transfire ao disco duro do seu computador a través do seu navegador web (se o permite). Estes rastros permiten que o sitio recoñeza o seu navegador e, se ten unha conta rexistrada, a asocie coa súa conta rexistrada.
+
+      Utilizamos rastros para comprender e gardar as súas preferencias para futuras visitas e compilar datos agregados sobre o tráfico do sitio e a interacción nel, de modo que poidamos ofrecer mellores experiencias e ferramentas no futuro. Podemos contratar fornecedores de servizos de terceiros para que nos axuden a comprerder mellor os visitantes do noso sitio. Estes fornecedores de servizos non están autorizados a utilizar a información compilada no noso nome, agás que sexa para axudarnos a levar a cabo e mellorar o noso obxectivo.
+
+      <a name="disclose"></a>
+
+      ## [Revelamos algunha información a terceiros?](#disclose)
+
+      Non vendemos, comerciamos nin transferimos a terceiros a súa información persoal identificábel. Isto non inclúe os terceiros de confianza que nos axudan a operar o noso sitio, a levar a cabo o noso obxectivo ou a prestarlle servizos, sempre e cando esas partes acorden manter esta información confidencial. Tamén podemos revelar a súa información cando creamos que é apropiado para cumprir coa lei, facer cumprir as políticas do noso sito ou protexer os nosos dereitos e os doutros, propiedade ou seguranza. No entanto, a información que non sexa de identificación persoal dos visitantes pode ser fornecida a outras partes para mercadotecnia, publicidade ou outros usos.
+
+      <a name="third-party"></a>
+
+      ## [Ligazóns de terceiros](#third-party)
+
+      Ocasionalmente, ao noso criterio, podemos incluír ou ofrecer produtos ou servizos de terceiros no noso sitio. Estes sitios de terceiros teñen políticas de privacidade separadas e independentes. Polo tanto, non temos ningunha responsabilidade sobre o contido e as actividades destes sitios ligados. Aínda así, buscamos protexer a integridade do noso sitio e agradecemos calquera comentario sobre estes sitios.
+
+      <a name="coppa"></a>
+
+      ## [Cumprimento da Lei de protección da privacidade dos menores na Internet](#coppa)
+
+      O noso sitio, produtos e servizos están dirixidos a persoas que teñen cando menos 13 anos de idade ou máis. Se este servidor está nos EE.UU., e vostede é menor de 13 anos, segundo os requisitos de COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), non utilice este sitio.
+
+      <a name="online"></a>
+
+      ## [Política de privacidade en liña soamente](#online)
+
+      Esta política de privacidade en liña aplícase só á información colleita a través do noso sitio e non á información recollida sen conexión en liña.
+
+      <a name="consent"></a>
+
+      ## [O seu consentimento](#consent)
+
+      Ao utilizar o sitio, acepta a política de privacidade do noso sitio web.
+
+      <a name="changes"></a>
+
+      ## [Cambios na nosa política de privacidade](#changes)
+
+      De decidirmos cambios na nosa política de privacidade, publicaremos tales cambios nesta páxina.
+
+      Este documento ten licenza CC-BY-SA. A súa última actualización é de do 31 de maio de 2013.
   badges:
     mass_award:
       errors:
@@ -3757,6 +4110,7 @@ gl:
       long_description: |
         Esta insignia concédese cando recibes ao menos 5 gústames en 300 publicacións diferentes. A comunidade admira as túas achegas ás conversas pola súa frecuencia e tamén pola súa calidade!
     out_of_love:
+      name: Por amor de
       description: Utilizou %{max_likes_per_day} gústames nun día
       long_description: |
         Esta insignia concédese canto utilizas todos os teus %{max_likes_per_day} gústames diarios. Lembra que dedicarlle tempo a valorar as publicacións que son do teu gusto anima os membros da comunidade a crear debates aínda mellores no futuro.
@@ -3866,6 +4220,7 @@ gl:
       button: "Rexistrarse"
       title: "Rexistrar conta de administrador"
       help: "rexistrar unha nova conta para comezar"
+      no_emails: "Desafortunadamente, non se determinaron enderezos de correo de administrador durante a definición inicial, polo que pode ser difícil finalizar a configuración. Engada, por favor, un correo de desenvolvedor no ficheiro de configuración ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>mire de crear unha conta de administrador desde a consola</a>."
     confirm_email:
       title: "Confirma o teu correo electrónico"
       message: "<p>Enviámosche un correo de activación a <b>%{email}</b>. Sigue as instrucións para activar a túa conta.</p><p>Se non che chega, comproba o cartafol de correo lixo e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar correctamente o teu correo</a>.</p>"
@@ -3909,6 +4264,7 @@ gl:
             label: "Tema de benvida"
             description: "<p>Como lle describirías a túa comunidade a alguén que non a coñece nun minuto?</p> <ul> <li>A quen están enfocadas as súas discusións?</li> <li>Que podo atopar aquí?</li> <li>Por que debería visitala?</li> </ul> <p>O teu tema de benvida é a primeira cousa que lerán os novos visitantes. Pensa que é o <b>parágrafo</b> a modo de presentación exprés ou introdución á misión. </p>"
             one_paragraph: "Limita a túa mensaxe de benvida a un único parágrafo."
+            extra_description: "Se non está seguro, pode saltar este paso e editar o seu texto de benvida máis tarde."
       privacy:
         title: "Acceso"
         description: "<p>A túa comunidade é aberta a todo o mundo ou está restrinxida só aos seus membros afiliados, con invitación ou aprobación? Se o prefires, podes facer que inicialmente sexa privada e despois convertela en aberta.</p>"
@@ -3954,6 +4310,20 @@ gl:
           governing_law:
             label: "Lei que rexe"
             placeholder: "Lei de California"
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "San Francisco, California"
+      colors:
+        title: "Cores"
+      fonts:
+        title: "Tipos de letra"
+        fields:
+          body_font:
+            label: "Tipo de letra do corpo"
+          heading_font:
+            label: "Tipo de letra de título"
+          font_preview:
+            label: "Visualizar"
       logos:
         title: "Logotipos"
         fields:
@@ -3996,10 +4366,15 @@ gl:
         title: "Emoji"
         description: "Que estilo de emojis prefires para a túa comunidade? Podes engadir máis e personalizalos vía Administración, Personalizar, Emoji."
       invites:
+        title: "Convidar o grupo"
         description: "Xa está case! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a túa comunidade."
         disabled: "Como os inicios de sesión locais están desactivados, non é posible enviar invitacións a ninguén. Vai ao seguinte paso."
       finished:
         title: "O teu Discourse está pronto!"
+        description: |
+          <p>Se xa comprende como cambiar esta configuración, <b>volva executar este asistente en calquera momento</b>, ou visite <a href='%{base_path}/admin' target='_blank'>a sección de administración</a>; atoparao xunto á icona de chave inglesa no menú do sitio.</p>
+          <p>É doado personalizar Discourse aínda máis usando o noso poderoso sistema de temas. Para ver exemplos, consulte os <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">principais temas e compoñentes</a> en <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
   joined: "Uniuse"
@@ -4021,6 +4396,7 @@ gl:
     unknown: "decoñecido"
     user_merged: "%{username} combinouse con esta conta"
     user_delete_self: "Eliminouse a si mesmo/a de %{url}"
+    webhook_deactivation_reason: "O seu webhook desactivouse automaticamente. Recibimos múltiplas respostas de status de fallo HTTP «%{status}»."
     api_key:
       automatic_revoked:
         one: "Revogada automaticamente, última actividade hai máis de %{count} día"
@@ -4058,6 +4434,8 @@ gl:
       suspect_user: "Este novo usuario inseriu información de perfil sen ler antes ningún tema nin publicación, o cal suxire claramente que pode ser un remitente cun comportamento non desexado. Revisa `approve_suspect_users`."
       contains_media: "Esta publicación inclúe elementos multimedia inseridos. Vexa `review_media_unless_trust_level`."
     actions:
+      agree:
+        title: "De acordo..."
       agree_and_keep:
         title: "Manter publicación"
         description: "De acordo con esta denuncia e manter a publicación sen modificar."
@@ -4092,8 +4470,10 @@ gl:
         description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén."
         confirm: "Confirmas a eliminación das respostas desta publicación tamén?"
       delete_and_agree:
+        title: "Eliminar publicación e aceptar"
         description: "Eliminar publicación; se é a primeira, eliminar tamén o tema"
       delete_and_agree_replies:
+        title: "Eliminar Publicación + Respostas e aceptar"
         description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén."
         confirm: "Confirmas a eliminación das respostas desta publicación tamén?"
       disagree_and_restore:
@@ -4143,6 +4523,12 @@ gl:
       %{keys}
 
       Arestora non se precisa realizar acción ningunha, mais repara en que é unha boa práctica de seguridade renovar todas as credencias importantes cada poucos anos.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Parte %{count})"
+      other: "%{topic_title} (Partes %{count})"
+    post_raw: "Continuando a discusión de %{parent_url}.\n\nDiscusións previas:\n\n%{previous_topics}"
+    small_action_post_raw: "Continuar a discusión en %{new_title}."
   activemodel:
     errors:
       <<: *errors

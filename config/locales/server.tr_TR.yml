@@ -194,6 +194,7 @@ tr_TR:
   topic_invite:
     failed_to_invite: "Kullanıcı, aşağıdaki gruplardan birinde grup üyeliği olmadan bu konuya davet edilemez: %{group_names}."
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
+    muted_topic: "Üzgünüz, o kullanıcı bu konuyu sessize aldı."
   backup:
     operation_already_running: "Devam eden bir işlem var. Yeni bir işlem başlatılamaz."
     backup_file_should_be_tar_gz: "Yedekleme dosyası .tar.gz uzantılı olmalı."
@@ -281,6 +282,7 @@ tr_TR:
   pm_reached_recipients_limit: "Maalesef bir mesajı %{recipients_limit} alıcıdan daha fazlasına gönderemezsiniz."
   removed_direct_reply_full_quotes: "Otomatik olarak önceki tüm gönderilerin alıntıları kaldırıldı."
   secure_upload_not_allowed_in_public_topic: "Maalesef, aşağıdaki güvenli yükleme (ler) herkese açık bir konuda kullanılamaz: %{upload_filenames}."
+  create_pm_on_existing_topic: "Üzgünüz, mevcut bir konuda PM oluşturamazsınız."
   just_posted_that: "yakın zamanda yaptığınız bir gönderiye çok benziyor"
   invalid_characters: "geçersiz karakterler barındırıyor"
   is_invalid: "belirsiz görünüyor, bu tamamlanmış bir cümle mi?"
@@ -320,6 +322,7 @@ tr_TR:
     reminders:
       at_desktop: "Bir dahaki sefere masaüstümdeyim"
       later_today: "Bugün ilerleyen saatlerde"
+      next_business_day: "Bir sonraki iş günü"
       tomorrow: "Yarın"
       next_week: "Gelecek hafta"
       next_month: "Gelecek ay"
@@ -1444,8 +1447,6 @@ tr_TR:
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
     max_logins_per_ip_per_minute: "Her IP adresi için dakika başına izin verilen maksimum giriş sayısı"
-    max_post_deletions_per_minute: "Bir kullanıcının dakikada silebileceği maksimum gönderi sayısı."
-    max_post_deletions_per_day: "Bir kullanıcının günde silebileceği maksimum gönderi sayısı."
     alert_admins_if_errors_per_minute: "Bir yönetici uyarısını tetiklemek için dakika başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     alert_admins_if_errors_per_hour: "Bir yönetici uyarısını tetiklemek için saat başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: yeniden başlatma gerektirir."
     categories_topics: " Kategoriler sayfasında gösterilecek konu sayısı. 0 olarak ayarlanırsa, iki sütunu simetrik (kategoriler ve konular) tutmak için otomatik olarak bir değer bulmaya çalışır."
@@ -3314,7 +3315,8 @@ tr_TR:
     devotee:
       name: Hayran
       description: Arka arkaya 365 gün ziyaret etti
-      long_description: "Bu rozet, art arda 365 gün ziyaret edenler için verilir. Vay, bütün bir yıldır bizimlesin! Bu rozet, art arda 365 gün ziyaret edenlere verilir. \n"
+      long_description: |
+        Bu rozet, 365 gün boyunca siteyi art arda ziyaret edenlere verilir. Vay, tam bir yıldır her gün bizimlesin!
     badge_title_metadata: "%{display_name} rozeti %{site_title}"
   admin_login:
     success: "E-posta Gönderildi"

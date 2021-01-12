@@ -1301,6 +1301,21 @@ describe Post do
     end
   end
 
+  describe ".hide!" do
+    after do
+      Discourse.redis.flushdb
+    end
+
+    it "should ignore the duplicate check" do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post, user: p1.user)
+      SiteSetting.unique_posts_mins = 10
+      p1.store_unique_post_key
+      p2.reload.hide!(PostActionType.types[:off_topic])
+      expect(p2).to be_hidden
+    end
+  end
+
   describe ".unhide!" do
     before { SiteSetting.unique_posts_mins = 5 }
 

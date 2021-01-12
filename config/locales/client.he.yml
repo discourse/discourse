@@ -481,11 +481,6 @@ he:
         name: "שם"
         fields: "שדות"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (דגל אחד סה״כ)"
-          two: "%{agreed}, %{disagreed}, %{ignored} (%{count} דגלים סה״כ)"
-          many: "%{agreed}, %{disagreed}, %{ignored} (%{count} דגלים סה״כ)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} דגלים סה״כ)"
         agreed:
           one: "%{count}% מסכים"
           two: "%{count}% מסכימים"
@@ -966,7 +961,7 @@ he:
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
       color_schemes:
-        default_description: "בררת מחדל"
+        default_description: "בררת המחדל לערכת העיצוב"
         disable_dark_scheme: "כמו הרגילה"
         dark_instructions: "ניתן להדגים את ערכת צבעי הערכה הכהה על ידי החלפת מצב התצוגה הכהה במכשיר שלך."
         undo: "איפוס"
@@ -3527,7 +3522,6 @@ he:
     invite:
       custom_message: "ניתן להעניק להזמנה שלך מגע אישי יותר על ידי כתיבת <a href>הודעה אישית</a>."
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
-      approval_not_required: "המשתמש יאושר אוטומטית עם קבלת ההזמנה הזאת."
       custom_message_template_forum: "היי, זה פורום מומלץ, כדאי להצטרף אליו!"
       custom_message_template_topic: "היי, חשבתי שהנושא הזה יעניין אותך!"
     forced_anonymous: "עקב עומס חריג, הודעה זו מוצגת באופן זמני לכולם כפי שתופיע בפני משתמשים שלא נכנסו למערכת."
@@ -4078,6 +4072,7 @@ he:
           install_upload: "מהמכשיר שלך"
           install_git_repo: "ממאגר git"
           install_create: "יצירת חדשה"
+          duplicate_remote_theme: "רכיב ערכת העיצוב „%{name}” כבר מותקן, להתקין עותק נוסף?"
           about_theme: "אודות"
           license: "רישיון"
           version: "גרסה:"
@@ -4586,6 +4581,7 @@ he:
         clear_penalty_history:
           title: "מחיקת היסטוריית עונשין"
           description: "משתמשים עם עונשין לא יכולים להגיע לדרגת אמון 3"
+        delete_all_posts_confirm_MF: "פעולה זו תמחק {POSTS, plural, one {פוסט אחד} two {שני פוסטים} many {# פוסטים} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} two {שני נושאים} many {־# נושאים} other {־# נושאים}}. להמשיך?"
         silence: "השתקה"
         unsilence: "ביטול השתקה"
         silenced: "בהשתקה?"
