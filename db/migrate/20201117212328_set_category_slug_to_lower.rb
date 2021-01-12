@@ -5,6 +5,7 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
     remove_index(:categories, name: 'unique_index_categories_on_slug')
 
     categories = DB.query("SELECT id, name, slug, parent_category_id FROM categories")
+    old_slugs = categories.map { |c| [c.id, c.slug] }.to_h
     updates = {}
 
     # Resolve duplicate tags by replacing mixed case slugs with new ones
@@ -54,7 +55,7 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
       execute <<~SQL
         UPDATE categories
         SET slug = '#{PG::Connection.escape_string(slug)}'
-        WHERE id = #{id}
+        WHERE id = #{id} -- #{PG::Connection.escape_string(old_slugs[id])}
       SQL
     end
 
