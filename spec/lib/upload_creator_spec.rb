@@ -497,4 +497,20 @@ RSpec.describe UploadCreator do
       end
     end
   end
+
+  describe '#should_downsize?' do
+    context "GIF image" do
+      let(:gif_file) { file_from_fixtures("animated.gif") }
+
+      before do
+        SiteSetting.max_image_size_kb = 1
+      end
+
+      it "is not downsized" do
+        creator = UploadCreator.new(gif_file, "animated.gif")
+        creator.extract_image_info!
+        expect(creator.should_downsize?).to eq(false)
+      end
+    end
+  end
 end

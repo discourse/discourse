@@ -126,7 +126,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
-        @upload.animated = animated?(@file)
+        @upload.animated = FastImage.animated?(@file)
       end
 
       add_metadata!
@@ -175,25 +175,6 @@ class UploadCreator
     elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
       @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels * 2))
     end
-  end
-
-  def animated?(file)
-    OptimizedImage.ensure_safe_paths!(file.path)
-
-    # TODO - find out why:
-    #   FastImage.animated?(@file)
-    # doesn't seem to identify all animated gifs
-    @frame_count ||= begin
-      command = [
-        "identify",
-        "-format", "%n\\n",
-        file.path
-      ]
-
-      frames = Discourse::Utils.execute_command(*command).to_i rescue 1
-    end
-
-    @frame_count > 1
   end
 
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
@@ -286,13 +267,13 @@ class UploadCreator
   end
 
   def should_alter_quality?
-    return false if animated?(@file)
+    return false if FastImage.animated?(@file)
 
     @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
   end
 
   def should_downsize?
-    max_image_size > 0 && filesize >= max_image_size
+    max_image_size > 0 && filesize >= max_image_size && !FastImage.animated?(@file)
   end
 
   def downsize!
@@ -302,14 +283,13 @@ class UploadCreator
 
       from = @file.path
       to = down_tempfile.path
-      scale = (from =~ /\.GIF$/i) ? "0.5" : "50%"
 
       OptimizedImage.ensure_safe_paths!(from, to)
 
       OptimizedImage.downsize(
         from,
         to,
-        scale,
+        "50%",
         scale_image: true,
         raise_on_error: true
       )
@@ -371,7 +351,7 @@ class UploadCreator
   end
 
   def should_crop?
-    return false if @opts[:type] == 'custom_emoji' && animated?(@file)
+    return false if ['profile_background', 'card_background', 'custom_emoji'].include?(@opts[:type]) && FastImage.animated?(@file)
 
     TYPES_TO_CROP.include?(@opts[:type])
   end
