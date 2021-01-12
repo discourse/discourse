@@ -66,7 +66,7 @@ class RateLimiter
 
 
       if ((tonumber(redis.call("LLEN", key)) < max) or
-          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) > secs) then
+          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) >= secs) then
         redis.call("LPUSH", key, now)
         redis.call("LTRIM", key, 0, max - 1)
         redis.call("EXPIRE", key, secs * 2)
@@ -91,7 +91,7 @@ class RateLimiter
       local return_val = 0
 
       if ((tonumber(redis.call("LLEN", key)) < max) or
-          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) > secs) then
+          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) >= secs) then
         return_val = 1
       else
         return_val = 0
@@ -188,7 +188,7 @@ class RateLimiter
     # number of events in buffer less than max allowed? OR
     (redis.llen(prefixed_key) < @max) ||
     # age bigger than silding window size?
-    (age_of_oldest(now) > @secs)
+    (age_of_oldest(now) >= @secs)
   end
 
   def rate_unlimited?

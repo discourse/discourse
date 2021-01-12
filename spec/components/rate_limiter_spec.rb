@@ -72,10 +72,10 @@ describe RateLimiter do
           limiter.performed!
         end.to raise_error(RateLimiter::LimitExceeded)
 
-        freeze_time 31.seconds.from_now
+        freeze_time 30.seconds.from_now
 
-        limiter.performed!
-        limiter.performed!
+        expect { limiter.performed! }.not_to raise_error
+        expect { limiter.performed! }.not_to raise_error
 
       end
     end
@@ -150,6 +150,7 @@ describe RateLimiter do
 
     context "multiple calls" do
       before do
+        freeze_time
         rate_limiter.performed!
         rate_limiter.performed!
       end
@@ -160,7 +161,15 @@ describe RateLimiter do
       end
 
       it "raises an error the third time called" do
-        expect { rate_limiter.performed! }.to raise_error(RateLimiter::LimitExceeded)
+        expect { rate_limiter.performed! }.to raise_error do |error|
+          expect(error).to be_a(RateLimiter::LimitExceeded)
+          expect(error).to having_attributes(available_in: 60)
+        end
+      end
+
+      it 'raises no error when the sliding window ended' do
+        freeze_time 60.seconds.from_now
+        expect { rate_limiter.performed! }.not_to raise_error
       end
 
       context "as an admin/moderator" do
