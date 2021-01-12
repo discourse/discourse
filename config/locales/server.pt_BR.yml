@@ -371,6 +371,16 @@ pt_BR:
     until_posts:
       one: "%{count} mensagem"
       other: "%{count} mensagens"
+    "new-topic": |
+      Bem vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversa!**
+
+      - O título parece interessante se você ler em voz alta? É um bom resumo?
+
+      - Quem estaria interessado nisto? Por que é relevante? Que tipo de respostas você quer?
+
+      - Inclua as palavras mais usadas no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou tag).
+
+      Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -1433,8 +1443,6 @@ pt_BR:
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     max_logins_per_ip_per_hour: "Número máximo de logins permitidos por endereço IP por hora"
     max_logins_per_ip_per_minute: "Número máximo de logins permitidos por endereço IP por minuto"
-    max_post_deletions_per_minute: "Número máximo de postagens que um usuário pode excluir por minuto."
-    max_post_deletions_per_day: "Número máximo de postagens que um usuário pode excluir por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
     alert_admins_if_errors_per_hour: "Número de erros por hora para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."

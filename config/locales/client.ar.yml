@@ -539,13 +539,6 @@ ar:
         name: "الاسم"
         fields: "الحقول"
       user_percentage:
-        summary:
-          zero: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(ما من إشارات)"
-          one: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(إشارة واحدة بالمُجمل)"
-          two: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(إشارتان بالمُجمل)"
-          few: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(%{count} إشارات بالمُجمل)"
-          many: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(%{count} إشارة بالمُجمل)"
-          other: "‏%{agreed}، ‏%{disagreed}، ‏%{ignored} ‏(%{count} إشارة بالمُجمل)"
         agreed:
           zero: "%{count}% مُوافق عليها"
           one: "%{count}% مُوافق عليها"
@@ -1048,7 +1041,6 @@ ar:
       color_scheme_default_on_all_devices: "تعيين مخطط (أنظمة) الألوان الافتراضية على جميع أجهزتي"
       color_scheme: "المخطط اللوني"
       color_schemes:
-        default_description: "المبدئي"
         disable_dark_scheme: "نفس العادية"
         dark_instructions: "يمكنك معاينة مخطّط الوضع الداكن اللوني بتفعيل الوضع الداكن من جهازك."
         undo: "صفّر"
@@ -3707,7 +3699,6 @@ ar:
     invite:
       custom_message: "اجعل دعوتك شخصية أكثر قليلاً عن طريق كتابة <a href>رسالة مخصصة</a>."
       custom_message_placeholder: "ادخل رسالتك المخصصة"
-      approval_not_required: "سيتم الموافقة على المستخدم تلقائيًا بمجرد قبوله هذه الدعوة."
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المجتمع!"
       custom_message_template_topic: "مرحبا. أظن أن هذا الموضوع سيسعدك!"
     forced_anonymous: "بسبب التحميل الشديد، يتم عرض هذا بشكل مؤقت للجميع كما يراه مستخدم سجّل الخروج."

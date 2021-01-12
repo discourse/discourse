@@ -381,7 +381,7 @@ gl:
 
           De modo predeterminado, o nivel de notificación dunha mensaxe privada estabelécese no nivel máis alto de `observación`, o que significa que recibirá unha notificación por cada nova resposta. Pero pode sobrescribir o nivel de notificación de _calquera_ tema a `observar`, `seguir` ou `silenciar`.
 
-          Vamo cambiar o nivel de notificación deste tema. Na parte inferior do tema, atopará un botón que amosa que este tema está en **observación**. Pode cambiar o nivel de notificación a **seguimento**?
+          Vamos cambiar o nivel de notificación deste tema. Na parte inferior do tema, atopará un botón que amosa que este tema está en **observación**. Pode cambiar o nivel de notificación a **seguimento**?
         not_found: |-
           Parece que aínda está en observación :eyes: este tema! Se ten problemas para atopalo, o botón de nivel de notificación está situado na parte inferior do tema.
         reply: |-

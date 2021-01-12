@@ -120,6 +120,8 @@ tr_TR:
       post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
       twitter: "Twitter'da paylaş"
+      facebook: "Facebook'ta paylaş"
+      email: "E-posta ile gönder"
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
@@ -393,9 +395,6 @@ tr_TR:
         name: "İsim"
         fields: "Alanlar"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} toplam bildiri)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} toplam bildiri)"
         agreed:
           one: "%%{count} uygunluk"
           other: "%%{count} uygunluk"

@@ -840,7 +840,6 @@ ro:
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       color_schemes:
-        default_description: "Implicit"
         disable_dark_scheme: "La fel ca de obicei"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"

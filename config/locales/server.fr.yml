@@ -954,7 +954,9 @@ fr:
     mute_topic: "Ignorer toutes les notifications pour ce sujet, %{link}"
     unwatch_category: "Arrêter de surveiller les sujets dans %{category}"
     mailing_list_mode: "Désactiver la liste de diffusion"
+    all: "Ne pas m'envoyer de courriel de %{sitename}"
     different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
+    not_found_description: "Désolé, nous n'avons pas pu trouver ce désabonnement. Il est possible que le lien dans votre courriel soit trop ancien et ait expiré."
     log_out: "Déconnexion"
     submit: "Sauvegarder les préférences"
     digest_frequency:
@@ -1332,7 +1334,7 @@ fr:
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
-    s3_cdn_warning: 'Le serveur est configuré pour télécharger des fichiers vers S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et des performances du site moindres. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Voir «Using Object Storage for Uploads» pour en savoir plus</a>.'
+    s3_cdn_warning: 'Le serveur est configuré pour télécharger des fichiers vers S3, mais aucun CDN S3 n''est configuré. Cela peut entraîner des coûts S3 élevés et des performances du site moindres. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Voir « Using Object Storage for Uploads » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">téléchargez directement la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="%{base_path}/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée ; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
@@ -1620,8 +1622,8 @@ fr:
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     max_logins_per_ip_per_hour: "Nombre maximum de connexions autorisées par adresse IP et par heure"
     max_logins_per_ip_per_minute: "Nombre maximum de connexions autorisées par adresse IP, par minute"
-    max_post_deletions_per_minute: "Nombre maximum de sujet qu'un utilisateur peut supprimer par minute."
-    max_post_deletions_per_day: "Nombre maximum de sujet qu'un utilisateur peut supprimer par jour."
+    max_post_deletions_per_minute: "Nombre maximum de messages qu'un utilisateur peut supprimer par minute. Réglez sur 0 pour désactiver les suppressions de messages."
+    max_post_deletions_per_day: "Nombre maximum de messages qu'un utilisateur peut supprimer par jour. Réglez sur 0 pour désactiver les suppressions de messages."
     invite_link_max_redemptions_limit: "Le nombre maximum d'utilisations des liens d'invitation doit être inférieur à cette valeur."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
@@ -1924,6 +1926,7 @@ fr:
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: "Supprimer les brouillons plus vieux que (n) jours."
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode spécial de lancement (mettre à 0 pour désactiver)"
+    prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « login required » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement pour les médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Voir <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour plus d''informations.'
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
     enable_emoji: "Activer les émojis"
@@ -1950,7 +1953,7 @@ fr:
     blur_tl0_flagged_posts_media: "Flouter les images des messages signalés pour masquer du contenu potentiellement NSFW."
     enable_page_publishing: "Autorisez les responsables de publier des sujets vers de nouvelles URL utilisant leur propre style."
     show_published_pages_login_required: "Les utilisateurs anonymes peuvent voir les pages publiées même quand la connexion est nécessaire."
-    skip_auto_delete_reply_likes: "Lorsque vous supprimez automatiquement des réponses anciennes , ignorez la suppression des messages avec ce nombre de J'aime ou plus."
+    skip_auto_delete_reply_likes: "Lorsque des réponses anciennes sont automatiquement supprimées, ignorer la suppression des messages avec ce nombre de J'aime ou plus."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
     default_email_level: "Définissez le niveau de notification courriel par défaut pour les sujets standards."
@@ -2208,7 +2211,7 @@ fr:
       invalid_iat: "Impossible de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion, veuillez réessayer."
     omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
-    omniauth_confirm_button: "Poursuivre"
+    omniauth_confirm_button: "Continuer"
     authenticator_error_no_valid_email: "Aucune adresse courriel associée à %{account} n'est autorisée. Vous devriez configurer votre compte avec une autre adresse."
     new_registrations_disabled: "La création de nouveaux comptes n'est pas autorisée pour le moment."
     password_too_long: "Les mots de passe sont limités à 200 caractères."
@@ -2270,6 +2273,7 @@ fr:
       not_allowed: "n'est pas autorisé pour ce fournisseur de courriels. Veuillez utiliser une autre adresse."
       blocked: "n'est pas autorisé."
       revoked: "N'enverra plus de courriels à « %{email} » jusqu'à %{date}."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
@@ -4080,7 +4084,7 @@ fr:
         Ce badge est accordé lorsque vous utilisez la totalité vos %{max_likes_per_day} J'aime par jour pendant 20 jours. Whaou ! Vous êtes un modèle d'encouragement pour les membres de la communauté !
     thank_you:
       name: Merci
-      description: A 20 messages ayant reçu un J'aime et a donné 10 j'aime
+      description: A 20 messages ayant reçu un J'aime et a donné 10 J'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour.
     gives_back:

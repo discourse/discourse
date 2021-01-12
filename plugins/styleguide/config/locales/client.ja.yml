@@ -17,6 +17,7 @@ ja:
         typography:
           title: "Typography"
           example: "Discourseへようこそ"
+          paragraph: "山路を登りながら、こう考えた。知に働けば角が立つ。情に棹させば流される。意地を通せば窮屈だ。とかくに人の世は住みにくい。住みにくさが高じると、安いところへ引き越したくなる。どこへ越しても住みにくいと悟った時、詩が生まれて、画ができる。"
         date_time_inputs:
           title: "日付/時刻の入力"
         font_scale:
@@ -34,10 +35,14 @@ ja:
           title: "ドロップダウン"
         categories:
           title: "カテゴリ"
+        bread_crumbs:
+          title: "パンくずリスト"
         navigation:
           title: "ナビゲーション"
         navigation_bar:
           title: "ナビゲーションバー"
+        navigation_stacked:
+          title: "スタックされたナビゲーション"
         categories_list:
           title: "カテゴリ一覧"
         topic_link:
@@ -70,6 +75,12 @@ ja:
           title: "関連トピック"
         post_menu:
           title: "投稿メニュー"
+        modal:
+          title: "モーダル"
+          header: "モーダルタイトル"
+          footer: "モーダルフッター"
+        user_about:
+          title: "ユーザーについてのボックス"
         header_icons:
           title: "ヘッダーアイコン"
         spinners:
