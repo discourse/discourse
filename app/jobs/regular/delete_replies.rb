@@ -4,7 +4,7 @@ module Jobs
   class DeleteReplies < ::Jobs::Base
 
     def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
+      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
 
       topic = topic_timer&.topic
 

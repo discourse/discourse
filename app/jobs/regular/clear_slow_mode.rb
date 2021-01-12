@@ -4,7 +4,7 @@ module Jobs
   class ClearSlowMode < ::Jobs::Base
 
     def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
+      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
 
       if topic_timer.nil? || topic_timer.execute_at > Time.zone.now
         return

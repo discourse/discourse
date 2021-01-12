@@ -4,7 +4,7 @@
 require 'rails_helper'
 
 describe Topic do
-  let(:job_klass) { Jobs::ToggleTopicClosed }
+  let(:job_klass) { Jobs::CloseTopic }
 
   context 'creating a topic without auto-close' do
     let(:topic) { Fabricate(:topic, category: category) }
@@ -46,7 +46,6 @@ describe Topic do
           args = job_klass.jobs.last['args'].first
 
           expect(args["topic_timer_id"]).to eq(topic.public_topic_timer.id)
-          expect(args["state"]).to eq(true)
         end
 
         context 'topic was created by staff user' do
@@ -65,7 +64,6 @@ describe Topic do
             args = job_klass.jobs.last['args'].first
 
             expect(args["topic_timer_id"]).to eq(topic_status_update.id)
-            expect(args["state"]).to eq(true)
           end
 
           context 'topic is closed manually' do
@@ -96,7 +94,6 @@ describe Topic do
             args = job_klass.jobs.last['args'].first
 
             expect(args["topic_timer_id"]).to eq(topic_status_update.id)
-            expect(args["state"]).to eq(true)
           end
         end
       end

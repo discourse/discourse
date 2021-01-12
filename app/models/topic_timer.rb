@@ -15,7 +15,7 @@ class TopicTimer < ActiveRecord::Base
   validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at, :user_id] }, if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
-  validate :ensure_update_will_happen
+  validate :executed_at_in_future?
 
   scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
 
@@ -84,23 +84,38 @@ class TopicTimer < ActiveRecord::Base
     !!self.class.private_types[self.status_type]
   end
 
+  def runnable?
+    return false if deleted_at.present?
+    return false if execute_at > Time.zone.now
+    true
+  end
+
   private
 
-  def ensure_update_will_happen
-    if created_at && (execute_at < created_at)
-      errors.add(:execute_at, I18n.t(
-        'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
-      ))
-    end
+  def executed_at_in_future?
+    return if created_at.blank? || (execute_at > created_at)
+
+    errors.add(:execute_at, I18n.t(
+      'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
+    ))
   end
 
+  # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
   end
-  alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
+  # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
+  def cancel_auto_open_job
+    Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:open_topic, topic_timer_id: id)
+  end
+
+  # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_silent_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
   end
 
   def cancel_auto_publish_to_category_job
@@ -138,29 +153,19 @@ class TopicTimer < ActiveRecord::Base
   def schedule_auto_open_job(time)
     topic.update_status('closed', true, user) if topic && !topic.closed
 
-    Jobs.enqueue_at(time, :toggle_topic_closed,
-      topic_timer_id: id,
-      state: false
-    )
+    Jobs.enqueue_at(time, :open_topic, topic_timer_id: id)
   end
 
   def schedule_auto_close_job(time)
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue_at(time, :toggle_topic_closed,
-      topic_timer_id: id,
-      state: true
-    )
+    Jobs.enqueue_at(time, :close_topic, topic_timer_id: id)
   end
 
   def schedule_auto_silent_close_job(time)
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue_at(time, :toggle_topic_closed,
-      topic_timer_id: id,
-      silent: true,
-      state: true
-    )
+    Jobs.enqueue_at(time, :close_topic, topic_timer_id: id, silent: true)
   end
 
   def schedule_auto_publish_to_category_job(time)

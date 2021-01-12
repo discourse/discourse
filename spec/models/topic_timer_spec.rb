@@ -91,15 +91,18 @@ RSpec.describe TopicTimer, type: :model do
         Jobs.expects(:cancel_scheduled_job).with(
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
+        Jobs.expects(:cancel_scheduled_job).with(
+          :close_topic, topic_timer_id: topic_timer.id
+        )
 
-        expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: 3.days.from_now) do
+        expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: 3.days.from_now) do
           topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
         end
       end
 
       describe 'when execute_at is smaller than the current time' do
         it 'should enqueue the job immediately' do
-          expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: Time.zone.now) do
+          expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: Time.zone.now) do
             topic_timer.update!(
               execute_at: Time.zone.now - 1.hour,
               created_at: Time.zone.now - 2.hour
@@ -114,8 +117,11 @@ RSpec.describe TopicTimer, type: :model do
         Jobs.expects(:cancel_scheduled_job).with(
           :toggle_topic_closed, topic_timer_id: topic_timer.id
         )
+        Jobs.expects(:cancel_scheduled_job).with(
+          :close_topic, topic_timer_id: topic_timer.id
+        )
 
-        expect_enqueued_with(job: :toggle_topic_closed, args: { topic_timer_id: topic_timer.id, state: true }, at: topic_timer.execute_at) do
+        expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: topic_timer.execute_at) do
           topic_timer.update!(user: admin)
         end
       end
@@ -235,27 +241,58 @@ RSpec.describe TopicTimer, type: :model do
       Sidekiq::Worker.clear_all
 
       expect { described_class.ensure_consistency! }
-        .to change { Jobs::ToggleTopicClosed.jobs.count }.by(4)
+        .to change { Jobs::CloseTopic.jobs.count }.by(2).and change { Jobs::OpenTopic.jobs.count }.by(2)
 
-      expect(job_enqueued?(job: :toggle_topic_closed, args: {
-        topic_timer_id: close_topic_timer.id,
-        state: true
+      expect(job_enqueued?(job: :close_topic, args: {
+        topic_timer_id: close_topic_timer.id
       })).to eq(true)
 
-      expect(job_enqueued?(job: :toggle_topic_closed, args: {
-        topic_timer_id: open_topic_timer.id,
-        state: false
+      expect(job_enqueued?(job: :open_topic, args: {
+        topic_timer_id: open_topic_timer.id
       })).to eq(true)
 
-      expect(job_enqueued?(job: :toggle_topic_closed, args: {
-        topic_timer_id: trashed_close_topic_timer.id,
-        state: true
+      expect(job_enqueued?(job: :close_topic, args: {
+        topic_timer_id: trashed_close_topic_timer.id
       })).to eq(true)
 
-      expect(job_enqueued?(job: :toggle_topic_closed, args: {
-        topic_timer_id: trashed_open_topic_timer.id,
-        state: false
+      expect(job_enqueued?(job: :open_topic, args: {
+        topic_timer_id: trashed_open_topic_timer.id
       })).to eq(true)
+    end
+  end
+
+  describe "runnable?" do
+    it "returns false if execute_at > now" do
+      topic_timer = Fabricate.build(:topic_timer,
+                                    execute_at: Time.zone.now + 1.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+
+      expect(topic_timer.runnable?).to eq(false)
+    end
+
+    it "returns false if timer is deleted" do
+      topic_timer = Fabricate.create(:topic_timer,
+                                    execute_at: Time.zone.now - 1.hour,
+                                    created_at: Time.zone.now - 2.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+      topic_timer.trash!
+
+      expect(topic_timer.runnable?).to eq(false)
+    end
+
+    it "returns true if execute_at < now" do
+      topic_timer = Fabricate.build(:topic_timer,
+                                    execute_at: Time.zone.now - 1.hour,
+                                    created_at: Time.zone.now - 2.hour,
+                                    user: Fabricate(:user),
+                                    topic: Fabricate(:topic)
+                                   )
+
+      expect(topic_timer.runnable?).to eq(true)
     end
   end
 end
