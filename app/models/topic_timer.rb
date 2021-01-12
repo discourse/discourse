@@ -18,6 +18,9 @@ class TopicTimer < ActiveRecord::Base
   validate :executed_at_in_future?
 
   scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
+  scope :pending_timers, ->(before_time = Time.now.utc) do
+    where("execute_at IS NOT NULL AND execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
+  end
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
@@ -32,14 +35,42 @@ class TopicTimer < ActiveRecord::Base
     end
   end
 
-  after_save do
-    if (saved_change_to_execute_at? || saved_change_to_user_id?)
-      now = Time.zone.now
-      time = execute_at < now ? now : execute_at
+  def status_type_name
+    self.class.types[status_type]
+  end
 
-      # private implementation detail have to use send
-      self.send("schedule_auto_#{self.class.types[status_type]}_job", time)
+  def enqueue_typed_job(time: nil)
+    # private implementation detail have to use send
+    return if typed_job_scheduled?
+    self.send("schedule_auto_#{status_type_name}_job")
+  end
+
+  # TODO(martin - 2021-05-01) - Remove this backwards compatability for outstanding
+  # jobs once they have all been run and after Jobs::TopicTimerEnqueuer is in place
+  def typed_job_scheduled?
+    scheduled = Jobs.scheduled_for(
+      TopicTimer.type_job_map[status_type_name], topic_timer_id: id
+    ).any?
+
+    if status_type_name == :close || status_type_name == :open || status_type_name == :silent_close
+      return scheduled || Jobs.scheduled_for(:toggle_topic_closed, topic_timer_id: id).any?
     end
+
+    scheduled
+  end
+
+  def self.type_job_map
+    {
+      close: :close_topic,
+      open: :open_topic,
+      publish_to_category: :publish_topic_to_category,
+      delete: :delete_topic,
+      reminder: :topic_reminder,
+      bump: :bump_topic,
+      delete_replies: :delete_replies,
+      silent_close: :close_topic,
+      clear_slow_mode: :clear_slow_mode
+    }
   end
 
   def self.types
@@ -64,18 +95,6 @@ class TopicTimer < ActiveRecord::Base
     @_private_types ||= types.only(:reminder, :clear_slow_mode)
   end
 
-  def self.ensure_consistency!
-    TopicTimer.where("topic_timers.execute_at < ?", Time.zone.now)
-      .find_each do |topic_timer|
-
-      # private implementation detail scoped to class
-      topic_timer.send(
-        "schedule_auto_#{self.types[topic_timer.status_type]}_job",
-        topic_timer.execute_at
-      )
-    end
-  end
-
   def public_type?
     !!self.class.public_types[self.status_type]
   end
@@ -98,6 +117,10 @@ class TopicTimer < ActiveRecord::Base
     errors.add(:execute_at, I18n.t(
       'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
     ))
+  end
+
+  def publishing_to_category?
+    self.status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
@@ -142,50 +165,46 @@ class TopicTimer < ActiveRecord::Base
     Jobs.cancel_scheduled_job(:clear_slow_mode, topic_timer_id: id)
   end
 
-  def schedule_auto_delete_replies_job(time)
-    Jobs.enqueue_at(time, :delete_replies, topic_timer_id: id)
+  def schedule_auto_delete_replies_job
+    Jobs.enqueue(:delete_replies, topic_timer_id: id)
   end
 
-  def schedule_auto_bump_job(time)
-    Jobs.enqueue_at(time, :bump_topic, topic_timer_id: id)
+  def schedule_auto_bump_job
+    Jobs.enqueue(:bump_topic, topic_timer_id: id)
   end
 
-  def schedule_auto_open_job(time)
+  def schedule_auto_open_job
     topic.update_status('closed', true, user) if topic && !topic.closed
 
-    Jobs.enqueue_at(time, :open_topic, topic_timer_id: id)
+    Jobs.enqueue(:open_topic, topic_timer_id: id)
   end
 
-  def schedule_auto_close_job(time)
+  def schedule_auto_close_job
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue_at(time, :close_topic, topic_timer_id: id)
+    Jobs.enqueue(:close_topic, topic_timer_id: id)
   end
 
-  def schedule_auto_silent_close_job(time)
+  def schedule_auto_silent_close_job
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue_at(time, :close_topic, topic_timer_id: id, silent: true)
+    Jobs.enqueue(:close_topic, topic_timer_id: id, silent: true)
   end
 
-  def schedule_auto_publish_to_category_job(time)
-    Jobs.enqueue_at(time, :publish_topic_to_category, topic_timer_id: id)
+  def schedule_auto_publish_to_category_job
+    Jobs.enqueue(:publish_topic_to_category, topic_timer_id: id)
   end
 
-  def publishing_to_category?
-    self.status_type.to_i == TopicTimer.types[:publish_to_category]
+  def schedule_auto_delete_job
+    Jobs.enqueue(:delete_topic, topic_timer_id: id)
   end
 
-  def schedule_auto_delete_job(time)
-    Jobs.enqueue_at(time, :delete_topic, topic_timer_id: id)
-  end
-
-  def schedule_auto_reminder_job(time)
+  def schedule_auto_reminder_job
     # noop, TODO(martin 2021-03-11): Remove this after timers migrated and outstanding jobs cancelled
   end
 
-  def schedule_auto_clear_slow_mode_job(time)
-    Jobs.enqueue_at(time, :clear_slow_mode, topic_timer_id: id)
+  def schedule_auto_clear_slow_mode_job
+    Jobs.enqueue(:clear_slow_mode, topic_timer_id: id)
   end
 end
 
