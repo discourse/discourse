@@ -37,7 +37,7 @@ uppercase hashtag works too #BUG, #BUG::tag`
       `<p>this is a category hashtag <a href="/c/bugs" class="hashtag">#<span>bug</span></a></p>
 <p>this is a tag hashtag <a href="/tag/monkey" class="hashtag">#<span>monkey</span></a></p>
 <p>category vs tag: <a href="/c/bugs" class="hashtag">#<span>bug</span></a> vs <a href="/tag/bug" class="hashtag">#<span>bug</span></a></p>
-<p>uppercase hashtag works too <a href="/c/bugs" class="hashtag">#<span>BUG</span></a>, <a href=\"/tag/bug\" class=\"hashtag\">#<span>BUG</span></a></p>`
+<p>uppercase hashtag works too <a href="/c/bugs" class="hashtag">#<span>BUG</span></a>, <a href="/tag/bug" class="hashtag">#<span>BUG</span></a></p>`
     );
   });
 });
