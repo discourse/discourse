@@ -1021,11 +1021,11 @@ module Email
 
       body = body.strip.downcase
       case body
-      when "mute"
+      when "mute", "muted", I18n.t("js.topic.notifications.muted.title").downcase
         NotificationLevels.topic_levels[:muted]
-      when "track"
+      when "track", I18n.t("js.topic.notifications.tracking.title").downcase
         NotificationLevels.topic_levels[:tracking]
-      when "watch"
+      when "watch", I18n.t("js.topic.notifications.watching.title").downcase
         NotificationLevels.topic_levels[:watching]
       else nil
       end
