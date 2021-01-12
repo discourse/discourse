@@ -26,13 +26,13 @@ gl:
           title: "Cores"
         icons:
           title: "Iconas"
-          full_list: "Vexa a lista completa das iconas dos tipos de letra"
+          full_list: "Vexa a listaxe completa das iconas dos tipos de letra"
         input_fields:
           title: "Campos de entrada"
         buttons:
           title: "Botóns"
         dropdowns:
-          title: "Despregábeis"
+          title: "Despregabeis"
         categories:
           title: "Categorías"
         bread_crumbs:
@@ -52,9 +52,9 @@ gl:
         topic_statuses:
           title: "Status do tema"
         topic_list:
-          title: "Lista de temas"
+          title: "Listaxe de temas"
         basic_topic_list:
-          title: "Lista de temas básicos"
+          title: "Listaxe de temas básicos"
         footer_message:
           title: "Mensaxe de pé de páxina"
         signup_cta:

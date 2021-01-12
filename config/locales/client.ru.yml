@@ -482,10 +482,10 @@ ru:
         fields: "Поля"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} жалоба)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (%{count} жалобы)"
-          many: "%{agreed}, %{disagreed}, %{ignored} (%{count} жалоб)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} жалоб)"
+          one: "%{agreed}, %{disagreed}, %{ignored}"
+          few: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
+          many: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (из %{count} жалоб)"
         agreed:
           one: "%{count}% согласие"
           few: "%{count}% согласия"
@@ -966,7 +966,7 @@ ru:
       color_scheme_default_on_all_devices: "Установить цветовую схему по умолчанию на всех моих устройствах"
       color_scheme: "Цветовая схема"
       color_schemes:
-        default_description: "Цветовая схема по умолчанию"
+        default_description: "Тема по умолчанию"
         disable_dark_scheme: "То же самое, что и обычный"
         dark_instructions: "Вы можете просмотреть цветовую схему тёмного режима, переключив тёмный режим вашего устройства."
         undo: "Сбросить"
@@ -4086,6 +4086,7 @@ ru:
           install_upload: "С вашего устройства"
           install_git_repo: "Из git-репозитория"
           install_create: "Создать новую"
+          duplicate_remote_theme: "Компонент темы «%{name}» уже установлен. Вы действительно хотите установить ещё одну копию?"
           about_theme: "О теме"
           license: "Лицензия"
           version: "Версия:"

@@ -441,10 +441,6 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} flag)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} zastavica)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count}kazni )"
         agreed:
           one: "%{count}% slaže"
           few: "%{count}% slaže"

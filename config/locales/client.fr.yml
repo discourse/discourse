@@ -281,7 +281,7 @@ fr:
       auto_delete_preference:
         label: "Supprimer automatiquement"
         never: "Jamais"
-        when_reminder_sent: "Une fois le rappel envoyé"
+        when_reminder_sent: "Après l'envoi du rappel"
         on_owner_reply: "Après avoir répondu à ce sujet"
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
@@ -295,7 +295,7 @@ fr:
         start_of_next_business_week: "Lundi"
         start_of_next_business_week_alt: "Lundi prochain"
         next_month: "Mois prochain"
-        custom: "Date et heure personnalisés"
+        custom: "Date et heure personnalisées"
         last_custom: "Dernier"
         none: "Pas de rappel nécessaire"
         today_with_time: "aujourd'hui à %{time}"
@@ -326,7 +326,7 @@ fr:
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
     cancel: "annuler"
-    deleting: "Suppression en cours..."
+    deleting: "Suppression…"
     save: "Sauvegarder"
     saving: "Sauvegarde en cours…"
     saved: "Sauvegardé !"
@@ -338,7 +338,7 @@ fr:
     pasting: "Coller…"
     enable: "Activer"
     disable: "Désactiver"
-    continue: "Poursuivre"
+    continue: "Continuer"
     undo: "Annuler"
     revert: "Rétablir"
     failed: "Échec"
@@ -424,8 +424,8 @@ fr:
         fields: "Champs"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} signalement en total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} signalements en total)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (des derniers %{count} signalements)"
         agreed:
           one: "%{count}% accepté"
           other: "%{count}% acceptés"
@@ -589,7 +589,7 @@ fr:
           notification: Notification
         email:
           title: "Courriel"
-          status: "Synchronisés %{old_emails} / %{total_emails} courriels via IMAP."
+          status: "%{old_emails} / %{total_emails} courriels synchronisés via IMAP."
           credentials:
             title: "Identifiants"
             smtp_server: "Serveur SMTP"
@@ -884,7 +884,6 @@ fr:
       color_scheme_default_on_all_devices: "Définir comme jeux de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
       color_schemes:
-        default_description: "Par défaut"
         disable_dark_scheme: "Désactivé"
         dark_instructions: "Vous pouvez prévisualiser le jeu de couleurs du mode sombre en basculant le mode sombre de votre appareil."
         undo: "Réinitialiser"
@@ -1043,7 +1042,7 @@ fr:
           Protéger votre compte avec des codes de sécurité à usage unique.
         extended_description: |
           L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en plus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> et <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
+        oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées à l'activation de l'authentification à deux facteurs sur votre compte."
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
@@ -1153,7 +1152,7 @@ fr:
       username:
         title: "Nom d'utilisateur"
         instructions: "unique, sans espaces, court"
-        short_instructions: "Les gens peuvent vous mentionner avec @%{username}"
+        short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayez %{suggestion} ?"
         not_available_no_suggestion: "Non disponible"
@@ -1198,7 +1197,7 @@ fr:
       hide_profile_and_presence: "Cacher mon profil public et statistiques"
       enable_physical_keyboard: "Activer le support du clavier physique sur iPad"
       text_size:
-        title: "Taille de texte"
+        title: "Taille du texte"
         smallest: "Très petite"
         smaller: "Petite"
         normal: "Normale"
@@ -2503,7 +2502,7 @@ fr:
       continue_discussion: "Suite du sujet %{postLink} :"
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
-      show_hidden: "Visualiser le contenu ignoré."
+      show_hidden: "Afficher le contenu ignoré."
       deleted_by_author:
         one: "(message retiré par son auteur, il sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message retiré par son auteur, il sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
@@ -2861,12 +2860,13 @@ fr:
       notify_action: "Message"
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
+      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(masqué)"
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
-      cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
+      cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment."
       notify_staff: "Notifier les responsables de manière privée"
       formatted_name:
         off_topic: "C'est hors-sujet"
@@ -3455,7 +3455,7 @@ fr:
         no_custom_groups: "Créer un nouveau groupe personnalisé"
       api:
         generate_master: "Générer une clé d'API maître"
-        none: "Il n'y a pas de clés API actives en ce moment."
+        none: "Il n'y a actuellement aucune clé API active."
         user: "Utilisateur"
         title: "API"
         key: "Clé"
@@ -3483,7 +3483,7 @@ fr:
         revoked: Révoquée
         delete: Supprimer définitivement
         not_shown_again: Cette clé ne sera plus affichée. Assurez-vous d'en avoir fait une copie avant de continuer.
-        continue: Poursuivre
+        continue: Continuer
         use_global_key: Clé globale (autorise toutes les actions)
         scopes:
           description: |
@@ -3805,6 +3805,7 @@ fr:
           install_upload: "Depuis votre appareil"
           install_git_repo: "Depuis un dépôt Git"
           install_create: "Créer un nouveau"
+          duplicate_remote_theme: "Le composant de thème « %{name} » est déjà installé, êtes-vous sûr de vouloir en installer une autre copie ?"
           about_theme: "À propos"
           license: "Licence"
           version: "Version :"
@@ -3826,7 +3827,7 @@ fr:
           up_to_date: "Thème à jour, dernière vérification :"
           has_overwritten_history: "La version actuelle du thème n'existe plus car l'historique Git a été écrasé par une mise à jour forcée."
           add: "Ajouter"
-          theme_settings: "Paramètres de thème"
+          theme_settings: "Paramètres du thème"
           no_settings: "Ce thème n'a pas de paramètres."
           theme_translations: "Traductions de thème"
           empty: "Aucun élément"
@@ -3941,7 +3942,7 @@ fr:
           reset: "Réinitialiser aux valeurs par défaut"
           reset_confirm: "Êtes-vous sûr de vouloir rétablir la valeur par défaut de %{fieldName} et perdre toutes vos modifications ?"
           save_error_with_reason: "Vos modifications n'ont pas été sauvegardées. %{error}"
-          instructions: "Personnalisez le modèle dans lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
+          instructions: "Personnalisez le modèle depuis lequel tous les courriels HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "Courriels"
         settings: "Paramètres"
@@ -4675,7 +4676,7 @@ fr:
         class_name: "Nom de classe"
         allowed_paths: "Liste des chemins autorisés"
         edit: "modifier"
-        category: "Écrire dans la catégorie"
+        category: "Publier dans la catégorie"
         add_host: "Ajouter un hôte"
         settings: "Paramètres d'intégration externe"
         crawling_settings: "Paramètres des robots d'indexation"
@@ -4710,7 +4711,7 @@ fr:
           filter: "Rechercher (URL ou URL externe)"
       reseed:
         action:
-          label: "Remplacement du texte…"
+          label: "Remplacer le texte…"
           title: "Remplacer le texte des catégories et des sujets avec les traductions"
         modal:
           title: "Remplacer le texte"

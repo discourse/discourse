@@ -374,9 +374,6 @@ hu:
         name: "Név"
         fields: "Mezők"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
         agreed:
           one: "%{count}% egyetért"
           other: "%{count}% egyetért"

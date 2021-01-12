@@ -1305,8 +1305,6 @@ zh_TW:
     max_topic_invitations_per_day: "每個使用者每天能創建的邀請至主題數量的最大值。"
     max_logins_per_ip_per_hour: "每小時每個 IP 可登入的次數上限"
     max_logins_per_ip_per_minute: "每分鐘每個 IP 可登入的次數上限"
-    max_post_deletions_per_minute: "每分鐘每個使用者可刪除的貼文數上限"
-    max_post_deletions_per_day: "每日每個使用者可刪除的貼文數上限"
     alert_admins_if_errors_per_minute: "觸發管理員警示的每分鐘錯誤數量。設為 0 會停用這個功能。注意：需要重啟。"
     alert_admins_if_errors_per_hour: "觸發管理員警示的每小時錯誤數量。設為 0 會停用這個功能。注意：需要重新啟動。"
     suggested_topics: "討論話題下的推薦話題數量"

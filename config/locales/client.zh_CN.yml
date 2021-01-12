@@ -395,7 +395,7 @@ zh_CN:
         fields: "字段"
       user_percentage:
         summary:
-          other: "%{agreed}，%{disagreed}，%{ignored}（共%{count}个标记）"
+          other: "%{agreed}，%{disagreed}，%{ignored} (共%{count}个标记)"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -843,7 +843,7 @@ zh_CN:
       color_scheme_default_on_all_devices: "为我所有的设备上设置默认配色方案"
       color_scheme: "配色方案"
       color_schemes:
-        default_description: "默认"
+        default_description: "主题默认"
         disable_dark_scheme: "与常规相同"
         dark_instructions: "你可以通过切换你的设备的深色模式来预览深色模式的配色方案。"
         undo: "重置"
@@ -3130,7 +3130,6 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
-      approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"
@@ -3672,6 +3671,7 @@ zh_CN:
           install_upload: "来自你的设备"
           install_git_repo: "从 git 仓库"
           install_create: "创建新的"
+          duplicate_remote_theme: "主题组件 “%{name}” 已经安装，你确定要安装另一个副本吗？"
           about_theme: "关于"
           license: "许可证"
           version: "版本："

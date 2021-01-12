@@ -29,7 +29,7 @@ gl:
           date_title: Data
           time_title: Hora
           format_title: Formato da data
-          timezone: Fuso horario
+          timezone: Zona horaria
           until: Ata...
           recurring:
             every_day: "Todos os días"

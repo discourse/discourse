@@ -417,6 +417,16 @@ ko:
       - 다른 사람들이 찾을 수 있도록 주제에 자주 사용되는 단어를 포함하세요. 주제를 관련 주제로 그룹화하려면 카테고리 (또는 태그)를 선택하십시오.
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)을 참조하세요.
+    "new-reply": |
+      %{site_name} &mdash; ** 참여해 주셔서 감사합니다! **
+
+      - 다른 커뮤니티 회원에게 친절하게 대하세요.
+
+      - 댓글이 대화를 개선합니까?
+
+      - 건설적인 비판은 환영하지만 사람이 아닌 *글 내용*을 비판하십시오.
+
+      자세한 내용은 [커뮤니티 가이드 라인 참조](%{base_path}/guidelines). 이 패널은 처음 %{education_posts_text}에 대해서만 표시됩니다.
     avatar: |2
 
       ### 계정에 사진을 걸어두는 건 어떠세요?
@@ -904,7 +914,9 @@ ko:
     mute_topic: "%{link} 이 토픽에 대한 모든 알림끄기"
     unwatch_category: "%{category} 카테고리의 모든 토픽 주시 중단하기"
     mailing_list_mode: "메일링 리스트 모드 끄기"
+    all: "%{sitename}에서 오는 메일은 전부 받지 않기"
     different_user_description: "우리가 메일을 보낸 사용자가 아닌 다른 사용자로 로그인되어 있습니다. 로그아웃하시거나, 익명 모드를 켜시고 다시 시도해주세요."
+    not_found_description: "죄송합니다. 구독 취소를 찾을 수 없습니다. 이메일의 링크가 너무 오래되어 만료되었을 수 있습니다."
     log_out: "로그아웃"
     submit: "환경 설정 저장"
     digest_frequency:
@@ -1282,6 +1294,7 @@ ko:
     github_config_warning: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
     s3_config_warning: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
     s3_backup_config_warning: '서버가 백업을 S3에 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정으로</a> 이동하여 <a href="%{base_path}/admin/site_settings">설정</a> 을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">&quot;S3에 이미지 업로드를 설정하는 방법&quot;을 참조하십시오. 자세한 내용은</a> .'
+    s3_cdn_warning: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
     image_magick_warning: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
     failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
@@ -1574,8 +1587,8 @@ ko:
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
-    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다."
-    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다."
+    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
+    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
@@ -1669,6 +1682,7 @@ ko:
     body_min_entropy: "글 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     allow_uppercase_posts: "제목과 내용을 모두 대문자로 작성하는 것을 허용하기"
     max_consecutive_replies: "다른 답변을 추가하지 못하기 전에 사용자가 주제에서 한 행에 게시해야하는 게시물 수입니다."
+    enable_filtered_replies_view: '“(n)개의 댓글” 버튼은 다른 모든 게시물을 축소하고 현재 게시물과 해당 댓글만 표시합니다.'
     title_fancy_entities: "주제 제목에서 일반적인 ASCII 문자를 멋진 HTML 엔티티로 변환 <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>하십시오.</a>"
     min_title_similar_length: "유사 글타래에 대한 체크가 있기 전, 최소 제목 글자 수"
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일"
@@ -1878,6 +1892,7 @@ ko:
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
+    prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록합니다."
     secure_media: '모든 업로드 (이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. &quot;로그인 필요&quot;가 활성화 된 경우 로그인 한 사용자 만 업로드에 액세스 할 수 있습니다. 그렇지 않으면 개인 메시지 및 개인 범주의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고 :이 설정은 복잡하며 관리에 대한 깊은 이해가 필요합니다. 세부 사항 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">은 메타에</a> 대한 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">보안 매체 주제</a> 를 참조하십시오.'
     secure_media_allow_embed_images_in_emails: "크기가 '이메일에 포함을 허용하는 보안 미디어 kb 크기' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지를 포함 할 수 있습니다."
     secure_media_max_email_embed_image_size_kb: "'이메일에 포함을 허용하는 보안 미디어' 설정이 활성화 된 경우 이메일에 포함되는 보안 이미지의 크기 제한입니다. 해당 설정을 사용하지 않으면 이 설정이 적용되지 않습니다."
@@ -1903,8 +1918,10 @@ ko:
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
     returning_users_days: "사용자가 돌아오는 것으로 간주되기까지 며칠이 경과해야합니다."
     review_media_unless_trust_level: "관리자는 회원레벨이 낮은 사용자의 게시물에 임베디드 미디어가 포함 된 경우 이를 검토합니다."
+    blur_tl0_flagged_posts_media: "잠재적인 NSFW 콘텐츠를 숨기기 위해 신고된 게시물 이미지를 흐리게 처리합니다."
     enable_page_publishing: "직원이 자신의 스타일을 사용하여 주제를 새 URL에 게시 할 수 있습니다."
     show_published_pages_login_required: "익명 사용자는 로그인이 필요한 경우에도 게시된 페이지를 볼 수 있습니다."
+    skip_auto_delete_reply_likes: "이전 답글을 자동으로 삭제하는 경우 좋아요 수가 이 이상인 게시물 삭제를 건너 뜁니다."
     default_email_digest_frequency: "사용자가 기본적으로 요약 이메일을받는 빈도입니다."
     default_include_tl0_in_digests: "기본적으로 새 사용자의 게시물을 요약 이메일에 포함시킵니다. 사용자는 원하는대로이를 변경할 수 있습니다."
     default_email_level: "일반 주제에 대한 기본 이메일 알림 레벨을 설정하십시오."
@@ -1979,6 +1996,7 @@ ko:
     gravatar_login_url: "사용자에게 Gravatar 서비스에 대한 로그인을 제공하는 gravatar_base_url과 관련된 URL"
     share_quote_buttons: "견적 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "견적 공유 버턴을 표시할 시기를 결정합니다. 익명 사용자만 또는 모든 사용자에게 표시하지 않습니다. "
+    create_revision_on_bulk_topic_moves: "주제가 대량으로 새 카테고리로 이동되면 첫 번째 게시물에 대한 개정판을 만듭니다."
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."

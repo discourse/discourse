@@ -417,9 +417,6 @@ fa_IR:
         name: "نام"
         fields: "فیلدها"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored}(%{count}پرچم)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count}پرچم)"
         agreed:
           one: "%{count}% موافقت شده"
           other: "%{count}% موافقت شده"
@@ -841,7 +838,6 @@ fa_IR:
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_schemes:
-        default_description: "پیش‌فرض"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
       dark_mode: "حالت تاریک"
@@ -2858,6 +2854,17 @@ fa_IR:
       dismiss: "نخواستیم"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
+    do_not_disturb:
+      title: "مزاحم نشود برای..."
+      save: "ذخیره"
+      label: "مزاحم نشود"
+      remaining: "%{remaining} باقی‌مانده"
+      options:
+        half_hour: "۳۰ دقیقه"
+        one_hour: "۱ ساعت"
+        two_hours: "۲ ساعت"
+        tomorrow: "تا فردا"
+        custom: "سفارشی"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

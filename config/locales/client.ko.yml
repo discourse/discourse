@@ -395,7 +395,7 @@ ko:
         fields: "필드"
       user_percentage:
         summary:
-          other: "%{agreed}, %{disagreed}, %{ignored} (전체 %{count}개의 신고)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (최근 %{count}개의  신고중)"
         agreed:
           other: "%{count}% 동의"
         disagreed:
@@ -843,7 +843,7 @@ ko:
       color_scheme_default_on_all_devices: "모든 장치에서 기본 색 구성표 설정"
       color_scheme: "색상 구성표"
       color_schemes:
-        default_description: "기본"
+        default_description: "테마 기본값"
         disable_dark_scheme: "일반과 동일"
         dark_instructions: "기기의 어두운 모드를 전환하여 어두운 모드 색 구성표를 미리 볼 수 있습니다."
         undo: "초기화"
@@ -3122,7 +3122,7 @@ ko:
     invite:
       custom_message: "<a href>맞춤 메시지</a> 를 작성하여 초대를 좀 더 개인적으로 만드십시오."
       custom_message_placeholder: "사용자 설정 메시지를 입력하세요"
-      approval_not_required: "사용자는 이 초대를 수락하는 즉시 자동 승인됩니다."
+      approval_not_required: "사용자는이 초대를 수락하는 즉시 자동 승인됩니다."
       custom_message_template_forum: "저기요, 이 포럼에 가입하셔야 해요!"
       custom_message_template_topic: "이 토픽에 흥미 있을 거 같은데요!"
     forced_anonymous: "극단적 인로드로 인해 로그 아웃 한 사용자가 볼 수있는 것처럼 모든 사람에게 일시적으로 표시됩니다."
@@ -3664,6 +3664,7 @@ ko:
           install_upload: "기기에서"
           install_git_repo: "git 저장소에서"
           install_create: "새로 만들기"
+          duplicate_remote_theme: "테마 구성 요소“%{name}”은 이미 설치되어 있습니다. 다른 복사본을 설치 하시겠습니까?"
           about_theme: "소개"
           license: "라이센스 정보"
           version: "버전:"
@@ -4166,6 +4167,7 @@ ko:
         clear_penalty_history:
           title: "명확한 페널티 기록"
           description: "위약금이있는 사용자는 TL3에 도달 할 수 없습니다"
+        delete_all_posts_confirm_MF: "{POSTS, plural, one {# 댓글} other {# 댓글}} 그리고 {TOPICS, plural, one {# 글} other {# 글}} 을 삭제하려고 합니다. 확실합니까?"
         silence: "쓰기 금지"
         unsilence: "쓰기 금지 해제"
         silenced: "쓰기 금지?"
