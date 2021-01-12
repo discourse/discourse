@@ -30,7 +30,6 @@ class TopicTimer < ActiveRecord::Base
        !attribute_in_database(:execute_at).nil?) ||
        will_save_change_to_user_id?
 
-      # private implementation detail have to use send
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
     end
   end
@@ -40,7 +39,6 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def enqueue_typed_job(time: nil)
-    # private implementation detail have to use send
     return if typed_job_scheduled?
     self.send("schedule_auto_#{status_type_name}_job")
   end
@@ -52,7 +50,7 @@ class TopicTimer < ActiveRecord::Base
       TopicTimer.type_job_map[status_type_name], topic_timer_id: id
     ).any?
 
-    if status_type_name == :close || status_type_name == :open || status_type_name == :silent_close
+    if [:close, :silent_close, :open].include?(status_type_name)
       return scheduled || Jobs.scheduled_for(:toggle_topic_closed, topic_timer_id: id).any?
     end
 
