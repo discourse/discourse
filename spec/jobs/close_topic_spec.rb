@@ -10,8 +10,6 @@ describe Jobs::CloseTopic do
   end
 
   it 'should be able to close a topic' do
-    topic
-
     freeze_time(61.minutes.from_now) do
       described_class.new.execute(
         topic_timer_id: topic.public_topic_timer.id,

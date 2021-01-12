@@ -14,17 +14,12 @@ module Jobs
         return
       end
 
-      if !Guardian.new(user).can_open_topic?(topic)
+      if !Guardian.new(user).can_open_topic?(topic) || topic.open?
         topic_timer.destroy!
         topic.reload
 
         topic.inherit_auto_close_from_category(timer_type: :close)
 
-        return
-      end
-
-      if topic.open?
-        topic_timer.destroy!
         return
       end
 
