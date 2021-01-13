@@ -90,7 +90,7 @@ this starts with spaces but IS NOT a quote'''
 
     it 'keeps uploaded files as links' do
       parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:upload_file].to_json }, user_id).parse
-      expect(parsed).to eq "This is a PDF I've uploaded:\n\n[original_name_of_file.pdf](https:\/\/vanilla.sampleforum.org\/uploads\/393\/5QR3BX57K7HM.pdf)"
+      expect(parsed).to eq "This is a PDF I've uploaded:\n\n<a href=\"https://vanilla.sampleforum.org/uploads/393/5QR3BX57K7HM.pdf\">original_name_of_file.pdf</a>"
     end
 
     it 'supports complex formatting' do
@@ -100,7 +100,7 @@ this starts with spaces but IS NOT a quote'''
 
     it 'support code blocks' do
       parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:code_block].to_json }, user_id).parse
-      expect(parsed).to eq "Here's a monospaced block:\n\n```this line should be monospaced\nthis one too, with extra spaces#{' ' * 4}\n```\n\nbut not this one"
+      expect(parsed).to eq "Here's a monospaced block:\n\n```\nthis line should be monospaced\nthis one too, with extra spaces#{' ' * 4}\n```\n\nbut not this one"
     end
   end
 end
