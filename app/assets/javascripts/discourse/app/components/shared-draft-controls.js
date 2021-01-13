@@ -21,11 +21,15 @@ export default Component.extend({
       bootbox.confirm(I18n.t("shared_drafts.confirm_publish"), (result) => {
         if (result) {
           this.set("publishing", true);
-          let destId = this.get("topic.destination_category_id");
+          const destinationCategoryId = this.topic.destination_category_id;
           this.topic
             .publish()
             .then(() => {
-              this.set("topic.category_id", destId);
+              this.topic.setProperties({
+                category_id: destinationCategoryId,
+                destination_category_id: undefined,
+                is_shared_draft: false,
+              });
             })
             .finally(() => {
               this.set("publishing", false);

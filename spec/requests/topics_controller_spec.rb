@@ -1205,6 +1205,21 @@ RSpec.describe TopicsController do
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
+      context 'updating shared drafts' do
+        fab!(:shared_drafts_category) { Fabricate(:category) }
+        fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: Fabricate(:category)) }
+
+        it 'changes destination category' do
+          category = Fabricate(:category)
+
+          put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(topic.shared_draft.category_id).not_to eq(category.id)
+        end
+      end
+
       describe 'without permission' do
         it "raises an exception when the user doesn't have permission to update the topic" do
           topic.update!(archived: true)
