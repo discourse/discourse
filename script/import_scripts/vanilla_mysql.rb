@@ -45,16 +45,37 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       SiteSetting.max_tags_per_topic = 10
     end
 
+    import_groups
     import_users
     import_avatars
+    import_group_users
     import_categories
     import_topics
     import_posts
     import_messages
 
     update_tl0
+    mark_topics_as_solved
 
     create_permalinks
+    import_attachments
+  end
+
+  def import_groups
+    puts "", "importing groups..."
+
+    groups = mysql_query <<-SQL
+        SELECT RoleID, Name
+          FROM #{TABLE_PREFIX}Role
+      ORDER BY RoleID
+    SQL
+
+    create_groups(groups) do |group|
+      {
+        id: group["RoleID"],
+        name: @htmlentities.decode(group["Name"]).strip
+      }
+    end
   end
 
   def import_users
@@ -147,7 +168,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
         photo_real_filename = nil
         parts = photo.squeeze("/").split("/")
-        if parts[0] == "cf:"
+        if parts[0] =~ /^[a-z0-9]{2}:/
           photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[2..-2].join('/')}".squeeze("/")
         elsif parts[0] == "~cf"
           photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[1..-2].join('/')}".squeeze("/")
@@ -198,6 +219,24 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
     # Didn't find it.
     nil
+  end
+
+  def import_group_users
+    puts "", "importing group users..."
+
+    group_users = mysql_query("
+      SELECT RoleID, UserID
+        FROM #{TABLE_PREFIX}UserRole
+    ").to_a
+
+    group_users.each do |row|
+      user_id = user_id_from_imported_user_id(row["UserID"])
+      group_id = group_id_from_imported_group_id(row["RoleID"])
+
+      if user_id && group_id
+        GroupUser.find_or_create_by(user_id: user_id, group_id: group_id)
+      end
+    end
   end
 
   def import_categories
@@ -272,7 +311,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
         "SELECT CommentID, DiscussionID, Body, Format,
-                DateInserted, InsertUserID
+                DateInserted, InsertUserID, QnA
          FROM #{TABLE_PREFIX}Comment
          WHERE CommentID > #{@last_post_id}
          ORDER BY CommentID ASC
@@ -286,13 +325,20 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
         user_id = user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID
-        {
+
+        mapped = {
           id: "comment#" + comment['CommentID'].to_s,
           user_id: user_id,
           topic_id: t[:topic_id],
           raw: VanillaBodyParser.new(comment, user_id).parse,
           created_at: Time.zone.at(comment['DateInserted'])
         }
+
+        if comment['QnA'] == "Accepted"
+          mapped[:custom_fields] = { is_accepted_answer: "true" }
+        end
+
+        mapped
       end
     end
   end
@@ -393,6 +439,104 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
         print '.'
       end
     end
+  end
+
+  def import_attachments
+    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+      puts "", "importing attachments"
+
+      start = Time.now
+      count = 0
+
+      # https://us.v-cdn.net/1234567/uploads/editor/xyz/image.jpg
+      cdn_regex = /https:\/\/us.v-cdn.net\/1234567\/uploads\/(\S+\/(\w|-)+.\w+)/i
+      # [attachment=10109:Screen Shot 2012-04-01 at 3.47.35 AM.png]
+      attachment_regex = /\[attachment=(\d+):(.*?)\]/i
+
+      Post.where("raw LIKE '%/us.v-cdn.net/%' OR raw LIKE '%[attachment%'").find_each do |post|
+        count += 1
+        print "\r%7d - %6d/sec" % [count, count.to_f / (Time.now - start)]
+        new_raw = post.raw.dup
+
+        new_raw.gsub!(attachment_regex) do |s|
+          matches = attachment_regex.match(s)
+          attachment_id = matches[1]
+          file_name = matches[2]
+          next unless attachment_id
+
+          r = mysql_query("SELECT Path, Name FROM #{TABLE_PREFIX}Media WHERE MediaID = #{attachment_id};").first
+          next if r.nil?
+          path = r["Path"]
+          name = r["Name"]
+          next unless path.present?
+
+          path.gsub!("s3://content/", "")
+          path.gsub!("s3://uploads/", "")
+          file_path = "#{ATTACHMENTS_BASE_DIR}/#{path}"
+
+          if File.exists?(file_path)
+            upload = create_upload(post.user.id, file_path, File.basename(file_path))
+            if upload && upload.errors.empty?
+              # upload.url
+              filename = name || file_name || File.basename(file_path)
+              html_for_upload(upload, normalize_text(filename))
+            else
+              puts "Error: Upload did not persist for #{post.id} #{attachment_id}!"
+            end
+          else
+            puts "Couldn't find file for #{attachment_id}. Skipping."
+            next
+          end
+        end
+
+        new_raw.gsub!(cdn_regex) do |s|
+          matches = cdn_regex.match(s)
+          attachment_id = matches[1]
+
+          file_path = "#{ATTACHMENTS_BASE_DIR}/#{attachment_id}"
+
+          if File.exists?(file_path)
+            upload = create_upload(post.user.id, file_path, File.basename(file_path))
+            if upload && upload.errors.empty?
+              upload.url
+            else
+              puts "Error: Upload did not persist for #{post.id} #{attachment_id}!"
+            end
+          else
+            puts "Couldn't find file for #{attachment_id}. Skipping."
+            next
+          end
+        end
+
+        if new_raw != post.raw
+          begin
+            PostRevisor.new(post).revise!(post.user, { raw: new_raw }, skip_revision: true, skip_validations: true, bypass_bump: true)
+          rescue
+            puts "PostRevisor error for #{post.id}"
+            post.raw = new_raw
+            post.save(validate: false)
+          end
+        end
+      end
+    end
+  end
+
+  def mark_topics_as_solved
+    puts "", "Marking topics as solved..."
+
+    DB.exec <<~SQL
+      INSERT INTO topic_custom_fields (name, value, topic_id, created_at, updated_at)
+      SELECT 'accepted_answer_post_id', pcf.post_id, p.topic_id, p.created_at, p.created_at
+        FROM post_custom_fields pcf
+        JOIN posts p ON p.id = pcf.post_id
+       WHERE pcf.name = 'is_accepted_answer' AND pcf.value = 'true'
+         AND NOT EXISTS (
+           SELECT 1
+           FROM topic_custom_fields x
+           WHERE x.topic_id = p.topic_id AND x.name = 'accepted_answer_post_id'
+         )
+      ON CONFLICT DO NOTHING
+    SQL
   end
 
 end
