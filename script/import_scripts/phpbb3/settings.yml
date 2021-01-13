@@ -12,18 +12,70 @@ database:
 
 import:
   # Set this if you import multiple phpBB forums into a single Discourse forum.
+  #
+  # For example, when importing multiple sites, prefix all imported IDs
+  # with 'first' to avoid conflicts. Subsequent import runs must have a
+  # different 'site_name'.
+  #
+  # site_name: first
+  #
   site_name:
 
   # Create new categories
+  #
+  # For example, to create a parent category and a subcategory.
+  #
+  # new_categories:
+  # - forum_id: foo
+  #   name: Foo Category
+  # - forum_id: bar
+  #   name: Bar Category
+  #   parent_id: foo
+  #
   new_categories:
 
   # Category mappings
+  #
+  # For example, topics from phpBB category 1 and 2 will be imported
+  # in the new "Foo Category" category, topics from phpBB category 3
+  # will be imported in subcategory "Bar category", topics from phpBB
+  # category 4 will be merged into category 5 and category 6 will be
+  # skipped.
+  #
+  # category_mappings:
+  #   1: foo
+  #   2: foo
+  #   3: bar
+  #   4: 5
+  #   6: SKIP
+  #
   category_mappings:
 
   # Tag mappings
+  #
+  # For example, imported topics from phpBB category 1 will be tagged
+  # with 'first-category', etc.
+  #
+  # tag_mappings:
+  #   1:
+  #   - first-category
+  #   2:
+  #   - second-category
+  #   3:
+  #   - third-category
+  #
   tag_mappings:
 
   # Rank to trust level mapping
+  #
+  # Map phpBB 3.x rank levels to trust level
+  # Users with rank at least 3000 will have TL3, etc.
+  #
+  # rank_mapping:
+  #   trust_level_1: 200
+  #   trust_level_2: 1000
+  #   trust_level_3: 3000
+  #
   rank_mapping:
 
   # WARNING: Do not activate this option unless you know what you are doing.
