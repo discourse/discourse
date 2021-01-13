@@ -235,6 +235,27 @@ RSpec.describe Admin::GroupsController do
       expect(response.status).to eq(404)
     end
 
+    it 'logs when a group is destroyed' do
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("name: #{group.name}")
+    end
+
+    it 'logs the grant_trust_level attribute' do
+      trust_level = TrustLevel[4]
+      group.update!(grant_trust_level: trust_level)
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("grant_trust_level: #{trust_level}")
+      expect(history.details).to include("name: #{group.name}")
+    end
+
     describe 'when group is automatic' do
       it "returns the right response" do
         group.update!(automatic: true)
