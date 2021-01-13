@@ -10,6 +10,10 @@ module Imap
       attr_accessor :trashed_emails, :trash_uid_validity
     end
 
+    class SpamMailResponse
+      attr_accessor :spam_emails, :spam_uid_validity
+    end
+
     class BasicMail
       attr_accessor :uid, :message_id
 
@@ -172,11 +176,16 @@ module Imap
       end
 
       # Look for the special Trash XLIST attribute.
-      # TODO: It might be more efficient to just store this against the group.
-      # Another table is looking more and more attractive....
       def trash_mailbox
         Discourse.cache.fetch("imap_trash_mailbox_#{account_digest}", expires_in: 30.minutes) do
           list_mailboxes(:Trash).first
+        end
+      end
+
+      # Look for the special Junk XLIST attribute.
+      def spam_mailbox
+        Discourse.cache.fetch("imap_spam_mailbox_#{account_digest}", expires_in: 30.minutes) do
+          list_mailboxes(:Junk).first
         end
       end
 
@@ -196,19 +205,26 @@ module Imap
         trash_uid_validity
       end
 
+      # open the spam mailbox for inspection or writing. after the yield we
+      # close the spam and reopen the original mailbox to continue operations.
+      # the normal open_mailbox call can be made if more extensive spam ops
+      # need to be done.
+      def open_spam_mailbox(write: false)
+        open_mailbox_before_spam = @open_mailbox_name
+        open_mailbox_before_spam_write = @open_mailbox_write
+
+        spam_uid_validity = open_mailbox(spam_mailbox, write: write)[:uid_validity]
+
+        yield(spam_uid_validity) if block_given?
+
+        open_mailbox(open_mailbox_before_spam, write: open_mailbox_before_spam_write)
+        spam_uid_validity
+      end
+
       def find_trashed_by_message_ids(message_ids)
         trashed_emails = []
         trash_uid_validity = open_trash_mailbox do
-          header_message_id_terms = message_ids.map do |msgid|
-            "HEADER Message-ID '#{Email.message_id_rfc_format(msgid)}'"
-          end
-
-          # OR clauses are written in Polish notation...so the query looks like this:
-          # OR OR HEADER Message-ID XXXX HEADER Message-ID XXXX HEADER Message-ID XXXX
-          or_clauses = 'OR ' * (header_message_id_terms.length - 1)
-          query = "#{or_clauses}#{header_message_id_terms.join(" ")}"
-
-          trashed_email_uids = imap.uid_search(query)
+          trashed_email_uids = find_uids_by_message_ids(message_ids)
           if trashed_email_uids.any?
             trashed_emails = emails(trashed_email_uids, ["UID", "ENVELOPE"]).map do |e|
               BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
@@ -220,6 +236,36 @@ module Imap
           resp.trashed_emails = trashed_emails
           resp.trash_uid_validity = trash_uid_validity
         end
+      end
+
+      def find_spam_by_message_ids(message_ids)
+        spam_emails = []
+        spam_uid_validity = open_spam_mailbox do
+          spam_email_uids = find_uids_by_message_ids(message_ids)
+          if spam_email_uids.any?
+            spam_emails = emails(spam_email_uids, ["UID", "ENVELOPE"]).map do |e|
+              BasicMail.new(message_id: Email.message_id_clean(e['ENVELOPE'].message_id), uid: e['UID'])
+            end
+          end
+        end
+
+        SpamMailResponse.new.tap do |resp|
+          resp.spam_emails = spam_emails
+          resp.spam_uid_validity = spam_uid_validity
+        end
+      end
+
+      def find_uids_by_message_ids(message_ids)
+        header_message_id_terms = message_ids.map do |msgid|
+          "HEADER Message-ID '#{Email.message_id_rfc_format(msgid)}'"
+        end
+
+        # OR clauses are written in Polish notation...so the query looks like this:
+        # OR OR HEADER Message-ID XXXX HEADER Message-ID XXXX HEADER Message-ID XXXX
+        or_clauses = 'OR ' * (header_message_id_terms.length - 1)
+        query = "#{or_clauses}#{header_message_id_terms.join(" ")}"
+
+        imap.uid_search(query)
       end
 
       def trash(uid)

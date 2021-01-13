@@ -180,15 +180,15 @@ module Imap
       # This can be done because Message-ID is unique on a mail server between mailboxes,
       # where the UID will have changed when moving into the Trash mailbox. We need to get
       # the new UID from the trash.
+      potential_spam = []
       response = @provider.find_trashed_by_message_ids(missing_message_ids)
       existing_incoming.each do |incoming|
         matching_trashed = response.trashed_emails.find { |email| email.message_id == incoming.message_id }
 
-        # if the email is not in the trash then we don't know where it is... could
-        # be in any mailbox on the server or could be permanently deleted. TODO
-        # here would be some sort of more complex detection of "where in the world
-        # has this UID gone?"
-        next if !matching_trashed
+        if !matching_trashed
+          potential_spam << incoming
+          next
+        end
 
         # if we deleted the topic/post ourselves in discourse then the post will
         # not exist, and this sync is just updating the old UIDs to the new ones
@@ -201,6 +201,34 @@ module Imap
         # the email has moved mailboxes, we don't want to try trashing again next time
         ImapSyncLog.debug("Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_trashed.uid} | UIDVALIDITY #{response.trash_uid_validity}] (TRASHED)", @group)
         incoming.update(imap_uid_validity: response.trash_uid_validity, imap_uid: matching_trashed.uid)
+      end
+
+      # This can be done because Message-ID is unique on a mail server between mailboxes,
+      # where the UID will have changed when moving into the Trash mailbox. We need to get
+      # the new UID from the spam.
+      response = @provider.find_spam_by_message_ids(missing_message_ids)
+      potential_spam.each do |incoming|
+        matching_spam = response.spam_emails.find { |email| email.message_id == incoming.message_id }
+
+        # if the email is not in the trash or spam then we don't know where it is... could
+        # be in any mailbox on the server or could be permanently deleted.
+        if !matching_spam
+          ImapSyncLog.debug("Email for incoming ID #{incoming.id} (#{incoming.message_id}) could not be found in the group mailbox, trash, or spam. It could be in another mailbox or permanently deleted.", @group)
+          incoming.update(imap_missing: true)
+          next
+        end
+
+        # if we deleted the topic/post ourselves in discourse then the post will
+        # not exist, and this sync is just updating the old UIDs to the new ones
+        # in the spam, and we don't need to re-destroy the post
+        if incoming.post
+          ImapSyncLog.debug("Deleting post ID #{incoming.post_id}, topic id #{incoming.topic_id}; email has been moved to spam on the IMAP server.", @group)
+          PostDestroyer.new(Discourse.system_user, incoming.post).destroy
+        end
+
+        # the email has moved mailboxes, we don't want to try marking as spam again next time
+        ImapSyncLog.debug("Updating incoming ID #{incoming.id} uid data FROM [UID #{incoming.imap_uid} | UIDVALIDITY #{incoming.imap_uid_validity}] TO [UID #{matching_spam.uid} | UIDVALIDITY #{response.spam_uid_validity}] (SPAM)", @group)
+        incoming.update(imap_uid_validity: response.spam_uid_validity, imap_uid: matching_spam.uid)
       end
     end
 
