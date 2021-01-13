@@ -568,7 +568,7 @@ en:
         ok: "OK"
       example_username: "username"
       reject_reason: 
-        title: "Why do you want to reject user?"
+        title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
     user_action:
