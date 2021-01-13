@@ -179,7 +179,7 @@ class ReviewablesController < ApplicationController
   end
 
   def perform
-    args = { version: params[:version].to_i, reject_reason: params[:reject_reason], send_email: params[:send_email] == "true" }
+    args = { version: params[:version].to_i }
 
     result = nil
     begin
@@ -188,6 +188,8 @@ class ReviewablesController < ApplicationController
       if error = claim_error?(reviewable)
         return render_json_error(error)
       end
+
+      args.merge!(reject_reason: params[:reject_reason], send_email: params[:send_email] == "true") if reviewable.type == 'ReviewableUser'
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e

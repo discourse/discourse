@@ -226,14 +226,14 @@ export default Component.extend({
       }
 
       let msg = action.get("confirm_message");
-      let require_reject_reason = action.get("require_reject_reason");
+      let requireRejectReason = action.get("require_reject_reason");
       if (msg) {
         bootbox.confirm(msg, (answer) => {
           if (answer) {
             return this._performConfirmed(action);
           }
         });
-      } else if (require_reject_reason) {
+      } else if (requireRejectReason) {
         showModal("reject-reason-reviewable", {
           title: "review.reject_reason.title",
           model: this.reviewable,
