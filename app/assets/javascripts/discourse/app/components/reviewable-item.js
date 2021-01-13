@@ -239,7 +239,7 @@ export default Component.extend({
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed.bind(this),
-          action: action,
+          action,
         });
       } else {
         return this._performConfirmed(action);
