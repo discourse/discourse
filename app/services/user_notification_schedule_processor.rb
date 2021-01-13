@@ -30,7 +30,7 @@ class UserNotificationScheduleProcessor
 
     previous_timing = find_previous_timing(local_time) if previous_timing.nil? && start_minute != 0
 
-    if start_minute > -1
+    if start_minute > 0
       previous_timing.ends_at = utc_time_at_minute(local_time, start_minute - 1)
       if previous_timing.id
         previous_timing.save
@@ -65,8 +65,10 @@ class UserNotificationScheduleProcessor
 
   def save_timing_and_continue(local_time, timing, days)
     if days == 0
-      timing.ends_at = local_time.end_of_day.utc
-      user.do_not_disturb_timings.find_or_create_by(timing.attributes.except("id"))
+      if timing
+        timing.ends_at = local_time.end_of_day.utc
+        user.do_not_disturb_timings.find_or_create_by(timing.attributes.except("id"))
+      end
       user.publish_do_not_disturb(ends_at: user.do_not_disturb_until)
     else
       create_timings_for(local_time + 1.day, days: days - 1, previous_timing: timing)

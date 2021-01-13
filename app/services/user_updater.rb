@@ -55,7 +55,7 @@ class UserUpdater
       attrs.push("day_#{n}_start_time".to_sym)
       attrs.push("day_#{n}_end_time".to_sym)
     end
-    attrs
+    { user_notification_schedule: attrs }
   }.call
 
   def initialize(actor, user)

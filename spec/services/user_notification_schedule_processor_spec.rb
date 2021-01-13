@@ -123,6 +123,24 @@ describe UserNotificationScheduleProcessor do
       end
     end
 
+    it 'handles midnight to midnight for multiple days (no timings created)' do
+      user.user_option.update(timezone: "UTC")
+      schedule = standard_schedule
+      schedule.update(
+        day_0_start_time: 0,
+        day_0_end_time: 1440,
+        day_1_start_time: 0,
+        day_1_end_time: 1440,
+        day_2_start_time: 0,
+        day_2_end_time: 1440,
+      )
+      travel_to Time.new(2021, 1, 4, 12, 0, 0, "+00:00") do
+        UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(schedule)
+        expect(user.do_not_disturb_timings.count).to eq(0)
+      end
+
+    end
+
     it 'publishes to message bus when the user should enter DND' do
       user.user_option.update(timezone: "UTC")
       schedule = standard_schedule
