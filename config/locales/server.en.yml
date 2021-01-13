@@ -3844,7 +3844,7 @@ en:
 
     signup_after_reject:
       title: "Signup After Reject"
-      subject_template: "You've been rejected on %{site_name}!"
+      subject_template: "You've been rejected on %{site_name}"
       text_body_template: |
         A staff member rejected your account on %{site_name}.
 
