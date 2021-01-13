@@ -126,7 +126,7 @@ class UploadCreator
       if is_image
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
-        @upload.animated = FastImage.animated?(@file)
+        @upload.animated = animated?
       end
 
       add_metadata!
@@ -267,13 +267,13 @@ class UploadCreator
   end
 
   def should_alter_quality?
-    return false if FastImage.animated?(@file)
+    return false if animated?
 
     @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
   end
 
   def should_downsize?
-    max_image_size > 0 && filesize >= max_image_size && !FastImage.animated?(@file)
+    max_image_size > 0 && filesize >= max_image_size && !animated?
   end
 
   def downsize!
@@ -351,7 +351,7 @@ class UploadCreator
   end
 
   def should_crop?
-    return false if ['profile_background', 'card_background', 'custom_emoji'].include?(@opts[:type]) && FastImage.animated?(@file)
+    return false if ['profile_background', 'card_background', 'custom_emoji'].include?(@opts[:type]) && animated?
 
     TYPES_TO_CROP.include?(@opts[:type])
   end
@@ -425,6 +425,32 @@ class UploadCreator
     @upload.for_site_setting    = true if @opts[:for_site_setting]
     @upload.for_gravatar        = true if @opts[:for_gravatar]
     @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
+  end
+
+  private
+
+  def animated?
+    return @animated if @animated != nil
+
+    @animated ||= begin
+      is_animated = FastImage.animated?(@file)
+      type = @image_info.type.to_s
+
+      if is_animated != nil
+        # FastImage will return nil if it cannot determine if animated
+        is_animated
+      elsif type == "gif" || type == "webp"
+        # Only GIFs, WEBPs and a few other unsupported image types can be animated
+        OptimizedImage.ensure_safe_paths!(@file.path)
+
+        command = ["identify", "-format", "%n\\n", @file.path]
+        frames = Discourse::Utils.execute_command(*command).to_i rescue 1
+
+        frames > 1
+      else
+        false
+      end
+    end
   end
 
 end
