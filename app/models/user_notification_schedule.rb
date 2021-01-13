@@ -3,23 +3,14 @@
 class UserNotificationSchedule < ActiveRecord::Base
   belongs_to :user
 
-  DEFAULT = {
-    enabled: false,
-    day_0_start_time: 480,
-    day_0_end_time: 1020,
-    day_1_start_time: 480,
-    day_1_end_time: 1020,
-    day_2_start_time: 480,
-    day_2_end_time: 1020,
-    day_3_start_time: 480,
-    day_3_end_time: 1020,
-    day_4_start_time: 480,
-    day_4_end_time: 1020,
-    day_5_start_time: 480,
-    day_5_end_time: 1020,
-    day_6_start_time: 480,
-    day_6_end_time: 1020
-  }
+  DEFAULT = -> {
+    attrs = { enabled: false }
+    7.times do |n|
+      attrs["day_#{n}_start_time".to_sym] = 480
+      attrs["day_#{n}_end_time".to_sym] = 1020
+    end
+    attrs
+  }.call
 
   validate :has_valid_times
   validates :enabled, inclusion: { in: [ true, false ] }

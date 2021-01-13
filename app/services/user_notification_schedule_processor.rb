@@ -80,11 +80,6 @@ class UserNotificationScheduleProcessor
   end
 
   def transform_wday(wday)
-    case wday
-    when 1..6
-      wday - 1
-    when 0
-      6
-    end
+    wday == 0 ? 6 : wday - 1
   end
 end

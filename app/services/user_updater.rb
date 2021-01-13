@@ -49,25 +49,14 @@ class UserUpdater
     :skip_new_user_tips
   ]
 
-  NOTIFICATION_SCHEDULE_ATTR = {
-    user_notification_schedule: [
-      :enabled,
-      :day_0_start_time,
-      :day_1_start_time,
-      :day_2_start_time,
-      :day_3_start_time,
-      :day_4_start_time,
-      :day_5_start_time,
-      :day_6_start_time,
-      :day_0_end_time,
-      :day_1_end_time,
-      :day_2_end_time,
-      :day_3_end_time,
-      :day_4_end_time,
-      :day_5_end_time,
-      :day_6_end_time,
-    ]
-  }
+  NOTIFICATION_SCHEDULE_ATTRS = -> {
+    attrs = [:enabled]
+    7.times do |n|
+      attrs.push("day_#{n}_start_time".to_sym)
+      attrs.push("day_#{n}_end_time".to_sym)
+    end
+    attrs
+  }.call
 
   def initialize(actor, user)
     @user = user
