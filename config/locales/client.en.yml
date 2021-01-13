@@ -4437,6 +4437,7 @@ en:
             topic_unarchived: "topic unarchived"
             post_staff_note_create: "add staff note"
             post_staff_note_destroy: "destroy staff note"
+            delete_group: "delete group"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
