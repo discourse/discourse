@@ -116,6 +116,10 @@
     a.categories-link {
       padding: 0.25em 0.5em;
       display: block;
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
       color: var(--primary);
       &:hover,
       &:focus {
