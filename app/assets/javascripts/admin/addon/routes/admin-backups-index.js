@@ -12,7 +12,9 @@ export default Route.extend({
   },
 
   model() {
-    return Backup.find();
+    return Backup.find().then((backups) =>
+      backups.map((backup) => Backup.create(backup))
+    );
   },
 
   deactivate() {
