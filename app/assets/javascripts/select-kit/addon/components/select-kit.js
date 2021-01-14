@@ -854,11 +854,12 @@ export default Component.extend(
                   }
 
                   const popperElement = data.state.elements.popper;
-                  if (
+                  const topPlacement =
                     popperElement &&
-                    popperElement.getAttribute("data-popper-placement") ===
-                      "top-start"
-                  ) {
+                    popperElement
+                      .getAttribute("data-popper-placement")
+                      .startsWith("top-");
+                  if (topPlacement) {
                     this.element.classList.remove("is-under");
                     this.element.classList.add("is-above");
                   } else {
@@ -868,6 +869,20 @@ export default Component.extend(
 
                   wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
+                  if (placementStrategy === "fixed") {
+                    const rects = this.element.getClientRects()[0];
+                    const bodyRects = body && body.getClientRects()[0];
+                    wrapper.style.position = "fixed";
+                    wrapper.style.left = `${rects.left}px`;
+                    if (topPlacement && bodyRects) {
+                      wrapper.style.top = `${rects.top - bodyRects.height}px`;
+                    } else {
+                      wrapper.style.top = `${rects.top}px`;
+                    }
+                    if (isDocumentRTL()) {
+                      wrapper.style.right = "unset";
+                    }
+                  }
                 }
               },
             },
