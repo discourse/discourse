@@ -44,6 +44,17 @@ export default MultiSelectHeaderComponent.extend({
         const selectKitHeaderWidth = this.element.offsetWidth;
         const items = this.element.querySelectorAll(".selected-name.choice");
         const input = this.element.querySelector(".filter-input");
+        const alreadyHidden = this.element.querySelector(".x-more-item");
+        if (alreadyHidden) {
+          const hiddenCount = parseInt(
+            alreadyHidden.getAttribute("data-hidden-count"),
+            10
+          );
+          return (
+            hiddenCount +
+            (this.selectedContent.length - (items.length + hiddenCount))
+          );
+        }
         let total = items[0].offsetWidth + input.offsetWidth;
         let shownItemsCount = 1;
         let shouldHide = false;

@@ -7,7 +7,7 @@
     }}
   {{/each}}
   {{#if hasHiddenItems}}
-    <div class="x-more-item">
+    <div class="x-more-item" data-hidden-count={{hiddenItemsCount}}>
       {{i18n "x_more" count=hiddenItemsCount}}
     </div>
   {{/if}}
