@@ -10,6 +10,19 @@ RSpec.describe TopicTimer, type: :model do
   before { freeze_time }
 
   context "validations" do
+    describe "pending_timers scope" do
+      it "does not return deleted timers" do
+        topic_timer.trash!
+        expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
+      end
+      it "does not return timers in the future of the provided before time" do
+        topic_timer.update(execute_at: 3.days.from_now)
+        expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
+        expect(TopicTimer.pending_timers(2.days.from_now).pluck(:id)).not_to include(topic_timer.id)
+        topic_timer.update(execute_at: 1.minute.ago, created_at: 10.minutes.ago)
+        expect(TopicTimer.pending_timers.pluck(:id)).to include(topic_timer.id)
+      end
+    end
     describe '#status_type' do
       it 'should ensure that only one active public topic status update exists' do
         topic_timer.update!(topic: topic)

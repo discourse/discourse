@@ -19,7 +19,7 @@ class TopicTimer < ActiveRecord::Base
 
   scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
   scope :pending_timers, ->(before_time = Time.now.utc) do
-    where("execute_at IS NOT NULL AND execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
+    where("execute_at <= :before_time AND deleted_at IS NULL", before_time: before_time)
   end
 
   before_save do
