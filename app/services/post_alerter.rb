@@ -557,9 +557,13 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp ||
-                  post.post_type != Post.types[:regular] ||
-                  post.incoming_email
+    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+
+    # If the post already has an incoming email, it has been set in the
+    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
+    # via the IMAP/SMTP flow, so there is no need to notify those involved
+    # in the email chain again.
+    return nil if post.incoming_email.present?
 
     post.topic.allowed_groups
       .where.not(smtp_server: nil)
@@ -576,28 +580,10 @@ class PostAlerter
 
     # users who interacted with the post by _directly_ emailing the group
     if group = group_notifying_via_smtp(post)
-      group_email_regex = group.email_username_regex
-      email_addresses = Set[group.email_username]
-
-      post.topic.incoming_email.each do |incoming_email|
-        to_addresses = incoming_email.to_addresses&.split(';')
-        cc_addresses = incoming_email.cc_addresses&.split(';')
-
-        next if to_addresses&.none? { |address| address =~ group_email_regex } &&
-                cc_addresses&.none? { |address| address =~ group_email_regex }
-
-        email_addresses.add(incoming_email.from_address)
-        email_addresses.merge(to_addresses) if to_addresses.present?
-        email_addresses.merge(cc_addresses) if cc_addresses.present?
-      end
-
-      email_addresses.subtract([nil, ''])
+      email_addresses = post.topic.incoming_email_addresses(group: group)
 
       if email_addresses.size > 1
-        Jobs.enqueue(:group_smtp_email,
-          group_id: group.id,
-          post_id: post.id,
-          email: email_addresses.to_a - [group.email_username])
+        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
       end
     end
 

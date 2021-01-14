@@ -1632,6 +1632,37 @@ class Topic < ActiveRecord::Base
       .first
   end
 
+  def incoming_email_addresses(group: nil, received_before: Time.zone.now)
+    if group.present?
+      group_email_regex = group.email_username_regex
+      email_addresses = Set[group.email_username]
+    else
+      email_addresses = Set.new
+    end
+
+    # TODO(martin) Look at improving this N1, it will just get slower the
+    # more replies/incoming emails there are for the topic.
+    self.incoming_email.where("created_at <= ?", received_before).each do |incoming_email|
+      to_addresses = incoming_email.to_addresses&.split(';')
+      cc_addresses = incoming_email.cc_addresses&.split(';')
+
+      next if to_addresses&.none? { |address| address =~ group_email_regex } &&
+        cc_addresses&.none? { |address| address =~ group_email_regex }
+
+      email_addresses.add(incoming_email.from_address)
+      email_addresses.merge(to_addresses) if to_addresses.present?
+      email_addresses.merge(cc_addresses) if cc_addresses.present?
+    end
+
+    email_addresses.subtract([nil, ''])
+
+    if group.present?
+      email_addresses = email_addresses.to_a - [group.email_username]
+    end
+
+    email_addresses
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
