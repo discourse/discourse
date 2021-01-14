@@ -12,14 +12,18 @@ module ImportScripts::PhpBB3
     end
 
     def map_users_to_import_ids(rows)
-      rows.map { |row| row[:user_id] }
+      rows.map { |row| @settings.prefix(row[:user_id]) }
     end
 
     def map_user(row)
       is_active_user = row[:user_inactive_reason] != Constants::INACTIVE_REGISTER
 
+      trust_level = row[:user_posts] == 0 ? TrustLevel[0] : TrustLevel[1]
+      trust_level = @settings.trust_level_for_posts(row[:user_posts], trust_level: trust_level)
+      manual_locked_trust_level = trust_level > TrustLevel[1] ? trust_level : nil
+
       {
-        id: row[:user_id],
+        id: @settings.prefix(row[:user_id]),
         email: row[:user_email],
         username: row[:username],
         password: @settings.import_passwords ? row[:user_password] : nil,
@@ -28,7 +32,8 @@ module ImportScripts::PhpBB3
         last_seen_at: row[:user_lastvisit] == 0 ? Time.zone.at(row[:user_regdate]) : Time.zone.at(row[:user_lastvisit]),
         registration_ip_address: (IPAddr.new(row[:user_ip]) rescue nil),
         active: is_active_user,
-        trust_level: row[:user_posts] == 0 ? TrustLevel[0] : TrustLevel[1],
+        trust_level: trust_level,
+        manual_locked_trust_level: manual_locked_trust_level,
         approved: is_active_user,
         approved_by_id: is_active_user ? Discourse.system_user.id : nil,
         approved_at: is_active_user ? Time.now : nil,
@@ -45,14 +50,14 @@ module ImportScripts::PhpBB3
     end
 
     def map_anonymous_users_to_import_ids(rows)
-      rows.map { |row| row[:post_username] }
+      rows.map { |row| @settings.prefix(row[:post_username]) }
     end
 
     def map_anonymous_user(row)
       username = row[:post_username]
 
       {
-        id: username,
+        id: @settings.prefix(username),
         email: "anonymous_#{SecureRandom.hex}@no-email.invalid",
         username: username,
         name: @settings.username_as_name ? username : '',
