@@ -36,6 +36,25 @@ class TopicTimer < ActiveRecord::Base
     end
   end
 
+  # These actions are in place to make sure the topic is in the correct
+  # state at the point in time where the timer is saved. It does not
+  # guarantee that the topic will be in the correct state when the timer
+  # job is executed, but each timer job handles deleted topics etc. gracefully.
+  #
+  # This is also important for the Open Temporarily and Close Temporarily timers,
+  # which change the topic's status straight away and set a timer to do the
+  # opposite action in the future.
+  after_save do
+    if (saved_change_to_execute_at? || saved_change_to_user_id?)
+      if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
+        topic.update_status('closed', false, user) if topic&.closed?
+      end
+      if status_type == TopicTimer.types[:open]
+        topic.update_status('closed', true, user) if topic&.open?
+      end
+    end
+  end
+
   def status_type_name
     self.class.types[status_type]
   end
@@ -174,20 +193,14 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_open_job
-    topic.update_status('closed', true, user) if topic && !topic.closed
-
     Jobs.enqueue(TopicTimer.type_job_map[:open], topic_timer_id: id)
   end
 
   def schedule_auto_close_job
-    topic.update_status('closed', false, user) if topic&.closed
-
     Jobs.enqueue(TopicTimer.type_job_map[:close], topic_timer_id: id)
   end
 
   def schedule_auto_silent_close_job
-    topic.update_status('closed', false, user) if topic&.closed
-
     Jobs.enqueue(TopicTimer.type_job_map[:close], topic_timer_id: id, silent: true)
   end
 
