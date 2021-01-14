@@ -4,10 +4,13 @@ module Jobs
   class PublishTopicToCategory < ::Jobs::Base
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
-      return if topic_timer.blank?
+      return if !topic_timer&.runnable?
 
       topic = topic_timer.topic
-      return if topic.blank?
+      if topic.blank?
+        topic_timer.destroy!
+        return
+      end
 
       return unless Guardian.new(topic_timer.user).can_see?(topic)
 

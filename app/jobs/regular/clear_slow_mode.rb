@@ -5,14 +5,10 @@ module Jobs
 
     def execute(args)
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
+      return if !topic_timer&.runnable?
 
-      if topic_timer.nil? || topic_timer.execute_at > Time.zone.now
-        return
-      end
-
-      topic = topic_timer&.topic
-
-      if topic.nil?
+      topic = topic_timer.topic
+      if topic.blank?
         topic_timer.destroy!
         return
       end

@@ -30,6 +30,8 @@ class TopicTimer < ActiveRecord::Base
        !attribute_in_database(:execute_at).nil?) ||
        will_save_change_to_user_id?
 
+      # TODO(martin - 2021-05-01) - Remove this backwards compatability for outstanding
+      # jobs once they have all been run and after Jobs::TopicTimerEnqueuer is in place
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
     end
   end
@@ -124,77 +126,77 @@ class TopicTimer < ActiveRecord::Base
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:close], topic_timer_id: id)
   end
 
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_open_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(:open_topic, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:open], topic_timer_id: id)
   end
 
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_silent_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:silent_close], topic_timer_id: id)
   end
 
   def cancel_auto_publish_to_category_job
-    Jobs.cancel_scheduled_job(:publish_topic_to_category, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:publish_to_category], topic_timer_id: id)
   end
 
   def cancel_auto_delete_job
-    Jobs.cancel_scheduled_job(:delete_topic, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:delete], topic_timer_id: id)
   end
 
   def cancel_auto_reminder_job
-    Jobs.cancel_scheduled_job(:topic_reminder, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:reminder], topic_timer_id: id)
   end
 
   def cancel_auto_bump_job
-    Jobs.cancel_scheduled_job(:bump_topic, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:bump], topic_timer_id: id)
   end
 
   def cancel_auto_delete_replies_job
-    Jobs.cancel_scheduled_job(:delete_replies, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:delete_replies], topic_timer_id: id)
   end
 
   def cancel_auto_clear_slow_mode_job
-    Jobs.cancel_scheduled_job(:clear_slow_mode, topic_timer_id: id)
+    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:clear_slow_mode], topic_timer_id: id)
   end
 
   def schedule_auto_delete_replies_job
-    Jobs.enqueue(:delete_replies, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:delete_replies], topic_timer_id: id)
   end
 
   def schedule_auto_bump_job
-    Jobs.enqueue(:bump_topic, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:bump], topic_timer_id: id)
   end
 
   def schedule_auto_open_job
     topic.update_status('closed', true, user) if topic && !topic.closed
 
-    Jobs.enqueue(:open_topic, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:open], topic_timer_id: id)
   end
 
   def schedule_auto_close_job
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue(:close_topic, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:close], topic_timer_id: id)
   end
 
   def schedule_auto_silent_close_job
     topic.update_status('closed', false, user) if topic&.closed
 
-    Jobs.enqueue(:close_topic, topic_timer_id: id, silent: true)
+    Jobs.enqueue(TopicTimer.type_job_map[:close], topic_timer_id: id, silent: true)
   end
 
   def schedule_auto_publish_to_category_job
-    Jobs.enqueue(:publish_topic_to_category, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:publish_to_category], topic_timer_id: id)
   end
 
   def schedule_auto_delete_job
-    Jobs.enqueue(:delete_topic, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:delete], topic_timer_id: id)
   end
 
   def schedule_auto_reminder_job
@@ -202,7 +204,7 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def schedule_auto_clear_slow_mode_job
-    Jobs.enqueue(:clear_slow_mode, topic_timer_id: id)
+    Jobs.enqueue(TopicTimer.type_job_map[:clear_slow_mode], topic_timer_id: id)
   end
 end
 
