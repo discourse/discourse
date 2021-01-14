@@ -14,6 +14,14 @@ export default Controller.extend({
   htmlEmpty: empty("model.html_content"),
 
   actions: {
+    updateUsername(selected) {
+      if (selected && selected.length > 0) {
+        this.set("username", selected[0]);
+      } else {
+        this.set("username", null);
+      }
+    },
+
     refresh() {
       const model = this.model;
 

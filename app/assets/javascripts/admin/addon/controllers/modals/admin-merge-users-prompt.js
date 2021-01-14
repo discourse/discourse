@@ -27,4 +27,13 @@ export default Controller.extend(ModalFunctionality, {
   close() {
     this.send("closeModal");
   },
+
+  @action
+  updateUsername(selected) {
+    if (selected && selected.length > 0) {
+      this.set("targetUsername", selected[0]);
+    } else {
+      this.set("targetUsername", null);
+    }
+  },
 });

@@ -30,6 +30,14 @@ export default Controller.extend({
   },
 
   actions: {
+    updateUsername(selected) {
+      if (selected && selected.length > 0) {
+        this.set("model.username", selected[0]);
+      } else {
+        this.set("model.username", null);
+      }
+    },
+
     changeUserMode(value) {
       if (value === "all") {
         this.model.set("username", null);

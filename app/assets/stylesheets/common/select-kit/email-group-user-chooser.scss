@@ -1,0 +1,39 @@
+.select-kit.email-group-user-chooser {
+  .select-kit-row.email-group-user-chooser-row {
+    .identifier {
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .name {
+      color: var(--primary-high);
+      font-size: $font-down-1;
+      margin-left: 0.5em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .avatar,
+    .d-icon {
+      margin-left: 0;
+      margin-right: 0.5em;
+    }
+  }
+  .select-kit-header {
+    .x-more-item {
+      background: var(--primary-low);
+      padding: 0.25em;
+      flex: 1;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      margin: 2px 0 0px 3px;
+      float: left;
+      height: 30px;
+      text-align: left;
+      color: inherit;
+      outline: none;
+      border-bottom: 2px solid transparent;
+    }
+  }
+}
