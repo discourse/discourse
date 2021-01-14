@@ -309,8 +309,8 @@ module Imap
       tags = Set.new
 
       # "Plus" part from the destination email address
-      to_addresses = incoming_email.to_addresses&.split(";") || []
-      cc_addresses = incoming_email.cc_addresses&.split(";") || []
+      to_addresses = incoming_email.to_addresses_split
+      cc_addresses = incoming_email.cc_addresses_split
       (to_addresses + cc_addresses).each do |address|
         if plus_part = address&.scan(group_email_regex)&.first&.first
           tags.add("plus:#{plus_part[1..-1]}") if plus_part.length > 0

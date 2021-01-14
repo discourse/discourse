@@ -416,8 +416,9 @@ class PostAlerter
     if opts[:skip_send_email_to]&.include?(user.email)
       skip_send_email = true
     elsif original_post.via_email && (incoming_email = original_post.incoming_email)
-      skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
-        contains_email_address?(incoming_email.cc_addresses, user)
+      skip_send_email =
+        incoming_email.to_addresses_split.include?(user.email) ||
+        incoming_email.cc_addresses_split.include?(user.email)
     else
       skip_send_email = opts[:skip_send_email]
     end
@@ -456,11 +457,6 @@ class PostAlerter
       push_notification(user, payload)
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
-  end
-
-  def contains_email_address?(addresses, user)
-    return false if addresses.blank?
-    addresses.split(";").include?(user.email)
   end
 
   def push_notification(user, payload)

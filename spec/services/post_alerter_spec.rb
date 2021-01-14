@@ -1244,7 +1244,7 @@ describe PostAlerter do
     end
   end
 
-  context "SMTP" do
+  context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
       Jobs.run_immediately!

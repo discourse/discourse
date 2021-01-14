@@ -1634,7 +1634,6 @@ class Topic < ActiveRecord::Base
 
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
     if group.present?
-      group_email_regex = group.email_username_regex
       email_addresses = Set[group.email_username]
     else
       email_addresses = Set.new
@@ -1643,11 +1642,15 @@ class Topic < ActiveRecord::Base
     # TODO(martin) Look at improving this N1, it will just get slower the
     # more replies/incoming emails there are for the topic.
     self.incoming_email.where("created_at <= ?", received_before).each do |incoming_email|
-      to_addresses = incoming_email.to_addresses&.split(';')
-      cc_addresses = incoming_email.cc_addresses&.split(';')
+      to_addresses = incoming_email.to_addresses_split
+      cc_addresses = incoming_email.cc_addresses_split
+      combined_addresses = [to_addresses, cc_addresses].flatten
 
-      next if to_addresses&.none? { |address| address =~ group_email_regex } &&
-        cc_addresses&.none? { |address| address =~ group_email_regex }
+      # We only care about the emails addressed to the group or CC'd to the
+      # group if the group is present.
+      if group.present? && combined_addresses.any?
+        next if combined_addresses.none? { |address| address =~ group.email_username_regex }
+      end
 
       email_addresses.add(incoming_email.from_address)
       email_addresses.merge(to_addresses) if to_addresses.present?
@@ -1660,7 +1663,7 @@ class Topic < ActiveRecord::Base
       email_addresses = email_addresses.to_a - [group.email_username]
     end
 
-    email_addresses
+    email_addresses.to_a
   end
 
   private
