@@ -311,7 +311,7 @@ const Composer = RestModel.extend({
     if (topic) {
       options.topicLink = {
         href: topic.url,
-        anchor: topic.fancy_title || escapeExpression(topicTitle),
+        anchor: topic.fancyTitle || escapeExpression(topicTitle),
       };
     }
 
