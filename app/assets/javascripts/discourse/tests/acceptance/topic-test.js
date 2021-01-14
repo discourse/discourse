@@ -67,22 +67,25 @@ acceptance("Topic", function (needs) {
       "it fills composer with the ring string"
     );
 
-    const targets = queryAll(".item span", ".composer-fields");
+    const targets = queryAll(
+      "#private-message-users .selected-name",
+      ".composer-fields"
+    );
 
     assert.equal(
-      $(targets[0]).text(),
+      $(targets[0]).text().trim(),
       "someguy",
       "it fills up the composer with the right user to start the PM to"
     );
 
     assert.equal(
-      $(targets[1]).text(),
+      $(targets[1]).text().trim(),
       "test",
       "it fills up the composer with the right user to start the PM to"
     );
 
     assert.equal(
-      $(targets[2]).text(),
+      $(targets[2]).text().trim(),
       "Group",
       "it fills up the composer with the right group to start the PM to"
     );

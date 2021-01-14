@@ -62,7 +62,9 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
-      queryAll(".users-input .item:nth-of-type(1)").text(),
+      queryAll("#private-message-users .selected-name:nth-of-type(1)")
+        .text()
+        .trim(),
       "codinghorror"
     );
     assert.ok(
@@ -164,7 +166,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_group_message");
 
     const items = [];
-    queryAll(".users-input .item").each((_, item) =>
+    queryAll("#private-message-users .selected-name").each((_, item) =>
       items.push(item.textContent.trim())
     );
 
@@ -348,7 +350,9 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_private_message");
 
     assert.equal(
-      queryAll(".users-input .item:nth-of-type(1)").text(),
+      queryAll("#private-message-users .selected-name:nth-of-type(1)")
+        .text()
+        .trim(),
       "uwe_keim"
     );
     assert.ok(

@@ -713,7 +713,9 @@ acceptance("Composer", function (needs) {
       await click(".modal .btn-default");
 
       assert.equal(
-        queryAll(".users-input .item:nth-of-type(1)").text(),
+        queryAll("#private-message-users .selected-name:nth-of-type(1)")
+          .text()
+          .trim(),
         "codinghorror"
       );
     } finally {
