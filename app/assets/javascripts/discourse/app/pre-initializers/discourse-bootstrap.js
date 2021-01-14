@@ -9,6 +9,7 @@ import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import RSVP from "rsvp";
 import Session from "discourse/models/session";
+import { camelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setIconList } from "discourse-common/lib/icon-library";
@@ -26,22 +27,37 @@ export default {
     if (isTesting()) {
       return;
     }
-    const preloadedDataElement = document.getElementById("data-preloaded");
-    const setupData = document.getElementById("data-discourse-setup").dataset;
 
-    if (preloadedDataElement) {
-      const preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-
-      Object.keys(preloaded).forEach(function (key) {
-        PreloadStore.store(key, JSON.parse(preloaded[key]));
-
-        if (setupData.debugPreloadedAppData === "true") {
-          /* eslint-disable no-console */
-          console.log(key, PreloadStore.get(key));
-          /* eslint-enable no-console */
-        }
+    let setupData;
+    let preloaded;
+    if (app.bootstrap) {
+      // This is annoying but our old way of using `data-*` attributes used camelCase by default
+      setupData = {};
+      Object.keys(app.bootstrap.setup_data).forEach((k) => {
+        setupData[camelize(k)] = app.bootstrap.setup_data[k];
       });
+      preloaded = app.bootstrap.preloaded;
     }
+
+    const setupDataElement = document.getElementById("data-discourse-setup");
+    if (setupDataElement) {
+      setupData = document.getElementById("data-discourse-setup").dataset;
+    }
+
+    const preloadedDataElement = document.getElementById("data-preloaded");
+    if (preloadedDataElement) {
+      preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+    }
+
+    Object.keys(preloaded).forEach(function (key) {
+      PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+      if (setupData.debugPreloadedAppData === "true") {
+        /* eslint-disable no-console */
+        console.log(key, PreloadStore.get(key));
+        /* eslint-enable no-console */
+      }
+    });
 
     let baseUrl = setupData.baseUrl;
     Object.defineProperty(app, "BaseUrl", {
@@ -94,8 +110,11 @@ export default {
       parseInt(setupData.userColorSchemeId, 10) || null;
     session.userDarkSchemeId = parseInt(setupData.userDarkSchemeId, 10) || -1;
 
-    if (isDevelopment()) {
-      setIconList(JSON.parse(setupData.svgIconList));
+    let iconList = setupData.svgIconList;
+    if (isDevelopment() && iconList) {
+      setIconList(
+        typeof iconList === "string" ? JSON.parse(iconList) : iconList
+      );
     }
 
     if (setupData.s3BaseUrl) {

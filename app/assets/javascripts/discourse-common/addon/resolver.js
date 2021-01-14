@@ -105,8 +105,9 @@ export function buildResolver(baseName) {
         dashed = dasherize(suffix),
         moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
-            e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-            e.indexOf(dashed, e.length - dashed.length) !== -1
+            e.indexOf("/templates/") === -1 &&
+            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
+              e.indexOf(dashed, e.length - dashed.length) !== -1)
           );
         });
 
