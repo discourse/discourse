@@ -1184,6 +1184,10 @@ module Email
         options[:post_type] = Post.types[:whisper]
       end
 
+      # To avoid race conditions with the post alerter and Group SMTP
+      # emails, we skip the jobs here and enqueue them only _after_
+      # the incoming email has been updated with the post and topic.
+      options[:skip_jobs] = true
       result = NewPostManager.new(user, options).perform
 
       errors = result.errors.full_messages
@@ -1203,6 +1207,13 @@ module Email
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
+
+        # Alert the people involved in the topic now that the incoming email
+        # has been linked to the post.
+        PostJobsEnqueuer.new(result.post, result.post.topic, options[:topic_id].blank?,
+                             import_mode: options[:import_mode],
+                             post_alert_options: options[:post_alert_options]
+                            ).enqueue_jobs
       end
 
       result.post
