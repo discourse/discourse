@@ -159,6 +159,9 @@ GEM
     json (2.5.1)
     json-schema (2.8.1)
       addressable (>= 2.4)
+    json-schema_builder (0.8.2)
+      activesupport (>= 4.0)
+      json-schema (>= 2.1)
     jwt (2.2.2)
     kgio (2.11.3)
     libv8 (8.4.255.0)
@@ -494,6 +497,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language
   json
+  json-schema_builder
   listen
   lograge
   logstash-event

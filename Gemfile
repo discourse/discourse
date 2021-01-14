@@ -167,6 +167,7 @@ group :test, :development do
   gem 'parallel_tests'
 
   gem 'rswag-specs'
+  gem 'json-schema_builder'
 end
 
 group :development do

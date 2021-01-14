@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require "json/schema_builder"
+
+# json-schema_builder config
+# We want to validate and be strict here so that we error when we detect
+# differences with the schema and the json response/request.
+JSON::SchemaBuilder.configure do |opts|
+  opts.validate_schema = true
+  opts.strict = true
+end
+
+# Require schema files
+Dir["./spec/requests/api/schemas/*.rb"].each { |file| require file }
+
+# Require shared examples
+Dir["./spec/requests/api/shared/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated
