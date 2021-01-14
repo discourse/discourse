@@ -109,6 +109,7 @@ export default Component.extend(UtilsMixin, {
         this.selectKit.close(event);
         return;
       }
+      this.selectKit.set("highlighted", null);
     },
   },
 });
