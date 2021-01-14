@@ -13,7 +13,11 @@ AdminDashboard.reopenClass({
   fetch() {
     return ajax("/admin/dashboard.json").then((json) => {
       const model = AdminDashboard.create();
-      model.set("version_check", json.version_check);
+      model.setProperties({
+        version_check: json.version_check,
+        new_features: json.new_features,
+      });
+
       return model;
     });
   },
@@ -40,6 +44,12 @@ AdminDashboard.reopenClass({
       const model = AdminDashboard.create(json);
       model.set("loaded", true);
       return model;
+    });
+  },
+
+  dismissNewFeatures() {
+    return ajax("/admin/dashboard/mark_new_features_as_seen.json", {
+      type: "PUT",
     });
   },
 });

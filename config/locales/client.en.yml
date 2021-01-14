@@ -3582,6 +3582,8 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        new_features: "New Features"
+        dismiss_new_features: "Dismiss"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."

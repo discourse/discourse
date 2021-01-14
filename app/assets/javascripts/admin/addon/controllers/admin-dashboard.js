@@ -12,6 +12,7 @@ export default Controller.extend({
   dashboardFetchedAt: null,
   exceptionController: inject("exception"),
   showVersionChecks: setting("version_checks"),
+  newFeatures: null,
 
   @discourseComputed("problems.length")
   foundProblems(problemsLength) {
@@ -71,6 +72,7 @@ export default Controller.extend({
 
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
+            properties.newFeatures = model.new_features;
           }
 
           this.setProperties(properties);
@@ -104,6 +106,12 @@ export default Controller.extend({
   actions: {
     refreshProblems() {
       this._loadProblems();
+    },
+
+    dismissNewFeatures() {
+      AdminDashboard.dismissNewFeatures().then(() => {
+        this.set("newFeatures", null);
+      });
     },
   },
 });

@@ -2130,6 +2130,10 @@ uncategorized:
     client: true
     hidden: true
 
+  check_for_new_features:
+    default: false
+    hidden: true
+
   automatically_unpin_topics:
     default: true
     client: true

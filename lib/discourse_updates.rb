@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module DiscourseUpdates
-
   class << self
 
     def check_version
@@ -115,6 +114,36 @@ module DiscourseUpdates
       keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
+    def perform_new_feature_check
+      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      json = JSON.parse(response.body)
+      Discourse.redis.set(new_features_key, response.body)
+    end
+
+    def unseen_new_features(user_id)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+      entries.select! { |item| item["id"].to_i > new_features_last_seen(user_id).to_i }
+      entries.sort { |item| item["id"].to_i }
+    end
+
+    def new_features_last_seen(user_id)
+      Discourse.redis.get new_features_last_seen_id(user_id)
+    end
+
+    def mark_new_features_as_seen(user_id)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+      last_seen = entries.max_by { |x| x["id"] }
+      Discourse.redis.set(new_features_last_seen_id(user_id), last_seen["id"])
+    end
+
+    # used only in specs
+    def reset_new_features(user_id)
+      Discourse.redis.del new_features_last_seen_id(user_id)
+      Discourse.redis.del new_features_key
+    end
+
     private
 
     def last_installed_version_key
@@ -143,6 +172,18 @@ module DiscourseUpdates
 
     def missing_versions_key_prefix
       'missing_version'
+    end
+
+    def new_features_endpoint
+      "https://meta.discourse.org/new-features.json"
+    end
+
+    def new_features_key
+      'new_features'
+    end
+
+    def new_features_last_seen_id(user_id)
+      "new_features_last_seen_id_user_#{user_id}"
     end
   end
 end

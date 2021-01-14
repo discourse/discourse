@@ -144,4 +144,46 @@ describe DiscourseUpdates do
       include_examples "when last_installed_version is old"
     end
   end
+
+  context 'new features' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin2) { Fabricate(:admin) }
+
+    before do
+      sample_features = [
+        { "id" => "2", "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!" },
+        { "id" => "3", "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!" },
+        { "id" => "1", "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!" },
+      ]
+
+      Discourse.redis.set('new_features', MultiJson.dump(sample_features))
+    end
+
+    it 'returns only unseen items by user' do
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns("2")
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns("1")
+
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+      expect(result.length).to eq(1)
+      expect(result[0]["id"]).to eq("3")
+
+      result2 = DiscourseUpdates.unseen_new_features(admin2.id)
+      expect(result2.length).to eq(2)
+      expect(result2[0]["id"]).to eq("3")
+      expect(result2[1]["id"]).to eq("2")
+
+      DiscourseUpdates.reset_new_features(admin.id)
+      DiscourseUpdates.reset_new_features(admin2.id)
+    end
+
+    it 'can mark features as seen for a given user' do
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_present
+
+      DiscourseUpdates.mark_new_features_as_seen(admin.id)
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+
+      # doesn't affect another user
+      expect(DiscourseUpdates.unseen_new_features(admin2.id)).to be_present
+    end
+  end
 end

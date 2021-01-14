@@ -1,0 +1,29 @@
+{{#if newFeatures}}
+  <div class="section dashboard-new-features">
+    <div class="section-title">
+      <h2>🎁 {{i18n "admin.dashboard.new_features"}}</h2>
+
+      {{d-button label="admin.dashboard.dismiss_new_features" action=dismissNewFeatures }}
+    </div>
+
+    <div class="section-body">
+      {{#each newFeatures as |feature|}}
+        <div class="admin-new-feature-item">
+          <div class="new-feature-emoji">{{feature.emoji}}</div>
+          <div class="new-feature-content">
+            <div class="header">
+              {{#if feature.link}}
+                <a href={{feature.link}} target="_blank" rel="noopener noreferrer">{{feature.title}}</a>
+              {{else}}
+                {{feature.title}}
+              {{/if}}
+            </div>
+            <div class="feature-description">{{feature.description}}</div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+    <div class="section-body">
+    </div>
+  </div>
+{{/if}}

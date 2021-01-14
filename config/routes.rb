@@ -264,6 +264,7 @@ Discourse::Application.routes.draw do
       resources :dashboard, only: [:index] do
         collection do
           get "problems"
+          put "mark_new_features_as_seen"
         end
       end
 
