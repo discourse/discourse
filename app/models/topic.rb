@@ -1633,11 +1633,7 @@ class Topic < ActiveRecord::Base
   end
 
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
-    if group.present?
-      email_addresses = Set[group.email_username]
-    else
-      email_addresses = Set.new
-    end
+    email_addresses = group.present? ? Set[group.email_username] : Set.new
 
     # TODO(martin) Look at improving this N1, it will just get slower the
     # more replies/incoming emails there are for the topic.
