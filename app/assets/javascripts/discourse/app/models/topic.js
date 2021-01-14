@@ -719,6 +719,10 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (topic.is_shared_draft) {
+        props.destination_category_id = props.category_id;
+        delete props.category_id;
+      }
       topic.setProperties(props);
     });
   },

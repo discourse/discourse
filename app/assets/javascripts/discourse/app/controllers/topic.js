@@ -111,21 +111,9 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed(
-    "model.postStream.loaded",
-    "model.category_id",
-    "model.is_shared_draft"
-  )
-  showSharedDraftControls(loaded, categoryId, isSharedDraft) {
-    let draftCat = this.site.shared_drafts_category_id;
-
-    return (
-      loaded &&
-      draftCat &&
-      categoryId &&
-      draftCat === categoryId &&
-      isSharedDraft
-    );
+  @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
+  showSharedDraftControls(loaded, isSharedDraft) {
+    return loaded && isSharedDraft;
   },
 
   @discourseComputed("site.mobileView", "model.posts_count")
