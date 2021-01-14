@@ -6,9 +6,10 @@ module Jobs
   # and enqueues their related jobs.
   #
   # Any leftovers will be caught in the next run, because execute_at will
-  # be < now, and topic timers that have run are deleted on completion.
+  # be < now, and topic timers that have run are deleted on completion or
+  # otherwise have their execute_at time modified.
   class TopicTimerEnqueuer < ::Jobs::Scheduled
-    every 5.minutes
+    every 2.minutes
 
     def execute(args = nil)
       timers = TopicTimer.pending_timers
