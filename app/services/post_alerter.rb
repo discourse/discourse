@@ -578,7 +578,7 @@ class PostAlerter
     if group = group_notifying_via_smtp(post)
       email_addresses = post.topic.incoming_email_addresses(group: group)
 
-      if email_addresses.size > 1
+      if email_addresses.any?
         Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
       end
     end
