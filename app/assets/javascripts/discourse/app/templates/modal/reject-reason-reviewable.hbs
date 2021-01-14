@@ -1,0 +1,19 @@
+{{#d-modal-body class="explain-reviewable"}}
+  {{textarea value=rejectReason}}
+  <div class="control-group">
+    <label>
+      {{input type="checkbox"
+        class="inline"
+        checked=sendEmail
+      }}
+      {{i18n "review.reject_reason.send_email"}}
+    </label>
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action=(route-action "closeModal") label="close"}}
+  <div class="pull-right">
+    {{d-button icon="trash-alt" class="btn-danger" action=(action "perform")}}
+  </div>
+</div>

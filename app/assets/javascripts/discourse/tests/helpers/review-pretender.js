@@ -24,7 +24,7 @@ export default function (helpers) {
           created_at: "2019-01-14T19:49:53.571Z",
           username: "newbie",
           email: "newbie@example.com",
-          bundled_action_ids: ["approve", "reject"],
+          bundled_action_ids: ["approve", "reject", "reject_user"],
         },
         {
           id: 4321,
@@ -58,6 +58,12 @@ export default function (helpers) {
           id: "reject",
           action_ids: ["reject"],
         },
+        {
+          id: "reject_user",
+          icon: "user-times",
+          label: "Delete User...",
+          action_ids: ["reject_user_delete", "reject_user_block"],
+        },
       ],
       actions: [
         {
@@ -69,6 +75,23 @@ export default function (helpers) {
           id: "reject",
           label: "Reject",
           icon: "far-thumbs-down",
+        },
+        {
+          id: "reject_user_delete",
+          icon: "user-times",
+          button_class: null,
+          label: "Delete User",
+          description: "The user will be deleted from the forum.",
+          require_reject_reason: true,
+        },
+        {
+          id: "reject_user_block",
+          icon: "ban",
+          button_class: null,
+          label: "Delete and Block User",
+          description:
+            "The user will be deleted, and we'll block their IP and email address.",
+          require_reject_reason: true,
         },
       ],
       reviewable_scores: [{ id: 1 }, { id: 2 }],
