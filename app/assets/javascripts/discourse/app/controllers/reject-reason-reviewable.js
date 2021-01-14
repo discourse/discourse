@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { action } from "@ember/object";
 
 export default Controller.extend(ModalFunctionality, {
   rejectReason: null,
@@ -9,14 +10,13 @@ export default Controller.extend(ModalFunctionality, {
     this.setProperties({ rejectReason: null, sendEmail: false });
   },
 
-  actions: {
-    perform() {
-      this.model.setProperties({
-        rejectReason: this.rejectReason,
-        sendEmail: this.sendEmail,
-      });
-      this.send("closeModal");
-      this.performConfirmed(this.action);
-    },
+  @action
+  perform() {
+    this.model.setProperties({
+      rejectReason: this.rejectReason,
+      sendEmail: this.sendEmail,
+    });
+    this.send("closeModal");
+    this.performConfirmed(this.action);
   },
 });
