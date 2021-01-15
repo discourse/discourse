@@ -6,12 +6,13 @@ export default Route.extend({
   queryParams: {
     q: { replace: true },
     overridden: { replace: true },
+    locale: { replace: true },
   },
 
   model(params) {
     return this.store.find(
       "site-text",
-      getProperties(params, "q", "overridden")
+      getProperties(params, "q", "overridden", "locale")
     );
   },
 

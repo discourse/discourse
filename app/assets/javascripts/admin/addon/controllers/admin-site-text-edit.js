@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(bufferedProperty("siteText"), {
   saved: false,
+  queryParams: ["locale"],
 
   @discourseComputed("buffered.value")
   saveDisabled(value) {
@@ -15,9 +16,11 @@ export default Controller.extend(bufferedProperty("siteText"), {
 
   actions: {
     saveChanges() {
-      const buffered = this.buffered;
+      const attrs = this.buffered.getProperties("value");
+      attrs.locale = this.locale;
+
       this.siteText
-        .save(buffered.getProperties("value"))
+        .save(attrs)
         .then(() => {
           this.commitBuffer();
           this.set("saved", true);
@@ -27,10 +30,11 @@ export default Controller.extend(bufferedProperty("siteText"), {
 
     revertChanges() {
       this.set("saved", false);
+
       bootbox.confirm(I18n.t("admin.site_text.revert_confirm"), (result) => {
         if (result) {
           this.siteText
-            .revert()
+            .revert(this.locale)
             .then((props) => {
               const buffered = this.buffered;
               buffered.setProperties(props);
