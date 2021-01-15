@@ -581,6 +581,12 @@ class PostAlerter
       if email_addresses.any?
         Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
       end
+
+      # add the group's email back into the array, because it is used for
+      # skip_send_email_to in the case of user private message notifications
+      # (we do not want the group to be sent any emails from here because it
+      # will make another email for IMAP to pick up in the group's mailbox)
+      email_addresses << group.email_username
     end
 
     # users that aren't part of any mentioned groups
