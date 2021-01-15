@@ -1633,7 +1633,7 @@ class Topic < ActiveRecord::Base
   end
 
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
-    email_addresses = group.present? ? Set[group.email_username] : Set.new
+    email_addresses = Set.new
 
     # TODO(martin) Look at improving this N1, it will just get slower the
     # more replies/incoming emails there are for the topic.
@@ -1643,21 +1643,19 @@ class Topic < ActiveRecord::Base
       combined_addresses = [to_addresses, cc_addresses].flatten
 
       # We only care about the emails addressed to the group or CC'd to the
-      # group if the group is present.
+      # group if the group is present. If combined addresses is empty we do
+      # not need to do this check, and instead can proceed on to adding the
+      # from address.
       if group.present? && combined_addresses.any?
         next if combined_addresses.none? { |address| address =~ group.email_username_regex }
       end
 
       email_addresses.add(incoming_email.from_address)
-      email_addresses.merge(to_addresses) if to_addresses.present?
-      email_addresses.merge(cc_addresses) if cc_addresses.present?
+      email_addresses.merge(combined_addresses)
     end
 
     email_addresses.subtract([nil, ''])
-
-    if group.present?
-      email_addresses = email_addresses.to_a - [group.email_username]
-    end
+    email_addresses.delete(group.email_username) if group.present?
 
     email_addresses.to_a
   end

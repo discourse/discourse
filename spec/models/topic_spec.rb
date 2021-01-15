@@ -2790,11 +2790,6 @@ describe Topic do
     end
 
     context "when the group is present" do
-      it "excludes the group email username address" do
-        expect(topic.incoming_email_addresses(group: group)).to match_array(
-          ["johnsmith@user.com", "otherguy@user.com"]
-        )
-      end
       it "excludes incoming emails that are not to or CCd to the group" do
         expect(topic.incoming_email_addresses(group: group)).not_to include(
           "unrelated@test.com"
