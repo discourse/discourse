@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class BookmarksController < ApplicationController
-
   requires_login
 
   def create
