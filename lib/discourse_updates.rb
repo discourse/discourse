@@ -175,7 +175,7 @@ module DiscourseUpdates
     end
 
     def new_features_endpoint
-      "https://meta.discourse.org/new-features.json"
+      'https://meta.discourse.org/new-features.json'
     end
 
     def new_features_key

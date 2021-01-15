@@ -8,19 +8,7 @@
 
     <div class="section-body">
       {{#each newFeatures as |feature|}}
-        <div class="admin-new-feature-item">
-          <div class="new-feature-emoji">{{feature.emoji}}</div>
-          <div class="new-feature-content">
-            <div class="header">
-              {{#if feature.link}}
-                <a href={{feature.link}} target="_blank" rel="noopener noreferrer">{{feature.title}}</a>
-              {{else}}
-                {{feature.title}}
-              {{/if}}
-            </div>
-            <div class="feature-description">{{feature.description}}</div>
-          </div>
-        </div>
+        {{dashboard-new-feature-item item=feature}}
       {{/each}}
     </div>
     <div class="section-body">
