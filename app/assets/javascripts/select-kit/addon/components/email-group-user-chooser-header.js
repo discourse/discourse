@@ -1,6 +1,7 @@
 import MultiSelectHeaderComponent from "select-kit/components/multi-select/multi-select-header";
 import { computed } from "@ember/object";
 import { gt } from "@ember/object/computed";
+import { isTesting } from "discourse-common/config/environment";
 import layout from "select-kit/templates/components/email-group-user-chooser-header";
 
 export default MultiSelectHeaderComponent.extend({
@@ -37,7 +38,8 @@ export default MultiSelectHeaderComponent.extend({
         !this.selectKit.options.autoWrap ||
         this.selectKit.isExpanded ||
         this.selectedContent === this.selectKit.noneItem ||
-        this.selectedContent.length <= 1
+        this.selectedContent.length <= 1 ||
+        isTesting()
       ) {
         return 0;
       } else {
