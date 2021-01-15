@@ -301,10 +301,6 @@ const AdminUser = User.extend({
   @discourseComputed("approved_by")
   approvedBy: wrapAdmin,
 
-  _formatError(event) {
-    return `http: ${event.status} - ${event.body}`;
-  },
-
   deleteSSORecord() {
     return ajax(`/admin/users/${this.id}/sso_record.json`, {
       type: "DELETE",

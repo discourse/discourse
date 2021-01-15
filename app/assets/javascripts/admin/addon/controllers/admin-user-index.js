@@ -167,6 +167,11 @@ export default Controller.extend(CanCheckEmails, {
     approve() {
       return this.model.approve(this.currentUser);
     },
+
+    _formatError(event) {
+      return `http: ${event.status} - ${event.body}`;
+    },
+
     deactivate() {
       return this.model
         .deactivate()
@@ -257,6 +262,7 @@ export default Controller.extend(CanCheckEmails, {
     },
     deleteAllPosts() {
       let deletedPosts = 0;
+      let deletedPercentage = 0;
       const user = this.model;
       const message = I18n.messageFormat(
         "admin.user.delete_all_posts_confirm_MF",
@@ -267,7 +273,6 @@ export default Controller.extend(CanCheckEmails, {
       );
 
       const performDelete = () => {
-        let deletedPercentage = 0;
         this.model
           .deleteAllPosts()
           .then(({ posts_deleted }) => {
@@ -387,7 +392,6 @@ export default Controller.extend(CanCheckEmails, {
     destroy() {
       const postCount = this.get("model.post_count");
       const maxPostCount = this.siteSettings.delete_all_posts_max;
-
       const user = this.model;
       const message = I18n.t("admin.user.delete_confirm");
       const location = document.location.pathname;
