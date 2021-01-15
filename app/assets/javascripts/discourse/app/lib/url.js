@@ -247,7 +247,7 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = window.location.pathname;
+    const oldPath = `${window.location.pathname}${window.location.search}`;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
