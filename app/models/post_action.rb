@@ -142,10 +142,6 @@ class PostAction < ActiveRecord::Base
     save
   end
 
-  def is_bookmark?
-    post_action_type_id == PostActionType.types[:bookmark]
-  end
-
   def is_like?
     post_action_type_id == PostActionType.types[:like]
   end
@@ -161,11 +157,11 @@ class PostAction < ActiveRecord::Base
 
   # A custom rate limiter for this model
   def post_action_rate_limiter
-    return unless is_flag? || is_bookmark? || is_like?
+    return unless is_flag? || is_like?
 
     return @rate_limiter if @rate_limiter.present?
 
-    %w(like flag bookmark).each do |type|
+    %w(like flag).each do |type|
       if public_send("is_#{type}?")
         limit = SiteSetting.get("max_#{type}s_per_day")
 
