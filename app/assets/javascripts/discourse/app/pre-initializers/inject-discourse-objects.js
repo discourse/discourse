@@ -45,18 +45,22 @@ export default {
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
     app.currentUser = currentUser;
+
+    ALL_TARGETS.forEach((t) =>
+      app.inject(t, "topicTrackingState", "topic-tracking-state:main")
+    );
+
     const topicTrackingState = TopicTrackingState.create({
       messageBus: MessageBus,
       siteSettings,
       currentUser,
     });
-
-    const site = Site.current();
-    app.register("site:main", site, { instantiate: false });
-
     app.register("topic-tracking-state:main", topicTrackingState, {
       instantiate: false,
     });
+
+    const site = Site.current();
+    app.register("site:main", site, { instantiate: false });
 
     const session = Session.current();
     app.register("session:main", session, { instantiate: false });
@@ -88,10 +92,6 @@ export default {
 
     ALL_TARGETS.concat("service").forEach((t) =>
       app.inject(t, "siteSettings", "site-settings:main")
-    );
-
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "topicTrackingState", "topic-tracking-state:main")
     );
 
     ALL_TARGETS.forEach((t) => app.inject(t, "site", "site:main"));
