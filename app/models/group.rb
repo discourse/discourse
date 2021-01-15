@@ -838,6 +838,11 @@ class Group < ActiveRecord::Base
     )
   end
 
+  def message_count
+    return 0 unless self.has_messages
+    TopicAllowedGroup.where(group_id: self.id).joins(:topic).count
+  end
+
   protected
 
   def name_format_validator

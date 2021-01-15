@@ -261,6 +261,18 @@ acceptance("Group - Authenticated", function (needs) {
       "Awesome Team",
       "it should display the group name"
     );
+
+    await click(".group-details-button button[aria-label='Delete']");
+
+    assert.equal(
+      queryAll(".bootbox .modal-body").html(),
+      I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: 2,
+      }),
+      "it should warn about orphan messages"
+    );
+
+    await click(".modal-footer .btn-default");
   });
 
   test("Moderator Viewing Group", async function (assert) {

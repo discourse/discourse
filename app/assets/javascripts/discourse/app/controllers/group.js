@@ -142,13 +142,22 @@ export default Controller.extend({
   destroyGroup() {
     this.set("destroying", true);
 
+    const model = this.model;
+    let message = I18n.t("admin.groups.delete_confirm");
+
+    if (model.has_messages && model.message_count > 0) {
+      message = I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: model.message_count,
+      });
+    }
+
     bootbox.confirm(
-      I18n.t("admin.groups.delete_confirm"),
+      message,
       I18n.t("no_value"),
       I18n.t("yes_value"),
       (confirmed) => {
         if (confirmed) {
-          this.model
+          model
             .destroy()
             .then(() => this.transitionToRoute("groups.index"))
             .catch((error) => {
