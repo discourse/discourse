@@ -27,7 +27,7 @@ acceptance("Bookmarking", function (needs) {
 
   needs.hooks.beforeEach(() => (steps = []));
 
-  const topicResponse = Object.assign({}, topicFixtures["/t/280/1.json"]);
+  const topicResponse = topicFixtures["/t/280/1.json"];
   topicResponse.post_stream.posts[0].cooked += `<span data-date="2021-01-15" data-time="00:35:00" class="discourse-local-date cooked-date past" data-timezone="Europe/London">
   <span>
     <svg class="fa d-icon d-icon-globe-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
