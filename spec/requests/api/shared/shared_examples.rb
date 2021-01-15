@@ -13,9 +13,10 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
 
   describe "request body" do
     it "matches the documented request schema" do |example|
-      errors = expected_request_schema.schema.fully_validate(params)
-      puts params if errors.count > 0 # for debugging
-      expect(errors).to be_empty
+      schemer = JSONSchemer.schema(expected_request_schema.schemer)
+      valid = schemer.valid?(params)
+      puts params unless valid # for debugging
+      expect(valid).to eq(true)
     end
   end
 
@@ -23,9 +24,10 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
     let(:json_response) { JSON.parse(response.body) }
 
     it "matches the documented response schema" do  |example|
-      errors = expected_response_schema.schema.fully_validate(json_response)
-      puts json_response if errors.count > 0 # for debugging
-      expect(errors).to be_empty
+      schemer = JSONSchemer.schema(expected_response_schema.schemer)
+      valid = schemer.valid?(json_response)
+      puts json_response unless valid # for debugging
+      expect(valid).to eq(true)
     end
   end
 end

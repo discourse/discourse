@@ -3,35 +3,63 @@
 module SpecSchemas
 
   class TagGroupCreateRequest
-    include JSON::SchemaBuilder
-
-    def schema
-      object do
-        string :name, required: true
-      end
+    def schemer
+      schema = {
+        'type' => 'object',
+        'properties' => {
+          'name' => {
+            'type' => 'string',
+            'required' => true
+          }
+        }
+      }
     end
   end
 
   class TagGroupResponse
-    include JSON::SchemaBuilder
-
-    def schema
-      object do
-        object :tag_group do
-          integer :id, required: true
-          string :name, required: true
-          array :tag_names do
-            items type: :string
-          end
-          array :parent_tag_name do
-            items type: :string
-          end
-          boolean :one_per_topic
-          object :permissions do
-            integer :everyone
-          end
-        end
-      end
+    def schemer
+      schema = {
+        'type' => 'object',
+        'properties' => {
+          'tag_group' => {
+            'type' => 'object',
+            'properties' => {
+              'id' => {
+                'type' => 'integer',
+                'required' => true
+              },
+              'name' => {
+                'type' => 'string',
+                'required' => true
+              },
+              'tag_names' => {
+                'type' => 'array',
+                'items' => {
+                  'type' => 'string'
+                }
+              },
+              'parent_tag_name' => {
+                'type' => 'array',
+                'items' => {
+                  'type' => 'string'
+                }
+              },
+              'one_per_topic' => {
+                'type' => 'boolean',
+              },
+              'permissions' => {
+                'type' => 'object',
+                'properties' => {
+                  'everyone' => {
+                    'type' => 'integer',
+                    'example' => 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     end
   end
 
