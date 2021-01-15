@@ -41,7 +41,7 @@ export default {
 
     const setupDataElement = document.getElementById("data-discourse-setup");
     if (setupDataElement) {
-      setupData = document.getElementById("data-discourse-setup").dataset;
+      setupData = setupDataElement.dataset;
     }
 
     const preloadedDataElement = document.getElementById("data-preloaded");
