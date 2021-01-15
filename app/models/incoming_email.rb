@@ -29,6 +29,14 @@ class IncomingEmail < ActiveRecord::Base
     SQL
   end
 
+  def to_addresses_split
+    self.to_addresses&.split(";") || []
+  end
+
+  def cc_addresses_split
+    self.cc_addresses&.split(";") || []
+  end
+
   def to_addresses=(to)
     if to&.is_a?(Array)
       to = to.map(&:downcase).join(";")
