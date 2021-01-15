@@ -64,6 +64,7 @@ export default Controller.extend(ModalFunctionality, {
   lastCustomReminderTime: null,
   postDetectedLocalDate: null,
   postDetectedLocalTime: null,
+  postDetectedLocalTimezone: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
@@ -80,6 +81,7 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null,
       postDetectedLocalDate: null,
       postDetectedLocalTime: null,
+      postDetectedLocalTimezone: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       model: this.model || {},
@@ -385,9 +387,15 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  _parseCustomDateTime(date, time) {
+  _parseCustomDateTime(date, time, parseTimezone = this.userTimezone) {
     let dateTime = isPresent(time) ? date + " " + time : date;
-    return moment.tz(dateTime, this.userTimezone);
+    let parsed = moment.tz(dateTime, parseTimezone);
+
+    if (parseTimezone !== this.userTimezone) {
+      parsed = parsed.tz(this.userTimezone);
+    }
+
+    return parsed;
   },
 
   _defaultCustomReminderTime() {
@@ -449,7 +457,8 @@ export default Controller.extend(ModalFunctionality, {
   postLocalDate() {
     let parsedPostLocalDate = this._parseCustomDateTime(
       this.model.postDetectedLocalDate,
-      this.model.postDetectedLocalTime
+      this.model.postDetectedLocalTime,
+      this.model.postDetectedLocalTimezone
     );
 
     if (!this.model.postDetectedLocalTime) {
