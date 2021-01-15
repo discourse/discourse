@@ -6,7 +6,7 @@ function replaceArrows(state) {
       continue;
     }
 
-    const arrowsRegexp = /-->|<--/;
+    const arrowsRegexp = /-->|<--|->|<-/;
     if (arrowsRegexp.test(token.content)) {
       for (let ci = 0; ci < token.children.length; ci++) {
         let child = token.children[ci];
@@ -14,8 +14,8 @@ function replaceArrows(state) {
         if (child.type === "text") {
           if (arrowsRegexp.test(child.content)) {
             child.content = child.content
-              .replace(/(^|\s)-->(\s|$)/gm, "\u0020\u2192\u0020")
-              .replace(/(^|\s)<--(\s|$)/gm, "\u0020\u2190\u0020");
+              .replace(/(^|\s)-{1,2}>(\s|$)/gm, "\u0020\u2192\u0020")
+              .replace(/(^|\s)<-{1,2}(\s|$)/gm, "\u0020\u2190\u0020");
           }
         }
       }
