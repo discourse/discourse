@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class BookmarksController < ApplicationController
+
   requires_login
 
   def create
     params.require(:post_id)
+
+    RateLimiter.new(
+      current_user, "create_bookmark", SiteSetting.max_bookmarks_per_day, 1.day.to_i
+    ).performed!
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark = bookmark_manager.create(

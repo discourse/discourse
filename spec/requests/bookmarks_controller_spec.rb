@@ -12,6 +12,28 @@ describe BookmarksController do
   end
 
   describe "#create" do
+    it "rate limits creates" do
+      SiteSetting.max_bookmarks_per_day = 1
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      post "/bookmarks.json", params: {
+        post_id: bookmark_post.id,
+        reminder_type: "tomorrow",
+        reminder_at: (Time.zone.now + 1.day).iso8601
+      }
+
+      expect(response.status).to eq(200)
+
+      post "/bookmarks.json", params: {
+        post_id: Fabricate(:post).id
+      }
+      expect(response.status).to eq(429)
+      expect(response.parsed_body['errors']).to include(
+        I18n.t("rate_limiter.by_type.create_bookmark", time_left: "24 hours")
+      )
+    end
+
     context "if the user already has bookmarked the post" do
       before do
         Fabricate(:bookmark, post: bookmark_post, user: bookmark_user)
