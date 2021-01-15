@@ -41,7 +41,22 @@
 
       {{i18n "admin.groups.manage.membership.primary_group"}}
     </label>
+  </div>
 
+  <div class="control-group">
+    <label class="control-label" for="title">
+      {{i18n "admin.groups.default_title"}}
+    </label>
+
+    {{input value=model.title name="title" class="input-xxlarge"}}
+
+    <div class="control-instructions">
+      {{i18n "admin.groups.default_title_description"}}
+    </div>
+  </div>
+
+  <div class="control-group">
+    {{group-flair-inputs model=model}}
   </div>
 {{/if}}
 

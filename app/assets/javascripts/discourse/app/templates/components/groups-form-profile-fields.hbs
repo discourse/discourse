@@ -19,20 +19,6 @@
         class="input-xxlarge group-form-full-name"
         value=model.full_name}}
   </div>
-
-  {{#if this.currentUser.can_create_group}}
-    <div class="control-group">
-      <label class="control-label" for="title">
-        {{i18n "admin.groups.default_title"}}
-      </label>
-
-      {{input value=model.title name="title" class="input-xxlarge"}}
-
-      <div class="control-instructions">
-        {{i18n "admin.groups.default_title_description"}}
-      </div>
-    </div>
-  {{/if}}
 {{/if}}
 
 <div class="control-group">
@@ -42,10 +28,6 @@
 
 {{#if canEdit}}
   {{yield}}
-
-  <div class="control-group">
-    {{group-flair-inputs model=model}}
-  </div>
 
   {{plugin-outlet name="group-edit" args=(hash group=model)}}
 {{/if}}
