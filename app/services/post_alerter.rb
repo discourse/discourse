@@ -575,6 +575,7 @@ class PostAlerter
     warn_if_not_sidekiq
 
     # users who interacted with the post by _directly_ emailing the group
+    emails_to_skip_send = nil
     if group = group_notifying_via_smtp(post)
       email_addresses = post.topic.incoming_email_addresses(group: group)
 
@@ -586,7 +587,8 @@ class PostAlerter
       # skip_send_email_to in the case of user private message notifications
       # (we do not want the group to be sent any emails from here because it
       # will make another email for IMAP to pick up in the group's mailbox)
-      email_addresses << group.email_username
+      emails_to_skip_send = email_addresses.dup
+      emails_to_skip_send << group.email_username
     end
 
     # users that aren't part of any mentioned groups
@@ -595,7 +597,7 @@ class PostAlerter
     users.each do |user|
       notification_level = TopicUser.get(post.topic, user)&.notification_level
       if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       end
     end
 
@@ -606,7 +608,7 @@ class PostAlerter
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       when TopicUser.notification_levels[:tracking]
         notify_group_summary(user, post)
       end
