@@ -37,6 +37,24 @@ describe VanillaBodyParser do
 this starts with spaces but IS NOT a quote'''
   end
 
+  it 'replaces pre tags with code backticks' do
+    complex_html = '<pre class="CodeBlock">foobar</pre>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "\n```\nfoobar\n```\n"
+  end
+
+  it 'strips code tags' do
+    complex_html = '<code>foobar</code>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "foobar"
+  end
+
+  it 'replaces div with quote class to bbcode quotes' do
+    complex_html = '<div class="Quote">foobar</div>'
+    parsed = VanillaBodyParser.new({ 'Format' => 'Html', 'Body' => complex_html }, user_id).parse
+    expect(parsed).to eq "\n\n[quote]\n\nfoobar\n\n[/quote]\n\n"
+  end
+
   describe 'rich format' do
     let(:rich_bodies) { JSON.parse(File.read('spec/fixtures/json/vanilla-rich-posts.json')).deep_symbolize_keys }
 
