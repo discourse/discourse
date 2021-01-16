@@ -543,29 +543,36 @@ describe TopicQuery do
         end
 
         it "returns the topics in correct order" do
+
+          # returns the topics while prioritizing pinned_topic when order is unspecified
+          expect(ids_in_order(nil)).to eq([pinned_topic, future_topic, closed_topic, invisible_topic, archived_topic, regular_topic].map(&:id))
+
+          # returns the topics while prioritizing pinned_topic when order is unspecified and descending is false
+          expect(ids_in_order(nil, false)).to eq([pinned_topic, regular_topic, archived_topic, invisible_topic, closed_topic, future_topic].map(&:id))
+
           # returns the topics in likes order if requested
-          expect(ids_in_order('posts')).to eq([future_topic, pinned_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id))
+          expect(ids_in_order('posts')).to eq([pinned_topic, future_topic, archived_topic, regular_topic, invisible_topic, closed_topic].map(&:id))
 
           # returns the topics in reverse likes order if requested
-          expect(ids_in_order('posts', false)).to eq([closed_topic, invisible_topic, regular_topic, archived_topic, pinned_topic, future_topic].map(&:id))
+          expect(ids_in_order('posts', false)).to eq([pinned_topic, closed_topic, invisible_topic, regular_topic, archived_topic, future_topic].map(&:id))
 
           # returns the topics in likes order if requested
           expect(ids_in_order('likes')).to eq([pinned_topic, regular_topic, archived_topic, future_topic, invisible_topic, closed_topic].map(&:id))
 
           # returns the topics in reverse likes order if requested
-          expect(ids_in_order('likes', false)).to eq([closed_topic, invisible_topic, future_topic, archived_topic, regular_topic, pinned_topic].map(&:id))
+          expect(ids_in_order('likes', false)).to eq([pinned_topic, closed_topic, invisible_topic, future_topic, archived_topic, regular_topic].map(&:id))
 
           # returns the topics in views order if requested
-          expect(ids_in_order('views')).to eq([regular_topic, archived_topic, future_topic, pinned_topic, closed_topic, invisible_topic].map(&:id))
+          expect(ids_in_order('views')).to eq([pinned_topic, regular_topic, archived_topic, future_topic, closed_topic, invisible_topic].map(&:id))
 
           # returns the topics in reverse views order if requested" do
-          expect(ids_in_order('views', false)).to eq([invisible_topic, closed_topic, pinned_topic, future_topic, archived_topic, regular_topic].map(&:id))
+          expect(ids_in_order('views', false)).to eq([pinned_topic, invisible_topic, closed_topic, future_topic, archived_topic, regular_topic].map(&:id))
 
           # returns the topics in posters order if requested" do
           expect(ids_in_order('posters')).to eq([pinned_topic, regular_topic, future_topic, invisible_topic, closed_topic, archived_topic].map(&:id))
 
           # returns the topics in reverse posters order if requested" do
-          expect(ids_in_order('posters', false)).to eq([archived_topic, closed_topic, invisible_topic, future_topic, regular_topic, pinned_topic].map(&:id))
+          expect(ids_in_order('posters', false)).to eq([pinned_topic, archived_topic, closed_topic, invisible_topic, future_topic, regular_topic].map(&:id))
 
           # sets a custom field for each topic to emulate a plugin
           regular_topic.custom_fields["sheep"] = 26

@@ -462,7 +462,7 @@ class TopicQuery
     topics = yield(topics) if block_given?
 
     options = options.merge(@options)
-    if ["activity", "default"].include?(options[:order] || "activity") &&
+    if (["activity", "default", "posts", "views", "likes", "posters"].include?(options[:order]) || options[:order].nil?) &&
         !options[:unordered] &&
         filter != :private_messages
       topics = prioritize_pinned_topics(topics, options)
