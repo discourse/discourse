@@ -112,12 +112,6 @@ export default MultiSelectComponent.extend(TagsMixin, {
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.blockedTags) {
-      results = results.filter((result) => {
-        return !context.blockedTags.includes(result.id);
-      });
-    }
-
     if (context.get("siteSettings.tags_sort_alphabetically")) {
       results = results.sort((a, b) => a.id > b.id);
     }
