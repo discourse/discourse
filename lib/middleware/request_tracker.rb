@@ -166,8 +166,8 @@ class Middleware::RequestTracker
 
     request = Rack::Request.new(env)
 
-    if rate_limit(request)
-      result = [429, {}, ["Slow down, too many requests from this IP address"]]
+    if available_in = rate_limit(request)
+      result = [429, { "Retry-After" => available_in }, ["Slow down, too many requests from this IP address"]]
       return result
     end
 
@@ -273,7 +273,7 @@ class Middleware::RequestTracker
           Discourse.warn("Global asset IP rate limit exceeded for #{ip}: 10 second rate limit", uri: request.env["REQUEST_URI"])
         end
 
-        return !(GlobalSetting.max_reqs_per_ip_mode == "warn")
+        return GlobalSetting.max_reqs_per_ip_mode != "warn" && limiter_assets10.seconds_to_wait(Time.now.to_i)
       end
 
       type = 10
@@ -282,12 +282,12 @@ class Middleware::RequestTracker
         type = 60
         limiter60.performed!
         false
-      rescue RateLimiter::LimitExceeded
+      rescue RateLimiter::LimitExceeded => e
         if warn
           Discourse.warn("Global IP rate limit exceeded for #{ip}: #{type} second rate limit", uri: request.env["REQUEST_URI"])
-          !(GlobalSetting.max_reqs_per_ip_mode == "warn")
+          GlobalSetting.max_reqs_per_ip_mode != "warn" && e.available_in
         else
-          true
+          e.available_in
         end
       end
     end
