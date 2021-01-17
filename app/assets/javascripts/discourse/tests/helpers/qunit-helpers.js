@@ -203,6 +203,7 @@ export function acceptance(name, optionsOrCallback) {
         resetSite(currentSettings(), siteChanges);
       }
 
+      getApplication().__registeredObjects__ = false;
       getApplication().reset();
       this.container = getOwner(this);
       if (loggedIn) {
@@ -249,6 +250,7 @@ export function acceptance(name, optionsOrCallback) {
           initializer.teardown(this.container);
         }
       });
+      app.__registeredObjects__ = false;
       app.reset();
 
       // We do this after reset so that the willClearRender will have already fired

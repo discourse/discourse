@@ -1,11 +1,11 @@
 import Theme from "admin/models/theme";
-import { mapRoutes } from "discourse/mapping-router";
 import { moduleFor } from "ember-qunit";
+import { registerRouter } from "discourse/mapping-router";
 import { test } from "qunit";
 
 moduleFor("controller:admin-customize-themes-show", {
   beforeEach() {
-    this.registry.register("router:main", mapRoutes());
+    registerRouter(this.registry);
   },
   needs: ["controller:adminUser"],
 });
