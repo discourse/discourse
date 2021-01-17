@@ -7,9 +7,11 @@ RSpec.describe UserBookmarkList do
   fab!(:user) { Fabricate(:user) }
   let(:list) { UserBookmarkList.new(user: user, guardian: Guardian.new(user), params: params) }
 
-  fab!(:bookmark1) { Fabricate(:bookmark, user: user) }
-  fab!(:bookmark2) { Fabricate(:bookmark, user: user) }
-  fab!(:bookmark3) { Fabricate(:bookmark, user: user) }
+  before do
+    22.times do
+      Fabricate(:bookmark, user: user)
+    end
+  end
 
   it "defaults to 20 per page" do
     expect(list.per_page).to eq(20)
@@ -19,14 +21,7 @@ RSpec.describe UserBookmarkList do
     let(:params) { { per_page: 1000 } }
 
     it "does not allow more than X bookmarks to be requested per page" do
-      old_constant = UserBookmarkList::PER_PAGE
-      UserBookmarkList.send(:remove_const, "PER_PAGE")
-      UserBookmarkList.const_set("PER_PAGE", 1)
-
-      expect(list.load.count).to eq(1)
-
-      UserBookmarkList.send(:remove_const, "PER_PAGE")
-      UserBookmarkList.const_set("PER_PAGE", old_constant)
+      expect(list.load.count).to eq(20)
     end
   end
 end

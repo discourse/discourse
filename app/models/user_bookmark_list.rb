@@ -14,9 +14,7 @@ class UserBookmarkList
     @params = params
 
     @params.merge!(per_page: PER_PAGE) if params[:per_page].blank?
-    if @params[:per_page] > PER_PAGE
-      @params[:per_page] = PER_PAGE
-    end
+    @params[:per_page] = PER_PAGE if @params[:per_page] > PER_PAGE
 
     @bookmarks = []
   end
