@@ -321,6 +321,9 @@ const Post = RestModel.extend({
           name: this.bookmark_name,
           postDetectedLocalDate: localDateEl ? localDateEl.dataset.date : null,
           postDetectedLocalTime: localDateEl ? localDateEl.dataset.time : null,
+          postDetectedLocalTimezone: localDateEl
+            ? localDateEl.dataset.timezone
+            : null,
         },
         title: this.bookmark_id
           ? "post.bookmarks.edit"
