@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
-  class PublishTopicToCategory < ::Jobs::Base
-    def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
-      return if !topic_timer&.runnable?
-
-      topic = topic_timer.topic
-      if topic.blank?
-        topic_timer.destroy!
-        return
-      end
-
+  class PublishTopicToCategory < ::Jobs::TopicTimerBase
+    def execute_timer_action(topic_timer, topic)
       return unless Guardian.new(topic_timer.user).can_see?(topic)
 
       TopicTimer.transaction do
