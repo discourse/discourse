@@ -37,6 +37,14 @@ class UserNotifications < ActionMailer::Base
                 new_user_tips: tips)
   end
 
+  def signup_after_reject(user, opts = {})
+    locale = user_locale(user)
+    build_email(user.email,
+                template: 'user_notifications.signup_after_reject',
+                locale: locale,
+                reject_reason: opts[:reject_reason])
+  end
+
   def suspicious_login(user, opts = {})
     ipinfo = DiscourseIpInfo.get(opts[:client_ip])
     location = ipinfo[:location]

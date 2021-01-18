@@ -1,11 +1,11 @@
 import EmberObject from "@ember/object";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { mapRoutes } from "discourse/mapping-router";
+import { registerRouter } from "discourse/mapping-router";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | avatar-selector", function (hooks) {
   hooks.beforeEach(function () {
-    this.registry.register("router:main", mapRoutes());
+    registerRouter(this.registry);
   });
 
   test("avatarTemplate", function (assert) {

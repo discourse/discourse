@@ -93,6 +93,11 @@
 }
 
 .hamburger-panel {
+  a.widget-link {
+    width: 100%;
+    box-sizing: border-box;
+    @include ellipsis;
+  }
   .panel-body {
     overflow-y: auto;
   }

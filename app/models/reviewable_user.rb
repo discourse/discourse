@@ -27,11 +27,13 @@ class ReviewableUser < Reviewable
     actions.add(:reject_user_delete, bundle: reject) do |a|
       a.icon = 'user-times'
       a.label = "reviewables.actions.reject_user.delete.title"
+      a.require_reject_reason = true
       a.description = "reviewables.actions.reject_user.delete.description"
     end
     actions.add(:reject_user_block, bundle: reject) do |a|
       a.icon = 'ban'
       a.label = "reviewables.actions.reject_user.block.title"
+      a.require_reject_reason = true
       a.description = "reviewables.actions.reject_user.block.description"
     end
   end
@@ -64,6 +66,17 @@ class ReviewableUser < Reviewable
       end
 
       begin
+        self.reject_reason = args[:reject_reason]
+
+        if args[:send_email] != false && SiteSetting.must_approve_users?
+          # Execute job instead of enqueue because user has to exists to send email
+          Jobs::CriticalUserEmail.new.execute({
+            type: :signup_after_reject,
+            user_id: target.id,
+            reject_reason: self.reject_reason
+          })
+        end
+
         delete_args = {}
         delete_args[:block_ip] = true if args[:block_ip]
         delete_args[:block_email] = true if args[:block_email]

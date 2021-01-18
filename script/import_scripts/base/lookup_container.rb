@@ -57,6 +57,11 @@ module ImportScripts
       UserCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:user)
     end
 
+    def find_username_by_import_id(import_id)
+      user_id = user_id_from_imported_user_id(import_id)
+      User.where(id: user_id).pluck(:username).first if user_id.present?
+    end
+
     # Get the Discourse Category id based on the id of the source category
     def category_id_from_imported_category_id(import_id)
       @categories[import_id] || @categories[import_id.to_s]

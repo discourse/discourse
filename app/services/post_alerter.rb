@@ -416,8 +416,9 @@ class PostAlerter
     if opts[:skip_send_email_to]&.include?(user.email)
       skip_send_email = true
     elsif original_post.via_email && (incoming_email = original_post.incoming_email)
-      skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
-        contains_email_address?(incoming_email.cc_addresses, user)
+      skip_send_email =
+        incoming_email.to_addresses_split.include?(user.email) ||
+        incoming_email.cc_addresses_split.include?(user.email)
     else
       skip_send_email = opts[:skip_send_email]
     end
@@ -456,11 +457,6 @@ class PostAlerter
       push_notification(user, payload)
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
-  end
-
-  def contains_email_address?(addresses, user)
-    return false if addresses.blank?
-    addresses.split(";").include?(user.email)
   end
 
   def push_notification(user, payload)
@@ -557,9 +553,13 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp ||
-                  post.post_type != Post.types[:regular] ||
-                  post.incoming_email
+    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
+
+    # If the post already has an incoming email, it has been set in the
+    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
+    # via the IMAP/SMTP flow, so there is no need to notify those involved
+    # in the email chain again.
+    return nil if post.incoming_email.present?
 
     post.topic.allowed_groups
       .where.not(smtp_server: nil)
@@ -575,30 +575,20 @@ class PostAlerter
     warn_if_not_sidekiq
 
     # users who interacted with the post by _directly_ emailing the group
+    emails_to_skip_send = nil
     if group = group_notifying_via_smtp(post)
-      group_email_regex = group.email_username_regex
-      email_addresses = Set[group.email_username]
+      email_addresses = post.topic.incoming_email_addresses(group: group)
 
-      post.topic.incoming_email.each do |incoming_email|
-        to_addresses = incoming_email.to_addresses&.split(';')
-        cc_addresses = incoming_email.cc_addresses&.split(';')
-
-        next if to_addresses&.none? { |address| address =~ group_email_regex } &&
-                cc_addresses&.none? { |address| address =~ group_email_regex }
-
-        email_addresses.add(incoming_email.from_address)
-        email_addresses.merge(to_addresses) if to_addresses.present?
-        email_addresses.merge(cc_addresses) if cc_addresses.present?
+      if email_addresses.any?
+        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
       end
 
-      email_addresses.subtract([nil, ''])
-
-      if email_addresses.size > 1
-        Jobs.enqueue(:group_smtp_email,
-          group_id: group.id,
-          post_id: post.id,
-          email: email_addresses.to_a - [group.email_username])
-      end
+      # add the group's email back into the array, because it is used for
+      # skip_send_email_to in the case of user private message notifications
+      # (we do not want the group to be sent any emails from here because it
+      # will make another email for IMAP to pick up in the group's mailbox)
+      emails_to_skip_send = email_addresses.dup
+      emails_to_skip_send << group.email_username
     end
 
     # users that aren't part of any mentioned groups
@@ -607,7 +597,7 @@ class PostAlerter
     users.each do |user|
       notification_level = TopicUser.get(post.topic, user)&.notification_level
       if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       end
     end
 
@@ -618,7 +608,7 @@ class PostAlerter
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       when TopicUser.notification_levels[:tracking]
         notify_group_summary(user, post)
       end

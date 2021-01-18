@@ -1244,7 +1244,7 @@ describe PostAlerter do
     end
   end
 
-  context "SMTP" do
+  context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
       Jobs.run_immediately!
@@ -1269,6 +1269,7 @@ describe PostAlerter do
     end
 
     it "sends notifications for new posts in topic" do
+      PostAlerter.any_instance.expects(:create_notification).at_least_once
       post = Fabricate(
         :post,
         topic: topic,
@@ -1281,6 +1282,11 @@ describe PostAlerter do
             cc_addresses: "bar@discourse.org"
           )
       )
+      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
+      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
+      topic.allowed_users << staged_group_user
+      topic.save
+
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
 
       post = Fabricate(:post, topic: topic)
@@ -1303,6 +1309,9 @@ describe PostAlerter do
           )
       )
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+
+      # we never want the group to be notified by email about these posts
+      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["foo@discourse.org", "bar@discourse.org", "baz@discourse.org", "discourse@example.com"]).at_least_once
 
       post = Fabricate(:post, topic: topic.reload)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)

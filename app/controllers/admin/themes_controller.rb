@@ -401,8 +401,10 @@ class Admin::ThemesController < Admin::AdminController
   def handle_switch
     param = theme_params[:component]
     if param.to_s == "false" && @theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_theme!
     elsif param.to_s == "true" && !@theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_component!
     end
   end

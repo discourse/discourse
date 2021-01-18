@@ -141,3 +141,11 @@ export function mapRoutes() {
     this.route("unknown", { path: "*path" });
   });
 }
+
+export function registerRouter(registry) {
+  registry.unregister("router:main");
+  let router = mapRoutes();
+
+  registry.register("router:main", router);
+  return router;
+}

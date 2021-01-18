@@ -11,7 +11,12 @@
             {{lastUpdatedAt}}
           </div>
         {{/if}}
-        {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
+        {{input
+          value=(readonly nameInput)
+          input=(action "onFilterChanged" value="target.value")
+          placeholderKey="directory.filter_name"
+          class="filter-name no-blur"
+        }}
       </div>
 
       {{#conditional-loading-spinner condition=model.loading}}
