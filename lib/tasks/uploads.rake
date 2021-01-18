@@ -90,6 +90,9 @@ end
 ################################################################################
 
 task "uploads:migrate_to_s3" => :environment do
+  STDOUT.puts("Please note that migrating to S3 is currently not reversible! \n[CTRL+c] to cancel, [ENTER] to continue")
+  STDIN.gets
+
   ENV["RAILS_DB"] ? migrate_to_s3 : migrate_to_s3_all_sites
 end
 
