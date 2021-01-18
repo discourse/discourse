@@ -58,6 +58,7 @@ export default Component.extend(
     multiSelect: false,
     labelProperty: null,
     titleProperty: null,
+    langProperty: null,
 
     init() {
       this._super(...arguments);
@@ -79,6 +80,7 @@ export default Component.extend(
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
           titleProperty: this.titleProperty,
+          langProperty: this.langProperty,
           options: EmberObject.create(),
 
           isLoading: false,
