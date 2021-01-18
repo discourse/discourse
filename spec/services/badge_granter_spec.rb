@@ -280,6 +280,11 @@ describe BadgeGranter do
       expect(user.notifications.find_by(notification_type: Notification.types[:granted_badge]).data_hash["badge_id"]).to eq(badge.id)
     end
 
+    it 'does not fail when user is missing' do
+      BadgeGranter.grant(badge, nil)
+      expect(badge.reload.grant_count).to eq(0)
+    end
+
   end
 
   describe 'revoke' do
