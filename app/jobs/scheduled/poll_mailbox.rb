@@ -19,8 +19,8 @@ module Jobs
       SiteSetting.pop3_polling_enabled?
     end
 
-    def process_popmail(popmail)
-      Email::Processor.process!(popmail.pop)
+    def process_popmail(mail_string)
+      Email::Processor.process!(mail_string)
     end
 
     POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"
@@ -38,7 +38,9 @@ module Jobs
 
       pop3.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
         pop.each_mail do |p|
-          process_popmail(p)
+          mail_string = p.pop
+          break if mail_too_old?(mail_string)
+          process_popmail(mail_string)
           p.delete if SiteSetting.pop3_polling_delete_from_server?
         end
       end
@@ -67,6 +69,15 @@ module Jobs
     def self.errors_in_past_24_hours
       Discourse.redis.zremrangebyscore(POLL_MAILBOX_ERRORS_KEY, 0, 24.hours.ago.to_i)
       Discourse.redis.zcard(POLL_MAILBOX_ERRORS_KEY).to_i
+    end
+
+    def mail_too_old?(mail_string)
+      mail = Mail.new(mail_string)
+      date_header = mail.header['Date']
+      return false if date_header.blank?
+
+      date = Time.parse(date_header.to_s)
+      date < 1.week.ago
     end
 
     def mark_as_errored!
