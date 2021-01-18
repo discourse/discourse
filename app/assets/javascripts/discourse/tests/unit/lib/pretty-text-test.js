@@ -1566,6 +1566,8 @@ var bar = 'bar';
       enabledTypographer,
       "<p> \u2192 \u2190 </p>"
     );
+    assert.cookedOptions("a -> b", enabledTypographer, "<p>a \u2192 b</p>");
+    assert.cookedOptions("a <- b", enabledTypographer, "<p>a \u2190 b</p>");
     assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
     assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
     assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
