@@ -1,7 +1,10 @@
 <div class="edit-site-text">
-
   <div class="title">
     <h3>{{siteText.id}}</h3>
+  </div>
+
+  <div class="title">
+    <h4>{{i18n "admin.site_text.locale"}} {{localeFullName}}</h4>
   </div>
 
   {{expanding-text-area value=buffered.value rows="1" class="site-text-value"}}
@@ -12,7 +15,7 @@
     {{/if}}
   {{/save-controls}}
 
-  {{#link-to "adminSiteText.index" class="go-back"}}
+  {{#link-to "adminSiteText.index" (query-params locale=locale) class="go-back"}}
     {{d-icon "arrow-left"}}
     {{i18n "admin.site_text.go_back"}}
   {{/link-to}}

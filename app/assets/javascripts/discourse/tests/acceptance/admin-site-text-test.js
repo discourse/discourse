@@ -8,6 +8,10 @@ import { test } from "qunit";
 
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
+  needs.settings({
+    available_locales: JSON.stringify([{ name: "English", value: "en" }]),
+    default_locale: "en",
+  });
 
   test("search for a key", async function (assert) {
     await visit("/admin/customize/site_texts");
@@ -31,7 +35,7 @@ acceptance("Admin - Site Texts", function (needs) {
   });
 
   test("edit and revert a site text by key", async function (assert) {
-    await visit("/admin/customize/site_texts/site.test");
+    await visit("/admin/customize/site_texts/site.test?locale=en");
 
     assert.equal(queryAll(".title h3").text(), "site.test");
     assert.ok(!exists(".saved"));

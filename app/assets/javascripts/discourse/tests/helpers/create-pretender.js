@@ -644,9 +644,15 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/admin/customize/site_texts", (request) => {
     if (request.queryParams.overridden) {
-      return response(200, { site_texts: [overridden] });
+      return response(200, {
+        site_texts: [overridden],
+        extras: { locale: "en" },
+      });
     } else {
-      return response(200, { site_texts: [siteText, overridden] });
+      return response(200, {
+        site_texts: [siteText, overridden],
+        extras: { locale: "en" },
+      });
     }
   });
 

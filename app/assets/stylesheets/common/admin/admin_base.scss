@@ -204,6 +204,12 @@ $mobile-breakpoint: 700px;
     .reseed {
       float: right;
     }
+    .locale {
+      margin-bottom: 0.5em;
+    }
+    .locale-search {
+      width: 50%;
+    }
   }
   .text-highlight {
     font-weight: bold;
