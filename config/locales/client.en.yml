@@ -4675,6 +4675,8 @@ en:
             target_username_placeholder: "Username of new owner"
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
+          progress:
+            title: "Merge progress"
           confirmation:
             title: "Transfer & Delete @%{username}"
             description: |

@@ -11,7 +11,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import messageBus from "message-bus-client";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
@@ -147,7 +146,7 @@ export default Controller.extend(CanCheckEmails, {
     impersonate() {
       return this.model
         .impersonate()
-        .then(() => (document.location = getURL("/")))
+        .then(() => DiscourseURL.redirectTo("/"))
         .catch((e) => {
           if (e.status === 404) {
             bootbox.alert(I18n.t("admin.impersonate.not_found"));
@@ -175,7 +174,9 @@ export default Controller.extend(CanCheckEmails, {
     deactivate() {
       return this.model
         .deactivate()
-        .then(() => window.location.reload())
+        .then(() =>
+          this.model.setProperties({ active: false, can_activate: true })
+        )
         .catch((e) => {
           const error = I18n.t("admin.user.deactivate_failed", {
             error: this._formatError(e),
@@ -192,7 +193,12 @@ export default Controller.extend(CanCheckEmails, {
     activate() {
       return this.model
         .activate()
-        .then(() => window.location.reload())
+        .then(() =>
+          this.model.setProperties({
+            active: true,
+            can_deactivate: !this.model.staff,
+          })
+        )
         .catch((e) => {
           const error = I18n.t("admin.user.activate_failed", {
             error: this._formatError(e),
@@ -477,7 +483,6 @@ export default Controller.extend(CanCheckEmails, {
       const user = this.model;
       const location = document.location.pathname;
 
-      const bootboxDiv = bootbox.dialog(I18n.t("admin.user.merging_user"));
       let formData = { context: location };
 
       if (targetUsername) {
@@ -488,20 +493,9 @@ export default Controller.extend(CanCheckEmails, {
         .merge(formData)
         .then((response) => {
           if (response.success) {
-            messageBus.subscribe("/merge_user", (data) => {
-              if (data.merged) {
-                if (/^\/admin\/users\/list\//.test(location)) {
-                  DiscourseURL.redirectTo(location);
-                } else {
-                  DiscourseURL.redirectTo(
-                    `/admin/users/${data.user.id}/${data.user.username}`
-                  );
-                }
-              } else if (data.message) {
-                bootboxDiv.find(".modal-body").html(data.message);
-              } else if (data.failed) {
-                bootbox.alert(I18n.t("admin.user.merge_failed"));
-              }
+            showModal("admin-merge-users-progress", {
+              admin: true,
+              model: this.model,
             });
           } else {
             bootbox.alert(I18n.t("admin.user.merge_failed"));
