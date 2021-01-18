@@ -73,10 +73,10 @@ module Jobs
 
     def mail_too_old?(mail_string)
       mail = Mail.new(mail_string)
-      date_header = mail.header['Date'].to_s
+      date_header = mail.header['Date']
       return false if date_header.blank?
 
-      date = Time.parse(date_header)
+      date = Time.parse(date_header.to_s)
       date < 1.week.ago
     end
 
