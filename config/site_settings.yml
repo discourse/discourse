@@ -2083,6 +2083,9 @@ uncategorized:
     hidden: true
     default: true
 
+  use_site_small_logo_as_system_avatar:
+    default: true
+
   disable_system_edit_notifications: true
 
   notification_consolidation_threshold:
