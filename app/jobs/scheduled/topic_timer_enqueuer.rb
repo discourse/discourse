@@ -9,12 +9,12 @@ module Jobs
   # be < now, and topic timers that have run are deleted on completion or
   # otherwise have their execute_at time modified.
   class TopicTimerEnqueuer < ::Jobs::Scheduled
-    every 2.minutes
+    every 1.minute
 
     def execute(args = nil)
       timers = TopicTimer.pending_timers
 
-      timers.each do |timer|
+      timers.find_each do |timer|
 
         # the typed job may not enqueue if it has already
         # been scheduled with enqueue_at

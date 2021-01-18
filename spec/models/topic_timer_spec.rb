@@ -15,11 +15,12 @@ RSpec.describe TopicTimer, type: :model do
         topic_timer.trash!
         expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
       end
+
       it "does not return timers in the future of the provided before time" do
-        topic_timer.update(execute_at: 3.days.from_now)
+        topic_timer.update!(execute_at: 3.days.from_now)
         expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
         expect(TopicTimer.pending_timers(2.days.from_now).pluck(:id)).not_to include(topic_timer.id)
-        topic_timer.update(execute_at: 1.minute.ago, created_at: 10.minutes.ago)
+        topic_timer.update!(execute_at: 1.minute.ago, created_at: 10.minutes.ago)
         expect(TopicTimer.pending_timers.pluck(:id)).to include(topic_timer.id)
       end
     end
@@ -40,7 +41,7 @@ RSpec.describe TopicTimer, type: :model do
         scheduled_jobs.clear
       end
 
-      it "returns true if the job is already scheduled" do
+      it "returns true if the job is scheduled" do
         Sidekiq::Testing.disable! do
           scheduled_jobs.clear
           Jobs.enqueue_at(3.hours.from_now, :close_topic, topic_timer_id: topic_timer.id)

@@ -47,10 +47,10 @@ class TopicTimer < ActiveRecord::Base
   after_save do
     if (saved_change_to_execute_at? || saved_change_to_user_id?)
       if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
-        topic.update_status('closed', false, user) if topic&.closed?
+        topic.update_status('closed', false, user) if topic.closed?
       end
       if status_type == TopicTimer.types[:open]
-        topic.update_status('closed', true, user) if topic&.open?
+        topic.update_status('closed', true, user) if topic.open?
       end
     end
   end
@@ -145,19 +145,19 @@ class TopicTimer < ActiveRecord::Base
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:close], topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
   end
 
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_open_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:open], topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:open_topic, topic_timer_id: id)
   end
 
   # TODO(martin - 2021-05-01) - Remove cancels for toggle_topic_closed once topic timer revamp completed.
   def cancel_auto_silent_close_job
     Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_timer_id: id)
-    Jobs.cancel_scheduled_job(TopicTimer.type_job_map[:silent_close], topic_timer_id: id)
+    Jobs.cancel_scheduled_job(:close_topic, topic_timer_id: id)
   end
 
   def cancel_auto_publish_to_category_job
