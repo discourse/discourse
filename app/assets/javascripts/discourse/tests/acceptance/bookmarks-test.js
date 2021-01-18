@@ -220,8 +220,11 @@ acceptance("Bookmarking", function (needs) {
 
   test("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let now = moment.tz(loggedInUser().resolvedTimezone(loggedInUser()));
-    let today = now.format("YYYY-MM-DD");
+    let postDate = moment.tz(
+      "2021-01-15",
+      loggedInUser().resolvedTimezone(loggedInUser())
+    );
+    let postDateFormatted = postDate.format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
     await click("#tap_tile_post_local_date");
@@ -234,7 +237,7 @@ acceptance("Bookmarking", function (needs) {
     );
     assert.equal(
       queryAll("#bookmark-custom-date > input").val(),
-      today,
+      postDateFormatted,
       "it should prefill the bookmark date"
     );
     assert.equal(
