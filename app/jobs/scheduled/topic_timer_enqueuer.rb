@@ -11,7 +11,7 @@ module Jobs
   class TopicTimerEnqueuer < ::Jobs::Scheduled
     every 1.minute
 
-    def execute(args = nil)
+    def execute(_args = nil)
       timers = TopicTimer.pending_timers
 
       timers.find_each do |timer|

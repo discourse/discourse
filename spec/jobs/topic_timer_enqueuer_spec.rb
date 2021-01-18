@@ -25,13 +25,13 @@ RSpec.describe Jobs::TopicTimerEnqueuer do
   it "does not enqueue deleted timers" do
     expect_not_enqueued_with(job: :close_topic, args: { topic_timer_id: deleted_timer.id })
     subject.execute
-    expect(deleted_timer.topic.reload.closed?).not_to eq(true)
+    expect(deleted_timer.topic.reload.closed?).to eq(false)
   end
 
   it "does not enqueue future timers" do
     expect_not_enqueued_with(job: :close_topic, args: { topic_timer_id: future_timer.id })
     subject.execute
-    expect(future_timer.topic.reload.closed?).not_to eq(true)
+    expect(future_timer.topic.reload.closed?).to eq(false)
   end
 
   it "enqueues the related job" do
