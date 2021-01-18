@@ -5,6 +5,7 @@ import UtilsMixin from "select-kit/mixins/utils";
 import { guidFor } from "@ember/object/internals";
 import layout from "select-kit/templates/components/select-kit/select-kit-row";
 import { makeArray } from "discourse-common/lib/helpers";
+import { reads } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   layout,
@@ -18,6 +19,7 @@ export default Component.extend(UtilsMixin, {
     "rowName:data-name",
     "ariaLabel:aria-label",
     "guid:data-guid",
+    "rowLang:lang",
   ],
   classNameBindings: [
     "isHighlighted",
@@ -46,6 +48,8 @@ export default Component.extend(UtilsMixin, {
   guid: computed("item", function () {
     return guidFor(this.item);
   }),
+
+  lang: reads("item.lang"),
 
   ariaLabel: computed("item.ariaLabel", "title", function () {
     return this.getProperty(this.item, "ariaLabel") || this.title;
@@ -82,6 +86,7 @@ export default Component.extend(UtilsMixin, {
       rowValue: this.getValue(this.item),
       rowLabel: this.getProperty(this.item, "labelProperty"),
       rowTitle: this.getProperty(this.item, "titleProperty"),
+      rowLang: this.getProperty(this.item, "langProperty"),
     });
   },
 

@@ -313,4 +313,35 @@ discourseModule("Integration | Component | select-kit/single-select", function (
       assert.equal(row.title(), "JACKSON");
     },
   });
+
+  componentTest("langProperty", {
+    template:
+      '{{single-select langProperty="foo" value=value content=content}}',
+
+    beforeEach() {
+      this.setProperties({
+        content: [{ id: 1, name: "john", foo: "be" }],
+        value: null,
+      });
+    },
+
+    async test(assert) {
+      assert.equal(
+        this.subject.header().el()[0].querySelector(".selected-name").lang,
+        ""
+      );
+
+      await this.subject.expand();
+
+      const row = this.subject.rowByValue(1);
+      assert.equal(row.el()[0].lang, "be");
+
+      await this.subject.selectRowByValue(1);
+
+      assert.equal(
+        this.subject.header().el()[0].querySelector(".selected-name").lang,
+        "be"
+      );
+    },
+  });
 });

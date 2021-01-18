@@ -99,6 +99,7 @@
     <div class="controls">
       {{combo-box
         valueProperty="value"
+        langProperty="value"
         content=availableLocales
         value=model.locale
         onChange=(action (mut model.locale))
