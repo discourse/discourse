@@ -868,7 +868,10 @@ class User < ActiveRecord::Base
   end
 
   def avatar_template
-    if id == Discourse::SYSTEM_USER_ID && SiteSetting.logo_small
+    use_small_logo = id == Discourse::SYSTEM_USER_ID &&
+      SiteSetting.logo_small && SiteSetting.use_site_small_logo_as_system_avatar
+
+    if use_small_logo
       UrlHelper.absolute(SiteSetting.logo_small.url)
     else
       self.class.avatar_template(username, uploaded_avatar_id)
