@@ -68,7 +68,7 @@ describe 'tags' do
       response '200', 'tag group created' do
         expected_response_schema = SpecSchemas::TagGroupResponse.new
 
-        let(:params) { { name: 'todo' } }
+        let(:params) { { 'name' => 'todo' } }
 
         schema(expected_response_schema.schemer)
 

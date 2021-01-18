@@ -6,12 +6,13 @@ module SpecSchemas
     def schemer
       schema = {
         'type' => 'object',
+        'additionalProperties' => false,
         'properties' => {
           'name' => {
             'type' => 'string',
-            'required' => true
           }
-        }
+        },
+        'required' => ['name']
       }
     end
   end
@@ -20,17 +21,16 @@ module SpecSchemas
     def schemer
       schema = {
         'type' => 'object',
+        'additionalProperties' => false,
         'properties' => {
           'tag_group' => {
             'type' => 'object',
             'properties' => {
               'id' => {
                 'type' => 'integer',
-                'required' => true
               },
               'name' => {
                 'type' => 'string',
-                'required' => true
               },
               'tag_names' => {
                 'type' => 'array',
@@ -56,9 +56,20 @@ module SpecSchemas
                   }
                 }
               }
-            }
+            },
+            'required' => [
+              'id',
+              'name',
+              'tag_names',
+              'parent_tag_name',
+              'one_per_topic',
+              'permissions'
+            ]
           }
-        }
+        },
+        'required' => [
+          'tag_group'
+        ]
       }
     end
   end
