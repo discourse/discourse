@@ -10,6 +10,7 @@ class Admin::DashboardController < Admin::AdminController
 
     new_features = DiscourseUpdates.unseen_new_features current_user.id
     data.merge!(new_features: new_features.as_json)
+    data.merge!(release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"])
 
     render json: data
   end

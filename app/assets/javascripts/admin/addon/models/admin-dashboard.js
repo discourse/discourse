@@ -16,6 +16,7 @@ AdminDashboard.reopenClass({
       model.setProperties({
         version_check: json.version_check,
         new_features: json.new_features,
+        release_notes_link: json.release_notes_link,
       });
 
       return model;

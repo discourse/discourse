@@ -73,6 +73,7 @@ export default Controller.extend({
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
             properties.newFeatures = model.new_features;
+            properties.releaseNotesLink = model.release_notes_link;
           }
 
           this.setProperties(properties);

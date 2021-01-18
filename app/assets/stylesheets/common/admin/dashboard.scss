@@ -620,10 +620,21 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 2em;
   }
+
+  .section-footer {
+    margin-top: 1em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .btn {
+      margin-left: 1em;
+    }
+  }
 }
 
 .admin-new-feature-item {
   display: flex;
+  align-items: flex-start;
 
   .new-feature-emoji {
     font-size: 3.5em;
@@ -633,6 +644,7 @@
 
   .new-feature-content {
     padding-right: 0.5em;
+    align-self: center;
     .header {
       font-size: $font-up-1;
       font-weight: bold;

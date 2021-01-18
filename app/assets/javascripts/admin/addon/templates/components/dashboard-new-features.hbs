@@ -1,9 +1,7 @@
 {{#if newFeatures}}
   <div class="section dashboard-new-features">
     <div class="section-title">
-      <h2>🎁 {{i18n "admin.dashboard.new_features"}}</h2>
-
-      {{d-button label="admin.dashboard.dismiss_new_features" action=dismissNewFeatures }}
+      <h2>{{replace-emoji (i18n "admin.dashboard.new_features.title") }}</h2>
     </div>
 
     <div class="section-body">
@@ -11,7 +9,11 @@
         {{dashboard-new-feature-item item=feature}}
       {{/each}}
     </div>
-    <div class="section-body">
+    <div class="section-footer">
+      <a rel="noopener noreferrer" target="_blank" href={{releaseNotesLink}} class="btn btn-primary">
+        {{i18n "admin.dashboard.new_features.learn_more"}}
+      </a>
+      {{d-button label="admin.dashboard.new_features.dismiss" action=dismissNewFeatures }}
     </div>
   </div>
 {{/if}}
