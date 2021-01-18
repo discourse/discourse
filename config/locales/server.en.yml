@@ -2363,6 +2363,8 @@ en:
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  # Example: "Original Poster, Most Recent Poster"
+  poster_description_joiner: ", "
 
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
