@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseUpdates
+
   class << self
 
     def check_version
@@ -182,7 +183,7 @@ module DiscourseUpdates
     end
 
     def new_features_last_seen_key(user_id)
-      "new_features_last_seen_id_user_#{user_id}"
+      "new_features_last_seen_user_#{user_id}"
     end
   end
 end

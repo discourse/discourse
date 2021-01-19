@@ -12,7 +12,6 @@ export default Controller.extend({
   dashboardFetchedAt: null,
   exceptionController: inject("exception"),
   showVersionChecks: setting("version_checks"),
-  newFeatures: null,
 
   @discourseComputed("problems.length")
   foundProblems(problemsLength) {

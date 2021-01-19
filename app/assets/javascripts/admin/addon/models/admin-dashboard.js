@@ -13,9 +13,7 @@ AdminDashboard.reopenClass({
   fetch() {
     return ajax("/admin/dashboard.json").then((json) => {
       const model = AdminDashboard.create();
-      model.setProperties({
-        version_check: json.version_check,
-      });
+      model.set("version_check", json.version_check);
 
       return model;
     });
