@@ -1,18 +1,9 @@
 # frozen_string_literal: true
 
 module Jobs
-  class OpenTopic < ::Jobs::Base
-    def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
-      return if !topic_timer&.runnable?
-
-      topic = topic_timer.topic
+  class OpenTopic < ::Jobs::TopicTimerBase
+    def execute_timer_action(topic_timer, topic)
       user = topic_timer.user
-
-      if topic.blank?
-        topic_timer.destroy!
-        return
-      end
 
       if !Guardian.new(user).can_open_topic?(topic) || topic.open?
         topic_timer.destroy!

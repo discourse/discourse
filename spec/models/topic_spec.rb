@@ -1876,7 +1876,7 @@ describe Topic do
 
         freeze_time 3.hours.from_now
 
-        TopicTimer.ensure_consistency!
+        Jobs::TopicTimerEnqueuer.new.execute
         expect(topic.reload.closed).to eq(true)
       end
     end
