@@ -1261,67 +1261,77 @@ describe PostAlerter do
     end
 
     fab!(:topic) do
-      Fabricate(:private_message_topic,
+      Fabricate(
+        :private_message_topic,
         topic_allowed_groups: [
           Fabricate.build(:topic_allowed_group, group: group)
         ]
       )
     end
 
-    it "sends notifications for new posts in topic" do
-      PostAlerter.any_instance.expects(:create_notification).at_least_once
-      post = Fabricate(
+    def create_post_with_incoming
+      Fabricate(
         :post,
         topic: topic,
         incoming_email:
-          Fabricate(
-            :incoming_email,
-            topic: topic,
-            from_address: "foo@discourse.org",
-            to_addresses: group.email_username,
-            cc_addresses: "bar@discourse.org"
-          )
+        Fabricate(
+          :incoming_email,
+          topic: topic,
+          from_address: "foo@discourse.org",
+          to_addresses: group.email_username,
+          cc_addresses: "bar@discourse.org"
+        )
       )
-      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
-      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
-      topic.allowed_users << staged_group_user
-      topic.save
+    end
+
+    it "does not send a group smtp email when the post already has an incoming email" do
+      post = create_post_with_incoming
 
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
 
+    it "sends a group smtp email when the post does not have an incoming email" do
+      create_post_with_incoming
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to include(group.email_username)
       expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
+    end
 
-      post = Fabricate(
-        :post,
-        topic: topic,
-        incoming_email:
-          Fabricate(
-            :incoming_email,
-            topic: topic,
-            from_address: "bar@discourse.org",
-            to_addresses: group.email_username,
-            cc_addresses: "baz@discourse.org"
-          )
-      )
+    it "does not send group smtp emails for a whisper" do
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
 
-      # we never want the group to be notified by email about these posts
-      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["foo@discourse.org", "bar@discourse.org", "baz@discourse.org", "discourse@example.com"]).at_least_once
+    it "does not send a notification email to the group when the post does not have an incoming email" do
+      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["discourse@example.com"]).at_least_once
+      post = create_post_with_incoming
+      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
+      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
+      topic.allowed_users << staged_group_user
+      topic.save
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "skips sending a notification email to the group and all other incoming email addresses" do
+
+      create_post_with_incoming
+      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["foo@discourse.org", "bar@discourse.org", "discourse@example.com"]).at_least_once
 
       post = Fabricate(:post, topic: topic.reload)
+      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
+      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
+      topic.allowed_users << staged_group_user
+      topic.save
+
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to eq([group.email_username])
-      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org", "baz@discourse.org")
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
-
-      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
   end
 end
