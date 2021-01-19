@@ -100,10 +100,11 @@ export const DefaultNotificationItem = createWidget(
 
     icon(notificationName) {
       let icon = iconNode(`notification.${notificationName}`);
-      icon.properties.attributes["alt"] = I18n.t(
+      icon.properties.attributes["aria-label"] = I18n.t(
         `notifications.titles.${notificationName}`
       );
       icon.properties.attributes["aria-hidden"] = false;
+      icon.properties.attributes["role"] = "img";
       return icon;
     },
 

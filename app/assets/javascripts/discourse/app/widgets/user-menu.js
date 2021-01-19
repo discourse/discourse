@@ -31,7 +31,7 @@ createWidget("user-menu-links", {
       href: `${this.attrs.path}/summary`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
-      alt: "user.preferences",
+      "aria-label": "user.preferences",
     };
   },
 
@@ -43,7 +43,7 @@ createWidget("user-menu-links", {
       href: `${this.attrs.path}/notifications`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.NOTIFICATIONS,
-      alt: "user.notifications",
+      "aria-label": "user.notifications",
     };
   },
 
@@ -55,7 +55,7 @@ createWidget("user-menu-links", {
       className: "user-bookmarks-link",
       icon: "bookmark",
       href: `${this.attrs.path}/activity/bookmarks`,
-      alt: "user.bookmarks",
+      "aria-label": "user.bookmarks",
     };
   },
 
@@ -67,7 +67,7 @@ createWidget("user-menu-links", {
       className: "user-pms-link",
       icon: "envelope",
       href: `${this.attrs.path}/messages`,
-      alt: "user.private_messages",
+      "aria-label": "user.private_messages",
     };
   },
 
