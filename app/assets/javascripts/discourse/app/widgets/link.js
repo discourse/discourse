@@ -67,7 +67,7 @@ export default createWidget("link", {
     if (attrs.icon) {
       if (attrs.alt) {
         let icon = iconNode(attrs.icon);
-        icon.properties.attributes["alt"] = attrs.alt;
+        icon.properties.attributes["alt"] = I18n.t(attrs.alt);
         icon.properties.attributes["aria-hidden"] = false;
         result.push(icon);
       } else {
