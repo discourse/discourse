@@ -20,7 +20,7 @@ module Jobs
     end
 
     def process_popmail(mail_string)
-      Email::Processor.process!(mail_string)
+      Email::Processor.process!(mail_string, source: :pop3_poll)
     end
 
     POLL_MAILBOX_TIMEOUT_ERROR_KEY = "poll_mailbox_timeout_error_key"

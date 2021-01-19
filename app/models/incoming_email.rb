@@ -29,6 +29,15 @@ class IncomingEmail < ActiveRecord::Base
     SQL
   end
 
+  def self.created_via_types
+    @types ||= Enum.new(
+      handle_mail: 1,
+      pop3_poll: 2,
+      imap: 3,
+      group_smtp: 4
+    )
+  end
+
   def to_addresses_split
     self.to_addresses&.split(";") || []
   end

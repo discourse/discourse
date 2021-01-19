@@ -38,6 +38,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     incoming = IncomingEmail.find_by(post_id: post.id, user_id: post.user_id, topic_id: post.topic_id)
     expect(incoming).not_to eq(nil)
     expect(incoming.message_id).to eq("topic/#{post.topic_id}/#{post.id}@test.localhost")
+    expect(incoming.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
   end
 
   it "creates a PostReplyKey and correctly uses it for the email reply_key substitution" do

@@ -78,6 +78,8 @@ describe Imap::Sync do
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
         .and change { IncomingEmail.count }.by(1)
 
+      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:imap])
+
       expect(group.imap_uid_validity).to eq(1)
       expect(group.imap_last_uid).to eq(100)
 
