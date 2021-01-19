@@ -53,6 +53,8 @@ de:
           title: "Themenstatus"
         topic_list:
           title: "Themenliste"
+        basic_topic_list:
+          title: "Grundlegende Themenliste"
         footer_message:
           title: "Fußzeile"
         signup_cta:
@@ -67,6 +69,8 @@ de:
           title: "Beitrag"
         topic_map:
           title: "Thema-Zusammenfassung"
+        site_header:
+          title: "Seitenkopf"
         suggested_topics:
           title: "Vorgeschlagene Themen"
         post_menu:

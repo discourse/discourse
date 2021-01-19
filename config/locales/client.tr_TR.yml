@@ -25,32 +25,32 @@ tr_TR:
         thousands: "%{number}b"
         millions: "%{number}M"
     dates:
-      time: "h:mm a"
+      time: "HH:mm"
       time_with_zone: "HH:mm (z)"
-      time_short_day: "ggg, SS:dd"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM, YYYY h:mm a"
-      long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
       long_date_with_year: "D MMM, 'YY LT"
-      long_date_without_year: "D MMM, LT"
+      long_date_without_year: "D MMM LT"
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "%{date} önce"
       tiny:
         half_a_minute: "< 1d"
         less_than_x_seconds:
-          one: "< %{count}s"
+          one: "< %{count}sn"
           other: "< %{count}s"
         x_seconds:
-          one: "%{count}s"
+          one: "%{count}sn"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< %{count}dk"
+          one: "< %{count}d"
           other: "< %{count}dk"
         x_minutes:
           one: "%{count}d"
@@ -62,7 +62,7 @@ tr_TR:
           one: "%{count}g"
           other: "%{count}g"
         x_months:
-          one: "%{count}ay"
+          one: "%{count}a"
           other: "%{count}ay"
         about_x_years:
           one: "%{count}y"
@@ -85,7 +85,7 @@ tr_TR:
         x_days:
           one: "%{count} gün"
           other: "%{count} gün"
-        date_year: "D MMM, 'YY"
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} dakika önce"
@@ -117,14 +117,15 @@ tr_TR:
       placeholder: tarih
     share:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
-      post: "#%{postNumber} numaralı gönderiyi paylaş"
+      post: "gönderi #%{postNumber}"
       close: "kapat"
       twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
       email: "E-posta ile gönder"
+      url: "URL'yi kopyala ve paylaş"
     action_codes:
-      public_topic: "bu konuyu %{when} herkese açık yaptı"
-      private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
+      public_topic: "bu konuyu %{when} tarihinde herkese açık yaptı"
+      private_topic: "bu konuyu %{when} tarihinde kişisel mesaj yaptı"
       split_topic: "bu konuyu %{when} ayırdı"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
@@ -394,6 +395,7 @@ tr_TR:
         email: "Eposta"
         name: "İsim"
         fields: "Alanlar"
+        reject_reason: "Sebep"
       user_percentage:
         agreed:
           one: "%%{count} uygunluk"
@@ -482,6 +484,9 @@ tr_TR:
           other: "Bekleyen <strong>%{count}</strong> gönderiniz var."
         ok: "Tamam"
       example_username: "kullaniciadi"
+      reject_reason:
+        title: "Bu kullanıcıyı neden reddediyorsunuz?"
+        send_email: "Ret e-postası gönder"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>konuyu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>konuyu</a> <a href='%{userUrl}'>sen</a> açtın"
@@ -3645,6 +3650,7 @@ tr_TR:
             api_key_update: "api anahtarını güncelleştir"
             api_key_destroy: "api anahtarını yok et"
             override_upload_secure_status: "yükleme güvenlik durumunu geçersiz kıl"
+            delete_group: "grubu sil"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek ya da başka bir eylem gerçekleşecek."
@@ -3981,6 +3987,7 @@ tr_TR:
         go_back: "Aramaya geri dön"
         recommended: "Sıradaki metni isteğine göre uyarlamanı öneririz:"
         show_overriden: "Sadece iptal edilenleri göster"
+        locale: "Dil:"
         more_than_50_results: "50 den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:
         show_overriden: "Sadece değiştirdiklerimi göster"

@@ -415,6 +415,7 @@ he:
   bookmarks:
     errors:
       already_bookmarked_post: "אי אפשר לסמן את אותו הפוסט פעמיים"
+      too_many: "יש לך יותר מדי סימניות, נא לבקר בכתובת %{user_bookmarks_url} כדי להסיר כמה מהן, עמך הסליחה."
       cannot_set_past_reminder: "אי אפשר להגדיר תזכורת סימנייה למועד שעבר."
       cannot_set_reminder_in_distant_future: "לא ניתן להגדיר תזכורת סימנייה למעבר ל־10 שנים בעתיד."
       time_must_be_provided: "יש לספק זמן לכל התזכורות"
@@ -1067,7 +1068,7 @@ he:
       read: "קריאה להכל"
       write: "כתיבה להכל"
       one_time_password: "יצירת אסימון כניסה חד־פעמי"
-      bookmarks_calendar: "תזכורת סימון שנקראו"
+      bookmarks_calendar: "לקרוא תזכורות לסימניות"
     invalid_public_key: "המפתח הציבורי שגוי, עמך הסליחה."
     invalid_auth_redirect: "מארח auth_redirect זה אינו מורשה, עמך הסליחה."
     invalid_token: "אסימון חסר, שגוי או פג תוקף."
@@ -1705,6 +1706,8 @@ he:
     max_topic_invitations_per_day: "מספר מירבי של הזמנות לנושא שמשתמשים יכולים לשלוח ביום. "
     max_logins_per_ip_per_hour: "מספר מקסימלי של התחברויות מורשות לכל כתובת IP בשעה"
     max_logins_per_ip_per_minute: "מספר מקסימלי של התחברויות מורשות לכתובת IP לדקה"
+    max_post_deletions_per_minute: "מספר הפוסטים המרבי שמשתמש יכול למחוק בדקה אחת. 0 ישבית מחיקת פוסטים."
+    max_post_deletions_per_day: "מספר הפוסטים המרבי שמשתמש יכול למחוק ביום אחד. 0 ישבית מחיקת פוסטים."
     invite_link_max_redemptions_limit: "כמות הניצולים המרבית שמורשית לקישורים הזמנה לא יכולה לעבור את הערך הזה."
     alert_admins_if_errors_per_minute: "מספר השגיאות בדקה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
     alert_admins_if_errors_per_hour: "מספר השגיאות בשעה לפני ששולחים התראה למנהל. ערך של 0 מנטרל אפשרות זו. שימו לב: מצריך הרצה מחדש."
@@ -1727,6 +1730,7 @@ he:
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
     selectable_avatars_enabled: "לאלץ משתמשים לבחור בתמונה ייצוגית מהרשימה."
     selectable_avatars: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור."
@@ -3552,6 +3556,13 @@ he:
         אנו דוגלים ב[התנהלות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
 
         השתתפות מהנה!
+    signup_after_reject:
+      title: "הרשמה לאחר דחייה"
+      subject_template: "נדחית מהאתר %{site_name}"
+      text_body_template: |
+        מישהו מחברי הסגל דחה את החשבון שלך באתר %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "הרשמה"
       subject_template: "[%{email_prefix}] אשרו את חשבונכם החדש"

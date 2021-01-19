@@ -3038,6 +3038,13 @@ fi:
         Uskomme [sivistyneeseen yhteisökäyttäytymiseen](%{base_url}/guidelines) kaikissa tilanteissa.
 
         Nauti palstastamme!
+    signup_after_reject:
+      title: "Rekisteröidy hylkäyksen jälkeen"
+      subject_template: "Sinut on hylätty palveluta %{site_name}"
+      text_body_template: |
+        Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
+
+        %{reject_reason}
     signup:
       title: "Liity"
       subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"

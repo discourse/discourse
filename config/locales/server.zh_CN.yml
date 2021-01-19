@@ -361,6 +361,7 @@ zh_CN:
   bookmarks:
     errors:
       already_bookmarked_post: "你不能将同一帖子收藏两次。"
+      too_many: "抱歉，你的书签过多，请访问 %{user_bookmarks_url} 删除一些书签。"
       cannot_set_past_reminder: "你不能在此主题设置收藏提醒。"
       cannot_set_reminder_in_distant_future: "你不能够设置一个大于十年的收藏提醒。"
       time_must_be_provided: "必须为所有提醒设置时间"
@@ -1581,6 +1582,8 @@ zh_CN:
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
     max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登录次数。"
     max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登录次数。"
+    max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。设置为 0 可禁用帖子删除。"
+    max_post_deletions_per_day: "用户每天可以删除的最大帖子数。设置为 0 可禁用帖子删除。"
     invite_link_max_redemptions_limit: "邀请链接所允许的最大兑换量不能超过这个数值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
@@ -1603,6 +1606,7 @@ zh_CN:
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "使用网站的小徽标代替系统用户的头像。要求必须有 logo。"
     restrict_letter_avatar_colors: "用于字符型头像背景的十六进制色彩值列表"
     selectable_avatars_enabled: "强制用户从列表中选择头像。"
     selectable_avatars: "用户可以选择的头像列表。"
@@ -3323,6 +3327,13 @@ zh_CN:
         我们始终相信[文明社区行为](%{base_url}/guidelines)。
 
         入住愉快！
+    signup_after_reject:
+      title: "拒绝后的注册"
+      subject_template: "你在 %{site_name}上被拒绝"
+      text_body_template: |
+        一名工作人员拒绝了你在 %{site_name} 上的帐户。
+
+        %{reject_reason}
     signup:
       title: "注册"
       subject_template: "[%{email_prefix}] 确认你的新账户"

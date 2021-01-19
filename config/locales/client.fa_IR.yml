@@ -416,6 +416,7 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        reject_reason: "دلیل"
       user_percentage:
         agreed:
           one: "%{count}% موافقت شده"
@@ -504,6 +505,9 @@ fa_IR:
           one: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
           other: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
         ok: "باشه"
+      reject_reason:
+        title: "چرا این کاربر را رد می‌کنید؟"
+        send_email: "ارسال ایمیل رد شدن"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
       you_posted_topic: "<a href='%{userUrl}'>شما یک </a><a href='%{topicUrl}'>موضوع</a> جدید ایجاد کردید."
@@ -3503,6 +3507,7 @@ fa_IR:
             change_name: "تغییر دادن نام"
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"
+            delete_group: "حذف گروه"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
@@ -3781,6 +3786,7 @@ fa_IR:
         go_back: "بازگشت به جستجو"
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
+        locale: "زبان:"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         history: "مشاهده تاریخچه تغییر"

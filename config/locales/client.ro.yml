@@ -340,6 +340,7 @@ ro:
       other: "Afișați %{count} subiecte noi"
     preview: "Previzualizează"
     cancel: "Anulează"
+    deleting: "Ștergere..."
     save: "Salvează schimbările"
     saving: "Se salvează..."
     saved: "Salvat!"
@@ -421,6 +422,7 @@ ro:
       topic: "Subiect:"
       filtered_topic: "Ai ales conținutul care poate fi revizuit dintr-un singur subiect."
       filtered_user: "Utilizatori"
+      filtered_reviewed_by: "Revizuit de"
       show_all_topics: "arată toate subiectele"
       deleted_post: "(postare ștearsă)"
       deleted_user: "(utilizator șters)"
@@ -446,14 +448,17 @@ ro:
           other: "%{count}% ignoră"
       topics:
         topic: "Discuție"
+        original: "(topic inițial)"
         details: "detalii"
       edit: "Editează"
       save: "Salvează"
       cancel: "Anulează"
+      new_topic: "Aprobarea acestui element va crea un subiect nou"
       filters:
         all_categories: "(toate categoriile)"
         type:
           title: "Tip"
+          all: "(toate tipurile)"
         minimum_score: "Scor minim:"
         refresh: "Reîmprospătează"
         status: "Status"
@@ -511,6 +516,7 @@ ro:
           few: "Ai <strong>%{count}</strong> postări în așteptare."
           other: "Ai <strong>%{count}</strong> postări în așteptare."
         ok: "Ok"
+      example_username: "nume de utilizator"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
       you_posted_topic: "<a href='%{userUrl}'>ai</a> postat <a href='%{topicUrl}'>subiectul</a>"
@@ -804,24 +810,32 @@ ro:
       private_messages: "Mesaje"
       user_notifications:
         filters:
+          filter_by: "Filtrare după"
           all: "Toate"
           read: "Citite"
           unread: "Necitite"
+        ignore_duration_title: "Ignoră Utilizatorul"
         ignore_duration_username: "Nume utilizator"
+        ignore_duration_when: "Durată:"
         ignore_duration_save: "Ignoră"
+        add_ignored_user: "Adaugă..."
         mute_option: "Setate pe silențios"
         normal_option: "Normal"
       activity_stream: "Activitate"
       preferences: "Preferințe"
       feature_topic_on_profile:
+        title: "Selectați un subiect"
+        search_label: "Căutați un subiect după titlu"
         save: "Salvează"
         clear:
           title: "Șterge"
+      use_current_timezone: "Utilizați fusul orar curent"
       profile_hidden: "Acest profil public al utilizatorului este ascuns."
       expand_profile: "Extinde"
       collapse_profile: "Colaps"
       bookmarks: "Semne de carte"
       bio: "Despre mine"
+      timezone: "Fus orar"
       invited_by: "Invitat de"
       trust_level: "Nivel de încredere"
       notifications: "Notificări"
@@ -839,6 +853,8 @@ ro:
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
+      skip_new_user_tips:
+        skip_link: "Sări peste aceste sfaturi"
       color_schemes:
         disable_dark_scheme: "La fel ca de obicei"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
@@ -953,7 +969,12 @@ ro:
         edit: "Editează"
         security_key:
           register: "Înregistrare"
+          title: "Chei de securitate"
+          add: "Adaugă cheie de securitate"
+          default_name: "Cheie de securitate principală"
           save: "Salvează"
+          edit_description: "Nume cheie de securitate"
+          name_required_error: "Trebuie să oferi un nume pentru cheia de securitate."
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."
@@ -963,30 +984,54 @@ ro:
         taken: "Acest nume de utilizator este deja folosit."
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       add_email:
+        title: "Adaugă e-mail"
         add: "adaugă"
       change_email:
         title: "Schimbă email"
         taken: "Această adresă există deja în baza de date."
         error: "A apărut o eroare la schimbarea de email. Poate această adresă este deja utilizată?"
         success: "Am trimis un email către adresa respectivă. Urmează instrucțiunile de confirmare."
+        success_via_admin: "Am trimis un e-mail la acea adresă. Utilizatorul va trebui să urmeze instrucțiunile de confirmare din e-mail."
         success_staff: "Ți-am trimis un email la adresa curentă. Urmează instrucțiunile de confirmare."
       change_avatar:
         title: "Schimbă poza de profil"
+        gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, bazat pe"
+        gravatar_title: "Schimbă-ți avatarul pe site-ul %{gravatarName}"
+        gravatar_failed: "Nu am putut găsi un %{gravatarName} cu acea adresă de e-mail."
+        refresh_gravatar_title: "Reîmprospătează %{gravatarName}"
         letter_based: "Poză de profil atribuită de sistem."
         uploaded_avatar: "Poză preferată"
         uploaded_avatar_empty: "Adaugă poza preferată"
         upload_title: "Încarcă poza preferată"
         image_is_not_a_square: "Atenţie: poza este decupată, înălțimea și lățimea nu erau egale."
+      change_profile_background:
+        title: "Antet profil"
+        instructions: "Antetele profilului vor fi centrate și au lățimea implicită de 1110px."
       change_card_background:
         title: "Fundal pentru pagina cu date personale"
         instructions: "Fundalul va fi centrat şi va avea o dimensiune standard de 590px."
+      change_featured_topic:
+        title: "Subiect recomandat"
+        instructions: "Un link către acest topic va fi pe cardul tău de utilizator și profil."
       email:
         title: "Email"
+        primary: "E-mail primar"
+        secondary: "E-mailuri secundare"
         primary_label: "primar"
+        unconfirmed_label: "neconfirmat"
+        resend_label: "retrimite e-mail-ul de confirmare"
+        resending_label: "trimitere..."
+        resent_label: "email trimis"
         update_email: "Schimbă email"
+        set_primary: "Setează e-mail principal"
+        destroy: "Elimină e-mail"
+        add_email: "Adaugă e-mail alternativ"
+        sso_override_instructions: "E-mailul poate fi actualizat de la furnizorul SSO."
+        no_secondary: "Nici un e-mail secundar"
         instructions: "Niciodată arătat publicului."
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
         ok: "Îți vom trimite un email pentru confirmare."
+        required: "Te rugăm să introduci o adresă de e-mail"
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
         frequency_immediately: "Vom trimite imediat un email dacă nu ai citit deja despre ce este vorba. "
@@ -1001,10 +1046,14 @@ ro:
         cancel: "Anulează"
         not_connected: "(nu este conectat)"
         confirm_modal_title: "Conectare cont %{provider}"
+        confirm_description:
+          account_specific: "Contul tău %{provider} '%{account_description}' va fi folosit pentru autentificare."
+          generic: "Contul tău %{provider} va fi folosit pentru autentificare."
       name:
         title: "Nume"
         instructions: "Numele tău complet (opțional)"
         instructions_required: "Numele tău complet"
+        required: "Te rugăm să introduci un nume"
         too_short: "Numele este prea scurt."
         ok: "Numele tău este OK."
       username:
@@ -1018,6 +1067,7 @@ ro:
         too_long: "Numele de utilizator este prea lung."
         checking: "Verifică disponibilitatea numelui de utilizator..."
         prefilled: "Emailul se potrivește cu numele de utilizator înregistrat."
+        required: "Te rugăm să introduci un nume de utilizator"
       locale:
         title: "Limba interfeței"
         instructions: "Limba pentru interfața forumului. Schimbarea se va produce odată ce reîmprospătați pagina."
@@ -1025,6 +1075,8 @@ ro:
         any: "oricare"
       password_confirmation:
         title: "Confirmă parola"
+      invite_code:
+        title: "Cod de invitație"
       auth_tokens:
         title: "Dispozitive folosite recent"
         details: "Detalii"
@@ -1037,7 +1089,14 @@ ro:
       website: "Website"
       email_settings: "Email"
       text_size:
+        title: "Dimensiune text"
+        smallest: "Cel mai mic"
+        smaller: "Mai mic"
         normal: "Normal"
+        larger: "Mai mare"
+        largest: "Cel mai mare"
+      title_count_mode:
+        title: "Titlul paginii în fundal afișează numărul de:"
       like_notification_frequency:
         title: "Notificare atunci când se primește apreciere"
         always: "Întotdeauna"
@@ -1341,11 +1400,17 @@ ro:
         name: "Twitter"
         title: "Twitter"
       instagram:
+        name: "Instagram"
         title: "Instagram"
       facebook:
+        name: "Facebook"
         title: "Facebook"
       github:
+        name: "GitHub"
         title: "GitHub"
+      discord:
+        name: "Discord"
+        title: "cu Discord"
     invites:
       accept_title: "Initație"
       welcome_to: "Bine ai venit la %{site_name}!"
@@ -1355,6 +1420,7 @@ ro:
       accept_invite: "Acceptă invitație"
       success: "Contul tău a fost creat și acum ești logat."
       name_label: "Nume"
+      password_label: "Parolă"
       optional_description: "(opțional)"
     password_reset:
       continue: "Continuă la %{site_name}"
@@ -1362,6 +1428,7 @@ ro:
       apple_international: "Apple/International"
       google: "Google"
       twitter: "Twitter"
+      emoji_one: "JoyPixels (fostul EmojiOne)"
       win10: "Win10"
       google_classic: "Google clasic"
       facebook_messenger: "Facebook Messenger"
@@ -1370,6 +1437,8 @@ ro:
       categories_with_featured_topics: "Categorii cu subiecte promovate"
       categories_and_latest_topics: "Categorii și subiecte recente"
       categories_and_top_topics: "Categorii și discuții în top"
+      categories_boxes: "Cutii cu subcategorii"
+      categories_boxes_with_topics: "Cutii cu subiecte recomandate"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1723,6 +1792,7 @@ ro:
       toggle_information: "comută între detaliile subiectului"
       read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din %{catLink} sau %{latestLink}."
       read_more: "Vrei să citești mai multe subiecte? %{catLink} sau %{latestLink}."
+      read_more_MF: "Există { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># subiect</a> necitit} other { <a href='{basePath}/unread'># subiecte</a> necitite} }{ NEW, plural, =0 {} one {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuție nouă</a>} other {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuții noi</a>} }. {CATEGORY, select, true {Răsfoiește altele subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
       jump_reply_up: sări la un răspuns mai vechi

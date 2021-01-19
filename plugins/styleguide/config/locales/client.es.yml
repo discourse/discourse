@@ -53,6 +53,8 @@ es:
           title: "Estados de los temas"
         topic_list:
           title: "Lista de temas"
+        basic_topic_list:
+          title: "Lista básica de temas"
         footer_message:
           title: "Mensaje de pie de página"
         signup_cta:
@@ -67,6 +69,8 @@ es:
           title: "Publicación"
         topic_map:
           title: "Mapa del tema"
+        site_header:
+          title: "Encabezado del sitio"
         suggested_topics:
           title: "Temas sugeridos"
         post_menu:
