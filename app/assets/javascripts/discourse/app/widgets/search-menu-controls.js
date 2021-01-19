@@ -23,6 +23,7 @@ createWidget("search-term", {
       value: attrs.value || "",
       autocomplete: "discourse",
       placeholder: attrs.contextEnabled ? "" : I18n.t("search.title"),
+      "aria-label": I18n.t("search.title"),
     };
   },
 
