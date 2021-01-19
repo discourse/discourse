@@ -89,7 +89,7 @@ describe Admin::DashboardController do
 
     describe '#new_features' do
       before do
-        Discourse.redis.del "new_features_last_seen_id_user_#{admin.id}"
+        Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
         Discourse.redis.del "new_features"
       end
 

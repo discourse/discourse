@@ -11,11 +11,6 @@ describe DiscourseUpdates do
     DiscourseUpdates.stubs(:updated_at).returns(updated_at)
   end
 
-  def reset_new_features(user_id)
-    Discourse.redis.del "new_features_last_seen_id_user_#{user_id}"
-    Discourse.redis.del "new_features"
-  end
-
   before do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
@@ -154,9 +149,10 @@ describe DiscourseUpdates do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
 
-    before do
-      reset_new_features(admin.id)
-      reset_new_features(admin2.id)
+    before(:each) do
+      Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
+      Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
+      Discourse.redis.del "new_features"
 
       sample_features = [
         { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => Time.zone.now - 40.minutes },
