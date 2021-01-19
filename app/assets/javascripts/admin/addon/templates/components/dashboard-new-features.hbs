@@ -11,11 +11,11 @@
     </div>
     <div class="section-footer">
       {{#if releaseNotesLink}}
-        <a rel="noopener noreferrer" target="_blank" href={{releaseNotesLink}} class="btn btn-primary">
+        <a rel="noopener noreferrer" target="_blank" href={{releaseNotesLink}} class="btn btn-primary new-features-release-notes">
           {{i18n "admin.dashboard.new_features.learn_more"}}
         </a>
       {{/if}}
-      {{d-button label="admin.dashboard.new_features.dismiss" action=dismissNewFeatures }}
+      {{d-button label="admin.dashboard.new_features.dismiss" class="new-features-dismiss" action=dismissNewFeatures }}
     </div>
   </div>
 {{/if}}
