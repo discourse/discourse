@@ -9,7 +9,7 @@ module Jobs
       Email::Processor.process!(
         args[:mail],
         retry_on_rate_limit: args[:retry_on_rate_limit] || false,
-        source: args[:source]
+        source: args[:source]&.to_sym
       )
     end
 
