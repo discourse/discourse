@@ -321,7 +321,7 @@ task 'javascript:update' => 'clean_up' do
       File.open(dest) do |file|
         contents = file.read
         contents.gsub!("sourceMappingURL=popper", "sourceMappingURL=/popper")
-        File.open(dest, "w+") { |f| f.write(contents) }
+        File.open(dest, "w+") { |d| d.write(contents) }
       end
     end
   end
