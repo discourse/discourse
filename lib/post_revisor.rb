@@ -634,6 +634,8 @@ class PostRevisor
         {}
       end
 
+    DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
+
     @post.publish_change_to_clients!(:revised, options)
   end
 
