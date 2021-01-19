@@ -55,6 +55,10 @@ class RateLimiter
     rate_unlimited? || is_under_limit?
   end
 
+  def seconds_to_wait(now)
+    @secs - age_of_oldest(now)
+  end
+
   # reloader friendly
   unless defined? PERFORM_LUA
     PERFORM_LUA = <<~LUA
@@ -171,10 +175,6 @@ class RateLimiter
 
   def redis
     Discourse.redis.without_namespace
-  end
-
-  def seconds_to_wait(now)
-    @secs - age_of_oldest(now)
   end
 
   def age_of_oldest(now)
