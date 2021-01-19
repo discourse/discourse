@@ -123,25 +123,24 @@ module DiscourseUpdates
     def unseen_new_features(user_id)
       entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
       return nil if entries.nil?
-      entries.select! { |item| item["id"].to_i > new_features_last_seen(user_id).to_i }
-      entries.sort { |item| item["id"].to_i }
+
+      last_seen = new_features_last_seen(user_id)
+
+      if last_seen.present?
+        entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
+      end
+
+      entries.sort { |item| Time.zone.parse(item["created_at"]) }
     end
 
     def new_features_last_seen(user_id)
-      Discourse.redis.get new_features_last_seen_id(user_id)
+      last_seen = Discourse.redis.get new_features_last_seen_key(user_id)
+      return nil if last_seen.blank?
+      Time.zone.parse(last_seen)
     end
 
     def mark_new_features_as_seen(user_id)
-      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
-      return nil if entries.nil?
-      last_seen = entries.max_by { |x| x["id"] }
-      Discourse.redis.set(new_features_last_seen_id(user_id), last_seen["id"])
-    end
-
-    # used only in specs
-    def reset_new_features(user_id)
-      Discourse.redis.del new_features_last_seen_id(user_id)
-      Discourse.redis.del new_features_key
+      Discourse.redis.set(new_features_last_seen_key(user_id), Time.now.to_s)
     end
 
     private
@@ -182,7 +181,7 @@ module DiscourseUpdates
       'new_features'
     end
 
-    def new_features_last_seen_id(user_id)
+    def new_features_last_seen_key(user_id)
       "new_features_last_seen_id_user_#{user_id}"
     end
   end

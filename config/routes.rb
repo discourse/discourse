@@ -260,11 +260,12 @@ Discourse::Application.routes.draw do
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
+      get "dashboard/new-features" => "dashboard#new_features"
+      put "dashboard/mark-new-features-as-seen" => "dashboard#mark_new_features_as_seen"
 
       resources :dashboard, only: [:index] do
         collection do
           get "problems"
-          put "mark_new_features_as_seen"
         end
       end
 

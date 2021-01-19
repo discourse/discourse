@@ -8,10 +8,6 @@ class Admin::DashboardController < Admin::AdminController
       data.merge!(version_check: DiscourseUpdates.check_version.as_json)
     end
 
-    new_features = DiscourseUpdates.unseen_new_features current_user.id
-    data.merge!(new_features: new_features.as_json)
-    data.merge!(release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"])
-
     render json: data
   end
 
@@ -27,7 +23,14 @@ class Admin::DashboardController < Admin::AdminController
     render_json_dump(problems: AdminDashboardData.fetch_problems(check_force_https: request.ssl?))
   end
 
+  def new_features
+    data = { new_features: DiscourseUpdates.unseen_new_features(current_user.id) }
+    data.merge!(release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"])
+    render json: data
+  end
+
   def mark_new_features_as_seen
-    render json: DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+    DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+    render json: success_json
   end
 end

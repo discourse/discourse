@@ -11,6 +11,11 @@ describe DiscourseUpdates do
     DiscourseUpdates.stubs(:updated_at).returns(updated_at)
   end
 
+  def reset_new_features(user_id)
+    Discourse.redis.del "new_features_last_seen_id_user_#{user_id}"
+    Discourse.redis.del "new_features"
+  end
+
   before do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
@@ -150,30 +155,36 @@ describe DiscourseUpdates do
     fab!(:admin2) { Fabricate(:admin) }
 
     before do
-      sample_features = [
-        { "id" => "2", "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!" },
-        { "id" => "3", "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!" },
-        { "id" => "1", "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!" },
-      ]
+      reset_new_features(admin.id)
+      reset_new_features(admin2.id)
 
+      sample_features = [
+        { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => Time.zone.now - 40.minutes },
+        { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => Time.zone.now - 15.minutes },
+        { "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!", "created_at" => Time.zone.now - 5.minutes },
+      ]
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
     end
 
+    it 'returns all items on the first run' do
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+
+      expect(result.length).to eq(3)
+      expect(result[2]["title"]).to eq("Super Fruits")
+    end
+
     it 'returns only unseen items by user' do
-      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns("2")
-      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns("1")
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns(Time.zone.now - 10.minutes)
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns(Time.zone.now - 30.minutes)
 
       result = DiscourseUpdates.unseen_new_features(admin.id)
       expect(result.length).to eq(1)
-      expect(result[0]["id"]).to eq("3")
+      expect(result[0]["title"]).to eq("Quality Veggies")
 
       result2 = DiscourseUpdates.unseen_new_features(admin2.id)
       expect(result2.length).to eq(2)
-      expect(result2[0]["id"]).to eq("3")
-      expect(result2[1]["id"]).to eq("2")
-
-      DiscourseUpdates.reset_new_features(admin.id)
-      DiscourseUpdates.reset_new_features(admin2.id)
+      expect(result2[0]["title"]).to eq("Quality Veggies")
+      expect(result2[1]["title"]).to eq("Fancy Legumes")
     end
 
     it 'can mark features as seen for a given user' do

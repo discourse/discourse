@@ -17,8 +17,8 @@ describe Admin::DashboardController do
 
     def populate_new_features
       sample_features = [
-        { "id" => "1", "emoji" => "🤾", "title" => "Cool Beans", "description" => "Now beans are included" },
-        { "id" => "2", "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Legumes too!" }
+        { "id" => "1", "emoji" => "🤾", "title" => "Cool Beans", "description" => "Now beans are included", "created_at" => Time.zone.now - 40.minutes },
+        { "id" => "2", "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Legumes too!",  "created_at" => Time.zone.now - 20.minutes }
       ]
 
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
@@ -54,37 +54,6 @@ describe Admin::DashboardController do
           expect(json['version_check']).not_to be_present
         end
       end
-
-      context 'new features' do
-        it 'has no new features by default' do
-          get "/admin/dashboard.json"
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json['new_features']).to eq(nil)
-        end
-
-        it 'fails gracefully for invalid JSON' do
-          Discourse.redis.set("new_features", "INVALID JSON")
-          get "/admin/dashboard.json"
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json['new_features']).to eq(nil)
-        end
-
-        it 'includes new features when available' do
-          populate_new_features
-
-          get "/admin/dashboard.json"
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-
-          expect(json['new_features'].length).to eq(2)
-          expect(json['new_features'][0]["emoji"]).to eq("🙈")
-          expect(json['new_features'][0]["id"]).to eq("2")
-
-          DiscourseUpdates.reset_new_features(admin.id)
-        end
-      end
     end
 
     describe '#problems' do
@@ -118,17 +87,47 @@ describe Admin::DashboardController do
       end
     end
 
-    describe '#mark_new_features_as_seen' do
-      it 'resets seen id for a given user' do
+    describe '#new_features' do
+      before do
+        Discourse.redis.del "new_features_last_seen_id_user_#{admin.id}"
+        Discourse.redis.del "new_features"
+      end
+
+      it 'is empty by default' do
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json['new_features']).to eq(nil)
+      end
+
+      it 'fails gracefully for invalid JSON' do
+        Discourse.redis.set("new_features", "INVALID JSON")
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json['new_features']).to eq(nil)
+      end
+
+      it 'includes new features when available' do
         populate_new_features
-        put "/admin/dashboard/mark_new_features_as_seen.json"
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json['new_features'].length).to eq(2)
+        expect(json['new_features'][0]["emoji"]).to eq("🙈")
+        expect(json['new_features'][0]["title"]).to eq("Fancy Legumes")
+      end
+    end
+
+    describe '#mark_new_features_as_seen' do
+      it 'resets last seen for a given user' do
+        populate_new_features
+        put "/admin/dashboard/mark-new-features-as-seen.json"
 
         expect(response.status).to eq(200)
-        expect(response.body).to eq("OK")
-
-        expect(DiscourseUpdates.new_features_last_seen(admin.id)).to eq("2")
-
-        DiscourseUpdates.reset_new_features(admin.id)
+        expect(DiscourseUpdates.new_features_last_seen(admin.id)).not_to eq(nil)
       end
     end
   end

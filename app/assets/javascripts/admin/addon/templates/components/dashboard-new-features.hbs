@@ -10,9 +10,11 @@
       {{/each}}
     </div>
     <div class="section-footer">
-      <a rel="noopener noreferrer" target="_blank" href={{releaseNotesLink}} class="btn btn-primary">
-        {{i18n "admin.dashboard.new_features.learn_more"}}
-      </a>
+      {{#if releaseNotesLink}}
+        <a rel="noopener noreferrer" target="_blank" href={{releaseNotesLink}} class="btn btn-primary">
+          {{i18n "admin.dashboard.new_features.learn_more"}}
+        </a>
+      {{/if}}
       {{d-button label="admin.dashboard.new_features.dismiss" action=dismissNewFeatures }}
     </div>
   </div>

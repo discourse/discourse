@@ -15,8 +15,6 @@ AdminDashboard.reopenClass({
       const model = AdminDashboard.create();
       model.setProperties({
         version_check: json.version_check,
-        new_features: json.new_features,
-        release_notes_link: json.release_notes_link,
       });
 
       return model;
@@ -48,8 +46,21 @@ AdminDashboard.reopenClass({
     });
   },
 
+  fetchNewFeatures() {
+    return ajax("/admin/dashboard/new-features.json").then((json) => {
+      const model = AdminDashboard.create();
+
+      model.setProperties({
+        new_features: json.new_features,
+        release_notes_link: json.release_notes_link,
+      });
+
+      return model;
+    });
+  },
+
   dismissNewFeatures() {
-    return ajax("/admin/dashboard/mark_new_features_as_seen.json", {
+    return ajax("/admin/dashboard/mark-new-features-as-seen.json", {
       type: "PUT",
     });
   },
