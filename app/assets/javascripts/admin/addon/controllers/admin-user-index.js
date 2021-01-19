@@ -278,26 +278,26 @@ export default Controller.extend(CanCheckEmails, {
         }
       );
 
-      const performDelete = () => {
+      const performDelete = (progressModal) => {
         this.model
           .deleteAllPosts()
           .then(({ posts_deleted }) => {
             if (posts_deleted === 0) {
               user.set("post_count", 0);
-              bootbox.hideAll();
+              progressModal.send("closeModal");
             } else {
               deletedPosts += posts_deleted;
               deletedPercentage = Math.floor(
                 (deletedPosts * 100) / user.get("post_count")
               );
-              $(".delete-posts-progress .progress-bar > span").css({
-                width: `${deletedPercentage}%`,
+              progressModal.setProperties({
+                deletedPercentage: deletedPercentage,
               });
-              performDelete();
+              performDelete(progressModal);
             }
           })
           .catch((e) => {
-            bootbox.hideAll();
+            progressModal.send("closeModal");
             let error;
             AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
             if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
@@ -320,20 +320,18 @@ export default Controller.extend(CanCheckEmails, {
             I18n.t("admin.user.delete_all_posts"),
           class: "btn btn-danger",
           callback: () => {
-            openProgressModal();
-            performDelete();
+            const progressModal = openProgressModal();
+            performDelete(progressModal);
           },
         },
       ];
+
       const openProgressModal = () => {
-        bootbox.dialog(
-          `<p>${I18n.t(
-            "admin.user.delete_posts_progress"
-          )}</p><div class='progress-bar'><span></span></div>`,
-          [],
-          { classes: "delete-posts-progress" }
-        );
+        return showModal("admin-delete-user-posts-progress", {
+          admin: true,
+        });
       };
+
       bootbox.dialog(message, buttons, { classes: "delete-all-posts" });
     },
 

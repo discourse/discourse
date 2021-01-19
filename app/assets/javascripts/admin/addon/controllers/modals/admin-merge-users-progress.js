@@ -5,9 +5,9 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import messageBus from "message-bus-client";
 
 export default Controller.extend(ModalFunctionality, {
-  onShow() {
-    this.set("message", I18n.t("admin.user.merging_user"));
+  message: I18n.t("admin.user.merging_user"),
 
+  onShow() {
     messageBus.subscribe("/merge_user", (data) => {
       if (data.merged) {
         if (/^\/admin\/users\/list\//.test(location)) {
