@@ -19,7 +19,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
  *   read
  *   username
  */
-createWidget("quick-access-item", {
+export default createWidget("quick-access-item", {
   tagName: "li",
 
   buildClasses(attrs) {

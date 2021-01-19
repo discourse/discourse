@@ -26,7 +26,8 @@
 .user-menu .quick-access-panel.quick-access-profile li:not(.show-all) {
   border-bottom: 1px solid var(--primary-low);
 
-  a {
+  a,
+  button {
     // accounts for menu "ears" 4px + border 1px
     padding: 0.75em calc(0.5em + 4px + 1px);
   }
