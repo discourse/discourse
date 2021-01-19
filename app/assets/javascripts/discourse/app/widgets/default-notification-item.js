@@ -99,7 +99,12 @@ export const DefaultNotificationItem = createWidget(
     },
 
     icon(notificationName) {
-      return iconNode(`notification.${notificationName}`);
+      let icon = iconNode(`notification.${notificationName}`);
+      icon.properties.attributes["alt"] = I18n.t(
+        `notifications.titles.${notificationName}`
+      );
+      icon.properties.attributes["aria-hidden"] = false;
+      return icon;
     },
 
     notificationTitle(notificationName) {
