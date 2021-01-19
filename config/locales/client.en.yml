@@ -567,7 +567,7 @@ en:
           other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
       example_username: "username"
-      reject_reason: 
+      reject_reason:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
@@ -2108,6 +2108,7 @@ en:
       or_search_google: "Or try searching with Google instead:"
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
+      search_button: "Search"
 
       context:
         user: "Search posts by @%{username}"
