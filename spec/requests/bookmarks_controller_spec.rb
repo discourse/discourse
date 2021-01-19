@@ -29,9 +29,6 @@ describe BookmarksController do
         post_id: Fabricate(:post).id
       }
       expect(response.status).to eq(429)
-      expect(response.parsed_body['errors']).to include(
-        I18n.t("rate_limiter.by_type.create_bookmark", time_left: "24 hours")
-      )
     end
 
     context "if the user reached the max bookmark limit" do
