@@ -59,11 +59,12 @@ class UserAnonymizer
         )
       end
 
-      @user.user_avatar.try(:destroy)
-      @user.single_sign_on_record.try(:destroy)
-      @user.oauth2_user_infos.try(:destroy_all)
-      @user.user_associated_accounts.try(:destroy_all)
-      @user.api_keys.find_each { |x| x.try(:destroy) }
+      @user.user_avatar&.destroy!
+      @user.single_sign_on_record&.destroy!
+      @user.oauth2_user_infos.destroy_all
+      @user.user_associated_accounts.destroy_all
+      @user.api_keys.destroy_all
+      @user.user_api_keys.destroy_all
       @user.user_emails.secondary.destroy_all
 
       @user_history = log_action
