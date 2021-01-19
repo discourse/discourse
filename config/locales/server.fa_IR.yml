@@ -1911,6 +1911,13 @@ fa_IR:
     signup_after_approval:
       title: "ثبت نام بعد از تایید"
       subject_template: "شما در %{site_name} تایید شدید!"
+    signup_after_reject:
+      title: "بعد از رد شدن ثبت‌نام کنید"
+      subject_template: "شما در %{site_name} رد شدید"
+      text_body_template: |
+        یکی از کارمندان حساب کاربری شما را در %{site_name} رد کرد.
+
+        %{reject_reason}
     signup:
       title: "ثبت‌نام"
       subject_template: "[%{email_prefix}] حساب کاربری خود را تایید کنید."

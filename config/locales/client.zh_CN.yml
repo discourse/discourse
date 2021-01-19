@@ -393,6 +393,7 @@ zh_CN:
         email: "邮箱"
         name: "名称"
         fields: "字段"
+        reject_reason: "原因"
       user_percentage:
         summary:
           other: "%{agreed}，%{disagreed}，%{ignored} (共%{count}个标记)"
@@ -478,6 +479,9 @@ zh_CN:
           other: "你有 <strong>%{count}</strong> 个帖子在等待审核中。"
         ok: "确认"
       example_username: "用户名"
+      reject_reason:
+        title: "你为什么拒绝这个用户？"
+        send_email: "发送拒绝邮件"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -2737,6 +2741,7 @@ zh_CN:
       list_filters:
         all: "所有主题"
         none: "无子分类"
+      colors_disabled: "你无法选择颜色，因为你没有类别样式。"
     flagging:
       title: "感谢你帮助我们建设文明社区！"
       action: "标记帖子"
@@ -3130,6 +3135,7 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
+      approval_not_required: "用户一旦接受此邀请，就会被自动批准。"
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"
@@ -4012,6 +4018,7 @@ zh_CN:
             topic_unarchived: "取消主题存档"
             post_staff_note_create: "添加管理人员注释"
             post_staff_note_destroy: "删除管理人员注释"
+            delete_group: "删除群组"
         screened_emails:
           title: "已屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -4377,6 +4384,8 @@ zh_CN:
         go_back: "返回搜索"
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: "只显示修改过的"
+        locale: "语言："
+        fallback_locale_warning: "你正在编辑各种 %{fallback}。选择 %{fallback} 作为界面语言的用户不会看到你的更改。"
         more_than_50_results: "有超过50个结果。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"

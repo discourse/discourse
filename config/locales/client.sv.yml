@@ -422,6 +422,7 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        reject_reason: "Anledning"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (av den senaste flaggan)"
@@ -514,6 +515,9 @@ sv:
           other: "Du har <strong>%{count}</strong> inlägg som väntar."
         ok: "OK"
       example_username: "användarnamn"
+      reject_reason:
+        title: "Varför avvisar du den här användaren?"
+        send_email: "Skicka avvisningsmeddelande"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -2846,6 +2850,7 @@ sv:
       list_filters:
         all: "alla ämnen"
         none: "inga underkategorier"
+      colors_disabled: "Du kan inte välja färger eftersom du inte har någon kategoristil."
     flagging:
       title: "Tack för att du hjälper till att hålla forumet civiliserat!"
       action: "Flagga inlägg"
@@ -3265,6 +3270,7 @@ sv:
     invite:
       custom_message: "Gör din inbjudan lite personligare genom att skriva ett <a href>anpassat meddelande</a>."
       custom_message_placeholder: "Skriv ditt personliga meddelande"
+      approval_not_required: "Användaren kommer automatiskt att godkännas så snart hon/han tackar ja till denna inbjudan."
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
     forced_anonymous: "På grund av extrem belastning, visas detta för samtliga precis som en utloggad användare skulle se det."
@@ -4150,6 +4156,7 @@ sv:
             topic_unarchived: "ämnet inte arkiverat"
             post_staff_note_create: "lägg till personalnotering"
             post_staff_note_destroy: "ta bort personalnotering"
+            delete_group: "radera grupp"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -4520,6 +4527,8 @@ sv:
         go_back: "Tillbaka till sökningen"
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
+        locale: "Språk:"
+        fallback_locale_warning: "Du redigerar en variant av %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"

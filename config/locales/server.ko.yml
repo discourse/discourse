@@ -3355,6 +3355,8 @@ ko:
         사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
         즐거운 시간 되세요!
+    signup_after_reject:
+      subject_template: "%{site_name}에서 거부되었습니다."
     signup:
       title: "가입하기"
       subject_template: "[%{email_prefix}] 새 계정 확인"

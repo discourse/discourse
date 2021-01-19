@@ -422,6 +422,7 @@ fr:
         email: "Courriel"
         name: "Nom"
         fields: "Champs"
+        reject_reason: "Raison"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
@@ -514,6 +515,9 @@ fr:
           other: "Vous avez <strong>%{count}</strong> messages en attente."
         ok: "OK"
       example_username: "nom d'utilisateur"
+      reject_reason:
+        title: "Pourquoi refusez-vous cet utilisateur ?"
+        send_email: "Envoyer le courriel de refus"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vous</a> avez démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -1756,7 +1760,7 @@ fr:
       italic_text: "texte en italique"
       link_title: "Lien"
       link_description: "saisir ici la description du lien"
-      link_dialog_title: "Insérer le lien"
+      link_dialog_title: "Insérer un lien"
       link_optional_text: "titre optionnel"
       link_url_placeholder: "Collez une URL ou tapez pour rechercher des sujets"
       blockquote_title: "Citation"
@@ -2034,7 +2038,7 @@ fr:
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
         notification_level: "Notifications"
-        choose_new_category: "Choisissez la nouvelle catégorie pour les sujets :"
+        choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
         selected:
           one: "Vous avez sélectionné <b>%{count}</b> sujet."
           other: "Vous avez sélectionné <b>%{count}</b> sujets."

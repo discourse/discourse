@@ -2966,6 +2966,12 @@ tr_TR:
       title: "Onay Sonrası Kayıt"
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
       text_body_template: "%{site_name}&#39;a hoş geldiniz! \nBir moderatör hesabınızı %{site_name} \n\nadresinde onayladı. Artık yeni hesabınıza şu adresten giriş yaparak erişebilirsiniz: %{base_url} \n\nYukarıdaki bağlantı tıklanabilir değilse, kopyalayıp web tarayıcınızın adres çubuğuna yapıştırmayı deneyin. \n\n%{new_user_tips} \n\nHer zaman [medeni topluluk davranışına] (%{base_url} / yönergeleri) kontrolünü sağlıyoruz. \n\nKeyfini çıkarın!\n"
+    signup_after_reject:
+      subject_template: "%{site_name} hesabınız reddedildi"
+      text_body_template: |
+        Bir ekip üyesi, %{site_name} hesabınızı reddetti.
+
+        %{reject_reason}
     signup:
       title: "Kaydol"
       subject_template: "[%{email_prefix}] Yeni hesabınızı onaylayın"

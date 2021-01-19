@@ -480,6 +480,7 @@ he:
         email: "דוא״ל"
         name: "שם"
         fields: "שדות"
+        reject_reason: "סיבה"
       user_percentage:
         agreed:
           one: "%{count}% מסכים"
@@ -581,6 +582,9 @@ he:
           other: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
         ok: "אישור"
       example_username: "שם משתמש"
+      reject_reason:
+        title: "למה בחרת לדחות את המשתמש הזה?"
+        send_email: "שליחת הודעה דחייה בדוא״ל"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -3058,6 +3062,7 @@ he:
       list_filters:
         all: "כל הנושאים"
         none: "אין תת־קטגוריות"
+      colors_disabled: "אי אפשר לבחור צבעים כיוון שסגנון הקטגוריה הוא כלום."
     flagging:
       title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
       action: "דגלו פוסט"
@@ -3075,6 +3080,7 @@ he:
       notify_action: "הודעה"
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
+      delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
@@ -3151,6 +3157,12 @@ he:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
     posts: "פוסטים"
+    posts_likes_MF: |
+      לנושא זה יש {count, plural, one {תגובה אחת} two {שתי תגובות} many {# תגובות} other {# תגובות}} {ratio, select,
+        low {עם יחס גבוה של לייקים לפוסט}
+        med {עם יחס גבוה מאוד של לייקים לפוסט}
+        high {עם יחס גבוה במיוחד של לייקים לפוסט}
+        other {}}
     original_post: "פוסט מקורי"
     views: "צפיות"
     views_lowercase:
@@ -3522,6 +3534,7 @@ he:
     invite:
       custom_message: "ניתן להעניק להזמנה שלך מגע אישי יותר על ידי כתיבת <a href>הודעה אישית</a>."
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
+      approval_not_required: "המשתמש יאושר אוטומטית עם קבלת ההזמנה הזאת."
       custom_message_template_forum: "היי, זה פורום מומלץ, כדאי להצטרף אליו!"
       custom_message_template_topic: "היי, חשבתי שהנושא הזה יעניין אותך!"
     forced_anonymous: "עקב עומס חריג, הודעה זו מוצגת באופן זמני לכולם כפי שתופיע בפני משתמשים שלא נכנסו למערכת."
@@ -4415,6 +4428,7 @@ he:
             topic_unarchived: "הנושא יצא מהארכיון"
             post_staff_note_create: "הוספת הערת סגל"
             post_staff_note_destroy: "השמדת הערת סגל"
+            delete_group: "הסרת קבוצה"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -4795,6 +4809,7 @@ he:
         go_back: "חזרה לחיפוש"
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
+        locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"

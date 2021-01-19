@@ -152,11 +152,11 @@ ko:
         message: |-
           %{title}에 가입해 주셔서 감사합니다.
 
-          - 나는 단지 로봇 일뿐입니다. 그러나 [사이트 관리자] (%{base_uri}/about)는 사용자들에게 도움을주기 위해 여기에 있습니다.
+          - 나는 단지 로봇 일뿐입니다. 그러나 [사이트 관리자](%{base_uri}/about)는 사용자들에게 도움을주기 위해 여기에 있습니다.
 
           - 신규 사용자가 할 수 있는 일은 일시적으로 제한됩니다. 곧 [새로운 기능]들을 알게 될 것입니다. 또한 이곳에서 [badges](%{base_uri}/배지)) 를 얻을 수 있습니다.
 
-          - 항상 [올바른 커뮤니티 활동] (%{base_uri}/지침) 을 해 줄것을 당부 드립니다.
+          - 항상 [올바른 커뮤니티 활동](%{base_uri}/지침) 을 해 줄것을 당부 드립니다.
       onebox:
         instructions: |-
           다음으로이 링크 중 하나를 나와 공유 할 수 있습니까? ** 한 줄에 링크 **로 답장하면 자동으로 확장되어 멋진 요약을 포함합니다. 링크를 복사하려면 모바일을 길게 누르거나 포인팅 장치를 마우스 오른쪽 버튼으로 클릭하십시오. <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>

@@ -415,6 +415,7 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        reject_reason: "Motivo"
       user_percentage:
         agreed:
           one: "%{count}% concorda"
@@ -842,6 +843,7 @@ pt_BR:
         perm_denied_expl: "Você negou permissão para notificações. Permita notificações nas configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
+        each_browser_note: 'Nota: Você deve alterar esta configuração em cada navegador que você usa. Todas as notificações serão desabilitadas quando em "não perturbe", independente desta configuração.'
         consent_prompt: "Você quer notificações ao vivo quando as pessoas respondem às suas postagens?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar Tudo"
@@ -3022,6 +3024,16 @@ pt_BR:
       dismiss: "Descartar"
     safe_mode:
       enabled: "O modo seguro está habilitado. Para sair do modo seguro feche esta janela do navegador"
+    do_not_disturb:
+      title: "Não perturbe por..."
+      save: "Salvar"
+      label: "Não perturbe"
+      remaining: "%{remaining} restantes"
+      options:
+        half_hour: "30 minutos"
+        one_hour: "1 hora"
+        two_hours: "2 horas"
+        tomorrow: "Até amanhã"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -3811,6 +3823,7 @@ pt_BR:
             override_upload_secure_status: "Sobrescrever o status seguro do upload"
             page_published: "página publicada"
             page_unpublished: "página despublicada"
+            delete_group: "apagar grupo"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
