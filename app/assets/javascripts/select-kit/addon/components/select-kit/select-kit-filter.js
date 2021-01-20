@@ -11,10 +11,12 @@ export default Component.extend(UtilsMixin, {
   layout,
   classNames: ["select-kit-filter"],
   classNameBindings: ["isExpanded:is-expanded"],
-  attributeBindings: ["selectKitId:data-select-kit-id"],
+  attributeBindings: ["role", "selectKitId:data-select-kit-id"],
   selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-filter`;
   }),
+
+  role: "searchbox",
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
