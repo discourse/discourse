@@ -92,6 +92,7 @@ end
 #  imap_uid          :integer
 #  imap_sync         :boolean
 #  imap_group_id     :bigint
+#  created_via       :integer
 #
 # Indexes
 #
