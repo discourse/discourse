@@ -354,7 +354,7 @@ describe BadgeGranter do
 
     it 'removes custom badge titles' do
       custom_badge_title = 'this is a badge title'
-      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en_US')
+      TranslationOverride.create!(translation_key: badge.translation_key, value: custom_badge_title, locale: 'en')
       described_class.grant(badge, user)
       user.update!(title: custom_badge_title)
 

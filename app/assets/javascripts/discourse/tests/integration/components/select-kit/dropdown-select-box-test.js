@@ -88,7 +88,7 @@ discourseModule(
 
         assert.equal(
           this.subject.header().el().attr("title"),
-          "[en_US.test_none]",
+          "[en.test_none]",
           "it adds a title attribute to the button"
         );
       },

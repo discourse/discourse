@@ -118,14 +118,14 @@ describe JsLocaleHelper do
       expect(message).not_to match 'Plural Function not found'
     end
 
-    it "includes uses message formats from fallback locale" do
-      translations = JsLocaleHelper.translations_for(:en_US)
-      en_us_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en_US)
-      expect(en_us_message_formats).to_not be_empty
+    it "uses message formats from fallback locale" do
+      translations = JsLocaleHelper.translations_for(:en_GB)
+      en_gb_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en_GB)
+      expect(en_gb_message_formats).to_not be_empty
 
       translations = JsLocaleHelper.translations_for(:en)
       en_message_formats = JsLocaleHelper.remove_message_formats!(translations, :en)
-      expect(en_us_message_formats).to eq(en_message_formats)
+      expect(en_gb_message_formats).to eq(en_message_formats)
     end
   end
 
@@ -207,12 +207,12 @@ describe JsLocaleHelper do
   end
 
   describe ".find_message_format_locale" do
-    it "finds locale for en_US" do
-      locale, filename = JsLocaleHelper.find_message_format_locale([:en_US],  fallback_to_english: false)
+    it "finds locale for en_GB" do
+      locale, filename = JsLocaleHelper.find_message_format_locale([:en_GB],  fallback_to_english: false)
       expect(locale).to eq("en")
       expect(filename).to end_with("/en.js")
 
-      locale, filename = JsLocaleHelper.find_message_format_locale(["en_US"],  fallback_to_english: false)
+      locale, filename = JsLocaleHelper.find_message_format_locale(["en_GB"],  fallback_to_english: false)
       expect(locale).to eq("en")
       expect(filename).to end_with("/en.js")
     end
