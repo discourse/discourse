@@ -1049,14 +1049,14 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 0.5em 0;
+  padding: 0.75em 0;
 
   .topic-footer-main-buttons {
     display: flex;
     flex-wrap: wrap;
 
     button {
-      margin-right: 0.5em;
+      margin-right: 0.75em;
       height: 100%; // helps select-kit buttons match height
     }
 
