@@ -3215,7 +3215,6 @@ fi:
     image_removed: "(kuva poistettu)"
     do_not_disturb:
       title: "Älä häiritse..."
-      save: "Tallenna"
       label: "Älä häiritse"
       remaining: "%{remaining} jäljellä"
       options:

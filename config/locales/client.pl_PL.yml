@@ -926,6 +926,20 @@ pl_PL:
         mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień związanych z tym użytkownikiem."
         normal_option: "Normalny"
         normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
+      notification_schedule:
+        title: "Harmonogram powiadomień"
+        label: "Włącz niestandardowy harmonogram powiadomień"
+        tip: "Poza tymi godzinami automatycznie pojawi się opcja „nie przeszkadzać”."
+        midnight: "Północ"
+        none: "Brak"
+        monday: "Poniedziałek"
+        tuesday: "Wtorek"
+        wednesday: "Środa"
+        thursday: "Czwartek"
+        friday: "Piątek"
+        saturday: "Sobota"
+        sunday: "Niedziela"
+        to: "do"
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       feature_topic_on_profile:
@@ -3554,7 +3568,6 @@ pl_PL:
     image_removed: "(obraz usunięty)"
     do_not_disturb:
       title: "Nie przeszkadzać przez..."
-      save: "Zapisz"
       label: "Nie przeszkadzać"
       remaining: "%{remaining} pozostało"
       options:
@@ -3563,6 +3576,7 @@ pl_PL:
         two_hours: "2 godziny"
         tomorrow: "Do jutra"
         custom: "Niestandardowe"
+      set_schedule: "Ustaw harmonogram powiadomień"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4821,7 +4835,6 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         locale: "Język:"
-        fallback_locale_warning: "Edytujesz różne %{fallback}. Użytkownicy, którzy wybierają %{fallback} jako swój język interfejsu, nie zobaczą Twoich zmian."
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
       settings:
         show_overriden: "Pokaż tylko nadpisane"

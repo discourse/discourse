@@ -3279,7 +3279,6 @@ gl:
     image_removed: "(imaxe retirada)"
     do_not_disturb:
       title: "Non molestar durante..."
-      save: "Gardar"
       label: "Non molestar"
       remaining: "queda %{remaining}"
       options:

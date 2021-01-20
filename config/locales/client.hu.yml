@@ -2342,7 +2342,6 @@ hu:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
     do_not_disturb:
       title: "Ne zavarjanak..."
-      save: "Mentés"
       label: "Ne zavarjanak"
       remaining: "%{remaining} van hátra"
       options:

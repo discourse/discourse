@@ -3106,7 +3106,6 @@ el:
     image_removed: "(η εικόνα αφαιρέθηκε)"
     do_not_disturb:
       title: "Μην ενοχλείτε για ..."
-      save: "Αποθήκευση"
       label: "Μην ενοχλείτε"
       options:
         half_hour: "30 λεπτά"

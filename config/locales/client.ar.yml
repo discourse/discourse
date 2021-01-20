@@ -3712,7 +3712,6 @@ ar:
     image_removed: "(تمت إزالة الصورة)"
     do_not_disturb:
       title: "عدم الإزعاج من أجل..."
-      save: "حفظ"
       label: "عدم الإزعاج"
       remaining: "%{remaining} متبقي"
       options:

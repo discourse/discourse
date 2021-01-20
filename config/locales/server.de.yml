@@ -3439,6 +3439,11 @@ de:
         Wir glauben an [zivilisiertes Community-Verhalten](%{base_url}/guidelines) zu jeder Zeit.
 
         Genieße deinen Aufenthalt!
+    signup_after_reject:
+      text_body_template: |
+        Ein Team-Mitglied hat dein Konto bei %{site_name} abgelehnt.
+
+        %{reject_reason}
     signup:
       title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{email_prefix}] Bestätige dein neues Konto"

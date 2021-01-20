@@ -3268,7 +3268,6 @@ es:
     image_removed: "(imagen eliminada)"
     do_not_disturb:
       title: "No molestar durante..."
-      save: "Guardar"
       label: "No molestar"
       remaining: "%{remaining} restante"
       options:

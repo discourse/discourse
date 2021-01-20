@@ -3141,7 +3141,6 @@ ko:
     image_removed: "(이미지 제거됨)"
     do_not_disturb:
       title: "방해 금지..."
-      save: "저장"
       label: "방해 금지"
       remaining: "%{remaining} 남음"
       options:

@@ -3281,7 +3281,6 @@ it:
     image_removed: "(immagine rimossa)"
     do_not_disturb:
       title: "Non disturbare per..."
-      save: "Salva"
       label: "Non disturbare"
       remaining: "%{remaining} rimanenti"
       options:
@@ -4525,7 +4524,6 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
-        fallback_locale_warning: "Stai modificando una varietà di %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
       settings:
         show_overriden: "Mostra solo i sovrascritti"

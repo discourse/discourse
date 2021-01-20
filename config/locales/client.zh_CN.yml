@@ -3149,7 +3149,6 @@ zh_CN:
     image_removed: "(图像被移除)"
     do_not_disturb:
       title: "请勿打扰..."
-      save: "保存"
       label: "请勿打扰"
       remaining: "剩余 %{remaining}"
       options:
@@ -4390,7 +4389,6 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: "只显示修改过的"
         locale: "语言："
-        fallback_locale_warning: "你正在编辑各种 %{fallback}。选择 %{fallback} 作为界面语言的用户不会看到你的更改。"
         more_than_50_results: "有超过50个结果。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
