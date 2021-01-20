@@ -13,7 +13,7 @@ fr:
         yesterday: Hier %{time}
         countdown:
           passed: la date est passée
-      title: Insérer date / heure
+      title: Insérer une date et une heure
       create:
         form:
           insert: Insérer
@@ -28,7 +28,7 @@ fr:
           invalid_date: Date invalide, vérifiez que la date et l'heure sont correctes
           date_title: Date
           time_title: Heure
-          format_title: Format de date
+          format_title: Format de la date
           timezone: Fuseau horaire
           until: Jusqu'à…
           recurring:

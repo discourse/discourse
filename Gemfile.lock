@@ -377,7 +377,7 @@ GEM
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
-    ruby2_keywords (0.0.2)
+    ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
     sanitize (5.2.3)
       crass (~> 1.0.2)

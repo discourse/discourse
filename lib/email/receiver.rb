@@ -152,7 +152,8 @@ module Email
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
-        imap_sync: false
+        imap_sync: false,
+        created_via: @opts[:source].present? ? IncomingEmail.created_via_types[@opts[:source]] : nil
       )
     end
 

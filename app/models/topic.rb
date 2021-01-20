@@ -1357,6 +1357,8 @@ class Topic < ActiveRecord::Base
       end
 
       if self.persisted?
+        # See TopicTimer.after_save for additional context; the topic
+        # status may be changed by saving.
         topic_timer.save!
       else
         self.topic_timers << topic_timer

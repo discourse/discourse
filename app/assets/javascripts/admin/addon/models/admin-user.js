@@ -1,17 +1,14 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
 import { filter, gt, lt, not, or } from "@ember/object/computed";
 import Group from "discourse/models/group";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import messageBus from "message-bus-client";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 const wrapAdmin = (user) => (user ? AdminUser.create(user) : null);
 
@@ -81,74 +78,9 @@ const AdminUser = User.extend({
   },
 
   deleteAllPosts() {
-    let deletedPosts = 0;
-    const user = this;
-    const message = I18n.messageFormat(
-      "admin.user.delete_all_posts_confirm_MF",
-      {
-        POSTS: user.get("post_count"),
-        TOPICS: user.get("topic_count"),
-      }
-    );
-    const buttons = [
-      {
-        label: I18n.t("composer.cancel"),
-        class: "d-modal-cancel",
-        link: true,
-      },
-      {
-        label:
-          `${iconHTML("exclamation-triangle")} ` +
-          I18n.t("admin.user.delete_all_posts"),
-        class: "btn btn-danger",
-        callback: () => {
-          openProgressModal();
-          performDelete();
-        },
-      },
-    ];
-    const openProgressModal = () => {
-      bootbox.dialog(
-        `<p>${I18n.t(
-          "admin.user.delete_posts_progress"
-        )}</p><div class='progress-bar'><span></span></div>`,
-        [],
-        { classes: "delete-posts-progress" }
-      );
-    };
-    const performDelete = () => {
-      let deletedPercentage = 0;
-      return ajax(`/admin/users/${user.get("id")}/delete_posts_batch`, {
-        type: "PUT",
-      })
-        .then(({ posts_deleted }) => {
-          if (posts_deleted === 0) {
-            user.set("post_count", 0);
-            bootbox.hideAll();
-          } else {
-            deletedPosts += posts_deleted;
-            deletedPercentage = Math.floor(
-              (deletedPosts * 100) / user.get("post_count")
-            );
-            $(".delete-posts-progress .progress-bar > span").css({
-              width: `${deletedPercentage}%`,
-            });
-            performDelete();
-          }
-        })
-        .catch((e) => {
-          bootbox.hideAll();
-          let error;
-          AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-          if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            error = e.jqXHR.responseJSON.errors[0];
-          }
-          error = error || I18n.t("admin.user.delete_posts_failed");
-          bootbox.alert(error);
-        });
-    };
-
-    bootbox.dialog(message, buttons, { classes: "delete-all-posts" });
+    return ajax(`/admin/users/${this.get("id")}/delete_posts_batch`, {
+      type: "PUT",
+    });
   },
 
   revokeAdmin() {
@@ -166,11 +98,7 @@ const AdminUser = User.extend({
   grantAdmin() {
     return ajax(`/admin/users/${this.id}/grant_admin`, {
       type: "PUT",
-    })
-      .then(() => {
-        bootbox.alert(I18n.t("admin.user.grant_admin_confirm"));
-      })
-      .catch(popupAjaxError);
+    });
   },
 
   revokeModeration() {
@@ -233,20 +161,7 @@ const AdminUser = User.extend({
     return ajax(`/admin/users/${this.id}/trust_level`, {
       type: "PUT",
       data: { level: this.trust_level },
-    })
-      .then(() => window.location.reload())
-      .catch((e) => {
-        let error;
-        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          error = e.jqXHR.responseJSON.errors[0];
-        }
-        error =
-          error ||
-          I18n.t("admin.user.trust_level_change_failed", {
-            error: this._formatError(e),
-          });
-        bootbox.alert(error);
-      });
+    });
   },
 
   restoreTrustLevel() {
@@ -257,20 +172,7 @@ const AdminUser = User.extend({
     return ajax(`/admin/users/${this.id}/trust_level_lock`, {
       type: "PUT",
       data: { locked: !!locked },
-    })
-      .then(() => window.location.reload())
-      .catch((e) => {
-        let error;
-        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          error = e.jqXHR.responseJSON.errors[0];
-        }
-        error =
-          error ||
-          I18n.t("admin.user.trust_level_change_failed", {
-            error: this._formatError(e),
-          });
-        bootbox.alert(error);
-      });
+    });
   },
 
   canLockTrustLevel: lt("trust_level", 4),
@@ -301,49 +203,27 @@ const AdminUser = User.extend({
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: "POST",
       data: { username_or_email: this.username },
-    }).then(() => bootbox.alert(I18n.t("admin.user.logged_out")));
+    });
   },
 
   impersonate() {
     return ajax("/admin/impersonate", {
       type: "POST",
       data: { username_or_email: this.username },
-    })
-      .then(() => (document.location = getURL("/")))
-      .catch((e) => {
-        if (e.status === 404) {
-          bootbox.alert(I18n.t("admin.impersonate.not_found"));
-        } else {
-          bootbox.alert(I18n.t("admin.impersonate.invalid"));
-        }
-      });
+    });
   },
 
   activate() {
     return ajax(`/admin/users/${this.id}/activate`, {
       type: "PUT",
-    })
-      .then(() => window.location.reload())
-      .catch((e) => {
-        const error = I18n.t("admin.user.activate_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      });
+    });
   },
 
   deactivate() {
     return ajax(`/admin/users/${this.id}/deactivate`, {
       type: "PUT",
       data: { context: document.location.pathname },
-    })
-      .then(() => window.location.reload())
-      .catch((e) => {
-        const error = I18n.t("admin.user.deactivate_failed", {
-          error: this._formatError(e),
-        });
-        bootbox.alert(error);
-      });
+    });
   },
 
   unsilence() {
@@ -371,165 +251,27 @@ const AdminUser = User.extend({
     return ajax(userPath("action/send_activation_email"), {
       type: "POST",
       data: { username: this.username },
-    })
-      .then(() => bootbox.alert(I18n.t("admin.user.activation_email_sent")))
-      .catch(popupAjaxError);
+    });
   },
 
   anonymize() {
-    const user = this;
-    const message = I18n.t("admin.user.anonymize_confirm");
-
-    const performAnonymize = function () {
-      return ajax(`/admin/users/${user.get("id")}/anonymize.json`, {
-        type: "PUT",
-      })
-        .then(function (data) {
-          if (data.success) {
-            if (data.username) {
-              document.location = getURL(
-                `/admin/users/${user.get("id")}/${data.username}`
-              );
-            } else {
-              document.location = getURL("/admin/users/list/active");
-            }
-          } else {
-            bootbox.alert(I18n.t("admin.user.anonymize_failed"));
-            if (data.user) {
-              user.setProperties(data.user);
-            }
-          }
-        })
-        .catch(() => bootbox.alert(I18n.t("admin.user.anonymize_failed")));
-    };
-
-    const buttons = [
-      {
-        label: I18n.t("composer.cancel"),
-        class: "cancel",
-        link: true,
-      },
-      {
-        label:
-          `${iconHTML("exclamation-triangle")} ` +
-          I18n.t("admin.user.anonymize_yes"),
-        class: "btn btn-danger",
-        callback: function () {
-          performAnonymize();
-        },
-      },
-    ];
-
-    bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
+    return ajax(`/admin/users/${this.id}/anonymize.json`, {
+      type: "PUT",
+    });
   },
 
-  destroy(opts) {
-    const user = this;
-    const message = I18n.t("admin.user.delete_confirm");
-    const location = document.location.pathname;
-
-    const performDestroy = function (block) {
-      bootbox.dialog(I18n.t("admin.user.deleting_user"));
-      let formData = { context: location };
-      if (block) {
-        formData["block_email"] = true;
-        formData["block_urls"] = true;
-        formData["block_ip"] = true;
-      }
-      if (opts && opts.deletePosts) {
-        formData["delete_posts"] = true;
-      }
-      return ajax(`/admin/users/${user.get("id")}.json`, {
-        type: "DELETE",
-        data: formData,
-      })
-        .then(function (data) {
-          if (data.deleted) {
-            if (/^\/admin\/users\/list\//.test(location)) {
-              document.location = location;
-            } else {
-              document.location = getURL("/admin/users/list/active");
-            }
-          } else {
-            bootbox.alert(I18n.t("admin.user.delete_failed"));
-            if (data.user) {
-              user.setProperties(data.user);
-            }
-          }
-        })
-        .catch(function () {
-          AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-          bootbox.alert(I18n.t("admin.user.delete_failed"));
-        });
-    };
-
-    const buttons = [
-      {
-        label: I18n.t("composer.cancel"),
-        class: "btn",
-        link: true,
-      },
-      {
-        label:
-          `${iconHTML("exclamation-triangle")} ` +
-          I18n.t("admin.user.delete_and_block"),
-        class: "btn btn-danger",
-        callback: function () {
-          performDestroy(true);
-        },
-      },
-      {
-        label: I18n.t("admin.user.delete_dont_block"),
-        class: "btn btn-primary",
-        callback: function () {
-          performDestroy(false);
-        },
-      },
-    ];
-
-    bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
+  destroy(formData) {
+    return ajax(`/admin/users/${this.id}.json`, {
+      type: "DELETE",
+      data: formData,
+    });
   },
 
-  merge(opts) {
-    const user = this;
-    const location = document.location.pathname;
-
-    const bootboxDiv = bootbox.dialog(I18n.t("admin.user.merging_user"));
-    let formData = { context: location };
-
-    if (opts && opts.targetUsername) {
-      formData["target_username"] = opts.targetUsername;
-    }
-
-    return ajax(`/admin/users/${user.id}/merge.json`, {
+  merge(formData) {
+    return ajax(`/admin/users/${this.id}/merge.json`, {
       type: "POST",
       data: formData,
-    })
-      .then((response) => {
-        if (response.success) {
-          messageBus.subscribe("/merge_user", (data) => {
-            if (data.merged) {
-              if (/^\/admin\/users\/list\//.test(location)) {
-                DiscourseURL.redirectTo(location);
-              } else {
-                DiscourseURL.redirectTo(
-                  `/admin/users/${data.user.id}/${data.user.username}`
-                );
-              }
-            } else if (data.message) {
-              bootboxDiv.find(".modal-body").html(data.message);
-            } else if (data.failed) {
-              bootbox.alert(I18n.t("admin.user.merge_failed"));
-            }
-          });
-        } else {
-          bootbox.alert(I18n.t("admin.user.merge_failed"));
-        }
-      })
-      .catch(() => {
-        AdminUser.find(user.id).then((u) => user.setProperties(u));
-        bootbox.alert(I18n.t("admin.user.merge_failed"));
-      });
+    });
   },
 
   loadDetails() {
@@ -558,10 +300,6 @@ const AdminUser = User.extend({
 
   @discourseComputed("approved_by")
   approvedBy: wrapAdmin,
-
-  _formatError(event) {
-    return `http: ${event.status} - ${event.body}`;
-  },
 
   deleteSSORecord() {
     return ajax(`/admin/users/${this.id}/sso_record.json`, {

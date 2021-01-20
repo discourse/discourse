@@ -3265,6 +3265,7 @@ gl:
     invite:
       custom_message: "Pode facer o convite un pouco máis persoal escribindo unha <a href>mensaxe personalizada</a>."
       custom_message_placeholder: "Escribe a túa mensaxe personalizada"
+      approval_not_required: "O usuario será aprobado automaticamente cando acepte esta invitación."
       custom_message_template_forum: "Oes, únete a este foro!"
       custom_message_template_topic: "Oes, vaiche gustar este tema!"
     forced_anonymous: "Debido á carga extrema, isto móstrase temporalmente a calquera de modo que ata un usuario sen sesión podería velo."
@@ -4150,6 +4151,7 @@ gl:
             topic_unarchived: "tema desarquivado"
             post_staff_note_create: "engadir nota de grupo"
             post_staff_note_destroy: "destruír nota de grupo"
+            delete_group: "eliminar grupo"
         screened_emails:
           title: "Correos-e controlados"
           description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo electrónico e bloquearase o rexistro ou se tomará outra medida."

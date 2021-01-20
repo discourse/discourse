@@ -314,6 +314,16 @@ task 'javascript:update' => 'clean_up' do
     else
       FileUtils.cp_r(src, dest)
     end
+
+    # use absolute path for popper.js's sourcemap
+    # avoids noisy console warnings in dev environment for non-homepage paths
+    if dest.end_with? "popper.js"
+      File.open(dest) do |file|
+        contents = file.read
+        contents.gsub!("sourceMappingURL=popper", "sourceMappingURL=/popper")
+        File.open(dest, "w+") { |d| d.write(contents) }
+      end
+    end
   end
 
   write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)

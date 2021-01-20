@@ -1,10 +1,6 @@
 import EmberObject from "@ember/object";
-import I18n from "I18n";
 import MessageBus from "message-bus-client";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
-import { extractError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
 
 const Backup = EmberObject.extend({
   destroy() {
@@ -21,16 +17,7 @@ const Backup = EmberObject.extend({
 
 Backup.reopenClass({
   find() {
-    return ajax("/admin/backups.json")
-      .then((backups) => backups.map((backup) => Backup.create(backup)))
-      .catch((error) => {
-        bootbox.alert(
-          I18n.t("admin.backups.backup_storage_error", {
-            error_message: extractError(error),
-          })
-        );
-        return [];
-      });
+    return ajax("/admin/backups.json");
   },
 
   start(withUploads) {
@@ -43,33 +30,18 @@ Backup.reopenClass({
         with_uploads: withUploads,
         client_id: MessageBus.clientId,
       },
-    }).then((result) => {
-      if (!result.success) {
-        bootbox.alert(result.message);
-      }
     });
   },
 
   cancel() {
     return ajax("/admin/backups/cancel.json", {
       type: "DELETE",
-    }).then((result) => {
-      if (!result.success) {
-        bootbox.alert(result.message);
-      }
     });
   },
 
   rollback() {
     return ajax("/admin/backups/rollback.json", {
       type: "POST",
-    }).then((result) => {
-      if (!result.success) {
-        bootbox.alert(result.message);
-      } else {
-        // redirect to homepage (session might be lost)
-        window.location = getURL("/");
-      }
     });
   },
 });

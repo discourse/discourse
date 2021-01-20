@@ -4,6 +4,7 @@ import RawHtml from "discourse/widgets/raw-html";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
+import { emojiUnescape } from "discourse/lib/text";
 import { h } from "virtual-dom";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -153,7 +154,11 @@ createSearchResult({
         { attributes: { "data-topic-id": topic.id } },
         this.siteSettings.use_pg_headlines_for_excerpt &&
           result.topic_title_headline
-          ? new RawHtml({ html: `<span>${result.topic_title_headline}</span>` })
+          ? new RawHtml({
+              html: `<span>${emojiUnescape(
+                result.topic_title_headline
+              )}</span>`,
+            })
           : new Highlighted(topic.fancyTitle, term)
       ),
     ];

@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 module Jobs
-  class CloseTopic < ::Jobs::Base
-    def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
-      return if !topic_timer&.runnable?
-
-      topic = topic_timer.topic
+  class CloseTopic < ::Jobs::TopicTimerBase
+    def execute_timer_action(topic_timer, topic)
+      silent = @args[:silent]
       user = topic_timer.user
-      silent = args[:silent]
 
-      if topic.blank? || topic.closed?
+      if topic.closed?
         topic_timer.destroy!
         return
       end

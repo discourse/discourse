@@ -1,17 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DeleteReplies < ::Jobs::Base
-
-    def execute(args)
-      topic_timer = TopicTimer.find_by(id: args[:topic_timer_id])
-
-      topic = topic_timer&.topic
-
-      if topic_timer.blank? || topic.blank? || topic_timer.execute_at > Time.zone.now
-        return
-      end
-
+  class DeleteReplies < ::Jobs::TopicTimerBase
+    def execute_timer_action(topic_timer, topic)
       unless Guardian.new(topic_timer.user).is_staff?
         topic_timer.trash!(Discourse.system_user)
         return

@@ -41,31 +41,34 @@
     <br>
 
     <div class="admin-controls">
-      {{#if model.theme_id}}
-        {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable modelId=model.id}}
-      {{else}}
-        <label>
-          {{input type="checkbox" checked=model.user_selectable}}
-          {{i18n "admin.customize.theme.color_scheme_user_selectable"}}
-        </label>
-      {{/if}}
+      {{#unless model.theme_id}}
+        <div class="pull-right">
+          <label>
+            {{input type="checkbox" checked=onlyOverridden}}
+            {{i18n "admin.settings.show_overriden"}}
+          </label>
+        </div>
+      {{/unless}}
+
+      <div>
+        {{#if model.theme_id}}
+          {{inline-edit-checkbox action=(action "applyUserSelectable") labelKey="admin.customize.theme.color_scheme_user_selectable" checked=model.user_selectable modelId=model.id}}
+        {{else}}
+          <label>
+            {{input type="checkbox" checked=model.user_selectable}}
+            {{i18n "admin.customize.theme.color_scheme_user_selectable"}}
+          </label>
+        {{/if}}
+      </div>
     </div>
 
     {{#if colors.length}}
       <table class="table colors">
         <thead>
           <tr>
-            <th>
-            </th>
+            <th></th>
             <th class="hex">{{i18n "admin.customize.color"}}</th>
-            <th class="overriden">
-              {{#unless model.theme_id}}
-                <label>
-                  {{input type="checkbox" checked=onlyOverridden}}
-                  {{i18n "admin.settings.show_overriden"}}
-                </label>
-              {{/unless}}
-            </th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

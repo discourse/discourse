@@ -18,8 +18,10 @@ export default Component.extend(UtilsMixin, {
     "rowValue:data-value",
     "rowName:data-name",
     "ariaLabel:aria-label",
+    "ariaSelected:aria-selected",
     "guid:data-guid",
     "rowLang:lang",
+    "role",
   ],
   classNameBindings: [
     "isHighlighted",
@@ -45,6 +47,8 @@ export default Component.extend(UtilsMixin, {
     return this.rowValue === this.getValue(this.selectKit.noneItem);
   }),
 
+  role: "option",
+
   guid: computed("item", function () {
     return guidFor(this.item);
   }),
@@ -53,6 +57,10 @@ export default Component.extend(UtilsMixin, {
 
   ariaLabel: computed("item.ariaLabel", "title", function () {
     return this.getProperty(this.item, "ariaLabel") || this.title;
+  }),
+
+  ariaSelected: computed("isSelected", function () {
+    return this.isSelected ? "true" : "false";
   }),
 
   title: computed("rowTitle", "item.title", "rowName", function () {

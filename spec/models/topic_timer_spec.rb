@@ -10,6 +10,20 @@ RSpec.describe TopicTimer, type: :model do
   before { freeze_time }
 
   context "validations" do
+    describe "pending_timers scope" do
+      it "does not return deleted timers" do
+        topic_timer.trash!
+        expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
+      end
+
+      it "does not return timers in the future of the provided before time" do
+        topic_timer.update!(execute_at: 3.days.from_now)
+        expect(TopicTimer.pending_timers.pluck(:id)).not_to include(topic_timer.id)
+        expect(TopicTimer.pending_timers(2.days.from_now).pluck(:id)).not_to include(topic_timer.id)
+        topic_timer.update!(execute_at: 1.minute.ago, created_at: 10.minutes.ago)
+        expect(TopicTimer.pending_timers.pluck(:id)).to include(topic_timer.id)
+      end
+    end
     describe '#status_type' do
       it 'should ensure that only one active public topic status update exists' do
         topic_timer.update!(topic: topic)
@@ -17,6 +31,44 @@ RSpec.describe TopicTimer, type: :model do
 
         expect { Fabricate(:topic_timer, topic: topic) }
           .to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    describe "#typed_job_scheduled?" do
+      let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
+
+      after do
+        scheduled_jobs.clear
+      end
+
+      it "returns true if the job is scheduled" do
+        Sidekiq::Testing.disable! do
+          scheduled_jobs.clear
+          Jobs.enqueue_at(3.hours.from_now, :close_topic, topic_timer_id: topic_timer.id)
+          expect(topic_timer.typed_job_scheduled?).to eq(true)
+        end
+      end
+
+      it "returns false if the job is not already scheduled" do
+        Sidekiq::Testing.disable! do
+          scheduled_jobs.clear
+          expect(topic_timer.typed_job_scheduled?).to eq(false)
+        end
+      end
+
+      it "returns true if the toggle_topic_closed job is scheduled for close,open,silent_close types" do
+        Sidekiq::Testing.disable! do
+          scheduled_jobs.clear
+          topic_timer1 = Fabricate(:topic_timer, status_type: TopicTimer.types[:close])
+          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer1.id)
+          topic_timer2 = Fabricate(:topic_timer, status_type: TopicTimer.types[:open])
+          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer2.id)
+          topic_timer3 = Fabricate(:topic_timer, status_type: TopicTimer.types[:silent_close])
+          Jobs.enqueue_at(3.hours.from_now, :toggle_topic_closed, topic_timer_id: topic_timer3.id)
+          expect(topic_timer1.typed_job_scheduled?).to eq(true)
+          expect(topic_timer2.typed_job_scheduled?).to eq(true)
+          expect(topic_timer3.typed_job_scheduled?).to eq(true)
+        end
       end
     end
 
@@ -95,20 +147,7 @@ RSpec.describe TopicTimer, type: :model do
           :close_topic, topic_timer_id: topic_timer.id
         )
 
-        expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: 3.days.from_now) do
-          topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
-        end
-      end
-
-      describe 'when execute_at is smaller than the current time' do
-        it 'should enqueue the job immediately' do
-          expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: Time.zone.now) do
-            topic_timer.update!(
-              execute_at: Time.zone.now - 1.hour,
-              created_at: Time.zone.now - 2.hour
-            )
-          end
-        end
+        topic_timer.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
       end
     end
 
@@ -121,9 +160,7 @@ RSpec.describe TopicTimer, type: :model do
           :close_topic, topic_timer_id: topic_timer.id
         )
 
-        expect_enqueued_with(job: :close_topic, args: { topic_timer_id: topic_timer.id }, at: topic_timer.execute_at) do
-          topic_timer.update!(user: admin)
-        end
+        topic_timer.update!(user: admin)
       end
     end
 
@@ -141,17 +178,8 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       it 'should close the topic' do
-        topic_timer
+        topic_timer.send(:schedule_auto_open_job)
         expect(topic.reload.closed).to eq(true)
-      end
-
-      describe 'when topic has been deleted' do
-        it 'should not queue the job' do
-          topic.trash!
-          topic_timer
-
-          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
-        end
       end
     end
 
@@ -169,17 +197,8 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       it 'should open the topic' do
-        topic_timer
+        topic_timer.send(:schedule_auto_close_job)
         expect(topic.reload.closed).to eq(false)
-      end
-
-      describe 'when topic has been deleted' do
-        it 'should not queue the job' do
-          topic.trash!
-          topic_timer
-
-          expect(Jobs::ToggleTopicClosed.jobs).to eq([])
-        end
       end
     end
 
@@ -202,62 +221,6 @@ RSpec.describe TopicTimer, type: :model do
           expect(timer.public_type).to be_falsey
         end
       end
-    end
-  end
-
-  describe '.ensure_consistency!' do
-    it 'should enqueue jobs that have been missed' do
-      close_topic_timer = Fabricate(:topic_timer,
-        execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour
-      )
-
-      open_topic_timer = Fabricate(:topic_timer,
-        status_type: described_class.types[:open],
-        execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour,
-        topic: Fabricate(:topic, closed: true)
-      )
-
-      Fabricate(:topic_timer, execute_at: Time.zone.now + 1.hour)
-
-      trashed_close_topic_timer = Fabricate(:topic_timer,
-        execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour
-      )
-
-      trashed_close_topic_timer.topic.trash!
-
-      trashed_open_topic_timer = Fabricate(:topic_timer,
-        execute_at: Time.zone.now - 1.hour,
-        created_at: Time.zone.now - 2.hour,
-        status_type: described_class.types[:open]
-      )
-
-      trashed_open_topic_timer.topic.trash!
-
-      # creating topic timers already enqueues jobs
-      # let's delete them to test ensure_consistency!
-      Sidekiq::Worker.clear_all
-
-      expect { described_class.ensure_consistency! }
-        .to change { Jobs::CloseTopic.jobs.count }.by(2).and change { Jobs::OpenTopic.jobs.count }.by(2)
-
-      expect(job_enqueued?(job: :close_topic, args: {
-        topic_timer_id: close_topic_timer.id
-      })).to eq(true)
-
-      expect(job_enqueued?(job: :open_topic, args: {
-        topic_timer_id: open_topic_timer.id
-      })).to eq(true)
-
-      expect(job_enqueued?(job: :close_topic, args: {
-        topic_timer_id: trashed_close_topic_timer.id
-      })).to eq(true)
-
-      expect(job_enqueued?(job: :open_topic, args: {
-        topic_timer_id: trashed_open_topic_timer.id
-      })).to eq(true)
     end
   end
 
