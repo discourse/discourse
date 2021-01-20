@@ -81,6 +81,14 @@
   > * {
     white-space: nowrap;
   }
+  .select-kit button {
+    height: 100%; // ensures nested select-kit button matches height of button siblings
+  }
+  .btn {
+    // need to reduce vertical padding for consistent height
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+  }
 }
 
 .show-more {
