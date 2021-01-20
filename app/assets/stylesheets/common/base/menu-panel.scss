@@ -283,6 +283,10 @@
 
       a {
         display: flex;
+      }
+
+      a,
+      button {
         padding: 0.25em 0.5em;
 
         > div {
@@ -396,7 +400,8 @@ div.menu-links-header {
         }
       }
 
-      a {
+      a,
+      button {
         // This is to make sure active and inactive tab icons have the same
         // size. `box-sizing` does not work and I have no idea why.
         border: 1px solid transparent;

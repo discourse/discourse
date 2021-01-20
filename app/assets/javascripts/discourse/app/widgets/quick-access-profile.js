@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import { Promise } from "rsvp";
+import QuickAccessItem from "discourse/widgets/quick-access-item";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
 
@@ -8,6 +9,19 @@ const _extraItems = [];
 export function addQuickAccessProfileItem(item) {
   _extraItems.push(item);
 }
+
+createWidgetFrom(QuickAccessItem, "logout-item", {
+  tagName: "li.logout",
+
+  html() {
+    return this.attach("flat-button", {
+      action: "logout",
+      content: I18n.t("user.log_out"),
+      icon: "sign-out-alt",
+      label: "user.log_out",
+    });
+  },
+});
 
 createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
   tagName: "div.quick-access-panel.quick-access-profile",
@@ -36,7 +50,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
     items = items.concat(_extraItems);
 
     if (this.attrs.showLogoutButton) {
-      items.push(this._logOutButton());
+      items.push({ widget: "logout-item" });
     }
     return items;
   },
@@ -101,15 +115,6 @@ createWidgetFrom(QuickAccessPanel, "quick-access-profile", {
         icon: "user-secret",
       };
     }
-  },
-
-  _logOutButton() {
-    return {
-      action: "logout",
-      className: "logout",
-      content: I18n.t("user.log_out"),
-      icon: "sign-out-alt",
-    };
   },
 
   _showToggleAnonymousButton() {

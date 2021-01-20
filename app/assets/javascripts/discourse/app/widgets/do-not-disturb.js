@@ -12,7 +12,7 @@ export default createWidget("do-not-disturb", {
   html() {
     if (this.currentUser.isInDoNotDisturb()) {
       return [
-        h("a.do-not-disturb-inner-container", [
+        h("button.btn-flat.do-not-disturb-inner-container", [
           iconNode("toggle-on"),
           h("span.do-not-disturb-label", [
             h("span", I18n.t("do_not_disturb.label")),
@@ -22,7 +22,7 @@ export default createWidget("do-not-disturb", {
       ];
     } else {
       return [
-        h("a.do-not-disturb-inner-container", [
+        h("button.btn-flat.do-not-disturb-inner-container", [
           iconNode("toggle-off"),
           h("span.do-not-disturb-label", I18n.t("do_not_disturb.label")),
         ]),

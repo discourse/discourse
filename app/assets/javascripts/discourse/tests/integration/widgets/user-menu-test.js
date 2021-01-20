@@ -94,9 +94,10 @@ discourseModule("Integration | Component | Widget | user-menu", function (
 
     async test(assert) {
       await click(".user-preferences-link");
+
       assert.ok(queryAll(".logout").length);
 
-      await click(".logout");
+      await click(".logout button");
       assert.ok(this.loggedOut);
     },
   });
