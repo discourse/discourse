@@ -1,6 +1,5 @@
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 import UtilsMixin from "select-kit/mixins/utils";
-import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/select-kit/single-select-header";
 
 export default SelectKitHeaderComponent.extend(UtilsMixin, {
@@ -8,7 +7,5 @@ export default SelectKitHeaderComponent.extend(UtilsMixin, {
   classNames: ["single-select-header"],
   attributeBindings: ["role"],
 
-  role: computed(function () {
-    return "combobox";
-  }),
+  role: "combobox",
 });

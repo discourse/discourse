@@ -12,9 +12,7 @@ export default Component.extend({
   }),
   rootEventType: "click",
 
-  role: computed(function () {
-    return "listbox";
-  }),
+  role: "listbox",
 
   init() {
     this._super(...arguments);

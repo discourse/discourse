@@ -16,9 +16,7 @@ export default Component.extend(UtilsMixin, {
     return `${this.selectKit.uniqueID}-filter`;
   }),
 
-  role: computed(function () {
-    return "searchbox";
-  }),
+  role: "searchbox",
 
   isHidden: computed(
     "selectKit.options.{filterable,allowAny,autoFilterable}",
