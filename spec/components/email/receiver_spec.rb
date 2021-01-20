@@ -11,8 +11,8 @@ describe Email::Receiver do
     SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
   end
 
-  def process(email_name)
-    Email::Receiver.new(email(email_name)).process!
+  def process(email_name, opts = {})
+    Email::Receiver.new(email(email_name), opts).process!
   end
 
   it "raises an EmptyEmailError when 'mail_string' is blank" do
@@ -348,6 +348,13 @@ describe Email::Receiver do
 
       expect { process(:html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This is a **HTML** reply ;)")
+    end
+
+    it "stores the created_via source against the incoming email" do
+      process(:text_reply, source: :handle_mail)
+      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:handle_mail])
+      process(:text_and_html_reply, source: :imap)
+      expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:imap])
     end
 
     it "automatically elides gmail quotes" do

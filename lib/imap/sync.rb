@@ -254,7 +254,8 @@ module Imap
             destinations: [@group],
             imap_uid_validity: @status[:uid_validity],
             imap_uid: email['UID'],
-            imap_group_id: @group.id
+            imap_group_id: @group.id,
+            source: :imap
           )
           receiver.process!
 

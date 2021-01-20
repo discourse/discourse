@@ -41,7 +41,8 @@ module Jobs
         message_id: message.message_id,
         to_addresses: message.to,
         cc_addresses: message.cc,
-        from_address: message.from
+        from_address: message.from,
+        created_via: IncomingEmail.created_via_types[:group_smtp]
       )
     end
   end
