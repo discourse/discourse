@@ -1724,6 +1724,7 @@ fr:
     category_colors: "Une liste de couleurs en valeur hexadécimale autorisées pour les catégories."
     category_style: "Style visuel pour les badges de catégorie."
     default_dark_mode_color_scheme_id: "Le jeu de couleurs utilisé en mode sombre."
+    dark_mode_none: "Aucune"
     max_image_size_kb: "La taille maximale des images envoyées en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy. Les images plus grandes que cette taille et plus petites que client_max_body_size seront redimensionnées à l'envoi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. La valeur doit aussi être configurée dans Nginx (client_max_body_size), Apache ou le proxy."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre « * » pour autoriser tous les types)"
@@ -3390,6 +3391,8 @@ fr:
         Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines).
 
         Amusez-vous bien !
+    signup_after_reject:
+      subject_template: "Votre inscription à %{site_name} a été rejetée"
     signup:
       title: "Inscription"
       subject_template: "[%{email_prefix}] Activez votre nouveau compte"

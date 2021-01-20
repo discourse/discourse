@@ -4231,6 +4231,9 @@ zh_CN:
         anonymize_yes: "是的，匿名化该账户"
         anonymize_failed: "在匿名化该账户时遇到问题。"
         delete: "删除用户"
+        delete_posts:
+          progress:
+            title: "删除帖子的进度"
         merge:
           button: "合并"
           prompt:
@@ -4242,6 +4245,8 @@ zh_CN:
             target_username_placeholder: "新的所有者的用户名"
             transfer_and_delete: "迁移并删除 @%{username}"
             cancel: "取消"
+          progress:
+            title: "合并进度"
           confirmation:
             title: "迁移并删除 @%{username}"
             description: |

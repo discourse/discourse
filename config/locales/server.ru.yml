@@ -3367,7 +3367,7 @@ ru:
 
         %{respond_instructions}
     user_posted:
-      title: "Пользователь опубликовал сообщение"
+      title: "Публикация пользователем сообщения"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3389,7 +3389,7 @@ ru:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Пользователь опубликовал личное сообщение"
+      title: "Публикация пользователем личного сообщения"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3400,7 +3400,7 @@ ru:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Пользователь опубликовал сымитированное личное сообщение"
+      title: "Публикация пользователем сымитированного личного сообщения"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -3483,8 +3483,8 @@ ru:
         Перейдите по ссылке для авторизации на форуме:
         %{base_url}/session/email-login/%{email_token}
     set_password:
-      title: "Установить пароль"
-      subject_template: "[%{email_prefix}] Установить пароль"
+      title: "Установка пароля"
+      subject_template: "[%{email_prefix}] Установка пароля"
       text_body_template: |
         Кто-то попросил добавить пароль к вашей учётной записи на сайте [%{site_name}](%{base_url}). Как вариант, вы можете войти в систему с помощью любого поддерживаемого онлайн-сервиса (Google, Facebook и т. д.), связанного с этим подтверждённым адресом электронной почты.
 
@@ -3510,7 +3510,7 @@ ru:
          Нажмите следующую ссылку, чтобы выбрать пароль для новой учётной записи:
          %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "Подтвердить новый адрес электронной почты"
+      title: "Подтверждение нового адреса электронной почты"
       subject_template: "[%{email_prefix}] Подтверждение нового адреса электронной почты"
       text_body_template: |
         Подтвердите новый адрес электронной почты для сайта %{site_name}, перейдя по ссылке:

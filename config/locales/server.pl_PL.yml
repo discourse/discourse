@@ -14,7 +14,7 @@ pl_PL:
       short: "%d.%m.%Y"
       short_no_year: "%-d %B"
       date_only: "%-d %B %Y"
-      long: "%B %-d, %Y, %l:%M%P"
+      long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
   date:
     month_names:
@@ -416,7 +416,7 @@ pl_PL:
     errors:
       already_bookmarked_post: "Nie możesz dodać zakładki do tego samego wpisu dwa razy."
       too_many: "Przepraszamy, masz zbyt wiele zakładek. Odwiedź %{user_bookmarks_url} aby niektóre usunąć."
-      cannot_set_past_reminder: "W przeszłości nie można ustawić przypomnienia o zakładce."
+      cannot_set_past_reminder: "Nie możesz ustawić przypomnienia o zakładce w przeszłości."
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "czas musi zostać podany dla wszystkich przypomnień"
     reminders:
@@ -828,7 +828,7 @@ pl_PL:
         other: "%{count} dni temu"
       about_x_months:
         one: "około %{count} miesiąca temu"
-        few: "około %{count} miesiące temu"
+        few: "około %{count} miesięcy temu"
         many: "około %{count} miesięcy temu"
         other: "około %{count} miesięcy temu"
       x_months:
@@ -837,8 +837,8 @@ pl_PL:
         many: "%{count} miesięcy temu"
         other: "%{count} miesięcy temu"
       about_x_years:
-        one: "około %{count} rok temu"
-        few: "około %{count} lata temu"
+        one: "około %{count} roku temu"
+        few: "około %{count} lat temu"
         many: "około %{count} lat temu"
         other: "około %{count} lat temu"
       over_x_years:
@@ -1429,8 +1429,8 @@ pl_PL:
     facebook_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     twitter_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
     github_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-    s3_config_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
-    s3_backup_config_warning: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a> .'
+    s3_config_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
+    s3_backup_config_warning: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
     s3_cdn_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
     image_magick_warning: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
     failing_emails_warning: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
@@ -1441,12 +1441,12 @@ pl_PL:
       many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
     missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś klucza API używanego do weryfikacji wiadomości haka internetowego."
-    bad_favicon_url: "Favicon nie ładuje się. Sprawdź ustawienia favicon w <a href='%{base_path}/admin/site_settings'>Ustawieniach witryny</a> ."
+    bad_favicon_url: "Favicon nie ładuje się. Sprawdź ustawienia favicon w <a href='%{base_path}/admin/site_settings'>Ustawieniach witryny</a>."
     deprecated_api_usage: "Wykryliśmy żądanie interfejsu API przy użyciu przestarzałej metody uwierzytelniania. Zaktualizuj go, aby używać <a href='https://meta.discourse.org/t/-/22706'>uwierzytelniania opartego na nagłówkach</a> . Po aktualizacji ten komunikat może zniknąć po 24 godzinach."
     update_mail_receiver: "Wykryliśmy nieaktualną wersję programu odbierającego pocztę. Kliknij <a href='https://meta.discourse.org/t/-/133491'>tutaj,</a> aby uzyskać instrukcje aktualizacji. Po aktualizacji ten komunikat może zniknąć po 24 godzinach."
     poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a> i dostawcę usług."
     poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
-    force_https_warning: "Twoja strona korzysta z SSL. Ale ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> nie jest jeszcze włączony w ustawieniach strony."
+    force_https_warning: "Twoja strona korzysta z SSL. Ale `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` nie jest jeszcze włączone w ustawieniach strony."
     out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla obserwowanych słów %{action} jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/logs/watched_words'>Obserwowanego słowa</a> lub wyłącz ustawienie witryny „obserwowane słowa wyrażenia regularne”."
@@ -1454,7 +1454,7 @@ pl_PL:
     display_local_time_in_user_card: "Wyświetl czas lokalny w oparciu o strefę czasową użytkownika po otwarciu karty użytkownika."
     censored_words: "Wskazane słowa będą automatycznie zamieniane na &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
-    default_locale: "Domyślny język tego wystąpienia dyskursu. Tekst kategorii i tematów generowanych przez system można zastąpić w opcji <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Dostosuj / Tekst</a> ."
+    default_locale: "Domyślny język tego wystąpienia dyskursu. Tekst kategorii i tematów generowanych przez system można zastąpić w opcji <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Dostosuj / Tekst</a>."
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych ustawieniach"
     set_locale_from_accept_language_header: "ustaw język interfejsu dla anonimowych użytkowników na podstawie nagłówków języka z ich przeglądarki"
     support_mixed_text_direction: "Obsługa mieszanych wskazówek tekstowych od lewej do prawej i od prawej do lewej."
@@ -1628,13 +1628,13 @@ pl_PL:
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
     enable_whispers: "Pozwalaj administracji na prywatną rozmowę w tematach."
-    allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a> ."
+    allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
     blocked_email_domains: "Lista domen poczty e-mail rozdzielonych pionową kreską, z których użytkownicy nie mogą rejestrować kont. Przykład: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista rozdzielonych pionową kreską domen e-mail, z których użytkownicy MUSZĄ się rejestrować. UWAGA: Użytkownicy z domenami e-mail innymi niż wypisane tutaj nie będą mogli się zarejestrować!"
     auto_approve_email_domains: "Użytkownicy z adresami e-mail z tej listy domen zostaną automatycznie zatwierdzeni."
     hide_email_address_taken: "Nie informuj użytkowników, że istnieje konto z danym adresem e-mail podczas rejestracji i z formularza zapomnianego hasła."
     log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
-    version_checks: "Wyślij ping do Discourse Hub w celu uzyskania aktualizacji wersji i pokaż komunikaty o nowej wersji na pulpicie <a href='%{base_path}/admin' target='_blank'>/ admin</a>"
+    version_checks: "Wyślij ping do Discourse Hub w celu uzyskania aktualizacji wersji i pokaż komunikaty o nowej wersji w panelu <a href='%{base_path}/admin' target='_blank'>admina</a>"
     new_version_emails: "Wyślij email na adres contact_email, kiedy nowa wersja Discourse będzie dostępna."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Wszyscy nowi użytkownicy muszą być wyraźnie zaproszeni przez zaufanych użytkowników lub personel. Rejestracja publiczna jest wyłączona."

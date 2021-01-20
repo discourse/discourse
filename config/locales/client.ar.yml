@@ -1963,7 +1963,7 @@ ar:
       edit_shared_draft: "عدّل المسودّة المشتركة"
       title: "أو اضغط Ctrl+Enter"
       users_placeholder: "أضف عضوا"
-      title_placeholder: "بجملة واحدة، صف ما الذي تود المناقشة فية؟"
+      title_placeholder: "ما هو موضوع هذا النقاش في جملة واحدة مختصرة؟"
       title_or_link_placeholder: "اكتب عنوانًا أو ألصِق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
       topic_featured_link_placeholder: "ضع رابطاً يظهر مع العنوان"

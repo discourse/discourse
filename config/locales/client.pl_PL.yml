@@ -31,14 +31,14 @@ pl_PL:
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, GG: mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM, GG: mm"
+      long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM YYYY H:mm"
+      full_no_year_no_time: "D MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
       long_date_with_year: "D MMM 'YY LT"
-      long_date_without_year: "D MMM, LT"
+      long_date_without_year: "D MMM LT"
       long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
@@ -346,7 +346,7 @@ pl_PL:
         start_of_next_business_week_alt: "Następny poniedziałek"
         next_month: "Następny miesiąc"
         custom: "Niestandardowa data i godzina"
-        last_custom: "Ostatni, ubiegły, zeszły"
+        last_custom: "Ostatnie"
         none: "Przypomnienie nie jest potrzebne"
         today_with_time: "dzisiaj o %{time}"
         tomorrow_with_time: "jutro o %{time}"
@@ -863,10 +863,10 @@ pl_PL:
         many: "%{count} tematów"
         other: "%{count} tematów"
       topic_stat_sentence_week:
-        one: "%{count}nowy temat w zeszłym miesiącu."
-        few: "%{count}nowe tematy w zeszłym tygodniu."
-        many: "%{count}nowych tematów w zeszłym tygodniu."
-        other: "%{count}nowych tematów w zeszłym tygodniu."
+        one: "%{count} nowy temat w zeszłym tygodniu."
+        few: "%{count} nowe tematy w zeszłym tygodniu."
+        many: "%{count} nowych tematów w zeszłym tygodniu."
+        other: "%{count} nowych tematów w zeszłym tygodniu."
       topic_stat_sentence_month:
         one: "%{count} nowy temat w ostatnim miesiącu."
         few: "%{count} nowe tematy w ostatnim miesiącu."
@@ -1614,7 +1614,7 @@ pl_PL:
       reset: "Resetuj hasło"
       complete_username: "Jeśli jakieś mamy konto o nazwie użytkownika <b>%{username}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
       complete_email: "Jeśli jakieś konto użytkownika posiada adres <b>%{email}</b>, za chwilę zostanie wysłana wiadomość z instrukcją jak ustawić nowe hasło."
-      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> . Powinieneś otrzymać wiadomość e-mail z instrukcjami, jak szybko zresetować hasło."
+      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b>. Powinieneś otrzymać wiadomość e-mail z instrukcjami, jak szybko zresetować hasło."
       complete_email_found: "Znaleźliśmy konto pasujące do <b>%{email}</b> . Powinieneś otrzymać wiadomość e-mail z instrukcjami, jak szybko zresetować hasło."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
@@ -1625,9 +1625,9 @@ pl_PL:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
       emoji: "zablokuj emoji"
-      complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
+      complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
-      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
+      complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email_found: "Znaleźliśmy konto pasujące do <b>%{email}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
       complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
@@ -2093,6 +2093,7 @@ pl_PL:
       or_search_google: "Albo spróbuj wyszukać w Google:"
       search_google: "Spróbuj wyszukać w Google:"
       search_google_button: "Google"
+      search_button: "Szukaj"
       context:
         user: "Szukaj postów @%{username}"
         category: "Szukaj w kategorii #%{category}"
@@ -3067,6 +3068,7 @@ pl_PL:
       list_filters:
         all: "wszystkie tematy"
         none: "brak podkategorii"
+      colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
     flagging:
       title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Oflaguj wpis"
@@ -3574,17 +3576,17 @@ pl_PL:
       reports:
         title: "Lista dostępnych zgłoszeń"
       dashboard:
-        title: "Raporty"
-        last_updated: "Zaktualizowano panel kontrolny:"
-        discourse_last_updated: "Zaktualizowano Discourse:"
+        title: "Panel"
+        last_updated: "Panel zaktualizowany:"
+        discourse_last_updated: "Discourse zaktualizowane:"
         version: "Wersja"
-        up_to_date: "Wersja Aktualna!"
+        up_to_date: "Wersja aktualna!"
         critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_upgrade: "Koniecznie zaktualizuj!"
-        no_check_performed: "Sprawdzanie dostępności aktualizacji nie jest wykonywane. Sprawdź działa czy sidekiq."
-        stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź działa czy sidekiq."
-        version_check_pending: "Wygląda na to że ostatnio była wykonana aktualizacja. Fantastycznie!"
+        no_check_performed: "Sprawdzanie dostępności aktualizacji nie zostało wykonane. Sprawdź czy działa sidekiq."
+        stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź czy działa sidekiq."
+        version_check_pending: "Wygląda na to, że ostatnio była wykonana aktualizacja. Fantastycznie!"
         installed_version: "Zainstalowana"
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
@@ -4648,6 +4650,9 @@ pl_PL:
         anonymize_yes: "Tak, anonimizuj to konto."
         anonymize_failed: "Wystąpił problem podczas anonimizacji konta."
         delete: "Usuń użytkownika"
+        delete_posts:
+          progress:
+            title: "Postęp usuwania postów"
         merge:
           button: "Połącz"
           prompt:
@@ -4659,6 +4664,8 @@ pl_PL:
             target_username_placeholder: "Nazwa nowego właściciela"
             transfer_and_delete: "Przenieś i usuń @%{username}"
             cancel: "Anuluj"
+          progress:
+            title: "Scal postęp"
           confirmation:
             title: "Przenieś i usuń @%{username}"
             description: |
@@ -4865,7 +4872,7 @@ pl_PL:
           tags: "Tagi"
           search: "Wyszukaj"
           groups: "Grupy"
-          dashboard: "Raporty"
+          dashboard: "Panel"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:

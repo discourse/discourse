@@ -888,6 +888,7 @@ fr:
       color_scheme_default_on_all_devices: "Définir comme jeux de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
       color_schemes:
+        default_description: "Couleur du thème"
         disable_dark_scheme: "Désactivé"
         dark_instructions: "Vous pouvez prévisualiser le jeu de couleurs du mode sombre en basculant le mode sombre de votre appareil."
         undo: "Réinitialiser"
@@ -1951,6 +1952,7 @@ fr:
       or_search_google: "Ou essayez plutôt de rechercher avec Google :"
       search_google: "Essayez plutôt de rechercher avec Google :"
       search_google_button: "Google"
+      search_button: "Recherche"
       context:
         user: "Rechercher dans les messages de @%{username}"
         category: "Rechercher dans la catégorie #%{category}"
@@ -2057,6 +2059,7 @@ fr:
         read: "Vous n'avez lu aucun sujet pour le moment."
         posted: "Vous n'avez écrit aucun message pour le moment."
         ready_to_create: "Prêt à "
+        latest: "Vous avez tout lu!"
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
@@ -2847,6 +2850,7 @@ fr:
       list_filters:
         all: "tous les sujets"
         none: "aucune sous-catégorie"
+      colors_disabled: "Vous ne pouvez pas sélectionner de couleurs, car vous n'avez pas choisi de style de catégorie."
     flagging:
       title: "Merci de nous aider à garder notre communauté civilisée !"
       action: "Signaler ce message"
@@ -4150,6 +4154,7 @@ fr:
             topic_unarchived: "sujet désarchivé"
             post_staff_note_create: "ajouter une note pour les responsables"
             post_staff_note_destroy: "supprimer une note pour les responsables"
+            delete_group: "Supprimer le groupe"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -4518,6 +4523,7 @@ fr:
         go_back: "Retour à la recherche"
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
+        locale: "Langue:"
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"

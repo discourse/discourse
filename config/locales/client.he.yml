@@ -2089,6 +2089,7 @@ he:
       or_search_google: "או שתנסו חיפוש בעזרת גוגל במקום."
       search_google: "נסה לחפש באמצעות גוגל במקום:"
       search_google_button: "גוגל"
+      search_button: "חיפוש"
       context:
         user: "חיפוש פוסטים לפי @%{username}"
         category: "חפשו את הקטגוריה #%{category}"

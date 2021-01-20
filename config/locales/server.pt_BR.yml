@@ -525,9 +525,9 @@ pt_BR:
 
       Obrigado por ser uma parte importante desta comunidade!
 
-      (Para mais informações sobre níveis de confiança, [veja este tópico][confiança]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
+      (Para mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
 
-      [confiança]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de Início Rápido do Administrador"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -763,7 +763,7 @@ pt_BR:
       description: 'Esta postagem contém conteúdo que uma pessoa razoável consideraria ofensiva, abusiva ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
     notify_user:
-      title: "Envie ao(à) @ %{nome de usuário} uma mensagem"
+      title: "Enviar uma mensagem para @%{username}"
       description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
       short_description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
       email_title: 'Sobre a sua postagem "%{title}"'
@@ -1612,7 +1612,7 @@ pt_BR:
     email_in: 'Permitir que os usuários postem novos tópicos por e-mail (requer pesquisa manual ou POP3). Configure os endereços na guia "Configurações" de cada categoria.'
     email_in_min_trust: "O nível de confiança mínimo que um usuário necessita ter para ser permitido a postar novos tópicos via email."
     email_in_spam_header: "O cabeçalho do email para detectar spam."
-    email_prefix: "A [etiqueta] usada no assunto dos emails. Ele será por padrão 'título' se não configurada."
+    email_prefix: "A [label] usada no assunto dos emails. Ele será por padrão 'título' se não configurada."
     email_site_title: "O título do site usado como o enviador dos emails do site. Por padrão será 'título' se não for configurado. Se o seu 'título' contiver caracteres que não são permitidos em strings de enviador de emails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário com base no endereço de e-mail."
     minimum_topics_similar: "Quantos tópicos devem existir antes que tópicos semelhantes sejam apresentados ao compor novos tópicos."
@@ -1816,8 +1816,8 @@ pt_BR:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Buscar resultados para '%{term}'"
-    audio: "[áudio]"
-    video: "[vídeo]"
+    audio: "[audio]"
+    video: "[video]"
   sso:
     login_error: "Erro de Login"
     not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
@@ -1957,7 +1957,7 @@ pt_BR:
     content_matches_auto_block_regex: "Conteúdo corresponde a regex de bloco automático"
     username:
       short: "deve ter no mínimo %{min} caracteres"
-      long: "precisa ter não mais que ${max} caracteres"
+      long: "precisa ter não mais que %{max} caracteres"
       too_long: "é muito longo"
       characters: "deve incluir apenas números, letras, traços, pontos e sublinhados"
       unique: "tem que ser único"
@@ -3291,7 +3291,7 @@ pt_BR:
       name: Leitor
       description: Leu todas as respostas em um tópico com mais de 100 respostas
       long_description: |
-        Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! : slight_smile:
+        Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! :slight_smile:
     popular_link:
       name: Link Popular
       description: Postou um link externo com 50 clicks
