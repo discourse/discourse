@@ -148,17 +148,18 @@ describe DiscourseUpdates do
   context 'new features' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
+    let!(:last_item_date) { Time.zone.now - 5.minutes }
+    let!(:sample_features) { [
+      { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => Time.zone.now - 40.minutes },
+      { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => Time.zone.now - 15.minutes },
+      { "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!", "created_at" => last_item_date },
+    ] }
 
     before(:each) do
       Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
       Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
       Discourse.redis.del "new_features"
 
-      sample_features = [
-        { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => Time.zone.now - 40.minutes },
-        { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => Time.zone.now - 15.minutes },
-        { "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!", "created_at" => Time.zone.now - 5.minutes },
-      ]
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
     end
 
@@ -191,6 +192,24 @@ describe DiscourseUpdates do
 
       # doesn't affect another user
       expect(DiscourseUpdates.unseen_new_features(admin2.id)).to be_present
+
+    end
+
+    it 'correctly sees newly added features as unseen' do
+      DiscourseUpdates.mark_new_features_as_seen(admin.id)
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (last_item_date)
+
+      updated_features = [
+        { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => Time.zone.now - 2.minutes }
+      ]
+      updated_features += sample_features
+
+      Discourse.redis.set('new_features', MultiJson.dump(updated_features))
+
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+      expect(result.length).to eq(1)
+      expect(result[0]["title"]).to eq("Brand New Item")
     end
   end
 end

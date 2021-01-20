@@ -141,7 +141,10 @@ module DiscourseUpdates
     end
 
     def mark_new_features_as_seen(user_id)
-      Discourse.redis.set(new_features_last_seen_key(user_id), Time.now.to_s)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+      last_seen = entries.max_by { |x| x["created_at"] }
+      Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
     end
 
     private
