@@ -13,6 +13,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
+  tagName: "ul",
+
   _initialize: on("init", function () {
     const filter = this.get("stream.filter");
     if (filter) {
