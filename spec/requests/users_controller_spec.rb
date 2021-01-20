@@ -1955,6 +1955,38 @@ describe UsersController do
             end
           end
 
+          context "with user_notification_schedule attributes" do
+            it "updates the user's notification schedule" do
+              params = {
+                user_notification_schedule: {
+                  enabled: true,
+                  day_0_start_time: 30,
+                  day_0_end_time: 60,
+                  day_1_start_time: 30,
+                  day_1_end_time: 60,
+                  day_2_start_time: 30,
+                  day_2_end_time: 60,
+                  day_3_start_time: 30,
+                  day_3_end_time: 60,
+                  day_4_start_time: 30,
+                  day_4_end_time: 60,
+                  day_5_start_time: 30,
+                  day_5_end_time: 60,
+                  day_6_start_time: 30,
+                  day_6_end_time: 60,
+                }
+              }
+              put "/u/#{user.username}.json", params: params
+
+              user.reload
+              expect(user.user_notification_schedule.enabled).to eq(true)
+              expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+              expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_6_end_time).to eq(60)
+            end
+          end
+
           context "uneditable field" do
             let!(:user_field) { Fabricate(:user_field, editable: false) }
 

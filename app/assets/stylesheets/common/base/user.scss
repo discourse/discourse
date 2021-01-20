@@ -789,3 +789,24 @@
     grid-column: 1 / span 2;
   }
 }
+
+.notification-schedule {
+  .instruction {
+    margin-top: 12px;
+    margin-bottom: 10px;
+  }
+
+  .notification-schedule-table {
+    .notification-schedule-tbody {
+      border-top-width: 1px;
+      .day {
+        .day-label {
+          padding: 1em 1em 1em 0;
+        }
+        .to {
+          padding: 0 0.5em;
+        }
+      }
+    }
+  }
+}

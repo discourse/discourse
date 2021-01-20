@@ -1624,6 +1624,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
+    permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     result = params
       .permit(permitted, theme_ids: [])
