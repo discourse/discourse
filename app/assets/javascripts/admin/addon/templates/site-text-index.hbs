@@ -39,7 +39,7 @@
 </div>
 
 {{#conditional-loading-spinner condition=searching}}
-  {{#if fallbackLocaleFullName}}
+  {{#if showFallbackLocaleWarning}}
     <div class="alert alert-info">
       {{d-icon "exclamation-circle"}}
       {{i18n "admin.site_text.fallback_locale_warning" fallback=fallbackLocaleFullName}}
