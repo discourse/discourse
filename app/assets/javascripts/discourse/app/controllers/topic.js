@@ -702,9 +702,9 @@ export default Controller.extend(bufferedProperty("model"), {
       if (!this.currentUser) {
         return bootbox.alert(I18n.t("bookmarks.not_bookmarked"));
       } else if (post) {
-        return post.toggleBookmark();
+        return this._togglePostBookmark(post);
       } else {
-        return this.model.toggleBookmark().then((changedIds) => {
+        return this._toggleTopicBookmark(this.model).then((changedIds) => {
           if (!changedIds) {
             return;
           }
@@ -1165,6 +1165,118 @@ export default Controller.extend(bufferedProperty("model"), {
         DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get("post_number")));
       });
     }
+  },
+
+  _togglePostBookmark(post) {
+    let postEl = document.querySelector(`[data-post-id="${post.id}"]`);
+    let localDateEl = null;
+    if (postEl) {
+      localDateEl = postEl.querySelector(".discourse-local-date");
+    }
+
+    return new Promise((resolve) => {
+      let modalController = showModal("bookmark", {
+        model: {
+          postId: post.id,
+          id: post.bookmark_id,
+          reminderAt: post.bookmark_reminder_at,
+          autoDeletePreference: post.bookmark_auto_delete_preference,
+          name: post.bookmark_name,
+          postDetectedLocalDate: localDateEl ? localDateEl.dataset.date : null,
+          postDetectedLocalTime: localDateEl ? localDateEl.dataset.time : null,
+          postDetectedLocalTimezone: localDateEl
+            ? localDateEl.dataset.timezone
+            : null,
+        },
+        title: post.bookmark_id
+          ? "post.bookmarks.edit"
+          : "post.bookmarks.create",
+        modalClass: "bookmark-with-reminder",
+      });
+      modalController.setProperties({
+        onCloseWithoutSaving: () => {
+          resolve({ closedWithoutSaving: true });
+          post.appEvents.trigger("post-stream:refresh", { id: post.id });
+        },
+        afterSave: (savedData) => {
+          post.createBookmark(savedData);
+          resolve({ closedWithoutSaving: false });
+        },
+        afterDelete: (topicBookmarked) => {
+          post.deleteBookmark(topicBookmarked);
+        },
+      });
+    });
+  },
+
+  _toggleTopicBookmark() {
+    if (this.model.bookmarking) {
+      return Promise.resolve();
+    }
+    this.model.set("bookmarking", true);
+    const bookmark = !this.model.bookmarked;
+    let posts = this.model.postStream.posts;
+
+    return this.model.firstPost().then((firstPost) => {
+      const toggleBookmarkOnServer = () => {
+        if (bookmark) {
+          return this._togglePostBookmark(firstPost).then((opts) => {
+            this.model.set("bookmarking", false);
+            if (opts && opts.closedWithoutSaving) {
+              return;
+            }
+            return this.model.afterTopicBookmarked(firstPost);
+          });
+        } else {
+          return this.model
+            .deleteBookmark()
+            .then(() => {
+              this.model.toggleProperty("bookmarked");
+              this.model.set("bookmark_reminder_at", null);
+              let clearedBookmarkProps = {
+                bookmarked: false,
+                bookmark_id: null,
+                bookmark_name: null,
+                bookmark_reminder_at: null,
+              };
+              if (posts) {
+                const updated = [];
+                posts.forEach((post) => {
+                  if (post.bookmarked) {
+                    post.setProperties(clearedBookmarkProps);
+                    updated.push(post.id);
+                  }
+                });
+                firstPost.setProperties(clearedBookmarkProps);
+                return updated;
+              }
+            })
+            .catch(popupAjaxError)
+            .finally(() => this.model.set("bookmarking", false));
+        }
+      };
+
+      const unbookmarkedPosts = [];
+      if (!bookmark && posts) {
+        posts.forEach(
+          (post) => post.bookmarked && unbookmarkedPosts.push(post)
+        );
+      }
+
+      return new Promise((resolve) => {
+        if (unbookmarkedPosts.length > 1) {
+          bootbox.confirm(
+            I18n.t("bookmarks.confirm_clear"),
+            I18n.t("no_value"),
+            I18n.t("yes_value"),
+            (confirmed) =>
+              confirmed ? toggleBookmarkOnServer().then(resolve) : resolve()
+          );
+        } else {
+          toggleBookmarkOnServer().then(resolve);
+        }
+      });
+    });
   },
 
   togglePinnedState() {
