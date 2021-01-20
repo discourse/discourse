@@ -3,20 +3,20 @@ en:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    short_date: "D MMM YYYY"
+    short_date: "D MMM, YYYY"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    long_date: "D MMMM YYYY LT"
+    long_date: "MMMM D, YYYY h:mma"
 
   datetime_formats: &datetime_formats
     formats:
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      short: "%d-%m-%Y"
+      short: "%m-%d-%Y"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      short_no_year: "%-d %B"
+      short_no_year: "%B %-d"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      date_only: "%-d %B %Y"
+      date_only: "%B %-d, %Y"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      long: "%-d %B %Y %H:%M"
+      long: "%B %-d, %Y, %l:%M%P"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
   date:
@@ -482,7 +482,7 @@ en:
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
       - Be kind to your fellow community members.
-      
+
       - Does your reply improve the conversation?
 
       - Constructive criticism is welcome, but criticize *ideas*, not people.
@@ -2909,8 +2909,8 @@ en:
         We’ve promoted you up another [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         As an experienced user, you might appreciate [this list of handy tips and tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
-        
-        We invite you to keep getting involved – we enjoy having you around. 
+
+        We invite you to keep getting involved – we enjoy having you around.
 
     backup_succeeded:
       title: "Backup Succeeded"

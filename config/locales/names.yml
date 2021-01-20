@@ -111,11 +111,11 @@ el:
   name: Greek
   nativeName: ελληνικά
 en:
-  name: English
-  nativeName: English
-en_US:
-  name: English (United States)
-  nativeName: English (United States)
+  name: English (US)
+  nativeName: English (US)
+en_GB:
+  name: English (UK)
+  nativeName: English (UK)
 eo:
   name: Esperanto
   nativeName: Esperanto

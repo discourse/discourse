@@ -13,11 +13,11 @@ describe I18n::Backend::FallbackLocaleList do
     expect(list[:en]).to eq([:en])
   end
 
-  it "works when default_locale is English (United States)" do
-    SiteSetting.default_locale = :en_US
+  it "works when default_locale is English (UK)" do
+    SiteSetting.default_locale = :en_GB
 
     expect(list[:ru]).to eq([:ru, :en])
-    expect(list[:en_US]).to eq([:en_US, :en])
+    expect(list[:en_GB]).to eq([:en_GB, :en])
     expect(list[:en]).to eq([:en])
   end
 
@@ -27,7 +27,7 @@ describe I18n::Backend::FallbackLocaleList do
     expect(list[:ru]).to eq([:ru, :en])
     expect(list[:de]).to eq([:de, :en])
     expect(list[:en]).to eq([:en])
-    expect(list[:en_US]).to eq([:en_US, :en])
+    expect(list[:en_GB]).to eq([:en_GB, :en])
   end
 
   context "when plugin registered fallback locale" do
@@ -50,14 +50,14 @@ describe I18n::Backend::FallbackLocaleList do
       expect(list[:en]).to eq([:en])
     end
 
-    it "works when default_locale is English (United States)" do
-      SiteSetting.default_locale = :en_US
+    it "works when default_locale is English (UK)" do
+      SiteSetting.default_locale = :en_GB
 
       expect(list[:de_AT]).to eq([:de_AT, :de, :en])
       expect(list[:"de_AT-formal"]).to eq([:"de_AT-formal", :de_AT, :de, :en])
       expect(list[:de]).to eq([:de, :en])
       expect(list[:en]).to eq([:en])
-      expect(list[:en_US]).to eq([:en_US, :en])
+      expect(list[:en_GB]).to eq([:en_GB, :en])
     end
 
     it "works when default_locale is not English" do

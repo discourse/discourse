@@ -195,8 +195,7 @@ module JsLocaleHelper
   end
 
   MOMENT_LOCALE_MAPPING ||= {
-    "hy" => "hy-am",
-    "en" => "en-gb"
+    "hy" => "hy-am"
   }
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
@@ -213,7 +212,6 @@ module JsLocaleHelper
       # moment.js uses a different naming scheme for locale files
       locale.tr('_', '-').downcase
     end
-
   end
 
   def self.find_message_format_locale(locale_chain, fallback_to_english:)

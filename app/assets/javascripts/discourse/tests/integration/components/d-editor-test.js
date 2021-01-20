@@ -608,7 +608,7 @@ third line`
     template: "{{d-editor value=value}}",
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en_US";
+      this.siteSettings.default_locale = "en";
     },
 
     async test(assert) {
@@ -622,7 +622,7 @@ third line`
     template: "{{d-editor value=value}}",
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en_US";
+      this.siteSettings.default_locale = "en";
     },
 
     async test(assert) {

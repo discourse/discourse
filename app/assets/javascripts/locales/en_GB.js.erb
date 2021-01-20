@@ -1,0 +1,6 @@
+//= depend_on 'client.en_GB.yml'
+//= depend_on 'client.en.yml'
+//= require locales/i18n
+
+<% JsLocaleHelper.reloadable_plugins(:en_GB, self) %>
+<%= JsLocaleHelper.output_locale(:en_GB) %>
