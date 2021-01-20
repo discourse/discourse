@@ -844,6 +844,20 @@ sv:
         mute_option_title: "Du kommer inte att få några aviseringar från denna användare."
         normal_option: "Normal"
         normal_option_title: "Du kommer att aviseras om denna användare svarar dig, citerar dig eller nämner dig."
+      notification_schedule:
+        title: "Aviseringsschema"
+        label: "Aktivera anpassat aviseringsschema"
+        tip: "Utanför dessa timmar kommer du automatiskt att placeras i \"stör ej\"."
+        midnight: "Midnatt"
+        none: "Ingen"
+        monday: "Måndag"
+        tuesday: "Tisdag"
+        wednesday: "Onsdag"
+        thursday: "Torsdag"
+        friday: "Fredag"
+        saturday: "Lördag"
+        sunday: "Söndag"
+        to: "till"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
       feature_topic_on_profile:
@@ -3285,7 +3299,6 @@ sv:
     image_removed: "(bild borttagen)"
     do_not_disturb:
       title: "Stör ej för..."
-      save: "Spara"
       label: "Stör ej"
       remaining: "%{remaining} kvar"
       options:
@@ -3294,6 +3307,7 @@ sv:
         two_hours: "2 timmar"
         tomorrow: "Tills imorgon"
         custom: "Anpassad"
+      set_schedule: "Ange ett aviseringsschema"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4534,7 +4548,6 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         locale: "Språk:"
-        fallback_locale_warning: "Du redigerar en variant av %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"

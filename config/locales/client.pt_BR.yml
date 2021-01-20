@@ -3026,7 +3026,6 @@ pt_BR:
       enabled: "O modo seguro está habilitado. Para sair do modo seguro feche esta janela do navegador"
     do_not_disturb:
       title: "Não perturbe por..."
-      save: "Salvar"
       label: "Não perturbe"
       remaining: "%{remaining} restantes"
       options:
@@ -4026,6 +4025,9 @@ pt_BR:
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Apagar Usuário"
+        delete_posts:
+          progress:
+            title: "Progresso da exclusão de postagens"
         merge:
           button: "Mesclar"
           prompt:

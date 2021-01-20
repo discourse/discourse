@@ -921,6 +921,20 @@ he:
         mute_option_title: "לא תגענה אליך התראות בנוגע למשתמש זה."
         normal_option: "רגיל"
         normal_option_title: "תגיע אליך התראה אם המשתמש הזה יגיב לך, יצטט אותך או יאזכר אותך."
+      notification_schedule:
+        title: "תזמון התראות"
+        label: "הפעלת תזמון התראות מותאם אישית"
+        tip: "מחוץ לשעות אלו המצב שלך יוגדר לכדי ‚לא להפריע’ אוטומטית."
+        midnight: "חצות"
+        none: "ללא"
+        monday: "יום שני"
+        tuesday: "יום שלישי"
+        wednesday: "יום רביעי"
+        thursday: "יום חמישי"
+        friday: "יום שישי"
+        saturday: "שבת"
+        sunday: "יום ראשון"
+        to: "עד"
       activity_stream: "פעילות"
       preferences: "העדפות"
       feature_topic_on_profile:
@@ -1250,8 +1264,8 @@ he:
         prefilled: "הדואר האלקטרוני תואם לשם משתמש זה"
         required: "נא למלא שם משתמש"
       locale:
-        title: "שפת ממשק"
-        instructions: "שפת ממשק המשתמש. היא תתחלף כשתרעננו את העמוד."
+        title: "שפת מנשק"
+        instructions: "שפת מנשק המשתמש. היא תתחלף עם רענון העמוד."
         default: "(ברירת מחדל)"
         any: "כלשהו"
       password_confirmation:
@@ -3549,7 +3563,6 @@ he:
     image_removed: "(התמונה הוסרה)"
     do_not_disturb:
       title: "לא להפריע למשך…"
-      save: "שמירה"
       label: "לא להפריע"
       remaining: "%{remaining} נותרו"
       options:
@@ -3558,6 +3571,7 @@ he:
         two_hours: "שעתיים"
         tomorrow: "עד מחר"
         custom: "מותאם"
+      set_schedule: "הגדרת תזמון התראות"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4645,6 +4659,9 @@ he:
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
+        delete_posts:
+          progress:
+            title: "התקדמות מחיקת הפוסטים"
         merge:
           button: "מיזוג"
           prompt:
@@ -4656,6 +4673,8 @@ he:
             target_username_placeholder: "שם המשתמש של הבעלים החדשים"
             transfer_and_delete: "העברה ומחיקה של ‎@%{username}‎"
             cancel: "ביטול"
+          progress:
+            title: "התקדמות המיזוג"
           confirmation:
             title: "העברה ומחיקה של ‎@%{username}‎"
             description: |

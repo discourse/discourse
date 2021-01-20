@@ -3302,7 +3302,6 @@ sl:
     image_removed: "(slika odstranjena)"
     do_not_disturb:
       title: "Ne moti za ..."
-      save: "Shrani"
       label: "Ne moti"
       remaining: "%{remaining} preostalo"
       options:

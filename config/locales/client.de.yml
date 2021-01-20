@@ -422,6 +422,7 @@ de:
         email: "E-Mail"
         name: "Name"
         fields: "Felder"
+        reject_reason: "Grund"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (des letzten Flags)"
@@ -514,6 +515,9 @@ de:
           other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
         ok: "OK"
       example_username: "benutzername"
+      reject_reason:
+        title: "Warum lehnst du diesen Benutzer ab?"
+        send_email: "Ablehnungs-E-Mail senden"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"%{userUrl}\">Du</a> hast <a href=\"%{topicUrl}\">das Thema</a> verfasst"
@@ -840,6 +844,20 @@ de:
         mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
+      notification_schedule:
+        title: "Zeitplan für Benachrichtigungen"
+        label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
+        tip: "Außerhalb dieser Zeiten wird automatisch der \"Nicht stören\"-Modus aktiviert."
+        midnight: "Mitternacht"
+        none: "keine"
+        monday: "Montag"
+        tuesday: "Dienstag"
+        wednesday: "Mittwoch"
+        thursday: "Donnerstag"
+        friday: "Freitag"
+        saturday: "Samstag"
+        sunday: "Sonntag"
+        to: "bis"
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       feature_topic_on_profile:
@@ -3279,7 +3297,6 @@ de:
     image_removed: "(Bild entfernt)"
     do_not_disturb:
       title: "Nicht stören für..."
-      save: "Speichern"
       label: "Nicht stören"
       remaining: "%{remaining} verbleibend"
       options:
@@ -4522,6 +4539,7 @@ de:
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
+        locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte anzeigen"

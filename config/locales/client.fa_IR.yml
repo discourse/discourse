@@ -806,6 +806,19 @@ fa_IR:
         mute_option_title: "هیچ اگاه سازی از این کاربر دریافت نمیکنید"
         normal_option: "معمولی"
         normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
+      notification_schedule:
+        title: "زمان‌بندی آگاه‌سازی"
+        label: "فعال سازی زمان‌بندی سفارشی آگاه‌سازی"
+        midnight: "نیمه شب"
+        none: "هیچ کدام"
+        monday: "دوشنبه"
+        tuesday: "سه‌شنبه"
+        wednesday: "چهار شنبه"
+        thursday: "پنج‌شنبه"
+        friday: "جمعه"
+        saturday: "شنبه"
+        sunday: "یک‌شنبه"
+        to: "به"
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
       feature_topic_on_profile:
@@ -2861,7 +2874,6 @@ fa_IR:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
     do_not_disturb:
       title: "مزاحم نشود برای..."
-      save: "ذخیره"
       label: "مزاحم نشود"
       remaining: "%{remaining} باقی‌مانده"
       options:
@@ -2870,6 +2882,7 @@ fa_IR:
         two_hours: "۲ ساعت"
         tomorrow: "تا فردا"
         custom: "سفارشی"
+      set_schedule: "تنظیم زمان‌بندی آگاه‌سازی"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

@@ -319,6 +319,7 @@ ro:
     drafts:
       resume: "Reluați"
       remove: "Eliminați"
+      remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj privat nou"
       topic_reply: "Răspuns ciornă"
@@ -521,6 +522,8 @@ ro:
           other: "Ai <strong>%{count}</strong> postări în așteptare."
         ok: "Ok"
       example_username: "nume de utilizator"
+      reject_reason:
+        send_email: "Trimite un e-mail de respingere"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a postat <a href='%{topicUrl}'>discuția</a>"
       you_posted_topic: "<a href='%{userUrl}'>ai</a> postat <a href='%{topicUrl}'>subiectul</a>"
@@ -625,6 +628,7 @@ ro:
           regular_categories_instructions: "Dacă aceste categorii sunt dezactivate, vor fi deblocate pentru membrii grupului. Utilizatorii vor fi notificați dacă sunt menționați sau cineva le răspunde."
         tags:
           title: Etichete
+          description: "Când utilizatorii sunt adăugați la acest grup, setările lor de notificare a etichetei vor fi setate la aceste valori implicite. Ulterior, le pot schimba."
         logs:
           title: "Jurnale"
           when: "Când"
@@ -797,8 +801,10 @@ ro:
       topics_entered: "Subiecte la care particip"
       post_count: "# postări"
       confirm_delete_other_accounts: "Ești sigur că vrei să ștergi aceste conturi?"
+      copied: "copiat"
     user_fields:
       none: "(alege o opțiune)"
+      required: 'Te rog introdu o valoare pentru "%{name}"'
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -822,12 +828,28 @@ ro:
         ignore_duration_username: "Nume utilizator"
         ignore_duration_when: "Durată:"
         ignore_duration_save: "Ignoră"
+        ignore_duration_note: "Rețineți că toate ignorările sunt șterse automat după expirarea duratei de ignorare."
+        ignore_duration_time_frame_required: "Te rog selectează un interval de timp"
+        ignore_no_users: "Nu aveți utilizatori ignorați."
+        ignore_option: "Ignorat"
+        ignore_option_title: "Nu vei primi notificări legate de acest utilizator și toate subiectele și răspunsurile acestuia vor fi ascunse."
         add_ignored_user: "Adaugă..."
         mute_option: "Setate pe silențios"
+        mute_option_title: "Nu vei primi notificări legate de acest utilizator."
         normal_option: "Normal"
+        normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
+      notification_schedule:
+        monday: "Luni"
+        tuesday: "Marţi"
+        wednesday: "Miercuri"
+        thursday: "Joi"
+        friday: "Vineri"
+        saturday: "Sâmbătă"
+        sunday: "Duminică"
       activity_stream: "Activitate"
       preferences: "Preferințe"
       feature_topic_on_profile:
+        open_search: "Selectează un subiect nou"
         title: "Selectați un subiect"
         search_label: "Căutați un subiect după titlu"
         save: "Salvează"
@@ -859,9 +881,15 @@ ro:
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       skip_new_user_tips:
         skip_link: "Sări peste aceste sfaturi"
+      theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
+      color_scheme_default_on_all_devices: "Setează schema (schemele) de culori implicite pe toate dispozitivele mele"
       color_scheme: "Schema de culori"
       color_schemes:
+        default_description: "Tema implicită"
         disable_dark_scheme: "La fel ca de obicei"
+        undo: "Resetare"
+        dark: "Mod întunecat"
+      dark_mode: "Mod întunecat"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"

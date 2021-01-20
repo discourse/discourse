@@ -3134,7 +3134,6 @@ vi:
     image_removed: "(hình ảnh đã bị xóa)"
     do_not_disturb:
       title: "Không làm phiền..."
-      save: "Lưu lại"
       label: "Không làm phiền"
       remaining: "còn lại %{remaining}"
       options:

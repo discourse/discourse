@@ -3284,7 +3284,6 @@ fr:
     image_removed: "(image supprimée)"
     do_not_disturb:
       title: "Ne pas déranger pendant…"
-      save: "Sauvegarder"
       label: "Ne pas déranger"
       remaining: "Encore %{remaining}"
       options:
