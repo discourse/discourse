@@ -759,6 +759,37 @@ RSpec.describe ListController do
       get "/c/hello/world/bye/#{subsubcategory.id}"
       expect(response.status).to eq(301)
       expect(response).to redirect_to("/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}")
+
+      get "/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirects to URL with correct case slug" do
+      category.update(slug: "hello")
+
+      get "/c/Hello/#{category.id}"
+      expect(response).to redirect_to("/c/hello/#{category.id}")
+
+      get "/c/hello/#{category.id}"
+      expect(response.status).to eq(200)
+    end
+
+    context "does not create a redirect loop" do
+      it "with encoded slugs" do
+        category = Fabricate(:category)
+        category.update_columns(slug: CGI.escape("systèmes"))
+
+        get "/c/syst%C3%A8mes/#{category.id}"
+        expect(response.status).to eq(200)
+      end
+
+      it "with lowercase encoded slugs" do
+        category = Fabricate(:category)
+        category.update_columns(slug: CGI.escape("systèmes").downcase)
+
+        get "/c/syst%C3%A8mes/#{category.id}"
+        expect(response.status).to eq(200)
+      end
     end
 
     context "with subfolder" do
