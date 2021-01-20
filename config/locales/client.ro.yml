@@ -433,6 +433,7 @@ ro:
         email: "Email"
         name: "Nume"
         fields: "Câmpuri"
+        reject_reason: "Motiv"
       user_percentage:
         agreed:
           one: "%{count}% este de acord"
@@ -448,6 +449,9 @@ ro:
           other: "%{count}% ignoră"
       topics:
         topic: "Discuție"
+        reviewable_count: "Număr"
+        reported_by: "Raportat de"
+        deleted: "[Subiect șters]"
         original: "(topic inițial)"
         details: "detalii"
       edit: "Editează"
@@ -855,6 +859,7 @@ ro:
       first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       skip_new_user_tips:
         skip_link: "Sări peste aceste sfaturi"
+      color_scheme: "Schema de culori"
       color_schemes:
         disable_dark_scheme: "La fel ca de obicei"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"

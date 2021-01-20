@@ -865,7 +865,7 @@ pt_BR:
       silenced_tooltip: "Este usuário está silenciado"
       suspended_notice: "Este usuário está suspenso até %{date}."
       suspended_permanently: "Este usuário está suspenso."
-      suspended_reason: "Motivo:"
+      suspended_reason: "Motivo: "
       email_activity_summary: "Resumo de Atividades"
       mailing_list_mode:
         label: "Modo lista de correio"
@@ -1645,7 +1645,7 @@ pt_BR:
       link_url_placeholder: "Cole uma URL ou digite para pesquisar tópicos"
       blockquote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
-      code_text: "identar texto pré-formatado por 4 espaços"
+      code_text: "recuar o texto pré-formatado em 4 espaços"
       paste_code_text: "digite ou cole o código aqui"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
@@ -2696,7 +2696,7 @@ pt_BR:
       other: "visualizações"
     replies: "Respostas"
     views_long:
-      one: "este tópico foi visto uma vez"
+      one: "este tópico foi visto %{count} vez"
       other: "este tópico foi visto %{number} vezes"
     activity: "Atividade"
     likes: "Curtidas"
@@ -2939,8 +2939,8 @@ pt_BR:
       delete_synonym_confirm: 'Você tem certeza que deseja excluir o sinônimo "%{tag_name}"?'
       delete_tag: "Apagar marcação"
       delete_confirm:
-        one: "Tem certeza de que deseja excluir esta tag e removê-la de um tópico para o qual ela está atribuída?"
-        other: "Tem certeza de que deseja excluir esta tag e removê-la de %{count} tópicos aos quais ela está atribuída?"
+        one: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópico para o qual ela está atribuída?"
+        other: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópicos aos quais ela está atribuída?"
       delete_confirm_no_topics: "Tem certeza de que deseja excluir esta tag?"
       delete_confirm_synonyms:
         one: "O sinônimo dela também será excluído."
@@ -2957,16 +2957,16 @@ pt_BR:
       upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato 'nome_etiqueta,grupo_etiqueta'."
       upload_successful: "Etiquetas enviadas com sucesso"
       delete_unused_confirmation:
-        one: "%{count} etiqueta será excluída: %{etiquetas}"
-        other: "%{count} etiquetas serão excluídas: %{etiquetas}"
+        one: "%{count} etiqueta será excluída: %{tags}"
+        other: "%{count} etiquetas serão excluídas: %{tags}"
       delete_unused_confirmation_more_tags:
-        one: "%{etiquetas} e %{count} mais"
-        other: "%{etiquetas} e %{count} mais"
+        one: "%{tags} e %{count} mais"
+        other: "%{tags} e %{count} mais"
       delete_unused: "Excluir Etiquetas Não Usadas"
       delete_unused_description: "Excluir todas as etiquetas que não estão anexadas a nenhum tópico ou mensagem pessoal"
       cancel_delete_unused: "Cancelar"
       filters:
-        without_category: "%{filter} %{category} Tópicos"
+        without_category: "%{filter} %{tag} Tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
         untagged_without_category: "%{filter} tópicos não etiquetados"
         untagged_with_category: "%{filter} tópicos não etiquetados em %{category}"
@@ -3359,7 +3359,7 @@ pt_BR:
           error: "Houve um erro ao carregar '%{filename}': %{message}"
         operations:
           is_running: "Uma operação está sendo executada..."
-          failed: "A %{operação} falhou. Por favor, cheque os registros."
+          failed: "A %{operation} falhou. Por favor, cheque os registros."
           cancel:
             label: "Cancelar"
             title: "Cancelar a operação atual"
@@ -4059,7 +4059,7 @@ pt_BR:
           one: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dia. (Configuração delete_user_max_post_age.)"
           other: "Não é possível remover todas as mensagens. Algumas mensagens são mais antigas do que %{count} dias. (Configuração delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Não pode remover porque o usuário tem mais de uma mensagem (delete_all_posts_max)"
+          one: "Não pode remover porque o usuário tem mais de %{count} mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
         delete_confirm: "Geralmente é preferível anonimizar usuários ao invés de excluí-los, para evitar remover conteúdo de discussões existentes.<br><br>Você tem CERTEZA de que deseja excluir este usuário? Esta ação é permanente!"
         delete_and_block: "Deletar e <b>bloquear</b> este e-mail e endereço IP"

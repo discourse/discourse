@@ -2094,6 +2094,7 @@ ru:
       or_search_google: "или попробуйте поискать в Google:"
       search_google: "Попробуйте поискать в Google:"
       search_google_button: "Google"
+      search_button: "Найти"
       context:
         user: "Искать сообщения от @%{username}"
         category: "Искать в разделе #%{category}"

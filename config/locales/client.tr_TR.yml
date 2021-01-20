@@ -1710,6 +1710,7 @@ tr_TR:
       or_search_google: "Ya da Google'la aramayı dene:"
       search_google: "Google'la aramayı dene:"
       search_google_button: "Google"
+      search_button: "Ara"
       context:
         user: "@%{username} kullancısına ait gönderilerde ara"
         category: "#%{category} kategorisini ara"

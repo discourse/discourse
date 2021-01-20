@@ -1742,6 +1742,7 @@ fa_IR:
       or_search_google: "یا به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
+      search_button: "جسنجو"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"

@@ -41,6 +41,8 @@ fr:
           title: "Navigation"
         navigation_bar:
           title: "Barre de navigation"
+        navigation_stacked:
+          title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
         topic_link:

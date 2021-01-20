@@ -1952,6 +1952,7 @@ sv:
       or_search_google: "Eller försök söka med Google istället:"
       search_google: "Försök söka med Google istället:"
       search_google_button: "Google"
+      search_button: "Sök"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -4370,6 +4371,9 @@ sv:
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
+        delete_posts:
+          progress:
+            title: "Förlopp för radering av inlägg"
         merge:
           button: "Slå ihop"
           prompt:
@@ -4381,6 +4385,8 @@ sv:
             target_username_placeholder: "Användarnamn på den nya ägaren"
             transfer_and_delete: "Överför och radera @%{username}"
             cancel: "Avbryt"
+          progress:
+            title: "Sammanslagningsförlopp"
           confirmation:
             title: "Överför och radera @%{username}"
             description: |
