@@ -42,6 +42,10 @@ export default {
 
     let siteSettings = container.lookup("site-settings:main");
 
+    ALL_TARGETS.forEach((t) =>
+      app.inject(t, "appEvents", "service:app-events")
+    );
+
     const currentUser = User.current();
     app.register("current-user:main", currentUser, { instantiate: false });
     app.currentUser = currentUser;
@@ -81,10 +85,6 @@ export default {
     app.register("search-service:main", SearchService);
 
     ALL_TARGETS.forEach((t) => app.inject(t, "store", "service:store"));
-
-    ALL_TARGETS.forEach((t) =>
-      app.inject(t, "appEvents", "service:app-events")
-    );
 
     ALL_TARGETS.concat("service").forEach((t) =>
       app.inject(t, "messageBus", "message-bus:main")

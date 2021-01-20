@@ -421,6 +421,7 @@ fi:
         email: "Sähköposti"
         name: "Nimi"
         fields: "Kentät"
+        reject_reason: "Syy"
       user_percentage:
         agreed:
           one: "%{count}% samaa mieltä"
@@ -510,6 +511,9 @@ fi:
           other: "Jonossa on <strong>%{count}</strong> viestiä."
         ok: "OK"
       example_username: "käyttäjänimi"
+      reject_reason:
+        title: "Miksi olet hylkäämässä kyseistä käyttäjää?"
+        send_email: "Lähetä sähköposti hylkäämisestä"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> kirjoitti <a href='%{topicUrl}'>ketjuun</a>"
       you_posted_topic: "<a href='%{userUrl}'>Sinä</a> kirjoitit <a href='%{topicUrl}'>ketjuun</a>"
@@ -905,6 +909,7 @@ fi:
       users: "Käyttäjät"
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
+      allow_private_messages_from_specific_users: "Salli vain tiettyjen käyttäjien lähettää minulle yksityisviestejä."
       ignored_users: "Sivuutettu"
       ignored_users_instructions: "Älä näytä näiden käyttäjien viestejä, näytä heiltä ilmoituksia äläkä vastaanota heiltä yksityisviestejä."
       tracked_topics_link: "Näytä"

@@ -555,12 +555,6 @@ class PostAlerter
   def group_notifying_via_smtp(post)
     return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
 
-    # If the post already has an incoming email, it has been set in the
-    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
-    # via the IMAP/SMTP flow, so there is no need to notify those involved
-    # in the email chain again.
-    return nil if post.incoming_email.present?
-
     post.topic.allowed_groups
       .where.not(smtp_server: nil)
       .where.not(smtp_port: nil)
@@ -574,24 +568,14 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # users who interacted with the post by _directly_ emailing the group
-    emails_to_skip_send = nil
-    if group = group_notifying_via_smtp(post)
-      email_addresses = post.topic.incoming_email_addresses(group: group)
+    # Users who interacted with the post by _directly_ emailing the group
+    # via the group's email_username. This excludes people who replied via
+    # email to a user_private_message notification email. These people should
+    # not be emailed again by the user_private_message notifications below.
+    emails_to_skip_send = notify_group_direct_emailers(post)
 
-      if email_addresses.any?
-        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
-      end
-
-      # add the group's email back into the array, because it is used for
-      # skip_send_email_to in the case of user private message notifications
-      # (we do not want the group to be sent any emails from here because it
-      # will make another email for IMAP to pick up in the group's mailbox)
-      emails_to_skip_send = email_addresses.dup
-      emails_to_skip_send << group.email_username
-    end
-
-    # users that aren't part of any mentioned groups
+    # Users that aren't part of any mentioned groups and who did not email
+    # the group directly.
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -601,7 +585,7 @@ class PostAlerter
       end
     end
 
-    # users that are part of all mentioned groups
+    # Users that are part of all mentioned groups
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
@@ -613,6 +597,33 @@ class PostAlerter
         notify_group_summary(user, post)
       end
     end
+  end
+
+  def notify_group_direct_emailers(post)
+    email_addresses = []
+    emails_to_skip_send = []
+    group = group_notifying_via_smtp(post)
+
+    return emails_to_skip_send if group.blank?
+
+    # If the post already has an incoming email, it has been set in the
+    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
+    # via the IMAP/SMTP flow, so there is no need to notify those involved
+    # in the email chain again.
+    if post.incoming_email.blank?
+      email_addresses = post.topic.incoming_email_addresses(group: group)
+      if email_addresses.any?
+        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
+      end
+    end
+
+    # Add the group's email into the array, because it is used for
+    # skip_send_email_to in the case of user private message notifications
+    # (we do not want the group to be sent any emails from here because it
+    # will make another email for IMAP to pick up in the group's mailbox)
+    emails_to_skip_send = email_addresses.dup if email_addresses.any?
+    emails_to_skip_send << group.email_username
+    emails_to_skip_send
   end
 
   def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)

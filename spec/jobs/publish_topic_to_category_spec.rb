@@ -12,7 +12,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
     Fabricate(:topic_timer,
       status_type: TopicTimer.types[:publish_to_category],
       category_id: another_category.id,
-      topic: topic
+      topic: topic,
+      execute_at: 1.minute.ago,
+      created_at: 5.minutes.ago
     )
 
     Fabricate(:post, topic: topic)

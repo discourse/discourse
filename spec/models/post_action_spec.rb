@@ -764,9 +764,7 @@ describe PostAction do
 
         freeze_time timer.execute_at
 
-        expect_enqueued_with(job: :open_topic, args: { topic_timer_id: timer.id }, at: Time.zone.now + 1.hour) do
-          Jobs::OpenTopic.new.execute(topic_timer_id: timer.id)
-        end
+        Jobs::OpenTopic.new.execute(topic_timer_id: timer.id)
 
         expect(topic.reload.closed).to eq(true)
         expect(timer.reload.execute_at).to eq_time(1.hour.from_now)

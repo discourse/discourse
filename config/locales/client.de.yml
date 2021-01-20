@@ -423,6 +423,9 @@ de:
         name: "Name"
         fields: "Felder"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (des letzten Flags)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (der letzten %{count} Flags)"
         agreed:
           one: "%{count}% zugestimmt"
           other: "%{count}% zugestimmt"
@@ -881,6 +884,7 @@ de:
       color_scheme_default_on_all_devices: "Mache diese Farbschemas zum Standard für alle meine Geräte"
       color_scheme: "Farbschema"
       color_schemes:
+        default_description: "Theme Standard"
         disable_dark_scheme: "gleich wie regulär"
         dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du das dunkle Design auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
@@ -3261,6 +3265,7 @@ de:
     invite:
       custom_message: "Gestalte deine Einladung etwas persönlicher, indem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
+      approval_not_required: "Benutzer werden beim Annehmen der Einladung sofort automatisch genehmigt."
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
@@ -4146,6 +4151,7 @@ de:
             topic_unarchived: "Thema nicht archiviert"
             post_staff_note_create: "team Notiz hinzufügen"
             post_staff_note_destroy: "team Notiz löschen"
+            delete_group: "Gruppe löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

@@ -1629,6 +1629,8 @@ gl:
     max_topic_invitations_per_day: "Número máximo de invitacións a un tema que un usuario pode enviar por día."
     max_logins_per_ip_per_hour: "Número máximo de inicios de sesión permitidos por enderezo IP por hora"
     max_logins_per_ip_per_minute: "Número máximo de inicios de sesión permitidos por enderezo IP por minuto"
+    max_post_deletions_per_minute: "Número máximo de publicacións que un usuario pode eliminar por minuto. De poñerse en 0 desactívase a eliminación de publicacións."
+    max_post_deletions_per_day: "Número máximo de publicacións que un usuario pode eliminar ao día. De estabelecer en 0 desactivarase a eliminación de publicacións."
     invite_link_max_redemptions_limit: "O número máximo de trocos permitidos para as ligazóns de invitación non pode ser superior a este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."

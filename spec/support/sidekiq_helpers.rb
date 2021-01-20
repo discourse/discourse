@@ -47,7 +47,7 @@ module SidekiqHelpers
   # end
   def expect_not_enqueued_with(job:, args: {}, at: nil)
     expect_enqueued_with(job: job, args: args, at: at, expectation: false) do
-      yield
+      yield if block_given?
     end
   end
 
@@ -59,6 +59,20 @@ module SidekiqHelpers
     klass = job.instance_of?(Class) ? job : "::Jobs::#{job.to_s.camelcase}".constantize
     at = at.to_f if at.is_a?(Time)
     match_jobs(jobs: klass.jobs, args: args, at: at)
+  end
+
+  # Same as job_enqueued? except it checks the expectation is true.
+  # Use this if you need to check if more than one job is enqueued from
+  # a single command, unlike expect_enqueued_with which needs a block
+  # to run code for the expectation to work. E.g.
+  #
+  # expect_not_enqueued_with(job: :close_topic, args: { topic_timer_id: deleted_timer.id })
+  # expect_not_enqueued_with(job: :close_topic, args: { topic_timer_id: future_timer.id })
+  # subject.execute
+  # expect_job_enqueued(job: :close_topic, args: { topic_timer_id: timer1.id })
+  # expect_job_enqueued(job: :open_topic, args: { topic_timer_id: timer2.id })
+  def expect_job_enqueued(job:, args: {}, at: nil)
+    expect(job_enqueued?(job: job, args: args, at: at)).to eq(true)
   end
 
   private

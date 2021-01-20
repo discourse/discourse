@@ -39,6 +39,7 @@ ro:
   title: "Discourse"
   topics: "Subiecte"
   posts: "Postări"
+  views: "vizualizări"
   loading: "Se încarcă"
   sign_up: "Înregistrare"
   log_in: "Autentificare"

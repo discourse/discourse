@@ -393,6 +393,7 @@ ko:
         email: "이메일"
         name: "이름"
         fields: "필드"
+        reject_reason: "이유"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (최근 %{count}개의  신고중)"
@@ -478,6 +479,9 @@ ko:
           other: "승인 대기중인 게시물이 <strong>%{count}</strong>개 있습니다."
         ok: "확인"
       example_username: "사용자명"
+      reject_reason:
+        title: "이 사용자를 금지하는 이유는 무엇입니까?"
+        send_email: "거부 이메일 보내기"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 사용자가 <a href='%{topicUrl}'>글 작성</a>"
       you_posted_topic: "<a href='%{userUrl}'>사용자님</a>이 <a href='%{topicUrl}'>글 작성</a>"
@@ -2736,6 +2740,7 @@ ko:
       list_filters:
         all: "모든 글"
         none: "하위 카테고리 없음"
+      colors_disabled: "카테고리 스타일이 없음이므로 색상을 선택할 수 없습니다."
     flagging:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "글 신고했습니다"
@@ -3030,7 +3035,7 @@ ko:
       selector_no_tags: "태그 없음"
       changed: "바뀐 태그:"
       tags: "태그"
-      choose_for_topic: "선택적 태그"
+      choose_for_topic: "태그 선택"
       info: "정보"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이없는 카테고리로 제한됩니다."
@@ -4004,6 +4009,7 @@ ko:
             topic_unarchived: "아카이브 취소된 글"
             post_staff_note_create: "관리자 메모 추가"
             post_staff_note_destroy: "관리자 메모 삭제"
+            delete_group: "그룹 삭제"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."

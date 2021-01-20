@@ -3311,6 +3311,12 @@ es:
         Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices) en todo momento.
 
         ¡Disfruta tu estadía!
+    signup_after_reject:
+      subject_template: "Te han rechazado la cuenta en %{site_name}"
+      text_body_template: |
+        Un miembro del equipo de %{site_name} ha rechazado la creación de tu cuenta.
+
+        %{reject_reason}
     signup:
       title: "Regístrate"
       subject_template: "[%{email_prefix}] Confirma tu cuenta nueva"
@@ -4295,6 +4301,7 @@ es:
       email_auth_res_enqueue: "Este correo falló la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo para más información."
       email_spam: "Este correo se marcó como spam por el encabezado definido en `email_in_spam_header`."
       suspect_user: "Este usuario nuevo ingresó información de perfil sin haber leído ningún tema o publicación, lo cual sugiere claramente que podría tratarse de un spammer. Revisa `approve_suspect_users`."
+      contains_media: "Esta publicación incluye medios incrustados. Ver `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Concordar..."

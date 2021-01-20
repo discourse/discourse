@@ -117,8 +117,10 @@ export default {
   },
 
   teardown() {
-    this.keyTrapper.reset();
-    this.keyTrapper = null;
+    if (this.keyTrapper) {
+      this.keyTrapper.reset();
+      this.keyTrapper = null;
+    }
     this.container = null;
   },
 

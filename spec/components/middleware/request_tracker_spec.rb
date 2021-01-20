@@ -237,10 +237,11 @@ describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_mode, 'warn+block'
 
       status, _ = middleware.call(env)
-      status, _ = middleware.call(env)
+      status, headers = middleware.call(env)
 
       expect(Rails.logger.warnings).to eq(1)
       expect(status).to eq(429)
+      expect(headers["Retry-After"]).to eq(10)
     end
 
     it "does warn if rate limiter is enabled" do
@@ -267,13 +268,15 @@ describe Middleware::RequestTracker do
       expect(status).to eq(200)
       status, _ = middleware.call(env1)
       expect(status).to eq(200)
-      status, _ = middleware.call(env1)
+      status, headers = middleware.call(env1)
       expect(status).to eq(429)
+      expect(headers["Retry-After"]).to eq(10)
 
       env2 = env("REMOTE_ADDR" => "1.1.1.1")
 
-      status, _ = middleware.call(env2)
+      status, headers = middleware.call(env2)
       expect(status).to eq(429)
+      expect(headers["Retry-After"]).to eq(10)
     end
 
     it "does block if rate limiter is enabled" do
@@ -286,8 +289,9 @@ describe Middleware::RequestTracker do
       status, _ = middleware.call(env1)
       expect(status).to eq(200)
 
-      status, _ = middleware.call(env1)
+      status, headers = middleware.call(env1)
       expect(status).to eq(429)
+      expect(headers["Retry-After"]).to eq(10)
 
       status, _ = middleware.call(env2)
       expect(status).to eq(200)

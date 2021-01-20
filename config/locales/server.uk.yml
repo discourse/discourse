@@ -224,6 +224,12 @@ uk:
     expired: "Термін дії вашого коду запрошення минув. Будь ласка, <a href='%{base_url}/about'>зв'яжіться з персоналом</a>."
     not_found: "Невірний код запрошення. Будь ласка, <a href='%{base_url}/about'>зв'яжіться з персоналом</a>."
     not_found_json: "Ваш маркер запрошення недійсний. Зверніться до персоналу."
+    not_found_template: |
+      <p>Ваше запрошення на <a href="%{base_url}">%{site_name}</a> вже використано.</p>
+
+      <p>Якщо ви пам'ятаєте ваш пароль, ви можете <a href="%{base_url}/login">Увійти в акаунт</a>.</p>
+
+      <p>В іншому випадку <a href="%{base_url}/password-reset">Відновіть пароль</a>.</p>
     error_message: "Під час прийняття запрошення сталася помилка. Зверніться до адміністратора сайту."
     user_exists: "Немає необхідності надсилати запрошення <b>%{email}</b>, такий <a href='%{base_path}/u/%{username}/summary'>акаунт вже існує!</a>"
     confirm_email: "<p>Ви майже закінчили! Ми відправили лист активації на Вашу електронну адресу e-mail пошти. Будь ласка, дотримуйтесь інструкцій в листі, щоб активувати свій акаунт. </p><p> Якщо лист не приходить, перевірте папку зі спамом. </p>"
@@ -409,6 +415,7 @@ uk:
   bookmarks:
     errors:
       already_bookmarked_post: "Ви не можете зробити закладку на одну публікацію двічі."
+      too_many: "Вибачте, у вас занадто багато закладок, відвідайте %{user_bookmarks_url} , щоб видалити деякі з них."
       cannot_set_past_reminder: "Ви не можете встановити нагадування в минулому."
       cannot_set_reminder_in_distant_future: "Ви не можете встановити нагадування більше як за 10 років у майбутньому."
       time_must_be_provided: "потрібно вказати час для всіх нагадувань"
@@ -464,6 +471,28 @@ uk:
       few: "%{count} дописи"
       many: "%{count} дописів"
       other: "%{count} дописів"
+    "new-topic": |
+      Ласкаво просимо на сайт %{site_name} &mdash; **Дякуємо за відкриття нової теми!**
+
+      Коли ви створюєте нову тему, подумайте:
+
+      - Чи цікавий придуманий заголовок? Чи достатньо точно він описує те, що ви хочете обговорити у вашій темі?
+
+      - Про що ваша тема? Кому вона буде цікава? Чому вона важлива для обговорення? Якою, на вашу думку, буде реакція спільноти на тему?
+
+      - Постарайтеся включити в текст повідомлення відповідні теги, за якими інші зможуть *знайти* тему. Виберіть розділ, до якого ваша тема підходить за змістом (або тег).
+
+      Більше інформації ви знайдете в нашому [керівництві користувача](%{base_path}/guidelines). Дане вікно буде показуватися, поки ви створюєте свої перші %{education_posts_text}.
+    "new-reply": |
+      Ласкаво просимо на сайт %{site_name} &mdash; **Дякуємо за участь в обговоренні!**
+
+      - Як ви думаєте, чи поліпшить вашу відповідь обговорення в цілому, хоча б трохи?
+
+      - Будьте доброзичливі до учасників розмови.
+
+      - Конструктивна критика вітається, але не забувайте критикувати *ідеї*, а не людей.
+
+      Більше інформації ви знайдете в нашому [керівництві користувача](%{base_path}/guidelines). Дане вікно буде показуватися, поки ви створюєте свої перші %{education_posts_text}.
     avatar: |
       ### Як щодо зображення для вашого профілю?
       Ви опублікували кілька тем і відповідей, але ваше зображення профілю не унікальне - це просто перша буква вашого імені.
@@ -947,6 +976,7 @@ uk:
       others: "Немає активностей."
     no_bookmarks:
       self: "У вас немає публікацій у закладках. Закладки дозволяють швидко переходити до обраних дискусій."
+      search: "Немає закладок за таким пошуковим запитом."
       others: "Закладок немає."
     no_likes_given:
       self: "Вам не сподобалися ніякі повідомлення."
@@ -1015,7 +1045,9 @@ uk:
     mute_topic: "Відмовитись від усіх повідомлень з теми, %{link}"
     unwatch_category: "Перестати слідкувати за всіма темами в категорії %{category}"
     mailing_list_mode: "Відключити режим постійної розсилки"
+    all: "Не надсилати мені жодних листів від %{sitename}"
     different_user_description: "На даний момент ви ввійшли як інший користувач, ніж той, кому ми надіслали електронну пошту. Вийдіть із системи або перейдіть в анонімний режим та спробуйте ще раз."
+    not_found_description: "На жаль, ми не змогли знайти цю підписку. Можливо, посилання у вашій електронній пошті застаріле та закінчилось?"
     log_out: "Вийти"
     submit: "Зберегти налаштування"
     digest_frequency:
@@ -1051,6 +1083,7 @@ uk:
       read: "Прочитати все"
       write: "Написати все"
       one_time_password: "Створити токен для одноразового входу"
+      bookmarks_calendar: "Читання нагадувань про закладки"
     invalid_public_key: "Вибачте, відкритий ключ недійсний."
     invalid_auth_redirect: "Вибачте, цей auth_redirect хост не дозволено."
     invalid_token: "Токен відсутній, недійсний або прострочений."
@@ -1386,8 +1419,13 @@ uk:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    google_oauth2_config_warning: 'Сервер налаштований так, щоб дозволити реєстрацію та вхід у систему за допомогою Google OAuth2 (enable_google_oauth2_logins), але значення ідентифікатора клієнта та секретні значення клієнта не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та оновіть налаштування. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
+    facebook_config_warning: 'Сервер налаштований на дозвіл реєстрації та входу в систему за допомогою Facebook (enable_facebook_logins), але ідентифікатор додатка та секретні значення додатка не встановлено. Зайдіть в <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть налаштування. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
+    twitter_config_warning: 'Сервер налаштований так, щоб дозволяти реєстрацію та вхід у систему за допомогою Twitter (enable_twitter_logins), але ключові та секретні значення не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть налаштування. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
+    github_config_warning: 'Сервер налаштований так, щоб дозволяти реєстрацію та вхід у систему за допомогою GitHub (enable_github_logins), але значення клієнта та секретні значення не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та оновіть налаштування. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
     s3_config_warning: 'Сервер налаштований для завантаження файлів у S3, але принаймні одне з наступних налаштувань не встановлено: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile або s3_upload_bucket. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть налаштування. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Див. "Як налаштувати завантаження зображень на S3?" щоб дізнатися більше</a>.'
     s3_backup_config_warning: 'Сервер налаштований на завантаження резервних копій на S3, але хоча б один параметр не встановлено: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, або s3_backup_bucket. Перейдіть на <a href="%{base_path}/admin/site_settings">налаштування сайту</a> та оновіть налаштування. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Дивіться "Як налаштувати завантаження зображень на S3?", щоб дізнатися більше</a>.'
+    s3_cdn_warning: 'Сервер налаштований на завантаження файлів на S3, але немає S3 CDN настроєно. Це може призвести до дорогих витрат S3 та зниження продуктивності сайту. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Див. «Using Object Storage for Uploads», щоб дізнатися більше</a>.'
     image_magick_warning: 'Сервер налаштований на створення мініатюр великих зображень, але ImageMagick не встановлено. Встановіть ImageMagick за допомогою вашого улюбленого менеджера пакетів або <a href="https://www.imagemagick.org/script/download.php" target="_blank">завантажте останній випуск</a>.'
     failing_emails_warning: 'Не вдалося виконати завдання електронної пошти %{num_failed_jobs}. Перевірте свою програму app.yml і переконайтесь, що налаштування поштового сервера є правильними. <a href="%{base_path}/sidekiq/retries" target="_blank">Перегляньте невдалі завдання в Sidekiq</a> .'
     subfolder_ends_in_slash: "Неправильно налаштована ваша папка; DISCOURSE_RELATIVE_URL_ROOT закінчується косою рискою."
@@ -1420,6 +1458,7 @@ uk:
     max_post_length: "Максимально допустима кількість символів в одному повідомленні."
     topic_featured_link_enabled: "Дозволити публікувати посилання з темами."
     show_topic_featured_link_in_digest: "Показати посилання на тему в e-mail дайджесті."
+    min_topic_views_for_delete_confirm: "Мінімальна кількість переглядів, яку повинна мати тема, щоб при її видаленні з’явилося спливаюче вікно підтвердження"
     min_topic_title_length: "Мінімально допустима кількість символів в назві теми."
     max_topic_title_length: "Максимально допустима кількість символів в назві теми."
     min_personal_message_title_length: "Мінімально допустима кількість символів в заголовку повідомлення в бесіді."
@@ -1475,6 +1514,7 @@ uk:
     enable_inline_onebox_on_all_domains: "Ігнорувати налаштування сайту inline_onebox_domain_allowlist і дозволити вбудований контент для всіх доменів."
     force_custom_user_agent_hosts: "Хости, для яких використовується агент користувача розумних вставок для всіх запитів. (Особливо корисно для хостів, які обмежують доступ користувальницького агента)."
     max_oneboxes_per_post: "Максимальна кількість oneboxes в повідомленні."
+    facebook_app_access_token: "Токен, згенерований з ідентифікатора додатка Facebook і секрету. Використовується для генерації розумних вставок Instagram."
     logo: "Зображення логотипу в лівому верхньому кутку вашого сайту. Використовуйте широке прямокутне зображення висотою 120 і співвідношенням сторін більше 3:1. Якщо залишити поле порожнім, буде показаний текст заголовка сайту."
     logo_small: "Невелике зображення логотипу в лівому верхньому кутку вашого сайту, видно при прокручуванні вниз. Використовуйте квадратне зображення 120×120. Якщо залишити порожнім, буде показаний домашній гліф."
     digest_logo: "Альтернативне зображення логотипу, що використовується у верхній частині e-mail пошти вашого сайту. Використовуйте зображення широкого прямокутника. Не використовуйте SVG-образ. Якщо залишити порожнім, буде використовуватися зображення з налаштування `логотип`."
@@ -1492,6 +1532,7 @@ uk:
     email_custom_headers: "Список додаткових заголовків у листах електронної пошти, розділених вертикальною рискою"
     email_subject: "Налаштовуваний формат теми для стандартних листів. Дивитися: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Надає користувачам більше інформації про те, чому він не може отримати доступ до певної теми. Примітка: Це не дуже безпечно, оскільки користувачі дізнаються, чи URL-адреса посилається на дійсну тему."
+    enforce_second_factor: "Примусова активація двофакторної аутентифікації. Виберіть \"Всі\" для примусового увімкнення всім користувачам. Виберіть \"Персонал\" для використання тільки для співробітників користувачів."
     force_https: "Примусово використовувати лише HTTPS для вашого сайту. УВАГА: можуть зникнути зображення до моменту, коли HTTPS повністю налаштовано і працюватиме всюди! Ви перевірили всі свої CDN, соціальні логіни і будь-які зовнішні логотипи і залежності, щоб переконатися, що вони всі сумісні з HTTPS, також?"
     same_site_cookies: "Використовувати файли cookie, зі знешкодженням при перехресному запиті CSRF для підтримуючих це браузерів (Lax або Strict). Попередження: Strict будуть працювати тільки на сайтах, які використовують SSO."
     summary_score_threshold: "Мінімальна оцінка повідомлення, необхідна для його включення в зведення по темі"
@@ -1502,6 +1543,7 @@ uk:
     enable_personal_messages: "Дозволити користувачам рівня довіри 1 (який можна налаштувати через мінімальний рівень довіри для надсилання повідомлень) створювати повідомлення та відповідати на повідомлення. Зверніть увагу, що співробітники завжди можуть надсилати повідомлення, незважаючи ні на що."
     enable_system_message_replies: "Дозволяє користувачам відповідати на системні повідомлення, навіть якщо приватні повідомлення відключені"
     enable_long_polling: "Використовувати механізм long polling для повідомлень про події"
+    enable_chunked_encoding: "Увімкнути дозвіл на фрагментацію повідомлень (chunked encoding) на сервері. Ця функція працює на більшості випадків, однак деякі проксі-сервери можуть буферизувати контент, що спричиняє затримку відповідей"
     long_polling_base_url: "Базовий URL, використовуваний для long polling (при використанні CDN для роздачі динамічного контенту встановіть в цьому параметрі адресу origin pull), наприклад: http://origin.site.com"
     long_polling_interval: "Час, який очікує сервер до відповіді клієнтам, коли немає даних для відправки (тільки для користувачів, які увійшли на сайт)"
     polling_interval: "Якщо не використовується long polling, як часто слід авторизованим клієнтам опитувати сервер, в мілісекундах"
@@ -1533,6 +1575,10 @@ uk:
     pending_users_reminder_delay: "Повідомляти модераторів, якщо нові користувачі чекають схвалення довше ніж стільки годин. Встановіть -1 для відключення цих повідомлень."
     persistent_sessions: "Користувачі залишатимуться авторизовані при закритті веб-браузера"
     maximum_session_age: "Користувач залишиться в системі протягом n годин з моменту останнього відвідування"
+    ga_version: "Версія Google Universal Analytics для використання: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Ідентифікатор коду відстеження Google Universal Analytics, наприклад: UA-12345678-9; див. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Доменне ім’я Google Universal Analytics, наприклад: mysite.com; див. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Увімкніть міждоменне відстеження Google Universal Analytics. До вихідних посилань на ці домени буде додано ідентифікатор клієнта. Див. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Посібник міждоменного відстеження Google.</a>"
     gtm_container_id: "Контейнер Google Tag Manager. Наприклад: GTM-ABCDEF. <br/>Примітка: Сторонні сценарії, завантажені GTM повинні бути дозволені в 'content security policy script src'."
     enable_escaped_fragments: "Поверніться до API Ajax-Crawling від Google, якщо веб-сканер не виявлено. Див. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Дозволити модераторам керувати категоріями та групами"
@@ -1624,9 +1670,19 @@ uk:
     google_oauth2_client_id: "Client ID для вашого Google додатка."
     google_oauth2_client_secret: "Client secret для вашого Google додатка"
     google_oauth2_prompt: "Необов’язковий розділений пробілом список значень, який вказує, чи запитує сервер авторизацію користувача для повторної автентифікації та згоди. Див. <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> щодо можливих значень."
+    google_oauth2_hd: "Необов’язковий домен, розміщений у Google Apps Hosted, до якого вхід буде обмежений. Див <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> для більш докладної інформації."
+    enable_twitter_logins: "Увімкніть автентифікацію Twitter, потрібні twitter_consumer_key та twitter_consumer_secret. Див. <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Ключ користувача для аутентифікації в Twitter, зареєстрований за адресою <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Секретний номер для перевірки справжності Twitter, зареєстрований в <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    enable_facebook_logins: "Увімкніть автентифікацію Facebook, потрібні facebook_app_id та facebook_app_secret. Див. <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
+    facebook_app_id: "Ідентифікатор застосунку для автентифікації та спільного використання Facebook, зареєстрований за адресою <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    facebook_app_secret: "Секрет застосунку для автентифікації та спільного використання Facebook, зареєстрований за адресою <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Увімкнути автентифікацію GitHub, потрібні github_client_id та github_client_secret. Див. <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
+    github_client_id: "Ідентифікатор клієнта для автентифікації GitHub, зареєстрований за адресою <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Секрет клієнта для автентифікації GitHub, зареєстрований за адресою <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Дозволити користувачам вхід за допомогою Discord?"
+    discord_client_id: 'Discord ID клієнта (потрібен такий? відвідайте <a href="https://discordapp.com/developers/applications/me">the Discord developer portal</a>)'
+    discord_secret: "Discord секретний ключ"
     enable_backups: "Дозволити адміністраторам створювати резервні копії форуму"
     allow_restore: "Дозволити імпорт, який може замінити ВСІ дані сайту. Залиште вимкненим, якщо не плануєте відновлювати резервну копію"
     maximum_backups: "Максимальна кількість резервних копій для зберігання на диску. Старіші резервні копії автоматично видаляються"
@@ -1668,9 +1724,14 @@ uk:
     purge_unactivated_users_grace_period_days: "Пільговий період (у днях) користувачу, який не активував свій акаунт, до того як його запис буде видалено. Встановіть 0, щоб ніколи не очищати неактивованих користувачів."
     enable_s3_uploads: "Розміщувати завантаження на Amazon S3. ВАЖЛИВО: потрібно правильні настройки S3 (access key id и secret access key)."
     s3_upload_bucket: "Ім'я Amazon S3 bucket куди будуть завантажуватися файли. УВАГА: має бути в нижньому регістрі, без пробілів, без підкреслень.\nhttp://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
+    s3_access_key_id: "Ідентифікатор ключа доступу Amazon S3, який буде використовуватися для завантаження зображень, вкладень та резервних копій."
+    s3_secret_access_key: "Секретний ключ доступу до Amazon S3, який буде використовуватися для завантаження зображень, вкладень та резервних копій."
+    s3_region: "Назва регіону Amazon S3, яка буде використовуватися для завантаження зображень та резервних копій."
+    s3_cdn_url: "URL-адреса CDN для використання для всіх ресурсів s3 (наприклад: https://cdn.somewhere.com). ПОПЕРЕДЖЕННЯ: після зміни цього налаштування ви повинні перезаписати всі старі повідомлення."
     avatar_sizes: "Список автоматически сгенерированных размеров аватар."
     external_system_avatars_enabled: "Використовуйте зовнішню систему аватарів."
     external_system_avatars_url: "URL-адреса служби системи зовнішніх аватарів. Дозволені заміни {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "Використовуйте невеликий логотип сайту замість аватара користувача системи. Потрібна наявність логотипу."
     restrict_letter_avatar_colors: "Список шестизначних hex значень кольорів, які будуть використані для фону аватара з літерою."
     selectable_avatars_enabled: "Змусити користувачів вибирати аватар зі списку."
     selectable_avatars: "Список аватарів, які користувачі можуть вибирати."

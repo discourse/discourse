@@ -422,6 +422,7 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        reject_reason: "Motivo"
       user_percentage:
         agreed:
           one: "%{count}% a favore"
@@ -511,6 +512,9 @@ it:
           other: "Hai<strong>%{count}</strong> messaggi in attesa."
         ok: "OK"
       example_username: "nome utente"
+      reject_reason:
+        title: "Perché stai rifiutando questo utente?"
+        send_email: "Invia email di rifiuto"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -881,6 +885,7 @@ it:
       color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
       color_schemes:
+        default_description: "Tema predefinito"
         disable_dark_scheme: "Come di norma"
         dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
         undo: "Reimposta"
@@ -1195,7 +1200,7 @@ it:
       enable_physical_keyboard: "Attiva supporto alla tastiera fisica su iPad"
       text_size:
         title: "Dimensioni del testo"
-        smallest: "Più piccolo"
+        smallest: "Piccolissimo"
         smaller: "Più piccolo"
         normal: "Normale"
         larger: "Più grande"
@@ -2133,6 +2138,7 @@ it:
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
+      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
@@ -2691,6 +2697,8 @@ it:
             description: "Modifica il nome del segnalibro o modifica la data e l'ora del promemoria"
       filtered_replies:
         viewing_posts_by: "Visualizzazione di %{post_count} messaggi di"
+        viewing_subset: "Alcune risposte sono compresse"
+        viewing_summary: "Visualizza un riepilogo di questo argomento"
         post_number: "%{username}, messaggio n. %{post_number}"
         show_all: "Mostra tutto"
     category:
@@ -2839,6 +2847,7 @@ it:
       list_filters:
         all: "tutti gli argomenti"
         none: "nessuna sottocategoria"
+      colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
@@ -2856,6 +2865,7 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
+      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -2922,6 +2932,12 @@ it:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
+    posts_likes_MF: |
+      Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
+        low {con un rapporto di 'mi piace' e risposte alto}
+        med {con un rapporto di 'mi piace' e risposte molto alto}
+        high {con un rapporto di 'mi piace' e risposte estremamente alto}
+        other {}}
     original_post: "Messaggio Originale"
     views: "Visite"
     views_lowercase:
@@ -3251,6 +3267,7 @@ it:
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
+      approval_not_required: "L'utente verrà approvato automaticamente non appena accetterà questo invito."
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
@@ -3795,6 +3812,7 @@ it:
           install_upload: "Dal tuo dispositivo"
           install_git_repo: "Da un repository git"
           install_create: "Crea nuovo"
+          duplicate_remote_theme: "Il componente «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
           about_theme: "Informazioni su"
           license: "Licenza"
           version: "Versione:"
@@ -4135,6 +4153,7 @@ it:
             topic_unarchived: "argomento de-archiviato"
             post_staff_note_create: "aggiungi note dello staff"
             post_staff_note_destroy: "distruggi la nota dello staff"
+            delete_group: "elimina gruppo"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -4299,6 +4318,7 @@ it:
         clear_penalty_history:
           title: "Cancella la storia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello Esperienza 3"
+        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Sei sicuro?"
         silence: "Silenzio"
         unsilence: "Non in silenzio"
         silenced: "Silenziato?"
@@ -4504,6 +4524,8 @@ it:
         go_back: "Torna alla Ricerca"
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
+        locale: "Lingua:"
+        fallback_locale_warning: "Stai modificando una varietà di %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
       settings:
         show_overriden: "Mostra solo i sovrascritti"
