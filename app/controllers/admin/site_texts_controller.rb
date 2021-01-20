@@ -80,7 +80,7 @@ class Admin::SiteTextsController < Admin::AdminController
     site_text = find_site_text(locale)
     value = site_text[:value] = params.dig(:site_text, :value)
     id = site_text[:id]
-    old_value = I18n.t(id, locale: locale)
+    old_value = I18n.with_locale(locale) { I18n.t(id) }
 
     translation_override = TranslationOverride.upsert!(locale, id, value)
 
@@ -108,7 +108,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
     site_text = find_site_text(locale)
     id = site_text[:id]
-    old_text = I18n.t(id, locale: locale)
+    old_text = I18n.with_locale(locale) { I18n.t(id) }
     TranslationOverride.revert!(locale, id)
 
     site_text = find_site_text(locale)
@@ -162,8 +162,8 @@ class Admin::SiteTextsController < Admin::AdminController
       value = override&.first
     end
 
-    value ||= I18n.t(key, locale: locale)
-    { id: key, value: value }
+    value ||= I18n.with_locale(locale) { I18n.t(key) }
+    { id: key, value: value, locale: locale }
   end
 
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)$/
@@ -187,8 +187,11 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def find_translations(query, overridden, locale)
     translations = Hash.new { |hash, key| hash[key] = {} }
+    search_results = I18n.with_locale(locale) do
+      I18n.search(query, overridden: overridden)
+    end
 
-    I18n.search(query, overridden: overridden, locale: locale).each do |key, value|
+    search_results.each do |key, value|
       if PLURALIZED_REGEX.match(key)
         translations[$1][$2] = value
       else
@@ -220,7 +223,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def fix_plural_keys(key, value, locale)
     value = value.with_indifferent_access
-    plural_keys = I18n.t('i18n.plural.keys', locale: locale)
+    plural_keys = I18n.with_locale(locale) { I18n.t('i18n.plural.keys') }
     return value if value.keys.size == plural_keys.size && plural_keys.all? { |k| value.key?(k) }
 
     fallback_value = I18n.t(key, locale: :en, default: {})
