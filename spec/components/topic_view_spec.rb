@@ -36,6 +36,25 @@ describe TopicView do
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
+  context "filter options" do
+    fab!(:p0) { Fabricate(:post, topic: topic) }
+    fab!(:p1) { Fabricate(:post, topic: topic, post_type: Post.types[:moderator_action]) }
+    fab!(:p2) { Fabricate(:post, topic: topic, post_type: Post.types[:small_action]) }
+
+    it "omits moderator actions and small posts when only_regular is set" do
+      tv = TopicView.new(topic.id, nil)
+      expect(tv.filtered_post_ids).to eq([p0.id, p1.id, p2.id])
+
+      tv = TopicView.new(topic.id, nil, only_regular: true)
+      expect(tv.filtered_post_ids).to eq([p0.id])
+    end
+
+    it "omits the first post when exclude_first is set" do
+      tv = TopicView.new(topic.id, nil, exclude_first: true)
+      expect(tv.filtered_post_ids).to eq([p0.id, p1.id, p2.id])
+    end
+  end
+
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
       fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
