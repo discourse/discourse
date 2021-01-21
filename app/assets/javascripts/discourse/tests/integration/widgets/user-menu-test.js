@@ -79,7 +79,9 @@ discourseModule("Integration | Component | Widget | user-menu", function (
       const routeToStub = sinon.stub(DiscourseURL, "routeTo");
       await click(".user-notifications-link");
       assert.ok(
-        routeToStub.calledWith(queryAll(".user-notifications-link")[0].href),
+        routeToStub.calledWith(
+          queryAll(".user-notifications-link").data("url")
+        ),
         "a second click should redirect to the full notifications page"
       );
     },
@@ -120,7 +122,7 @@ discourseModule("Integration | Component | Widget | user-menu", function (
     },
 
     async test(assert) {
-      const userPmsLink = queryAll(".user-pms-link")[0];
+      const userPmsLink = queryAll(".user-pms-link").data("url");
       assert.ok(userPmsLink);
       await click(".user-pms-link");
 
@@ -143,7 +145,7 @@ discourseModule("Integration | Component | Widget | user-menu", function (
       const routeToStub = sinon.stub(DiscourseURL, "routeTo");
       await click(".user-pms-link");
       assert.ok(
-        routeToStub.calledWith(userPmsLink.href),
+        routeToStub.calledWith(userPmsLink),
         "a second click should redirect to the full private messages page"
       );
     },
@@ -171,7 +173,7 @@ discourseModule("Integration | Component | Widget | user-menu", function (
       const routeToStub = sinon.stub(DiscourseURL, "routeTo");
       await click(".user-bookmarks-link");
       assert.ok(
-        routeToStub.calledWith(queryAll(".user-bookmarks-link")[0].href),
+        routeToStub.calledWith(queryAll(".user-bookmarks-link").data("url")),
         "a second click should redirect to the full bookmarks page"
       );
     },

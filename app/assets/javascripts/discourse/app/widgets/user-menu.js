@@ -23,51 +23,64 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
+  _defaultTabAttrs() {
+    return {
+      "aria-controls": "quick-access-profile",
+      "aria-selected": "false",
+      tabindex: "-1",
+    };
+  },
+
   profileGlyph() {
     return {
-      label: "user.preferences",
+      title: "user.preferences",
       className: "user-preferences-link",
       icon: "user",
-      href: `${this.attrs.path}/summary`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
-      "aria-label": "user.preferences",
+      data: { url: `${this.attrs.path}/summary` },
+      role: "tab",
+      tabAttrs: this._defaultTabAttrs(),
     };
   },
 
   notificationsGlyph() {
     return {
-      label: "user.notifications",
+      title: "user.notifications",
       className: "user-notifications-link",
       icon: "bell",
-      href: `${this.attrs.path}/notifications`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.NOTIFICATIONS,
-      "aria-label": "user.notifications",
+      data: { url: `${this.attrs.path}/notifications` },
+      role: "tab",
+      tabAttrs: this._defaultTabAttrs(),
     };
   },
 
   bookmarksGlyph() {
     return {
+      title: "user.bookmarks",
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.BOOKMARKS,
-      label: "user.bookmarks",
       className: "user-bookmarks-link",
       icon: "bookmark",
-      href: `${this.attrs.path}/activity/bookmarks`,
+      data: { url: `${this.attrs.path}/activity/bookmarks` },
       "aria-label": "user.bookmarks",
+      role: "tab",
+      tabAttrs: this._defaultTabAttrs(),
     };
   },
 
   messagesGlyph() {
     return {
+      title: "user.private_messages",
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.MESSAGES,
-      label: "user.private_messages",
       className: "user-pms-link",
       icon: "envelope",
-      href: `${this.attrs.path}/messages`,
-      "aria-label": "user.private_messages",
+      data: { url: `${this.attrs.path}/messages` },
+      role: "tab",
+      tabAttrs: this._defaultTabAttrs(),
     };
   },
 
@@ -82,7 +95,7 @@ createWidget("user-menu-links", {
     if (this.isActive(glyph)) {
       glyph = this.markAsActive(glyph);
     }
-    return this.attach("link", $.extend(glyph, { hideLabel: true }));
+    return this.attach("flat-button", glyph);
   },
 
   html() {
@@ -108,9 +121,10 @@ createWidget("user-menu-links", {
 
     glyphs.push(this.profileGlyph());
 
-    return h("ul.menu-links-row", [
+    return h("div.menu-links-row", [
       h(
-        "li.glyphs",
+        "div.glyphs",
+        { attributes: { "aria-label": "Menu links", role: "tablist" } },
         glyphs.map((l) => this.glyphHtml(l))
       ),
     ]);
@@ -121,12 +135,16 @@ createWidget("user-menu-links", {
     // the full page.
     definition.action = null;
     definition.actionParam = null;
+    definition.url = definition.data.url;
 
     if (definition.className) {
       definition.className += " active";
     } else {
       definition.className = "active";
     }
+
+    definition.tabAttrs["tabindex"] = "0";
+    definition.tabAttrs["aria-selected"] = "true";
 
     return definition;
   },
