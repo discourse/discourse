@@ -23,12 +23,30 @@ export function addUserMenuGlyph(glyph) {
 createWidget("user-menu-links", {
   tagName: "div.menu-links-header",
 
-  _defaultTabAttrs() {
+  _tabAttrs(quickAccessType) {
     return {
-      "aria-controls": "quick-access-profile",
+      "aria-controls": `quick-access-${quickAccessType}`,
       "aria-selected": "false",
       tabindex: "-1",
     };
+  },
+
+  // TODO: Remove when 2.7 gets released.
+  _structureAsTab(extraGlyph) {
+    const glyph = extraGlyph;
+    // Assume glyph is a button if it has a data-url field.
+    if (!glyph.data || !glyph.data.url) {
+      glyph.title = glyph.label;
+      glyph.data = { url: glyph.href };
+
+      glyph.label = null;
+      glyph.href = null;
+    }
+
+    glyph.role = "tab";
+    glyph.tabAttrs = this._tabAttrs(glyph.actionParam);
+
+    return glyph;
   },
 
   profileGlyph() {
@@ -40,7 +58,7 @@ createWidget("user-menu-links", {
       actionParam: QuickAccess.PROFILE,
       data: { url: `${this.attrs.path}/summary` },
       role: "tab",
-      tabAttrs: this._defaultTabAttrs(),
+      tabAttrs: this._tabAttrs(QuickAccess.PROFILE),
     };
   },
 
@@ -53,7 +71,7 @@ createWidget("user-menu-links", {
       actionParam: QuickAccess.NOTIFICATIONS,
       data: { url: `${this.attrs.path}/notifications` },
       role: "tab",
-      tabAttrs: this._defaultTabAttrs(),
+      tabAttrs: this._tabAttrs(QuickAccess.NOTIFICATIONS),
     };
   },
 
@@ -67,7 +85,7 @@ createWidget("user-menu-links", {
       data: { url: `${this.attrs.path}/activity/bookmarks` },
       "aria-label": "user.bookmarks",
       role: "tab",
-      tabAttrs: this._defaultTabAttrs(),
+      tabAttrs: this._tabAttrs(QuickAccess.BOOKMARKS),
     };
   },
 
@@ -80,7 +98,7 @@ createWidget("user-menu-links", {
       icon: "envelope",
       data: { url: `${this.attrs.path}/messages` },
       role: "tab",
-      tabAttrs: this._defaultTabAttrs(),
+      tabAttrs: this._tabAttrs(QuickAccess.MESSAGES),
     };
   },
 
@@ -107,7 +125,8 @@ createWidget("user-menu-links", {
           g = g(this);
         }
         if (g) {
-          glyphs.push(g);
+          const structuredGlyph = this._structureAsTab(g);
+          glyphs.push(structuredGlyph);
         }
       });
     }
