@@ -1,6 +1,6 @@
-import AdminDashboard from "admin/models/admin-dashboard";
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 
 export default Component.extend({
   newFeatures: null,
@@ -9,18 +9,18 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    AdminDashboard.fetchNewFeatures().then((model) => {
+    ajax("/admin/dashboard/new-features.json").then((json) => {
       this.setProperties({
-        newFeatures: model.new_features,
-        releaseNotesLink: model.release_notes_link,
+        newFeatures: json.new_features,
+        releaseNotesLink: json.release_notes_link,
       });
     });
   },
 
   @action
   dismissNewFeatures() {
-    AdminDashboard.dismissNewFeatures().then(() =>
-      this.set("newFeatures", null)
-    );
+    ajax("/admin/dashboard/mark-new-features-as-seen.json", {
+      type: "PUT",
+    }).then(() => this.set("newFeatures", null));
   },
 });

@@ -148,10 +148,10 @@ describe DiscourseUpdates do
   context 'new features' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
-    let!(:last_item_date) { Time.zone.now - 5.minutes }
+    let!(:last_item_date) { 5.minutes.ago }
     let!(:sample_features) { [
-      { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => Time.zone.now - 40.minutes },
-      { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => Time.zone.now - 15.minutes },
+      { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => 40.minutes.ago },
+      { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => 15.minutes.ago },
       { "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!", "created_at" => last_item_date },
     ] }
 
@@ -171,8 +171,8 @@ describe DiscourseUpdates do
     end
 
     it 'returns only unseen items by user' do
-      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns(Time.zone.now - 10.minutes)
-      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns(Time.zone.now - 30.minutes)
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns(10.minutes.ago)
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns(30.minutes.ago)
 
       result = DiscourseUpdates.unseen_new_features(admin.id)
       expect(result.length).to eq(1)
@@ -201,7 +201,7 @@ describe DiscourseUpdates do
       expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (last_item_date)
 
       updated_features = [
-        { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => Time.zone.now - 2.minutes }
+        { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => 2.minutes.ago }
       ]
       updated_features += sample_features
 

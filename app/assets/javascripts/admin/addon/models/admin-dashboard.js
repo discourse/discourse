@@ -43,25 +43,6 @@ AdminDashboard.reopenClass({
       return model;
     });
   },
-
-  fetchNewFeatures() {
-    return ajax("/admin/dashboard/new-features.json").then((json) => {
-      const model = AdminDashboard.create();
-
-      model.setProperties({
-        new_features: json.new_features,
-        release_notes_link: json.release_notes_link,
-      });
-
-      return model;
-    });
-  },
-
-  dismissNewFeatures() {
-    return ajax("/admin/dashboard/mark-new-features-as-seen.json", {
-      type: "PUT",
-    });
-  },
 });
 
 export default AdminDashboard;
