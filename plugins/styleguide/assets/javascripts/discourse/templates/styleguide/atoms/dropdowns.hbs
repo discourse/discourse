@@ -1,21 +1,21 @@
 {{#styleguide-example title="combo-box"}}
-  {{combo-box content=dummy.options}}
+  {{combo-box content=dummy.options onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="filterable combo-box"}}
-  {{combo-box content=dummy.categoryNames options=(hash filterable=true)}}
+  {{combo-box content=dummy.categoryNames options=(hash filterable=true) onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="combo-box with a default state"}}
-  {{combo-box content=dummy.options options=(hash none="category.none")}}
+  {{combo-box content=dummy.options options=(hash none="category.none") onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="combo-box clearable"}}
-  {{combo-box content=dummy.options clearable=true options=(hash none="category.none")}}
+  {{combo-box content=dummy.options clearable=true options=(hash none="category.none") onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="topic-notifications-options"}}
-  {{topic-notifications-options topic=dummy.topic}}
+  {{topic-notifications-options topic=dummy.topic onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="topic-notifications-button"}}
@@ -29,7 +29,7 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="category-chooser"}}
-  {{category-chooser}}
+  {{category-chooser onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="pinned-button"}}
@@ -41,19 +41,19 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="categories-admin-dropdown"}}
-  {{categories-admin-dropdown}}
+  {{categories-admin-dropdown onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="category-notifications-button"}}
-  {{category-notifications-button category=dummy.categories.[0]}}
+  {{category-notifications-button category=dummy.categories.[0] onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="notifications-button"}}
-  {{notifications-button options=(hash i18nPrefix="groups.notifications") value=1}}
+  {{notifications-button options=(hash i18nPrefix="groups.notifications") value=1 onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box content=dummy.options}}
+  {{dropdown-select-box content=dummy.options onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="future-date-input-selector"}}
@@ -68,17 +68,17 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="multi-select"}}
-  {{multi-select content=dummy.options options=(hash none="test.none")}}
+  {{multi-select content=dummy.options options=(hash none="test.none") onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="admin group-chooser"}}
-  {{group-chooser selected=dummy.selectedGroups content=dummy.groups}}
+  {{group-chooser selected=dummy.selectedGroups content=dummy.groups onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="list-setting"}}
-  {{list-setting settingValue=dummy.settings}}
+  {{list-setting settingValue=dummy.settings onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="list-setting with colors"}}
-  {{list-setting settingValue=dummy.colors nameProperty="color"}}
+  {{list-setting settingValue=dummy.colors nameProperty="color" onChange=(action "dummy")}}
 {{/styleguide-example}}
