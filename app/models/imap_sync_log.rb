@@ -9,20 +9,25 @@ class ImapSyncLog < ActiveRecord::Base
     @levels ||= Enum.new(:debug, :info, :warn, :error)
   end
 
-  def self.log(message, level, group_id = nil)
+  def self.log(message, level, group_id = nil, db = true)
     now = Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
-    new_log = create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
+
+    new_log = if db
+      create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
+    end
+
     if ENV["DEBUG_IMAP"]
       Rails.logger.send(:warn, "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}")
     else
       Rails.logger.send(level, "#{level[0].upcase}, [#{now}] [IMAP] (group_id #{group_id}) #{message}")
     end
+
     new_log
   end
 
-  def self.debug(message, group_or_id)
+  def self.debug(message, group_or_id, db: true)
     group_id = group_or_id.is_a?(Integer) ? group_or_id : group_or_id.id
-    log(message, :debug, group_id)
+    log(message, :debug, group_id, db)
   end
 
   def self.info(message, group_or_id)
