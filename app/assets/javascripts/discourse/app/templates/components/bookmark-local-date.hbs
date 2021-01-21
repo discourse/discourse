@@ -1,0 +1,6 @@
+{{#if showPostLocalDate}}
+  {{#tap-tile icon="globe-americas" activeTile=activeTile onChange=(action "setReminder")}}
+    <div class="tap-tile-title">{{i18n "bookmarks.reminders.post_local_date"}}</div>
+    <div class="tap-tile-date">{{postLocalDateFormatted}}</div>
+  {{/tap-tile}}
+{{/if}}

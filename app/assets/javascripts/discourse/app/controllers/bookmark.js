@@ -1,5 +1,4 @@
 import { REMINDER_TYPES, formattedReminderTime } from "discourse/lib/bookmark";
-import { and, or } from "@ember/object/computed";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -10,6 +9,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { and } from "@ember/object/computed";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -62,9 +62,7 @@ export default Controller.extend(ModalFunctionality, {
   customReminderTime: null,
   lastCustomReminderDate: null,
   lastCustomReminderTime: null,
-  postDetectedLocalDate: null,
-  postDetectedLocalTime: null,
-  postDetectedLocalTimezone: null,
+  postLocalDate: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
@@ -242,8 +240,6 @@ export default Controller.extend(ModalFunctionality, {
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
-  showPostLocalDate: or("postDetectedLocalDate", "postDetectedLocalTime"),
-
   get showLaterToday() {
     let later = this.laterToday();
     return (
@@ -299,10 +295,6 @@ export default Controller.extend(ModalFunctionality, {
 
   get nextMonthFormatted() {
     return this.nextMonth().format(I18n.t("dates.long_no_year"));
-  },
-
-  get postLocalDateFormatted() {
-    return this.postLocalDate().format(I18n.t("dates.long_no_year"));
   },
 
   loadLocalDates() {
@@ -459,7 +451,7 @@ export default Controller.extend(ModalFunctionality, {
       case REMINDER_TYPES.LAST_CUSTOM:
         return this.parsedLastCustomReminderDatetime;
       case REMINDER_TYPES.POST_LOCAL_DATE:
-        return this.postLocalDate();
+        return this.postLocalDate;
     }
   },
 
@@ -469,20 +461,6 @@ export default Controller.extend(ModalFunctionality, {
 
   nextMonth() {
     return this.startOfDay(this.now().add(1, "month"));
-  },
-
-  postLocalDate() {
-    let parsedPostLocalDate = this._parseCustomDateTime(
-      this.postDetectedLocalDate,
-      this.postDetectedLocalTime,
-      this.postDetectedLocalTimezone
-    );
-
-    if (!this.postDetectedLocalTime) {
-      return this.startOfDay(parsedPostLocalDate);
-    }
-
-    return parsedPostLocalDate;
   },
 
   tomorrow() {
@@ -588,5 +566,14 @@ export default Controller.extend(ModalFunctionality, {
     if (type !== REMINDER_TYPES.CUSTOM) {
       return this.saveAndClose();
     }
+  },
+
+  @action
+  selectPostLocalDate(date) {
+    this.setProperties({
+      selectedReminderType: this.reminderTypes.POST_LOCAL_DATE,
+      postLocalDate: date,
+    });
+    return this.saveAndClose();
   },
 });
