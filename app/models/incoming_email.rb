@@ -34,7 +34,8 @@ class IncomingEmail < ActiveRecord::Base
       handle_mail: 1,
       pop3_poll: 2,
       imap: 3,
-      group_smtp: 4
+      group_smtp: 4,
+      unknown: 9
     )
   end
 
@@ -92,7 +93,7 @@ end
 #  imap_uid          :integer
 #  imap_sync         :boolean
 #  imap_group_id     :bigint
-#  created_via       :integer
+#  created_via       :integer          default(9), not null
 #
 # Indexes
 #
