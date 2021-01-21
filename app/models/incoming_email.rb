@@ -37,11 +37,11 @@ class IncomingEmail < ActiveRecord::Base
 
   def self.created_via_types
     @types ||= Enum.new(
+      unknown: 0,
       handle_mail: 1,
       pop3_poll: 2,
       imap: 3,
-      group_smtp: 4,
-      unknown: 9
+      group_smtp: 4
     )
   end
 
