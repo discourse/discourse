@@ -3,15 +3,15 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="filterable combo-box"}}
-  {{combo-box content=dummy.categoryNames filterable=true}}
+  {{combo-box content=dummy.categoryNames options=(hash filterable=true)}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="combo-box with a default state"}}
-  {{combo-box content=dummy.options none="category.none"}}
+  {{combo-box content=dummy.options options=(hash none="category.none")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="combo-box clearable"}}
-  {{combo-box content=dummy.options none="category.none" clearable=true}}
+  {{combo-box content=dummy.options clearable=true options=(hash none="category.none")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="topic-notifications-options"}}
@@ -49,7 +49,7 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="notifications-button"}}
-  {{notifications-button i18nPrefix="groups.notifications" value=1}}
+  {{notifications-button options=(hash i18nPrefix="groups.notifications") value=1}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
@@ -63,12 +63,12 @@
     input=dummy.topicTimerUpdateDate
     includeWeekend=true
     includeForever=true
-    none="topic.auto_update_input.none"
+    options=(hash none="topic.auto_update_input.none")
   }}
 {{/styleguide-example}}
 
 {{#styleguide-example title="multi-select"}}
-  {{multi-select none="test.none" content=dummy.options}}
+  {{multi-select content=dummy.options options=(hash none="test.none")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="admin-group-selector"}}
