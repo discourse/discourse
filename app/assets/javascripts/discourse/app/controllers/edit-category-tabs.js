@@ -15,7 +15,7 @@ export default Controller.extend({
   saving: false,
   deleting: false,
   panels: null,
-  hiddenTooltip: true,
+  showTooltip: false,
   createdCategory: false,
   expandedMenu: false,
   mobileView: readOnly("site.mobileView"),
@@ -74,6 +74,11 @@ export default Controller.extend({
   @discourseComputed("selectedTab")
   selectedTabTitle(tab) {
     return I18n.t(`category.${underscore(tab)}`);
+  },
+
+  @discourseComputed("showTooltip", "model.cannot_delete_reason")
+  showDeleteReason(showTooltip, reason) {
+    return showTooltip && reason;
   },
 
   actions: {
@@ -143,7 +148,7 @@ export default Controller.extend({
     },
 
     toggleDeleteTooltip() {
-      this.toggleProperty("hiddenTooltip");
+      this.toggleProperty("showTooltip");
     },
 
     goBack() {
