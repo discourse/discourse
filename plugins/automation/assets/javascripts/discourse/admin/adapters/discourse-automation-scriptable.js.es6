@@ -2,7 +2,7 @@ import DiscourseAutomationAdapter from "./discourse-automation-adapter";
 
 export default DiscourseAutomationAdapter.extend({
   apiNameFor() {
-    return "trigger";
+    return "scriptable";
   },
 
   jsonMode: true

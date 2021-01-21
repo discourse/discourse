@@ -5,14 +5,14 @@ module DiscourseAutomation
     attributes :id, :component, :name, :metadata, :placeholders
 
     def placeholders
-      script_field = scope[:script_options].script_fields.detect do |s|
+      field = scope[:scriptable].fields.detect do |s|
         s[:name].to_s == object.name && s[:component].to_s == object.component
       end
 
-      if script_field && script_field[:placeholders].blank?
+      if !field || field[:accepts_placeholders].blank?
         nil
       else
-        scope[:script_options].script_placeholders
+        scope[:scriptable].placeholders.map { |placeholder| "%%#{placeholder.upcase}%%" }
       end
     end
   end

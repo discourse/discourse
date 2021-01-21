@@ -28,15 +28,15 @@ module DiscourseAutomation
       automation.update!(request.parameters[:automation].slice(:name, :id, :script))
 
       trigger_params = request.parameters[:automation][:trigger].slice(:metadata, :name)
-      if automation.trigger
-        automation.trigger.update_with_params(trigger_params)
-      else
-        automation.create_trigger!(trigger_params)
-        automation.trigger.update_with_params(trigger_params)
-      end
+      automation.create_trigger!(trigger_params) unless automation.trigger
+
+      automation.trigger.update_with_params(trigger_params)
 
       Array(request.parameters[:automation][:fields]).each do |field|
-        f = automation.fields.find_or_initialize_by(name: field[:name], component: field[:component])
+        f = automation.fields.find_or_initialize_by(
+          name: field[:name],
+          component: field[:component]
+        )
         f.update!(metadata: field[:metadata])
       end
 

@@ -27,9 +27,11 @@
 .discourse-automation-form {
   .scripts-list {
     width: 210px;
+
     .select-kit-header {
       background: var(--secondary);
       border: 1px solid var(--primary-medium);
+      border-radius: 0;
 
       &:hover {
         color: var(--primary);
@@ -49,7 +51,7 @@
       border-bottom: 1px solid var(--primary-low);
     }
 
-    input[type="text"],
+    .input-large,
     .select-kit,
     .d-date-time-input {
       width: 300px;
@@ -65,8 +67,50 @@
     }
   }
 
-  .pm-field {
-    .pm-input {
+  .pms-field {
+    .actions.header {
+      display: flex;
+      margin-bottom: 1em;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .pm-field {
+      background: var(--primary-very-low);
+      padding: 0.5em;
+
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        .control-label {
+          width: 100%;
+        }
+        .controls {
+          margin: 0;
+        }
+      }
+
+      .d-editor,
+      .d-editor-container {
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+
+        .d-editor-input {
+          min-height: 200px;
+        }
+      }
+    }
+
+    .d-editor-textarea-wrapper {
+      box-sizing: border-box;
+      min-width: 300px;
+    }
+
+    .pm-field:not(:last-child) {
+      margin-bottom: 1em;
+    }
+    .pm-title {
       width: 100%;
     }
     .pm-textarea {
@@ -74,5 +118,21 @@
       box-sizing: border-box;
       height: 200px;
     }
+  }
+}
+
+.placeholders-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .placeholder-item {
+    background: var(--primary-low);
+    color: var(--primary-high);
+    border-radius: 3px;
+    font-size: $font-down-2;
+    padding: 0.5em;
+    margin: 0.25em 0.25em 0.25em 0;
+    flex-shrink: 0;
   }
 }

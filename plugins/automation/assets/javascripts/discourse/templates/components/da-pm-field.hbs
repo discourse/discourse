@@ -1,0 +1,41 @@
+<section class="pms-field">
+  <div class="pm-field">
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "discourse_automation.fields.pm.title.label"}}
+      </label>
+
+      <div class="controls">
+        {{input
+          value=field.metadata.pm.title
+          class="pm-input pm-title"
+          input=(action (mut pm.title) value="target.value")
+        }}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "discourse_automation.fields.pm.raw.label"}}
+      </label>
+
+      <div class="controls">
+        {{d-editor value=field.metadata.pm.raw}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">
+        {{i18n "discourse_automation.fields.pm.delay.label"}}
+      </label>
+
+      <div class="controls">
+        {{input
+          value=field.metadata.pm.delay
+          class="input-large pm-input"
+          input=(action (mut pm.delay) value="target.value")
+        }}
+      </div>
+    </div>
+  </div>
+</section>

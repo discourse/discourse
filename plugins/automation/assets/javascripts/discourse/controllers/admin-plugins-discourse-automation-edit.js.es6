@@ -8,12 +8,16 @@ export default Ember.Controller.extend({
 
   automation: reads("model.automation"),
 
+  isUpdatingAutomation: false,
+
   @action
   saveAutomation(automation) {
-    this.set("error", null);
-    automation.update().catch(e => {
-      this.set("error", extractError(e));
-    });
+    this.setProperties({ error: null, isUpdatingAutomation: true });
+
+    return automation
+      .update()
+      .catch(e => this.set("error", extractError(e)))
+      .finally(() => this.set("isUpdatingAutomation", false));
   },
 
   @action

@@ -1,0 +1,58 @@
+<section class="pms-field">
+  <section class="actions header">
+    {{d-button
+      icon="plus"
+      action=(action "insertPM")
+      class="btn-primary insert-pm"
+    }}
+  </section>
+  {{#each field.metadata.pms as |pm|}}
+    <div class="pm-field">
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.title.label"}}
+        </label>
+
+        <div class="controls">
+          {{input
+            value=pm.title
+            class="pm-input pm-title"
+            input=(action (mut pm.title) value="target.value")
+          }}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.raw.label"}}
+        </label>
+
+        <div class="controls">
+          {{d-editor value=pm.raw}}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "discourse_automation.fields.pms.delay.label"}}
+        </label>
+
+        <div class="controls">
+          {{input
+            value=pm.delay
+            class="input-large pm-input"
+            input=(action (mut pm.delay) value="target.value")
+          }}
+        </div>
+      </div>
+
+      <section class="actions">
+        {{d-button
+          icon="trash-alt"
+          action=(action "removePM" pm)
+          class="btn-danger"
+        }}
+      </section>
+    </div>
+  {{/each}}
+</section>

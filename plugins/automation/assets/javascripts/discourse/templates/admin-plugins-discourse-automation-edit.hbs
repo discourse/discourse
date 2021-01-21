@@ -26,7 +26,7 @@
         <div class="controls">
           {{dropdown-select-box
             value=automation.script.id
-            content=model.scripts.content
+            content=model.scriptables.content
             class="scripts-list"
             onChange=(action (mut automation.script.id))
             options=(hash filterable=true)
@@ -38,7 +38,7 @@
     </section>
 
     <section class="trigger-section form-section edit">
-      <h2 class="title">{{i18n "discourse_automation.models.trigger.name.label"}}</h2>
+      <h2 class="title">{{i18n "discourse_automation.edit_automation.trigger_section.title"}}</h2>
 
       <div class="control-group">
         <label class="control-label">
@@ -48,7 +48,7 @@
         <div class="controls">
           {{combo-box
             value=automation.trigger.name
-            content=model.triggers.content
+            content=model.triggerables
             class="scripts-list"
             onChange=(action (mut automation.trigger.name))
           }}
@@ -80,6 +80,7 @@
       <div class="controls">
         {{d-button
           icon="plus"
+          isLoading=isUpdatingAutomation
           class="btn-primary"
           label="discourse_automation.update"
           action=(action "saveAutomation" automation)

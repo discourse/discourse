@@ -1,7 +1,8 @@
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 
 export default Component.extend({
-  placeholdersString: Ember.computed("field.placeholders", function() {
+  placeholdersString: computed("field.placeholders", function() {
     return this.field.placeholders.join(", ");
   })
 });

@@ -17,7 +17,7 @@ as the plugin command.
 ## Usage
 
 ```ruby
-Triggers.add(:on_cake_day) do
+Triggerable.add(:on_cake_day) do
   placeholder(:target_username, 'target_username')
 
   provided([:target_username])

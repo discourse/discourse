@@ -12,16 +12,16 @@ module DiscourseAutomation
     def script
       {
         id: object.script,
-        version: script_options.script_version,
-        name: I18n.t("discourse_automation.scripts.#{object.script}.title"),
-        description: I18n.t("discourse_automation.scripts.#{object.script}.description"),
-        doc: I18n.t("discourse_automation.scripts.#{object.script}.doc"),
-        placeholders: script_options.script_placeholders
+        version: scriptable.version,
+        name: I18n.t("discourse_automation.scriptables.#{object.script}.title"),
+        description: I18n.t("discourse_automation.scriptables.#{object.script}.description"),
+        doc: I18n.t("discourse_automation.scriptables.#{object.script}.doc"),
+        placeholders: scriptable.placeholders
       }
     end
 
     def fields
-      fields = Array(script_options.script_fields).map do |script_field|
+      fields = Array(scriptable.fields).map do |script_field|
         field = object.fields.find_by(name: script_field[:name], component: script_field[:component])
         field || DiscourseAutomation::Field.new(name: script_field[:name], component: script_field[:component])
       end
@@ -29,7 +29,7 @@ module DiscourseAutomation
       ActiveModel::ArraySerializer.new(
         fields,
         each_serializer: DiscourseAutomation::FieldSerializer,
-        scope: { script_options: script_options }
+        scope: { scriptable: scriptable }
       ).as_json
     end
 
@@ -43,8 +43,8 @@ module DiscourseAutomation
 
     private
 
-    def script_options
-      DiscourseAutomation::Script.script_for_automation(object)
+    def scriptable
+      DiscourseAutomation::Scriptable.new(object)
     end
   end
 end

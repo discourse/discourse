@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Script.add_script('gift_exchange') do
-  placeholders %w[YEAR GIFTER_USERNAME GIFTEE_USERNAME]
+DiscourseAutomation::Scriptable.add('gift_exchange') do
+  placeholder :year
+  placeholder :giftee_username
+  placeholder :gifter_username
 
-  field :giftee_assignment_message, component: :pm, placeholders: true
+  field :giftee_assignment_message, component: :pm, accepts_placeholders: true
   field :gift_exchangers_group, component: :group
 
   version 16
 
-  script do
-    now = Time.zone.now
+  triggerables %i[point_in_time]
 
-    giftee_assignment_message = automation.metadata_for_field('giftee_assignment_message')
+  script do |trigger, fields|
+    now = Time.zone.now
+    giftee_assignment_message = fields['giftee_assignment_message']
 
     if giftee_assignment_message['title'].blank?
       Rails.logger.warn '[discourse-automation] Gift exchange requires a title for the PM'
@@ -23,16 +26,16 @@ DiscourseAutomation::Script.add_script('gift_exchange') do
       next
     end
 
-    gift_exchangers_group = automation.metadata_for_field('gift_exchangers_group')
+    gift_exchangers_group = fields['gift_exchangers_group']
 
     unless group = Group.find_by(id: gift_exchangers_group['group_id'])
       Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{gift_exchangers_group['group_id']}"
       next
     end
 
-    cf_name = "#{group.name}-gifts-were-exchanged-#{automation.id}-#{script_version}-#{now.year}"
+    cf_name = "#{group.name}-gifts-were-exchanged-#{automation.id}-#{version}-#{now.year}"
     if group.custom_fields[cf_name].present?
-      Rails.logger.warn "[discourse-automation] Gift exchange script has already been run on #{cf_name} this year #{now.year} for this script version #{script_version}"
+      Rails.logger.warn "[discourse-automation] Gift exchange script has already been run on #{cf_name} this year #{now.year} for this script version #{version}"
       next
     end
 
@@ -51,9 +54,9 @@ DiscourseAutomation::Script.add_script('gift_exchange') do
 
     pairs.each do |gifter, giftee|
       placeholders = {
-        'YEAR' => now.year.to_s,
-        'GIFTER_USERNAME' => gifter,
-        'GIFTEE_USERNAME' => giftee
+        year: now.year.to_s,
+        gifter_username: gifter,
+        giftee_username: giftee
       }
 
       raw = utils.apply_placeholders(giftee_assignment_message['body'], placeholders)

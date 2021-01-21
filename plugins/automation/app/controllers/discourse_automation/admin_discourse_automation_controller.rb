@@ -2,13 +2,10 @@
 
 module DiscourseAutomation
   class AdminDiscourseAutomationController < ::ApplicationController
-    def index
-    end
+    def index; end
 
-    def new
-    end
+    def new; end
 
-    def edit
-    end
+    def edit; end
   end
 end

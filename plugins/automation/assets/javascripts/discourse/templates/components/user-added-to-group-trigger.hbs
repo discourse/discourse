@@ -1,0 +1,16 @@
+<section class="group-field">
+  <div class="control-group">
+    <label class="control-label">
+      {{i18n "discourse_automation.triggerables.user_added_to_group.metadata.tracked_groups.label"}}
+    </label>
+
+    <div class="controls">
+      {{group-chooser
+        content=allGroups
+        value=metadata.group_ids
+        labelProperty="name"
+        onChange=(action (mut metadata.group_ids))
+      }}
+    </div>
+  </div>
+</section>

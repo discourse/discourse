@@ -1,0 +1,18 @@
+<section class="group-field">
+  <div class="control-group">
+    <label class="control-label">
+      {{i18n "discourse_automation.fields.user.label"}}
+    </label>
+
+    <div class="controls">
+      {{user-chooser
+        value=field.metadata.username
+        onChange=(action "onChangeUsername")
+        options=(hash
+          maximum=1
+          excludeCurrentUser=false
+        )
+      }}
+    </div>
+  </div>
+</section>

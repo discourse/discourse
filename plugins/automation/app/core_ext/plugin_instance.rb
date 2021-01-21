@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Plugin::Instance
-  def add_automation_script(name, &block)
+  def add_automation_scriptable(name, &block)
     reloadable_patch do
-      DiscourseAutomation::Script.add_script(name, &block)
+      DiscourseAutomation::Scriptable.add(name, &block)
     end
   end
 end

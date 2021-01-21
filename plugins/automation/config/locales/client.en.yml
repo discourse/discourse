@@ -4,26 +4,49 @@ en:
       title: Automation
       create: Create
       update: Update
+      edit_automation:
+        trigger_section:
+          title: Trigger
       fields:
+        user:
+          label: User
         pm:
           title:
             label: Title
-          body:
+          raw:
             label: Body
+        pms:
+          title:
+            label: Title
+          raw:
+            label: Body
+          delay:
+            label: Delay (minutes)
         group:
           label: Group
-      triggers:
+      triggerables:
+        user_added_to_group:
+          metadata:
+            tracked_groups:
+              label: Tracked groups
         point_in_time:
-          help: "Allows you to execute an automation at a specific point in time during a year. eg: 22 for `day` means that the 22 of each month the automation will be executed."
           datetime:
             label: Datetime
-      scripts:
+      scriptables:
         gift_exchange:
           fields:
             gift_exchangers_group:
               label: Group name of participants
             giftee_assignment_message:
               label: Message sent to gifter
+        send_pms:
+          add_a_pm_btn:
+            label: Add a PM
+          fields:
+            sendable_pms:
+              label: Sendable PMs
+            sender:
+              label: PMs sender
       models:
         trigger:
           name:
