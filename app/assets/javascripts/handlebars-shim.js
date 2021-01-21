@@ -5,6 +5,10 @@ if (typeof define !== "undefined") {
     if (typeof Handlebars !== "undefined") {
       // eslint-disable-next-line
       __exports__.default = Handlebars;
+      __exports__.compile = function () {
+        // eslint-disable-next-line
+        return Handlebars.compile(...arguments);
+      };
     }
   });
 

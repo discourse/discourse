@@ -27,7 +27,7 @@ acceptance("Category Edit", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.equal(queryAll(".badge-category").text(), "testing");
 
-    await fillIn("#edit-text-color", "#ff0000");
+    await fillIn(".edit-text-color input", "#ff0000");
 
     await click(".edit-category-topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");

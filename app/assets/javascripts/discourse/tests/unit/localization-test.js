@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import I18n from "I18n";
 import LocalizationInitializer from "discourse/initializers/localization";
+import { getApplication } from "@ember/test-helpers";
 
 module("initializer:localization", {
   _locale: I18n.locale,
@@ -42,7 +43,7 @@ test("translation overrides", function (assert) {
     "js.composer.reply": "WAT",
     "js.topic.reply.help": "foobar",
   };
-  LocalizationInitializer.initialize(this.registry);
+  LocalizationInitializer.initialize(getApplication());
 
   assert.equal(
     I18n.t("composer.reply"),
@@ -61,7 +62,7 @@ test("skip translation override if parent node is not an object", function (asse
     "js.composer.reply": "WAT",
     "js.composer.reply.help": "foobar",
   };
-  LocalizationInitializer.initialize(this.registry);
+  LocalizationInitializer.initialize(getApplication());
 
   assert.equal(I18n.t("composer.reply.help"), "[fr.composer.reply.help]");
 });

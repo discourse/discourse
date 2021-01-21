@@ -15,7 +15,13 @@ acceptance("User Routes", function (needs) {
     );
   });
   test("Invalid usernames", async function (assert) {
-    await visit("/u/eviltrout%2F..%2F..%2F/summary");
+    try {
+      await visit("/u/eviltrout%2F..%2F..%2F/summary");
+    } catch (e) {
+      if (e.message !== "TransitionAborted") {
+        throw e;
+      }
+    }
 
     assert.equal(currentRouteName(), "exception-unknown");
   });

@@ -790,7 +790,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='0'] .scale-btn[data-scale='50']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -800,7 +800,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='3'] .scale-btn[data-scale='50']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -810,7 +810,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='4'] .scale-btn[data-scale='75']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -819,7 +819,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='5'] .scale-btn[data-scale='50']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -828,7 +828,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='6'] .scale-btn[data-scale='75']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -837,7 +837,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='8'] .scale-btn[data-scale='75']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 
@@ -846,7 +846,7 @@ acceptance("Composer", function (needs) {
     await click(
       queryAll(
         ".button-wrapper[data-image-index='9'] .scale-btn[data-scale='75']"
-      )
+      )[0]
     );
     assertImageResized(assert, uploads);
 

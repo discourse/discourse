@@ -280,7 +280,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-add-members-modal .modal-close");
 
-    const memberDropdown = selectKit(".group-member-dropdown:first");
+    const memberDropdown = selectKit(".group-member-dropdown:nth-of-type(1)");
     await memberDropdown.expand();
 
     assert.equal(

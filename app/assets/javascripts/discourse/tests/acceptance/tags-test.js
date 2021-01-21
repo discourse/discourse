@@ -102,7 +102,7 @@ acceptance("Tags listed by group", function (needs) {
       "shown in given order and with tags that are not in a group"
     );
     assert.deepEqual(
-      $(".tag-list:first .discourse-tag")
+      $(".tag-list:nth-of-type(1) .discourse-tag")
         .toArray()
         .map((i) => {
           return $(i).text();
@@ -111,7 +111,7 @@ acceptance("Tags listed by group", function (needs) {
       "shows the tags in default sort (by count)"
     );
     assert.deepEqual(
-      $(".tag-list:first .discourse-tag")
+      $(".tag-list:nth-of-type(1) .discourse-tag")
         .toArray()
         .map((i) => {
           return $(i).attr("href");
@@ -302,7 +302,7 @@ acceptance("Tag info", function (needs) {
       "delete UI is visible"
     );
 
-    await click(".unlink-synonym:first");
+    await click(".unlink-synonym:nth-of-type(1)");
     assert.ok(
       queryAll(".tag-info .synonyms-list .tag-box").length === 1,
       "removed a synonym"
