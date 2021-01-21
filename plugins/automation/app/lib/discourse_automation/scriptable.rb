@@ -94,6 +94,7 @@ module DiscourseAutomation
             pm = pm.merge(archetype: Archetype.private_message)
 
             if defined?(EncryptedPostCreator)
+              pm[:target_usernames] = (pm[:target_usernames] || []).join(',')
               post_created = EncryptedPostCreator.new(sender, pm).create
             end
 
