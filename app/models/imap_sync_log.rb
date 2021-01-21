@@ -11,10 +11,9 @@ class ImapSyncLog < ActiveRecord::Base
 
   def self.log(message, level, group_id = nil, db = true)
     now = Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
-    new_log = nil
 
-    if db
-      new_log = create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
+    new_log = if db
+      create(message: message, level: ImapSyncLog.levels[level], group_id: group_id)
     end
 
     if ENV["DEBUG_IMAP"]
