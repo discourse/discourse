@@ -95,6 +95,8 @@ export default Controller.extend(ModalFunctionality, {
       this._initializeExistingBookmarkData();
     }
 
+    this.loadLocalDates();
+
     schedule("afterRender", () => {
       if (this.site.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
@@ -240,10 +242,7 @@ export default Controller.extend(ModalFunctionality, {
 
   showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
 
-  showPostLocalDate: or(
-    "model.postDetectedLocalDate",
-    "model.postDetectedLocalTime"
-  ),
+  showPostLocalDate: or("postDetectedLocalDate", "postDetectedLocalTime"),
 
   get showLaterToday() {
     let later = this.laterToday();
@@ -304,6 +303,24 @@ export default Controller.extend(ModalFunctionality, {
 
   get postLocalDateFormatted() {
     return this.postLocalDate().format(I18n.t("dates.long_no_year"));
+  },
+
+  loadLocalDates() {
+    let postEl = document.querySelector(
+      `[data-post-id="${this.model.postId}"]`
+    );
+    let localDateEl = null;
+    if (postEl) {
+      localDateEl = postEl.querySelector(".discourse-local-date");
+    }
+
+    if (localDateEl) {
+      this.setProperties({
+        postDetectedLocalDate: localDateEl.dataset.date,
+        postDetectedLocalTime: localDateEl.dataset.time,
+        postDetectedLocalTimezone: localDateEl.dataset.timezone,
+      });
+    }
   },
 
   @discourseComputed("userTimezone")
@@ -456,12 +473,12 @@ export default Controller.extend(ModalFunctionality, {
 
   postLocalDate() {
     let parsedPostLocalDate = this._parseCustomDateTime(
-      this.model.postDetectedLocalDate,
-      this.model.postDetectedLocalTime,
-      this.model.postDetectedLocalTimezone
+      this.postDetectedLocalDate,
+      this.postDetectedLocalTime,
+      this.postDetectedLocalTimezone
     );
 
-    if (!this.model.postDetectedLocalTime) {
+    if (!this.postDetectedLocalTime) {
       return this.startOfDay(parsedPostLocalDate);
     }
 

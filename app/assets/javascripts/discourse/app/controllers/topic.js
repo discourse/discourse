@@ -1168,12 +1168,6 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _togglePostBookmark(post) {
-    let postEl = document.querySelector(`[data-post-id="${post.id}"]`);
-    let localDateEl = null;
-    if (postEl) {
-      localDateEl = postEl.querySelector(".discourse-local-date");
-    }
-
     return new Promise((resolve) => {
       let modalController = showModal("bookmark", {
         model: {
@@ -1182,11 +1176,6 @@ export default Controller.extend(bufferedProperty("model"), {
           reminderAt: post.bookmark_reminder_at,
           autoDeletePreference: post.bookmark_auto_delete_preference,
           name: post.bookmark_name,
-          postDetectedLocalDate: localDateEl ? localDateEl.dataset.date : null,
-          postDetectedLocalTime: localDateEl ? localDateEl.dataset.time : null,
-          postDetectedLocalTimezone: localDateEl
-            ? localDateEl.dataset.timezone
-            : null,
         },
         title: post.bookmark_id
           ? "post.bookmarks.edit"

@@ -226,12 +226,6 @@ export default Component.extend({
     return this.unhandledRowClick(e, topic);
   },
 
-  actions: {
-    toggleBookmark() {
-      this.topic.toggleBookmark().finally(() => this.renderTopicListItem());
-    },
-  },
-
   unhandledRowClick() {},
 
   navigateToTopic,
