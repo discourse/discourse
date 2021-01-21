@@ -34,18 +34,6 @@
       max-height: 40vh;
     }
   }
-
-  @include breakpoint(medium) {
-    // hide button labels to save space
-    .btn {
-      .d-button-label {
-        display: none;
-      }
-      .d-icon {
-        margin: 0;
-      }
-    }
-  }
 }
 
 .navigation-container {
