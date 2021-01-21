@@ -262,7 +262,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it should display the group name"
     );
 
-    await click(".group-details-button button[aria-label='Delete']");
+    await click(".group-details-button button.btn-danger");
 
     assert.equal(
       queryAll(".bootbox .modal-body").html(),
