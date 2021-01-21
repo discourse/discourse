@@ -6,6 +6,8 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :post
   belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
 
+  validates :created_via, presence: true
+
   scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
 
   scope :addressed_to, -> (email) do
@@ -33,6 +35,7 @@ class IncomingEmail < ActiveRecord::Base
 
   def self.created_via_types
     @types ||= Enum.new(
+      unknown: 0,
       handle_mail: 1,
       pop3_poll: 2,
       imap: 3,
@@ -106,7 +109,7 @@ end
 #  imap_uid          :integer
 #  imap_sync         :boolean
 #  imap_group_id     :bigint
-#  created_via       :integer
+#  created_via       :integer          default(0), not null
 #
 # Indexes
 #
