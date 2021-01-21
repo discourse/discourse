@@ -144,6 +144,15 @@ export function applyDefaultHandlers(pretender) {
     return response({ email: "eviltrout@example.com" });
   });
 
+  pretender.get("/u/is_local_username", () =>
+    response({
+      valid: [],
+      valid_groups: [],
+      mentionable_groups: [],
+      cannot_see: [],
+    })
+  );
+
   pretender.get("/u/eviltrout.json", () => {
     const json = fixturesByUrl["/u/eviltrout.json"];
     json.user.can_edit = loggedIn();

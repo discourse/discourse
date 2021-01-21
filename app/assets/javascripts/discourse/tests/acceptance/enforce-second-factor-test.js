@@ -3,8 +3,19 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+
+async function catchAbortedTransition() {
+  try {
+    await visit("/u/eviltrout/summary");
+  } catch (e) {
+    if (e.message !== "TransitionAborted") {
+      throw e;
+    }
+  }
+  await settled();
+}
 
 acceptance("Enforce Second Factor", function (needs) {
   needs.user();
@@ -21,7 +32,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "staff";
 
-    await visit("/u/eviltrout/summary");
+    await catchAbortedTransition();
 
     assert.equal(
       queryAll(".control-label").text(),
@@ -45,7 +56,7 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "all";
 
-    await visit("/u/eviltrout/summary");
+    await catchAbortedTransition();
 
     assert.equal(
       queryAll(".control-label").text(),
@@ -70,7 +81,7 @@ acceptance("Enforce Second Factor", function (needs) {
     this.siteSettings.enforce_second_factor = "all";
     this.siteSettings.allow_anonymous_posting = true;
 
-    await visit("/u/eviltrout/summary");
+    await catchAbortedTransition();
 
     assert.notEqual(
       queryAll(".control-label").text(),

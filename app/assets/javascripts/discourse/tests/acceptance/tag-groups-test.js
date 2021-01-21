@@ -46,7 +46,7 @@ acceptance("Tag Groups", function (needs) {
 
     await click(".tag-group-content .btn.btn-default");
 
-    await click(".tag-chooser .choice:first");
+    await click(".tag-chooser .choice:nth-of-type(1)");
     assert.ok(!queryAll(".tag-group-content .btn.btn-danger")[0].disabled);
   });
 

@@ -6,6 +6,7 @@ import {
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { REMINDER_TYPES } from "discourse/lib/bookmark";
 import User from "discourse/models/user";
+import { getApplication } from "@ember/test-helpers";
 import sinon from "sinon";
 import { test } from "qunit";
 
@@ -18,7 +19,7 @@ function mockMomentTz(dateString) {
 discourseModule("Unit | Controller | bookmark", function (hooks) {
   hooks.beforeEach(function () {
     logIn();
-    KeyboardShortcutInitializer.initialize(this.container);
+    KeyboardShortcutInitializer.initialize(getApplication());
 
     BookmarkController = this.owner.lookup("controller:bookmark");
     BookmarkController.setProperties({

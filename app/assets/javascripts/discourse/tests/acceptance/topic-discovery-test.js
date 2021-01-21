@@ -22,7 +22,7 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.equal(
-      queryAll("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
+      queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
