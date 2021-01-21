@@ -6,11 +6,7 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :post
   belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
 
-  before_save do
-    if self.created_via.blank?
-      self.created_via = IncomingEmail.created_via_types[:unknown]
-    end
-  end
+  validates :created_via, presence: true
 
   scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
 
