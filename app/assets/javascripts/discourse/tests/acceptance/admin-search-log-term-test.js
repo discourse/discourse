@@ -1,6 +1,6 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Admin - Search Log Term", function (needs) {
   needs.user();

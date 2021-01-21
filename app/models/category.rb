@@ -343,8 +343,7 @@ class Category < ActiveRecord::Base
     if slug.present?
       # if we don't unescape it first we strip the % from the encoded version
       slug = SiteSetting.slug_generation_method == 'encoded' ? CGI.unescape(self.slug) : self.slug
-      # sanitize the custom slug
-      self.slug = Slug.sanitize(slug)
+      self.slug = Slug.for(slug, '', method: :encoded)
 
       if self.slug.blank?
         errors.add(:slug, :invalid)
@@ -795,16 +794,23 @@ class Category < ActiveRecord::Base
     return nil if slug_path.empty?
     return nil if slug_path.size > SiteSetting.max_category_nesting
 
-    if SiteSetting.slug_generation_method == "encoded"
-      slug_path.map! { |slug| CGI.escape(slug) }
+    slug_path.map! do |slug|
+      if SiteSetting.slug_generation_method == "encoded"
+        CGI.escape(slug.downcase)
+      else
+        slug.downcase
+      end
     end
 
     query =
       slug_path.inject(nil) do |parent_id, slug|
-        Category.where(
-          slug: slug,
-          parent_category_id: parent_id,
-        ).select(:id)
+        category = Category.where(slug: slug, parent_category_id: parent_id)
+
+        if match_id = /^(\d+)-category/.match(slug).presence
+          category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
+        end
+
+        category.select(:id)
       end
 
     Category.find_by_id(query)

@@ -53,8 +53,8 @@ he:
           title: "מצבי נושא"
         topic_list:
           title: "רשימת נושאים"
-        latest_topic_list:
-          title: "רשימת נושאים אחרונים"
+        basic_topic_list:
+          title: "רשימת נושאים בסיסית"
         footer_message:
           title: "הודעת כותרת תחתונה"
         signup_cta:
@@ -69,6 +69,8 @@ he:
           title: "פוסט"
         topic_map:
           title: "מפת נושאים"
+        site_header:
+          title: "כותרת האתר"
         suggested_topics:
           title: "נושאים מוצעים"
         post_menu:

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 import User from "discourse/models/user";
 
 export default DiscourseRoute.extend({

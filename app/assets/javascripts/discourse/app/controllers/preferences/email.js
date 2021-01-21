@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import { empty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { propertyEqual } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
+import { propertyEqual } from "discourse/lib/computed";
 
 export default Controller.extend({
   queryParams: ["new"],

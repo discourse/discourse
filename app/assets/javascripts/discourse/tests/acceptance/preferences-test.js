@@ -1,20 +1,20 @@
 import {
-  visit,
-  currentURL,
-  currentRouteName,
-  click,
-  fillIn,
-} from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
-import {
   acceptance,
-  updateCurrentUser,
-  queryAll,
   exists,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  fillIn,
+  visit,
+} from "@ember/test-helpers";
+import I18n from "I18n";
 import User from "discourse/models/user";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 function preferencesPretender(server, helper) {
   server.post("/u/second_factors.json", () => {
@@ -479,3 +479,30 @@ acceptance(
     });
   }
 );
+
+acceptance("Ignored users", function (needs) {
+  needs.user();
+  needs.settings({ min_trust_level_to_allow_ignore: 1 });
+
+  test("when trust level < min level to ignore", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+
+    assert.ok(
+      !exists(".user-ignore"),
+      "it does not show the list of ignored users"
+    );
+  });
+
+  test("when trust level >= min level to ignore", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ trust_level: 1 });
+    assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
+  });
+
+  test("staff can always see ignored users", async function (assert) {
+    await visit(`/u/eviltrout/preferences/users`);
+    await updateCurrentUser({ moderator: true });
+    assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
+  });
+});

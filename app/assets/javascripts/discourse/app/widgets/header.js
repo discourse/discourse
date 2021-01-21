@@ -1,17 +1,17 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { get } from "@ember/object";
-import { schedule } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { avatarImg } from "discourse/widgets/post";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applySearchAutocomplete } from "discourse/lib/search";
-import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { ajax } from "discourse/lib/ajax";
+import { applySearchAutocomplete } from "discourse/lib/search";
+import { avatarImg } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import { get } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { schedule } from "@ember/runloop";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const _extraHeaderIcons = [];
 
@@ -64,66 +64,69 @@ createWidget("header-notifications", {
       ),
     ];
 
-    const unreadNotifications = user.get("unread_notifications");
-    if (!!unreadNotifications) {
-      contents.push(
-        this.attach("link", {
-          action: attrs.action,
-          className: "badge-notification unread-notifications",
-          rawLabel: unreadNotifications,
-          omitSpan: true,
-          title: "notifications.tooltip.regular",
-          titleOptions: { count: unreadNotifications },
-        })
-      );
-    }
-
-    const unreadHighPriority = user.get("unread_high_priority_notifications");
-    if (!!unreadHighPriority) {
-      // highlight the avatar if the first ever PM is not read
-      if (
-        !user.get("read_first_notification") &&
-        !user.get("enforcedSecondFactor")
-      ) {
-        if (!attrs.active && attrs.ringBackdrop) {
-          contents.push(h("span.ring"));
-          contents.push(h("span.ring-backdrop-spotlight"));
-          contents.push(
-            h(
-              "span.ring-backdrop",
-              {},
-              h("h1.ring-first-notification", {}, [
-                h("span", {}, I18n.t("user.first_notification")),
-                h("span", {}, [
-                  I18n.t("user.skip_new_user_tips.not_first_time"),
-                  " ",
-                  this.attach("link", {
-                    action: "skipNewUserTips",
-                    className: "skip-new-user-tips",
-                    label: "user.skip_new_user_tips.skip_link",
-                    title: "user.skip_new_user_tips.description",
-                    omitSpan: true,
-                  }),
-                ]),
-              ])
-            )
-          );
-        }
+    if (user.isInDoNotDisturb()) {
+      contents.push(h("div.do-not-disturb-background", iconNode("moon")));
+    } else {
+      const unreadNotifications = user.get("unread_notifications");
+      if (!!unreadNotifications) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-notifications",
+            rawLabel: unreadNotifications,
+            omitSpan: true,
+            title: "notifications.tooltip.regular",
+            titleOptions: { count: unreadNotifications },
+          })
+        );
       }
 
-      // add the counter for the unread high priority
-      contents.push(
-        this.attach("link", {
-          action: attrs.action,
-          className: "badge-notification unread-high-priority-notifications",
-          rawLabel: unreadHighPriority,
-          omitSpan: true,
-          title: "notifications.tooltip.high_priority",
-          titleOptions: { count: unreadHighPriority },
-        })
-      );
-    }
+      const unreadHighPriority = user.get("unread_high_priority_notifications");
+      if (!!unreadHighPriority) {
+        // highlight the avatar if the first ever PM is not read
+        if (
+          !user.get("read_first_notification") &&
+          !user.get("enforcedSecondFactor")
+        ) {
+          if (!attrs.active && attrs.ringBackdrop) {
+            contents.push(h("span.ring"));
+            contents.push(h("span.ring-backdrop-spotlight"));
+            contents.push(
+              h(
+                "span.ring-backdrop",
+                {},
+                h("h1.ring-first-notification", {}, [
+                  h("span", {}, I18n.t("user.first_notification")),
+                  h("span", {}, [
+                    I18n.t("user.skip_new_user_tips.not_first_time"),
+                    " ",
+                    this.attach("link", {
+                      action: "skipNewUserTips",
+                      className: "skip-new-user-tips",
+                      label: "user.skip_new_user_tips.skip_link",
+                      title: "user.skip_new_user_tips.description",
+                      omitSpan: true,
+                    }),
+                  ]),
+                ])
+              )
+            );
+          }
+        }
 
+        // add the counter for the unread high priority
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-high-priority-notifications",
+            rawLabel: unreadHighPriority,
+            omitSpan: true,
+            title: "notifications.tooltip.high_priority",
+            titleOptions: { count: unreadHighPriority },
+          })
+        );
+      }
+    }
     return contents;
   },
 });

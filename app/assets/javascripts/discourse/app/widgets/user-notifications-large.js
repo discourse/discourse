@@ -1,6 +1,6 @@
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
 import { dateNode } from "discourse/helpers/node";
+import { h } from "virtual-dom";
 
 createWidget("large-notification-item", {
   buildClasses(attrs) {

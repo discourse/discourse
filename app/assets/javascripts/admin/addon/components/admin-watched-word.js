@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   classNames: ["watched-word"],

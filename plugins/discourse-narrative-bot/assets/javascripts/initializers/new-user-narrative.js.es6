@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initialize(api) {
   const messageBus = api.container.lookup("message-bus:main");

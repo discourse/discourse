@@ -1,36 +1,36 @@
-import I18n from "I18n";
-import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
-import Component from "@ember/component";
-import Mousetrap from "mousetrap";
-
-import discourseComputed, {
-  on,
-  observes,
-} from "discourse-common/utils/decorators";
-import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { siteDir } from "discourse/lib/text-direction";
 import {
-  determinePostReplaceSelection,
-  clipboardHelpers,
-  safariHacksDisabled,
   caretPosition,
+  clipboardHelpers,
+  determinePostReplaceSelection,
   inCodeBlock,
+  safariHacksDisabled,
 } from "discourse/lib/utilities";
-import toMarkdown from "discourse/lib/to-markdown";
-import deprecated from "discourse-common/lib/deprecated";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { translations } from "pretty-text/emoji/data";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import showModal from "discourse/lib/show-modal";
+import { later, next, schedule, scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import I18n from "I18n";
+import Mousetrap from "mousetrap";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import { SKIP } from "discourse/lib/autocomplete";
+import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { getRegister } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { inject as service } from "@ember/service";
+import showModal from "discourse/lib/show-modal";
+import { siteDir } from "discourse/lib/text-direction";
+import toMarkdown from "discourse/lib/to-markdown";
+import { translations } from "pretty-text/emoji/data";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -105,7 +105,7 @@ class Toolbar {
     }
 
     this.addButton({
-      id: "quote",
+      id: "blockquote",
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
@@ -415,7 +415,7 @@ export default Component.extend({
     if (isTesting()) {
       this._updatePreview();
     } else {
-      debounce(this, this._updatePreview, 30);
+      discourseDebounce(this, this._updatePreview, 30);
     }
   },
 

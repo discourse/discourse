@@ -1,14 +1,18 @@
-import { computed, get, action } from "@ember/object";
+import { action, computed, get } from "@ember/object";
 import Component from "@ember/component";
-import { makeArray } from "discourse-common/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 import layout from "select-kit/templates/components/selected-name";
+import { makeArray } from "discourse-common/lib/helpers";
+import { reads } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   tagName: "",
   layout,
   name: null,
   value: null,
+  headerTitle: null,
+  headerLang: null,
+  headerLabel: null,
 
   @action
   onSelectedNameClick() {
@@ -25,11 +29,14 @@ export default Component.extend(UtilsMixin, {
     this.setProperties({
       headerLabel: this.getProperty(this.item, "labelProperty"),
       headerTitle: this.getProperty(this.item, "titleProperty"),
+      headerLang: this.getProperty(this.item, "langProperty"),
       name: this.getName(this.item),
       value:
         this.item === this.selectKit.noneItem ? null : this.getValue(this.item),
     });
   },
+
+  lang: reads("headerLang"),
 
   ariaLabel: computed("item", "sanitizedTitle", function () {
     return this._safeProperty("ariaLabel", this.item) || this.sanitizedTitle;

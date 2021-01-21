@@ -345,26 +345,6 @@ ca:
     until_posts:
       one: "%{count} publicació"
       other: "%{count} publicacions"
-    "new-topic": |
-      Us donem la benvinguda a %{site_name} &mdash; **gràcies per obrir una nova conversa!**
-
-      - El títol sona interessant si el llegiu en veu alta? És un bon resum?
-
-      - Qui pot interessar-s'hi? Per què és important? Quina mena de reaccions voleu?
-
-      - Incloeu mots emprats sovint en el tema perquè la resta el puguin *trobar*. Per a agrupar el vostre tema amb altres relacionats, trieu una categoria.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís sols apareixerà per al vostre primer %{education_posts_text}.
-    "new-reply": |
-      Benvingut a %{site_name}. **Gràcies per col·laborar!**
-
-      - La vostra resposta millora d'alguna manera la conversa?
-
-      - Siguem amables amb la resta de membres de la comunitat.
-
-      - Les crítiques constructives són benvingudes, però per a criticar *idees* no pas persones.
-
-      Per a saber-ne més, [doneu un cop d'ull a la guia de la comunitat](%{base_path}/guidelines). Aquest avís només apareixerà en el vostre primer/la vostra primera %{education_posts_text}.
     avatar: |
       ### Què us sembla si poseu una fotografia per al vostre compte?
 
@@ -844,9 +824,7 @@ ca:
     mute_topic: "Silencia totes les notificacions per a aquest tema, %{link}"
     unwatch_category: "Deixa de vigilar tots els temes en %{category}"
     mailing_list_mode: "Apaga el mode de llista de correu"
-    all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment heu iniciat la sessió amb una identitat diferent d'aquella a la qual hem enviat un correu. Tanqueu la sessió o entreu anònimament, i torneu a provar-ho."
-    not_found_description: "No hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç en el vostre correu?"
     log_out: "Tanca la sessió"
     submit: "Desa les preferències"
     digest_frequency:
@@ -1449,8 +1427,6 @@ ca:
     max_topic_invitations_per_day: "Nombre màxim d'invitacions a temes que un usuari pot enviar cada dia."
     max_logins_per_ip_per_hour: "Nombre màxim de connexions permeses per adreça IP per hora"
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
-    max_post_deletions_per_minute: "Nombre màxim de publicacions que pot suprimir un usuari per minut."
-    max_post_deletions_per_day: "Nombre màxim de publicacions que pot suprimir un usuari per dia."
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
@@ -1711,7 +1687,6 @@ ca:
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
-    prevent_anons_from_downloading_files: "Impedeix que els usuaris anònims puguin descarregar fitxers adjunts. ATENCIÓ: Això impedirà que funcioni cap fitxer que no sigui una imatge publicat com a adjunt."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."

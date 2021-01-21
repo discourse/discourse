@@ -1,10 +1,10 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 let _test;
 

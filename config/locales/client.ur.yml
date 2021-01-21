@@ -373,9 +373,6 @@ ur:
         name: "نام"
         fields: "فیلڈز"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگ)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگز)"
         agreed:
           one: "%{count}٪ متفق"
           other: "%{count}٪ متفق"
@@ -759,7 +756,6 @@ ur:
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
         disable: "اطلاعات غیر فعال کریں"
         enable: "اطلاعات فعال کریں"
-        each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
       dismiss_notifications: "سب بر خاست کریں"
@@ -1416,7 +1412,6 @@ ur:
       options: "اختیارات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
-      blockquote_text: "بلاک متن"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
       toggle_unlisted: "غیر مندرج ٹَوگل کریں"
@@ -1480,8 +1475,7 @@ ur:
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_title: "ہائپرلِنک ڈالیں"
       link_optional_text: "اختیاری عنوان"
-      quote_title: "بلاک کوٹ"
-      quote_text: "بلاک کوٹ"
+      blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
       code_text: "حاشیہ نے ٹَیکسٹ کو پہلے سے 4 خالی جگہوں سے فارمیٹ کر دیا"
       paste_code_text: "کوڈ یہاں ٹائپ یا پیسٹ کریں"
@@ -1526,7 +1520,6 @@ ur:
           label: "نیا ٹاپک"
         shared_draft:
           label: "مشترکہ ڈرافٹ"
-          desc: "ایک ٹاپک ڈرافٹ کریں جو صرف سٹاف کو نظر آسکے"
         toggle_topic_bump:
           label: "ٹاپک بَمپ ٹَوگل کریں"
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
@@ -1798,7 +1791,6 @@ ur:
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
       jump_reply_up: اِس سے پرانے جواب پر جائیں
@@ -2391,7 +2383,6 @@ ur:
       notify_action: "پیغام"
       official_warning: "آفیشل انتباہ"
       delete_spammer: "سپیم کرنے والے کو حذف کریں"
-      delete_confirm_MF: "آپ اِس صارف سے {POSTS, plural, one {<b>1</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>1</b> ٹاپک} other {<b>#</b> ٹاپکس}} حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{email}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
       yes_delete_spammer: "جی ہاں، سپیم کرنے والے کو حذف کریں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2458,12 +2449,6 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
-    posts_likes_MF: |
-      اِس ٹاپک {count, plural, one {کا 1 جواب} other {کے # جوابات ہیں}} {ratio, select,
-      low {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
-      med {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
-      high {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
-      other {}}
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -3653,7 +3638,6 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ {POSTS, plural, one {1 پوسٹ} other {# پوسٹس}} and {TOPICS, plural, one {1 ٹاپک} other {# ٹاپکس}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"

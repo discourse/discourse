@@ -353,12 +353,12 @@ it:
       none_found: "Nessun argomento trovato."
       title:
         search: "Cerca un argomento"
-        placeholder: "digita qui il titolo dell&#39;argomento, l&#39;URL o l&#39;id"
+        placeholder: "digita qui il titolo dell'argomento, l'URL o l'id"
     choose_message:
       none_found: "Nessun messaggio trovato."
       title:
         search: "Cerca un messaggio"
-        placeholder: "digita qui il titolo del messaggio, l&#39;URL o l&#39;id"
+        placeholder: "digita qui il titolo del messaggio, l'URL o l'id"
     review:
       order_by: "Ordina per"
       in_reply_to: "in risposta a"
@@ -411,6 +411,7 @@ it:
       topic: "Argomento:"
       filtered_topic: "Hai filtrato il contenuto revisionabile in un singolo Argomento"
       filtered_user: "Utente"
+      filtered_reviewed_by: "Revisionato da"
       show_all_topics: "mostra tutti gli argomenti"
       deleted_post: "(messaggio eliminato)"
       deleted_user: "(utente eliminato)"
@@ -421,10 +422,8 @@ it:
         email: "Email"
         name: "Nome"
         fields: "Campi"
+        reject_reason: "Motivo"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} segnalazione in totale)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} segnalazioni in totale)"
         agreed:
           one: "%{count}% a favore"
           other: "%{count}% a favore"
@@ -513,6 +512,9 @@ it:
           other: "Hai<strong>%{count}</strong> messaggi in attesa."
         ok: "OK"
       example_username: "nome utente"
+      reject_reason:
+        title: "Perché stai rifiutando questo utente?"
+        send_email: "Invia email di rifiuto"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> ha pubblicato <a href='%{topicUrl}'>l'argomento</a>"
       you_posted_topic: "<a href='%{userUrl}'>Tu</a> hai pubblicato <a href='%{topicUrl}'>l'argomento</a>"
@@ -868,7 +870,7 @@ it:
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
-        each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
+        each_browser_note: 'Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando in "non disturbare", indipendentemente da questa impostazione.'
         consent_prompt: "Desideri ricevere notifiche in tempo reale quando qualcuno risponde a un tuo messaggio?"
       dismiss: "Ignora"
       dismiss_notifications: "Ignora tutti"
@@ -883,7 +885,7 @@ it:
       color_scheme_default_on_all_devices: "Imposta questa combinazione (o combinazioni) di colori come predefinita/e su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
       color_schemes:
-        default_description: "Predefinito"
+        default_description: "Tema predefinito"
         disable_dark_scheme: "Come di norma"
         dark_instructions: "Puoi provare i colori del tema scuro attivando il tema scuro sul tuo dispositivo."
         undo: "Reimposta"
@@ -1198,7 +1200,7 @@ it:
       enable_physical_keyboard: "Attiva supporto alla tastiera fisica su iPad"
       text_size:
         title: "Dimensioni del testo"
-        smallest: "Più piccolo"
+        smallest: "Piccolissimo"
         smaller: "Più piccolo"
         normal: "Normale"
         larger: "Più grande"
@@ -1627,6 +1629,12 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
+      plus_subcategories_title:
+        one: "%{name} e una sottocategoria"
+        other: "%{name} e %{count} sottocategorie"
+      plus_subcategories:
+        one: "+ %{count} sottocategoria"
+        other: "+ %{count} sottocategorie"
     select_kit:
       default_header_text: Selezione...
       no_content: Nessun risultato trovato
@@ -1682,7 +1690,6 @@ it:
       options: "Opzioni"
       whisper: "sussurra"
       unlist: "invisibile"
-      blockquote_text: "Citazione"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
       toggle_unlisted: "Rendi Invisibile"
@@ -1754,8 +1761,8 @@ it:
       link_dialog_title: "Inserisci il collegamento"
       link_optional_text: "titolo opzionale"
       link_url_placeholder: "Incolla un URL o digita per cercare argomenti"
-      quote_title: "Citazione"
-      quote_text: "Citazione"
+      blockquote_title: "Citazione"
+      blockquote_text: "Citazione"
       code_title: "Testo preformattato"
       code_text: "rientra il testo preformattato di 4 spazi"
       paste_code_text: "digita o incolla il codice qui"
@@ -1809,7 +1816,7 @@ it:
           label: "Nuovo Argomento"
         shared_draft:
           label: "Bozza Condivisa"
-          desc: "Prepara la bozza di un argomento che sarà visibile solo allo Staff"
+          desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
         toggle_topic_bump:
           label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
@@ -2131,7 +2138,7 @@ it:
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
       read_more: "Vuoi saperne di più? %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l&#39;ultimo post di questo Argomento."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'>1 argomento non letto</a> } other { Ci sono <a href='{basePath}/unread'># argomenti non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {è } other{}} <a href='{basePath}/new'>1 nuovo</a> argomento} other { {BOTH, select, true{e } false {Ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Scorri tutte le categorie
       browse_all_tags: Sfoglia tutte le etichette
@@ -2145,6 +2152,7 @@ it:
         select: "Gli utenti possono pubblicare in questo argomento solo una volta ogni:"
         description: "Per promuovere discussioni ponderate in argomenti in rapida evoluzione o controversi, gli utenti devono attendere prima di pubblicare nuovamente in questo argomento."
         save: "Abilita"
+        enabled_until: "(Facoltativo) Attivato fino a:"
         remove: "Disattiva"
         hours: "Ore:"
         minutes: "Minuti:"
@@ -2515,6 +2523,7 @@ it:
       has_replies:
         one: "%{count} Risposta"
         other: "%{count} Risposte"
+      has_replies_count: "%{count}"
       unknown_user: "(utente sconosciuto / eliminato)"
       has_likes_title:
         one: "Una persona ha messo \"Mi piace\" a questo messaggio"
@@ -2523,6 +2532,13 @@ it:
       has_likes_title_you:
         one: "tu e un'altra persona avete messo \"Mi piace\" a questo messaggio"
         other: "tu e altre %{count} persone avete messo \"Mi piace\" a questo messaggio"
+      filtered_replies_hint:
+        one: "Visualizza questo messaggio e la sua risposta"
+        other: "Visualizza questo messaggio e le sue %{count} risposte"
+      filtered_replies_viewing:
+        one: "Visualizzazione di %{count} risposta a"
+        other: "Visualizzazione di %{count} risposte a"
+      in_reply_to: "Carica post padre"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -2679,6 +2695,12 @@ it:
           edit_bookmark:
             name: "Modifica Segnalibro"
             description: "Modifica il nome del segnalibro o modifica la data e l'ora del promemoria"
+      filtered_replies:
+        viewing_posts_by: "Visualizzazione di %{post_count} messaggi di"
+        viewing_subset: "Alcune risposte sono compresse"
+        viewing_summary: "Visualizza un riepilogo di questo argomento"
+        post_number: "%{username}, messaggio n. %{post_number}"
+        show_all: "Mostra tutto"
     category:
       can: "può&hellip;"
       none: "(nessuna categoria)"
@@ -2729,6 +2751,17 @@ it:
       change_in_category_topic: "Modifica Descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
       security: "Sicurezza"
+      security_add_group: "Aggiungi un gruppo"
+      permissions:
+        group: "Gruppo"
+        see: "Vedi"
+        reply: "Rispondi"
+        create: "Crea"
+        no_groups_selected: "Nessun gruppo ha ottenuto l'accesso; questa categoria sarà visibile solo allo staff."
+        everyone_has_access: 'Questa categoria è pubblica, tutti possono vedere, rispondere e creare messaggi. Per limitare i permessi, rimuovere uno o più permessi concessi al gruppo "tutti".'
+        toggle_reply: "Attiva/Disattiva permesso di risposta"
+        toggle_full: "Attiva/Disattiva permesso di creazione"
+        inherited: 'Questo permesso è ereditato da "tutti"'
       special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
@@ -2814,6 +2847,7 @@ it:
       list_filters:
         all: "tutti gli argomenti"
         none: "nessuna sottocategoria"
+      colors_disabled: "Non puoi selezionare i colori perché lo stile della categoria è impostato su 'none'."
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
@@ -2831,7 +2865,7 @@ it:
       notify_action: "Messaggio"
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
-      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>1</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>1</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dall'indirizzo IP<b>{ip_address}</b>, e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco nero permanente. Sei veramente sicuro che questo utente sia uno spammer?"
+      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare l'iscrizione dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -2899,7 +2933,11 @@ it:
         help: "Questo argomento è un messaggio personale"
     posts: "Messaggi"
     posts_likes_MF: |
-      Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
+      Questo argomento ha {count, plural, one {# risposta} other {# risposte}} {ratio, select,
+        low {con un rapporto di 'mi piace' e risposte alto}
+        med {con un rapporto di 'mi piace' e risposte molto alto}
+        high {con un rapporto di 'mi piace' e risposte estremamente alto}
+        other {}}
     original_post: "Messaggio Originale"
     views: "Visite"
     views_lowercase:
@@ -3229,7 +3267,7 @@ it:
     invite:
       custom_message: "Rendi il tuo invito un po' più personale scrivendo un <a href>messaggio personalizzato</a>."
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
-      approval_not_required: "L'utente sarà approvato automaticamente non appena accetterà questo invito."
+      approval_not_required: "L'utente verrà approvato automaticamente non appena accetterà questo invito."
       custom_message_template_forum: "Ehi, unisciti a questo forum!"
       custom_message_template_topic: "Ehi, credo che questo argomento ti possa interessare!"
     forced_anonymous: "A causa del carico eccessivo, il sito viene ora mostrato a tutti come lo vedrebbe un utente non connesso."
@@ -3241,6 +3279,16 @@ it:
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
     image_removed: "(immagine rimossa)"
+    do_not_disturb:
+      title: "Non disturbare per..."
+      label: "Non disturbare"
+      remaining: "%{remaining} rimanenti"
+      options:
+        half_hour: "30 minuti"
+        one_hour: "un'ora"
+        two_hours: "due ore"
+        tomorrow: "Fino a domani"
+        custom: "Personalizzato"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -3463,6 +3511,10 @@ it:
               sync_sso: Sincronizza un utente usando SSO.
               show: Ottieni informazioni su un utente.
               check_emails: Elenca le email degli utenti.
+              update: Aggiorna le informazioni del profilo utente.
+              log_out: Disconnetti tutte le sessioni per un utente.
+              anonymize: Anonimizza gli account utente.
+              delete: Elimina account utente.
             email:
               receive_emails: Combina questo ambito con il destinatario della posta per elaborare le email in arrivo.
       web_hooks:
@@ -3759,6 +3811,7 @@ it:
           install_upload: "Dal tuo dispositivo"
           install_git_repo: "Da un repository git"
           install_create: "Crea nuovo"
+          duplicate_remote_theme: "Il componente «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
           about_theme: "Informazioni su"
           license: "Licenza"
           version: "Versione:"
@@ -4099,6 +4152,7 @@ it:
             topic_unarchived: "argomento de-archiviato"
             post_staff_note_create: "aggiungi note dello staff"
             post_staff_note_destroy: "distruggi la nota dello staff"
+            delete_group: "elimina gruppo"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -4263,7 +4317,7 @@ it:
         clear_penalty_history:
           title: "Cancella la storia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello Esperienza 3"
-        delete_all_posts_confirm_MF: "Stai per cancellare {POSTS, plural, one {1 messaggio} other {# messaggi}} e {TOPICS, plural, one {1 argomento} other {# argomenti}}. Sei sicuro?"
+        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Sei sicuro?"
         silence: "Silenzio"
         unsilence: "Non in silenzio"
         silenced: "Silenziato?"
@@ -4469,6 +4523,7 @@ it:
         go_back: "Torna alla Ricerca"
         recommended: "Consigliamo di personalizzare il seguente testo per tue adattarlo alle necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
+        locale: "Lingua:"
         more_than_50_results: "Ci sono più di 50 risultati. Per favore, raffina la tua ricerca."
       settings:
         show_overriden: "Mostra solo i sovrascritti"
@@ -4566,6 +4621,7 @@ it:
         image: Immagine
         icon_help: "Inserisci il nome di un'icona Font Awesome (usa il prefisso 'far-' per le icone Regular e 'fab-' per le icone Brands)"
         image_help: "Inserisci l'URL dell'immagine (sovrascrive il campo icona, se entrambi sono impostati)"
+        read_only_setting_help: "Personalizza testo"
         query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente

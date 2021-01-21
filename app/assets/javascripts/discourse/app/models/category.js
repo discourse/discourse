@@ -1,13 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import PermissionType from "discourse/models/permission-type";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import PermissionType from "discourse/models/permission-type";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { get } from "@ember/object";
 import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
 
 const STAFF_GROUP_NAME = "staff";
 
@@ -490,24 +490,12 @@ Category.reopenClass({
     return ajax(`/c/${id}/show.json`);
   },
 
-  reloadBySlug(slug, parentSlug) {
-    return parentSlug
-      ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`)
-      : ajax(`/c/${slug}/find_by_slug.json`);
-  },
-
   reloadBySlugPath(slugPath) {
     return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
   reloadCategoryWithPermissions(params, store, site) {
-    if (params.slug && params.slug.match(/^\d+-category/)) {
-      const id = parseInt(params.slug, 10);
-      return this.reloadById(id).then((result) =>
-        this._includePermissions(result.category, store, site)
-      );
-    }
-    return this.reloadBySlug(params.slug, params.parentSlug).then((result) =>
+    return this.reloadBySlugPath(params.slug).then((result) =>
       this._includePermissions(result.category, store, site)
     );
   },

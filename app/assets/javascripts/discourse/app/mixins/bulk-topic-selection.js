@@ -1,8 +1,8 @@
-import { alias } from "@ember/object/computed";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { on } from "discourse-common/utils/decorators";
 import Mixin from "@ember/object/mixin";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
+import { alias } from "@ember/object/computed";
+import { on } from "discourse-common/utils/decorators";
 
 export default Mixin.create({
   bulkSelectEnabled: false,

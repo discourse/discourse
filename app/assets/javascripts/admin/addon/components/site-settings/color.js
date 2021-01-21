@@ -1,5 +1,5 @@
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed, action } from "@ember/object";
 
 function RGBToHex(rgb) {
   // Choose correct separator

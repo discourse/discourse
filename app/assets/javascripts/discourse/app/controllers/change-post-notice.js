@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
-import { cookAsync } from "discourse/lib/text";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { action } from "@ember/object";
+import { cookAsync } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 
 export default Controller.extend(ModalFunctionality, {
   post: null,

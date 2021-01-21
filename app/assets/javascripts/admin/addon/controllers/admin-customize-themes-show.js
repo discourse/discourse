@@ -1,21 +1,21 @@
-import I18n from "I18n";
-import { makeArray } from "discourse-common/lib/helpers";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 import {
   empty,
   filterBy,
-  match,
   mapBy,
+  match,
   notEmpty,
 } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import ThemeSettings from "admin/models/theme-settings";
+import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
-import { url } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import ThemeSettings from "admin/models/theme-settings";
-import { THEMES, COMPONENTS } from "admin/models/theme";
-import EmberObject from "@ember/object";
-import bootbox from "bootbox";
+import { url } from "discourse/lib/computed";
 
 const THEME_UPLOAD_VAR = 2;
 

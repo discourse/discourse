@@ -1,6 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import showModal from "discourse/lib/show-modal";
 import EmberObject from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   queryParams: {

@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import Topic from "discourse/models/topic";
 import Post from "discourse/models/post";
+import Topic from "discourse/models/topic";
 
 function postStreamTest(name, attrs) {
   componentTest(name, {

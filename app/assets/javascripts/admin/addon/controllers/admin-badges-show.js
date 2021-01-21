@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { reads } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { run } from "@ember/runloop";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { reads } from "@ember/object/computed";
+import { run } from "@ember/runloop";
 
 export default Controller.extend(bufferedProperty("model"), {
   adminBadges: controller(),
@@ -54,6 +54,11 @@ export default Controller.extend(bufferedProperty("model"), {
       return bufferedQuery.trim().length > 0;
     }
     return modelQuery && modelQuery.trim().length > 0;
+  },
+
+  @discourseComputed("model.i18n_name")
+  textCustomizationPrefix(i18n_name) {
+    return `badges.${i18n_name}.`;
   },
 
   @observes("model.id")

@@ -97,8 +97,6 @@ def dependencies
       source: 'highlight.js/build/.',
       destination: 'highlightjs'
     }, {
-      source: 'jquery-resize/jquery.ba-resize.js'
-    }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
       destination: 'jquery.autoellipsis-1.0.10.js'
     }, {
@@ -315,6 +313,16 @@ task 'javascript:update' => 'clean_up' do
       File.write(dest, Uglifier.new.compile(File.read(src)))
     else
       FileUtils.cp_r(src, dest)
+    end
+
+    # use absolute path for popper.js's sourcemap
+    # avoids noisy console warnings in dev environment for non-homepage paths
+    if dest.end_with? "popper.js"
+      File.open(dest) do |file|
+        contents = file.read
+        contents.gsub!("sourceMappingURL=popper", "sourceMappingURL=/popper")
+        File.open(dest, "w+") { |d| d.write(contents) }
+      end
     end
   end
 

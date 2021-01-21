@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import { equal, match, alias } from "@ember/object/computed";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, equal, match } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { THEMES, COMPONENTS } from "admin/models/theme";
-import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
 import { set } from "@ember/object";
 
 const MIN_NAME_LENGTH = 4;
@@ -26,7 +26,6 @@ export default Controller.extend(ModalFunctionality, {
   checkPrivate: match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
-  urlPlaceholder: "https://github.com/discourse/sample_theme",
   advancedVisible: false,
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
@@ -76,12 +75,15 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @discourseComputed("privateChecked")
+  urlPlaceholder(privateChecked) {
+    return privateChecked
+      ? "git@github.com:discourse/sample_theme.git"
+      : "https://github.com/discourse/sample_theme";
+  },
+
   @observes("privateChecked")
   privateWasChecked() {
-    this.privateChecked
-      ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
-      : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
-
     const checked = this.privateChecked;
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
@@ -123,6 +125,27 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("privateChecked", "checkPrivate", "publicKey")
   showPublicKey(privateChecked, checkPrivate, publicKey) {
     return privateChecked && checkPrivate && publicKey;
+  },
+
+  onClose() {
+    this.setProperties({
+      duplicateRemoteThemeWarning: null,
+      privateChecked: false,
+      privateKey: null,
+      localFile: null,
+      uploadUrl: null,
+      publicKey: null,
+      branch: null,
+    });
+  },
+
+  themeHasSameUrl(theme, url) {
+    const themeUrl = theme.remote_theme && theme.remote_theme.remote_url;
+    return (
+      themeUrl &&
+      url &&
+      url.replace(/\.git$/, "") === themeUrl.replace(/\.git$/, "")
+    );
   },
 
   actions: {
@@ -167,6 +190,17 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (this.remote || this.popular) {
+        const duplicate = this.themesController.model.content.find((theme) =>
+          this.themeHasSameUrl(theme, this.uploadUrl)
+        );
+        if (duplicate && !this.duplicateRemoteThemeWarning) {
+          const warning = I18n.t(
+            "admin.customize.theme.duplicate_remote_theme",
+            { name: duplicate.name }
+          );
+          this.set("duplicateRemoteThemeWarning", warning);
+          return;
+        }
         options.data = {
           remote: this.uploadUrl,
           branch: this.branch,

@@ -49,6 +49,15 @@ class UserUpdater
     :skip_new_user_tips
   ]
 
+  NOTIFICATION_SCHEDULE_ATTRS = -> {
+    attrs = [:enabled]
+    7.times do |n|
+      attrs.push("day_#{n}_start_time".to_sym)
+      attrs.push("day_#{n}_end_time".to_sym)
+    end
+    { user_notification_schedule: attrs }
+  }.call
+
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
@@ -80,6 +89,11 @@ class UserUpdater
       user_profile.card_background_upload_id = nil
     elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
       user_profile.card_background_upload_id = upload.id
+    end
+
+    if attributes[:user_notification_schedule]
+      user_notification_schedule = user.user_notification_schedule || UserNotificationSchedule.new(user: user)
+      user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
     old_user_name = user.name.present? ? user.name : ""
@@ -170,7 +184,7 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
+      if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(
@@ -184,7 +198,13 @@ class UserUpdater
       return saved
     end
 
-    DiscourseEvent.trigger(:user_updated, user) if saved
+    if saved
+      if user_notification_schedule
+        user_notification_schedule.create_do_not_disturb_timings(delete_existing: true)
+      end
+      DiscourseEvent.trigger(:user_updated, user)
+    end
+
     saved
   end
 

@@ -1,7 +1,7 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function template(options = []) {

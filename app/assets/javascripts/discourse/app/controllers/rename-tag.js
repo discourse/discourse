@@ -1,7 +1,7 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import BufferedContent from "discourse/mixins/buffered-content";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import BufferedContent from "discourse/mixins/buffered-content";
+import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import { oneWay } from "@ember/object/computed";
 

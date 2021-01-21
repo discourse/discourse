@@ -1,8 +1,8 @@
-import afterTransition from "discourse/lib/after-transition";
+import Component from "@ember/component";
 import I18n from "I18n";
+import afterTransition from "discourse/lib/after-transition";
 import { next } from "@ember/runloop";
 import { on } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 
 export default Component.extend({
   classNameBindings: [

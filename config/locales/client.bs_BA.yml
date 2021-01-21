@@ -441,10 +441,6 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} flag)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} zastavica)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count}kazni )"
         agreed:
           one: "%{count}% slaže"
           few: "%{count}% slaže"
@@ -896,7 +892,6 @@ bs_BA:
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         disable: "Isključi obavjesti"
         enable: "Uključi obavijesti"
-        each_browser_note: "Napomena: Ovu opciju morate promjeniti na svakom pregledniku."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
@@ -1653,7 +1648,6 @@ bs_BA:
       options: "Opcije"
       whisper: "šapat"
       unlist: "nelistan"
-      blockquote_text: "Citiranje"
       add_warning: "Ovo je zvanično upozorenje."
       toggle_whisper: " Prekidač za Šapat"
       toggle_unlisted: "Prekidač za Listan"
@@ -1719,8 +1713,7 @@ bs_BA:
       link_description: "ubaci opis linka"
       link_dialog_title: "Unesi Link"
       link_optional_text: "naslov neobavezan"
-      quote_title: "\"Blockquote\" izdvojeni citat"
-      quote_text: "\"Blockquote\" izdvojeni citat"
+      blockquote_text: "Citiranje"
       code_title: "Formatiran Tekst"
       code_text: "Unapred formatirani tekst za 4 razmaka"
       paste_code_text: "ukucaj ili zalijepi kod ovdje"
@@ -1765,7 +1758,6 @@ bs_BA:
           label: "Nova tema"
         shared_draft:
           label: "Dijeljena skica"
-          desc: "Skiciraj temu koja će biti vidljiva samo administratorima"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
@@ -2049,7 +2041,6 @@ bs_BA:
       toggle_information: "uključi detalje teme"
       read_more_in_category: "Želite dalje čitati? Pregledajte druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite li dalje čitati? %{catLink} Ili %{latestLink}."
-      read_more_MF: "Postoj{ UNREAD, plural, =0 {} one {i <a href='{basePath}/unread'>1 nepročitana</a> } few {e <a href='{basePath}/unread'># nepročitane</a> } other {i <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='{basePath}/new'>1 nova</a> tema} few {} other { {BOTH, select, true{i } false {e } other{}} <a href='{basePath}/new'># novih</a> tema} } preostalih za čitati, ili {CATEGORY, select, true {pogledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
       jump_reply_up: jump to earlier reply
@@ -2745,12 +2736,6 @@ bs_BA:
         title: "Ova tema je lična poruka"
         help: "Ova tema je lična poruka"
     posts: "Odgovori"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "Originalni Odgovor"
     views: "Pregledi"
     views_lowercase:

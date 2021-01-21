@@ -1,12 +1,12 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import I18n from "I18n";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | Widget | post", function (hooks) {
@@ -937,10 +937,10 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
 
   componentTest("topic map - has summary", {
     template:
-      '{{mount-widget widget="post" args=args toggleSummary=(action "toggleSummary")}}',
+      '{{mount-widget widget="post" args=args showSummary=(action "showSummary")}}',
     beforeEach() {
       this.set("args", { showTopicMap: true, hasTopicSummary: true });
-      this.on("toggleSummary", () => (this.summaryToggled = true));
+      this.on("showSummary", () => (this.summaryToggled = true));
     },
     async test(assert) {
       assert.equal(queryAll(".toggle-summary").length, 1);

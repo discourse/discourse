@@ -407,9 +407,6 @@ ca:
         name: "Nom"
         fields: "Camps"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} bandera en total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} banderes en total)"
         agreed:
           one: "El %{count}% hi està d'acord"
           other: "El %{count}% hi està d'acord"
@@ -809,7 +806,6 @@ ca:
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         disable: "Desactiva les notificacions"
         enable: "Activa les notificacions"
-        each_browser_note: "Nota: cal canviar aquesta configuració en cada navegador que feu servir."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"
@@ -818,7 +814,6 @@ ca:
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
-        default_description: "Per defecte"
         disable_dark_scheme: "Igual que habitualment"
         dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
         undo: "Restableix"
@@ -1518,7 +1513,6 @@ ca:
       options: "Opcions"
       whisper: "xiuxiueig"
       unlist: "invisible"
-      blockquote_text: "Bloc de citació"
       add_warning: "Aquest és un avís oficial."
       toggle_whisper: "Commuta el xiuxiueig"
       toggle_unlisted: "Commuta invisible"
@@ -1584,8 +1578,7 @@ ca:
       link_dialog_title: "Insereix un enllaç"
       link_optional_text: "títol opcional"
       link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
-      quote_title: "Bloc de citació"
-      quote_text: "Bloc de citació"
+      blockquote_text: "Bloc de citació"
       code_title: "Text preformatat"
       code_text: "Text amb sagnat preformatat de 4 espais"
       paste_code_text: "escriviu o enganxeu el codi aquí"
@@ -1630,7 +1623,6 @@ ca:
           label: "Tema nou"
         shared_draft:
           label: "Esborrany compartit"
-          desc: "Esborrany d'un tema que sols serà visible a l'equip responsable"
         toggle_topic_bump:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
@@ -1903,7 +1895,6 @@ ca:
       read_more_in_category: "Voleu llegir-ne més? Navegueu per altres temes a %{catLink} o %{latestLink}."
       read_more: "Voleu llegir-ne més? %{catLink} o %{latestLink}."
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no llegit</a> } other { are <a href='{basePath}/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nou</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nous</a> temes} } restants, or {CATEGORY, select, true {navegueu per altres temes en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mira els temes més recents
       jump_reply_up: salta a la resposta anterior
@@ -2506,7 +2497,6 @@ ca:
       notify_action: "Missatge"
       official_warning: "Avís oficial"
       delete_spammer: "Suprimeix generador de brossa"
-      delete_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {<b>1</b> publicació} other {<b>#</b> publicacions}} and {TOPICS, plural, one {<b>1</b> tema} other {<b>#</b> temes}} d'aquest usuari, suprimir el seu compte, blocar identificacions des de l'adreça IP <b>{ip_address}</b> i afegir l'adreça de correu electrònic <b>{email}</b> a una llista de bloqueig permanent. Esteu segur que aquest usuari realment genera brossa?"
       yes_delete_spammer: "Sí, suprimeix generador de brossa"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(amagat)"
@@ -2573,12 +2563,6 @@ ca:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
-    posts_likes_MF: |
-      Aquest tema té {count, plural, one {1 resposta} other {# respostes}} {ratio, select,
-      low {amb una proporció alta de 'm'agrada' per publicació}
-      med {amb una proporció molt alta de 'm'agrada' per publicació}
-      high {amb una proporció extremament alta de 'm'agrada' per publicació}
-      other {}}
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -3790,7 +3774,6 @@ ca:
         clear_penalty_history:
           title: "Neteja l'historial de penalitzacions"
           description: "els usuaris amb penalitzacions no poden assolir el nivell de confiança 3"
-        delete_all_posts_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {1 publicació} other {# publicacions}} i {TOPICS, plural, one {1 tema} other {# temes}}. Esteu segur?"
         silence: "Silencia"
         unsilence: "Desfés el silenciament"
         silenced: "Silenciat?"

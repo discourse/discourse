@@ -102,6 +102,24 @@ span.badge-posts {
         }
       }
     }
+    &.replies-button-visible {
+      display: flex;
+      align-items: center;
+      .show-replies {
+        margin-left: auto;
+        display: flex;
+        font-size: $font-up-1;
+        + .reply {
+          margin-left: 0;
+        }
+        .d-icon {
+          padding-left: 8px;
+        }
+      }
+      .actions {
+        flex-grow: 2;
+      }
+    }
   }
 }
 
@@ -268,20 +286,6 @@ span.post-count {
   padding: 15px 0;
 }
 
-// mobile has no fixed width on topic-body so overflow: hidden causes problems
-.topic-body {
-  overflow: visible;
-  .cooked {
-    overflow: visible;
-  }
-}
-
-// instead, for mobile we set overflow hidden on the post's #main-outlet
-// this prevents image overflow on deeply nested blockquotes, lists, etc
-[class*="archetype-"] #main-outlet {
-  overflow: hidden;
-}
-
 .quote-button.visible {
   z-index: z("tooltip");
 }
@@ -424,5 +428,32 @@ span.highlighted {
   &.old {
     border-top: none;
     padding-top: 0;
+  }
+}
+
+.posts-filtered-notice {
+  padding-right: 10em;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-bottom: unquote("max(0.75em, env(safe-area-inset-bottom))");
+  margin: 1em -9px;
+
+  z-index: 101;
+  .filtered-replies-show-all {
+    position: absolute;
+    right: 2em;
+  }
+
+  .filtered-replies-viewing {
+    text-align: left;
+    width: 100%;
+  }
+
+  .filtered-avatar {
+    margin-left: 0;
+    img.avatar {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

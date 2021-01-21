@@ -1,19 +1,19 @@
-import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
-import { skip, test } from "qunit";
-import I18n from "I18n";
-import { run } from "@ember/runloop";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
-  invisible,
-  visible,
-  queryAll,
   exists,
+  invisible,
+  queryAll,
+  visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
 import Draft from "discourse/models/draft";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import { run } from "@ember/runloop";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer", function (needs) {
   needs.user();

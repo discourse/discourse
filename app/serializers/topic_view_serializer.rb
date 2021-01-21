@@ -74,7 +74,8 @@ class TopicViewSerializer < ApplicationSerializer
     :show_read_indicator,
     :requested_group_name,
     :thumbnails,
-    :user_last_posted_at
+    :user_last_posted_at,
+    :is_shared_draft
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -236,10 +237,14 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_destination_category_id?
-    scope.can_create_shared_draft? &&
-      object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-      object.topic.shared_draft.present?
+    scope.can_create_shared_draft? && object.topic.shared_draft.present?
   end
+
+  def is_shared_draft
+    include_destination_category_id?
+  end
+
+  alias_method :include_is_shared_draft?, :include_destination_category_id?
 
   def include_pending_posts?
     scope.authenticated? && object.queued_posts_enabled

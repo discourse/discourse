@@ -586,7 +586,6 @@ sw:
         perm_denied_expl: "Umekataza kibali cha taarifa. Ruhusu taarifa kupitia mipangilio ya kivinjari."
         disable: "Sitisha Taarifa"
         enable: "Ruhusu Taarifa"
-        each_browser_note: "Ilani: Unaweza kubadilisha mpangilio huu kwenye kila kivinjari utakachotumia."
         consent_prompt: "Je, unataka taarifa mubashara watu wakijibu kwenye posti zako?"
       dismiss: "Ondosha"
       dismiss_notifications: "Puuzia Zote"
@@ -1166,7 +1165,6 @@ sw:
       options: "Chaguo"
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
-      blockquote_text: "Zuianukulu"
       add_warning: "Hii ni onyo rasmi."
       toggle_whisper: "Badilisha Nong'ono"
       toggle_unlisted: "Badilisha Ondoa kwenye Orodha"
@@ -1223,8 +1221,7 @@ sw:
       link_description: "andika maelezo ya kiungo hapa"
       link_dialog_title: "Ingiza kiungo-wavuti"
       link_optional_text: "kichwa cha habari kisichokuwa cha muhimu"
-      quote_title: "Zuianukulu"
-      quote_text: "Zuianukulu"
+      blockquote_text: "Zuianukulu"
       code_title: "Maneno yaliyowekwa muundo"
       code_text: "Maneno yaliyowekwa muundo kwa kuacha nafasi 4 kuingia ndani"
       paste_code_text: "andika au bandika kodi hapa"
@@ -1265,7 +1262,6 @@ sw:
           label: "Mada Mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
-          desc: "Mswadajaribio wa mada utakao onekana kwa wasaidizi tu"
     notifications:
       tooltip:
         regular:
@@ -1504,7 +1500,6 @@ sw:
       toggle_information: "badilisha taarifa za mada"
       read_more_in_category: "Unataka kusoma zaidi? Vinjari mada zingine ndani ya %{catLink} au %{latestLink}."
       read_more: "Unataka kusoma zaidi? %{catLink} au %{latestLink}."
-      read_more_MF: "Kuna { UNREAD, plural, =0 {} one { ni <a href='{basePath}/unread'>haijasomwa 1</a> } other { ni <a href='{basePath}/unread'>haijasomwa #</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{na } false {ni } other {}} mada<a href='{basePath}/new'>mpya 1</a>} other { {BOTH, select, true{na } false {ni } other{}} <a href='{basePath}/new'>mada mpya #</a>} } zilizobaki, au {CATEGORY, select, true {vinjari mada zingine ndani ya {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vinjari kategoria zote
       view_latest_topics: tembelea mada mpya
       jump_reply_up: fikia jibu la awali
@@ -1973,7 +1968,6 @@ sw:
       notify_action: "Ujumbe"
       official_warning: "Onyo Rasmi"
       delete_spammer: "Futa Muandishi wa Taka"
-      delete_confirm_MF: "Unakaribia kufuta {POSTS, plural, one {chapisho<b>1</b>} other {machapisho <b>#</b>}} na {TOPICS, plural, one {mada<b>1</b>} other {mada<b>#</b>}} kutoka kwa mtumiaji mwingine, ondoa akaunti yao, zuia usajili kutoka kwenye anwani zao za mtandao<b>{ip_address}</b>, na ongeza barua pepe zao <b>{email}</b>kwenye orodha ya waliozuliwa. Una uhakika mtumiaji huyu anatuma barua au ujumbe taka?"
       yes_delete_spammer: "Ndiyo, futa mtuma barua taka"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(imefichwa)"
@@ -2016,12 +2010,6 @@ sw:
       unlisted:
         help: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa kwenye orodha za mada, na njia pekee ya kuifia ni kupitia kiungo chake"
     posts: "Machapisho"
-    posts_likes_MF: |
-      Mada hii ina {count, plural, one {jibu 1} other {majibu #}} {ratio, select,
-      low {yenye uwiano wa upendo zaidi kuliko chapisho}
-      med {yenye uwiano wa upendo mwingi kuliko chapisho}
-      high {yenye uwiano wa upendo mwingi sana kuliko chapisho}
-      other {}}
     original_post: "Chapisho la Kwanza"
     views: "Imeonwa"
     views_lowercase:
@@ -2934,7 +2922,6 @@ sw:
         penalty_post_delete: "Futa taarifa"
         penalty_post_edit: "Hariri Taarifa"
         penalty_post_none: "Usifanye chochote"
-        delete_all_posts_confirm_MF: "Unaenda kufuta {POSTS, plural, one {chapisho 1} other {machapisho #}} na {TOPICS, plural, one {mada 1} other {mada #}}. Una uhakika?"
         silence: "Imenyamazishwa"
         unsilence: "Imeruhusiwa"
         silenced: "Nyamazishwa?"

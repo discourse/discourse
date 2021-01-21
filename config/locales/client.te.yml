@@ -690,7 +690,6 @@ te:
       flags: కేతనాలు
     composer:
       options: "ఎంపికలు"
-      blockquote_text: "బ్లాక్ కోట్"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
       saved_local_draft_tip: "స్థానికంగా భద్రం"
@@ -725,8 +724,7 @@ te:
       link_description: "లంకె వివరణ ఇక్కడ రాయండి"
       link_dialog_title: "హైపర్ లంకె చొప్పించండి"
       link_optional_text: "ఐచ్చిక శీర్షిక"
-      quote_title: "బ్లాక్ కోట్"
-      quote_text: "బ్లాక్ కోట్"
+      blockquote_text: "బ్లాక్ కోట్"
       code_title: "ముందే అలంకరించిన పాఠ్యం"
       code_text: "ముందే అలంకరించిన పాఠ్యాన్ని 4 జాగాలు జరుపు"
       upload_title: "ఎగుమతించు"

@@ -144,7 +144,9 @@
                 </div>
               {{/if}}
               {{#if isNotSuspendedOrIsStaff}}
-                {{html-safe model.bio_cooked}}
+                {{#html-with-links}}
+                  {{html-safe model.bio_cooked}}
+                {{/html-with-links}}
               {{/if}}
             </div>
 

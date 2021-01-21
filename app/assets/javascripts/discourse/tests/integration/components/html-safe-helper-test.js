@@ -1,7 +1,7 @@
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Integration | Component | html-safe-helper", function (hooks) {
   setupRenderingTest(hooks);

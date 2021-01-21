@@ -51,8 +51,6 @@ hu:
           title: "Témaállapotok"
         topic_list:
           title: "Témalista"
-        latest_topic_list:
-          title: "Legutóbbi témák listája"
         footer_message:
           title: "Lábléc üzenet"
         post:

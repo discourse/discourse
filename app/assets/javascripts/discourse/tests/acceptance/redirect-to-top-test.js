@@ -1,10 +1,10 @@
-import { visit, currentRouteName } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, visit } from "@ember/test-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { test } from "qunit";
 
 acceptance("Redirect to Top", function (needs) {
   needs.pretender((server, helper) => {

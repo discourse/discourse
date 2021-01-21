@@ -2,8 +2,6 @@
 // It is compiled to CSS separately from the rest of the app.
 // The source variables come from color_transformations.scss and variables.scss
 
-@import "common/foundation/variables";
-
 // this converts HEX colors to RGBs so they can be used in vanilla CSS
 // i.e.: rgba(var(--primary-low-rgb), 0.5)
 //

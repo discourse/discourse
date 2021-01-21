@@ -1,10 +1,10 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const topCategoryIds = [2, 3, 1];

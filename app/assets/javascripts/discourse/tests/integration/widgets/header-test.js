@@ -1,11 +1,11 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import { click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | Widget | header", function (hooks) {

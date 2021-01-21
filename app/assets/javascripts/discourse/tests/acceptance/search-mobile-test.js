@@ -1,7 +1,7 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -28,7 +28,7 @@ acceptance("Search - Mobile", function (needs) {
       "it should expand advanced search filters"
     );
 
-    await fillIn(".search-query", "posts");
+    await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
     assert.ok(queryAll(".fps-topic").length === 1, "has one post");
@@ -42,7 +42,7 @@ acceptance("Search - Mobile", function (needs) {
 
     assert.equal(
       queryAll("input.full-page-search").val(),
-      "posts",
+      "discourse",
       "it does not reset input when hitting search icon again"
     );
   });

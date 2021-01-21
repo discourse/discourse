@@ -411,6 +411,7 @@ de:
       topic: "Thema:"
       filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
       filtered_user: "Benutzer"
+      filtered_reviewed_by: "Überprüft von"
       show_all_topics: "Zeige alle Themen"
       deleted_post: "(Beitrag gelöscht)"
       deleted_user: "(Benutzer gelöscht)"
@@ -421,10 +422,11 @@ de:
         email: "E-Mail"
         name: "Name"
         fields: "Felder"
+        reject_reason: "Grund"
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} Meldung insgesamt)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} Meldungen insgesamt)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (des letzten Flags)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (der letzten %{count} Flags)"
         agreed:
           one: "%{count}% zugestimmt"
           other: "%{count}% zugestimmt"
@@ -513,6 +515,9 @@ de:
           other: "Du hast <strong>%{count}</strong> verbleibende Beiträge."
         ok: "OK"
       example_username: "benutzername"
+      reject_reason:
+        title: "Warum lehnst du diesen Benutzer ab?"
+        send_email: "Ablehnungs-E-Mail senden"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"%{userUrl}\">Du</a> hast <a href=\"%{topicUrl}\">das Thema</a> verfasst"
@@ -732,13 +737,13 @@ de:
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen im Zusammenhang mit Nachrichten in dieser Gruppe."
-      flair_url: "Avatar-Hintergrund"
+      flair_url: "Avatar-Flair Bild"
       flair_upload_description: "Verwende quadratische Bilder, die nicht kleiner als 20 x 20 Pixel sind."
-      flair_bg_color: "Avatar-Hintergrundfarbe"
+      flair_bg_color: "Avatar-Flair Hintergrundfarbe"
       flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
-      flair_color: "Avatar-Hintergrundfarbe"
+      flair_color: "Avatar-Flair Farbe"
       flair_color_placeholder: "(Optoinal) Hex-Farbwert"
-      flair_preview_icon: "Vorschau-Icon"
+      flair_preview_icon: "Vorschau Symbol"
       flair_preview_image: "Vorschaubild"
       flair_type:
         icon: "Wähle ein Symbol"
@@ -839,6 +844,20 @@ de:
         mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
+      notification_schedule:
+        title: "Zeitplan für Benachrichtigungen"
+        label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
+        tip: "Außerhalb dieser Zeiten wird automatisch der \"Nicht stören\"-Modus aktiviert."
+        midnight: "Mitternacht"
+        none: "keine"
+        monday: "Montag"
+        tuesday: "Dienstag"
+        wednesday: "Mittwoch"
+        thursday: "Donnerstag"
+        friday: "Freitag"
+        saturday: "Samstag"
+        sunday: "Sonntag"
+        to: "bis"
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       feature_topic_on_profile:
@@ -868,7 +887,7 @@ de:
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         disable: "Benachrichtigungen deaktivieren"
         enable: "Benachrichtigungen aktivieren"
-        each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser einzeln ändern."
+        each_browser_note: 'Hinweis: Du musst diese Einstellung in jedem von Dir verwendeten Browser ändern. Alle Benachrichtigungen werden deaktiviert, wenn "Nicht stören" angezeigt wird, unabhängig von dieser Einstellung.'
         consent_prompt: "Möchtest du Live-Benachrichtigungen erhalten, wenn jemand auf deine Beiträge antwortet?"
       dismiss: "Alles gelesen"
       dismiss_notifications: "Alles gelesen"
@@ -883,7 +902,7 @@ de:
       color_scheme_default_on_all_devices: "Mache diese Farbschemas zum Standard für alle meine Geräte"
       color_scheme: "Farbschema"
       color_schemes:
-        default_description: "Standard"
+        default_description: "Theme Standard"
         disable_dark_scheme: "gleich wie regulär"
         dark_instructions: "Du kannst das dunkle Farbschema ausprobieren, indem du das dunkle Design auf deinem Gerät einschaltest."
         undo: "Zurücksetzen"
@@ -1688,7 +1707,6 @@ de:
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
-      blockquote_text: "Blockquote"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Sichtbarkeit umschalten"
@@ -1760,8 +1778,8 @@ de:
       link_dialog_title: "Link einfügen"
       link_optional_text: "Optionaler Titel"
       link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
-      quote_title: "Zitat"
-      quote_text: "Zitat"
+      blockquote_title: "Blockquote"
+      blockquote_text: "Blockquote"
       code_title: "Vorformatierter Text"
       code_text: "vorformatierten Text mit 4 Leerzeichen einrücken"
       paste_code_text: "Tippe oder füge den Code hier ein"
@@ -1815,7 +1833,7 @@ de:
           label: "Neues Thema"
         shared_draft:
           label: "Gemeinsame Vorlage"
-          desc: "Entwerfe ein Thema, das nur für das Team sichtbar ist."
+          desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
         toggle_topic_bump:
           label: "Bump des Themas umschalten"
           desc: "Antworten ohne das Datum der neuesten Antwort zu ändern"
@@ -2151,6 +2169,7 @@ de:
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
         description: "Um eine durchdachte Diskussion in schnellen oder umstrittenen Diskussionen zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut posten."
         save: "Aktivieren"
+        enabled_until: "(Optional) Aktiviert bis:"
         remove: "Deaktivieren"
         hours: "Stunden:"
         minutes: "Minuten:"
@@ -2521,6 +2540,7 @@ de:
       has_replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
+      has_replies_count: "%{count}"
       unknown_user: "(unbekannt/gelöschter Benutzer)"
       has_likes_title:
         one: "dieser Beitrag gefällt %{count} Person"
@@ -2529,11 +2549,18 @@ de:
       has_likes_title_you:
         one: "dir und einer weiteren Person gefällt dieser Beitrag"
         other: "dir und %{count} weiteren Personen gefällt dieser Beitrag"
+      filtered_replies_hint:
+        one: "Diesen Beitrag und seine Antwort ansehen"
+        other: "Diesen Beitrag und seine %{count} Antworten ansehen"
+      filtered_replies_viewing:
+        one: "Zeige %{count} Antwort an"
+        other: "Zeige %{count} Antworten an"
+      in_reply_to: "Übergeordneten Beitrag laden"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-        file_too_large: "Entschuldigung, die Datei ist zu groß (maximale Größe ist %{max_size_kb}kb). Wie wäre es, die Datei zu einem Cloud Sharing Service hochzuladen und dann den Link einzufügen?"
+        file_too_large: "Entschuldigung, die Datei ist zu groß (maximale Größe ist %{max_size_kb}kb). Wie wäre es, die Datei in einen Cloud Sharing Service hochzuladen und dann den Link einzufügen?"
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         too_many_dragged_and_dropped_files:
           one: "Es kann leider nur %{count} Datei gleichzeitig hochgeladen werden."
@@ -2685,6 +2712,12 @@ de:
           edit_bookmark:
             name: "Lesezeichen bearbeiten"
             description: "Ändere den Namen des Lesezeichens oder den Erinnerungszeitpunkt."
+      filtered_replies:
+        viewing_posts_by: "Zeige %{post_count} Beiträge von"
+        viewing_subset: "Einige Antworten sind reduziert"
+        viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
+        post_number: "%{username}, Beitrag #%{post_number}"
+        show_all: "Alle anzeigen"
     category:
       can: "kann&hellip; "
       none: "(keine Kategorie)"
@@ -2742,10 +2775,10 @@ de:
         reply: "Antworte"
         create: "Erstelle"
         no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für Mitarbeiter sichtbar."
-        everyone_has_access: "Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe \"Jeder\" erteilt wurden, um die Berechtigungen einzuschränken."
+        everyone_has_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe "Jeder" erteilt wurden, um die Berechtigungen einzuschränken.'
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
-        inherited: "Diese Berechtigung wird von \"jedem\" vererbt"
+        inherited: 'Diese Berechtigung wird von "jedem" vererbt'
       special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen / Textinhalte</a> geändert werden.'
@@ -2916,7 +2949,11 @@ de:
         help: "Dieses Thema ist eine persönliche Nachricht"
     posts: "Beiträge"
     posts_likes_MF: |
-      Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
+      Dieses Thema hat {count, plural, one {# Antwort} other {# Antworten}} {ratio, select,
+        low {mit einem hohen Verhältnis von Likes zu Beiträgen}
+        med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
+        high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
+        other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
     views_lowercase:
@@ -3246,7 +3283,7 @@ de:
     invite:
       custom_message: "Gestalte deine Einladung etwas persönlicher, indem du eine <a href>eigene Nachricht</a> schreibst."
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
-      approval_not_required: "Der Benutzer wird automatisch genehmigt, sobald er diese Einladung annimmt."
+      approval_not_required: "Benutzer werden beim Annehmen der Einladung sofort automatisch genehmigt."
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
     forced_anonymous: "Aufgrund einer außergewöhnlichen Last wird dies vorübergehend so angezeigt, wie es ein nicht angemeldeter Benutzer sehen würde."
@@ -3258,6 +3295,16 @@ de:
     safe_mode:
       enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
+    do_not_disturb:
+      title: "Nicht stören für..."
+      label: "Nicht stören"
+      remaining: "%{remaining} verbleibend"
+      options:
+        half_hour: "30 Minuten"
+        one_hour: "1 Stunde"
+        two_hours: "2 Stunden"
+        tomorrow: "Bis morgen"
+        custom: "Benutzerdefiniert"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
@@ -3427,8 +3474,8 @@ de:
         none_selected: "Wähle eine Gruppe, um loszulegen"
         no_custom_groups: "Erstelle eine neue benutzerdefinierte Gruppe"
       api:
-        generate_master: "Master API Key erzeugen"
-        none: "Es gibt momentan keine aktiven API-Keys"
+        generate_master: "Master API Schlüssel erzeugen"
+        none: "Es gibt momentan keine aktiven API Schlüssel"
         user: "Benutzer"
         title: "API"
         key: "Schlüssel"
@@ -3437,7 +3484,7 @@ de:
         last_used: Zuletzt verwendet
         never_used: (nie)
         generate: "Erzeugen"
-        undo_revoke: "Widerrufen zurückziehen"
+        undo_revoke: "Widerruf rückgängig machen"
         revoke: "Widerrufen"
         all_users: "Alle Benutzer"
         active_keys: "Aktive API Schlüssel"
@@ -3454,7 +3501,7 @@ de:
         save: Speichern
         new_key: Neuer API Schlüssel
         revoked: Widerrufen
-        delete: Endgültig gelöscht
+        delete: Endgültig löschen
         not_shown_again: Dieser Schlüssel wird nicht noch einmal angezeigt. Stelle sicher, dass du eine Kopie hast, bevor du fortfährst.
         continue: Weiter
         use_global_key: Globaler Schlüssel (erlaubt alle Aktionen)
@@ -3480,6 +3527,10 @@ de:
               sync_sso: Synchronisieren Sie einen Benutzer mit SSO.
               show: Informationen über einen Benutzer abrufen.
               check_emails: Benutzer-E-Mails auflisten.
+              update: Benutzerprofil Informationen aktualisieren.
+              log_out: Alle Sitzungen für einen Benutzer abmelden.
+              anonymize: Benutzerkonten anonymisieren.
+              delete: Benutzerkonten löschen.
             email:
               receive_emails: Kombiniere diesen Bereich mit dem E-Mail-Empfänger, um eingehende E-Mails zu verarbeiten.
       web_hooks:
@@ -3610,7 +3661,7 @@ de:
           title: "Eine Sicherung zu dieser Instanz hochladen"
           uploading: "Wird hochgeladen…"
           uploading_progress: "Wird hochgeladen... %{progress}%"
-          success: "'%{filename}' wurd erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu einer Minute dauern, bis sie in der Liste erscheint."
+          success: "'%{filename}' wurde erfolgreich hochgeladen. Die Datei wird nun verarbeitet. Es kann bis zu einer Minute dauern, bis sie in der Liste erscheint."
           error: "Beim Hochladen der Datei '%{filename}' ist ein Fehler aufgetreten: %{message}"
         operations:
           is_running: "Ein Vorgang läuft gerade…"
@@ -3776,6 +3827,7 @@ de:
           install_upload: "Von deinem Gerät"
           install_git_repo: "Aus einem Git-Repository"
           install_create: "Neu erstellen"
+          duplicate_remote_theme: "Die Theme-Komponente „%{name}“ ist bereits installiert. Möchtest Du wirklich eine weitere Kopie installieren?"
           about_theme: "Über uns"
           license: "Lizenz"
           version: "Version:"
@@ -3806,7 +3858,7 @@ de:
             other: "Theme liegt %{count} Commits zurück!"
           compare_commits: "(Siehe neue Beiträge)"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
-          imported_from_archive: "Das Design wurde von eine .zip Datei importiert"
+          imported_from_archive: "Das Design wurde von einer .zip Datei importiert"
           scss:
             text: "CSS"
             title: "Gib benutzerdefiniertes CSS ein, wir akzeptieren alle gültigen CSS und SCSS-Stile"
@@ -4116,6 +4168,7 @@ de:
             topic_unarchived: "Thema nicht archiviert"
             post_staff_note_create: "team Notiz hinzufügen"
             post_staff_note_destroy: "team Notiz löschen"
+            delete_group: "Gruppe löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -4280,7 +4333,7 @@ de:
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
           description: "Benutzer mit Strafen können TL3 nicht erreichen"
-        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
+        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {# Beitrag} other {# Beiträge}} und {TOPICS, plural, one {# Thema} other {# Themen}} löschen. Bist du dir sicher?"
         silence: "Stummschalten"
         unsilence: "Stummschaltung aufheben"
         silenced: "Stummgeschaltet?"
@@ -4312,7 +4365,7 @@ de:
         last_100_days: "in den letzten 100 Tagen"
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
-        post_count: Erstelle Beiträge
+        post_count: Erstellte Beiträge
         second_factor_enabled: Zwei-Faktor-Authentifizierung aktiviert
         topics_entered: Betrachtete Themen
         flags_given_count: Gemachte Meldungen
@@ -4357,13 +4410,13 @@ de:
         delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
-          other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
+          other: "Benutzer können nicht gelöscht werden, wenn sie Beiträge haben. Lösche zuerst alle Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge älter als %{count} Tage können nicht gelöscht werden.)"
         cant_delete_all_posts:
           one: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tag (die „delete_user_max_post_age“ Einstellung)."
           other: "Nicht alle Beiträge können gelöscht werden. Einige Beiträge sind älter als %{count} Tage (die „delete_user_max_post_age“ Einstellung)."
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat (die „delete_all_posts_max“ Einstellung)."
-          other: "Nicht alle Beiträge konnten gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (die „delete_all_posts_max“ Einstellung)."
+          other: "Es können nicht alle Beiträge gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat (siehe „delete_all_posts_max“ Einstellung)."
         delete_confirm: "Es ist grundsätzlich vorzuziehen, Benutzer zu anonymisieren statt sie zu löschen, um zu vermeiden, dass Inhalt aus bestehenden Diskussionen entfernt wird. <br><br>Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies lässt sich nicht rückgängig machen."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
@@ -4385,7 +4438,7 @@ de:
         reset_bounce_score:
           label: "Zurücksetzen"
           title: "Anzahl unzustellbarer E-Mails auf 0 zurücksetzen"
-        visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten"
+        visit_profile: "Besuche die <a href='%{url}'>Benutzer-Einstellungen</a>, um dieses Profil zu bearbeiten."
         deactivate_explanation: "Ein deaktivierter Benutzer muss seine E-Mail-Adresse erneut bestätigen."
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         silence_explanation: "Ein stummgeschalteter Benutzer kann keine Beiträge schreiben oder Themen beginnen."
@@ -4486,6 +4539,7 @@ de:
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
+        locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte anzeigen"
@@ -4583,6 +4637,7 @@ de:
         image: Bild
         icon_help: "Gib einen Font Awesome Icon Namen ein (benutze für reguläre Icons das Präfix 'far-' und für Marken-Icons 'fab-')"
         image_help: "Gebe die URL eines Bildes ein (überschreibt Symbol Feld wenn beide aktiv sind)"
+        read_only_setting_help: "Anpassen von Text"
         query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus

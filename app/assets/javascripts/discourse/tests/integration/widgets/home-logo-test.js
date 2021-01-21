@@ -1,10 +1,10 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import Session from "discourse/models/session";
 
 const bigLogo = "/images/d-logo-sketch.png?test";

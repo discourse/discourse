@@ -1,11 +1,11 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import EmberObject from "@ember/object";
-import pretender from "discourse/tests/helpers/create-pretender";
 import { click } from "@ember/test-helpers";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import pretender from "discourse/tests/helpers/create-pretender";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule("Integration | Component | badge-title", function (hooks) {
   setupRenderingTest(hooks);

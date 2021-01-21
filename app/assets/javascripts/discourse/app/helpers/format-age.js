@@ -1,6 +1,6 @@
 import { autoUpdatingRelativeAge, durationTiny } from "discourse/lib/formatter";
-import { registerUnbound } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
+import { registerUnbound } from "discourse-common/lib/helpers";
 
 registerUnbound("format-age", function (dt) {
   dt = new Date(dt);

@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import { warn } from "@ember/debug";
-import discourseComputed from "discourse-common/utils/decorators";
 import { alias, oneWay } from "@ember/object/computed";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import { on } from "@ember/object/evented";
+import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
-import showModal from "discourse/lib/show-modal";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
+import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
+import { on } from "@ember/object/evented";
+import showModal from "discourse/lib/show-modal";
+import { warn } from "@ember/debug";
 
 const CUSTOM_TYPES = [
   "bool",

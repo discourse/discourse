@@ -366,26 +366,6 @@ fi:
     until_posts:
       one: "ensimmäisen viestisi"
       other: "%{count} ensimmäistä viestiäsi"
-    "new-topic": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
-
-      - Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Onko se hyvä kiteytys?
-
-      - Ketä tämä ketju voisi kiinnostaa? Mikä on sen merkitys? Minkälaisia vastauksia odotat?
-
-      - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
-
-      Saadaksesi lisätietoa, [käy tutkimassa ohjeet](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
-    "new-reply": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
-
-      - Parantaako vastauksesi keskustelua jollain tapaa?
-
-      - Ole ystävällinen muille käyttäjille.
-
-      - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
-
-      Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
       ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 
@@ -879,9 +859,7 @@ fi:
     mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
-    all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
-    not_found_description: "Pahoittelut, tätä tilauksen perumista ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
@@ -1488,8 +1466,6 @@ fi:
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
     max_logins_per_ip_per_minute: "Enimmäismäärä kirjautumisia IP-osoitetta kohden minuutissa"
-    max_post_deletions_per_minute: "Kuinka monta viestiä käyttäjä voi poistaa minuutissa."
-    max_post_deletions_per_day: "Kuinka monta viestiä käyttäjä voi poistaa päivässä."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     categories_topics: "Kuinka monta ketjua näytetään Alueet-sivulla (/categories). Jos 0, etsitään automaattisesti arvoa, jolla kaksi saraketta pysyvät symmetrisinä (alueet ja ketjut)."
@@ -1744,7 +1720,6 @@ fi:
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
-    prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit kuten :) :p :( muunnetaan emojeiksi"
@@ -3063,6 +3038,13 @@ fi:
         Uskomme [sivistyneeseen yhteisökäyttäytymiseen](%{base_url}/guidelines) kaikissa tilanteissa.
 
         Nauti palstastamme!
+    signup_after_reject:
+      title: "Rekisteröidy hylkäyksen jälkeen"
+      subject_template: "Sinut on hylätty palveluta %{site_name}"
+      text_body_template: |
+        Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
+
+        %{reject_reason}
     signup:
       title: "Liity"
       subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"

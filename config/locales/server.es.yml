@@ -51,6 +51,9 @@ es:
   remove_posts_deleted_by_author: "Eliminado por el autor"
   redirect_warning: "No pudimos verificar que el enlace que seleccionaste realmente se haya publicado en el foro. Si deseas continuar de todos modos, selecciona el siguiente enlace."
   on_another_topic: "En otro tema"
+  inline_oneboxer:
+    topic_page_title_post_number: "nº %{post_number}"
+    topic_page_title_post_number_by_user: "nº %{post_number} por %{username}"
   themes:
     bad_color_scheme: "No se puede actualizar el tema, paleta de colores inválida"
     other_error: "Algo salió mal al actualizar el tema"
@@ -421,26 +424,6 @@ es:
     until_posts:
       one: "%{count} post"
       other: "%{count} publicaciones"
-    "new-topic": |
-      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
-
-      - ¿El título suena interesante si lo lees en voz alta? ¿Es un buen resumen de lo que trata?
-
-      - ¿Quién estaría interesado en leer esto? ¿Por qué es importante? ¿Qué tipo de respuestas quisieras suscitar?
-
-      - Incluye palabras de uso frecuente en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría.
-
-      Para más información, [visita nuestras directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
-    "new-reply": |
-      Bienvenido a %{site_name} &mdash; **¡gracias por contribuir a la conversación!**
-
-      - ¿Tu respuesta mejora la conversación de alguna forma, aunque sea un poco?
-
-      - Sé amable con tus compañeros, miembros de la comunidad.
-
-      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, no a las personas.
-
-      Para más consejos, [visita las directrices de la comunidad](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     avatar: |
       ### ¿Que tal si agregas una imagen para tu cuenta?
 
@@ -948,9 +931,7 @@ es:
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
     mailing_list_mode: "Desactivar el modo lista de correo"
-    all: "No enviarme ningún correo electrónico desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Por favor, cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
-    not_found_description: "Lo sentimos, no pudimos encontrar esta cancelación de suscripción. ¿Es posible que el enlace de tu correo electrónico haya caducado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -1598,8 +1579,6 @@ es:
     max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
     max_logins_per_ip_per_hour: "Máximo número de inicios de sesión permitidos por dirección IP por hora."
     max_logins_per_ip_per_minute: "Máximo número de inicios de sesión permitidos por dirección IP por minuto."
-    max_post_deletions_per_minute: "Número máximo de publicaciones que un usuario puede eliminar por minuto."
-    max_post_deletions_per_day: "Número máximo de publicaciones que un usuario puede eliminar por día."
     invite_link_max_redemptions_limit: "Los canjes máximos permitidos para los enlaces de invitación no pueden ser más que este valor."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
@@ -1900,7 +1879,6 @@ es:
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
-    prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto que no sea una imagen."
     secure_media: 'Limita el acceso a los medios subidos (imágenes, video, audio). Si está habilitado «inicio de sesión requerido», solo los usuarios que hayan iniciado sesión pueden acceder a los medios subidos. En caso contrario, se limitará el acceso únicamente a los medios subidos en mensajes privados. ADVERTENCIA: se deben habilitar las subidas S3 antes de poder habilitar esta configuración. Ver <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> para más detalles.'
     secure_media_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente serían quitadas de los correos electrónicos si su tamaño es menor que la configuración de 'secure media max email embed image size kb'."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» deshabilitará completamente el slug."
@@ -2208,6 +2186,18 @@ es:
   admin:
     email:
       sent_test: "¡enviado!"
+    user:
+      merge_user:
+        updating_username: "Actualizando nombre de usuario..."
+        changing_post_ownership: "Cambiando la propiedad de la publicación ..."
+        merging_given_daily_likes: "Fusionando los me gusta diarios dados..."
+        merging_post_timings: "Fusionando tiempos de publicación ..."
+        merging_user_visits: "Fusionando visitas de usuarios..."
+        updating_site_settings: "Actualizando ajustes del sitio..."
+        updating_user_stats: "Actualizando estadísticas de los usuarios..."
+        merging_user_attributes: "Fusionando atributos de usuario..."
+        updating_user_ids: "Actualizando identificadores de usuario..."
+        deleting_source_user: "Eliminando usuario de origen..."
   user:
     deactivated: "Ha sido desactivado debido a muchos correod electrónicos rechazados a «%{email}»."
     deactivated_by_staff: "Desactivado por el staff"
@@ -2532,10 +2522,6 @@ es:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "¡Enhorabuena por llegar a un nivel de confianza más!"
-      text_body_template: |
-        Te hemos subido al siguiente [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
-
-        Te invitamos a que sigas participando en la comunidad. Nos gusta tenerte por aquí.
     backup_succeeded:
       title: "Copia de respaldo realizada con éxito"
       subject_template: "La copia de respaldo se completó exitosamente"
@@ -3325,6 +3311,12 @@ es:
         Creemos en una comunidad con un [comportamiento civilizado en comunidad](%{base_url}/directrices) en todo momento.
 
         ¡Disfruta tu estadía!
+    signup_after_reject:
+      subject_template: "Te han rechazado la cuenta en %{site_name}"
+      text_body_template: |
+        Un miembro del equipo de %{site_name} ha rechazado la creación de tu cuenta.
+
+        %{reject_reason}
     signup:
       title: "Regístrate"
       subject_template: "[%{email_prefix}] Confirma tu cuenta nueva"
@@ -4309,6 +4301,7 @@ es:
       email_auth_res_enqueue: "Este correo falló la comprobación DMARC, por lo que seguramente no es de quien parece ser. Comprueba los encabezados del correo para más información."
       email_spam: "Este correo se marcó como spam por el encabezado definido en `email_in_spam_header`."
       suspect_user: "Este usuario nuevo ingresó información de perfil sin haber leído ningún tema o publicación, lo cual sugiere claramente que podría tratarse de un spammer. Revisa `approve_suspect_users`."
+      contains_media: "Esta publicación incluye medios incrustados. Ver `review_media_unless_trust_level`."
     actions:
       agree:
         title: "Concordar..."

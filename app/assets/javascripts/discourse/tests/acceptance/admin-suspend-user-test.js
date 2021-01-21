@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click, fillIn } from "@ember/test-helpers";
-import { test } from "qunit";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Admin - Suspend User", function (needs) {
   needs.user();

@@ -1,7 +1,7 @@
 <div class="future-date-input">
   {{#unless isBasedOnDuration}}
     <div class="control-group">
-      <label>{{displayLabel}}</label>
+      <label class={{labelClasses}}>{{displayLabel}}</label>
       {{future-date-input-selector
         minimumResultsForSearch=-1
         statusType=statusType

@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
-import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 import { set } from "@ember/object";
 

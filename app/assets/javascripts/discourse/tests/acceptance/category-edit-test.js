@@ -1,13 +1,13 @@
 import {
-  queryAll,
   acceptance,
+  queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import { test } from "qunit";
 
 acceptance("Category Edit", function (needs) {
   needs.user();

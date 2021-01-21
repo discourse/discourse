@@ -1,14 +1,15 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import Site from "discourse/models/site";
-import Session from "discourse/models/session";
+import { click, visit } from "@ember/test-helpers";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import I18n from "I18n";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
@@ -60,7 +61,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("does not show option to disable dark mode by default", async function (assert) {
     await visit("/u/eviltrout/preferences/interface");
-    assert.equal($(".control-group.dark-mode").length, 0);
+    assert.ok(!exists(".control-group.dark-mode"), "option not visible");
   });
 
   test("shows light/dark color scheme pickers", async function (assert) {
@@ -71,8 +72,65 @@ acceptance("User Preferences - Interface", function (needs) {
     ]);
 
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok($(".light-color-scheme").length, "has regular dropdown");
-    assert.ok($(".dark-color-scheme").length, "has dark color scheme dropdown");
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+    assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
+  });
+
+  test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
+    let site = Site.current();
+    site.set("user_themes", [
+      { id: 1, name: "Cool Theme", color_scheme_id: null },
+    ]);
+
+    site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
+
+    await visit("/u/eviltrout/preferences/interface");
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+
+    assert.equal(
+      selectKit(".light-color-scheme .select-kit").header().value(),
+      null
+    );
+    assert.equal(
+      selectKit(".light-color-scheme .select-kit").header().label(),
+      I18n.t("user.color_schemes.default_description")
+    );
+  });
+
+  test("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
+    let meta = document.createElement("meta");
+    meta.name = "discourse_theme_ids";
+    meta.content = "2";
+    document.getElementsByTagName("head")[0].appendChild(meta);
+
+    let site = Site.current();
+    site.set("user_themes", [
+      { theme_id: 1, name: "Cool Theme", color_scheme_id: 2, default: true },
+      {
+        theme_id: 2,
+        name: "Some Other Theme",
+        color_scheme_id: 3,
+        default: false,
+      },
+    ]);
+
+    site.set("user_color_schemes", [
+      { id: 2, name: "Cool Breeze" },
+      { id: 3, name: "Dark Night" },
+    ]);
+
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+    assert.equal(selectKit(".theme .select-kit").header().value(), 2);
+
+    await selectKit(".light-color-scheme .select-kit").expand();
+    assert.equal(
+      queryAll(".light-color-scheme .select-kit .select-kit-row").length,
+      2
+    );
+
+    document.querySelector("meta[name='discourse_theme_ids']").remove();
   });
 });
 
@@ -93,7 +151,7 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
 
       assert.ok(
-        $(".control-group.dark-mode").length,
+        exists(".control-group.dark-mode"),
         "it has the option to disable dark mode"
       );
     });
@@ -103,7 +161,7 @@ acceptance(
       site.set("user_color_schemes", []);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.equal($(".control-group.color-scheme").length, 0);
+      assert.ok(!exists(".control-group.color-scheme"));
     });
 
     test("light color scheme picker", async function (assert) {
@@ -111,10 +169,9 @@ acceptance(
       site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok($(".light-color-scheme").length, "has regular picker dropdown");
-      assert.equal(
-        $(".dark-color-scheme").length,
-        0,
+      assert.ok(exists(".light-color-scheme"), "has regular picker dropdown");
+      assert.ok(
+        !exists(".dark-color-scheme"),
         "does not have a dark color scheme picker"
       );
     });
@@ -138,18 +195,15 @@ acceptance(
       };
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok($(".light-color-scheme").length, "has regular dropdown");
-      assert.ok(
-        $(".dark-color-scheme").length,
-        "has dark color scheme dropdown"
-      );
+      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
       assert.equal(
-        $(".dark-color-scheme .selected-name").data("value"),
+        queryAll(".dark-color-scheme .selected-name").data("value"),
         session.userDarkSchemeId,
         "sets site default as selected dark scheme"
       );
-      assert.equal(
-        $(".control-group.dark-mode").length,
+      assert.ok(
+        !exists(".control-group.dark-mode"),
         0,
         "it does not show disable dark mode checkbox"
       );

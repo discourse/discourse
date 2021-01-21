@@ -38,5 +38,14 @@ export default {
       allow_badges: true,
       custom_fields: {}
     }
+  },
+  "/c/11/show.json": {
+    category: {
+      id: 11,
+      name: "testing",
+      color: "0088CC",
+      text_color: "FFFFFF",
+      slug: "testing"
+    }
   }
 };

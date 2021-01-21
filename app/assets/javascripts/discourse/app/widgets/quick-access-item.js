@@ -1,9 +1,9 @@
-import { h } from "virtual-dom";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import { emojiUnescape } from "discourse/lib/text";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 
 /**
  * This helper widget tries to enforce a consistent look and behavior for any
@@ -19,7 +19,7 @@ import { escapeExpression } from "discourse/lib/utilities";
  *   read
  *   username
  */
-createWidget("quick-access-item", {
+export default createWidget("quick-access-item", {
   tagName: "li",
 
   buildClasses(attrs) {

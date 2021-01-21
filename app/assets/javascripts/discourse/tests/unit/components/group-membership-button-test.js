@@ -1,5 +1,5 @@
-import { test } from "qunit";
 import { moduleFor } from "ember-qunit";
+import { test } from "qunit";
 
 // TODO: Convert to a modern *integration* test
 moduleFor("component:group-membership-button");

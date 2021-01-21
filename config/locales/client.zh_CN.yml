@@ -382,6 +382,7 @@ zh_CN:
       topic: "主题："
       filtered_topic: "您正在选择性地查看这一主题中的可审核内容。"
       filtered_user: "用户"
+      filtered_reviewed_by: "审核者"
       show_all_topics: "显示所有主题"
       deleted_post: "(已删除的帖子)"
       deleted_user: "(已删除的用户)"
@@ -392,9 +393,10 @@ zh_CN:
         email: "邮箱"
         name: "名称"
         fields: "字段"
+        reject_reason: "原因"
       user_percentage:
         summary:
-          other: "%{agreed}，%{disagreed}，%{ignored}（共%{count}个标记）"
+          other: "%{agreed}，%{disagreed}，%{ignored} (共%{count}个标记)"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -477,6 +479,9 @@ zh_CN:
           other: "你有 <strong>%{count}</strong> 个帖子在等待审核中。"
         ok: "确认"
       example_username: "用户名"
+      reject_reason:
+        title: "你为什么拒绝这个用户？"
+        send_email: "发送拒绝邮件"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -827,7 +832,7 @@ zh_CN:
         perm_denied_expl: "你拒绝了通知提醒的权限。设置浏览器以启用通知提醒。"
         disable: "停用通知"
         enable: "启用通知"
-        each_browser_note: "注意：你必须在你使用的所用浏览器中更改这项设置。"
+        each_browser_note: '注意：你必须在你使用的每个浏览器上更改此设置。在 “请勿打扰” 状态下，所有通知都将被禁用，无视具体设置。'
         consent_prompt: "有回复时是否接收通知？"
       dismiss: "忽略"
       dismiss_notifications: "忽略所有"
@@ -842,7 +847,7 @@ zh_CN:
       color_scheme_default_on_all_devices: "为我所有的设备上设置默认配色方案"
       color_scheme: "配色方案"
       color_schemes:
-        default_description: "默认"
+        default_description: "主题默认"
         disable_dark_scheme: "与常规相同"
         dark_instructions: "你可以通过切换你的设备的深色模式来预览深色模式的配色方案。"
         undo: "重置"
@@ -1628,7 +1633,6 @@ zh_CN:
       options: "选项"
       whisper: "密语"
       unlist: "隐藏"
-      blockquote_text: "引用"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
       toggle_unlisted: "显示/隐藏于主题列表"
@@ -1697,8 +1701,8 @@ zh_CN:
       link_dialog_title: "插入链接"
       link_optional_text: "可选标题"
       link_url_placeholder: "粘贴 URL 或键入以搜索主题"
-      quote_title: "引用"
-      quote_text: "引用"
+      blockquote_title: "引用"
+      blockquote_text: "引用"
       code_title: "预格式化文本"
       code_text: "预格式化文本将缩进 4 格"
       paste_code_text: "输入或粘贴代码"
@@ -1752,7 +1756,7 @@ zh_CN:
           label: "新主题"
         shared_draft:
           label: "共享草稿"
-          desc: "起草一个只对管理人员可见的主题"
+          desc: "起草一个只对允许的用户可见的主题"
         toggle_topic_bump:
           label: "切换主题顶帖"
           desc: "回复但不改变最新回复的日期"
@@ -2057,7 +2061,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？浏览%{catLink}的其他主题或%{latestLink}。"
       read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此主题的最新帖子。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 个未读主题</a>} other { <a href='{basePath}/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
+      read_more_MF: "还有{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1个未读主题</a>} other {<a href='{basePath}/unread'>#个未读主题</a> }}{BOTH, select, true{和} false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/new'>#1个新主题</a>} other{<a href='{basePath}/new'>#个新主题 </a>}}, 或者{CATEGORY,select,true{浏览其它的{catLink}主题} false{{latestLink}} other{}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 浏览所有分类
       browse_all_tags: 浏览所有标签
@@ -2071,6 +2075,7 @@ zh_CN:
         select: "用户只能在这个主题中发言一次："
         description: "为了提高回帖太快或有争议内容的主题的讨论质量，用户再次发言之前必须稍作等待。"
         save: "启用"
+        enabled_until: "(可选)在以下日期之前启用："
         remove: "停用"
         hours: "小时："
         minutes: "分钟："
@@ -2425,12 +2430,18 @@ zh_CN:
       unread: "未读帖子"
       has_replies:
         other: "%{count} 回复"
+      has_replies_count: "%{count}"
       unknown_user: "（未知或已删除的用户）"
       has_likes_title:
         other: "%{count}人赞了该贴"
       has_likes_title_only_you: "你赞了这个帖子"
       has_likes_title_you:
         other: "你和另外的%{count}人赞了帖"
+      filtered_replies_hint:
+        other: "查看此帖子及其 %{count} 个回复"
+      filtered_replies_viewing:
+        other: "查看 %{count} 个回复"
+      in_reply_to: "加载父帖子"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -2578,6 +2589,12 @@ zh_CN:
           edit_bookmark:
             name: "编辑收藏"
             description: "编辑收藏名称或修改提醒的日期和时间"
+      filtered_replies:
+        viewing_posts_by: "查看 %{post_count} 个帖子"
+        viewing_subset: "一些回复已被折叠"
+        viewing_summary: "查看此主题的摘要"
+        post_number: "%{username}，帖子 #%{post_number}"
+        show_all: "显示全部"
     category:
       can: "能够&hellip; "
       none: "（未分类）"
@@ -2635,10 +2652,10 @@ zh_CN:
         reply: "回复"
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理员可见。"
-        everyone_has_access: "这个分类是公开的，任何人都可以看到，回复和创建帖子。要限制权限，请删除“所有人”组的一个或多个权限。"
+        everyone_has_access: '这个分类是公开的，任何人都可以看到，回复和创建帖子。要限制权限，请删除“所有人”组的一个或多个权限。'
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
-        inherited: "此权限继承自 “所有人”"
+        inherited: '此权限继承自 “所有人”'
       special_warning: "警告：这是一个预设的分类，它的安全设置不能被更改。如果你不想要使用这个分类，直接删除它，而不是另作他用。"
       uncategorized_security_warning: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类。这个分类没有安全设置。"
       uncategorized_general_warning: '这个分类是特殊的。它用作未选择分类的新主题的默认分类。如果你想要避免此行为并强制选择分类，<a href="%{settingLink}">请在此处禁用该设置</a>。如果你要修改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
@@ -2724,6 +2741,7 @@ zh_CN:
       list_filters:
         all: "所有主题"
         none: "无子分类"
+      colors_disabled: "你无法选择颜色，因为你没有类别样式。"
     flagging:
       title: "感谢你帮助我们建设文明社区！"
       action: "标记帖子"
@@ -2741,7 +2759,7 @@ zh_CN:
       notify_action: "私信"
       official_warning: "正式警告"
       delete_spammer: "删除垃圾发布者"
-      delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} 和 {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}，删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，并将其邮件地址 <b>{email}</b>加入黑名单。你确定该用户是垃圾广告发布者吗？"
+      delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} 和 {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}，并且删除该账户，阻止其IP地址 <b>{ip_address}</b> 再次注册，同时将其邮件地址 <b>{email}</b>加入永久的黑名单。你确定该用户是垃圾内容制造者吗？"
       yes_delete_spammer: "是的，删除垃圾内容发布者"
       ip_address_missing: "（N/A）"
       hidden_email_address: "（隐藏）"
@@ -3117,7 +3135,7 @@ zh_CN:
     invite:
       custom_message: "通过编写<a href>自定义消息</a>，使你的邀请更个性化。"
       custom_message_placeholder: "输入留言"
-      approval_not_required: "一旦用户接受此邀请，他们将被自动批准。"
+      approval_not_required: "用户一旦接受此邀请，就会被自动批准。"
       custom_message_template_forum: "你好，你应该加入这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
     forced_anonymous: "由于负载过大，暂时对所有用户都显示匿名用户所见的内容。"
@@ -3129,6 +3147,16 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
     image_removed: "(图像被移除)"
+    do_not_disturb:
+      title: "请勿打扰..."
+      label: "请勿打扰"
+      remaining: "剩余 %{remaining}"
+      options:
+        half_hour: "30分钟"
+        one_hour: "1 小时"
+        two_hours: "2 小时"
+        tomorrow: "直到明天"
+        custom: "自定义"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -3350,6 +3378,10 @@ zh_CN:
               sync_sso: 使用 SSO 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
+              update: 更新用户个人资料信息。
+              log_out: 注销用户的所有会话。
+              anonymize: 匿名用户帐户。
+              delete: 删除用户帐户。
             email:
               receive_emails: 将此范围与邮件收件人结合起来处理传入的电子邮件。
       web_hooks:
@@ -3644,6 +3676,7 @@ zh_CN:
           install_upload: "来自你的设备"
           install_git_repo: "从 git 仓库"
           install_create: "创建新的"
+          duplicate_remote_theme: "主题组件 “%{name}” 已经安装，你确定要安装另一个副本吗？"
           about_theme: "关于"
           license: "许可证"
           version: "版本："
@@ -3663,6 +3696,7 @@ zh_CN:
           check_for_updates: "检查更新"
           updating: "更新…"
           up_to_date: "主题已经是最新版本，上次检查："
+          has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
           theme_settings: "主题设置"
           no_settings: "这个主题内没有设置"
@@ -3983,6 +4017,7 @@ zh_CN:
             topic_unarchived: "取消主题存档"
             post_staff_note_create: "添加管理人员注释"
             post_staff_note_destroy: "删除管理人员注释"
+            delete_group: "删除群组"
         screened_emails:
           title: "已屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -4195,6 +4230,9 @@ zh_CN:
         anonymize_yes: "是的，匿名化该账户"
         anonymize_failed: "在匿名化该账户时遇到问题。"
         delete: "删除用户"
+        delete_posts:
+          progress:
+            title: "删除帖子的进度"
         merge:
           button: "合并"
           prompt:
@@ -4206,6 +4244,8 @@ zh_CN:
             target_username_placeholder: "新的所有者的用户名"
             transfer_and_delete: "迁移并删除 @%{username}"
             cancel: "取消"
+          progress:
+            title: "合并进度"
           confirmation:
             title: "迁移并删除 @%{username}"
             description: |
@@ -4348,6 +4388,7 @@ zh_CN:
         go_back: "返回搜索"
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: "只显示修改过的"
+        locale: "语言："
         more_than_50_results: "有超过50个结果。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
@@ -4445,6 +4486,7 @@ zh_CN:
         image: 图片
         icon_help: "输入一个 Font Awsome 图标的名称（使用前缀“far-”表示常规图标，“fab-”表示品牌图标）"
         image_help: "输入图像的 URL（如果同时设置了 URL 和图标，则 URL 会覆盖图标）"
+        read_only_setting_help: "自定义文本"
         query: 徽章查询（SQL）
         target_posts: 查询到的帖子
         auto_revoke: 每天运行撤销查询

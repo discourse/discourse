@@ -1,12 +1,12 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import Topic from "discourse/models/topic";
 import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { equal } from "@ember/object/computed";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Topic from "discourse/models/topic";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, {
   selectedSlowMode: null,
@@ -14,6 +14,7 @@ export default Controller.extend(ModalFunctionality, {
   minutes: null,
   seconds: null,
   saveDisabled: false,
+  enabledUntil: null,
   showCustomSelect: equal("selectedSlowMode", "custom"),
 
   init() {
@@ -99,7 +100,7 @@ export default Controller.extend(ModalFunctionality, {
       this._parseValue(this.seconds)
     );
 
-    Topic.setSlowMode(this.model.id, seconds)
+    Topic.setSlowMode(this.model.id, seconds, this.enabledUntil)
       .catch(popupAjaxError)
       .then(() => {
         this.set("model.slow_mode_seconds", seconds);

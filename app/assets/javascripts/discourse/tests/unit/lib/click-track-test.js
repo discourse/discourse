@@ -1,11 +1,11 @@
-import sinon from "sinon";
-import { skip, test, module } from "qunit";
-import { later } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import ClickTrack from "discourse/lib/click-track";
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { module, skip, test } from "qunit";
+import ClickTrack from "discourse/lib/click-track";
+import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
+import { later } from "@ember/runloop";
 import pretender from "discourse/tests/helpers/create-pretender";
+import sinon from "sinon";
 
 const track = ClickTrack.trackClick;
 

@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
+import Component from "@ember/component";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
   tagName: "li",

@@ -1,5 +1,5 @@
-import { helperContext } from "discourse-common/lib/helpers";
 import I18n from "I18n";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -170,7 +170,10 @@ export function durationTiny(distance, ageOpts) {
 
 function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
-  const distance = Math.round((new Date() - date) / 1000);
+  let distance = Math.round((new Date() - date) / 1000);
+  if (distance < 0) {
+    distance = Math.round((date - new Date()) / 1000);
+  }
   const dividedDistance = Math.round(distance / 60.0);
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 

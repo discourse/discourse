@@ -226,6 +226,17 @@
     }
   }
 
+  .discourse-tags {
+    flex-wrap: wrap;
+    display: inline-flex;
+    font-weight: normal;
+
+    .discourse-tag.simple {
+      font-size: $font-down-1;
+      margin-right: 0.25em;
+    }
+  }
+
   input[type="checkbox"] {
     margin-top: 0;
     margin-left: 0;

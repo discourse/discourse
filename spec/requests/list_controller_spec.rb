@@ -88,6 +88,9 @@ RSpec.describe ListController do
   end
 
   describe "categories and X" do
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category) }
+
     it "returns top topics" do
       Fabricate(:topic, like_count: 1000, posts_count: 100)
       TopTopic.refresh!
@@ -99,6 +102,12 @@ RSpec.describe ListController do
       get "/categories_and_latest.json"
       data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(2)
+    end
+
+    it "returns topics from subcategories when no_subcategories=false" do
+      Fabricate(:topic, category: sub_category)
+      get "/c/#{category.slug}/#{category.id}/l/latest.json?no_subcategories=false"
+      expect(response.parsed_body["topic_list"]["topics"].length).to eq(2)
     end
   end
 

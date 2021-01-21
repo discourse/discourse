@@ -365,6 +365,27 @@ describe TopicViewSerializer do
         expect(json[:details][:can_edit_tags]).to eq(true)
       end
     end
+
+    context "can_edit" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      let(:user) { group_user.user }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it 'explicitly returns can_edit' do
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit]).to eq(true)
+
+        topic.update!(category: nil)
+
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit]).to eq(false)
+      end
+    end
   end
 
   context "published_page" do

@@ -149,6 +149,18 @@ RSpec.describe Reviewable, type: :model do
           expect(reviewables).not_to include(qp)
         end
 
+        it 'can filter by who reviewed the flag' do
+          reviewable = Fabricate(:reviewable_flagged_post)
+          admin = Fabricate(:admin)
+          reviewable.perform(admin, :ignore)
+
+          reviewables = Reviewable.list_for(
+            user, status: :all, reviewed_by: admin.username
+          )
+
+          expect(reviewables).to contain_exactly(reviewable)
+        end
+
         it 'Does not filter by status when status parameter is set to all' do
           rejected_reviewable = Fabricate(:reviewable, target: post, status: Reviewable.statuses[:rejected])
           reviewables = Reviewable.list_for(user, status: :all)

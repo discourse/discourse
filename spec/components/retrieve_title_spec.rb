@@ -67,6 +67,27 @@ describe RetrieveTitle do
 
       expect(RetrieveTitle.crawl("https://brelksdjflaskfj.com/amazing")).to eq("very amazing")
     end
-  end
 
+    it "detects and uses encoding from Content-Type header" do
+      stub_request(:get, "https://brelksdjflaskfj.com/amazing")
+        .to_return(
+          status: 200,
+          body: "<html><title>fancy apostrophes ’’’</title>".dup.force_encoding('ASCII-8BIT'),
+          headers: { 'Content-Type' => 'text/html; charset="utf-8"' }
+        )
+
+      IPSocket.stubs(:getaddress).returns('100.2.3.4')
+      expect(RetrieveTitle.crawl("https://brelksdjflaskfj.com/amazing")).to eq("fancy apostrophes ’’’")
+
+      stub_request(:get, "https://brelksdjflaskfj.com/amazing")
+        .to_return(
+          status: 200,
+          body: "<html><title>japanese こんにちは website</title>".encode('EUC-JP').force_encoding('ASCII-8BIT'),
+          headers: { 'Content-Type' => 'text/html;charset=euc-jp' }
+        )
+
+      IPSocket.stubs(:getaddress).returns('100.2.3.4')
+      expect(RetrieveTitle.crawl("https://brelksdjflaskfj.com/amazing")).to eq("japanese こんにちは website")
+    end
+  end
 end

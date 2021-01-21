@@ -5,7 +5,7 @@
 //= require jquery.debug
 //= require ember.debug
 //= require locales/i18n
-//= require locales/en_US
+//= require locales/en
 //= require route-recognizer/dist/route-recognizer
 //= require fake_xml_http_request
 //= require pretender/pretender

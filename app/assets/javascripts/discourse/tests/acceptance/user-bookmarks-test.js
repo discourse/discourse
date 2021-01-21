@@ -1,13 +1,13 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance("User's bookmarks", function (needs) {
   needs.user();

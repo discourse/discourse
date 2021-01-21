@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
-import toMarkdown from "discourse/lib/to-markdown";
-import Handlebars from "handlebars";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
+import Handlebars from "handlebars";
+import I18n from "I18n";
 import { deepMerge } from "discourse-common/lib/object";
+import { escape } from "pretty-text/sanitizer";
+import { helperContext } from "discourse-common/lib/helpers";
+import toMarkdown from "discourse/lib/to-markdown";
 
 let _defaultHomepage;
 
@@ -59,7 +59,13 @@ export function avatarUrl(template, size) {
 
 export function getRawSize(size) {
   const pixelRatio = window.devicePixelRatio || 1;
-  return size * Math.min(3, Math.max(1, Math.round(pixelRatio)));
+  let rawSize = 1;
+  if (pixelRatio > 1.1 && pixelRatio < 2.1) {
+    rawSize = 2;
+  } else if (pixelRatio >= 2.1) {
+    rawSize = 3;
+  }
+  return size * rawSize;
 }
 
 export function avatarImg(options, customGetURL) {
@@ -102,6 +108,25 @@ export function postUrl(slug, topicId, postNumber) {
     url += "/" + postNumber;
   }
   return url;
+}
+
+export function highlightPost(postNumber) {
+  const container = document.querySelector(`#post_${postNumber}`);
+  if (!container) {
+    return;
+  }
+  const element = container.querySelector(".topic-body");
+  if (!element || element.classList.contains("highlighted")) {
+    return;
+  }
+
+  element.classList.add("highlighted");
+
+  const removeHighlighted = function () {
+    element.classList.remove("highlighted");
+    element.removeEventListener("animationend", removeHighlighted);
+  };
+  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {

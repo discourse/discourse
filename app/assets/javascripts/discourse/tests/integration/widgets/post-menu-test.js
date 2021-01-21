@@ -1,10 +1,10 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | Widget | post-menu", function (

@@ -50,8 +50,13 @@
     </section>
   {{/if}}
 
-  {{#unless noCategoryStyle}}
-    <section class="field">
+  <section class="field">
+    {{#if noCategoryStyle}}
+      <label>
+        {{d-icon "exclamation-triangle"}}
+        {{i18n "category.colors_disabled"}}
+      </label>
+    {{else}}
       <label>{{i18n "category.badge_colors"}}</label>
       <div class="category-color-editor">
         {{html-safe categoryBadgePreview}}
@@ -72,6 +77,6 @@
           </div>
         </div>
       </div>
-    </section>
-  {{/unless}}
+    {{/if}}
+  </section>
 </form>

@@ -1,8 +1,8 @@
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
+import { iconNode } from "discourse-common/lib/icon-library";
 
 export const ButtonClass = {
   tagName: "button.widget-button.btn",

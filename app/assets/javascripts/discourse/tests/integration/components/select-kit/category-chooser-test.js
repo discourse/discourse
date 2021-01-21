@@ -1,9 +1,9 @@
-import createStore from "discourse/tests/helpers/create-store";
-import I18n from "I18n";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import I18n from "I18n";
+import createStore from "discourse/tests/helpers/create-store";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function template(options = []) {

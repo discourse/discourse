@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { alias, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, equal } from "@ember/object/computed";
+import { i18n, setting } from "discourse/lib/computed";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import { setting, i18n } from "discourse/lib/computed";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   adminBackups: controller(),

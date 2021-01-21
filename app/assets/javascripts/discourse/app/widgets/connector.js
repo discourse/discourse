@@ -1,5 +1,5 @@
-import { next } from "@ember/runloop";
 import { getOwner } from "@ember/application";
+import { next } from "@ember/runloop";
 
 export default class Connector {
   constructor(widget, opts) {

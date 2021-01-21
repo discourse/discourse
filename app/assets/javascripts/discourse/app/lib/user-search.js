@@ -1,10 +1,10 @@
-import { isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse/lib/debounce";
+import { cancel, later } from "@ember/runloop";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { userPath } from "discourse/lib/url";
-import { emailValid } from "discourse/lib/utilities";
 import { Promise } from "rsvp";
-import { later, cancel } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { emailValid } from "discourse/lib/utilities";
+import { isTesting } from "discourse-common/config/environment";
+import { userPath } from "discourse/lib/url";
 
 var cache = {},
   cacheKey,
@@ -81,7 +81,32 @@ function performSearch(
     });
 }
 
-var debouncedSearch = discourseDebounce(performSearch, 300);
+var debouncedSearch = function (
+  term,
+  topicId,
+  categoryId,
+  includeGroups,
+  includeMentionableGroups,
+  includeMessageableGroups,
+  allowedUsers,
+  groupMembersOf,
+  resultsFn
+) {
+  discourseDebounce(
+    this,
+    performSearch,
+    term,
+    topicId,
+    categoryId,
+    includeGroups,
+    includeMentionableGroups,
+    includeMessageableGroups,
+    allowedUsers,
+    groupMembersOf,
+    resultsFn,
+    300
+  );
+};
 
 function organizeResults(r, options) {
   if (r === CANCELLED_STATUS) {

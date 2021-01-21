@@ -1,8 +1,8 @@
-import { get } from "@ember/object";
-import { registerUnbound } from "discourse-common/lib/helpers";
 import { avatarImg, formatUsername } from "discourse/lib/utilities";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { registerUnbound } from "discourse-common/lib/helpers";
 
 let _customAvatarHelpers;
 

@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance(
   "Composer disabled, uncategorized not allowed when any topic_template present",

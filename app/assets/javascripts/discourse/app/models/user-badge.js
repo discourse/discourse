@@ -1,10 +1,10 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
+import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import EmberObject from "@ember/object";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const UserBadge = EmberObject.extend({
   @discourseComputed

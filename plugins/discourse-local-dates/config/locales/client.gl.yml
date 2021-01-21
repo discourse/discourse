@@ -19,13 +19,17 @@ gl:
           insert: Inserir
           advanced_mode: Modo avanzado
           simple_mode: Modo simple
+          format_description: "Formato usado para presentarlle a data ao usuario. Use Z para amosar o desprazamento e zz para o nome da zona horaria."
+          timezones_title: Zonas horarias que presentar
+          timezones_description: As zonas horarias utilizaranse para presentar datas na visualización previa e na alternativa.
           recurring_title: Periodicidade
+          recurring_description: "Define a recorrencia dun evento. Tamén pode editar manualmente a opción recorrente xerada polo formulario e usar unha das seguintes claves: anos, trimestres, meses, semanas, días, horas, minutos, segundos, milisegundos."
           recurring_none: Sen periodicidade
           invalid_date: Data non válida; asegúrate de que data e hora son correctas
           date_title: Data
           time_title: Hora
           format_title: Formato da data
-          timezone: Fuso horario
+          timezone: Zona horaria
           until: Ata...
           recurring:
             every_day: "Todos os días"

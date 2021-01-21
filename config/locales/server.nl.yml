@@ -39,6 +39,7 @@ nl:
   title: "Discourse"
   topics: "Topics"
   posts: "berichten"
+  views: "weergaven"
   loading: "Laden"
   powered_by_html: 'Mogelijk gemaakt door <a href="https://www.discourse.org">Discourse</a>, best bekeken met JavaScript ingeschakeld'
   sign_up: "Registreren"
@@ -191,6 +192,14 @@ nl:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
       cors_origins_should_not_have_trailing_slash: "U dient geen schuine streep (/) toe te voegen aan CORS-domeinen."
     conflicting_google_user_id: 'De Google-account-ID voor deze account is gewijzigd; om beveiligingsredenen is stafinterventie vereist. Neem contact op met een staflid en wijs hem of haar op <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Sorry, we konden geen voorbeeld voor deze webpagina genereren, omdat de server '%{hostname}' niet kon worden gevonden. In plaats van een voorbeeld verschijnt alleen een koppeling in uw bericht. :cry:"
+      error_response: "Sorry, we konden geen voorbeeld voor deze webpagina genereren, omdat de webserver een foutcode %{status_code} heeft geretourneerd. In plaats van een voorbeeld verschijnt alleen een koppeling in uw bericht. :cry:"
+      missing_data:
+        one: "Sorry, we konden geen voorbeeld voor deze webpagina genereren, omdat de volgende tag oEmbed / OpenGraph niet kon worden gevonden: %{missing_attributes}"
+        other: "Sorry, we konden geen voorbeeld voor deze webpagina genereren, omdat de volgende tags oEmbed / OpenGraph niet konden worden gevonden: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "Uw uitnodigingstoken is verlopen. <a href='%{base_url}/about'>Neem contact op</a> met een staflid."
     not_found: "Uw uitnodigingstoken is ongeldig. <a href='%{base_url}/about'>Neem contact op</a> met een staflid."
@@ -401,26 +410,6 @@ nl:
     until_posts:
       one: "%{count} bericht"
       other: "%{count} berichten"
-    "new-topic": |
-      Welkom op %{site_name} &ndash; **bedankt voor het starten van een nieuwe conversatie!**
-
-      - Klinkt de titel interessant als u deze hardop leest? Is het een goede samenvatting?
-
-      - Wie zou hierin geïnteresseerd zijn? Waarom is het van belang? Wat voor reacties verwacht u te krijgen?
-
-      - Gebruik algemeen gebruikte woorden, zodat anderen uw topic kunnen *vinden*. Selecteer een categorie om uw topic met verwante topics te groeperen.
-
-      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
-    "new-reply": |
-      Welkom op %{site_name} &ndash; **bedankt voor uw bijdrage!**
-
-      - Levert uw antwoord een nuttige bijdrage aan de conversatie, hoe klein dan ook?
-
-      - Wees aardig voor de andere gemeenschapsleden.
-
-      - Opbouwende kritiek is welkom, maar geef kritiek op *ideeën*, niet op mensen.
-
-      [Bekijk onze gemeenschapsrichtlijnen](%{base_path}/guidelines) voor meer informatie. Dit paneel verschijnt alleen bij uw eerste %{education_posts_text}.
     avatar: |
       ### Wat dacht u van een afbeelding voor uw account?
 
@@ -846,6 +835,7 @@ nl:
       others: "Geen activiteit."
     no_bookmarks:
       self: "U hebt geen bladwijzers voor berichten; via bladwijzers kunt u snel bepaalde berichten raadplegen."
+      search: "Geen bladwijzers gevonden met de opgegeven zoekopdracht."
       others: "Geen bladwijzers."
     no_likes_given:
       self: "U hebt geen berichten geliket."
@@ -914,9 +904,7 @@ nl:
     mute_topic: "Alle meldingen voor dit topic negeren, %{link}"
     unwatch_category: "Geen topics in %{category} meer in de gaten houden"
     mailing_list_mode: "Mailinglijstmodus uitschakelen"
-    all: "Mij geen e-mail van %{sitename} sturen"
     different_user_description: "U bent momenteel aangemeld als een andere gebruiker dan die we een e-mail hebben gestuurd. Meld u af, of open de anonieme modus, en probeer het opnieuw."
-    not_found_description: "Sorry, we konden u niet uitschrijven. Is het mogelijk dat de koppeling in uw e-mail is verlopen?"
     log_out: "Afmelden"
     submit: "Voorkeuren opslaan"
     digest_frequency:
@@ -1377,6 +1365,7 @@ nl:
     enable_inline_onebox_on_all_domains: "Website-instelling inline_onebox_domain_allowlist negeren en inline onebox op alle domeinen toestaan."
     force_custom_user_agent_hosts: "Hosts waarvoor bij alle aanvragen de aangepaste onebox-useragent wordt gebruikt. (Met name handig voor hosts die toegang beperken via de useragent)."
     max_oneboxes_per_post: "Maximale aantal oneboxes in een bericht."
+    facebook_app_access_token: "Een token, gegenereerd op basis van uw Facebook-app-ID en -geheim. Gebruikt om Instagram-oneboxes te genereren."
     logo: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1. Bij leeg laten wordt de titeltekst van de website getoond."
     logo_small: "De kleine logoafbeelding links bovenaan op uw website, zichtbaar bij omlaag scrollen. Gebruik een vierkante afbeelding van 120 × 120. Bij leeg laten wordt een startpaginasymbool getoond."
     digest_logo: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van uw website. Gebruik een brede rechthoekige afbeelding. Gebruik geen SVG-afbeelding. Bij leeg laten wordt de afbeelding van de instelling `logo` gebruikt."
@@ -1470,6 +1459,7 @@ nl:
     enable_whispers: "Privécommunicatie van stafleden binnen topics toestaan."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kunt u <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
     blocked_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarbij gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
+    allowed_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     auto_approve_email_domains: "Gebruikers met e-mailadressen van deze lijst met domeinen worden automatisch goedgekeurd."
     hide_email_address_taken: "Gebruikers niet informeren dat een account met een bepaald e-mailadres bestaat tijdens registratie en vanaf het formulier voor vergeten wachtwoorden."
     log_out_strict: "Bij het afmelden ALLE sessies voor de gebruiker op alle apparaten afmelden"
@@ -1561,8 +1551,6 @@ nl:
     max_topic_invitations_per_day: "Maximale aantal uitnodigingen voor een topic dat een gebruiker per dag kan versturen."
     max_logins_per_ip_per_hour: "Maximale aantal toegestane aanmeldingen per IP-adres per uur"
     max_logins_per_ip_per_minute: "Maximale aantal toegestane aanmeldingen per IP-adres per minuut"
-    max_post_deletions_per_minute: "Maximale aantal berichten dat een gebruiker per minuut kan verwijderen."
-    max_post_deletions_per_day: "Maximale aantal berichten dat een gebruiker per dag kan verwijderen."
     invite_link_max_redemptions_limit: "Het maximaal toegestane aantal inwisselingen voor uitnodigingskoppelingen kan niet meer zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
@@ -1632,7 +1620,11 @@ nl:
     min_trust_to_send_messages: "Het minimale vertrouwensniveau dat nodig is om nieuwe persoonlijke berichten te maken."
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om koppelingen in berichten op te nemen"
+    min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
+    min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
+    min_trust_level_to_allow_user_card_background: "Het minimale vertrouwensniveau dat nodig is om een gebruikerskaartachtergrond te uploaden"
     min_trust_level_to_allow_invite: "Het minimale vertrouwensniveau dat nodig is om gebruikers uit te nodigen"
+    min_trust_level_to_allow_ignore: "Het minimale vertrouwensniveau dat nodig is om gebruikers te negeren"
     newuser_max_links: "Hoeveel koppelingen een nieuwe gebruiker aan een bericht kan toevoegen."
     newuser_max_attachments: "Hoeveel bijlagen een nieuwe gebruiker aan een bericht kan toevoegen."
     newuser_max_mentions_per_post: "Maximale aantal @naam-vermeldingen dat een nieuwe gebruiker in een bericht kan gebruiken."
@@ -1850,7 +1842,6 @@ nl:
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding tonen waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
-    prevent_anons_from_downloading_files: "Voorkomen dat anonieme gebruikers bijlagen downloaden. WAARSCHUWING: hierdoor zullen websiteonderdelen anders dan afbeeldingen die als bijlage zijn geplaatst niet werken."
     secure_media: 'Beperkt toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf’s, zips en andere). Als ‘aanmelding vereist’ is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is toegang beperkt tot media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist grondige kennis van beheer. Zie <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">het topic over beveiligde media op Meta</a> voor details.'
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
@@ -1935,6 +1926,7 @@ nl:
     governing_law: "Toepasselijk recht"
     city_for_disputes: "Stad voor geschillen"
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor stafgebruikers."
+    shared_drafts_min_trust_level: "Gebruikers mogen gedeelde concepten zien en bewerken."
     push_notifications_prompt: "Prompt voor gebruikerstoestemming weergeven."
     push_notifications_icon: "Het badgepictogram dat in de meldingshoek verschijnt. Een eenkleurige PNG van 96×96 met transparantie wordt aanbevolen."
     heading_font: "Te gebruiken lettertypen voor kopteksten op de website. Thema's kunnen worden overschreven via de aangepaste CSS-eigenschap '--heading-font-family'."
@@ -2313,10 +2305,6 @@ nl:
       subject_template: "Welkom bij %{site_name}!"
     tl2_promotion_message:
       subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
-      text_body_template: |
-        We hebben uw [vertrouwensniveau](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) gepromoveerd!
-
-        We nodigen u uit om mee te blijven doen – we vinden het leuk om u in de buurt te hebben.
     backup_succeeded:
       title: "Back-up geslaagd"
       subject_template: "Back-up voltooid"

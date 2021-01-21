@@ -1,8 +1,8 @@
+import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { gt } from "@ember/object/computed";
-import Component from "@ember/component";
-import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
+import { longDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({

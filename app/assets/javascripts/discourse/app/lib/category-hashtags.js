@@ -1,7 +1,7 @@
 export const SEPARATOR = ":";
 import {
-  caretRowCol,
   caretPosition,
+  caretRowCol,
   inCodeBlock,
 } from "discourse/lib/utilities";
 

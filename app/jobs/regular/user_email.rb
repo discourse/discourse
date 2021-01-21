@@ -193,6 +193,8 @@ module Jobs
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
       end
 
+      email_args[:reject_reason] = args[:reject_reason]
+
       message = EmailLog.unique_email_per_post(post, user) do
         UserNotifications.public_send(type, user, email_args)
       end

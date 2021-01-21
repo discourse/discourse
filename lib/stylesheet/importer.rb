@@ -315,11 +315,7 @@ module Stylesheet
     end
 
     def imports(asset, parent_path)
-      if asset[-1] == "*"
-        Dir["#{Stylesheet::Common::ASSET_ROOT}/#{asset}.scss"].map do |path|
-          Import.new(asset[0..-2] + File.basename(path, ".*"))
-        end
-      elsif callback = Importer.special_imports[asset]
+      if callback = Importer.special_imports[asset]
         instance_eval(&callback)
       else
         path, source = match_theme_import(asset, parent_path)

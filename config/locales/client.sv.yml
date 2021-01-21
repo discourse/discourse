@@ -411,6 +411,7 @@ sv:
       topic: "Ämne:"
       filtered_topic: "Du har filtrerat för granskning av innehåll i ett enskilt ämne."
       filtered_user: "Användare"
+      filtered_reviewed_by: "Granskade av"
       show_all_topics: "visa alla ämnen"
       deleted_post: "(inlägg raderat)"
       deleted_user: "(användare raderad)"
@@ -421,10 +422,11 @@ sv:
         email: "E-post"
         name: "Namn"
         fields: "Fält"
+        reject_reason: "Anledning"
       user_percentage:
         summary:
-          one: "%{agreed},%{disagreed},%{ignored} (%{count} flagga totalt)"
-          other: "%{agreed},%{disagreed},%{ignored} (%{count} flaggor totalt)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (av den senaste flaggan)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (av de senaste %{count} flaggorna)"
         agreed:
           one: "%{count} % instämmer"
           other: "%{count} % instämmer"
@@ -513,6 +515,9 @@ sv:
           other: "Du har <strong>%{count}</strong> inlägg som väntar."
         ok: "OK"
       example_username: "användarnamn"
+      reject_reason:
+        title: "Varför avvisar du den här användaren?"
+        send_email: "Skicka avvisningsmeddelande"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -839,6 +844,20 @@ sv:
         mute_option_title: "Du kommer inte att få några aviseringar från denna användare."
         normal_option: "Normal"
         normal_option_title: "Du kommer att aviseras om denna användare svarar dig, citerar dig eller nämner dig."
+      notification_schedule:
+        title: "Aviseringsschema"
+        label: "Aktivera anpassat aviseringsschema"
+        tip: "Utanför dessa timmar kommer du automatiskt att placeras i \"stör ej\"."
+        midnight: "Midnatt"
+        none: "Ingen"
+        monday: "Måndag"
+        tuesday: "Tisdag"
+        wednesday: "Onsdag"
+        thursday: "Torsdag"
+        friday: "Fredag"
+        saturday: "Lördag"
+        sunday: "Söndag"
+        to: "till"
       activity_stream: "Aktivitet"
       preferences: "Inställningar"
       feature_topic_on_profile:
@@ -868,7 +887,7 @@ sv:
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         disable: "Inaktivera aviseringar"
         enable: "Aktivera aviseringar"
-        each_browser_note: "Notera: Du måste ändra denna inställning i varje webbläsare du använder."
+        each_browser_note: 'Obs! Du måste ändra den här inställningen i varje webbläsare du använder. Alla meddelanden kommer att inaktiveras när du är i ”stör ej”, oavsett denna inställning.'
         consent_prompt: "Vill du ha realtidsaviseringar när personer svarar på dina inlägg?"
       dismiss: "Avfärda"
       dismiss_notifications: "Avfärda alla"
@@ -883,7 +902,7 @@ sv:
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
       color_schemes:
-        default_description: "Standard"
+        default_description: "Temat Standard"
         disable_dark_scheme: "Samma som vanlig"
         dark_instructions: "Du kan förhandsgranska färgschemat för mörkt läge genom att växla dina enheters mörka läge."
         undo: "Återställ"
@@ -1688,7 +1707,6 @@ sv:
       options: "Alternativ"
       whisper: "viska"
       unlist: "avlistad"
-      blockquote_text: "Citat"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
       toggle_unlisted: "Växla olistad"
@@ -1760,8 +1778,8 @@ sv:
       link_dialog_title: "Infoga hyperlänk"
       link_optional_text: "valfri rubrik"
       link_url_placeholder: "Klistra in en URL eller skriv för att söka ämnen"
-      quote_title: "Citat"
-      quote_text: "Citat"
+      blockquote_title: "Citat"
+      blockquote_text: "Citat"
       code_title: "Förformatterad text"
       code_text: "indentera förformatterad text med 4 mellanslag"
       paste_code_text: "skriv eller klistra in din kod här"
@@ -1815,7 +1833,7 @@ sv:
           label: "Nytt ämne"
         shared_draft:
           label: "Delat utkast"
-          desc: "Utarbeta ett ämne som endast är synligt för personalen"
+          desc: "Skapa ett utkast av ett ämne vilket enbart kommer vara synligt för tillåtna användare"
         toggle_topic_bump:
           label: "Växla ämnesknuff"
           desc: "Svara utan att ändra senaste svarsdatum"
@@ -1948,6 +1966,7 @@ sv:
       or_search_google: "Eller försök söka med Google istället:"
       search_google: "Försök söka med Google istället:"
       search_google_button: "Google"
+      search_button: "Sök"
       context:
         user: "Sök inlägg av @%{username}"
         category: "Sök kategorin #%{category}"
@@ -2137,7 +2156,7 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{catLink} eller %{latestLink}."
       read_more: "Vill du läsa mer? %{catLink} eller %{latestLink}."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
-      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'>1 nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Det finns { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># oläst</a> } other { <a href='{basePath}/unread'># olästa</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nytt</a> ämne} other { {BOTH, select, true{och } false {} other{}} <a href='{basePath}/new'># nya</a> ämnen} } kvar, eller {CATEGORY, select, true {bläddra bland andra ämnen i {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Bläddra bland alla kategorier
       browse_all_tags: Bläddra bland alla taggar
@@ -2151,6 +2170,7 @@ sv:
         select: "Användare får bara publicera i detta ämne en gång varje:"
         description: "För att främja tankeväckande diskussioner i snabba eller omtvistade diskussioner måste användarna vänta innan de publicerar i det här ämnet igen."
         save: "Aktivera"
+        enabled_until: "(Valfritt) Aktiverad till:"
         remove: "Inaktivera"
         hours: "Timmar:"
         minutes: "Minuter:"
@@ -2521,6 +2541,7 @@ sv:
       has_replies:
         one: "%{count} svar"
         other: "%{count} svar"
+      has_replies_count: "%{count}"
       unknown_user: "(okänd/raderad användare)"
       has_likes_title:
         one: "%{count} person gillade detta inlägg"
@@ -2529,6 +2550,13 @@ sv:
       has_likes_title_you:
         one: "du och %{count} annan person gillade det här inlägget"
         other: "du och %{count} andra personer gillade det här inlägget"
+      filtered_replies_hint:
+        one: "Visa detta inlägg och dess svar"
+        other: "Visa detta inlägg och dess %{count} svar"
+      filtered_replies_viewing:
+        one: "Visar %{count} svar på"
+        other: "Visar %{count} svar på"
+      in_reply_to: "Ladda överordnat inlägg"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -2685,6 +2713,12 @@ sv:
           edit_bookmark:
             name: "Redigera bokmärke"
             description: "Redigera bokmärkets namn eller ändra påminnelsens datum och tid."
+      filtered_replies:
+        viewing_posts_by: "Visar %{post_count} inlägg av"
+        viewing_subset: "Vissa svar har förminskats"
+        viewing_summary: "Visar en sammanfattning av detta ämne"
+        post_number: "%{username}, inlägg nr %{post_number}"
+        show_all: "Visa alla"
     category:
       can: "can&hellip; "
       none: "(ingen kategori)"
@@ -2742,10 +2776,10 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_has_access: "Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”."
+        everyone_has_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
-        inherited: "Denna behörighet ärvs från \"alla\""
+        inherited: 'Denna behörighet ärvs från "alla"'
       special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
@@ -2831,6 +2865,7 @@ sv:
       list_filters:
         all: "alla ämnen"
         none: "inga underkategorier"
+      colors_disabled: "Du kan inte välja färger eftersom du inte har någon kategoristil."
     flagging:
       title: "Tack för att du hjälper till att hålla forumet civiliserat!"
       action: "Flagga inlägg"
@@ -2848,7 +2883,7 @@ sv:
       notify_action: "Meddelande"
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
-      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>1</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>1</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
+      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
       hidden_email_address: "(dold)"
@@ -2916,11 +2951,11 @@ sv:
         help: "Detta ämne är ett personligt meddelande"
     posts: "Inlägg"
     posts_likes_MF: |
-      Detta ämne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med ett högt förhållande mellan gillningar och inlägg}
-      med {med ett väldigt högt förhållande mellan gillningar och inlägg}
-      high {med ett extremt högt förhållande mellan gillningar och inlägg}
-      other {}}
+      Detta ämne har {count, plural, one {# svar} other {# svar}} {ratio, select,
+        low {med ett högt förhållande mellan gillningar/inlägg}
+        med {med ett mycket högt förhållande mellan gillningar/inlägg}
+        high {med ett extremt högt förhållande mellan gillningar/inlägg}
+        other {}}
     original_post: "Originalinlägg"
     views: "Visningar"
     views_lowercase:
@@ -3250,7 +3285,7 @@ sv:
     invite:
       custom_message: "Gör din inbjudan lite personligare genom att skriva ett <a href>anpassat meddelande</a>."
       custom_message_placeholder: "Skriv ditt personliga meddelande"
-      approval_not_required: "Användaren godkänns automatiskt så snart han/hon godkänner denna inbjudan."
+      approval_not_required: "Användaren kommer automatiskt att godkännas så snart hon/han tackar ja till denna inbjudan."
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
     forced_anonymous: "På grund av extrem belastning, visas detta för samtliga precis som en utloggad användare skulle se det."
@@ -3262,6 +3297,17 @@ sv:
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
+    do_not_disturb:
+      title: "Stör ej för..."
+      label: "Stör ej"
+      remaining: "%{remaining} kvar"
+      options:
+        half_hour: "30 minuter"
+        one_hour: "1 timme"
+        two_hours: "2 timmar"
+        tomorrow: "Tills imorgon"
+        custom: "Anpassad"
+      set_schedule: "Ange ett aviseringsschema"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -3484,6 +3530,10 @@ sv:
               sync_sso: Synkronisera en användare genom SSO.
               show: Erhåll information om en användare.
               check_emails: Lista användares e-post.
+              update: Uppdatera information om användarprofil.
+              log_out: Logga ut alla sessioner för en användare.
+              anonymize: Anonymisera användarkonton.
+              delete: Ta bort användarkonton.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
       web_hooks:
@@ -3780,6 +3830,7 @@ sv:
           install_upload: "Från din enhet"
           install_git_repo: "Från en git-lagringsplats"
           install_create: "Skapa ny"
+          duplicate_remote_theme: "Temakomponenten \"%{name}\" har redan installerats. Är du säker på att du vill installera ytterligare en kopia?"
           about_theme: "Om"
           license: "Licens"
           version: "Version:"
@@ -4120,6 +4171,7 @@ sv:
             topic_unarchived: "ämnet inte arkiverat"
             post_staff_note_create: "lägg till personalnotering"
             post_staff_note_destroy: "ta bort personalnotering"
+            delete_group: "radera grupp"
         screened_emails:
           title: "Kontrollerade e-postadresser"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -4284,7 +4336,7 @@ sv:
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
-        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {1 inlägg} other {# inlägg}} och {TOPICS, plural, one {1 ämne} other {# ämnen}}. Är du säker?"
+        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?"
         silence: "Tysta"
         unsilence: "Otysta"
         silenced: "Tystad?"
@@ -4333,6 +4385,9 @@ sv:
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
+        delete_posts:
+          progress:
+            title: "Förlopp för radering av inlägg"
         merge:
           button: "Slå ihop"
           prompt:
@@ -4344,6 +4399,8 @@ sv:
             target_username_placeholder: "Användarnamn på den nya ägaren"
             transfer_and_delete: "Överför och radera @%{username}"
             cancel: "Avbryt"
+          progress:
+            title: "Sammanslagningsförlopp"
           confirmation:
             title: "Överför och radera @%{username}"
             description: |
@@ -4490,6 +4547,7 @@ sv:
         go_back: "Tillbaka till sökningen"
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
+        locale: "Språk:"
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"
@@ -4587,6 +4645,7 @@ sv:
         image: Bild
         icon_help: "Ange ett FA-ikonnamn (använd prefix 'far-' för reguljära ikoner samt 'fab-' för varumärkesikoner)"
         image_help: "Ange URL till bilden (ersätter ikonfältet om båda är angivna)"
+        read_only_setting_help: "Anpassa text"
         query: Utmärkelsesökning (SQL)
         target_posts: Sök målets inlägg
         auto_revoke: Kör återkallelsesökning dagligen

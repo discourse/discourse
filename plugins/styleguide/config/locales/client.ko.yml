@@ -53,8 +53,8 @@ ko:
           title: "글 상태"
         topic_list:
           title: "글 목록"
-        latest_topic_list:
-          title: "최신 글 목록"
+        basic_topic_list:
+          title: "기본 글 목록"
         footer_message:
           title: "하단 메시지"
         signup_cta:
@@ -69,6 +69,8 @@ ko:
           title: "글"
         topic_map:
           title: "글 맵"
+        site_header:
+          title: "사이트 헤더"
         suggested_topics:
           title: "주요 글"
         post_menu:

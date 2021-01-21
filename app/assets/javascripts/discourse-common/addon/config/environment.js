@@ -11,7 +11,7 @@ export function setEnvironment(e) {
 }
 
 export function isTesting() {
-  return Ember.testing;
+  return Ember.testing || environment === "testing";
 }
 
 export function isDevelopment() {

@@ -326,26 +326,6 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    "new-topic": |
-      Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
-
-      - Lyder title interessant hvis du læser den højt? Er det et godt resumé?
-      - Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
-      - Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
-
-      For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
-
-      Husk venligst mens du skriver dit svar:
-
-      - Forbedrer dit svar samtalen på en eller anden måde?
-
-      - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
-
-      - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
-
-      For flere tips, [se vores retningslinier](%{base_path}/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
       ### Hvad med et billede til din konto?
 
@@ -662,9 +642,7 @@ da:
     mute_topic: "Nulstil alle notifikationer for dette emne/indlæg, %{link}"
     unwatch_category: "Følg ikke længere disse emner i %{category}"
     mailing_list_mode: "Sluk mailing list modus"
-    all: "Send ikke email fra %{sitename} til mig"
     different_user_description: "Du er i øjeblikket logget ind som en anden bruger, end den vi har emailet. Venligst log ud, eller gå i anonym modus, og prøv igen"
-    not_found_description: "Beklager, men vi kunne ikke finde denne afmeldelse. Er det muligt at linket i emailen er udløbet?"
     log_out: "Log ud"
     digest_frequency:
       never: "aldrig"

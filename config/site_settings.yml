@@ -118,6 +118,7 @@ basic:
     default: false
   set_locale_from_accept_language_header:
     default: false
+    client: true
     validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
@@ -725,6 +726,9 @@ posting:
       ja: true
   max_consecutive_replies:
     default: 3
+  enable_filtered_replies_view:
+    default: false
+    client: true
   title_prettify:
     default: true
     locale_default:
@@ -735,7 +739,7 @@ posting:
     default: false
     locale_default:
       en: true
-      en_US: true
+      en_GB: true
   title_fancy_entities: true
   min_personal_message_title_length:
     client: true
@@ -772,6 +776,9 @@ posting:
   shared_drafts_category:
     type: category
     default: ""
+  shared_drafts_min_trust_level:
+    default: "staff"
+    enum: "TrustLevelAndStaffSetting"
   post_edit_time_limit:
     default: 1440
     max: 10080
@@ -990,6 +997,7 @@ posting:
     default: false
   show_published_pages_login_required:
     default: false
+  skip_auto_delete_reply_likes: 5
 
 email:
   email_time_window_mins:
@@ -1215,7 +1223,7 @@ files:
     list_type: compact
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp"
     refresh: true
     type: list
     list_type: compact
@@ -1422,6 +1430,7 @@ trust:
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
+    client: true
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
@@ -1598,7 +1607,7 @@ onebox:
     type: list
     list_type: compact
   enable_inline_onebox_on_all_domains:
-    default: false
+    default: true
   force_custom_user_agent_hosts:
     default: "http://codepen.io"
     type: list
@@ -1711,10 +1720,10 @@ rate_limits:
     min: 1
     default: 6
   max_post_deletions_per_minute:
-    min: 1
+    min: 0
     default: 2
   max_post_deletions_per_day:
-    min: 1
+    min: 0
     default: 10
   invite_link_max_redemptions_limit:
     min: 2
@@ -2073,6 +2082,9 @@ uncategorized:
 
   enable_system_avatars:
     hidden: true
+    default: true
+
+  use_site_small_logo_as_system_avatar:
     default: true
 
   disable_system_edit_notifications: true

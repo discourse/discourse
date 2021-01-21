@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape, sanitize } from "discourse/lib/text";
 import Component from "@ember/component";
-import { sanitize, emojiUnescape } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 
 export default Component.extend({

@@ -1,27 +1,27 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { not, notEmpty, equal, and, or } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import { flushMap } from "discourse/models/store";
-import RestModel from "discourse/models/rest";
-import { propertyEqual, fmt } from "discourse/lib/computed";
-import { longDate } from "discourse/lib/formatter";
+import { and, equal, not, notEmpty, or } from "@ember/object/computed";
+import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "discourse/lib/preload-store";
-import { userPath } from "discourse/lib/url";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import Session from "discourse/models/session";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { deepMerge } from "discourse-common/lib/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { flushMap } from "discourse/models/store";
+import getURL from "discourse-common/lib/get-url";
+import { longDate } from "discourse/lib/formatter";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
+import { userPath } from "discourse/lib/url";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -719,6 +719,10 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
+      if (topic.is_shared_draft) {
+        props.destination_category_id = props.category_id;
+        delete props.category_id;
+      }
       topic.setProperties(props);
     });
   },
@@ -837,8 +841,10 @@ Topic.reopenClass({
     return ajax(`/t/id_for/${slug}`);
   },
 
-  setSlowMode(topicId, seconds) {
+  setSlowMode(topicId, seconds, enabledUntil) {
     const data = { seconds };
+    data.enabled_until = enabledUntil;
+
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
   },
 });

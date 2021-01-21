@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
+  LOREM,
+  chooseDarker,
   createPreviewComponent,
   darkLightDiff,
-  chooseDarker,
-  LOREM,
 } from "wizard/lib/preview";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default createPreviewComponent(305, 165, {
   logo: null,

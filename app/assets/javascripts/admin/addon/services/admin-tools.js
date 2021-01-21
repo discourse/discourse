@@ -1,16 +1,16 @@
-import I18n from "I18n";
+import AdminUser from "admin/models/admin-user";
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin
 // modules. Inject it optionally, and if it exists go to town!
 
-import AdminUser from "admin/models/admin-user";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
-import { getOwner } from "discourse-common/lib/get-owner";
-import Service from "@ember/service";
+import I18n from "I18n";
 import { Promise } from "rsvp";
+import Service from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import showModal from "discourse/lib/show-modal";
 
 export default Service.extend({
   init() {

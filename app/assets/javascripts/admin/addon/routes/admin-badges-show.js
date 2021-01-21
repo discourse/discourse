@@ -1,10 +1,10 @@
+import Badge from "discourse/models/badge";
 import I18n from "I18n";
-import { get } from "@ember/object";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
-import Badge from "discourse/models/badge";
-import showModal from "discourse/lib/show-modal";
 import bootbox from "bootbox";
+import { get } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 export default Route.extend({
   serialize(m) {

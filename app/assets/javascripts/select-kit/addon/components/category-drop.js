@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { readOnly } from "@ember/object/computed";
-import { computed } from "@ember/object";
+import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
-import Category from "discourse/models/category";
+import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { computed } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
+import { readOnly } from "@ember/object/computed";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";

@@ -1,7 +1,7 @@
+import { classify, dasherize } from "@ember/string";
+import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { classify, dasherize } from "@ember/string";
 
 const _options = {};
 
@@ -105,8 +105,9 @@ export function buildResolver(baseName) {
         dashed = dasherize(suffix),
         moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
-            e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-            e.indexOf(dashed, e.length - dashed.length) !== -1
+            e.indexOf("/templates/") === -1 &&
+            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
+              e.indexOf(dashed, e.length - dashed.length) !== -1)
           );
         });
 

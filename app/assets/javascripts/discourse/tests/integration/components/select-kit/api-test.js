@@ -1,16 +1,16 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import selectKit, {
-  setDefaultState,
   DEFAULT_CONTENT,
+  setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | select-kit:api", function (hooks) {
   setupRenderingTest(hooks);

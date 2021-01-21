@@ -1,36 +1,37 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { and, or, alias, reads } from "@ember/object/computed";
-import { cancel, debounce, run } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
 import Controller, { inject } from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import { buildQuote } from "discourse/lib/quote";
-import Draft from "discourse/models/draft";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { escapeExpression } from "discourse/lib/utilities";
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, or, reads } from "@ember/object/computed";
 import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { emojiUnescape } from "discourse/lib/text";
-import { shortDate } from "discourse/lib/formatter";
-import Composer, { SAVE_LABELS, SAVE_ICONS } from "discourse/models/composer";
-import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
-import EmberObject, { computed, action } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import bootbox from "bootbox";
-import showModal from "discourse/lib/show-modal";
+import { cancel, run } from "@ember/runloop";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import DiscourseURL from "discourse/lib/url";
+import Draft from "discourse/models/draft";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import bootbox from "bootbox";
+import { buildQuote } from "discourse/lib/quote";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
+import { inject as service } from "@ember/service";
+import { shortDate } from "discourse/lib/formatter";
+import showModal from "discourse/lib/show-modal";
 
 function loadDraft(store, opts) {
   let promise = Promise.resolve();
@@ -1008,7 +1009,7 @@ export default Controller.extend({
         this.model.set("categoryId", opts.topicCategoryId);
       }
 
-      if (opts.topicTags && !this.site.mobileView && this.site.can_tag_topics) {
+      if (opts.topicTags && this.site.can_tag_topics) {
         let tags = escapeExpression(opts.topicTags)
           .split(",")
           .slice(0, this.siteSettings.max_tags_per_topic);
@@ -1162,7 +1163,11 @@ export default Controller.extend({
         // in test debounce is Ember.run, this will cause
         // an infinite loop
         if (!isTesting()) {
-          this._saveDraftDebounce = debounce(this, this._saveDraft, 2000);
+          this._saveDraftDebounce = discourseDebounce(
+            this,
+            this._saveDraft,
+            2000
+          );
         }
       } else {
         this._saveDraftPromise = model.saveDraft().finally(() => {
@@ -1188,7 +1193,7 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        let method = isTesting() ? run : debounce;
+        let method = isTesting() ? run : discourseDebounce;
         this._saveDraftDebounce = method(this, this._saveDraft, 2000);
       }
     }

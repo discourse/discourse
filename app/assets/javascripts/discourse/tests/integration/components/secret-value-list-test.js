@@ -1,12 +1,12 @@
+import { click, fillIn } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { fillIn, click } from "@ember/test-helpers";
 
 discourseModule("Integration | Component | secret-value-list", function (
   hooks

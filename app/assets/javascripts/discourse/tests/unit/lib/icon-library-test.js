@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
 import {
+  convertIconClass,
   iconHTML,
   iconNode,
-  convertIconClass,
 } from "discourse-common/lib/icon-library";
+import { module, test } from "qunit";
 
 module("Unit | Utility | icon-library", function () {
   test("return icon markup", function (assert) {

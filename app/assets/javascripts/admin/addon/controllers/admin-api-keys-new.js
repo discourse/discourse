@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import { isBlank } from "@ember/utils";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 

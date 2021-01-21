@@ -647,8 +647,7 @@ class UsersController < ApplicationController
         success: true,
         active: user.active?,
         message: activation.message,
-        user_id: user.id
-      }
+      }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
@@ -658,9 +657,8 @@ class UsersController < ApplicationController
 
       render json: {
         success: true,
-        active: user.active?,
-        message: activation.success_message,
-        user_id: user.id
+        active: false,
+        message: activation.success_message
       }
     else
       errors = user.errors.to_hash
@@ -1110,33 +1108,37 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    type = params[:type]
-    upload_id = params[:upload_id]
-
     if SiteSetting.sso_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    type = params[:type]
+
+    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != 'system'
+    if invalid_type
+      return render json: failed_json, status: 422
     end
 
-    upload = Upload.find_by(id: upload_id)
-
-    # old safeguard
-    user.create_user_avatar unless user.user_avatar
-
-    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
-      if !upload
-        return render_json_error I18n.t("avatar.missing")
+    if type.blank? || type == 'system'
+      upload_id = nil
+    else
+      if !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
       end
 
-      if type == "gravatar"
+      upload_id = params[:upload_id]
+      upload = Upload.find_by(id: upload_id)
+
+      if upload.nil?
+        return render_json_error I18n.t('avatar.missing')
+      end
+
+      # old safeguard
+      user.create_user_avatar unless user.user_avatar
+
+      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
+
+      if type == 'gravatar'
         user.user_avatar.gravatar_upload_id = upload_id
       else
         user.user_avatar.custom_upload_id = upload_id
@@ -1622,6 +1624,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
+    permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     result = params
       .permit(permitted, theme_ids: [])

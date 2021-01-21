@@ -84,7 +84,7 @@
             {{d-button
               icon=diversityScale.icon
               class=(concat "diversity-scale " diversityScale.name)
-              title=(concat "emoji_picker." diversityScale.name "_tone")
+              title=diversityScale.title
               action=(action "onDiversitySelection" index)
             }}
           {{/each}}

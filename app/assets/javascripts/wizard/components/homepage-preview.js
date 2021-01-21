@@ -1,9 +1,9 @@
-import { observes } from "discourse-common/utils/decorators";
 import {
-  createPreviewComponent,
   LOREM,
+  createPreviewComponent,
   darkLightDiff,
 } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(659, 320, {
   logo: null,

@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias, sort } from "@ember/object/computed";
-import { next } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, sort } from "@ember/object/computed";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { next } from "@ember/runloop";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(GrantBadgeController, {
   adminUser: controller(),

@@ -1,9 +1,9 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
 import sinon from "sinon";
+import { test } from "qunit";
 
 acceptance("Category New", function (needs) {
   needs.user();
@@ -16,6 +16,12 @@ acceptance("Category New", function (needs) {
     assert.equal(queryAll(".badge-category").text(), "testing");
 
     await click("#save-category");
+
+    assert.equal(
+      currentURL(),
+      "/c/testing/edit/general",
+      "it transitions to the category edit route"
+    );
 
     assert.equal(
       queryAll(".edit-category-title h2").text(),

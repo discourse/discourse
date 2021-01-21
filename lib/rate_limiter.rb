@@ -55,6 +55,10 @@ class RateLimiter
     rate_unlimited? || is_under_limit?
   end
 
+  def seconds_to_wait(now)
+    @secs - age_of_oldest(now)
+  end
+
   # reloader friendly
   unless defined? PERFORM_LUA
     PERFORM_LUA = <<~LUA
@@ -66,7 +70,7 @@ class RateLimiter
 
 
       if ((tonumber(redis.call("LLEN", key)) < max) or
-          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) > secs) then
+          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) >= secs) then
         redis.call("LPUSH", key, now)
         redis.call("LTRIM", key, 0, max - 1)
         redis.call("EXPIRE", key, secs * 2)
@@ -91,7 +95,7 @@ class RateLimiter
       local return_val = 0
 
       if ((tonumber(redis.call("LLEN", key)) < max) or
-          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) > secs) then
+          (now - tonumber(redis.call("LRANGE", key, -1, -1)[1])) >= secs) then
         return_val = 1
       else
         return_val = 0
@@ -112,7 +116,7 @@ class RateLimiter
     now = Time.now.to_i
 
     if ((max || 0) <= 0) || rate_limiter_allowed?(now)
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type) if raise_error
+      raise RateLimiter::LimitExceeded.new(seconds_to_wait(now), @type) if raise_error
       false
     else
       true
@@ -173,20 +177,18 @@ class RateLimiter
     Discourse.redis.without_namespace
   end
 
-  def seconds_to_wait
-    @secs - age_of_oldest
-  end
-
-  def age_of_oldest
+  def age_of_oldest(now)
     # age of oldest event in buffer, in seconds
-    Time.now.to_i - redis.lrange(prefixed_key, -1, -1).first.to_i
+    now - redis.lrange(prefixed_key, -1, -1).first.to_i
   end
 
   def is_under_limit?
+    now = Time.now.to_i
+
     # number of events in buffer less than max allowed? OR
     (redis.llen(prefixed_key) < @max) ||
     # age bigger than silding window size?
-    (age_of_oldest > @secs)
+    (age_of_oldest(now) >= @secs)
   end
 
   def rate_unlimited?

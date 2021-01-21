@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import loadScript from "discourse/lib/load-script";
 import getURL from "discourse-common/lib/get-url";
+import loadScript from "discourse/lib/load-script";
 import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 

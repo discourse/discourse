@@ -1,31 +1,31 @@
-import I18n from "I18n";
-import { isPresent, isEmpty } from "@ember/utils";
-import { or, and, not, alias } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { next, schedule, later } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import Composer from "discourse/models/composer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import { alias, and, not, or } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { isEmpty, isPresent } from "@ember/utils";
+import { later, next, schedule } from "@ember/runloop";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Composer from "discourse/models/composer";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import Post from "discourse/models/post";
-import { buildQuote } from "discourse/lib/quote";
+import { Promise } from "rsvp";
 import QuoteState from "discourse/lib/quote-state";
 import Topic from "discourse/models/topic";
-import discourseDebounce from "discourse/lib/debounce";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import showModal from "discourse/lib/show-modal";
 import TopicTimer from "discourse/models/topic-timer";
-import { Promise } from "rsvp";
-import { escapeExpression } from "discourse/lib/utilities";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { escapeExpression } from "discourse/lib/utilities";
+import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
+import showModal from "discourse/lib/show-modal";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 let customPostMessageCallbacks = {};
 
@@ -52,7 +52,7 @@ export default Controller.extend(bufferedProperty("model"), {
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,
-  queryParams: ["filter", "username_filters"],
+  queryParams: ["filter", "username_filters", "replies_to_post_number"],
   loadedAllPosts: or(
     "model.postStream.loadedAllPosts",
     "model.postStream.loadingLastPost"
@@ -64,6 +64,7 @@ export default Controller.extend(bufferedProperty("model"), {
   _progressIndex: null,
   hasScrolled: null,
   username_filters: null,
+  replies_to_post_number: null,
   filter: null,
   quoteState: null,
 
@@ -110,10 +111,9 @@ export default Controller.extend(bufferedProperty("model"), {
     }
   },
 
-  @discourseComputed("model.postStream.loaded", "model.category_id")
-  showSharedDraftControls(loaded, categoryId) {
-    let draftCat = this.site.shared_drafts_category_id;
-    return loaded && draftCat && categoryId && draftCat === categoryId;
+  @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
+  showSharedDraftControls(loaded, isSharedDraft) {
+    return loaded && isSharedDraft;
   },
 
   @discourseComputed("site.mobileView", "model.posts_count")
@@ -421,10 +421,27 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    toggleSummary() {
+    showSummary() {
       return this.get("model.postStream")
-        .toggleSummary()
+        .showSummary()
         .then(() => {
+          this.updateQueryParams();
+        });
+    },
+
+    cancelFilter(previousFilters) {
+      this.get("model.postStream").cancelFilter();
+      this.get("model.postStream")
+        .refresh()
+        .then(() => {
+          if (previousFilters) {
+            if (previousFilters.replies_to_post_number) {
+              this._jumpToPostNumber(previousFilters.replies_to_post_number);
+            }
+            if (previousFilters.filter_upwards_post_id) {
+              this._jumpToPostId(previousFilters.filter_upwards_post_id);
+            }
+          }
           this.updateQueryParams();
         });
     },
@@ -867,9 +884,9 @@ export default Controller.extend(bufferedProperty("model"), {
       });
     },
 
-    toggleParticipant(user) {
+    filterParticipant(user) {
       this.get("model.postStream")
-        .toggleParticipant(user.get("username"))
+        .filterParticipant(user.username)
         .then(() => this.updateQueryParams);
     },
 
@@ -1500,15 +1517,22 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  _scrollToPost: discourseDebounce(function (postNumber) {
-    const $post = $(`.topic-post article#post_${postNumber}`);
+  _scrollToPost(postNumber) {
+    discourseDebounce(
+      this,
+      function () {
+        const $post = $(`.topic-post article#post_${postNumber}`);
 
-    if ($post.length === 0 || isElementInViewport($post)) {
-      return;
-    }
+        if ($post.length === 0 || isElementInViewport($post)) {
+          return;
+        }
 
-    $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
-  }, 500),
+        $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
+      },
+      postNumber,
+      500
+    );
+  },
 
   unsubscribe() {
     // never unsubscribe when navigating from topic to topic

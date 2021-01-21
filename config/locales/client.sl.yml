@@ -438,6 +438,7 @@ sl:
       title: "Pregled"
       topic: "Tema:"
       filtered_user: "Uporabnik"
+      filtered_reviewed_by: "Pregledal"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -447,12 +448,6 @@ sl:
         email: "E-naslov"
         name: "Polno ime"
         fields: "Polja"
-      user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          two: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} vseh prijav)"
       topics:
         topic: "Tema"
         reviewable_count: "Število"
@@ -901,7 +896,6 @@ sl:
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
         disable: "Onemogoči obvestila"
         enable: "Omogoči obvestila"
-        each_browser_note: "Opomba: to nastavitev morate spremeniti v vseh brskalnikih, ki jih uporabljate."
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
@@ -916,7 +910,6 @@ sl:
       color_scheme_default_on_all_devices: "Nastavi privzete barvne sheme v vseh mojih napravah"
       color_scheme: "Barvna shema"
       color_schemes:
-        default_description: "Privzeto"
         disable_dark_scheme: "Enako kot običajna"
         dark_instructions: "Barvno shemo temnega načina si lahko ogledate tako, da napravo preklopite v temni način."
         undo: "Ponastavi"
@@ -1705,7 +1698,6 @@ sl:
       options: "Možnosti"
       whisper: "šepet"
       unlist: "izločeno"
-      blockquote_text: "Citirano"
       add_warning: "To je uradno opozorilo."
       toggle_whisper: "Preklopi šepet"
       toggle_unlisted: "Preklopi izločeno"
@@ -1778,8 +1770,7 @@ sl:
       link_dialog_title: "Vstavi povezavo"
       link_optional_text: "neobvezen naslov"
       link_url_placeholder: "Za iskanje po temah prilepite ali vpišite URL"
-      quote_title: "Citiraj"
-      quote_text: "Citirano"
+      blockquote_text: "Citirano"
       code_title: "Predoblikovano besedilo"
       code_text: "zamakni predoblikovano besedilo s 4 presledki"
       paste_code_text: "vpiši ali prilepi kodo"
@@ -1828,7 +1819,6 @@ sl:
           label: "Nova tema"
         shared_draft:
           label: "Skupen osnutek"
-          desc: "Ustvari osnutek teme, ki bo viden samo osebju"
         toggle_topic_bump:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"
@@ -2155,7 +2145,6 @@ sl:
       read_more_in_category: "Brskaj po ostalih temah v %{catLink} ali %{latestLink}."
       read_more: "Brskaj po ostalih temah %{catLink} ali %{latestLink}."
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Je še <a href='{basePath}/unread'>1 neprebrana</a> } two { Sta še <a href='{basePath}/unread'>2 neprebrani</a> } other { Je še<a href='{basePath}/unread'># neprebranih } } { NEW, plural, =0 {} one { {BOTH, select, true{in} false {je } other{}} <a href='{basePath}/new'>1 nova</a> tema ostala} two { {BOTH, select, true{in } false {sta } other{}} <a href='{basePath}/new'>2 novi</a> temi ostali} other { {BOTH, select, true{in } false {so } other{}} <a href='{basePath}/new'># nove</a> teme ostale} }, ali {CATEGORY, select, true {brskaj druge teme v {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Brskajte po vseh kategorijah
       browse_all_tags: Brskanje po vseh oznakah
@@ -2557,6 +2546,7 @@ sl:
         two: "%{count} odgovora"
         few: "%{count} odgovore"
         other: "%{count} odgovorov"
+      has_replies_count: "%{count}"
       has_likes_title:
         one: "%{count} uporabniku je prispevek všeč"
         two: "%{count} uporabnikoma je prispevek všeč"
@@ -2568,6 +2558,11 @@ sl:
         two: "vam in %{count} drugima uporabnikoma je prispevek všeč"
         few: "vam in %{count} drugim uporabnikom je prispevek všeč"
         other: "vam in %{count} drugim uporabnikom je prispevek všeč"
+      filtered_replies_hint:
+        one: "Oglejte si to objavo in njen odgovor"
+        two: "Oglejte si to objavo in njena %{count} odgovora"
+        few: "Oglejte si to objavo in njene %{count} odgovore"
+        other: "Oglejte si to objavo in njenih %{count} odgovorov"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -2701,6 +2696,12 @@ sl:
       bookmarks:
         created: "Ustvarjeno"
         name: "Polno ime"
+      filtered_replies:
+        viewing_posts_by: "Ogled %{post_count} objav avtorja"
+        viewing_subset: "Nekateri odgovori so strnjeni"
+        viewing_summary: "Ogled povzetka te teme"
+        post_number: "%{username}, objava #%{post_number}"
+        show_all: "Pokaži vse"
     category:
       can: "lahko&hellip; "
       none: "(brez kategorije)"
@@ -2744,6 +2745,17 @@ sl:
       change_in_category_topic: "Uredi opis"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
+      security_add_group: "Dodaj skupino"
+      permissions:
+        group: "Skupina"
+        see: "Glej"
+        reply: "Odgovori"
+        create: "Ustvari"
+        no_groups_selected: "Dostop ni bil odobren nobeni skupini; ta kategorija bo vidna samo osebju."
+        everyone_has_access: 'Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«.'
+        toggle_reply: "Preklopi dovoljenje za odgovor"
+        toggle_full: "Preklopi dovoljenje za ustvarjanje"
+        inherited: 'To dovoljenje je podedovano od "vsi"'
       special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
       uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more imeti varnostnih nastavitev."
       uncategorized_general_warning: 'Ta kategorija je posebna. Uporabi se kot privzeta kategorija za teme brez kategorije. Če hočete onemogočiti takšen način in hočete obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če hočete spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
@@ -2832,7 +2844,6 @@ sl:
       notify_action: "Opozorilo"
       official_warning: "Uradno opozorilo"
       delete_spammer: "Izbriši spamerja"
-      delete_confirm_MF: "Izbrisali boste {POSTS, plural, one {<b>1</b> prispevek} two {<b>2</b> prispevka} other {<b>#</b> prispevkov}} in {TOPICS, plural, one {<b>1</b> temo} two {<b>2</b> temi} other {<b>#</b> tem}} od tega uporabnika, odstranili njegov račun, blokirali prijave iz njegovih IP naslovov <b>{ip_address}</b> in dodali njegov e-naslov <b>{email}</b> na trajen seznam blokiranih. Ali ste prepričani da je ta uporabnik res spamer?"
       yes_delete_spammer: "Da, izbriši spamerja"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrito)"
@@ -2909,12 +2920,6 @@ sl:
         title: "Ta tema je zasebno sporočilo"
         help: "Ta tema je zasebno sporočilo"
     posts: "Prispevki"
-    posts_likes_MF: |
-      Ta tema ima {count, plural, one {1 odgovor} two {2 odgovora} other {# odgovorov}} {ratio, select,
-        low {z visokim razmerjem med všečki in prispevki}
-        med {z zelo visokim razmerjem med všečki in prispevki}
-        high {z skrajno visokim razmerjem med všečki in prispevki}
-        other {}}
     original_post: "Izvirni prispevek"
     views: "Ogledi"
     views_lowercase:
@@ -3284,7 +3289,6 @@ sl:
     invite:
       custom_message: "Naredite vaše povabilo bolj osebno tako da napišete <a href>osebno sporočilo</a>."
       custom_message_placeholder: "Vnesi sporočilo po meri"
-      approval_not_required: "Uporabnik bo samodejno odobren takoj, ko bo sprejel to povabilo."
       custom_message_template_forum: "Pridruži se našemu forumu!"
       custom_message_template_topic: "Zdi se mi, da vam bo ta tema všeč!"
     forced_anonymous: "Zaradi visoke obremenitve je to prikazano vsem tako kot bi videl neprijavljen uporabnik."
@@ -3296,6 +3300,16 @@ sl:
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
+    do_not_disturb:
+      title: "Ne moti za ..."
+      label: "Ne moti"
+      remaining: "%{remaining} preostalo"
+      options:
+        half_hour: "30 minut"
+        one_hour: "1 ura"
+        two_hours: "2 uri"
+        tomorrow: "Do jutri"
+        custom: "Po meri"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3858,7 +3872,6 @@ sl:
         penalty_post_none: "Ne naredi nič"
         clear_penalty_history:
           title: "Izbriši zgodovino kazni"
-        delete_all_posts_confirm_MF: "Izbrisali boste {POSTS, plural, one {1 prispevek} two {2 prispevka} other {# prispevkov}} in {TOPICS, plural, one {1 temo} two {2 temi} other {# tem}}. Ali ste prepričani?"
         silence: "Utišaj"
         unsilence: "Ukini utišanje uporabnika"
         silenced: "Utišan?"
@@ -4095,6 +4108,7 @@ sl:
         icon: Ikona
         image: Slika
         image_help: "Vnesi URL do slike (ima prednost pred ikono)"
+        read_only_setting_help: "Prilagodite besedilo"
         query: poizvedba (SQL) značke
         show_posts: Prikaži prispevek za značko na strani z značkami
         trigger: Sproži

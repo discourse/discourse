@@ -1,11 +1,11 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import compile from "handlebars-compiler";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   addRawTemplate,
   removeRawTemplate,
 } from "discourse-common/lib/raw-templates";
+import compile from "handlebars-compiler";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";

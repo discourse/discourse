@@ -22,35 +22,35 @@ en:
         millions: "%{number}M"
     dates:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      time: "HH:mm"
+      time: "h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      time_with_zone: "HH:mm (z)"
+      time_with_zone: "hh:mm a (z)"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      time_short_day: "ddd, HH:mm"
+      time_short_day: "ddd, h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year: "D MMM, HH:mm"
+      long_no_year: "MMM D, h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year_no_time: "D MMM"
+      long_no_year_no_time: "MMM D"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      full_no_year_no_time: "Do MMMM"
+      full_no_year_no_time: "MMMM Do"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year: "MMM D, YYYY h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_with_year_no_time: "D MMM YYYY"
+      long_with_year_no_time: "MMM D, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      full_with_year_no_time: "D MMMM YYYY"
+      full_with_year_no_time: "MMMM Do, YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "D MMM 'YY LT"
+      long_date_with_year: "MMM D, 'YY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_without_year: "D MMM LT"
+      long_date_without_year: "MMM D, LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "MMM D, 'YY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
 
       wrap_ago: "%{date} ago"
 
@@ -87,7 +87,7 @@ en:
           one: "%{count}y"
           other: "%{count}y"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_month: "D MMM"
+        date_month: "MMM D"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM 'YY"
       medium:
@@ -101,7 +101,7 @@ en:
           one: "%{count} day"
           other: "%{count} days"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-        date_year: "D MMM 'YY"
+        date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
           one: "%{count} min ago"
@@ -457,6 +457,7 @@ en:
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User"
+      filtered_reviewed_by: "Reviewed By"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -467,11 +468,12 @@ en:
         email: "Email"
         name: "Name"
         fields: "Fields"
+        reject_reason: "Reason"
 
       user_percentage:
         summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flag)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} total flags)"
+          one: "%{agreed}, %{disagreed}, %{ignored} (of last flag)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (of last %{count} flags)"
         agreed:
           one: "%{count}% agree"
           other: "%{count}% agree"
@@ -565,6 +567,9 @@ en:
           other: "You have <strong>%{count}</strong> posts pending."
         ok: "OK"
       example_username: "username"
+      reject_reason:
+        title: "Why are you rejecting this user?"
+        send_email: "Send rejection email"
 
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -902,6 +907,20 @@ en:
         mute_option_title: "You will not receive any notifications related to this user."
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
+      notification_schedule:
+        title: "Notification Schedule"
+        label: "Enable custom notification schedule"
+        tip: "Outside of these hours you will be put in 'do not disturb' automatically."
+        midnight: "Midnight"
+        none: "None"
+        monday: "Monday"
+        tuesday: "Tuesday"
+        wednesday: "Wednesday"
+        thursday: "Thursday"
+        friday: "Friday"
+        saturday: "Saturday"
+        sunday: "Sunday"
+        to: "to"
       activity_stream: "Activity"
       preferences: "Preferences"
       feature_topic_on_profile:
@@ -931,7 +950,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable Notifications"
         enable: "Enable Notifications"
-        each_browser_note: "Note: You have to change this setting on every browser you use."
+        each_browser_note: 'Note: You have to change this setting on every browser you use. All notifications will be disabled when in "do not disturb", regardless of this setting.'
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
       dismiss_notifications: "Dismiss All"
@@ -946,7 +965,7 @@ en:
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
       color_schemes:
-        default_description: "Default"
+        default_description: "Theme default"
         disable_dark_scheme: "Same as regular"
         dark_instructions: "You can preview the dark mode color scheme by toggling your device's dark mode."
         undo: "Reset"
@@ -1792,8 +1811,6 @@ en:
     date_time_picker:
       from: From
       to: To
-      errors:
-        to_before_from: "To date must be later than from date."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -1829,7 +1846,6 @@ en:
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
-      blockquote_text: "Blockquote"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
@@ -1907,8 +1923,8 @@ en:
       link_dialog_title: "Insert Hyperlink"
       link_optional_text: "optional title"
       link_url_placeholder: "Paste a URL or type to search topics"
-      quote_title: "Blockquote"
-      quote_text: "Blockquote"
+      blockquote_title: "Blockquote"
+      blockquote_text: "Blockquote"
       code_title: "Preformatted text"
       code_text: "indent preformatted text by 4 spaces"
       paste_code_text: "type or paste code here"
@@ -1964,7 +1980,7 @@ en:
           label: "New Topic"
         shared_draft:
           label: "Shared Draft"
-          desc: "Draft a topic that will only be visible to staff"
+          desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
@@ -2104,6 +2120,7 @@ en:
       or_search_google: "Or try searching with Google instead:"
       search_google: "Try searching with Google instead:"
       search_google_button: "Google"
+      search_button: "Search"
 
       context:
         user: "Search posts by @%{username}"
@@ -2306,14 +2323,14 @@ en:
         UNREAD, plural,
         =0 {}
         one {
-        is <a href='{basePath}/unread'>1 unread</a>
+        is <a href='{basePath}/unread'># unread</a>
         } other {
         are <a href='{basePath}/unread'># unread</a>
         }
         } {
         NEW, plural,
         =0 {}
-        one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic}
+        one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'># new</a> topic}
         other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
         } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
@@ -2333,6 +2350,7 @@ en:
         select: "Users may only post in this topic once every:"
         description: "To promote thoughtful discussion in fast moving or contentious discussions, users must wait before posting again in this topic."
         save: "Enable"
+        enabled_until: "(Optional) Enabled until:"
         remove: "Disable"
         hours: "Hours:"
         minutes: "Minutes:"
@@ -2736,6 +2754,7 @@ en:
       has_replies:
         one: "%{count} Reply"
         other: "%{count} Replies"
+      has_replies_count: "%{count}"
 
       unknown_user: "(unknown/deleted user)"
       has_likes_title:
@@ -2746,6 +2765,15 @@ en:
       has_likes_title_you:
         one: "you and %{count} other person liked this post"
         other: "you and %{count} other people liked this post"
+
+      filtered_replies_hint:
+        one: "View this post and its reply"
+        other: "View this post and its %{count} replies"
+      filtered_replies_viewing:
+        one: "Viewing %{count} reply to"
+        other: "Viewing %{count} replies to"
+
+      in_reply_to: "Load parent post"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -2917,6 +2945,13 @@ en:
             name: "Edit bookmark"
             description: "Edit the bookmark name or change the reminder date and time"
 
+      filtered_replies:
+        viewing_posts_by: "Viewing %{post_count} posts by"
+        viewing_subset: "Some replies are collapsed"
+        viewing_summary: "Viewing a summary of this topic"
+        post_number: "%{username}, post #%{post_number}"
+        show_all: "Show all"
+
     category:
       can: "can&hellip; "
       none: "(no category)"
@@ -2974,10 +3009,10 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_has_access: "This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the \"everyone\" group."
+        everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
-        inherited: "This permission is inherited from \"everyone\""
+        inherited: 'This permission is inherited from "everyone"'
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -3063,6 +3098,7 @@ en:
       list_filters:
         all: "all topics"
         none: "no subcategories"
+      colors_disabled: "You can’t select colors because you have a category style of none."
 
     flagging:
       title: "Thanks for helping to keep our community civil!"
@@ -3083,7 +3119,7 @@ en:
       delete_spammer: "Delete Spammer"
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
-      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>#</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -3156,7 +3192,7 @@ en:
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
+      This topic has {count, plural, one {# reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
         med {with a very high like to post ratio}
         high {with an extremely high like to post ratio}
@@ -3503,7 +3539,7 @@ en:
     invite:
       custom_message: "Make your invite a little bit more personal by writing a <a href>custom message</a>."
       custom_message_placeholder: "Enter your custom message"
-      approval_not_required: "User will be auto-approved as soon as they will accept this invite."
+      approval_not_required: "User will be auto-approved as soon as they accept this invite."
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
@@ -3519,6 +3555,18 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     image_removed: "(image removed)"
+
+    do_not_disturb:
+      title: "Do not disturb for..."
+      label: "Do not disturb"
+      remaining: "%{remaining} remaining"
+      options:
+        half_hour: "30 minutes"
+        one_hour: "1 hour"
+        two_hours: "2 hours"
+        tomorrow: "Until tomorrow"
+        custom: "Custom"
+      set_schedule: "Set a notification schedule"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4058,6 +4106,7 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
+          duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -4406,6 +4455,7 @@ en:
             topic_unarchived: "topic unarchived"
             post_staff_note_create: "add staff note"
             post_staff_note_destroy: "destroy staff note"
+            delete_group: "delete group"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -4576,7 +4626,7 @@ en:
           description: "users with penalties cannot reach TL3"
 
         # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
-        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
+        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {# post} other {# posts}} and {TOPICS, plural, one {# topic} other {# topics}}. Are you sure?"
         silence: "Silence"
         unsilence: "Unsilence"
         silenced: "Silenced?"
@@ -4625,6 +4675,9 @@ en:
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
+        delete_posts:
+          progress:
+            title: "Progress of deleting posts"
         merge:
           button: "Merge"
           prompt:
@@ -4637,6 +4690,8 @@ en:
             target_username_placeholder: "Username of new owner"
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
+          progress:
+            title: "Merge progress"
           confirmation:
             title: "Transfer & Delete @%{username}"
             description: |
@@ -4789,6 +4844,8 @@ en:
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
+        locale: "Language:"
+        fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings
@@ -4888,6 +4945,7 @@ en:
         image: Image
         icon_help: "Enter a Font Awesome icon name (use prefix 'far-' for regular icons and 'fab-' for brand icons)"
         image_help: "Enter the URL of the image (overrides icon field if both are set)"
+        read_only_setting_help: "Customize text"
         query: Badge Query (SQL)
         target_posts: Query targets posts
         auto_revoke: Run revocation query daily

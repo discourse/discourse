@@ -588,11 +588,13 @@ class Plugin::Instance
 
       # Automatically include all ES6 JS and hbs files
       root_path = "#{root_dir_name}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js') if transpile_js
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{root_dir_name}/admin/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true) if transpile_js
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
@@ -857,6 +859,15 @@ class Plugin::Instance
         actions: actions,
         formats: formats
       ), self)
+  end
+
+  # Register a new demon process to be forked by the Unicorn master.
+  # The demon_class should inherit from Demon::Base.
+  # With great power comes great responsibility - this method should
+  # be used with extreme caution. See `config/unicorn.conf.rb`.
+  def register_demon_process(demon_class)
+    raise "Not a demon class" if !demon_class.ancestors.include?(Demon::Base)
+    DiscoursePluginRegistry.demon_processes << demon_class
   end
 
   protected

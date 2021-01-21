@@ -411,6 +411,7 @@ nl:
       topic: "Topic:"
       filtered_topic: "U hebt op beoordeelbare inhoud in één topic gefilterd."
       filtered_user: "Gebruiker"
+      filtered_reviewed_by: "Beoordeeld door"
       show_all_topics: "alle topics tonen"
       deleted_post: "(bericht verwijderd)"
       deleted_user: "(gebruiker verwijderd)"
@@ -422,9 +423,6 @@ nl:
         name: "Naam"
         fields: "Velden"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} totale markering)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} totale markeringen)"
         agreed:
           one: "%{count}% akkoord"
           other: "%{count}% akkoord"
@@ -868,7 +866,6 @@ nl:
         perm_denied_expl: "U hebt toestemming voor meldingen geweigerd. Sta meldingen toe via uw browserinstellingen."
         disable: "Meldingen uitschakelen"
         enable: "Meldingen inschakelen"
-        each_browser_note: "Opmerking: u moet deze instelling in elke browser die u gebruikt wijzigen."
         consent_prompt: "Wilt u livemeldingen ontvangen als mensen op uw berichten antwoorden?"
       dismiss: "Negeren"
       dismiss_notifications: "Alle verwijderen"
@@ -883,7 +880,6 @@ nl:
       color_scheme_default_on_all_devices: "Standaard kleurenschema(’s) op al mijn apparaten instellen"
       color_scheme: "Kleurenschema"
       color_schemes:
-        default_description: "Standaard"
         disable_dark_scheme: "Hetzelfde als normaal"
         dark_instructions: "U kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van uw apparaat om te schakelen."
         undo: "Terugzetten"
@@ -1296,6 +1292,7 @@ nl:
         link_redemption_stats: "Inwisselingen"
         link_groups: Groepen
         link_expires_at: Verloopt
+        create: "Uitnodigen"
         copy_link: "Koppeling tonen"
         generate_link: "Uitnodigingskoppeling maken"
         link_generated: "Hier is uw uitnodigingskoppeling!"
@@ -1626,6 +1623,12 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
+      plus_subcategories_title:
+        one: "%{name} en één subcategorie"
+        other: "%{name} en %{count} subcategorieën"
+      plus_subcategories:
+        one: "+ %{count} subcategorie"
+        other: "+ %{count} subcategorieën"
     select_kit:
       default_header_text: Selecteren...
       no_content: Geen overeenkomsten gevonden
@@ -1681,7 +1684,6 @@ nl:
       options: "Opties"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
-      blockquote_text: "Citaat"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluistermodus in-/uitschakelen"
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
@@ -1753,8 +1755,7 @@ nl:
       link_dialog_title: "Hyperlink invoegen"
       link_optional_text: "optionele titel"
       link_url_placeholder: "Plak een URL of typ om topics te zoeken"
-      quote_title: "Citaat"
-      quote_text: "Citaat"
+      blockquote_text: "Citaat"
       code_title: "Vooraf opgemaakte tekst"
       code_text: "vooraf opgemaakte tekst met 4 spaties laten inspringen"
       paste_code_text: "typ of plak hier code"
@@ -1808,7 +1809,7 @@ nl:
           label: "Nieuw topic"
         shared_draft:
           label: "Gedeeld concept"
-          desc: "Een concepttopic maken dat alleen zichtbaar is voor stafleden"
+          desc: "Een concepttopic maken dat alleen zichtbaar is voor toegestane gebruikers"
         toggle_topic_bump:
           label: "Topicbump in-/uitschakelen"
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
@@ -2130,7 +2131,6 @@ nl:
       read_more_in_category: "Wilt u meer lezen? U kunt door andere topics in %{catLink} bladeren, of de %{latestLink}."
       read_more: "Wilt u meer lezen? %{catLink} of %{latestLink}."
       unread_indicator: "Nog geen enkel lid heeft het laatste bericht van dit topic gelezen."
-      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle categorieën bekijken
       browse_all_tags: Alle tags bekijken
@@ -2541,6 +2541,7 @@ nl:
         no_save_draft: "Nee, concept opslaan"
         yes_value: "Ja, bewerking negeren"
       abandon:
+        title: "Concept afbreken"
         confirm: "Weet u zeker dat u uw bericht wilt afbreken?"
         no_value: "Nee, behouden"
         no_save_draft: "Nee, concept opslaan"
@@ -2727,6 +2728,17 @@ nl:
       change_in_category_topic: "Omschrijving wijzigen"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       security: "Beveiliging"
+      security_add_group: "Een groep toevoegen"
+      permissions:
+        group: "Groep"
+        see: "Bekijken"
+        reply: "Antwoorden"
+        create: "Aanmaken"
+        no_groups_selected: "Er is geen toegang tot groepen verleend; deze categorie is alleen zichtbaar voor stafleden."
+        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en aanmaken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
+        toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
+        toggle_full: "Toestemming Aanmaken in-/uitschakelen"
+        inherited: 'Deze toestemming is overgenomen van ''iedereen'''
       special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan geen beveiligingsinstellingen bevatten."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij is bedoeld als de standaardcategorie voor nieuwe topics die geen selecteerde categorie hebben. Als u dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als u de naam of omschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
@@ -2829,7 +2841,6 @@ nl:
       notify_action: "Bericht"
       official_warning: "Officiële waarschuwing"
       delete_spammer: "Spammer verwijderen"
-      delete_confirm_MF: "U gaat {POSTS, plural, one {<b>1</b> bericht} other {<b>#</b> berichten}} en {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} van deze gebruiker verwijderen, zijn/haar account verwijderen, nieuwe registraties vanaf het IP-adres <b>{ip_address}</b> blokkeren en het e-mailadres <b>{email}</b> op een permanente blokkeerlijst zetten. Weet u zeker dat deze gebruiker een spammer is?"
       yes_delete_spammer: "Ja, spammer verwijderen"
       ip_address_missing: "(N.v.t.)"
       hidden_email_address: "(verborgen)"
@@ -2896,12 +2907,6 @@ nl:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
     posts: "Berichten"
-    posts_likes_MF: |
-      Dit topic heeft {count, plural, one {1 antwoord} other {# antwoorden}} {ratio, select,
-      low {met een hoge verhouding likes per bericht}
-      med {met een erg hoge verhouding likes per bericht}
-      high {met een zeer hoge verhouding likes per bericht}
-      other {}}
     original_post: "Oorspronkelijke bericht"
     views: "Weergaven"
     views_lowercase:
@@ -3231,7 +3236,6 @@ nl:
     invite:
       custom_message: "Maak uw uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer uw eigen bericht in"
-      approval_not_required: "Gebruiker wordt automatisch goedgekeurd zodra hij of zij deze uitnodiging accepteert."
       custom_message_template_forum: "Hee, u zou aan dit forum moeten deelnemen!"
       custom_message_template_topic: "Hee, dit topic lijkt me wel iets voor u!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."
@@ -3465,6 +3469,12 @@ nl:
               sync_sso: Een gebruiker synchroniseren via SSO.
               show: Informatie over een gebruiker verkrijgen.
               check_emails: E-mailadressen van gebruiker weergeven.
+              update: Gebruikersprofielgegevens bijwerken.
+              log_out: Alle sessies voor een gebruiker afmelden.
+              anonymize: Gebruikersaccounts anonimiseren.
+              delete: Gebruikersaccounts verwijderen.
+            email:
+              receive_emails: Deze scope met de e-mailontvanger combineren om inkomende e-mails te verwerken.
       web_hooks:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
@@ -3704,6 +3714,7 @@ nl:
           is_default: "Thema is standaard ingeschakeld"
           user_selectable: "Thema kan door gebruikers worden geselecteerd"
           color_scheme_user_selectable: "Kleurenschema kan door gebruikers worden geselecteerd"
+          auto_update: "Automatisch bijwerken wanneer Discourse wordt bijgewerkt"
           color_scheme: "Kleurenpalet"
           default_light_scheme: "Licht (standaard)"
           color_scheme_select: "Kleuren die door thema worden gebruikt selecteren"
@@ -3777,6 +3788,7 @@ nl:
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
+          has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
           theme_settings: "Thema-instellingen"
           no_settings: "Dit thema heeft geen instellingen."
@@ -4261,7 +4273,6 @@ nl:
         clear_penalty_history:
           title: "Minpuntengeschiedenis wissen"
           description: "gebruikers met minpunten kunnen geen TL3 bereiken"
-        delete_all_posts_confirm_MF: "U gaat {POSTS, plural, one {1 bericht} other {# berichten}} en {TOPICS, plural, one {1 topic} other {# topics}} verwijderen. Weet u het zeker?"
         silence: "Dempen"
         unsilence: "Dempen opheffen"
         silenced: "Gedempt?"
@@ -4470,6 +4481,7 @@ nl:
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"
+        history: "Wijzigingsoverzicht bekijken"
         reset: "terugzetten"
         none: "geen"
       site_settings:

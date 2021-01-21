@@ -651,7 +651,6 @@ sk:
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
-        each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
       dismiss_notifications: "Zahodiť všetko"
@@ -1202,7 +1201,6 @@ sk:
       more_emoji: "viac ..."
       options: "Možnosti"
       whisper: "šepot"
-      blockquote_text: "Úvodzovky"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
@@ -1249,8 +1247,7 @@ sk:
       link_description: "tu zadaj popis odkazu"
       link_dialog_title: "Vložte hyperlink"
       link_optional_text: "nepovinný názov"
-      quote_title: "Úvodzovky"
-      quote_text: "Úvodzovky"
+      blockquote_text: "Úvodzovky"
       code_title: "Preformátovaný text"
       code_text: "Odsaďte preformátovaný text 4 medzerami"
       paste_code_text: "sem zadajte alebo vložte kód"
@@ -1467,7 +1464,6 @@ sk:
       toggle_information: "zmeniť detaily témy"
       read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v %{catLink} alebo v %{latestLink}."
       read_more: "Chcete si prečítať viac? %{catLink} alebo v %{latestLink}."
-      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
       jump_reply_up: prejsť na predchádzajúcu odpoveď
@@ -1972,17 +1968,6 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
-    posts_likes_MF: |2
-
-      Táto téma obsahuje {count, plural, one {1 odpoveď} other {# odpovedí}} {ratio, select,
-
-      low {s vysokým pomerom "Páči sa" na príspevok}
-
-      med {s veľmi vysokým pomerom "Páči sa" na príspevok}
-
-      high {s extrémne vysokým pomerom "Páči sa" na príspevok}
-
-      other {}}
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:

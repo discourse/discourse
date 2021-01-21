@@ -374,9 +374,6 @@ hu:
         name: "Név"
         fields: "Mezők"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (összesen %{count} megjelölés)"
         agreed:
           one: "%{count}% egyetért"
           other: "%{count}% egyetért"
@@ -775,7 +772,6 @@ hu:
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         disable: "Értesítések kikapcsolása"
         enable: "Értesítések bekapcsolása"
-        each_browser_note: "Megjegyzés: Minden használt böngészőben be kell állítania ezt a beállítást."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
       dismiss_notifications: "Összes elvetése"
@@ -1384,7 +1380,6 @@ hu:
       options: "Beállítások"
       whisper: "suttogás"
       unlist: "nem listázott"
-      blockquote_text: "idézetblokk"
       add_warning: "Ez egy hivatalos figyelmeztetés."
       posting_not_on_topic: "Melyik témakörre szeretnél válaszolni?"
       saved_local_draft_tip: "helyi mentés készült"
@@ -1438,8 +1433,7 @@ hu:
       link_description: "itt add meg a link leírását"
       link_dialog_title: "Hiperhivatkozás beszúrása"
       link_optional_text: "alternatív cím"
-      quote_title: "Idézet"
-      quote_text: "Idézet"
+      blockquote_text: "idézetblokk"
       code_title: "Előformázott szöveg"
       code_text: "az előformázott szöveget 4 szóközzel beljebb kezdi"
       paste_code_text: "Írd vagy másold be a kódot ide"
@@ -1474,7 +1468,6 @@ hu:
           label: "Új téma"
         shared_draft:
           label: "Megsztott vázlat"
-          desc: "Csak olyan témákat soroljon be amik csak a személyzet által láthatóak"
     notifications:
       tooltip:
         regular:
@@ -1669,7 +1662,6 @@ hu:
       toggle_information: "témakör részleteinek megjelenítése vagy elrejtése"
       read_more_in_category: "Szeretnél még többet olvasni? Nézz meg más témakat itt, %{catLink} vagy itt: %{latestLink}."
       read_more: "Szeretnél mégtöbbet olvasni? %{catLink} vagy %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Böngéssz a kategóriák között
       view_latest_topics: legújabb témák megtekintése
       jump_reply_up: ugrás régebbi válaszhoz
@@ -2348,6 +2340,16 @@ hu:
       dismiss: "Elvet"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
+    do_not_disturb:
+      title: "Ne zavarjanak..."
+      label: "Ne zavarjanak"
+      remaining: "%{remaining} van hátra"
+      options:
+        half_hour: "30 percig"
+        one_hour: "1 óráig"
+        two_hours: "2 óráig"
+        tomorrow: "Holnapig"
+        custom: "Egyéni"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

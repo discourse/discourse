@@ -333,8 +333,6 @@ zh_TW:
         name: "名稱"
         fields: "欄位"
       user_percentage:
-        summary:
-          other: "%{agreed}, %{disagreed}, %{ignored} (共%{count}則檢舉)"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -692,7 +690,6 @@ zh_TW:
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         disable: "停用通知"
         enable: "啟用通知"
-        each_browser_note: "注意：你必須在你使用的所用瀏覽器中更改這個設定。"
         consent_prompt: "當別人回覆您的貼文時，您想要收到即時通知嗎？"
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
@@ -1317,7 +1314,6 @@ zh_TW:
       options: "選項"
       whisper: "密談"
       unlist: "不公開"
-      blockquote_text: "塊引用"
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
@@ -1377,8 +1373,7 @@ zh_TW:
       link_description: "在此輸入超連結的描述"
       link_dialog_title: "插入超連結"
       link_optional_text: "標題 (可選填)"
-      quote_title: "引用"
-      quote_text: "引用"
+      blockquote_text: "塊引用"
       code_title: "預先格式化文字"
       code_text: "以 4 格空白將文字縮排"
       paste_code_text: "輸入或貼上代碼"
@@ -1423,7 +1418,6 @@ zh_TW:
           label: "新增話題"
         shared_draft:
           label: "共享草稿"
-          desc: "建立只有管理員可見的話題草稿"
         toggle_topic_bump:
           label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
@@ -1664,7 +1658,6 @@ zh_TW:
       toggle_information: "切換話題詳情"
       read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
       read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
-      read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 個未讀的話題</a>} other { <a href='{basePath}/unread'># 個未讀的話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 個新</a>的話題} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 個最近</a>的話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的貼文
       jump_reply_up: 跳到更早的回覆
@@ -2232,7 +2225,6 @@ zh_TW:
       notify_action: "訊息"
       official_warning: "正式警告"
       delete_spammer: "刪除垃圾貼文發送者"
-      delete_confirm_MF: "你將刪除該使用者的{POSTS, plural, one {<b>1</b>個貼文} other {<b>#</b>個貼文}} and {TOPICS, plural, one {<b>1</b>個話題} other {<b>#</b>個話題}}、該帳號，並阻止其IP地址 <b>%{ip_address}</b> 再次註冊，並將其郵件地址 <b>%{email}</b> 加入黑名單。你確定這使用者是廣告散佈者嗎？"
       yes_delete_spammer: "是的，刪除垃圾貼文發送者"
       ip_address_missing: "(N/A)"
       hidden_email_address: "( 隱藏) "
@@ -2291,12 +2283,6 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
@@ -3414,7 +3400,6 @@ zh_TW:
         clear_penalty_history:
           title: "清除違規紀錄"
           description: "有違規紀錄的使用者無法抵達 TL3"
-        delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個貼文} other {# 個貼文}}和 {TOPICS, plural, one {1 個話題} other {# 個話題}}。確定嗎？"
         silence: "靜音"
         unsilence: "取消靜音"
         silenced: "靜音？"

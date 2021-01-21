@@ -1,11 +1,11 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("New Topic - Anonymous", function () {
   test("accessing new-topic route when logged out", async function (assert) {

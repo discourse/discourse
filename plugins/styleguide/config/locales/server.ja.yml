@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-ja: 
+ja:
+  site_settings:
+    styleguide_enabled: "`/styleguide` のパスを有効にして、Discourseのスタイリングに役立てる"
+    styleguide_admin_only: "styleguide の表示を管理者に制限する"

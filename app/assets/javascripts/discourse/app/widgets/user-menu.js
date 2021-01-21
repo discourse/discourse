@@ -1,6 +1,6 @@
-import { later } from "@ember/runloop";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { later } from "@ember/runloop";
 
 const UserMenuAction = {
   QUICK_ACCESS: "quickAccess",
@@ -31,6 +31,7 @@ createWidget("user-menu-links", {
       href: `${this.attrs.path}/summary`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.PROFILE,
+      "aria-label": "user.preferences",
     };
   },
 
@@ -42,6 +43,7 @@ createWidget("user-menu-links", {
       href: `${this.attrs.path}/notifications`,
       action: UserMenuAction.QUICK_ACCESS,
       actionParam: QuickAccess.NOTIFICATIONS,
+      "aria-label": "user.notifications",
     };
   },
 
@@ -53,6 +55,7 @@ createWidget("user-menu-links", {
       className: "user-bookmarks-link",
       icon: "bookmark",
       href: `${this.attrs.path}/activity/bookmarks`,
+      "aria-label": "user.bookmarks",
     };
   },
 
@@ -64,6 +67,7 @@ createWidget("user-menu-links", {
       className: "user-pms-link",
       icon: "envelope",
       href: `${this.attrs.path}/messages`,
+      "aria-label": "user.private_messages",
     };
   },
 

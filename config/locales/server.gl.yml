@@ -39,6 +39,7 @@ gl:
   title: "Discourse"
   topics: "Temas"
   posts: "publicacións"
+  views: "Visualizacións"
   loading: "Cargando"
   powered_by_html: 'Con tecnoloxía de <a href="https://www.discourse.org">Discourse</a>, vese mellor con Java habilitado'
   sign_up: "Rexistrarse"
@@ -50,12 +51,16 @@ gl:
   remove_posts_deleted_by_author: "Eliminada polo autor"
   redirect_warning: "Non puidemos verificar que a ligazón que seleccionaches está publicada agora mesmo no foro. Se queres continuar igualmente, selecciona a seguinte ligazón."
   on_another_topic: "Noutro tema"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   themes:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Algo foi mal ao actualizar o tema"
     compile_error:
       unrecognized_extension: "Extensión de ficheiro non recoñecida: %{extension}"
     import_error:
+      generic: Produciuse un erro ao importar este tema
       about_json: "Erro importante: about.json non existe ou non é válido. Seguro que este é un tema de Discourse?"
       about_json_values: "about.json contén valores non válidos: %{errors}"
       modifier_values: "os modificadores about.json coteñen valores non válidos: %{errors}"
@@ -139,6 +144,9 @@ gl:
       inclusion: no está incluído na listaxe
       invalid: non é válido
       is_invalid: "parece pouco claro, é unha oración completa?"
+      is_invalid_meaningful: "parece pouco claro, a maioría das palabras conteñen as mesmas letras unha e outra vez?"
+      is_invalid_unpretentious: "parece pouco claro, unha ou máis palabras é moi longa?"
+      is_invalid_quiet: "Parece pouco claro, quería escribilo con TODAS MAIÚSCULAS?"
       invalid_timezone: "'%{tz}' non é un fuso horario válido"
       contains_censored_words: "contén as seguintes palabras censuradas: %{censored_words}"
       less_than: debe ser menor que %{count}
@@ -180,29 +188,59 @@ gl:
       default_tags_already_selected: "Non podes seleccionar unha etiqueta utilizada noutra listaxe."
       s3_upload_bucket_is_required: "Non se poden activar as cargas a S3 a menos que proporciones un valor 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Non podes activar o inventario en S3 a menos que actives as cargas en S3."
+      page_publishing_requirements: "A publicación de páxinas non se pode activar se está activado o aseguramento multimedia."
       s3_backup_requires_s3_settings: "Non podes utilizar S3 como localización da copia de seguranza a menos que proporcionaras '%{setting_name}'."
       s3_bucket_reused: "Non podes utilizar o mesmo depósito (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixe un depósito diferente ou utiliza un camiño distinto para cada un deles."
       secure_media_requirements: "Débese habilitar a carga de S3 antes de habilitar medios seguros."
+      share_quote_facebook_requirements: "Debes definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
+      second_factor_cannot_enforce_with_socials: "Non pode forzar 2FA tendo o activo o inicio de sesión con redes sociais. Primeiro debe desactivar o inicio de sesión con: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non podes aplicar 2FA se os inicios de sesión locais estás deshabilitados."
+      second_factor_cannot_be_enforced_with_sso_enabled: "Non pode forzar 2FA se SSO está activado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non podes deshabilitar o inicio de sesión local se se aplica 2FA. Deshabilita 2FA antes de deshabilitar os inicios de sesión locais."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non podes habilitar as cargas S3 porque xa están habilitadas globalmente e habilitar este nivel de sitio podería provocar problemas críticos coas cargas."
-    conflicting_google_user_id: 'A ID de Google para esta conta cambiou; requírese a intervención do equipo por razóns de seguridade. Contacta con el e envíalle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+      cors_origins_should_not_have_trailing_slash: "Non debe engadir a barra final (/) ás orixes de CORS."
+    conflicting_google_user_id: 'O ID da conta de Google desta conta cambiou; requírese a intervención do grupo por razóns de seguranza. Contacte con el e envíelle esta referencia <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Sentímolo, non se puido xerar unha visualización desta páxina web porque non se puido atopar o servidor «%{hostname}». En lugar dunha visualización previa, só aparecerá unha ligazón na súa publicación. :cry:"
+      error_response: "Sentímolo, non se puido xerar unha visualización desta páxina web porque o servidor devolveu un código de erro %{status_code}. En lugar dunha visualización previa, só aparecerá unha ligazón na súa publicación. :cry:"
+      missing_data:
+        one: "Sentímolo, non se puido xerar unha visualización desta páxina web porque a seguinte etiqueta oEmbed / OpenGraph non se puido atopar: %{missing_attributes}"
+        other: "Sentímolo, non se puido xerar unha visualización desta páxina web porque as seguintes etiquetas oEmbed / OpenGraph non se puideron atopar: %{missing_attributes}."
+  word_connector:
+    comma: ", "
   invite:
+    expired: "O seu token de convidado expirou. <a href='%{base_url}/about'>Contacte co grupo</a>."
     not_found: "O teu código de invitación non é válido. <a href='%{base_url}/about'>Contacta co noso equipo</a>."
     not_found_json: "O teu  código de invitación non é válido. Contacta co noso equipo."
+    not_found_template: |
+      <p>O seu convite a<a href="%{base_url}">%{site_name}</a>xa foi devolto</p>
+
+      <p>Se lembra o seu contrasinal, pode<a href="%{base_url}/login">iniciar sesión</a></p>
+
+      <p>Caso contrario, <a href="%{base_url}/password-reset">restabeleza o contrasinal</a></p>
     error_message: "Houbo un erro ao aceptar a invitación. Contacta co administrador do sitio."
     user_exists: "Non necesitas invitar a <b>%{email}</b>, pois <a href='%{base_path}/u/%{username}/summary'>xa teñen unha conta!</a>"
     confirm_email: "<p>Xa case está! Enviámosche un correo de activación ao teu enderezo electrónico. Sigue as instrucións para activar a túa conta.</p><p>Se non che chega, comprobar o cartafol de correo lixo.</p>"
     cant_invite_to_group: "Non tes permitido convidar a usuarios a grupo(s) específico(s). Asegúrate de seres o propietario do(s) grupo(s) ao que estás tentando convidar."
+    disabled_errors:
+      sso_enabled: "Os convites están desactivados porque está activado SSO."
+      local_logins_disabled: "Os convites están desactivados porque está desactivado axuste «activar inicio de sesión local»."
+      invalid_access: "Non ten permiso para ver o recurso solicitado."
   bulk_invite:
     file_should_be_csv: "O ficheiro cargado debe ter o formato CSV."
     max_rows: "As primeiras %{max_bulk_invites} invitacións xa foron enviadas. Tenta dividir o ficheiro en partes máis pequenas."
     error: "Houbo un erro ao cargar o ficheiro. Téntao máis tarde."
   invite_link:
+    email_taken: "Este enderezo de correo xa está en uso. Se xa ten unha conta, inicie sesión ou restabeleza o contrasinal."
     max_redemptions_limit: "debería estar entre 2 e %{max_limit}."
   topic_invite:
     failed_to_invite: "O usuario non pode ser invitado a este tema por non ser membro de ningún destes grupos: %{group_names}."
     user_exists: "Este usuario xa foi invitado. Só se pode invitar a un usuario a un tema unha única vez."
+    muted_invitee: "Sentímolo, ese usuario silenciouno."
+    muted_topic: "Sentímolo, ese usuario silenciou este tema."
+    receiver_does_not_allow_pm: "Sentímolo, ese usuario non lle permite enviarlles mensaxes privadas."
+    sender_does_not_allow_pm: "Sentímolo, vostede non permite que ese usuario lle envíe mensaxes privadas."
+    receiver_does_not_allow_other_user_pm: "Sentímolo, ese usuario non permite que un participante existente lles envíe mensaxes privadas."
   backup:
     operation_already_running: "Estase a executar unha operación. Nestes intres non se pode iniciar un novo traballo."
     backup_file_should_be_tar_gz: "O ficheiro da copia de seguranza debe ter formato .tar.gz."
@@ -225,6 +263,7 @@ gl:
   email_template_cant_be_modified: "Este modelo de correo electrónico non pode ser modificado."
   invalid_whisper_access: "Ou bisbar non está habilitado ou non o tes permitido facer."
   not_in_group:
+    title_topic: "Debe solicitar a incorporación ao grupo «%{group}» para ver este tema."
     title_category: "Debes estar no grupo para ver esta categoría."
     request_membership: "Solicitar ser membro"
     join_group: "Unirse ao grupo"
@@ -296,6 +335,7 @@ gl:
   removed_direct_reply_full_quotes: "Cita de toda a publicación anterior eliminada automaticamente"
   secure_upload_not_allowed_in_public_topic: "Sentímolo, a(s) seguinte(s) carga(s) non pode(n) ser utilizada(s) nun tema público: %{upload_filenames}."
   create_pm_on_existing_topic: "Sentímolo, non podes crear unha mensaxe privada nun tema existente."
+  slow_mode_enabled: "Este tema está en modo lento."
   just_posted_that: "é moi semellante ao que xa publicaches recentemente."
   invalid_characters: "contén caracteres non válidos"
   is_invalid: "parece pouco claro, é unha oración completa?"
@@ -334,6 +374,7 @@ gl:
   too_late_to_edit: "Esta publicación é de hai moito tempo. Xa non se pode modificar nin eliminar."
   edit_conflict: "Esta publicación foi editada por outro usuario e os teus cambios non se poden gardar."
   revert_version_same: "A versión actual é a mesma que a versión á que tentas volver."
+  cannot_edit_on_slow_mode: "Este tema está en modo lento. Para fomentar un debate reflexivo e considerado, actualmente non está permitido editar publicacións antigas."
   excerpt_image: "imaxe"
   bookmarks:
     errors:
@@ -388,25 +429,25 @@ gl:
       one: "%{count} publicación"
       other: "%{count} publicacións"
     "new-topic": |
-      Benvido/a a %{site_name} &mdash; **grazas por iniciares unha nova conversa!**
+      Dámoslle a benvida a %{site_name} &mdash; , **grazas por iniciar unha nova conversa!**
 
-      - Se o les en voz alta, soa ben o seu título? É un bo resumo do que trata?
+      - Soa ben o seu título, se o le en voz alta? É un bo resumo do que trata?
 
-      - Quen terá interese por ler isto? Por que é importante? A que tipo de respostas queres dar pé?
+      - A quen lle interesaría ler isto? Por que é importante? A que tipo de respostas quere dar pé?
 
-      - Inclúe palabras de uso frecuente no teu tema para facilitar que poida ser atopado. Para agrupalo con outros temas relacionados, selecciona unha categoría.
+      - Inclúa palabras de uso frecuente no seu tema para facilitar que poida ser *atopado*. Para agrupalo con outros temas relacionados, seleccione unha categoría (ou etiqueta).
 
-      Para máis información, [visita as directrices da nosa comunidade](%{base_path}/directrices). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
+      Para saber máis, [visite as normas da nosa comunidade](%{base_path}/guidelines). Este panel só lle aparecerá na primeira conversa %{education_posts_text}.
     "new-reply": |
-      Benvido/a a %{site_name} &mdash; **grazas pola túa contribución!**
+      Dámoslle a benvida a %{site_name} &mdash; **grazas por contribuír!**
 
-      - Dalgún xeito a túa resposta mellora a conversa?
+      - Sexa amábel cos colegas membros da comunidade.
 
-      - Sé amable cos demais membros da comunidade.
+      - A súa resposta mellora a conversa?
 
-      - A crítica construtiva é benvida, mais lembra criticar as ideas non as persoas.
+      - A crítica construtiva é benvida pero critique as *ideas*, non as persoas.
 
-      Para máis información, [visita as directrices da nosa comunidade](%{base_path}/directrices). Este panel só aparecerá nas túas %{education_posts_text} primeiras publicacións.
+      Para saber máis, [consulte as nosas normas da comunidade] (%{base_path}/guidelines). Este panel só lle aparecerá nas súas primieras conversas %{education_posts_text}.
     avatar: |
       ### Que tal se lle engades unha imaxe á túa conta?
 
@@ -429,6 +470,14 @@ gl:
       Parece claro que este tema che importa &ndash; publicaches máis do %{percent}% das respostas.
 
       Aínda podería ser mellor se lles deses espazo a outras persoas para compartiren o seu punto de vista. Que tal se as convidas?
+    get_a_room: |
+      ###Anime a todos a participar na conversa
+
+      Respondeu %{count} veces a @%{reply_username} neste tema en particular!
+
+      Unha gran discusión inclúe moitas voces e perspectivas. Pode atraer a alguén máis?
+
+      E non o esqueza, se quere continuar a conversa en extenso con este usuario en particular fóra da vista pública, [envíelle unha mensaxe persoal] (%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Alcanzaches o límite de respostas para este tema.
 
@@ -465,6 +514,7 @@ gl:
               reply_by_email_disabled: "A resposta vía correo electrónico está deshabilitada."
               target_user_not_found: "Non se atopou a un dos usuarios aos que lles envías esta mensaxe."
               unable_to_update: "Produciuse un erro ao actualizar este tema."
+              unable_to_tag: "Produciuse un erro etiquetando o tema."
             featured_link:
               invalid: "non é válido. Un URL debe incluír http:// or https://."
               invalid_category: "non se pode editar nesta categoría."
@@ -501,7 +551,7 @@ gl:
         web_hook:
           attributes:
             payload_url:
-              invalid: "O URL non é válido; debería incluír http:// or https://. Non está permitido ningún espazo en branco."
+              invalid: "O URL non é válido. O URL debería incluír http:// ou https://. Non está permitido ningún espazo en branco."
         custom_emoji:
           attributes:
             name:
@@ -548,21 +598,21 @@ gl:
 
       Parabéns! :confetti_ball:
 
-      Se podes ver este tema é porque fuches promovido recentemente a usuario **habitual** (nivel de confianza 3).
+      Se pode ver este tema é porque foi promovido recentemente a usuario **habitual** (nivel de confianza 3).
 
-      Agora podes &hellip;
+      Agora pode &hellip;
 
       * Editar o título de calquera tema
       * Cambiar a categoría de calquera tema
-      * As túas ligazóns ([deixarán automaticamente de levar a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
-      * Acceder á categoría privada Sala VIP só visible para usuarios cun nivel de confianza 3 ou superior
-      * Agochar o correo elixo cunha soa denuncia
+      * As súas ligazóns serán fiábeis (retirarase [a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
+      * Acceder á categoría privada Sala VIP só visíbel para usuarios cun nivel de confianza 3 ou superior
+      * Agochar o lixo cunha soa alerta
 
-      Consulta aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrate de saudares.
+      Consulte aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrese de saudar.
 
-      Grazas por seres parte importante da comunidade!
+      Grazas por ser parte importante da comunidade!
 
-      (Para máis información sobre os niveis de confianza, [mira este tema][trust]. Repara en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
+      (Para máis información sobre os niveis de confianza, [mire este tema][trust]. Repare en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LER PRIMEIRO: Guía rápida de inicio para administradores"
@@ -802,7 +852,7 @@ gl:
     inappropriate:
       title: "Inapropiado"
       description: 'Esta publicación ten contido que unha persoa razoable podería considerar ofensivo, abusivo ou supor unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>.'
-      short_description: 'Unha violación das<a href="%{base_path}/guidelines">directrices da nosa comunidade</a> '
+      short_description: 'Unha violación das <a href="%{base_path}/guidelines">normas da nosa comunidade</a>'
     notify_user:
       title: "Enviar unha mensaxe a @%{username}"
       description: "Quero falar con esta persoa directa e persoalmente acerca da súa publicación."
@@ -836,6 +886,7 @@ gl:
       others: "Sen actividade."
     no_bookmarks:
       self: "Non tes publicacións engadidas aos marcadores; os marcadores permítenche volver rapidamente sobre publicacións específicas."
+      search: "Non se atoparon marcadores coa busca fornecida."
       others: "Sen marcadores"
     no_likes_given:
       self: "Non lle deches Gústame a ningunha publicación."
@@ -870,7 +921,7 @@ gl:
       title: "Inapropiado"
       description: 'Este tema ten contido que unha persoa razoable podería considerar ofensivo, abusivo ou supor unha violación das <a href="%{base_path}/guidelines">directrices da nosa comunidade</a>.'
       long_form: "denunciou isto como inapropiado"
-      short_description: 'Unha violación das<a href="%{base_path}/guidelines">directrices da nosa comunidade</a> '
+      short_description: 'Unha violación das <a href="%{base_path}/guidelines">normas da nosa comunidade</a>'
     notify_moderators:
       title: "Algo máis"
       description: 'Este tema require da atención do equipo con base nas <a href="%{base_path}/guidelines">directrices</a>, <a href="%{tos_url}">os termos de servizo</a> ou por calquera outro motivo non listado enriba.'
@@ -904,9 +955,9 @@ gl:
     mute_topic: "Silenciar todas as notificacións para este tema, %{link}"
     unwatch_category: "Deixar de seguir todos os temas en %{category}"
     mailing_list_mode: "Desactivar o modo de lista de correo"
-    all: "Non enviarme ningún correo electrónico de %{sitename}"
+    all: "Non me envíe ningún correo electrónico de %{sitename}"
     different_user_description: "Actualmente tes a sesión iniciada cun usuario diferente ao que lle enviamos un correo electrónico. Sae, ou entra en modo anónimo, e vólveo tentar."
-    not_found_description: "Non puidemos atopar a cancelación da subscrición. É posible que caducase a ligazón do teu correo electrónico xa caducase?"
+    not_found_description: "Non puidemos atopar a desubscrición. É posíbel que a ligazón do seu correo electrónico sexa vella de máis ou xa expirase?"
     log_out: "Saír da sesión"
     submit: "Gardar preferencias"
     digest_frequency:
@@ -942,6 +993,7 @@ gl:
       read: "Ler todo"
       write: "Escribir todo"
       one_time_password: "Crear un código de inicio de sesión dun só uso"
+      bookmarks_calendar: "Ler recordatorios de marcadores"
     invalid_public_key: "Sentímolo, a chave pública non é válida"
     invalid_auth_redirect: "Sentímolo, este host auth_redirect host non está permitido."
     invalid_token: "Código non válido, caducado ou ausente."
@@ -967,6 +1019,8 @@ gl:
       title: "Porcentaxe de denuncias do usuario"
       labels:
         user: Usuario
+        agreed_flags: Alertas acordadas
+        disagreed_flags: Alertas en desacordo
         ignored_flags: Denuncias ignoradas
         score: Puntuación
       description: "Listaxe de usuarios ordenada segundo a porcentaxe de respostas ás súas por parte do equipo (en desacordo ou en acordo)."
@@ -984,6 +1038,8 @@ gl:
     flags_status:
       title: "Estado das denuncias"
       values:
+        agreed: De acordo
+        disagreed: En desacordo
         deferred: Descartadas
         no_action: Sen acción
       labels:
@@ -1253,6 +1309,7 @@ gl:
         login_at: Inicio de sesión ás
       description: "Listaxe de inicios de sesión dos administradores coa súa localización."
     top_uploads:
+      title: "Cargas importantes"
       labels:
         filename: Nome do ficheiro
         extension: Extensión
@@ -1268,28 +1325,33 @@ gl:
       description: "Usuarios que foron silenciados e/ou ignorados por moitos outros usuarios."
   dashboard:
     rails_env_warning: "O teu servidor está a executarse en modo %{env}."
-    host_names_warning: "O teu ficheiro config/database.yml file está a usar o nome do servidor localhost predefinido. Actualízao para utilizar o nome do servidor do teu sitio."
-    sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, caso do envío de correos electrónicos, están a ser realizadas de forma asíncrona por sidekiq. Asegúrate de que, ao menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprende máis sobre Sidekiq aquí</a>.'
+    host_names_warning: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
+    sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, caso do envío de correos electrónicos, están a ser realizadas de forma asíncrona por sidekiq. Asegúrese de que, cando menos un proceso de sidekiq está en execución. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda máis sobre Sidekiq aquí</a>.'
     queue_size_warning: "O número de tarefas na cola é %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou tes que engadir máis traballadores de Sidekiq."
     memory_warning: "O teu servidor estase a executar con menos de 1 GB da memoria total. Recoméndase ao menos unha memoria de 1 GB."
+    google_oauth2_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Google OAuth2 (enable_google_oauth2_logins) pero o id do cliente e os valores do segredo de cliente non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte esta guía para saber máis</a>.'
+    facebook_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Facebook (enable_facebook_logins) pero o id da aplicación e os segredos da aplicación non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulte esta guía para saber máis</a>.'
+    twitter_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Twitter (enable_twitter_logins), pero a clave e o segredo non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulte esta guía para saber máis</a>.'
+    github_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
     s3_config_warning: 'O servidor está configurado para subir ficheiros a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
     s3_backup_config_warning: 'O servidor está configurado para subir copias de seguranza a S3, pero ao menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vai a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualiza a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa esta guía para saber máis</a>.'
-    image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instálao utilizando o teu administrador de paquetes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descarga a última versión</a>.'
-    failing_emails_warning: 'Hai %{num_failed_jobs} tarefas de correo electrónico que fallaron. Comproba o teu app.yml e asegúrate de que os axustes do servidor de correo son correctos. <a href="%{base_path}/sidekiq/retries" target="_blank">Mira as tarefas que fallaron en Sidekiq</a>.'
+    s3_cdn_warning: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
+    image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instáleo utilizando o administrador de paquetes que lle guste ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descargue a última versión</a>.'
+    failing_emails_warning: 'Hai %{num_failed_jobs} procesos de correo electrónico que fallaron. Comprobe o seu app.yml e asegúrese de que a configuración do servidor de correo é correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Revise os procesos que fallaron en Sidekiq</a>.'
     subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
     email_polling_errored_recently:
-      one: "A sondaxe do correo electrónico xerou  un erro nas últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
-      other: "A sondaxe do correo electrónico xerou %{count} erros nas últimas 24 horas. Revisa <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
+      one: "A recollida do correo electrónico xerou un erro nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
+      other: "A recollida do correo electrónico xerou %{count} erros nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
     missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionaches unha chave API que se utiliza para verificar as mensaxes de webhook."
-    bad_favicon_url: "Erro ao cargar a favicona. Comproba a súa configuración en <a href='%{base_path}/admin/site_settings'>Axustes do sitio</a>."
-    deprecated_api_usage: "Detectamos unha solicitude de API utilizando un método de autenticación obsoleto. Actualíceo para utilizar unha autenticación <a href='https://meta.discourse.org/t/-/22706'>baseada nunha cabeceira</a>. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer. "
-    update_mail_receiver: "Detectamos unha versión desactualizada do receptor de correo. Preme <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para actualizar as instrucións. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
+    bad_favicon_url: "Erro ao cargar favicon. Comprobe a configuración sobre favicon en <a href='%{base_path}/admin/site_settings'>Configuración do sitio</a>."
+    deprecated_api_usage: "Detéctase unha consulta de API utilizando un método de autenticación obsoleto. Actualíceo para utilizar <a href='https://meta.discourse.org/t/-/22706'>autenticación baseada nunha cabeceira</a>. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
+    update_mail_receiver: "Detéctase unha versión desactualizada do receptor de correo. Prema <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para actualizar as instrucións. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
     poll_pop3_timeout: "A conexión ao servidor POP3 está a superar o tempo de espera. Non se puido recuperar o correo electrónico entrante. Comproba os teus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a> e o provedor do servizo."
     poll_pop3_auth_error: "A conexión ao servidor POP3 está a fallar por un erro na autenticación. Comproba os teus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a>."
     force_https_warning: "O teu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda habilitado nos axuste do teu sitio."
     out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
     unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
-    watched_word_regexp_error: "A expresión regular para %{action} as palabras vistas non é válida. Comproba a <a href='%{base_path}/admin/logs/watched_words'>Cconfiguración das palabras vistas</a> ou desactiva a opción de 'expresións regulares para palabras vistas'. "
+    watched_word_regexp_error: "A expresión regular para %{action} as palabras vixiadas non é válida. Comproba a <a href='%{base_path}/admin/logs/watched_words'>configuración das palabras vixiadas</a> ou desactiva a opción de 'expresións regulares para palabras vixiadas'."
   site_settings:
     display_local_time_in_user_card: "Mostrar a hora local con base no fuso horario do usuario cando se abre a túa tarxeta."
     censored_words: "As palabras serán automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1304,11 +1366,13 @@ gl:
     max_post_length: "Extensión máxima das publicacións en número de caracteres"
     topic_featured_link_enabled: "Activar a publicación dunha ligazón con temas."
     show_topic_featured_link_in_digest: "Mostrar a ligazón destacada do tema no correo electrónico de resumo."
+    min_topic_views_for_delete_confirm: "Cantidade mínima de vistas que debe ter un tema para que apareza unha xanela emerxente de confirmación cando se elimina"
     min_topic_title_length: "Extensión mínima do título dos temas en número de caracteres"
     max_topic_title_length: "Extensión máxima do título dos temas en número de caracteres"
     min_personal_message_title_length: "Extensión mínima do título dunha mensaxe en número de caracteres"
     max_emojis_in_title: "Número máximo de emojis permitido no título dun tema"
     min_search_term_length: "Extensión mínima dunha busca válida en número de caracteres"
+    search_tokenize_chinese_japanese_korean: "Forzar a busca para tokenizar chinés/xaponés/coreano incluso en sitios que non sexan CXC"
     search_prefer_recent_posts: "Se a busca no foro é lenta, esta opción proba primeiro nun índice daquelas publicacións máis recentes"
     search_recent_posts_size: "Número de publicacións recentes que se manteñen no índice"
     log_search_queries: "Rexistro de buscas realizadas polos usuarios"
@@ -1358,20 +1422,25 @@ gl:
     enable_inline_onebox_on_all_domains: "Ignorar o axuste do sitio inline_onebox_domain_whitelist e permitir incluír onebox en todos os dominios."
     force_custom_user_agent_hosts: "Hosts que se utilizarán para o axente usuario personalizado de onebox en todas as solicitudes (especialmente útil para hosts que limitan o acceso por usuario axente)."
     max_oneboxes_per_post: "Número máximo de caixas (onboxes) nunha publicación."
+    facebook_app_access_token: "Un token xerado a partir do ID da túa app de Facebook e o seu segredo. Utilízase para xerar caixas de Instagram."
     logo: "A imaxe do logotipo na parte superior esquerda do teu sitio. Utiliza unha imaxe rectangular larga cunha altura de 120 e unha relación de aspecto superior a 3:1. Se se deixa en branco, mostrarase o texto do título do sitio."
     logo_small: " A imaxe pequena do logotipo na parte superior esquerda do teu sitio ao te desprazares cara a abaixo. Utiliza un cadrado de 120 x 120. Se se deixa en branco, mostrarase un glifo local."
     digest_logo: "A imaxe de logotipo alternativa utilizada na parte superior do resumo de correo electrónico do teu sitio. Utiliza un rectángulo largo. Non debe ser unha imaxe SVG. Se se deixa en branco, utilizarase a imaxe do «logo»."
     mobile_logo: "O logotipo utilizado na versión móbil do teu sitio. Utiliza unha imaxe rectangular cunha anchura de 120 e unha proporción maior que 3:1. Se se deixa en branco, utilizarase a imaxe que se configurou como logotipo."
+    logo_dark: "Alternativa de esquema escuro para o axuste de «logo»."
+    logo_small_dark: "Alternativa de esquema escuro para o axuste do «logo pequeno»."
+    mobile_logo_dark: "Alternativa de esquema escuro para o axuste de «logo para móbil»."
     large_icon: " Imaxe utilizada como base para outras iconas de metadatos. O ideal sería que fose maior que 512 x 512. Se se deixa en branco, utilizarase logo_small."
-    manifest_icon: " Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
-    favicon: "Unha favicona para o teu sitio, mira <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
+    manifest_icon: "Imaxe utilizada como logo/imaxe de benvida en Android. Cambiarase automaticamente o tamaño a 512 × 512. Se se deixa en branco, utilizarase large_icon."
+    favicon: "Un favicon para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     apple_touch_icon: "Icona utilizada para dispositivos Apple. Redimensionarase automaticamente a 180x180. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
     twitter_summary_large_image: "A 'imaxe grande de resumo' da tarxeta de Twitter (debe ter ao menos 280 de largura e ao menos 150 de altura). Se se deixa en branco, xeraranse metadatos de tarxetas normais utilizando opengraph_image."
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de correos electrónicos personalizados separados por barras"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Mira <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
+    enforce_second_factor: "Obriga aos usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «grupo» para forzalo en usuarios do grupo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: ¡NON actives esta opción a non ser que verifiques completamente a configuración e esta funcione correctamente en todas partes! Comprobaches tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     same_site_cookies: "Utilizar as mesmas cookies do sitio; elas eliminan todos os vectores CSRF (falsificación de petición en sitios cruzados) dos navegadores compatibles (Lax o Strict). Advertencia: Strict só funcionará en sitios que forcen o inicio de sesión e utilicen SSO. "
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída no resumo deste tema."
@@ -1381,7 +1450,13 @@ gl:
     summary_max_results: "Número máximo de publicacións que devolve a opción 'Resumir este tema'"
     enable_personal_messages: " Permitir aos usuarios con nivel de confianza 1 (configurable a través do mínimo nivel de confianza para enviar mensaxes) crear mensaxes e respondelas. Repara en que o equipo sempre pode enviar mensaxes pase o que pasar."
     enable_system_message_replies: "Permitirlles aos usuarios responder mensaxes do sistema, mesmo aínda que as mensaxes persoais estean desactivadas."
+    enable_long_polling: "O bus de mensaxes utilizado para a notificación pode utilizar «long polling»"
+    enable_chunked_encoding: "Active as respostas mediante codificación fragmentaria do servidor. Esta funcionalidade serve na maioría das configuracións, pero algúns servidores intermedios poden retelas, o que provocaría que se atrasen as respostas"
+    long_polling_base_url: "URL base empregado para o long polling (cando unha rede de distribución de contido serve contido dinámico, asegúrese de axustalo como «origin pull») por exemplo: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor debe de esperar antes de responder aos clientes que non hai datos para enviar (soamente usuarios con sesión iniciada)."
+    polling_interval: "Se non se utilizar «long polling», con que frecuencia deben iniciar sesión os clientes en milisegundos"
+    anon_polling_interval: "Con que frecuencia deberían consultar mostras os clientes anónimos en milisegundos"
+    background_polling_interval: "Con que frecuencia debería consultar mostras os clientes en milisegundos (se a xanela está en sengundo plano)"
     hide_post_sensitivity: "A probabilidade de que unha publicación denunciada sexa ocultada."
     silence_new_user_sensitivity: "A probabilidade de que un usuario novo sexa silenciado por denuncias de mensaxes lixo."
     auto_close_topic_sensitivity: "A probabilidade de que un tema denunciado sexa pechado automaticamente."
@@ -1408,16 +1483,27 @@ gl:
     pending_users_reminder_delay: "Notificarlles aos moderadores se hai novos usuarios que estiveran á espera da súa aprobación por máis tempo desta cantidade de horas. Valor -1 para deshabilitar notificacións. "
     persistent_sessions: "Os usuarios permanecerán conectados cando o navegador estea pechado"
     maximum_session_age: "O usuario permanecerá coa sesión iniciada durante n horas desde a última visita."
-    enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún  webcrawler is detected. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    ga_version: "Versión de Google Universal Analytics que usar: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Id de código de seguimento de Google Universal Analytics, por exemplo: UA-12345678-9; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_domain_name: "Nome de dominio de Google Universal Analytics, por exemplo: mysite.com; véxase <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
+    ga_universal_auto_link_domains: "Active o seguimento entre dominios de Google Universal Analytics. As ligazóns de saída a estes dominios engadirán o id do cliente. Consulte a <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Guía de seguimento entre dominios de Google.</a>"
+    gtm_container_id: "Id do contedor de Google Tag Manager. por exemplo: GTM-ABCDEF. <br/>Nota: Pode ser que teñan que estar listados os guións de terceiros cargados con GTM no «pantalla de guión da norma de seguranza de contido\"."
+    enable_escaped_fragments: "Ir á API Ajax-Crawling de Google se non se detecta ningún rastrexador web. Véxase <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permitir aos moderadores administrar categorías e grupos"
-    cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadeiro para activar CORS."
+    cors_origins: "Orixes permitidas para as solicitudes de orixe cruzada (CORS). Cada orixe debe incluír http:// ou https://. A variábel env DISCOURSE_ENABLE_CORS débese establecer como verdadeira para activar CORS."
     use_admin_ip_allowlist: "Os administradores só poden iniciar sesión se están nun enderezo IP definido na listaxe de enderezos IP revisados (Administración > Rexistros > IP revisados)."
+    blocked_ip_blocks: "Unha lista de bloques IP privados que Discourse nunca debería rastrexar"
+    allowed_internal_hosts: "Unha lista de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
+    allowed_onebox_iframes: "Unha lista de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."
     allowed_iframes: "Unha listaxe de prefixos de dominios para iframe src que Discourse pode permitir de forma segura en publicacións"
+    allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!."
+    blocked_crawler_user_agents: "Palabra única sen insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a lista de permitidos."
     slow_down_crawler_user_agents: "Axentes de usuario de rastrexadores web aos que se lles debe aplicar unha cota limitada en robots.txt utilizando a directiva de atraso no rastrexo"
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
     content_security_policy: "Activar a política de seguridade de contido (CSP)"
     content_security_policy_report_only: "Activar só o informe de política de seguridade de contido"
     content_security_policy_collect_reports: "Habilitar a recolección de informes de violación de CSP en /csp_reports"
+    content_security_policy_script_src: "Fontes de guión adicionais permitidas. O servidor actual e a rede de distribución de contido CDN inclúense de xeito predeterminado. Consulte <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar os ataques XSS coa norma de seguranza do contido.</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días  terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Establézase en 0 para desactivalo."
     top_menu: "Determinar que elementos aparecen no menú de navegación da páxina de inicio e en que orde. Exemplo últimos|recentes|senler|categorías|destacados|publicados|marcadores"
     post_menu: "Determinar os elementos que aparecen no menú de publicación e en que orde. Exemplo: gústame|editar|denunciar|eliminar|compartir|gardar en marcadores|responder"
@@ -1427,6 +1513,7 @@ gl:
     site_contact_group_name: "Un nome de grupo válido para ser convidado a todas as mensaxes automatizadas."
     send_welcome_message: "Enviar aos novos usuarios unha mensaxe de benvida cunha guía de acceso rápido."
     send_tl1_welcome_message: "Enviar aos novos usuarios con nivel de confianza 1 unha mensaxe de benvida."
+    send_tl2_promotion_message: "Envíe unha nova mensaxe aos usuarios de nivel 2 de confianza sobre a promoción."
     suppress_reply_directly_below: "Non mostrar o contador de respostas despregable cando hai unha única resposta xusto embaixo desta publicación."
     suppress_reply_directly_above: "Non mostrar o despregable en-resposta-a nunha publicación se unicamente hai unha resposta xusto enriba dela."
     remove_full_quote: "Eliminar automaticamente citas completas nas respostas directas."
@@ -1443,10 +1530,13 @@ gl:
     email_token_valid_hours: "Os códigos para restablecer o contrasinal ou activar a conta son válidos durante (n) horas."
     enable_badges: "Activar o sistema de insignias"
     enable_whispers: "Permitir que os membros do equipo se comuniquen entre eles por privado dentro dos temas."
-    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, podes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
+    allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
+    blocked_email_domains: "Unha lista formatada por tubarías de dominios de correo electrónico nos que non se lles permite aos usuarios rexistrar contas. Exemplo: mailinator.com | trashmail.net"
+    allowed_email_domains: "Unha lista formatada por tubarías de dominios de correo electrónico cos que os usuarios DEBEN rexistrar contas. AVISO: Non se permitirán os usuarios con dominios de correo electrónico distintos aos da lista."
     auto_approve_email_domains: "Os usuarios con enderezos electrónicos desta listaxe de dominios serán automaticamente aprobados."
     hide_email_address_taken: "Non informar aos usuarios da existencia dunha conta cun correo electrónico dado durante o rexistro e desde o formulario de contrasinal esquecido."
     log_out_strict: "Ao pechar a sesión, pechar TODAS as sesións en todos os dispositivos do usuario"
+    version_checks: "Faga ping ao Discourse Hub para obter actualizacións de versións e amosa mensaxes de nova versión no panel de control do<a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Enviar un correo electrónico a contact_email address cando haxa dispoñible unha nova versión de Discourse."
     invite_expiry_days: "Tempo de duración que as claves para convidar usuarios son válidas, en días"
     invite_only: "Todos os usuarios novos deben ser invitados de forma explícita por usuarios de confianza ou membros do equipo. Os rexistros públicos están desactivados."
@@ -1454,19 +1544,22 @@ gl:
     min_username_length: "Lonxitude mínima do nome de usuario en caracteres. Advertencia: se hai usuarios ou grupos cunha extensión menor, o teu sitio quebrará!"
     max_username_length: "Lonxitude máxima do nome de usuario en caracteres. Advertencia: se hai usuarios ou grupos cunha extensión maior, o teu sitio quebrará!"
     unicode_usernames: " Permitir que os nomes de usuario conteñan algunhas letras e números Unicode."
+    allowed_unicode_username_characters: "Expresión regular para permitir só algúns caracteres Unicode dentro dos nomes de usuario. Sempre se permitirán letras e números ASCII e non precisarán ser incluídos na lista de permitidos."
     reserved_usernames: "Nomes de usuario que non están permitidos. O asterisco * pódese utilizar para coincidir con calquera carácter cero ou máis veces."
     min_password_length: "Lonxitude mínima do contrasinal"
     min_admin_password_length: "Lonxitude mínima do contrasinal para un administrador"
     password_unique_characters: "Número mínimo de caracteres únicos que un contrasinal debe conter"
     block_common_passwords: "Non permitir contrasinais que estean entre os 10.000 contrasinais máis comúns."
     external_auth_skip_create_confirm: Ao rexistrarse cun método de autenticación externo, saltar a ventá emerxente de creación de conta. Utilízase mellor xunto con sso_overrides_email, sso_overrides_username e sso_overrides_name.
+    external_auth_immediately: "Redirecciona automaticamente ao sistema de inicio de sesión externo sen a interacción do usuario. Isto só ten efecto cando login_required é verdadeiro e só hai un método de autenticación externo"
     enable_sso: "Habilitar o inicio de sesión único a través dun sitio externo (AVISO: OS ENDEREZOS DE CORREO ELECTRÓNICO DOS USUARIOS *TEÑEN* QUE SER VALIDADOS NO SITIO EXTERNO!)"
-    verbose_sso_logging: " Rexistrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementar o protocolo do provedor de SSO de Discourse no /session/sso_provider endpoint, require que se configure sso_provider_secrets"
-    sso_url: "URL do extremo para o inicio de sesión único (debe incluír http:// ou https://)"
+    verbose_sso_logging: "Rexistrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_sso_provider: "Implementar o protocolo do fornecedor de SSO de Discourse no punto de destino /session/sso_provider, require que se defina sso_provider_secrets"
+    sso_url: "URL do destino para o inicio de sesión único (debe incluír http:// ou https://)"
     sso_secret: "Cadea secreta utilizada para autenticar criptograficamente a información do SSO, asegúrate de que teña 10 caracteres ou máis"
     sso_provider_secrets: "Unha listaxe de pares de dominios secretos que utiliza Discourse como provedor de SSO. Asegúrate de que a clave secreta SSO teña 10 caracteres ou máis. O símbolo do comodín * pódese utilizar para facer coincidir calquera dominio ou só unha parte del (por exemplo, * .exemplo.com)."
     sso_overrides_bio: "Sobrescribe a biografía do usuario no seu perfil e deshabilita a posibilidade de cambiala"
+    sso_overrides_groups: "Sincronice todas as incorporacións manuais a grupos con grupos especificados no atributo sso dos grupos (AVISO: se non especifica grupos, o usuario terá en branco toda pertenza a grupos de incorporación manual)"
     sso_overrides_email: "Anula o correo electrónico local co correo electrónico externo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación. (ADVERTENCIA: poden producirse discrepancias debido á normalización dos correos electrónicos locais)"
     sso_overrides_username: "Anula o nome de usuario local co nome de usuario externo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación. (ADVERTENCIA: poden producirse discrepancias debido á normalización dos correos electrónicos locais)"
     sso_overrides_name: "Anula o nome completo co nome completo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación."
@@ -1487,16 +1580,25 @@ gl:
     google_oauth2_prompt: "Unha listaxe opcional delimitada por valores de cadea que especifica se o servidor solicita ao usuario a reautenticación e o consentimento. Revisa <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para os valores posibles."
     google_oauth2_hd: "Un dominio opcional hospedado por Google Apps limiatará o inicio de sesión. Revisa <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para máis detalles."
     enable_twitter_logins: "Habilitar a autenticación con Twitter require twitter_consumer_key e twitter_consumer_secret. Revisa <a href='https://meta.discourse.org/t/13395' target='_blank'>a configuración do inicio de sesión mediante Twitter (e insercións) para Discourse</a>."
+    twitter_consumer_key: "Clave de consumidor para a autenticación con Twitter, rexistrada en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
+    twitter_consumer_secret: "Segrego do consumidor para a autenticación con Twitter, rexistrado en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     enable_facebook_logins: "Habilitar a autenticación con Facebook require facebook_app_id e facebook_app_secret. Revisa <a href='https://meta.discourse.org/t/13394' target='_blank'>a configuración do inicio de sesión mediante Facebook para Discourse</a>."
+    facebook_app_id: "Id de aplicación para autenticación e compartición con Facebook, rexistrado en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Chave secreta para a autenticación mediante Facebook, rexistrada en <a href='https://developers.facebook.com/apps/' target='_blank'> https://developers.facebook.com/apps</a>"
+    enable_github_logins: "Activar a autenticación con GitHub, require github_client_id e github_client_secret. Véxase <a href='https://meta.discourse.org/t/13745' target='_blank'>Configurar o inicio de sesión con GitHub para Discourse</a>."
+    github_client_id: "Id de cliente para a autenticación con GitHub, rexistrada en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
+    github_client_secret: "Segredo de cliente para a autenticación con GitHub, rexistrado en <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Permitir aos usuarios a autenticación mediante Discord?"
     discord_client_id: 'ID de cliente de Discord (necesitas unha? Visita <a href="https://discordapp.com/developers/applications/me">o portal de programadores de Discord</a>)'
     discord_secret: "Chave secreta de Discord"
+    discord_trusted_guilds: 'Soamente lles permite aos membros destes colectivos de Discord iniciar sesión a través de Discord. Utilice o identificador numérico para o colectivo. Para saber máis, consulte aquí as instrucións <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">aquí</a>. Déixeo en branco para permitirllo a calquera colectvos.'
     enable_backups: "Permitir que os administradores cren copias de seguranza do foro"
     allow_restore: "Permitir restaurar, o cal pode substituír TODOS os datos do sitio! Deixar en False a non ser que planees restaurar desde unha copia de seguranza"
     maximum_backups: "Número máximo de copias de seguranza que se manterán no disco. Aquelas máis antigas serán eliminadas automaticamente."
     automatic_backups_enabled: "Executar copias de seguranza automáticas definidas pola frecuencia das copias de seguranza"
     backup_frequency: "O número de días entre unha e outra copia de seguranza."
+    s3_backup_bucket: "O cofre remoto para facer copias de seguranza. AVISO: Asegúrese de que se trata dun cofre privado."
+    s3_endpoint: "O punto final pódese modificar para facer unha copia de seguranza nun servizo compatíbel con S3 como DigitalOcean Spaces ou Minio. AVISO: Déixeo en branco se usa AWS S3."
     s3_configure_tombstone_policy: "Habilitar a política de eliminación automática para cargas tombstone. IMPORTANTE: se está deshabilitado, non se reclamará ningún espazo despois de eliminar as cargas."
     s3_disable_cleanup: "Evitar a eliminación de antigas copias de seguranza de S3 cando o número delas supere o máximo permitido"
     enable_s3_inventory: "Xerar informes e verificar as cargas utilizando o inventario de Amazon S3. IMPORTANTE: require credenciais S3 válidas (tanto a chave de acceso como a chave de acceso secreta)."
@@ -1511,6 +1613,7 @@ gl:
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visitas (n) na fórmula de temas destacados: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de gústames na primeira publicación (n) na fórmula de temas destacados:: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador de gústames por publicación (n) na fórmula de temas destacados: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    rebake_old_posts_count: "Número de publicacións antigas que volverán ao forno cada 15 minutos."
     enable_safe_mode: "Permitir aos usuarios entrar no modo seguro para depurar complementos."
     rate_limit_create_topic: "Despois de crear un tema, os usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_create_post: "Despois de publicar, os usuarios deben agardar (n) segundos antes de crear unha outra publicación."
@@ -1521,12 +1624,13 @@ gl:
     max_bookmarks_per_day: "Número máximo de marcadores por usuario e día."
     max_edits_per_day: "Número máximo de edicións por usuario e día."
     max_topics_per_day: "Número máximo de temas que un usuario pode crear por día."
+    max_personal_messages_per_day: "Número máximo de novos temas de mensaxes persoais que un usuario pode crear ao día."
     max_invites_per_day: "Número máximo de invitacións que un usuario pode enviar por días."
     max_topic_invitations_per_day: "Número máximo de invitacións a un tema que un usuario pode enviar por día."
     max_logins_per_ip_per_hour: "Número máximo de inicios de sesión permitidos por enderezo IP por hora"
     max_logins_per_ip_per_minute: "Número máximo de inicios de sesión permitidos por enderezo IP por minuto"
-    max_post_deletions_per_minute: "Número máximo de publicacións que un usuario pode eliminar por minuto."
-    max_post_deletions_per_day: "Número máximo de publicacións que un usuario pode eliminar por día."
+    max_post_deletions_per_minute: "Número máximo de publicacións que un usuario pode eliminar por minuto. De poñerse en 0 desactívase a eliminación de publicacións."
+    max_post_deletions_per_day: "Número máximo de publicacións que un usuario pode eliminar ao día. De estabelecer en 0 desactivarase a eliminación de publicacións."
     invite_link_max_redemptions_limit: "O número máximo de trocos permitidos para as ligazóns de invitación non pode ser superior a este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre reiniciar."
@@ -1540,9 +1644,12 @@ gl:
     purge_deleted_uploads_grace_period_days: "Período de graza (en días) antes de que un ficheiro orfo subido sexa eliminado."
     purge_unactivated_users_grace_period_days: "Período de graza (en días) antes de que un usuario cuxa conta non ten actividade sexa eliminado. Establézase en 0 para que ningún usuario sen actividade sexa expulsado."
     enable_s3_uploads: "Colocar os ficheiros subidos no almacén Amazon S3. IMPORTANTE: require credenciais de S3 validas. (tanto a chave de acceso e a chave de acceso secreta)."
+    s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil AWS EC2 da instancia</a> para conceder acceso ao cofre S3. NOTA: Para activar isto, requírese que Discourse estea funcionando nunha instancia EC2 configurada adecuadamente e sobrescribe a configuración de «clave de acceso s3»" e a de «clave de acceso segredo s3».'
+    s3_upload_bucket: "O nome do cofre de Amazon S3 no que se cargarán os ficheiros. AVISO: debe ser en minúsculas, sen puntos, sen liñas de subliñado."
     s3_access_key_id: "A ID da chave de acceso de Amazon S3 que se utilizará para subir imaxes, ficheiros anexos e copias de seguranza."
     s3_secret_access_key: "A chave secreta de acceso a Amazon S3 que se utilizará para subir imaxes, ficheiros anexos e copias de seguranza."
     s3_region: "O nome de rexión de Amazon S3 que utilizará para subir imaxes e copias de seguranza."
+    s3_cdn_url: "O URL de CDN que se utilizará para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: despois de cambiar este axuste debe volver refacer todas as publicacións antigas."
     avatar_sizes: "Listaxe de tamaños dos avatares xerados automaticamente."
     external_system_avatars_enabled: "Utilizar un servizo externo de avatares."
     external_system_avatars_url: "Enderezo URL do servizo externo para os avatares. As substitucións permitidas son {username} {first_letter} {color} {size}"
@@ -1551,7 +1658,10 @@ gl:
     selectable_avatars: "Listaxe de avatares que os usuarios poden elixir."
     allow_all_attachments_for_group_messages: "Permitir todos os ficheiros anexos para mensaxes de grupo."
     png_to_jpg_quality: "Calidade do ficheiro JPG convertido (1 é calidade mínima; 99 é a mellor; 100 para desactivar)"
+    recompress_original_jpg_quality: "Calidade dos ficheiros de imaxe cargados (1 é a de menor calidade, 99 é a de mellor calidade, 100 para desactivar)."
+    image_preview_jpg_quality: "Calidade dos ficheiros de imaxe redimensionados (1 é a máis baixa calidade, 99 é a mellor calidade, 100 para desactivar)."
     allow_staff_to_upload_any_file_in_pm: "Permitir que os membros do equipo poidan subir calquera ficheiro nas mensaxes privadas."
+    strip_image_metadata: "Elimina os metadatos da imaxe."
     min_ratio_to_crop: "Proporción utilizada para recortar imaxes altas. Insire o resultado de largura/altura."
     simultaneous_uploads: "Número máximo de ficheiros que se poden arrastrar e soltar no editor"
     enable_flash_video_onebox: "Habilitar a inserción de ligazóns swf e flv (Adobe Flash) no formato Onebox. AVISO: podería supor riscos de seguridade."
@@ -1590,13 +1700,21 @@ gl:
     min_trust_to_send_messages: "O nivel de confianza mínimo requirido para crear novas mensaxes persoais."
     min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
     min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións."
+    min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación."
+    min_trust_level_to_allow_profile_background: "O nivel de confianza mínimo requirido para cargar un fondo de perfil."
+    min_trust_level_to_allow_user_card_background: "O nivel de confianza mínimo requirido para cargar un fondo de ficha de usuario."
+    min_trust_level_to_allow_invite: "O nivel de confianza mínimo requirido para invitar usuarios."
+    min_trust_level_to_allow_ignore: "O nivel de confianza mínimo requirido para ignorar usuarios."
+    allowed_link_domains: "Dominios que os usuarios poden vincular mesmo se non teñen o nivel de confianza apropiado para publicar ligazóns."
     newuser_max_links: "Número de ligazóns que un novo usuario pode engadir nunha publicación."
+    newuser_max_embedded_media: "Cantos elementos multimedia incorporados pode engadir un novo usuario a unha publicación."
     newuser_max_attachments: "Número de ficheiros anexos que un novo usuario pode engadir nunha publicación."
     newuser_max_mentions_per_post: "Número máximo de mencións a @usuarios que un novo usuario pode facer nunha publicación."
     newuser_max_replies_per_topic: "Número máximo de respostas que un usuario novo pode dar no mesmo tema antes de que alguén responda."
     max_mentions_per_post: "Número máximo de mencións a @usuarios que alguén pode facer nunha publicación."
     max_users_notified_per_group_mention: "Número máximo de usuarios que serán notificados se se menciona un grupo (se se chega ao límite, non se enviará notificación ningunha)"
     enable_mentions: "Permitir aos usuarios mencionar outros usuarios."
+    create_thumbnails: "Crear miniaturas e imaxes en modo galería cando son demasiado grandes para encaixar nunha publicación."
     email_time_window_mins: "Agardar (n) minutos antes de enviar correos electrónicos a modo de notificación para darlles aos usuarios a posibilidade de editaren e remataren as súas publicacións."
     personal_email_time_window_seconds: "Agardar (n) minutos antes de enviar correos electrónicos a modo de mensaxe persoal para darlles aos usuarios a posibilidade de editaren e remataren as súas publicacións."
     email_posts_context: "Número de respostas previas que se inclúen como contexto nos correos electrónicos das notificacións."
@@ -1606,11 +1724,14 @@ gl:
     body_min_entropy: "A mínima entropía mínima (caracteres únicos) que se require para o corpo dunha publicación."
     allow_uppercase_posts: "Permitir todas en maiúsculas no título dun tema ou no corpo dunha publicación."
     max_consecutive_replies: "Número de publicacións continuadas que un usuario ten que facer antes de que se lle prohiba engadir outra resposta."
+    enable_filtered_replies_view: 'O botón «(n) respostas» prega todas demais publicacións e só amosa a publicación actual e as súas respostas.'
     title_fancy_entities: "Converter caracteres ASCII en entidades HTML de adorno no título dos temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     desktop_category_page_style: "Estilo visual para a páxina de /categorías."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
     category_style: "Estilo visual para as insignias das categorías."
+    default_dark_mode_color_scheme_id: "O esquema de cores empregado no modo escuro."
+    dark_mode_none: "Ningún"
     max_image_size_kb: "O tamaño máximo dunha imaxe en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén. As imaxes cun tamaño superior e inferior ao client_max_body_size serán adaptadas para se axustar ao tamaño de subida."
     max_attachment_size_kb: "O tamaño máximo dos ficheiros anexos en kB. Isto configúrase en nginx (client_max_body_size) / apache ou proxy tamén."
     authorized_extensions: "Unha listaxe das extensións de ficheiro permitidas para subir (utiliza '*' para habilitar todos os tipos de ficheiro)"
@@ -1620,6 +1741,7 @@ gl:
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros comúns no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
     title_remove_extraneous_space: "Eliminar os espazos en branco diante da puntuación final."
+    automatic_topic_heat_values: 'Actualice automaticamente a configuración de «vista de temas candentes» e «popularidade en valoracións de tema» en función da actividade do sitio.'
     topic_views_heat_low: "Despois deste número de vistas, o campo Vistas resaltarase lixeiramente."
     topic_views_heat_medium: "Despois deste número de vistas, o campo Vistas resaltarase moderadamente."
     topic_views_heat_high: "Despois deste número de vistas, o campo Vistas resaltarase fortemente."
@@ -1637,10 +1759,13 @@ gl:
     privacy_policy_url: "Se tes un documento coa política de privacidade aloxado en calquera outro sitio e queres usalo, insire aquí o seu URL completo."
     log_anonymizer_details: "Manter ou non os detalles dun usuario no rexistro despois de seren anonimizados. Para cumprir co RXPD, deberás desactivalo."
     newuser_spam_host_threshold: "Número de veces que un novo usuario pode publicar unha ligazón ao mesmo dominio dentro de `newuser_spam_host_threshold` das súas publicacións antes de ser considerado lixo."
+    allowed_spam_host_domains: "Unha lista de dominios excluídos das probas de servidores lixo. Nunca se lles restrinxirá aos usuarios novos a creación de publicacións con ligazóns a estes dominios."
+    staff_like_weight: "Canto peso terán as valoracións do grupo (as valoracóns dos que non son do grupo terán un peso de 1.)"
     topic_view_duration_hours: "Contar unha visita a un novo tema por IP/usuario cada N horas"
     user_profile_view_duration_hours: "Contar unha visita de perfil por IP/usuario cada N horas"
     levenshtein_distance_spammer_emails: "Ao revisar coincidencias en correos electrónicos de remitentes non desexados, número de caracteres diferentes que permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Se hai xa (n) contas con nivel de confianza 0 desde esta IP (e ningunha é dun membro do equipo ou de nivel de confianza 2 ou superior), prohibir rexistros novos desde esa IP."
+    min_ban_entries_for_roll_up: "Ao premer o botón Pregrar, crearase unha nova entrada de veto de subrede se hai cando menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de correos electrónicos prohibidos que non coincidan despois de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP prohibidas que non coincidan despois de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para automaticamente pausar un tema para a súa intervención"
@@ -1649,15 +1774,19 @@ gl:
     min_first_post_typing_time: "Período mínimo en milisegundos durante o que un usuario debe escribir na súa primeira publicación; se non chega a este limiar, a publicación pasará automaticamente á cola de moderación. Establézase en 0 para desactivar (non recomendado)."
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente a aqueles usuarios que non cumpran o limiar establecido en min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza para silenciar automaticamente a quen escribe moi rápido"
+    auto_silence_first_post_regex: "Expresión regular insensíbel que de pasarse provocará que a primeira publicación do usuario se vexa silenciada e remitida á cola de aprobación. Exemplo: rabia|a[bc]a, fará que primeiro se silencien todas as mensaxes que conteñan rabia ou aba ou aca. Só se aplica á primeira publicación."
     reviewable_claiming: "É necesario reclamar o contido revisable antes de poder actuar sobre el?"
     reviewable_default_topics: "Mostrar por defecto o contido revisable agrupado por tema"
     reviewable_default_visibility: "Non mostrar os elementos revisables a non ser que cumpran con esta prioridade"
     high_trust_flaggers_auto_hide_posts: "As publicacións de usuarios novos ocúltanse automaticamente tras ser denunciadas como lixo ou non desexadas por un usuario con NC3 ou superior"
     cooldown_hours_until_reflag: "Tempo que os usuarios deberán agardar antes de volver denunciar unha publicación"
     reply_by_email_enabled: "Habilitar a resposta aos temas por correo electrónico."
+    reply_by_email_address: "Modelo para responder por entrada de correo electrónico, por exemplo: %%{reply_key}@reply.example.com ou respostas+%%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Lista de modelos alternativos para responder a enderezos de correo electrónico entrantes. Exemplo: %%{reply_key}@reply.example.com|respostas+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Utilizar HTML no canto de texto para o correo entrante."
     strip_incoming_email_lines: "Elimina os espazos en branco iniciais e finais de cada liña de correos electrónicos entrantes."
     disable_emails: "Evite que Discourse envíe calquera clase de correo electrónico. Seleccione «si» para desactivar os correos electrónicos a todos os usuarios. Seleccione «non equipo» para desactivar os correos electrónicos só para usuarios que non sexan do equipo."
+    strip_images_from_short_emails: "Elimina as imaxes de correos electrónicos que teñan un tamaño inferior a 2800 bytes."
     short_email_length: "Lonxitude dun correo curto en bytes"
     display_name_on_email_from: "Mostrar nomes completos nos campos de remitente do correo"
     unsubscribe_via_email: "Permitir aos usuarios darse de baixa dos correos electrónicos ao responder co texto «cancelar subscrición» no asunto ou no corpo da mensaxe"
@@ -1667,9 +1796,16 @@ gl:
     max_emails_per_day_per_user: "Número máximo de correos electrónicos que se enviarán aos usuarios por día. Establézase en 0 para desactivar este límite."
     enable_staged_users: "Crear usuarios provisorios automaticamente ao procesar correos electrónicos entrantes."
     maximum_staged_users_per_email: "Número máximo de usuarios provisorios creados ao procesar un correo electrónico entrante."
+    auto_generated_allowlist: "Lista de enderezos de correo electrónico que non se comprobarán no seu contido xerado automaticamente. Exemplo: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquear correo electrónico entrante que se identificou como xerado automaticamente."
     ignore_by_title: "Ignorar correos electrónicos entrantes con base no seu título."
     mailgun_api_key: "Chave secreta da API de Mailgun utilizada para verificar mensaxes vía webhook."
+    soft_bounce_score: "Puntuación de rebote engadida ao usuario cando se produce un rebote temporal."
+    hard_bounce_score: "Puntuación de rebote engadida ao usuario cando se produce un rebote permanente."
+    bounce_score_threshold: "Puntuación máxima de rebote antes de retirar os envíos por correo a un usuario."
+    reset_bounce_score_after_days: "Restabelece automaticamente a puntuación de rebote despois de X días."
+    blocked_attachment_content_types: "Listaxe de palabras clave empregadas para bloquear anexos en función do tipo de contido."
+    blocked_attachment_filenames: "Listaxe de palabras clave usadas para bloquear anexos en función do nome do ficheiro."
     forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor revelar enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
@@ -1678,16 +1814,32 @@ gl:
     raw_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante."
     raw_rejected_email_max_length: "Número de caracteres que deben almacenarse para o correo entrante rexeitado."
     delete_rejected_email_after_days: "Eliminar correos entrantes con máis de (n) días de antigüidade."
+    manual_polling_enabled: "Enviar correos electrónicos usando a API de resposta ao correo."
+    pop3_polling_enabled: "Recoller a través de POP3 as respostas por correo."
     pop3_polling_ssl: "Utilizar SSL mentres se conecta ao servidor POP3 (recomendado)"
     pop3_polling_openssl_verify: "Verificar certificado TLS (por defecto: activado)"
     pop3_polling_period_mins: "Período en minutos entre revisións de correo da conta POP3. NOTA: cómpre reiniciar."
+    pop3_polling_port: "O porto no que recoller unha conta POP3 activa."
+    pop3_polling_host: "O servidor no que recoller o correo vía POP3."
+    pop3_polling_username: "O nome de usuario da conta POP3 para recoller o correo."
+    pop3_polling_password: "O contrasinal da conta POP3 na que recoller o correo."
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se deshabilitas isto, deberás limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    email_in: 'Permitir aos usuarios publicar temas novos por correo electrónico (require unha recollida manual ou con pop3). Configure os enderezos na lapela «Configuración» de cada categoría.'
     email_in_min_trust: "O nivel de confianza mínimo requirido para poder publicar vía correo electrónico."
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
     email_in_spam_header: "A cabeceira do correo para detectar correo lixo."
     enable_imap: "Habilitar IMAP para sincronizar mensaxes de grupo."
+    enable_imap_write: "Activar a sincronización IMAP de dobre paso. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
+    enable_imap_idle: "Utilice o mecanismo IMAP IDLE para agardar por novos correos electrónicos."
+    enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
     imap_polling_period_mins: "Período en minutos entre revisións das contas IMAP para correos electrónicos"
+    imap_polling_old_emails: "Número máximo de vellos correos electrónicos (procesados) que se actualizarán cada vez que se recolla unha caixa de correo IMAP (0 para todos)."
+    imap_polling_new_emails: "Número máximo de novos correos (sen procesar) que se actualizarán cada vez que se recolla unha caixa de correo IMAP."
+    imap_batch_import_email: "O número mínimo de novos correos electrónicos que disparan o modo de importación (desactiva as alertas de publicación)."
+    email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
+    email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
+    find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
     minimum_topics_similar: "Número de temas que ten que haber no foro para que ao ir crear outros novos se mostren temas similares."
     relative_date_duration: "Número de días posteriores a unha publicación a partir de cando as datas se mostran como relativas (7 d) no canto de absolutas (20 feb)."
     delete_user_max_post_age: "Non permitir eliminar usuarios cuxa primeira publicación teña unha antigüidade de (x) días."
@@ -1708,47 +1860,139 @@ gl:
     disable_digest_emails: "Deshabilitar os correos electrónicos de resumo para todos os usuarios."
     apply_custom_styles_to_digest: "Os modelos de correo electrónico e css aplícanse aos correos electrónicos de resumo."
     email_accent_bg_color: " A cor para realizar que se utiliza como fondo nalgúns elementos nos correos electrónicos HTML. Insire un nome («vermello») ou un valor hexadecimal («#FF0000»)."
+    email_accent_fg_color: "A cor do texto representado na cor de fondo do correo electrónico nos correos HTML. Introduza un nome de cor («branco») ou un valor hexadecimal («#FFFFFF»)."
+    email_link_color: "A cor das ligazóns nos correos HTML. Introduza un nome de cor («azul») ou un valor hexadecimal («# 0000FF»)."
+    detect_custom_avatars: "Comprobar se os usuarios cargaron imaxes personalizada ao perfil ou non."
     max_daily_gravatar_crawls: "Número máximo de veces ao día que Discourse comprobará Gravatar  na procura de avatares personalizadas."
+    public_user_custom_fields: "Unha listaxe de campos personalizados do usuario que se poden recuperar coa API."
+    staff_user_custom_fields: "Unha listaxe de campos personalizados do grupo que se poden recuperar coa API."
     enable_user_directory: "Proporcionar un directorio de usuarios para explorar"
+    enable_group_directory: "Fornecer un directorio de grupos que observar"
+    enable_category_group_moderation: "Permitirlles aos grupos moderar contido en categorías específicas"
+    group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
     allow_anonymous_posting: "Permitir aos usuarios cambiar ao modo anónimo"
     anonymous_posting_min_trust_level: "O nivel de confianza mínimo requirido para activar a publicación anónima"
     anonymous_account_duration_minutes: "Para protexer o anonimato, crear unha nova conta anónima cada N minutos para cada usuario. Exemplo: se se establece en 600, axiña que pasen 600 minutos desde a última publicación E o usuario cambie a anónimo, crearase unha nova conta anónima."
+    hide_user_profiles_from_public: "Desactivar tarxetas de usuario, perfís de usuario e directorio de usuarios para usuarios anónimos."
+    allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
     allow_featured_topic_on_user_profiles: "Permitir aos usuarios destacar unha ligazón a un tema da súa tarxeta de usuario e perfil."
     show_inactive_accounts: "Permitir aos usuarios coa sesión iniciada ver os perfís de contas inactivas."
     hide_suspension_reasons: "Non mostrar publicamente os motivos de suspensión nos perfís dos usuarios."
+    log_personal_messages_views: "Rexistra as visualizacións de mensaxes persoais por parte do administrador para outros usuarios/grupos."
     ignored_users_count_message_threshold: "Notificar aos moderadores se un usuario en particular é ignorado por moitos outros."
     ignored_users_message_gap_days: "Tempo de espera antes de lles volver notificar aos moderadores que un usuario é ignorado por moitos outros."
     clean_up_inactive_users_after_days: "Número de días antes de que se elimine un usuario inactivo (nivel de confianza 0 sen publicacións). Para desactivar esta opción establézase en 0."
     clean_up_unused_staged_users_after_days: "Número de días antes de que un usuario temporal (sen actividade) sexa eliminado. Para desactivar esta opción establézase en 0."
+    user_selected_primary_groups: "Permitirlles aos usuarios estabelecer o seu propio grupo principal"
     max_notifications_per_user: "Número máximo de notificacións por usuario. Se se supera este número, as notificacións antigas eliminaranse; aplicación semanal. Establézase en 0 para desactivalo."
+    allowed_user_website_domains: "O sitio web do usuario verificarase respecto destes dominios. Listaxe formatada con tubarías."
     allow_profile_backgrounds: "Permitir aos usuarios subir fondos de perfil."
     sequential_replies_threshold: "Número de publicacións seguidas que un usuario ten que facer nun tema antes de que se lle lembre que son demasiadas repostas consecutivas."
     get_a_room_threshold: "Número de publicacións que un usuario debe facerlle á mesma persoa e no mesmo tema antes de recibir unha advertencia."
+    enable_mobile_theme: "Os dispositivos móbiles utilizan un tema adaptado para móbiles, coa posibilidade de trocar o sitio completo. Desactíveo se quere utilizar unha folla de estilo personalizada que sexa completamente adaptábel."
+    dominating_topic_minimum_percent: "Que porcentaxe de publicacións ten que facer un usuario nun tema antes de recordarlle que entra en predominancia sobre o tema."
+    disable_avatar_education_message: "Desactiva a mensaxe educativa para cambiar o avatar."
     suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listaxes de temas."
     header_dropdown_category_count: "Número de categorías que se poden mostrar no menú despregable da cabeceira."
+    permalink_normalizations: "Aplica a seguinte expresión regular antes de que coincidan con ligazóns permanentes, como por exemplo: /(topic.*)\\?.*/\\1 eliminará as cadeas de consulta das rutas temáticas. O formato é regex+string use \\1 etc. para acceder ás capturas."
+    global_notice: "Amosar un aviso de báner global URXENTE, DE EMERXENCIA e non rexeitábel a todos os visitantes, cambialo a branco para agochalo (permítese HTML)."
+    disable_system_edit_notifications: "Desactiva as notificacións de edición por parte do usuario do sistema cando está activado «download_remote_images_to_local»."
+    notification_consolidation_threshold: "Número de valoracións ou solicitudes de adhesión recibidas antes de que as notificacións se fusionen nunha soa. Estabelécese en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante os que as notificacións se consolidan nunha única notificación, unha vez que se alcance o limite. O límite pódese configurar en `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Despegar os temas automaticamente cando o usuario chega ao fondo."
     read_time_word_count: "Número de palabras por minuto para calcular o tempo estimado de lectura."
     topic_page_title_includes_category: "A <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta do título</a> da páxina do tema inclúe o nome da categoría."
     native_app_install_banner_ios: "Mostra o anuncio da aplicación DiscourseHub en dispositivos iOS a usuarios habituais (nivel de confianza 1 e superior)."
+    native_app_install_banner_android: "Mostra o anuncio da aplicación DiscourseHub en dispositivos Android a usuarios habituais (nivel de confianza 1 e superior)."
+    app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
+    app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     share_anonymized_statistics: "Compartir estatísticas de uso anonimizadas."
+    auto_handle_queued_age: "Xestione automaticamente rexistros que esperan ser revisados despois de moitos días. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabeler en 0 para desactivar esta función."
+    svg_icon_subset: "Engada 5 iconas FontAwesome adicionais que lle gustaría incluír nos seus recursos. Use o prefixo «fa-» para iconas sólidas, «far-» para iconas normais e «fab-» para iconas de marca."
+    max_prints_per_hour_per_user: "Número máximo de accesos/impresión de páxina (estabelecido en 0 para desactivar)"
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Deshabilitar para agochar o nome completo en todas partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
+    show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a lagoa de tempo no tema."
+    short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
+    default_code_lang: "O realzado predeterminado da sintaxe da linguaxe de programación aplicado aos bloques de código GitHub (auto, nohighlight, ruby, python etc.)"
+    warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase axustando a 0."
+    autohighlight_all_code: "Forza a aplicación do resaltado de código en todos os bloques de código preformateados, mesmo cando se especificase o idioma de xeito explícito."
+    highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiados idiomas pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
+    show_copy_button_on_codeblocks: "Engadir un botón aos bloques de código para copiar o contido do bloque ao portapapeis do usuario. Esta funcionalidade non é compatíbel con Internet Explorer."
+    embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
+    embed_topics_list: "Admite a incorporación en HTML de listaxes de temas"
+    embed_set_canonical_url: "Estabeleza o URL canónico dos temas incorporados no URL do contido incorporado."
+    embed_truncate: "Truncar as publicacións incorporadas."
+    embed_unlisted: "Os temas importados non serán listados ata que un usuario responda."
+    embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
+    allowed_embed_selectors: "Unha listaxe separada por comas de elementos CSS que se permiten nas incorporacións."
+    allowed_href_schemes: "Esquemas permitidos en ligazóns ademais de http e https."
+    embed_post_limit: "Número máximo de publicacións que incorporar."
     embed_username_required: "O nome de usuario para a creación de temas é obrigatorio."
+    notify_about_flags_after: "Se hai alertas que non se manexaron despois destas horas, envíelles unha mensaxe persoal aos moderadores. Axustar a 0 para desactivar."
+    show_create_topics_notice: "Se o sitio ten menos de 5 temas públicos, amosará un aviso pedindo aos administradores que creen algúns temas."
     delete_drafts_older_than_n_days: "Eliminar borradores con máis de (n) días de antigüidade."
+    bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar o modo de arranque (axustar a 0 para desactivar)"
+    prevent_anons_from_downloading_files: "Evitar que usuarios anónimos descarguen anexos."
+    secure_media: 'Limita o acceso a TODO o que fose cargado (imaxes, vídeo, son, texto, pdf, zip e outros). Se está habilitado o «requírese inicio de sesión», só os usuarios con sesión activa poden acceder ás cargas. En caso contrario, o acceso limitarase só para as cargas de multimedia en mensaxes privadas e categorías privadas. AVISO: este axuste é complexo e require unha comprensión administrativa profunda. Véxase <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">o tema de multimedia seguro en Meta</a> para saber máis.'
+    secure_media_allow_embed_images_in_emails: "Permite incorporar imaxes seguras que normalmente se engadirían nos correos electrónicos, se o seu tamaño é menor que o axuste de tamaño máx. de imaxe incorporada en correo en kb."
+    secure_media_max_email_embed_image_size_kb: "O tamaño de corte para imaxes seguras que se incorporarán nos correos se está activado o axuste «multimedia seguro que se permite incorporar nas mensaxes de correo». Se este axuste non está activado, non terá efecto."
+    slug_generation_method: "Escolla un método de xeración de abreviacións. Con «codificado» xerarase unha cadea con codificación porcentual, con «ningún» desactivarase a abreviación amigábel."
     enable_emoji: "Activar emojis"
+    enable_emoji_shortcuts: "A cariña común en texto como :): p :( converterase a emojis"
+    emoji_set: "Como lle gustaría o seu emoji?"
+    emoji_autocomplete_min_chars: "Número mínimo de caracteres necesarios para disparar a xanela emerxente para completar o emoji"
+    enable_inline_emoji_translation: "Activa a tradución de emojis en liña (sen ningún espazo nin puntuación anterior)"
+    approve_post_count: "A cantidade de publicacións dun usuario novo ou básico que deba aprobarse"
+    approve_unless_trust_level: "As publicacións dirixidas a usuarios por debaixo deste nivel de confianza deben ser aprobadas."
+    approve_new_topics_unless_trust_level: "Os novos temas dirixidos a usuarios por debaixo deste nivel de confianza deben ser aprobados."
+    approve_unless_staged: "Novos temas e publicacións para usuarios en proceso que se deben aprobar"
+    notify_about_queued_posts_after: "Se hai publicacións que agardan ser revisadas durante horas de máis, envíese unha notificación a todos os moderadores. Estabelécese en 0 para desactivar estas notificacións."
+    auto_close_messages_post_count: "Número máximo de publicacións permitidas nunha mensaxe antes do peche automático (0 para desactivar)"
+    auto_close_topics_post_count: "Número máximo de publicacións permitidas nun tema antes do peche automático (0 para desactivar)"
+    auto_close_topics_create_linked_topic: "Crear un novo tema ligado cando un tema se pecha automaticamente conforme o axuste de «conta de publicacións para peche automático de temas»"
     code_formatting_style: "O botón de código no editor establecerá por defecto este estilo de formato de código"
     max_allowed_message_recipients: "Número máximo de destinatarios que se permiten nunha mensaxe."
+    watched_words_regular_expressions: "As palabras observadas son expresións regulares."
+    old_post_notice_days: "Días antes de que o aviso de publicación deveña vello"
     new_user_notice_tl: "O nivel de confianza mínimo requirido para ver avisos de novos usuarios."
+    returning_user_notice_tl: "O nivel de confianza mínimo requirido para ver avisos de usuarios que volven."
     returning_users_days: "Número de días que deben transcorrer para considerar que un usuario está de volta."
+    review_media_unless_trust_level: "O persoal revisará as publicacións de usuarios con niveis de confianza máis baixos se conteñen elementos multimedia inseridos."
+    blur_tl0_flagged_posts_media: "Desenfocar imaxes con publicacións sinaladas para agochar contido potencialmente inapropiado (NSFW)."
+    enable_page_publishing: "Permitirlles aos membros do grupo publicar temas en novos URL co seu propio estilo."
+    show_published_pages_login_required: "Os usuarios anónimos poden ver as páxinas publicadas, aínda que se pida iniciar sesión."
+    skip_auto_delete_reply_likes: "Cando se eliminen automaticamente respostas antigas, saltar as publicacións con este número de valoracións ou máis."
     default_email_digest_frequency: "Frecuencia por defecto con que os usuarios reciben correos electrónicos de resumo."
+    default_include_tl0_in_digests: "Incluír de xeito predeterminado publicacións de novos usuarios en resumos de correo electrónico. Os usuarios poden cambiar isto nas súas preferencias."
+    default_email_level: "Establece o nivel predefinido de notificación por correo electrónico para temas habituais."
+    default_email_messages_level: "Establece o nivel predefinido de notificación por correo electrónico cando alguén lle envía mensaxes ao usuario."
+    default_email_mailing_list_mode: "Envía un correo electrónico para cada nova publicación de xeito predefinido."
+    default_email_mailing_list_mode_frequency: "Os usuarios que activen o modo de listaxe de correo recibirán os correos coa frecuencia predeterminada."
+    disable_mailing_list_mode: "Non permitirlle aos usuarios activar o modo de listaxe de correo."
+    default_email_previous_replies: "Inclúese, de modo predeterminado, as respostas anteriores nos correos."
+    default_email_in_reply_to: "Inclúe, de modo predeterminado, o limiar da publicación respondida nos correos."
+    default_other_new_topic_duration_minutes: "Condición predefinida global para que un tema se considere novo."
+    default_other_auto_track_topics_after_msecs: "Tempo predefinido global antes de que un tema se siga automaticamente."
+    default_other_notification_level_when_replying: "Nivel de notificación predefinida global cando o usuario responde a un tema."
     default_other_external_links_in_new_tab: "Abrir as ligazóns externas nunha nova pestana por defecto."
     default_other_enable_quoting: "Activar resposta citando o texto seleccionado por defecto."
+    default_other_enable_defer: "Activar, de xeito predeterminado, a función de aprazar o tema."
     default_other_dynamic_favicon: "Mostrar o número de temas novos/actualizados na icona do navegador por defecto."
+    default_other_skip_new_user_tips: "Salta os consellos iniciais e as insignias dos novos usuarios."
     default_other_like_notification_frequency: "Notificarlles aos usuarios os gústames por defecto"
+    default_topics_automatic_unpin: "Desafixar automaticamente temas cando o usuario acada o fondo, de modo predeterminado."
+    default_categories_watching: "Lista de categorías que se vixían por defecto."
+    default_categories_tracking: "Lista de categorías seguidas por defecto."
     default_categories_muted: "Listaxe de categorías que están silenciadas por defecto."
+    default_categories_watching_first_post: "Lista de categorías en que se verá por defecto a primeira publicación de cada novo tema."
+    default_categories_regular: "Lista de categorías que non están silenciadas de modo predeterminado. Útil cando o axuste do sitio «mute_all_categories_by_default» está activada."
+    mute_all_categories_by_default: "Estabeleza o nivel de notificación predeterminado de todas as categorías como silenciado. Requírelles aos usuarios que opten por categorías para que aparezan nas páxinas «últimas» e «categorías». Se desexa modificar os valores predeterminados para usuarios anónimos, configure os axustes «default_categories_»."
+    default_tags_watching: "Lista de etiquetas que se vixían por defecto."
+    default_tags_tracking: "Lista de etiquetas seguidas por defecto."
     default_tags_muted: "Listaxe de etiquetas que están silenciadas por defecto."
+    default_tags_watching_first_post: "Lista de etiquetas en que se verá por defecto a primeira publicación de cada novo tema."
     default_text_size: "Tamaño do texto seleccionado por defecto"
     default_title_count_mode: "Modo predefinido para a páxina do contador do título"
     retain_web_hook_events_period_days: "Número de días para reter rexistros de eventos de web hook."
@@ -1759,6 +2003,7 @@ gl:
     max_api_keys_per_user: "Número máximo de chaves API de usuario por usuario"
     min_trust_level_for_user_api_key: "Nivel de confianza necesario para xerar chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
+    allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
     expire_user_api_keys_days: "Número de días antes de que a chave API de usuario caduque automaticamente (0 para nunca)"
     tagging_enabled: "Activar etiquetas nos temas?"
     min_trust_to_create_tag: "O nivel de confianza mínimo para crear un etiqueta."
@@ -1777,12 +2022,23 @@ gl:
     force_lowercase_tags: "Forzar que todas as etiquetas estean integramente en minúsculas."
     company_name: "Nome da empresa"
     governing_law: "Lei que rexe"
+    city_for_disputes: "Cidade para disputas"
+    shared_drafts_category: "Active a funcionalidade Borradores compartidos designando unha categoría para os borradores de temas. Os temas desta categoría suprimiranse das listaxes de temas para os usuarios do grupo."
+    shared_drafts_min_trust_level: "Permitir que os usuarios vexan e editen borradores compartidos."
     push_notifications_prompt: "Mostrar  aviso do consentimento do usuario."
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
+    base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
+    heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
     short_title: "O título curto utilizarase na páxina de inicio do usuario, no iniciador ou naqueles sitios onde o espazo é limitado. Debe limitarse a 12 caracteres."
+    dashboard_hidden_reports: "Permitir agochar os informes específicos do panel de control."
+    dashboard_visible_tabs: "Escolla que lapelas do panel son visíbeis."
+    dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     gravatar_name: "Nome do provedor de Gravatar"
     gravatar_base_url: "URL da API base do provedor de Gravatar"
     gravatar_login_url: "URL relativo a gravatar_base_url, que prové ao usuario o acceso ao servizo de Gravatar"
+    share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
+    share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
+    create_revision_on_bulk_topic_moves: "Crear revisión para as primeiras publicacións cando os temas se moven a unha nova categoría en lote."
     errors:
       invalid_email: "Enderezo electrónico non válido"
       invalid_username: "Non hai un usuario con este nome de usuario."
@@ -1799,18 +2055,34 @@ gl:
       invalid_string_max: "Non debe ter máis de %{max} caracteres."
       invalid_reply_by_email_address: "O valor debe conter '%{reply_key}' e ser diferente ao correo electrónico da notificación."
       invalid_alternative_reply_by_email_addresses: "Todos os valores deben conter '%{reply_key}' e ser diferentes ao correo electrónico da notificación."
+      pop3_polling_host_is_empty: "Debe estabelecer un «servidor de recollida pop3» antes de activar a recollida POP3."
+      pop3_polling_username_is_empty: "Debe estabelecer un «nome de usuario de recollida pop3» antes de activar a recollida POP3."
+      pop3_polling_password_is_empty: "Debe estabelecer un «contrasinal de usuario de recollida pop3» antes de activar a recollida POP3."
       pop3_polling_authentication_failed: "Erro na autenticación POP3. Verifica as túas credenciais POP3."
       reply_by_email_address_is_empty: "Debes habilitar 'enderezo para responder vía correo electrónico' antes de activar resposta por correo electrónico."
+      email_polling_disabled: "Debe activar ben a recollida manual ou POP3 antes de activar a resposta por correo electrónico."
       user_locale_not_enabled: "Debes habilitar primeiro «permitir usuario local» antes de activar esta opción."
       invalid_regex: "A expresión regular non é válida ou non está permitida."
       email_editable_enabled: "Debes desactivar 'correo electrónico editable' antes de activar esta opción. "
       staged_users_disabled: "Primeiro debes habilitar 'usuarios provisionais' antes de activar esta opción."
       reply_by_email_disabled: "Primeiro debes habilitar 'responder vía correo electrónico' antes de activar esta opción."
       sso_url_is_empty: "Debes establecer un 'URL de sso' antes de activar esta opción."
+      sso_invite_only: "Non pode activar o sso e «convidar só» ao mesmo tempo."
+      enable_local_logins_disabled: "Debes habilitar primeiro «habilitar inicios de sesión locais» antes de activar esta opción."
+      min_username_length_exists: "Non pode estabelecer que a largura mínima do nome de usuario sexa maior có nome de usuario máis curto (%{username})."
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
+      max_username_length_exists: "Non pode establecer que a largura máxima do nome de usuario sexa menor que o nome de usuario máis longo (%{username})."
       max_username_length_range: "Non podes establecer o máximo por debaixo do mínimo."
       invalid_hex_value: "Os valores das cores deben ser códigos de 6 díxitos hexadecimais."
       empty_selectable_avatars: "Primeiro debes subir ao menos dous avatares seleccionables antes de activar esta opción."
+      category_search_priority:
+        very_low_weight_invalid: "Non pode estabelecer que o peso sexa maior que a «category_search_priority_low_weight»."
+        low_weight_invalid: "Non pode estabelecer que o peso sexa maior ou igual a 1 ou menor que «category_search_priority_very_low_weight»."
+        high_weight_invalid: "Non pode estabelecer que o peso sexa menor ou igual 1 ou maior que a «category_search_priority_very_high_weight»."
+        very_high_weight_invalid: "Non pode estabelecer que o peso sexa menor que «category_search_priority_high_weight»."
+      allowed_unicode_usernames:
+        regex_invalid: "A expresión regular non é válida: %{error}"
+        leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
       list_value_count: "A listaxe debe conter exactamente %{count} valores."
     placeholder:
@@ -1918,9 +2190,12 @@ gl:
     autoclosed_disabled_lastpost: "Este tema agora está aberto. Permítense novas respostas."
     auto_deleted_by_timer: "Eliminado automaticamente polo temporizador."
   login:
+    invalid_second_factor_method: "O método en dous pasos seleccionado non é válido."
+    not_enabled_second_factor_method: "O método en dous pasos seleccionado non está permitido para a túa conta."
     security_key_description: "Cando teñas a chave de seguranza preparada, preme no botón Autenticar con chave de seguranza que se mostra a continuación."
     security_key_alternative: "Tentalo doutro xeito"
     security_key_authenticate: "Autenticar con chave de seguranza"
+    security_key_not_allowed_error: "O proceso de autenticación da clave de seguranza expirou ou anulouse."
     security_key_no_matching_credential_error: "As credenciais non coinciden coa chave de seguranza introducida."
     security_key_support_missing_error: "O teu dispositivo ou navegador actual non admite o uso de chaves de seguranza. Utiliza outro método."
     security_key_invalid: "Produciuse un erro ao validar a chave de seguridade."
@@ -1944,18 +2219,24 @@ gl:
       csrf_detected: "Esgotouse o tempo de autorización ou cambiaches de navegador. Téntao de novo."
       request_error: "Produciuse un erro ao iniciar a autorización. Téntao de novo."
       invalid_iat: "Non se puido verificar o token de autorización por mor de diferenzas no horario do servidor. Téntao de novo."
+    omniauth_error_unknown: "Produciuse un erro ao procesar o iniciador de sesión. Ténteo de novo, por favor."
     omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Non hai ningún enderezo electrónico asociado con %{account} que estea permitido. Debes configurar a túa conta cun enderezo electrónico diferente."
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
     password_too_long: "Os contrasinais teñen de límite 200 caracteres."
     email_too_long: "O correo electrónico facilitado é demasiado longo. Os nomes dos correos electrónicos non deben superar os 254 caracteres e os nomes de dominio non deben ter máis de 253."
+    wrong_invite_code: "O código de convite que introduciu era incorrecto."
     reserved_username: "Este nome de usuario non está permitido."
     missing_user_field: "Non completaches todos os campos de usuario"
     auth_complete: "Autenticación completada."
     click_to_continue: "Preme aquí para continuar."
+    already_logged_in: "Perdoa! Esta invitación está destinada a novos usuarios, que aínda non teñen unha conta."
+    second_factor_title: "Autenticación en dous pasos"
     second_factor_description: "Insire o código de autenticación desde a túa aplicación:"
     second_factor_backup_description: "Escribe un dos códigos de copia de seguranza"
+    second_factor_backup_title: "Código de copia de seguranza en dous pasos"
+    invalid_second_factor_code: "Código de autenticación non válido. Cada código só se pode usar unha vez."
     invalid_security_key: "Chave de seguridade non válida."
     missing_second_factor_name: "Insire un nome"
     missing_second_factor_code: "Insire un código."
@@ -1965,7 +2246,21 @@ gl:
   admin:
     email:
       sent_test: "enviado!"
+    user:
+      merge_user:
+        updating_username: "Actualizando nome de usuario..."
+        changing_post_ownership: "Cambiando o propietario da publicación ..."
+        merging_given_daily_likes: "Combinando as valoración diarias..."
+        merging_post_timings: "Combinando os intres de publicación..."
+        merging_user_visits: "Combinando as visitas de usuario..."
+        updating_site_settings: "Actualizando a configuración do sitio..."
+        updating_user_stats: "Actualizando as estatística de usuario..."
+        merging_user_attributes: "Combinando os atributos de usuario..."
+        updating_user_ids: "Actualizando os id de usuario..."
+        deleting_source_user: "Eliminando o usuario orixe..."
   user:
+    deactivated: "Desactivado debido a excesivos correos rebotados con «%{email}»"
+    deactivated_by_staff: "Desactivado polo grupo"
     deactivated_by_inactivity:
       one: "Desactivado automaticamente despois de %{count} día de inactividade"
       other: "Desactivado automaticamente despois de %{count} días de inactividade"
@@ -1985,17 +2280,24 @@ gl:
       must_not_end_with_confusing_suffix: "non debe remtar cun sufixo confuso do tipo .json ou .png etc."
     email:
       invalid: "non é válido."
+      not_allowed: "non está permitido desde ese fornecedor. Utilice outro enderezo de correo electrónico."
       blocked: "non está permtido."
       revoked: "Non se enviarán máis correos electrónicos a '%{email}' ata %{date}."
+      does_not_exist: "N/D"
     ip_address:
       blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
       max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o teu enderezo IP (alcanzouse o límite). Contacta cun membro do equipo."
     website:
       domain_not_allowed: "O sitio web non é válido. Os dominios permitidos son: %{domains}"
+    auto_rejected: "Rexeitouse automaticamente debido á idade. Véxase o axuste do sitio auto_handle_queued_age."
     destroy_reasons:
+      unused_staged_user: "Usuario en proceso non utilizado"
+      fixed_primary_email: "Corrixido o correo electrónico principal do usuario en proceso"
       same_ip_address: "Mesmo enderezo IP (%{ip_address}) que outros usuarios."
       inactive_user: "Usuario inactivo"
     email_in_spam_header: "O primeiro correo electrónico do usuario marcouse como correo lixo"
+    already_silenced: "O usuario xa foi silenciado por %{staff} %{time_ago}."
+    already_suspended: "O usuario xa foi suspendido por %{staff} %{time_ago}."
   reviewables_reminder:
     submitted:
       one: "Hai elementos enviados desde hai máis de %{count} hora. [Revísaos](%{base_path}/review)."
@@ -2004,6 +2306,7 @@ gl:
       one: "%{count} elemento necesita ser revisado"
       other: "%{count} elementos necesitan ser reservados"
   unsubscribe_mailer:
+    title: "Anular a subscrición ao servizo de correo"
     subject_template: "Confirmar que xa non queres recibir actualizacións por correo electrónico de %{site_title}"
     text_body_template: |
       Alguén (posiblemente ti?) solicitou non recibir máis actualizacións por correo electrónico de %{site_domain_name} a este enderezo.
@@ -2013,6 +2316,7 @@ gl:
 
       Se queres continuar recibindo actualizacións por correo electrónico, ignora esta mensaxe.
   invite_mailer:
+    title: "Correo de convite"
     subject_template: "%{inviter_name} invitoute a '%{topic_title}' en%{site_domain_name}"
     text_body_template: |
       %{inviter_name} invitoute á discusión
@@ -2029,6 +2333,7 @@ gl:
 
       %{invite_link}
   custom_invite_mailer:
+    title: "Correo de convite personalizado"
     subject_template: "%{inviter_name} invitoute a '%{topic_title}' en%{site_domain_name}"
     text_body_template: |
       %{inviter_name} invitoute á discusión
@@ -2049,6 +2354,7 @@ gl:
 
       %{invite_link}
   invite_forum_mailer:
+    title: "Correo de convite ao foro"
     subject_template: "%{inviter_name} invitoute a unirte a %{site_domain_name}"
     text_body_template: |
       %{inviter_name} invitoute a unirte a
@@ -2061,6 +2367,7 @@ gl:
 
       %{invite_link}
   custom_invite_forum_mailer:
+    title: "Correo de convite ao foro personalizado"
     subject_template: "%{inviter_name} invitoute a unirte a %{site_domain_name}"
     text_body_template: |
       %{inviter_name} invitoute a unirte a
@@ -2077,6 +2384,7 @@ gl:
 
       %{invite_link}
   invite_password_instructions:
+    title: "Instrucións de contrasinal de convidado"
     subject_template: "Establece un contrasinal para a túa conta en %{site_name}"
     text_body_template: |
       Grazas por aceptares a invitación a %{site_name} -- Benvido/a!
@@ -2085,6 +2393,17 @@ gl:
       %{base_url}/u/password-reset/%{email_token}
 
       (Se a ligazón anterior xa caducou, elixe "Esquecín o meu contrasinal" cando vaias iniciar sesión co teu enderezo electrónico.)
+  download_backup_mailer:
+    title: "Descargar a copia de seguranza do servizo de correo"
+    subject_template: "[%{email_prefix}] Descarga de copia de seguranza do sitio"
+    text_body_template: |
+      Aquí está a [descarga de copia de seguranza do sitio] (%{backup_file_path}) que pediu.
+
+      Enviamos esta ligazón de descarga ao seu enderezo de correo electrónico validado por motivos de seguranza.
+
+      (Se vostede *non* solicitou esta descarga, debería preocuparse seriamente: alguén ten acceso como administrador ao seu sitio.)
+    no_token: |
+      Esta ligazón de descarga de copia de seguranza xa expirou ou foi utilizada.
   admin_confirmation_mailer:
     title: "Confirmación do administrador"
     subject_template: "[%{email_prefix}] Confirmar nova conta de administrador"
@@ -2092,13 +2411,86 @@ gl:
       Confirma que queres engadir a **%{target_username} (%{target_email})** como un administrador do teu foro.
 
       [Confirmar conta de administrador](%{admin_confirm_url})
+  test_mailer:
+    title: "Proba de correo"
+    subject_template: "[%{email_prefix}] Proba de entrega de correo"
+    text_body_template: |
+      Esta é unha proba de correo de
+
+      [**%{base_url}**][0]
+
+      A entrega do correo é complicada. Aquí están unhas poucas cousas que debería comprobar en primeiro lugar:
+
+      - *Asegúrese* axustar a «notification email» de: enderezo correctamente na configuación do seu sitio. **O dominio especificado no enderezo «de» dos correos que envíe é o dominio contra o que será validado o seu correo**.
+
+      - Aprenda como ver a forma en bruto do correo no seu cliente de correo, de modo que poida examinar as cabeceiras de correo para obter pistas importantes. En Gmail, é o que se chama «show original» no menú despregábel que está na parte superior dereita de cada mensaxe de correo.
+
+      - **IMPORTANTE:** Ten o seu ISP un rexistro de DNS reverso asociado aos nomes de dominio e aos enderezos IP desde os que vostede envía o correo? [Comprobe o seu rexistro PTR reverso[2] aquí. Se o seu ISP non introduce o rexistro apuntador reverso adecuado, é moi pouco probábel que o seu correo se poida entregar.
+
+      - É o [rexistro SPF][8] do seu dominio correcto? [Probe o seu rexistro SPF][1] aquí. Vexa que TXT é o tipo de rexistro oficial correcto para SPF.
+
+      - É o [rexistro DKIM][3] do seu dominio correcto? Isto mellorará a entrega do correo. [Probe o seu rexistro DKIM][7] aquí.
+
+      - Se ten en marcha o seu propio servidor de correo, comprobe que os IP do seu servidor de correo [non están en ningunha lista de bloqueo de correo][4]. Comprobe tamén que se envía un nome de servidor totalmente cualificado que resolve o DNS na súa mensaxe HELO. En caso de que non, o seu correo será rexeitado por moitos servizos de correo.
+
+      - Recomendámoslle fortemente que **envíe un correo de proba a [mail-tester.com][mt]** para comprobar que todo o anterior está funcionando correctamente.
+
+      (A maneira *doada* é crear unha conta en [SendGrid][sg], [SparkPost][sp], [Mailgun][mg] ou [Mailjet][mj], que teñen plans de correo de baixo custo e funcionarán ben para pequenas comunidades. Aínda con todo iso, necesitará configurar os rexistros SPF e DKIM no seu DNS!)
+
+      Agardamos que recibise correctamente esta proba de entrega de correo!
+
+      Boa sorte,
+
+      Os amigos de [Discourse](https://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: https://www.kitterman.com/spf/validate.html
+      [2]: https://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: https://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: https://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing/
+      [mt]: https://www.mail-tester.com/
   new_version_mailer:
+    title: "Nova versión de servizo de correo"
     subject_template: "[%{email_prefix}] Nova versión de Discourse, actualización dispoñible"
+    text_body_template: |
+      Aleluia, está dispoñíbel unha nova versión de [Discourse](https://www.discourse.org).
+
+      A súa versión: %{installed_version}
+      A nova versión: **%{new_version}**
+
+      - Actualice fácil mediante ** [actualización cun só clic] (%{base_url}/admin/upgrade) **
+
+      - Vexa as novidades nas [notas da edición] (https://meta.discourse.org/tag/release-notes) ou vexa o [rexistro en bruto de cambios en GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Visite [meta.discourse.org](https://meta.discourse.org) para novas, discusións e apoio sobre Discourse
   new_version_mailer_with_notes:
+    title: "Nova versión do servizo de correo con notas"
     subject_template: "[%{email_prefix}] actualización dispoñible"
+    text_body_template: |
+      Aleluia, está dispoñíbel unha nova versión de [Discourse](https://www.discourse.org).
+
+      A súa versión: %{installed_version}
+      A nova versión: **%{new_version}**
+
+      - Actualice fácil mediante ** [actualización cun só clic] (%{base_url}/admin/upgrade) **
+
+      - Vexa as novidades nas [notas da edición] (https://meta.discourse.org/tag/release-notes) ou vexa o [rexistro en bruto de cambios en GitHub](https://github.com/discourse/discourse/commits/master)
+
+      - Visite [meta.discourse.org](https://meta.discourse.org) para novas, discusións e apoio sobre Discourse
+
+      ### Notas da edición
+
+      %{notes}
   flag_reasons:
     off_topic: "A túa publicación foi denunciada como **fóra de tema**: a comunidade pensa que non se axusta como debe ao tema que está definido polo seu título e primeira publicación."
     inappropriate: "A túa publicación foi denunciada como **inapropiada**: a comunidade pensa que é ofensiva, abusiva ou viola as [as directrices da nosa comunidade](%{base_path}/directrices)."
+    spam: "A súa publicación foi sinalada como **lixo**: a comunidade considera que é publicidade, algo que ten un carácter excesivamente promocional en lugar de ser útil ou relevante para o tema como se esperaba."
     notify_moderators: "A túa publicación foi denunciada para requirir a **atención do moderador**: a comunidade cre que algo dela precisa da intervención manual dun membro do equipo."
   flags_dispositions:
     agreed: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e estamos botándolle un ollo."
@@ -2129,9 +2521,60 @@ gl:
         Porén, se a publicación volvese ser ocultada de segundas, permanecerá oculta ata que un membro do equipo a xestione.
 
         Para máis información, visita as [directrices da nosa comunidade](%{base_url}/directrices).
+    post_hidden_again:
+      title: "Publicación agochada de novo"
+      subject_template: "Publicación agochada por alertas da comunidade, notificouselle ao grupo"
+      text_body_template: |
+        Ola,
+
+        Esta é unha mensaxe automática de %{site_name} para informalo de que a súa publicación volveu ser agochada outra vez.
+
+        <%{base_url}%{url}>
+
+        %{flag_reason}
+
+        A comunidade sinalou esta publicación e agora está agochada. **Debido a que esta publicación foi agochada máis dunha vez, agora permanecerá agochada ata que sexa tratada por un membro do grupol.**
+
+        Para obter máis información de actuación, consulte as [directrices da comunidade] (%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación denunciada restaurada polo equipo"
       subject_template: "Publicación denunciada restaurada polo equipo"
+      text_body_template: |
+        Ola,
+
+        Esta é unha mensaxe automática desde %{site_name} para facerlle saber que [a súa publicación](%{base_url}%{url}) foi restaurada.
+
+        A comunidade sinalou esta publicación pero un dos membros optou por restaurala.
+
+        [detalles="Prema para expandir a publicación restaurada"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+    flags_agreed_and_post_deleted:
+      title: "O grupo retirou a publicación sinalada"
+      subject_template: "O grupo retirou a publicación sinalada"
+      text_body_template: |
+        Ola,
+
+        Esta é unha mensaxe automatica de %{site_name} para facerlle saber que [a súa publicación](%{base_url}%{url}) foi retirada.
+
+        %{flag_reason}
+
+        A comunidade sinalou esta publicación e un dos membros optou por retirala.
+
+        [detalles=«Prema para despregar a publicación retirada»]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        Véxa as [normas da comunidade](%{base_url}/guidelines) para os detalles.
+    usage_tips:
+      text_body_template: |
+        Para algúns consellos rápidos sobre como comezar como novo usuario, [consulte esta publicación do blog] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        A medida que participe aquí, irémolo coñecendo e as limitacións temporais dos novos usuarios irán desaparecendo. Co tempo gañará [niveis de confianza] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclúen funcionalidades especiais para axudarnos a xestionar xuntos esta comunidade.
     welcome_user:
       title: "Benvida ao usuario"
       subject_template: "Benvido/a a %{site_name}!"
@@ -2144,7 +2587,12 @@ gl:
 
         Desfruta da túa estancia!
     welcome_tl1_user:
+      title: "Dámoslle a benvida ao usuario TL1"
       subject_template: "Grazas por pasares o tempo connosco"
+      text_body_template: |
+        Boas. Vemos que estivo ocupado lendo, o que é fantástico, así que lle incrementamos un nivel de confianza! (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+
+        Estamos realmente contentos de que pase tempo con nós e encantaríanos saber máis sobre vostede. Dedique un momento a [cubrir o seu perfil] (%{base_url}/my/preferences/profile), ou anímese a [iniciar un novo tema] (%{base_url}/categories).
     welcome_staff:
       title: "Benvida ao equipo do foro"
       subject_template: "Parabéns! Alcanzaches o status de %{role}!"
@@ -2155,6 +2603,7 @@ gl:
 
         Canda o poder vén a responsabilidade. Se non tes experiencia moderando, visita a [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
+      title: "Convite de benvida"
       subject_template: "Benvido/a a %{site_name}!"
       text_body_template: |
         Grazas por aceptares a invitación a  %{site_name} -- dámosche a benvida!
@@ -2170,6 +2619,14 @@ gl:
         Desfruta da túa estancia!
 
         [preferencias]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "Parabéns pola súa promoción a un novo nivel de confianza!"
+      text_body_template: |
+        Promocionámolo a outro [nivel de confianza](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        Como usuario experimentado, debería valorar [esta lista de consellos e trucos](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Animámolo a que siga participando. Gústanos telo por aquí!
     backup_succeeded:
       title: "Copia de seguranza feita satisfactoriamente"
       subject_template: "A copia de seguranza completouse correctamente"
@@ -2231,6 +2688,16 @@ gl:
         ``` text
         %{logs}
         ```
+    user_added_to_group_as_owner:
+      title: "Engadido ao grupo como propietario"
+      subject_template: "Vostede foi engadido como un propietario do grupo %{group_name}"
+      text_body_template: |
+        Vostede foi engadido como un propietaro do grupo [%{group_name}](%{base_url}%{group_path}).
+    user_added_to_group_as_member:
+      title: "Engadido ao grupo como membro"
+      subject_template: "Vostede foi engadido como un membro do grupo %{group_name}"
+      text_body_template: |
+        Vostede foi engadido como un membro do grupo [%{group_name}] (%{base_url}%{group_path}).
     csv_export_succeeded:
       title: "Exportacion de datos en CSV feita satisfactoriamente"
       subject_template: "[%{export_title}] exportación de datos completada"
@@ -2305,6 +2772,7 @@ gl:
 
         Se estás a ter este problema e si incluíches contido na resposta, téntao cun formato máis simple.
     email_reject_parsing:
+      title: "Procesamento do rexeitamento do correo"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Contido non recoñecido"
       text_body_template: |
         Sentímolo, mais a túa mensaxe de correo electrónico a %{destination} (co título %{former_title}) non funcionou.
@@ -2342,6 +2810,7 @@ gl:
         %{post_error}
 
         Se podes corrixiri o problema, téntao de novo.
+      date_invalid: "Non se atopou ningunha data de creación da publicación. Falta no correo unha cabeceira de data?"
     email_reject_post_too_short:
       title: "Correo electrónico de rexeitamento. Publicación demasiado curta"
       subject_template: "[%{email_prefix}] Problema de correo electrónico -- Publicacións demasiado curta"
@@ -2510,6 +2979,14 @@ gl:
     spam_post_blocked:
       title: "Publicación lixo bloqueada"
       subject_template: "As publicacións do novo usuario %{username} foron bloqueadas por repetir ligazóns"
+      text_body_template: |
+        Esta é unha mensaxe automática.
+
+        O novo usuario [%{username}](%{user_url}) tentou crear múltiples publicacións con ligazóns a %{domains}, pero tales publicacións foron bloqueadas co fin de evitar mensaxes lixo. O usuario aínda pode crear novas publicacións sempre e cando non conteñan ligazóns a %{domains}.
+
+        [Bótalle un ollo ao usuario](%{user_url}).
+
+        Isto pode modificarse nos axustes do sitio `newuser_spam_host_threshold` e `white_listed_spam_host_domains`. Considera a opción de engadir %{domains} á lista de permitidos se queres establecer unha excepción con eles.
     unsilenced:
       title: "Sen silenciar"
       subject_template: "Conta reestablecida"
@@ -2810,6 +3287,15 @@ gl:
         Se non tentaches crear unha conta para %{email} nin pretendiches cambiar o enderezo electrónico, non te preocuupes. Podes ignorar esta mensaxe.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
+    account_second_factor_disabled:
+      title: "Autenticación en dous pasos desactivada"
+      subject_template: "[%{email_prefix}] Autenticación en dous pasos desactivada."
+      text_body_template: |
+        A autenticación en dous pasos desactivouse na túa conta en %{site_name}. Agora podes iniciar sesión con só o teu contrasinal; xa non se vai precisar un código adicional de autenticación.
+
+        Se non elixiches desactivar a autenticación en dous pasos, pode que alguén comprometese a seguridade da túa conta.
+
+        Se tes calquera pregunta, [contacta co noso equipo](%{base_url}/about).
     digest:
       why: "Un breve resumo de %{site_link} desde a túa última visita o %{last_seen_at}"
       since_last_visit: "Desde a túa última visita"
@@ -2862,6 +3348,13 @@ gl:
     admin_login:
       title: "Inicio de sesión de administrador"
       subject_template: "[%{email_prefix}] Inicio de sesión"
+      text_body_template: |
+        Alguén solicitou iniciar sesión na túa conta en [%{site_name}](%{base_url}).
+
+        Se non fuches ti, podes ignorar este correo electrónico.
+
+        Preme na seguinte ligazón para iniciar sesión:
+        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Conta creada"
       subject_template: "[%{email_prefix}] A túa nova conta"
@@ -2873,6 +3366,21 @@ gl:
     confirm_new_email:
       title: "Confirmar novo correo electrónico"
       subject_template: "[%{email_prefix}] Confirma o teu novo enderezo de correo electrónico"
+      text_body_template: |
+        Confirme o seu novo enderezo electrónico para %{site_name} premendo na seguinte ligazón:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Se non solicitou este cambio, contacte cun [administrador do sitio](%{base_url}/about).
+    confirm_new_email_via_admin:
+      title: "Confirme o novo correo electrónico."
+      subject_template: "[%{email_prefix}] Confirma o teu novo enderezo electrónico"
+      text_body_template: |
+        Confirme o seu novo enderezo electrónico para %{site_name} premendo na seguinte ligazón:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Este cambio de enderezo electrónico foi solicitado por un administrador do sitio. Se vostede non solicitou este cambio, contacte cun [administrador do sitio](%{base_url}/about).
     confirm_old_email:
       title: "Confirmar o correo electrónico antigo"
       subject_template: "[%{email_prefix}] Confirma o teu enderezo de correo electrónico actual"
@@ -3001,6 +3509,7 @@ gl:
     file_missing: "Sentímolo, debes facilitar un ficheiro para subir."
     empty: "Sentímolo, mais o ficheiro que facilitaches está baleiro."
     png_to_jpg_conversion_failure_message: "Produciuse un erro ao converter de PNG a JPG."
+    optimize_failure_message: "Produciuse un erro ao optimizar a imaxe subida."
     attachments:
       too_large: "Sentímolo, o ficheiro que tentas subir é demasiado grande (o tamaño máximo é de %{max_size_kb} KB)."
     images:
@@ -3045,13 +3554,20 @@ gl:
     neutral: "Neutro"
     grey_amber: "Gris ámbar"
     shades_of_blue: "Azulado"
+    latte: "Latte"
     summer: "Verán"
     dark_rose: "Rosa escuro"
+    wcag: "WCAG Claro"
+    wcag_theme_name: "WCAG Claro"
+    wcag_dark: "WCAG Escuro"
+    wcag_dark_theme_name: "WCAG Escuro"
+    default_theme_name: "Predeterminado"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
     neutral_theme_name: "Neutro"
     grey_amber_theme_name: "Gris ámbar"
     shades_of_blue_theme_name: "Azulado"
+    latte_theme_name: "Latte"
     summer_theme_name: "Verán"
     dark_rose_theme_name: "Rosa escuro"
   edit_this_page: "Editar esta páxina"
@@ -3063,10 +3579,365 @@ gl:
     Editar a primeira publicación deste tema para cambiar o contido da páxina %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/directrices"
+    body: |
+      <a name="civilized"></a>
+
+      ## [Este é unha praza civilizada para a discusión pública](#civilized)
+
+      Por favor, trate este foro de discusión co mesmo respecto co que trataría un parque público. Tamén nós somos un recurso comunitario compartido; un lugar para compartir capacidades, coñecementos e intereses mediante unha conversa fluída.
+
+      Estas non son regras duras e fulminantes, apenas normas para axudar ao xuízo humano da nosa comunidade e manter este como un lugar limpo e ben iluminado para o discurso público civilizado.
+
+      <a name="improve"></a>
+
+      ##[Mellorar a discusión](#improve)
+
+      Axude a facer desta unha gran praza de discusión, traballando sempre para mellorar a discusión nalgún aspecto, por mais pequeno que sexa. Se non está seguro de que a súa publicación sumará á conversa, pense no que quere dicirr e ténteo novamente máis tarde.
+
+      Os temas aquí discutidos son importantes para nós, e queremos que actúe como se tamén fosen importantes para vostede. Respecte os temas e as pesoas que os discuten, mesmo que discorde con algo do que se está a dicir.
+
+      Unha forma de mellorar a discusión é descubrir outras que xa están a acontecer. Dedique tempo a navegar polos temas aquí antes de responder ou iniciar o seu prorio, e terá mais oportunidades de atopar a outros que compartan os seus intereses.
+
+      <a name="agreeable"></a>
+
+      ## [Sexa conciliador, mesmo cando está en desacordo](#agreeable)
+
+      Pode querer responder a algo co que está en desacordo. Moi ben. Mas lembre que se trata de _criticar ideas, non persoas_. Por favor, evite:
+
+      * Alcumar
+      * Ataques ad hominem
+      * Responder ao ton dunha mensaxe en vez ao seu contido real
+      * Reaccionar emocionalmente
+
+      En vez diso, forneza contra-argumentos fundamentados que melloran a conversa.
+
+      <a name="participate"></a>
+
+      ## [A súa participación conta](#participate)
+
+      As conversas que aquí temos estabelecen o ton para os novos que chegan. Axude a marcar o futuro desta comunidade, escollendo participar en discusións que fan deste foro un lugar interesante para estar &mdash; e evitando aqueles que non.
+
+      Discourse fornece ferramentas que lle permiten á comunidade identificar colectivamente as mellores (e as peores) contribucións: marcadores de favoritos, valoracións, alertas, respostas, edicións e así. Utilice estas ferramentas para mellorar a súa propia experiencia, e a de todos os outros tamen.
+
+      Deixemos a nosa comunidade mellor do que a atopamos.
+
+      <a name="flag-problems"></a>
+
+      ## [Se ve un problema, sináleo](#flag-problems)
+
+      Os moderadores teñen unha autoridade especial; eles son responsábeis deste foro. Mas vostede tamén o é. Coa súa axuda, os moderadores poden ser facilitadores da comunidade, e non só porteiros ou policías.
+
+      Cando vexa un mal comportamento, non responda. Alimenta o mal comportamento recoñecéndoo, consume a súa enerxía, e desperdiza o tempo de todos. _Só sinalíceo_. De se acumular alertas suficientes, tomaranse medidas, automaticamente ou por intervención de moderadores.
+
+      Co fin de manter a nosa comunidade, os moderadores resérvanse o dereito de retirar calquera contido e calquera conta de usuario, por calquera razón, en calquera momento. Os moderadores non visualizan previamente as mensaxes novas; os moderadores e operadores do sitio non asumen ningunha responsabilidade por ningún contido publicado pela comunidade.
+
+      <a name="be-civil"></a>
+
+      ## [Sexa sempre cívico](#be-civil)
+
+      Nada sabota unha conversa saudábel como a rudeza:
+
+      * Sexa cívico. Non publique nada que unha persoa razoábel podería consider ofensivo, abusivo, ou discurso de odio.
+      * Mantéeñao limpo. Non publique nada obsceno ou sexualmente explícito.
+      * Respecte ao outro. Non acose nin regañe a ninguén, non ridiculice persoas nin expoña información privada.
+      * Respecte o noso foro. Non publique lixo nin se permita vandalizar o foro de ningunha outra forma.
+
+      Estes non son termos concretos com definicións precisas &mdash; evite mesmo a _aparencia_ de calquera destas cousas. Se non está seguro, pregúntese como se sentiría se a súa publicación aparecese na primeira páxina do New York Times.
+
+      Este é un fóro público, e os motores de busca indexan estas discusións. Manteña o idioma, as ligazóns e as imaxes aptas para a familia e os amigos.
+
+      <a name="keep-tidy"></a>
+
+      ## [Limpeza e orde no foro](#keep-tidy)
+
+      Faga o esforzo de colocar as cousas no lugar adecuado, para que poidamos pasar máis tempo a discutir e menos tempo a limpar. Por iso:
+
+      * Non inicie un tema na categoría errada.
+      * Non repetir a mesma cousa en múltiplos temas.
+      * Non publicar respostas sen contido.
+      * Non desviar un tema cambiando o foco central a medio camiño.
+      * Non asine as súas publicacións &mdash; cada publicación ten xa a súa información de perfil anexada a el.
+
+      En vez de publicar «+1 » ou «Concordo», use o botón de valoración. En vez de desviar un tema a unha dirección radicalmente diferente, utilice a opción Responder como Tema Ligado.
+
+      <a name="stealing"></a>
+
+      ## [Publique só a súa produción](#stealing)
+
+      Non pode publicar nada dixital que pertenza a outra persoa sen autorización. Non pode publicar descricións, ligazóns ou métodos para roubar a propiedade intelectual de ninguén (software, vídeo, son, imaxes), nin para infrinxir calquera outra lei.
+
+      <a name="power"></a>
+
+      ## [Powered by You](#power)
+
+      Este sitio é operado polo seu [amábel grupo local](%{base_path}/about) e por *vostede*, a comunidade. Se tiver algunha pregunta sobre como deberían funcionar as cousas, abra un novo tema en [categoría comentario do sitio](%{base_path}/c/site-feedback) e discutámolo! De haber algún asunto crítico ou urxente que non se poida tratar cun metatema ou alerta, contacte con nós a través da [páxina do grupo](%{base_path}/about).
+
+      <a name="tos"></a>
+
+      ## [Termos do servizo](#tos)
+
+      Desde logo, os legalismos son aborrecidos pero debemos protexernos a nós mesmos &ndash; e por extensión a vostede e os seus datos &ndash; contra xente hostil. Temos uns [Termos de servizo](%{base_path}/tos) que describen o seu (e o noso) comportamento e dereitos relativos ao contido, normas de privacidade e legalidade. Para utilizar este servizo, debe estar de acordo en cumprir cos nosos [TOS](%{base_path}/tos).
   tos_topic:
     title: "Termos do servizo"
+    body: |
+      Estes termos rexen a utilización do foro da Internet en <%{base_url}>. Para utilizar o foro, debe concordar nestes termos con %{company_name}, a empresa que dirixe o foro.
+
+      A empresa pode ofrecer outros produtos e servizos, con distintos termos. Estes termos aplícanse só á utilización do foro.
+
+      Saltar a:
+
+      - [Termos importantes](#heading--important-terms)
+      - [Permiso para utilizar o foro](#heading--permission)
+      - [Condición de utilización do foro](#heading--conditions)
+      - [Utilización aceptábel](#heading--acceptable-use)
+      - [Normas de contido](#heading--content-standards)
+      - [Cumprimento da legalidade](#heading--enforcement)
+      - [A súa conta](#heading--your-account)
+      - [O seu contido](#heading--your-content)
+      - [A súa responsabilidade](#heading--responsibility)
+      - [Exencións de responsabilidade](#heading--disclaimers)
+      - [Límites de responsabilidade](#heading--liability)
+      - [Opinión](#heading--feedback)
+      - [Terminación](#heading--termination)
+      - [Disputas](#heading--disputes)
+      - [Termos xerais](#heading--general)
+      - [Contacto](#heading--contact)
+      - [Cambios](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Termos importantes</a></h2>
+
+      ***Estes termos inclúen unha serie de disposicións importantes que afectan os seus dereitos e responsabilidades, tales como as exencións en [Exencións de responsabilidade]](#heading--disclaimers), límites da responsabilidade da empresa para con vostede en [Límites de responsabilidade](#heading--liability), o seu acordo para cubrir a empresa por danos causados pola súa mala utilización do foro en [A súa responsibilidade](#heading--responsibility), e un acordo para arbitrar disputas en [Disputas](#heading--disputes).***
+
+
+      <h2 id="heading--permission"><a href="#heading--permission">Permiso para utilizar o foro</a></h2>
+
+      Suxeito a estes termos, a empresa dálle permiso para utilizar o foro. Todos precisan de concordar con estes termos para utilizar o foro.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Condicións de utilización do foro</a></h2>
+
+      O seu permiso para utilizar o foro está suxeito ás seguintes condicións:
+
+      1. Debe ter polo menos trece anos de idade.
+
+      2. No pode utilizar o foro se a empresa o contacta directamente para lle dicir que non pode.
+
+      3. Debe utilizar o foro de acordo con [Utilización aceptábel](#heading--acceptable-use) e [Normas de contido](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Utilización aceptábel</a></h2>
+
+      1. Non se pode infrinxir a lei usando o foro.
+
+      2. Non pode utilizar ou tentar utilizar a conta doutro no foro sen a súa autorización específica.
+
+      3. Non pode comprar, vender, ou doutra forma negociar nomes de usuario ou outros identificadores únicos no foro.
+
+      4. Non pode enviar anuncios, cadeas de mensaxes ou outras solicitudes a través do foro, nin utilizar o foro para recoller enderezos ou outros datos persoais para listas de correo comerciais ou bases de datos.
+
+      5. Non pode automatizar o acceso ao foro, ou monitorizar o foro, como por exemplo cunha "araña de web", complemento do navegador, ou outro programa de computador que non sexa un navegador de web. Pode rastrear o foro para indexalo nun motor de busca aberto ao público, se xestiona algún.
+
+      6. Non pode utilizar o foro para enviar correo electrónico a listas de distribución, grupos de noticias, ou pseudónimos de correo en grupo.
+
+      7. Non pode dar a entender falsamente que é afiliado ou está apoiado pola empresa.
+
+      8. Non pode estabelecer hiperligacións a imaxes ou outros contidos non hipertextuais do foro noutras páxinas web.
+
+      9. Non pode retirar ningunha marca que mostre a propiedade exclusiva de materiais que descargue do foro.
+
+      10. Non pode amosar calquera parte do foro noutros sitios web con `<iframe>`.
+
+      11. Non pode desactivar, evitar, ou rodear calquera restrición de seguranza ou de acceso ao foro.
+
+      12. Non pode sobrecargar a infraestrutura do foro cun volume desmesurado de consultas, ou consultas destinadas a supoñer unha carga desmesurada nos sistemas de información subxacentes ao foro.
+
+      13. Non pode facerse pasar por outros a través do foro.
+
+      14. Non pode animar ou axudar a ninguén para a violación destes termos.
+
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Normas de contido</a></h2>
+
+      1. Non pode enviar contidos ao foro que sexan ilegais, ofensivos, ou de calquera outra forma daniños para terceiros. Isto inclúe contido que sexa acosador, inapropiado ou abusivo.
+
+      2. Non pode enviar ao foro contido que viole a lei, infrinxa os dereitos de propiedade intelectual de ninguén, viole a privacidade de ninguén ou rompa os acordos que teña con outros.
+
+      3. Non pode enviar contido ao foro que conteña código informático malicioso, tal como virus informáticos ou software espía.
+
+      4. Non pode enviar contido ao foro como mera lugar de referencia, para manter un enderezo específico, nome de usuario ou outro identificador único.
+
+      5. Non pode utilizar o foro para divulgar informacións que non teña o dereito de divulgar, como informacións confidenciais ou persoais doutros.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Cumprimento da legalidade</a></h2>
+
+      A empresa pode investigar e procesar xudicialmente as violacións destes termos en toda a extensión legal. A empresa pode notificar e cooperar coas autoridades responsábeis de aplicar a lei na persecución de violacións da lei e destes termos.
+
+      A empresa resérvase o dereito a cambiar, redactar e eliminar o contido no foro por calquera razón. Se cre que alguén someteu contido ao foro violand estes termos, [contacte con nós inmediatamente](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">A súa conta</a></h2>
+
+      Debe crear e iniciar sesión nunha conta para utilizar algunhas funcionalidades do foro.
+
+      Para crear unha conta, debe fornecer algunhas informacións sobre vostede mesmo. Se crea unha conta, concorda con fornecer, como mínimo, un enderezo de correo electrónico válido, e con manter ese enderezo actualizado. Pode pechar a súa conta en calquera momento, enviando un correo a <%{contact_email}>.
+
+      Concorda en ser responsábel de toda acción que se produza utilizando a súa conta, autorizada ou non por vostede mesmoi, ata que a peche ou notifique á empresa que a súa conta foi manipulada. Esta de acordo con notificarlle inmediatamente á empresa se sospeita que a súa conta foi comprometida. Concorda en seleccionar un contrasinal seguro para a súa conta, e mantelo en segredo.
+
+      A empresa pode restrinxir, suspender ou pechar a súa conta no foro, conforme a súa política de tratamento de peticións de cesamentos relacionados con dereitos de autor ou se a empresa cre razoabelmente que rompeu algunha regra destes termos.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">O seu contido</a></h2>
+
+      Nada nestes termos dá á empresa ningún dereito de propiedaade sobre a propiedade intelectual que comparta co foro, tal como informació da súa conta, mensaxes, ou outros contidos que envíe ao foro. Nada nestes termos lle dá a vostede ningún dereito de propiedade sobre a propiedade intelectual da empresa, tampouco.
+
+      Entre vostede e a empresa, vostede é o único responsábel do contido que envíe ao foro. Está de acordo en non suxerir implicitamente que o contido que envía ao fórum está patrocinado ou aprobado pola empresa. Estes termos non obrigan a empresa a almacenar, manter ou fornecer copias do contido que vostede envía, e a cambialo, de acordo con estes termos.
+
+      O contido que envía ao foro perténcelle, e é o usuario quen decide cal o permiso que dar a outros para facelo. Mais, como mínimo, concede permiso á empresa para fornecer o contido que envía ao foro a outros usuarios do foro. Esa licenza especial permítelle á empresa copiar, publicar, e analizar o contido que somete ao fórum.
+
+      Cando o contido que envía se retira do foro, sexa pola súa vontade ou pola empresa, a licenza especial da empresa termina cando a última copia desaparece das copias de seguranza, caches e outros sistemas de empresa. Outras licenzas que vostede aplique ao contido que envía, tales como as licenzas [Creative Commons](https://creativecommons.org), poden continuar vixente logo de que retire o seu contido. Esas licenzas poden dar a outros, ou á propia empresa, o dereito de compartir novamente o seu contido no foro.
+
+      Outros que reciben o contido que envía ao foro poden violar os termos en que licenciou o seu contido. Concorda con que a empresa non será responsábel ante vostede desas violacións ou polas súas consecuencias.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">A súa responsabilidade</a></h2>
+
+      Concorda en indemnizar a empresa de reclamacións legais feitas por terceiros relacionadas coa súa violación destes termos, ou violación destes termos por terceiros que utilicen a súa conta no foro. Tanto vostede como a empresa acordan notificar á outra parte de calquera reclamación legal polas cales poida ter que indemnizar a empresa o máis rapidamente posíbel. Se a empresa non o notificase prontamente dunha reclamación legal, vostede non terá que indemnizar a empresa por danos dos quese podería defender ou ter mitigado co aviso inmediato. O cliente concorda en permitir que a empresa teña o control da investigación, defensa e resolución de reclamacións legais polas cales vostede tería que indemnizar a empresa, e cooperar con eses esforzos. A empresa concorda en non acordar ningunha resolución que admita a súa culpa ou impoña obrigas sen o seu acordo previo.
+
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Exencións de responsabilidade</a></h2>
+
+      ***Acepta todo o risco de utilizar o foro e o contido do foro. Tanto canto a lei o permita, a empresa e as súas auxiliares fornecer fornecen o foro tal como está, sen ningunha garantía.***
+
+      O foro pode hiperligar e integrar foros e servizos xestionados por outros. A empresa non ofrece ningunha garantía sobre os servizos xestionados por terceiros, ou contidos que estes poidan fornecer. A utilización de servizos xestionados por outros pode estar rexida por outros termos entre vostede e o servizo en funcionamento.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Límites de responsabilidade</a></h2>
+
+      ***Nin a empresa nin as súas auxiliares serán responsábeis ante vostede por danos causados pola quebra de contrato que o seu persoal non puidese prever razoabelmente cando vostede aceptou estes termos.***
+
+      *** Na medida en que a lei o permita, a responsabilidade ante vostede por reclamacións de calquera tipo relacionadas co foro ou contido do foro estará limitada a $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Opinión</a></h2>
+
+      A empresa agradece os seus comentarios e suxestións sobre o foro. Consulte a sección [Contact](#heading--contact) seguinte para ver formas de poñerse en contacto connosco.
+
+      Está de acordo con que a empresa será libre de actuar con base nos seus comentarios e suxestións, e que a empresa non terá que notificarlle que os seus comentarios foron utilizados, obter o seu permiso para os utilizar, ou pagarlle. Concorda en non enviar comentarios ou suxestións que crea que poidan ser confidenciais ou privados, da súa propiedade, ou da de outros.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Terminación</a></h2>
+
+      Tanto vostede como a empresa poden pór fin ao acordo escrito nestes termos en calquera momento. Cando o noso acordo termine, o permiso para utilizar o foro tamén termina.
+
+      As disposicións seguintes sobreviven ao fin do noso acordo: [O seu contido](#heading--your-content), [Opinión](#heading--feedback), [A súa responsabilidade](#heading--responsibility), [Exencións de responsabilidade](#heading--disclaimers), [Límites de responsabilidade](#heading--liability), e [Termos xerais](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Disputas</a></h2>
+
+      %{governing_law} rexerá calquera disputa relacionada con estes termos ou a súa utilización do foro.
+
+      Vostede e a empresa concordan en solicitar ordes xudiciais relacionadas con estes termos só nos xulgados de %{city_for_disputes}. Nin o cliente nin a empresa se oporán á xurisdición, foro ou venia neses tribunais.
+
+      ***Alén de solicitar unha orde xudicial ou para demandas ao abeiro da Lei de fraude e abuso informático, o cliente e a empresa resolverán calquera disputa a través de arbitraxe vinculante da Asociación Americana de Arbitraxe. A arbitraxe seguirá as Regras de arbitraxe comercial da AAA e os procedementos suplementarios para conflitos relacionados co consumidor. A arbitraxe acontecerá en %{city_for_disputes}. Resolverá calquera disputa como individuo, e non como parte dunha acción colectiva ou outro procedemento representativo, quere como queixoso quere como membro da clase. Ningún árbitraxe consolidará calquera disputa con ningunha outra arbitraxe sen a autorización da empresa.***
+
+      Calquera decisión arbitral incluirá os custos da arbitraxe, honorarios razoábeis dos avogados, e custos razoábeis para as testemuñas. Vostede e a empresa poden introducir as decisións arbitrais en calquera tribunal con xurisdición.
+
+      <h2 id="heading--general"><a href="#heading--general">Termos xerais</a></h2>
+
+      Se unha disposición destes termos for inaplicábel tal como está escrita, pero puidese ser cambiada para facela cumpríbel, esa disposición debe ser modificada na medida mínima necesaria para volvela aplicábel. En caso contrario, esa disposición deberá ser suprimida.
+
+      Non pode traspasar o seu acordo coa empresa. A empresa pode traspasar o seu acordo a calquera filial da empresa, a calquera outra empresa que obteña o control da empresa, ou a calquera outra empresa que compre bens da empresa relacionados co foro. Calquera tentativa de cesión contra estes termos non ten ningún efecto legal.
+
+      Nin o exercicio de calquera dereito ao abrigo do presente acordo, nin a renuncia a calquera ruptura do presente acordo, renuncia a calquera outra ruptura do presente acordo.
+
+      Estes termos incorporan todos os termos do acordo entre o cliente e a empresa sobre a utilización do foro. Estes termos substitúen enteiramente calquera dos outros acordos sobre a utilización por vostede do foro, escritos ou non.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contacto</a></h2>
+
+      Pode enviar notificar a empresa nestes termos, e enviar preguntas á empresa, en <%{contact_email}>.
+
+      A empresa pode notificalo ao abeito destes termos utilizando o enderezo de correo electrónico que forneceu para a súa conta no foro, ou publicando unha mensaxe na páxina inicial do foro ou na páxina da súa conta.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Cambios</a>></h2>
+
+      A empresa actualizou por última vez estes termos o 12 de xullo de 2018, e pode actualizar estes termos outra vez. A empresa publicará todas as actualizacións no foro. Para actualizacións que conteñan alteracións substanciais, a empresa concorda en enviarlle un correo, no caso de que crease unha conta e fornecese un enderezo de correo válido. A empresa pode tamén anunciar actualizacións con mensaxes especiais ou alertas no foro.
+
+      Unha vez que reciba unha actualización destes termos, deberá estar de acordo cos novos termos co fin de continuar a utilizar o foro.
   privacy_topic:
     title: "Política de privacidade"
+    body: |
+      <a name="collect"></a>
+
+      ## [Que información colleitamos?](#collect)
+
+      Colleitamos información súa cando se rexistra no noso sitio e compilamos datos cando participa no foro lendo, escribindo e avaliando o contido que se comparte aquí.
+
+      Cando se rexistre no noso sitio, pediráselle que introduza o seu nome e enderezo de correo electrónico. No entanto, pode visitar o sitio sen rexistrarse. O seu enderezo de correo electrónico comprobarase mediante un correo electrónico que contén unha ligazón de único uso. Se esa ligazón se visita, sabemos que vostede controla ese enderezo de correo electrónico.
+
+      Cando se rexistra e publica, rexistramos o enderezo IP de onde se orixinou o envío. Tamén podemos conservar os rexistros do servidor que inclúen o enderezo IP de cada solicitude ao noso servidor.
+
+      <a name="use"></a>
+
+      ##[Que facemos coa súa información?](#use)
+
+      Calquera información que compilemos de vostede pode ser utilizada dunha das seguintes maneiras:
+
+      * Para personalizar a súa experiencia &mdash; a súa información axúdanos a responder mellor ás súas necesidades individuais.
+      * Para mellorar o noso sitio web&mdash; esforzámonos a cotío por mellorar a nosa proposta a sitios web baseándonos na información e nos comentarios que recibimos de vostede.
+      * Para mellorar o servizo de atención ao cliente &mdash; a súa información axúdanos a responder máis eficazmente as peticións de servizo ao cliente e ás súas necesidades de asistencia.
+      * Para enviar correos electrónicos periódicos &mdash; O enderezo de correo electrónico que nos proporcione pode utilizarse para enviarlle información, notificacións que solicite sobre cambios en temas ou en respostas do seu nome de usuario, respostas a consultas e/ou outras peticións e cuestións.
+
+      <a name="protect"></a>
+
+      ## [Como protexemos esta información súa?](#protect)
+
+      Implementamos una variedade de medidas de seguranza para asegurar a súa información persoal cando entra, envía o accede á súa información persoal.
+
+      <a name="data-retention"></a>
+
+      ## [Cal é súa política de retención de datos?](#data-retention)
+
+      Faremos en boa fe, esforzos para..:
+
+      * Conservar os rexistros do servidor que conteñan o enderezo IP de todas as solicitudes a este servidor non máis de 90 días.
+      * Conservar os enderezos IP asociados aos usuarios rexistrados e coas súas mensaxes non máis de 5 anos.
+
+      <a name="cookies"></a>
+
+      ## [Usamos rastros?](#cookies)
+
+      Sí. Os rastros son pequenos ficheiros que un sitio ou o seu fornecedor de servizos transfire ao disco duro do seu computador a través do seu navegador web (se o permite). Estes rastros permiten que o sitio recoñeza o seu navegador e, se ten unha conta rexistrada, a asocie coa súa conta rexistrada.
+
+      Utilizamos rastros para comprender e gardar as súas preferencias para futuras visitas e compilar datos agregados sobre o tráfico do sitio e a interacción nel, de modo que poidamos ofrecer mellores experiencias e ferramentas no futuro. Podemos contratar fornecedores de servizos de terceiros para que nos axuden a comprerder mellor os visitantes do noso sitio. Estes fornecedores de servizos non están autorizados a utilizar a información compilada no noso nome, agás que sexa para axudarnos a levar a cabo e mellorar o noso obxectivo.
+
+      <a name="disclose"></a>
+
+      ## [Revelamos algunha información a terceiros?](#disclose)
+
+      Non vendemos, comerciamos nin transferimos a terceiros a súa información persoal identificábel. Isto non inclúe os terceiros de confianza que nos axudan a operar o noso sitio, a levar a cabo o noso obxectivo ou a prestarlle servizos, sempre e cando esas partes acorden manter esta información confidencial. Tamén podemos revelar a súa información cando creamos que é apropiado para cumprir coa lei, facer cumprir as políticas do noso sito ou protexer os nosos dereitos e os doutros, propiedade ou seguranza. No entanto, a información que non sexa de identificación persoal dos visitantes pode ser fornecida a outras partes para mercadotecnia, publicidade ou outros usos.
+
+      <a name="third-party"></a>
+
+      ## [Ligazóns de terceiros](#third-party)
+
+      Ocasionalmente, ao noso criterio, podemos incluír ou ofrecer produtos ou servizos de terceiros no noso sitio. Estes sitios de terceiros teñen políticas de privacidade separadas e independentes. Polo tanto, non temos ningunha responsabilidade sobre o contido e as actividades destes sitios ligados. Aínda así, buscamos protexer a integridade do noso sitio e agradecemos calquera comentario sobre estes sitios.
+
+      <a name="coppa"></a>
+
+      ## [Cumprimento da Lei de protección da privacidade dos menores na Internet](#coppa)
+
+      O noso sitio, produtos e servizos están dirixidos a persoas que teñen cando menos 13 anos de idade ou máis. Se este servidor está nos EE.UU., e vostede é menor de 13 anos, segundo os requisitos de COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), non utilice este sitio.
+
+      <a name="online"></a>
+
+      ## [Política de privacidade en liña soamente](#online)
+
+      Esta política de privacidade en liña aplícase só á información colleita a través do noso sitio e non á información recollida sen conexión en liña.
+
+      <a name="consent"></a>
+
+      ## [O seu consentimento](#consent)
+
+      Ao utilizar o sitio, acepta a política de privacidade do noso sitio web.
+
+      <a name="changes"></a>
+
+      ## [Cambios na nosa política de privacidade](#changes)
+
+      De decidirmos cambios na nosa política de privacidade, publicaremos tales cambios nesta páxina.
+
+      Este documento ten licenza CC-BY-SA. A súa última actualización é de do 31 de maio de 2013.
   badges:
     mass_award:
       errors:
@@ -3093,10 +3964,12 @@ gl:
         Esta insignia concédese cando alcanzas o nivel de confianza 2. Grazas por participares durante estas semanas e unirte de veras a esta comunidade. Agora podes enviar invitacións desde a túa páxina de usuario ou desde os propios temas, crear mensaxes persoais para grupos e ter máis gústames diarios.
     regular:
       name: Normal
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedido</a> recategorizar, renomear, seguimento de ligazóns, wiki, máis gústame
       long_description: |
         Esta insignia concédese cando alcanzas o nivel de confianza 3. Grazas por seres parte habitual da nosa comunidade ao longo destes meses. Ti es agora un dos lectores máis activos e fonte de confianza que fai mellor a comunidade. Agora podes recategorizar e renomear temas, as túas denuncias teñen máis peso, podes acceder á área privada da sala VIP, alén de poder dar moitos máis gústames por día.
     leader:
       name: Líder
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedida</a> a edición global, fixar, pechar, arquivar, dividir e combinar, máis gústame
       long_description: |
         Esta insignia concédese cando alcanzas o nivel de confianza 4. Es un líder da comunidade, así elixido/a polos administradores e cos teus xestos e palabras serves de exemplo positivo para o resto de membros. Tes a posibilidade de editar todas as publicacións e realizar accións propias dun moderador caso de salientar temas, pechalos, arquivalos, facelos invisibles, dividilos ou fusionalos.
     welcome:
@@ -3181,6 +4054,7 @@ gl:
         Esta insignia concédese cando convidas a tres persoas que levan tempo neste sitio e convertéronse en usuarios básicos. Unha comunidade viva precisa dun fluxo constante de voces que se sumen ás conversas.
     champion:
       name: Campión
+      description: Convidados 5 membros
       long_description: |
         Esta insignia concédese cando convidas a cinco persoas que levan neste sitio o tempo suficiente como para se converteren membros de pleno dereito. Fantástico! Grazas por aumentar a diversidade da comunidade con novos membros!
     first_share:
@@ -3223,38 +4097,47 @@ gl:
       long_description: |
         Esta insignia concédese cando a ligazón que compartiches alcanza os 1000 clics. Brutal! Publicaches unha ligazón que mellorou significativamente a conversa ao engadir detalles esenciais, máis contexto e información. Bo traballo!
     appreciated:
+      name: Apreciado
       description: Recibiu 1 gústame en 20 publicacións
       long_description: |
         Esta insignia concédese cando recibes ao menos un gústame en 20 publicacións diferentes. A comunidade está a desfrutar das túas achegas ás conversas!
     respected:
+      name: Respectado
       description: Recibiu 2 gústames en 100 publicacións
       long_description: |
         Esta insignia concédese cando recibes ao menos 2 gústames en 100 publicacións diferentes. A comunidade está a apreciar as túas numerosas achegas ás conversas!
     admired:
+      name: Admirado
       description: Recibiu 5 gústames en 300 publicacións
       long_description: |
         Esta insignia concédese cando recibes ao menos 5 gústames en 300 publicacións diferentes. A comunidade admira as túas achegas ás conversas pola súa frecuencia e tamén pola súa calidade!
     out_of_love:
+      name: Por amor de
       description: Utilizou %{max_likes_per_day} gústames nun día
       long_description: |
         Esta insignia concédese canto utilizas todos os teus %{max_likes_per_day} gústames diarios. Lembra que dedicarlle tempo a valorar as publicacións que son do teu gusto anima os membros da comunidade a crear debates aínda mellores no futuro.
     higher_love:
+      name: Maior amor
       description: Utilizou %{max_likes_per_day} gústames nun día 5 veces
       long_description: |
         Esta insignia concédese canto utilizas todos os teus %{max_likes_per_day} gústames diarios durante 5 días. Grazas por lle dedicares tempo a incentivar e premiar as mellores conversas cada día.
     crazy_in_love:
+      name: Tolo de amor
       description: Utilizou %{max_likes_per_day} gústames nun día 20 veces
       long_description: |
         Esta insignia concédese canto utilizas todos os teus %{max_likes_per_day} gústames diarios durante 20 días. Fantástico! Es un modelo para toda a comunidade por animares os demais membros da comunidade.
     thank_you:
+      name: Grazas
       description: Recibiu 20 gústames en publicacións e deu 10
       long_description: |
         Esta insignia concédese cando recibiches 20 gústames nas túas publicacións e deches 10 ou máis de volta. Cando a alguén lle gusta o que publicas, procura atopar tempo tamén para agradecer as publicacións dos demais.
     gives_back:
+      name: Devolve
       description: Recibiu 100 gústames en publicacións e deu 100
       long_description: |
         Esta insignia concédese cando recibiches 100 gústames nas túas publicacións e deches 100 ou máis de volta. Grazas por dares tanto e agradecelo de volta!
     empathetic:
+      name: Empático
       description: Recibiu 500 gústames en publicacións e deu 1000
       long_description: |
         Esta insignia concédese cando recibiches 500 gústames nas túas publicacións e deches 1000 ou máis de volta. Xenial! Serves de modelo de xenerosidade e apreciación mutua :two_hearts:.
@@ -3269,6 +4152,8 @@ gl:
       long_description: |
         Esta insignia concédese a primeira vez que mencionas a un @usuario nunha publicación túa. Cada mención xera unha notificación á persoa en cuestión para que saiban que a estás a mencionar. Simplemente comeza escribindo con @ para mencionar a alguén ou, se está permitido, a un grupo; é unha forma conveniente para chamar a atención.
     first_onebox:
+      name: Primeiro Onebox
+      description: Publicou unha ligazón que estaba oneboxed
       long_description: |
         Esta insignia concédese a primeira vez que publicas unha ligazón nunha liña que automaticamente se expande nunha caixa (onebox) cun título, resumo e, cando está dispoñible, unha imaxe.
     first_reply_by_email:
@@ -3277,16 +4162,23 @@ gl:
       long_description: |
         Esta insignia concédese a primeira vez que respondes a unha publicación vía correo electrónico :e-mail:.
     new_user_of_the_month:
+      name: "Novo usuario do mes"
+      description: Contribucións destacadas no seu primeiro mes
       long_description: |
         Esta insignia concédese para felicitar a dous novos usuarios polas súas excelentes colaboracións en función da frecuencia con que reciben gústames e de quen proveñen.
     enthusiast:
       name: Entusiasta
+      description: Visitouse 10 días seguidos
       long_description: |
         Esta insignia concédese por nos visitares durante 10 días consecutivos. Grazas ficar connosco máis dunha semana!
     aficionado:
+      name: Afeccionado
+      description: Visitouse 100 días seguidos
       long_description: |
         Esta insignia concédese por nos visitares durante 100 días consecutivos. Máis de tres meses!
     devotee:
+      name: Devoto
+      description: Visitouse 365 días seguidos
       long_description: |
         Esta insignia concédese por nos visitares durante 365 días consecutivos. Un ano enteiriño!
     badge_title_metadata: "%{display_name} insignia en %{site_title}"
@@ -3295,12 +4187,15 @@ gl:
     errors:
       unknown_email_address: "Enderezo de correo electrónico descoñecido"
       invalid_token: "Código non válido."
+    email_input: "Correo electrónico do administrador"
     submit_button: "Enviar correo electrónico"
   performance_report:
     initial_post_raw: Este tema inclúe informes diarios sobre o rendemento do teu sitio.
     initial_topic_title: Informes sobre o rendemento do sitio web
   tags:
     title: "Etiquetas"
+    restricted_tag_disallowed: 'Non pode aplicar a etiqueta «%{tag}».'
+    restricted_tag_remove_disallowed: 'Non pode retirar a etiqueta «%{tag}».'
     minimum_required_tags:
       one: "Debes seleccionar ao menos %{count} etiqueta."
       other: "Debes seleccionar ao menos %{count} etiquetas."
@@ -3327,6 +4222,7 @@ gl:
       button: "Rexistrarse"
       title: "Rexistrar conta de administrador"
       help: "rexistrar unha nova conta para comezar"
+      no_emails: "Desafortunadamente, non se determinaron enderezos de correo de administrador durante a definición inicial, polo que pode ser difícil finalizar a configuración. Engada, por favor, un correo de desenvolvedor no ficheiro de configuración ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>mire de crear unha conta de administrador desde a consola</a>."
     confirm_email:
       title: "Confirma o teu correo electrónico"
       message: "<p>Enviámosche un correo de activación a <b>%{email}</b>. Sigue as instrucións para activar a túa conta.</p><p>Se non che chega, comproba o cartafol de correo lixo e <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar correctamente o teu correo</a>.</p>"
@@ -3370,6 +4266,7 @@ gl:
             label: "Tema de benvida"
             description: "<p>Como lle describirías a túa comunidade a alguén que non a coñece nun minuto?</p> <ul> <li>A quen están enfocadas as súas discusións?</li> <li>Que podo atopar aquí?</li> <li>Por que debería visitala?</li> </ul> <p>O teu tema de benvida é a primeira cousa que lerán os novos visitantes. Pensa que é o <b>parágrafo</b> a modo de presentación exprés ou introdución á misión. </p>"
             one_paragraph: "Limita a túa mensaxe de benvida a un único parágrafo."
+            extra_description: "Se non está seguro, pode saltar este paso e editar o seu texto de benvida máis tarde."
       privacy:
         title: "Acceso"
         description: "<p>A túa comunidade é aberta a todo o mundo ou está restrinxida só aos seus membros afiliados, con invitación ou aprobación? Se o prefires, podes facer que inicialmente sexa privada e despois convertela en aberta.</p>"
@@ -3415,6 +4312,20 @@ gl:
           governing_law:
             label: "Lei que rexe"
             placeholder: "Lei de California"
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "San Francisco, California"
+      colors:
+        title: "Cores"
+      fonts:
+        title: "Tipos de letra"
+        fields:
+          body_font:
+            label: "Tipo de letra do corpo"
+          heading_font:
+            label: "Tipo de letra de título"
+          font_preview:
+            label: "Visualizar"
       logos:
         title: "Logotipos"
         fields:
@@ -3457,10 +4368,15 @@ gl:
         title: "Emoji"
         description: "Que estilo de emojis prefires para a túa comunidade? Podes engadir máis e personalizalos vía Administración, Personalizar, Emoji."
       invites:
+        title: "Convidar o grupo"
         description: "Xa está case! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a túa comunidade."
         disabled: "Como os inicios de sesión locais están desactivados, non é posible enviar invitacións a ninguén. Vai ao seguinte paso."
       finished:
         title: "O teu Discourse está pronto!"
+        description: |
+          <p>Se xa comprende como cambiar esta configuración, <b>volva executar este asistente en calquera momento</b>, ou visite <a href='%{base_path}/admin' target='_blank'>a sección de administración</a>; atoparao xunto á icona de chave inglesa no menú do sitio.</p>
+          <p>É doado personalizar Discourse aínda máis usando o noso poderoso sistema de temas. Para ver exemplos, consulte os <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">principais temas e compoñentes</a> en <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>Páseo ben e moita sorte <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>organizando a súa nova comunidade.</a></p>
   search_logs:
     graph_title: "Análise das buscas"
   joined: "Uniuse"
@@ -3482,6 +4398,7 @@ gl:
     unknown: "decoñecido"
     user_merged: "%{username} combinouse con esta conta"
     user_delete_self: "Eliminouse a si mesmo/a de %{url}"
+    webhook_deactivation_reason: "O seu webhook desactivouse automaticamente. Recibimos múltiplas respostas de status de fallo HTTP «%{status}»."
     api_key:
       automatic_revoked:
         one: "Revogada automaticamente, última actividade hai máis de %{count} día"
@@ -3509,6 +4426,7 @@ gl:
       new_topics_unless_trust_level: "Os usuarios con niveis de confianza baixos deben ter temas aprobados polo equipo. Revisa `approve_new_topics_unless_trust_level`."
       fast_typer: "O usuario novo escribiu a súa primeira publicación sospeitosamente rápido; pode ser un bot ou alguén cun comportamento de remitente non desexado. Revisa `min_first_post_typing_time`."
       auto_silence_regexp: "O usuario novo cuxa primeira publicación coincide coa configuración `auto_silence_first_post_regex`."
+      watched_word: "Esta publicación incluía unha palabra vixiada. Consulte a <a href='%{base_url}/admin/logs/watched_words'>lista de palabras vixiadas</a>."
       staged: "Os novos temas e publicacións de usuarios provisorios deben ser aprobados polo equipo. Revisa `approve_unless_staged`."
       category: "As publicacións nesta categoría requiren a aprobación manual do equipo. Consulta os axustes das categorías."
       must_approve_users: "Todos os novos usuarios deben ser aprobados polo equipo. Consulta `must_approve_users`."
@@ -3516,7 +4434,10 @@ gl:
       email_auth_res_enqueue: "Neste correo fallou a comprobación DMARC polo que posiblemente non é de quen semella ser. Comproba as cabeceiras do correo para máis información."
       email_spam: "Este correo electrónico foi denunciado como lixo pola cabeceira definida en `email_in_spam_header`."
       suspect_user: "Este novo usuario inseriu información de perfil sen ler antes ningún tema nin publicación, o cal suxire claramente que pode ser un remitente cun comportamento non desexado. Revisa `approve_suspect_users`."
+      contains_media: "Esta publicación inclúe elementos multimedia inseridos. Vexa `review_media_unless_trust_level`."
     actions:
+      agree:
+        title: "De acordo..."
       agree_and_keep:
         title: "Manter publicación"
         description: "De acordo con esta denuncia e manter a publicación sen modificar."
@@ -3551,8 +4472,10 @@ gl:
         description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén."
         confirm: "Confirmas a eliminación das respostas desta publicación tamén?"
       delete_and_agree:
+        title: "Eliminar publicación e aceptar"
         description: "Eliminar publicación; se é a primeira, eliminar tamén o tema"
       delete_and_agree_replies:
+        title: "Eliminar Publicación + Respostas e aceptar"
         description: "Eliminar publicación e todas as súas respostas; se é a primeira publicación, eliminar o tema tamén."
         confirm: "Confirmas a eliminación das respostas desta publicación tamén?"
       disagree_and_restore:
@@ -3602,6 +4525,12 @@ gl:
       %{keys}
 
       Arestora non se precisa realizar acción ningunha, mais repara en que é unha boa práctica de seguridade renovar todas as credencias importantes cada poucos anos.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Parte %{count})"
+      other: "%{topic_title} (Partes %{count})"
+    post_raw: "Continuando a discusión de %{parent_url}.\n\nDiscusións previas:\n\n%{previous_topics}"
+    small_action_post_raw: "Continuar a discusión en %{new_title}."
   activemodel:
     errors:
       <<: *errors

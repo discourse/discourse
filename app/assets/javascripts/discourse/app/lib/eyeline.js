@@ -1,5 +1,5 @@
-import { isTesting } from "discourse-common/config/environment";
 import AppEvents from "discourse/services/app-events";
+import { isTesting } from "discourse-common/config/environment";
 
 let _skipUpdate;
 let _rootElement;

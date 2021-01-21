@@ -200,9 +200,11 @@
                 canCreatePost=model.details.can_create_post
                 multiSelect=multiSelect
                 selectedPostsCount=selectedPostsCount
+                filteredPostsCount=model.postStream.filteredPostsCount
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
+                streamFilters=model.postStream.streamFilters
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
@@ -222,7 +224,8 @@
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
-                toggleSummary=(action "toggleSummary")
+                showSummary=(action "showSummary")
+                cancelFilter=(action "cancelFilter")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
                 topVisibleChanged=(action "topVisibleChanged")

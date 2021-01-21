@@ -1,5 +1,5 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
 export default Controller.extend({

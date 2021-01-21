@@ -331,28 +331,6 @@ pt:
     until_posts:
       one: "%{count} mensagem"
       other: "%{count} mensagens"
-    "new-topic": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
-
-      - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
-
-      - Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas pretende?
-
-      - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    "new-reply": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
-
-      - A sua resposta melhora de alguma maneira esta conversação?
-
-      - Seja gentil com os restantes membros da comunidade.
-
-      - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -625,9 +603,7 @@ pt:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
     mailing_list_mode: "Desligar modo de lista de distribuição"
-    all: "Não me mandar email de %{sitename}"
     different_user_description: "Está ligado como um utilizador diferente do que aquele para o qual enviamos email. Por favor saia, ou entre em modo anónimo, e tente novamente."
-    not_found_description: "Pedimos desculpa, não conseguimos cancelar a sua subscrição. É possível que a ligação no seu email tenha expirado?"
     log_out: "Sair"
     digest_frequency:
       never: "nunca"
@@ -1168,7 +1144,6 @@ pt:
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
-    prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"

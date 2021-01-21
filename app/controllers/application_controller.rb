@@ -803,16 +803,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
 
     if !SiteSetting.login_required? || @current_user
-      key = "page_not_found_topics"
-      if @topics_partial = Discourse.redis.get(key)
-        @topics_partial = @topics_partial.html_safe
-      else
+      key = "page_not_found_topics:#{I18n.locale}"
+      @topics_partial = Discourse.cache.fetch(key, expires_in: 10.minutes) do
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        Discourse.redis.setex(key, 10.minutes, @topics_partial)
-      end
+        render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+      end.html_safe
     end
 
     @container_class = "wrap not-found-container"

@@ -122,6 +122,7 @@ el:
       twitter: "Κοινοποιήστε στο Twitter"
       facebook: "Μοιραστείτε στο Facebook"
       email: "Αποστολή μέσω email"
+      url: "Αντιγραφή και κοινοποίηση διεύθυνσης URL"
     action_codes:
       public_topic: "έκανε αυτό το θέμα δημόσιο στις %{when}"
       private_topic: "έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
@@ -415,9 +416,6 @@ el:
         name: "Όνομα"
         fields: "Πεδία"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} συνολική σημαία)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} συνολικές σημαίες)"
         agreed:
           one: "%{count} συμφωνεί"
           other: "%{count} συμφωνούν"
@@ -859,7 +857,6 @@ el:
         perm_denied_expl: "Απορρίψατε την άδεια για ειδοποιήσεις. Επιτρέψτε τις ειδοποιήσεις μέσω των ρυθμίσεων του browser σας."
         disable: "Απενεργοποίηση Ειδοποιήσεων"
         enable: "Ενεργοποίηση Ειδοποιήσεων"
-        each_browser_note: "Σημείωση: Θα πρέπει να αλλάξετε αυτή τη ρύθμιση σε κάθε browser που χρησιμοποιείτε."
         consent_prompt: "Θέλετε ζωντανές ειδοποιήσεις όταν οι χρήστες απαντούν στις αναρτήσεις σας;"
       dismiss: "Απόρριψη"
       dismiss_notifications: "Απόρριψη Όλων"
@@ -874,7 +871,6 @@ el:
       color_scheme_default_on_all_devices: "Όρισε προεπιλεγμένο συνδυασμό χρωμάτων σε όλες τις συσκευές μου"
       color_scheme: "Συνδυασμός χρωμάτων"
       color_schemes:
-        default_description: "Προεπιλογή"
         disable_dark_scheme: "Το ίδιο με το κανονικό"
         dark_instructions: "Μπορείτε να κάνετε προεπισκόπηση του συνδυασμού χρωμάτων σκοτεινής λειτουργίας αλλάζοντας τη σκοτεινή λειτουργία της συσκευής σας."
         undo: "Επαναφορά"
@@ -1499,6 +1495,7 @@ el:
       awaiting_approval: "Ο λογαριασμός σου δεν έχει εγκριθεί από κανέναν συνεργάτη ακόμη. Θα λάβεις ένα email όταν εγκριθεί."
       requires_invite: "Λυπούμαστε, αλλά η πρόσβαση σε αυτό το φόρουμ είναι δυνατή μόνο με πρόσκληση."
       not_activated: "Δεν γίνεται να συνδεθείς ακόμη. Έχουμε ήδη στείλει ένα email με οδηγίες ενεργοποίησης στη διεύθυνση <b>%{sentTo}</b>. Ακολούθησε τις οδηγίες σε αυτό το μήνυμα για να ενεργοποιήσεις το λογαριασμό σου."
+      not_allowed_from_ip_address: "Δεν μπορείς να συνδεθείς από αυτή τη διεύθυνση IP."
       admin_not_allowed_from_ip_address: "Από αυτή τη διεύθυνση IP δεν επιτρέπεται να συνδεθείς ως διαχειριστής."
       resend_activation_email: "Πάτησε εδώ για να σταλεί ξανά το email ενεργοποίησης."
       resend_title: "Επαναποστολή Email Ενεργοποίησης"
@@ -1566,6 +1563,16 @@ el:
       enter: "Enter"
     conditional_loading_section:
       loading: Φόρτωση...
+    category_row:
+      topic_count:
+        one: "%{count} θέμα σε αυτήν την κατηγορία"
+        other: "%{count} θέματα σε αυτήν την κατηγορία"
+      plus_subcategories_title:
+        one: "%{name} και μία υποκατηγορία"
+        other: "%{name} και %{count} υποκατηγορίες"
+      plus_subcategories:
+        one: "+ %{count} υποκατηγορία"
+        other: "+ %{count} υποκατηγορίες"
     select_kit:
       default_header_text: Επιλογή...
       no_content: Δεν βρέθηκαν αποτελέσματα
@@ -1578,6 +1585,9 @@ el:
       min_content_not_reached:
         one: "Επιλέξτε τουλάχιστον %{count} στοιχείο."
         other: "Επιλέξτε τουλάχιστον %{count} στοιχεία."
+      invalid_selection_length:
+        one: "Η επιλογή πρέπει να έχει τουλάχιστον %{count} χαρακτήρα."
+        other: "Η επιλογή πρέπει να έχει τουλάχιστον %{count} χαρακτήρες."
       components:
         categories_admin_dropdown:
           title: "Διαχείριση κατηγοριών"
@@ -1618,7 +1628,6 @@ el:
       options: "Επιλογές"
       whisper: "ψιθύρισμα"
       unlist: "κρυμμένο"
-      blockquote_text: "Blockquote"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
       toggle_whisper: "Εναλλαγή Ψιθύρων"
       toggle_unlisted: "Εναλλαγή Κρυφών"
@@ -1643,6 +1652,9 @@ el:
         post_length: "Κάθε ανάρτηση πρέπει να περιέχει τουλάχιστον %{min} χαρακτήρες"
         try_like: "Έχετε δοκιμάσει το κουμπί %{heart};"
         category_missing: "Πρέπει να διαλέξεις μια κατηγορία"
+        tags_missing:
+          one: "Πρέπει να επιλέξετε τουλάχιστον %{count} ετικέτα"
+          other: "Πρέπει να επιλέξετε τουλάχιστον %{count} ετικέτες"
         topic_template_not_modified: "Παρακαλώ προσθέστε λεπτομέρειες στο θέμα σας με την επεξεργασία του προτύπου θέματος."
       save_edit: "Αποθήκευση Επεξεργασίας"
       overwrite_edit: "Αντικατάσταση επεξεργασίας"
@@ -1684,8 +1696,7 @@ el:
       link_dialog_title: "Εισαγωγή Υπερσύνδεσμου"
       link_optional_text: "προαιρετικός τίτλος"
       link_url_placeholder: "Επικολλήστε μια διεύθυνση URL ή πληκτρολογήστε για να αναζητήσετε θέματα"
-      quote_title: "Μπλοκ Κειμένου"
-      quote_text: "Μπλοκ κειμένου σε παράθεση"
+      blockquote_text: "Blockquote"
       code_title: "Προ-διαμορφωμένο κείμενο"
       code_text: "το προ-διαμορφωμένο κείμενο να μπει σε εσοχή με 4 κενά"
       paste_code_text: "πληκτρολογήστε ή επικολλήστε τον κώδικα εδώ"
@@ -1713,6 +1724,7 @@ el:
         draft: Προσχέδιο
         edit: Επεξεργασία
         reply_to_post:
+          label: Απάντηση στην ανάρτηση του %{postUsername}
           desc: Απάντηση σε μια συγκεκριμένη ανάρτηση
         reply_as_new_topic:
           label: Απάντηση ως συνδεδεμένο θέμα
@@ -1734,10 +1746,10 @@ el:
           label: "Νέο Νήμα"
         shared_draft:
           label: "Κοινόχρηστο προσχέδιο"
-          desc: "Προσχέδιο ενός θέματος που θα είναι ορατό μόνο στο προσωπικό"
         toggle_topic_bump:
           label: "Εναλλαγή ώθησης θέματος"
           desc: "Απάντηση χωρίς αλλαγή της τελευταίας ημερομηνίας απάντησης"
+      reload: "Ανανέωση"
     notifications:
       tooltip:
         regular:
@@ -1902,6 +1914,8 @@ el:
           noreplies: έχουν μηδέν απαντήσεις
           single_user: περιέχουν ένα μόνο χρήστη
         post:
+          count:
+            label: Αναρτήσεις
           time:
             label: Αναρτήθηκε
             before: πριν
@@ -2028,7 +2042,6 @@ el:
       read_more_in_category: "Θέλεις να διαβάσεις περισσότερα; Βρες άλλα νήματα στο %{catLink} ή %{latestLink}."
       read_more: "Θέλεις να διαβασεις περισσότερα; %{catLink} ή %{latestLink}."
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
-      read_more_MF: "Έχεις { UNREAD, plural, =0 {} one { μόνο <a href='{basePath}/unread'>1 αδιάβαστο</a> } other { <a href='{basePath}/unread'># αδιάβαστα</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{και } false {έχεις } other{}} <a href='{basePath}/new'>1 νέο</a> νήμα} other { {BOTH, select, true{και } false {έχεις } other{}} <a href='{basePath}/new'># νέα</a> νήματα} } ακόμη ή {CATEGORY, select, true {περιηγήσου σε άλλα νήματα {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
       browse_all_tags: Περιηγηθείτε σε όλες τις ετικέτες
@@ -2036,6 +2049,12 @@ el:
       jump_reply_up: μετάβαση στην απάντηση που προηγείται
       jump_reply_down: μετάβαση στην απάντηση που ακολουθεί
       deleted: "Το νήμα έχει διαγραφεί "
+      slow_mode_update:
+        durations:
+          1_hour: "1 ώρα"
+          4_hours: "4 ώρες"
+          1_day: "1 ημέρα"
+          1_week: "1 εβδομάδα"
       topic_status_update:
         title: "Χρονοδιακόπτης Νήματος"
         save: "Ρύθμιση Χρονοδιακόπτη"
@@ -2682,7 +2701,6 @@ el:
       notify_action: "Μήνυμα"
       official_warning: "Επίσημη Προειδοποίηση"
       delete_spammer: "Διαγραφή Ανεπιθύμητου"
-      delete_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {<b>1</b> ανάρτηση} other {<b>#</b> αναρτήσεις}} και{TOPICS,plural, one {<b>1</b> νήμα} other {<b>#</b> νήματα}} από το χρήστη, να διαγράψεις τον λογαριασμό του, να απαγορεύσεις τις εγγραφές από τη διεύθυνση IP <b>{ip_address}</b> και να πρόσθεσεις την διεύθυνση email <b>{email}</b> στην λίστα ανεπιθύμητων. Είσαι βέβαιος πως αυτός ο χρήστης είναι ανεπιθύμητος;"
       yes_delete_spammer: "Ναι, σβήσε τον ανεπιθύμητο χρήστη"
       ip_address_missing: "(μη διαθέσιμο)"
       hidden_email_address: "(κρυφό)"
@@ -2749,17 +2767,6 @@ el:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
     posts: "Αναρτήσεις"
-    posts_likes_MF: |2
-
-      Αυτό το νήμα έχει {count, plural, one {1 απάντηση} other {# απαντήσεις}} {ratio, select,
-
-      low {με μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      med {με πολύ μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      high {με εξαιρετικά μεγάλη αναλογία «μου αρέσει» στις αναρτήσεις}
-
-      other {}}
     original_post: "Αρχική Ανάρτηση"
     views: "Προβολές"
     views_lowercase:
@@ -3097,6 +3104,14 @@ el:
     safe_mode:
       enabled: "Η λειτουργία ασφαλείας είναι ενεργοποιημένη, για να εξέλθεις από τη λειτουργία ασφαλείας κλείσε το παράθυρο περιήγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
+    do_not_disturb:
+      title: "Μην ενοχλείτε για ..."
+      label: "Μην ενοχλείτε"
+      options:
+        half_hour: "30 λεπτά"
+        one_hour: "1 ώρα"
+        two_hours: "2 ώρες"
+        tomorrow: "Μέχρι αύριο"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:
@@ -3609,6 +3624,7 @@ el:
           install_upload: "Από τη συσκευή σας"
           install_git_repo: "Από ένα αποθετήριο git"
           install_create: "Δημιουργία νέου"
+          duplicate_remote_theme: "Το στοιχείο θέματος «%{name}» είναι ήδη εγκατεστημένο, είστε βέβαιοι ότι θέλετε να εγκαταστήσετε ένα άλλο αντίγραφο;"
           about_theme: "Σχετικά"
           license: "Άδεια Χρήσης"
           version: "Έκδοση:"
@@ -4082,7 +4098,6 @@ el:
         clear_penalty_history:
           title: "Καθαρισμός ιστορικού ποινών"
           description: "χρήστες με ποινές δε μπορούν να φτάσουν στο ΕΕ3"
-        delete_all_posts_confirm_MF: "Πρόκειται να διαγράψεις {POSTS, plural, one {1 ανάρτηση} other {# αναρτήσεις}} and {TOPICS, plural, one {1 νήμα} other {# νήματα}}. Είσαι σίγουρος;"
         silence: "Σίγαση"
         unsilence: "Αναίρεση Σίγασης"
         silenced: "Σε Σιγή;"

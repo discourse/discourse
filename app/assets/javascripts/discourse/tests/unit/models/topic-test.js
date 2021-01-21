@@ -1,10 +1,10 @@
-import { test } from "qunit";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import EmberObject from "@ember/object";
+import { test } from "qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 discourseModule("Unit | Model | topic", function () {
   test("defaults", function (assert) {

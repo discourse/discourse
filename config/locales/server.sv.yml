@@ -51,6 +51,9 @@ sv:
   remove_posts_deleted_by_author: "Borttaget av författaren"
   redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
   on_another_topic: "I ett annat ämne"
+  inline_oneboxer:
+    topic_page_title_post_number: "Nr %{post_number}"
+    topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
   themes:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
@@ -260,6 +263,7 @@ sv:
   email_template_cant_be_modified: "Den här e-postmallen kan inte ändras"
   invalid_whisper_access: "Antingen är viskningar inte aktiverade eller så har du inte behörighet för att skapa viskningsinlägg"
   not_in_group:
+    title_topic: "Du måste begära medlemskap i gruppen '%{group}' för att se detta ämne."
     title_category: "Du måste vara i en grupp för att se denna kategori."
     request_membership: "Begär medlemskap"
     join_group: "Gå med i grupp"
@@ -375,6 +379,7 @@ sv:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kan inte bokmärka samma inlägg två gånger."
+      too_many: "Tyvärr har du för många bokmärken, gå till %{user_bookmarks_url} för att ta bort några."
       cannot_set_past_reminder: "Du kan inte sätta en påminnelse för bokmärke i det förflutna."
       cannot_set_reminder_in_distant_future: "Du kan inte sätta en påminnelse för bokmärke mer än 10 år framåt i tiden."
       time_must_be_provided: "tid måste anges för alla påminnelser"
@@ -425,21 +430,21 @@ sv:
       one: "%{count} inlägg"
       other: "%{count} inlägg"
     "new-topic": |
-      Välkommen till %{site_name} &mdash; **tack för att du startade ett nytt samtal!**
+      Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation**
 
-      - Låter rubriken intressant om du läser det högt? Är det en bra sammanfattning?
+      - Låter rubriken intressant om du läser den högt? Ger det en bra sammanfattning?
 
       - Vem skulle kunna vara intresserad av detta? Varför är det viktigt? Vad för typ av svar förväntar du dig?
 
-      - Inkludera vanligt förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori.
+      - Inkludera vanliga förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori (eller tagg).
 
       För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
     "new-reply": |
       Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
 
-      - Bidrar ditt svar till samtalet på något sätt?
-
       - Var snäll mot andra medlemmar.
+
+      - Bidrar ditt svar till samtalet på något sätt?
 
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
@@ -933,7 +938,7 @@ sv:
     mailing_list_mode: "Stäng av utskicksläge"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: "Tyvärr kunde vi inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
+    not_found_description: "Tyvärr kunde vi inte hitta den här avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
     log_out: "Logga ut"
     submit: "Spara inställningar"
     digest_frequency:
@@ -1311,6 +1316,7 @@ sv:
     github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
     s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
+    s3_cdn_warning: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
@@ -1604,8 +1610,8 @@ sv:
     max_topic_invitations_per_day: "Max antal ämnesinbjudningar en användare kan skicka per dag."
     max_logins_per_ip_per_hour: "Maximalt antal inloggningar tillåtna per IP-adress per timme"
     max_logins_per_ip_per_minute: "Maximalt antal inloggningar tillåtna per IP-adress per minut"
-    max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut."
-    max_post_deletions_per_day: "Maximalt antal inlägg som en användare kan radera per dag."
+    max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut. Ställ in till 0 för att inaktivera inläggsraderingar."
+    max_post_deletions_per_day: "Maximalt antal inlägg som en användare kan radera per dag. Ställ in till 0 för att inaktivera inläggsraderingar."
     invite_link_max_redemptions_limit: "Maximalt antal återinbjudningar tillåtna för inbjudningslänkar kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
@@ -1628,6 +1634,7 @@ sv:
     avatar_sizes: "Lista över automatiskt genererade avatar-storlekar."
     external_system_avatars_enabled: "Använd externt system för avatar-tjänster."
     external_system_avatars_url: "URL till externt system för avatar-tjänster. Tillåtna ersättningar är {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "Använd webbplatsens lilla logotyp istället för systemanvändarens avatar. Kräver att logotypen är närvarande."
     restrict_letter_avatar_colors: "En lista med sexsiffriga hexadecimala färgvärden som ska användas för bakgrund av avatarer i brev."
     selectable_avatars_enabled: "Tvinga användare att välja en avatar från listan."
     selectable_avatars: "Lista på avatarer som användare kan välja från"
@@ -1699,6 +1706,7 @@ sv:
     body_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för ett inläggs innehåll."
     allow_uppercase_posts: "Tillåt enbart versaler i ämnets rubrik eller innehåll."
     max_consecutive_replies: "Antal inlägg som en användare måste göra i rad inom ett ämne innan användaren hindras lägga till ytterligare ett svar."
+    enable_filtered_replies_view: '(n)-svarsknappen förminskar alla andra inlägg och visar bara det aktuella inlägget och dess svar.'
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     desktop_category_page_style: "Visuell stil för /kategorier-sidan."
@@ -1908,7 +1916,7 @@ sv:
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
-    prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor. VARNING: det kommer att förhindra alla webbplatsens tillgångar som inte är bilder och som lagts upp som bilagor från att fungera."
+    prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
     secure_media: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ämnet för säkra media i Meta</a>.'
     secure_media_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure media max email embed image size kb'."
     secure_media_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra media i e-post är aktiverad, 'secure media allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
@@ -1937,6 +1945,7 @@ sv:
     blur_tl0_flagged_posts_media: "Diffusera flaggade inläggsbilder för att dölja innehåll som kanske är bäst att inte visa på arbetet."
     enable_page_publishing: "Tillåt personal att publicera ämnen för nya URL:er med deras egna utformning."
     show_published_pages_login_required: "Anonyma användare kan se publicerade sidor även när inloggning krävs."
+    skip_auto_delete_reply_likes: "När gamla svar tas bort automatiskt, hoppa över att radera inlägg med det här antalet gillningar eller mer."
     default_email_digest_frequency: "Standardinställning för hur ofta användare mottar sammanfattningen som skickas via e-post."
     default_include_tl0_in_digests: "Omfatta som standard inlägg från nya användare i sammanfattningar som skickas via e-post. Användare kan ändra detta i sina inställningar."
     default_email_level: "Ställ in standardnivå för e-postmeddelanden för vanliga ämnen."
@@ -1997,6 +2006,7 @@ sv:
     governing_law: "Gällande lag"
     city_for_disputes: "Domstol vid tvist"
     shared_drafts_category: "Aktivera funktionen Delade utkast genom att ange en kategori för ämnesutkast. Ämnen i den här kategorin undantas från ämneslistor för personalanvändare."
+    shared_drafts_min_trust_level: "Tillåt användare att se och redigera delade utkast."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
@@ -2218,6 +2228,18 @@ sv:
   admin:
     email:
       sent_test: "skickat!"
+    user:
+      merge_user:
+        updating_username: "Uppdaterar användarnamn..."
+        changing_post_ownership: "Ändrar äganderätt till inlägget..."
+        merging_given_daily_likes: "Sammanslagning av dagliga gillanden..."
+        merging_post_timings: "Sammanslagning av tidpunkter för inlägg..."
+        merging_user_visits: "Sammanslagning av användarbesök..."
+        updating_site_settings: "Uppdaterar webbplatsinställningar..."
+        updating_user_stats: "Uppdaterar användarstatistik..."
+        merging_user_attributes: "Sammanslagning av användarattribut..."
+        updating_user_ids: "Uppdaterar användar-id..."
+        deleting_source_user: "Tar bort källanvändare..."
   user:
     deactivated: "Inaktiverades på grund av för många studsade e-postmeddelanden till '%{email}'."
     deactivated_by_staff: "Avaktiverades av personalen"
@@ -2547,9 +2569,11 @@ sv:
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
-        Vi har gett dig en högre [förtroendenivå](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Vi har uppgraderat dig till en annan [tillitsnivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
-        Vi hoppas att du fortsätter att engagera dig - vi tycker om att ha dig här!
+        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Vi välkomnar dig att fortsätta engagera dig — vi tycker om att ha dig i närheten.
     backup_succeeded:
       title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"
@@ -3220,6 +3244,13 @@ sv:
       title: "Ny medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
       text_body_template: "Välkommen till %{site_name}! \n\nEn administratör har godkänt ditt konto hos %{site_name}.\n\nDu har nu tillgång till ditt nya konto genom att logga in från:\n%{base_url}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare.\n\n%{new_user_tips}\n\nVi tror på ett [civiliserat beteende i forumet](%{base_url}/guidelines) vid alla tillfällen.\n\nNjut av din vistelse!\n"
+    signup_after_reject:
+      title: "Registrering efter avslag"
+      subject_template: "Du har avvisats på %{site_name}"
+      text_body_template: |
+        Personal avvisade ditt konto på %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "Bli medlem"
       subject_template: "%{email_prefix} Bekräfta ditt nya konto"

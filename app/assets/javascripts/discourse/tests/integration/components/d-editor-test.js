@@ -1,20 +1,20 @@
+import { click, fillIn } from "@ember/test-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { next } from "@ember/runloop";
-import { clearToolbarCallbacks } from "discourse/components/d-editor";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
-  setTextareaSelection,
   getTextareaSelection,
+  setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import { fillIn, click } from "@ember/test-helpers";
+import I18n from "I18n";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
+import { next } from "@ember/runloop";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -459,13 +459,13 @@ third line`
 
       textarea.selectionStart = 0;
 
-      await click("button.quote");
+      await click("button.blockquote");
 
       assert.equal(this.value, "> one\n> \n> two\n> \n> three");
       assert.equal(textarea.selectionStart, 0);
       assert.equal(textarea.selectionEnd, 25);
 
-      await click("button.quote");
+      await click("button.blockquote");
       assert.equal(this.value, "one\n\ntwo\n\nthree");
     },
   });
@@ -481,7 +481,7 @@ third line`
       textarea.selectionStart = 6;
       textarea.selectionEnd = 10;
 
-      await click("button.quote");
+      await click("button.blockquote");
       assert.equal(this.value, "one\n\n\n> \n> two");
     },
   });
@@ -490,12 +490,12 @@ third line`
     textarea.selectionStart = 6;
     textarea.selectionEnd = 9;
 
-    await click("button.quote");
+    await click("button.blockquote");
     assert.equal(this.value, "hello\n\n> wor\n\nld.");
     assert.equal(textarea.selectionStart, 7);
     assert.equal(textarea.selectionEnd, 12);
 
-    await click("button.quote");
+    await click("button.blockquote");
 
     assert.equal(this.value, "hello\n\nwor\n\nld.");
     assert.equal(textarea.selectionStart, 7);
@@ -504,7 +504,7 @@ third line`
     textarea.selectionStart = 15;
     textarea.selectionEnd = 15;
 
-    await click("button.quote");
+    await click("button.blockquote");
     assert.equal(this.value, "hello\n\nwor\n\nld.\n\n> Blockquote");
   });
 
@@ -608,7 +608,7 @@ third line`
     template: "{{d-editor value=value}}",
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en_US";
+      this.siteSettings.default_locale = "en";
     },
 
     async test(assert) {
@@ -622,7 +622,7 @@ third line`
     template: "{{d-editor value=value}}",
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
-      this.siteSettings.default_locale = "en_US";
+      this.siteSettings.default_locale = "en";
     },
 
     async test(assert) {

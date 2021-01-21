@@ -954,7 +954,7 @@ describe 'topics' do
           category_id: { type: :string, nullable: true },
         }
 
-        let(:request_body) { { time: '2020-07-11+18:00-06:00', status_type: 'close' } }
+        let(:request_body) { { time: Time.current + 1.day, status_type: 'close' } }
         let!(:topic_post) { Fabricate(:post) }
         let(:id) { topic_post.topic.id }
 

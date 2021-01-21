@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { notEmpty, empty, equal } from "@ember/object/computed";
-import { computed } from "@ember/object";
+import { empty, equal, notEmpty } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "button",

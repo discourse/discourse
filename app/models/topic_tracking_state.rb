@@ -12,6 +12,7 @@ class TopicTrackingState
   UNREAD_MESSAGE_TYPE = "unread"
   LATEST_MESSAGE_TYPE = "latest"
   MUTED_MESSAGE_TYPE = "muted"
+  UNMUTED_MESSAGE_TYPE = "unmuted"
 
   attr_accessor :user_id,
                 :topic_id,
@@ -100,6 +101,21 @@ class TopicTrackingState
     message = {
       topic_id: topic.id,
       message_type: MUTED_MESSAGE_TYPE,
+    }
+    MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
+  end
+
+  def self.publish_unmuted(topic)
+    return if !SiteSetting.mute_all_categories_by_default
+    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
+      .where("users.last_seen_at > ?", 7.days.ago)
+      .order("users.last_seen_at DESC")
+      .limit(100)
+      .pluck(:id)
+    return if user_ids.blank?
+    message = {
+      topic_id: topic.id,
+      message_type: UNMUTED_MESSAGE_TYPE,
     }
     MessageBus.publish("/latest", message.as_json, user_ids: user_ids)
   end
@@ -219,7 +235,7 @@ class TopicTrackingState
                 always: User::NewTopicDuration::ALWAYS,
                 default_duration: SiteSetting.default_other_new_topic_duration_minutes,
                 min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime
-              ).where_clause.send(:predicates)[0]
+              ).where_clause.ast.to_sql
   end
 
   def self.include_tags_in_report?
@@ -297,8 +313,7 @@ class TopicTrackingState
       else
         TopicQuery
           .unread_filter(Topic, -999, staff: opts && opts[:staff])
-          .where_clause.send(:predicates)
-          .join(" AND ")
+          .where_clause.ast.to_sql
           .gsub("-999", ":user_id")
       end
 
@@ -313,7 +328,7 @@ class TopicTrackingState
       if opts[:skip_new]
         "1=0"
       else
-        TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
+        TopicQuery.new_filter(Topic, "xxx").where_clause.ast.to_sql.gsub!("'xxx'", treat_as_new_topic_clause) +
           " AND topics.created_at > :min_new_topic_date" +
           " AND (category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at)"
       end

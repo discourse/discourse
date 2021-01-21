@@ -1,10 +1,10 @@
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
-  updateCurrentUser,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("Enforce Second Factor", function (needs) {
   needs.user();

@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
+import { next } from "@ember/runloop";
 
 export default Component.extend({
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")

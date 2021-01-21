@@ -35,20 +35,26 @@ fr:
           title: "Listes déroulantes"
         categories:
           title: "Catégories"
+        bread_crumbs:
+          title: "Fils d'Ariane"
         navigation:
           title: "Navigation"
         navigation_bar:
           title: "Barre de navigation"
+        navigation_stacked:
+          title: "Navigation empilée"
         categories_list:
           title: "Liste des catégories"
         topic_link:
           title: "Lien vers le sujet"
+        topic_list_item:
+          title: "Élément de liste de sujets"
         topic_statuses:
           title: "Statuts des sujets"
         topic_list:
           title: "Liste des sujets"
-        latest_topic_list:
-          title: "Sujets récents"
+        basic_topic_list:
+          title: "Liste des sujets de base"
         footer_message:
           title: "Message de pied de page"
         signup_cta:
@@ -63,6 +69,8 @@ fr:
           title: "Message"
         topic_map:
           title: "Carte des sujets"
+        site_header:
+          title: "En-tête du site"
         suggested_topics:
           title: "Sujets suggérés"
         post_menu:
@@ -71,7 +79,9 @@ fr:
           title: "Modale"
           header: "Titre de la modale"
           footer: "Pied de la modale"
+        user_about:
+          title: "Boîte à propos de l'utilisateur"
         header_icons:
           title: "Icônes d'en-tête"
         spinners:
-          title: "Icónes de chargement"
+          title: "Icônes de chargement"

@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { schedule } from "@ember/runloop";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import bootbox from "bootbox";
-import discourseComputed, {
-  on,
-  observes,
-} from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["watched-word-form"],

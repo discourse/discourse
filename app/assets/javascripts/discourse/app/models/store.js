@@ -1,11 +1,11 @@
 import EmberObject, { set } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import ResultSet from "discourse/models/result-set";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { underscore } from "@ember/string";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import ResultSet from "discourse/models/result-set";
+import { ajax } from "discourse/lib/ajax";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { underscore } from "@ember/string";
 
 let _identityMap;
 

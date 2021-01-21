@@ -1,10 +1,10 @@
 import {
-  queryAll,
-  exists,
   acceptance,
+  exists,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("New Message - Anonymous", function () {
   test("accessing new-message route when logged out", async function (assert) {

@@ -1,8 +1,8 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { configureEyeline } from "discourse/lib/eyeline";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import { configureEyeline } from "discourse/lib/eyeline";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
 discourseModule("Integration | Component | load-more", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,7 +1,7 @@
-import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -88,7 +88,7 @@ discourseModule(
 
         assert.equal(
           this.subject.header().el().attr("title"),
-          "[en_US.test_none]",
+          "[en.test_none]",
           "it adds a title attribute to the button"
         );
       },

@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { empty, alias } from "@ember/object/computed";
+import { alias, empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
-import { Promise } from "rsvp";
 
 const _buttons = [];
 

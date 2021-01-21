@@ -1,8 +1,8 @@
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import { run } from "@ember/runloop";
-import { ajax } from "discourse/lib/ajax";
 import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { run } from "@ember/runloop";
 
 const _loaded = {};
 const _loading = {};

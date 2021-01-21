@@ -1,12 +1,12 @@
 import I18n from "I18n";
-import { createWidget } from "discourse/widgets/widget";
 import RawHtml from "discourse/widgets/raw-html";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { h } from "virtual-dom";
-import { avatarFor } from "discourse/widgets/post";
-import { userPath } from "discourse/lib/url";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { userPath } from "discourse/lib/url";
 
 export function actionDescriptionHtml(actionCode, createdAt, username) {
   const dt = new Date(createdAt);

@@ -1,5 +1,5 @@
-import User from "discourse/models/user";
 import Pretender from "pretender";
+import User from "discourse/models/user";
 
 export function parsePostData(query) {
   const result = {};
@@ -219,31 +219,15 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "posts") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-      });
-    } else if (request.queryParams.q === "evil") {
-      return response({
-        posts: [
-          {
-            id: 1234,
-          },
-        ],
-        tags: [
-          {
-            id: 6,
-            name: "eviltrout",
-          },
-        ],
-      });
+    if (request.queryParams.q === "discourse") {
+      return response(fixturesByUrl["/search.json"]);
+    } else if (request.queryParams.q === "discourse in:personal") {
+      const fixtures = fixturesByUrl["/search.json"];
+      fixtures.topics.firstObject.archetype = "private_message";
+      return response(fixtures);
+    } else {
+      return response({});
     }
-
-    return response({});
   });
 
   pretender.put("/u/eviltrout.json", () => response({ user: {} }));
@@ -313,6 +297,10 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/c/1/show.json"])
   );
 
+  pretender.get("/c/1-category/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/1/show.json"])
+  );
+
   pretender.put("/categories/:category_id", (request) => {
     const category = parsePostData(request.requestBody);
     category.id = parseInt(request.params.category_id, 10);
@@ -324,17 +312,13 @@ export function applyDefaultHandlers(pretender) {
     return response({ category });
   });
 
-  pretender.post("/categories", () => {
-    return response({
-      category: {
-        id: 11,
-        name: "testing",
-        color: "0088CC",
-        text_color: "FFFFFF",
-        slug: "testing",
-      },
-    });
-  });
+  pretender.post("/categories", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
+
+  pretender.get("/c/testing/find_by_slug.json", () =>
+    response(fixturesByUrl["/c/11/show.json"])
+  );
 
   pretender.get("/draft.json", (request) => {
     if (request.queryParams.draft_key === "new_topic") {
@@ -660,9 +644,15 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/admin/customize/site_texts", (request) => {
     if (request.queryParams.overridden) {
-      return response(200, { site_texts: [overridden] });
+      return response(200, {
+        site_texts: [overridden],
+        extras: { locale: "en" },
+      });
     } else {
-      return response(200, { site_texts: [siteText, overridden] });
+      return response(200, {
+        site_texts: [siteText, overridden],
+        extras: { locale: "en" },
+      });
     }
   });
 
@@ -678,6 +668,17 @@ export function applyDefaultHandlers(pretender) {
     result.id = request.params.key;
     result.can_revert = true;
     return response(200, { site_text: result });
+  });
+
+  pretender.get("/admin/themes", () => {
+    return response(200, { themes: [], extras: {} });
+  });
+
+  pretender.post("/admin/themes/generate_key_pair", () => {
+    return response(200, {
+      private_key: "privateKey",
+      public_key: "publicKey",
+    });
   });
 
   pretender.get("/tag_groups", () => response(200, { tag_groups: [] }));

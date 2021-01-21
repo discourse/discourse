@@ -1,6 +1,28 @@
-import { exists, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentURL } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+
+acceptance("Category 404", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/c/category-does-not-exist/find_by_slug.json", () => {
+      return helper.response(404, {
+        errors: ["The requested URL or resource could not be found."],
+        error_type: "not_found",
+        extras: { html: "<div class='page-not-found'>not found</div>" },
+      });
+    });
+  });
+  test("Navigating to a bad category link does not break the router", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click('[data-for-test="category-404"]');
+    assert.equal(currentURL(), "/404");
+
+    // See that we can navigate away
+    await click("#site-logo");
+    assert.equal(currentURL(), "/");
+  });
+});
 
 acceptance("Unknown", function (needs) {
   const urls = {

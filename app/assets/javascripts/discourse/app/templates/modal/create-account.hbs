@@ -17,7 +17,14 @@
             <table>
               <tbody>
                 <tr class="input create-account-email">
-                  <td class="label"><label for="new-account-email">{{i18n "user.email.title"}}</label></td>
+                  <td class="label">
+                    <label for="new-account-email">
+                      {{i18n "user.email.title"}}
+                      {{~#if userFields~}}
+                        <span class="required">*</span>
+                      {{/if}}
+                    </label>
+                  </td>
                   <td>
                     {{#if emailValidated}}
                       <span class="value">{{accountEmail}}</span>
@@ -34,7 +41,14 @@
                 </tr>
 
                 <tr class="input">
-                  <td class="label"><label for="new-account-username">{{i18n "user.username.title"}}</label></td>
+                  <td class="label">
+                    <label for="new-account-username">
+                      {{i18n "user.username.title"}}
+                      {{~#if userFields~}}
+                        <span class="required">*</span>
+                      {{/if}}
+                    </label>
+                  </td>
                   <td>
                     {{#if usernameDisabled}}
                       <span class="value">{{accountUsername}}</span>
@@ -52,7 +66,14 @@
                 {{#if fullnameRequired}}
                   <tr class="input">
                     <td class="label">
-                      <label for="new-account-name">{{i18n "user.name.title"}}</label>
+                      <label for="new-account-name">
+                        {{i18n "user.name.title"}}
+                        {{#if siteSettings.full_name_required}}
+                          {{~#if userFields~}}
+                            <span class="required">*</span>
+                          {{/if}}
+                        {{/if}}
+                      </label>
                     </td>
                     <td>
                       {{#if nameDisabled}}
@@ -83,7 +104,14 @@
 
                 {{#if passwordRequired}}
                   <tr class="input">
-                    <td class="label"><label for="new-account-password">{{i18n "user.password.title"}}</label></td>
+                    <td class="label">
+                      <label for="new-account-password">
+                        {{i18n "user.password.title"}}
+                        {{~#if userFields~}}
+                          <span class="required">*</span>
+                        {{/if}}
+                      </label>
+                    </td>
                     <td>
                       {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
                     </td>

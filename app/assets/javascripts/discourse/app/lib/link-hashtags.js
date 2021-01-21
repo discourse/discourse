@@ -1,7 +1,7 @@
-import { schedule } from "@ember/runloop";
+import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
-import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
+import { schedule } from "@ember/runloop";
 
 const categoryHashtags = {};
 const tagHashtags = {};
@@ -23,15 +23,19 @@ export function linkSeenHashtags($elem) {
         slug = slug.substr(0, slug.length - TAG_HASHTAG_POSTFIX.length);
       }
 
-      if (categoryHashtags[slug] && !hasTagSuffix) {
-        replaceSpan($(hashtag), slug, categoryHashtags[slug]);
-      } else if (tagHashtags[slug]) {
-        replaceSpan($(hashtag), slug, tagHashtags[slug]);
+      const lowerSlug = slug.toLowerCase();
+      if (categoryHashtags[lowerSlug] && !hasTagSuffix) {
+        replaceSpan($(hashtag), slug, categoryHashtags[lowerSlug]);
+      } else if (tagHashtags[lowerSlug]) {
+        replaceSpan($(hashtag), slug, tagHashtags[lowerSlug]);
       }
     });
   });
 
-  return slugs.uniq().filter((slug) => !checkedHashtags.has(slug));
+  return slugs
+    .map((slug) => slug.toLowerCase())
+    .uniq()
+    .filter((slug) => !checkedHashtags.has(slug));
 }
 
 export function fetchUnseenHashtags(slugs) {

@@ -1,9 +1,10 @@
 import { alias, reads } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { on } from "@ember/object/evented";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(LoadMore, {
   tagName: "table",
@@ -73,7 +74,17 @@ export default Component.extend(LoadMore, {
 
     let scrollTo = this.session.get("topicListScrollPosition");
     if (scrollTo && scrollTo >= 0) {
-      schedule("afterRender", () => $(window).scrollTop(scrollTo + 1));
+      schedule("afterRender", () => {
+        discourseDebounce(
+          this,
+          function () {
+            if (this.element && !this.isDestroying && !this.isDestroyed) {
+              $(window).scrollTop(scrollTo + 1);
+            }
+          },
+          0
+        );
+      });
     }
   },
 

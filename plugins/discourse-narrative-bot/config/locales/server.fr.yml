@@ -12,6 +12,7 @@ fr:
     discourse_narrative_bot_disable_public_replies: "Désactiver les réponses publiques de l'assistant Discourse"
     discourse_narrative_bot_welcome_post_type: "Type de message de bienvenue envoyé par l'assistant Discourse"
     discourse_narrative_bot_welcome_post_delay: "Attendre (n) seconde(s) avant d'envoyer le message de bienvenue de l'assistant Discourse"
+    discourse_narrative_bot_skip_tutorials: "Tutoriels de l'assistant Discourse à ignorer"
   badges:
     certified:
       name: Certifié
@@ -26,7 +27,9 @@ fr:
   discourse_narrative_bot:
     bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
     tl2_promotion_message:
-      subject_template: "Maintenant que vous avez été promu, il est temps d’en apprendre davantage sur certaines fonctionnalités avancées !"
+      subject_template: "Maintenant que vous avez été promu, il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
+      text_body_template: |
+        Répondez à ce message par `@%{discobot_username} %{reset_trigger}` pour en savoir plus sur ce que vous pouvez faire.
     timeout:
       message: |-
         Hey @%{username}, je viens voir si tout va bien car je n'ai pas eu de vos nouvelles depuis un moment.
@@ -42,6 +45,9 @@ fr:
       trigger: "Jet"
       invalid: |-
         Je suis désolé, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
+      not_enough_dice:
+        one: "Je n'ai que %{count} dé(s). [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
+        other: "Je n'ai que %{count} dés. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de face](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pour un dé non truqué est de 120 ?
       results: |-
@@ -76,7 +82,7 @@ fr:
         quote: "Les erreurs sont toujours pardonnables, si l'on a le courage de les admettre."
         author: "Bruce Lee"
       "10":
-        quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteind."
+        quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteint."
         author: "Napoleon Hill"
       results: |-
         > :left_speech_bubble: %{quote} __ &mdash; %{author}
@@ -182,6 +188,23 @@ fr:
           Sympa la photo ! – J'ai appuyé sur le bouton :heart: J'aime pour que vous sachiez au combien je l'apprécie. :heart_eyes:
         like_not_found: |-
           Avez-vous oublié d'aimer :heart: mon [message ?](%{url}) :crying_cat_face:
+        not_found: |-
+          Il semblerait que vous n'ayez pas téléversé d'image, j'en ai donc choisi une qui vous fera _certainement_ plaisir.
+
+          `%{image_url}`
+
+          Essayez de téléverser cette image, ou de coller le lien sur une nouvelle ligne vide !
+      likes:
+        instructions: |-
+          Voici une photo de licorne :
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Si vous l'aimez (et qui n'aime pas les licornes ?) allez-y, appuyez sur le bouton _J'aime_ :heart: sous ce message pour me le faire savoir.
+        reply: |-
+          Merci d'avoir apprécié mon message !
+        not_found: |-
+          Avez-vous oublié _d'aimer_ :heart: mon [message ?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Pouvez-vous faire quelques mots en **gras** ou en _italique_ dans votre réponse ?
@@ -223,23 +246,23 @@ fr:
           Uh oh, je ne vois aucun signet sur ce sujet ! Avez-vous trouvé le bouton signet sous chaque message ? Utilisez le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour dévoiler d'autres actions si nécessaire.
       emoji:
         instructions: |-
-          Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [emoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un emoji** à votre réponse ? N'importe lequel sera bien:
+          Vous pouvez avoir remarqué que j'utilise des petites images dans mes réponses :blue_car::dash: Elles sont appelées [émoji](https://fr.wikipedia.org/wiki/Emoji). Pouvez-vous **ajouter un émoji** à votre réponse ? N'importe lequel sera bien:
 
           - Tapez `:) ;) :D :P :O`
 
-          - Tapez <kbd>:</kbd> puis complétez le nom de l'emoji `:tada:`
+          - Tapez <kbd>:</kbd> puis complétez le nom de l'émoji `:tada:`
 
-          - Appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
+          - Appuyez sur le bouton émoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur, ou sur le clavier de votre mobile.
         reply: |-
           C'est :sparkles: _emojitastic !_ :sparkles:
         not_found: |-
-          Oops, je ne vois pas aucun emoji dans votre réponse ? Oh non ! :sob:
+          Oops, je ne vois pas aucun émoji dans votre réponse ? Oh non ! :sob:
 
-          Essayez de taper <kbd>:</kbd> pour faire apparaître la sélection d'emoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
+          Essayez de taper <kbd>:</kbd> pour faire apparaître la sélection d'émoji, puis appuyer sur les premières lettres de ce que vous voulez, comme par exemple `:bird:`
 
-          Ou appuyez sur le bouton emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
+          Ou appuyez sur le bouton émoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> dans l'éditeur.
 
-          (Si vous êtes sur un appareil mobile, vous pouvez aussi entrer l'emoji directement depuis votre clavier.)
+          (Si vous êtes sur un appareil mobile, vous pouvez aussi entrer l'émoji directement depuis votre clavier.)
       mention:
         instructions: |-
           Parfois vous avez peut-être envie d'attirer l'attention de quelqu'un, même si vous ne lui répondez pas directement. Tapez `@` et complétez son nom d'utilisateur pour le mentionner.
@@ -261,17 +284,19 @@ fr:
         reply: |-
           [Notre équipe](%{base_uri}/groups/staff) sera notifié de façon privée de votre signalement. Si assez de membres de la communauté signalent un message, il sera automatiquement masqué par précaution.
           (Puisque je n'ai pas réellement écrit un article méchant :ange: j'ai anticipé et j'ai enlevé le signalement pour le moment.)
+        not_found: |-
+          Oh non, mon _sale_ message n'a pas encore été signalé comme inapproprié. :worried: Pouvez-vous le signaler comme inapproprié à l'aide du ** drapeau ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? N'oubliez pas d'utiliser le bouton Afficher plus <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> pour afficher plus d'actions pour chaque message.
       search:
         instructions: |-
           _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les challenges, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> en haut à droite &#8599; pour la trouver.
 
           Essayer de chercher le terme "capy​&#8203;bara" dans ce sujet.
         hidden_message: |-
-          Comment avez-vous manqué ce capybara ? :clin d&#39;œil:
+          Comment avez-vous manqué ce capybara ? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Avez-vous remarqué que vous êtes maintenant de retour au début ? Nourrissez ce pauvre capybara affamé en **répondant avec l&#39;emoji `%{search_answer}` ** et vous serez automatiquement conduit à la fin.
+          Avez-vous remarqué que vous êtes maintenant de retour au début ? Nourrissez ce pauvre capybara affamé en **répondant avec l'émoji `%{search_answer}`** et vous serez automatiquement conduit à la fin.
         reply: |-
           Vous l'avez trouvé :tada:
 
@@ -295,7 +320,7 @@ fr:
         alt: "Certificat d'accomplissement"
     advanced_user_narrative:
       reset_trigger: "tutoriel avancé"
-      cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé "
+      cert_title: "En reconnaissance de l'accomplissement avec succès du tutoriel utilisateur avancé"
       title: ":arrow_up: Fonctionnalités utilisateur avancé"
       start_message: |-
         En tant qu'utilisateur _averti_, avez-vous déjà visité la page [mes préférences](%{base_uri}/my/preferences) @%{username} ? Il y a beaucoup de possibilité pour personnaliser votre expérience, comme en sélectionnant un thème clair ou foncé.

@@ -1,6 +1,6 @@
-import { visit, currentRouteName } from "@ember/test-helpers";
-import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("Static", function () {
   test("Static Pages", async function (assert) {

@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
+import ScreenedEmail from "admin/models/screened-email";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import ScreenedEmail from "admin/models/screened-email";
 
 export default Controller.extend({
   loading: false,

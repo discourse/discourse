@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { equal, gte, none, alias } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Controller from "@ember/controller";
+import { alias, equal, gte, none } from "@ember/object/computed";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import { schedule } from "@ember/runloop";
 
 const ButtonBackBright = {
     classes: "btn-primary",

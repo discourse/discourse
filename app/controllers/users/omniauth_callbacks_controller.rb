@@ -26,7 +26,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = DiscoursePluginRegistry.auth_providers.find { |p| p.name == params[:provider] }
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
       # Save to redis, with a secret token, then redirect to confirmation screen
@@ -54,9 +53,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       rescue URI::Error
       end
 
-      if parsed && # Valid
-         (parsed.host == nil || parsed.host == Discourse.current_hostname) && # Local
-         !parsed.path.starts_with?("#{Discourse.base_path}/auth/") # Not /auth URL
+      if valid_origin?(parsed)
         @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
@@ -83,6 +80,14 @@ class Users::OmniauthCallbacksController < ApplicationController
     redirect_to @origin
   end
 
+  def valid_origin?(uri)
+    return false if uri.nil?
+    return false if uri.host.present? && uri.host != Discourse.current_hostname
+    return false if uri.path.start_with?("#{Discourse.base_path}/auth/")
+    return false if uri.path.start_with?("#{Discourse.base_path}/login")
+    true
+  end
+
   def failure
     error_key = params[:message].to_s.gsub(/[^\w-]/, "") || "generic"
     flash[:error] = I18n.t("login.omniauth_error.#{error_key}", default: I18n.t("login.omniauth_error.generic"))
@@ -106,11 +111,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   def complete_response_data
     if @auth_result.user
       user_found(@auth_result.user)
-    elsif SiteSetting.invite_only?
+    elsif invite_required?
       @auth_result.requires_invite = true
     else
       session[:authentication] = @auth_result.session_data
     end
+  end
+
+  def invite_required?
+    SiteSetting.invite_only?
   end
 
   def user_found(user)

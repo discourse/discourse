@@ -1,18 +1,18 @@
-import I18n from "I18n";
-import { schedule, next } from "@ember/runloop";
+import { REMINDER_TYPES, formattedReminderTime } from "discourse/lib/bookmark";
 import { and, or } from "@ember/object/computed";
-import { action } from "@ember/object";
-import { isPresent, isEmpty } from "@ember/utils";
+import { isEmpty, isPresent } from "@ember/utils";
+import { next, schedule } from "@ember/runloop";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Controller from "@ember/controller";
-import { Promise } from "rsvp";
+import I18n from "I18n";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { ajax } from "discourse/lib/ajax";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import { formattedReminderTime, REMINDER_TYPES } from "discourse/lib/bookmark";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import bootbox from "bootbox";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -64,6 +64,7 @@ export default Controller.extend(ModalFunctionality, {
   lastCustomReminderTime: null,
   postDetectedLocalDate: null,
   postDetectedLocalTime: null,
+  postDetectedLocalTimezone: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
@@ -80,6 +81,7 @@ export default Controller.extend(ModalFunctionality, {
       lastCustomReminderTime: null,
       postDetectedLocalDate: null,
       postDetectedLocalTime: null,
+      postDetectedLocalTimezone: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       model: this.model || {},
@@ -385,9 +387,15 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  _parseCustomDateTime(date, time) {
+  _parseCustomDateTime(date, time, parseTimezone = this.userTimezone) {
     let dateTime = isPresent(time) ? date + " " + time : date;
-    return moment.tz(dateTime, this.userTimezone);
+    let parsed = moment.tz(dateTime, parseTimezone);
+
+    if (parseTimezone !== this.userTimezone) {
+      parsed = parsed.tz(this.userTimezone);
+    }
+
+    return parsed;
   },
 
   _defaultCustomReminderTime() {
@@ -449,7 +457,8 @@ export default Controller.extend(ModalFunctionality, {
   postLocalDate() {
     let parsedPostLocalDate = this._parseCustomDateTime(
       this.model.postDetectedLocalDate,
-      this.model.postDetectedLocalTime
+      this.model.postDetectedLocalTime,
+      this.model.postDetectedLocalTimezone
     );
 
     if (!this.model.postDetectedLocalTime) {

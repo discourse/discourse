@@ -1,9 +1,14 @@
-import { debounce } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import transformPost from "discourse/lib/transform-post";
+import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { avatarFor } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
+import transformPost from "discourse/lib/transform-post";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {
@@ -41,7 +46,7 @@ export function cloak(post, component) {
   _heights[post.id] = $post.outerHeight();
 
   component.dirtyKeys.keyDirty(`post-${post.id}`);
-  debounce(component, "queueRerender", 1000);
+  discourseDebounce(component, "queueRerender", 1000);
 }
 
 export function uncloak(post, component) {
@@ -58,22 +63,139 @@ addWidgetCleanCallback("post-stream", () => {
   _heights = {};
 });
 
+createWidget("posts-filtered-notice", {
+  buildKey: (attrs) => `posts-filtered-notice-${attrs.id}`,
+
+  buildClasses() {
+    return ["posts-filtered-notice"];
+  },
+
+  html(attrs) {
+    const filters = attrs.streamFilters;
+
+    if (filters.filter_upwards_post_id || filters.mixedHiddenPosts) {
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies.viewing_subset")
+        ),
+        this.attach("filter-show-all", attrs),
+      ];
+    } else if (filters.replies_to_post_number) {
+      const sourcePost = attrs.posts.findBy(
+        "post_number",
+        filters.replies_to_post_number
+      );
+
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies_viewing", {
+            count: sourcePost.reply_count,
+          })
+        ),
+        h("span.filtered-user-row", [
+          h(
+            "span.filtered-avatar",
+            avatarFor.call(this, "small", {
+              template: sourcePost.avatar_template,
+              username: sourcePost.username,
+              url: sourcePost.usernameUrl,
+            })
+          ),
+          this.attach("filter-jump-to-post", {
+            username: sourcePost.username,
+            postNumber: filters.replies_to_post_number,
+          }),
+        ]),
+        this.attach("filter-show-all", attrs),
+      ];
+    } else if (filters.filter && filters.filter === "summary") {
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies.viewing_summary")
+        ),
+        this.attach("filter-show-all", attrs),
+      ];
+    } else if (filters.username_filters) {
+      const firstUserPost = attrs.posts[1],
+        userPostsCount = parseInt(attrs.filteredPostsCount, 10) - 1;
+      return [
+        h(
+          "span.filtered-replies-viewing",
+          I18n.t("post.filtered_replies.viewing_posts_by", {
+            post_count: userPostsCount,
+          })
+        ),
+        h(
+          "span.filtered-avatar",
+          avatarFor.call(this, "small", {
+            template: firstUserPost.avatar_template,
+            username: firstUserPost.username,
+            url: firstUserPost.usernameUrl,
+          })
+        ),
+        this.attach("poster-name", firstUserPost),
+        this.attach("filter-show-all", attrs),
+      ];
+    }
+
+    return [];
+  },
+});
+
+createWidget("filter-jump-to-post", {
+  tagName: "a.filtered-jump-to-post",
+  buildKey: (attrs) => `jump-to-post-${attrs.id}`,
+
+  html(attrs) {
+    return I18n.t("post.filtered_replies.post_number", {
+      username: attrs.username,
+      post_number: attrs.postNumber,
+    });
+  },
+
+  click() {
+    DiscourseURL.jumpToPost(this.attrs.postNumber);
+  },
+});
+
+createWidget("filter-show-all", {
+  tagName: "a.filtered-replies-show-all",
+  buildKey: (attrs) => `filtered-show-all-${attrs.id}`,
+
+  buildClasses() {
+    return ["btn", "btn-primary"];
+  },
+
+  html() {
+    return [iconNode("arrows-alt-v"), I18n.t("post.filtered_replies.show_all")];
+  },
+
+  click() {
+    this.sendWidgetAction("cancelFilter", this.attrs.streamFilters);
+    this.appEvents.trigger(
+      "post-stream:filter-show-all",
+      this.attrs.streamFilters
+    );
+  },
+});
+
 export default createWidget("post-stream", {
   tagName: "div.post-stream",
 
   html(attrs) {
-    const posts = attrs.posts || [];
-    const postArray = posts.toArray();
-
-    const result = [];
-
-    const before = attrs.gaps && attrs.gaps.before ? attrs.gaps.before : {};
-    const after = attrs.gaps && attrs.gaps.after ? attrs.gaps.after : {};
+    const posts = attrs.posts || [],
+      postArray = posts.toArray(),
+      result = [],
+      before = attrs.gaps && attrs.gaps.before ? attrs.gaps.before : {},
+      after = attrs.gaps && attrs.gaps.after ? attrs.gaps.after : {},
+      mobileView = this.site.mobileView;
 
     let prevPost;
     let prevDate;
 
-    const mobileView = this.site.mobileView;
     for (let i = 0; i < postArray.length; i++) {
       const post = postArray[i];
 
@@ -156,6 +278,21 @@ export default createWidget("post-stream", {
 
       prevPost = post;
     }
+
+    if (
+      attrs.streamFilters &&
+      Object.keys(attrs.streamFilters).length &&
+      (Object.keys(before).length > 0 || Object.keys(after).length > 0)
+    ) {
+      result.push(
+        this.attach("posts-filtered-notice", {
+          posts: postArray,
+          streamFilters: attrs.streamFilters,
+          filteredPostsCount: attrs.filteredPostsCount,
+        })
+      );
+    }
+
     return result;
   },
 });

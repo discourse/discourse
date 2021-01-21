@@ -1,6 +1,6 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "td",

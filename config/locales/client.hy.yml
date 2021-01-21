@@ -768,7 +768,6 @@ hy:
         perm_denied_expl: "Դուք մերժել եք ծանուցումների թույլտվությունը: Թույլատրեք ծանուցումները Ձեր բրաուզերի կարգավորումներից:"
         disable: "Անջատել Ծանուցումները"
         enable: "Միացնել Ծանուցումները"
-        each_browser_note: "Ծանոթություն: Դուք պետք է փոխեք այս կարգավորումը Ձեր օգտագործած յուրաքանչյուր բրաուզերի համար:"
         consent_prompt: "Դուք ցանկանո՞ւմ եք ստանալ այժմեական ծանուցումներ, երբ մարդիկ պատասխանեն Ձեր գրառումներին:"
       dismiss: "Չեղարկել"
       dismiss_notifications: "Չեղարկել Բոլորը"
@@ -1470,7 +1469,6 @@ hy:
       options: "Տարբերակներ"
       whisper: "շշուկ"
       unlist: "չցուցակագրված"
-      blockquote_text: "Մեջբերել բաժինը"
       add_warning: "Սա պաշտոնական զգուշացում է:"
       toggle_whisper: "Փոխանջատել Շշնջումը"
       toggle_unlisted: "Փոխանջատել Չցուցակագրվածները"
@@ -1536,8 +1534,7 @@ hy:
       link_dialog_title: "Տեղադրել Հիպերհղումը"
       link_optional_text: "ընտրովի վերնագիր"
       link_url_placeholder: "Տեղադրեք URL կամ տեքստը մուտքագրեք՝ թեմաները որոնելու համար"
-      quote_title: "Մեջբերել"
-      quote_text: "Մեջբերել բաժինը"
+      blockquote_text: "Մեջբերել բաժինը"
       code_title: "Ձևաչափված տեքստ"
       code_text: "Անջատել ձևաչափված տեքստը 4 բացատով"
       paste_code_text: "գրեք կամ տեղադրեք կոդն այստեղ"
@@ -1583,7 +1580,6 @@ hy:
           label: "Նոր Թեմա"
         shared_draft:
           label: "Ստեղծել Կիսված Սևագիր"
-          desc: "Սևագրեք թեմա, որը տեսանելի կլինի միայն անձնակազմին"
         toggle_topic_bump:
           label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
@@ -1868,7 +1864,6 @@ hy:
       read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ %{catLink}-ում կամ %{latestLink}."
       read_more: "Ցանկանո՞ւմ եք կարդալ ավելին: %{catLink} կամ %{latestLink}."
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
-      read_more_MF: " { UNREAD, plural, =0 {} one {<a href='{basePath}/unread'>1 չկարդացած</a> } other { <a href='{basePath}/unread'># չկարդացած</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {Կա} other{}} <a href='{basePath}/new'>1 նոր</a> topic} other { {BOTH, select, true{and } false {կա } other{}} <a href='{basePath}/new'># նոր</a> թեմա} } , կամ {CATEGORY, select, true {դիտեք այլ թեմաներ {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Դիտել բոլոր կատեգորիաները
       view_latest_topics: դիտեք վերջին թեմաները
@@ -2494,7 +2489,6 @@ hy:
       notify_action: "Հաղորդագրություն"
       official_warning: "Պաշտոնական Զգուշացում"
       delete_spammer: "Ջնջել Սպամ տարածողին"
-      delete_confirm_MF: "Դուք պատրաստվում եք ջնջել այս օգտատիրոջ {POSTS, plural, one {<b>1</b> գրառումը} other {<b>#</b> գրառումները}} և {TOPICS, plural, one {<b>1</b> թեման} other {<b>#</b> թեմաները}} , ջնջել նրա հաշիվը, արգելափակել մուտքը նրա <b>{ip_address}</b> IP-ից և ավելացնել նրա <b>{email}</b> էլ հասցեն մշտական արգելափակվածների ցանկին: Դուք համոզվա՞ծ եք, որ այս օգտատերն իրոք սպամ տարածող է:"
       yes_delete_spammer: "Այո, Ջնջել Սպամ տարածողին"
       ip_address_missing: "(անհասանելի)"
       hidden_email_address: "(թաքցված)"
@@ -2561,12 +2555,6 @@ hy:
         title: "Այս թեման անձնական հաղորդագրություն է"
         help: "Այս թեման անձնական հաղորդագրություն է"
     posts: "Գրառումներ"
-    posts_likes_MF: |
-      Այս թեման ունի {count, plural, one {1 պատասխան} other {# պատասխան}} {ratio, select,
-        low {գրառման հավանումների բարձր հարաբերակցությամբ}
-        med {գրառման հավանումների շատ բարձր հարաբերակցությամբ}
-        high {գրառման հավանումների չափազանց բարձր հարաբերակցությամբ}
-        other {}}
     original_post: "Սկզբնական Գրառումը"
     views: "Դիտում"
     views_lowercase:
@@ -3835,7 +3823,6 @@ hy:
         clear_penalty_history:
           title: "Ջնջել Տուգանքների Պատմությունը"
           description: "տուգանքներ ունեցող օգտատերերը չեն կարող հասնել 3-րդ Վստահության Մակարդակի"
-        delete_all_posts_confirm_MF: "Դուք պատրաստվում եք ջնջել {POSTS, plural, one {1 գրառում} other {# գրառում}} և {TOPICS, plural, one {1 թեմա} other {# թեմա}}: Դուք համոզվա՞ծ եք:"
         silence: "Լռեցնել"
         unsilence: "Միացնել"
         silenced: "Լռեցվա՞ծ"

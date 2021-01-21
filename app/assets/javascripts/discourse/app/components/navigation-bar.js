@@ -1,9 +1,9 @@
-import { next } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import { next } from "@ember/runloop";
+import { renderedConnectorsFor } from "discourse/lib/plugin-connectors";
 
 export default Component.extend(FilterModeMixin, {
   tagName: "ul",

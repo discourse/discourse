@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { equal, and, empty, or } from "@ember/object/computed";
-import Component from "@ember/component";
+import { and, empty, equal, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
+import I18n from "I18n";
 import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
+import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   selection: null,
@@ -17,6 +17,7 @@ export default Component.extend({
   isBasedOnLastPost: equal("selection", "set_based_on_last_post"),
   displayDateAndTimePicker: and("includeDateTime", "isCustom"),
   displayLabel: null,
+  labelClasses: null,
   displayNumberInput: or("isBasedOnLastPost", "isBasedOnDuration"),
 
   init() {

@@ -1,9 +1,9 @@
-import { test } from "qunit";
+import Site from "discourse/models/site";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import createStore from "discourse/tests/helpers/create-store";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import Site from "discourse/models/site";
 import sinon from "sinon";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { test } from "qunit";
 
 discourseModule("Unit | Utility | category-badge", function () {
   test("categoryBadge without a category", function (assert) {

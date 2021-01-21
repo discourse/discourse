@@ -1,8 +1,8 @@
-import { empty, or, notEmpty } from "@ember/object/computed";
+import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import bootbox from "bootbox";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   username: null,

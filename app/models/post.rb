@@ -166,6 +166,10 @@ class Post < ActiveRecord::Base
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
 
+  def self.find_by_number(topic_id, post_number)
+    find_by(topic_id: topic_id, post_number: post_number)
+  end
+
   def whisper?
     post_type == Post.types[:whisper]
   end
@@ -529,6 +533,7 @@ class Post < ActiveRecord::Base
     self.hidden = true
     self.hidden_at = Time.zone.now
     self.hidden_reason_id = reason
+    self.skip_unique_check = true
     save!
 
     Topic.where(
@@ -1174,4 +1179,5 @@ end
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
 #  index_posts_on_user_id_and_created_at     (user_id,created_at)
+#  index_posts_user_and_likes                (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

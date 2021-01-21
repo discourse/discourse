@@ -1,7 +1,7 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import { formattedReminderTime } from "discourse/lib/bookmark";
+import { module, test } from "qunit";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import { formattedReminderTime } from "discourse/lib/bookmark";
+import sinon from "sinon";
 
 module("Unit | Utility | bookmark", function (hooks) {
   hooks.beforeEach(function () {

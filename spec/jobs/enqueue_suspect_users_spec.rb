@@ -80,5 +80,13 @@ describe Jobs::EnqueueSuspectUsers do
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(true)
     end
+
+    it 'ignores imported users even if they have multiple custom fields' do
+      suspect_user.upsert_custom_fields({ field_a: 'value', field_b: 'value', import_id: 'fake_id' })
+
+      subject.execute({})
+
+      expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
+    end
   end
 end

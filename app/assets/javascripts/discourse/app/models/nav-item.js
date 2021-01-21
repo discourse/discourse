@@ -1,15 +1,15 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import { reads } from "@ember/object/computed";
-import deprecated from "discourse-common/lib/deprecated";
+import I18n from "I18n";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { reads } from "@ember/object/computed";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -75,12 +75,13 @@ const NavItem = EmberObject.extend({
     "name",
     "category",
     "tagId",
+    "noSubcategories",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId) {
+  count(name, category, tagId, noSubcategories) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category, tagId);
+      return state.lookupCount(name, category, tagId, noSubcategories);
     }
   },
 });

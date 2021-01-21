@@ -7,6 +7,16 @@ class Search
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.preload(results, object)
+    if @preload
+      @preload.each { |preload| preload.call(results, object) }
+    end
+  end
+
   def self.per_facet
     5
   end
@@ -164,7 +174,7 @@ class Search
   end
 
   attr_accessor :term
-  attr_reader :clean_term
+  attr_reader :clean_term, :guardian
 
   def initialize(term, opts = nil)
     @opts = opts || {}
@@ -281,6 +291,8 @@ class Search
       topics = @results.posts.map(&:topic)
       Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
     end
+
+    Search.preload(@results, self)
 
     @results
   end
@@ -605,7 +617,14 @@ class Search
   end
 
   advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/i) do |posts, match|
-    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck_first(:id)
+    username = match.downcase
+
+    user_id = User.where(staged: false).where(username_lower: username).pluck_first(:id)
+
+    if !user_id && username == "me"
+      user_id = @guardian.user&.id
+    end
+
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -1260,7 +1279,7 @@ class Search
             #{ts_config},
             t1.fancy_title,
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
-            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'', HighlightAll=true'
           ) AS topic_title_headline",
           "TS_HEADLINE(
             #{ts_config},

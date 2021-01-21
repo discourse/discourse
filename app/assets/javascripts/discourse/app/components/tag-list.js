@@ -1,8 +1,8 @@
+import Category from "discourse/models/category";
+import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { sort } from "@ember/object/computed";
-import Component from "@ember/component";
-import Category from "discourse/models/category";
 
 export default Component.extend({
   classNameBindings: [

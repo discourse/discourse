@@ -128,8 +128,13 @@ describe PostCreator do
         expect(channels.find { |s| s =~ /new/ }).to eq(nil)
       end
 
-      it "generates the correct messages for a secure topic" do
+      it 'enqueues job to generate messages' do
+        p = creator.create
+        expect(job_enqueued?(job: :post_update_topic_tracking_state, args: { post_id: p.id })).to eq(true)
+      end
 
+      it "generates the correct messages for a secure topic" do
+        Jobs.run_immediately!
         UserActionManager.enable
 
         admin = Fabricate(:admin)
@@ -169,7 +174,7 @@ describe PostCreator do
       end
 
       it 'generates the correct messages for a normal topic' do
-
+        Jobs.run_immediately!
         UserActionManager.enable
 
         p = nil
@@ -578,6 +583,36 @@ describe PostCreator do
       expect(topic.posts_count).to eq(1)
       expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
+    end
+  end
+
+  context 'silent' do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    it 'silent do not mess up the public view' do
+      freeze_time DateTime.parse('2010-01-01 12:00')
+
+      first = PostCreator.new(
+        user,
+        topic_id: topic.id,
+        raw: 'this is the first post'
+      ).create
+
+      freeze_time 1.year.from_now
+
+      PostCreator.new(user,
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        silent: true,
+        post_type: Post.types[:regular],
+        raw: 'this is a whispered reply').create
+
+      topic.reload
+
+      # silent post should not muck up that number
+      expect(topic.last_posted_at).to eq_time(first.created_at)
+      expect(topic.last_post_user_id).to eq(first.user_id)
+      expect(topic.word_count).to eq(5)
     end
   end
 

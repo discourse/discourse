@@ -1,13 +1,13 @@
-import Component from "@ember/component";
-import { Promise } from "rsvp";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import {
-  shouldOpenInNewTab,
   openLinkInNewTab,
+  shouldOpenInNewTab,
 } from "discourse/lib/click-track";
+import Component from "@ember/component";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
 import bootbox from "bootbox";
+import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
   classNames: ["bookmark-list-wrapper"],

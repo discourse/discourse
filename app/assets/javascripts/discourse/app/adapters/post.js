@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import RestAdapter, { Result } from "discourse/adapters/rest";
+import { ajax } from "discourse/lib/ajax";
 import { underscore } from "@ember/string";
 
 export default RestAdapter.extend({

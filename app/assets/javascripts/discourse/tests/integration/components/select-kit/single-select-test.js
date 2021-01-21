@@ -1,9 +1,9 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function template(options = []) {
   return `
@@ -311,6 +311,37 @@ discourseModule("Integration | Component | select-kit/single-select", function (
       const row = this.subject.rowByValue(1);
 
       assert.equal(row.title(), "JACKSON");
+    },
+  });
+
+  componentTest("langProperty", {
+    template:
+      '{{single-select langProperty="foo" value=value content=content}}',
+
+    beforeEach() {
+      this.setProperties({
+        content: [{ id: 1, name: "john", foo: "be" }],
+        value: null,
+      });
+    },
+
+    async test(assert) {
+      assert.equal(
+        this.subject.header().el()[0].querySelector(".selected-name").lang,
+        ""
+      );
+
+      await this.subject.expand();
+
+      const row = this.subject.rowByValue(1);
+      assert.equal(row.el()[0].lang, "be");
+
+      await this.subject.selectRowByValue(1);
+
+      assert.equal(
+        this.subject.header().el()[0].querySelector(".selected-name").lang,
+        "be"
+      );
     },
   });
 });

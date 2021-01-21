@@ -336,8 +336,6 @@ th:
         email: "อีเมล"
         name: "ชื่อ"
       user_percentage:
-        summary:
-          other: "%{agreed},%{disagreed},%{ignored} (%{count}ธงทั้งหมด)"
         agreed:
           other: "%{count}% เห็นด้วย"
         disagreed:
@@ -694,7 +692,6 @@ th:
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
         disable: "ปิดการแจ้งเตือน"
         enable: "เปิดการแจ้งเตือน"
-        each_browser_note: "โปรดทราบ: คุณต้องเปลี่ยนการตั้งค่านี้บนทุกบราวเซอร์ที่คุณใช้"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
@@ -1305,7 +1302,6 @@ th:
       more_emoji: "อื่นๆ..."
       options: "ตัวเลือก"
       whisper: "กระซิบ"
-      blockquote_text: "ส่วนอ้างถึง"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
       toggle_whisper: "เปิดกระซิบ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
@@ -1358,8 +1354,7 @@ th:
       link_dialog_title: "เพิ่มลิงค์"
       link_optional_text: "ชื่อเรื่องเพิ่มเติม"
       link_url_placeholder: "วาง URL หรือพิมพ์เพื่อค้นหากระทู้"
-      quote_title: "ส่วนอ้างถึง"
-      quote_text: "ส่วนอ้างถึง"
+      blockquote_text: "ส่วนอ้างถึง"
       code_title: "ข้อความก่อนจัดรูปแบบ"
       code_text: "ข้อความก่อนจัดรูปแบบเยื้อง 4 เคาะ"
       paste_code_text: "พิมพ์หรือวางโค้ดที่นี่"
@@ -1396,7 +1391,6 @@ th:
           label: "กระทู้ใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
-          desc: "ร่างกระทู้ที่สามารถเห็นแค่ทีมงาน"
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
     notifications:

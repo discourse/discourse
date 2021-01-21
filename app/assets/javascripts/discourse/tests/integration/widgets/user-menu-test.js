@@ -1,14 +1,14 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
-import sinon from "sinon";
-import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
 import { click } from "@ember/test-helpers";
+import sinon from "sinon";
 
 discourseModule("Integration | Component | Widget | user-menu", function (
   hooks
@@ -94,9 +94,10 @@ discourseModule("Integration | Component | Widget | user-menu", function (
 
     async test(assert) {
       await click(".user-preferences-link");
+
       assert.ok(queryAll(".logout").length);
 
-      await click(".logout");
+      await click(".logout button");
       assert.ok(this.loggedOut);
     },
   });

@@ -19,7 +19,7 @@ module Email
         @receiver = Email::Receiver.new(@mail, @opts)
         @receiver.process!
       rescue RateLimiter::LimitExceeded
-        @opts[:retry_on_rate_limit] ? Jobs.enqueue(:process_email, mail: @mail) : raise
+        @opts[:retry_on_rate_limit] ? Jobs.enqueue(:process_email, mail: @mail, source: @opts[:source]) : raise
       rescue => e
         return handle_bounce(e) if @receiver.is_bounce?
 

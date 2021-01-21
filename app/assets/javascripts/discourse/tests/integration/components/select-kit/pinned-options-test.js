@@ -1,9 +1,9 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import Topic from "discourse/models/topic";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const buildTopic = function (pinned = true) {
   return Topic.create({

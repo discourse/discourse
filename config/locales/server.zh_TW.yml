@@ -306,26 +306,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
-    "new-topic": |
-      歡迎來到%{site_name} &mdash; **衷心感謝你參與討論！**
-
-      - 標題是否清晰明了地描述了主題？看起來有意思麼？
-
-      - 誰會感興趣？它為什麼重要？你期望從社區中獲得什麼樣的回應？
-
-      - 選擇恰當的詞句以便別人能找到你的主題。若想要給主題分組，選擇一個分類。
-
-      更多的幫助信息，[請查看我們的社群準則](%{base_path}/guidelines)。此信息面板只在你發佈前 %{education_posts_text}時顯示。
-    "new-reply": |
-      歡迎來到 %{site_name} — **感謝你的參與！**
-
-      - 你的回應是否以某些方式改善了討論？
-
-      - 務必尊重所有社群成員。
-
-      - 歡迎有建設性的評論，但論述時請針對觀點，而別針對個人。
-
-      [請查看我們的社群守則](%{base_path}/guidelines)以進一步了解。（此訊息只會在你發表 %{education_posts_text} 時顯示）
     avatar: |
       ### 來個大頭貼吧！
 
@@ -743,9 +723,7 @@ zh_TW:
     mute_topic: "關閉此主題的所有通知，%{link}"
     unwatch_category: "停止監看%{category}分類中的所有主題"
     mailing_list_mode: "停用郵件列表模式"
-    all: "不要從%{sitename}給我發送任何郵件"
     different_user_description: "你登錄的帳戶與郵件不符。請登出，或進入隱私模式，然後再重試。"
-    not_found_description: "對不起，我們找不到這個退訂連結。有可能你的郵件中的連結已經過期？"
     log_out: "退出"
     submit: "儲存偏好設定"
     digest_frequency:
@@ -1327,8 +1305,6 @@ zh_TW:
     max_topic_invitations_per_day: "每個使用者每天能創建的邀請至主題數量的最大值。"
     max_logins_per_ip_per_hour: "每小時每個 IP 可登入的次數上限"
     max_logins_per_ip_per_minute: "每分鐘每個 IP 可登入的次數上限"
-    max_post_deletions_per_minute: "每分鐘每個使用者可刪除的貼文數上限"
-    max_post_deletions_per_day: "每日每個使用者可刪除的貼文數上限"
     alert_admins_if_errors_per_minute: "觸發管理員警示的每分鐘錯誤數量。設為 0 會停用這個功能。注意：需要重啟。"
     alert_admins_if_errors_per_hour: "觸發管理員警示的每小時錯誤數量。設為 0 會停用這個功能。注意：需要重新啟動。"
     suggested_topics: "討論話題下的推薦話題數量"
@@ -1571,7 +1547,6 @@ zh_TW:
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: "刪除超過 n 天得草稿。"
     bootstrap_mode_min_users: "禁用摘要模式的使用者數下限（0 為禁用）。"
-    prevent_anons_from_downloading_files: "禁止匿名使用者下載附件。警告：這將禁止他們訪問任何發表在貼文中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
     enable_emoji_shortcuts: "常見的顏文字，例如：「 :)、:p、:( 」，將轉換為表情符號"

@@ -91,6 +91,8 @@ RSpec.describe RobotsTxtController do
         i = response.body.index('User-agent: *')
         expect(i).to be_present
         expect(response.body[i..-1]).to include("Disallow: /auth/")
+        # we have to insert Googlebot for special handling
+        expect(response.body[i..-1]).to include("User-agent: Googlebot")
       end
 
       it "can allowlist user agents" do

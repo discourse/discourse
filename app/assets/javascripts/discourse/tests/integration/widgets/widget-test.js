@@ -1,17 +1,17 @@
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
 import I18n from "I18n";
-import { next } from "@ember/runloop";
-import { createWidget } from "discourse/widgets/widget";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { Promise } from "rsvp";
-import hbs from "discourse/widgets/hbs-compiler";
 import { click } from "@ember/test-helpers";
+import { createWidget } from "discourse/widgets/widget";
+import hbs from "discourse/widgets/hbs-compiler";
+import { next } from "@ember/runloop";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 discourseModule("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);

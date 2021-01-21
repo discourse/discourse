@@ -1,16 +1,16 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
-import { alias, or, and, equal, notEmpty } from "@ember/object/computed";
-import EmberObject, { computed, action } from "@ember/object";
-import { next } from "@ember/runloop";
-import Component from "@ember/component";
-import ReportLoader from "discourse/lib/reports-loader";
-import { exportEntity } from "discourse/lib/export-csv";
-import { outputExportResult } from "discourse/lib/export-result";
+import EmberObject, { action, computed } from "@ember/object";
 import Report, { SCHEMA_VERSION } from "admin/models/report";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import Component from "@ember/component";
+import I18n from "I18n";
+import ReportLoader from "discourse/lib/reports-loader";
+import discourseComputed from "discourse-common/utils/decorators";
+import { exportEntity } from "discourse/lib/export-csv";
 import { isPresent } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
+import { makeArray } from "discourse-common/lib/helpers";
+import { next } from "@ember/runloop";
+import { outputExportResult } from "discourse/lib/export-result";
 
 const TABLE_OPTIONS = {
   perPage: 8,

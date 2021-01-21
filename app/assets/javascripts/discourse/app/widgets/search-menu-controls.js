@@ -1,8 +1,8 @@
 import I18n from "I18n";
-import { get } from "@ember/object";
-import { searchContextDescription } from "discourse/lib/search";
-import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
+import { get } from "@ember/object";
+import { h } from "virtual-dom";
+import { searchContextDescription } from "discourse/lib/search";
 
 createWidget("search-term", {
   tagName: "input",
@@ -23,6 +23,7 @@ createWidget("search-term", {
       value: attrs.value || "",
       autocomplete: "discourse",
       placeholder: attrs.contextEnabled ? "" : I18n.t("search.title"),
+      "aria-label": I18n.t("search.title"),
     };
   },
 

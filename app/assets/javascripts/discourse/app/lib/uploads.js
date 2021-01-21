@@ -1,6 +1,6 @@
 import I18n from "I18n";
-import { isAppleDevice } from "discourse/lib/utilities";
 import bootbox from "bootbox";
+import { isAppleDevice } from "discourse/lib/utilities";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(

@@ -1,48 +1,75 @@
 # frozen_string_literal: true
 
+require_relative 'bbcode/xml_to_markdown'
+
 module ImportScripts::PhpBB3
   class TextProcessor
     # @param lookup [ImportScripts::LookupContainer]
     # @param database [ImportScripts::PhpBB3::Database_3_0 | ImportScripts::PhpBB3::Database_3_1]
     # @param smiley_processor [ImportScripts::PhpBB3::SmileyProcessor]
     # @param settings [ImportScripts::PhpBB3::Settings]
-    def initialize(lookup, database, smiley_processor, settings)
+    # @param phpbb_config [Hash]
+    def initialize(lookup, database, smiley_processor, settings, phpbb_config)
       @lookup = lookup
       @database = database
       @smiley_processor = smiley_processor
       @he = HTMLEntities.new
+      @use_xml_to_markdown = phpbb_config[:phpbb_version].start_with?('3.2')
 
       @settings = settings
       @new_site_prefix = settings.new_site_prefix
       create_internal_link_regexps(settings.original_site_prefix)
     end
 
-    def process_raw_text(raw)
-      text = raw.dup
-      text = CGI.unescapeHTML(text)
+    def process_raw_text(raw, attachments = nil)
+      if @use_xml_to_markdown
+        unreferenced_attachments = attachments&.dup
 
-      clean_bbcodes(text)
-      if @settings.use_bbcode_to_md
-        text = bbcode_to_md(text)
+        converter = BBCode::XmlToMarkdown.new(
+          raw,
+          username_from_user_id: lambda { |user_id| @lookup.find_username_by_import_id(user_id) },
+          smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie).dup },
+          quoted_post_from_post_id: lambda { |post_id| @lookup.topic_lookup_from_imported_post_id(post_id) },
+          upload_md_from_file: (lambda do |filename, index|
+            unreferenced_attachments[index] = nil
+            attachments.fetch(index, filename).dup
+          end if attachments),
+          url_replacement: nil,
+          allow_inline_code: false
+        )
+
+        text = converter.convert
+
+        text.gsub!(@short_internal_link_regexp) do |link|
+          replace_internal_link(link, $1, $2)
+        end
+
+        add_unreferenced_attachments(text, unreferenced_attachments)
+      else
+        text = raw.dup
+        text = CGI.unescapeHTML(text)
+
+        clean_bbcodes(text)
+        if @settings.use_bbcode_to_md
+          text = bbcode_to_md(text)
+        end
+        process_smilies(text)
+        process_links(text)
+        process_lists(text)
+        process_code(text)
+        fix_markdown(text)
+        process_attachments(text, attachments) if attachments.present?
+
+        text
       end
-      process_smilies(text)
-      process_links(text)
-      process_lists(text)
-      process_code(text)
-      fix_markdown(text)
-      text
     end
 
     def process_post(raw, attachments)
-      text = process_raw_text(raw)
-      text = process_attachments(text, attachments) if attachments.present?
-      text
+      process_raw_text(raw, attachments) rescue raw
     end
 
     def process_private_msg(raw, attachments)
-      text = process_raw_text(raw)
-      text = process_attachments(text, attachments) if attachments.present?
-      text
+      process_raw_text(raw, attachments) rescue raw
     end
 
     protected
@@ -139,6 +166,12 @@ module ImportScripts::PhpBB3
         attachments.fetch(index, real_filename)
       end
 
+      add_unreferenced_attachments(text, unreferenced_attachments)
+    end
+
+    def add_unreferenced_attachments(text, unreferenced_attachments)
+      return text unless unreferenced_attachments
+
       unreferenced_attachments = unreferenced_attachments.compact
       text << "\n" << unreferenced_attachments.join("\n") unless unreferenced_attachments.empty?
       text
@@ -161,6 +194,7 @@ module ImportScripts::PhpBB3
 
     def fix_markdown(text)
       text.gsub!(/(\n*\[\/?quote.*?\]\n*)/mi) { |q| "\n#{q.strip}\n" }
+      text.gsub!(/^!\[[^\]]*\]\([^\]]*\)$/i) { |img| "\n#{img.strip}\n" } # space out images single on line
       text
     end
   end

@@ -1,6 +1,6 @@
-import { test, module } from "qunit";
-import createStore from "discourse/tests/helpers/create-store";
+import { module, test } from "qunit";
 import Site from "discourse/models/site";
+import createStore from "discourse/tests/helpers/create-store";
 
 module("Unit | Model | site", function () {
   test("create", function (assert) {

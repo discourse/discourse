@@ -1,8 +1,8 @@
 import I18n from "I18n";
+import { createPopper } from "@popperjs/core";
 import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
 import { schedule } from "@ember/runloop";
-import { createPopper } from "@popperjs/core";
 
 /*
 

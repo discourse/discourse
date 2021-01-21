@@ -137,6 +137,35 @@ describe Jobs::NotifyMailingListSubscribers do
         include_examples "no emails"
       end
 
+      context "mute all categories by default setting" do
+        before { SiteSetting.mute_all_categories_by_default = true }
+        include_examples "no emails"
+      end
+
+      context "mute all categories by default setting but user is watching category" do
+        before do
+          SiteSetting.mute_all_categories_by_default = true
+          CategoryUser.create(user: mailing_list_user, category: post.topic.category, notification_level: CategoryUser.notification_levels[:watching])
+        end
+        include_examples "one email"
+      end
+
+      context "mute all categories by default setting but user is watching tag" do
+        before do
+          SiteSetting.mute_all_categories_by_default = true
+          TagUser.create(user: mailing_list_user, tag: tag, notification_level: TagUser.notification_levels[:watching])
+        end
+        include_examples "one email"
+      end
+
+      context "mute all categories by default setting but user is watching topic" do
+        before do
+          SiteSetting.mute_all_categories_by_default = true
+          TopicUser.create(user: mailing_list_user, topic: post.topic, notification_level: TopicUser.notification_levels[:watching])
+        end
+        include_examples "one email"
+      end
+
       context "from a muted tag" do
         before { TagUser.create(user: mailing_list_user, tag: tag, notification_level: TagUser.notification_levels[:muted]) }
         include_examples "no emails"

@@ -46,16 +46,6 @@
         &.is-highlighted.is-selected {
           background: var(--tertiary-low);
         }
-
-        .discourse-tag {
-          &:hover {
-            color: var(--primary);
-          }
-        }
-
-        .discourse-tag-count {
-          margin-left: 0.5em;
-        }
       }
 
       .selected-tags {

@@ -1,8 +1,8 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
 import UtilsMixin from "select-kit/mixins/utils";
-import { schedule } from "@ember/runloop";
+import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend(UtilsMixin, {
   eventType: "click",

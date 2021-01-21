@@ -86,4 +86,35 @@
   .love {
     background-color: var(--love, $love);
   }
+
+  .header_primary {
+    background-color: var(--header_primary, $header_primary);
+  }
+
+  .header_background {
+    background-color: var(--header_background, $header_background);
+  }
+
+  .header_primary-low {
+    background-color: var(--header_primary-low, $header_primary-low);
+  }
+
+  .header_primary-low-mid {
+    background-color: var(--header_primary-low-mid, $header_primary-low-mid);
+  }
+
+  .header_primary-medium {
+    background-color: var(--header_primary-medium, $header_primary-medium);
+  }
+
+  .header_primary-high {
+    background-color: var(--header_primary-high, $header_primary-high);
+  }
+
+  .header_primary-very-high {
+    background-color: var(
+      --header_primary-very-high,
+      $header_primary-very-high
+    );
+  }
 }

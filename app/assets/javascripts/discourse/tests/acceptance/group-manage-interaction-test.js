@@ -1,10 +1,10 @@
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
-  updateCurrentUser,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Managing Group Interaction Settings", function (needs) {
   needs.user();

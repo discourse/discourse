@@ -1,6 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
 import { helperContext } from "discourse-common/lib/helpers";
+import { isEmpty } from "@ember/utils";
 
 export default function logout({ redirect } = {}) {
   const ctx = helperContext();

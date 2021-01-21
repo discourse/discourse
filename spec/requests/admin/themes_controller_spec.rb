@@ -378,12 +378,28 @@ describe Admin::ThemesController do
         theme: {
           theme_fields: [
             { name: 'scss', target: 'common', value: '' },
-            { name: 'test', target: 'common', value: 'filename.jpg', upload_id: 4 }
+            { name: 'header', target: 'common', value: 'filename.jpg', upload_id: 4 }
           ]
         }
       }
 
       expect(response.status).to eq(403)
+    end
+
+    it 'allows zip-imported theme fields to be locally edited' do
+      r = RemoteTheme.create!(remote_url: "")
+      theme.update!(remote_theme_id: r.id)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'header', target: 'common', value: 'filename.jpg', upload_id: 4 }
+          ]
+        }
+      }
+
+      expect(response.status).to eq(200)
     end
 
     it 'updates a child theme' do
@@ -534,6 +550,18 @@ describe Admin::ThemesController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].first).to include(I18n.t("themes.errors.component_no_default"))
+    end
+
+    it 'prevents converting the default theme to a component' do
+      SiteSetting.default_theme_id = theme.id
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: { component: true }
+      }
+
+      # should this error message be localized? InvalidParameters :component
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include('component')
     end
   end
 

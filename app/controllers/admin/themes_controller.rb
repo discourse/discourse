@@ -291,7 +291,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def ban_for_remote_theme!
-    raise Discourse::InvalidAccess if @theme.remote_theme
+    raise Discourse::InvalidAccess if @theme.remote_theme&.is_git?
   end
 
   def add_relative_themes!(kind, ids)
@@ -401,8 +401,10 @@ class Admin::ThemesController < Admin::AdminController
   def handle_switch
     param = theme_params[:component]
     if param.to_s == "false" && @theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_theme!
     elsif param.to_s == "true" && !@theme.component?
+      raise Discourse::InvalidParameters.new(:component) if @theme.id == SiteSetting.default_theme_id
       @theme.switch_to_component!
     end
   end

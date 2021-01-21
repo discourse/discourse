@@ -1013,7 +1013,7 @@ describe UserNotifications do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
-            expects_build_with(has_entry(:locale, "en_US"))
+            expects_build_with(has_entry(:locale, "en"))
           end
         end
       end

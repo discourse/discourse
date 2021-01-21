@@ -1,8 +1,8 @@
-import { queryAll, acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { clearCache } from "discourse/lib/plugin-connectors";
 import hbs from "htmlbars-inline-precompile";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 const HELLO = "javascripts/multi-test/connectors/user-profile-primary/hello";
 const GOODBYE =

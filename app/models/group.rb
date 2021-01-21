@@ -303,7 +303,7 @@ class Group < ActiveRecord::Base
       .where(groups: { id: id })
       .where('topics.archetype <> ?', Archetype.private_message)
       .where('topics.visible')
-      .where(post_type: Post.types[:regular])
+      .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
@@ -750,7 +750,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.short_path
+    flair_icon.presence || flair_upload&.url
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|

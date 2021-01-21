@@ -1,18 +1,18 @@
-import sinon from "sinon";
-import { test } from "qunit";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
 import {
-  setting,
+  fmt,
+  htmlSafe,
+  i18n,
   propertyEqual,
   propertyNotEqual,
-  fmt,
-  i18n,
+  setting,
   url,
-  htmlSafe,
 } from "discourse/lib/computed";
-import { setPrefix } from "discourse-common/lib/get-url";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { setPrefix } from "discourse-common/lib/get-url";
+import sinon from "sinon";
+import { test } from "qunit";
 
 discourseModule("Unit | Utility | computed", function (hooks) {
   hooks.beforeEach(function () {

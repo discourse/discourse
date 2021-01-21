@@ -53,8 +53,8 @@ zh_CN:
           title: "主题状态"
         topic_list:
           title: "主题列表"
-        latest_topic_list:
-          title: "最新主题列表"
+        basic_topic_list:
+          title: "基本主题列表"
         footer_message:
           title: "页脚消息"
         signup_cta:
@@ -69,6 +69,8 @@ zh_CN:
           title: "帖子"
         topic_map:
           title: "主题地图"
+        site_header:
+          title: "网站标题"
         suggested_topics:
           title: "推荐主题"
         post_menu:

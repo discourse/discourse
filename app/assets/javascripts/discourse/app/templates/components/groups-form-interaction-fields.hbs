@@ -94,10 +94,11 @@
   <label>{{i18n "groups.notification_level"}}</label>
 
   {{notifications-button
-    value=model.default_notification_level
+    value=defaultNotificationLevel
     class="groups-form-default-notification-level"
     options=(hash
       i18nPrefix="groups.notifications"
     )
+    onChange=(action (mut model.default_notification_level))
   }}
 </div>
