@@ -322,7 +322,8 @@ aside.onebox {
   }
 }
 
-aside.onebox .onebox-body .onebox-avatar {
+aside.onebox .onebox-body .onebox-avatar,
+aside.onebox.preview-error .site-icon {
   max-height: none;
   max-width: none;
   height: 60px;
