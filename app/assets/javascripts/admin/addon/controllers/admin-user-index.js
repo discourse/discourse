@@ -601,8 +601,10 @@ export default Controller.extend(CanCheckEmails, {
         I18n.t("admin.user.sso.confirm_delete"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        () => {
-          return this.model.deleteSSORecord();
+        (confirmed) => {
+          if (confirmed) {
+            return this.model.deleteSSORecord();
+          }
         }
       );
     },
