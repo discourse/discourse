@@ -26,10 +26,6 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     is_uncategorized
   end
 
-  def include_subcategory_ids?
-    subcategory_ids.present?
-  end
-
   def topics_day
     count_with_subcategories(:topics_day)
   end
