@@ -120,3 +120,12 @@
     }
   }
 }
+
+.rtl .ace_placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+
+  [dir="ltr"] {
+    text-align: left !important;
+  }
+}

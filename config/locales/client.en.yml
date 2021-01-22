@@ -4166,9 +4166,7 @@ en:
 
               Example:
 
-              :root {
-                --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:

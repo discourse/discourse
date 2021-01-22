@@ -10,6 +10,7 @@ export default Component.extend({
   _editor: null,
   _skipContentChangeEvent: null,
   disabled: false,
+  htmlPlaceholder: false,
 
   @observes("editorId")
   editorIdChanged() {
@@ -86,6 +87,10 @@ export default Component.extend({
         loadedAce.config.set("loadWorkerFromBlob", false);
         loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
 
+        if (this.htmlPlaceholder) {
+          this._overridePlaceholder(loadedAce);
+        }
+
         if (!this.element || this.isDestroying || this.isDestroyed) {
           return;
         }
@@ -130,5 +135,33 @@ export default Component.extend({
         this._editor.navigateFileEnd();
       }
     },
+  },
+
+  _overridePlaceholder(loadedAce) {
+    const originalPlaceholderSetter =
+      loadedAce.config.$defaultOptions.editor.placeholder.set;
+
+    loadedAce.config.$defaultOptions.editor.placeholder.set = function () {
+      if (!this.$updatePlaceholder) {
+        const originalRendererOn = this.renderer.on;
+        this.renderer.on = function () {};
+        originalPlaceholderSetter.call(this, ...arguments);
+        this.renderer.on = originalRendererOn;
+
+        const originalUpdatePlaceholder = this.$updatePlaceholder;
+
+        this.$updatePlaceholder = function () {
+          originalUpdatePlaceholder.call(this, ...arguments);
+
+          if (this.renderer.placeholderNode) {
+            this.renderer.placeholderNode.innerHTML = this.$placeholder || "";
+          }
+        }.bind(this);
+
+        this.on("input", this.$updatePlaceholder);
+      }
+
+      this.$updatePlaceholder();
+    };
   },
 });
