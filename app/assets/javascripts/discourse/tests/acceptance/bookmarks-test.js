@@ -206,12 +206,12 @@ acceptance("Bookmarking", function (needs) {
       "it should prefill the bookmark name"
     );
     assert.equal(
-      queryAll("#bookmark-custom-date > input").val(),
+      queryAll("#custom-date > input").val(),
       tomorrow,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      queryAll("#bookmark-custom-time").val(),
+      queryAll("#custom-time").val(),
       "08:00",
       "it should prefill the bookmark time"
     );
@@ -236,12 +236,12 @@ acceptance("Bookmarking", function (needs) {
       "it should prefill the bookmark name"
     );
     assert.equal(
-      queryAll("#bookmark-custom-date > input").val(),
+      queryAll("#custom-date > input").val(),
       postDateFormatted,
       "it should prefill the bookmark date"
     );
     assert.equal(
-      queryAll("#bookmark-custom-time").val(),
+      queryAll("#custom-time").val(),
       "10:35",
       "it should prefill the bookmark time"
     );

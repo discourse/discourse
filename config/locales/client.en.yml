@@ -571,6 +571,20 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
+    time_shortcut:
+      later_today: "Later today"
+      next_business_day: "Next business day"
+      tomorrow: "Tomorrow"
+      next_week: "Next week"
+      post_local_date: "Date in post"
+      later_this_week: "Later this week"
+      start_of_next_business_week: "Monday"
+      start_of_next_business_week_alt: "Next Monday"
+      next_month: "Next month"
+      custom: "Custom date and time"
+      none: "None needed"
+      last_custom: "Last"
+
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
       you_posted_topic: "<a href='%{userUrl}'>You</a> posted <a href='%{topicUrl}'>the topic</a>"

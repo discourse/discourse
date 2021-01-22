@@ -1,17 +1,28 @@
-import { REMINDER_TYPES, formattedReminderTime } from "discourse/lib/bookmark";
-import { and, or } from "@ember/object/computed";
+import {
+  LATER_TODAY_CUTOFF_HOUR,
+  MOMENT_THURSDAY,
+  laterToday,
+  now,
+  parseCustomDatetime,
+  tomorrow,
+} from "discourse/lib/timeUtils";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
+
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
+import { TIME_SHORTCUT_TYPES } from "discourse/lib/timeShortcut";
+
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
+import { formattedReminderTime } from "discourse/lib/bookmark";
+import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
@@ -23,31 +34,38 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 // d deletePost
 // t replyAsNewTopic
 const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
-const START_OF_DAY_HOUR = 8;
-const LATER_TODAY_CUTOFF_HOUR = 17;
-const LATER_TODAY_MAX_HOUR = 18;
-const MOMENT_MONDAY = 1;
-const MOMENT_THURSDAY = 4;
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
-  "l t": { handler: "selectReminderType", args: [REMINDER_TYPES.LATER_TODAY] },
+  "l t": {
+    handler: "selectReminderType",
+    args: [TIME_SHORTCUT_TYPES.LATER_TODAY],
+  },
   "l w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.LATER_THIS_WEEK],
+    args: [TIME_SHORTCUT_TYPES.LATER_THIS_WEEK],
   },
   "n b d": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.NEXT_BUSINESS_DAY],
+    args: [TIME_SHORTCUT_TYPES.NEXT_BUSINESS_DAY],
   },
-  "n d": { handler: "selectReminderType", args: [REMINDER_TYPES.TOMORROW] },
-  "n w": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_WEEK] },
+  "n d": {
+    handler: "selectReminderType",
+    args: [TIME_SHORTCUT_TYPES.TOMORROW],
+  },
+  "n w": {
+    handler: "selectReminderType",
+    args: [TIME_SHORTCUT_TYPES.NEXT_WEEK],
+  },
   "n b w": {
     handler: "selectReminderType",
-    args: [REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK],
+    args: [TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK],
   },
-  "n m": { handler: "selectReminderType", args: [REMINDER_TYPES.NEXT_MONTH] },
-  "c r": { handler: "selectReminderType", args: [REMINDER_TYPES.CUSTOM] },
-  "n r": { handler: "selectReminderType", args: [REMINDER_TYPES.NONE] },
+  "n m": {
+    handler: "selectReminderType",
+    args: [TIME_SHORTCUT_TYPES.NEXT_MONTH],
+  },
+  "c r": { handler: "selectReminderType", args: [TIME_SHORTCUT_TYPES.CUSTOM] },
+  "n r": { handler: "selectReminderType", args: [TIME_SHORTCUT_TYPES.NONE] },
   "d d": { handler: "delete" },
 };
 
@@ -58,13 +76,10 @@ export default Controller.extend(ModalFunctionality, {
   _closeWithoutSaving: false,
   _savingBookmarkManually: false,
   onCloseWithoutSaving: null,
-  customReminderDate: null,
-  customReminderTime: null,
-  lastCustomReminderDate: null,
-  lastCustomReminderTime: null,
   postDetectedLocalDate: null,
   postDetectedLocalTime: null,
   postDetectedLocalTimezone: null,
+  prefilledDatetime: null,
   mouseTrap: null,
   userTimezone: null,
   showOptions: false,
@@ -72,16 +87,13 @@ export default Controller.extend(ModalFunctionality, {
   onShow() {
     this.setProperties({
       errorMessage: null,
-      selectedReminderType: REMINDER_TYPES.NONE,
+      selectedReminderType: TIME_SHORTCUT_TYPES.NONE,
       _closeWithoutSaving: false,
       _savingBookmarkManually: false,
-      customReminderDate: null,
-      customReminderTime: this._defaultCustomReminderTime(),
-      lastCustomReminderDate: null,
-      lastCustomReminderTime: null,
       postDetectedLocalDate: null,
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
+      prefilledDatetime: null,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
       showOptions: false,
       model: this.model || {},
@@ -89,7 +101,6 @@ export default Controller.extend(ModalFunctionality, {
 
     this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
-    this._loadLastUsedCustomReminderDatetime();
 
     if (this._editingExistingBookmark()) {
       this._initializeExistingBookmarkData();
@@ -123,16 +134,8 @@ export default Controller.extend(ModalFunctionality, {
 
   _initializeExistingBookmarkData() {
     if (this._existingBookmarkHasReminder()) {
-      let parsedReminderAt = this._parseCustomDateTime(this.model.reminderAt);
-
-      if (parsedReminderAt.isSame(this.laterToday())) {
-        return this.set("selectedReminderType", REMINDER_TYPES.LATER_TODAY);
-      }
-
       this.setProperties({
-        customReminderDate: parsedReminderAt.format("YYYY-MM-DD"),
-        customReminderTime: parsedReminderAt.format("HH:mm"),
-        selectedReminderType: REMINDER_TYPES.CUSTOM,
+        prefilledDatetime: this.model.reminderAt,
       });
     }
   },
@@ -167,26 +170,6 @@ export default Controller.extend(ModalFunctionality, {
     return preferred;
   },
 
-  _loadLastUsedCustomReminderDatetime() {
-    let lastTime = localStorage.lastCustomBookmarkReminderTime;
-    let lastDate = localStorage.lastCustomBookmarkReminderDate;
-
-    if (lastTime && lastDate) {
-      let parsed = this._parseCustomDateTime(lastDate, lastTime);
-
-      // can't set reminders in the past
-      if (parsed < this.now()) {
-        return;
-      }
-
-      this.setProperties({
-        lastCustomReminderDate: lastDate,
-        lastCustomReminderTime: lastTime,
-        parsedLastCustomReminderDatetime: parsed,
-      });
-    }
-  },
-
   _bindKeyboardShortcuts() {
     KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
     Object.keys(BOOKMARK_BINDINGS).forEach((shortcut) => {
@@ -218,16 +201,6 @@ export default Controller.extend(ModalFunctionality, {
     return isPresent(id);
   },
 
-  @discourseComputed("selectedReminderType")
-  customDateTimeSelected(selectedReminderType) {
-    return selectedReminderType === REMINDER_TYPES.CUSTOM;
-  },
-
-  @discourseComputed()
-  reminderTypes: () => {
-    return REMINDER_TYPES;
-  },
-
   @discourseComputed()
   autoDeletePreferences: () => {
     return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
@@ -238,72 +211,53 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  showLastCustom: and("lastCustomReminderTime", "lastCustomReminderDate"),
-
   showPostLocalDate: or(
     "model.postDetectedLocalDate",
     "model.postDetectedLocalTime"
   ),
 
-  get showLaterToday() {
-    let later = this.laterToday();
-    return (
-      !later.isSame(this.tomorrow(), "date") &&
-      this.now().hour() < LATER_TODAY_CUTOFF_HOUR
-    );
+  @discourseComputed()
+  customTimeShortcutOptions() {
+    let customOptions = [];
+
+    if (this.showPostLocalDate) {
+      customOptions.push({
+        icon: "globe-americas",
+        id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
+        label: "bookmarks.reminders.post_local_date",
+        time: this.postLocalDate(),
+        timeFormatted: this.postLocalDate().format(
+          I18n.t("dates.long_no_year")
+        ),
+        hidden: false,
+      });
+    }
+
+    return customOptions;
   },
 
-  get showLaterThisWeek() {
-    return this.now().day() < MOMENT_THURSDAY;
-  },
+  @discourseComputed()
+  additionalTimeShortcutOptions() {
+    let additional = [];
 
-  @discourseComputed("parsedLastCustomReminderDatetime")
-  lastCustomFormatted(parsedLastCustomReminderDatetime) {
-    return parsedLastCustomReminderDatetime.format(
-      I18n.t("dates.long_no_year")
-    );
+    let later = laterToday(this.userTimezone);
+    if (
+      !later.isSame(tomorrow(this.userTimezone), "date") &&
+      now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR
+    ) {
+      additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
+    }
+
+    if (now(this.userTimezone).day() < MOMENT_THURSDAY) {
+      additional.push(TIME_SHORTCUT_TYPES.LATER_THIS_WEEK);
+    }
+
+    return additional;
   },
 
   @discourseComputed("model.reminderAt")
   existingReminderAtFormatted(existingReminderAt) {
     return formattedReminderTime(existingReminderAt, this.userTimezone);
-  },
-
-  get startNextBusinessWeekLabel() {
-    if (this.now().day() === MOMENT_MONDAY) {
-      return I18n.t("bookmarks.reminders.start_of_next_business_week_alt");
-    }
-    return I18n.t("bookmarks.reminders.start_of_next_business_week");
-  },
-
-  get startNextBusinessWeekFormatted() {
-    return this.nextWeek()
-      .day(MOMENT_MONDAY)
-      .format(I18n.t("dates.long_no_year"));
-  },
-
-  get laterTodayFormatted() {
-    return this.laterToday().format(I18n.t("dates.time"));
-  },
-
-  get tomorrowFormatted() {
-    return this.tomorrow().format(I18n.t("dates.time_short_day"));
-  },
-
-  get nextWeekFormatted() {
-    return this.nextWeek().format(I18n.t("dates.long_no_year"));
-  },
-
-  get laterThisWeekFormatted() {
-    return this.laterThisWeek().format(I18n.t("dates.time_short_day"));
-  },
-
-  get nextMonthFormatted() {
-    return this.nextMonth().format(I18n.t("dates.long_no_year"));
-  },
-
-  get postLocalDateFormatted() {
-    return this.postLocalDate().format(I18n.t("dates.long_no_year"));
   },
 
   @discourseComputed("userTimezone")
@@ -315,25 +269,22 @@ export default Controller.extend(ModalFunctionality, {
     const reminderAt = this._reminderAt();
     const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
 
-    if (this.selectedReminderType === REMINDER_TYPES.CUSTOM) {
+    if (this.selectedReminderType === TIME_SHORTCUT_TYPES.CUSTOM) {
       if (!reminderAt) {
         return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
       }
-
-      localStorage.lastCustomBookmarkReminderTime = this.customReminderTime;
-      localStorage.lastCustomBookmarkReminderDate = this.customReminderDate;
     }
 
     localStorage.bookmarkDeleteOption = this.autoDeletePreference;
 
     let reminderType;
-    if (this.selectedReminderType === REMINDER_TYPES.NONE) {
+    if (this.selectedReminderType === TIME_SHORTCUT_TYPES.NONE) {
       reminderType = null;
     } else if (
-      this.selectedReminderType === REMINDER_TYPES.LAST_CUSTOM ||
-      this.selectedReminderType === REMINDER_TYPES.POST_LOCAL_DATE
+      this.selectedReminderType === TIME_SHORTCUT_TYPES.LAST_CUSTOM ||
+      this.selectedReminderType === TIME_SHORTCUT_TYPES.POST_LOCAL_DATE
     ) {
-      reminderType = REMINDER_TYPES.CUSTOM;
+      reminderType = TIME_SHORTCUT_TYPES.CUSTOM;
     } else {
       reminderType = this.selectedReminderType;
     }
@@ -387,77 +338,19 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  _parseCustomDateTime(date, time, parseTimezone = this.userTimezone) {
-    let dateTime = isPresent(time) ? date + " " + time : date;
-    let parsed = moment.tz(dateTime, parseTimezone);
-
-    if (parseTimezone !== this.userTimezone) {
-      parsed = parsed.tz(this.userTimezone);
-    }
-
-    return parsed;
-  },
-
-  _defaultCustomReminderTime() {
-    return `0${START_OF_DAY_HOUR}:00`;
-  },
-
   _reminderAt() {
     if (!this.selectedReminderType) {
       return;
     }
 
-    switch (this.selectedReminderType) {
-      case REMINDER_TYPES.LATER_TODAY:
-        return this.laterToday();
-      case REMINDER_TYPES.NEXT_BUSINESS_DAY:
-        return this.nextBusinessDay();
-      case REMINDER_TYPES.TOMORROW:
-        return this.tomorrow();
-      case REMINDER_TYPES.NEXT_WEEK:
-        return this.nextWeek();
-      case REMINDER_TYPES.START_OF_NEXT_BUSINESS_WEEK:
-        return this.nextWeek().day(MOMENT_MONDAY);
-      case REMINDER_TYPES.LATER_THIS_WEEK:
-        return this.laterThisWeek();
-      case REMINDER_TYPES.NEXT_MONTH:
-        return this.nextMonth();
-      case REMINDER_TYPES.CUSTOM:
-        this.set(
-          "customReminderTime",
-          this.customReminderTime || this._defaultCustomReminderTime()
-        );
-        const customDateTime = this._parseCustomDateTime(
-          this.customReminderDate,
-          this.customReminderTime
-        );
-        if (!customDateTime.isValid()) {
-          this.setProperties({
-            customReminderTime: null,
-            customReminderDate: null,
-          });
-          return;
-        }
-        return customDateTime;
-      case REMINDER_TYPES.LAST_CUSTOM:
-        return this.parsedLastCustomReminderDatetime;
-      case REMINDER_TYPES.POST_LOCAL_DATE:
-        return this.postLocalDate();
-    }
-  },
-
-  nextWeek() {
-    return this.startOfDay(this.now().add(7, "days"));
-  },
-
-  nextMonth() {
-    return this.startOfDay(this.now().add(1, "month"));
+    return this.selectedDateTime;
   },
 
   postLocalDate() {
-    let parsedPostLocalDate = this._parseCustomDateTime(
+    let parsedPostLocalDate = parseCustomDatetime(
       this.model.postDetectedLocalDate,
       this.model.postDetectedLocalTime,
+      this.userTimezone,
       this.model.postDetectedLocalTimezone
     );
 
@@ -466,35 +359,6 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return parsedPostLocalDate;
-  },
-
-  tomorrow() {
-    return this.startOfDay(this.now().add(1, "day"));
-  },
-
-  startOfDay(momentDate) {
-    return momentDate.hour(START_OF_DAY_HOUR).startOf("hour");
-  },
-
-  now() {
-    return moment.tz(this.userTimezone);
-  },
-
-  laterToday() {
-    let later = this.now().add(3, "hours");
-    if (later.hour() >= LATER_TODAY_MAX_HOUR) {
-      return later.hour(LATER_TODAY_MAX_HOUR).startOf("hour");
-    }
-    return later.minutes() < 30
-      ? later.startOf("hour")
-      : later.add(30, "minutes").startOf("hour");
-  },
-
-  laterThisWeek() {
-    if (!this.showLaterThisWeek) {
-      return;
-    }
-    return this.startOfDay(this.now().add(2, "days"));
   },
 
   _handleSaveError(e) {
@@ -561,14 +425,12 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @action
-  selectReminderType(type) {
-    if (type === REMINDER_TYPES.LATER_TODAY && !this.showLaterToday) {
-      return;
-    }
+  onTimeSelected(type, time) {
+    this.setProperties({ selectedReminderType: type, selectedDateTime: time });
 
-    this.set("selectedReminderType", type);
-
-    if (type !== REMINDER_TYPES.CUSTOM) {
+    // if the type is custom, we need to wait for the user to click save, as
+    // they could still be adjusting the date and time
+    if (type !== TIME_SHORTCUT_TYPES.CUSTOM) {
       return this.saveAndClose();
     }
   },
