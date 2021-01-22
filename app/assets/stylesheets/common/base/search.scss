@@ -128,6 +128,7 @@
     }
 
     .search-advanced-title {
+      font-size: $font-up-1;
       background: var(--primary-low);
       padding: 0.358em 1em;
       @include breakpoint(medium) {
