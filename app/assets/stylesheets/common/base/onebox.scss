@@ -322,8 +322,7 @@ aside.onebox {
   }
 }
 
-aside.onebox .onebox-body .onebox-avatar,
-aside.onebox.preview-error .site-icon {
+aside.onebox .onebox-body .onebox-avatar {
   max-height: none;
   max-width: none;
   height: 60px;
@@ -803,4 +802,10 @@ aside.onebox.stackexchange .onebox-body {
       }
     }
   }
+}
+
+aside.onebox.preview-error .site-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5em;
 }
