@@ -295,15 +295,23 @@
 }
 
 .heatmap-high,
-.heatmap-high a {
+.heatmap-high a,
+.heatmap-high .d-icon,
+.heatmap-high .d-button-label {
   color: #fe7a15 !important;
 }
+
 .heatmap-med,
-.heatmap-med a {
+.heatmap-med a,
+.heatmap-med .d-icon,
+.heatmap-med .d-button-label {
   color: #cf7721 !important;
 }
+
 .heatmap-low,
-.heatmap-low a {
+.heatmap-low a,
+.heatmap-low .d-icon,
+.heatmap-low .d-button-label {
   color: #9b764f !important;
 }
 

@@ -62,6 +62,15 @@ export const ButtonClass = {
         h("span.d-button-label", I18n.t(attrs.label, attrs.labelOptions))
       );
     }
+    if (attrs.translatedLabel) {
+      contents.push(
+        h(
+          "span.d-button-label",
+          attrs.translatedLabel.toString(),
+          attrs.translatedLabelOptions
+        )
+      );
+    }
     if (attrs.contents) {
       contents.push(attrs.contents);
     }

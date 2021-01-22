@@ -378,6 +378,10 @@ export function queryAll() {
   return window.find(...arguments);
 }
 
+export function query() {
+  return document.querySelector(...arguments);
+}
+
 export function invisible(selector) {
   const $items = queryAll(selector + ":visible");
   return (

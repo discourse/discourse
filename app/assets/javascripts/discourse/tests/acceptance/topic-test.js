@@ -146,7 +146,7 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.ok(queryAll("a.wiki").length === 1, "it shows the wiki icon");
+    assert.ok(queryAll("button.wiki").length === 1, "it shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {

@@ -113,7 +113,7 @@ discourseModule("Integration | Component | Widget | post", function (hooks) {
       this.on("showHistory", () => (this.historyShown = true));
     },
     async test(assert) {
-      await click(".post-info.edits");
+      await click(".post-info.edits button");
       assert.ok(this.historyShown, "clicking the pencil shows the history");
     },
   });
