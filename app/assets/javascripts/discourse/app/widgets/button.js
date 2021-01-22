@@ -38,6 +38,17 @@ export const ButtonClass = {
       attributes.title = title;
     }
 
+    if (attrs.role) {
+      attributes["role"] = attrs.role;
+    }
+
+    if (attrs.tabAttrs) {
+      const tab = attrs.tabAttrs;
+      attributes["aria-selected"] = tab["aria-selected"];
+      attributes["tabindex"] = tab["tabindex"];
+      attributes["aria-controls"] = tab["aria-controls"];
+    }
+
     if (attrs.disabled) {
       attributes.disabled = "true";
     }
@@ -51,11 +62,20 @@ export const ButtonClass = {
     return attributes;
   },
 
+  _buildIcon(attrs) {
+    const icon = iconNode(attrs.icon, { class: attrs.iconClass });
+    if (attrs["aria-label"]) {
+      icon.properties.attributes["role"] = "img";
+      icon.properties.attributes["aria-hidden"] = false;
+    }
+    return icon;
+  },
+
   html(attrs) {
     const contents = [];
     const left = !attrs.iconRight;
     if (attrs.icon && left) {
-      contents.push(iconNode(attrs.icon, { class: attrs.iconClass }));
+      contents.push(this._buildIcon(attrs));
     }
     if (attrs.label) {
       contents.push(
@@ -75,7 +95,7 @@ export const ButtonClass = {
       contents.push(attrs.contents);
     }
     if (attrs.icon && !left) {
-      contents.push(iconNode(attrs.icon, { class: attrs.iconClass }));
+      contents.push(this._buildIcon(attrs));
     }
 
     return contents;

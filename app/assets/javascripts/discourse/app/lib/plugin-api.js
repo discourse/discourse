@@ -737,10 +737,10 @@ class PluginApi {
    * example:
    *
    * api.addUserMenuGlyph({
-   *    label: 'awesome.label',
+   *    title: 'awesome.label',
    *    className: 'my-class',
    *    icon: 'my-icon',
-   *    href: `/some/path`
+   *    data: { url: `/some/path` },
    * });
    *
    */

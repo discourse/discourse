@@ -40,6 +40,15 @@ export default createWidget("quick-access-panel", {
     return Promise.resolve([]);
   },
 
+  buildAttributes() {
+    const attributes = this.attrs;
+    attributes["aria-labelledby"] = this.key;
+    attributes["tabindex"] = "0";
+    attributes["role"] = "tabpanel";
+
+    return attributes;
+  },
+
   newItemsLoaded() {},
 
   itemHtml(item) {}, // eslint-disable-line no-unused-vars
