@@ -36,7 +36,7 @@
       </label>
 
       {{#if userHasTimezoneSet}}
-        {{time-shortcut-picker prefilledDatetime=prefilledDatetime onTimeSelected=(action "onTimeSelected") customOptions=customTimeShortcutOptions additionalOptionsToShow=additionalTimeShortcutOptions }}
+        {{time-shortcut-picker prefilledDatetime=prefilledDatetime onTimeSelected=(action "onTimeSelected") customOptions=customTimeShortcutOptions additionalOptionsToShow=additionalTimeShortcutOptions}}
       {{else}}
         <div class="alert alert-info">{{html-safe (i18n "bookmarks.no_timezone" basePath=(base-path))}}</div>
       {{/if}}

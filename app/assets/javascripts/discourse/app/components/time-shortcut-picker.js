@@ -8,7 +8,7 @@ import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
 } from "discourse/lib/timeShortcut";
-import { discourseComputed, observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 import Component from "@ember/component";
 import { action } from "@ember/object";
@@ -27,6 +27,7 @@ export default Component.extend({
   prefilledDatetime: null,
 
   additionalOptionsToShow: [],
+  hiddenOptions: [],
   customOptions: [],
 
   lastCustomDate: null,
@@ -146,14 +147,27 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("additionalOptionsToShow", "customOptions", "userTimezone")
-  options(additionalOptionsToShow, customOptions, userTimezone) {
+  @discourseComputed(
+    "additionalOptionsToShow",
+    "hiddenOptions",
+    "customOptions",
+    "userTimezone"
+  )
+  options(additionalOptionsToShow, hiddenOptions, customOptions, userTimezone) {
     let options = defaultShortcutOptions(userTimezone);
 
     if (additionalOptionsToShow.length > 0) {
       options.forEach((opt) => {
-        if (opt.hidden && additionalOptionsToShow.includes(opt.id)) {
+        if (additionalOptionsToShow.includes(opt.id)) {
           opt.hidden = false;
+        }
+      });
+    }
+
+    if (hiddenOptions.length > 0) {
+      options.forEach((opt) => {
+        if (hiddenOptions.includes(opt.id)) {
+          opt.hidden = true;
         }
       });
     }

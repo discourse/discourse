@@ -40,7 +40,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.tomorrow",
       time: tomorrow(timezone),
       timeFormatted: tomorrow(timezone).format(I18n.t("dates.time_short_day")),
-      hidden: false,
     },
     {
       icon: "angle-double-right",
@@ -63,7 +62,6 @@ export function defaultShortcutOptions(timezone) {
       timeFormatted: nextBusinessWeekStart(timezone).format(
         I18n.t("dates.long_no_year")
       ),
-      hidden: false,
     },
     {
       icon: "far-clock",
@@ -71,7 +69,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.next_week",
       time: nextWeek(timezone),
       timeFormatted: nextWeek(timezone).format(I18n.t("dates.long_no_year")),
-      hidden: false,
     },
     {
       icon: "far-calendar-plus",
@@ -79,7 +76,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.next_month",
       time: nextMonth(timezone),
       timeFormatted: nextMonth(timezone).format(I18n.t("dates.long_no_year")),
-      hidden: false,
     },
     {
       icon: "calendar-alt",
@@ -87,7 +83,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.custom",
       time: null,
       timeFormatted: null,
-      hidden: false,
       isCustom: true,
     },
     {
@@ -96,7 +91,6 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.none",
       time: null,
       timeFormatted: null,
-      hidden: false,
     },
   ];
 }
