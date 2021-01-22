@@ -15,6 +15,15 @@ describe Admin::DashboardController do
   context 'while logged in as an admin' do
     fab!(:admin) { Fabricate(:admin) }
 
+    def populate_new_features
+      sample_features = [
+        { "id" => "1", "emoji" => "🤾", "title" => "Cool Beans", "description" => "Now beans are included", "created_at" => Time.zone.now - 40.minutes },
+        { "id" => "2", "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Legumes too!",  "created_at" => Time.zone.now - 20.minutes }
+      ]
+
+      Discourse.redis.set('new_features', MultiJson.dump(sample_features))
+    end
+
     before do
       sign_in(admin)
     end
@@ -75,6 +84,50 @@ describe Admin::DashboardController do
           expect(json['problems'][0]).to be_a(String)
           expect(json['problems'][1]).to be_a(String)
         end
+      end
+    end
+
+    describe '#new_features' do
+      before do
+        Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
+        Discourse.redis.del "new_features"
+      end
+
+      it 'is empty by default' do
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json['new_features']).to eq(nil)
+      end
+
+      it 'fails gracefully for invalid JSON' do
+        Discourse.redis.set("new_features", "INVALID JSON")
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json['new_features']).to eq(nil)
+      end
+
+      it 'includes new features when available' do
+        populate_new_features
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json['new_features'].length).to eq(2)
+        expect(json['new_features'][0]["emoji"]).to eq("🙈")
+        expect(json['new_features'][0]["title"]).to eq("Fancy Legumes")
+      end
+    end
+
+    describe '#mark_new_features_as_seen' do
+      it 'resets last seen for a given user' do
+        populate_new_features
+        put "/admin/dashboard/mark-new-features-as-seen.json"
+
+        expect(response.status).to eq(200)
+        expect(DiscourseUpdates.new_features_last_seen(admin.id)).not_to eq(nil)
       end
     end
   end

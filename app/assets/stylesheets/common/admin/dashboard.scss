@@ -612,3 +612,42 @@
     font-size: $font-up-3;
   }
 }
+
+.dashboard-new-features {
+  .section-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 1.5em;
+  }
+
+  .section-footer {
+    margin: 1.5em;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .btn {
+      margin-left: 1em;
+    }
+  }
+}
+
+.admin-new-feature-item {
+  display: flex;
+  align-items: flex-start;
+
+  .new-feature-emoji {
+    font-size: 3.5em;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+  }
+
+  .new-feature-content {
+    padding-right: 0.5em;
+    align-self: center;
+    .header {
+      font-size: $font-up-1;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+  }
+}

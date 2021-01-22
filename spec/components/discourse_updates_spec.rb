@@ -144,4 +144,72 @@ describe DiscourseUpdates do
       include_examples "when last_installed_version is old"
     end
   end
+
+  context 'new features' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin2) { Fabricate(:admin) }
+    let!(:last_item_date) { 5.minutes.ago }
+    let!(:sample_features) { [
+      { "emoji" => "🤾", "title" => "Super Fruits", "description" => "Taste explosion!", "created_at" => 40.minutes.ago },
+      { "emoji" => "🙈", "title" => "Fancy Legumes", "description" => "Magic legumes!", "created_at" => 15.minutes.ago },
+      { "emoji" => "🤾", "title" => "Quality Veggies", "description" => "Green goodness!", "created_at" => last_item_date },
+    ] }
+
+    before(:each) do
+      Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
+      Discourse.redis.del "new_features_last_seen_user_#{admin2.id}"
+      Discourse.redis.del "new_features"
+
+      Discourse.redis.set('new_features', MultiJson.dump(sample_features))
+    end
+
+    it 'returns all items on the first run' do
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+
+      expect(result.length).to eq(3)
+      expect(result[2]["title"]).to eq("Super Fruits")
+    end
+
+    it 'returns only unseen items by user' do
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin.id).returns(10.minutes.ago)
+      DiscourseUpdates.stubs(:new_features_last_seen).with(admin2.id).returns(30.minutes.ago)
+
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+      expect(result.length).to eq(1)
+      expect(result[0]["title"]).to eq("Quality Veggies")
+
+      result2 = DiscourseUpdates.unseen_new_features(admin2.id)
+      expect(result2.length).to eq(2)
+      expect(result2[0]["title"]).to eq("Quality Veggies")
+      expect(result2[1]["title"]).to eq("Fancy Legumes")
+    end
+
+    it 'can mark features as seen for a given user' do
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_present
+
+      DiscourseUpdates.mark_new_features_as_seen(admin.id)
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+
+      # doesn't affect another user
+      expect(DiscourseUpdates.unseen_new_features(admin2.id)).to be_present
+
+    end
+
+    it 'correctly sees newly added features as unseen' do
+      DiscourseUpdates.mark_new_features_as_seen(admin.id)
+      expect(DiscourseUpdates.unseen_new_features(admin.id)).to be_empty
+      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (last_item_date)
+
+      updated_features = [
+        { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => 2.minutes.ago }
+      ]
+      updated_features += sample_features
+
+      Discourse.redis.set('new_features', MultiJson.dump(updated_features))
+
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+      expect(result.length).to eq(1)
+      expect(result[0]["title"]).to eq("Brand New Item")
+    end
+  end
 end

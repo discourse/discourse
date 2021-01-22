@@ -3601,6 +3601,10 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        new_features:
+          title: "🎁 New Features"
+          dismiss: "Dismiss"
+          learn_more: "Learn more"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
