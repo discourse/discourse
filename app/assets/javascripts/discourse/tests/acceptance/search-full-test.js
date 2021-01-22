@@ -160,7 +160,9 @@ acceptance("Search - Full Page", function (needs) {
         '"autocomplete" popup has an entry for "admin"'
       );
 
-      await click(".search-advanced-options .autocomplete ul li a:first");
+      await click(
+        ".search-advanced-options .autocomplete ul li a:nth-of-type(1)"
+      );
 
       assert.ok(
         exists('.search-advanced-options span:contains("admin")'),

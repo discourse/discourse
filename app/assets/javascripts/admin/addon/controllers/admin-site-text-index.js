@@ -45,8 +45,8 @@ export default Controller.extend({
   @discourseComputed("locale")
   showFallbackLocaleWarning() {
     return (
-      (this.siteSettings.allow_user_locale ||
-        this.siteSettings.set_locale_from_accept_language_header) &&
+      this.siteSettings.allow_user_locale &&
+      this.siteSettings.set_locale_from_accept_language_header &&
       this.fallbackLocaleFullName
     );
   },

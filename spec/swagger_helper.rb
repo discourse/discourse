@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'json_schemer'
+
+# Require schema files
+Dir["./spec/requests/api/schemas/*.rb"].each { |file| require file }
+
+# Require shared spec examples
+Dir["./spec/requests/api/shared/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   # Specify a root folder where Swagger JSON files are generated

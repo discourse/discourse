@@ -6,6 +6,8 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :post
   belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
 
+  validates :created_via, presence: true
+
   scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
 
   scope :addressed_to, -> (email) do
@@ -29,13 +31,28 @@ class IncomingEmail < ActiveRecord::Base
     SQL
   end
 
+  scope :without_raw, -> { select(self.column_names - ["raw"]) }
+
   def self.created_via_types
     @types ||= Enum.new(
+      unknown: 0,
       handle_mail: 1,
       pop3_poll: 2,
       imap: 3,
       group_smtp: 4
     )
+  end
+
+  def as_mail_message
+    @mail_message ||= Mail.new(self.raw)
+  end
+
+  def raw_headers
+    as_mail_message.header.raw_source
+  end
+
+  def raw_body
+    as_mail_message.body
   end
 
   def to_addresses_split
@@ -92,7 +109,7 @@ end
 #  imap_uid          :integer
 #  imap_sync         :boolean
 #  imap_group_id     :bigint
-#  created_via       :integer
+#  created_via       :integer          default(0), not null
 #
 # Indexes
 #

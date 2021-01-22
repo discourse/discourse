@@ -1825,8 +1825,6 @@ en:
     date_time_picker:
       from: From
       to: To
-      errors:
-        to_before_from: "To date must be later than from date."
 
     emoji_picker:
       filter_placeholder: Search for emoji
@@ -3750,6 +3748,9 @@ en:
         group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
+        delete_with_messages_confirm:
+          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it.<br><br>Are you sure?"
+          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them.<br><br>Are you sure?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
