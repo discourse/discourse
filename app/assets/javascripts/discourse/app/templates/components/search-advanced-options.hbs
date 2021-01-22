@@ -7,6 +7,7 @@
     </label>
     <div class="controls">
       {{user-chooser
+        id="search-posted-by"
         value=searchedTerms.username
         onChange=(action "onChangeSearchTermForUsername")
         options=(hash
@@ -20,6 +21,7 @@
     <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
     <div class="controls">
       {{search-advanced-category-chooser
+        id="search-in-category"
         value=searchedTerms.category.id
         onChange=(action "onChangeSearchTermForCategory")
       }}
@@ -33,6 +35,7 @@
       <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
       <div class="controls">
         {{tag-chooser
+          id="search-with-tags"
           tags=searchedTerms.tags
           allowCreate=false
           everyTag=true
@@ -116,7 +119,7 @@
     <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
     <div class="controls">
       {{combo-box
-        id="status"
+        id="search-status-options"
         valueProperty="value"
         content=statusOptions
         value=searchedTerms.status
@@ -179,7 +182,7 @@
   </div>
 
   <div class="count-group control-group pull-left">
-    <label class="control-label">{{i18n "search.advanced.views.label"}}</label>
+    <label class="control-label" for="search-min-views">{{i18n "search.advanced.views.label"}}</label>
     <div class="count pull-left">
       <div class="controls">
         {{input
