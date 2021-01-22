@@ -65,7 +65,7 @@
             <div class="tap-tile-title">{{i18n "bookmarks.reminders.next_month"}}</div>
             <div class="tap-tile-date">{{nextMonthFormatted}}</div>
           {{/tap-tile}}
-          {{bookmark-local-date postId=model.postId activeTile=grid.activeTile onChange=(action "selectPostLocalDate")}}
+          {{bookmark-local-date postId=model.postId tileId=reminderTypes.POST_LOCAL_DATE activeTile=grid.activeTile onChange=(action "selectPostLocalDate")}}
           {{#tap-tile icon="calendar-alt" tileId=reminderTypes.CUSTOM activeTile=grid.activeTile onChange=(action "selectReminderType")}}
             <div class="tap-tile-title">{{i18n "bookmarks.reminders.custom"}}</div>
           {{/tap-tile}}
