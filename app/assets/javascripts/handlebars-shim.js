@@ -7,7 +7,7 @@ if (typeof define !== "undefined") {
       __exports__.default = Handlebars;
       __exports__.compile = function () {
         // eslint-disable-next-line
-        return Handlebars.compile(...arguments);
+        return Handlebars.compile.apply(this, arguments);
       };
     }
   });
