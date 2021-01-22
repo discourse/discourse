@@ -210,6 +210,7 @@ en:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
 
+    clear_input: "Clear input"
     edit: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
