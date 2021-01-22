@@ -859,3 +859,24 @@ table {
   z-index: z("max");
   color: var(--secondary);
 }
+
+.controls {
+  .grouped-control {
+    display: flex;
+    flex-direction: column;
+
+    .grouped-control-label {
+      padding: 0.25em 0;
+    }
+
+    .grouped-control-field {
+      flex: 1 0 auto;
+      display: flex;
+      padding-bottom: 0.25em;
+
+      label {
+        margin: 0;
+      }
+    }
+  }
+}
