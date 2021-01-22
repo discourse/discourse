@@ -844,6 +844,15 @@ en:
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "week"
+        month: "month"
+      topic_stat_all_time:
+        one: "%{number} total"
+        other: "%{number} total"
       topic_stat_sentence_week:
         one: "%{count} new topic in the past week."
         other: "%{count} new topics in the past week."
@@ -1571,16 +1580,6 @@ en:
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> exceeded site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
 
     learn_more: "learn more..."
-
-    all_time: "total"
-    all_time_desc: "total topics created"
-    year: "year"
-    year_desc: "topics created in the last 365 days"
-    month: "month"
-    month_desc: "topics created in the last 30 days"
-    week: "week"
-    week_desc: "topics created in the last 7 days"
-    day: "day"
 
     first_post: First post
     mute: Mute

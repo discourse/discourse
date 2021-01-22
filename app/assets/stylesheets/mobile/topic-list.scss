@@ -358,15 +358,14 @@ tr.category-topic-link {
   > footer {
     border-top: 1px solid var(--primary-low);
     padding: 7px 10px;
-    figure {
+    .category-stat {
       float: left;
-      margin: 3px 7px 0 0;
-      font-weight: bold;
-      font-size: $font-down-1;
-    }
-    figcaption {
-      display: inline;
+      margin: 3px 1em 0 0;
       font-weight: normal;
+      font-size: $font-down-1;
+      .value {
+        font-weight: bold;
+      }
     }
     .btn {
       float: right;
