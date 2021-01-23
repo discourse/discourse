@@ -107,6 +107,8 @@ export default Component.extend(bufferedProperty("model"), {
       this.allGroups.forEach((group) => {
         if (groupIds.includes(group.id)) {
           updatedPermissions[group.name] = PermissionType.FULL;
+        } else {
+          delete updatedPermissions[group.name];
         }
       });
 
