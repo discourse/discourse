@@ -83,7 +83,7 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.custom",
       time: null,
       timeFormatted: null,
-      isCustom: true,
+      isCustomTimeShortcut: true,
     },
     {
       icon: "ban",

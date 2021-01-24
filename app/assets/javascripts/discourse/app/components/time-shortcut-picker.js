@@ -121,18 +121,12 @@ export default Component.extend({
         this.userTimezone
       );
 
-      if (!customDatetime.isValid()) {
-        this.setProperties({
-          customTime: null,
-          customDate: null,
-        });
-        return;
+      if (customDatetime.isValid()) {
+        dateTime = customDatetime;
+
+        localStorage.lastCustomTime = this.customTime;
+        localStorage.lastCustomDate = this.customDate;
       }
-
-      dateTime = customDatetime;
-
-      localStorage.lastCustomTime = this.customTime;
-      localStorage.lastCustomDate = this.customDate;
     } else {
       dateTime = this.options.find((opt) => opt.id === type).time;
     }
