@@ -11,6 +11,7 @@ import {
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 import Component from "@ember/component";
+import I18n from "I18n";
 import { action } from "@ember/object";
 
 export default Component.extend({
@@ -164,6 +165,17 @@ export default Component.extend({
           opt.hidden = true;
         }
       });
+    }
+
+    if (this.lastCustomDate && this.lastCustomTime) {
+      let lastCustom = options.find(
+        (opt) => opt.id === TIME_SHORTCUT_TYPES.LAST_CUSTOM
+      );
+      lastCustom.time = this.parsedLastCustomDatetime;
+      lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
+        I18n.t("dates.long_no_year")
+      );
+      lastCustom.hidden = false;
     }
 
     let customOptionIndex = options.findIndex(

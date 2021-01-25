@@ -86,6 +86,14 @@ export function defaultShortcutOptions(timezone) {
       isCustomTimeShortcut: true,
     },
     {
+      icon: "undo",
+      id: TIME_SHORTCUT_TYPES.LAST_CUSTOM,
+      label: "time_shortcut.last_custom",
+      time: null,
+      timeFormatted: null,
+      hidden: true,
+    },
+    {
       icon: "ban",
       id: TIME_SHORTCUT_TYPES.NONE,
       label: "time_shortcut.none",

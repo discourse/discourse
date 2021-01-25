@@ -153,7 +153,7 @@ export default Controller.extend({
     "themeId"
   )
   currentSchemeCanBeSelected(userThemes, userColorSchemes, themeId) {
-    if (!userThemes) {
+    if (!userThemes || !themeId) {
       return false;
     }
 

@@ -15,7 +15,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
     this.categoriesSorting = ["position"];
   },
 
-  @discourseComputed("site.categories")
+  @discourseComputed("site.categories.[]")
   categoriesBuffered(categories) {
     const bufProxy = EmberObjectProxy.extend(BufferedProxy);
     return categories.map((c) => bufProxy.create({ content: c }));

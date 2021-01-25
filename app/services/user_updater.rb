@@ -200,7 +200,9 @@ class UserUpdater
 
     if saved
       if user_notification_schedule
-        user_notification_schedule.create_do_not_disturb_timings(delete_existing: true)
+        user_notification_schedule.enabled ?
+          user_notification_schedule.create_do_not_disturb_timings(delete_existing: true) :
+          user_notification_schedule.destroy_scheduled_timings
       end
       DiscourseEvent.trigger(:user_updated, user)
     end

@@ -36,6 +36,7 @@ describe "Discobot Certificate" do
         get '/discobot/certificate.svg', params: params
 
         expect(response.status).to eq(200)
+        expect(response.body).to include('<image height="55px" width="55px" />')
       end
 
       describe 'when params are missing' do

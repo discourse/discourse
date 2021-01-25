@@ -210,6 +210,7 @@ en:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
 
+    clear_input: "Clear input"
     edit: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -3614,6 +3615,10 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        new_features:
+          title: "🎁 New Features"
+          dismiss: "Dismiss"
+          learn_more: "Learn more"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -4179,9 +4184,7 @@ en:
 
               Example:
 
-              :root {
-                --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:

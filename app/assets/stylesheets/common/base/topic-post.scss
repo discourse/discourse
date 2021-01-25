@@ -655,6 +655,34 @@ blockquote {
   &.raw-email {
     cursor: pointer;
   }
+  &.edits {
+    .widget-button {
+      display: flex;
+      align-items: center;
+
+      .d-button-label {
+        order: 0;
+        padding-right: 0.25em;
+        color: var(--primary-med-or-secondary-med);
+        transition: color 0.25s;
+      }
+
+      .d-icon {
+        order: 1;
+        transition: color 0.25s;
+      }
+      .discourse-no-touch & {
+        &:hover {
+          .d-button-label {
+            color: var(--primary-high);
+          }
+          .d-icon {
+            color: var(--primary-high);
+          }
+        }
+      }
+    }
+  }
 }
 
 pre {

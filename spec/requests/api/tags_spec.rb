@@ -60,17 +60,17 @@ describe 'tags' do
     post 'Creates a tag group' do
       tags 'Tags'
       consumes 'application/json'
-      expected_request_schema = SpecSchemas::TagGroupCreateRequest.new
+      expected_request_schema = SpecSchemas::SpecLoader.new('tag_group_create_request').load
 
-      parameter name: :params, in: :body, schema: expected_request_schema.schemer
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'tag group created' do
-        expected_response_schema = SpecSchemas::TagGroupResponse.new
+        expected_response_schema = SpecSchemas::SpecLoader.new('tag_group_create_response').load
 
         let(:params) { { 'name' => 'todo' } }
 
-        schema(expected_response_schema.schemer)
+        schema(expected_response_schema)
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
