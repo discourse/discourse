@@ -12,7 +12,45 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 import Component from "@ember/component";
 import I18n from "I18n";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { action } from "@ember/object";
+
+// global shortcuts that interfere with these modal shortcuts, they are rebound when the
+// component is destroyed
+//
+// c createTopic
+// r replyToPost
+// l toggle like
+// t replyAsNewTopic
+const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "t"];
+const BINDINGS = {
+  "l t": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.LATER_TODAY],
+  },
+  "l w": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.LATER_THIS_WEEK],
+  },
+  "n d": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.TOMORROW],
+  },
+  "n w": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.NEXT_WEEK],
+  },
+  "n b w": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK],
+  },
+  "n m": {
+    handler: "selectShortcut",
+    args: [TIME_SHORTCUT_TYPES.NEXT_MONTH],
+  },
+  "c r": { handler: "selectShortcut", args: [TIME_SHORTCUT_TYPES.CUSTOM] },
+  "n r": { handler: "selectShortcut", args: [TIME_SHORTCUT_TYPES.NONE] },
+};
 
 export default Component.extend({
   tagName: "",
@@ -63,6 +101,7 @@ export default Component.extend({
       });
     }
 
+    this._bindKeyboardShortcuts();
     this._loadLastUsedCustomDatetime();
   },
 
@@ -185,5 +224,33 @@ export default Component.extend({
     options.splice(customOptionIndex, 0, ...customOptions);
 
     return options;
+  },
+
+  _bindKeyboardShortcuts() {
+    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
+    Object.keys(BINDINGS).forEach((shortcut) => {
+      KeyboardShortcuts.addShortcut(shortcut, () => {
+        let binding = BINDINGS[shortcut];
+        if (binding.args) {
+          return this.send(binding.handler, ...binding.args);
+        }
+        this.send(binding.handler);
+      });
+    });
+  },
+
+  _unbindKeyboardShortcuts() {
+    KeyboardShortcuts.unbind(BINDINGS);
+  },
+
+  _restoreGlobalShortcuts() {
+    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this._unbindKeyboardShortcuts();
+    this._restoreGlobalShortcuts();
   },
 });

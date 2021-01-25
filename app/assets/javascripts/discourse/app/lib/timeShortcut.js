@@ -12,7 +12,6 @@ import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {
   LATER_TODAY: "later_today",
-  NEXT_BUSINESS_DAY: "next_business_day",
   TOMORROW: "tomorrow",
   NEXT_WEEK: "next_week",
   NEXT_MONTH: "next_month",

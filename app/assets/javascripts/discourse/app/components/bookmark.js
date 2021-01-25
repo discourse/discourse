@@ -33,39 +33,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 // l toggle like
 // d deletePost
 // t replyAsNewTopic
-const GLOBAL_SHORTCUTS_TO_PAUSE = ["c", "r", "l", "d", "t"];
+const GLOBAL_SHORTCUTS_TO_PAUSE = ["d"];
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
-  "l t": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.LATER_TODAY],
-  },
-  "l w": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.LATER_THIS_WEEK],
-  },
-  "n b d": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.NEXT_BUSINESS_DAY],
-  },
-  "n d": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.TOMORROW],
-  },
-  "n w": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.NEXT_WEEK],
-  },
-  "n b w": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.START_OF_NEXT_BUSINESS_WEEK],
-  },
-  "n m": {
-    handler: "selectReminderType",
-    args: [TIME_SHORTCUT_TYPES.NEXT_MONTH],
-  },
-  "c r": { handler: "selectReminderType", args: [TIME_SHORTCUT_TYPES.CUSTOM] },
-  "n r": { handler: "selectReminderType", args: [TIME_SHORTCUT_TYPES.NONE] },
   "d d": { handler: "delete" },
 };
 
