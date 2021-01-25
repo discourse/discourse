@@ -1,0 +1,298 @@
+.font-helvetica {
+  --font-family: Helvetica;
+  font-family: Helvetica;
+}
+.font-open-sans {
+  --font-family: Open Sans;
+  font-family: Open Sans;
+}
+@font-face {
+  font-family: Open Sans;
+  src: asset-url("/fonts/OpenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Open Sans;
+  src: asset-url("/fonts/OpenSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-oxanium {
+  --font-family: Oxanium;
+  font-family: Oxanium;
+}
+@font-face {
+  font-family: Oxanium;
+  src: asset-url("/fonts/oxanium-regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Oxanium;
+  src: asset-url("/fonts/oxanium-bold.woff2") format("woff2");
+  font-weight: 700;
+}
+.font-roboto {
+  --font-family: Roboto;
+  font-family: Roboto;
+}
+@font-face {
+  font-family: Roboto;
+  src: asset-url("/fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Roboto;
+  src: asset-url("/fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-lato {
+  --font-family: Lato;
+  font-family: Lato;
+}
+@font-face {
+  font-family: Lato;
+  src: asset-url("/fonts/Lato-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Lato;
+  src: asset-url("/fonts/Lato-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-noto-sans-jp {
+  --font-family: NotoSansJP;
+  font-family: NotoSansJP;
+}
+@font-face {
+  font-family: NotoSansJP;
+  src: asset-url("/fonts/NotoSansJP-Regular.otf") format("");
+  font-weight: 400;
+}
+@font-face {
+  font-family: NotoSansJP;
+  src: asset-url("/fonts/NotoSansJP-Bold.otf") format("");
+  font-weight: 700;
+}
+.font-montserrat {
+  --font-family: Montserrat;
+  font-family: Montserrat;
+}
+@font-face {
+  font-family: Montserrat;
+  src: asset-url("/fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Montserrat;
+  src: asset-url("/fonts/Montserrat-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-roboto-condensed {
+  --font-family: RobotoCondensed;
+  font-family: RobotoCondensed;
+}
+@font-face {
+  font-family: RobotoCondensed;
+  src: asset-url("/fonts/RobotoCondensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: RobotoCondensed;
+  src: asset-url("/fonts/RobotoCondensed-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-source-sans-pro {
+  --font-family: SourceSansPro;
+  font-family: SourceSansPro;
+}
+@font-face {
+  font-family: SourceSansPro;
+  src: asset-url("/fonts/SourceSansPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: SourceSansPro;
+  src: asset-url("/fonts/SourceSansPro-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-oswald {
+  --font-family: Oswald;
+  font-family: Oswald;
+}
+@font-face {
+  font-family: Oswald;
+  src: asset-url("/fonts/Oswald-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Oswald;
+  src: asset-url("/fonts/Oswald-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-raleway {
+  --font-family: Raleway;
+  font-family: Raleway;
+}
+@font-face {
+  font-family: Raleway;
+  src: asset-url("/fonts/Raleway-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Raleway;
+  src: asset-url("/fonts/Raleway-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-roboto-mono {
+  --font-family: RobotoMono;
+  font-family: RobotoMono;
+}
+@font-face {
+  font-family: RobotoMono;
+  src: asset-url("/fonts/RobotoMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: RobotoMono;
+  src: asset-url("/fonts/RobotoMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-poppins {
+  --font-family: Poppins;
+  font-family: Poppins;
+}
+@font-face {
+  font-family: Poppins;
+  src: asset-url("/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Poppins;
+  src: asset-url("/fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-noto-sans {
+  --font-family: NotoSans;
+  font-family: NotoSans;
+}
+@font-face {
+  font-family: NotoSans;
+  src: asset-url("/fonts/NotoSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: NotoSans;
+  src: asset-url("/fonts/NotoSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-roboto-slab {
+  --font-family: RobotoSlab;
+  font-family: RobotoSlab;
+}
+@font-face {
+  font-family: RobotoSlab;
+  src: asset-url("/fonts/RobotoSlab-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: RobotoSlab;
+  src: asset-url("/fonts/RobotoSlab-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-merriweather {
+  --font-family: Merriweather;
+  font-family: Merriweather;
+}
+@font-face {
+  font-family: Merriweather;
+  src: asset-url("/fonts/Merriweather-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Merriweather;
+  src: asset-url("/fonts/Merriweather-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-ubuntu {
+  --font-family: Ubuntu;
+  font-family: Ubuntu;
+}
+@font-face {
+  font-family: Ubuntu;
+  src: asset-url("/fonts/Ubuntu-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Ubuntu;
+  src: asset-url("/fonts/Ubuntu-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-pt-sans {
+  --font-family: PTSans;
+  font-family: PTSans;
+}
+@font-face {
+  font-family: PTSans;
+  src: asset-url("/fonts/PTSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: PTSans;
+  src: asset-url("/fonts/PTSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-playfair-display {
+  --font-family: PlayfairDisplay;
+  font-family: PlayfairDisplay;
+}
+@font-face {
+  font-family: PlayfairDisplay;
+  src: asset-url("/fonts/PlayfairDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: PlayfairDisplay;
+  src: asset-url("/fonts/PlayfairDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-nunito {
+  --font-family: Nunito;
+  font-family: Nunito;
+}
+@font-face {
+  font-family: Nunito;
+  src: asset-url("/fonts/Nunito-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Nunito;
+  src: asset-url("/fonts/Nunito-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-lora {
+  --font-family: Lora;
+  font-family: Lora;
+}
+@font-face {
+  font-family: Lora;
+  src: asset-url("/fonts/Lora-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Lora;
+  src: asset-url("/fonts/Lora-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+.font-mukta {
+  --font-family: Mukta;
+  font-family: Mukta;
+}
+@font-face {
+  font-family: Mukta;
+  src: asset-url("/fonts/Mukta-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Mukta;
+  src: asset-url("/fonts/Mukta-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
