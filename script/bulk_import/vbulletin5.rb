@@ -7,7 +7,7 @@ require "htmlentities"
 
 class BulkImport::VBulletin < BulkImport::Base
 
-  DB_PREFIX = "vb_"
+  DB_PREFIX = ""
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
   ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
   AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
@@ -157,7 +157,7 @@ class BulkImport::VBulletin < BulkImport::Base
                  THEN 1
                  ELSE 0
                END
-             ) AS threads,
+             ) AS threads
         FROM #{DB_PREFIX}user u
         LEFT OUTER JOIN #{DB_PREFIX}node n ON u.userid = n.userid
        WHERE u.userid > #{@last_imported_user_id}
@@ -272,7 +272,7 @@ class BulkImport::VBulletin < BulkImport::Base
     topics = mysql_stream <<-SQL
       SELECT t.nodeid AS threadid, t.title, t.parentid AS forumid,
              t.open, t.userid AS postuserid, t.publishdate AS dateline,
-             nv.count views, 1 AS visible, t.sticky,
+             nv.count views, 1 AS visible, t.sticky
             FROM #{DB_PREFIX}node t
        LEFT JOIN #{DB_PREFIX} nodeview nv ON nv.nodeid = t.nodeid
            WHERE t.parentid IN (SELECT nodeid from #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
@@ -316,17 +316,17 @@ class BulkImport::VBulletin < BulkImport::Base
        WHERE p.parentid NOT IN (SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
          AND p.contenttypeid = #{@text_typeid}
          AND p.nodeid > #{@last_imported_post_id}
-       ORDER BY postid
+       ORDER BY p.nodeid
     SQL
 
     create_posts(posts) do |row|
       post = {
         imported_id: row[0],
-        topic_id: topic_id_from_imported_id(row[3]),
         user_id: user_id_from_imported_id(row[1]),
+        topic_id: topic_id_from_imported_id(row[2]) || row[0],
         created_at: Time.zone.at(row[4]),
         hidden: row[5] == 0,
-        raw: normalize_text(row[4]),
+        raw: normalize_text(row[3]),
       }
 
       post
@@ -346,7 +346,7 @@ class BulkImport::VBulletin < BulkImport::Base
       ORDER BY nodeid
     SQL
 
-    create_post_actions(post_thanks) do |row|
+    create_post_actions(post_likes) do |row|
       post_id = post_id_from_imported_id(row[0])
       user_id = user_id_from_imported_id(row[1])
 
@@ -368,7 +368,7 @@ class BulkImport::VBulletin < BulkImport::Base
     @imported_topics = {}
 
     topics = mysql_stream <<-SQL
-      SELECT t.nodeid, t.title, t.userid, t.publishdate AS dateline,
+      SELECT t.nodeid, t.title, t.userid, t.publishdate AS dateline
             FROM #{DB_PREFIX}node t
        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.nodeid
            WHERE pm.msgtype = 'message'
@@ -399,7 +399,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     mysql_stream(<<-SQL
       SELECT t.nodeid, t.userid, t.parentid
-        FROM #{DB_PREFIX}node
+        FROM #{DB_PREFIX}node t
         LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.parentid
        WHERE pm.msgtype = 'message'
          AND t.nodeid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
@@ -432,7 +432,7 @@ class BulkImport::VBulletin < BulkImport::Base
        WHERE (p.nodeid = pm.nodeid OR p.parentid = pm.nodeid)
          AND p.contenttypeid = #{@text_typeid}
          AND p.nodeid > #{@last_imported_post_id}
-       ORDER BY postid
+       ORDER BY p.nodeid
     SQL
 
     create_posts(posts) do |row|
@@ -679,3 +679,4 @@ class BulkImport::VBulletin < BulkImport::Base
 end
 
 BulkImport::VBulletin.new.run
+
