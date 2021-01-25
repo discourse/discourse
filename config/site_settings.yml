@@ -541,7 +541,9 @@ users:
     max: 10
   block_common_passwords: true
   username_change_period: 3
-  email_editable: true
+  email_editable:
+    client: true
+    default: true
   logout_redirect:
     client: true
     default: ""
