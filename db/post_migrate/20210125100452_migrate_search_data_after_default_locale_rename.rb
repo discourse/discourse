@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
-    move_search_data("category_search_data")
-    move_search_data("post_search_data")
-    move_search_data("tag_search_data")
-    move_search_data("topic_search_data")
-    move_search_data("user_search_data")
+    %w{category tag topic post user}.each { |model| fix_search_data(model) }
   end
 
   def down
@@ -15,14 +13,25 @@ class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
 
   private
 
-  def move_search_data(table_name)
-    execute <<~SQL
-      UPDATE #{table_name} x
-      SET locale = 'en'
-      WHERE locale = 'en_US'
+  def fix_search_data(model)
+    key = "#{model}_id"
+    table = "#{model}_search_data"
+
+    sql = <<~SQL
+      UPDATE #{table}
+         SET locale = 'en'
+       WHERE #{key} IN (
+              SELECT #{key}
+                FROM #{table}
+               WHERE locale = 'en_US'
+               LIMIT 500000
+           )
     SQL
-  rescue
-    # Probably a unique key constraint violation. A background job might have inserted conflicting data during the UPDATE.
-    # We can safely ignore this error. The ReindexSearch job will eventually fix the data.
+
+    loop do
+      count = execute(sql).cmd_tuples
+      break if count == 0
+      puts "Migrated #{count} rows of #{table} to new locale."
+    end
   end
 end
