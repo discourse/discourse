@@ -212,13 +212,13 @@ describe UserSearch do
       expect(results).to eq [mr_b, mr_brown, mr_blue].map(&:username)
     end
 
-    it "doesn't prioritises exact matches for users who haven't been seen in more than 1 year" do
+    it "doesn't prioritises exact matches mentions for users who haven't been seen in over a year" do
       abcdef = Fabricate(:user, username: "abcdef", last_seen_at: 2.days.ago)
       abcde  = Fabricate(:user, username: "abcde", last_seen_at: 2.weeks.ago)
       abcd   = Fabricate(:user, username: "abcd", last_seen_at: 2.months.ago)
       abc    = Fabricate(:user, username: "abc", last_seen_at: 2.years.ago)
 
-      results = search_for("abc")
+      results = search_for("abc", topic_id: topic.id)
       expect(results).to eq [abcdef, abcde, abcd, abc].map(&:username)
     end
 
