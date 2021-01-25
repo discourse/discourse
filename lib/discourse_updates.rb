@@ -131,6 +131,10 @@ module DiscourseUpdates
         entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
       end
 
+      entries.select! do |item|
+        item["discourse_version"].nil? || Discourse.has_needed_version?(Discourse::VERSION::STRING, item["discourse_version"]) rescue nil
+      end
+
       entries.sort { |item| Time.zone.parse(item["created_at"]) }
     end
 
