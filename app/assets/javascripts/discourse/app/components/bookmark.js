@@ -52,8 +52,6 @@ export default Component.extend({
       _savingBookmarkManually: false,
       _saving: false,
       _deleting: false,
-      _closeWithoutSaving: false,
-      _savingBookmarkManually: false,
       postDetectedLocalDate: null,
       postDetectedLocalTime: null,
       postDetectedLocalTimezone: null,
