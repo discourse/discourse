@@ -105,7 +105,7 @@ RSpec.describe ApplicationController do
 
     it 'contains authentication data when cookies exist' do
       cookie_data = "someauthenticationdata"
-      cookies['authentication_data'] = "someauthenticationdata"
+      cookies['authentication_data'] = cookie_data
       get '/login'
       expect(response.status).to eq(200)
       expect(response.body).to include("data-authentication-data=\"#{cookie_data}\"")

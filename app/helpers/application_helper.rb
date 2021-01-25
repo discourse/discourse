@@ -562,13 +562,14 @@ module ApplicationHelper
   end
 
   def authentication_data
-    @authentication_data ||= begin
+    return @authentication_data if defined?(@authentication_data)
+
+    @authentication_data = begin
       value = cookies[:authentication_data]
       if value
         cookies.delete(:authentication_data, path: Discourse.base_path("/"))
       end
-      value = nil if current_user
-      value
+      current_user ? nil : value
     end
   end
 end
