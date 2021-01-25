@@ -210,10 +210,21 @@ describe UserAnonymizer do
     end
 
     it "removes api key" do
-      ApiKey.create(user_id: user.id)
+      ApiKey.create!(user_id: user.id)
+
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
+
       user.reload
       expect(user.api_keys).to be_empty
+    end
+
+    it "removes user api key" do
+      user_api_key = Fabricate(:user_api_key, user: user)
+
+      expect { make_anonymous }.to change { UserApiKey.count }.by(-1)
+
+      user.reload
+      expect(user.user_api_keys).to be_empty
     end
 
     context "executes job" do
