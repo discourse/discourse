@@ -7,7 +7,7 @@ require "htmlentities"
 
 class BulkImport::VBulletin < BulkImport::Base
 
-  TABLE_PREFIX = "vb_"
+  DB_PREFIX = "vb_"
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
   ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
   AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
@@ -36,9 +36,9 @@ class BulkImport::VBulletin < BulkImport::Base
 
     @client.query_options.merge!(as: :array, cache_rows: false)
 
-    @forum_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Forum'").first['contenttypeid']
-    @channel_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Channel'").first['contenttypeid']
-    @text_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Text'").first['contenttypeid']
+    @forum_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Forum'").to_a[0][0]
+    @channel_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Channel'").to_a[0][0]
+    @text_typeid = mysql_query("SELECT contenttypeid FROM #{DB_PREFIX}contenttype WHERE class='Text'").to_a[0][0]
   end
 
   def execute
@@ -81,7 +81,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     groups = mysql_stream <<-SQL
         SELECT usergroupid, title, description, usertitle
-          FROM #{TABLE_PREFIX}usergroup
+          FROM #{DB_PREFIX}usergroup
          WHERE usergroupid > #{@last_imported_group_id}
       ORDER BY usergroupid
     SQL
@@ -100,9 +100,9 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing users..."
 
     users = mysql_stream <<-SQL
-        SELECT u.userid, u.username, u.email, u.joindate, u.birthday, u.ipaddress, u.usergroupid, u.bandate, u.liftdate
-          FROM #{TABLE_PREFIX}user u
-     LEFT JOIN #{TABLE_PREFIX}userban ub ON ub.userid = u.userid
+        SELECT u.userid, u.username, u.email, u.joindate, u.birthday, u.ipaddress, u.usergroupid, ub.bandate, ub.liftdate
+          FROM #{DB_PREFIX}user u
+     LEFT JOIN #{DB_PREFIX}userban ub ON ub.userid = u.userid
          WHERE u.userid > #{@last_imported_user_id}
       ORDER BY u.userid
     SQL
@@ -130,7 +130,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     users = mysql_stream <<-SQL
         SELECT u.userid, u.email, u.joindate
-          FROM #{TABLE_PREFIX}user u
+          FROM #{DB_PREFIX}user u
          WHERE u.userid > #{@last_imported_user_id}
       ORDER BY u.userid
     SQL
@@ -158,8 +158,8 @@ class BulkImport::VBulletin < BulkImport::Base
                  ELSE 0
                END
              ) AS threads,
-        FROM #{TABLE_PREFIX}user u
-        LEFT OUTER JOIN #{TABLE_PREFIX}node n ON u.userid = n.userid
+        FROM #{DB_PREFIX}user u
+        LEFT OUTER JOIN #{DB_PREFIX}node n ON u.userid = n.userid
        WHERE u.userid > #{@last_imported_user_id}
        GROUP BY u.userid
        ORDER BY u.userid
@@ -183,7 +183,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     group_users = mysql_stream <<-SQL
       SELECT usergroupid, userid
-        FROM #{TABLE_PREFIX}user
+        FROM #{DB_PREFIX}user
        WHERE userid > #{@last_imported_user_id}
     SQL
 
@@ -200,7 +200,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     user_profiles = mysql_stream <<-SQL
         SELECT userid, homepage, profilevisits
-          FROM #{TABLE_PREFIX}user
+          FROM #{DB_PREFIX}user
          WHERE userid > #{@last_imported_user_id}
       ORDER BY userid
     SQL
@@ -341,7 +341,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     post_likes = mysql_stream <<-SQL
         SELECT nodeid, userid, dateline
-          FROM #{TABLE_PREFIX}reputation
+          FROM #{DB_PREFIX}reputation
          WHERE nodeid > #{@last_imported_post_id}
       ORDER BY nodeid
     SQL
@@ -483,7 +483,7 @@ class BulkImport::VBulletin < BulkImport::Base
   def find_upload(post, attachment_id)
     sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filename filename,
                   a.filedata filedata, a.extension extension
-             FROM #{TABLE_PREFIX}attachment a
+             FROM #{DB_PREFIX}attachment a
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
 
@@ -528,8 +528,8 @@ class BulkImport::VBulletin < BulkImport::Base
 
     total_count = mysql_query(<<-SQL
       SELECT COUNT(p.postid) count
-        FROM #{TABLE_PREFIX}post p
-        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
+        FROM #{DB_PREFIX}post p
+        JOIN #{DB_PREFIX}thread t ON t.threadid = p.threadid
        WHERE t.firstpostid <> p.postid
     SQL
     ).first[0].to_i
@@ -614,14 +614,14 @@ class BulkImport::VBulletin < BulkImport::Base
 
     total_count = mysql_query(<<-SQL
       SELECT COUNT(userid) count
-        FROM #{TABLE_PREFIX}sigparsed
+        FROM #{DB_PREFIX}sigparsed
     SQL
     ).first[0].to_i
     current_count = 0
 
     user_signatures = mysql_stream <<-SQL
         SELECT userid, signatureparsed
-          FROM #{TABLE_PREFIX}sigparsed
+          FROM #{DB_PREFIX}sigparsed
       ORDER BY userid
     SQL
 
