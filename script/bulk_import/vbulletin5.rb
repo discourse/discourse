@@ -11,6 +11,7 @@ class BulkImport::VBulletin < BulkImport::Base
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
   ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
   AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
+  ROOT_NODE = 2
 
   def initialize
     super
@@ -57,10 +58,7 @@ class BulkImport::VBulletin < BulkImport::Base
     import_user_emails
     import_user_stats
 
-    #import_user_passwords
-    #import_user_salts
     import_user_profiles
-    # --- need writing below
     import_categories
     import_topics
     import_posts
@@ -71,10 +69,11 @@ class BulkImport::VBulletin < BulkImport::Base
     import_topic_allowed_users
     import_private_posts
 
-    create_permalink_file
-    import_attachments
-    import_avatars
-    import_signatures
+    # --- need writing below
+    #create_permalink_file
+    #jimport_attachments
+    #import_avatars
+    #import_signatures
   end
 
   def import_groups
@@ -150,20 +149,20 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing user stats..."
 
     users = mysql_stream <<-SQL
-              SELECT u.userid, u.joindate, u.posts,
-                     SUM(
-                       CASE
-                         WHEN n.contenttypeid = #{@text_typeid}
-                          AND n.parentid IN ( select nodeid from #{DB_PREFIX}node where contenttypeid=#{@channel_typeid} )
-                         THEN 1
-                         ELSE 0
-                       END
-                     ) AS threads,
-                FROM #{TABLE_PREFIX}user u
-     LEFT OUTER JOIN #{TABLE_PREFIX}node n ON u.userid = n.userid
-               WHERE u.userid > #{@last_imported_user_id}
-            GROUP BY u.userid
-            ORDER BY u.userid
+      SELECT u.userid, u.joindate, u.posts,
+             SUM(
+               CASE
+                 WHEN n.contenttypeid = #{@text_typeid}
+                  AND n.parentid IN ( select nodeid from #{DB_PREFIX}node where contenttypeid=#{@channel_typeid} )
+                 THEN 1
+                 ELSE 0
+               END
+             ) AS threads,
+        FROM #{TABLE_PREFIX}user u
+        LEFT OUTER JOIN #{TABLE_PREFIX}node n ON u.userid = n.userid
+       WHERE u.userid > #{@last_imported_user_id}
+       GROUP BY u.userid
+       ORDER BY u.userid
     SQL
 
     create_user_stats(users) do |row|
@@ -173,7 +172,6 @@ class BulkImport::VBulletin < BulkImport::Base
         new_since: Time.zone.at(row[1]),
         post_count: row[2],
         topic_count: row[3],
-        #first_post_created_at: row[4] && Time.zone.at(row[4])
       }
 
       user
@@ -196,43 +194,6 @@ class BulkImport::VBulletin < BulkImport::Base
       }
     end
   end
-
-  #def import_user_passwords
-  #  puts "Importing user passwords..."
-
-  #  user_passwords = mysql_stream <<-SQL
-  #      SELECT userid, password
-  #        FROM #{TABLE_PREFIX}user
-  #       WHERE userid > #{@last_imported_user_id}
-  #    ORDER BY userid
-  #  SQL
-
-  #  create_custom_fields("user", "password", user_passwords) do |row|
-  #    {
-  #      record_id: user_id_from_imported_id(row[0]),
-  #      value: row[1],
-  #    }
-  #  end
-  #end
-
-  #def import_user_salts
-  #  puts "Importing user salts..."
-
-  #  user_salts = mysql_stream <<-SQL
-  #      SELECT userid, salt
-  #        FROM #{TABLE_PREFIX}user
-  #       WHERE userid > #{@last_imported_user_id}
-  #         AND LENGTH(COALESCE(salt, '')) > 0
-  #    ORDER BY userid
-  #  SQL
-
-  #  create_custom_fields("user", "salt", user_salts) do |row|
-  #    {
-  #      record_id: user_id_from_imported_id(row[0]),
-  #      value: row[1],
-  #    }
-  #  end
-  #end
 
   def import_user_profiles
     puts "Importing user profiles..."
@@ -257,24 +218,28 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing categories..."
 
     categories = mysql_query(<<-SQL
-        SELECT forumid, parentid, title, description, displayorder
-          FROM #{TABLE_PREFIX}forum
-         WHERE forumid > #{@last_imported_category_id}
-      ORDER BY forumid
+      SELECT nodeid AS forumid, title, description, displayorder, parentid
+        FROM #{DB_PREFIX}node
+       WHERE parentid = #{ROOT_NODE}
+       UNION
+         SELECT nodeid, title, description, displayorder, parentid
+           FROM #{DB_PREFIX}node
+          WHERE contenttypeid = #{@channel_typeid}
+            AND parentid IN (SELECT nodeid FROM #{DB_PREFIX}node WHERE parentid = #{ROOT_NODE})
     SQL
     ).to_a
 
     return if categories.empty?
 
-    parent_categories   = categories.select { |c| c[1] == -1 }
-    children_categories = categories.select { |c| c[1] != -1 }
+    parent_categories   = categories.select { |c| c[4] == ROOT_NODE }
+    children_categories = categories.select { |c| c[4] != ROOT_NODE }
 
     parent_category_ids = Set.new parent_categories.map { |c| c[0] }
 
     # cut down the tree to only 2 levels of categories
     children_categories.each do |cc|
-      until parent_category_ids.include?(cc[1])
-        cc[1] = categories.find { |c| c[0] == cc[1] }[1]
+      until parent_category_ids.include?(cc[4])
+        cc[4] = categories.find { |c| c[0] == cc[4] }[4]
       end
     end
 
@@ -282,9 +247,9 @@ class BulkImport::VBulletin < BulkImport::Base
     create_categories(parent_categories) do |row|
       {
         imported_id: row[0],
-        name: normalize_text(row[2]),
-        description: normalize_text(row[3]),
-        position: row[4],
+        name: normalize_text(row[1]),
+        description: normalize_text(row[2]),
+        position: row[3],
       }
     end
 
@@ -292,10 +257,10 @@ class BulkImport::VBulletin < BulkImport::Base
     create_categories(children_categories) do |row|
       {
         imported_id: row[0],
-        name: normalize_text(row[2]),
-        description: normalize_text(row[3]),
-        position: row[4],
-        parent_category_id: category_id_from_imported_id(row[1]),
+        name: normalize_text(row[1]),
+        description: normalize_text(row[2]),
+        position: row[3],
+        parent_category_id: category_id_from_imported_id(row[4]),
       }
     end
   end
@@ -303,12 +268,19 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_topics
     puts "Importing topics..."
 
+
     topics = mysql_stream <<-SQL
-        SELECT threadid, title, forumid, postuserid, open, dateline, views, visible, sticky
-          FROM #{TABLE_PREFIX}thread t
-         WHERE threadid > #{@last_imported_topic_id}
-           AND EXISTS (SELECT 1 FROM #{TABLE_PREFIX}post p WHERE p.threadid = t.threadid)
-      ORDER BY threadid
+      SELECT t.nodeid AS threadid, t.title, t.parentid AS forumid,
+             t.open, t.userid AS postuserid, t.publishdate AS dateline,
+             nv.count views, 1 AS visible, t.sticky,
+            FROM #{DB_PREFIX}node t
+       LEFT JOIN #{DB_PREFIX} nodeview nv ON nv.nodeid = t.nodeid
+           WHERE t.parentid IN (SELECT nodeid from #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
+             AND t.contenttypeid = #{@text_typeid}
+             AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
+             AND t.approved = 1 AND t.showapproved = 1
+             AND t.nodeid > #{@last_imported_topic_id}
+        ORDER BY t.nodeid
     SQL
 
     create_topics(topics) do |row|
@@ -318,8 +290,8 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: row[0],
         title: normalize_text(row[1]),
         category_id: category_id_from_imported_id(row[2]),
-        user_id: user_id_from_imported_id(row[3]),
-        closed: row[4] == 0,
+        user_id: user_id_from_imported_id(row[4]),
+        closed: row[3] == 0,
         created_at: created_at,
         views: row[6],
         visible: row[7] == 1,
@@ -335,47 +307,43 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing posts..."
 
     posts = mysql_stream <<-SQL
-        SELECT postid, p.threadid, parentid, userid, p.dateline, p.visible, pagetext
-               #{", post_thanks_amount" if @has_post_thanks}
-
-          FROM #{TABLE_PREFIX}post p
-          JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-         WHERE postid > #{@last_imported_post_id}
-      ORDER BY postid
+      SELECT p.nodeid, p.userid, p.parentid,
+             CONVERT(CAST(rawtext AS BINARY)USING utf8),
+             p.publishdate, 1 AS visible, p.parentid
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid = p.nodeid
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid = p.nodeid
+       WHERE p.parentid NOT IN (SELECT nodeid FROM #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
+         AND p.contenttypeid = #{@text_typeid}
+         AND p.nodeid > #{@last_imported_post_id}
+       ORDER BY postid
     SQL
 
     create_posts(posts) do |row|
-      topic_id = topic_id_from_imported_id(row[1])
-      replied_post_topic_id = topic_id_from_imported_post_id(row[2])
-      reply_to_post_number = topic_id == replied_post_topic_id ? post_number_from_imported_id(row[2]) : nil
-
       post = {
         imported_id: row[0],
-        topic_id: topic_id,
-        reply_to_post_number: reply_to_post_number,
-        user_id: user_id_from_imported_id(row[3]),
+        topic_id: topic_id_from_imported_id(row[3]),
+        user_id: user_id_from_imported_id(row[1]),
         created_at: Time.zone.at(row[4]),
         hidden: row[5] == 0,
-        raw: normalize_text(row[6]),
+        raw: normalize_text(row[4]),
       }
 
-      post[:like_count] = row[7] if @has_post_thanks
       post
     end
   end
 
   def import_likes
-    return unless @has_post_thanks
     puts "Importing likes..."
 
     @imported_likes = Set.new
     @last_imported_post_id = 0
 
-    post_thanks = mysql_stream <<-SQL
-        SELECT postid, userid, date
-          FROM #{TABLE_PREFIX}post_thanks
-         WHERE postid > #{@last_imported_post_id}
-      ORDER BY postid
+    post_likes = mysql_stream <<-SQL
+        SELECT nodeid, userid, dateline
+          FROM #{TABLE_PREFIX}reputation
+         WHERE nodeid > #{@last_imported_post_id}
+      ORDER BY nodeid
     SQL
 
     create_post_actions(post_thanks) do |row|
@@ -400,16 +368,17 @@ class BulkImport::VBulletin < BulkImport::Base
     @imported_topics = {}
 
     topics = mysql_stream <<-SQL
-        SELECT pmtextid, title, fromuserid, touserarray, dateline
-          FROM #{TABLE_PREFIX}pmtext
-         WHERE pmtextid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
-      ORDER BY pmtextid
+      SELECT t.nodeid, t.title, t.userid, t.publishdate AS dateline,
+            FROM #{DB_PREFIX}node t
+       LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.nodeid
+           WHERE pm.msgtype = 'message'
+             AND t.nodeid > #{@last_imported_topic_id}
+        ORDER BY t.nodeid
     SQL
 
     create_topics(topics) do |row|
       title = extract_pm_title(row[1])
-      user_ids = [row[2], row[3].scan(/i:(\d+)/)].flatten.map(&:to_i).sort
-      key = [title, user_ids]
+      key = [title, row[2]]
 
       next if @imported_topics.has_key?(key)
       @imported_topics[key] = row[0] + PRIVATE_OFFSET
@@ -418,7 +387,7 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: row[0] + PRIVATE_OFFSET,
         title: title,
         user_id: user_id_from_imported_id(row[2]),
-        created_at: Time.zone.at(row[4]),
+        created_at: Time.zone.at(row[3]),
       }
     end
   end
@@ -429,17 +398,17 @@ class BulkImport::VBulletin < BulkImport::Base
     allowed_users = Set.new
 
     mysql_stream(<<-SQL
-        SELECT pmtextid, touserarray
-          FROM #{TABLE_PREFIX}pmtext
-         WHERE pmtextid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
-      ORDER BY pmtextid
+      SELECT t.nodeid, t.userid, t.parentid
+        FROM #{DB_PREFIX}node
+        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.parentid
+       WHERE pm.msgtype = 'message'
+         AND t.nodeid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
+       ORDER BY t.nodeid
     SQL
     ).each do |row|
-      next unless topic_id = topic_id_from_imported_id(row[0] + PRIVATE_OFFSET)
-      row[1].scan(/i:(\d+)/).flatten.each do |id|
-        next unless user_id = user_id_from_imported_id(id)
-        allowed_users << [topic_id, user_id]
-      end
+      next unless topic_id = topic_id_from_imported_id(row[2] + PRIVATE_OFFSET)
+      next unless user_id = user_id_from_imported_id(id)
+      allowed_users << [topic_id, user_id]
     end
 
     create_topic_allowed_users(allowed_users) do |row|
@@ -454,16 +423,21 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing private posts..."
 
     posts = mysql_stream <<-SQL
-        SELECT pmtextid, title, fromuserid, touserarray, dateline, message
-          FROM #{TABLE_PREFIX}pmtext
-         WHERE pmtextid > #{@last_imported_private_post_id - PRIVATE_OFFSET}
-      ORDER BY pmtextid
+      SELECT p.nodeid, p.title, p.userid, p.parentid,
+             CONVERT(CAST(rawtext AS BINARY)USING utf8),
+             p.publishdate
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid = p.nodeid
+        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = p.nodeid
+       WHERE (p.nodeid = pm.nodeid OR p.parentid = pm.nodeid)
+         AND p.contenttypeid = #{@text_typeid}
+         AND p.nodeid > #{@last_imported_post_id}
+       ORDER BY postid
     SQL
 
     create_posts(posts) do |row|
       title = extract_pm_title(row[1])
-      user_ids = [row[2], row[3].scan(/i:(\d+)/)].flatten.map(&:to_i).sort
-      key = [title, user_ids]
+      key = [title, row[2]]
 
       next unless topic_id = topic_id_from_imported_id(@imported_topics[key])
 
@@ -471,8 +445,8 @@ class BulkImport::VBulletin < BulkImport::Base
         imported_id: row[0] + PRIVATE_OFFSET,
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row[2]),
-        created_at: Time.zone.at(row[4]),
-        raw: normalize_text(row[5]),
+        created_at: Time.zone.at(row[5]),
+        raw: normalize_text(row[4]),
       }
     end
   end
