@@ -64,10 +64,11 @@ class UserSearch
   def search_ids
     users = Set.new
 
-    # 1. exact username matches
+    # 1. exact username matches active in the past year
     if @term.present?
       scoped_users
         .where(username_lower: @term)
+        .where('last_seen_at > ?', 1.year.ago)
         .limit(@limit)
         .pluck(:id)
         .each { |id| users << id }
