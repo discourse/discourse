@@ -3,8 +3,11 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
 import { alias } from "@ember/object/computed";
 import { on } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Mixin.create({
+  router: service(),
+
   bulkSelectEnabled: false,
   selected: null,
 
