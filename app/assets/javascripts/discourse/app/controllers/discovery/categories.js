@@ -19,15 +19,6 @@ export default DiscoveryController.extend({
 
   canEdit: reads("currentUser.staff"),
 
-  @discourseComputed("model.categories.[].featuredTopics.length")
-  latestTopicOnly() {
-    return (
-      this.get("model.categories").find(
-        (c) => c.get("featuredTopics.length") > 1
-      ) === undefined
-    );
-  },
-
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
     let style = this.site.mobileView
