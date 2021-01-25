@@ -12,8 +12,6 @@ import sinon from "sinon";
 
 let clock = null;
 
-// note: dateString should be in UTC time, and will be translated to
-// the provided timezone time
 function mockMomentTz(dateString, timezone) {
   clock = fakeTime(dateString, timezone, true);
 }
@@ -77,8 +75,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template: template,
 
     beforeEach() {
-      // 10PM + 3h is 1am
-      mockMomentTz("2019-12-11T12:00:00", this.currentUser._timezone);
+      mockMomentTz("2019-12-11T22:00:00", this.currentUser._timezone);
     },
 
     test(assert) {
@@ -93,7 +90,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template: template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T04:30:00", this.currentUser._timezone);
+      mockMomentTz("2019-12-11T14:30:00", this.currentUser._timezone);
     },
 
     test(assert) {
@@ -105,7 +102,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template: template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T07:00:00", this.currentUser._timezone);
+      mockMomentTz("2019-12-11T17:00:00", this.currentUser._timezone);
     },
 
     test(assert) {
@@ -120,7 +117,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     template: template,
 
     beforeEach() {
-      mockMomentTz("2019-12-11T03:00:00", this.currentUser._timezone);
+      mockMomentTz("2019-12-11T13:00:00", this.currentUser._timezone);
     },
 
     test(assert) {
