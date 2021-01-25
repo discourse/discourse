@@ -264,7 +264,17 @@ const AdminUser = User.extend({
     return ajax(`/admin/users/${this.id}.json`, {
       type: "DELETE",
       data: formData,
-    });
+    })
+      .then((data) => {
+        if (!data.deleted && data.user) {
+          this.setProperties(data.user);
+        }
+
+        return data;
+      })
+      .catch(() => {
+        this.find(this.id).then((u) => this.setProperties(u));
+      });
   },
 
   merge(formData) {

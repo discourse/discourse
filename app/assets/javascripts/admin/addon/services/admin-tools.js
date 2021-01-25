@@ -33,8 +33,8 @@ export default Service.extend({
     return AdminUser.find(userId).then((au) => this.spammerDetails(au));
   },
 
-  deleteUser(id) {
-    AdminUser.find(id).then((user) => user.destroy({ deletePosts: true }));
+  deleteUser(id, formData) {
+    return AdminUser.find(id).then((user) => user.destroy(formData));
   },
 
   spammerDetails(adminUser) {
