@@ -24,7 +24,6 @@ da:
       long_description: |
         Denne badge tildeles, når den interaktive avancerede brugervejledning er afsluttet. Du har mestret de avancerede diskussionsværktøjer - og nu er du fuldt licenseret!
   discourse_narrative_bot:
-    bio: "Hej, jeg er ikke en rigtigt person. Jeg er en bot der kan lære dig om dette site. For at interaggere med mig, send mig en besked, eller nævn **`@%{discobot_username}`** overalt."
     timeout:
       message: |-
         Hey @%{username}, jeg skriver fordi jeg ikke har hørt fra dig i et stykke tid.

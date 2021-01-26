@@ -29,7 +29,7 @@ pl_PL:
     dates:
       time: "H:mm"
       time_with_zone: "HH:mm (z)"
-      time_short_day: "ddd, GG: mm"
+      time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
       long_no_year: "D MMM, HH:mm"
       long_no_year_no_time: "D MMM"
@@ -161,7 +161,7 @@ pl_PL:
       placeholder: data
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
-      post: "wpis #%{postNumber}"
+      post: "post #%{postNumber}"
       close: "zamknij"
       twitter: "Udostępnij na Twitterze"
       facebook: "Udostępnij na Facebooku"
@@ -233,6 +233,7 @@ pl_PL:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
+    clear_input: "Wyczyść wprowadzone dane"
     edit: "edytuj tytuł i kategorię tego tematu"
     expand: "Rozszerz"
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
@@ -303,7 +304,7 @@ pl_PL:
         last_30_days: "Ostatnie 30"
       like_count: "Polubienia"
       topic_count: "Tematy"
-      post_count: "Wpisy"
+      post_count: "Posty"
       user_count: "Użytkownicy"
       active_user_count: "Aktywni użytkownicy"
       contact: "Kontakt"
@@ -312,13 +313,13 @@ pl_PL:
       title: "Zakładka"
       clear_bookmarks: "Wyczyść zakładki"
       help:
-        bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
+        bookmark: "Kliknij, aby dodać pierwszy post tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie. Masz przypomnienie ustawione na %{reminder_at} dla tego tematu."
     bookmarks:
-      created: "Wpis już dodano do zakładek%{name}"
+      created: "Dodano post do zakładek. %{name}"
       not_bookmarked: "dodaj do zakładek"
-      created_with_reminder: "Dodałeś ten wpis do zakładek z przypomnieniem %{date}%{name}"
+      created_with_reminder: "Dodano post do zakładek z przypomnieniem %{date}. %{name}"
       remove: "Usuń zakładkę"
       delete: "Usuń zakładkę"
       confirm_delete: "Czy na pewno chcesz usunąć tę zakładkę? Przypomnienie również zostanie usunięte."
@@ -332,7 +333,7 @@ pl_PL:
         label: "Usuń automatycznie"
         never: "Nigdy"
         when_reminder_sent: "Po wysłaniu przypomnienia"
-        on_owner_reply: "Po odpowiedzi na ten temat"
+        on_owner_reply: "Gdy odpowiem w tym temacie"
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       reminders:
@@ -409,12 +410,12 @@ pl_PL:
       none_found: "Nie znaleziono tematów."
       title:
         search: "Wyszukaj temat"
-        placeholder: "wpisz tytuł tematu, adres URL lub identyfikator tutaj"
+        placeholder: "wpisz tutaj tytuł tematu, adres URL lub id"
     choose_message:
       none_found: "Nie znaleziono wiadomości."
       title:
         search: "Wyszukaj wiadomość"
-        placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub identyfikator"
+        placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
       order_by: "Segreguj według:"
       in_reply_to: "w odpowiedzi na"
@@ -425,7 +426,7 @@ pl_PL:
         subtotal: "Suma częściowa"
         total: "Łącznie"
         min_score_visibility: "Minimalny wynik dla widoczności"
-        score_to_hide: "Wynik do ukrycia wpisu"
+        score_to_hide: "Wynik by ukryć post"
         take_action_bonus:
           name: "Podjęto działanie"
           title: "Gdy członek personelu zdecyduje się na działanie, flaga otrzymuje premię."
@@ -545,7 +546,7 @@ pl_PL:
       conversation:
         view_full: "zobacz całą rozmowę"
       scores:
-        about: "Wynik jest obliczany na podstawie poziomu zaufania raportującego, akceptacji poprzednich flag i priorytetu raportowanego wpisu."
+        about: "Wynik jest obliczany na podstawie poziomu zaufania raportującego, akceptacji poprzednich flag i priorytetu raportowanego postu."
         score: "Wynik"
         date: "Data"
         type: "Typ"
@@ -578,13 +579,13 @@ pl_PL:
         reviewable_user:
           title: "Użytkownik"
       approval:
-        title: "Wpis wymaga zatwierdzenia"
+        title: "Post wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
         pending_posts:
-          one: "Masz <strong>%{count}</strong> oczekujący wpis."
-          few: "Masz <strong>%{count}</strong> oczekujące wpisy."
-          many: "Masz <strong>%{count}</strong> oczekujących wpisów."
-          other: "Masz <strong>%{count}</strong> oczekujących wpisów."
+          one: "Masz <strong>%{count}</strong> oczekujący post."
+          few: "Masz <strong>%{count}</strong> oczekujące posty."
+          many: "Masz <strong>%{count}</strong> oczekujących postów."
+          other: "Masz <strong>%{count}</strong> oczekujących postów."
         ok: "OK"
       example_username: "użytkownik"
       reject_reason:
@@ -690,7 +691,7 @@ pl_PL:
           long_title: "Domyślne powiadomienia kategorii"
           description: "Po dodaniu użytkowników do tej grupy ustawienia powiadomień kategorii zostaną ustawione na wartości domyślne. Potem mogą je zmienić."
           watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym poście i temacie, a liczba nowych postów będzie wyświetlana obok tytułów na liście tematów."
-          tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
+          tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych postów pojawi się obok tytułu na liście tematów."
           watching_first_post_categories_instructions: "Użytkownicy zostaną powiadomieni o pierwszym postie w każdym nowym temacie w tych kategoriach."
           regular_categories_instructions: "Jeśli te kategorie są wyciszone, nie zostaną wyciszone dla członków grupy. Użytkownicy zostaną powiadomieni, jeśli zostaną wspomniani lub ktoś na nie odpowie."
           muted_categories_instructions: "Użytkownicy nie będą powiadamiani o nowych tematach w tych kategoriach i nie będą pojawiać się na stronach kategorii ani najnowszych tematów."
@@ -700,7 +701,7 @@ pl_PL:
           description: "Po dodaniu użytkowników do tej grupy ustawienia powiadomień tagów zostaną ustawione na wartości domyślne. Potem mogą je zmienić."
           watched_tags_instructions: "Automatycznie obserwuj wszystkie tematy z tymi tagami. Członkowie grupy zostaną powiadomieni o wszystkich nowych postach i tematach, a liczba nowych postów będzie również wyświetlana obok tematu."
           tracked_tags_instructions: "Automatycznie śledź wszystkie tematy z tymi tagami. Obok tematu pojawi się liczba nowych postów."
-          watching_first_post_tags_instructions: "Zostaniesz powiadomiony o pierwszym wpisie w każdym nowym temacie oznaczonym tymi tagami."
+          watching_first_post_tags_instructions: "Zostaniesz powiadomiony o pierwszym poście w każdym nowym temacie oznaczonym tymi tagami."
           regular_tags_instructions: "Jeśli te tagi są wyciszone, nie zostaną wyciszone dla członków grupy. Użytkownicy zostaną powiadomieni, jeśli zostaną wspomniani lub ktoś na nie odpowie."
           muted_tags_instructions: "Użytkownicy nie będą powiadamiani o nowych tematach z tymi tagami i nie pojawią się one w najnowszych."
         logs:
@@ -720,7 +721,7 @@ pl_PL:
       public_admission: "Zezwól wszystkim użytkownikom na dołączanie do tej grupy (widoczność grupy musi być ustawiona na publiczną)"
       public_exit: "Zezwól wszystkim użytkownikom na opuszczanie tej grupy"
       empty:
-        posts: "Członkowie tej grupy nie opublikowali żadnych wpisów."
+        posts: "Członkowie tej grupy nie napisali żadnych postów."
         members: "Nie ma użytkowników w tej grupie"
         requests: "Są prośby o dołączenie do tej grupy."
         mentions: "Nie ma wspomnień tej grupy"
@@ -784,7 +785,7 @@ pl_PL:
         owner: "Właściciel"
         forbidden: "Nie możesz oglądać profili użytkowników."
       topics: "Tematy"
-      posts: "Wpisów"
+      posts: "Postów"
       mentions: "Wzmianki"
       messages: "Wiadomości"
       notification_level: "Domyślny poziom powiadomień dla wiadomości grupy."
@@ -800,9 +801,9 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwowanie"
-          description: "Dostaniesz powiadomienie o każdym nowym wpisie w każdej dyskusji, zobaczysz również ilość odpowiedzi."
+          description: "Dostaniesz powiadomienie o każdym nowym poście w każdej dyskusji, zobaczysz również ilość odpowiedzi."
         watching_first_post:
-          title: "Oglądasz pierwszy wpis"
+          title: "Obserwowanie pierwszego postu"
           description: "Zostaniesz poinformowany o nowych wiadomościach w tej grupie, ale nie odpowiedziach do wiadomości."
         tracking:
           title: "Śledzenie"
@@ -850,7 +851,7 @@ pl_PL:
         save: "Zapisz kolejność"
         apply_all: "Zastosuj"
         position: "Pozycja"
-      posts: "Wpisy"
+      posts: "Posty"
       topics: "Tematy"
       latest: "Aktualne"
       latest_by: "najnowszy wpis: "
@@ -886,7 +887,7 @@ pl_PL:
       trust_level: "TL"
       read_time: "czas czytania:"
       topics_entered: "wprowadzone tematy:"
-      post_count: "# wpisów"
+      post_count: "# postów"
       confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
       powered_by: "używa <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "skopiowano"
@@ -902,7 +903,7 @@ pl_PL:
         button_text: "Pobierz Wszystko"
         confirm: "Czy na pewno chcesz pobrać swoje posty?"
         success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
-        rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
+        rate_limit_error: "Posty mogą być pobierane raz dziennie, spróbuj ponownie jutro."
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
@@ -970,7 +971,7 @@ pl_PL:
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
         each_browser_note: 'Uwaga: musisz zmienić to ustawienie w każdej przeglądarce, której używasz. Wszystkie powiadomienia zostaną wyłączone w trybie „nie przeszkadzać”, niezależnie od tego ustawienia.'
-        consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na twój wpis?"
+        consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowiada na twoje posty?"
       dismiss: "Odrzuć"
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
@@ -1015,22 +1016,22 @@ pl_PL:
         enabled: "Włącz tryb listy mailingowej"
         instructions: |
           To ustawienie nadpisuje podsumowanie aktywności. <br />
-        individual: "Wyślij e-mail dla każdego nowego wpisu"
-        individual_no_echo: "Wysyłaj emaile dla każdego nowego wpisu oprócz mojego"
-        many_per_day: "Wyślij mi e-mail dla każdego nowego wpisu (około %{dailyEmailEstimate} na dzień)"
-        few_per_day: "Wyślij mi e-mail dla każdego nowego wpisu (około 2 dziennie)"
+        individual: "Wyślij e-mail dla każdego nowego postu"
+        individual_no_echo: "Wysyłaj e-maile dla każdego nowego postu oprócz mojego"
+        many_per_day: "Wyślij mi e-mail dla każdego nowego postu (około %{dailyEmailEstimate} na dzień)"
+        few_per_day: "Wyślij mi e-mail dla każdego nowego postu (około 2 dziennie)"
         warning: "Tryb listy mailingowej włączony. Ustawienia powiadomień e-mail są zastępowane."
       tag_settings: "Tagi"
       watched_tags: "Obserwowane"
-      watched_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami, będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. "
+      watched_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami, będziesz otrzymywać powiadomienie o każdym nowym poście i temacie, a liczba nieprzeczytanych i nowych postów będzie wyświetlana obok tytułów na liście tematów."
       tracked_tags: "Śledzone"
-      tracked_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
+      tracked_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami. Licznik nowych postów pojawi się obok tytułu na liście tematów."
       muted_tags: "Wyciszone"
       muted_tags_instructions: "Nie będziesz powiadamiany o niczym dotyczącym nowych tematów z tymi tagami i nie pojawią się na liście aktualnych."
       watched_categories: "Obserwowane"
-      watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nowych wpisów będzie wyświetlana obok tytułów na liście tematów. "
+      watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym poście i temacie, a liczba nowych postów będzie wyświetlana obok tytułów na liście tematów."
       tracked_categories: "Śledzone"
-      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
+      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Licznik nowych postów pojawi się obok tytułu na liście tematów."
       watched_first_post_categories: "Oglądasz pierwszy wpis"
       watched_first_post_categories_instructions: "Zostaniesz powiadomiony o pierwszym wpisie w każdym nowym temacie w tych kategoriach."
       watched_first_post_tags: "Oglądasz pierwszy wpis"
@@ -1539,7 +1540,7 @@ pl_PL:
       close: "zamknij"
       dismiss_error: "Odrzuć błąd"
     close: "Zamknij"
-    assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
+    assets_changed_confirm: "Serwis został zaktualizowany. Odświeżyć stronę aby otrzymać najnowszą wersję?"
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
     home: "Strona główna"
@@ -1792,8 +1793,6 @@ pl_PL:
     date_time_picker:
       from: Od
       to: Do
-      errors:
-        to_before_from: "Do daty musi być późniejsza niż data."
     emoji_picker:
       filter_placeholder: Szukaj emoji
       smileys_&_emotion: Buźki i emocje
@@ -2321,8 +2320,8 @@ pl_PL:
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy
       suggest_create_topic: rozpocząć nową rozmowę?
-      jump_reply_up: przeskocz do wcześniejszej odpowiedzi
-      jump_reply_down: przeskocz do późniejszej odpowiedzi
+      jump_reply_up: skocz do wcześniejszej odpowiedzi
+      jump_reply_down: skocz do późniejszej odpowiedzi
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -2419,7 +2418,7 @@ pl_PL:
         jump_prompt: "skocz do..."
         jump_prompt_of: "%{count} wpisów"
         jump_prompt_long: "Skocz do..."
-        jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
+        jump_bottom_with_number: "skocz do postu %{post_number}"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
         total: w sumie wpisów
@@ -3604,6 +3603,10 @@ pl_PL:
         installed_version: "Zainstalowana"
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
+        new_features:
+          title: "\U0001F381 Nowe funkcje"
+          dismiss: "Odrzuć"
+          learn_more: "Dowiedz się więcej"
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -3736,6 +3739,11 @@ pl_PL:
         group_members: "Członkowie grupy"
         delete: "Usuń"
         delete_confirm: "Usunąć tę grupę?"
+        delete_with_messages_confirm:
+          one: "Usunięcie tej grupy spowoduje, że %{count} wiadomość zostanie osierocona, a członkowie grupy nie będą już mieli do niej dostępu.<br><br>Jesteś pewien?"
+          few: "Usunięcie tej grupy spowoduje, że %{count} wiadomości zostanie osieroconych, a członkowie grupy nie będą już mieli do nich dostępu.<br><br>Jesteś pewien?"
+          many: "Usunięcie tej grupy spowoduje, że %{count} wiadomości zostanie osieroconych, a członkowie grupy nie będą już mieli do nich dostępu.<br><br>Jesteś pewien?"
+          other: "Usunięcie tej grupy spowoduje, że %{count} wiadomości zostanie osieroconych, a członkowie grupy nie będą już mieli do nich dostępu.<br><br>Jesteś pewien?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
         delete_owner_confirm: "Usunąć status właściciela dla '%{username}'?"
         add: "Dodaj"
@@ -3968,7 +3976,7 @@ pl_PL:
           rollback:
             label: "Wycofaj"
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
-            confirm: "Czy jesteś pewien, że chcesz przywrócić bazę danych do ostatniej działającej wersji ?"
+            confirm: "Czy jesteś pewien, że chcesz przywrócić bazę danych do ostatniej działającej wersji?"
         location:
           local: "Lokalne miejsce"
           s3: "S3"
@@ -4121,13 +4129,13 @@ pl_PL:
             minimum: "Wymaga wersji %{version} Discourse'a lub wyższej."
             maximum: "Wymaga wersji %{version} Discourse'a lub niższej."
           component_of: "Składnik:"
-          update_to_latest: "Aktualizuj do najnowszego"
+          update_to_latest: "Zaktualizuj do najnowszej wersji"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
-          theme_settings: "Ustawienia tematu"
+          theme_settings: "Ustawienia motywu"
           no_settings: "Ten temat nie ma żanych ustawień"
           theme_translations: "Tłumaczenia tematu"
           empty: "Brak elementu"
@@ -4159,15 +4167,13 @@ pl_PL:
             title: "Określ własne kolory (tylko dla zaawansowanych użytkowników)"
             placeholder: |2-
 
-              Użyj tego arkusza stylów, aby dodać kolory do listy niestandardowych właściwości CSS.
+              Użyj tego arkusza stylów, aby dodać własne kolory do listy niestandardowych właściwości CSS.
 
-              Na przykład:
+              Przykład:
 
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
-              Zdecydowanie zaleca się dodawanie przedrostków do nazw właściwości, aby uniknąć konfliktów z zainstalowanymi wtyczkami lub silnikiem forum.
+              Zdecydowanie zalecamy dodawanie przedrostków do nazw zmiennych, aby uniknąć konfliktów z wtyczkami i/lub silnikiem forum.
           head_tag:
             text: "</head>"
             title: "HTML, który zostanie umieszczony przed tagiem </head>"
@@ -4835,6 +4841,7 @@ pl_PL:
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
         locale: "Język:"
+        fallback_locale_warning: "Edytujesz język oparty na %{fallback}. Użytkownicy, którzy wybiorą %{fallback} jako język interfejsu, nie zobaczą Twoich zmian."
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
       settings:
         show_overriden: "Pokaż tylko nadpisane"
@@ -4989,7 +4996,7 @@ pl_PL:
         group: "Grupa"
         image: "Grafika"
         alt: "podgląd niestandardowego emoji"
-        delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
+        delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}:?"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"

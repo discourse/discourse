@@ -1378,8 +1378,6 @@ ur:
     date_time_picker:
       from: سے
       to: کیلئے
-      errors:
-        to_before_from: "'کب تک' کی تاریخ 'کب سے' کی تاریخ کے بعد ہونا ضروری ہے۔"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       smileys_&_emotion: سمائیلیاں اور جذبات

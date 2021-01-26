@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 en_GB:
+  badges:
+    certified:
+      long_description: |
+        This badge is granted upon successful completion of the interactive new user tutorial. You’ve taken the initiative to learn the basic tools of discussion, and now you have been certified!
   discourse_narrative_bot:
     advanced_user_narrative:
       start_message: |-
