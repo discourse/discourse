@@ -10,6 +10,74 @@ import { test } from "qunit";
 acceptance("Tags", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/tag/test/notifications", () =>
+      helper.response({
+        tag_notification: { id: "test", notification_level: 2 },
+      })
+    );
+
+    server.get("/tag/test/l/unread.json", () =>
+      helper.response({
+        users: [
+          {
+            id: 42,
+            username: "foo",
+            name: "Foo",
+            avatar_template: "/user_avatar/localhost/foo/{size}/10265_2.png",
+          },
+        ],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          per_page: 30,
+          top_tags: [],
+          tags: [{ id: 42, name: "test", topic_count: 1, staff: false }],
+          topics: [
+            {
+              id: 42,
+              title: "Hello world",
+              fancy_title: "Hello world",
+              slug: "hello-world",
+              posts_count: 1,
+              reply_count: 1,
+              highest_post_number: 1,
+              created_at: "2020-01-01T00:00:00.000Z",
+              last_posted_at: "2020-01-01T00:00:00.000Z",
+              bumped: true,
+              bumped_at: "2020-01-01T00:00:00.000Z",
+              archetype: "regular",
+              unseen: false,
+              last_read_post_number: 1,
+              unread: 0,
+              new_posts: 1,
+              pinned: false,
+              unpinned: null,
+              visible: true,
+              closed: true,
+              archived: false,
+              notification_level: 3,
+              bookmarked: false,
+              liked: true,
+              tags: ["test"],
+              views: 42,
+              like_count: 42,
+              has_summary: false,
+              last_poster_username: "foo",
+              pinned_globally: false,
+              featured_link: null,
+              posters: [],
+            },
+          ],
+        },
+      })
+    );
+
+    server.put("/topics/bulk", () => helper.response({}));
+  });
+
   test("list the tags", async function (assert) {
     await visit("/tags");
 
@@ -18,6 +86,13 @@ acceptance("Tags", function (needs) {
       $('*[data-tag-name="eviltrout"]').length,
       "shows the eviltrout tag"
     );
+  });
+
+  test("dismiss notifications", async function (assert) {
+    await visit("/tag/test/l/unread");
+    await click("button.dismiss-read");
+    await click(".dismiss-read-modal button.btn-primary");
+    assert.ok(find(".dismiss-read-modal:visible").length === 0);
   });
 });
 
