@@ -4,6 +4,7 @@ import componentTest, {
 import {
   discourseModule,
   exists,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
@@ -202,6 +203,37 @@ discourseModule("Integration | Component | d-button", function (hooks) {
       });
 
       assert.equal(queryAll("button .d-button-label").text(), "bar");
+    },
+  });
+
+  componentTest("ariaExpanded", {
+    template: "{{d-button ariaExpanded=ariaExpanded}}",
+
+    test(assert) {
+      this.set("ariaExpanded", true);
+
+      assert.equal(query("button").ariaExpanded, "true");
+
+      this.set("ariaExpanded", false);
+
+      assert.equal(query("button").ariaExpanded, "false");
+
+      this.set("ariaExpanded", "false");
+
+      assert.equal(query("button").ariaExpanded, "false");
+
+      this.set("ariaExpanded", "true");
+
+      assert.equal(query("button").ariaExpanded, "true");
+    },
+  });
+
+  componentTest("ariaControls", {
+    template: "{{d-button ariaControls=ariaControls}}",
+
+    test(assert) {
+      this.set("ariaControls", "foo-bar");
+      assert.equal(query("button").getAttribute("aria-controls"), "foo-bar");
     },
   });
 });
