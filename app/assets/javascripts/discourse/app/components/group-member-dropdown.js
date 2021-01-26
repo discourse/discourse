@@ -11,7 +11,42 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  content: computed("member.owner", "member.primary", function () {
+  contentAll() {
+    return [
+      {
+        id: "removeMembers",
+        name: I18n.t("groups.members.remove_members"),
+        description: I18n.t("groups.members.remove_members_description"),
+        icon: "user-times",
+      },
+      {
+        id: "makeOwners",
+        name: I18n.t("groups.members.make_owners"),
+        description: I18n.t("groups.members.make_owners_description"),
+        icon: "shield-alt",
+      },
+      {
+        id: "removeOwners",
+        name: I18n.t("groups.members.remove_owners"),
+        description: I18n.t("groups.members.remove_owners_description"),
+        icon: "shield-alt",
+      },
+      {
+        id: "makeAllPrimary",
+        name: I18n.t("groups.members.make_all_primary"),
+        description: I18n.t("groups.members.make_all_primary_description"),
+        icon: "id-card",
+      },
+      {
+        id: "removeAllPrimary",
+        name: I18n.t("groups.members.remove_all_primary"),
+        description: I18n.t("groups.members.remove_all_primary_description"),
+        icon: "id-card",
+      },
+    ];
+  },
+
+  contentSingle() {
     const items = [
       {
         id: "removeMember",
@@ -68,5 +103,9 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
+  },
+
+  content: computed("isBulk", "member.owner", "member.primary", function () {
+    return this.isBulk ? this.contentAll() : this.contentSingle();
   }),
 });

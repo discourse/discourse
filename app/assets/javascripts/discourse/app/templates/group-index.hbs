@@ -23,17 +23,36 @@
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
       <table class="group-members">
         <thead>
-          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username"}}
-          <th class="group-labels"></th>
+          {{#if isBulk}}
+            <th class="bulk-select">
+              {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+            </th>
+          {{/if}}
+          {{table-header-toggle-bulk order=order asc=asc field="username_lower" labelKey="username" isBulk=isBulk toggleBulkSelect=(action "toggleBulkSelect") class="avatar"}}
+          <th class="group-owner"></th>
           {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
           {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
           {{table-header-toggle order=order asc=asc field="last_seen_at" labelKey="last_seen"}}
-          <th></th>
+          <th>
+            {{#if isBulk}}
+              {{group-member-dropdown
+                isBulk=isBulk
+                canAdminGroup=model.can_admin_group
+                onChange=(action "actOnSelection" bulkSelection)
+              }}
+            {{/if}}
+          </th>
         </thead>
 
         <tbody>
           {{#each model.members as |m|}}
             <tr>
+              {{#if isBulk}}
+                <td class="bulk-select">
+                  {{input type="checkbox" class="bulk-select" click=(action "selectMember" m)}}
+                </td>
+              {{/if}}
+
               <td class="avatar">
                 {{user-info user=m skipName=skipName}}
               </td>

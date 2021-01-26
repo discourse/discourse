@@ -107,12 +107,21 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  th:first-child {
+  .bulk-select {
+    padding: 10px;
+    width: 30px;
+  }
+
+  .avatar {
+    text-align: left;
+  }
+
+  th.sortable:first-child {
     width: 30%;
     text-align: left;
   }
 
-  th:last-child {
+  th.sortable:last-child {
     width: 5%;
   }
 
@@ -130,10 +139,6 @@ table.group-members {
       .avatar-flair {
         color: var(--primary);
       }
-    }
-
-    td:first-child {
-      text-align: left;
     }
 
     td {

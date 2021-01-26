@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { gt } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -16,7 +17,10 @@ export default Controller.extend({
   filterInput: null,
 
   loading: false,
+  isBulk: false,
   showActions: false,
+
+  bulkSelection: null,
 
   @observes("filterInput")
   _setFilter() {
@@ -109,6 +113,43 @@ export default Controller.extend({
   },
 
   @action
+  actOnSelection(selection, actionId) {
+    const userIds = (selection || []).map((member) => member.id);
+
+    switch (actionId) {
+      case "removeMembers":
+        return ajax(`/groups/${this.model.id}/members.json`, {
+          type: "DELETE",
+          data: { user_ids: userIds },
+        }).then(() => this.model.findMembers(this.memberParams, true));
+
+      case "makeOwners":
+        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+          type: "PUT",
+          data: { user_ids: userIds },
+        }).then(() => selection.forEach((s) => s.set("owner", true)));
+
+      case "removeOwners":
+        return ajax(`/admin/groups/${this.model.id}/owners.json`, {
+          type: "DELETE",
+          data: { user_ids: userIds },
+        }).then(() => selection.forEach((s) => s.set("owner", false)));
+
+      case "makeAllPrimary":
+        return ajax(`/admin/groups/${this.model.id}/primary.json`, {
+          type: "PUT",
+          data: { user_ids: userIds },
+        }).then(() => selection.forEach((s) => s.set("primary", true)));
+
+      case "removeAllPrimary":
+        return ajax(`/admin/groups/${this.model.id}/primary.json`, {
+          type: "DELETE",
+          data: { user_ids: userIds },
+        }).then(() => selection.forEach((s) => s.set("primary", false)));
+    }
+  },
+
+  @action
   removeMember(user) {
     this.model.removeMember(user, this.memberParams);
   },
@@ -130,6 +171,25 @@ export default Controller.extend({
         .addMembers(this.usernames)
         .then(() => this.set("usernames", []))
         .catch(popupAjaxError);
+    }
+  },
+
+  @action
+  toggleBulkSelect() {
+    this.setProperties({
+      isBulk: !this.isBulk,
+      bulkSelection: null,
+    });
+  },
+
+  @action
+  selectMember(member, e) {
+    this.set("bulkSelection", this.bulkSelection || []);
+
+    if (e.target.checked) {
+      this.bulkSelection.pushObject(member);
+    } else {
+      this.bulkSelection.removeObject(member);
     }
   },
 });

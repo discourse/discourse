@@ -1,0 +1,8 @@
+{{#if isBulk}}
+  <button type="button" class="btn btn-default bulk-select-all">{{i18n "topics.bulk.select_all"}}</button>
+  <button type="button" class="btn btn-default bulk-clear-all">{{i18n "topics.bulk.clear_all"}}</button>
+{{else}}
+  {{flat-button class="bulk-select" icon="list" action=toggleBulkSelect title="topics.bulk.toggle"}}
+{{/if}}
+
+<span class="header-contents">{{columnIcon}}{{title}}{{chevronIcon}}</span>
