@@ -1611,6 +1611,7 @@ ko:
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
+    use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
@@ -3356,6 +3357,7 @@ ko:
 
         즐거운 시간 되세요!
     signup_after_reject:
+      title: "거부 후 가입"
       subject_template: "%{site_name}에서 거부되었습니다."
     signup:
       title: "가입하기"

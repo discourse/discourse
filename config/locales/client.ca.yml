@@ -1479,8 +1479,6 @@ ca:
     date_time_picker:
       from: De
       to: A
-      errors:
-        to_before_from: "La data final ha de ser posterior a la data inicial."
     emoji_picker:
       filter_placeholder: Cerca un emoji
       smileys_&_emotion: Emoticones

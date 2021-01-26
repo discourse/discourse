@@ -1390,8 +1390,6 @@ da:
     date_time_picker:
       from: Fra
       to: Til
-      errors:
-        to_before_from: "Til dato skal være senere end fra dato."
     emoji_picker:
       filter_placeholder: Søg efter humørikon
       smileys_&_emotion: Smilys og følelser

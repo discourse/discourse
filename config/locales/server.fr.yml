@@ -1528,7 +1528,7 @@ fr:
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     enable_badges: "Activer le système de badges"
     enable_whispers: "Autoriser les communications privées entre responsables au sein d'un sujet."
-    allow_index_in_robots_txt: "Spécifiez dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
+    allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     auto_approve_email_domains: "Les utilisateurs dont le domaine de l'adresse courriel appartient à cette liste seront automatiquement approuvés."
     hide_email_address_taken: "Ne pas informer les utilisateurs qu'un compte existe avec un courriel donné lors de l'inscription ou à partir du formulaire d'oubli du mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions de l'utilisateur sur tous les appareils"

@@ -1603,8 +1603,6 @@ fi:
     date_time_picker:
       from: Mistä
       to: Vastaanottaja
-      errors:
-        to_before_from: "Päättymispäivän on oltava myöhempi kuin alkamispäivän."
     emoji_picker:
       filter_placeholder: Etsi emojia
       smileys_&_emotion: Hymiöt ja tunteet

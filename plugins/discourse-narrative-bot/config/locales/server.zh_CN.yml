@@ -25,7 +25,7 @@ zh_CN:
       long_description: |
         该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
   discourse_narrative_bot:
-    bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
+    bio: "你好，我不是一个真实存在的人类。我是一个可以带你了解这个站点的机器人。你可以通过给我发消息或提及我来与我交互。"
     tl2_promotion_message:
       subject_template: "现在你已经晋升了，是时候学习高级功能了！"
       text_body_template: |

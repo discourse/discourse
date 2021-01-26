@@ -25,7 +25,6 @@ fr:
       long_description: |
         Ce badge est décerné quand vous avez terminé avec succès le tutoriel interactif des utilisateurs avancés. Vous avez pris l'initiative d'apprendre les outils avancés de la discussion et vous êtes maintenant certifié à 100% !
   discourse_narrative_bot:
-    bio: "Bonjour, je ne suis pas une personne réelle. Je suis un robot pour vous faire découvrir ce site. Pour interagir avec moi, envoyez-moi un message ou mentionnez **`@%{discobot_username}`** n'importe où."
     tl2_promotion_message:
       subject_template: "Maintenant que vous avez été promu, il est temps d'en apprendre davantage sur certaines fonctionnalités avancées !"
       text_body_template: |

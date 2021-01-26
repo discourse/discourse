@@ -844,6 +844,19 @@ fr:
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
         normal_option_title: "Vous serez notifié si cet utilisateur vous répond, vous cite ou vous mentionne."
+      notification_schedule:
+        title: "Planification des notifications"
+        label: "Activer la planification des notifications personnalisées"
+        tip: "En dehors de ces heures, vous serez automatiquement mis en \"ne pas déranger\"."
+        midnight: "Minuit"
+        none: "Aucun"
+        monday: "Lundi"
+        tuesday: "Mardi"
+        wednesday: "Mercredi"
+        thursday: "Jeudi"
+        friday: "Vendredi"
+        saturday: "samedi"
+        sunday: "dimanche"
       activity_stream: "Activité"
       preferences: "Préférences"
       feature_topic_on_profile:
@@ -890,7 +903,7 @@ fr:
       color_schemes:
         default_description: "Couleur du thème"
         disable_dark_scheme: "Désactivé"
-        dark_instructions: "Vous pouvez prévisualiser le jeu de couleurs du mode sombre en basculant le mode sombre de votre appareil."
+        dark_instructions: "Vous pouvez prévisualiser le jeu de couleurs du mode sombre en activant le mode sombre de votre appareil."
         undo: "Réinitialiser"
         regular: "Normal"
         dark: "Mode sombre"
@@ -1659,8 +1672,6 @@ fr:
     date_time_picker:
       from: De
       to: À
-      errors:
-        to_before_from: "La date de fin doit être postérieure à celle de début."
     emoji_picker:
       filter_placeholder: Rechercher un émoji
       smileys_&_emotion: Frimousses et émotions
@@ -3292,6 +3303,7 @@ fr:
         two_hours: "2 heures"
         tomorrow: "Jusqu'à demain"
         custom: "Personnalisé"
+      set_schedule: "Planifier les notifications"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -3319,6 +3331,10 @@ fr:
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
+        new_features:
+          title: "\U0001F381 Nouvelles fonctionnalités"
+          dismiss: "Ignorer"
+          learn_more: "En savoir plus…"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -3862,17 +3878,6 @@ fr:
           color_definitions:
             text: "Définitions de couleur"
             title: "Entrez des définitions de couleurs personnalisées (utilisateurs avancés uniquement)"
-            placeholder: |2-
-
-              Utilisez cette feuille de style pour ajouter des couleurs personnalisées à la liste des propriétés personnalisées CSS.
-
-              Exemple :
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              Il est fortement recommandé de préfixer les noms de propriété pour éviter les conflits avec Discourse ou ses extensions.
           head_tag:
             text: "</head>"
             title: "HTML qui sera inséré avant la balise </head>"

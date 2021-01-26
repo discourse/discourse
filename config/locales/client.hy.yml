@@ -1435,8 +1435,6 @@ hy:
     date_time_picker:
       from: Ում կողմից
       to: Ում
-      errors:
-        to_before_from: "Հաջորդ ամսաթիվը պետք է լինի ավելի մեծ, քան նախորդը:"
     emoji_picker:
       filter_placeholder: Փնտրել էմոջի
       smileys_&_emotion: Սմայլիկներ և Էմոցինաեր

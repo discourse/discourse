@@ -25,7 +25,6 @@ nl:
       long_description: |
         Deze badge wordt toegekend wanneer de interactieve handleiding voor gevorderde gebruikers met succes is doorlopen. U hebt de geavanceerde hulpmiddelen voor discussie onder de knie – en u bent nu volledig gecertificeerd!
   discourse_narrative_bot:
-    bio: "Hallo, ik ben geen echt persoon. Ik ben een bot die u uitleg over deze website kan geven. Stuur mij een bericht of noem ergens **`@%{discobot_username}`** om met mij te communiceren."
     dice:
       trigger: "gooien"
       invalid: |-

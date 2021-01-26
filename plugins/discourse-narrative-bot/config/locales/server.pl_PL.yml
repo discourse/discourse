@@ -25,7 +25,7 @@ pl_PL:
       long_description: |
         Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
   discourse_narrative_bot:
-    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
+    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby wejść ze mną w interakcję, wyślij do mnie wiadomość lub wspomnij w dowolnym miejscu."
     tl2_promotion_message:
       subject_template: "Teraz, gdy zostałeś awansowany, czas poznać kilka zaawansowanych funkcji!"
       text_body_template: |

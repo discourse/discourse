@@ -164,6 +164,7 @@ zh_CN:
         us_gov_west_1: "AWS 政府云（US-West）"
         us_west_1: "美国西部（N. California）"
         us_west_2: "美国西部（Oregon）"
+    clear_input: "清除输入"
     edit: "编辑该主题的标题和分类"
     expand: "展开"
     not_implemented: "非常抱歉，这个功能仍在开发中！"
@@ -803,6 +804,20 @@ zh_CN:
         mute_option_title: "你不会收到任何关于此用户的通知"
         normal_option: "普通"
         normal_option_title: "如果用户回复、引用或提到你，你将会收到消息。"
+      notification_schedule:
+        title: "定时通知"
+        label: "启用自定义定时通知"
+        tip: "在这些时间之外，你将自动进入 “请勿打扰” 状态。"
+        midnight: "午夜"
+        none: "无"
+        monday: "星期一"
+        tuesday: "星期二"
+        wednesday: "星期三"
+        thursday: "星期四"
+        friday: "星期五"
+        saturday: "星期六"
+        sunday: "星期日"
+        to: "到"
       activity_stream: "活动"
       preferences: "设置"
       feature_topic_on_profile:
@@ -1599,8 +1614,6 @@ zh_CN:
     date_time_picker:
       from: 从
       to: 发至
-      errors:
-        to_before_from: "截至日期必须晚于开始日期。"
     emoji_picker:
       filter_placeholder: 查找表情符号
       smileys_&_emotion: 笑脸与情感
@@ -1881,6 +1894,7 @@ zh_CN:
       or_search_google: "或者尝试使用Google进行搜索："
       search_google: "尝试使用Google进行搜索："
       search_google_button: "Google"
+      search_button: "搜索"
       context:
         user: "搜索 @%{username} 的帖子"
         category: "搜索 #%{category} 分类"
@@ -3157,6 +3171,7 @@ zh_CN:
         two_hours: "2 小时"
         tomorrow: "直到明天"
         custom: "自定义"
+      set_schedule: "设定一个定时通知"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -3184,6 +3199,10 @@ zh_CN:
         installed_version: "已安装"
         latest_version: "最新版本"
         problems_found: "根据您当前的站点设置提供一些建议"
+        new_features:
+          title: "\U0001F381 新功能"
+          dismiss: "忽略"
+          learn_more: "了解更多"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题."
@@ -3313,6 +3332,8 @@ zh_CN:
         group_members: "群组成员"
         delete: "删除"
         delete_confirm: "删除这个群组吗？"
+        delete_with_messages_confirm:
+          other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>你确定吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
@@ -3727,14 +3748,11 @@ zh_CN:
             title: "输入自定义颜色配置（仅限高级用户）"
             placeholder: |2-
 
-              使用这个样式表将自定义颜色添加到CSS自定义属性。
+              使用这个样式表将自定义的颜色添加到CSS自定义属性列表。
 
               例如：
 
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               强烈建议使用前缀为属性命名以避免与插件或核心程序冲突。
           head_tag:
@@ -4389,6 +4407,7 @@ zh_CN:
         recommended: "我们建议自定义以下文本以符合你的需求："
         show_overriden: "只显示修改过的"
         locale: "语言："
+        fallback_locale_warning: "您正在基于 %{fallback}编辑语言。选择 %{fallback} 作为界面语言的用户将看不到你的更改。"
         more_than_50_results: "有超过50个结果。请优化您的搜索。"
       settings:
         show_overriden: "只显示被覆盖"
