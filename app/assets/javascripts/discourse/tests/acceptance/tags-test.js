@@ -3,6 +3,7 @@ import {
   exists,
   queryAll,
   updateCurrentUser,
+  invisible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -92,7 +93,7 @@ acceptance("Tags", function (needs) {
     await visit("/tag/test/l/unread");
     await click("button.dismiss-read");
     await click(".dismiss-read-modal button.btn-primary");
-    assert.ok(find(".dismiss-read-modal:visible").length === 0);
+    assert.ok(invisible(".dismiss-read-modal"));
   });
 });
 
