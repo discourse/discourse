@@ -11,11 +11,13 @@
   }
 
   .styleguide-menu {
+    margin-top: 1em;
     flex: 1 0 0;
 
     ul {
       list-style: none;
-      margin-bottom: 2em;
+      margin-bottom: 1.5em;
+      margin-left: 0;
 
       li.styleguide-heading {
         color: var(--primary-medium, $primary-medium);
@@ -45,9 +47,9 @@
 
   .styleguide-section {
     .section-title {
-      font-size: $font-up-6;
+      font-size: $font-up-5;
       font-weight: normal;
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
     }
 
     .section-description {
@@ -65,14 +67,15 @@
     .styleguide-example {
       .example-title {
         color: var(--primary-medium, $primary-medium);
-        font-size: 0.8em;
+        font-size: $font-0;
         border-bottom: 1px solid var(--primary-low, $primary-low);
-        margin-bottom: 0.8em;
+        margin-bottom: 1em;
       }
 
       .rendered {
         width: 100%;
       }
+
       margin-bottom: 2em;
     }
   }
