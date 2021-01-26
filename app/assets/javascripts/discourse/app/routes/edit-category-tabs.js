@@ -13,6 +13,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       parentParams,
       selectedTab: transition.to.params.tab,
+      showTooltip: false,
     });
   },
 });
