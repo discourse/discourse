@@ -268,7 +268,6 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_topics
     puts "Importing topics..."
 
-
     topics = mysql_stream <<-SQL
       SELECT t.nodeid AS threadid, t.title, t.parentid AS forumid,
              t.open, t.userid AS postuserid, t.publishdate AS dateline,
@@ -277,6 +276,7 @@ class BulkImport::VBulletin < BulkImport::Base
        LEFT JOIN #{DB_PREFIX} nodeview nv ON nv.nodeid = t.nodeid
            WHERE t.parentid IN (SELECT nodeid from #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
              AND t.contenttypeid = #{@text_typeid}
+             AND t.parentid != 7
              AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
              AND t.approved = 1 AND t.showapproved = 1
              AND t.nodeid > #{@last_imported_topic_id}
@@ -286,9 +286,11 @@ class BulkImport::VBulletin < BulkImport::Base
     create_topics(topics) do |row|
       created_at = Time.zone.at(row[5])
 
+      title = normalize_text(row[1])
+
       t = {
         imported_id: row[0],
-        title: normalize_text(row[1]),
+        title: title,
         category_id: category_id_from_imported_id(row[2]),
         user_id: user_id_from_imported_id(row[4]),
         closed: row[3] == 0,
@@ -298,6 +300,7 @@ class BulkImport::VBulletin < BulkImport::Base
       }
 
       t[:pinned_at] = created_at if row[8] == 1
+      p t if title.nil?
 
       t
     end
@@ -377,18 +380,18 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
-      title = extract_pm_title(row[1])
-      key = [title, row[2]]
+      key = [row[1], row[2]]
 
       next if @imported_topics.has_key?(key)
       @imported_topics[key] = row[0] + PRIVATE_OFFSET
       {
         archetype: Archetype.private_message,
         imported_id: row[0] + PRIVATE_OFFSET,
-        title: title,
+        title: row[1],
         user_id: user_id_from_imported_id(row[2]),
         created_at: Time.zone.at(row[3]),
       }
+
     end
   end
 
