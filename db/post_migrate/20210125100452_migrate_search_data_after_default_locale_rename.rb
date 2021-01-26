@@ -4,7 +4,7 @@ class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-    %w{category tag topic post user}.each { |model| fix_search_data(model) }
+    %w{category tag topic user}.each { |model| fix_search_data(model) }
   end
 
   def down
@@ -17,6 +17,8 @@ class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
     key = "#{model}_id"
     table = "#{model}_search_data"
 
+    puts "Migrating #{table} to new locale."
+
     sql = <<~SQL
       UPDATE #{table}
          SET locale = 'en'
@@ -24,7 +26,7 @@ class MigrateSearchDataAfterDefaultLocaleRename < ActiveRecord::Migration[6.0]
               SELECT #{key}
                 FROM #{table}
                WHERE locale = 'en_US'
-               LIMIT 500000
+               LIMIT 100000
            )
     SQL
 
