@@ -211,5 +211,25 @@ describe DiscourseUpdates do
       expect(result.length).to eq(1)
       expect(result[0]["title"]).to eq("Brand New Item")
     end
+
+    it 'correctly shows features by Discourse version' do
+      features_with_versions = [
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 40.minutes.ago },
+        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 20.minutes.ago, discourse_version: "2.6.0.beta1" },
+        { "emoji" => "🙈", "title" => "Confetti", "created_at" => 15.minutes.ago, discourse_version: "2.7.0.beta2" },
+        { "emoji" => "🤾", "title" => "Not shown yet", "created_at" => 10.minutes.ago, discourse_version: "2.7.0.beta5" },
+        { "emoji" => "🤾", "title" => "Not shown yet (beta < stable)", "created_at" => 10.minutes.ago, discourse_version: "2.7.0" },
+        { "emoji" => "🤾", "title" => "Ignore invalid version", "created_at" => 10.minutes.ago, discourse_version: "invalid-version" },
+      ]
+
+      Discourse.redis.set('new_features', MultiJson.dump(features_with_versions))
+      DiscourseUpdates.stubs(:last_installed_version).returns("2.7.0.beta2")
+      result = DiscourseUpdates.unseen_new_features(admin.id)
+
+      expect(result.length).to eq(3)
+      expect(result[0]["title"]).to eq("Confetti")
+      expect(result[1]["title"]).to eq("Whistles")
+      expect(result[2]["title"]).to eq("Bells")
+    end
   end
 end

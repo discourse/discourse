@@ -12,7 +12,10 @@ module TimelineLookup
     last_days_ago = -1
     tuples.each_with_index do |t, idx|
       return result unless t.is_a?(Array)
-      next unless (idx % every) === 0
+
+      if idx != tuples.size - 1
+        next unless (idx % every) === 0
+      end
 
       days_ago = t[1]
 

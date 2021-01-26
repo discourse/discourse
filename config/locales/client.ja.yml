@@ -387,6 +387,7 @@ ja:
         email: "Eメール"
         name: "名前"
         fields: "広場"
+        reject_reason: "理由"
       user_percentage:
         agreed:
           other: "%{count}%同意"
@@ -470,6 +471,9 @@ ja:
           other: "<strong>%{count}</strong> 個の投稿が保留中です。"
         ok: "OK"
       example_username: "ユーザ名"
+      reject_reason:
+        title: "このユーザーを拒否する理由は何ですか？"
+        send_email: "拒否メールを送信"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が <a href='%{topicUrl}'>トピック</a> を作成"
       you_posted_topic: "<a href='%{userUrl}'>あなた</a> が <a href='%{topicUrl}'>トピック</a> を作成"
@@ -566,6 +570,10 @@ ja:
           title: カテゴリ
           long_title: "カテゴリのデフォルト通知"
           description: "ユーザーがこのグループに追加されると、ユーザーのカテゴリ通知設定はこれらのデフォルトに設定されます。その後、彼らはそれらを変更することができます。"
+          watched_categories_instructions: "自動的にカテゴリー内の全てのトピックをウォッチします。グループのメンバーに全ての新規投稿と新規トピックが通知されまた、新規投稿数がトピックの隣に表示されます。"
+          tracked_categories_instructions: "自動的にカテゴリー内の全てのトピックを追跡します。新規投稿数がトピックの隣に表示されます。"
+          watching_first_post_categories_instructions: "ユーザーにカテゴリー内の新規トピックに対する最初の投稿が通知されます。"
+          regular_categories_instructions: "これらのカテゴリがミュートされている場合、グループメンバーのミュートは解除されます。ユーザーがメンションされたり、誰かが返信したりすると、ユーザーに通知されます。"
         tags:
           title: タグ
           long_title: "タグのデフォルト通知"
@@ -1569,8 +1577,6 @@ ja:
     date_time_picker:
       from: 発信元
       to: 宛先
-      errors:
-        to_before_from: "終了日には、開始日よりも後でなければなりません。"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       smileys_&_emotion: スマイリーと感情

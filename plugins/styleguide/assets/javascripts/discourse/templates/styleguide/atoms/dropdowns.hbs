@@ -1,35 +1,29 @@
-{{#styleguide-example title="combo-box"}}
-  {{combo-box content=dummy.options}}
+{{#styleguide-example title="combo-box" initialValue=dummy.options.[0].name as |value|}}
+  {{combo-box content=dummy.options value=value onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="filterable combo-box"}}
-  {{combo-box content=dummy.categoryNames filterable=true}}
+{{#styleguide-example title="filterable combo-box" initialValue=dummy.categories.[0].name as |value|}}
+  {{combo-box content=dummy.categories value=value options=(hash filterable=true) onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="combo-box with a default state"}}
-  {{combo-box content=dummy.options none="category.none"}}
+{{#styleguide-example title="combo-box with a default state" initialValue=dummy.options.[0].name as |value|}}
+  {{combo-box content=dummy.options value=value options=(hash none="category.none") onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="combo-box clearable"}}
-  {{combo-box content=dummy.options none="category.none" clearable=true}}
+{{#styleguide-example title="combo-box clearable" initialValue=dummy.options.[0].name as |value|}}
+  {{combo-box content=dummy.options clearable=true value=value options=(hash none="category.none") onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="topic-notifications-options"}}
-  {{topic-notifications-options topic=dummy.topic}}
-{{/styleguide-example}}
-
-{{#styleguide-example title="topic-notifications-button"}}
-  <div id="#topic-footer-buttons">
-    {{topic-notifications-button topic=dummy.topic}}
-  </div>
+{{#styleguide-example title="topic-notifications-options" initialValue=1 as |value|}}
+  {{topic-notifications-options topic=dummy.topic value=value onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="topic-footer-mobile-dropdown"}}
   {{topic-footer-mobile-dropdown topic=dummy.topic}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="category-chooser"}}
-  {{category-chooser}}
+{{#styleguide-example title="category-chooser" initialValue=categories.[0].name as |value|}}
+  {{category-chooser value=value onChange=(fn (mut value))}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="pinned-button"}}
@@ -41,19 +35,19 @@
 {{/styleguide-example}}
 
 {{#styleguide-example title="categories-admin-dropdown"}}
-  {{categories-admin-dropdown}}
+  {{categories-admin-dropdown onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="category-notifications-button"}}
-  {{category-notifications-button category=dummy.categories.[0]}}
+  {{category-notifications-button category=dummy.categories.[0] value=1 onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="notifications-button"}}
-  {{notifications-button i18nPrefix="groups.notifications" value=1}}
+  {{notifications-button options=(hash i18nPrefix="groups.notifications") value=2 onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="dropdown-select-box"}}
-  {{dropdown-select-box content=dummy.options}}
+  {{dropdown-select-box content=dummy.options onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="future-date-input-selector"}}
@@ -63,22 +57,22 @@
     input=dummy.topicTimerUpdateDate
     includeWeekend=true
     includeForever=true
-    none="topic.auto_update_input.none"
+    options=(hash none="topic.auto_update_input.none")
   }}
 {{/styleguide-example}}
 
 {{#styleguide-example title="multi-select"}}
-  {{multi-select none="test.none" content=dummy.options}}
+  {{multi-select content=dummy.options options=(hash none="test.none") onChange=(action "dummy")}}
 {{/styleguide-example}}
 
-{{#styleguide-example title="admin-group-selector"}}
-  {{admin-group-selector selected=dummy.selectedGroups content=dummy.groups}}
+{{#styleguide-example title="admin group-chooser"}}
+  {{group-chooser selected=dummy.selectedGroups content=dummy.groups onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="list-setting"}}
-  {{list-setting settingValue=dummy.settings}}
+  {{list-setting settingValue=dummy.settings onChange=(action "dummy")}}
 {{/styleguide-example}}
 
 {{#styleguide-example title="list-setting with colors"}}
-  {{list-setting settingValue=dummy.colors nameProperty="color"}}
+  {{list-setting settingValue=dummy.colors nameProperty="color" onChange=(action "dummy")}}
 {{/styleguide-example}}

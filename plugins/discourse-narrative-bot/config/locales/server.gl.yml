@@ -25,7 +25,6 @@ gl:
       long_description: |
         Esta insignia conséguese tras completar correctamente o titorial interactivo avanzado de novo usuario. Adquiriu as ferramentas avanzadas de discusión — e agora está totalmente licenciado!
   discourse_narrative_bot:
-    bio: "Ola, eu non son unha persoa real. Son un bot que pode instruílo sobre este sitio. Para interactuar comigo, envíeme unha mensaxe ou mención **`@%{discobot_username}`** en calquera sitio."
     tl2_promotion_message:
       subject_template: "Agora que foi promocionado, é o momento de aprender sobre algunhas funcionalidades avanzadas!"
       text_body_template: |

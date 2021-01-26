@@ -1614,8 +1614,6 @@ bs_BA:
     date_time_picker:
       from: Od
       to: Ka
-      errors:
-        to_before_from: "Ciljani datum mora biti kasniji od početnog datuma."
     emoji_picker:
       filter_placeholder: Pretraži emotikone
       smileys_&_emotion: Smeješci i osječaj

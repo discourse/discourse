@@ -187,6 +187,7 @@ de:
         us_gov_west_1: "AWS GovCloud (US-West)"
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
+    clear_input: "Eingabe löschen"
     edit: "Titel und Kategorie dieses Themas ändern"
     expand: "Aufklappen"
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
@@ -1673,8 +1674,6 @@ de:
     date_time_picker:
       from: Von
       to: An
-      errors:
-        to_before_from: "Das Datum muss später als das von-Datum sein."
     emoji_picker:
       filter_placeholder: Emoji suchen
       smileys_&_emotion: Smileys und Emotion
@@ -1883,7 +1882,7 @@ de:
       membership_request_accepted: "Mitgliedschaft akzeptiert in '%{group_name}' "
       membership_request_consolidated:
         one: "%{count} offene Mitgliedschaftsanfrage für '%{group_name}'"
-        other: "%{count} offene Mitgliedschaftanfragen für '%{group_name}'"
+        other: "%{count} offene Mitgliedschaftsanfragen für '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - abgeschlossen"
@@ -1966,6 +1965,7 @@ de:
       or_search_google: "Oder versuche stattdessen mit Google zu suchen:"
       search_google: "Versuche stattdessen mit Google zu suchen:"
       search_google_button: "Google"
+      search_button: "Suche"
       context:
         user: "Beiträge von @%{username} durchsuchen"
         category: "Kategorie #%{category} durchsuchen"
@@ -2864,6 +2864,7 @@ de:
       list_filters:
         all: "alle Themen"
         none: "keine Unterkategorien"
+      colors_disabled: "Sie können keine Farben auswählen, da Sie keinen Kategoriestil haben."
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
@@ -3305,6 +3306,7 @@ de:
         two_hours: "2 Stunden"
         tomorrow: "Bis morgen"
         custom: "Benutzerdefiniert"
+      set_schedule: "Zeitplan für Benachrichtigungen festlegen"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
@@ -3332,6 +3334,10 @@ de:
         installed_version: "Installiert"
         latest_version: "Neueste"
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
+        new_features:
+          title: "\U0001F381 Neue Funktionen"
+          dismiss: "Verwerfen"
+          learn_more: "Mehr erfahren"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -3462,6 +3468,9 @@ de:
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
         delete_confirm: "Diese Gruppe löschen?"
+        delete_with_messages_confirm:
+          one: "Wenn Sie diese Gruppe löschen, wird %{count} Nachricht verwaist, Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du sicher?"
+          other: "Wenn Sie diese Gruppe löschen, werden %{count} Nachrichten verwaist, Gruppenmitglieder haben keinen Zugriff mehr auf sie.<br><br>Bist du sicher?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
         add: "Hinzufügen"
@@ -3883,9 +3892,7 @@ de:
 
               Beispiel:
 
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               Eigenschaften sollten mit einem Präfix versehen werden, um Konflikte mit Discourse und Plugins zu vermeiden.
           head_tag:
@@ -4382,6 +4389,9 @@ de:
         anonymize_yes: "Ja, diesen Benutzer anonymisieren"
         anonymize_failed: "Beim Anonymisieren des Benutzers ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
+        delete_posts:
+          progress:
+            title: "Fortschritt beim Löschen von Beiträgen"
         merge:
           button: "Zusammenführen"
           prompt:
@@ -4393,6 +4403,8 @@ de:
             target_username_placeholder: "Benutzername des neuen Eigentümers"
             transfer_and_delete: "Übertragen & Löschen @%{username}"
             cancel: "Abbrechen"
+          progress:
+            title: "Fortschritt der Zusammenführung"
           confirmation:
             title: "Übertragen & Löschen @%{username}"
             description: |
@@ -4540,6 +4552,7 @@ de:
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
         locale: "Sprache:"
+        fallback_locale_warning: "Du bearbeitest eine Sprache basierend auf %{fallback}. Benutzer, die %{fallback} als Sprache ihrer Schnittstelle wählen, werden deine Änderungen nicht sehen."
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
       settings:
         show_overriden: "Nur geänderte anzeigen"

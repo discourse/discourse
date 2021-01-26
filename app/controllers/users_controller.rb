@@ -1041,18 +1041,14 @@ class UsersController < ApplicationController
   def search_users
     term = params[:term].to_s.strip
 
-    topic_id = params[:topic_id]
-    topic_id = topic_id.to_i if topic_id
-
-    category_id = params[:category_id].to_i if category_id.present?
+    topic_id = params[:topic_id].to_i if params[:topic_id].present?
+    category_id = params[:category_id].to_i if params[:category_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
     group_names << params[:group] if params[:group]
-    if group_names.present?
-      @groups = Group.where(name: group_names)
-    end
+    @groups = Group.where(name: group_names) if group_names.present?
 
     options = {
      topic_allowed_users: topic_allowed_users,
@@ -1060,13 +1056,8 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
-    if topic_id
-      options[:topic_id] = topic_id
-    end
-
-    if category_id
-      options[:category_id] = category_id
-    end
+    options[:topic_id] = topic_id if topic_id
+    options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
 
@@ -1075,8 +1066,10 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
     groups =
-      if current_user
+      if term.present? && current_user
         if params[:include_groups] == 'true'
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == 'true'
@@ -1085,10 +1078,6 @@ class UsersController < ApplicationController
           Group.messageable(current_user)
         end
       end
-
-    # blank term is only handy for in-topic search of users after @
-    # we do not want group results ever if term is blank
-    groups = nil if term.blank?
 
     if groups
       groups = Group.search_groups(term, groups: groups)

@@ -961,7 +961,7 @@ describe Search do
 
       it 'can find posts with tags' do
         # we got to make this index (it is deferred)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
 
         result = Search.execute(tag.name)
         expect(result.posts.length).to eq(1)
@@ -977,7 +977,7 @@ describe Search do
 
       it 'can find posts with tag synonyms' do
         synonym = Fabricate(:tag, name: 'synonym', target_tag: tag)
-        Jobs::ReindexSearch.new.rebuild_problem_posts
+        Jobs::ReindexSearch.new.rebuild_posts
         result = Search.execute(synonym.name)
         expect(result.posts.length).to eq(1)
       end

@@ -396,7 +396,6 @@ export default Controller.extend(CanCheckEmails, {
     destroy() {
       const postCount = this.get("model.post_count");
       const maxPostCount = this.siteSettings.delete_all_posts_max;
-      const user = this.model;
       const message = I18n.t("admin.user.delete_confirm");
       const location = document.location.pathname;
 
@@ -422,13 +421,9 @@ export default Controller.extend(CanCheckEmails, {
               }
             } else {
               bootbox.alert(I18n.t("admin.user.delete_failed"));
-              if (data.user) {
-                user.setProperties(data.user);
-              }
             }
           })
           .catch(() => {
-            AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
             bootbox.alert(I18n.t("admin.user.delete_failed"));
           });
       };
