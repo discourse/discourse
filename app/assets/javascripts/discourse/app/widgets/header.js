@@ -146,8 +146,10 @@ createWidget(
           "a.icon",
           {
             attributes: {
-              href: attrs.user.get("path"),
-              title: attrs.user.get("name"),
+              "aria-haspopup": true,
+              "aria-expanded": attrs.active,
+              href: attrs.user.path,
+              title: attrs.user.name || attrs.user.username,
               "data-auto-route": true,
             },
           },
@@ -177,6 +179,8 @@ createWidget(
           "a.icon.btn-flat",
           {
             attributes: {
+              "aria-expanded": attrs.active,
+              "aria-haspopup": true,
               href: attrs.href,
               "data-auto-route": true,
               title,
@@ -441,7 +445,7 @@ export default createWidget("header", {
     if (this.site.mobileView) {
       const searchService = this.register.lookup("search-service:main");
       const context = searchService.get("searchContext");
-      var params = "";
+      let params = "";
 
       if (context) {
         params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
