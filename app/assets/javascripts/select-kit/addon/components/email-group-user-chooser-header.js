@@ -24,17 +24,17 @@ export default MultiSelectHeaderComponent.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this.set("__isRendered", true);
+    this.set("_isRendered", true);
   },
 
   hiddenItemsCount: computed(
     "selectedContent.[]",
     "selectKit.options.autoWrap",
     "selectKit.isExpanded",
-    "__isRendered",
+    "_isRendered",
     function () {
       if (
-        !this.__isRendered ||
+        !this._isRendered ||
         !this.selectKit.options.autoWrap ||
         this.selectKit.isExpanded ||
         this.selectedContent === this.selectKit.noneItem ||

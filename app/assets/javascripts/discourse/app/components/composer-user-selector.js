@@ -5,7 +5,7 @@ import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 export default Component.extend({
   init() {
     this._super(...arguments);
-    this.set("__groups", []);
+    this.set("_groups", []);
   },
 
   didInsertElement() {
@@ -21,9 +21,9 @@ export default Component.extend({
     return recipients ? recipients.split(",").filter(Boolean) : [];
   },
 
-  __updateGroups(selected, newGroups) {
+  _updateGroups(selected, newGroups) {
     const groups = [];
-    this.__groups.forEach((existing) => {
+    this._groups.forEach((existing) => {
       if (selected.includes(existing)) {
         groups.addObject(existing);
       }
@@ -34,7 +34,7 @@ export default Component.extend({
       }
     });
     this.setProperties({
-      __groups: groups,
+      _groups: groups,
       hasGroups: groups.length > 0,
     });
   },
@@ -48,7 +48,7 @@ export default Component.extend({
           newGroups.addObject(recipient);
         }
       });
-      this.__updateGroups(selected, newGroups);
+      this._updateGroups(selected, newGroups);
       this.set("recipients", selected.join(","));
     },
   },
