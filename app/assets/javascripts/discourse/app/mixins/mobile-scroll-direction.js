@@ -1,5 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import discourseDebounce from "discourse-common/lib/debounce";
+
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
