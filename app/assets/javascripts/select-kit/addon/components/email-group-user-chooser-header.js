@@ -22,19 +22,12 @@ export default MultiSelectHeaderComponent.extend({
     );
   }),
 
-  didInsertElement() {
-    this._super(...arguments);
-    this.set("_isRendered", true);
-  },
-
   hiddenItemsCount: computed(
     "selectedContent.[]",
     "selectKit.options.autoWrap",
     "selectKit.isExpanded",
-    "_isRendered",
     function () {
       if (
-        !this._isRendered ||
         !this.selectKit.options.autoWrap ||
         this.selectKit.isExpanded ||
         this.selectedContent === this.selectKit.noneItem ||
@@ -44,7 +37,7 @@ export default MultiSelectHeaderComponent.extend({
         return 0;
       } else {
         const selectKitHeaderWidth = this.element.offsetWidth;
-        const items = this.element.querySelectorAll(".selected-name.choice");
+        const choices = this.element.querySelectorAll(".selected-name.choice");
         const input = this.element.querySelector(".filter-input");
         const alreadyHidden = this.element.querySelector(".x-more-item");
         if (alreadyHidden) {
@@ -54,15 +47,18 @@ export default MultiSelectHeaderComponent.extend({
           );
           return (
             hiddenCount +
-            (this.selectedContent.length - (items.length + hiddenCount))
+            (this.selectedContent.length - (choices.length + hiddenCount))
           );
         }
-        let total = items[0].offsetWidth + input.offsetWidth;
+        if (choices.length === 0 && this.selectedContent.length > 0) {
+          return 0;
+        }
+        let total = choices[0].offsetWidth + input.offsetWidth;
         let shownItemsCount = 1;
         let shouldHide = false;
-        for (let i = 1; i < items.length - 1; i++) {
-          const currentWidth = items[i].offsetWidth;
-          const nextWidth = items[i + 1].offsetWidth;
+        for (let i = 1; i < choices.length - 1; i++) {
+          const currentWidth = choices[i].offsetWidth;
+          const nextWidth = choices[i + 1].offsetWidth;
           const ratio =
             (total + currentWidth + nextWidth) / selectKitHeaderWidth;
           if (ratio >= 0.95) {
@@ -73,7 +69,7 @@ export default MultiSelectHeaderComponent.extend({
             total += currentWidth;
           }
         }
-        return shouldHide ? items.length - shownItemsCount : 0;
+        return shouldHide ? choices.length - shownItemsCount : 0;
       }
     }
   ),
