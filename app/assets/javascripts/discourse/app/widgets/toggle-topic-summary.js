@@ -22,7 +22,7 @@ createWidget("toggle-summary-description", {
         readingTime,
       });
     }
-    return I18n.t("summary.description", { replyCount: attrs.topicReplyCount });
+    return I18n.t("summary.description", { count: attrs.topicReplyCount });
   },
 
   html(attrs) {
