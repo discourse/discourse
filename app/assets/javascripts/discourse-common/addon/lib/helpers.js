@@ -22,7 +22,7 @@ const _helpers = {};
 
 function rawGet(ctx, property, options) {
   if (options.types && options.data.view) {
-    var view = options.data.view;
+    let view = options.data.view;
     return view.getStream
       ? view.getStream(property).value()
       : view.getAttr(property);

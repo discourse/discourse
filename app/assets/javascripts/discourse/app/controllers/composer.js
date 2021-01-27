@@ -727,7 +727,7 @@ export default Controller.extend({
       }
     }
 
-    var staged = false;
+    let staged = false;
 
     // TODO: This should not happen in model
     const imageSizes = {};

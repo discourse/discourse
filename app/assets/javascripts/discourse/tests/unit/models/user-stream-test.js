@@ -4,8 +4,8 @@ import UserAction from "discourse/models/user-action";
 
 module("Unit | Model | user-stream", function () {
   test("basics", function (assert) {
-    var user = User.create({ id: 1, username: "eviltrout" });
-    var stream = user.get("stream");
+    let user = User.create({ id: 1, username: "eviltrout" });
+    let stream = user.get("stream");
     assert.present(stream, "a user has a stream by default");
     assert.equal(
       stream.get("user"),
@@ -25,8 +25,8 @@ module("Unit | Model | user-stream", function () {
   });
 
   test("filterParam", function (assert) {
-    var user = User.create({ id: 1, username: "eviltrout" });
-    var stream = user.get("stream");
+    let user = User.create({ id: 1, username: "eviltrout" });
+    let stream = user.get("stream");
 
     // defaults to posts/topics
     assert.equal(stream.get("filterParam"), "4,5");

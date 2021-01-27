@@ -7,7 +7,7 @@ import { registerUnbound } from "discourse-common/lib/helpers";
   update the dates on a regular interval.
 **/
 registerUnbound("format-date", function (val, params) {
-  var leaveAgo,
+  let leaveAgo,
     format = "medium",
     title = true;
 
@@ -22,7 +22,7 @@ registerUnbound("format-date", function (val, params) {
   }
 
   if (val) {
-    var date = new Date(val);
+    let date = new Date(val);
     return htmlSafe(
       autoUpdatingRelativeAge(date, {
         format: format,

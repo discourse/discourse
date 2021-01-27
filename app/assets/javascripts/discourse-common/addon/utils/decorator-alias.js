@@ -12,7 +12,7 @@ export default function decoratorAlias(fn, errorMessage) {
           configurable: desc.configurable,
           writable: desc.writable,
           initializer: function () {
-            var value = extractValue(desc);
+            let value = extractValue(desc);
             return fn.apply(null, params.concat(value));
           },
         };
