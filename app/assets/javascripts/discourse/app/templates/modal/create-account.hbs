@@ -62,7 +62,7 @@
                 {{#if nameDisabled}}
                   <span class="value">{{accountName}}</span>
                 {{else}}
-                  {{input value=accountName id="new-account-name" class=(value-entered accountName)}}
+                  {{text-field value=accountName id="new-account-name" class=(value-entered accountName)}}
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
                     {{#if siteSettings.full_name_required}}
@@ -90,31 +90,36 @@
               )
             }}
 
-            {{#if passwordRequired}}
-              <label for="new-account-password">
-                {{i18n "user.password.title"}}
-                {{~#if userFields~}}
-                  <span class="required">*</span>
-                {{/if}}
-              </label>
-              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-              {{input-tip validation=passwordValidation}}
-              <label>{{passwordInstructions}}</label>
-              <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
-                {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
-              </div>
-            {{/if}}
+            <div class="input-group">
+              {{#if passwordRequired}}
+                {{password-field value=accountPassword class=(value-entered accountPassword) type="password" id="new-account-password" capsLockOn=capsLockOn}}
+                <label class="alt-placeholder" for="new-account-password">
+                  {{i18n "user.password.title"}}
+                  {{~#if userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
+                </label>
 
-            <div class="password-confirmation">
-              <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
-              {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
-              {{input value=accountChallenge id="new-account-challenge"}}
+                <label class="more-info">{{passwordInstructions}}</label>
+                {{input-tip validation=passwordValidation}}
+                <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
+                  {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                </div>
+              {{/if}}
+
+              <div class="password-confirmation">
+                <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
+                {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
+                {{input value=accountChallenge id="new-account-challenge"}}
+              </div>
             </div>
 
             {{#if requireInviteCode }}
-              <label for="invite-code">{{i18n "user.invite_code.title"}}</label>
-              {{input value=inviteCode id="inviteCode"}}
-              <label>{{i18n "user.invite_code.instructions"}}</label>
+              <div class="input-group">
+                {{input value=inviteCode class=(value-entered inviteCode) id="inviteCode"}}
+                <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
+                <label class="more-info">{{i18n "user.invite_code.instructions"}}</label>
+              </div>
             {{/if}}
 
             {{plugin-outlet
