@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
+  has_many :shelved_notifications, through: :notification
 
   # deleted in user_second_factors relationship
   has_many :totps, -> {
@@ -1389,10 +1390,6 @@ class User < ActiveRecord::Base
 
   def do_not_disturb_until
     active_do_not_disturb_timings.maximum(:ends_at)
-  end
-
-  def shelved_notifications
-    ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
   end
 
   protected

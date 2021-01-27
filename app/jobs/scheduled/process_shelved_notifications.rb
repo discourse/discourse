@@ -14,16 +14,10 @@ module Jobs
 
       now = Time.zone.now
       shelved_notification_ids = DB.query_single(sql, now: now)
+      shelved_notifications = ShelvedNotification.where(id: shelved_notification_ids)
+      shelved_notifications.each(&:process)
+      shelved_notifications.destroy_all
 
-      ShelvedNotification.where(id: shelved_notification_ids).each do |shelved_notification|
-        begin
-          shelved_notification.process
-        rescue
-          Rails.logger.warn("Failed to process shelved notification with ID #{shelved_notification.id}")
-        end
-      end
-
-      ShelvedNotification.where(id: shelved_notification_ids).destroy_all
       DB.exec("DELETE FROM do_not_disturb_timings WHERE ends_at < :now", now: now)
     end
   end

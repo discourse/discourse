@@ -52,7 +52,6 @@ describe DoNotDisturbController do
         delete "/do-not-disturb.json"
         expect { notification.shelved_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(user.do_not_disturb?).to eq(false)
-
       end
     end
   end
