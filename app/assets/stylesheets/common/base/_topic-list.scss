@@ -34,18 +34,6 @@
       max-height: 40vh;
     }
   }
-
-  @include breakpoint(medium) {
-    // hide button labels to save space
-    .btn {
-      .d-button-label {
-        display: none;
-      }
-      .d-icon {
-        margin: 0;
-      }
-    }
-  }
 }
 
 .navigation-container {
@@ -80,6 +68,14 @@
   margin-bottom: var(--nav-space);
   > * {
     white-space: nowrap;
+  }
+  .select-kit button {
+    height: 100%; // ensures nested select-kit button matches height of button siblings
+  }
+  .btn {
+    // need to reduce vertical padding for consistent height
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
   }
 }
 
