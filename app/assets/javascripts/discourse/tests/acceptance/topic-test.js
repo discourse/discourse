@@ -264,7 +264,17 @@ acceptance("Topic featured links", function (needs) {
   needs.settings({
     topic_featured_link_enabled: true,
     max_topic_title_length: 80,
+    exclude_rel_nofollow_domains: "example.com",
   });
+
+  test("remove nofollow attribute", async function (assert) {
+    await visit("/t/-/299/1");
+
+    const link = queryAll(".title-wrapper .topic-featured-link");
+    assert.equal(link.text(), " example.com");
+    assert.equal(link.attr("rel"), "ugc");
+  });
+
   test("remove featured link", async function (assert) {
     await visit("/t/-/299/1");
     assert.ok(

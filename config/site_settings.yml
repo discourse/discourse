@@ -48,6 +48,7 @@ required:
     default: ""
     type: group
   exclude_rel_nofollow_domains:
+    client: true
     default: ""
     type: list
     list_type: simple

@@ -4647,6 +4647,7 @@ export default {
     pinned_at: null,
     pinned_until: null,
     featured_link: "http://www.example.com/has-title.html",
+    featured_link_root_domain: "example.com",
     details: {
       auto_close_at: null,
       auto_close_hours: null,
