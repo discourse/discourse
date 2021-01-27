@@ -182,29 +182,27 @@ export default Component.extend({
         type: "PUT",
         data,
       }).then(() => {
-        if (this.afterSave) {
-          this.afterSave({
-            reminderAt: reminderAtISO,
-            reminderType: this.selectedReminderType,
-            autoDeletePreference: this.autoDeletePreference,
-            id: this.model.id,
-            name: this.model.name,
-          });
-        }
+        this._executeAfterSave(reminderAtISO);
       });
     } else {
       return ajax("/bookmarks", { type: "POST", data }).then((response) => {
-        if (this.afterSave) {
-          this.afterSave({
-            reminderAt: reminderAtISO,
-            reminderType: this.selectedReminderType,
-            autoDeletePreference: this.autoDeletePreference,
-            id: response.id,
-            name: this.model.name,
-          });
-        }
+        this.set("model.id", response.id);
+        this._executeAfterSave(reminderAtISO);
       });
     }
+  },
+
+  _executeAfterSave(reminderAtISO) {
+    if (!this.afterSave) {
+      return;
+    }
+    this.afterSave({
+      reminderAt: reminderAtISO,
+      reminderType: this.selectedReminderType,
+      autoDeletePreference: this.autoDeletePreference,
+      id: this.model.id,
+      name: this.model.name,
+    });
   },
 
   _deleteBookmark() {
