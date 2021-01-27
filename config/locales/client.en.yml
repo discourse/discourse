@@ -3739,7 +3739,9 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_user_count: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_count:
+              one: "%{count} user has the new email domains and will be added to the group."
+              other: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
