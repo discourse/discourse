@@ -7,8 +7,6 @@ import {
   startOfDay,
   tomorrow,
 } from "discourse/lib/timeUtils";
-import { isEmpty, isPresent } from "@ember/utils";
-import { next } from "@ember/runloop";
 
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
@@ -22,17 +20,13 @@ import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
-import { or } from "@ember/object/computed";
+import { and, notEmpty, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
 //
-// c createTopic
-// r replyToPost
-// l toggle like
 // d deletePost
-// t replyAsNewTopic
 const GLOBAL_SHORTCUTS_TO_PAUSE = ["d"];
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -42,9 +36,8 @@ const BOOKMARK_BINDINGS = {
 export default Component.extend({
   tagName: "",
 
-  init() {
-    this._super(...arguments);
-
+  @on("init")
+  _setup() {
     this.setProperties({
       errorMessage: null,
       selectedReminderType: TIME_SHORTCUT_TYPES.NONE,
@@ -65,27 +58,32 @@ export default Component.extend({
     this._loadBookmarkOptions();
     this._bindKeyboardShortcuts();
 
-    if (this._editingExistingBookmark()) {
+    if (this.editingExistingBookmark) {
       this._initializeExistingBookmarkData();
     }
 
     this._loadPostLocalDates();
   },
 
+  @on("didInsertElement")
+  _prepareUI() {
+    if (this.site.isMobileDevice) {
+      document.getElementById("bookmark-name").blur();
+    }
+
+    // we want to make sure the options panel opens so the user
+    // knows they have set these options previously.
+    if (this.autoDeletePreference) {
+      this.toggleOptionsPanel();
+    }
+  },
+
   _initializeExistingBookmarkData() {
-    if (this._existingBookmarkHasReminder()) {
+    if (this.existingBookmarkHasReminder) {
       this.setProperties({
         prefilledDatetime: this.model.reminderAt,
       });
     }
-  },
-
-  _editingExistingBookmark() {
-    return isPresent(this.model) && isPresent(this.model.id);
-  },
-
-  _existingBookmarkHasReminder() {
-    return isPresent(this.model) && isPresent(this.model.reminderAt);
   },
 
   _loadBookmarkOptions() {
@@ -93,13 +91,6 @@ export default Component.extend({
       "autoDeletePreference",
       this.model.autoDeletePreference || this._preferredDeleteOption() || 0
     );
-
-    // we want to make sure the options panel opens so the user
-    // knows they have set these options previously. run next otherwise
-    // the modal is not visible when it tries to slide down the options
-    if (this.autoDeletePreference) {
-      next(() => this.toggleOptionsPanel());
-    }
   },
 
   _preferredDeleteOption() {
@@ -149,10 +140,12 @@ export default Component.extend({
     }
   },
 
-  _showPostLocalDate: or("postDetectedLocalDate", "postDetectedLocalTime"),
-
   _saveBookmark() {
-    const reminderAt = this._reminderAt();
+    let reminderAt = null;
+    if (this.selectedReminderType) {
+      reminderAt = this.selectedDatetime;
+    }
+
     const reminderAtISO = reminderAt ? reminderAt.toISOString() : null;
 
     if (this.selectedReminderType === TIME_SHORTCUT_TYPES.CUSTOM) {
@@ -184,7 +177,7 @@ export default Component.extend({
       auto_delete_preference: this.autoDeletePreference,
     };
 
-    if (this._editingExistingBookmark()) {
+    if (this.editingExistingBookmark) {
       return ajax("/bookmarks/" + this.model.id, {
         type: "PUT",
         data,
@@ -222,14 +215,6 @@ export default Component.extend({
         this.afterDelete(response.topic_bookmarked);
       }
     });
-  },
-
-  _reminderAt() {
-    if (!this.selectedReminderType) {
-      return;
-    }
-
-    return this.selectedDateTime;
   },
 
   _postLocalDate() {
@@ -274,15 +259,12 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("model.reminderAt")
-  showExistingReminderAt(existingReminderAt) {
-    return isPresent(existingReminderAt);
-  },
-
-  @discourseComputed("model.id")
-  showDelete(id) {
-    return isPresent(id);
-  },
+  showExistingReminderAt: notEmpty("model.reminderAt"),
+  showDelete: notEmpty("model.id"),
+  userHasTimezoneSet: notEmpty("userTimezone"),
+  showPostLocalDate: or("postDetectedLocalDate", "postDetectedLocalTime"),
+  editingExistingBookmark: and("model", "model.id"),
+  existingBookmarkHasReminder: and("model", "model.reminderAt"),
 
   @discourseComputed()
   autoDeletePreferences: () => {
@@ -298,7 +280,7 @@ export default Component.extend({
   customTimeShortcutOptions() {
     let customOptions = [];
 
-    if (this._showPostLocalDate) {
+    if (this.showPostLocalDate) {
       customOptions.push({
         icon: "globe-americas",
         id: TIME_SHORTCUT_TYPES.POST_LOCAL_DATE,
@@ -338,18 +320,6 @@ export default Component.extend({
     return formattedReminderTime(existingReminderAt, this.userTimezone);
   },
 
-  @discourseComputed("userTimezone")
-  userHasTimezoneSet(userTimezone) {
-    return !isEmpty(userTimezone);
-  },
-
-  @on("didInsertElement")
-  blurName() {
-    if (this.site.isMobileDevice) {
-      document.getElementById("bookmark-name").blur();
-    }
-  },
-
   @action
   saveAndClose() {
     if (this._saving || this._deleting) {
@@ -387,7 +357,7 @@ export default Component.extend({
         .catch((e) => this._handleSaveError(e));
     };
 
-    if (this._existingBookmarkHasReminder()) {
+    if (this.existingBookmarkHasReminder) {
       bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
         if (result) {
           deleteAction();
@@ -406,7 +376,7 @@ export default Component.extend({
 
   @action
   onTimeSelected(type, time) {
-    this.setProperties({ selectedReminderType: type, selectedDateTime: time });
+    this.setProperties({ selectedReminderType: type, selectedDatetime: time });
 
     // if the type is custom, we need to wait for the user to click save, as
     // they could still be adjusting the date and time

@@ -8,12 +8,16 @@ import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
 } from "discourse/lib/timeShortcut";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 
 import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { action } from "@ember/object";
+import { and } from "@ember/object/computed";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // component is destroyed
@@ -75,11 +79,12 @@ export default Component.extend({
   customDate: null,
   customTime: null,
 
-  init() {
-    this._super(...arguments);
+  defaultCustomReminderTime: `0${START_OF_DAY_HOUR}:00`,
 
+  @on("init")
+  _setupPicker() {
     this.setProperties({
-      customTime: this._defaultCustomReminderTime(),
+      customTime: this.defaultCustomReminderTime,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
     });
 
@@ -105,18 +110,10 @@ export default Component.extend({
     this._loadLastUsedCustomDatetime();
   },
 
-  @discourseComputed("selectedShortcut")
-  customDatetimeSelected(selectedShortcut) {
-    return selectedShortcut === TIME_SHORTCUT_TYPES.CUSTOM;
-  },
-
-  _defaultCustomReminderTime() {
-    return `0${START_OF_DAY_HOUR}:00`;
-  },
-
-  @observes("customDate", "customTime")
-  customDatetimeChanged() {
-    this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
+  @on("willDestroyElement")
+  _resetKeyboardShortcuts() {
+    KeyboardShortcuts.unbind(BINDINGS);
+    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
   },
 
   _loadLastUsedCustomDatetime() {
@@ -138,47 +135,32 @@ export default Component.extend({
     }
   },
 
-  @action
-  selectShortcut(type) {
-    if (
-      this.options
-        .filter((opt) => opt.hidden)
-        .map((opt) => opt.id)
-        .includes(type)
-    ) {
+  _bindKeyboardShortcuts() {
+    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
+    Object.keys(BINDINGS).forEach((shortcut) => {
+      KeyboardShortcuts.addShortcut(shortcut, () => {
+        let binding = BINDINGS[shortcut];
+        if (binding.args) {
+          return this.send(binding.handler, ...binding.args);
+        }
+        this.send(binding.handler);
+      });
+    });
+  },
+
+  @discourseComputed("selectedShortcut")
+  customDatetimeSelected(selectedShortcut) {
+    return selectedShortcut === TIME_SHORTCUT_TYPES.CUSTOM;
+  },
+
+  customDatetimeFilled: and("customDate", "customTime"),
+
+  @observes("customDate", "customTime")
+  customDatetimeChanged() {
+    if (!this.customDatetimeFilled) {
       return;
     }
-
-    let dateTime = null;
-    if (type === TIME_SHORTCUT_TYPES.CUSTOM) {
-      this.set(
-        "customTime",
-        this.customTime || this._defaultCustomReminderTime()
-      );
-      const customDatetime = parseCustomDatetime(
-        this.customDate,
-        this.customTime,
-        this.userTimezone
-      );
-
-      if (customDatetime.isValid()) {
-        dateTime = customDatetime;
-
-        localStorage.lastCustomTime = this.customTime;
-        localStorage.lastCustomDate = this.customDate;
-      }
-    } else {
-      dateTime = this.options.find((opt) => opt.id === type).time;
-    }
-
-    this.setProperties({
-      selectedShortcut: type,
-      selectedDatetime: dateTime,
-    });
-
-    if (this.onTimeSelected) {
-      this.onTimeSelected(type, dateTime);
-    }
+    this.selectShortcut(TIME_SHORTCUT_TYPES.CUSTOM);
   },
 
   @discourseComputed(
@@ -226,31 +208,43 @@ export default Component.extend({
     return options;
   },
 
-  _bindKeyboardShortcuts() {
-    KeyboardShortcuts.pause(GLOBAL_SHORTCUTS_TO_PAUSE);
-    Object.keys(BINDINGS).forEach((shortcut) => {
-      KeyboardShortcuts.addShortcut(shortcut, () => {
-        let binding = BINDINGS[shortcut];
-        if (binding.args) {
-          return this.send(binding.handler, ...binding.args);
-        }
-        this.send(binding.handler);
-      });
+  @action
+  selectShortcut(type) {
+    if (
+      this.options
+        .filter((opt) => opt.hidden)
+        .map((opt) => opt.id)
+        .includes(type)
+    ) {
+      return;
+    }
+
+    let dateTime = null;
+    if (type === TIME_SHORTCUT_TYPES.CUSTOM) {
+      this.set("customTime", this.customTime || this.defaultCustomReminderTime);
+      const customDatetime = parseCustomDatetime(
+        this.customDate,
+        this.customTime,
+        this.userTimezone
+      );
+
+      if (customDatetime.isValid()) {
+        dateTime = customDatetime;
+
+        localStorage.lastCustomTime = this.customTime;
+        localStorage.lastCustomDate = this.customDate;
+      }
+    } else {
+      dateTime = this.options.find((opt) => opt.id === type).time;
+    }
+
+    this.setProperties({
+      selectedShortcut: type,
+      selectedDatetime: dateTime,
     });
-  },
 
-  _unbindKeyboardShortcuts() {
-    KeyboardShortcuts.unbind(BINDINGS);
-  },
-
-  _restoreGlobalShortcuts() {
-    KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
-  },
-
-  willDestroy() {
-    this._super(...arguments);
-
-    this._unbindKeyboardShortcuts();
-    this._restoreGlobalShortcuts();
+    if (this.onTimeSelected) {
+      this.onTimeSelected(type, dateTime);
+    }
   },
 });
