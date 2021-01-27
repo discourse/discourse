@@ -41,13 +41,7 @@ export default Component.extend({
 
   actions: {
     updateRecipients(selected, content) {
-      const newGroups = [];
-      selected.forEach((recipient) => {
-        const recipientObj = content.findBy("id", recipient);
-        if (recipientObj.isGroup) {
-          newGroups.addObject(recipient);
-        }
-      });
+      const newGroups = content.filterBy("isGroup").mapBy("id");
       this._updateGroups(selected, newGroups);
       this.set("recipients", selected.join(","));
     },
