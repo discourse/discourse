@@ -5,6 +5,13 @@ describe 'users' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }
+  let(:admin) { Fabricate(:admin) }
+
+  before do
+    SiteSetting.tagging_enabled = true
+    Jobs.run_immediately!
+    sign_in(admin)
+  end
 
   path '/users.json' do
 
@@ -97,6 +104,126 @@ describe 'users' do
         run_test!
       end
     end
+  end
+
+  path '/u/by-external/{provider}/{external_id}.json' do
+
+    get 'Get a user by identity provider external ID' do
+      tags 'Users'
+      consumes 'application/json'
+      parameter name: 'Api-Key', in: :header, type: :string, required: true
+      parameter name: 'Api-Username', in: :header, type: :string, required: true
+      parameter name: :provider,
+                in: :path,
+                type: :string,
+                required: true,
+                description: "Authentication provider name. Can be found in the provider callback URL: `/auth/{provider}/callback`"
+      parameter name: :external_id, in: :path, type: :string, required: true
+
+      produces 'application/json'
+      response '200', 'user response' do
+        schema '$ref' => '#/components/schemas/user_response'
+
+        let(:user) { Fabricate(:user) }
+        let(:provider) { 'google_oauth2' }
+        let(:external_id) { 'myuid' }
+
+        before do
+          SiteSetting.enable_google_oauth2_logins = true
+          UserAssociatedAccount.create!(user: user, provider_uid: 'myuid', provider_name: 'google_oauth2')
+        end
+
+        run_test!
+      end
+    end
+  end
+
+  path '/u/{username}/preferences/avatar/pick.json' do
+
+    put 'Update avatar' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_update_avatar_request')
+
+      parameter name: :username, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'avatar updated' do
+        expected_response_schema = load_spec_schema('success_ok_response')
+
+        let(:user) { Fabricate(:user) }
+        let(:username) { user.username }
+        let(:upload) { Fabricate(:upload, user: user) }
+        let(:params) { { 'upload_id' => upload.id, 'type' => 'uploaded' } }
+
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+  end
+
+  path '/u/{username}/preferences/email.json' do
+
+    put 'Update email' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_update_email_request')
+
+      parameter name: :username, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'email updated' do
+
+        let(:user) { Fabricate(:user) }
+        let(:username) { user.username }
+        let(:params) { { 'email' => "test@example.com" } }
+
+        expected_response_schema = nil
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+  end
+
+  path '/directory_items.json' do
+
+    get 'Get a public list of users' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :period,
+                in: :query,
+                type: :string,
+                required: true,
+                description: 'enum: "daily", "weekly", "monthly", "quarterly", "yearly", "all"'
+
+      produces 'application/json'
+      response '200', 'directory items response' do
+
+        let(:period) { 'weekly' }
+
+        expected_response_schema = load_spec_schema('users_public_list_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
   end
 
 end

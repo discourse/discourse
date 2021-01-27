@@ -21,21 +21,25 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
     end
   end
 
-  describe "request body" do
-    it "matches the documented request schema" do |example|
-      schemer = JSONSchemer.schema(expected_request_schema)
-      expect_schema_valid(schemer, params)
+    describe "request body" do
+      it "matches the documented request schema" do |example|
+        if expected_request_schema
+          schemer = JSONSchemer.schema(expected_request_schema)
+          expect_schema_valid(schemer, params)
+        end
+      end
     end
-  end
 
   describe "response body" do
     let(:json_response) { JSON.parse(response.body) }
 
     it "matches the documented response schema" do  |example|
-      schemer = JSONSchemer.schema(
-        expected_response_schema,
-      )
-      expect_schema_valid(schemer, json_response)
+      if expected_response_schema
+        schemer = JSONSchemer.schema(
+          expected_response_schema,
+        )
+        expect_schema_valid(schemer, json_response)
+      end
     end
   end
 end
