@@ -868,7 +868,8 @@ class Topic < ActiveRecord::Base
 
         # when a topic changes category we may need to make uploads
         # linked to posts secure/not secure depending on whether the
-        # category is private
+        # category is private. this is only done if the catrgory
+        # has actually changed to avoid noise.
         DB.after_commit do
           Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
         end
