@@ -233,6 +233,7 @@ he:
         us_gov_west_1: "הענן הממשלתי של AWS (מערב ארה״ב)"
         us_west_1: "מערב ארה״ב (צפון קליפורניה)"
         us_west_2: "מערב ארה״ב (אורגון)"
+    clear_input: "פינוי הקלט"
     edit: "עריכת הכותרת והקטגוריה של נושא זה"
     expand: "הרחב"
     not_implemented: "תכונה זו עדיין לא מומשה, עמך הסליחה!"
@@ -1788,8 +1789,6 @@ he:
     date_time_picker:
       from: מאת
       to: אל
-      errors:
-        to_before_from: "תאריך היעד חייב להיות לאחר תאריך ההתחלה."
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -3599,6 +3598,10 @@ he:
         installed_version: "הותקן"
         latest_version: "אחרונה"
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
+        new_features:
+          title: "\U0001F381 תכונות חדשות"
+          dismiss: "התעלמות"
+          learn_more: "מידע נוסף"
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
@@ -3731,6 +3734,11 @@ he:
         group_members: "חברי הקבוצה"
         delete: "מחיקה"
         delete_confirm: "להסיר קבוצה זו?"
+        delete_with_messages_confirm:
+          one: "מחיקת הקבוצה הזאת תוביל להתייתמותה של הודעה %{count}, חברי הקבוצה לא יוכלו לגשת אליה עוד.<br><br>להמשיך?"
+          two: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד.<br><br>להמשיך?"
+          many: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד.<br><br>להמשיך?"
+          other: "מחיקת הקבוצה הזאת תוביל להתייתמותן של %{count} הודעות, חברי הקבוצה לא יוכלו לגשת אליהן עוד.<br><br>להמשיך?"
         delete_failed: "לא ניתן להסיר קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_owner_confirm: "להסיר את הרשאות הניהול של ‚%{username}’?"
         add: "הוספה"
@@ -4158,17 +4166,15 @@ he:
 
               דוגמה:
 
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               מומלץ מאוד להוסיף קידומת לשמות המאפיינים כדי להימנע מסתירות מול תוספים ו/או הליבה.
           head_tag:
-            text: "</head>"
-            title: "HTML שיוכנס לפני התג </head>"
+            text: "</‎head>"
+            title: "HTML שיוכנס לפני התג </‎head>"
           body_tag:
-            text: "</body>"
-            title: "HTML שיוכנס לפני התג </body> "
+            text: "</‎body>"
+            title: "HTML שיוכנס לפני התג </‎body>"
           yaml:
             text: "YAML"
             title: "עריכת הגדרות ערכת העיצוב בתצורת YAML"
@@ -4830,6 +4836,7 @@ he:
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         locale: "שפה:"
+        fallback_locale_warning: "בחרת לערוך שפה שמבוססת על %{fallback}. משתמשים שבוחרים ב%{fallback} כשפת מנשק המשתמש שלהם לא יראו את השינויים שלך."
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"

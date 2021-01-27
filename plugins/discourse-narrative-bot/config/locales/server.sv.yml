@@ -25,7 +25,7 @@ sv:
       long_description: |
         Denna utmärkelse tilldelas efter att den interaktiva vägledningen för avancerade användare har genomförts. Du har lärt dig om de avancerade diskussionsverktygen och är nu certifierad!
   discourse_narrative_bot:
-    bio: "Hej, Jag är inte en riktig person. Jag är en bot som kan lära dig använda denna site. För att interagera med mig skickar du mig ett meddelande eller nämner **`@%{discobot_username}`** någonstans."
+    bio: "Hej, jag är ingen riktig person. Jag är en bot som kan lära dig mer om den här webbplatsen. För att interagera med mig, skicka ett meddelande till mig eller nämna mig med namn."
     tl2_promotion_message:
       subject_template: "Nu när du har blivit befordrad är det dags att lära dig mer om några avancerade funktioner!"
       text_body_template: |

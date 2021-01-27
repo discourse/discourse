@@ -24,6 +24,8 @@ export default TextField.extend({
   },
 
   keyUp(e) {
+    this._super(e);
+
     if (e.which === 20 && this.canToggle) {
       this.toggleProperty("capsLockOn");
     }

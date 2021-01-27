@@ -110,7 +110,7 @@ export default Controller.extend(bufferedProperty("model"), {
         const data = {};
         const buffered = this.buffered;
         fields.forEach(function (field) {
-          var d = buffered.get(field);
+          let d = buffered.get(field);
           if (boolFields.includes(field)) {
             d = !!d;
           }

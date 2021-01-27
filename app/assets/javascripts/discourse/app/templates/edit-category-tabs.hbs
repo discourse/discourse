@@ -34,6 +34,12 @@
     {{/each}}
   </div>
 
+  {{#if showDeleteReason}}
+    <div class="edit-category-delete-warning">
+      <p class="warning">{{html-safe model.cannot_delete_reason}}</p>
+    </div>
+  {{/if}}
+
   <div class="edit-category-footer">
     {{d-button id="save-category" class="btn-primary" disabled=disabled action=(action "saveCategory") label=saveLabel}}
 
@@ -54,10 +60,6 @@
           icon="question-circle"
           label="category.delete"
         }}
-
-        <div class="cannot-delete-reason {{if hiddenTooltip "hidden" ""}}">
-          {{html-safe model.cannot_delete_reason}}
-        </div>
       </div>
     {{/if}}
   </div>

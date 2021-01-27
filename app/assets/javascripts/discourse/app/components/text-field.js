@@ -17,6 +17,8 @@ export default TextField.extend({
     "aria-label",
   ],
 
+  classNameBindings: ["valueEntered"],
+
   init() {
     this._super(...arguments);
 
@@ -71,6 +73,8 @@ export default TextField.extend({
 
   keyUp(event) {
     this._super(event);
+
+    this.set("valueEntered", this.value.length > 0);
 
     if (this.siteSettings.support_mixed_text_direction) {
       let val = this.value;

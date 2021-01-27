@@ -25,7 +25,7 @@ de:
       long_description: |
         Das Abzeichen wird verliehen, wenn das interaktive Tutorial für fortgeschrittene Benutzer erfolgreich abgeschlossen wurde. Du beherrscht die fortgeschrittenen Werkzeuge für Diskussionen erlernt und besitzt nun die Lizenz zum Diskutieren.
   discourse_narrative_bot:
-    bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne irgendwo **`@%{discobot_username}`**, um mit mir zu interagieren."
+    bio: "Hallo! Ich bin keine reale Person. Ich bin ein Bot, der dir etwas über diese Website beibringen kann. Schick mir eine Nachricht oder erwähne mich namentlich, um mit mir zu interagieren."
     tl2_promotion_message:
       subject_template: "Jetzt, da Sie befördert wurden, ist es Zeit, etwas über einige erweiterte Funktionen zu erfahren!"
       text_body_template: |

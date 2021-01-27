@@ -187,6 +187,7 @@ gl:
         us_gov_west_1: "AWS GovCloud (EUA-Oeste)"
         us_west_1: "EUA Oeste (N. California)"
         us_west_2: "EUA Oeste (Oregón)"
+    clear_input: "Despexar entrada"
     edit: "editar o título e a categoría deste tema"
     expand: "Expandir"
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda."
@@ -422,6 +423,7 @@ gl:
         email: "Correo electrónico"
         name: "Nome"
         fields: "Campos"
+        reject_reason: "Razón"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (da última alerta)"
@@ -514,6 +516,9 @@ gl:
           other: "Tes <strong>%{count}</strong> publicacións pendentes."
         ok: "De acordo"
       example_username: "nome de usuario"
+      reject_reason:
+        title: "Por que rexeita a este usuario?"
+        send_email: "Enviar correo de rexeitamento"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vostede</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -840,6 +845,20 @@ gl:
         mute_option_title: "Non recibirás notificación ningunha relacionada con este usuario."
         normal_option: "Normal"
         normal_option_title: "Recibirás unha notificación se este usuario che responde, cita a túa mensaxe ou menciona o teu nome."
+      notification_schedule:
+        title: "Calendario de notificacións"
+        label: "Activar o calendario personalizado de notificacións"
+        tip: "Fóra destas horas, vostede terá posto automaticamente en «non molestar»"
+        midnight: "Medianoite"
+        none: "Ningunha"
+        monday: "Luns"
+        tuesday: "Martes"
+        wednesday: "Mércores"
+        thursday: "Xoves"
+        friday: "Venres"
+        saturday: "Sábado"
+        sunday: "Domingo"
+        to: "para o"
       activity_stream: "Actividade"
       preferences: "Preferencias"
       feature_topic_on_profile:
@@ -1655,8 +1674,6 @@ gl:
     date_time_picker:
       from: De
       to: A
-      errors:
-        to_before_from: "A data límite debe ser posterior á de orixe."
     emoji_picker:
       filter_placeholder: Buscar emoji
       smileys_&_emotion: Emoticonas e emoción
@@ -1948,6 +1965,7 @@ gl:
       or_search_google: "Ou proba a buscar con Google:"
       search_google: "Proba a buscar con Google:"
       search_google_button: "Google"
+      search_button: "Buscar"
       context:
         user: "Buscar publicacións de @%{username}"
         category: "Buscar na categoría #%{category}"
@@ -2846,6 +2864,7 @@ gl:
       list_filters:
         all: "todos os temas"
         none: "sen subcategorías"
+      colors_disabled: "Non pode seleccionar cores porque ten un estilo de categoría con ningún."
     flagging:
       title: "Grazas por axudar a manter a nosa comunidade."
       action: "Denunciar publicación"
@@ -3287,6 +3306,7 @@ gl:
         two_hours: "2 horas"
         tomorrow: "Ata mañá"
         custom: "Personalizado"
+      set_schedule: "Estabelecer un calendario de notificacións"
   admin_js:
     type_to_filter: "escribe para filtrar..."
     admin:
@@ -3314,6 +3334,10 @@ gl:
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
+        new_features:
+          title: "Novas funcionalidades"
+          dismiss: "Desbotar"
+          learn_more: "Saber máis"
         last_checked: "Última comprobación"
         refresh_problems: "Actualizar"
         no_problems: "Non se atoparon problemas."
@@ -3444,6 +3468,9 @@ gl:
         group_members: "Membros do grupo"
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
+        delete_with_messages_confirm:
+          one: "Se elimina este grupo, quedará orfo %{count} mensaxe, os membros do grupo xa non terán acceso a el.<br><br>Está seguro?"
+          other: "Se elimina este grupo, quedará orfo %{count} mensaxes, os membros do grupo xa non terán acceso a el.<br><br>Está seguro?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
@@ -3861,15 +3888,13 @@ gl:
             title: "Escriba definicións de cor personalizadas (só para usuarios avanzados)"
             placeholder: |2-
 
-              Utilice esta folla de estilo para engadir cores personalizadas á listaxe de propiedades CSS.
+              Utilice esta folla de estilo para engadir cores personalizadas á lista de propiedades de CSS personalizadas
 
               Exemplo:
 
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
-              Prefixar os nomes da propiedade resulta altamente recomendábel para evitarmos conflitos con complementos e/ou o núcleo.
+              Recoméndase intensamente prefixar os nomes para evitar conflitos con complementos e/ou o núcleo.
           head_tag:
             text: "</head>"
             title: "HTML que se inserirá antes da etiqueta </head>"
@@ -4364,6 +4389,9 @@ gl:
         anonymize_yes: "Si, converter a conta en anónima"
         anonymize_failed: "Produciuse un problema convertendo a conta en anónima."
         delete: "Eliminar usuario"
+        delete_posts:
+          progress:
+            title: "Progreso na eliminación de publicacións"
         merge:
           button: "Combinar"
           prompt:
@@ -4375,6 +4403,8 @@ gl:
             target_username_placeholder: "Nome de usuario do novo propietario"
             transfer_and_delete: "Transferir e eliminar @%{username}"
             cancel: "Cancelar"
+          progress:
+            title: "Combinar o progreso"
           confirmation:
             title: "Transferir e eliminar @%{username}"
             description: |
@@ -4521,6 +4551,8 @@ gl:
         go_back: "Volver á busca"
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás túas necesidades:"
         show_overriden: "Amosar só os cambios"
+        locale: "Idioma:"
+        fallback_locale_warning: "Está a editar un idioma baseado en %{fallback}. Os usuarios que escollan %{fallback} como idioma de interface non verán os cambios."
         more_than_50_results: "Hai máis de 50 resultados. Restrinxe a busca."
       settings:
         show_overriden: "Amosar só os cambios"

@@ -1113,7 +1113,7 @@ it:
         title: "Email"
         primary: "Email principale"
         secondary: "Email secondaria"
-        primary_label: "primario"
+        primary_label: "primaria"
         unconfirmed_label: "non confermata"
         resend_label: "Reinvia email di conferma"
         resending_label: "invio in corso..."
@@ -1656,8 +1656,6 @@ it:
     date_time_picker:
       from: Da
       to: A
-      errors:
-        to_before_from: "La data di fine deve essere successiva alla data di inizio."
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       smileys_&_emotion: Smileys ed Emotion
@@ -2526,7 +2524,7 @@ it:
       has_replies_count: "%{count}"
       unknown_user: "(utente sconosciuto / eliminato)"
       has_likes_title:
-        one: "Una persona ha messo \"Mi piace\" a questo messaggio"
+        one: "%{count} persona ha messo \"Mi piace\" a questo messaggio"
         other: "%{count} persone hanno messo \"Mi piace\" a questo messaggio"
       has_likes_title_only_you: "hai messo \"Mi piace\" a questo messaggio"
       has_likes_title_you:
@@ -2623,7 +2621,7 @@ it:
         people:
           like:
             one: "ha messo \"Mi piace\""
-            other: "ha messo \"Mi piace\""
+            other: "hanno messo \"Mi piace\""
           read:
             one: "ha letto"
             other: "ha letto"
@@ -3861,17 +3859,6 @@ it:
           color_definitions:
             text: "Definizioni dei colori"
             title: "Inserisci definizioni di colore personalizzate (solo utenti avanzati)"
-            placeholder: |2-
-
-              Usa questo foglio di stile per aggiungere colori personalizzati all'elenco delle proprietà personalizzate CSS.
-
-              Esempio:
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              E' fortemente raccomandato premettere i nomi delle proprietà per evitare conflitti con i plugin e/o il nucleo.
           head_tag:
             text: "</head>"
             title: "HTML che sarà inserito prima del tag </head> "

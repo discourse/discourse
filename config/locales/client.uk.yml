@@ -1779,8 +1779,6 @@ uk:
     date_time_picker:
       from: Від
       to: До
-      errors:
-        to_before_from: "На сьогоднішній день має бути пізніше, ніж з дати."
     emoji_picker:
       filter_placeholder: Шукати emoji
       smileys_&_emotion: Смайли та емоції
@@ -4142,17 +4140,6 @@ uk:
           color_definitions:
             text: "Визначення кольорів"
             title: "Введіть власні визначення кольорів (лише для досвідчених користувачів)"
-            placeholder: |2-
-
-              Використовуйте цю таблицю стилів, щоб додати власні кольори до списку власних властивостей CSS.
-
-              Приклад:
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              Настійно рекомендується вводити префікси до назв властивостей, щоб уникнути конфліктів з плагінами та/або ядром.
           head_tag:
             text: "</head>"
             title: "HTML-код, який буде вставлений перед міткою </head>"

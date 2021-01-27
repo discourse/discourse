@@ -3732,10 +3732,10 @@ it:
             label: "Argomento di Benvenuto"
             description: "<p>Come descriveresti la tua comunità ad un estraneo su un ascensore in circa 1 minuto?</p><ul><li>Per chi sono queste discussioni?</li><li>Cosa posso trovare qui?</li><li>Perché dovrei visitare il sito?</li></ul><p>Il tuo argomento di benvenuto è la prima cosa che i nuovi arrivati leggeranno. Pensalo come al <b>tuo paragrafo</b> 'discorso da ascensore' o 'dichiarazione di intenti'.</p>"
             one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
-            extra_description: "In caso d'incertezza, puoi saltare questo passaggio e modificare il tuo argomento di benvenuto più tardi."
+            extra_description: "Se non si è sicuri, è possibile saltare questo passaggio e modificare l'argomento di benvenuto in un secondo momento."
       privacy:
         title: "Accesso"
-        description: "<p> La tua comunità è aperta a tutti, o è limitata da adesione, invito o approvazione? Se preferisci, puoi impostare le cose in privato, quindi passare a pubblico più avanti. </p>"
+        description: "<p>La tua comunità è aperta a tutti o è limitata da appartenenza, invito o approvazione? Se si preferisce, puoi configurare le cose in privato, quindi passare a pubblico in seguito.</p>"
         fields:
           privacy:
             choices:
@@ -3751,7 +3751,7 @@ it:
               open:
                 label: "Gli utenti possono registrarsi autonomamente."
               invite_only:
-                label: "Gli utenti devono essere invitati da utenti o dallo staff prima che possano registrarsi."
+                label: "Gli utenti devono essere invitati da utenti attendibili o dallo staff prima di potersi registrare."
               must_approve:
                 label: "Gli utenti possono registrarsi autonomamente, ma devono essere approvati dallo staff."
       contact:
@@ -3760,7 +3760,7 @@ it:
           contact_email:
             label: "Email"
             placeholder: "nome@esempio.com"
-            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche quali segnalazioni non gestite, aggiornamenti sulla protezione e sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a> per un contatto urgente."
+            description: "Indirizzo email della persona o del gruppo responsabile di questa comunità. Utilizzato per notifiche critiche come segnalazioni non gestite, aggiornamenti di sicurezza e sulla tua <a href='%{base_path}/about' target='_blank'>pagina Informazioni</a> per un contatto urgente."
           contact_url:
             label: "Sito Web"
             placeholder: "https://www.example.com/contact-us"
@@ -3806,10 +3806,10 @@ it:
         fields:
           favicon:
             label: "Icona del Browser"
-            description: "Icona usata per rappresentare il tuo sito sul browser web, che si veda bene in piccole dimensioni. Le estensioni raccomandate sono PNG e JPG. Useremo il logo quadrato come predefinito."
+            description: "Icona usata per rappresentare il tuo sito sul browser web, che si veda bene in piccole dimensioni. Le estensioni di immagini consigliate sono PNG e JPG. Per impostazione predefinita useremo il logo quadrato."
           large_icon:
             label: "Icona Grande"
-            description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512x512. Useremo il logo quadrato come predefinito."
+            description: "Icona usata per rappresentare il tuo sito sul dispositivi moderni, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita useremo il logo quadrato."
       homepage:
         description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
         title: "Homepage"
@@ -3840,7 +3840,7 @@ it:
       finished:
         title: "Il tuo Discourse è Pronto!"
         description: |
-          <p>Se vorrai cambiare queste impostazioni, <b>esegui nuovamente questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>la sezione admin</a>; lo trovi accanto all'icona della chiave chiave nel menu del sito.</p>
+          <p>Se vuoi cambiare queste impostazioni, <b>riesegui questa procedura guidata in qualsiasi momento</b>, o visita <a href='%{base_path}/admin' target='_blank'>il pannello amministrativo</a>; lo trovi accanto all'icona della chiave inglese nel menu del sito.</p>
           <p>È facile personalizzare il tuo Discourse ancora di più utilizzando il nostro potente sistema di temi. Per esempio, consulta i <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">temi e componenti principali</a> su <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Divertiti e buona fortuna <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>nel costruire la tua nuova comunità!</a></p>
   search_logs:

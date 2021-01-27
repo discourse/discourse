@@ -660,8 +660,10 @@ createWidget("post-article", {
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
-            p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformWithCallbacks(p);
+            let result = transformWithCallbacks(p);
+            result.shareUrl = `${topicUrl}/${p.post_number}`;
+            result.asPost = this.store.createRecord("post", p);
+            return result;
           });
         });
     }

@@ -25,7 +25,6 @@ es:
       long_description: |
         Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
-    bio: "¡Hola! No soy una persona real, soy un bot que te puede enseñar acerca este sitio. Para interactuar conmigo, envíame un mensaje o menciona **`%{discobot_username}`** en cualquier lugar."
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.

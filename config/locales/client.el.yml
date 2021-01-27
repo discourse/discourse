@@ -1594,8 +1594,6 @@ el:
     date_time_picker:
       from: Από
       to: Προς
-      errors:
-        to_before_from: "Η τελική ημερομηνία πρέπει να είναι αργότερα από την αρχική ημερομηνία."
     emoji_picker:
       filter_placeholder: Αναζήτηση για emoji
       smileys_&_emotion: Χαμόγελα και συγκίνηση
