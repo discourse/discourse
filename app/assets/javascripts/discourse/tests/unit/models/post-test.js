@@ -18,13 +18,13 @@ function buildPost(args) {
 
 module("Unit | Model | post", function () {
   test("defaults", function (assert) {
-    var post = Post.create({ id: 1 });
+    let post = Post.create({ id: 1 });
     assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
     assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
   });
 
   test("new_user", function (assert) {
-    var post = Post.create({ trust_level: 0 });
+    let post = Post.create({ trust_level: 0 });
     assert.ok(post.get("new_user"), "post is from a new user");
 
     post.set("trust_level", 1);
@@ -32,7 +32,7 @@ module("Unit | Model | post", function () {
   });
 
   test("firstPost", function (assert) {
-    var post = Post.create({ post_number: 1 });
+    let post = Post.create({ post_number: 1 });
     assert.ok(post.get("firstPost"), "it's the first post");
 
     post.set("post_number", 10);
@@ -40,7 +40,7 @@ module("Unit | Model | post", function () {
   });
 
   test("updateFromPost", function (assert) {
-    var post = Post.create({
+    let post = Post.create({
       post_number: 1,
       raw: "hello world",
     });

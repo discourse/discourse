@@ -16,7 +16,7 @@ export function replaceCategoryLinkRenderer(fn) {
 }
 
 function categoryStripe(color, classes) {
-  var style = color ? "style='background-color: #" + color + ";'" : "";
+  let style = color ? "style='background-color: #" + color + ";'" : "";
   return "<span class='" + classes + "' " + style + "></span>";
 }
 
@@ -65,7 +65,7 @@ export function categoryBadgeHTML(category, opts) {
 }
 
 export function categoryLinkHTML(category, options) {
-  var categoryOptions = {};
+  let categoryOptions = {};
 
   // TODO: This is a compatibility layer with the old helper structure.
   // Can be removed once we migrate to `registerUnbound` fully

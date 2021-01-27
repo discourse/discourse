@@ -154,7 +154,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
     assert.notOk(track(generateClickEventOn("a")));
 
-    var $link = fixture("a").first();
+    let $link = fixture("a").first();
     assert.ok($link.hasClass("no-href"));
     assert.equal($link.data("href"), "http://www.google.com/");
     assert.blank($link.attr("href"));
@@ -178,7 +178,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   function badgeClickCount(assert, id, expected) {
     track(generateClickEventOn("#" + id));
-    var $badge = $("span.badge", fixture("#" + id).first());
+    let $badge = $("span.badge", fixture("#" + id).first());
     assert.equal(parseInt($badge.html(), 10), expected);
   }
 
@@ -200,7 +200,7 @@ module("Unit | Utility | click-track", function (hooks) {
 
   function testOpenInANewTab(description, clickEventModifier) {
     test(description, async function (assert) {
-      var clickEvent = generateClickEventOn("a");
+      let clickEvent = generateClickEventOn("a");
       clickEventModifier(clickEvent);
       assert.ok(track(clickEvent));
       assert.notOk(clickEvent.defaultPrevented);

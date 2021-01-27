@@ -5,7 +5,7 @@
 // Requires chrome-launcher and chrome-remote-interface from npm
 // An up-to-date version of chrome is also required
 
-var args = process.argv.slice(2);
+let args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 3) {
   console.log("Usage: node run-qunit.js <URL> <timeout> <result_file>");
@@ -128,9 +128,9 @@ async function runAllTests() {
     }
 
     const timeout = parseInt(args[1] || 300000, 10);
-    var start = Date.now();
+    let start = Date.now();
 
-    var interval;
+    let interval;
 
     let runTests = async function () {
       if (Date.now() > start + timeout) {
@@ -218,7 +218,7 @@ function logQUnit() {
       return;
     }
 
-    var msg = "\n    Assertion Failed:";
+    let msg = "\n    Assertion Failed:";
     if (context.message) {
       msg += " " + context.message;
     }
@@ -256,7 +256,7 @@ function logQUnit() {
       console.log("\n");
     }
 
-    var stats = [
+    let stats = [
       "Time: " + context.runtime + "ms",
       "Total: " + context.total,
       "Passed: " + context.passed,

@@ -194,7 +194,7 @@ discourseModule("Unit | Utility | uploads", function () {
 
   test("isImage", function (assert) {
     ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
-      var image = "image." + extension;
+      let image = "image." + extension;
       assert.ok(isImage(image), image + " is recognized as an image");
       assert.ok(
         isImage("http://foo.bar/path/to/" + image),

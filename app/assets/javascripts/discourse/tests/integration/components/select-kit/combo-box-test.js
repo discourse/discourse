@@ -24,17 +24,17 @@ const setDefaultState = (ctx, options) => {
   ctx.setProperties(properties);
 };
 
-discourseModule("Integration | Component | select-kit/combo-box", function (
-  hooks
-) {
-  setupRenderingTest(hooks);
+discourseModule(
+  "Integration | Component | select-kit/combo-box",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    this.set("subject", selectKit());
-  });
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
 
-  componentTest("options.clearable", {
-    template: `
+    componentTest("options.clearable", {
+      template: `
       {{combo-box
         value=value
         content=content
@@ -43,36 +43,36 @@ discourseModule("Integration | Component | select-kit/combo-box", function (
       }}
     `,
 
-    beforeEach() {
-      setDefaultState(this, {
-        clearable: true,
-        onChange: (value) => {
-          this.set("value", value);
-        },
-      });
-    },
+      beforeEach() {
+        setDefaultState(this, {
+          clearable: true,
+          onChange: (value) => {
+            this.set("value", value);
+          },
+        });
+      },
 
-    async test(assert) {
-      const $header = this.subject.header();
+      async test(assert) {
+        const $header = this.subject.header();
 
-      assert.ok(
-        exists($header.el().find(".btn-clear")),
-        "it shows the clear button"
-      );
-      assert.equal($header.value(), DEFAULT_VALUE);
+        assert.ok(
+          exists($header.el().find(".btn-clear")),
+          "it shows the clear button"
+        );
+        assert.equal($header.value(), DEFAULT_VALUE);
 
-      await click($header.el().find(".btn-clear"));
+        await click($header.el().find(".btn-clear"));
 
-      assert.notOk(
-        exists($header.el().find(".btn-clear")),
-        "it hides the clear button"
-      );
-      assert.equal($header.value(), null);
-    },
-  });
+        assert.notOk(
+          exists($header.el().find(".btn-clear")),
+          "it hides the clear button"
+        );
+        assert.equal($header.value(), null);
+      },
+    });
 
-  componentTest("options.{caretUpIcon,caretDownIcon}", {
-    template: `
+    componentTest("options.{caretUpIcon,caretDownIcon}", {
+      template: `
       {{combo-box
         value=value
         content=content
@@ -83,27 +83,28 @@ discourseModule("Integration | Component | select-kit/combo-box", function (
       }}
     `,
 
-    beforeEach() {
-      setDefaultState(this, {
-        caretUpIcon: "pencil-alt",
-        caretDownIcon: "trash-alt",
-      });
-    },
+      beforeEach() {
+        setDefaultState(this, {
+          caretUpIcon: "pencil-alt",
+          caretDownIcon: "trash-alt",
+        });
+      },
 
-    async test(assert) {
-      const $header = this.subject.header().el();
+      async test(assert) {
+        const $header = this.subject.header().el();
 
-      assert.ok(
-        exists($header.find(`.d-icon-${this.caretDownIcon}`)),
-        "it uses the icon provided"
-      );
+        assert.ok(
+          exists($header.find(`.d-icon-${this.caretDownIcon}`)),
+          "it uses the icon provided"
+        );
 
-      await this.subject.expand();
+        await this.subject.expand();
 
-      assert.ok(
-        exists($header.find(`.d-icon-${this.caretUpIcon}`)),
-        "it uses the icon provided"
-      );
-    },
-  });
-});
+        assert.ok(
+          exists($header.find(`.d-icon-${this.caretUpIcon}`)),
+          "it uses the icon provided"
+        );
+      },
+    });
+  }
+);

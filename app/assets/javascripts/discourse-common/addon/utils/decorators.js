@@ -51,7 +51,7 @@ export function readOnly(target, name, desc) {
     enumerable: desc.enumerable,
     configurable: desc.configurable,
     initializer: function () {
-      var value = extractValue(desc);
+      let value = extractValue(desc);
       return value.readOnly();
     },
   };

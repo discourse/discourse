@@ -53,17 +53,18 @@ export default Controller.extend({
 
       // Only confirm if we already been saved
       if (f.get("id")) {
-        bootbox.confirm(I18n.t("admin.user_fields.delete_confirm"), function (
-          result
-        ) {
-          if (result) {
-            f.destroyRecord()
-              .then(function () {
-                model.removeObject(f);
-              })
-              .catch(popupAjaxError);
+        bootbox.confirm(
+          I18n.t("admin.user_fields.delete_confirm"),
+          function (result) {
+            if (result) {
+              f.destroyRecord()
+                .then(function () {
+                  model.removeObject(f);
+                })
+                .catch(popupAjaxError);
+            }
           }
-        });
+        );
       } else {
         model.removeObject(f);
       }

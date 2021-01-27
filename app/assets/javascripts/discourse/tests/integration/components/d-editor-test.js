@@ -97,33 +97,33 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     });
   }
 
-  testCase(`selecting the space before a word`, async function (
-    assert,
-    textarea
-  ) {
-    textarea.selectionStart = 5;
-    textarea.selectionEnd = 7;
+  testCase(
+    `selecting the space before a word`,
+    async function (assert, textarea) {
+      textarea.selectionStart = 5;
+      textarea.selectionEnd = 7;
 
-    await click(`button.bold`);
+      await click(`button.bold`);
 
-    assert.equal(this.value, `hello **w**orld.`);
-    assert.equal(textarea.selectionStart, 8);
-    assert.equal(textarea.selectionEnd, 9);
-  });
+      assert.equal(this.value, `hello **w**orld.`);
+      assert.equal(textarea.selectionStart, 8);
+      assert.equal(textarea.selectionEnd, 9);
+    }
+  );
 
-  testCase(`selecting the space after a word`, async function (
-    assert,
-    textarea
-  ) {
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 6;
+  testCase(
+    `selecting the space after a word`,
+    async function (assert, textarea) {
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 6;
 
-    await click(`button.bold`);
+      await click(`button.bold`);
 
-    assert.equal(this.value, `**hello** world.`);
-    assert.equal(textarea.selectionStart, 2);
-    assert.equal(textarea.selectionEnd, 7);
-  });
+      assert.equal(this.value, `**hello** world.`);
+      assert.equal(textarea.selectionStart, 2);
+      assert.equal(textarea.selectionEnd, 7);
+    }
+  );
 
   testCase(`bold button with no selection`, async function (assert, textarea) {
     await click(`button.bold`);
@@ -149,37 +149,37 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     assert.equal(textarea.selectionEnd, 11);
   });
 
-  testCase(`bold with a multiline selection`, async function (
-    assert,
-    textarea
-  ) {
-    this.set("value", "hello\n\nworld\n\ntest.");
+  testCase(
+    `bold with a multiline selection`,
+    async function (assert, textarea) {
+      this.set("value", "hello\n\nworld\n\ntest.");
 
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 12;
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 12;
 
-    await click(`button.bold`);
-    assert.equal(this.value, `**hello**\n\n**world**\n\ntest.`);
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 20);
+      await click(`button.bold`);
+      assert.equal(this.value, `**hello**\n\n**world**\n\ntest.`);
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 20);
 
-    await click(`button.bold`);
-    assert.equal(this.value, `hello\n\nworld\n\ntest.`);
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 12);
-  });
+      await click(`button.bold`);
+      assert.equal(this.value, `hello\n\nworld\n\ntest.`);
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 12);
+    }
+  );
 
-  testCase(`italic button with no selection`, async function (
-    assert,
-    textarea
-  ) {
-    await click(`button.italic`);
-    const example = I18n.t(`composer.italic_text`);
-    assert.equal(this.value, `hello world.*${example}*`);
+  testCase(
+    `italic button with no selection`,
+    async function (assert, textarea) {
+      await click(`button.italic`);
+      const example = I18n.t(`composer.italic_text`);
+      assert.equal(this.value, `hello world.*${example}*`);
 
-    assert.equal(textarea.selectionStart, 13);
-    assert.equal(textarea.selectionEnd, 13 + example.length);
-  });
+      assert.equal(textarea.selectionStart, 13);
+      assert.equal(textarea.selectionEnd, 13 + example.length);
+    }
+  );
 
   testCase(`italic button with a selection`, async function (assert, textarea) {
     textarea.selectionStart = 6;
@@ -196,25 +196,25 @@ discourseModule("Integration | Component | d-editor", function (hooks) {
     assert.equal(textarea.selectionEnd, 11);
   });
 
-  testCase(`italic with a multiline selection`, async function (
-    assert,
-    textarea
-  ) {
-    this.set("value", "hello\n\nworld\n\ntest.");
+  testCase(
+    `italic with a multiline selection`,
+    async function (assert, textarea) {
+      this.set("value", "hello\n\nworld\n\ntest.");
 
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 12;
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 12;
 
-    await click(`button.italic`);
-    assert.equal(this.value, `*hello*\n\n*world*\n\ntest.`);
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 16);
+      await click(`button.italic`);
+      assert.equal(this.value, `*hello*\n\n*world*\n\ntest.`);
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 16);
 
-    await click(`button.italic`);
-    assert.equal(this.value, `hello\n\nworld\n\ntest.`);
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 12);
-  });
+      await click(`button.italic`);
+      assert.equal(this.value, `hello\n\nworld\n\ntest.`);
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 12);
+    }
+  );
 
   componentTest("advanced code", {
     template: "{{d-editor value=value}}",
@@ -508,20 +508,20 @@ third line`
     assert.equal(this.value, "hello\n\nwor\n\nld.\n\n> Blockquote");
   });
 
-  testCase(`bullet button with no selection`, async function (
-    assert,
-    textarea
-  ) {
-    const example = I18n.t("composer.list_item");
+  testCase(
+    `bullet button with no selection`,
+    async function (assert, textarea) {
+      const example = I18n.t("composer.list_item");
 
-    await click(`button.bullet`);
-    assert.equal(this.value, `hello world.\n\n* ${example}`);
-    assert.equal(textarea.selectionStart, 14);
-    assert.equal(textarea.selectionEnd, 16 + example.length);
+      await click(`button.bullet`);
+      assert.equal(this.value, `hello world.\n\n* ${example}`);
+      assert.equal(textarea.selectionStart, 14);
+      assert.equal(textarea.selectionEnd, 16 + example.length);
 
-    await click(`button.bullet`);
-    assert.equal(this.value, `hello world.\n\n${example}`);
-  });
+      await click(`button.bullet`);
+      assert.equal(this.value, `hello world.\n\n${example}`);
+    }
+  );
 
   testCase(`bullet button with a selection`, async function (assert, textarea) {
     textarea.selectionStart = 6;
@@ -538,25 +538,25 @@ third line`
     assert.equal(textarea.selectionEnd, 12);
   });
 
-  testCase(`bullet button with a multiple line selection`, async function (
-    assert,
-    textarea
-  ) {
-    this.set("value", "* Hello\n\nWorld\n\nEvil");
+  testCase(
+    `bullet button with a multiple line selection`,
+    async function (assert, textarea) {
+      this.set("value", "* Hello\n\nWorld\n\nEvil");
 
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 20;
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 20;
 
-    await click(`button.bullet`);
-    assert.equal(this.value, "Hello\n\nWorld\n\nEvil");
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 18);
+      await click(`button.bullet`);
+      assert.equal(this.value, "Hello\n\nWorld\n\nEvil");
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 18);
 
-    await click(`button.bullet`);
-    assert.equal(this.value, "* Hello\n\n* World\n\n* Evil");
-    assert.equal(textarea.selectionStart, 0);
-    assert.equal(textarea.selectionEnd, 24);
-  });
+      await click(`button.bullet`);
+      assert.equal(this.value, "* Hello\n\n* World\n\n* Evil");
+      assert.equal(textarea.selectionStart, 0);
+      assert.equal(textarea.selectionEnd, 24);
+    }
+  );
 
   testCase(`list button with no selection`, async function (assert, textarea) {
     const example = I18n.t("composer.list_item");
@@ -633,23 +633,23 @@ third line`
     },
   });
 
-  testCase(`doesn't jump to bottom with long text`, async function (
-    assert,
-    textarea
-  ) {
-    let longText = "hello world.";
-    for (let i = 0; i < 8; i++) {
-      longText = longText + longText;
+  testCase(
+    `doesn't jump to bottom with long text`,
+    async function (assert, textarea) {
+      let longText = "hello world.";
+      for (let i = 0; i < 8; i++) {
+        longText = longText + longText;
+      }
+      this.set("value", longText);
+
+      $(textarea).scrollTop(0);
+      textarea.selectionStart = 3;
+      textarea.selectionEnd = 3;
+
+      await click("button.bold");
+      assert.equal($(textarea).scrollTop(), 0, "it stays scrolled up");
     }
-    this.set("value", longText);
-
-    $(textarea).scrollTop(0);
-    textarea.selectionStart = 3;
-    textarea.selectionEnd = 3;
-
-    await click("button.bold");
-    assert.equal($(textarea).scrollTop(), 0, "it stays scrolled up");
-  });
+  );
 
   componentTest("emoji", {
     template: "{{d-editor value=value}}",

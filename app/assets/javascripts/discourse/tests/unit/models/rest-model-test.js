@@ -15,7 +15,7 @@ module("Unit | Model | rest-model", function () {
       },
     });
 
-    var g = Grape.create({ store, percent: 0.4 });
+    let g = Grape.create({ store, percent: 0.4 });
     assert.equal(g.get("inverse"), 0.6, "it runs `munge` on `create`");
   });
 

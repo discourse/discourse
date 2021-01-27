@@ -33,9 +33,9 @@ const Modal = Plugin.Constructor;
 
 function AcceptanceModal(option, _relatedTarget) {
   return this.each(function () {
-    var $this = $(this);
-    var data = $this.data("bs.modal");
-    var options = $.extend(
+    let $this = $(this);
+    let data = $this.data("bs.modal");
+    let options = $.extend(
       {},
       Modal.DEFAULTS,
       $this.data(),
@@ -202,8 +202,8 @@ export default function setupTests(app, container) {
   // Load ES6 tests
   function getUrlParameter(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-    var results = regex.exec(location.search);
+    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    let results = regex.exec(location.search);
     return results === null
       ? ""
       : decodeURIComponent(results[1].replace(/\+/g, " "));

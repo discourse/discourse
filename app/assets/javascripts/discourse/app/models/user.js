@@ -342,7 +342,7 @@ const User = RestModel.extend({
       data[s] = this.get(`user_option.${s}`);
     });
 
-    var updatedState = {};
+    let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
       (s) => {

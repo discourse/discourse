@@ -14,7 +14,7 @@ export default DiscourseRoute.extend({
     Badge.findAll().then(function (badges) {
       controller.set("badges", badges);
       if (badges.length > 0) {
-        var grantableBadges = controller.get("grantableBadges");
+        let grantableBadges = controller.get("grantableBadges");
         if (grantableBadges.length > 0) {
           controller.set("selectedBadgeId", grantableBadges[0].get("id"));
         }
