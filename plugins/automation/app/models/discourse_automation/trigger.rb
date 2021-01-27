@@ -2,9 +2,6 @@
 
 module DiscourseAutomation
   class Trigger < ActiveRecord::Base
-    POINT_IN_TIME = 'point-in-time'
-    USER_JOINED_GROUP = 'user-joined-group'
-
     self.table_name = 'discourse_automation_triggers'
 
     belongs_to :automation, class_name: 'DiscourseAutomation::Automation'

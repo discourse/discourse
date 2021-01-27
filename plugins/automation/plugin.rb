@@ -31,6 +31,7 @@ after_initialize do
     '../app/core_ext/plugin_instance',
     '../app/lib/discourse_automation/triggers/user_added_to_group',
     '../app/lib/discourse_automation/triggers/point_in_time',
+    '../app/lib/discourse_automation/triggers/post_created_edited',
     '../app/lib/discourse_automation/scripts/gift_exchange',
     '../app/lib/discourse_automation/scripts/send_pms'
   ].each { |path| require File.expand_path(path, __FILE__) }
@@ -79,6 +80,30 @@ after_initialize do
           'group' => group
         )
       end
+    end
+  end
+
+  on(:post_created) do |post|
+    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+
+    DiscourseAutomation::Trigger.where(name: name).find_each do |trigger|
+      trigger.run!(
+        'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+        'action' => :create,
+        'post' => post
+      )
+    end
+  end
+
+  on(:post_edited) do |post|
+    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
+
+    DiscourseAutomation::Trigger.where(name: name).find_each do |trigger|
+      trigger.run!(
+        'kind' => DiscourseAutomation::Triggerable::POST_CREATED_EDITED,
+        'action' => :edit,
+        'post' => post
+      )
     end
   end
 end
