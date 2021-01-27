@@ -58,6 +58,8 @@ class UploadSecurity
 
       return [true, reason] if perform_check(check)
     end
+
+    [false, "no checks satisfied"]
   end
 
   def secure_media_disabled_check
