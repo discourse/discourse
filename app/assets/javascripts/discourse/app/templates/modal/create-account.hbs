@@ -13,151 +13,109 @@
 
       {{#if showCreateForm}}
         <div class="login-form">
+          <h1>{{i18n "create_account.title"}}</h1>
           <form>
-            <table>
-              <tbody>
-                <tr class="input create-account-email">
-                  <td class="label">
-                    <label for="new-account-email">
-                      {{i18n "user.email.title"}}
-                      {{~#if userFields~}}
-                        <span class="required">*</span>
-                      {{/if}}
-                    </label>
-                  </td>
-                  <td>
-                    {{#if emailValidated}}
-                      <span class="value">{{accountEmail}}</span>
-                    {{else}}
-                      {{input type="email" value=accountEmail id="new-account-email" name="email" autofocus="autofocus"}}
-                    {{/if}}
-                  </td>
-                </tr>
+            <div class="input-group">
 
-                <tr class="instructions create-account-email">
-                  <td></td>
-                  {{input-tip validation=emailValidation id="account-email-validation"}}
-                  <td><label>{{i18n "user.email.instructions"}}</label></td>
-                </tr>
+              {{#if emailValidated}}
+                <span class="value">{{accountEmail}}</span>
+              {{else}}
+                {{input type="email" value=accountEmail id="new-account-email" name="email" class=(value-entered accountEmail)}}
+                <label class="alt-placeholder" for="new-account-email">
+                  {{i18n "user.email.title"}}
+                  {{~#if userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
+                </label>
+              {{/if}}
+              <label class="more-info">{{i18n "user.email.instructions"}}</label>
+              {{input-tip validation=emailValidation id="account-email-validation"}}
+            </div>
 
-                <tr class="input">
-                  <td class="label">
-                    <label for="new-account-username">
-                      {{i18n "user.username.title"}}
-                      {{~#if userFields~}}
-                        <span class="required">*</span>
-                      {{/if}}
-                    </label>
-                  </td>
-                  <td>
-                    {{#if usernameDisabled}}
-                      <span class="value">{{accountUsername}}</span>
-                    {{else}}
-                      {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="discourse"}}
-                    {{/if}}
-                  </td>
-                </tr>
-                <tr class="instructions">
-                  <td></td>
-                  {{input-tip validation=usernameValidation id="username-validation"}}
-                  <td><label>{{i18n "user.username.instructions"}}</label></td>
-                </tr>
+            <label for="new-account-username">
+              {{i18n "user.username.title"}}
+              {{~#if userFields~}}
+                <span class="required">*</span>
+              {{/if}}
+            </label>
 
-                {{#if fullnameRequired}}
-                  <tr class="input">
-                    <td class="label">
-                      <label for="new-account-name">
-                        {{i18n "user.name.title"}}
-                        {{#if siteSettings.full_name_required}}
-                          {{~#if userFields~}}
-                            <span class="required">*</span>
-                          {{/if}}
-                        {{/if}}
-                      </label>
-                    </td>
-                    <td>
-                      {{#if nameDisabled}}
-                        <span class="value">{{accountName}}</span>
-                      {{else}}
-                        {{text-field value=accountName id="new-account-name"}}
-                      {{/if}}
-                    </td>
-                  </tr>
-                  <tr class="instructions">
-                    <td></td>
-                    {{input-tip validation=nameValidation}}
-                    <td><label>{{nameInstructions}}</label></td>
-                  </tr>
+            {{#if usernameDisabled}}
+              <span class="value">{{accountUsername}}</span>
+            {{else}}
+              {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength
+              autocomplete="discourse"}}
+            {{/if}}
+
+            {{input-tip validation=usernameValidation id="username-validation"}}
+            <label>{{i18n "user.username.instructions"}}</label>
+
+            {{#if fullnameRequired}}
+              <label for="new-account-name">
+                {{i18n "user.name.title"}}
+                {{#if siteSettings.full_name_required}}
+                  {{~#if userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
                 {{/if}}
+              </label>
+              {{#if nameDisabled}}
+                <span class="value">{{accountName}}</span>
+              {{else}}
+                {{text-field value=accountName id="new-account-name"}}
+              {{/if}}
+              {{input-tip validation=nameValidation}}
+              <label>{{nameInstructions}}</label>
+            {{/if}}
 
-                {{plugin-outlet
-                  name="create-account-before-password"
-                  noTags=true
-                  args=(hash
-                    accountName=accountName
-                    accountUsername=accountUsername
-                    accountPassword=accountPassword
-                    userFields=userFields
-                    authOptions=authOptions
-                  )
-                }}
+            {{plugin-outlet
+            name="create-account-before-password"
+              noTags=true
+              args=(hash
+                accountName=accountName
+                accountUsername=accountUsername
+                accountPassword=accountPassword
+                userFields=userFields
+                authOptions=authOptions
+              )
+            }}
 
-                {{#if passwordRequired}}
-                  <tr class="input">
-                    <td class="label">
-                      <label for="new-account-password">
-                        {{i18n "user.password.title"}}
-                        {{~#if userFields~}}
-                          <span class="required">*</span>
-                        {{/if}}
-                      </label>
-                    </td>
-                    <td>
-                      {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
-                    </td>
-                  </tr>
-                  <tr class="instructions">
-                    <td></td>
-                    {{input-tip validation=passwordValidation}}
-                    <td>
-                      <label>{{passwordInstructions}}</label>
-                      <div class="caps-lock-warning {{unless capsLockOn "hidden"}}">
-                        {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
-                      </div>
-                    </td>
-                  </tr>
+            {{#if passwordRequired}}
+              <label for="new-account-password">
+                {{i18n "user.password.title"}}
+                {{~#if userFields~}}
+                  <span class="required">*</span>
                 {{/if}}
+              </label>
+              {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+              {{input-tip validation=passwordValidation}}
+              <label>{{passwordInstructions}}</label>
+              <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
+                {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+              </div>
+            {{/if}}
 
-                <tr class="password-confirmation">
-                  <td><label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label></td>
-                  <td>
-                    {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
-                    {{input value=accountChallenge id="new-account-challenge"}}
-                  </td>
-                </tr>
+            <div class="password-confirmation">
+              <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
+              {{honeypot-input id="new-account-confirmation" autocomplete="new-password" value=accountHoneypot}}
+              {{input value=accountChallenge id="new-account-challenge"}}
+            </div>
 
-                {{#if requireInviteCode }}
-                  <tr class="invite-code">
-                    <td><label for="invite-code">{{i18n "user.invite_code.title"}}</label></td>
-                    <td>
-                      {{input value=inviteCode id="inviteCode"}}
-                    </td>
-                    <td><label>{{i18n "user.invite_code.instructions"}}</label></td>
-                  </tr>
-                {{/if}}
+            {{#if requireInviteCode }}
+              <label for="invite-code">{{i18n "user.invite_code.title"}}</label>
+              {{input value=inviteCode id="inviteCode"}}
+              <label>{{i18n "user.invite_code.instructions"}}</label>
+            {{/if}}
 
-                {{plugin-outlet
-                  name="create-account-after-password"
-                  noTags=true
-                  args=(hash
-                    accountName=accountName
-                    accountUsername=accountUsername
-                    accountPassword=accountPassword
-                    userFields=userFields
-                  )
-                }}
-              </tbody>
-            </table>
+            {{plugin-outlet
+              name="create-account-after-password"
+              noTags=true
+              args=(hash
+                accountName=accountName
+                accountUsername=accountUsername
+                accountPassword=accountPassword
+                userFields=userFields
+              )
+            }}
 
             {{#if userFields}}
               <div class="user-fields">
@@ -187,7 +145,9 @@
           {{/d-button}}
         {{/unless}}
 
-        <div class="disclaimer">{{html-safe disclaimerHtml}}</div>
+        <div class="disclaimer">
+          {{html-safe disclaimerHtml}}
+        </div>
       </div>
 
       {{plugin-outlet name="create-account-after-modal-footer" tagName=""}}

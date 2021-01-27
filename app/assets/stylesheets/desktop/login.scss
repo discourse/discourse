@@ -110,11 +110,6 @@
     align-items: center;
     padding: 15px 0;
 
-    tr {
-      display: flex;
-      flex-direction: column;
-    }
-
     &.hidden {
       display: none;
     }
@@ -130,17 +125,12 @@
     padding: 15px 0;
   }
 
-  .create-account-form tr {
-    display: flex;
-    flex-direction: column;
-  }
-
   .login-form {
     position: relative;
     display: flex;
+    flex-direction: column;
     overflow: hidden;
-    flex: 1 1 auto;
-
+    width: 100%;
     &:after,
     &:before {
       content: "";
@@ -170,44 +160,50 @@
         rgba(var(--secondary-rgb), 1)
       );
     }
-    form {
-      box-sizing: border-box;
-      padding: 16px 24px;
-      margin-bottom: 0;
-      max-height: 475px;
-      @media screen and (max-height: 650px) {
-        max-height: calc(65vh - 100px);
-        > *:last-child {
-          margin-bottom: 40px;
-        }
-      }
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
 
-    form,
-    table {
+    .input-group {
       width: 100%;
-    }
-
-    tr {
+      position: relative;
       display: flex;
       flex-direction: column;
-      margin-top: 0.15em;
-      &.password-confirmation {
-        display: none;
+      margin-bottom: 2em;
+      input {
+        padding: .75em .5em;
+        border-radius: 0.25em;
+        min-width: 250px;
+        box-shadow: none;
+      }
+      input:focus {
+        outline: none;
+        border: 1px solid var(--tertiary);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb),.25);
+      }
+      label.alt-placeholder {
+        color:#999; 
+        font-size:16px;
+        font-weight:normal;
+        position:absolute;
+        pointer-events:none;
+        left: 1em;
+        top:10px;
+        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
+        transition:0.2s ease all; 
+      }
+      input:focus + label.alt-placeholder, input.value-entered + label.alt-placeholder {
+        top:-8px;
+        left: calc(1em - .25em);
+        background-color: var(--secondary);
+        padding: 0 .25em 0 .25em;
+        font-size:14px;
+        color:#999;
+      }
+      input.alt-placeholder:invalid {
+        color: var(--primary);
       }
     }
-  }
 
-  tr.input {
-    input,
-    label {
-      margin-bottom: 0;
-      width: 100%;
-    }
-    .tip {
-      max-width: 340px;
+    .password-confirmation {
+      display: none;
     }
   }
 
