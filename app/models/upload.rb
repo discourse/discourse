@@ -451,27 +451,29 @@ end
 #
 # Table name: uploads
 #
-#  id                     :integer          not null, primary key
-#  user_id                :integer          not null
-#  original_filename      :string           not null
-#  filesize               :integer          not null
-#  width                  :integer
-#  height                 :integer
-#  url                    :string           not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  sha1                   :string(40)
-#  origin                 :string(1000)
-#  retain_hours           :integer
-#  extension              :string(10)
-#  thumbnail_width        :integer
-#  thumbnail_height       :integer
-#  etag                   :string
-#  secure                 :boolean          default(FALSE), not null
-#  access_control_post_id :bigint
-#  original_sha1          :string
-#  verification_status    :integer          default(1), not null
-#  animated               :boolean
+#  id                           :integer          not null, primary key
+#  user_id                      :integer          not null
+#  original_filename            :string           not null
+#  filesize                     :integer          not null
+#  width                        :integer
+#  height                       :integer
+#  url                          :string           not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  sha1                         :string(40)
+#  origin                       :string(1000)
+#  retain_hours                 :integer
+#  extension                    :string(10)
+#  thumbnail_width              :integer
+#  thumbnail_height             :integer
+#  etag                         :string
+#  secure                       :boolean          default(FALSE), not null
+#  access_control_post_id       :bigint
+#  original_sha1                :string
+#  verification_status          :integer          default(1), not null
+#  animated                     :boolean
+#  security_last_changed_at     :datetime
+#  security_last_changed_reason :string
 #
 # Indexes
 #
