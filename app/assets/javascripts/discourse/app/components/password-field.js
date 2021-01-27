@@ -5,8 +5,6 @@ import TextField from "discourse/components/text-field";
   Be sure to test on a variety of browsers and operating systems when changing this logic.
 **/
 export default TextField.extend({
-  classNameBindings: ["valueEntered"],
-
   canToggle: false,
 
   keyPress(e) {
@@ -26,7 +24,7 @@ export default TextField.extend({
   },
 
   keyUp(e) {
-    this.set("valueEntered", this.value.length > 0);
+    this._super(e);
 
     if (e.which === 20 && this.canToggle) {
       this.toggleProperty("capsLockOn");
