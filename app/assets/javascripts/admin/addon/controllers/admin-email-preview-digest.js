@@ -2,6 +2,7 @@ import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmailPreview from "admin/models/email-preview";
 import bootbox from "bootbox";
+import { get } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -15,11 +16,7 @@ export default Controller.extend({
 
   actions: {
     updateUsername(selected) {
-      if (selected && selected.length > 0) {
-        this.set("username", selected[0]);
-      } else {
-        this.set("username", null);
-      }
+      this.set("username", get(selected, "firstObject"));
     },
 
     refresh() {

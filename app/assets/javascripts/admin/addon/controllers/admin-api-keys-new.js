@@ -3,6 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { get } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
@@ -31,11 +32,7 @@ export default Controller.extend({
 
   actions: {
     updateUsername(selected) {
-      if (selected && selected.length > 0) {
-        this.set("model.username", selected[0]);
-      } else {
-        this.set("model.username", null);
-      }
+      this.set("model.username", get(selected, "firstObject"));
     },
 
     changeUserMode(value) {
