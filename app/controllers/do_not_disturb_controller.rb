@@ -25,9 +25,10 @@ class DoNotDisturbController < ApplicationController
   def destroy
     current_user.active_do_not_disturb_timings.destroy_all
     current_user.publish_do_not_disturb(ends_at: nil)
-    current_user.notifications.unprocessed.each do |notification|
-      NotificationEmailer.process_notification(notification, no_delay: true)
+    current_user.shelved_notifications.each do |shelved_notification|
+      shelved_notification.process
     end
+    current_user.shelved_notifications.destroy_all
     render json: success_json
   end
 

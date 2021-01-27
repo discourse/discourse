@@ -44,13 +44,15 @@ describe DoNotDisturbController do
     end
 
     describe "#destroy" do
-      it "process notifications that came in during DND" do
+      it "process shelved notifications that came in during DND" do
         user.do_not_disturb_timings.create(starts_at: 2.days.ago, ends_at: 2.days.from_now)
         notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
 
-        expect(notification.processed).to eq(false)
+        expect(notification.shelved_notification).to be_present
         delete "/do-not-disturb.json"
-        expect(notification.reload.processed).to eq(true)
+        expect { notification.shelved_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(user.do_not_disturb?).to eq(false)
+
       end
     end
   end
