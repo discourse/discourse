@@ -439,7 +439,7 @@ describe Email::Sender do
         @secure_image_file = file_from_fixtures("logo.png", "images")
         @secure_image = UploadCreator.new(@secure_image_file, "logo.png")
           .create_for(Discourse.system_user.id)
-        @secure_image.update_secure_status(secure_override_value: true)
+        @secure_image.update_secure_status(override: true)
         @secure_image.update(access_control_post_id: reply.id)
         reply.update(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
         reply.rebake!

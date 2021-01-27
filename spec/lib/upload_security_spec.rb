@@ -7,7 +7,7 @@ RSpec.describe UploadSecurity do
   let(:post_in_secure_context) { Fabricate(:post, topic: Fabricate(:topic, category: private_category)) }
   fab!(:upload) { Fabricate(:upload) }
   let(:type) { nil }
-  let(:opts) { { type: type } }
+  let(:opts) { { type: type, creating: true } }
   subject { described_class.new(upload, opts) }
 
   context "when secure media is enabled" do

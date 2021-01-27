@@ -420,7 +420,7 @@ class PostCreator
 
   def update_uploads_secure_status
     return if !SiteSetting.secure_media?
-    @post.update_uploads_secure_status
+    @post.update_uploads_secure_status(source: "post creator")
   end
 
   def delete_owned_bookmarks

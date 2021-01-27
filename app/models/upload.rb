@@ -311,14 +311,28 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def update_secure_status(secure_override_value: nil)
-    mark_secure = secure_override_value.nil? ? UploadSecurity.new(self).should_be_secure? : secure_override_value
+  def update_secure_status(source: "unknown", override: nil)
+    if override.nil?
+      mark_secure, reason = UploadSecurity.new(self).should_be_secure_with_reason
+    else
+      mark_secure = override
+      reason = "manually overridden"
+    end
 
     secure_status_did_change = self.secure? != mark_secure
-    self.update_column("secure", mark_secure)
+    self.update(secure_params([mark_secure, reason], source))
+
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
 
     secure_status_did_change
+  end
+
+  def secure_params(secure_with_reason, source = "unknown")
+    {
+      secure: secure_with_reason.first,
+      security_last_changed_reason: secure_with_reason.second + " | source: #{source}",
+      security_last_changed_at: Time.zone.now
+    }
   end
 
   def self.migrate_to_new_scheme(limit: nil)
