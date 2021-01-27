@@ -1608,7 +1608,8 @@ en:
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
-      description_time: "There are <b>%{replyCount}</b> replies with an estimated read time of <b>%{readingTime} minutes</b>."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
+      description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
 

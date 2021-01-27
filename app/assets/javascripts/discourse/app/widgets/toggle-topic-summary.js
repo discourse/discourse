@@ -17,7 +17,7 @@ createWidget("toggle-summary-description", {
           (attrs.topicPostsCount * MIN_POST_READ_TIME) / 60
         )
       );
-      return I18n.t("summary.description_time", {
+      return I18n.messageFormat("summary.description_time_MF", {
         replyCount: attrs.topicReplyCount,
         readingTime,
       });
