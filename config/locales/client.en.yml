@@ -2864,7 +2864,9 @@ en:
         unlock_post_description: "allow the poster to edit this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
-        delete_topic_confirm_modal: "This topic currently has over %{minViews} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+        delete_topic_confirm_modal:
+          one: "This topic currently has over %{count} view and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+          other: "This topic currently has over %{count} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
         delete_topic_confirm_modal_yes: "Yes, delete this topic"
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
