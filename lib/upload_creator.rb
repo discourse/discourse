@@ -133,7 +133,7 @@ class UploadCreator
 
       if SiteSetting.secure_media
         secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
-        attrs = @upoad.secure_params(secure, reason, "upload creator")
+        attrs = @upload.secure_params(secure, reason, "upload creator")
         @upload.assign_attributes(attrs)
       end
 
