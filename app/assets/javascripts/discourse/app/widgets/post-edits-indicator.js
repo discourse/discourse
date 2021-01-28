@@ -53,7 +53,7 @@ export default createWidget("post-edits-indicator", {
 
     return this.attach("flat-button", {
       icon,
-      title,
+      translatedTitle: title,
       className,
       action: "onPostEditsIndicatorClick",
       translatedLabel: attrs.version > 1 ? attrs.version - 1 : "",

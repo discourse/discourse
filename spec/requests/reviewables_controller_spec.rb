@@ -357,6 +357,7 @@ describe ReviewablesController do
       it "succeeds for a valid action" do
         other_reviewable = Fabricate(:reviewable)
 
+        SiteSetting.must_approve_users = true
         put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("200")
         json = response.parsed_body
@@ -369,6 +370,20 @@ describe ReviewablesController do
 
         expect(reviewable.reload.version).to eq(1)
         expect(other_reviewable.reload.version).to eq(0)
+
+        job = Jobs::CriticalUserEmail.jobs.first
+        expect(job).to be_present
+        expect(job['args'][0]['type']).to eq('signup_after_approval')
+      end
+
+      it "doesn't send email when `send_email` is false" do
+        other_reviewable = Fabricate(:reviewable)
+
+        SiteSetting.must_approve_users = true
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}&send_email=false"
+
+        job = Jobs::CriticalUserEmail.jobs.first
+        expect(job).to be_blank
       end
 
       context "claims" do
