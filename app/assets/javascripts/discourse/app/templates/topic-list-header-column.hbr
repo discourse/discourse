@@ -1,4 +1,4 @@
-<th data-sort-order='{{order}}' class='{{view.className}}'>
+<th data-sort-order='{{order}}' class='{{view.className}}' {{#if ariaLabel}}aria-label='{{ariaLabel}}'{{/if}}>
   {{~#if canBulkSelect}}
     {{~#if showBulkToggle}}
       {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}

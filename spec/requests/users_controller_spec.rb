@@ -9,7 +9,7 @@ describe UsersController do
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
 
-      get '/u/hp.json'
+      get '/session/hp.json'
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -584,7 +584,7 @@ describe UsersController do
 
   describe '#create' do
     def honeypot_magic(params)
-      get '/u/hp.json'
+      get '/session/hp.json'
       json = response.parsed_body
       params[:password_confirmation] = json["value"]
       params[:challenge] = json["challenge"].reverse
@@ -762,6 +762,18 @@ describe UsersController do
           json = response.parsed_body
           expect(json['active']).to be_falsey
           expect(json['message']).to eq(I18n.t("login.activate_email", email: post_user_params[:email]))
+          expect(json['user_id']).not_to be_present
+
+          existing.destroy!
+          expect {
+            post_user
+          }.to change { User.count }
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+
+          expect(json['active']).to be_falsey
+          expect(json['message']).to eq(I18n.t("login.activate_email", email: post_user_params[:email]))
+          expect(json['user_id']).not_to be_present
         end
       end
     end
@@ -1297,6 +1309,8 @@ describe UsersController do
       before do
         UsersController.any_instance.stubs(:honeypot_value).returns("abc")
         UsersController.any_instance.stubs(:challenge_value).returns("efg")
+        SessionController.any_instance.stubs(:honeypot_value).returns("abc")
+        SessionController.any_instance.stubs(:challenge_value).returns("efg")
       end
 
       let!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
@@ -1554,7 +1568,7 @@ describe UsersController do
     it "fails for anonymous users" do
       user = Fabricate(:user)
       get "/u/#{user.username}/invited_count.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "works for users who can see invites" do
@@ -1711,7 +1725,7 @@ describe UsersController do
             end
 
             get "/u/#{inviter.username}/invited/pending.json"
-            expect(response.status).to eq(403)
+            expect(response.status).to eq(422)
           end
         end
       end
@@ -1756,6 +1770,21 @@ describe UsersController do
 
             get "/u/#{inviter.username}/invite_links.json"
             expect(response.status).to eq(403)
+          end
+        end
+
+        context 'when local logins are disabled' do
+          it 'explains why invites are disabled to staff users' do
+            SiteSetting.enable_local_logins = false
+            inviter = sign_in(Fabricate(:admin))
+            Fabricate(:invite, invited_by: inviter,  email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required])
+
+            get "/u/#{inviter.username}/invite_links.json"
+            expect(response.status).to eq(200)
+
+            expect(response.parsed_body['error']).to include(I18n.t(
+              'invite.disabled_errors.local_logins_disabled'
+            ))
           end
         end
       end
@@ -1923,6 +1952,38 @@ describe UsersController do
 
               expect(user.user_fields[user_field.id.to_s]).to eq('sad')
               expect(user.user_fields[optional_field.id.to_s]).to eq('feet')
+            end
+          end
+
+          context "with user_notification_schedule attributes" do
+            it "updates the user's notification schedule" do
+              params = {
+                user_notification_schedule: {
+                  enabled: true,
+                  day_0_start_time: 30,
+                  day_0_end_time: 60,
+                  day_1_start_time: 30,
+                  day_1_end_time: 60,
+                  day_2_start_time: 30,
+                  day_2_end_time: 60,
+                  day_3_start_time: 30,
+                  day_3_end_time: 60,
+                  day_4_start_time: 30,
+                  day_4_end_time: 60,
+                  day_5_start_time: 30,
+                  day_5_end_time: 60,
+                  day_6_start_time: 30,
+                  day_6_end_time: 60,
+                }
+              }
+              put "/u/#{user.username}.json", params: params
+
+              user.reload
+              expect(user.user_notification_schedule.enabled).to eq(true)
+              expect(user.user_notification_schedule.day_0_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_0_end_time).to eq(60)
+              expect(user.user_notification_schedule.day_6_start_time).to eq(30)
+              expect(user.user_notification_schedule.day_6_end_time).to eq(60)
             end
           end
 
@@ -2280,6 +2341,29 @@ describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it 'ignores the upload if picking a system avatar' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "system"
+        }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.uploaded_avatar_id).to eq(nil)
+      end
+
+      it 'raises an error if the type is invalid' do
+        SiteSetting.allow_uploaded_avatars = false
+        another_upload = Fabricate(:upload)
+
+        put "/u/#{user.username}/preferences/avatar/pick.json", params: {
+          upload_id: another_upload.id, type: "x"
+        }
+
+        expect(response.status).to eq(422)
+      end
+
       it 'can successfully pick the system avatar' do
         put "/u/#{user.username}/preferences/avatar/pick.json"
 
@@ -2351,7 +2435,7 @@ describe UsersController do
       context 'selectable avatars is enabled' do
 
         before do
-          SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+          SiteSetting.selectable_avatars = [avatar1, avatar2]
           SiteSetting.selectable_avatars_enabled = true
         end
 
@@ -2650,6 +2734,34 @@ describe UsersController do
     end
   end
 
+  describe '#check_sso_email' do
+    it 'raises an error when not logged in' do
+      get "/u/zogstrip/sso-email.json"
+      expect(response.status).to eq(403)
+    end
+
+    context 'while logged in' do
+      let(:sign_in_admin) { sign_in(Fabricate(:admin)) }
+      let(:user) { Fabricate(:user) }
+
+      it "raises an error when you aren't allowed to check sso email" do
+        sign_in(Fabricate(:user))
+        get "/u/#{user.username}/sso-email.json"
+        expect(response).to be_forbidden
+      end
+
+      it "returns emails and associated_accounts when you're allowed to see them" do
+        user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_email: "foobar@example.com", external_id: "example", last_payload: "looks good")
+        sign_in_admin
+
+        get "/u/#{user.username}/sso-email.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email"]).to eq("foobar@example.com")
+      end
+    end
+  end
+
   describe '#update_primary_email' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_email) { user.primary_email }
@@ -2851,12 +2963,24 @@ describe UsersController do
       expect(json["user_summary"]["post_count"]).to eq(0)
     end
 
-    it "returns 404 for a hidden profile" do
-      user = Fabricate(:user)
-      user.user_option.update_column(:hide_profile_and_presence, true)
+    context '`hide_profile_and_presence` user option is checked' do
+      fab!(:user) { Fabricate(:user) }
 
-      get "/u/#{user.username_lower}/summary.json"
-      expect(response.status).to eq(404)
+      before do
+        user.user_option.update_columns(hide_profile_and_presence: true)
+      end
+
+      it "returns 404" do
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns summary info if `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+      end
     end
   end
 
@@ -3217,6 +3341,37 @@ describe UsersController do
           get "/u/by-external/99.json"
           expect(response).not_to be_successful
         end
+
+        context "for an external provider" do
+          before do
+            sign_in(Fabricate(:admin))
+            SiteSetting.enable_google_oauth2_logins = true
+            UserAssociatedAccount.create!(user: user, provider_uid: 'myuid', provider_name: 'google_oauth2')
+          end
+
+          it "doesn't work for non-admin" do
+            sign_in(user)
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(403)
+          end
+
+          it "can fetch the user" do
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user"]["username"]).to eq(user.username)
+          end
+
+          it "fails for disabled provider" do
+            SiteSetting.enable_google_oauth2_logins = false
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(404)
+          end
+
+          it "returns 404 for missing user" do
+            get "/u/by-external/google_oauth2/myotheruid.json"
+            expect(response.status).to eq(404)
+          end
+        end
       end
 
       describe "include_post_count_for" do
@@ -3336,13 +3491,28 @@ describe UsersController do
       expect(response).to redirect_to '/login'
     end
 
-    it "does not include hidden profiles" do
-      user2.user_option.update(hide_profile_and_presence: true)
-      get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body["users"]
+    context '`hide_profile_and_presence` user option is checked' do
+      before do
+        user2.user_option.update_columns(hide_profile_and_presence: true)
+      end
 
-      expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+      it "does not include hidden profiles" do
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["users"]
+
+        expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username)
+      end
+
+      it "does include hidden profiles when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+
+        get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["users"]
+
+        expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
+      end
     end
   end
 
@@ -4457,6 +4627,31 @@ describe UsersController do
       sign_in(user)
       get "/u/#{bookmark3.user.username}/bookmarks.json"
       expect(response.status).to eq(403)
+    end
+
+    it "shows a helpful message if no bookmarks are found" do
+      bookmark1.destroy
+      bookmark2.destroy
+      bookmark3.destroy
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
+      expect(response.parsed_body['no_results_help']).to eq(
+        I18n.t('user_activity.no_bookmarks.self')
+      )
+    end
+
+    it "shows a helpful message if no bookmarks are found for the search" do
+      sign_in(user)
+      get "/u/#{user.username}/bookmarks.json", params: {
+        q: 'badsearch'
+      }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['bookmarks']).to eq([])
+      expect(response.parsed_body['no_results_help']).to eq(
+        I18n.t('user_activity.no_bookmarks.search')
+      )
     end
   end
 

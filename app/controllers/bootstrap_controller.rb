@@ -30,9 +30,23 @@ class BootstrapController < ApplicationController
       desktop_view: !mobile_view?,
       request: request
     ).each do |file|
-      add_style(file)
+      add_style(file, plugin: true)
     end
     add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_ids.present?
+
+    extra_locales = []
+    if ExtraLocalesController.client_overrides_exist?
+      extra_locales << ExtraLocalesController.url('overrides')
+    end
+    if staff?
+      extra_locales << ExtraLocalesController.url('admin')
+    end
+
+    plugin_js = Discourse.find_plugin_js_assets(
+      include_official: allow_plugins?,
+      include_unofficial: allow_third_party_plugins?,
+      request: request
+    ).map { |f| script_asset_path(f) }
 
     bootstrap = {
       theme_ids: theme_ids,
@@ -40,9 +54,12 @@ class BootstrapController < ApplicationController
       current_homepage: current_homepage,
       locale_script: locale,
       stylesheets: @stylesheets,
+      plugin_js: plugin_js,
+      plugin_test_js: [script_asset_path("plugin_tests")],
       setup_data: client_side_setup_data,
-      preloaded: @preloaded
+      preloaded: @preloaded,
     }
+    bootstrap[:extra_locales] = extra_locales if extra_locales.present?
 
     render_json_dump(bootstrap: bootstrap)
   end
@@ -57,7 +74,7 @@ private
     end
   end
 
-  def add_style(target)
+  def add_style(target, opts = nil)
     if styles = Stylesheet::Manager.stylesheet_details(target, 'all', theme_ids)
       styles.each do |style|
         @stylesheets << {
@@ -65,7 +82,7 @@ private
           media: 'all',
           theme_id: style[:theme_id],
           target: style[:target]
-        }
+        }.merge(opts || {})
       end
     end
   end

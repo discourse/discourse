@@ -17,6 +17,7 @@ class ReviewableSerializer < ApplicationSerializer
     :can_edit,
     :score,
     :version,
+    :target_created_by_trust_level
   )
 
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: 'users'
@@ -128,6 +129,10 @@ class ReviewableSerializer < ApplicationSerializer
 
   def include_category_id?
     object.category_id.present?
+  end
+
+  def target_created_by_trust_level
+    object&.target_created_by&.trust_level
   end
 
 end

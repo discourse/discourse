@@ -1,6 +1,6 @@
-import { none, and } from "@ember/object/computed";
-import NavigationDefaultController from "discourse/controllers/navigation/default";
+import { and, none } from "@ember/object/computed";
 import FilterModeMixin from "discourse/mixins/filter-mode";
+import NavigationDefaultController from "discourse/controllers/navigation/default";
 
 export default NavigationDefaultController.extend(FilterModeMixin, {
   showingParentCategory: none("category.parentCategory"),

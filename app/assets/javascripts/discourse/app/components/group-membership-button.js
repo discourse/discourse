@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Component from "@ember/component";
+import I18n from "I18n";
+import bootbox from "bootbox";
+import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import bootbox from "bootbox";
-import cookie from "discourse/lib/cookie";
 
 export default Component.extend({
   classNames: ["group-membership-button"],

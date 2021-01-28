@@ -1,7 +1,7 @@
+import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
+import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import Controller from "@ember/controller";
-import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
 
 export default Controller.extend({
   showTop: true,

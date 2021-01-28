@@ -56,7 +56,7 @@ pt:
     compile_error:
       unrecognized_extension: "Extensão de ficheiro desconhecida: %{extension}"
     import_error:
-      generic: Ocorreu um erro durante a importação do tema
+      about_json: "Erro de importação: about.json não existe ou é inválido. Tem a certeza de que este é um Tema do Discourse?"
       about_json_values: "about.json possui valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
       unpack_failed: "Falha ao desempacotar o ficheiro"
@@ -67,6 +67,7 @@ pt:
       component_no_default: "Components de um tema não podem ter o tema predefinido"
       component_no_color_scheme: "Componentes de um tema não podem ter paletas de cor"
       no_multilevels_components: "Temas com temas descendentes não pode ser temas descendentes"
+      optimized_link: Os links de imagens otimizadas são efémeros e não devem ser incluídos no código-fonte do tema.
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
       name_too_long: "Existe uma configuração com um nome demasiado longo. O tamanho máximo é 255"
@@ -111,6 +112,7 @@ pt:
         screened_email_error: "Acontece quando o endereço de e-mail do remetente já foi confirmado."
         unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
       unrecognized_error: "Erro Desconhecido"
+    view_redacted_media: "Exibir media"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -132,6 +134,10 @@ pt:
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro, é uma frase completa?"
+      is_invalid_meaningful: "parece pouco claro, a maioria das palavras contém as mesmas letras várias vezes?"
+      is_invalid_unpretentious: "parece pouco claro, uma ou mais palavras são muito longas?"
+      is_invalid_quiet: "parece pouco claro, você pretendia inserir TUDO em MAIÚSCULAS?"
+      invalid_timezone: "'%{tz}' não é um fuso horário válido"
       contains_censored_words: "contém as seguintes paravras censuradas: %{censored_words}"
       less_than: tem que ser menos que %{count}
       less_than_or_equal_to: tem que ser menos ou igual a %{count}
@@ -172,17 +178,36 @@ pt:
       default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Não pode ativar envio de inventório para S3 a não ser que tenha ativado carregamentos para S3."
+      page_publishing_requirements: "A publicação de página não pode ser ativada se a media segura estiver ativada."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
       secure_media_requirements: "Envios para S3 deve estar ativado antes de ativar média segura."
+      share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
+      second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
+      second_factor_cannot_be_enforced_with_sso_enabled: "Você não pode aplicar o 2FA se o SSO estiver ativado."
   invite:
     not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
+    error_message: "Ocorreu um erro ao aceitar o convite. Entre em contato com o administrador do site."
+    confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
+    cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
+    disabled_errors:
+      sso_enabled: "Os convites estão desativados porque o SSO está ativado."
+      local_logins_disabled: "Os convites são desativados porque a opção “ativar logins locais” está desativada."
+      invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
+    max_rows: "Os primeiros %{max_bulk_invites} convites foram enviados. Tente dividir o ficheiro em partes menores."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
+  invite_link:
+    max_redemptions_limit: "deve estar entre 2 e %{max_limit}."
   topic_invite:
     user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
+    muted_invitee: "Desculpe, esse usuário silenciou-te."
+    muted_topic: "Desculpe, esse usuário silenciou este tópico."
+    receiver_does_not_allow_pm: "Desculpe, esse usuário não permite que você lhe envie mensagens privadas."
+    sender_does_not_allow_pm: "Desculpe, você não permite que esse usuário lhe envie mensagens privadas."
+    receiver_does_not_allow_other_user_pm: "Desculpe, esse usuário não permite que um participante existente lhe envie mensagens privadas."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
@@ -192,10 +217,14 @@ pt:
     location:
       local: "Local"
       s3: "Amazon S3"
+  invalid_params: "Você forneceu parâmetros inválidos para o pedido: %{message}"
   not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
   not_found: "O URL ou recurso pedido não foi encontrado."
   invalid_access: "Não tem permissões para visualizar o recurso pedido."
+  authenticator_not_found: "O método de autenticação não existe ou foi desativado."
+  invalid_api_credentials: "Você não tem permissão para visualizar o recurso solicitado. O nome de usuário ou chave da API é inválido."
   read_only_mode_enabled: "Este sítio encontra-se no modo só de leitura. As interações estão desativadas."
+  email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   not_in_group:
     join_group: "Aderir ao Grupo"
   reading_time: "Tempo de leitura"
@@ -217,6 +246,7 @@ pt:
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
     created: "Criado"
+    new_topic: "Criar novo tópico"
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
     one: "Pedimos desculpa, pode mencionar apenas %{count} outro utilizador numa mensagem."
@@ -225,6 +255,8 @@ pt:
   too_many_mentions_newuser:
     one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
+  no_embedded_media_allowed_trust: "Desculpe, você não pode incorporar itens de media num post."
+  no_embedded_media_allowed: "Pedimos desculpa, mas novos utilizadores não podem incorporar itens de media nos posts."
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
     one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexo numa mensagem."
@@ -238,6 +270,7 @@ pt:
   topic_not_found: "Algo de errado ocorreu. Talvez este tópico tenha sido fechado ou eliminado enquanto olhava para ele?"
   not_accepting_pms: "Desculpe, de momento, %{username} não está a aceitar mensagens."
   max_pm_recipients: "Desculpe, pode enviar uma mensagem para um máximo de %{recipients_limit}destinatários."
+  slow_mode_enabled: "Este tópico está em modo lento."
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
   invalid_characters: "contem caracteres inválidos"
   is_invalid: "parece pouco claro, é uma frase completa?"
@@ -298,28 +331,6 @@ pt:
     until_posts:
       one: "%{count} mensagem"
       other: "%{count} mensagens"
-    "new-topic": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
-
-      - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
-
-      - Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas pretende?
-
-      - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    "new-reply": |2
-
-      Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
-
-      - A sua resposta melhora de alguma maneira esta conversação?
-
-      - Seja gentil com os restantes membros da comunidade.
-
-      - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
-
-      Para mais, [verifique as orientações da comunidade](%{base_path}/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -529,38 +540,31 @@ pt:
       title: "Fora de Contexto"
       description: "Esta mensagem não é relevante para a discussão corrente, conforme definido pelo título e pela primeira mensagem, e provavelmente deverá ser transferida para outro tópico."
       short_description: "Não é relevante para a discussão"
-      long_form: "sinalizou isto como fora de contexto"
     spam:
       title: "Spam"
       short_description: "É um anúncio ou vandalismo"
-      long_form: "sinalizou isto como spam"
       email_title: '"%{title}" foi sinalizado como spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inapropriado"
-      long_form: "sinalizou isto como inapropriado"
     notify_user:
       title: "Enviar uma mensagem a @%{username}"
-      long_form: "utilizador com mensagens"
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Algo Mais"
       description: "Esta mensagem requer a atenção do pessoal por outra razão não listada acima."
       short_description: "Requer a atenção da equipa por outra razão"
-      long_form: "marcou isto para ser alvo da atenção do pessoal"
       email_title: 'Uma mensagem em "%{title}" requer a atenção do pessoal'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Adicionar Marcador"
       description: "Adicionar um marcador a esta mensagem"
       short_description: "Adicionar esta publicação aos marcadores"
-      long_form: "adicionou um marcador a esta mensagem"
     like:
       title: "Gostar"
       description: "Gostar desta mensagem"
       short_description: "Gostar desta publicação"
-      long_form: "gostou disto"
   user_activity:
     no_bookmarks:
       others: "Sem marcadores."
@@ -599,9 +603,7 @@ pt:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
     mailing_list_mode: "Desligar modo de lista de distribuição"
-    all: "Não me mandar email de %{sitename}"
     different_user_description: "Está ligado como um utilizador diferente do que aquele para o qual enviamos email. Por favor saia, ou entre em modo anónimo, e tente novamente."
-    not_found_description: "Pedimos desculpa, não conseguimos cancelar a sua subscrição. É possível que a ligação no seu email tenha expirado?"
     log_out: "Sair"
     digest_frequency:
       never: "nunca"
@@ -942,9 +944,6 @@ pt:
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
-    enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
-    instagram_consumer_key: "Chave de consumidor para a autenticação via Instagram"
-    instagram_consumer_secret: "Segredo de consumidor para a autenticação via Instagram"
     allow_restore: "Permitir o restauro, que pode substituir TODOS os dados do sítio. Deixar a falso a menos que planeie restaurar uma cópia de segurança"
     maximum_backups: "O número máximo de cópias de segurança a manter no disco. As cópias de segurança antigas são eliminadas automaticamente."
     automatic_backups_enabled: "Executar cópias de segurança automáticas de acordo com as definições de frequência de cópia de segurança"
@@ -967,7 +966,6 @@ pt:
     max_bookmarks_per_day: "Número máximo de marcadores por utilizador por dia."
     max_edits_per_day: "Número máximo de edições por utilizador por dia."
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
-    max_personal_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
@@ -1054,7 +1052,6 @@ pt:
     tos_url: "Se tem um documento de Termos de Serviço alojado noutro local e que queira usar, forneça a URL completa aqui."
     privacy_policy_url: "Se tem um documento de Política de Privacidade alojado noutro local e que queira usar, forneça a URL completa aqui."
     newuser_spam_host_threshold: "Quantas vezes um novo utilizador pode colocar um link para o mesmo endereço dentro do número de publicações `newuser_spam_host_threshold` , antes de ser considerado spam."
-    staff_like_weight: "Quanto é o fator de ponderação extra a dar aos gostos provenientes do pessoal."
     topic_view_duration_hours: "Contar uma nova visualização do tópico uma vez por IP/Utilizador a cada N horas"
     user_profile_view_duration_hours: "Contar visualização de novo perfil de utilizador uma vez por IP/utilizador a cada N horas"
     levenshtein_distance_spammer_emails: "Ao fazer a correspondência de e-mails de spam, o número de caracteres de diferença que ainda permitirá uma correspondência difusa."
@@ -1104,8 +1101,6 @@ pt:
     delete_all_posts_max: "Número máximo de mensagens que podem ser eliminadas de uma única vez com o botão Eliminar Todas as Mensagens. Se um utilizador tem mais mensagens do que este número, estas não podem ser eliminadas de uma única vez e o utilizador não pode ser eliminado."
     email_editable: "Permitir que os utilizadores alterem o seu endereço de email após o registo."
     allow_uploaded_avatars: "Permitir que os utilizadores carreguem fotografias de perfil personalizadas."
-    allow_animated_avatars: "Permitir que os utilizadores utilizem fotografias de perfil com gifs animados. AVISO: executar avatars:atualizar após mudança desta configuração."
-    allow_animated_thumbnails: "Gera miniaturas de imagens ou gifs animados."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
     automatically_download_gravatars: "Transferir Gravatars para os utilizadores após a criação da conta ou alteração de ''e-mail''."
     digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
@@ -1140,7 +1135,6 @@ pt:
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     show_time_gap_days: "Se duas mensagens são feitas com todos estes dias de diferença, exibir a diferença de tempo no tópico."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
-    default_code_lang: "O destaque de sintaxe da linguagem de programação predefinida aplicada aos blocos de código do GitHub (lang-auto, ruby, python, etc.)"
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico em que a última resposta é mais antiga que estes dias, um aviso será exibido. Desativar ao configurar para 0."
     autohighlight_all_code: "Forçar a aplicação do destaque de código para todos os blocos de código pré-formatados mesmo quando estes não especificam explicitamente a linguagem."
     embed_truncate: "Truncar mensagens incorporadas."
@@ -1150,7 +1144,6 @@ pt:
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
-    prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
@@ -1160,6 +1153,7 @@ pt:
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
+    blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir publicações de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
     default_email_mailing_list_mode: "Por defeito, enviar um email por cada nova mensagem."
@@ -1195,6 +1189,7 @@ pt:
     tag_style: "Estilo visual dos distintivos das etiquetas."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
+    create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1291,7 +1286,6 @@ pt:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo de errado ocorreu, talvez o nome de utilizador ou o email já estejam registados. Tente a hiperligação Esqueci a minha palavra-passe."
-    omniauth_error_unknown: "Algo ocorreu ao processar o seu início de sessão, por favor tente novamente."
     omniauth_confirm_button: "Continuar"
     authenticator_error_no_valid_email: "Nenhum endereço de email associado com %{account} são permitidos. Talvez precise de configurar a sua conta com um endereço de email diferente."
     new_registrations_disabled: "Neste momento não é permitido novo registo de contas."
@@ -1299,8 +1293,6 @@ pt:
     email_too_long: "O email fornecido é demasiado longo. Nomes de caixas de email não devem ter mais que 254 caracteres, e nomes de domínio não devem ter mais que 253 caracteres."
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
-    already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
-    second_factor_title: "Autenticação em Dois Passos"
     second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
   admin:
     email:
@@ -1320,6 +1312,7 @@ pt:
       not_allowed: "este provedor de emails não é permitido. Por favor utilize outro endereço de email."
       blocked: "não é permitido."
       revoked: "Emails não serão enviados a '%{email}' até %{date}."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
@@ -1330,11 +1323,11 @@ pt:
   download_backup_mailer:
     subject_template: "[%{email_prefix}] Transferir Cópia de Segurança do Site"
     text_body_template: |
-      Aqui tem a [tarnsferência da cópia de segurança do ''site'' ](%{backup_file_path}) que solicitou.
+      Aqui tem o [download do backup do site](%{backup_file_path}) que solicitou.
 
-      Nós enviamos esta hiperligação de transferência para o endereço de ''e-mail'' validado por motivos de segurança.
+      Nós enviámos este link de download para o endereço de e-mail validado por motivos de segurança.
 
-      (se não solicitou esta transferência, deveria ficar preocupado -- alguém tem acesso de administrator ao seu ''site''.)
+      (se *não* solicitou este download, deveria ficar preocupado -- alguém tem acesso de administrador ao seu site.)
     no_token: |
       Desculpe, esta hiperligação de transferência da cópia de segurança já foi utilizada ou expirou.
   admin_confirmation_mailer:
@@ -2005,8 +1998,6 @@ pt:
     initial_topic_title: Relatórios de desempenho do sítio
   tags:
     title: "Etiquetas"
-    staff_tag_disallowed: 'A etiqueta "%{tag}" pode ser aplicada pela equipa de apoio apenas.'
-    staff_tag_remove_disallowed: 'A etiqueta "%{tag}" apenas poderá ser removida pela equipa de apoio.'
   rss_by_tag: "Tópicos etiquetados %{tag}"
   finish_installation:
     congratulations: "Felicitações, você instalou o Discourse!"
@@ -2072,8 +2063,6 @@ pt:
             label: "Mensagens Automatizadas"
       corporate:
         title: "Organização"
-      colors:
-        title: "Tema"
       logos:
         title: "Logos"
         fields:

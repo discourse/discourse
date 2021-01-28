@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -9,13 +9,13 @@ export default Controller.extend({
 
     this.saveAttrNames = [
       "muted_usernames",
-      "ignored_usernames",
       "new_topic_duration_minutes",
       "auto_track_topics_after_msecs",
       "notification_level_when_replying",
       "like_notification_frequency",
       "allow_private_messages",
       "enable_allowed_pm_users",
+      "user_notification_schedule",
     ];
 
     this.likeNotificationFrequencies = [

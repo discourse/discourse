@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
+  before_action :set_mp_snapshot_fields
   before_action :clear_notifications
   around_action :with_resolved_locale
   before_action :set_mobile_view
@@ -46,6 +47,9 @@ class ApplicationController < ActionController::Base
   after_action  :perform_refresh_session
   after_action  :dont_cache_page
   after_action  :conditionally_allow_site_embedding
+
+  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
+  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
 
   layout :set_layout
 
@@ -152,13 +156,15 @@ class ApplicationController < ActionController::Base
   rescue_from RateLimiter::LimitExceeded do |e|
     retry_time_in_seconds = e&.available_in
 
-    render_json_error(
-      e.description,
-      type: :rate_limit,
-      status: 429,
-      extras: { wait_seconds: retry_time_in_seconds },
-      headers: { 'Retry-After': retry_time_in_seconds },
-    )
+    with_resolved_locale do
+      render_json_error(
+        e.description,
+        type: :rate_limit,
+        status: 429,
+        extras: { wait_seconds: retry_time_in_seconds },
+        headers: { 'Retry-After': retry_time_in_seconds }
+      )
+    end
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
@@ -170,11 +176,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::InvalidParameters do |e|
-    message = I18n.t('invalid_params', message: e.message)
+    opts = {
+      custom_message: 'invalid_params',
+      custom_message_params: { message: e.message }
+    }
+
     if (request.format && request.format.json?) || request.xhr? || !request.get?
-      rescue_discourse_actions(:invalid_parameters, 400, include_ember: true, custom_message_translated: message)
+      rescue_discourse_actions(:invalid_parameters, 400, opts.merge(include_ember: true))
     else
-      rescue_discourse_actions(:not_found, 400, custom_message_translated: message)
+      rescue_discourse_actions(:not_found, 400, opts)
     end
   end
 
@@ -198,6 +208,7 @@ class ApplicationController < ActionController::Base
       403,
       include_ember: true,
       custom_message: e.custom_message,
+      custom_message_params: e.custom_message_params,
       group: e.group
     )
   end
@@ -238,10 +249,8 @@ class ApplicationController < ActionController::Base
 
     message = title = nil
     with_resolved_locale(check_current_user: false) do
-      if opts[:custom_message_translated]
-        title = message = opts[:custom_message_translated]
-      elsif opts[:custom_message]
-        title = message = I18n.t(opts[:custom_message])
+      if opts[:custom_message]
+        title = message = I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
       else
         message = I18n.t(type)
         if status_code == 403
@@ -296,6 +305,15 @@ class ApplicationController < ActionController::Base
     response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
   end
 
+  def set_mp_snapshot_fields
+    if defined?(Rack::MiniProfiler)
+      Rack::MiniProfiler.add_snapshot_custom_field("Application version", Discourse.git_version)
+      if Rack::MiniProfiler.snapshots_transporter?
+        Rack::MiniProfiler.add_snapshot_custom_field("Site", Discourse.current_hostname)
+      end
+    end
+  end
+
   def clear_notifications
     if current_user && !@readonly_mode
 
@@ -316,15 +334,15 @@ class ApplicationController < ActionController::Base
         current_user.reload
         current_user.publish_notifications_state
         cookie_args = {}
-        cookie_args[:path] = Discourse.base_uri if Discourse.base_uri.present?
+        cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
         cookies.delete('cn', cookie_args)
       end
     end
   end
 
   def with_resolved_locale(check_current_user: true)
-    if check_current_user && current_user
-      locale = current_user.effective_locale
+    if check_current_user && (user = current_user rescue nil)
+      locale = user.effective_locale
     else
       if SiteSetting.set_locale_from_accept_language_header
         locale = locale_from_header
@@ -486,7 +504,14 @@ class ApplicationController < ActionController::Base
       result.find_by(find_opts)
     elsif params[:external_id]
       external_id = params[:external_id].chomp('.json')
-      SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      if provider_name = params[:external_provider]
+        raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+        provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
+        raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
+        UserAssociatedAccount.find_by(provider_name: provider_name, provider_uid: external_id)&.user
+      else
+        SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+      end
     end
     raise Discourse::NotFound if user.blank?
 
@@ -714,11 +739,11 @@ class ApplicationController < ActionController::Base
   def redirect_to_login
     dont_cache_page
 
-    if SiteSetting.enable_sso?
+    if SiteSetting.external_auth_immediately && SiteSetting.enable_sso?
       # save original URL in a session so we can redirect after login
       session[:destination_url] = destination_url
       redirect_to path('/session/sso')
-    elsif !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+    elsif SiteSetting.external_auth_immediately && !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -792,16 +817,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
 
     if !SiteSetting.login_required? || @current_user
-      key = "page_not_found_topics"
-      if @topics_partial = Discourse.redis.get(key)
-        @topics_partial = @topics_partial.html_safe
-      else
+      key = "page_not_found_topics:#{I18n.locale}"
+      @topics_partial = Discourse.cache.fetch(key, expires_in: 10.minutes) do
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        Discourse.redis.setex(key, 10.minutes, @topics_partial)
-      end
+        render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+      end.html_safe
     end
 
     @container_class = "wrap not-found-container"
@@ -811,7 +833,7 @@ class ApplicationController < ActionController::Base
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
-    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").to_s.tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
   end
@@ -835,6 +857,14 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def honeypot_value
+    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+  end
+
+  def challenge_value
+    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+  end
 
   def render_post_json(post, add_raw: true)
     post_serializer = PostSerializer.new(post, scope: guardian, root: false)

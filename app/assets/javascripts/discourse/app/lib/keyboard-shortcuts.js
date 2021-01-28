@@ -1,14 +1,13 @@
-import { later, run } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import Composer from "discourse/models/composer";
-import { minimumOffset } from "discourse/lib/offset-calculator";
-import { ajax } from "discourse/lib/ajax";
-import { throttle, schedule } from "@ember/runloop";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { later, run, schedule, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
+import Composer from "discourse/models/composer";
+import DiscourseURL from "discourse/lib/url";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { ajax } from "discourse/lib/ajax";
+import { minimumOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -118,6 +117,10 @@ export default {
   },
 
   teardown() {
+    if (this.keyTrapper) {
+      this.keyTrapper.reset();
+      this.keyTrapper = null;
+    }
     this.container = null;
   },
 
@@ -614,8 +617,12 @@ export default {
 
     // Try scrolling to post above or below.
     if ($selected.length !== 0) {
-      if (direction === -1 && index === 0) return;
-      if (direction === 1 && index === $articles.length - 1) return;
+      if (direction === -1 && index === 0) {
+        return;
+      }
+      if (direction === 1 && index === $articles.length - 1) {
+        return;
+      }
     }
 
     $article = $articles.eq(index + direction);

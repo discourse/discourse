@@ -1,5 +1,5 @@
-import { helperContext } from "discourse-common/lib/helpers";
 import I18n from "I18n";
+import { helperContext } from "discourse-common/lib/helpers";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -29,13 +29,17 @@ export function toTitleCase(str) {
 }
 
 export function longDate(dt) {
-  if (!dt) return;
+  if (!dt) {
+    return;
+  }
   return moment(dt).format(I18n.t("dates.long_with_year"));
 }
 
 // suppress year, if current year
 export function longDateNoYear(dt) {
-  if (!dt) return;
+  if (!dt) {
+    return;
+  }
 
   if (new Date().getFullYear() !== dt.getFullYear()) {
     return moment(dt).format(I18n.t("dates.long_date_with_year"));
@@ -58,8 +62,12 @@ export function updateRelativeAge(elems) {
 }
 
 export function autoUpdatingRelativeAge(date, options) {
-  if (!date) return "";
-  if (+date === +new Date(0)) return "";
+  if (!date) {
+    return "";
+  }
+  if (+date === +new Date(0)) {
+    return "";
+  }
 
   options = options || {};
   let format = options.format || "tiny";
@@ -162,7 +170,10 @@ export function durationTiny(distance, ageOpts) {
 
 function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
-  const distance = Math.round((new Date() - date) / 1000);
+  let distance = Math.round((new Date() - date) / 1000);
+  if (distance < 0) {
+    distance = Math.round((date - new Date()) / 1000);
+  }
   const dividedDistance = Math.round(distance / 60.0);
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
@@ -316,7 +327,9 @@ export function number(val) {
   let formattedNumber;
 
   val = Math.round(parseFloat(val));
-  if (isNaN(val)) val = 0;
+  if (isNaN(val)) {
+    val = 0;
+  }
 
   if (val > 999999) {
     formattedNumber = I18n.toNumber(val / 1000000, { precision: 1 });

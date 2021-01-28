@@ -419,4 +419,15 @@ HTML
     end
   end
 
+  context "SVG sprite theme fields" do
+    let(:upload) { Fabricate(:upload) }
+    let(:theme) { Fabricate(:theme) }
+    let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
+
+    it "is rebaked when upload changes" do
+      theme_field.update(upload: Fabricate(:upload))
+      expect(theme_field.value_baked).to eq(nil)
+    end
+  end
+
 end

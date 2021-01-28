@@ -45,6 +45,24 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/login")
     end
 
+    it "should not redirect to SSO when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.sso_url = 'http://someurl.com'
+      SiteSetting.enable_sso = true
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
+    it "should not redirect to authenticator when external_auth_immediately is disabled" do
+      SiteSetting.external_auth_immediately = false
+      SiteSetting.enable_google_oauth2_logins = true
+      SiteSetting.enable_local_logins = false
+
+      get "/"
+      expect(response).to redirect_to("/login")
+    end
+
     context "with omniauth in test mode" do
       before do
         OmniAuth.config.test_mode = true
@@ -86,11 +104,21 @@ RSpec.describe ApplicationController do
     end
 
     it 'contains authentication data when cookies exist' do
-      COOKIE_DATA = "someauthenticationdata"
-      cookies['authentication_data'] = COOKIE_DATA
+      cookie_data = "someauthenticationdata"
+      cookies['authentication_data'] = cookie_data
       get '/login'
       expect(response.status).to eq(200)
-      expect(response.body).to include("data-authentication-data=\"#{COOKIE_DATA }\"")
+      expect(response.body).to include("data-authentication-data=\"#{cookie_data}\"")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
+    end
+
+    it 'deletes authentication data cookie even if already authenticated' do
+      sign_in(Fabricate(:user))
+      cookies['authentication_data'] = "someauthenticationdata"
+      get '/'
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("data-authentication-data=")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
     end
   end
 
@@ -355,7 +383,7 @@ RSpec.describe ApplicationController do
 
         it 'should handle 404 to a css file' do
 
-          Discourse.redis.del("page_not_found_topics")
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
 
           topic1 = Fabricate(:topic)
           get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
@@ -376,7 +404,8 @@ RSpec.describe ApplicationController do
       end
 
       it 'should cache results' do
-        Discourse.redis.del("page_not_found_topics")
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        Discourse.cache.delete("page_not_found_topics:fr")
 
         topic1 = Fabricate(:topic)
         get '/t/nope-nope/99999999'
@@ -388,6 +417,13 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(404)
         expect(response.body).to include(topic1.title)
         expect(response.body).to_not include(topic2.title)
+
+        # Different locale should have different cache
+        SiteSetting.default_locale = :fr
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+        expect(response.body).to include(topic2.title)
       end
     end
   end
@@ -627,6 +663,62 @@ RSpec.describe ApplicationController do
     topic = create_post.topic
     get "/t/#{topic.slug}/#{topic.id}"
     expect(response.body).to have_tag("link", with: { rel: "canonical", href: "http://test.localhost/t/#{topic.slug}/#{topic.id}" })
+  end
+
+  context "default locale" do
+    before do
+      SiteSetting.default_locale = :fr
+      sign_in(Fabricate(:user))
+    end
+
+    after do
+      I18n.reload!
+    end
+
+    context "with rate limits" do
+      before do
+        RateLimiter.clear_all!
+        RateLimiter.enable
+      end
+
+      after { RateLimiter.disable }
+
+      it "serves a LimitExceeded error in the preferred locale" do
+        SiteSetting.max_likes_per_day = 1
+        post1 = Fabricate(:post)
+        post2 = Fabricate(:post)
+        override = TranslationOverride.create(
+          locale: "fr",
+          translation_key: "rate_limiter.by_type.create_like",
+          value: "French LimitExceeded error message"
+        )
+        I18n.reload!
+
+        post "/post_actions.json", params: {
+          id: post1.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(200)
+
+        post "/post_actions.json", params: {
+          id: post2.id, post_action_type_id: PostActionType.types[:like]
+        }
+        expect(response.status).to eq(429)
+        expect(response.parsed_body["errors"].first).to eq(override.value)
+      end
+    end
+
+    it "serves an InvalidParameters error with the default locale" do
+      override = TranslationOverride.create(
+        locale: "fr",
+        translation_key: "invalid_params",
+        value: "French InvalidParameters error message"
+      )
+      I18n.reload!
+
+      get "/search.json", params: { q: "hello\0hello" }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to eq(override.value)
+    end
   end
 
   describe "set_locale" do

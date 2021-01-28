@@ -56,7 +56,9 @@ export default Controller.extend({
 
   @action
   loadMore() {
-    if (this.get("model.all_loaded")) return;
+    if (this.get("model.all_loaded")) {
+      return;
+    }
 
     this.set("loading", true);
 

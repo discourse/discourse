@@ -21,12 +21,32 @@ uk:
       public:
         title: "Голоси <strong>публічні</strong> ."
       results:
+        groups:
+          title: "Ви повинні бути учасником %{groups} для голосування в цьому опитуванні."
         vote:
           title: "Результати будуть показані при <strong>голосуванні</strong> ."
         closed:
           title: "Результати будуть показані після <strong>закриття</strong> ."
         staff:
           title: "Результати показуються лише <strong>співробітникам</strong> ."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Виберіть принаймні <strong>%{count}</strong> варіант."
+            few: "Виберіть принаймні <strong>%{count}</strong> варіанти."
+            many: "Виберіть принаймні <strong>%{count}</strong> варіантів."
+            other: "Виберіть принаймні <strong>%{count}</strong> варіанти."
+          up_to_max_options:
+            one: "Виберіть не більше як <strong>%{count}</strong> варіант."
+            few: "Виберіть не більше <strong>%{count}</strong> варіанти."
+            many: "Виберіть не більше <strong>%{count}</strong> варіантів."
+            other: "Виберіть не більше <strong>%{count}</strong> варіантів."
+          x_options:
+            one: "Виберіть <strong>%{count}</strong> варіант."
+            few: "Виберіть <strong>%{count}</strong> варіанти."
+            many: "Виберіть <strong>%{count}</strong> варіантів."
+            other: "Виберіть <strong>%{count}</strong> варіантів."
+          between_min_and_max_options: "Виберіть між <strong>%{min}</strong> і <strong>%{max}</strong> варіантами."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"
@@ -53,6 +73,12 @@ uk:
       automatic_close:
         closes_in: "Закривається в <strong>%{timeLeft}</strong> ."
         age: "Закрито <strong>%{age}</strong>"
+      breakdown:
+        title: "Результати опитування"
+        votes: "%{count} голоси"
+        breakdown: "Розбивка"
+        percentage: "Відсоток"
+        count: "Кількість"
       error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."
       error_while_casting_votes: "На жаль, сталася помилка під час голосування."
       error_while_fetching_voters: "На жаль, під час відображення тих, хто проголосував, сталася помилка."
@@ -61,6 +87,7 @@ uk:
         title: Створити опитування
         insert: Вставити опитування
         help:
+          options_count: Введіть принаймні 1 варіант
           invalid_values: Мінімальне значення має бути меншим, ніж максимальне.
           min_step_value: Мінімальне значення кроку 1
         poll_type:
@@ -74,14 +101,20 @@ uk:
           vote: На голосування
           closed: Коли закрито
           staff: Для персоналу тільки
+        poll_groups:
+          label: Дозволені групи
         poll_chart_type:
           label: Тип діаграми
+          bar: Гістограма
+          pie: Кругова
         poll_config:
           max: Макс
           min: Мін
           step: Крок
         poll_public:
           label: Покажіть, хто проголосував
+        poll_title:
+          label: Заголовок (необов'язково)
         poll_options:
           label: Введіть один варіант опитування на рядок
         automatic_close:

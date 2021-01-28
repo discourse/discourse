@@ -1,4 +1,4 @@
-import xss from "pretty-text/xss";
+import xss from "xss";
 
 function attr(name, value) {
   if (value) {
@@ -71,15 +71,17 @@ export function hrefAllowed(href, extraHrefMatchers) {
   }
 }
 
-export function sanitize(text, whiteLister) {
-  if (!text) return "";
+export function sanitize(text, allowLister) {
+  if (!text) {
+    return "";
+  }
 
   // Allow things like <3 and <_<
   text = text.replace(/<([^A-Za-z\/\!]|$)/g, "&lt;$1");
 
-  const whiteList = whiteLister.getWhiteList(),
-    allowedHrefSchemes = whiteLister.getAllowedHrefSchemes(),
-    allowedIframes = whiteLister.getAllowedIframes();
+  const allowList = allowLister.getAllowList(),
+    allowedHrefSchemes = allowLister.getAllowedHrefSchemes(),
+    allowedIframes = allowLister.getAllowedIframes();
   let extraHrefMatchers = null;
 
   if (allowedHrefSchemes && allowedHrefSchemes.length > 0) {
@@ -92,12 +94,12 @@ export function sanitize(text, whiteLister) {
   }
 
   let result = xss(text, {
-    whiteList: whiteList.tagList,
+    whiteList: allowList.tagList,
     stripIgnoreTag: true,
     stripIgnoreTagBody: ["script", "table"],
 
     onIgnoreTagAttr(tag, name, value) {
-      const forTag = whiteList.attrList[tag];
+      const forTag = allowList.attrList[tag];
       if (forTag) {
         const forAttr = forTag[name];
         if (
@@ -124,6 +126,12 @@ export function sanitize(text, whiteLister) {
           return "-STRIP-";
         }
 
+        if (tag === "video" && name === "autoplay") {
+          // This might give us duplicate 'muted' atttributes
+          // but they will be deduped by later processing
+          return "autoplay muted";
+        }
+
         // Heading ids must begin with `heading--`
         if (
           ["h1", "h2", "h3", "h4", "h5", "h6"].indexOf(tag) !== -1 &&
@@ -132,7 +140,7 @@ export function sanitize(text, whiteLister) {
           return attr(name, value);
         }
 
-        const custom = whiteLister.getCustom();
+        const custom = allowLister.getCustom();
         for (let i = 0; i < custom.length; i++) {
           const fn = custom[i];
           if (fn(tag, name, value)) {

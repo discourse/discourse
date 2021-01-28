@@ -1,4 +1,4 @@
-import selectKit from "helpers/select-kit-helper";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 export async function displayPollBuilderButton() {
   await visit("/");

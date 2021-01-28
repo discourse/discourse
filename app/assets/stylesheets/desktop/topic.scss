@@ -63,12 +63,14 @@
   border-top: 1px solid var(--primary-low);
   padding: 10px 0;
   max-width: 758px;
-  .topic-timer-heading {
+  .topic-timer-heading,
+  .slow-mode-heading {
     display: flex;
     align-items: center;
     margin: 0px;
   }
-  .topic-timer-remove {
+  .topic-timer-remove,
+  .slow-mode-remove {
     font-size: $font-down-2;
     background: transparent;
     margin-left: auto;
@@ -85,6 +87,14 @@
   display: flex;
   justify-content: flex-end;
   z-index: z("timeline");
+  // max-width + bottom + left/right makes this element take up the whole width
+  // albeit as a transparent row, but we disable pointer-events to allow user to
+  // interact with visible elements at bottom of viewport
+  pointer-events: none;
+  > * {
+    // and then we reset for its children
+    pointer-events: auto;
+  }
   &.docked {
     position: absolute;
     bottom: -70px;
@@ -197,13 +207,13 @@
   z-index: z("dropdown");
 }
 
-@media all and (min-width: 400px) {
-  #topic-progress,
-  #topic-progress-expanded {
-    right: 0;
-    left: 0;
-  }
+#topic-progress,
+#topic-progress-expanded {
+  right: 0;
+  left: 0;
+}
 
+@media all and (min-width: 400px) {
   #topic-footer-main-buttons {
     max-width: 70%;
   }

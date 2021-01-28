@@ -93,9 +93,31 @@ RSpec.describe PublishedPagesController do
           published_page.topic.tags = [Fabricate(:tag, name: "recipes")]
         end
 
+        context "when secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "returns 404" do
+            get published_page.path
+            expect(response.status).to eq(404)
+          end
+        end
+
         it "returns 200" do
           get published_page.path
           expect(response.status).to eq(200)
+        end
+
+        it "works even if image logos are not available" do
+          SiteSetting.logo_small = nil
+          get published_page.path
+          expect(response.body).to include("<img class=\"published-page-logo\" src=\"#{SiteSetting.logo.url}\"/>")
+
+          SiteSetting.logo = nil
+          get published_page.path
+          expect(response.body).not_to include("published-page-logo")
         end
 
         it "defines correct css classes on body" do

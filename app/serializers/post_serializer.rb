@@ -78,8 +78,7 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
-             :notice_type,
-             :notice_args,
+             :notice,
              :last_wiki_edit,
              :locked,
              :excerpt,
@@ -438,12 +437,14 @@ class PostSerializer < BasicPostSerializer
     include_action_code? && action_code_who.present?
   end
 
-  def notice_type
-    post_custom_fields[Post::NOTICE_TYPE]
+  def notice
+    post_custom_fields[Post::NOTICE]
   end
 
-  def include_notice_type?
-    case notice_type
+  def include_notice?
+    return false if notice.blank?
+
+    case notice["type"]
     when Post.notices[:custom]
       return true
     when Post.notices[:new_user]
@@ -454,17 +455,7 @@ class PostSerializer < BasicPostSerializer
       return false
     end
 
-    scope.user && scope.user.id && object.user &&
-    scope.user.id != object.user_id &&
-    scope.user.has_trust_level?(min_trust_level)
-  end
-
-  def notice_args
-    post_custom_fields[Post::NOTICE_ARGS]
-  end
-
-  def include_notice_args?
-    notice_args.present? && include_notice_type?
+    scope.user && scope.user.id != object.user_id && scope.user.has_trust_level?(min_trust_level)
   end
 
   def locked

@@ -1,0 +1,12 @@
+{{#styleguide-example title="navigation"}}
+  <div class="list-controls">
+    <div class="container">
+      {{#d-section class="navigation-container"}}
+        {{bread-crumbs categories=dummy.categories}}
+        {{navigation-bar navItems=dummy.navItems filterMode="latest"}}
+        {{categories-admin-dropdown}}
+        {{create-topic-button canCreateTopic=true}}
+      {{/d-section}}
+    </div>
+  </div>
+{{/styleguide-example}}

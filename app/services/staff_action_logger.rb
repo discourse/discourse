@@ -168,10 +168,10 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
 
     args = params(opts).merge(
-      action: UserHistory.actions[opts[:new_raw_value].present? ? :post_staff_note_create : :post_staff_note_destroy],
+      action: UserHistory.actions[opts[:new_value].present? ? :post_staff_note_create : :post_staff_note_destroy],
       post_id: post.id
     )
-    args[:new_value] = opts[:new_raw_value] if opts[:new_raw_value].present?
+    args[:new_value] = opts[:new_value] if opts[:new_value].present?
     args[:previous_value] = opts[:old_value] if opts[:old_value].present?
 
     UserHistory.create!(params(opts).merge(args))
@@ -821,7 +821,7 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context] }
+    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
   end
 
   def validate_category(category)

@@ -1,7 +1,5 @@
 // Styles for /admin section
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
 $mobile-breakpoint: 700px;
@@ -59,8 +57,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 1) 0%,
-        rgba(var(--secondary-rgb), 0) 100%
+        rgba(var(--secondary-rgb), 1),
+        rgba(var(--secondary-rgb), 0)
       );
     }
     &:after {
@@ -71,21 +69,20 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0) 0%,
-        rgba(var(--secondary-rgb), 1) 100%
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
       );
     }
   }
 }
 
-.nav-stacked {
-  @media screen and (max-width: 700px) {
-    margin: 0 10px 0 -10px;
-  }
-}
-
 .admin-contents {
   position: relative;
+  .nav-stacked {
+    @media screen and (max-width: 700px) {
+      margin: 0 15px 0 -10px;
+    }
+  }
 }
 
 .admin-contents table {
@@ -206,6 +203,12 @@ $mobile-breakpoint: 700px;
     }
     .reseed {
       float: right;
+    }
+    .locale {
+      margin-bottom: 0.5em;
+    }
+    .locale-search {
+      width: 50%;
     }
   }
   .text-highlight {
@@ -472,8 +475,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 1) 0%,
-        rgba(var(--primary-low-rgb), 0) 100%
+        rgba(var(--primary-low-rgb), 1),
+        rgba(var(--primary-low-rgb), 0)
       );
     }
 
@@ -485,8 +488,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 0) 0%,
-        rgba(var(--primary-low-rgb), 1) 100%
+        rgba(var(--primary-low-rgb), 0),
+        rgba(var(--primary-low-rgb), 1)
       );
     }
   }
@@ -658,7 +661,8 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-nav {
-  width: 18.018%;
+  width: 18%;
+  box-sizing: border-box;
   position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
   @media (max-width: $mobile-breakpoint) {
     position: absolute;
@@ -671,21 +675,14 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-detail {
-  width: 76.5765%;
-  @media (max-width: $mobile-breakpoint) {
-    z-index: z("base");
-    width: 100%;
-  }
-
-  background-color: var(
-    --secondary
-  ); // Todo: set this properly - it needs to be >= the menu height
-  min-height: 875px;
+  background-color: var(--secondary);
   margin-left: 0;
   border-left: solid 1px var(--primary-low);
   padding: 30px 0 30px 30px;
+  width: 82%;
+  box-sizing: border-box;
   @media (max-width: $mobile-breakpoint) {
-    padding: 30px 0;
+    width: 95%;
     border: none;
   }
 }
@@ -706,7 +703,6 @@ $mobile-breakpoint: 700px;
     transition: transform 0.3s ease;
     @include transform(translateX(0));
     margin-left: -10px;
-    padding-left: 10px;
   }
 }
 

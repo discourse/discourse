@@ -1,6 +1,7 @@
-import WhiteLister from "pretty-text/white-lister";
-import { sanitize } from "pretty-text/sanitizer";
+import AllowLister from "pretty-text/allow-lister";
+import deprecated from "discourse-common/lib/deprecated";
 import guid from "pretty-text/guid";
+import { sanitize } from "pretty-text/sanitizer";
 
 export const ATTACHMENT_CSS_CLASS = "attachment";
 
@@ -23,11 +24,19 @@ function createHelper(
   optionCallbacks,
   pluginCallbacks,
   getOptions,
-  whiteListed
+  allowListed
 ) {
   let helper = {};
   helper.markdownIt = true;
-  helper.whiteList = (info) => whiteListed.push([featureName, info]);
+  helper.allowList = (info) => allowListed.push([featureName, info]);
+  helper.whiteList = (info) => {
+    deprecated("`whiteList` has been replaced with `allowList`", {
+      since: "2.6.0.beta.4",
+      dropFrom: "2.7.0",
+    });
+    helper.allowList(info);
+  };
+
   helper.registerInline = deprecate(featureName, "registerInline");
   helper.replaceBlock = deprecate(featureName, "replaceBlock");
   helper.addPreProcessor = deprecate(featureName, "addPreProcessor");
@@ -174,7 +183,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   // see https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
   // handles |video and |audio alt transformations for image tags
   if (split[1] === "video") {
-    return videoHTML(token);
+    if (options.discourse.previewing) {
+      return `<div class="onebox-placeholder-container">
+        <span class="placeholder-icon video"></span>
+      </div>`;
+    } else {
+      return videoHTML(token);
+    }
   } else if (split[1] === "audio") {
     return audioHTML(token);
   }
@@ -214,8 +229,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
         token.attrs.push(["height", height]);
       }
 
-      if (options.discourse.previewing && match[6] !== "x" && match[4] !== "x")
+      if (
+        options.discourse.previewing &&
+        match[6] !== "x" &&
+        match[4] !== "x"
+      ) {
         token.attrs.push(["class", "resizable"]);
+      }
     } else if ((data = extractDataAttribute(split[i]))) {
       token.attrs.push(data);
     } else {
@@ -285,30 +305,36 @@ export function setup(opts, siteSettings, state) {
 
   const check = /discourse-markdown\/|markdown-it\//;
   let features = [];
-  let whiteListed = [];
+  let allowListed = [];
 
   Object.keys(require._eak_seen).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {
-        const featureName = entry.split("/").reverse()[0];
-        features.push(featureName);
-        module.setup(
-          createHelper(
-            featureName,
-            opts,
-            optionCallbacks,
-            pluginCallbacks,
-            getOptions,
-            whiteListed
-          )
-        );
+        const id = entry.split("/").reverse()[0];
+        let priority = module.priority || 0;
+        features.unshift({ id, setup: module.setup, priority });
       }
     }
   });
 
-  Object.entries(state.whiteListed || {}).forEach((entry) => {
-    whiteListed.push(entry);
+  features
+    .sort((a, b) => a.priority - b.priority)
+    .forEach((f) => {
+      f.setup(
+        createHelper(
+          f.id,
+          opts,
+          optionCallbacks,
+          pluginCallbacks,
+          getOptions,
+          allowListed
+        )
+      );
+    });
+
+  Object.entries(state.allowListed || {}).forEach((entry) => {
+    allowListed.push(entry);
   });
 
   optionCallbacks.forEach(([, callback]) => {
@@ -317,8 +343,8 @@ export function setup(opts, siteSettings, state) {
 
   // enable all features by default
   features.forEach((feature) => {
-    if (!opts.features.hasOwnProperty(feature)) {
-      opts.features[feature] = true;
+    if (!opts.features.hasOwnProperty(feature.id)) {
+      opts.features[feature.id] = true;
     }
   });
 
@@ -376,14 +402,14 @@ export function setup(opts, siteSettings, state) {
   opts.setup = true;
 
   if (!opts.discourse.sanitizer || !opts.sanitizer) {
-    const whiteLister = new WhiteLister(opts.discourse);
+    const allowLister = new AllowLister(opts.discourse);
 
-    whiteListed.forEach(([feature, info]) => {
-      whiteLister.whiteListFeature(feature, info);
+    allowListed.forEach(([feature, info]) => {
+      allowLister.allowListFeature(feature, info);
     });
 
     opts.sanitizer = opts.discourse.sanitizer = !!opts.discourse.sanitize
-      ? (a) => sanitize(a, whiteLister)
+      ? (a) => sanitize(a, allowLister)
       : (a) => a;
   }
 }

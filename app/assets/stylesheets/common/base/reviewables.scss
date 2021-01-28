@@ -188,11 +188,6 @@
     width: auto;
   }
 
-  .refresh {
-    height: 1em;
-    display: flex;
-  }
-
   .score-filter {
     width: 5em;
   }
@@ -279,6 +274,18 @@
     }
   }
   padding-bottom: 1em;
+}
+
+.blur-images {
+  img:not(.avatar):not(.emoji) {
+    filter: blur(10px);
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+      filter: blur(0);
+      transition: 0.2s ease-in-out;
+    }
+  }
 }
 
 .reviewable-histories {
@@ -488,6 +495,10 @@
     }
     margin-bottom: 0.5em;
   }
+}
+
+.flag-modal .modal-inner-container .select-kit.reviewable-action-dropdown {
+  width: initial;
 }
 
 @media screen and (max-width: 1000px) {

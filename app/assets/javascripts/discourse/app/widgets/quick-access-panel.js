@@ -1,8 +1,8 @@
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { Promise } from "rsvp";
 
 /**
  * This tries to enforce a consistent flow of fetching, caching, refreshing,
@@ -38,6 +38,15 @@ export default createWidget("quick-access-panel", {
 
   findNewItems() {
     return Promise.resolve([]);
+  },
+
+  buildAttributes() {
+    const attributes = this.attrs;
+    attributes["aria-labelledby"] = this.key;
+    attributes["tabindex"] = "0";
+    attributes["role"] = "tabpanel";
+
+    return attributes;
   },
 
   newItemsLoaded() {},
@@ -95,10 +104,11 @@ export default createWidget("quick-access-panel", {
       return [h("div.spinner-container", h("div.spinner"))];
     }
 
-    let bottomItems = [];
     const items = this.getItems().length
       ? this.getItems().map((item) => this.itemHtml(item))
       : [this.emptyStatePlaceholderItem()];
+
+    let bottomItems = [];
 
     if (!this.hideBottomItems()) {
       bottomItems.push(
@@ -107,6 +117,7 @@ export default createWidget("quick-access-panel", {
           title: "view_all",
           icon: "chevron-down",
           className: "btn btn-default btn-icon no-text show-all",
+          "aria-label": "view_all",
           href: this.showAllHref(),
         })
       );

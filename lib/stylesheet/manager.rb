@@ -150,8 +150,16 @@ class Stylesheet::Manager
   def self.precompile_css
     themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name, :color_scheme_id)
     themes << nil
+
+    color_schemes = ColorScheme.where(user_selectable: true).to_a
+    color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
+    color_schemes = color_schemes.compact.uniq
+
+    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
+    targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
+
     themes.each do |id, name, color_scheme_id|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
+      targets.each do |target|
         theme_id = id || SiteSetting.default_theme_id
         next if target =~ THEME_REGEX && theme_id == -1
         cache_key = "#{target}_#{theme_id}"
@@ -162,11 +170,14 @@ class Stylesheet::Manager
         cache[cache_key] = nil
       end
 
-      scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
-      STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id) || ColorScheme.base
 
-      builder = self.new(COLOR_SCHEME_STYLESHEET, id, scheme)
-      builder.compile(force: true)
+      [theme_color_scheme, *color_schemes].uniq.each do |scheme|
+        STDERR.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{name} (#{scheme.name})"
+
+        builder = self.new(COLOR_SCHEME_STYLESHEET, id, scheme)
+        builder.compile(force: true)
+      end
       clear_color_scheme_cache!
     end
 
@@ -406,12 +417,13 @@ class Stylesheet::Manager
     cs = @color_scheme || theme&.color_scheme
 
     category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+    fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
     if cs || category_updated > 0
       theme_color_defs = theme&.resolve_baked_field(:common, :color_definitions)
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{SiteSetting.base_font}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}-#{fonts}"
     else
-      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
+      digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string = "#{digest_string}-#{cdn_url}"

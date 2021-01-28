@@ -1,6 +1,6 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   didInsertElement() {
@@ -26,10 +26,5 @@ export default Component.extend({
         }
       });
     });
-  },
-
-  mouseMove(e) {
-    this.set("screenX", e.screenX);
-    this.set("screenY", e.screenY);
   },
 });

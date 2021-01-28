@@ -52,9 +52,7 @@ describe StaticController do
       end
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = 'X'
-        SiteSetting.s3_secret_access_key = 'X'
+        setup_s3
       end
 
       it 'can proxy a favicon correctly' do

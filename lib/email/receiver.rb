@@ -147,12 +147,13 @@ module Email
         raw: Email::Cleaner.new(@raw_email).execute,
         subject: subject,
         from_address: @from_email,
-        to_addresses: @mail.to&.map(&:downcase)&.join(";"),
-        cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+        to_addresses: @mail.to,
+        cc_addresses: @mail.cc,
         imap_uid_validity: @opts[:imap_uid_validity],
         imap_uid: @opts[:imap_uid],
         imap_group_id: @opts[:imap_group_id],
-        imap_sync: false
+        imap_sync: false,
+        created_via: IncomingEmail.created_via_types[@opts[:source] || :unknown]
       )
     end
 
@@ -395,7 +396,7 @@ module Email
         text, elided_text, text_format = markdown, elided_markdown, Receiver::formats[:markdown]
       end
 
-      if SiteSetting.strip_incoming_email_lines
+      if SiteSetting.strip_incoming_email_lines && text.present?
         in_code = nil
 
         text = text.lines.map! do |line|
@@ -1184,6 +1185,10 @@ module Email
         options[:post_type] = Post.types[:whisper]
       end
 
+      # To avoid race conditions with the post alerter and Group SMTP
+      # emails, we skip the jobs here and enqueue them only _after_
+      # the incoming email has been updated with the post and topic.
+      options[:skip_jobs] = true
       result = NewPostManager.new(user, options).perform
 
       errors = result.errors.full_messages
@@ -1203,6 +1208,13 @@ module Email
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user)
         end
+
+        # Alert the people involved in the topic now that the incoming email
+        # has been linked to the post.
+        PostJobsEnqueuer.new(result.post, result.post.topic, options[:topic_id].blank?,
+                             import_mode: options[:import_mode],
+                             post_alert_options: options[:post_alert_options]
+                            ).enqueue_jobs
       end
 
       result.post

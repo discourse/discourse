@@ -81,6 +81,11 @@ $quote-share-maxwidth: 150px;
 .d-editor-preview {
   word-wrap: break-word;
   line-height: $line-height-large;
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
   h1,
   h2,
   h3,
@@ -650,6 +655,35 @@ blockquote {
   &.raw-email {
     cursor: pointer;
   }
+  &.edits {
+    .widget-button {
+      display: flex;
+      align-items: center;
+
+      .d-button-label {
+        order: 0;
+        padding-right: 0.25em;
+        color: var(--primary-med-or-secondary-med);
+        transition: color 0.25s;
+      }
+
+      .d-icon {
+        order: 1;
+        transition: color 0.25s;
+        color: var(--primary-med-or-secondary-med);
+      }
+      .discourse-no-touch & {
+        &:hover {
+          .d-button-label {
+            color: var(--primary-high);
+          }
+          .d-icon {
+            color: var(--primary-high);
+          }
+        }
+      }
+    }
+  }
 }
 
 pre {
@@ -669,6 +703,7 @@ pre {
   overflow: visible;
 
   .copy-cmd {
+    @include unselectable;
     position: absolute;
     top: 0;
     right: 0;
@@ -676,7 +711,6 @@ pre {
     font-size: $font-down-2;
     min-height: 0;
     font-size: $font-down-2;
-    user-select: none;
 
     &.copied {
       .d-icon {
@@ -1044,31 +1078,21 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 0.5em 0;
+  padding: 0.75em 0;
 
   .topic-footer-main-buttons {
-    margin: 0 0 -0.5em 0;
     display: flex;
     flex-wrap: wrap;
-
-    > .btn {
-      margin: 0 0.5em 0.5em 0;
-      display: inline-flex;
-      align-items: center;
-
-      .d-button-label {
-        display: flex;
-        flex: 1 0 auto;
-        align-items: center;
-      }
+    align-items: stretch; // aligns items by making them the same height
+    button {
+      margin-right: 0.54em;
     }
 
     .topic-admin-menu-button-container {
       display: inline-flex;
-    }
-
-    .topic-admin-menu-button-container > span:not(:empty) {
-      margin: 0 0.5em 0.5em 0;
+      > span {
+        display: flex; // to make this button match siblings behavior, all of its parents need to be flex
+      }
     }
   }
 
@@ -1103,4 +1127,37 @@ a.mention-group {
   text-align: left;
   bottom: -2px;
   right: 15px;
+}
+
+.posts-filtered-notice {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: var(--tertiary-low);
+  bottom: 0;
+  padding: 1em;
+  margin-top: 0.5em;
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(
+    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
+      (0.8em * 2)
+  );
+
+  .filtered-avatar {
+    margin: 0 0.5em;
+    + .names {
+      flex: inherit;
+    }
+  }
+
+  .filtered-replies-show-all {
+    margin-left: 1em;
+  }
+
+  .filtered-user-row {
+    @include ellipsis;
+  }
 }

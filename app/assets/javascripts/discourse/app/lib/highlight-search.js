@@ -13,7 +13,9 @@ export default function (elem, term, opts = {}) {
       .map((w) => w.replace(/^"(.*)"$/, "$1"));
 
     const highlightOpts = {};
-    if (!opts.defaultClassName) highlightOpts.className = CLASS_NAME;
+    if (!opts.defaultClassName) {
+      highlightOpts.className = CLASS_NAME;
+    }
     highlightHTML(elem, words, highlightOpts);
   }
 }

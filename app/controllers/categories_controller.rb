@@ -204,7 +204,7 @@ class CategoriesController < ApplicationController
 
   def find_by_slug
     params.require(:category_slug)
-    @category = Category.find_by_slug(params[:category_slug], params[:parent_category_slug])
+    @category = Category.find_by_slug_path(params[:category_slug].split('/'))
 
     raise Discourse::NotFound unless @category.present?
 

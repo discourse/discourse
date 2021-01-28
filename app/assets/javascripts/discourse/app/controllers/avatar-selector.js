@@ -1,8 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
 
@@ -10,6 +10,31 @@ export default Controller.extend(ModalFunctionality, {
   gravatarName: setting("gravatar_name"),
   gravatarBaseUrl: setting("gravatar_base_url"),
   gravatarLoginUrl: setting("gravatar_login_url"),
+
+  @discourseComputed(
+    "siteSettings.selectable_avatars_enabled",
+    "siteSettings.selectable_avatars"
+  )
+  selectableAvatars(enabled, list) {
+    if (enabled) {
+      return list ? list.split("|") : [];
+    }
+  },
+
+  @discourseComputed(
+    "user.avatar_template",
+    "user.system_avatar_template",
+    "user.gravatar_avatar_template"
+  )
+  selected(avatarTemplate, systemAvatarTemplate, gravatarAvatarTemplate) {
+    if (avatarTemplate === systemAvatarTemplate) {
+      return "system";
+    } else if (avatarTemplate === gravatarAvatarTemplate) {
+      return "gravatar";
+    } else {
+      return "custom";
+    }
+  },
 
   @discourseComputed(
     "selected",
@@ -55,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     uploadComplete() {
-      this.set("selected", "uploaded");
+      this.set("selected", "custom");
     },
 
     refreshGravatar() {

@@ -122,6 +122,7 @@
       }
 
       .action-title {
+        line-height: normal;
         @include ellipsis;
       }
 
@@ -357,10 +358,6 @@
   #file-uploading {
     color: var(--primary-high);
   }
-}
-
-.cooked > *:first-child {
-  margin-top: 0;
 }
 
 .autocomplete {

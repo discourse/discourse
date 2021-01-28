@@ -7,7 +7,9 @@ export default {
 
   isVerboseLocalizationEnabled(container) {
     const siteSettings = container.lookup("site-settings:main");
-    if (siteSettings.verbose_localization) return true;
+    if (siteSettings.verbose_localization) {
+      return true;
+    }
 
     try {
       return sessionStorage && sessionStorage.getItem("verbose_localization");
@@ -29,11 +31,13 @@ export default {
 
       const segs = k.split(".");
 
-      let node = I18n.translations[I18n.locale];
+      let node = I18n.translations[I18n.locale] || {};
       let i = 0;
 
       for (; i < segs.length - 1; i++) {
-        if (!(segs[i] in node)) node[segs[i]] = {};
+        if (!(segs[i] in node)) {
+          node[segs[i]] = {};
+        }
         node = node[segs[i]];
       }
 

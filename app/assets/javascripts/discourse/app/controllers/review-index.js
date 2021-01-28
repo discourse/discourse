@@ -1,6 +1,6 @@
+import Controller from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
 import { isPresent } from "@ember/utils";
 
 export default Controller.extend({
@@ -11,6 +11,7 @@ export default Controller.extend({
     "category_id",
     "topic_id",
     "username",
+    "reviewed_by",
     "from_date",
     "to_date",
     "sort_order",
@@ -24,6 +25,7 @@ export default Controller.extend({
   topic_id: null,
   filtersExpanded: false,
   username: "",
+  reviewed_by: "",
   from_date: null,
   to_date: null,
   sort_order: null,
@@ -147,6 +149,7 @@ export default Controller.extend({
         status: this.filterStatus,
         category_id: this.filterCategoryId,
         username: this.filterUsername,
+        reviewed_by: this.filterReviewedBy,
         from_date: isPresent(this.filterFromDate)
           ? this.filterFromDate.toISOString(true).split("T")[0]
           : null,

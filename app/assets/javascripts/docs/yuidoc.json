@@ -4,6 +4,6 @@
   "url": "http://www.discourse.org/",
   "options": {
     "exclude": "development,production,defer",
-    "outdir":   "./build"
+    "outdir": "./build"
   }
 }

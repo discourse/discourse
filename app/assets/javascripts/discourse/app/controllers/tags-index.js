@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import showModal from "discourse/lib/show-modal";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   sortedByCount: true,
@@ -72,7 +72,7 @@ export default Controller.extend({
           }
 
           const joinedTags = tags.slice(0, displayN).join(", ");
-          var more = Math.max(0, tags.length - displayN);
+          let more = Math.max(0, tags.length - displayN);
 
           const tagsString =
             more === 0

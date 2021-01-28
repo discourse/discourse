@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { empty, and } from "@ember/object/computed";
-import { setting } from "discourse/lib/computed";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { and, empty } from "@ember/object/computed";
 import Group from "discourse/models/group";
+import I18n from "I18n";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import discourseComputed from "discourse-common/utils/decorators";
+import { setting } from "discourse/lib/computed";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {
@@ -110,8 +110,12 @@ export default buildCategoryPanel("settings", {
 
   @discourseComputed("category.sort_ascending")
   sortAscendingOption(sortAscending) {
-    if (sortAscending === "false") return false;
-    if (sortAscending === "true") return true;
+    if (sortAscending === "false") {
+      return false;
+    }
+    if (sortAscending === "true") {
+      return true;
+    }
     return sortAscending;
   },
 

@@ -191,7 +191,7 @@ class UserAvatarsController < ApplicationController
     return if !upload
     return upload if upload.extension == "svg"
 
-    upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
+    upload.get_optimized_image(size, size)
     # TODO decide if we want to detach here
   end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Bookmark < ActiveRecord::Base
+  BOOKMARK_LIMIT = 2000
+
   self.ignored_columns = [
     "delete_when_reminder_sent" # TODO(2021-07-22): remove
   ]
@@ -37,6 +39,7 @@ class Bookmark < ActiveRecord::Base
 
   validate :unique_per_post_for_user
   validate :ensure_sane_reminder_at_time
+  validate :bookmark_limit_not_reached
   validates :name, length: { maximum: 100 }
 
   # we don't care whether the post or topic is deleted,
@@ -63,6 +66,11 @@ class Bookmark < ActiveRecord::Base
     if reminder_at > 10.years.from_now.utc
       self.errors.add(:base, I18n.t("bookmarks.errors.cannot_set_reminder_in_distant_future"))
     end
+  end
+
+  def bookmark_limit_not_reached
+    return if user.bookmarks.count < BOOKMARK_LIMIT
+    self.errors.add(:base, I18n.t("bookmarks.errors.too_many", user_bookmarks_url: "#{Discourse.base_url}/my/activity/bookmarks"))
   end
 
   def no_reminder?
@@ -102,6 +110,20 @@ class Bookmark < ActiveRecord::Base
     result.group('date(bookmarks.created_at)')
       .order('date(bookmarks.created_at)')
       .count
+  end
+
+  ##
+  # Deletes bookmarks that are attached to posts/topics that were deleted
+  # more than X days ago. We don't delete bookmarks instantly when a post/topic
+  # is deleted so that there is a grace period to un-delete.
+  def self.cleanup!
+    grace_time = 3.days.ago
+    DB.exec(<<~SQL, grace_time: grace_time)
+      DELETE FROM bookmarks b
+      USING topics t, posts p
+      WHERE (b.topic_id = t.id AND b.post_id = p.id)
+        AND (t.deleted_at < :grace_time OR p.deleted_at < :grace_time)
+    SQL
   end
 end
 

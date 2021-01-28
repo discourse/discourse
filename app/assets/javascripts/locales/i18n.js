@@ -254,7 +254,7 @@ I18n.toHumanSize = function(number, options) {
 
   options = this.prepareOptions(options, {
     precision: precision,
-    format: "%n%u",
+    format: this.t("number.human.storage_units.format"),
     delimiter: ""
   });
 

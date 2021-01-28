@@ -314,6 +314,17 @@ describe CategoriesController do
         expect(response.status).to eq(422)
       end
 
+      it "returns errors when there is a name conflict while moving a category into another" do
+        parent_category = Fabricate(:category, name: "Parent", user: admin)
+        other_category = Fabricate(:category, name: category.name, user: admin, parent_category: parent_category, slug: "a-different-slug")
+
+        put "/categories/#{category.id}.json", params: {
+          parent_category_id: parent_category.id,
+        }
+
+        expect(response.status).to eq(422)
+      end
+
       it "returns 422 if email_in address is already in use for other category" do
         _other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
 

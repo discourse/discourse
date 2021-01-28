@@ -36,6 +36,16 @@ pl_PL:
             few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
             many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
             other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
+          up_to_max_options:
+            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
+            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
+            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
+            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
+          x_options:
+            one: "Wybierz przynajmniej <strong>%{count}</strong> opcję."
+            few: "Wybierz przynajmniej <strong>%{count}</strong> opcje."
+            many: "Wybierz przynajmniej <strong>%{count}</strong> opcji."
+            other: "Wybierz co najmniej <strong>%{count}</strong> opcji."
           between_min_and_max_options: "Wybierz między <strong>%{min}</strong> a <strong>%{max}</strong> opcji."
       cast-votes:
         title: "Oddaj głos"
@@ -47,7 +57,7 @@ pl_PL:
         title: "Wróć do oddanych głosów"
         label: "Pokaż głos"
       group-results:
-        title: "Grupuj głosy polami użytkownika"
+        title: "Grupuj głosy według pól użytkownika"
         label: "Pokaż podsumowanie"
       export-results:
         title: "Eksportuj wyniki ankiety"
@@ -65,15 +75,16 @@ pl_PL:
         age: "Zamknięta <strong>%{age}</strong>"
       breakdown:
         title: "Wyniki ankiety"
+        votes: "%{count} głosów"
         breakdown: "Podział"
         percentage: "Procent"
         count: "Liczba"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
-      error_while_exporting_results: "Przepraszamy, wystąpił błąd poczas eksportowania wyników ankiety."
+      error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
       ui_builder:
-        title: Utwórz ankietę
+        title: Zbuduj ankietę
         insert: Wstaw ankietę
         help:
           options_count: Wpisz co najmniej 1 opcję
@@ -94,12 +105,16 @@ pl_PL:
           label: Dozwolone grupy
         poll_chart_type:
           label: Typ wykresu
+          bar: Pasek
+          pie: Ciasto
         poll_config:
           max: Max
           min: Min
           step: Krok
         poll_public:
           label: Pokaż kto głosował
+        poll_title:
+          label: Tytuł (opcjonalnie)
         poll_options:
           label: Wprowadź jedną opcję ankiety w jednej linii
         automatic_close:

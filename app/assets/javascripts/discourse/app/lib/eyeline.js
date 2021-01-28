@@ -1,5 +1,5 @@
-import { isTesting } from "discourse-common/config/environment";
 import AppEvents from "discourse/services/app-events";
+import { isTesting } from "discourse-common/config/environment";
 
 let _skipUpdate;
 let _rootElement;
@@ -62,19 +62,29 @@ Eyeline.prototype.update = function () {
     let markSeen = false;
 
     // Make sure the element is visible
-    if (!$elem.is(":visible")) return true;
+    if (!$elem.is(":visible")) {
+      return true;
+    }
 
     // It's seen if...
     // ...the element is vertically within the top and botom
-    if (elemTop <= docViewBottom && elemTop >= docViewTop) markSeen = true;
+    if (elemTop <= docViewBottom && elemTop >= docViewTop) {
+      markSeen = true;
+    }
 
     // ...the element top is above the top and the bottom is below the bottom (large elements)
-    if (elemTop <= docViewTop && elemBottom >= docViewBottom) markSeen = true;
+    if (elemTop <= docViewTop && elemBottom >= docViewBottom) {
+      markSeen = true;
+    }
 
     // ...we're at the bottom and the bottom of the element is visible (large bottom elements)
-    if (atBottom && elemBottom >= docViewTop) markSeen = true;
+    if (atBottom && elemBottom >= docViewTop) {
+      markSeen = true;
+    }
 
-    if (!markSeen) return true;
+    if (!markSeen) {
+      return true;
+    }
 
     // If you hit the bottom we mark all the elements as seen. Otherwise, just the first one
     if (!atBottom) {

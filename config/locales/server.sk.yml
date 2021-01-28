@@ -242,28 +242,6 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
-    "new-topic": |2
-
-      Víitajte na %{site_name} &mdash; **Ďakujeme za založenie novej konverzácie!**
-
-      - Znie titulok zaujímavo ak ho čítate nahlas ? Zodpovedá obsahu ?
-
-      - Koho by to mohlo zaujímať ? Prečo je to dôležité ? Akú reakciu očakávate ?
-
-      - Vložte často používane slová vo vašej téme aby ju ostatní vedeli "nájsť". Pre zlúčenie vašej témy so súvisiacimi témami vyberte kategóriu .
-
-      Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
-    "new-reply": |2
-
-      Vitajte na %{site_name} &mdash; **Ďakujeme za príspevok!**
-
-      - Vylepší vaša odpoveď nejakým spôsobom diskusiu ?
-
-      - Buďte ohľaduplní k ostatným členom komunity.
-
-      - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
-
-      Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
     avatar: |2
 
       ### Čo takto nastaviť svoj profilový obrázok?
@@ -509,36 +487,29 @@ sk:
     off_topic:
       title: "Mimo témy"
       description: "Tento príspevok nesúvisí s danou témou popísanou v názve a prvom príspevku a pravdepodobne by mal byť presunutý niekam inam"
-      long_form: "toto je označené ako \"Mimo témy\""
     spam:
       title: "Spam"
-      long_form: "označiť toto ako spam"
       email_title: '"%{title}" bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      long_form: "toto označ ako nevhodné"
     notify_user:
       title: "Poslať @%{username} správu"
-      long_form: "úživateľovi bola zaslaná správa"
       email_title: 'Váš príspevok v "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Niečo iné"
       description: "Tento príspevok vyžaduje pozornosť obsluhy z iného dôvodu ako je uvedené vyššie."
-      long_form: "označené do pozornosti obsluhy"
       email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Záložka"
       description: "Vytvor záložku na tento príspevok"
       short_description: "Vytvor záložku na tento príspevok"
-      long_form: "záložka na tento príspevok bola vytvorená "
     like:
       title: "Páči sa mi"
       description: "Páči sa mi tento príspevok"
       short_description: "Páči sa mi tento príspevok"
-      long_form: "páčilo sa"
   user_activity:
     no_default:
       others: "Žiadna aktivita"
@@ -571,8 +542,6 @@ sk:
     mute_topic: "Stíšiť všetky upozornenia pre túto tému, %{link}"
     unwatch_category: "Prestať pozerať všetky témy v kategórii %{category}"
     mailing_list_mode: "Vypnúť režim mailing listu"
-    all: "Neposielajte mi žiadne maily zo stránky %{sitename}"
-    not_found_description: "Ľutujeme, nedokázali sme Vás odhlásiť. Je možné, že platnosť odkazu vo Vašom emaile vypršala."
     log_out: "Odhlásiť sa"
     digest_frequency:
       never: "nikdy"
@@ -886,7 +855,6 @@ sk:
     max_bookmarks_per_day: "Maximálny počet záložiek na jedného používateľa denne."
     max_edits_per_day: "Maximálny počet úprav používateľa denne."
     max_topics_per_day: "Maximálny počet tém používateľa denne."
-    max_personal_messages_per_day: "Maximálny počet správ ktoré môže používateľ denne vytvoriť."
     max_invites_per_day: "Maximálny počet pozvánok ktoré môže používateľ denne zaslať."
     max_topic_invitations_per_day: "Maximálny počet pozvánok do tém ktoré môže používateľ denne zaslať."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
@@ -955,7 +923,6 @@ sk:
     faq_url: "Ak máte FAQ stránku uloženú na iných stránkach, napište sem plný odkaz na ňu."
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
-    staff_like_weight: "Koľkonásobne viac sa má dať zamestnaneckým páči sa mi."
     topic_view_duration_hours: "Započítaj nové pozretie témy raz za IP/používateľa každých N hodín."
     user_profile_view_duration_hours: "Započítaj nové pozretie používateľského profilu raz za IP/používateľa každých N hodín."
     levenshtein_distance_spammer_emails: "Počet rozdielnych znakov, ktoré stále umožnia fuzzy zhodu, keď sa hľadájú emaily od spammerov."
@@ -989,8 +956,6 @@ sk:
     delete_all_posts_max: "Maximálny počet príspevkov, ktoré môžu byť vymazané naraz pomocou tlačítka Vymaž všetky príspevky. Ak má používateľ viac ako uvedený počet, príspevky nemôžu byť vymazané naraz a používateľ nemôže byť vymazaný."
     email_editable: "Povoliť užívateľom zmenu ich emailovej adresy po registrácii."
     allow_uploaded_avatars: "Povoliť používateľom nahranie profilovej fotky."
-    allow_animated_avatars: "Umožniť používateľom, použiť ako profilový obrázok animovaný gif. VAROVANE: na zmenu tohoto nastavenia spustite rake task avatars:refresh."
-    allow_animated_thumbnails: "Generovať animované náhľady anomovaných gifov."
     default_avatars: "URL na avatara, ktorý bude štandardne použitý pre nových používateľov pokiaľ si ho nezmenia."
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
@@ -1014,7 +979,6 @@ sk:
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
-    default_code_lang: "Vysvietenie syntaxe pre štandardné programovacie jazyky, aplikované na GitHub bloky kódu (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
     autohighlight_all_code: "Zapnúť vysvietenie syntaxe kódu na všetky formátované bloky kódu, i keď nie je explicitne zadaný jazyk."
     embed_truncate: "Orezať vkladané príspevky."
@@ -1022,7 +986,6 @@ sk:
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: "Vymazať návrhy staršie ako (n) dní."
-    prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
     emoji_set: "Aké emoji chcete mať?"
@@ -1135,14 +1098,12 @@ sk:
     errors: "%{errors}"
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
-    omniauth_error_unknown: "Niečo sa pokazilo počas prihlasovania, prosím skúste sa prihlásiť znova."
     omniauth_confirm_button: "Pokračovať"
     new_registrations_disabled: "Registrácia nových účtov momentálne nie je povolená."
     password_too_long: "Dĺžka hesla je obmedzená na 200 znakov. "
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     reserved_username: "Toto užívateľské meno nie je povolené."
     missing_user_field: "Nevyplnili ste všetky užívateľké polia."
-    second_factor_title: "Dvojfaktorová autentifikácia"
     second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
   admin:
     email:
@@ -1533,8 +1494,6 @@ sk:
             placeholder: "meno@príklad.com"
       corporate:
         title: "Organizácia"
-      colors:
-        title: "Téma"
       homepage:
         fields:
           homepage_style:

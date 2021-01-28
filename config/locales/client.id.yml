@@ -25,6 +25,7 @@ id:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
       long_no_year_no_time: "MMM D"
@@ -95,6 +96,10 @@ id:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "tutup"
+      twitter: "Bagikan di Twitter"
+      facebook: "Bagikan di Facebook"
+      email: "Kirim lewat email"
+      url: "Salin dan bagikan URL"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -130,7 +135,6 @@ id:
     topic_admin_menu: "tindakan topik"
     wizard_required: "Selamat datang di Discourse baru Anda! Mari kita mulai dengan <a href='%{url}' data-auto-route='true'>wizard pengaturan</a> ✨"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
-    bootstrap_mode_enabled: "Untuk lebih memudahkan peluncuran situs baru Anda, Anda berada di mode bootstrap. Semua pengguna baru akan mendapat level 1 dan mendapat ringkasan email harian diaktifkan. Hal ini akan otomatis dimatikan ketika pengguna %{min_users} sudah ikut."
     bootstrap_mode_disabled: "Mode bootstrap akan dinonaktifkan dalam 24 jam."
     themes:
       default_description: "Asal"
@@ -629,7 +633,6 @@ id:
         other: "%{count} topik baru dalam seminggu terakhir."
       topic_stat_sentence_month:
         other: "%{count} topik baru dalam sebulan terakhir."
-      n_more: "Kategori (%{count} lagi) ..."
     ip_lookup:
       title: Pencarian Alamat IP
       hostname: nama host
@@ -701,7 +704,6 @@ id:
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
-        each_browser_note: "Catatan : Anda harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
@@ -721,7 +723,6 @@ id:
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
-      github_profile: "Github"
       email_activity_summary: "Jumlah aktifitas"
       mailing_list_mode:
         label: "mode milis"
@@ -879,7 +880,6 @@ id:
         title: "Kata Sandi Lagi"
       auth_tokens:
         title: "Perangkat yang Baru Digunakan"
-        ip: "IP"
         details: "Detil"
         log_out_all: "Logout semua"
         not_you: "Bukan Anda?"
@@ -960,8 +960,6 @@ id:
         links_tab: "Tautan"
         link_created_at: "Dibuat"
         link_groups: Grup
-        generate_link: "Salin Tautan Undangan"
-        link_generated: "Tautan undangan telah sukses dibuat!"
         valid_for: "Tautan undangan hanya berlaku untuk alamat surel: %{email}"
         invite_link:
           success: "Tautan undangan telah sukses dibuat!"
@@ -1083,7 +1081,6 @@ id:
       disable: "Tunjukkan Tulisan yang Dihapus"
     private_message_info:
       title: "Pesan"
-      edit: "Tambah atau Hapus ..."
       leave_message: "Apakah Anda yakin ingin meninggalkan pesan ini?"
       remove_allowed_user: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
       remove_allowed_group: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
@@ -1146,7 +1143,6 @@ id:
       invited_by: "Anda telah diundang oleh:"
       accept_invite: "Terima Undangan"
       name_label: "Nama"
-      password_label: "Atur Kata Sandi"
       optional_description: "(opsional)"
     password_reset:
       continue: "Lanjut ke %{site_name}"
@@ -1172,8 +1168,6 @@ id:
       enter: "Enter"
     conditional_loading_section:
       loading: Diproses...
-    category_row:
-      topic_count: "%{count} topik dalam kategori ini"
     select_kit:
       default_header_text: Pilih...
       no_content: Tidak ditemukan yang cocok
@@ -1192,7 +1186,6 @@ id:
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
-      blockquote_text: "Blok Kutipan"
       add_warning: "Ini adalah peringatan resmi."
       similar_topics: "Topik anda mirip dengan..."
       reference_topic_title: "RE: %{title}"
@@ -1204,7 +1197,6 @@ id:
         post_length: "Tulisan setidaknya harus %{min} karakter"
         try_like: "Sudahkah Anda mencoba tombol %{heart}?"
         category_missing: "Anda harus memilih kategori"
-        tags_missing: "Anda harus memilih setidaknya %{count} label"
       save_edit: "Simpah Ubahan"
       reply_original: "Balas pada Topik Asal"
       reply_here: "Balas Disini"
@@ -1238,8 +1230,7 @@ id:
       link_dialog_title: "Sisipkan Tautan"
       link_optional_text: "judul opsional"
       link_url_placeholder: "Tempel URL atau ketik untuk mencari topik"
-      quote_title: "Blok Kutipan"
-      quote_text: "Blok Kutipan"
+      blockquote_text: "Blok Kutipan"
       code_title: "Teks terformat"
       paste_code_text: "ketik atau tempel kode di sini"
       upload_title: "Unggah"
@@ -1253,7 +1244,6 @@ id:
         draft: Konsep
         edit: Ubah
         reply_to_post:
-          label: Membalas tulisan %{postNumber} oleh %{postUsername}
           desc: Membalas tulisan tertentu
         reply_as_new_topic:
           desc: Buat topik baru yang ditautkan dengan topik ini
@@ -1345,14 +1335,13 @@ id:
       show_links: "tampilkan pranala dalam topik ini"
       browse_all_categories: Lihat semua kategori
       view_latest_topics: lihat topik terbaru
-      suggest_create_topic: Buat topik baru?
       jump_reply_up: lompat ke balasan sebelumnya
       progress:
         jump_prompt_or: "atau"
       notifications:
         reasons:
           "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "0": "You are ignoring all notifications on this topic."

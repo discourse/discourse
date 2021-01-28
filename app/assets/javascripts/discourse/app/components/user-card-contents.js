@@ -1,16 +1,16 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { alias, gte, and, gt, not, or } from "@ember/object/computed";
 import EmberObject, { set } from "@ember/object";
-import Component from "@ember/component";
+import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import User from "discourse/models/user";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
-import { durationTiny } from "discourse/lib/formatter";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
+import Component from "@ember/component";
+import I18n from "I18n";
+import User from "discourse/models/user";
+import { durationTiny } from "discourse/lib/formatter";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
@@ -88,7 +88,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   usernameClass: (username) => (username ? `user-card-${username}` : ""),
 
   @discourseComputed("username", "topicPostCount")
-  togglePostsLabel(username, count) {
+  filterPostsLabel(username, count) {
     return I18n.t("topic.filter_to", { username, count });
   },
 
@@ -210,8 +210,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       this._close();
     },
 
-    togglePosts() {
-      this.togglePosts(this.user);
+    filterPosts() {
+      this.filterPosts(this.user);
       this._close();
     },
 

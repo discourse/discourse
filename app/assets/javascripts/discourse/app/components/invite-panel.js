@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import EmberObject, { action } from "@ember/object";
-import { alias, and, equal } from "@ember/object/computed";
+import { alias, and, equal, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
-import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
+import I18n from "I18n";
 import Invite from "discourse/models/invite";
-import { i18n } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emailValid } from "discourse/lib/utilities";
 import { getNativeContact } from "discourse/lib/pwa-utils";
+import { i18n } from "discourse/lib/computed";
+import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   tagName: null,
@@ -17,6 +17,8 @@ export default Component.extend({
 
   inviteModel: alias("panel.model.inviteModel"),
   userInvitedShow: alias("panel.model.userInvitedShow"),
+  isStaff: readOnly("currentUser.staff"),
+  isAdmin: readOnly("currentUser.admin"),
 
   // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
@@ -25,8 +27,6 @@ export default Component.extend({
   customMessage: null,
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,
-
-  isAdmin: alias("currentUser.admin"),
 
   init() {
     this._super(...arguments);
@@ -57,8 +57,12 @@ export default Component.extend({
     saving,
     can_invite_to
   ) {
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const emailTrimmed = emailOrUsername.trim();
 
@@ -77,7 +81,9 @@ export default Component.extend({
       return true;
     }
 
-    if (can_invite_to) return false;
+    if (can_invite_to) {
+      return false;
+    }
 
     return false;
   },
@@ -98,9 +104,15 @@ export default Component.extend({
     groupIds,
     hasCustomMessage
   ) {
-    if (hasCustomMessage) return true;
-    if (saving) return true;
-    if (isEmpty(emailOrUsername)) return true;
+    if (hasCustomMessage) {
+      return true;
+    }
+    if (saving) {
+      return true;
+    }
+    if (isEmpty(emailOrUsername)) {
+      return true;
+    }
 
     const email = emailOrUsername.trim();
 
@@ -275,6 +287,8 @@ export default Component.extend({
       ? "topic.invite_private.email_or_username_placeholder"
       : "topic.invite_reply.username_placeholder";
   },
+
+  showApprovalMessage: and("isStaff", "siteSettings.must_approve_users"),
 
   customMessagePlaceholder: i18n("invite.custom_message_placeholder"),
 

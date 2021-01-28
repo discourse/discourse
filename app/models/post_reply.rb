@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class PostReply < ActiveRecord::Base
-  # TODO(2020-01-17): remove
-  self.ignored_columns = %w{
-    reply_id
-  }
-
   belongs_to :post
   belongs_to :reply, foreign_key: :reply_post_id, class_name: 'Post'
 

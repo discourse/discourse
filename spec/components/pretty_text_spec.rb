@@ -36,7 +36,7 @@ describe PrettyText do
           <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" alt="slight_smile" class="emoji"></a>
           </div>
           <blockquote>
           <p>ddd</p>
@@ -636,6 +636,22 @@ describe PrettyText do
       end
     end
 
+    context "emojis" do
+      it "should remove broken emoji" do
+        html = <<~EOS
+          <img src=\"//localhost:3000/images/emoji/twitter/bike.png?v=9\" title=\":bike:\" class=\"emoji\" alt=\":bike:\"> <img src=\"//localhost:3000/images/emoji/twitter/cat.png?v=9\" title=\":cat:\" class=\"emoji\" alt=\":cat:\"> <img src=\"//localhost:3000/images/emoji/twitter/discourse.png?v=9\" title=\":discourse:\" class=\"emoji\" alt=\":discourse:\">
+        EOS
+        expect(PrettyText.excerpt(html, 7)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 8)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 9)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 10)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 11)).to eq(":bike: &hellip;")
+        expect(PrettyText.excerpt(html, 12)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 13)).to eq(":bike: :cat: &hellip;")
+        expect(PrettyText.excerpt(html, 14)).to eq(":bike: :cat: &hellip;")
+      end
+    end
+
     it "should have an option to strip links" do
       expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 100, strip_links: true)).to eq("cnn")
     end
@@ -900,13 +916,27 @@ describe PrettyText do
       expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
     end
 
+    describe "#convert_vimeo_iframes" do
+      it "converts <iframe> to <a>" do
+        html = <<~HTML
+          <p>This is a Vimeo link:</p>
+          <iframe width="640" height="360" src="https://player.vimeo.com/video/1" data-original-href="https://vimeo.com/1" frameborder="0" allowfullscreen="" seamless="seamless" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
+        HTML
+
+        md = PrettyText.format_for_email(html, post)
+
+        expect(md).not_to include('<iframe')
+        expect(md).to match_html(<<~HTML)
+          <p>This is a Vimeo link:</p>
+          <p><a href="https://vimeo.com/1">https://vimeo.com/1</a></p>
+        HTML
+      end
+    end
+
     describe "#strip_secure_media" do
       before do
-        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
-        SiteSetting.s3_access_key_id = "s3-access-key-id"
-        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        setup_s3
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.enable_s3_uploads = true
         SiteSetting.secure_media = true
         SiteSetting.login_required = true
       end
@@ -969,12 +999,14 @@ describe PrettyText do
       it "replaces secure images with a placeholder, keeping the url in an attribute" do
         url = "/secure-media-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <img src=\"#{url}\">
+        <img src=\"#{url}\" width=\"20\" height=\"20\">
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include('<img')
         expect(md).to include("Redacted")
         expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+        expect(md).to include("data-width=\"20\"")
+        expect(md).to include("data-height=\"20\"")
       end
     end
   end
@@ -1038,7 +1070,7 @@ describe PrettyText do
     end
 
     it "replaces some glyphs that are not in the emoji range" do
-      expect(PrettyText.cook("☺")).to match(/\:slight_smile\:/)
+      expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
     end
 
     it "replaces digits" do
@@ -1711,17 +1743,20 @@ HTML
     end
 
     it "wraps the [wrap] tag in block" do
+      # can interfere with parsing
+      SiteSetting.enable_markdown_typographer = true
+
       md = <<~MD
-        [wrap=toc]
-        taco
+        [wrap=toc id="a” aa='b"' bb="f'"]
+        taco1
         [/wrap]
       MD
 
       cooked = PrettyText.cook(md)
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc">
-        <p>taco</p>
+        <div class="d-wrap" data-wrap="toc" data-id="a" data-aa="b&amp;quot;" data-bb="f'">
+        <p>taco1</p>
         </div>
       HTML
 
@@ -1744,10 +1779,10 @@ HTML
     end
 
     it "adds attributes as data-attributes" do
-      cooked = PrettyText.cook("[wrap=toc name=\"pepper bell\" id=1]taco[/wrap]")
+      cooked = PrettyText.cook("[wrap=toc name=\"single quote's\" id='1\"2']taco[/wrap]")
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-name="pepper bell" data-id="1">
+        <div class="d-wrap" data-wrap="toc" data-name="single quote's" data-id="1&amp;quot;2">
         <p>taco</p>
         </div>
       HTML

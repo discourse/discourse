@@ -56,7 +56,6 @@ bs_BA:
     compile_error:
       unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
-      generic: Došlo je do pogreške prilikom uvoza te teme
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
       unpack_failed: "Otpakivanje datoteke nije uspelo"
@@ -184,27 +183,6 @@ bs_BA:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-  education:
-    "new-topic": |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
-
-      - Does the title accurately describe your topic? Does it sound interesting?
-
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
-
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
-    "new-reply": |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
-
-      - Does your reply improve the conversation in some way?
-
-      - Be kind to your fellow community members.
-
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -310,16 +288,12 @@ bs_BA:
     off_topic:
       title: "Nije Relevantno"
       description: "Ovaj post iz korjena mjenja tok ove teme i najvjerovatnije bi ga trebalo premjestiti. Ako je ovo prvi post to jest sama tema, onda mu najvjerovatnije nije mjesto ovde."
-      long_form: "opomeni kao ne-relevantno"
     spam:
       title: "Spam"
-      long_form: "opomeni kao spam"
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
-      long_form: "opomeni kao neprikladno"
     notify_user:
-      long_form: "korisnik obavješten"
       email_title: 'Tvoj post u temi "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -329,12 +303,10 @@ bs_BA:
       title: "Sačuvaj"
       description: "Sačuvaj ovaj post"
       short_description: "Sačuvaj ovaj post"
-      long_form: "sačuvan post"
     like:
       title: "Like"
       description: "Lajkuj ovaj post"
       short_description: "Lajkuj ovaj post"
-      long_form: "lajkovao si ovo"
   user_activity:
     no_replies:
       others: "Nema odgovora."
@@ -647,7 +619,6 @@ bs_BA:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_personal_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
@@ -703,7 +674,6 @@ bs_BA:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    staff_like_weight: "How much extra weighting factor to give staff likes."
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     min_ban_entries_for_roll_up: "Kada kliknete tipku Roll up, stvorit ćete novi unos za subnet ban ako ima najmanje (N) unosa."
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -735,13 +705,11 @@ bs_BA:
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
-    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:
@@ -793,13 +761,11 @@ bs_BA:
     errors: "%{errors}"
     not_available: "Nije dostupno. Probaj %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     omniauth_confirm_button: "Nastavi"
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
     click_to_continue: "Klikni ovdje da nastavite dalje"
-    second_factor_title: "Two Factor Authentication"
     second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
   admin:
     email:
@@ -1027,10 +993,6 @@ bs_BA:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Izgled"
-      themes_further_reading:
-        title: "Teme"
       homepage:
         fields:
           homepage_style:

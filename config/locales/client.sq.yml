@@ -488,7 +488,6 @@ sq:
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         disable: "Çaktivizoni njoftimet"
         enable: "Aktivizoni njoftimet"
-        each_browser_note: "Shënim: Duhet të ndryshoni këtë rregullim (setting) në çdo shfletues që përdorni. "
       dismiss: "Hiqe"
       dismiss_notifications: "Hiqini të gjitha"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
@@ -502,7 +501,6 @@ sq:
       admin_tooltip: "Ky anëtar është administrator"
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_reason: "Arsyeja:"
-      github_profile: "Github"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
         individual: "Dërgo një email për çdo postim të ri"
@@ -649,7 +647,6 @@ sq:
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       auth_tokens:
-        ip: "IP"
         details: "Detaje"
       last_posted: "Postimi i fundit"
       last_emailed: "Emaili i Fundit"
@@ -734,8 +731,6 @@ sq:
         links_tab: "Lidhjet"
         link_created_at: "Krijuar"
         link_groups: Grupet
-        create: "Dërgoni ftesën"
-        generate_link: "Kopjo lidhjen e ftesës"
         bulk_invite:
           success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
@@ -913,7 +908,6 @@ sq:
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
       not_activated: "Nuk mund të identifikoheni akoma. Ju kemi dërguar një email aktivizimi tek <b>%{sentTo}</b>. Ndiqni udhëzimet në atë email për të aktivizuar llogarinë tuaj. "
-      not_allowed_from_ip_address: "Nuk lejohet identifikimi nga kjo adresë IP."
       admin_not_allowed_from_ip_address: "Nuk futesh dot si admin nga kjo adresë IP."
       resend_activation_email: "Klikoni këtu për të dërguar sërish email-in e aktivizimit."
       resend_title: "Dërgo përsëri emailin e aktivizimit"
@@ -923,7 +917,6 @@ sq:
       sent_activation_email_again: "Ju dërguam një email aktivizimi të ri tek adresa %{currentEmail}. Emaili mund të vonohet disa minuta, verifikoni edhe dosjen \"spam\". "
       to_continue: "Ju lutemi, Identifikohuni"
       preferences: "Duhet të identifikoheni për të ndryshuar preferencat e profilit."
-      forgot: "Nuk i mbaj mend detajet e llogarisë"
       not_approved: "Llogaria juaj nuk është aprovuar ende. Do t'ju dërgojmë një email kur të aprovohet. "
       google_oauth2:
         name: "Google"
@@ -946,7 +939,6 @@ sq:
       accept_invite: "Prano ftesën"
       success: "Llogaria juaj u krijua dhe ju tani mund të identifikoheni."
       name_label: "Emri"
-      password_label: "Vendos Fjalëkalim"
     password_reset:
       continue: "Vazhdo tek %{site_name}"
     emoji_set:
@@ -975,7 +967,6 @@ sq:
       options: "Opsione"
       whisper: "pëshpëritje"
       unlist: "çlistuar"
-      blockquote_text: "Citim"
       add_warning: "Ky është një paralajmërim zyrtar."
       toggle_whisper: "Pëshpëritje?"
       toggle_unlisted: "Toggle Unlisted"
@@ -1024,8 +1015,7 @@ sq:
       link_description: "shkruaj përshkrimin e lidhjes këtu"
       link_dialog_title: "Vendosni një lidhje"
       link_optional_text: "titull fakultativ"
-      quote_title: "Citim"
-      quote_text: "Citim"
+      blockquote_text: "Citim"
       code_title: "Tekst i paraformatuar"
       code_text: "shkruani 4 hapësira (space) për të filluar tekstin e paraformatuar"
       paste_code_text: "shkruani ose ngjisni kodin këtu"
@@ -1087,10 +1077,8 @@ sq:
       title: "kërko në faqe"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
-      searching: "Duke kërkuar..."
       post_format: "#%{post_number} nga %{username}"
       search_google_button: "Google"
-      search_google_title: "Kërko në këtë faqe"
       context:
         user: "Kërko postime nga @%{username}"
         category: "Kërkoni kategorinë #%{category}"
@@ -1139,12 +1127,10 @@ sq:
         new: "Nuk ka tema të reja."
         read: "Nuk keni lexuar asnjë temë deri tani."
         posted: "Nuk keni shkruajtur tek asnjë temë deri tani."
-        latest: "Nuk ka tema të fundit. Oh sa keq."
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: %{category}."
         top: "Nuk ka tema popullore."
         educate:
-          new: '<p>Temat e reja shfaqen këtu.</p><p>Automatikisht, temat cilësohen si të reja dhe kanë një shënim <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">i ri</span> nëse janë krijuar gjatë dy ditëve të fundit.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat</a> për t''a ndryshuar këtë parametër.</p>'
           unread: '<p>Temat e palexuara shfaqen këtu.</p><p>Automatikisht, temat klasifikohen si të palexuara dhe kanë etiketa me numër <span class="badge new-posts badge-notification">1</span> nëse ju:</p><ul><li>krijuat temën</li><li>iu përgjigjët temës</li><li>lexuat temën për më shumë se 4 minuta</li></ul><p>Ose nëse keni zgjedhur të Gjurmoni ose Vëzhgoni temën duke klikuar në butonin përkatës në fund të çdo teme.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat tuaja</a> për të bërë ndryshime.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
@@ -1210,10 +1196,8 @@ sq:
       toggle_information: "më shumë mbi temën"
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në %{catLink} ose %{latestLink}."
       read_more: "Dëshironi të lexoni më shumë? %{catLink} ose %{latestLink}."
-      read_more_MF: "Keni { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 shkrim të palexuar</a> } other { <a href='{basePath}/unread'># shkrime të palexuara</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{dhe } false {është } other{}} <a href='{basePath}/new'>1 shkrim të ri</a>} other { {BOTH, select, true{dhe } false {} other{}} <a href='{basePath}/new'># shkrime të reja</a>} } akoma, ose {CATEGORY, select, true {shiko temat e tjera në kategorinë {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
-      suggest_create_topic: Pse nuk hapni një temë të re?
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
@@ -1250,7 +1234,7 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "
@@ -1317,7 +1301,6 @@ sq:
       feature_topic:
         title: "Temë në plan të parë"
         pin: "Shfaqe këtë temë në krye të kategorisë %{categoryLink} deri më"
-        confirm_pin: "Ju tashmë keni %{count} tema të përzgjedhura. Shumë tema të përzgjedhura mund të bëhen barrë për përdorues të rinj dhe anonimë. A jeni i sigurtë që dëshironi ta përzgjidhni një temë tjetër në këtë kategori?"
         unpin: "Remove this topic from the top of the %{categoryLink} category."
         unpin_until: "Remove this topic from the top of the %{categoryLink} category or wait until <strong>%{until}</strong>."
         pin_note: "Përdoruesit mund ta çngjitin këtë temë veçan sipas dëshirës."
@@ -1327,7 +1310,6 @@ sq:
           one: "Temat kryesore të momentit në %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temat kryesore të momentit në %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Shfaqe këtë temë në krye të listës së të gjitha temave deri më"
-        confirm_pin_globally: "Ju tashmë keni %{count} tema të përzgjedhura. Shumë tema të përzgjedhura mund të bëhen barrë për përdorues të rinj dhe anonimë. A jeni i sigurtë që dëshironi ta përzgjidhni një temë tjetër të gjithanëshme?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
         global_pin_note: "Përdoruesit mund ta çngjitin këtë temë veçan sipas dëshirës."
@@ -1603,7 +1585,6 @@ sq:
     flagging:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
-      take_action: "Vepro"
       notify_action: "Mesazh"
       official_warning: "Paralajmërim zyrtar"
       delete_spammer: "Elimino Spammer"
@@ -1670,13 +1651,6 @@ sq:
       unlisted:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
-    posts_long: "ka %{number} postime në temë"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase:
@@ -1688,7 +1662,6 @@ sq:
     likes_lowercase:
       one: "pëlqim"
       other: "pëlqime"
-    likes_long: "ka %{number} pëlqime në këtë temë"
     users: "Përdoruesit"
     users_lowercase:
       one: "përdorues"

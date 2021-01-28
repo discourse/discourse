@@ -1,18 +1,18 @@
 import I18n from "I18n";
-import { h } from "virtual-dom";
+import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
+import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
+import { avatarFor } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import evenRound from "discourse/plugins/poll/lib/even-round";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
-import loadScript from "discourse/lib/load-script";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
-import { avatarFor } from "discourse/widgets/post";
-import RawHtml from "discourse/widgets/raw-html";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import evenRound from "discourse/plugins/poll/lib/even-round";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -102,7 +102,9 @@ createWidget("discourse-poll-load-more", {
   click() {
     const { state } = this;
 
-    if (state.loading) return;
+    if (state.loading) {
+      return;
+    }
 
     state.loading = true;
     return this.sendWidgetAction("loadMore").finally(
@@ -126,7 +128,9 @@ createWidget("discourse-poll-voters", {
   fetchVoters() {
     const { attrs, state } = this;
 
-    if (state.loaded === "loading") return;
+    if (state.loaded === "loading") {
+      return;
+    }
     state.loaded = "loading";
 
     return _fetchVoters({
@@ -343,14 +347,26 @@ createWidget("discourse-poll-container", {
     const options = poll.get("options");
 
     if (attrs.showResults) {
+      const contents = [];
+
+      if (attrs.titleHTML) {
+        contents.push(new RawHtml({ html: attrs.titleHTML }));
+      }
+
       const type = poll.get("type") === "number" ? "number" : "standard";
       const resultsWidget =
         type === "number" || attrs.poll.chart_type !== PIE_CHART_TYPE
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
-      return this.attach(resultsWidget, attrs);
+      contents.push(this.attach(resultsWidget, attrs));
+
+      return contents;
     } else if (options) {
       const contents = [];
+
+      if (attrs.titleHTML) {
+        contents.push(new RawHtml({ html: attrs.titleHTML }));
+      }
 
       if (!checkUserGroups(this.currentUser, poll)) {
         contents.push(
@@ -487,24 +503,13 @@ createWidget("discourse-poll-pie-canvas", {
 
 createWidget("discourse-poll-pie-chart", {
   tagName: "div.poll-results-chart",
+
   html(attrs) {
     const contents = [];
 
     if (!attrs.showResults) {
       clearPieChart(attrs.id);
       return contents;
-    }
-
-    if (attrs.groupableUserFields.length) {
-      const button = this.attach("button", {
-        className: "btn-default poll-show-breakdown",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "far-eye",
-        action: "showBreakdown",
-      });
-
-      contents.push(button);
     }
 
     const chart = this.attach("discourse-poll-pie-canvas", attrs);
@@ -548,7 +553,7 @@ function pieChartConfig(data, labels, opts = {}) {
 }
 
 function stripHtml(html) {
-  var doc = new DOMParser().parseFromString(html, "text/html");
+  let doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
 }
 
@@ -614,6 +619,18 @@ createWidget("discourse-poll-buttons", {
           })
         );
       }
+    }
+
+    if (attrs.groupableUserFields.length && poll.voters > 0) {
+      const button = this.attach("button", {
+        className: "btn-default poll-show-breakdown",
+        label: "poll.group-results.label",
+        title: "poll.group-results.title",
+        icon: "far-eye",
+        action: "showBreakdown",
+      });
+
+      contents.push(button);
     }
 
     if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
@@ -691,7 +708,9 @@ export default createWidget("discourse-poll", {
 
   buildAttributes(attrs) {
     let cssClasses = "poll";
-    if (attrs.poll.chart_type === PIE_CHART_TYPE) cssClasses += " pie";
+    if (attrs.poll.chart_type === PIE_CHART_TYPE) {
+      cssClasses += " pie";
+    }
     return {
       class: cssClasses,
       "data-poll-name": attrs.poll.get("name"),
@@ -900,9 +919,15 @@ export default createWidget("discourse-poll", {
   toggleOption(option) {
     const { attrs } = this;
 
-    if (this.isClosed()) return;
-    if (!this.currentUser) return this.showLogin();
-    if (!checkUserGroups(this.currentUser, this.attrs.poll)) return;
+    if (this.isClosed()) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
+    if (!checkUserGroups(this.currentUser, this.attrs.poll)) {
+      return;
+    }
 
     const { vote } = attrs;
     if (!this.isMultiple()) {
@@ -916,8 +941,12 @@ export default createWidget("discourse-poll", {
   },
 
   castVotes() {
-    if (!this.canCastVotes()) return;
-    if (!this.currentUser) return this.showLogin();
+    if (!this.canCastVotes()) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
 
     const { attrs, state } = this;
 

@@ -80,6 +80,10 @@ class Admin::GroupsController < Admin::AdminController
     if group.automatic
       can_not_modify_automatic
     else
+      details = { name: group.name }
+      details[:grant_trust_level] = group.grant_trust_level if group.grant_trust_level
+
+      StaffActionLogger.new(current_user).log_custom('delete_group', details)
       group.destroy!
       render json: success_json
     end
@@ -90,6 +94,8 @@ class Admin::GroupsController < Admin::AdminController
     raise Discourse::NotFound unless group
 
     return can_not_modify_automatic if group.automatic
+    guardian.ensure_can_edit_group!(group)
+
     users = User.where(username: group_params[:usernames].split(","))
 
     users.each do |user|
@@ -117,6 +123,7 @@ class Admin::GroupsController < Admin::AdminController
     raise Discourse::NotFound unless group
 
     return can_not_modify_automatic if group.automatic
+    guardian.ensure_can_edit_group!(group)
 
     user = User.find(params[:user_id].to_i)
     group.group_users.where(user_id: user.id).update_all(owner: false)

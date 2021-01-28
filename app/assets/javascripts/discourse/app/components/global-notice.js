@@ -1,10 +1,10 @@
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import Component from "@ember/component";
-import LogsNotice from "discourse/services/logs-notice";
 import EmberObject, { computed } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import Component from "@ember/component";
+import I18n from "I18n";
+import LogsNotice from "discourse/services/logs-notice";
+import { bind } from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
 
 const _pluginNotices = [];
 
@@ -120,7 +120,7 @@ export default Component.extend({
           notices.push(
             Notice.create({
               text: I18n.t("bootstrap_mode_enabled", {
-                min_users: this.siteSettings.bootstrap_mode_min_users,
+                count: this.siteSettings.bootstrap_mode_min_users,
               }),
               id: "alert-bootstrap-mode",
             })
@@ -193,7 +193,9 @@ export default Component.extend({
       }
 
       const alert = document.getElementById(`global-notice-${notice.id}`);
-      if (alert) alert.style.display = "none";
+      if (alert) {
+        alert.style.display = "none";
+      }
     },
   },
 

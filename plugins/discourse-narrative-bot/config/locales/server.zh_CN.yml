@@ -25,15 +25,11 @@ zh_CN:
       long_description: |
         该徽章授予给完成交互式高级用户教程的你。你已经掌握了讨论的高级工具——本徽章就是你的证明！
   discourse_narrative_bot:
-    bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
+    bio: "你好，我不是一个真实存在的人类。我是一个可以带你了解这个站点的机器人。你可以通过给我发消息或提及我来与我交互。"
     tl2_promotion_message:
-      subject_template: "恭喜！你的信任等级提升了！"
+      subject_template: "现在你已经晋升了，是时候学习高级功能了！"
       text_body_template: |
-        现在你已经晋升了了，是时候学习一些高级特性了!
-
-        用 `@%{discobot_username} %{reset_trigger}` 来回复这条信息，了解更多你能做的事情。
-
-        我们邀请你继续参与社区活动——我们喜欢有你在身边。
+        使用`@%{discobot_username} %{reset_trigger}`回复本消息可以找出更多功能。
     timeout:
       message: |-
         你好， @%{username}。好久没见到你了，一切可好？
@@ -49,8 +45,8 @@ zh_CN:
       trigger: "骰子"
       invalid: |-
         我很抱歉，数学上证明了不可能投出这种色子组合。 :confounded:
-      not_enough_dice: |-
-        我只有 %{num_of_dice} 个色子。我知道，[太不像话了](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)。
+      not_enough_dice:
+        other: "我只有 %{count} 骰子。 [Shameful]\n(https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
       out_of_range: |-
         你知道数学上[面最多](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)的公平色子有 120 面么？
       results: |-
@@ -151,7 +147,6 @@ zh_CN:
       reset_trigger: "教程"
       title: "新用户教程完成证明"
       cert_title: "你已经成功完成新用户教程了"
-      delete_reason: "用户跳过了新用户提示"
       hello:
         title: "欢迎！"
         message: |-
@@ -191,13 +186,13 @@ zh_CN:
         reply: |-
           好赞的图片—我点了赞 :heart: ，你知道我很乐意看见它的 :heart_eyes:
         like_not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
+          你忘记点赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
         not_found: |-
-          看起来你还没有上传一张图片，因此我选择了一张可以令你满意的。
+          你还没有上传图像，因此我为你选择了一张我觉得你会喜欢的。
 
-          `%{image_url}`
+          <%{image_url}>
 
-          试试再上传一张，或者将链接粘贴在单独的一行中！
+          上传另一个试试，也可以单独一行粘贴图片的链接！
       likes:
         instructions: |-
           这是一只独角兽的照片：
@@ -206,7 +201,7 @@ zh_CN:
 
           如果你喜欢的话（谁会不喜欢呢！）点击帖子底部的赞:heart:按钮让我知道。
         reply: |-
-          谢谢你喜欢我的帖子！
+          感谢你喜欢我的帖子！
         not_found: |-
           你忘记赞 :heart: 我的[帖子](%{url})了吗？ :crying_cat_face:
       formatting:

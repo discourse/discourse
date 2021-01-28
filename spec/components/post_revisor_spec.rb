@@ -128,6 +128,38 @@ describe PostRevisor do
       end
     end
 
+    describe 'topic is in slow mode' do
+      before do
+        topic.update!(slow_mode_seconds: 1000)
+      end
+
+      it 'regular edit' do
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+
+        expect(post.errors.present?).to eq(true)
+        expect(post.errors.messages[:base].first).to be I18n.t("cannot_edit_on_slow_mode")
+      end
+
+      it 'ninja editing is allowed' do
+        SiteSetting.editing_grace_period = 1.minute
+
+        subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+
+        post.reload
+
+        expect(post.errors).to be_empty
+      end
+
+      it 'staff is allowed to edit posts even if the topic is in slow mode' do
+        admin = Fabricate(:admin)
+        subject.revise!(admin, { raw: 'updated body' }, revised_at: post.updated_at + 10.minutes)
+
+        post.reload
+
+        expect(post.errors).to be_empty
+      end
+    end
+
     describe 'ninja editing' do
       it 'correctly applies edits' do
         SiteSetting.editing_grace_period = 1.minute
@@ -787,14 +819,14 @@ describe PostRevisor do
           end
 
           it "can't add staff-only tags" do
-            create_staff_tags(['important'])
+            create_staff_only_tags(['important'])
             result = subject.revise!(user, raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(false)
             expect(post.topic.errors.present?).to eq(true)
           end
 
           it "staff can add staff-only tags" do
-            create_staff_tags(['important'])
+            create_staff_only_tags(['important'])
             result = subject.revise!(admin, raw: "lets totally update the body", tags: ['important', 'stuff'])
             expect(result).to eq(true)
             post.reload
@@ -803,7 +835,7 @@ describe PostRevisor do
 
           context "with staff-only tags" do
             before do
-              create_staff_tags(['important'])
+              create_staff_only_tags(['important'])
               topic = post.topic
               topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
             end

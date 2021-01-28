@@ -1,5 +1,9 @@
 import { get } from "@ember/object";
 
+export const RUNTIME_OPTIONS = {
+  allowProtoPropertiesByDefault: true,
+};
+
 export function registerRawHelpers(hbs, handlebarsClass) {
   if (!hbs.helpers) {
     hbs.helpers = Object.create(handlebarsClass.helpers);
@@ -25,21 +29,22 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   };
 
   // #each .. in support (as format is transformed to this)
-  hbs.registerHelper("each", function (
-    localName,
-    inKeyword,
-    contextName,
-    options
-  ) {
-    var list = get(this, contextName);
-    var output = [];
-    var innerContext = Object.create(this);
-    for (var i = 0; i < list.length; i++) {
-      innerContext[localName] = list[i];
-      output.push(options.fn(innerContext));
+  hbs.registerHelper(
+    "each",
+    function (localName, inKeyword, contextName, options) {
+      if (typeof contextName === "undefined") {
+        return;
+      }
+      let list = get(this, contextName);
+      let output = [];
+      for (let i = 0; i < list.length; i++) {
+        let innerContext = {};
+        innerContext[localName] = list[i];
+        output.push(options.fn(innerContext));
+      }
+      return output.join("");
     }
-    return output.join("");
-  });
+  );
 
   function stringCompatHelper(fn) {
     const old = hbs.helpers[fn];

@@ -18,9 +18,7 @@ describe Jobs::VacateLegacyPrefixBackups, type: :multisite do
   end
 
   before do
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_access_key_id = "abc"
-    SiteSetting.s3_secret_access_key = "def"
+    setup_s3
     SiteSetting.s3_backup_bucket = bucket_name
     SiteSetting.backup_location = BackupLocationSiteSetting::S3
   end

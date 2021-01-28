@@ -56,7 +56,6 @@ hu:
     compile_error:
       unrecognized_extension: "Ismeretlen fájlkiterjesztés: %{extension}"
     import_error:
-      generic: Hiba történt a téma importálásákor
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
@@ -151,12 +150,6 @@ hu:
   invite:
     not_found: "A meghívási token érvénytelen. Lépjen kapcsolatba a <a href='%{base_url}/about'>stábbal</a>."
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
-    not_found_template: |
-      <p>A(z) <a href="%{base_url}">%{site_name}</a> meghívóját már felhasználta.</p>
-
-      <p>Ha emlékszik a jelszóra, akkor <a href="%{base_url}/login">bejelentkezhet</a>.</p>
-
-      <p>Egyébként <a href="%{base_url}/password-reset">állítsa helyre a jelszavát</a>.</p>
     error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
   backup:
@@ -273,14 +266,6 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    get_a_room: |
-      ### Biztasson mindenkit, hogy csatlakozzanak a beszélgetéshez
-
-      %{count} alkalommal válaszoz @%{reply_username} felhasználónak ebben a témában.
-
-      A jó beszélgetések számos hangot és perspektívát tartalmaznak. Be tud valaki mást is vonni?
-
-      És ne feledje, ha nem nyilvánosan szeretné folytatni a párbeszédet ezzel a felhasználóval, akkor [személyes üzenetet is küldhet neki](%{base_path}/u/%{reply_username}).
   activerecord:
     attributes:
       category:
@@ -473,15 +458,12 @@ hu:
   post_action_types:
     off_topic:
       title: "Nem a témához tartozó"
-      long_form: "megjelölve nem a témához tartozóként"
     spam:
       title: "Szemét"
-      long_form: "megjelölve szemétként"
       email_title: 'A(z) „%{title}” szemétnek lett jelölve'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nem ideillő"
-      long_form: "megjelölve nem ideillőként"
     notify_user:
       email_title: 'A bejegyzése itt: „%{title}”'
       email_body: "%{link}\n\n%{message}"
@@ -492,12 +474,10 @@ hu:
       title: "Könyvjelző"
       description: "Bejegyzés könyvjelzőzése"
       short_description: "Bejegyzés könyvjelzőzése"
-      long_form: "a bejegyzés könyvjelzőzve"
     like:
       title: "Kedvelés"
       description: "Bejegyzés kedvelése"
       short_description: "Bejegyzés kedvelése"
-      long_form: "kedvelve"
   user_activity:
     no_default:
       self: "Még nincsenek tevékenységek."
@@ -764,10 +744,13 @@ hu:
     enable_badges: "A jelvény rendszer engedélyezése"
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
+    recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emodzsi engedélyezése"
     enable_emoji_shortcuts: "A gyakori mosolyt jelző szövegek, mint a :) :p és :( emodzsikká lesznek alakítva"
     emoji_set: "Hogy szeretné az emodzsiját?"
+    auto_close_topics_create_linked_topic: "Új összekapcsolt téma létrehozása, ha a téma a „témák automatikus lezárása bejegyzésszám alapján” beállítás miatt automatikusan lezárásra kerül."
     company_name: "Cégnév"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
@@ -815,14 +798,12 @@ hu:
     errors: "%{errors}"
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
-    omniauth_error_unknown: "A bejelentkezési valamiért nem sikerült, próbálja meg újra."
     omniauth_confirm_button: "Folytatás"
     new_registrations_disabled: "Az új fiókok létrehozása jelenleg nem engedélyezett."
     password_too_long: "A jelszavak legfeljebb 200 karakter hosszúak lehetnek."
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötte ki az összes felhasználói mezőt"
     click_to_continue: "Kattintson ide a folytatáshoz."
-    second_factor_title: "Kétfaktoros hitelesítés"
     second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
   admin:
     email:
@@ -1072,7 +1053,6 @@ hu:
     latte: "Tejeskávé"
     summer: "Nyár"
     dark_rose: "Sötét rózsa"
-    default_theme_name: "Világos"
     light_theme_name: "Világos"
     dark_theme_name: "Sötét"
     neutral_theme_name: "Semleges"
@@ -1193,8 +1173,6 @@ hu:
     submit_button: "E-mail küldése"
   tags:
     title: "Címkék"
-    staff_tag_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai állíthatják be.'
-    staff_tag_remove_disallowed: 'A(z) „%{tag}” címkét csak a stáb tagjai távolíthatják el.'
     forbidden:
       in_this_category: 'A(z) „%{tag_name}” címke nem használható ebben a kategóriában'
       restricted_to:
@@ -1242,10 +1220,6 @@ hu:
           company_name:
             label: "Cégnév"
             placeholder: "Példa szervezet"
-      colors:
-        title: "Téma"
-      themes_further_reading:
-        title: "Témák"
       logos:
         title: "Logók"
         fields:
@@ -1350,6 +1324,10 @@ hu:
         title: "Elutasítás"
       delete_user:
         title: "Felhasználó törlése"
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (%{count}. rész)"
+      other: "%{topic_title} (%{count}. rész)"
   activemodel:
     errors:
       <<: *errors

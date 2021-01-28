@@ -68,6 +68,7 @@ class DiscoursePluginRegistry
   define_register :vendored_pretty_text, Set
   define_register :vendored_core_pretty_text, Set
   define_register :seedfu_filter, Set
+  define_register :demon_processes, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -81,6 +82,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :api_parameter_routes
   define_filtered_register :api_key_scope_mappings
+  define_filtered_register :user_api_key_scope_mappings
 
   define_filtered_register :permitted_bulk_action_parameters
 
@@ -130,8 +132,8 @@ class DiscoursePluginRegistry
         next if each_options[:admin]
       end
 
-      Dir.glob("#{root}/**/*") do |f|
-        yield f, ext
+      Dir.glob("#{root}/**/*.#{ext}") do |f|
+        yield f
       end
     end
   end
@@ -160,6 +162,7 @@ class DiscoursePluginRegistry
       elsif opts == :color_definitions
         self.color_definition_stylesheets[plugin_directory_name] = asset
       elsif opts == :variables
+        Discourse.deprecate(":variables is deprecated", drop_from: "2.7")
         self.sass_variables << asset
       else
         self.stylesheets[plugin_directory_name] ||= Set.new

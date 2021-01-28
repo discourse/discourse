@@ -299,12 +299,12 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
-    unless current_user.staff?
+    guardian.ensure_can_delete!(post)
+
+    unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
-
-    guardian.ensure_can_delete!(post)
 
     destroyer = PostDestroyer.new(current_user, post, context: params[:context])
     destroyer.destroy
@@ -320,11 +320,13 @@ class PostsController < ApplicationController
 
   def recover
     post = find_post_from_params
-    unless current_user.staff?
+    guardian.ensure_can_recover_post!(post)
+
+    unless guardian.can_moderate_topic?(post.topic)
       RateLimiter.new(current_user, "delete_post_per_min", SiteSetting.max_post_deletions_per_minute, 1.minute).performed!
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
-    guardian.ensure_can_recover_post!(post)
+
     destroyer = PostDestroyer.new(current_user, post)
     destroyer.recover
     post.reload
@@ -477,18 +479,25 @@ class PostsController < ApplicationController
     post = find_post_from_params
     raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)
 
-    previous_notice = post.custom_fields[Post::NOTICE_ARGS]
+    old_notice = post.custom_fields[Post::NOTICE]
 
     if params[:notice].present?
-      post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:custom]
-      post.custom_fields[Post::NOTICE_ARGS] = PrettyText.cook(params[:notice], features: { onebox: false })
-      post.save_custom_fields
+      post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:custom],
+        raw: params[:notice],
+        cooked: PrettyText.cook(params[:notice], features: { onebox: false })
+      }
     else
-      post.delete_post_notices
+      post.custom_fields.delete(Post::NOTICE)
     end
 
-    details = { new_raw_value: params[:notice], old_value: previous_notice }
-    StaffActionLogger.new(current_user).log_post_staff_note(post, details)
+    post.save_custom_fields
+
+    StaffActionLogger.new(current_user).log_post_staff_note(
+      post,
+      old_value: old_notice&.[]("raw"),
+      new_value: params[:notice]
+    )
 
     render body: nil
   end
@@ -802,14 +811,21 @@ class PostsController < ApplicationController
   end
 
   def find_post_using(finder)
-    # Include deleted posts if the user is staff
-    finder = finder.with_deleted if current_user.try(:staff?)
-    post = finder.first
+    # A deleted post can be seen by staff or a category group moderator for the topic.
+    # But we must find the deleted post to determine which category it belongs to, so
+    # we must find.with_deleted
+    post = finder.with_deleted.first
     raise Discourse::NotFound unless post
 
-    # load deleted topic
-    post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
-    raise Discourse::NotFound unless post.topic
+    post.topic = Topic.with_deleted.find(post.topic_id)
+
+    if !post.topic ||
+       (
+        (post.deleted_at.present? || post.topic.deleted_at.present?) &&
+        !guardian.can_moderate_topic?(post.topic)
+       )
+      raise Discourse::NotFound
+    end
 
     guardian.ensure_can_see!(post)
     post

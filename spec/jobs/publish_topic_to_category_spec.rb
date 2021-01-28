@@ -12,7 +12,9 @@ RSpec.describe Jobs::PublishTopicToCategory do
     Fabricate(:topic_timer,
       status_type: TopicTimer.types[:publish_to_category],
       category_id: another_category.id,
-      topic: topic
+      topic: topic,
+      execute_at: 1.minute.ago,
+      created_at: 5.minutes.ago
     )
 
     Fabricate(:post, topic: topic)
@@ -67,6 +69,8 @@ RSpec.describe Jobs::PublishTopicToCategory do
           .to change { topic.private_message? }.to(true)
       end
 
+      topic.allowed_users << topic.public_topic_timer.user
+
       now = freeze_time
 
       message = MessageBus.track_publish do
@@ -84,6 +88,35 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
       expect(message.data[:reload_topic]).to be_present
       expect(message.data[:refresh_stream]).to be_present
+    end
+
+    it "does nothing if the user can't see the PM" do
+      non_participant_TL4_user = Fabricate(:trust_level_4)
+      topic.convert_to_private_message(Discourse.system_user)
+      timer = topic.public_topic_timer
+      timer.update!(user: non_participant_TL4_user)
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      topic.reload
+      expect(topic.private_message?).to eq(true)
+      expect(topic.category).not_to eq(another_category)
+    end
+
+    it "works if the user can see the PM" do
+      tl4_user = Fabricate(:trust_level_4)
+      topic.convert_to_private_message(Discourse.system_user)
+
+      topic.allowed_users << tl4_user
+
+      timer = topic.public_topic_timer
+      timer.update!(user: tl4_user)
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      topic.reload
+      expect(topic.private_message?).to eq(false)
+      expect(topic.category).to eq(another_category)
     end
   end
 

@@ -606,10 +606,15 @@ class ImportScripts::Base
           skipped += 1
           puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
         else
-          result = BookmarkManager.new(user).create(post_id: post.id)
+          begin
+            manager = BookmarkManager.new(user)
+            bookmark = manager.create(post_id: post.id)
 
-          created += 1 if result.errors.none?
-          skipped += 1 if result.errors.any?
+            created += 1 if manager.errors.none?
+            skipped += 1 if manager.errors.any?
+          rescue
+            skipped += 1
+          end
         end
       end
 
@@ -737,6 +742,10 @@ class ImportScripts::Base
       WHERE u1.user_id = user_stats.user_id
         AND user_stats.topic_count <> sub.topic_count
     SQL
+
+    puts "", "Updating user digest_attempted_at..."
+
+    DB.exec("UPDATE user_stats SET digest_attempted_at = now() WHERE digest_attempted_at IS NULL")
   end
 
   # scripts that are able to import last_seen_at from the source data should override this method

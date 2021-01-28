@@ -134,8 +134,7 @@ module Discourse
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
     if Rails.env == "development" || Rails.env == "test"
-      config.assets.paths << "#{config.root}/test/javascripts"
-      config.assets.paths << "#{config.root}/test/stylesheets"
+      config.assets.paths << "#{config.root}/app/assets/javascripts/discourse/tests"
       config.assets.paths << "#{config.root}/node_modules"
     end
 
@@ -160,7 +159,8 @@ module Discourse
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
-      google-universal-analytics.js
+      google-universal-analytics-v3.js
+      google-universal-analytics-v4.js
       start-discourse.js
       print-page.js
       omniauth-complete.js
@@ -261,6 +261,7 @@ module Discourse
     # Our templates shouldn't start with 'discourse/app/templates'
     config.handlebars.templates_root = {
       'discourse/app/templates' => '',
+      'admin/addon/templates' => 'admin/templates/',
       'select-kit/addon/templates' => 'select-kit/templates/'
     }
 
@@ -355,7 +356,7 @@ module Discourse
             %w{qunit.js
               qunit.css
               test_helper.css
-              test_helper.js
+              discourse/tests/test_helper.js
               wizard/test/test_helper.js
             }.include?(logical_path) ||
             logical_path =~ /\/node_modules/ ||

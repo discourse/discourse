@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { notEmpty, empty, equal } from "@ember/object/computed";
-import { computed } from "@ember/object";
+import { empty, equal, notEmpty } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "button",
@@ -17,6 +17,7 @@ export default Component.extend({
   translatedLabel: null,
   ariaLabel: null,
   translatedAriaLabel: null,
+  forwardEvent: false,
 
   isLoading: computed({
     set(key, value) {
@@ -64,33 +65,51 @@ export default Component.extend({
 
   @discourseComputed("title", "translatedTitle")
   computedTitle(title, translatedTitle) {
-    if (this.title) return I18n.t(title);
+    if (this.title) {
+      return I18n.t(title);
+    }
     return translatedTitle;
   },
 
   @discourseComputed("label", "translatedLabel")
   computedLabel(label, translatedLabel) {
-    if (this.label) return I18n.t(label);
+    if (this.label) {
+      return I18n.t(label);
+    }
     return translatedLabel;
   },
 
   @discourseComputed("ariaLabel", "translatedAriaLabel", "computedLabel")
   computedAriaLabel(ariaLabel, translatedAriaLabel, computedLabel) {
-    if (ariaLabel) return I18n.t(ariaLabel);
-    if (translatedAriaLabel) return translatedAriaLabel;
+    if (ariaLabel) {
+      return I18n.t(ariaLabel);
+    }
+    if (translatedAriaLabel) {
+      return translatedAriaLabel;
+    }
     return computedLabel;
   },
 
-  click() {
+  click(event) {
     let { action } = this;
 
     if (action) {
       if (typeof action === "string") {
+        // Note: This is deprecated in new Embers and needs to be removed in the future.
+        // There is already a warning in the console.
         this.sendAction("action", this.actionParam);
       } else if (typeof action === "object" && action.value) {
-        action.value(this.actionParam);
+        if (this.forwardEvent) {
+          action.value(this.actionParam, event);
+        } else {
+          action.value(this.actionParam);
+        }
       } else if (typeof this.action === "function") {
-        action(this.actionParam);
+        if (this.forwardEvent) {
+          action(this.actionParam, event);
+        } else {
+          action(this.actionParam);
+        }
       }
     }
 

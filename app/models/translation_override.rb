@@ -4,13 +4,22 @@ require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
   # Allowlist i18n interpolation keys that can be included when customizing translations
-  CUSTOM_INTERPOLATION_KEYS_WHITELIST = {
+  ALLOWED_CUSTOM_INTERPOLATION_KEYS = {
     "user_notifications.user_" => %w{
       topic_title_url_encoded
       site_title_url_encoded
       context
+
+      site_name
+      optional_re
+      optional_pm
+      optional_cat
+      optional_tags
+      topic_title
     }
   }
+  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
+  deprecate_constant 'CUSTOM_INTERPOLATION_KEYS_WHITELIST', 'TranslationOverride::ALLOWED_CUSTOM_INTERPOLATION_KEYS'
 
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value
@@ -98,7 +107,7 @@ class TranslationOverride < ActiveRecord::Base
 
       custom_interpolation_keys = []
 
-      CUSTOM_INTERPOLATION_KEYS_WHITELIST.select do |key, value|
+      ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |key, value|
         if transformed_key.start_with?(key)
           custom_interpolation_keys = value
         end

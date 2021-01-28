@@ -37,6 +37,14 @@ class UserNotifications < ActionMailer::Base
                 new_user_tips: tips)
   end
 
+  def signup_after_reject(user, opts = {})
+    locale = user_locale(user)
+    build_email(user.email,
+                template: 'user_notifications.signup_after_reject',
+                locale: locale,
+                reject_reason: opts[:reject_reason])
+  end
+
   def suspicious_login(user, opts = {})
     ipinfo = DiscourseIpInfo.get(opts[:client_ip])
     location = ipinfo[:location]
@@ -88,7 +96,7 @@ class UserNotifications < ActionMailer::Base
 
   def confirm_new_email(user, opts = {})
     build_user_email_token_by_template(
-      "user_notifications.confirm_new_email",
+      opts[:requested_by_admin] ? "user_notifications.confirm_new_email_via_admin" : "user_notifications.confirm_new_email",
       user,
       opts[:email_token]
     )

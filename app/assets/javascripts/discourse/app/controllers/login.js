@@ -1,23 +1,23 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { alias, or, readOnly } from "@ember/object/computed";
-import EmberObject from "@ember/object";
-import { next, schedule } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
-import { ajax } from "discourse/lib/ajax";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import showModal from "discourse/lib/show-modal";
-import { setting } from "discourse/lib/computed";
-import { findAll } from "discourse/models/login-method";
-import { escape } from "pretty-text/sanitizer";
-import { escapeExpression, areCookiesEnabled } from "discourse/lib/utilities";
-import { extractError } from "discourse/lib/ajax-error";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { getWebauthnCredential } from "discourse/lib/webauthn";
-import bootbox from "bootbox";
+import { alias, or, readOnly } from "@ember/object/computed";
+import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { next, schedule } from "@ember/runloop";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { escape } from "pretty-text/sanitizer";
+import { extractError } from "discourse/lib/ajax-error";
+import { findAll } from "discourse/models/login-method";
+import getURL from "discourse-common/lib/get-url";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { isEmpty } from "@ember/utils";
+import { setting } from "discourse/lib/computed";
+import showModal from "discourse/lib/show-modal";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -70,8 +70,12 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("awaitingApproval", "hasAtLeastOneLoginButton")
   modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
     const classes = ["login-modal"];
-    if (awaitingApproval) classes.push("awaiting-approval");
-    if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+    if (awaitingApproval) {
+      classes.push("awaiting-approval");
+    }
+    if (hasAtLeastOneLoginButton) {
+      classes.push("has-alt-auth");
+    }
     return classes.join(" ");
   },
 
@@ -183,7 +187,9 @@ export default Controller.extend(ModalFunctionality, {
               "hidden-login-form"
             );
             const applyHiddenFormInputValue = (value, key) => {
-              if (!hiddenLoginForm) return;
+              if (!hiddenLoginForm) {
+                return;
+              }
 
               hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
             };
@@ -332,7 +338,9 @@ export default Controller.extend(ModalFunctionality, {
       showModal("login");
 
       next(() => {
-        if (callback) callback();
+        if (callback) {
+          callback();
+        }
         this.flash(errorMsg, className || "success");
       });
     };
@@ -395,6 +403,8 @@ export default Controller.extend(ModalFunctionality, {
       skipConfirmation,
     });
 
-    showModal("createAccount", { modalClass: "create-account" });
+    next(() => {
+      showModal("createAccount", { modalClass: "create-account" });
+    });
   },
 });

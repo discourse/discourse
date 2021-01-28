@@ -23,7 +23,6 @@ nb_NO:
       long_description: |
         Dette merket er tildelt ved fullførelse av den interaktive opplæringen for avanserte brukere. Du har mestret de avanserte verktøyene for diskusjoner — og er nå fullstendig lisensiert!
   discourse_narrative_bot:
-    bio: "Hei, jeg er ikke en virkelig person. Jeg er en robot som kan lære deg om dette nettstedet. For å kommunisere med meg send meg en melding eller nevn **`@%{discobot_username}`** hvor som helst."
     timeout:
       message: |-
         Hei @%{username}, jeg bare sjekker opp på deg fordi jeg har ikke hørt fra deg på en stund.
@@ -39,8 +38,6 @@ nb_NO:
       trigger: "rull"
       invalid: |-
         Jeg beklager, det er matematisk umulig å rulle den kombinasjonen av terninger. :confounded:
-      not_enough_dice: |-
-        Jeg har bare %{num_of_dice} terninger. Jeg vet det er [flaut] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)!
       out_of_range: |-
         Visste du at [maksimalt antall sider](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematisk rettferdig terning er 120?
       results: |-

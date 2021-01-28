@@ -49,6 +49,7 @@
     max-width: 350px;
     min-width: 50px;
     margin-left: 12px;
+    word-break: break-word;
     .select-kit {
       min-width: 100px;
     }
@@ -150,10 +151,11 @@
     align-items: flex-start;
     .field,
     .value {
-      width: unset;
+      width: 100%;
     }
+
     .select-kit {
-      width: 300px;
+      width: 100%;
     }
   }
 

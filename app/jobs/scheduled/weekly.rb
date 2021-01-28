@@ -14,6 +14,7 @@ module Jobs
       UserAuthToken.cleanup!
       Email::Cleaner.delete_rejected!
       Notification.purge_old!
+      Bookmark.cleanup!
     end
   end
 end

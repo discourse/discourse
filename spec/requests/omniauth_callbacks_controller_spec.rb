@@ -196,6 +196,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         events = DiscourseEvent.track_events { get "/auth/google_oauth2/callback.json" }
+        expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
         expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
 
         expect(response.status).to eq(302)
@@ -384,6 +385,25 @@ RSpec.describe Users::OmniauthCallbacksController do
 
         user.reload
         expect(user.email).to eq('email@example.com')
+      end
+
+      it "shows error when sso_overrides_email causes a validation error" do
+        SiteSetting.email_editable = false
+        SiteSetting.sso_overrides_email = true
+
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
+
+        google_email = user.email
+        user.update!(email: 'anotheremail@example.com')
+        Fabricate(:user, email: google_email) # Another user has the google account email
+
+        get "/auth/google_oauth2/callback"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("errors.messages.taken"))
+        expect(session[:current_user_id]).to eq(nil)
+
+        user.reload
+        expect(user.email).to eq('anotheremail@example.com')
       end
 
       context 'when user has TOTP enabled' do

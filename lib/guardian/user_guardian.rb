@@ -92,6 +92,10 @@ module UserGuardian
     is_admin? || (is_staff? && SiteSetting.moderators_view_emails)
   end
 
+  def can_check_sso_email?(user)
+    user && is_admin?
+  end
+
   def restrict_user_fields?(user)
     user.trust_level == TrustLevel[0] && anonymous?
   end
@@ -111,6 +115,7 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
+    return true if !SiteSetting.allow_users_to_hide_profile?
 
     # If a user has hidden their profile, restrict it to them and staff
     if user.user_option.try(:hide_profile_and_presence?)
@@ -167,4 +172,7 @@ module UserGuardian
     (is_me?(user) && user.has_trust_level?(SiteSetting.min_trust_level_to_allow_user_card_background.to_i)) || is_staff?
   end
 
+  def can_delete_sso_record?(user)
+    SiteSetting.enable_sso && user && is_admin?
+  end
 end

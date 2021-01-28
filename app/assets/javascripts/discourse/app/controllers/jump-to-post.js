@@ -1,7 +1,7 @@
-import { alias } from "@ember/object/computed";
-import { next } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { alias } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(ModalFunctionality, {
   model: null,

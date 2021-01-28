@@ -11,7 +11,13 @@ export function setEnvironment(e) {
 }
 
 export function isTesting() {
-  return Ember.testing;
+  return Ember.testing || environment === "testing";
+}
+
+// Generally means "before we migrated to Ember CLI"
+let _isLegacy = Ember.VERSION.startsWith("3.12");
+export function isLegacyEmber() {
+  return _isLegacy;
 }
 
 export function isDevelopment() {

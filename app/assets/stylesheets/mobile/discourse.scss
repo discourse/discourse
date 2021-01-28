@@ -91,8 +91,11 @@ blockquote {
     align-items: center;
     padding: 8px 10px;
     height: 100%;
-    width: 100%;
     box-sizing: border-box;
+  }
+
+  .expander .selection {
+    @include ellipsis;
   }
 
   .expander > .d-icon {
@@ -125,6 +128,7 @@ blockquote {
           height: 100%;
           display: block;
           padding: 5px 8px;
+          @include ellipsis;
         }
       }
     }
@@ -138,6 +142,11 @@ blockquote {
 }
 
 // Special elements
+
+#main-outlet {
+  padding-top: 0.25em;
+}
+
 #main {
   position: relative;
 }

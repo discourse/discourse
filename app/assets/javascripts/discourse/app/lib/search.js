@@ -1,19 +1,19 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import Category from "discourse/models/category";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import userSearch from "discourse/lib/user-search";
-import { userPath } from "discourse/lib/url";
-import { emojiUnescape } from "discourse/lib/text";
-import User from "discourse/models/user";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
-import { escapeExpression } from "discourse/lib/utilities";
+import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import { deepMerge } from "discourse-common/lib/object";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { userPath } from "discourse/lib/url";
+import userSearch from "discourse/lib/user-search";
 
 export function translateResults(results, opts) {
   opts = opts || {};
@@ -133,14 +133,21 @@ export function translateResults(results, opts) {
 }
 
 export function searchForTerm(term, opts) {
-  if (!opts) opts = {};
+  if (!opts) {
+    opts = {};
+  }
 
   // Only include the data we have
   const data = { term: term };
-  if (opts.typeFilter) data.type_filter = opts.typeFilter;
-  if (opts.searchForId) data.search_for_id = true;
-  if (opts.restrictToArchetype)
+  if (opts.typeFilter) {
+    data.type_filter = opts.typeFilter;
+  }
+  if (opts.searchForId) {
+    data.search_for_id = true;
+  }
+  if (opts.restrictToArchetype) {
     data.restrict_to_archetype = opts.restrictToArchetype;
+  }
 
   if (opts.searchContext) {
     data.search_context = {
@@ -213,6 +220,7 @@ export function applySearchAutocomplete(
         key: "#",
         width: "100%",
         treatAsTextarea: true,
+        autoSelectFirstSuggestion: false,
         transformComplete(obj) {
           return obj.text;
         },
@@ -233,6 +241,7 @@ export function applySearchAutocomplete(
           key: "@",
           width: "100%",
           treatAsTextarea: true,
+          autoSelectFirstSuggestion: false,
           transformComplete: (v) => v.username || v.name,
           dataSource: (term) => userSearch({ term, includeGroups: true }),
           afterComplete,

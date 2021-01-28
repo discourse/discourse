@@ -1,6 +1,6 @@
+import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
-import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({

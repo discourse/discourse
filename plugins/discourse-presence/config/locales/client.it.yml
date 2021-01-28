@@ -7,8 +7,12 @@
 it:
   js:
     presence:
-      replying: "sta rispondendo"
-      editing: "modificando"
+      replying:
+        one: "sta rispondendo"
+        other: "stanno rispondendo"
+      editing:
+        one: "sta modificando"
+        other: "stanno modificando"
       replying_to_topic:
         one: "sta rispondendo"
         other: "stanno rispondendo"

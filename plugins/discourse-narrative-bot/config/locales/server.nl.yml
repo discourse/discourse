@@ -25,19 +25,13 @@ nl:
       long_description: |
         Deze badge wordt toegekend wanneer de interactieve handleiding voor gevorderde gebruikers met succes is doorlopen. U hebt de geavanceerde hulpmiddelen voor discussie onder de knie – en u bent nu volledig gecertificeerd!
   discourse_narrative_bot:
-    bio: "Hallo, ik ben geen echt persoon. Ik ben een bot die u uitleg over deze website kan geven. Stuur mij een bericht of noem ergens **`@%{discobot_username}`** om met mij te communiceren."
-    tl2_promotion_message:
-      subject_template: "Gefeliciteerd met de promotie van uw vertrouwensniveau!"
-      text_body_template: |
-        Nu u bent gepromoveerd, is het tijd voor wat geavanceerde functies!
-
-        Beantwoord dit bericht met `@%{discobot_username} %{reset_trigger}` om meer te lezen over wat u kunt doen.
-
-        U bent van harte uitgenodigd om mee te blijven werken – we genieten van uw aanwezigheid.
     dice:
       trigger: "gooien"
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
+      not_enough_dice:
+        one: "Ik heb maar %{count} dobbelsteen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
+        other: "Ik heb maar %{count} dobbelstenen. [Beschamend](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ik weet het!"
       results: |-
         > :game_die: %{results}
     quote:
@@ -105,9 +99,11 @@ nl:
       reset_trigger: "handleiding"
       title: "Certificaat voor het voltooien van de handleiding voor nieuwe gebruikers"
       cert_title: "Als erkenning voor de succesvolle voltooiing van de handleiding voor nieuwe gebruikers"
-      delete_reason: "Gebruiker heeft de tips voor nieuwe gebruikers overgeslagen"
       hello:
         title: "Gegroet!"
+      likes:
+        reply: |-
+          Bedankt voor het liken van mijn bericht!
       formatting:
         reply: |-
           Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](http://commonmark.org/help) :nerd:

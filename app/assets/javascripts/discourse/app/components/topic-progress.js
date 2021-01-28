@@ -1,8 +1,8 @@
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   elementId: "topic-progress-wrapper",
@@ -145,7 +145,9 @@ export default Component.extend({
 
   _dock() {
     const $wrapper = $(this.element);
-    if (!$wrapper || $wrapper.length === 0) return;
+    if (!$wrapper || $wrapper.length === 0) {
+      return;
+    }
 
     const $html = $("html");
     const offset = window.pageYOffset || $html.scrollTop();

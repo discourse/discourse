@@ -1,11 +1,11 @@
 import EmberObject, { set } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import ResultSet from "discourse/models/result-set";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { underscore } from "@ember/string";
 import Category from "discourse/models/category";
 import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import ResultSet from "discourse/models/result-set";
+import { ajax } from "discourse/lib/ajax";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { underscore } from "@ember/string";
 
 let _identityMap;
 
@@ -114,9 +114,9 @@ export default EmberObject.extend({
   },
 
   find(type, findArgs, opts) {
-    var adapter = this.adapterFor(type);
+    let adapter = this.adapterFor(type);
     return adapter.find(this, type, findArgs, opts).then((result) => {
-      var hydrated = this._hydrateFindResults(result, type, findArgs, opts);
+      let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
 
       if (result.extras) {
         hydrated.set("extras", result.extras);
@@ -139,7 +139,7 @@ export default EmberObject.extend({
     hydrated.set(
       "content",
       hydrated.get("content").map((item) => {
-        var staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
+        let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
           staleItem.setProperties(item);
         } else {

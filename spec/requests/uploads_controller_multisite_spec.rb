@@ -10,17 +10,15 @@ describe UploadsController do
       let(:upload) { Fabricate(:upload_s3) }
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = "fakeid7974664"
-        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        setup_s3
       end
 
       context "when upload is secure and secure media enabled" do
         before do
           SiteSetting.secure_media = true
           upload.update(secure: true)
-          stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
         end
+
         context "when running on a multisite connection", type: :multisite do
           it "redirects to the signed_url_for_path with the multisite DB name in the url" do
             sign_in(user)

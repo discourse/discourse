@@ -164,10 +164,11 @@ describe Invite do
 
         it 'resets expiry of a resent invite' do
           SiteSetting.invite_expiry_days = 2
-          invite.update!(expires_at: 10.days.ago)
+          invite.update!(invalidated_at: 10.days.ago, expires_at: 10.days.ago)
           expect(invite).to be_expired
 
           invite.resend_invite
+          expect(invite.invalidated_at).to be_nil
           expect(invite).not_to be_expired
         end
 
@@ -195,6 +196,12 @@ describe Invite do
 
     context 'invite links' do
       let(:inviter) { Fabricate(:user) }
+
+      it 'with single use can exist' do
+        Invite.generate_multiple_use_invite_link(invited_by: inviter, max_redemptions_allowed: 1)
+        invite_link = Invite.last
+        expect(invite_link.is_invite_link?).to eq(true)
+      end
 
       it "has sane defaults" do
         Invite.generate_multiple_use_invite_link(invited_by: inviter)

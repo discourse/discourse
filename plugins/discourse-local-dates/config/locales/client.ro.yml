@@ -7,6 +7,36 @@
 ro:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Astăzi la %{time}
+        tomorrow: Mâine la %{time}
+        yesterday: Ieri %{time}
+        countdown:
+          passed: data a trecut
+      title: Introdu data / ora
       create:
         form:
+          insert: Introdu
+          advanced_mode: Mod avansat
+          simple_mode: Modul simplu
+          format_description: "Format utilizat pentru a afișa data utilizatorului. Utilizați Z pentru a afișa decalajul de timp și zz pentru numele fusului orar."
+          timezones_title: Fusuri orare de afișat
+          timezones_description: Fusurile orare vor fi utilizate pentru a afișa datele în previzualizare și în rezervă.
+          recurring_title: Recurență
+          recurring_description: "Definiți recurența unui eveniment. De asemenea, puteți edita manual opțiunea recurentă generată de formular și puteți utiliza una dintre următoarele chei: ani, trimestre, luni, săptămâni, zile, ore, minute, secunde, milisecunde."
+          recurring_none: Nicio recurență
+          invalid_date: Data invalidă, asigurați-vă că data și ora sunt corecte
+          date_title: Dată
           time_title: Timp
+          format_title: Formatul datei
+          timezone: Fus orar
+          until: Pana cand...
+          recurring:
+            every_day: "În fiecare zi"
+            every_week: "În fiecare săptămână"
+            every_two_weeks: "La fiecare două săptămâni"
+            every_month: "În fiecare lună"
+            every_two_months: "La fiecare două luni"
+            every_three_months: "La fiecare trei luni"
+            every_six_months: "La fiecare șase luni"
+            every_year: "În fiecare an"

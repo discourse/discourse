@@ -153,7 +153,6 @@ bg:
     topic_admin_menu: "действия по темата"
     wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
-    bootstrap_mode_enabled: "За да помогнем със стартирането на вашия сайт по-лесно, поставихме сайта в \"стартиращ режим\". Всички нови потребители ще получат ниво на доверие 1 и ще имат активирани дневни известия за активноста във форума. Този режим ще бъде автоматично спрян, когато бройката регистрирани потребители стигне %{min_users}."
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
     themes:
       default_description: "По подразбиране"
@@ -625,7 +624,6 @@ bg:
       topic_stat_sentence_month:
         one: "%{count}нова тема през последния месец."
         other: "%{count}през последния месец."
-      n_more: "Категории (още %{count}) ..."
     ip_lookup:
       title: Търсене по IP адрес
       hostname: Хост
@@ -697,7 +695,6 @@ bg:
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         disable: "Деактивиране на Известията"
         enable: "Активиране на Известията"
-        each_browser_note: "Забележка: Трябва да промените тази настройка при всички браузъри, които използвате."
         consent_prompt: "Искате ли известявания в реално време, когато хората отговарят на вашите публикации?"
       dismiss: "Отмени"
       dismiss_notifications: "Отмени всички"
@@ -713,7 +710,6 @@ bg:
       admin_tooltip: "Този потребител е админ"
       suspended_notice: "Този потребител е отстранен до %{date}."
       suspended_reason: "Причина:"
-      github_profile: "Github"
       email_activity_summary: "Сумарна активност"
       mailing_list_mode:
         label: "Режим Бюлетин"
@@ -793,7 +789,6 @@ bg:
         disable: "Деактивиране"
         enable: "Позволи"
       second_factor:
-        title: "Двуфакторно удостоверяване"
         confirm_password_description: "Моля, потвърдете паролата за да продължите"
         name: "Име"
         label: "Код"
@@ -868,7 +863,6 @@ bg:
       password_confirmation:
         title: "Паролата отново"
       auth_tokens:
-        ip: "IP "
         details: "Детайли "
       last_posted: "Последна публикация"
       last_emailed: "Последен имейл"
@@ -955,8 +949,6 @@ bg:
         links_tab: "Връзки"
         link_created_at: "Създадени"
         link_groups: Групи
-        create: "Изпрати покана"
-        generate_link: "Копирай Връзката-Покана"
         bulk_invite:
           success: "Файлът е качен успешно. Ще бъдете информирани чрез съобщение, когато процесът завърши."
       password:
@@ -1097,7 +1089,6 @@ bg:
       disable: "Покажи изтритите публикации"
     private_message_info:
       title: "Съобщение"
-      invite: "Поканете други ..."
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
@@ -1134,7 +1125,6 @@ bg:
       title: "Вход"
       username: "Потребител"
       password: "Парола"
-      second_factor_title: "Удостоверяване с два фактора"
       email_placeholder: "имейл или потребителско име"
       caps_lock_warning: "Включен е Caps Lock"
       error: "Непозната грешка"
@@ -1150,15 +1140,12 @@ bg:
       awaiting_approval: "Вашия акаунт все още не е одобрен от администратора. Ще получите известие, когато това се случи."
       requires_invite: "Съжаляваме, този форум е достъпен само с покани."
       not_activated: "Не може да влезете. Изпратихме имейл за активация на <b>%{sentTo}</b>. Моля, следвайте инструкциите в имейла, за да активирате профила."
-      not_allowed_from_ip_address: "Не може да влезете от този IP адрес."
       admin_not_allowed_from_ip_address: "Не може да влезете като админ от този IP адрес."
       resend_activation_email: "Натиснете тук, за да изпратите повторен имейл за активация."
-      omniauth_disallow_totp: "Профилът ви има активирано удостоверяване с два фактора. Моля, влезте с паролата си."
       resend_title: "Изпрати отново активационен имейл "
       sent_activation_email_again: "Изпратихме имейл за активация на <b>%{currentEmail}</b>. Може да изминат няколко минути докато пристигне. Не забравяйте да проверите Вашата спам папка."
       to_continue: "Моля влезте"
       preferences: "Трябва да сте влезли, за да можете да променяте потребителските си настройки."
-      forgot: "Не си спомням подробности за профила ми"
       not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл, когато е възможно влизането Ви. "
       google_oauth2:
         name: "Google"
@@ -1184,7 +1171,6 @@ bg:
       accept_invite: "Приеми поканата."
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
-      password_label: "Задайте парола"
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1213,7 +1199,6 @@ bg:
       options: "Опции"
       whisper: "шепот"
       unlist: "скрити"
-      blockquote_text: "Текстов блок"
       add_warning: "Това е официално предупреждение."
       toggle_whisper: "Включи шепот"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
@@ -1226,7 +1211,6 @@ bg:
         title_too_long: "Заглавието не може да е повече от %{max} символа"
         post_length: "Публикацията трябва да е най-малко %{min} символа."
         category_missing: "Трябва да изберете категория"
-        tags_missing: "Трябва да изберете поне %{count} етикети."
       save_edit: "Запази редакцията"
       reply_original: "Отговори на Оригинална Тема"
       reply_here: "Отговори тук"
@@ -1255,8 +1239,7 @@ bg:
       link_description: "добави описание на връзката тук"
       link_dialog_title: "Добави хипервръзка"
       link_optional_text: "заглавие по избор"
-      quote_title: "Текстов блок"
-      quote_text: "Текстов блок"
+      blockquote_text: "Текстов блок"
       code_title: "Форматиран текст"
       code_text: "Избутай текста с 4 интервала"
       paste_code_text: "въведете или поставете кода тук"
@@ -1321,14 +1304,12 @@ bg:
       full_page_title: "търсене на теми или публикации"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
-      searching: "Търсене ... "
       post_format: "#%{post_number} от %{username} "
       results_page: "Резултати от търсенето на '%{term}'"
       more_results: "Има повече резултати. Моля, прецизирайте търсенето си."
       or_search_google: "Или вместо това опитайте търсене с Гугъл:"
       search_google: "Опитайте вместо това търсене с Гугъл:"
       search_google_button: "Google"
-      search_google_title: "Търсене в този сайт"
       context:
         user: "Търсете публикация от @%{username}"
         category: "Търсене за категория #%{category}"
@@ -1393,12 +1374,10 @@ bg:
         new: "Нямате нови теми."
         read: "Все още не сте прочели нито една тема."
         posted: "Все още не сте публикували нито една тема."
-        latest: "Няма повече теми в Последни. Това е тъжно."
         bookmarks: "Все още нямате теми в Отметки."
         category: "Няма теми в категория %{category}."
         top: "Няма топ теми."
         educate:
-          new: '<p>Непрочетените теми се появяват тук.</p><p>По подразбиране темите се считат за непрочетени и ще показват бройката <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> нови</span> ако са създадени през последните 2 дни.</p><p> Моля посетете вашите <a href="%{userPrefsUrl}">настройки</a> за да промените това.</p>'
           unread: '<p>Вашите непрочетени теми са тук.</p><p>По подразбиране, темите се считат за непрочетени и ще им се показва брояч <span class="badge new-posts badge-notification">1</span> ако вие:</p><ul><li>Сте създали тема</li><li>Отговорили на тема</li><li>Прочели темата преди повече от 4 минути</li></ul><p>Или ако са изрично определени в темата да бъдат проследявани и гледани чрез контрол на уведомление в долната част на всяка тема. </p><p>За да промените това, влезте във <a href="%{userPrefsUrl}">вашите настройки от тук.</a></p>'
       bottom:
         latest: "Няма повече теми в Последни."
@@ -1462,10 +1441,8 @@ bg:
       toggle_information: "Показване / скриване на подробна информация за дадена тема "
       read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в %{catLink} или %{latestLink}."
       read_more: "Искате да прочетете повече ? %{catLink} или %{latestLink}."
-      read_more_MF: "Има { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетени </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } или {CATEGORY, select, true {потърси други теми в {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
-      suggest_create_topic: Защо не създадете тема ?
       jump_reply_up: към по ранен отговор
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
@@ -1511,7 +1488,7 @@ bg:
           "3_2": "Ще получавате известия, защото наблюдавате тази тема."
           "3_1": "Ще получавате известия, защото създадохте тази тема."
           "3": "Ще получавате известия, защото наблюдавате тази тема."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ще ви уведобим, ако някой ви отговори или спомене вашето @име"
           "1": "Ще ви уведобим, ако някой ви отговори или спомене вашето @име"
           "0_7": "Вие игнорирате всички известия в тази категория."
@@ -1581,7 +1558,6 @@ bg:
       feature_topic:
         title: "Фокусирай тази тема"
         pin: "Тази тема да се появява в горната част на %{categoryLink} категорията докато"
-        confirm_pin: "Вие вече имате %{count} заковани теми. Прекалено много заковани теми може да объркат новите и анонимни потребители. Сигурни ли сте че искате да заковете още една тема към тази категория ?"
         unpin: "Премахни тази тема от началото на категория %{categoryLink}"
         unpin_until: "Премахни тази тема от горната част на %{categoryLink} категорията или изчакай докато <strong>%{until}</strong>."
         pin_note: "Потребителите могат да отковат тази тема индивидуално само за тях"
@@ -1591,7 +1567,6 @@ bg:
           one: "Темата е закачена в %{categoryLink}: <strong class='badge badge-notification unread'>е %{count}</strong>"
           other: "Темите закачени в %{categoryLink}: <strong class='badge badge-notification unread'>са %{count}</strong>"
         pin_globally: "Тази тема да се появява в горната част на всички списъци докато"
-        confirm_pin_globally: "Вие вече имате %{count} глобално заковани теми. Прекалено много заковани теми може да объркат новите и анонимни потребители. Сигурни ли сте че искате да заковете още една тема глобално към тази категория ?"
         unpin_globally: "Премахни тази тема от началото на списъците с теми."
         unpin_globally_until: "Премахни тази тема от горната част на списъка с теми или изчакай докато <strong>%{until}</strong>."
         global_pin_note: "Потребителите могат да отговат темата индивидуално само за тях."
@@ -1918,7 +1893,6 @@ bg:
     flagging:
       title: "Благодарим ви, че помагате да поддържаме дискусията цивилизована!"
       action: "Сигнализирай публикацията "
-      take_action: "Предприеми действие "
       notify_action: "Съобщение"
       official_warning: "Официално предупреждение"
       delete_spammer: "Изтрий спамера "
@@ -1970,13 +1944,6 @@ bg:
       unlisted:
         help: "Тази тема е скрита; не се появява в списъка с теми и може да бъде достъпна само с директен линк."
     posts: "Публикации"
-    posts_long: "има %{number} публикации в тази тема"
-    posts_likes_MF: |
-      Тази тема има {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "Оригинална публикация"
     views: "Прегледи"
     views_lowercase:
@@ -1988,7 +1955,6 @@ bg:
     likes_lowercase:
       one: "харесване"
       other: "харесвания"
-    likes_long: "има %{number} харесвания в тази тема"
     users: "Потребители"
     users_lowercase:
       one: "потребител"
@@ -2184,8 +2150,6 @@ bg:
         save: "Запази"
         delete: "Изтрий"
         everyone_can_use: "Етикетите могат да се използват от всички"
-        usable_only_by_staff: "Етикетите са видими за всички, но само персонал може да ги използва"
-        visible_only_to_staff: "Етикетите са видими само за персонала"
       topics:
         none:
           unread: "Нямате непрочетени теми."
@@ -2609,7 +2573,6 @@ bg:
             post_locked: "публикацията е заключена"
             post_unlocked: "публикацията е отключена"
             check_personal_message: "провери лично съобщение"
-            disabled_second_factor: "деактивиране на двуфакторното удостоверяване"
             topic_published: "темата е пубикувана"
             post_approved: "публикацията е одобрена"
             create_badge: "създай значка"

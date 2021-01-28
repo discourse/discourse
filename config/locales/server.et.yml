@@ -222,26 +222,6 @@ et:
     until_posts:
       one: "%{count} postitus"
       other: "%{count} postitust"
-    "new-topic": |
-      Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
-
-      - Kas pealkiri kõlab kuvitavalt kui sa seda kõvasti loed? Kas see on hea kokkuvõte?
-
-      - Kas võiksid olla sellest huvitatud? Miks see oluline on? Millist tagasisidet sa soovid?
-
-      - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    "new-reply": |
-      Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
-
-      - Kas sinu vastus parandab vestlust mingil moel?
-
-      - Ole kommuuni liikmete vastu lahke.
-
-      - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -475,36 +455,29 @@ et:
     off_topic:
       title: "Teemaväline"
       description: "Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada."
-      long_form: "tähistasin selle kui teemavälise"
     spam:
       title: "Spämm"
-      long_form: "tähistasin selle kui spämmi"
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ebasünnis"
-      long_form: "tähistasin selle kui sobimatu"
     notify_user:
       title: "Saada kasutajale @%{username} sõnum"
-      long_form: "saatsin kasutajale sõnumi"
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Miski muu"
       description: "See postitus nõuab meeskonna tähelepanu eelpool loetlemata põhjusel."
-      long_form: "tähistasin selle kui meeskonna tähelepanu vajava"
       email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Järjehoidja"
       description: "Lisa sellele postitusele järjehoidja"
       short_description: "Lisa sellele postitusele järjehoidja"
-      long_form: "lisasin sellele postitusele järjehoidja"
     like:
       title: "Laigi"
       description: "Laigi seda postitust"
       short_description: "Laigi seda postitust"
-      long_form: "laikis seda"
   user_activity:
     no_default:
       others: "Tegevusi pole."
@@ -762,9 +735,6 @@ et:
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_admin_password_length: "Minimaalne administraatori parooli pikkus."
-    enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
-    instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
-    instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
     enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
@@ -803,7 +773,6 @@ et:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     not_available: "Pole saadaval. Proovime %{suggestion}?"
     omniauth_confirm_button: "Jätka"
-    already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   admin:
     email:
       sent_test: "saadetud!"
@@ -891,7 +860,6 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1021,8 +989,6 @@ et:
     submit_button: "Saada kiri"
   tags:
     title: "Sildid"
-    staff_tag_disallowed: 'Sildi "%{tag}" võib lisada ainult meeskonna liige.'
-    staff_tag_remove_disallowed: 'Sildi "%{tag}" võib eemaldada ainult meeskonna liige.'
   rss_by_tag: "%{tag}-ga sildistatud teemad"
   finish_installation:
     congratulations: "Palju õnne, Discourse on paigaldatud!"
@@ -1081,10 +1047,6 @@ et:
             label: "Automaatsed sõnumid"
       corporate:
         title: "Organisatsioon"
-      colors:
-        title: "Kujundusteema"
-      themes_further_reading:
-        title: "Kujundused"
       logos:
         title: "Logod"
         fields:

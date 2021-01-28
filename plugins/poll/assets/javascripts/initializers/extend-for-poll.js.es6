@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import WidgetGlue from "discourse/widgets/glue";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { observes } from "discourse-common/utils/decorators";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 function initializePolls(api) {
   const register = getRegister(api);
@@ -88,11 +88,14 @@ function initializePolls(api) {
       }
 
       if (poll) {
+        const titleElement = pollElem.querySelector(".poll-title");
+
         const attrs = {
           id: `${pollName}-${pollPost.id}`,
           post: pollPost,
           poll,
           vote,
+          titleHTML: titleElement && titleElement.outerHTML,
           groupableUserFields: (
             api.container.lookup("site-settings:main")
               .poll_groupable_user_fields || ""

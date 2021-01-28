@@ -1,24 +1,23 @@
+@import "font";
 @import "./vendor/normalize";
 @import "./vendor/normalize-ext";
 @import "./common/foundation/base";
-@import "./common/foundation/variables";
-@import "./common/foundation/colors";
-@import "./common/foundation/mixins";
+@import "./color_definitions";
 @import "./common/components/buttons";
 
 article.post {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--primary-low);
 
   img.avatar {
     border-radius: 50%;
   }
 
   &.deleted {
-    background-color: #ffe5e5;
+    background-color: var(--danger-low);
   }
 
   .quote .title {
-    border-left: 5px solid $primary-very-low;
+    border-left: 5px solid var(--primary-very-low);
     padding: 10px 10px 0 12px;
     .avatar {
       margin-right: 7px;
@@ -33,7 +32,7 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    border-left: 5px solid $primary-very-low;
+    border-left: 5px solid var(--primary-very-low);
     p {
       margin: 0 0 10px 0;
     }
@@ -44,7 +43,7 @@ article.post {
 
   .post-date {
     float: right;
-    color: #aaa;
+    color: var(--primary-low-mid);
     font-size: $font-down-1;
     margin: 10px 4px 0 0;
   }
@@ -83,19 +82,19 @@ article.post {
   margin: 0 0 10px 0;
 
   a {
-    color: #5c5c5c;
+    color: var(--primary-high);
   }
   a.staff {
-    background-color: #ffffc2;
+    background-color: var(--highlight-low);
   }
 
   a.new-user {
-    color: $primary-low-mid-or-secondary-high;
+    color: var(--primary-low-mid);
   }
 
   span.title {
     font-weight: normal;
-    color: #999;
+    color: var(--primary-medium);
   }
 }
 
@@ -110,12 +109,12 @@ img.emoji {
   margin: 10px 20px 6px 0;
   display: inline-block;
   float: right;
-  color: #0088cc;
+  color: var(--tertiary);
 }
 
 .replies {
   font-size: $font-0;
-  color: #999;
+  color: var(--primary-medium);
 }
 
 .clearfix {
@@ -127,7 +126,7 @@ header.discourse {
   padding-right: 10px;
   padding-bottom: 8px;
   font-size: $font-up-2;
-  border-bottom: 3px solid #ddd;
+  border-bottom: 3px solid var(--primary-low);
 
   display: flex;
   flex-direction: row;
@@ -150,7 +149,7 @@ footer {
   .button {
     color: white;
     padding: 6px 8px;
-    background-color: #0088cc;
+    background-color: var(--tertiary);
     display: inline-block;
   }
 }
@@ -182,7 +181,7 @@ div.lightbox-wrapper {
   margin: 0.5rem;
 
   &:hover {
-    background: #006da3;
+    background: var(--tertiary-hover);
   }
 
   span {
@@ -211,16 +210,16 @@ div.lightbox-wrapper {
     clear: both;
 
     .main-link {
-      border-bottom: 1px solid $primary-low;
+      border-bottom: 1px solid var(--primary-low);
       padding: 0.5rem;
       width: 100%;
 
       a {
-        color: $primary;
+        color: var(--primary);
       }
 
       a:visited {
-        color: $primary-medium;
+        color: var(--primary-medium);
       }
     }
 
@@ -249,7 +248,7 @@ div.lightbox-wrapper {
         .topic-last-posted-at,
         .topic-created-at,
         .topic-stats {
-          color: $primary-medium;
+          color: var(--primary-medium);
         }
       }
 

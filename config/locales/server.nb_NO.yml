@@ -153,12 +153,6 @@ nb_NO:
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    not_found_template: |
-      <p>Invitasjonen din til <a href="%{base_url}">%{site_name}</a> er allerede brukt.</p>
-
-      <p>Hvis du husker passordet ditt kan du <a href="%{base_url}/login">Logge Inn</a>.</p>
-
-      <p>Hvis ikke kan du <a href="%{base_url}/password-reset">Nullstille Passordet</a>.</p>
     user_exists: "Det er ikke nødvendig å invitere <b>%{email}</b>, de <a href='%{base_path}/u/%{username}/summary'>har allerede en konto!</a>"
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
@@ -292,26 +286,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    "new-topic": |
-      Velkommen til %{site_name}. **Takk for at du starter en ny samtale!**
-
-      - Høres tittelen interessant ut hvis du leser den høyt? Er den en god oppsummering?
-
-      - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
-
-      - Bruk relevante begrep i emnet slik at andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
-
-      [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
-
-      - Forbedrer innlegget ditt samtalen på noen måte?
-
-      - Vær snill mot andre brukere.
-
-      - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
-
-      For mer informasjon [se retningslinjene våre](%{base_path}/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     avatar: |
       ### Hva med et bilde på kontoen din?
 
@@ -606,41 +580,34 @@ nb_NO:
       title: "Urelatert"
       description: "Dette innlegget er ikke relevant for den aktuelle diskusjonen som fastsatt av tittelen og det første innlegget og burde sannsynligvis flyttes til et annet sted. "
       short_description: "Ikke relevant til diskusjonen"
-      long_form: "markerte dette som urelevant"
     spam:
       title: "Spam"
       description: "Dette innlegget er reklame, eller vandalisme. Det er ikke nyttig eller relevant for dette emnet."
       short_description: "Dette er reklame eller vandalisme"
-      long_form: "markerte dette som spam"
       email_title: '"%{title}" ble rapportert som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
-      long_form: "markerte dette som upassende"
     notify_user:
       title: "Send en melding til @%{username}"
       description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
       short_description: "Jeg ønsker å snakke med denne personen direkte og personlig om innlegget."
-      long_form: "sendt melding til bruker"
       email_title: 'Ditt innlegg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noe annet"
       description: "Dette innlegget krever oppmerksomhet fra staben av en annen grunn enn listen over."
       short_description: "Krever oppmerksomhet fra staben av en annen grunn"
-      long_form: "flagget dette for oppfølging av staben"
       email_title: 'Et innlegg i "%{title}" krever oppfølging av staben'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bokmerke"
       description: "Bokmerk dette innlegget"
       short_description: "Lag bokmerke for dette innlegget"
-      long_form: "bokmerket dette innlegget"
     like:
       title: "Lik"
       description: "Liker dette innlegget"
       short_description: "Lik dette innlegget"
-      long_form: "likte dette"
   user_activity:
     no_default:
       self: "Du har ingen aktivitet enda."
@@ -691,9 +658,7 @@ nb_NO:
     mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
     unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
-    all: "Ikke send meg noen e-poster fra %{sitename}"
     different_user_description: "Du er allerede logget inn som en annen bruker enn den vi sendte e-posten til. Vennligst logg ut eller bytt til anonym modus før du prøver igjen."
-    not_found_description: "Beklager, vi klarte ikke finne denne avmeldingen. Det kan tenkes lenken i e-posten har gått ut på dato?"
     log_out: "Logg ut"
     digest_frequency:
       never: "aldri"
@@ -1141,14 +1106,11 @@ nb_NO:
     suspended_with_reason: "Konto sperret til %{date}: %{reason}"
     not_available: "Ikke mulig. Prøv %{suggestion}?"
     something_already_taken: "Noe gikk galt, kanskje brukernavn eller email er allerede i bruk? Prøv 'glemt passord' linken."
-    omniauth_error_unknown: "Noe gikk galt under innloggingsprosessen, prøv igjen."
     omniauth_confirm_button: "Fortsett"
     new_registrations_disabled: "Nye kontoregistreringer tillates ikke per nå."
     password_too_long: "Passord er begrenset til 200 tegn."
     reserved_username: "Det brukernavnet tillates ikke."
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
-    already_logged_in: "Oisann, ser ut som du prøver å akseptere en invitasjon for en en annen bruker. Hvis du ikke er %{current_user}, logg ut og prøv igjen."
-    second_factor_title: "Totrinnsverifisering"
     second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
   admin:
     email:
@@ -1263,7 +1225,6 @@ nb_NO:
   color_schemes:
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Endre denne siden"
@@ -1478,10 +1439,6 @@ nb_NO:
             label: "Automatiserte meldinger"
       corporate:
         title: "Organisasjon"
-      colors:
-        title: "Drakt"
-      themes_further_reading:
-        title: "Drakter"
       logos:
         title: "Logoer"
         fields:

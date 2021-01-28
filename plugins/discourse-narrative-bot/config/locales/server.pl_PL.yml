@@ -12,6 +12,7 @@ pl_PL:
     discourse_narrative_bot_disable_public_replies: "Wyłącz publiczne odpowiedzi bota Discourse Narrative"
     discourse_narrative_bot_welcome_post_type: "Rodzaj powitalnego posta, który bot Discourse Narrative powinien przesłać"
     discourse_narrative_bot_welcome_post_delay: "Odczekaj (n) sekund, zanim wyślesz powitanie bota Discourse Narrative"
+    discourse_narrative_bot_skip_tutorials: "Samouczki Discourse Narrative Bot do pominięcia"
   badges:
     certified:
       name: Certyfikowany
@@ -24,11 +25,11 @@ pl_PL:
       long_description: |
         Odznaka została nadana za ukończenie interaktywnego tutorialu dla zaawansowanych użytkowników. Poznałeś zaawansowane narzędzia dyskusji i jesteś teraz w pełni licencjonowany!
   discourse_narrative_bot:
-    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby skomunikować się ze mną, wyślij do mnie wiadomość lub oznacz **`@%{discobot_username}`** w dowolnym miejscu."
+    bio: "Witaj, nie jestem prawdziwą osobą. Jestem botem, który może nauczyć Cię korzystania z tej witryny. Aby wejść ze mną w interakcję, wyślij do mnie wiadomość lub wspomnij w dowolnym miejscu."
     tl2_promotion_message:
-      subject_template: "Gratuluję zdobycia nowego poziomu zaufania!"
+      subject_template: "Teraz, gdy zostałeś awansowany, czas poznać kilka zaawansowanych funkcji!"
       text_body_template: |
-        Po awansie nadszedł czas, aby dowiedzieć się o niektórych zaawansowanych funkcjach! Odpowiedz na tę wiadomość za pomocą „@ %{discobot_username} %{reset_trigger}”, aby dowiedzieć się więcej o tym, co możesz zrobić. Zapraszamy do dalszego angażowania się - cieszymy się, że jesteśmy w pobliżu.
+        Odpowiedz na tę wiadomość z `@%{discobot_username} %{reset_trigger}`, aby dowiedzieć się więcej o tym, co możesz zrobić.
     timeout:
       message: |-
         Witaj @%{username}, przypominam o sobie bo od dawna do mnie nie zaglądałeś.
@@ -44,8 +45,11 @@ pl_PL:
       trigger: "przewiń"
       invalid: |-
         Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
-      not_enough_dice: |-
-        Mam tylko %{num_of_dice} kości. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
+      not_enough_dice:
+        one: "Mam tylko %{count} kość. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
+        few: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
+        many: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
+        other: "Mam tylko %{count} kości. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), Ja wiem!"
       out_of_range: |-
         Czy wiesz, że [maksymalna ilość ścian](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) na sprawiedliwej kostce do gry to 120?
       results: |-
@@ -74,10 +78,10 @@ pl_PL:
         quote: "To mały krok dla człowieka, ale wielki krok dla ludzkości."
         author: "Neil Armstrong"
       "8":
-        quote: "Rób codziennie jedną rzecz, której się boisz."
+        quote: "Każdego dnia rób jedną rzecz, która cię przeraża"
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Błędy są zawsze wybaczalne, jeśli osoba może się do nich przyznać."
+        quote: "Błędy są zawsze wybaczalne, jeśli ktoś ma odwagę się do nich przyznać."
         author: "Bruce Lee"
       "10":
         quote: "Każda rzecz, którą umysł ludzki może pojąć i w nią uwierzyć, może on osiągnąć."
@@ -88,18 +92,18 @@ pl_PL:
       trigger: "fortuna"
       answers:
         "1": "Jest to pewne"
-        "2": "Jest to zdecydowane, więc"
-        "3": "Bez zająknięcia"
-        "4": "Tak zdecydowanie"
+        "2": "Zdecydowanie tak"
+        "3": "Bez wątpliwości"
+        "4": "Tak, zdecydowanie"
         "5": "Możesz na tym polegać"
         "6": "Tak jak ja to widzę, tak"
-        "7": "Najpewniej"
+        "7": "Najprawdopodobniej"
         "8": "Perspektywy są dobre"
         "9": "Tak"
         "10": "Wszystkie znaki wskazują na to, że tak"
         "11": "Odpowiedź niejasna, spróbuj ponownie"
         "12": "Spytaj ponownie później"
-        "13": "Lepiej, abym Ci teraz nie mówił"
+        "13": "Lepiej ci teraz nie mówić"
         "14": "Nie mogę teraz tego przewidzieć"
         "15": "Skoncentruj się i spytaj ponownie"
         "16": "Nie licz na to"
@@ -129,7 +133,7 @@ pl_PL:
           %{quote_sample} `
 
           `@%{discobot_username} %{magic_8_ball_trigger}
-          >:kryształowa_kula: Możesz na tym polegać
+          >:crystal_ball: Możesz na tym polegać
       do_not_understand:
         first_response: |-
           Hej! Dzięki za odpowiedź!
@@ -153,7 +157,7 @@ pl_PL:
 
           - Jestem tylko robotem, ale [nasz przyjazny zespół](%{base_uri}/about) jest zawsze do dyspozycji, jeśli potrzebujesz skontaktować się z prawdziwą osobą.
 
-          - Ze względów bezpieczeństwa uprawnienia nowych użytkowników są mniejsze. Gdy poznamy się lepiej, uzyskasz dostęp do [nowych możliwości](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [odznak](%{base_uri}/badges)).
+          - Ze względów bezpieczeństwa uprawnienia nowych użytkowników są ograniczone. Gdy poznamy się lepiej, uzyskasz dostęp do [nowych możliwości](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (i [odznak](%{base_uri}/badges)).
 
           - Wierzymy w [cywilizowane zachowanie członków](%{base_uri}/guidelines) społeczności w każdej sytuacji.
       onebox:
@@ -186,13 +190,13 @@ pl_PL:
         reply: |-
           Ładne zdjęcie - nacisnąłem przycisk lajka :heart:, żeby Ci podziękować :heart_eyes:
         like_not_found: |-
-          Zapomniałeś polajkować :heart: mój [wpis]?(%{url}) :crying_cat_face:
+          Zapomniałeś polajkować :heart: mój [wpis?](%{url}) :crying_cat_face:
         not_found: |-
-          Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _na pewno_ Ci się podoba.
+          Wygląda na to, że nie przesłałeś obrazu, więc wybrałem zdjęcie, które _jestem pewien_ Ci się podoba.
 
-          `%{image_url}`
+          <%{image_url}>
 
-          Spróbuj przesłać go jeszcze raz lub wkleić link sam w liście!
+          Spróbuj przesłać go następnym razem lub wklej link w polu!
       likes:
         instructions: |-
           Oto zdjęcie jednorożca:
@@ -202,18 +206,21 @@ pl_PL:
           Śmiało naciśnij przycisk Lubię to :heart: pod tym postem jeśli Ci się to podoba (a komu by się nie podobało?)
         reply: |-
           Dzięki za polubienie mojego posta!
+        not_found: |-
+          Czy zapomniałeś polubić :heart: mój [post?] (%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Czy możesz **pogrubić** lub zastosować _kursywę_ dla części słów w swojej odpowiedzi?
 
           - napisz '**pogrub**' lub '_kursywa_'
 
-          - lub, naciśnij przycisk<kbd><b>B</b></kbd> lub<kbd><i>I</i></kbd> w edytorze.
+          - lub, naciśnij przycisk <kbd><b>B</b></kbd> lub <kbd><i>I</i></kbd> w edytorze
         reply: |-
           Dobra robota! BBCode i HTML również pracują nad formatowaniem - aby dowiedzieć się więcej [rozpocznij ten tutorial](http://commonmark.org/help) :nerd:
         not_found: |-
-          Aww, nie znalazłem żadnego formatowania tekstu w odpowiedzi.:pencil2:
-          Czy możesz spróbować ponownie? Użyj przycisków<kbd> <b>B</b></kbd>pogrubienia lub<kbd><i> I</i></kbd>kursywy w edytorze, jeśli utknąłeś.
+          Uuu, nie znalazłem żadnego formatowania tekstu w odpowiedzi. :pencil2:
+
+          Czy możesz spróbować ponownie? Użyj przycisków <kbd><b>B</b></kbd> pogrubienia lub <kbd><i>I</i></kbd> kursywy w edytorze, jeśli utknąłeś.
       quoting:
         instructions: |-
           Czy możesz spróbować zacytować mnie w odpowiedzi, tak żebym wiedział do której części się odnosisz?
@@ -280,17 +287,19 @@ pl_PL:
           Wiesz co robić. Śmiało, **oflaguj ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> jako nieodpowiedni!
         reply: |-
           [Nasz zespół](%{base_uri}/groups/staff) zostanie prywatnie poinformowany o Twojej fladze. W przypadku, gdy wystarczająca liczba członków społeczności oflaguje ten sam wpis, zostanie on automatycznie ukryty ze względów ostrożności (Jako żę tak naprawdę nie napisałem niczego nieodpowiedniego :angel:, po prostu usunąłem flagę ze swojego wpisu),
+        not_found: |-
+          O nie, mój nieodpowiedni wpis nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni, używając flagi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, by wyświetlić więcej opcji przy dla danego wpisu.
       search:
         instructions: |-
           _psst_ …Ukryłem niespodziankę w tym wątku. Jeśli chcesz podjąć wyzwanie, **wybierz ikonę szukania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> w prawym górnym rogu &#8599;, by jej poszukać.
 
           Spróbuj wyszukać frazę „kapibara” w tym wątku.
         hidden_message: |-
-          Jak tęskniłeś za tą kapibarą? :Puść oczko:
+          Jak tęskniłeś za tą kapibarą? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę **, odpowiadając emoji `%{search_answer}` **, a zostaniesz automatycznie zabrany do końca.
+          Zauważyłeś, że wróciłeś na początek? Nakarm tę biedną głodną kapibarę, **odpowiadając emoji `%{search_answer}`**, a zostaniesz automatycznie zabrany do końca.
         reply: |-
           Yay, udało Ci się to odnaleźć :tada:
 
@@ -307,14 +316,14 @@ pl_PL:
 
           %{certificate}
 
-          To na razie wszystko! Sprawdź [**najnowsze wątki dyskusji**](%{base_uri}/latest) lub [**kategorie**](%{base_uri}/categories). :sunglassses:
+          To na razie wszystko! Sprawdź [**najnowsze tematy dyskusji**](%{base_uri}/latest) lub [**kategorie**](%{base_uri}/categories). :sunglasses:
 
-          (Jeśli będziesz chciał ponownie porozmawiać, wyślij mi wiadomość lub wzmianki `@%{discobot_username}` w dowolnym momencie!)
+          (Jeśli będziesz chciał ponownie porozmawiać, wyślij mi wiadomość lub wspomnij `@%{discobot_username}` w dowolnym momencie!)
       certificate:
-        alt: "Certyfikat osiągnięcia"
+        alt: "Certyfikat Osiągnięcia"
     advanced_user_narrative:
       reset_trigger: "zaawansowany samouczek"
-      cert_title: "W uznaniu za pomyślne ukończenie tutorialu zaawansowanego użytkownika."
+      cert_title: "W uznaniu za pomyślne ukończenie samouczka zaawansowanego użytkownika."
       title: ":arrow_up: Zaawansowane opcje użytkownika"
       start_message: |-
         Jako _zaawansowany_ użytkownik, czy odwiedziłeś już [stronę swoich ustawień](%{base_uri}/my/preferences), @%{username}? Istnieje wiele możliwości dostosowania ustawień, takich jak wybranie ciemnego lub jasnego motywu.
@@ -423,9 +432,9 @@ pl_PL:
           Czy masz problem przy tworzeniu widgetu szczegółów? Spróbuj dołączyć następujący tekst w twojej odpowiedzi.
 
           ```tekst
-          [szczegóły=Wybierz mnie, aby zobaczyć szczegóły]
+          [details=Pokaż szczegóły]
           Tutaj są szczegóły
-          [/szczegóły]
+          [/details]
           ```
         reply: |-
           Dobra robota - twoja dbałość o _szczegóły_ jest wspaniała!

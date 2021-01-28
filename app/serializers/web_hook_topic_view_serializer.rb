@@ -20,6 +20,7 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     topic_timer
     details
     image_url
+    slow_mode_seconds
   }.each do |attr|
     define_method("include_#{attr}?") do
       false

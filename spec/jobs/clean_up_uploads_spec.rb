@@ -126,11 +126,11 @@ describe Jobs::CleanUpUploads do
     end
   end
 
-  it "does not clean up uploads with URLs used in site settings" do
+  it "does not clean up selectable avatars" do
     avatar1_upload = fabricate_upload
     avatar2_upload = fabricate_upload
 
-    SiteSetting.selectable_avatars = [avatar1_upload.url, avatar2_upload.url].join("\n")
+    SiteSetting.selectable_avatars = [avatar1_upload, avatar2_upload]
 
     Jobs::CleanUpUploads.new.execute(nil)
 

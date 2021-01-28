@@ -1,8 +1,8 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import { run } from "@ember/runloop";
-import { ajax } from "discourse/lib/ajax";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { run } from "@ember/runloop";
 
 const _loaded = {};
 const _loading = {};
@@ -51,7 +51,7 @@ export default function loadScript(url, opts) {
     return Promise.resolve();
   }
 
-  if (PUBLIC_JS_VERSIONS && !opts.css) {
+  if (PUBLIC_JS_VERSIONS) {
     url = cacheBuster(url);
   }
 
@@ -110,12 +110,12 @@ export default function loadScript(url, opts) {
 
 export function cacheBuster(url) {
   if (PUBLIC_JS_VERSIONS) {
-    // eslint-disable-next-line no-unused-vars
-    const [_, folder, lib] = url.split("/");
+    let [folder, ...lib] = url.split("/").filter(Boolean);
     if (folder === "javascripts") {
-      const version = PUBLIC_JS_VERSIONS[lib];
-      if (version) {
-        return `${url}?v=${version}`;
+      lib = lib.join("/");
+      const versionedPath = PUBLIC_JS_VERSIONS[lib];
+      if (versionedPath) {
+        return `/javascripts/${versionedPath}`;
       }
     }
   }

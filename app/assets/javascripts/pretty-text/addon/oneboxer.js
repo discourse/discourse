@@ -1,13 +1,13 @@
-import { later } from "@ember/runloop";
 import {
-  localCache,
   failedCache,
-  setLocalCache,
-  setFailedCache,
-  resetLocalCache,
-  resetFailedCache,
+  localCache,
   normalize,
+  resetFailedCache,
+  resetLocalCache,
+  setFailedCache,
+  setLocalCache,
 } from "pretty-text/oneboxer-cache";
+import { later } from "@ember/runloop";
 
 let timeout;
 const loadingQueue = [];
@@ -112,8 +112,12 @@ export function load({
   const $elem = $(elem);
 
   // If the onebox has loaded or is loading, return
-  if ($elem.data("onebox-loaded")) return;
-  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) return;
+  if ($elem.data("onebox-loaded")) {
+    return;
+  }
+  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) {
+    return;
+  }
 
   const url = elem.href;
 
@@ -121,11 +125,15 @@ export function load({
   if (!refresh) {
     // If we have it in our cache, return it.
     const cached = localCache[normalize(url)];
-    if (cached) return cached.prop("outerHTML");
+    if (cached) {
+      return cached.prop("outerHTML");
+    }
 
     // If the request failed, don't do anything
     const failed = failedCache[normalize(url)];
-    if (failed) return;
+    if (failed) {
+      return;
+    }
   }
 
   // Add the loading CSS class

@@ -24,15 +24,6 @@ hu:
       long_description: |
         Ez a jelvényt az interaktív haladó felhasználói eligazítás sikeres teljesítéséért jár. Elsajátította a beszélgetés speciális eszközeit, és ezzel teljesen hivatalos lett!
   discourse_narrative_bot:
-    bio: "Üdv, nem igazi személy vagyok. Egy bot vagyok, és megtanítom az oldal használatát. A velem történő interakcióhoz küldjön nekem egy üzenetet, vagy említsen meg így bárhol: **`@%{discobot_username}`**."
-    tl2_promotion_message:
-      subject_template: "Gratulálunk az első bizalmi szint előléptetéséért!"
-      text_body_template: |
-        Most hogy előléptették, ideje megtanulnia néhány speciális funkciót!
-
-        Válaszoljon erre az üzenetre ezzel: `@%{discobot_username} %{reset_trigger}`, hogy többet tudjon meg arról, hogy mit tehet.
-
-        Arra kérjük, hogy továbbra is vegyen részt – örülünk, hogy itt van.
     timeout:
       message: |-
         Üdv @%{username}, csak beköszönök, mert nem hallottam Önről egy ideje.
@@ -48,8 +39,6 @@ hu:
       trigger: "kockadobás"
       invalid: |-
         Sajnálom, matematikailag lehetetlen ezt a kockakombinációt dobni. :confounded:
-      not_enough_dice: |-
-        Csak %{num_of_dice} kockám van. [Szégyenletes](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!
       out_of_range: |-
         Tudta, hogy a [legtöbb oldallal rendelkező](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematikailag fair kocka 120 oldalas?
       results: |-

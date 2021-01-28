@@ -12,10 +12,7 @@ RSpec.describe UploadSecurity do
 
   context "when secure media is enabled" do
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secrets3_region key"
+      setup_s3
       SiteSetting.secure_media = true
     end
 
@@ -62,6 +59,19 @@ RSpec.describe UploadSecurity do
           let(:type) { 'category_background' }
           it "returns false" do
             expect(subject.should_be_secure?).to eq(false)
+          end
+        end
+        describe "for a custom public type" do
+          let(:type) { 'my_custom_type' }
+
+          it "returns true if the custom type has not been added" do
+            expect(subject.should_be_secure?).to eq(true)
+          end
+
+          it "returns false if the custom type has been added" do
+            UploadSecurity.register_custom_public_type(type)
+            expect(subject.should_be_secure?).to eq(false)
+            UploadSecurity.reset_custom_public_types
           end
         end
         describe "for_theme" do

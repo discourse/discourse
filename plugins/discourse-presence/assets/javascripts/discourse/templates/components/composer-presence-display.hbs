@@ -8,9 +8,9 @@
     <span class="presence-text">
       <span class="description">
         {{#if isReply ~}}
-          {{i18n "presence.replying"}}
+          {{i18n "presence.replying" count=presenceUsers.length}}
         {{~else~}}
-          {{i18n "presence.editing"}}
+          {{i18n "presence.editing" count=presenceUsers.length}}
         {{~/if}}
       </span>{{!-- (using comment to stop whitespace)
 --}}</span>{{!--

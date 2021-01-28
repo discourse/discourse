@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { and, not, equal } from "@ember/object/computed";
+import { and, equal, not } from "@ember/object/computed";
 import Component from "@ember/component";
+import I18n from "I18n";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["flag-action-type"],

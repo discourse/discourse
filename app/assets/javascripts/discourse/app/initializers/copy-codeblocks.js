@@ -1,9 +1,9 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { cancel, later } from "@ember/runloop";
-import { Promise } from "rsvp";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import { guidFor } from "@ember/object/internals";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 // http://github.com/feross/clipboard-copy
 function clipboardCopy(text) {

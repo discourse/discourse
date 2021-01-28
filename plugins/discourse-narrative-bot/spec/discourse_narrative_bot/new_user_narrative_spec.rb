@@ -745,7 +745,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           it "should use correct path to images on subfolder installs" do
             GlobalSetting.stubs(:relative_url_root).returns('/forum')
-            Discourse.stubs(:base_uri).returns("/forum")
+            Discourse.stubs(:base_path).returns("/forum")
 
             post.update!(raw: skip_trigger)
 
@@ -1127,6 +1127,23 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           expect(user.badges.where(
             name: DiscourseNarrativeBot::NewUserNarrative.badge_name).exists?
           ).to eq(true)
+        end
+
+        it 'should accept a raw emoji' do
+          post.update!(
+            raw: "#{described_class.search_answer_emoji} this is the emoji you mentioned"
+          )
+
+          expect do
+            DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
+          end.to change { Post.count }.by(2)
+
+          new_post = topic.ordered_posts.last(2).first
+
+          expect(new_post.raw).to eq(I18n.t(
+            'discourse_narrative_bot.new_user_narrative.search.reply',
+            search_url: "#{Discourse.base_url}/search", base_uri: ''
+          ).chomp)
         end
       end
     end

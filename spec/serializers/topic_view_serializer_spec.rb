@@ -212,6 +212,30 @@ describe TopicViewSerializer do
     end
   end
 
+  describe 'tags order' do
+    fab!(:tag1) { Fabricate(:tag, name: 'ctag', topic_count: 5) }
+    fab!(:tag2) { Fabricate(:tag, name: 'btag', topic_count: 9) }
+    fab!(:tag3) { Fabricate(:tag, name: 'atag', topic_count: 3) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topic.tags << tag1
+      topic.tags << tag2
+      topic.tags << tag3
+    end
+
+    it 'tags are automatically sorted by tag popularity' do
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(btag ctag atag))
+    end
+
+    it 'tags can be sorted alphabetically' do
+      SiteSetting.tags_sort_alphabetically = true
+      json = serialize_topic(topic, user)
+      expect(json[:tags]).to eq(%w(atag btag ctag))
+    end
+  end
+
   context "with flags" do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:other_post) { Fabricate(:post, topic: topic) }
@@ -341,6 +365,27 @@ describe TopicViewSerializer do
         expect(json[:details][:can_edit_tags]).to eq(true)
       end
     end
+
+    context "can_edit" do
+      fab!(:group_user) { Fabricate(:group_user) }
+      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      let(:user) { group_user.user }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
+
+      it 'explicitly returns can_edit' do
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit]).to eq(true)
+
+        topic.update!(category: nil)
+
+        json = serialize_topic(topic, user)
+        expect(json[:details][:can_edit]).to eq(false)
+      end
+    end
   end
 
   context "published_page" do
@@ -375,6 +420,18 @@ describe TopicViewSerializer do
           expect(json[:published_page]).to be_present
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
+
+        context "secure media is enabled" do
+          before do
+            setup_s3
+            SiteSetting.secure_media = true
+          end
+
+          it "doesn't return the published page" do
+            json = serialize_topic(topic, admin)
+            expect(json[:published_page]).to be_blank
+          end
+        end
       end
     end
   end
@@ -399,4 +456,38 @@ describe TopicViewSerializer do
     end
   end
 
+  describe '#user_last_posted_at' do
+    context 'When the slow mode is disabled' do
+      it 'returns nil' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+    end
+
+    context 'Wwhen the slow mode is enabled' do
+      before { topic.update!(slow_mode_seconds: 1000) }
+
+      it 'returns nil if no user is given' do
+        json = serialize_topic(topic, nil)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it "returns nil if there's no topic_user association" do
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_nil
+      end
+
+      it 'returns the last time the user posted' do
+        Fabricate(:topic_user, user: user, topic: topic, last_posted_at: 6.hours.ago)
+        json = serialize_topic(topic, user)
+
+        expect(json[:user_last_posted_at]).to be_present
+      end
+    end
+  end
 end

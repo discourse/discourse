@@ -88,6 +88,9 @@ RSpec.describe ListController do
   end
 
   describe "categories and X" do
+    let(:category) { Fabricate(:category_with_definition) }
+    let(:sub_category) { Fabricate(:category_with_definition, parent_category: category) }
+
     it "returns top topics" do
       Fabricate(:topic, like_count: 1000, posts_count: 100)
       TopTopic.refresh!
@@ -99,6 +102,12 @@ RSpec.describe ListController do
       get "/categories_and_latest.json"
       data = response.parsed_body
       expect(data["topic_list"]["topics"].length).to eq(2)
+    end
+
+    it "returns topics from subcategories when no_subcategories=false" do
+      Fabricate(:topic, category: sub_category)
+      get "/c/#{category.slug}/#{category.id}/l/latest.json?no_subcategories=false"
+      expect(response.parsed_body["topic_list"]["topics"].length).to eq(2)
     end
   end
 
@@ -195,6 +204,17 @@ RSpec.describe ListController do
 
         expect(response.parsed_body["topic_list"]["topics"].first["id"])
           .to eq(topic.id)
+      end
+
+      it 'should display moderator group private messages for a moderator' do
+        moderator = Fabricate(:moderator)
+        group = Group.find(Group::AUTO_GROUPS[:moderators])
+        topic = Fabricate(:private_message_topic, allowed_groups: [group])
+
+        sign_in(moderator)
+
+        get "/topics/private-messages-group/#{moderator.username}/#{group.name}.json"
+        expect(response.status).to eq(200)
       end
 
       it "should not display group private messages for a moderator's group" do
@@ -592,10 +612,23 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].size).to eq(2)
     end
 
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
-      get "/topics/created-by/#{user.username}.json"
-      expect(response.status).to eq(404)
+    context 'when `hide_profile_and_presence` is true' do
+      before do
+        user.user_option.update_columns(hide_profile_and_presence: true)
+      end
+
+      it "returns 404" do
+        get "/topics/created-by/#{user.username}.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "should respond with a list when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+        get "/topics/created-by/#{user.username}.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_list"]["topics"].size).to eq(2)
+      end
     end
   end
 
@@ -729,7 +762,15 @@ RSpec.describe ListController do
     end
 
     context "with subfolder" do
-      it "redirects to URL containing the updated slug" do
+      it "main category redirects to URL containing the updated slug" do
+        set_subfolder "/forum"
+        get "/c/#{category.slug}"
+
+        expect(response.status).to eq(301)
+        expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
+      end
+
+      it "sub-sub-category redirects to URL containing the updated slug" do
         set_subfolder "/forum"
         get "/c/hello/world/bye/#{subsubcategory.id}"
 

@@ -11,12 +11,18 @@ export default function getURL(url) {
   }
 
   // if it's a non relative URL, return it.
-  if (url !== "/" && !/^\/[^\/]/.test(url)) return url;
+  if (url !== "/" && !/^\/[^\/]/.test(url)) {
+    return url;
+  }
 
-  const found = url.indexOf(baseUri);
+  const found = url.startsWith(baseUri);
 
-  if (found >= 0 && found < 3) return url;
-  if (url[0] !== "/") url = "/" + url;
+  if (found) {
+    return url;
+  }
+  if (url[0] !== "/") {
+    url = "/" + url;
+  }
 
   return baseUri + url;
 }

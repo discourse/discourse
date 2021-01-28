@@ -1,6 +1,6 @@
-import { computed } from "@ember/object";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
+import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend(TagsMixin, {
@@ -91,9 +91,15 @@ export default MultiSelectComponent.extend(TagsMixin, {
         .slice(0, 100);
     }
 
-    if (!this.everyTag) data.filterForInput = true;
-    if (this.excludeSynonyms) data.excludeSynonyms = true;
-    if (this.excludeHasSynonyms) data.excludeHasSynonyms = true;
+    if (!this.everyTag) {
+      data.filterForInput = true;
+    }
+    if (this.excludeSynonyms) {
+      data.excludeSynonyms = true;
+    }
+    if (this.excludeHasSynonyms) {
+      data.excludeHasSynonyms = true;
+    }
 
     return this.searchTags("/tags/filter/search", data, this._transformJson);
   },

@@ -12,19 +12,31 @@ module Jobs
 
     COMPONENTS ||= %w(
       user_archive
-      user_archive_profile
+      preferences
+      auth_tokens
+      auth_token_logs
       badges
       bookmarks
       category_preferences
+      flags
+      likes
+      post_actions
+      queued_posts
       visits
     )
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
       user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
+      auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
+      auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
       badges: ['badge_id', 'badge_name', 'granted_at', 'post_id', 'seq', 'granted_manually', 'notification_id', 'featured_rank'],
       bookmarks: ['post_id', 'topic_id', 'post_number', 'link', 'name', 'created_at', 'updated_at', 'reminder_type', 'reminder_at', 'reminder_last_sent_at', 'reminder_set_at', 'auto_delete_preference'],
       category_preferences: ['category_id', 'category_names', 'notification_level', 'dismiss_new_timestamp'],
+      flags: ['id', 'post_id', 'flag_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id', 'targets_topic', 'was_take_action'],
+      likes: ['id', 'post_id', 'topic_id', 'post_number', 'created_at', 'updated_at', 'deleted_at', 'deleted_by'],
+      post_actions: ['id', 'post_id', 'post_action_type', 'created_at', 'updated_at', 'deleted_at', 'deleted_by', 'related_post_id'],
+      queued_posts: ['id', 'verdict', 'category_id', 'topic_id', 'post_raw', 'other_json'],
       visits: ['visited_at', 'posts_read', 'mobile', 'time_read'],
     )
 
@@ -38,12 +50,15 @@ module Jobs
       COMPONENTS.each do |name|
         h = { name: name, method: :"#{name}_export" }
         h[:filetype] = :csv
-        filename_method = :"#{name}_filename"
-        if respond_to? filename_method
-          h[:filename] = public_send(filename_method)
-        else
-          h[:filename] = name
+        filetype_method = :"#{name}_filetype"
+        if respond_to? filetype_method
+          h[:filetype] = public_send(filetype_method)
         end
+        condition_method = :"include_#{name}?"
+        if respond_to? condition_method
+          h[:skip] = !public_send(condition_method)
+        end
+        h[:filename] = name
         components.push(h)
       end
 
@@ -61,11 +76,16 @@ module Jobs
       zip_filename = nil
       begin
         components.each do |component|
+          next if component[:skip]
           case component[:filetype]
           when :csv
             CSV.open("#{dirname}/#{component[:filename]}.csv", "w") do |csv|
               csv << get_header(component[:name])
               public_send(component[:method]) { |d| csv << d }
+            end
+          when :json
+            File.open("#{dirname}/#{component[:filename]}.json", "w") do |file|
+              file.write MultiJson.dump(public_send(component[:method]), indent: 4)
             end
           else
             raise 'unknown export filetype'
@@ -129,6 +149,59 @@ module Jobs
         .select(:location, :website, :bio_raw, :views)
         .each do |user_profile|
         yield get_user_archive_profile_fields(user_profile)
+      end
+    end
+
+    def preferences_export
+      UserSerializer.new(@current_user, scope: guardian)
+    end
+
+    def preferences_filetype
+      :json
+    end
+
+    def auth_tokens_export
+      return enum_for(:auth_tokens) unless block_given?
+
+      UserAuthToken
+        .where(user_id: @current_user.id)
+        .each do |token|
+        yield [
+          token.id,
+          token.auth_token.to_s[0..4] + "...", # hashed and truncated
+          token.prev_auth_token[0..4] + "...",
+          token.auth_token_seen,
+          token.client_ip,
+          token.user_agent,
+          token.seen_at,
+          token.rotated_at,
+          token.created_at,
+          token.updated_at,
+        ]
+      end
+    end
+
+    def include_auth_token_logs?
+      # SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.where(user_id: @current_user.id).exists?
+    end
+
+    def auth_token_logs_export
+      return enum_for(:auth_token_logs) unless block_given?
+
+      UserAuthTokenLog
+        .where(user_id: @current_user.id)
+        .each do |log|
+        yield [
+          log.id,
+          log.action,
+          log.user_auth_token_id,
+          log.client_ip,
+          log.auth_token.to_s[0..4] + "...", # hashed and truncated
+          log.created_at,
+          log.path,
+          log.user_agent,
+        ]
       end
     end
 
@@ -200,6 +273,98 @@ module Jobs
       end
     end
 
+    def flags_export
+      return enum_for(:flags_export) unless block_given?
+
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where(post_action_type_id: PostActionType.flag_types.values)
+        .each do |pa|
+        yield [
+          pa.id,
+          pa.post_id,
+          PostActionType.flag_types[pa.post_action_type_id],
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+          pa.related_post_id,
+          pa.targets_topic,
+          # renamed to 'was_take_action' to avoid possibility of thinking this is a synonym of agreed_at
+          pa.staff_took_action,
+        ]
+      end
+    end
+
+    def likes_export
+      return enum_for(:likes_export) unless block_given?
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where(post_action_type_id: PostActionType.types[:like])
+        .each do |pa|
+        post = Post.with_deleted.find(pa.post_id)
+        yield [
+          pa.id,
+          pa.post_id,
+          post&.topic_id,
+          post&.post_number,
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+        ]
+      end
+    end
+
+    def include_post_actions?
+      # Most forums should not have post_action records other than flags and likes, but they are possible in historical oddities.
+      PostAction
+        .where(user_id: @current_user.id)
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .exists?
+    end
+
+    def post_actions_export
+      return enum_for(:likes_export) unless block_given?
+      PostAction
+        .with_deleted
+        .where(user_id: @current_user.id)
+        .where.not(post_action_type_id: PostActionType.flag_types.values + [PostActionType.types[:like], PostActionType.types[:bookmark]])
+        .each do |pa|
+        yield [
+          pa.id,
+          pa.post_id,
+          PostActionType.types[pa.post_action_type] || pa.post_action_type,
+          pa.created_at,
+          pa.updated_at,
+          pa.deleted_at,
+          self_or_other(pa.deleted_by_id),
+          pa.related_post_id,
+        ]
+      end
+    end
+
+    def queued_posts_export
+      return enum_for(:queued_posts_export) unless block_given?
+
+      # Most Reviewable fields staff-private, but post content needs to be exported.
+      ReviewableQueuedPost
+        .where(created_by: @current_user.id)
+        .each do |rev|
+
+        yield [
+          rev.id,
+          Reviewable.statuses[rev.status],
+          rev.category_id,
+          rev.topic_id,
+          rev.payload['raw'],
+          MultiJson.dump(rev.payload.slice(*queued_posts_payload_permitted_keys)),
+        ]
+      end
+    end
+
     def visits_export
       return enum_for(:visits_export) unless block_given?
 
@@ -251,6 +416,16 @@ module Jobs
       categories.reverse.join("|")
     end
 
+    def self_or_other(user_id)
+      if user_id.nil?
+        nil
+      elsif user_id == @current_user.id
+        'self'
+      else
+        'other'
+      end
+    end
+
     def get_user_archive_fields(user_archive)
       user_archive_array = []
       topic_data = user_archive.topic
@@ -287,6 +462,23 @@ module Jobs
       end
 
       user_archive_profile
+    end
+
+    def queued_posts_payload_permitted_keys
+      # Generated with:
+      #
+      # SELECT distinct json_object_keys(payload) from reviewables
+      # where type = 'ReviewableQueuedPost' and (payload->'old_queued_post_id') IS NULL
+      #
+      # except raw, created_topic_id, created_post_id
+      %w{
+        composer_open_duration_msecs
+        is_poll
+        reply_to_post_number
+        tags
+        title
+        typing_duration_msecs
+      }
     end
 
     def notify_user(upload, export_title)

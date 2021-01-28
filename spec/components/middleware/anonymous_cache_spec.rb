@@ -26,6 +26,10 @@ describe Middleware::AnonymousCache do
       it "is false if it has an auth cookie" do
         expect(new_helper("HTTP_COOKIE" => "jack=1; _t=#{"1" * 32}; jill=2").cacheable?).to eq(false)
       end
+
+      it "is false for srv/status routes" do
+        expect(new_helper("PATH_INFO" => "/srv/status").cacheable?).to eq(false)
+      end
     end
 
     context "per theme cache" do
@@ -124,6 +128,48 @@ describe Middleware::AnonymousCache do
         crawler.cache([200, { "HELLO" => "WORLD" }, ["hello ", "world"]])
         expect(crawler.cached).to eq([200, { "X-Discourse-Cached" => "true", "HELLO" => "WORLD" }, ["hello world"]])
       end
+    end
+  end
+
+  context 'background request rate limit' do
+    it 'will rate limit background requests' do
+
+      app = Middleware::AnonymousCache.new(
+        lambda do |env|
+          [200, {}, ["ok"]]
+        end
+      )
+
+      global_setting :background_requests_max_queue_length, "0.5"
+
+      env = {
+        "HTTP_COOKIE" => "_t=#{SecureRandom.hex}",
+        "HOST" => "site.com",
+        "REQUEST_METHOD" => "GET",
+        "REQUEST_URI" => "/somewhere/rainbow",
+        "REQUEST_QUEUE_SECONDS" => 2.1,
+        "rack.input" => StringIO.new
+      }
+
+      # non background ... long request
+      env["REQUEST_QUEUE_SECONDS"] = 2
+
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
+
+      env["HTTP_DISCOURSE_BACKGROUND"] = "true"
+
+      status, headers, body = app.call(env.dup)
+      expect(status).to eq(429)
+      expect(headers["content-type"]).to eq("application/json; charset=utf-8")
+      json = JSON.parse(body.join)
+      expect(json["extras"]["wait_seconds"]).to be > 4.9
+
+      env["REQUEST_QUEUE_SECONDS"] = 0.4
+
+      status, _ = app.call(env.dup)
+      expect(status).to eq(200)
+
     end
   end
 

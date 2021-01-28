@@ -1,14 +1,13 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
+import Controller, { inject } from "@ember/controller";
 import { alias, equal } from "@ember/object/computed";
-import { next } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { movePosts, mergeTopic } from "discourse/models/topic";
+import { mergeTopic, movePosts } from "discourse/models/topic";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
+import { isEmpty } from "@ember/utils";
+import { next } from "@ember/runloop";
 
 export default Controller.extend(ModalFunctionality, {
   topicName: null,

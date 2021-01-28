@@ -1,18 +1,18 @@
-import I18n from "I18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
-  PRIVATE_MESSAGE,
-  CREATE_TOPIC,
   CREATE_SHARED_DRAFT,
-  REPLY,
+  CREATE_TOPIC,
   EDIT,
+  PRIVATE_MESSAGE,
+  REPLY,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
+import bootbox from "bootbox";
+import { camelize } from "@ember/string";
 import { computed } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import bootbox from "bootbox";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -137,7 +137,6 @@ export default DropdownSelectBoxComponent.extend({
     ) {
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_post.label", {
-          postNumber: _postSnapshot.post_number,
           postUsername: _postSnapshot.username,
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
@@ -298,7 +297,9 @@ export default DropdownSelectBoxComponent.extend({
         bootbox.confirm(
           I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
           (result) => {
-            if (result) this._replyAsNewTopicSelect(options);
+            if (result) {
+              this._replyAsNewTopicSelect(options);
+            }
           }
         );
       } else {

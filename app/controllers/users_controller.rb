@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     :update_second_factor, :create_second_factor_backup, :select_avatar,
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
-    :bookmarks, :invited
+    :bookmarks, :invited, :invite_links, :check_sso_email
   ]
 
   skip_before_action :check_xhr, only: [
@@ -35,7 +35,6 @@ class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   skip_before_action :redirect_to_login_if_required, only: [:check_username,
                                                             :create,
-                                                            :get_honeypot_value,
                                                             :account_created,
                                                             :activate_account,
                                                             :perform_account_activation,
@@ -207,6 +206,22 @@ class UsersController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def check_sso_email
+    user = fetch_user_from_params(include_inactive: true)
+
+    unless user == current_user
+      guardian.ensure_can_check_sso_email!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
+
+    email = user&.single_sign_on_record&.external_email
+    email = I18n.t("user.email.does_not_exist") if email.blank?
+
+    render json: { email: email }
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: 403
+  end
+
   def update_primary_email
     if !SiteSetting.enable_secondary_emails
       return render json: failed_json, status: 410
@@ -370,57 +385,87 @@ class UsersController < ApplicationController
   end
 
   def invited
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      offset = params[:offset].to_i || 0
+      filter_by = params[:filter] || "redeemed"
+      inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
-    offset = params[:offset].to_i || 0
-    filter_by = params[:filter] || "redeemed"
-    inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
+      invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
+        Invite.find_pending_invites_from(inviter, offset)
+      elsif filter_by == "redeemed"
+        Invite.find_redeemed_invites_from(inviter, offset)
+      else
+        []
+      end
 
-    invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
-      Invite.find_pending_invites_from(inviter, offset)
-    elsif filter_by == "redeemed"
-      Invite.find_redeemed_invites_from(inviter, offset)
+      show_emails = guardian.can_see_invite_emails?(inviter)
+      if params[:search].present? && invites.present?
+        filter_sql = '(LOWER(users.username) LIKE :filter)'
+        filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
+        invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+      end
+
+      render json: MultiJson.dump(InvitedSerializer.new(
+        OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
+        scope: guardian,
+        root: false
+      ))
     else
-      []
-    end
+      if current_user&.staff?
+        message = if SiteSetting.enable_sso
+          I18n.t("invite.disabled_errors.sso_enabled")
+        elsif !SiteSetting.enable_local_logins
+          I18n.t("invite.disabled_errors.local_logins_disabled")
+        end
 
-    show_emails = guardian.can_see_invite_emails?(inviter)
-    if params[:search].present? && invites.present?
-      filter_sql = '(LOWER(users.username) LIKE :filter)'
-      filter_sql = '(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)' if show_emails
-      invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+        render_invite_error(message)
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
     end
-
-    render json: MultiJson.dump(InvitedSerializer.new(
-      OpenStruct.new(invite_list: invites.to_a, show_emails: show_emails, inviter: inviter, type: filter_by),
-      scope: guardian,
-      root: false
-    ))
   end
 
   def invite_links
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+      guardian.ensure_can_see_invite_details!(inviter)
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
-    guardian.ensure_can_see_invite_details!(inviter)
+      offset = params[:offset].to_i || 0
+      invites = Invite.find_links_invites_from(inviter, offset)
 
-    offset = params[:offset].to_i || 0
-    invites = Invite.find_links_invites_from(inviter, offset)
+      render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
+    else
+      if current_user&.staff?
+        message = if SiteSetting.enable_sso
+          I18n.t("invite.disabled_errors.sso_enabled")
+        elsif !SiteSetting.enable_local_logins
+          I18n.t("invite.disabled_errors.local_logins_disabled")
+        end
 
-    render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
+        render_invite_error(message)
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
+    end
   end
 
   def invited_count
-    guardian.ensure_can_invite_to_forum!
+    if guardian.can_invite_to_forum?
+      inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
 
-    inviter = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+      pending_count = Invite.find_pending_invites_count(inviter)
+      redeemed_count = Invite.find_redeemed_invites_count(inviter)
+      links_count = Invite.find_links_invites_count(inviter)
 
-    pending_count = Invite.find_pending_invites_count(inviter)
-    redeemed_count = Invite.find_redeemed_invites_count(inviter)
-    links_count = Invite.find_links_invites_count(inviter)
-
-    render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
-                             total: (pending_count.to_i + redeemed_count.to_i) } }
+      render json: { counts: { pending: pending_count, redeemed: redeemed_count, links: links_count,
+                               total: (pending_count.to_i + redeemed_count.to_i) } }
+    else
+      if current_user&.staff?
+        render json: { counts: 0 }
+      else
+        render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
+      end
+    end
   end
 
   def is_local_username
@@ -602,8 +647,7 @@ class UsersController < ApplicationController
         success: true,
         active: user.active?,
         message: activation.message,
-        user_id: user.id
-      }
+      }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
@@ -613,9 +657,8 @@ class UsersController < ApplicationController
 
       render json: {
         success: true,
-        active: user.active?,
-        message: activation.success_message,
-        user_id: user.id
+        active: false,
+        message: activation.success_message
       }
     else
       errors = user.errors.to_hash
@@ -640,17 +683,6 @@ class UsersController < ApplicationController
     render json: {
       success: false,
       message: I18n.t("login.something_already_taken")
-    }
-  end
-
-  def get_honeypot_value
-    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
-    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
-
-    render json: {
-      value: honeypot_value,
-      challenge: challenge_value,
-      expires_in: SecureSession.expiry
     }
   end
 
@@ -1009,18 +1041,14 @@ class UsersController < ApplicationController
   def search_users
     term = params[:term].to_s.strip
 
-    topic_id = params[:topic_id]
-    topic_id = topic_id.to_i if topic_id
-
-    category_id = params[:category_id].to_i if category_id.present?
+    topic_id = params[:topic_id].to_i if params[:topic_id].present?
+    category_id = params[:category_id].to_i if params[:category_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
     group_names << params[:group] if params[:group]
-    if group_names.present?
-      @groups = Group.where(name: group_names)
-    end
+    @groups = Group.where(name: group_names) if group_names.present?
 
     options = {
      topic_allowed_users: topic_allowed_users,
@@ -1028,13 +1056,8 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
-    if topic_id
-      options[:topic_id] = topic_id
-    end
-
-    if category_id
-      options[:category_id] = category_id
-    end
+    options[:topic_id] = topic_id if topic_id
+    options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
 
@@ -1043,8 +1066,10 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
     groups =
-      if current_user
+      if term.present? && current_user
         if params[:include_groups] == 'true'
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == 'true'
@@ -1053,10 +1078,6 @@ class UsersController < ApplicationController
           Group.messageable(current_user)
         end
       end
-
-    # blank term is only handy for in-topic search of users after @
-    # we do not want group results ever if term is blank
-    groups = nil if term.blank?
 
     if groups
       groups = Group.search_groups(term, groups: groups)
@@ -1076,33 +1097,37 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    type = params[:type]
-    upload_id = params[:upload_id]
-
     if SiteSetting.sso_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    type = params[:type]
+
+    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != 'system'
+    if invalid_type
+      return render json: failed_json, status: 422
     end
 
-    upload = Upload.find_by(id: upload_id)
-
-    # old safeguard
-    user.create_user_avatar unless user.user_avatar
-
-    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
-      if !upload
-        return render_json_error I18n.t("avatar.missing")
+    if type.blank? || type == 'system'
+      upload_id = nil
+    else
+      if !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
       end
 
-      if type == "gravatar"
+      upload_id = params[:upload_id]
+      upload = Upload.find_by(id: upload_id)
+
+      if upload.nil?
+        return render_json_error I18n.t('avatar.missing')
+      end
+
+      # old safeguard
+      user.create_user_avatar unless user.user_avatar
+
+      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
+
+      if type == 'gravatar'
         user.user_avatar.gravatar_upload_id = upload_id
       else
         user.user_avatar.custom_upload_id = upload_id
@@ -1138,7 +1163,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars[upload.sha1]
+    unless SiteSetting.selectable_avatars.include?(upload)
       return render json: failed_json, status: 422
     end
 
@@ -1508,7 +1533,9 @@ class UsersController < ApplicationController
         if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
-            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+            no_results_help: I18n.t(
+              params[:q].present? ? "user_activity.no_bookmarks.search" : "user_activity.no_bookmarks.self"
+            )
           }
         else
           page = params[:page].to_i + 1
@@ -1520,19 +1547,6 @@ class UsersController < ApplicationController
         @bookmark_reminders = Bookmark.where(user_id: user.id).where.not(reminder_at: nil).joins(:topic)
       end
     end
-  end
-
-  HONEYPOT_KEY ||= 'HONEYPOT_KEY'
-  CHALLENGE_KEY ||= 'CHALLENGE_KEY'
-
-  protected
-
-  def honeypot_value
-    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
-  end
-
-  def challenge_value
-    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
 
   private
@@ -1581,7 +1595,6 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
-      :ignored_usernames,
       :allowed_pm_usernames,
       :theme_ids,
       :locale,
@@ -1600,6 +1613,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
+    permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     result = params
       .permit(permitted, theme_ids: [])
@@ -1663,5 +1677,13 @@ class UsersController < ApplicationController
 
   def summary_cache_key(user)
     "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
+  end
+
+  def render_invite_error(message)
+    render json: {
+      invites: [],
+      can_see_invite_details: false,
+      error: message
+    }
   end
 end

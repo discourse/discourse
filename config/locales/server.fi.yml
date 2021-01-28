@@ -56,7 +56,6 @@ fi:
     compile_error:
       unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
-      generic: Teeman tuomisessa tapahtui virhe
       about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
       about_json_values: "about.json sisältää arvoja, jotka eivät kelpaa: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei ole pääsyoikeutta tai tietovarastoa ei löytynyt"
@@ -187,12 +186,6 @@ fi:
   invite:
     not_found: "Kutsusi tunnistusväline ei kelpaa. <a href='%{base_url}/about'>Ota yhteyttä henkilökuntaan</a>."
     not_found_json: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä henkilökuntaan."
-    not_found_template: |
-      <p>Kutsusi sivustolle<a href="%{base_url}">%{site_name}</a> on jo käytetty.</p>
-
-      <p>Jos muistat salasanasi voit <a href="%{base_url}/login">kirjautua sisään</a>.</p>
-
-      <p>Muussa tapauksessa <a href="%{base_url}/password-reset">uusi salasanasi</a>.</p>
     error_message: "Kutsun hyväksyminen epäonnistui. Ota yhteyttä sivuston ylläpitäjään."
     user_exists: "Ei ole tarpeen lähettää kutsua osoitteeseen <b>%{email}</b>, sillä kutsuttavalla <a href='%{base_path}/u/%{username}/summary'>on jo tunnus!</a>"
     confirm_email: "<p>Melkein valmista! Lähetimme aktivointiviestin sähköpostiosoitteeseesi. Aktivoi tilisi noudattamalla sähköpostissa kerrottuja ohjeita.</p><p>Jos viesti ei saavu, tarkistathan roskapostikansiosi.</p>"
@@ -225,7 +218,6 @@ fi:
   email_template_cant_be_modified: "Tätä sähköpostipohjaa ei voi muokata"
   invalid_whisper_access: "Joko kuiskaukset eivät ole käytössä tai sinulla ei ole oikeutta kuiskata."
   not_in_group:
-    title_topic: "Täytyy kuulua ryhmään, jotta näkee tämän ketjun."
     title_category: "Täytyy kuulua ryhmään, jotta näkee tämän alueen."
     request_membership: "Hae jäsenyyttä"
     join_group: "Liity ryhmään"
@@ -374,26 +366,6 @@ fi:
     until_posts:
       one: "ensimmäisen viestisi"
       other: "%{count} ensimmäistä viestiäsi"
-    "new-topic": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
-
-      - Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Onko se hyvä kiteytys?
-
-      - Ketä tämä ketju voisi kiinnostaa? Mikä on sen merkitys? Minkälaisia vastauksia odotat?
-
-      - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
-
-      Saadaksesi lisätietoa, [käy tutkimassa ohjeet](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
-    "new-reply": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
-
-      - Parantaako vastauksesi keskustelua jollain tapaa?
-
-      - Ole ystävällinen muille käyttäjille.
-
-      - Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
-
-      Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](%{base_path}/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
       ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 
@@ -416,14 +388,6 @@ fi:
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
       Ketju voisi olla vielä parempi, jos useammilla olisi tilaa jakaa omia näkökulmiaan. Voisit kutsua heitä tänne?
-    get_a_room: |
-      ### Rohkaise kaikkia osallistumaan keskusteluun
-
-      Olet vastannut %{count} kertaa käyttäjälle @%{reply_username} tässä ketjussa!
-
-      Parhaissa keskusteluissa on monia ääniä ja näkökulmia. Voitko saada jonkun liittymään keskusteluun?
-
-      Pidä mielessä, että jos haluat keskustella syvällisemmin tämän käyttäjän kanssa ei-julkisesti, [lähetä hänelle yksityisviesti](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -784,43 +748,36 @@ fi:
       title: "Se eksyy aiheesta"
       description: "Viesti ei ole liity meneillään olevaan keskusteluun, jonka aiheen määrittelee ketjun otsikko ja aloitusviesti. Viesti pitäisi luultavasti siirtää toiseen paikkaan."
       short_description: "Ei liity aiheeseen"
-      long_form: "liputti tämän eksyvän aiheesta"
     spam:
       title: "Roskaposti"
       description: "Viesti on mainos tai ilkivaltaa. Se on hyödytön ja epäolennainen tähän ketjuun."
       short_description: "On mainos tai häiriköintiä"
-      long_form: "liputti tämän roskapostiksi"
       email_title: '"%{title}" liputettiin roskapostiksi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Sopimaton"
       description: 'Viestissä on sisältöä, jota tolkun ihminen pitää loukkaavana, herjaavana tai <a href="%{base_path}/guidelines">palstan sääntöjen</a> vastaisena.'
       short_description: '<a href="%{base_path}/guidelines">Palstan sääntöjen</a> vastainen'
-      long_form: "liputti tämän sopimattomaksi"
     notify_user:
       title: "Lähetä käyttäjälle @%{username} viesti."
       description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
       short_description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
-      long_form: "lähetä käyttäjälle viesti"
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Jotain muuta"
       description: "Henkilökunnan tulisi huomioida viesti muusta kuin yllä listatusta syystä."
       short_description: "Henkilökunnan tulisi huomioida muusta syystä"
-      long_form: "liputti tämän henkilökunnan huomioitavaksi"
       email_title: 'Henkilökunnan tulisi huomioida viesti ketjussa "%{title}" '
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Kirjanmerkki"
       description: "Lisää viesti kirjanmerkkeihin"
       short_description: "Lisää viesti kirjanmerkkeihin"
-      long_form: "viesti lisätty kirjanmerkkeihin"
     like:
       title: "Tykkää"
       description: "Tykkää viestistä"
       short_description: "Tykkää viestistä"
-      long_form: "tykkäsi tästä"
   draft:
     sequence_conflict_error:
       title: "luonnosvirhe"
@@ -902,9 +859,7 @@ fi:
     mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
-    all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
-    not_found_description: "Pahoittelut, tätä tilauksen perumista ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
@@ -1274,10 +1229,6 @@ fi:
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: "Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää."
     memory_warning: "Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa."
-    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id- ja client secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
-    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id- ja app secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
-    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-salausarvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
-    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
     s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataa uusin versio</a>.'
@@ -1371,7 +1322,6 @@ fi:
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
     email_subject: "Mukauta sähköpostiviestien otsikon muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
-    enforce_second_factor: "Pakottaa käyttäjiä ottamaan kaksivaiheisen tunnistautumisen käyttöön. Voit pakottaa sen kaikille valitsemalla \"kaikki\". Vaihtoehto \"henkilökunta\" pakottaa sen vain henkilökunnalle."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_percent_filter: "Kun käyttäjä klikkaa 'Näytä ketjun tiivistelmä', näytä paras % viesteistä"
@@ -1407,9 +1357,6 @@ fi:
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki tilit, ennen uusien käyttäjien päästämistä sivustolle."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
-    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code ID -seurantakoodi, esim: UA-12345678-9; ks. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) verkkotunnus, esim. mysite.com; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin (analytics.js) verkkotunnusten välinen seurantapalvelu . Poisvieviin näiden verkkotunnusten linkkeihin lisätään client id -tunniste. Katso lisää <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Cross-Domain Tracking -oppaasta.</a>"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
     allowed_iframes: "Iframe src -verkkotunnukset, jotka Discourse voi turvallisesti sallia viesteissä"
@@ -1480,18 +1427,11 @@ fi:
     enable_twitter_logins: "Ota käyttöön Twitter-tunnistautuminen, vaaditaan twitter_consumer_key ja twitter_consumer_secret. Katso <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Twitter-tunnistautumisen consumer key, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Twitter-tunnistautumisen consumer secret, joka rekisteröidään palvelussa <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Ota Instagram-autentikaatio käyttöön, vaatimuksena instagram_consumer_key ja instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key Instagram-autentikaatioon"
-    instagram_consumer_secret: "Consumer secret Instagram-autentikaatioon"
     enable_facebook_logins: "Ota käyttöön Facebook-tunnistautuminen, vaaditaan facebook_app_id ja facebook_app_secret. Katso <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuring Facebook login for Discourse</a>."
     facebook_app_secret: "Facebook-tunnistautumisen app secret, joka rekisteröidään palvelussa <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Ota käyttöön Facebook-tunnistautuminen, vaaditaan github_client_id ja github_client_secret. Katso <a href='https://meta.discourse.org/t/13745' target='_blank'>Configuring GitHub login for Discourse</a>."
-    github_client_id: "GitHub-tunnistautumisen client id, joka rekisteröidään palvelussa <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "GitHub-tunnistautumisen client secret, joka rekisteröidään palvelussa <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Salli käyttäjien kirjautua Discordin avulla?"
     discord_client_id: 'Discordin Client ID (Tarvitsetko? Käy Discordin <a href="https://discordapp.com/developers/applications/me">kehittäjäportaalissa</a>)'
     discord_secret: "Discordin Secret Key"
-    discord_trusted_guilds: 'Salli vain näiden Discord-kiltojen jäsenten kirjautua Discordin avulla. Käytä killan numeerista ID:tä. Jos tarvitset lisätietoa, ohjeet löytyy <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">täältä</a>. Jätä tyhjäksi, jos et halua rajoittaa killan perusteella.'
     enable_backups: "Salli ylläpitäjien tehdä varmuuskopioita palstasta"
     allow_restore: "Salli palautus, joka korvaa KAIKEN sivuston datan! Jätä valitsematta, jos et aio palauttaa sivuston varmuuskopiota"
     maximum_backups: "Tallennettuna pidettävien varmuuskopioiden maksimimäärä. Vanhemmat varmuuskopiot poistetaan automaattisesti"
@@ -1522,13 +1462,10 @@ fi:
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Kuinka monta ketjua käyttäjä voi aloittaa päivässä."
-    max_personal_messages_per_day: "Kuinka monta yksityisviestiketjua käyttäjä voi aloittaa päivässä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
     max_logins_per_ip_per_minute: "Enimmäismäärä kirjautumisia IP-osoitetta kohden minuutissa"
-    max_post_deletions_per_minute: "Kuinka monta viestiä käyttäjä voi poistaa minuutissa."
-    max_post_deletions_per_day: "Kuinka monta viestiä käyttäjä voi poistaa päivässä."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     categories_topics: "Kuinka monta ketjua näytetään Alueet-sivulla (/categories). Jos 0, etsitään automaattisesti arvoa, jolla kaksi saraketta pysyvät symmetrisinä (alueet ja ketjut)."
@@ -1641,7 +1578,6 @@ fi:
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
     log_anonymizer_details: "Pidetäänkö käyttäjästä tietoa lokeissa anonymisoinnin jälkeen. Jos noudatat GDPR:ää sinun on kytkettävä tämä pois käytöstä."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viesteissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
-    staff_like_weight: "Kuinka suuri ylimääräinen arvo on henkilökunnan tykkäyksillä."
     topic_view_duration_hours: "Laske uusi ketjun katselu kerran per IP/käyttäjä joka N:s tunti"
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
@@ -1715,8 +1651,6 @@ fi:
     email_editable: "Salli käyttäjien vaihtaa sähköpostiosoitteensa tilin luomisen jälkeen."
     logout_redirect: "Minne selain ohjataan uloskirjautumisen jälkeen (esim: https://esimerkki.fi/logout)"
     allow_uploaded_avatars: "Salli käyttäjien ladata oma profiilikuva."
-    allow_animated_avatars: "Salli käyttäjien valita animoituja gif-profiilikuvia. VAROITUS: aja avatars:refresh rake task tämän asetuksen muuttamisen jälkeen."
-    allow_animated_thumbnails: "Luo animoidut esikatselukuvat animoiduista gif-tiedostoista."
     default_avatars: "Verkko-osoitteet profiilikuviin, joita käytetään oletuksena uusille käyttäjille."
     automatically_download_gravatars: "Lataa käyttäjille Gravatarit automaattisesti tilin luonnin ja sähköpostin vaihdon yhteydessä."
     digest_topics: "Yläraja sähköpostikoosteessa näytettävien suosittujen ketjujen määrälle."
@@ -1773,7 +1707,6 @@ fi:
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
-    default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen Github koodiblokeissa (lang-auto, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa palstan suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -1787,7 +1720,6 @@ fi:
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
-    prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi. 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit kuten :) :p :( muunnetaan emojeiksi"
@@ -2014,8 +1946,6 @@ fi:
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     auto_deleted_by_timer: "Poistettiin ajastetusti."
   login:
-    invalid_second_factor_method: "Valittu kaksivaiheinen tunnistautumistapa ei kelpaa."
-    not_enabled_second_factor_method: "Valittu kaksivaiheinen tunnistautumistapa ei ole käytössä käyttäjätililläsi."
     security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
     security_key_alternative: "Kokeile muuta tapaa"
     security_key_authenticate: "Tunnistaudu tunnistautumislaitteen avulla"
@@ -2042,7 +1972,6 @@ fi:
       csrf_detected: "Valtuuttaminen katkesi määräajan ylityttyä tai vaihdoit selainta. Yritä uudelleen."
       request_error: "Valtuuttamista aloitettaessa tapahtui virhe. Yritä uudelleen."
       invalid_iat: "Valtuutusvälinettä ei voida vahvistaa palvelinkellojen eron vuoksi. Yritä uudelleen."
-    omniauth_error_unknown: "Jotain meni pieleen kirjautumisesti käsittelyssä, ole hyvä ja yritä uudelleen."
     omniauth_confirm_title: "Kirjaudu käyttäen %{provider}"
     omniauth_confirm_button: "Jatka"
     authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään käyttäjätilisi eri sähköpostiosoitteella."
@@ -2053,11 +1982,8 @@ fi:
     missing_user_field: "Et ole täyttänyt kaikkia kenttiä"
     auth_complete: "Todentaminen suoritettu."
     click_to_continue: "Jatka klikkaamalla tästä."
-    already_logged_in: "Hups, näyttää siltä, että yrität hyväksyä kutsun käyttäjänä, jolle sitä ei lähetetty. Jos et ole %{current_user}, kirjaudu ulos ja yritä uudestaan."
-    second_factor_title: "Kaksivaihenen tunnistautuminen"
     second_factor_description: "Syötä vaadittava todennuskoodi sovelluksestasi:"
     second_factor_backup_description: "Syötä yksi varmuuskoodeistasi"
-    second_factor_backup_title: "Kaksivaiheisen tunnistautumisen varmuuskoodi"
     invalid_second_factor_code: "Todennuskoodi ei kelpaa. Yhtä koodia voi käyttää vain kerran."
     invalid_security_key: "Tunnistautumislaite ei kelpaa."
     second_factor_toggle:
@@ -3012,15 +2938,6 @@ fi:
         Jos et yrittänyt luoda tunnusta sähköpostiosoitteella %{email} tai vaihtaa sähköpostiosoitettasi, älä huoli - voit huoletta jättää tämän viestin huomiotta.
 
         Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "2-vaiheinen tunnistautuminen pois"
-      subject_template: "%{email_prefix} Kaksivaiheinen tunnistautuminen pois kytketty"
-      text_body_template: |
-        Kaksivaiheinen tunnistautuminen poistettiin tililtäsi sivustolla %{site_name}. Voit nyt kirjautua pelkällä salasanallasi; erillistä todennuskoodia ei enää vaadita lisäksi.
-
-        Jos et kytkenyt kaksivaiheista tunnistautumista pois päältä, joku on saattanut murtautua tilillesi.
-
-        Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       since_last_visit: "Viime vierailusi jälkeen"
@@ -3072,13 +2989,6 @@ fi:
     admin_login:
       title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{email_prefix}] Kirjautuminen"
-      text_body_template: |
-        Joku haluaa kirjautua tilillesi sivustolla [%{site_name}](%{base_url}).
-
-        Jos se et ole sinä, voit huoletta jättää tämän viestin huomiotta.
-
-        Kirjaudu sisään klikkaamalla linkkiä:
-        %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Tili luotu"
       subject_template: "[%{email_prefix}] Uusi käyttäjätilisi"
@@ -3090,10 +3000,6 @@ fi:
     confirm_new_email:
       title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista uusi sähköpostiosoite"
-      text_body_template: |
-        Vahvista uusi sähköpostiosoitteesi sivustolla %{site_name} klikkaamalla linkkiä:
-
-        %{base_url}/u/confirm-new-email/%{email_token}
     confirm_old_email:
       title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{email_prefix}] Vahvista nykyinen sähköpostiosoitteesi"
@@ -3132,6 +3038,13 @@ fi:
         Uskomme [sivistyneeseen yhteisökäyttäytymiseen](%{base_url}/guidelines) kaikissa tilanteissa.
 
         Nauti palstastamme!
+    signup_after_reject:
+      title: "Rekisteröidy hylkäyksen jälkeen"
+      subject_template: "Sinut on hylätty palveluta %{site_name}"
+      text_body_template: |
+        Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
+
+        %{reject_reason}
     signup:
       title: "Liity"
       subject_template: "[%{email_prefix}] Vahvista uusi käyttäjätilisi"
@@ -3241,7 +3154,6 @@ fi:
     latte: "Latte"
     summer: "Kesäinen"
     dark_rose: "Tumma ruusu"
-    default_theme_name: "Vaalea"
     light_theme_name: "Vaalea"
     dark_theme_name: "Tumma"
     neutral_theme_name: "Neutraali"
@@ -3699,8 +3611,6 @@ fi:
     initial_topic_title: Sivuston suorituskykyraportit
   tags:
     title: "Tunnisteet"
-    staff_tag_disallowed: 'Tunnisteen "%{tag}" voi lisätä vain henkilökunta'
-    staff_tag_remove_disallowed: 'Tunnisteen "%{tag}" voi poistaa vain henkilökunta'
     minimum_required_tags:
       one: "Täytyy valita ainakin %{count} tunniste."
       other: "Täytyy valita ainakin %{count} tunnistetta."
@@ -3819,10 +3729,6 @@ fi:
           city_for_disputes:
             label: "Kaupunki jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
-      colors:
-        title: "Värimaailma"
-      themes_further_reading:
-        title: "Teemat"
       logos:
         title: "Logot"
         fields:
@@ -3870,9 +3776,6 @@ fi:
         disabled: "Koska paikalliset kirjautumiset ovat pois käytöstä, ei ole mahdollista kutsua ketään. Ole hyvä jatka seuraavaan vaiheeseen."
       finished:
         title: "Discoursesi on valmis!"
-        description: |
-          <p>Jos sinun joskus tekee mieli muuttaa näitä asetuksia, <b>käy läpi tämä ohjattu asennus milloin vain</b> tai käy <a href='%{base_path}/admin' target='_blank'>ylläpito-osiossa</a>; löydät sen jakoavaimen ohesta sivuston valikosta.</p>
-          <p>Pidä hauskaa, ja onnea matkaan <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>uuden yhteisön rakentamiseen!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
   joined: "Liittyi"

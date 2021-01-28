@@ -12,7 +12,9 @@ export function buildQuote(post, contents, opts = {}) {
     `topic:${opts.topic || post.topic_id}`,
   ];
 
-  if (opts.full) params.push("full:true");
+  if (opts.full) {
+    params.push("full:true");
+  }
 
   return `[quote="${params.join(", ")}"]\n${contents.trim()}\n[/quote]\n\n`;
 }

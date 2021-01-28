@@ -1,15 +1,15 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emojiUnescape } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import { reads } from "@ember/object/computed";
-import deprecated from "discourse-common/lib/deprecated";
+import I18n from "I18n";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { deepMerge } from "discourse-common/lib/object";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { reads } from "@ember/object/computed";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")
@@ -48,7 +48,7 @@ const NavItem = EmberObject.extend({
     }, this);
 
     if (customHref) {
-      return customHref;
+      return getURL(customHref);
     }
 
     const context = { category, noSubcategories, tagId };
@@ -75,12 +75,13 @@ const NavItem = EmberObject.extend({
     "name",
     "category",
     "tagId",
+    "noSubcategories",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId) {
+  count(name, category, tagId, noSubcategories) {
     const state = this.topicTrackingState;
     if (state) {
-      return state.lookupCount(name, category, tagId);
+      return state.lookupCount(name, category, tagId, noSubcategories);
     }
   },
 });
@@ -122,7 +123,12 @@ NavItem.reopenClass({
 
     if (context.tagId && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
-      path += "/tags";
+
+      if (context.category) {
+        path += "/tags";
+      } else {
+        path += "/tag";
+      }
     }
 
     if (context.category) {
@@ -164,10 +170,14 @@ NavItem.reopenClass({
       }
     }
 
-    if (!Category.list() && filterType === "categories") return null;
-    if (!Site.currentProp("top_menu_items").includes(filterType)) return null;
+    if (!Category.list() && filterType === "categories") {
+      return null;
+    }
+    if (!Site.currentProp("top_menu_items").includes(filterType)) {
+      return null;
+    }
 
-    var args = { name: filterType, hasIcon: filterType === "unread" };
+    let args = { name: filterType, hasIcon: filterType === "unread" };
     if (opts.category) {
       args.category = opts.category;
     }
@@ -228,7 +238,9 @@ NavItem.reopenClass({
         ExtraNavItem.create(deepMerge({}, context, descriptor))
       )
       .filter((item) => {
-        if (!item.customFilter) return true;
+        if (!item.customFilter) {
+          return true;
+        }
         return item.customFilter(category, args);
       });
 
@@ -237,6 +249,10 @@ NavItem.reopenClass({
     extraItems.forEach((item) => {
       if (item.init) {
         item.init(item, category, args);
+      }
+
+      if (item.href) {
+        item.href = getURL(item.href);
       }
 
       const before = item.before;

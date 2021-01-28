@@ -101,7 +101,6 @@ gem 'css_parser', require: false
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-instagram'
 gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
@@ -168,6 +167,7 @@ group :test, :development do
   gem 'parallel_tests'
 
   gem 'rswag-specs'
+  gem 'json_schemer'
 end
 
 group :development do
@@ -193,7 +193,6 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
-gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
 gem 'unicorn', require: false, platform: :ruby

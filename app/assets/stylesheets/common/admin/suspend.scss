@@ -5,6 +5,10 @@
 
   .suspend-reason {
     width: 100%;
+
+    &.combo-box {
+      margin-bottom: 9px;
+    }
   }
 
   .suspend-reason-label,

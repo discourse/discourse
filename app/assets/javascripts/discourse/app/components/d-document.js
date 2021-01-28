@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
-import logout from "discourse/lib/logout";
 import I18n from "I18n";
-import { setLogoffCallback } from "discourse/lib/ajax";
+import { bind } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
+import logout from "discourse/lib/logout";
+import { inject as service } from "@ember/service";
+import { setLogoffCallback } from "discourse/lib/ajax";
 
 export default Component.extend({
   tagName: "",

@@ -291,16 +291,24 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||= begin
-      if mobile_view? && SiteSetting.site_mobile_logo_url.present?
-        SiteSetting.site_mobile_logo_url
+      if mobile_view?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
       else
-        SiteSetting.site_logo_url
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
+        else
+          SiteSetting.site_logo_url
+        end
       end
     end
   end
 
   def login_path
-    "#{Discourse::base_uri}/login"
+    "#{Discourse.base_path}/login"
   end
 
   def mobile_view?
@@ -488,7 +496,7 @@ module ApplicationHelper
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
       base_url: Discourse.base_url,
-      base_uri: Discourse::base_uri,
+      base_uri: Discourse.base_path,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,
       markdown_it_url: script_asset_path('markdown-it-bundle'),
@@ -550,6 +558,18 @@ module ApplicationHelper
       else
         "#{user.name.presence || user.username }"
       end
+    end
+  end
+
+  def authentication_data
+    return @authentication_data if defined?(@authentication_data)
+
+    @authentication_data = begin
+      value = cookies[:authentication_data]
+      if value
+        cookies.delete(:authentication_data, path: Discourse.base_path("/"))
+      end
+      current_user ? nil : value
     end
   end
 end

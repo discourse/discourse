@@ -2,6 +2,14 @@
 // To style group content differently, use the existing classes with a .group parent class.
 // For example: .group .user-secondary-navigation
 
+span.mention-group {
+  color: var(--primary-high-or-secondary-low);
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: $font-down-1;
+}
+
 .group-details-container {
   background: var(--primary-very-low);
   padding: 20px;

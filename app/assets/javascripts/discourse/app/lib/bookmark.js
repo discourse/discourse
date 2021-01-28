@@ -28,4 +28,5 @@ export const REMINDER_TYPES = {
   NONE: "none",
   START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
   LATER_THIS_WEEK: "later_this_week",
+  POST_LOCAL_DATE: "post_local_date",
 };

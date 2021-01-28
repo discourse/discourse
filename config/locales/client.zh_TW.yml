@@ -28,7 +28,7 @@ zh_TW:
       timeline_date: "YYYY年 M月"
       long_no_year_no_time: "M月 D日"
       full_no_year_no_time: "M月 D日"
-      long_with_year: "YYYY年 M月 D日 h:mm a"
+      long_with_year: "YYYY年M月D日 h:mm a"
       long_with_year_no_time: "YYYY年 M月 D日"
       full_with_year_no_time: "YYYY年 M月 D日"
       long_date_with_year: "YYYY年 M月 D日 LT"
@@ -127,7 +127,6 @@ zh_TW:
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
-    bootstrap_mode_enabled: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{min_users} 個使用者註冊後自動關閉。"
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     themes:
       default_description: "預設"
@@ -227,18 +226,29 @@ zh_TW:
       help:
         bookmark: "點擊以將此話題的第一篇貼文加入書籤"
         unbookmark: "點擊以移除此話題所有書籤"
+        unbookmark_with_reminder: "按一下以移除本主題中的所有書籤和提醒事項。此主題的提醒設定為 %{reminder_at} 。"
     bookmarks:
       not_bookmarked: "將此貼文加入書籤"
       remove: "移除書籤"
+      confirm_delete: "您確定要刪除這個書籤嗎？提醒也會被刪除。"
       confirm_clear: "確定要移除該話題上的所有書籤嗎？"
       save: "儲存"
+      no_timezone: '您尚未設定時區。將無法設定提醒事項。在<a href="%{basePath}/my/preferences/profile">您的設定檔</a>中設定一個 。'
+      auto_delete_preference:
+        on_owner_reply: "在我回复這個話題之後"
       search: "搜索"
       reminders:
         later_today: "今日稍晚"
         tomorrow: "明天"
         next_week: "下週"
+        post_local_date: "張貼日期"
         later_this_week: "本週稍晚"
+        start_of_next_business_week: "星期一"
+        start_of_next_business_week_alt: "下個星期一"
         next_month: "下個月"
+        custom: "自定義日期和時間"
+        none: "無需提醒"
+        existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
     drafts:
       resume: "恢復"
       remove: "移除"
@@ -323,8 +333,6 @@ zh_TW:
         name: "名稱"
         fields: "欄位"
       user_percentage:
-        summary:
-          other: "%{agreed}, %{disagreed}, %{ignored} (共%{count}則檢舉)"
         agreed:
           other: "%{count}%同意"
         disagreed:
@@ -609,7 +617,6 @@ zh_TW:
         other: "%{count}過去一週的新話題"
       topic_stat_sentence_month:
         other: "%{count}過去一個月的新話題"
-      n_more: "分類（%{count} 或更多）…"
     ip_lookup:
       title: IP 位址查詢
       hostname: 伺服器名稱
@@ -683,7 +690,6 @@ zh_TW:
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         disable: "停用通知"
         enable: "啟用通知"
-        each_browser_note: "注意：你必須在你使用的所用瀏覽器中更改這個設定。"
         consent_prompt: "當別人回覆您的貼文時，您想要收到即時通知嗎？"
       dismiss: "忽略"
       dismiss_notifications: "忽略全部"
@@ -704,7 +710,6 @@ zh_TW:
       suspended_notice: "該使用者已被停權至 %{date}。"
       suspended_permanently: "該使用者已被停權。"
       suspended_reason: "原因: "
-      github_profile: "Github"
       email_activity_summary: "活動摘要"
       mailing_list_mode:
         label: "郵件列表模式"
@@ -791,7 +796,6 @@ zh_TW:
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
       second_factor_backup:
-        title: "二步驟備用碼"
         regenerate: "重新產生"
         disable: "禁用"
         enable: "啟用"
@@ -799,12 +803,10 @@ zh_TW:
         copy_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
         copied_to_clipboard: "複製至剪貼簿"
-        remaining_codes: "你還剩下 <strong>%{count}</strong> 個可使用的備用碼"
         codes:
           title: "已產生備用碼"
           description: "每個備用碼僅可使用一次。請將它們保存在安全且可被找到的地方。"
       second_factor:
-        title: "兩步驟驗證"
         confirm_password_description: "請確認你的密碼以繼續"
         name: "名稱"
         label: "代碼"
@@ -815,10 +817,6 @@ zh_TW:
         show_key_description: "手動輸入"
         short_description: |
           以一次性安全碼保護您的帳號
-        extended_description: |
-          二步驟驗證使用除了密碼外的一次性代碼來加強帳號安全性。可以使用<a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>或<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>設備來產生代碼。
-        oauth_enabled_warning: "請注意，一旦啟用二步驟驗證，將自動關閉社群登入。"
-        enforced_notice: "在進入網站前，需啟用兩個步驟驗證以增強帳號安全性"
         disable: "禁用"
         save: "儲存"
         edit: "編輯"
@@ -898,10 +896,8 @@ zh_TW:
         title: "再次輸入密碼"
       auth_tokens:
         title: "最近使用的裝置"
-        ip: "IP"
         details: "詳細訊息"
         log_out_all: "登出所有裝置"
-        active: "目前啟用中的"
         not_you: "不是你嗎？"
         show_all: "顯示全部（%{count}）"
         show_few: "顯示更少"
@@ -1011,14 +1007,10 @@ zh_TW:
         links_tab: "連結"
         link_created_at: "已建立"
         link_groups: 群組
-        create: "送出邀請"
-        generate_link: "拷貝邀請連結"
-        link_generated: "邀請連結生成成功！"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         invite_link:
           success: "邀請連結生成成功！"
         bulk_invite:
-          none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳大量邀請檔</a>一次邀請一群人。"
           success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
           error: "上傳的檔案必須是 csv 格式。"
           confirmation_message: "您即將寄email邀請給上傳文件中的所有人。"
@@ -1161,8 +1153,6 @@ zh_TW:
       disable: "顯示已刪除的貼文"
     private_message_info:
       title: "訊息"
-      invite: "邀請其他人..."
-      edit: "新增或移除…"
       leave_message: "確定要移除這個訊息嗎？"
       remove_allowed_user: "確定將 %{name} 從對話中移除？"
       remove_allowed_group: "確定將 %{name} 從對話中移除？"
@@ -1202,9 +1192,7 @@ zh_TW:
       title: "登入"
       username: "使用者"
       password: "密碼"
-      second_factor_title: "兩步驟驗證"
       second_factor_description: "請輸入應用程式中的驗證碼："
-      second_factor_backup_title: "兩步驟驗證備用"
       second_factor_backup_description: "請輸入一組您的備用碼"
       email_placeholder: "電子郵件地址或使用者名稱"
       caps_lock_warning: "大寫鎖定中"
@@ -1220,10 +1208,8 @@ zh_TW:
       awaiting_approval: "你的帳號尚未通過工作人員的審核，當審核通過時你會收到電子郵件通知。"
       requires_invite: "抱歉，只有受邀請者才能進入此論壇。"
       not_activated: "你還無法登入，我們之前曾將啟用帳號的電子郵件寄至 <b>%{sentTo}</b>，請從該電子郵件啟用你的帳號。"
-      not_allowed_from_ip_address: "你無法透過此 IP 登入。"
       admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
       resend_activation_email: "按這裡重新寄出啟用帳號的電子郵件。"
-      omniauth_disallow_totp: "您的帳號已啟用兩步驟驗證。請使用您的密碼登入。"
       resend_title: "重新寄出認證信"
       change_email: "更換電子郵件"
       provide_new_email: "提供新的電子郵件，我們將把認證信重新寄給您。"
@@ -1232,7 +1218,6 @@ zh_TW:
       sent_activation_email_again_generic: "啟用帳號的電子郵件已寄出 ，你可能幾分鐘後才會收到，如果一直沒收到，請檢查垃圾郵件資料夾。"
       to_continue: "請登入"
       preferences: "需要登入後更改設置"
-      forgot: "我不記得帳號詳情了"
       not_approved: "您的帳號尚未通過審核。一旦您的帳號通過審核，就會傳送電子郵件通知您。"
       google_oauth2:
         name: "Google"
@@ -1261,7 +1246,6 @@ zh_TW:
       accept_invite: "接受邀請"
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
-      password_label: "設定密碼"
       optional_description: "(選擇性)"
     password_reset:
       continue: "繼續連接至 %{site_name}"
@@ -1285,8 +1269,6 @@ zh_TW:
       alt: "Alt"
     conditional_loading_section:
       loading: 載入中...
-    category_row:
-      topic_count: "%{count}個話題在此分類"
     select_kit:
       default_header_text: 選擇...
       no_content: 找不到符合的項目
@@ -1332,7 +1314,6 @@ zh_TW:
       options: "選項"
       whisper: "密談"
       unlist: "不公開"
-      blockquote_text: "塊引用"
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
@@ -1341,7 +1322,6 @@ zh_TW:
       similar_topics: "與你的話題類似的討論..."
       drafts_offline: "離線草稿"
       edit_conflict: "編輯衝突"
-      group_mentioned_limit: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{max}位），因此不會有任何人收到通知。"
       group_mentioned:
         other: "提及 %{group} 時，你將通知 <a href='%{group_link}'>%{count} 人</a> － 確定嗎？"
       cannot_see_mention:
@@ -1355,7 +1335,6 @@ zh_TW:
         post_length: "貼文必須至少 %{min} 個字。"
         try_like: "您用過%{heart}了嗎？"
         category_missing: "你必須選擇一個分類。"
-        tags_missing: "您至少必須選擇%{count}個標籤"
       save_edit: "儲存編輯"
       overwrite_edit: "覆寫編輯"
       reply_original: "回覆至原始的話題"
@@ -1394,8 +1373,7 @@ zh_TW:
       link_description: "在此輸入超連結的描述"
       link_dialog_title: "插入超連結"
       link_optional_text: "標題 (可選填)"
-      quote_title: "引用"
-      quote_text: "引用"
+      blockquote_text: "塊引用"
       code_title: "預先格式化文字"
       code_text: "以 4 格空白將文字縮排"
       paste_code_text: "輸入或貼上代碼"
@@ -1423,7 +1401,6 @@ zh_TW:
         draft: 草稿
         edit: 編輯
         reply_to_post:
-          label: 回應%{postUsername}的 %{postNumber}貼文
           desc: 回應特定貼文
         reply_as_new_topic:
           label: 以「連結話題」回應
@@ -1441,7 +1418,6 @@ zh_TW:
           label: "新增話題"
         shared_draft:
           label: "共享草稿"
-          desc: "建立只有管理員可見的話題草稿"
         toggle_topic_bump:
           label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
@@ -1464,9 +1440,6 @@ zh_TW:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -1528,7 +1501,6 @@ zh_TW:
       full_page_title: "搜尋話題或貼文"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
-      searching: "正在搜尋..."
       post_format: "#%{post_number} %{username}"
       results_page: "'%{term}' 的搜尋結果"
       more_results: "還有更多結果。請嘗試縮小搜尋條件。"
@@ -1537,7 +1509,6 @@ zh_TW:
       or_search_google: "或是嘗試利用 Google 搜尋:"
       search_google: "嘗試利用 Google 搜尋:"
       search_google_button: "Google"
-      search_google_title: "搜尋這個網站"
       context:
         user: "搜尋 @%{username} 的貼文"
         category: "搜索 #%{category} 分類"
@@ -1579,8 +1550,6 @@ zh_TW:
           noreplies: 沒有回覆
           single_user: 只有一個使用者參與
         post:
-          count:
-            label: 最少貼文數
           time:
             label: 發表於
             before: 之前
@@ -1625,12 +1594,10 @@ zh_TW:
         new: "沒有新的話題。"
         read: "你尚未閱讀任何話題。"
         posted: "你尚未在任何話題裡發表貼文。"
-        latest: "沒有最近的話題。真令人難過。"
         bookmarks: "您目前沒有把任何話題加入書籤。"
         category: "沒有 %{category} 的話題。"
         top: "沒有精選話題。"
         educate:
-          new: '<p>這裡顯示了近期話題列表。</p><p>預設情況下，以下話題將顯示在近期列表。如果是最近 2 天內開啟的，還會顯示一個<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>標誌。<p>你可以在<a href="%{userPrefsUrl}">使用者設置</a>中更改要顯示哪些內容。</p>'
           unread: '<p>這裡顯示你的未讀話題。</p><p>預設情況下，下述話題會被放在未讀中。並且會在旁邊顯示未讀的數量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>開啟了該話題</li><li>回覆了該話題</li><li>閲讀該話題超過 4 分鐘</li></ul><p>或者你在話題底部的通知控制中選擇了追蹤或關注。</p><p>你可以在<a href="%{userPrefsUrl}">使用者設置</a>中修改未讀設置。</p>'
       bottom:
         latest: "已經沒有其它最近的話題了。"
@@ -1691,10 +1658,8 @@ zh_TW:
       toggle_information: "切換話題詳情"
       read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
       read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
-      read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 個未讀的話題</a>} other { <a href='{basePath}/unread'># 個未讀的話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'>1 個新</a>的話題} other { {BOTH, select, true{和 } false {} other{}} <a href='{basePath}/new'># 個最近</a>的話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的貼文
-      suggest_create_topic: 開啟一個新話題吧？
       jump_reply_up: 跳到更早的回覆
       jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
@@ -1783,7 +1748,7 @@ zh_TW:
           "2_8": "您將會看到新回覆的數量，因為你正在追蹤這個分類。"
           "2_4": "您將會看到新回覆的數量，因為你回覆了此話題。"
           "2_2": "您將會看到新回覆的數量，因為你正在追蹤這個話題。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "如果有人@你或回覆你，將通知你。"
           "1": "如果有人@你或回覆你，將通知你。"
           "0_7": "你正忽略此分類中的所有通知。"
@@ -1857,7 +1822,6 @@ zh_TW:
       feature_topic:
         title: "擁有這個話題"
         pin: "將該話題置於%{categoryLink}分類最上方至"
-        confirm_pin: "已有%{count}個置頂話題。太多的置頂話題可能會困擾新使用者和訪客。確定想在該分類再置頂一個話題？"
         unpin: "取消此話題在%{categoryLink}類別的置頂狀態"
         unpin_until: "從%{categoryLink}分類最上方移除話題或者移除於<strong>%{until}</strong>。"
         pin_note: "允許使用者取消置頂。"
@@ -1866,7 +1830,6 @@ zh_TW:
         already_pinned:
           other: "%{categoryLink}分類的置頂話題數：<strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "將話題置於所有話題列表最上方至"
-        confirm_pin_globally: "已有%{count}個全局置頂話題。太多的置頂話題可能會困擾新使用者和訪客。確定想再全局置頂一個話題？"
         unpin_globally: "將話題從所有話題列表的最上方移除。"
         unpin_globally_until: "從所有話題列表最上方移除話題或者移除於<strong>%{until}</strong>。"
         global_pin_note: "允許使用者取消全局置頂。"
@@ -2024,7 +1987,6 @@ zh_TW:
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         file_too_large: "檔案過大（最大 %{max_size_kb}KB）。為什麼不就大檔案上傳至雲存儲服務後再分享連結呢？"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
-        too_many_dragged_and_dropped_files: "抱歉，您一次最多只能上傳%{max}個檔案。"
         upload_not_authorized: "抱歉，你沒有上傳檔案的權限 (驗證擴展：%{authorized_extensions})。"
         image_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳圖片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
@@ -2080,7 +2042,6 @@ zh_TW:
         delete_topic_disallowed: "您沒有刪除此話題的權限。"
         delete_topic: "刪除話題"
         add_post_notice: "加入工作人員通知"
-        remove_post_notice: "移除工作人員通知"
       actions:
         people:
           like_capped:
@@ -2130,8 +2091,13 @@ zh_TW:
             title: "顯示電子郵件HTML格式"
             button: "HTML"
       bookmarks:
+        edit: "編輯書籤"
         created: "已建立"
         name: "名稱"
+        actions:
+          edit_bookmark:
+            name: "編輯書籤"
+            description: "編輯書籤名稱或更改提醒日期和時間"
     category:
       can: "可以&hellip; "
       none: "( 無分類 )"
@@ -2148,7 +2114,6 @@ zh_TW:
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
-      manage_tag_groups_link: "在此處管理標籤群組。"
       allow_global_tags_label: "也允許其他標籤（Tags）"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
       delete: "刪除分類"
@@ -2257,11 +2222,9 @@ zh_TW:
     flagging:
       title: "感謝幫助社群遠離邪惡！"
       action: "檢舉貼文"
-      take_action: "執行動作"
       notify_action: "訊息"
       official_warning: "正式警告"
       delete_spammer: "刪除垃圾貼文發送者"
-      delete_confirm_MF: "你將刪除該使用者的{POSTS, plural, one {<b>1</b>個貼文} other {<b>#</b>個貼文}} and {TOPICS, plural, one {<b>1</b>個話題} other {<b>#</b>個話題}}、該帳號，並阻止其IP地址 <b>%{ip_address}</b> 再次註冊，並將其郵件地址 <b>%{email}</b> 加入黑名單。你確定這使用者是廣告散佈者嗎？"
       yes_delete_spammer: "是的，刪除垃圾貼文發送者"
       ip_address_missing: "(N/A)"
       hidden_email_address: "( 隱藏) "
@@ -2320,13 +2283,6 @@ zh_TW:
       unlisted:
         help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
-    posts_long: "此話題有 %{number} 篇貼文"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "原始貼文"
     views: "觀看"
     views_lowercase:
@@ -2338,7 +2294,6 @@ zh_TW:
     likes: "讚"
     likes_lowercase:
       other: "個讚"
-    likes_long: "此話題收到了 %{number} 個讚"
     users: "使用者"
     users_lowercase:
       other: "使用者"
@@ -2573,8 +2528,6 @@ zh_TW:
         delete: "刪除"
         confirm_delete: "確定要刪除此標籤組嗎？"
         everyone_can_use: "所有使用者都能使用標籤。"
-        usable_only_by_staff: "所有使用者都能看到標籤，但只有管理員能使用。"
-        visible_only_to_staff: "只有管理員能看到標籤。"
       topics:
         none:
           unread: "你沒有未讀話題。"
@@ -3286,7 +3239,6 @@ zh_TW:
             post_edit: "編輯貼文"
             post_unlocked: "貼文已被解除封鎖"
             check_personal_message: "檢查個人訊息"
-            disabled_second_factor: "停用兩步驟驗證"
             topic_published: "話題已發佈"
             post_approved: "貼文已通過審核"
             post_rejected: "貼文未通過審核"
@@ -3424,7 +3376,6 @@ zh_TW:
         suspend_reason_label: "你為什麼要將此使用者停權？你輸入的原因將在此使用者登入時顯示，及顯示在此使用者的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason_hidden_label: "您為何要將該使用者停權？使用者在登入時會看見這段文字，請簡短描述。"
         suspend_reason: "原因"
-        suspend_reason_placeholder: "停權原因"
         suspend_message: "Email 訊息"
         suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
@@ -3449,7 +3400,6 @@ zh_TW:
         clear_penalty_history:
           title: "清除違規紀錄"
           description: "有違規紀錄的使用者無法抵達 TL3"
-        delete_all_posts_confirm_MF: "你將要刪除 {POSTS, plural, one {1 個貼文} other {# 個貼文}}和 {TOPICS, plural, one {1 個話題} other {# 個話題}}。確定嗎？"
         silence: "靜音"
         unsilence: "取消靜音"
         silenced: "靜音？"
@@ -3482,7 +3432,6 @@ zh_TW:
         private_topics_count: 私人話題
         posts_read_count: 讀過的貼文
         post_count: 已發表的貼文
-        second_factor_enabled: 兩步驟驗證已啟用
         topics_entered: 讀過的話題
         flags_given_count: 檢舉
         flags_received_count: 被檢舉

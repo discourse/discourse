@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 import UploadMixin from "discourse/mixins/upload";
-import { on } from "@ember/object/evented";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { on } from "@ember/object/evented";
 
 export default Component.extend(UploadMixin, {
   type: "csv",

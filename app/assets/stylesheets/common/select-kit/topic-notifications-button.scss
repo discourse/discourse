@@ -1,7 +1,7 @@
 .topic-notifications-button {
   &.is-loading {
+    @include unselectable;
     pointer-events: none;
-    user-select: none;
 
     .d-icon-spinner {
       margin: 0;

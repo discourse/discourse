@@ -24,9 +24,6 @@ ca:
       long_description: |
         Aquesta insígnia es concedeix després d'haver completat amb èxit el tutorial interactiu d'usuari avançat. Heu dominat les eines avançades de discussió, i ara teniu esteu completament acreditat!
   discourse_narrative_bot:
-    bio: "Hola, no sóc una persona real, sóc un robot que us pot ensenyar coses sobre aquest lloc web. Per a interactuar amb mi, envieu-me un missatge o feu una menció a **%{discobot_username}** en qualsevol lloc. "
-    tl2_promotion_message:
-      subject_template: "Enhorabona per la vostra promoció de nivell de confiança!"
     timeout:
       message: |-
         Bon dia @%{username},
@@ -44,8 +41,6 @@ ca:
       trigger: "tira"
       invalid: |-
         Ho sento, és matemàticament impossible fer aquesta combinació de daus. :confounded:
-      not_enough_dice: |-
-        Només tinc %{num_of_dice} daus. [Vergonyós] (http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ho sé!
       out_of_range: |-
         ¿Sabíeu que [el nombre màxim de cares](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per a un dau matemàtic és 120?
       results: |-

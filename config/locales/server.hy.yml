@@ -54,7 +54,6 @@ hy:
     bad_color_scheme: "Անհնար է թարմացնել թեման, անվավեր գունապնակ"
     other_error: "Թեման թարմացնելիս ինչ-որ բան այնպես չէ ընթացել"
     import_error:
-      generic: Այդ թեման ներմուծելիս տեղի է ունեցել սխալ
       about_json_values: "about.json -ը պարունակում է անվավեր արժեքներ. %{errors}"
       git: "git ռեպոզիտորիայի կլոնավորման սխալ, հասանելիությունը մերժված է, կամ ռեպոզիտորիան գտնված չէ"
       unpack_failed: "Ֆայլի բացումը ձախողվեց"
@@ -170,12 +169,6 @@ hy:
       s3_bucket_reused: "Դուք չեք կարող օգտագործել միևնույն արկղը 's3_upload_bucket' -ի և 's3_backup_bucket' -ի համար: Ընտրեք այլ արկղ կամ օգտագործեք տարբեր ուղիներ յուրաքանչյուր արկղի համար:"
     conflicting_google_user_id: 'Այս հաշվի Google Account ID -ն փոփոխվել է; պահանջվում է անձնակազմի միջամտություն անվտանգության պատճառներից ելնելով: Խնդրում ենք կապվել անձնակազմի հետ ր նշել նրանց հետևյալը՝ <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   invite:
-    not_found_template: |
-      <p> <a href="%{base_url}">%{site_name}</a> -ին Ձեր հրավերը արդեն ընդունված է: </p>
-
-      <p>Եթե Դուք հիշում եք Ձեր գաղտնաբառը, կարող եք <a href="%{base_url}/login">Մուտք գործել</a>:</p>
-
-      <p>Այլապես խնդրում ենք <a href="%{base_url}/password-reset">Վերահաստատել Գաղտնաբառը</a>:</p>
     error_message: "Հրավերն ընդունելիս տեղի է ունեցել սխալ: Խնդրում ենք կապվել կայքի ադմինիստրատորի հետ:"
     user_exists: "Կարիք չկա հրավիրել <b>%{email}</b> -ին, նա <a href='%{base_path}/u/%{username}/summary'>արդեն իսկ ունի հաշիվ!</a>"
     confirm_email: "<p>Դուք գրեթե վերջացրել եք! Մենք ակտիվացման նամակ ենք ուղարկել Ձեր էլ. հասցեին: Խնդրում ենք հետևել նամակի հրահանգներին Ձեր հաշվի ակտիվացման համար: </p><p>Եթե այն չի հասնում, ստուգեք Ձեր սպամի թղթապանակը: </p>"
@@ -326,26 +319,6 @@ hy:
     until_posts:
       one: "%{count} գրառում"
       other: "%{count} գրառում"
-    "new-topic": |
-      Բարի գալուստ %{site_name} &mdash; **շնորհակալ ենք նոր խոսակցություն սկսելու համար!**
-
-      - Վերնագիրը հետաքրքի՞ր է հնչում, երբ Դուք կարդում եք այն բարձրաձայն: Այն լա՞վ ամփոփում է:
-
-      - Ո՞ւմ կհետաքրքրի սա: Ինչո՞ւ է այն էական: Ինչ տեսակի արձագանքներ եք ցանկանում:
-
-      - Ներառեք ընդհանուր օգտագործվող բառեր Ձեր թեմայում, որպեսզի մյուսները կարողանան *գտնել* այն: Ձեր թեման համանման թեմաների հետ խմբավորելու համար ընտրեք կատեգորիա:
-
-      Ավելին իմանալու համար [դիտեք մեր համայնքի ուղեցույցը](%{base_path}/ուղեցույց:. Այս հարթակը կհայտնվի միայն Ձեր առաջին %{education_posts_text}-ում:
-    "new-reply": |
-      Բարի գալուստ %{site_name} &mdash; **շնորհակալություն մասնակցության համար!**
-
-      - Ձեր պատասխանը որևէ կերպ բարելավո՞ւմ է խոսակցությունը:
-
-      - Եղեք բարի Ձեր համայնքի ընկեր անդամների հանդեպ:
-
-      - Կառուցողական քննադատությունը ողջունվում է, սակայն քննադատեք *մտքերը*, ոչ թե մարդկանց:
-
-      Ավելին իմանալու համար [այցելեք մեր համայնքի ուղեցույց](%{base_path}/guidelines): Այս կառավարման հարթակը կհայտնվի միայն Ձեր առաջին %{education_posts_text}-ում:
     avatar: |
       ### Ի՞նչ կասեք Ձեր հաշվի համար նկարի մասին:
 
@@ -653,43 +626,36 @@ hy:
       title: "Թեմայից Դուրս"
       description: "Այս գրառումը կապված չէ ընթացիկ քննարկման հետ՝ հաշվի առնելով վերնագիրը և առաջին գրառումը, և հավանաբար պետք է տեղափոխվի մեկ այլ տեղ:"
       short_description: "Կապված չէ քննարկման հետ"
-      long_form: "դրոշակավորել է սա որպես թեմայից դուրս"
     spam:
       title: "Սպամ"
       description: "Այս գրառումը գովազդ է կամ վայրագություն: Այն օգտակար չէ կամ կապված չէ այս թեմայի հետ:"
       short_description: "Սա գովազդ է կամ վայրագություն:"
-      long_form: "դրոշակավորել է սա որպես սպամ"
       email_title: '"%{title}" -ը դրոշակավորվել է որպես սպամ'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Անհամապատասխան"
       description: 'Այս գրառումը պարունակում է նյութեր, որ ողջամիտ անձնավորությունը կհամարի հարձակողական, վիրավորական կամ <a href="%{base_path}/guidelines">մեր համայնքի ուղեցույցի</a> խախտում:'
       short_description: '<a href="%{base_path}/guidelines">Մեր համայնքի ուղեցույցի</a> խախտում'
-      long_form: "դրոշակավորել է սա որպես անհամապատասխան"
     notify_user:
       title: "Ուղարկել նամակ @%{username} -ին"
       description: "Ես ցանկանում եմ ուղղակիորեն և անձամբ խոսել այս մարդու հետ իր գրառման մասին:"
       short_description: "Ես ցանկանում եմ ուղղակիորեն և անձամբ խոսել այս մարդու հետ իր գրառման մասին:"
-      long_form: "նամակ է գրել օգտատիրոջը"
       email_title: 'Ձեր գրառումը "%{title}" -ում'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Որևէ Այլ Բան"
       description: "Այս գրառումը պահանջում է անձնակազմի ուշադրությունը վերը չնշված մեկ այլ պատճառով:"
       short_description: "Պահանջվում է անձնակազմի ուշադրություն մեկ այլ պատճառով"
-      long_form: "դրոշակավորել է սա անձնակազմի ուշադրության համար"
       email_title: '"%{title}"-ում գրառումը պահանջում է անձնակազմի ուշադրությունը'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Էջանշել"
       description: "Էջանշել այս գրառումը"
       short_description: "Էջանշել այս գրառումը"
-      long_form: "էջանշել է այս գրառումը"
     like:
       title: "Հավանել"
       description: "Հավանել այս գրառումը"
       short_description: "Հավանել այս գրառումը"
-      long_form: "հավանել է սա"
   user_activity:
     no_default:
       self: "Դուք դեռևս ակտիվություն չունեք:"
@@ -743,9 +709,7 @@ hy:
     mute_topic: "Խլացնել այս թեմայի բոլոր ծանուցւոմները, %{link}"
     unwatch_category: "Դադարել դիտել %{category} -ի բոլոր թեմաները"
     mailing_list_mode: "Անջատել փոստային ցուցակի ռեժիմը"
-    all: "Չուղարկել ինձ որևէ էլ. նամակ%{sitename}-ից"
     different_user_description: "Դուք ներկայումս մուտքագրված եք որպես մեկ այլ օգտատեր, քան այն, ում մենք ուղարկել ենք էլ. նամակ: Խնդրում ենք դուրս գրվել կամ մուտք գործել անանուն ռեժիմ և փորձել կրկին:"
-    not_found_description: "Ներողություն, մենք չկարողացանք գտնել այս բաժանորդագրումից հրաժարումը: Հնարավոր է՝ Ձեր էլ.նամակի հղումը ժամկետանց է:"
     log_out: "Դուրս Գրվել"
     digest_frequency:
       never: "երբեք"
@@ -1093,10 +1057,6 @@ hy:
     sidekiq_warning: 'Sidekiq -ը չի աշխատում: Շատ առաջադրանքներ, օրինակ՝ էլ. նամակների ուղարկումը, անհամաժամորեն(asynchronously) իրականացվում են sidekiq -ի կողմից: Խնդրում ենք համոզվել, որ առնվազն մեկ sidekiq գործընթաց աշխատում է: <a href="https://github.com/mperham/sidekiq" target="_blank">Իմացեք Sidekiq -ի մասին այստեղ</a>:'
     queue_size_warning: "Սպասող job-երի քանակը %{queue_size} է, ինչը բարձր է: Սա կարող է խնդիր առաջացնել Sidekiq գործընթաց(ներ)ի հետ, կամ հնարավոր է՝ կարիք լինի ավելացնելու ավելի շատ Sidekiq աշխատողների:"
     memory_warning: "Ձեր սերվերն աշխատում է 1 ԳԲ-ից քիչ ընդհանուր հիշողությամբ: Խորհուրդ է տրվում առնվազն 1 ԳԲ հիշողություն:"
-    google_oauth2_config_warning: 'Սերվերը կարգավորված է թույլատրելու գրանցումը և մուտքը Google OAuth2 -ով (enable_google_oauth2_logins), սակայն հաճախորդի id -ն և հաճախորդի գաղտնի արժեքները սահմանված չեն: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Դիտեք այս ուղեցույցը՝ ավելին իմանալու համար</a>:'
-    facebook_config_warning: 'Սերվերը կարգավորված է թույլատրելու Facebook -ի միջոցով գրանցումն ու մուտքը (enable_facebook_logins), սակայն հավելվածի id -ն և հավելվածի գաղտնի արժեքները սահմանված չեն: Գնացեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Ավելին իմանալու համար դիտեք այս ուղեցույցը</a>:'
-    twitter_config_warning: 'Սերվերը կարգավորված է թույլատրել գրանցումը և մուտքը Twitter-ով (enable_twitter_logins), բայց key-ը և գաղտնի արժեքները սահմանված չեն: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">ԴԻտեք այս ուղեցույցը՝ ավելին իմանալու համար</a>:'
-    github_config_warning: 'Սերվերը կարգավորված է թույլատրել գրանցումները և մուտքերը GitHub -ով (enable_github_logins), բայց հաճախորդի id-ն և գաղտնի արժեքները սահմանված չեն: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Դիտեք այս ուղեցույցը՝ ավելին իմանալու համար</a>:'
     s3_config_warning: 'Սերվերը կարգավորված է վերբեռնել ֆայլեր S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
     s3_backup_config_warning: 'Սերվերը կարգավորված է վերբեռնել պահուստներ S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
     image_magick_warning: 'Սերվերը կարգավորված է ստեղծելու մեծ նկարների փոքրապատկերներ, սակայն ImageMagick -ը տեղադրված չէ: Տեղադրեք ImageMagick՝ օգտագործելով Ձեր նախընտրելի package manager-ը կամ <a href="https://www.imagemagick.org/script/download.php" target="_blank">ներբեռնեք վերջին թողարկումը</a>:'
@@ -1177,7 +1137,6 @@ hy:
     notification_email: "Ումից. էլ. հասցեն, որն օգտագործվում է բոլոր էական համակարգային նամակները ուղարկելիս: Այստեղ սահմանված դոմենը պետք է ունենա SPF, DKIM և հակադարձ PTR գրառումներ՝ ճիշտ սահմանված էլ. նամակի ստացման համար:"
     email_custom_headers: "Անհատական էլ. նամակի վերնագրերի ցանկ՝ բաժանված խողովակի սիմվոլով( | ):"
     email_subject: "Անհատականացվող սուբյեկտի ֆորմատ ստանդարտ էլ. հասցեների համար: Այցելեք <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    enforce_second_factor: "Պարտադրում է օգտատերերին միացնել երկրորդ գործոնով նույնականացումը: Ընտրեք 'բոլորը' ՝ բոլոր օգտատերերին պարտադրելու համար: Ընտրեք 'անձնակազմ' ՝ միայն անձնակազմի անդամներին պարտադրելու համար:"
     force_https: "Պարտադրեք Ձեր կայքին օգտագործել միայն HTTPS: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ ՄԻ միացրեք սա, քանի դեռ համոզված չեք, որ HTTPS -ը ամբողջությամբ կարգավորված է և աշխատում է բացառապես ամենուր! Դուք ստուգե՞լ եք նաև Ձեր CDN-ը, բոլոր սոցիալական կայքերը և ցանկացած արտաքին լոգո / կախյալներ՝ համոզվելու համար, որ դրանք բոլորը համատեղելի են HTTPS -ի հետ:"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "'Ամփոփել Այս Թեման'-ի մեջ ներառման համար անհրաժեշտ գրառման նվազագույն միավորը"
@@ -1209,8 +1168,6 @@ hy:
     post_undo_action_window_mins: "Րոպեների քանակը, որոնց ընթացքում օգտատերերին թույլատրվում է ետարկել գրառման վրա կատարված վերջին գործողությունները (հավանում, դրոշակավորում և այլն):"
     pending_users_reminder_delay: "Ծանուցել մոդերատորներին, եթե նոր օգտատերերը սպասում են հաստատման ավելի երկար, քան այսքան ժամ: Սահմանեք -1՝ ծանուցւոմները անջատելու համար:"
     maximum_session_age: "Օգտատերը կմնա մուտքագրված վերջին այցելությունից n ժամ անց"
-    ga_universal_domain_name: "Google Universal Analytics (analytics.js) դոմենի անուն, օրինակ՝ mysite.com; այցելեք <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "Միացնել Google Universal Analytics (analytics.js) խաչաձև դոմենի դիտումը: Այս դոմնեների ելքային հղումները կունենան իրենց ավելացված հաճախորդի id: Այցելեք <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
     allowed_iframes: "iframe src դոմենի նախամասնիկներ, որ discourse-ը կարող է ապահով թույլատրել գրառումներում"
@@ -1280,14 +1237,8 @@ hy:
     enable_twitter_logins: "Միացնել Twitter նույնականացումը, պահանջում է requires twitter_consumer_key և twitter_consumer_secret: Այցելեք <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter մուտքի (և rich զետեղումների) կարգավորում Discourse -ի համար</a>:"
     twitter_consumer_key: "Twitter նույնականացման համարսՍպառողի key, որը գրանցված է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Հաճախորդի գաղտնի արժեքը Twitter-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_instagram_logins: "Միացնել Instagram նույնականացումը, պահանջում է instagram_consumer_key և instagram_consumer_secret"
-    instagram_consumer_key: "Հաճախորդի բանալին Instagram-ով վավերականացման համար"
-    instagram_consumer_secret: "Սպառողի գաղտնի արժեքի Instagram նույնականացում"
     enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Միացնել Github-ով վավերականացումը, պահանջում է github_client_id և github_client_secret: Այցելեք <a href='https://meta.discourse.org/t/13745' target='_blank'>GitHub-ով մուտքի կարգավորումը Discourse -ի համար</a>:"
-    github_client_id: "Հաճախորդի id-ն Github-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    github_client_secret: "Հաճախորդի գաղտնի արժեքը Github-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
     allow_restore: "Թույլատրել վերականգնումը, որը կարող է փոխարինել կայքի ԲՈԼՈՐ տվյալները: Թողեք սխալ, մինչև որ չպլանավորեք վերականգնել պահուստ:"
     maximum_backups: "Պահուստների՝ դիսկի վրա պահելու առավելագույն քանակը: Ավելի հին պահուստները ավտոմատ կերպով ջնջվում են:"
@@ -1319,13 +1270,10 @@ hy:
     max_bookmarks_per_day: "Յուրաքանչյուր օգտատիրոջ յուրաքանչյուր օրվա էջանշումների առավելագույն քանակը:"
     max_edits_per_day: "Յուրաքանչյուր օրվա յուրաքանչյուր օգտատիրոջ խմբագրումների առավելագույն քանակը"
     max_topics_per_day: "Թեմաների առավելագույն քանակը, որ օգտատերը կարող է ստեղծել յուրաքանչյուր օր:"
-    max_personal_messages_per_day: "Հաղորդագրությունների առավելագույն քանակը, որ օգտատերերը կարող են ստեղծել յուրաքանչյուր օր"
     max_invites_per_day: "Հրավերների առավելագույն քանակը, որ օգտատերը կարող է ուղարկել յուրաքանչյուր օր:"
     max_topic_invitations_per_day: "Թեմայի հրավերների առավելագույն քանակը, որ օգտատերը կարող է ուղարկել ամեն օր:"
     max_logins_per_ip_per_hour: "Յուրաքանչյուր IP հասցեից յուրաքանչյուր ժամվա մեջ թույլատրված մուտքերի առավելագույն քանակը"
     max_logins_per_ip_per_minute: "Յուրաքանչյուր IP հասցեից յուրաքանչյուր րոպեում թույլատրված մուտքերի առավելագույն քանակը"
-    max_post_deletions_per_minute: "Գրառումների առավելագույն քանակը, որ օգտատերը կարող է ջնջել յուրաքանչյուր րոպեում:"
-    max_post_deletions_per_day: "Գրառումների առավելագույն քանակը, որ օգտատերը կարող է ջնջել յուրաքանչյուր օրում:"
     alert_admins_if_errors_per_minute: "Ադմինին զգուշացում ուղարկելու համար յուրաքանչյուր րոպեում սխալների քանակը: 0 արժեքը անջատում է այս հատկանիշը: ՆՇՈՒՄ՝ պահանջում է վերսկսում(restart):"
     alert_admins_if_errors_per_hour: "Ադմինին զգուշացում ուղարկելու համար յուրաքանչյուր ժամում սխալների քանակը: 0 արժեքը անջատում է այս հատկանիշը: ՆՇՈՒՄ՝ պահանջում է վերագործարկում:"
     suggested_topics: "Թեմայի ներքևում ցուցադրվող առաջարկվող թեմաների քանակը:"
@@ -1435,7 +1383,6 @@ hy:
     privacy_policy_url: "Եթե ունեք այլ վայրում տեղադրված Գաղտնիության Քաղաքականության փաստաթուղթ, որը ցանկանում եք օգտագործել, տեղադրեք ամբողջական URL-ը այստեղ:"
     log_anonymizer_details: "Պահպանել արդյոք օգտատիրոջ տվյլաները գրառումներում անվանազրկումից հետո: GDPR -ի օգտագործման ժամանակ Դուք պետք է անջատեք սա:"
     newuser_spam_host_threshold: "Քանի անգամ նոր օգտատերը կարող է հրապարակել միևնույն հոսթի հղումը` ըստ իր `newuser_spam_host_threshold` գրառումների սահմանաչափի՝ մինչև սպամ համարվելը:"
-    staff_like_weight: "Որքան է լրացուցիչ կշռի գործոնը՝ անձնակազմի կողմից հավանում տալու համար:"
     topic_view_duration_hours: "Հաշվարկել թեմայի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     user_profile_view_duration_hours: "Հաշվարկել օգտատիրոջ պրոֆիլի նոր դիտում՝ ըստ յուրաքանչյուր IP-ի/Օգտատիրոջ յուրաքանչյուր N ժամը մեկ"
     levenshtein_distance_spammer_emails: "Սպամմերի էլ. նամակների համապատասխանեցման ժամանակ սիմվոլների տարբերության քանակը, որը դեռևս թույլ կտա անորոշ համընկնում:"
@@ -1498,8 +1445,6 @@ hy:
     email_editable: "Թույլատրել օգտատերերին փոփոխել իրենց էլ. հասցեները գրանցումից հետո:"
     logout_redirect: "Դուրսգրումից հետո բրաուզերի վերաուղարկման տեղադրություն (օրինակ՝ https://example.com/logout)"
     allow_uploaded_avatars: "Թույլատրել օգտատերերին վերբեռնել անհատական պրոֆիլի նկարներ:"
-    allow_animated_avatars: "Թույլատրել օգտատերերին օգտագործել պրոֆիլի անիմացված gif նկարներ: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ աշխատացրեք avatars:refresh առաջադրանքը՝ այս կարգավորումը փոխելուց հետո:"
-    allow_animated_thumbnails: "Գեներացնում է անիմացված gif -երի անիմացված փոքրանկարները:"
     default_avatars: "Անձնապատկերների URL-ներ, որոնք լռելյայն կերպով կօգտագործվեն նոր օգտատերերի համար, մինչև նրանք կփոխեն դրանք:"
     automatically_download_gravatars: "Ներբեռնել Gravatar -ներ օգտատերերի համար հաշվի ստեղծման կամ էլ. հասցեի փոփոխման ժամանակ:"
     digest_topics: "Ամփոփիչ նամակում ցուցադրվող տարածված թեմաների առավելագույն քանակը:"
@@ -1550,7 +1495,6 @@ hy:
     display_name_on_posts: "Ցուցադրել օգտատիրոջ ամբողջական անունը իր գրառումներում՝ ի հավելումն իր @օգտանվան:"
     show_time_gap_days: "Եթե երկու գրառում կատարվում են այսքան օր տարբերությամբ, ցուցադրել ժամանակի տարբերությունը թեմայում:"
     short_progress_text_threshold: "Թեմայի պատասխանների քանակը այս թվին գերազանցելուց հետո առաջընթացի բարը կցուցադրի միայն ընթացիկ գրառման համարը: Եթե փոփոխեք առաջընթացի բարի լայնությունը, հնարավոր է՝ պետք լինի նաև փոխել այս արժեքը:"
-    default_code_lang: "Լռելյայն ծրագրավորման լեզվի շարադասության ընդգծում՝ կիրառված GitHub կոդի բկոկների վրա (lang-auto, ruby, python և այլն) :"
     warn_reviving_old_topic_age: "Երբ որևէ մեկը սկսի պատասխանել թեմայի, որտեղ վերջին պատասխանը այսքան օրից ավելի հին է, կցուցադրվի զգուշացում: Անջատեք՝ 0 սահմանելով:"
     autohighlight_all_code: "Հարկադրել կոդի ընդգծումը բոլոր նախաֆորմատավորված կոդերի բլոկների համար, անգամ եթե նրանք բացահայտ չեն սահմանել լեզուն:"
     highlighted_languages: "Ներառված շարադասության ընդգծման կանոնները: (Ուշադրություն՝ չափազանց շատ լեզուների ներառումը կարող է ազդել կատարողականության վրա) այցելեք՝ <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> դեմոյի համար:"
@@ -1563,7 +1507,6 @@ hy:
     show_create_topics_notice: "Եթե կայքն ունի 5-ից քիչ հանրային թեմա, ցուցադրել նշում՝ ադմիններին խնդրելով ստեղծել որոշ թեմաներ:"
     delete_drafts_older_than_n_days: "Ջնջել (n) օրվանից ավելի հին սևագրերը:"
     bootstrap_mode_min_users: "Օգտատերերի նվազագույն քանակը, որ պահանջվում է սկզբնաբեռնման (bootstrap) ռեժիմը անջատելու համար (սահմանեք 0՝ անջատելու համար)"
-    prevent_anons_from_downloading_files: "Արգելել անանուն օգտատերերին ներբեռնել կցորդներ: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ սա կկանխի ցանկացած ոչ-պատկերային կայքի ակտիվների աշխատանքը, որոնք հրապարակված են որպես կցորդ:"
     slug_generation_method: "Ընտրեք սլագի գեներացման մեթոդ: 'կոդավորված' -ը կգեներացնի տոկոսային կոդավորման տող: 'ոչ մի' -ն ընդհանրապես կանջատի սլագը:"
     enable_emoji: "Միացնել էմոջի"
     enable_emoji_shortcuts: "Հայտնի սմայլիկների տեքստը, օրինակ՝ :) :p :( , կփոխարկվի էմոջիով"
@@ -1786,7 +1729,6 @@ hy:
     errors: "%{errors}"
     not_available: "Հասանելի չէ: Փորձե՞լ %{suggestion}:"
     something_already_taken: "Ինչ-որ սխալ է տեղի ունեցել, միգուցե օգտանունը կամ էլ. հասցեն արդեն գրանցված է: Փորձեք 'մոռացել եմ գաղտնաբառը' հղումը:"
-    omniauth_error_unknown: "Ձեր մուտք գործելու ընթացքում ինչ-որ բան սխալ է ընթացել, խնդրում ենք փորձել կրկին:"
     omniauth_confirm_button: "Շարունակել"
     authenticator_error_no_valid_email: "%{account} հետ կապակցված էլ. հասցեներ թույլատրված չեն: Հնարավոր է՝ կարիք լինի կարգավորելու Ձեր հաշիվը մեկ այլ էլ. հասցեով:"
     new_registrations_disabled: "Նոր հաշվի գրանցումները այս պահին թույլատրելի չեն:"
@@ -1796,11 +1738,8 @@ hy:
     missing_user_field: "Դուք դեռևս չեք լրացրել օգտատիրոջ բոլոր դաշտերը"
     auth_complete: "Նույնականացումը ավարտված է:"
     click_to_continue: "Շարունակելու համար սեղմեք այստեղ:"
-    already_logged_in: "Օյ, կարծես թե Դուք փորձում եք ընդունել մեկ այլ օգտատիրոջ համար նախատեսված հրավեր: Եթե Դուք %{current_user} -ը չեք, խնդրում ենք դուրս գրվել և փորձել կրկին:"
-    second_factor_title: "Երկգործոն Վավերացում"
     second_factor_description: "Խնդրում ենք մուտքագրել պահանջված նույնականացման կոդը Ձեր հավելվածից՝"
     second_factor_backup_description: "Խնդրում ենք մուտքագրել Ձեր պահուստային կոդերից որևէ մեկը՝"
-    second_factor_backup_title: "Երկգործոն Պահուստային Կոդ"
     invalid_second_factor_code: "Անվավեր նույնականացման կոդ: Յուրաքանչյուր կոդ կարող է օգտագործվել միայն մեկ անգամ:"
     second_factor_toggle:
       backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
@@ -2560,10 +2499,6 @@ hy:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"
       text_body_template: "Դուք հենց նոր փորձել եք ստեղծել հաշիվ %{site_name} -ում կամ փոփոխել հաշվի էլ. հասցեն %{email} -ի: Համենայն դեպս, հաշիվն արդեն գոյություն ունի %{email}-ով:\n\nԵթե մոռացել եք Ձեր գաղտնաբառը, [վերահաստատեք այն հիմա](%{base_url}/գաղտնաբառի-վերահաստատում):\n\nԵթե Դուք չեք փորձել ստեղծել հաշիվ %{email} -ով կամ փոփոխել Ձեր էլ. հասցեն, մի անհանգստացեք - Դուք հանգիստ կարող եք անտեսել այս հաղորդագրությունը: \n\nԵթե ունեք հարցեր, [կապվեք մեր բարեհամբույր անձնակազմի հետ](%{base_url}/մեր մասին):\n"
-    account_second_factor_disabled:
-      title: "Երկգործոն Նույնականացումը անջատված է"
-      subject_template: "[%{email_prefix}] Երկգործոն Վավերացումը անջատված է"
-      text_body_template: "Երկգործոն նույնականացումը անջատված է Ձեր %{site_name} հաշվի վրա: Դուք այժմ կարող եք մուտք գործել միայն Ձեր գաղտնաբառով; լրացուցիչ նույնականացում այլևս չի պահանջվում: \n\nԵթե Դուք չեք ընտրել անջատել երկգործոն նույնականացումը, հնարավոր է՝ ինչ-որ մեկը ջարդել է Ձեր հաշիվը: \n\nԵթե ունեք հարցեր, [կապվեք մեր բարեհամբույր անձնակազմի հետ](%{base_url}/մեր մասին):\n"
     digest:
       why: " %{site_link}-ի համառոտ ամփոփում՝ Ձեր %{last_seen_at}վերջին այցելությունից հետո"
       since_last_visit: "Ձեր վերջին այցելությունից հետո"
@@ -2754,7 +2689,6 @@ hy:
     latte: "Լատտե"
     summer: "Ամառ"
     dark_rose: "Մուգ Վարդագույն"
-    default_theme_name: "Բաց"
     light_theme_name: "Բաց"
     dark_theme_name: "Մուգ"
     neutral_theme_name: "Նեյտրալ"
@@ -3102,8 +3036,6 @@ hy:
     initial_topic_title: Վեբ-կայքի կատարողականության հաշվետվություններ
   tags:
     title: "Թեգեր"
-    staff_tag_disallowed: ' "%{tag}" թեգը կարող է կիրառվել միայն անձնակազմի կողմից:'
-    staff_tag_remove_disallowed: '"%{tag}" թեգը կարող է հեռացվել միայն անձնակազմի կողմից:'
     upload_row_too_long: "CSV ֆայլը պետք է ունենա մեկ թեգ յուրաքանչյուր տողում: Ըստ ցանկության՝ թեգը կարող է շարունակվել ստորակետով և ապա՝ թեգի խմբի անվանմանմբ:"
     forbidden:
       in_this_category: '"%{tag_name}" -ը չի կարող օգտագործվել այս կատեգորիայում'
@@ -3196,10 +3128,6 @@ hy:
           city_for_disputes:
             label: "Վեճերի Քաղաք"
             placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
-      colors:
-        title: "Թեմա"
-      themes_further_reading:
-        title: "Թեմաներ"
       logos:
         title: "Լոգոներ"
         fields:
@@ -3240,9 +3168,6 @@ hy:
         disabled: "Քանի որ տեղական մուտքերը անջատված են, անհնար է ուղարկել հրավերներ որևէ մեկին: Խնդրում ենք անցնել մյուս քայլին:"
       finished:
         title: "Ձեր Discourse -ը պատրաստ է!"
-        description: |
-          <p>Եթե Դուք երբևէ ցանկանաք փոփոխել այս կարգավորումները, <b>վերագործարկեք այս օգնականը ցանկացած ժամանակ</b> կամ այցելեք <a href='%{base_path}/admin' target='_blank'>Ձեր ադմինի բաժին</a>; այն կգտնեք կայքի մենյուում պտուտակի պատկերակի կողքին: </p>
-          <p>Վայելեք, և հաջողություն ենք մաղթում <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>Ձեր նոր համայնքը կառուցելիս!</a></p>
   search_logs:
     graph_title: "Որոնումների Քանակ"
   joined: "Միացել է"

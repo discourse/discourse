@@ -23,7 +23,7 @@ class Demon::EmailSync < ::Demon::Base
   def start_thread(db, group)
     Thread.new do
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        ImapSyncLog.debug("Thread started for group #{group.name} in db #{db}", group)
+        ImapSyncLog.debug("Thread started for group #{group.name} in db #{db}", group, db: false)
         begin
           syncer = Imap::Sync.new(group)
         rescue Net::IMAP::NoResponseError => e
@@ -44,7 +44,7 @@ class Demon::EmailSync < ::Demon::Base
           )
 
           if !syncer.can_idle? && status[:remaining] == 0
-            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group)
+            ImapSyncLog.debug("Going to sleep for group #{group.name} in db #{db} to wait for new emails", group, db: false)
 
             # Thread goes into sleep for a bit so it is better to return any
             # connection back to the pool.
@@ -133,7 +133,7 @@ class Demon::EmailSync < ::Demon::Base
           # Spawn new threads for groups that are now synchronized.
           groups.each do |group_id, group|
             if !@sync_data[db][group_id]
-              ImapSyncLog.debug("Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}", group)
+              ImapSyncLog.debug("Starting thread for group #{group.name} mailbox #{group.imap_mailbox_name}", group, db: false)
 
               @sync_data[db][group_id] = {
                 thread: start_thread(db, group),

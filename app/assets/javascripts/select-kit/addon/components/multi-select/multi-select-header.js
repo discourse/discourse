@@ -1,7 +1,7 @@
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 import { computed } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
 import layout from "select-kit/templates/components/multi-select/multi-select-header";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitHeaderComponent.extend({
   classNames: ["multi-select-header"],

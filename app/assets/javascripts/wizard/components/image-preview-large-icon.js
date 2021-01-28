@@ -1,5 +1,5 @@
-import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(325, 125, {
   ios: null,
@@ -17,7 +17,8 @@ export default createPreviewComponent(325, 125, {
     };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint(options) {
+    const { width, height } = options;
     this.scaleImage(this.image, 10, 8, 87, 87);
     this.scaleImage(this.ios, 0, 0, width, height);
   },

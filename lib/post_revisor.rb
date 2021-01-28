@@ -144,6 +144,11 @@ class PostRevisor
     @revised_at = @opts[:revised_at] || Time.now
     @last_version_at = @post.last_version_at || Time.now
 
+    if guardian.affected_by_slow_mode?(@topic) && !ninja_edit?
+      @post.errors.add(:base, I18n.t("cannot_edit_on_slow_mode"))
+      return false
+    end
+
     @version_changed = false
     @post_successfully_saved = true
 
@@ -194,7 +199,7 @@ class PostRevisor
 
     # We log staff/group moderator edits to posts
     if (
-      (@editor.staff? || (@post.is_category_description? && Guardian.new(@editor).can_edit_category_description?(@post.topic.category))) &&
+      (@editor.staff? || (@post.is_category_description? && guardian.can_edit_category_description?(@post.topic.category))) &&
       @editor.id != @post.user_id &&
       @fields.has_key?('raw') &&
       !@opts[:skip_staff_log]
@@ -532,6 +537,7 @@ class PostRevisor
     return if bypass_bump? || !is_last_post?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
+    TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
@@ -628,6 +634,8 @@ class PostRevisor
         {}
       end
 
+    DiscourseEvent.trigger(:before_post_publish_changes, post_changes, @topic_changes, options)
+
     @post.publish_change_to_clients!(:revised, options)
   end
 
@@ -637,6 +645,10 @@ class PostRevisor
 
   def successfully_saved_post_and_topic
     @post_successfully_saved && !@topic_changes.errored?
+  end
+
+  def guardian
+    @guardian ||= Guardian.new(@editor)
   end
 
 end

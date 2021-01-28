@@ -1,7 +1,7 @@
+import { observes, on } from "discourse-common/utils/decorators";
 import TextArea from "@ember/component/text-area";
-import { schedule } from "@ember/runloop";
-import { on, observes } from "discourse-common/utils/decorators";
 import autosize from "discourse/lib/autosize";
+import { schedule } from "@ember/runloop";
 
 export default TextArea.extend({
   @on("didInsertElement")

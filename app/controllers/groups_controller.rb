@@ -34,6 +34,9 @@ class GroupsController < ApplicationController
     },
     automatic: Proc.new { |groups|
       groups.where(automatic: true)
+    },
+    non_automatic: Proc.new { |groups|
+      groups.where(automatic: false)
     }
   }
   ADD_MEMBERS_LIMIT = 1000
@@ -81,6 +84,8 @@ class GroupsController < ApplicationController
     else
       type_filters = type_filters - [:my, :owner]
     end
+
+    type_filters.delete(:non_automatic)
 
     # count the total before doing pagination
     total = groups.count
@@ -537,6 +542,7 @@ class GroupsController < ApplicationController
   def search
     groups = Group.visible_groups(current_user)
       .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
+      .includes(:flair_upload)
       .order(:name)
 
     if (term = params[:term]).present?

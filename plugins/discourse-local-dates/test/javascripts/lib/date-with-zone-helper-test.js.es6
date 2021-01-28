@@ -3,7 +3,7 @@ import DateWithZoneHelper from "./date-with-zone-helper";
 const PARIS = "Europe/Paris";
 const SYDNEY = "Australia/Sydney";
 
-QUnit.module("lib:date-with-zone-helper");
+module("lib:date-with-zone-helper");
 
 function buildDateHelper(params = {}) {
   return new DateWithZoneHelper({
@@ -17,7 +17,7 @@ function buildDateHelper(params = {}) {
   });
 }
 
-QUnit.test("#format", (assert) => {
+test("#format", function (assert) {
   let date = buildDateHelper({
     day: 15,
     month: 2,
@@ -28,7 +28,7 @@ QUnit.test("#format", (assert) => {
   assert.equal(date.format(), "2020-03-15T15:36:00.000+01:00");
 });
 
-QUnit.test("#repetitionsBetweenDates", (assert) => {
+test("#unitRepetitionsBetweenDates", function (assert) {
   let date;
 
   date = buildDateHelper({
@@ -39,7 +39,7 @@ QUnit.test("#repetitionsBetweenDates", (assert) => {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.hour",
       moment.tz("2020-02-15 15:36", SYDNEY)
     ),
@@ -55,7 +55,7 @@ QUnit.test("#repetitionsBetweenDates", (assert) => {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:36", PARIS)
     ),
@@ -71,7 +71,7 @@ QUnit.test("#repetitionsBetweenDates", (assert) => {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
+    date.unitRepetitionsBetweenDates(
       "1.minute",
       moment.tz("2020-02-15 15:37", PARIS)
     ),
@@ -87,16 +87,16 @@ QUnit.test("#repetitionsBetweenDates", (assert) => {
     timezone: PARIS,
   });
   assert.equal(
-    date.repetitionsBetweenDates(
-      "2.minute",
+    date.unitRepetitionsBetweenDates(
+      "2.minutes",
       moment.tz("2020-02-15 15:41", PARIS)
     ),
-    2.5,
+    6,
     "it correctly finds difference with a multiplicator"
   );
 });
 
-QUnit.test("#add", (assert) => {
+test("#add", function (assert) {
   let date;
   let futureLocalDate;
 

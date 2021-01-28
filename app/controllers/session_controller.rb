@@ -244,7 +244,7 @@ class SessionController < ApplicationController
       text = nil
 
       # If there's a problem with the email we can explain that
-      if (e.record.is_a?(User) && e.record.errors[:email].present?)
+      if (e.record.is_a?(User) && e.record.errors[:primary_email].present?)
         if e.record.email.blank?
           text = I18n.t("sso.no_email")
         else
@@ -442,13 +442,42 @@ class SessionController < ApplicationController
   end
 
   def destroy
+    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+
+    sso = SiteSetting.enable_sso
+    only_one_authenticator = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+    if SiteSetting.login_required && (sso || only_one_authenticator)
+      # In this situation visiting most URLs will start the auth process again
+      # Go to the `/login` page to avoid an immediate redirect
+      redirect_url ||= path("/login")
+    end
+
+    redirect_url ||= path("/")
+
+    event_data = { redirect_url: redirect_url, user: current_user }
+    DiscourseEvent.trigger(:before_session_destroy, event_data)
+    redirect_url = event_data[:redirect_url]
+
     reset_session
     log_off_user
     if request.xhr?
-      render body: nil
+      render json: {
+        redirect_url: redirect_url
+      }
     else
-      redirect_to (params[:return_url] || path("/"))
+      redirect_to redirect_url
     end
+  end
+
+  def get_honeypot_value
+    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
+    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+
+    render json: {
+      value: honeypot_value,
+      challenge: challenge_value,
+      expires_in: SecureSession.expiry
+    }
   end
 
   protected

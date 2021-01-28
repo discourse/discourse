@@ -162,26 +162,21 @@
 }
 
 .modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
   .btn {
-    margin: 0 5px 5px 0;
+    margin: 0 0.3em 0 0;
     &[href] {
       min-height: unset;
     }
   }
-}
 
-.modal.edit-category-modal {
-  .modal-body {
-    textarea {
-      height: 10em;
-    }
-  }
-  @media screen and (min-width: 524px) {
-    .modal-inner-container {
-      min-width: 525px;
-    }
+  .btn,
+  a {
+    margin-bottom: 0.3em;
   }
 }
 
@@ -335,7 +330,7 @@
   }
 }
 
-.delete-posts-progress {
+.admin-delete-user-posts-progress-modal {
   .progress-bar {
     height: 15px;
     position: relative;
@@ -352,141 +347,6 @@
       transition: width 0.6s linear;
     }
   }
-}
-
-.permission-list {
-  // Category security tab
-  list-style: none;
-  margin: 0 0 30px;
-  padding: 0;
-  .name {
-    margin-right: 20px;
-    display: inline-block;
-    min-width: 100px;
-  }
-  .permission {
-    margin-left: 20px;
-  }
-  .d-icon-times-circle {
-    margin-left: 5px;
-    color: var(--danger);
-  }
-  li {
-    margin-bottom: 10px;
-  }
-}
-
-.edit-category-modal {
-  input:not([type="checkbox"]),
-  .controls {
-    display: block;
-    margin-bottom: 0.5em;
-  }
-
-  .disable_info_wrap {
-    position: relative;
-    display: inline-block;
-    float: right;
-
-    .cannot_delete_reason {
-      position: absolute;
-      background: var(--primary);
-      color: var(--secondary);
-      text-align: center;
-      border-radius: 2px;
-      padding: 12px 8px;
-
-      &::after {
-        top: 100%;
-        left: 57%;
-        border: solid transparent;
-        content: " ";
-        position: absolute;
-        border-top-color: var(--primary);
-        border-width: 8px;
-      }
-    }
-  }
-
-  .permission-selector {
-    margin-right: 0.25em;
-  }
-
-  .pending-permission-change-alert {
-    margin-left: auto;
-    max-width: 250px;
-    background: var(--primary-very-high);
-    color: var(--secondary);
-    margin-top: 10px;
-    padding: 5px 10px;
-    position: relative;
-    .arrow-div {
-      border: solid transparent;
-      content: " ";
-      position: absolute;
-      border-bottom-color: var(--primary-very-high);
-      border-width: 7px;
-      top: -13px;
-      left: 200px;
-    }
-  }
-
-  .add-permission {
-    position: relative;
-    top: 0.1em;
-  }
-
-  .edit-category-tab-settings {
-    $category-settings-width: 280px; // Consistent width makes this all easier to read
-    > section {
-      margin-bottom: 1.5em;
-    }
-    input[type="number"],
-    input[type="text"],
-    .select-kit {
-      width: $category-settings-width;
-    }
-    label {
-      max-width: $category-settings-width;
-    }
-    .category-email-in-outlet {
-      label {
-        flex-wrap: wrap; // Todo: fix all multi-element labels
-        a {
-          margin-left: 1.3em;
-        }
-      }
-    }
-  }
-  #category-min-tags-from-group {
-    width: 100px;
-  }
-}
-
-.edit-category-tab-tags {
-  .select-kit {
-    &.tag-chooser {
-      width: 100%;
-
-      .select-kit-filter,
-      .filter-input {
-        display: flex;
-        flex: 1 0 250px;
-      }
-
-      .mobile-view & {
-        .no-content,
-        .is-loading,
-        &.select-kit.is-expanded .select-kit-collection {
-          width: 95%;
-        }
-      }
-    }
-  }
-}
-
-#category-min-tags-from-group {
-  min-height: 36px;
 }
 
 .incoming-email-modal {
@@ -809,5 +669,19 @@
         min-width: 49%;
       }
     }
+  }
+}
+
+.modal.edit-slow-mode-modal {
+  .slow-mode-label {
+    display: inline-flex;
+  }
+
+  .alert.alert-info {
+    margin-bottom: 0;
+  }
+
+  .input-small {
+    width: 10%;
   }
 }

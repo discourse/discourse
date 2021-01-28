@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
-import { readOnly } from "@ember/object/computed";
-import deprecated from "discourse-common/lib/deprecated";
+import EmberObject, { action } from "@ember/object";
+import I18n from "I18n";
 import bootbox from "bootbox";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 
 const Tab = EmberObject.extend({
   init() {
@@ -142,13 +142,22 @@ export default Controller.extend({
   destroyGroup() {
     this.set("destroying", true);
 
+    const model = this.model;
+    let message = I18n.t("admin.groups.delete_confirm");
+
+    if (model.has_messages && model.message_count > 0) {
+      message = I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: model.message_count,
+      });
+    }
+
     bootbox.confirm(
-      I18n.t("admin.groups.delete_confirm"),
+      message,
       I18n.t("no_value"),
       I18n.t("yes_value"),
       (confirmed) => {
         if (confirmed) {
-          this.model
+          model
             .destroy()
             .then(() => this.transitionToRoute("groups.index"))
             .catch((error) => {

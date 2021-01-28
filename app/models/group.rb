@@ -303,7 +303,7 @@ class Group < ActiveRecord::Base
       .where(groups: { id: id })
       .where('topics.archetype <> ?', Archetype.private_message)
       .where('topics.visible')
-      .where(post_type: Post.types[:regular])
+      .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
@@ -750,7 +750,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.short_path
+    flair_icon.presence || flair_upload&.url
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
@@ -817,6 +817,11 @@ class Group < ActiveRecord::Base
     }
   end
 
+  def imap_enabled?
+    return false if !SiteSetting.enable_imap
+    imap_config.values.compact.length == imap_config.keys.length
+  end
+
   def email_username_regex
     user, domain = email_username.split('@')
     if user.present? && domain.present?
@@ -831,6 +836,11 @@ class Group < ActiveRecord::Base
       group_name: self.full_name.presence || self.name,
       group_path: "/g/#{self.name}"
     )
+  end
+
+  def message_count
+    return 0 unless self.has_messages
+    TopicAllowedGroup.where(group_id: self.id).joins(:topic).count
   end
 
   protected

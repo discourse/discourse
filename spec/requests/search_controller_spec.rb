@@ -231,6 +231,11 @@ describe SearchController do
       expect(SearchLog.where(term: 'wookie')).to be_blank
     end
 
+    it "does not raise 500 with an empty term" do
+      get "/search/query.json", params: { term: "in:first", type_filter: "topic", search_for_id: true }
+      expect(response.status).to eq(200)
+    end
+
     context 'rate limited' do
       it 'rate limits anon searches per user' do
         SiteSetting.rate_limit_search_anon_user = 2
@@ -327,6 +332,26 @@ describe SearchController do
       term = "hello\0hello"
 
       get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+    end
+
+    it "doesn't raise an error if the page is a string number" do
+      get "/search.json", params: { q: 'kittens', page: '3' }
+      expect(response.status).to eq(200)
+    end
+
+    it "doesn't raise an error if the page is a integer number" do
+      get "/search.json", params: { q: 'kittens', page: 3 }
+      expect(response.status).to eq(200)
+    end
+
+    it "returns a 400 error if the page parameter is invalid" do
+      get "/search.json?page=xawesome%27\"</a\&"
+      expect(response.status).to eq(400)
+    end
+
+    it "returns a 400 error if the page parameter is padded with spaces" do
+      get "/search.json", params: { q: 'kittens', page: ' 3  ' }
       expect(response.status).to eq(400)
     end
 

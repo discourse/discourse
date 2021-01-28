@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { action, computed } from "@ember/object";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["group-members-dropdown"],

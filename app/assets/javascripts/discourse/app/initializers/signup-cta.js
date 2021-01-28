@@ -18,12 +18,24 @@ export default {
     screenTrack.keyValueStore = keyValueStore;
 
     // Preconditions
-    if (user) return; // must not be logged in
-    if (keyValueStore.get("anon-cta-never")) return; // "never show again"
-    if (!siteSettings.allow_new_registrations) return;
-    if (siteSettings.invite_only) return;
-    if (siteSettings.login_required) return;
-    if (!siteSettings.enable_signup_cta) return;
+    if (user) {
+      return;
+    } // must not be logged in
+    if (keyValueStore.get("anon-cta-never")) {
+      return;
+    } // "never show again"
+    if (!siteSettings.allow_new_registrations) {
+      return;
+    }
+    if (siteSettings.invite_only) {
+      return;
+    }
+    if (siteSettings.login_required) {
+      return;
+    }
+    if (!siteSettings.enable_signup_cta) {
+      return;
+    }
 
     function checkSignupCtaRequirements() {
       if (session.get("showSignupCta")) {

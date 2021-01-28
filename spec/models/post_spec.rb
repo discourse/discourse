@@ -136,24 +136,18 @@ describe Post do
         end
       end
     end
+  end
 
-    context 'a post with notices' do
-      let(:post) {
-        post = Fabricate(:post, post_args)
-        post.custom_fields[Post::NOTICE_TYPE] = Post.notices[:returning_user]
-        post.custom_fields[Post::NOTICE_ARGS] = 1.day.ago
-        post.save_custom_fields
-        post
-      }
-
-      describe 'recovery' do
-        it 'deletes notices' do
-          expect { post.trash! }
-            .to change { post.custom_fields.length }.from(2).to(0)
-        end
-      end
+  context 'a post with notices' do
+    let(:post) do
+      post = Fabricate(:post, post_args)
+      post.upsert_custom_fields(Post::NOTICE => { type: Post.notices[:returning_user], last_posted_at: 1.day.ago })
+      post
     end
 
+    it 'will have its notice cleared when post is trashed' do
+      expect { post.trash! }.to change { post.custom_fields }.to({})
+    end
   end
 
   describe "with_secure_media?" do
@@ -164,7 +158,11 @@ describe Post do
     end
 
     context "when secure media is enabled" do
-      before { enable_secure_media_and_s3 }
+      before do
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+      end
 
       context "if login_required" do
         before { SiteSetting.login_required = true }
@@ -1303,6 +1301,21 @@ describe Post do
     end
   end
 
+  describe ".hide!" do
+    after do
+      Discourse.redis.flushdb
+    end
+
+    it "should ignore the duplicate check" do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post, user: p1.user)
+      SiteSetting.unique_posts_mins = 10
+      p1.store_unique_post_key
+      p2.reload.hide!(PostActionType.types[:off_topic])
+      expect(p2).to be_hidden
+    end
+  end
+
   describe ".unhide!" do
     before { SiteSetting.unique_posts_mins = 5 }
 
@@ -1359,7 +1372,7 @@ describe Post do
     fab!(:attachment_upload_2) { Fabricate(:upload) }
     fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
-    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
+    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
     let(:audio_url) { "#{base_url}#{audio_upload.url}" }
 
@@ -1426,7 +1439,11 @@ describe Post do
       end
 
       context "when secure media is enabled" do
-        before { enable_secure_media_and_s3 }
+        before do
+          setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+        end
 
         it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
           other_post = Fabricate(:post)
@@ -1464,19 +1481,14 @@ describe Post do
       end
 
       before do
-        enable_secure_media_and_s3
+        setup_s3
+        SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+        SiteSetting.secure_media = true
+
         attachment_upload.update!(original_filename: "hello.csv")
 
-        stub_request(:head, "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/")
-
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{attachment_upload.sha1}.#{attachment_upload.extension}?acl"
-        )
-        stub_request(
-          :put,
-          "https://#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com/original/1X/#{image_upload.sha1}.#{image_upload.extension}?acl"
-        )
+        stub_upload(attachment_upload)
+        stub_upload(image_upload)
       end
 
       it "marks image and attachment uploads as secure in PMs when secure_media is ON" do
@@ -1643,7 +1655,10 @@ describe Post do
     end
 
     it "correctly identifies secure uploads" do
-      enable_secure_media_and_s3
+      setup_s3
+      SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
+      SiteSetting.secure_media = true
+
       upload1 = Fabricate(:upload_s3, secure: true)
       upload2 = Fabricate(:upload_s3, secure: true)
 
@@ -1690,11 +1705,7 @@ describe Post do
     end
 
     it "should skip external urls with upload url in query string" do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secret key"
-      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+      setup_s3
 
       urls = []
       upload = Fabricate(:upload_s3)
@@ -1702,14 +1713,5 @@ describe Post do
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
     end
-  end
-
-  def enable_secure_media_and_s3
-    SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-    SiteSetting.enable_s3_uploads = true
-    SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-    SiteSetting.s3_access_key_id = "some key"
-    SiteSetting.s3_secret_access_key = "some secret key"
-    SiteSetting.secure_media = true
   end
 end

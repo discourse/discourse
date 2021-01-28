@@ -1,10 +1,10 @@
 import {
-  registerHelpers,
   createHelperContext,
+  registerHelpers,
 } from "discourse-common/lib/helpers";
+import Handlebars from "handlebars";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
-import Handlebars from "handlebars";
 import { setOwner } from "@ember/application";
 
 export function autoLoadModules(container, registry) {

@@ -1,37 +1,36 @@
-import I18n from "I18n";
-import { debounce, later, next, schedule, scheduleOnce } from "@ember/runloop";
-import { inject as service } from "@ember/service";
-import Component from "@ember/component";
-import Mousetrap from "mousetrap";
-
-import discourseComputed, {
-  on,
-  observes,
-} from "discourse-common/utils/decorators";
-import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { generateCookFunction } from "discourse/lib/text";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { siteDir } from "discourse/lib/text-direction";
 import {
-  determinePostReplaceSelection,
-  clipboardHelpers,
-  safariHacksDisabled,
   caretPosition,
+  clipboardHelpers,
+  determinePostReplaceSelection,
   inCodeBlock,
+  safariHacksDisabled,
 } from "discourse/lib/utilities";
-import toMarkdown from "discourse/lib/to-markdown";
-import deprecated from "discourse-common/lib/deprecated";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { translations } from "pretty-text/emoji/data";
+import discourseComputed, {
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { emojiUrlFor } from "discourse/lib/text";
-import showModal from "discourse/lib/show-modal";
+import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
+import { later, next, schedule, scheduleOnce } from "@ember/runloop";
+import Component from "@ember/component";
+import I18n from "I18n";
+import Mousetrap from "mousetrap";
 import { Promise } from "rsvp";
-import { isTesting } from "discourse-common/config/environment";
 import { SKIP } from "discourse/lib/autocomplete";
+import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { getRegister } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
+import { isTesting } from "discourse-common/config/environment";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { inject as service } from "@ember/service";
+import showModal from "discourse/lib/show-modal";
+import { siteDir } from "discourse/lib/text-direction";
+import toMarkdown from "discourse/lib/to-markdown";
+import { translations } from "pretty-text/emoji/data";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -106,7 +105,7 @@ class Toolbar {
     }
 
     this.addButton({
-      id: "quote",
+      id: "blockquote",
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
@@ -185,7 +184,7 @@ class Toolbar {
     if (button.shortcut) {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
-      var shortcutTitle = `${mod}+${button.shortcut}`;
+      let shortcutTitle = `${mod}+${button.shortcut}`;
 
       // Mac users are used to glyphs for shortcut keys
       if (mac) {
@@ -240,7 +239,9 @@ export default Component.extend({
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
-    if (placeholder) return I18n.t(placeholder);
+    if (placeholder) {
+      return I18n.t(placeholder);
+    }
     return null;
   },
 
@@ -311,6 +312,10 @@ export default Component.extend({
       this.appEvents.on("composer:replace-text", this, "_replaceText");
     }
     this._mouseTrap = mouseTrap;
+
+    if (isTesting()) {
+      this.element.addEventListener("paste", this.paste.bind(this));
+    }
   },
 
   _insertBlock(text) {
@@ -334,6 +339,10 @@ export default Component.extend({
       mouseTrap.unbind(sc)
     );
     $(this.element.querySelector(".d-editor-preview")).off("click.preview");
+
+    if (isTesting()) {
+      this.element.removeEventListener("paste", this.paste);
+    }
   },
 
   @discourseComputed()
@@ -375,7 +384,9 @@ export default Component.extend({
         return;
       }
 
-      if (this.preview === cooked) return;
+      if (this.preview === cooked) {
+        return;
+      }
 
       this.set("preview", cooked);
       schedule("afterRender", () => {
@@ -383,7 +394,9 @@ export default Component.extend({
           return;
         }
         const $preview = $(this.element.querySelector(".d-editor-preview"));
-        if ($preview.length === 0) return;
+        if ($preview.length === 0) {
+          return;
+        }
 
         if (this.previewUpdated) {
           this.previewUpdated($preview);
@@ -402,7 +415,7 @@ export default Component.extend({
     if (isTesting()) {
       this._updatePreview();
     } else {
-      debounce(this, this._updatePreview, 30);
+      discourseDebounce(this, this._updatePreview, 30);
     }
   },
 
@@ -864,7 +877,7 @@ export default Component.extend({
   },
 
   paste(e) {
-    if (!$(".d-editor-input").is(":focus")) {
+    if (!$(".d-editor-input").is(":focus") && !isTesting()) {
       return;
     }
 
@@ -888,7 +901,7 @@ export default Component.extend({
       !isInlinePasting &&
       !isCodeBlock
     ) {
-      plainText = plainText.trim().replace(/\r/g, "");
+      plainText = plainText.replace(/\r/g, "");
       const table = this._extractTable(plainText);
       if (table) {
         this.appEvents.trigger("composer:insert-text", table);

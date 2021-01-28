@@ -71,19 +71,36 @@ describe PostAlerter do
 
     end
 
-    it "triggers :before_create_notifications_for_users" do
-      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
-      op = Fabricate(:post, user: pm.user, topic: pm)
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
-      group = Fabricate(:group, users: [user2])
-      pm.allowed_users << user1
-      pm.allowed_groups << group
-      events = DiscourseEvent.track_events do
-        PostAlerter.post_created(op)
+    context "group inboxes" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:group) { Fabricate(:group, users: [user2], name: "TestGroup") }
+      fab!(:pm) { Fabricate(:topic, archetype: 'private_message', category_id: nil, allowed_groups: [group]) }
+      fab!(:op) { Fabricate(:post, user: pm.user, topic: pm) }
+
+      it "triggers :before_create_notifications_for_users" do
+        pm.allowed_users << user1
+        events = DiscourseEvent.track_events do
+          PostAlerter.post_created(op)
+        end
+
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
+        expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
       end
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user1], op])
-      expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user2], op])
+
+      it "triggers group summary notification" do
+        TopicUser.change(user2.id, pm.id, notification_level: TopicUser.notification_levels[:tracking])
+
+        PostAlerter.post_created(op)
+        group_summary_notification = Notification.where(user_id: user2.id)
+
+        expect(group_summary_notification.count).to eq(1)
+        expect(group_summary_notification.first.notification_type).to eq(Notification.types[:group_message_summary])
+
+        notification_payload = JSON.parse(group_summary_notification.first.data)
+        expect(notification_payload["group_name"]).to eq(group.name)
+      end
     end
   end
 
@@ -205,7 +222,7 @@ describe PostAlerter do
 
     it 'does not notify for ignored users' do
       post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]', topic: topic)
-      IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
+      Fabricate(:ignored_user, user: evil_trout, ignored_user: post.user)
 
       expect {
         PostAlerter.post_created(post)
@@ -707,9 +724,24 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
+
+      expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+    end
+
+    it "pushes nothing when the user is in 'do not disturb'" do
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+      2.times do |i|
+        UserApiKey.create!(user_id: evil_trout.id,
+                           client_id: "xxx#{i}",
+                           application_name: "iPhone#{i}",
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
+                           push_url: "https://site2.com/push")
+      end
+
+      Fabricate(:do_not_disturb_timing, user: evil_trout, starts_at: Time.zone.now, ends_at: 1.day.from_now)
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
     end
@@ -722,7 +754,7 @@ describe PostAlerter do
         UserApiKey.create!(user_id: evil_trout.id,
                            client_id: "xxx#{i}",
                            application_name: "iPhone#{i}",
-                           scopes: ['notifications'],
+                           scopes: ['notifications'].map { |name| UserApiKeyScope.new(name: name) },
                            push_url: "https://site2.com/push")
       end
 
@@ -1212,7 +1244,7 @@ describe PostAlerter do
     end
   end
 
-  context "SMTP" do
+  context "SMTP (group_smtp_email)" do
     before do
       SiteSetting.enable_smtp = true
       Jobs.run_immediately!
@@ -1229,58 +1261,77 @@ describe PostAlerter do
     end
 
     fab!(:topic) do
-      Fabricate(:private_message_topic,
+      Fabricate(
+        :private_message_topic,
         topic_allowed_groups: [
           Fabricate.build(:topic_allowed_group, group: group)
         ]
       )
     end
 
-    it "sends notifications for new posts in topic" do
-      post = Fabricate(
+    def create_post_with_incoming
+      Fabricate(
         :post,
         topic: topic,
         incoming_email:
-          Fabricate(
-            :incoming_email,
-            topic: topic,
-            from_address: "foo@discourse.org",
-            to_addresses: group.email_username,
-            cc_addresses: "bar@discourse.org"
-          )
+        Fabricate(
+          :incoming_email,
+          topic: topic,
+          from_address: "foo@discourse.org",
+          to_addresses: group.email_username,
+          cc_addresses: "bar@discourse.org"
+        )
       )
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
 
+    it "does not send a group smtp email when the post already has an incoming email" do
+      post = create_post_with_incoming
+
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "sends a group smtp email when the post does not have an incoming email" do
+      create_post_with_incoming
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to include(group.email_username)
       expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
+    end
 
-      post = Fabricate(
-        :post,
-        topic: topic,
-        incoming_email:
-          Fabricate(
-            :incoming_email,
-            topic: topic,
-            from_address: "bar@discourse.org",
-            to_addresses: group.email_username,
-            cc_addresses: "baz@discourse.org"
-          )
-      )
+    it "does not send group smtp emails for a whisper" do
+      create_post_with_incoming
+      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "does not send a notification email to the group when the post does not have an incoming email" do
+      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["discourse@example.com"]).at_least_once
+      post = create_post_with_incoming
+      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
+      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
+      topic.allowed_users << staged_group_user
+      topic.save
+      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
+    end
+
+    it "skips sending a notification email to the group and all other incoming email addresses" do
+
+      create_post_with_incoming
+      PostAlerter.any_instance.expects(:create_notification).with(kind_of(User), Notification.types[:private_message], kind_of(Post), skip_send_email_to: ["foo@discourse.org", "bar@discourse.org", "discourse@example.com"]).at_least_once
 
       post = Fabricate(:post, topic: topic.reload)
+      staged_group_user = Fabricate(:staged, email: "discourse@example.com")
+      Fabricate(:topic_user, user: staged_group_user, topic: post.topic)
+      topic.allowed_users << staged_group_user
+      topic.save
+
       expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(1)
       email = ActionMailer::Base.deliveries.last
       expect(email.from).to eq([group.email_username])
-      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org", "baz@discourse.org")
+      expect(email.to).to contain_exactly("foo@discourse.org", "bar@discourse.org")
       expect(email.subject).to eq("Re: #{topic.title}")
-
-      post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-      expect { PostAlerter.new.after_save_post(post, true) }.to change { ActionMailer::Base.deliveries.size }.by(0)
     end
   end
 end

@@ -785,7 +785,7 @@ describe SiteSettingExtension do
 
   describe '.default_locale' do
     it 'is always loaded' do
-      expect(settings.default_locale).to eq('en_US')
+      expect(settings.default_locale).to eq('en')
     end
   end
 

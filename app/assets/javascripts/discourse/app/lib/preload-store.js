@@ -45,7 +45,9 @@ export default {
   },
 
   remove(key) {
-    if (this.data[key]) delete this.data[key];
+    if (this.data[key]) {
+      delete this.data[key];
+    }
   },
 
   reset() {

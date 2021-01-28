@@ -29,14 +29,14 @@
       {{/if}}
       <div class="controls">
         {{combo-box
-                content=userSelectableColorSchemes
-                value=selectedColorSchemeId
-                onChange=(action "loadColorScheme")
-                options=(hash
-                  translatedNone=selectedColorSchemeNoneLabel
-                )
-
-              }}
+          content=userSelectableColorSchemes
+          value=selectedColorSchemeId
+          onChange=(action "loadColorScheme")
+          options=(hash
+            translatedNone=selectedColorSchemeNoneLabel
+            autoInsertNoneItem=showColorSchemeNoneItem
+          )
+        }}
       </div>
     </div>
     {{#if showDarkColorSchemeSelector}}
@@ -99,6 +99,7 @@
     <div class="controls">
       {{combo-box
         valueProperty="value"
+        langProperty="value"
         content=availableLocales
         value=model.locale
         onChange=(action (mut model.locale))
@@ -135,7 +136,9 @@
   {{#if siteSettings.automatically_unpin_topics}}
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics  class="pref-auto-unpin"}}
   {{/if}}
-  {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
+  {{#if siteSettings.allow_users_to_hide_profile}}
+    {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence  class="pref-hide-profile"}}
+  {{/if}}
   {{#if isiPad}}
     {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks  class="pref-safari-hacks"}}
   {{/if}}

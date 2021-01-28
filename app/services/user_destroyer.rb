@@ -32,6 +32,8 @@ class UserDestroyer
       Draft.where(user_id: user.id).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
 
+      category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
+
       if opts[:delete_posts]
         user.posts.each do |post|
 
@@ -49,7 +51,11 @@ class UserDestroyer
             end
           end
 
-          PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+          if post.is_first_post? && category_topic_ids.include?(post.topic_id)
+            post.update!(user: Discourse.system_user)
+          else
+            PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+          end
 
           if post.topic && post.is_first_post?
             Topic.unscoped.where(id: post.topic_id).update_all(user_id: nil)

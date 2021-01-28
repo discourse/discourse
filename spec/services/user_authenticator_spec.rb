@@ -11,8 +11,8 @@ def github_auth(email_valid)
     name: "Joe Doe 546",
     authenticator_name: "github",
     extra_data: {
-      github_user_id: "100",
-      github_screen_name: "joedoe546"
+      provider: "github",
+      uid: "100"
     },
     skip_email_validation: false
   }

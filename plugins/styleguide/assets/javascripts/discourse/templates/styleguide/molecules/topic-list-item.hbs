@@ -1,0 +1,27 @@
+{{#styleguide-example title="topic list item"}}
+  <table class="topic-list">
+    <tbody>
+      {{topic-list-item topic=dummy.topic showPosters=true}}
+    </tbody>
+  </table>
+{{/styleguide-example}}
+
+{{#styleguide-example title="topic list item - hide category"}}
+  <table class="topic-list">
+    <tbody>
+      {{topic-list-item topic=dummy.topic hideCategory=true showPosters=true}}
+    </tbody>
+  </table>
+{{/styleguide-example}}
+
+{{#styleguide-example title="topic list item - show likes"}}
+  <table class="topic-list">
+    <tbody>
+      {{topic-list-item topic=dummy.topic showLikes=true showPosters=true}}
+    </tbody>
+  </table>
+{{/styleguide-example}}
+
+{{#styleguide-example title="topic list item - latest" class="half-size"}}
+  {{latest-topic-list-item topic=dummy.topic}}
+{{/styleguide-example}}

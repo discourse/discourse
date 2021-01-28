@@ -8,7 +8,7 @@
 # 2. Stop using a concatenator that does tons of work checking for semicolons when
 #     when rebuilding an asset
 
-if Rails.env == "development"
+if Rails.env.development? || Rails.env.test?
   module ActionView::Helpers::AssetUrlHelper
 
     def asset_path(source, options = {})

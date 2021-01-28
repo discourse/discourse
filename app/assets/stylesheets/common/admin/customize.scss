@@ -348,6 +348,25 @@
     }
   }
 
+  .editor-information {
+    display: flex;
+    align-items: center;
+    font-size: $font-up-1;
+    margin-bottom: 0.5em;
+
+    .editor-back-button {
+      margin-right: 0.25em;
+    }
+
+    .editor-theme-name-wrapper {
+      margin-left: 0.25em;
+    }
+
+    .editor-theme-name {
+      font-weight: bold;
+    }
+  }
+
   .current-style.maximized {
     position: fixed;
     top: 0;
@@ -500,6 +519,10 @@
       button.btn-danger {
         margin-left: auto;
       }
+    }
+
+    .admin-controls {
+      display: block;
     }
   }
   .colors {

@@ -69,12 +69,30 @@ describe ContentSecurityPolicy do
       expect(script_srcs).to include("'report-sample'")
     end
 
-    it 'allowlists Google Analytics and Tag Manager when integrated' do
-      SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
+    context 'for Google Analytics' do
+      before do
+        SiteSetting.ga_universal_tracking_code = 'UA-12345678-9'
+      end
+
+      it 'allowlists Google Analytics v3 when integrated' do
+        script_srcs = parse(policy)['script-src']
+        expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+        expect(script_srcs).not_to include('https://www.googletagmanager.com/gtag/js')
+      end
+
+      it 'allowlists Google Analytics v4 when integrated' do
+        SiteSetting.ga_version = 'v4_gtag'
+
+        script_srcs = parse(policy)['script-src']
+        expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+        expect(script_srcs).to include('https://www.googletagmanager.com/gtag/js')
+      end
+    end
+
+    it 'allowlists Google Tag Manager when integrated' do
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
@@ -221,6 +239,7 @@ describe ContentSecurityPolicy do
 
       theme.set_field(target: :common, name: "header", value: <<~SCRIPT)
         <script src='https://example.com/myscript.js'></script>
+        <script src='https://example.com/myscript2.js?with=query'></script>
         <script src='//example2.com/protocol-less-script.js'></script>
         <script src='domain-only.com'></script>
         <script>console.log('inline script')</script>
@@ -230,6 +249,8 @@ describe ContentSecurityPolicy do
       theme.save!
 
       expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript.js')
+      expect(parse(theme_policy)['script-src']).to include('https://example.com/myscript2.js')
+      expect(parse(theme_policy)['script-src']).not_to include('?')
       expect(parse(theme_policy)['script-src']).to include('example2.com/protocol-less-script.js')
       expect(parse(theme_policy)['script-src']).not_to include('domain-only.com')
       expect(parse(theme_policy)['script-src']).not_to include(a_string_matching /^\/theme-javascripts/)

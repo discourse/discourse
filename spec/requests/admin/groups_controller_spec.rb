@@ -235,6 +235,27 @@ RSpec.describe Admin::GroupsController do
       expect(response.status).to eq(404)
     end
 
+    it 'logs when a group is destroyed' do
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("name: #{group.name}")
+    end
+
+    it 'logs the grant_trust_level attribute' do
+      trust_level = TrustLevel[4]
+      group.update!(grant_trust_level: trust_level)
+      delete "/admin/groups/#{group.id}.json"
+
+      history = UserHistory.where(acting_user: admin).last
+
+      expect(history).to be_present
+      expect(history.details).to include("grant_trust_level: #{trust_level}")
+      expect(history.details).to include("name: #{group.name}")
+    end
+
     describe 'when group is automatic' do
       it "returns the right response" do
         group.update!(automatic: true)
@@ -280,6 +301,107 @@ RSpec.describe Admin::GroupsController do
       }
       expect(response.status).to eq(200)
       expect(response.parsed_body["user_count"]).to eq(0)
+    end
+  end
+
+  context "when moderators_manage_categories_and_groups is enabled" do
+    let(:group_params) do
+      {
+        group: {
+          name: 'testing-as-moderator',
+          usernames: [admin.username, user.username].join(","),
+          owner_usernames: [user.username].join(","),
+          allow_membership_requests: true,
+          membership_request_template: 'Testing',
+          members_visibility_level: Group.visibility_levels[:staff]
+        }
+      }
+    end
+
+    before do
+      SiteSetting.moderators_manage_categories_and_groups = true
+    end
+
+    context "the user is a moderator" do
+      before do
+        user.update!(moderator: true)
+        sign_in(user)
+      end
+
+      it 'should allow groups to be created' do
+        post "/admin/groups.json", params: group_params
+
+        expect(response.status).to eq(200)
+
+        group = Group.last
+
+        expect(group.name).to eq('testing-as-moderator')
+        expect(group.users).to contain_exactly(admin, user)
+        expect(group.allow_membership_requests).to eq(true)
+        expect(group.membership_request_template).to eq('Testing')
+        expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
+      end
+
+      it 'should allow group owners to be added' do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: [user.username, admin.username].join(",")
+          }
+        }
+
+        expect(response.status).to eq(200)
+
+        response_body = response.parsed_body
+
+        expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
+
+        expect(group.group_users.where(owner: true).map(&:user))
+          .to contain_exactly(user, admin)
+      end
+
+      it 'should allow groups owners to be removed' do
+        group.add_owner(user)
+
+        delete "/admin/groups/#{group.id}/owners.json", params: {
+          user_id: user.id
+        }
+
+        expect(response.status).to eq(200)
+        expect(group.group_users.where(owner: true)).to eq([])
+      end
+    end
+
+    context "the user is not a moderator or admin" do
+      before do
+        user.update!(moderator: false, admin: false)
+        sign_in(user)
+      end
+
+      it 'should not allow groups to be created' do
+        post "/admin/groups.json", params: group_params
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'should not allow group owners to be added' do
+        put "/admin/groups/#{group.id}/owners.json", params: {
+          group: {
+            usernames: [user.username, admin.username].join(",")
+          }
+        }
+
+        expect(response.status).to eq(404)
+      end
+
+      it 'should not allow groups owners to be removed' do
+        group.add_owner(user)
+
+        delete "/admin/groups/#{group.id}/owners.json", params: {
+          user_id: user.id
+        }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 end

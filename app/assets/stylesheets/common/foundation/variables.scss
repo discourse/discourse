@@ -48,6 +48,7 @@ $base-font-size: 0.938em !default; // eq. to 15px
 $base-font-size-larger: 1.063em !default; // eq. to 17px
 $base-font-size-largest: 1.118em !default; // eq. to 19px
 $base-font-family: var(--font-family) !default;
+$heading-font-family: var(--heading-font-family) !default;
 
 // Font-size defintions, multiplier ^ (step / interval)
 $font-up-6: 2.296em;
@@ -189,6 +190,10 @@ $box-shadow: (
 // Replaces dark-light-diff($primary, $secondary, 50%, -50%)
 @function blend-primary-secondary($percent) {
   @return srgb-scale($primary, $secondary, $percent);
+}
+
+@function blend-header-primary-background($percent) {
+  @return srgb-scale($header_primary, $header_background, $percent);
 }
 
 @function dark-light-diff(

@@ -10,6 +10,15 @@ describe InvitesController do
     fab!(:invite) { Fabricate(:invite) }
     fab!(:user) { Fabricate(:coding_horror) }
 
+    it 'does not work for logged in users' do
+      sign_in(Fabricate(:user))
+      get "/invites/#{invite.invite_key}"
+
+      expect(response.status).to eq(200)
+      body = response.body
+      expect(CGI.unescapeHTML(body)).to include(I18n.t("login.already_logged_in"))
+    end
+
     it "returns error if invite not found" do
       get "/invites/nopeNOPEnope"
 
@@ -29,7 +38,7 @@ describe InvitesController do
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', base_url: Discourse.base_url))
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.expired', base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
@@ -136,11 +145,11 @@ describe InvitesController do
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
-      it "allows admin to send multiple invites to same email" do
+      it "does not allow admins to send multiple invites to same email" do
         user = sign_in(admin)
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(422)
       end
 
       it "responds with error message in case of validation failure" do

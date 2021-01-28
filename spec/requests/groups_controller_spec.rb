@@ -172,7 +172,7 @@ describe GroupsController do
       expect(body["load_more_groups"]).to eq("/groups?page=1")
       expect(body["total_rows_groups"]).to eq(1)
       expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic]
+        described_class::TYPE_FILTERS.keys - [:my, :owner, :automatic, :non_automatic]
       )
     end
 
@@ -288,7 +288,7 @@ describe GroupsController do
         expect(body["total_rows_groups"]).to eq(10)
 
         expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
-          described_class::TYPE_FILTERS.keys
+          described_class::TYPE_FILTERS.keys - [:non_automatic]
         )
       end
 
@@ -326,6 +326,16 @@ describe GroupsController do
             expect_type_to_return_right_groups(
               'automatic',
               Group::AUTO_GROUP_IDS.keys - [0]
+            )
+          end
+        end
+
+        describe 'non automatic groups' do
+          it 'should return the right response' do
+            group2 = Fabricate(:group)
+            expect_type_to_return_right_groups(
+              'non_automatic',
+              [group.id, group2.id]
             )
           end
         end
@@ -446,6 +456,15 @@ describe GroupsController do
     it "calls `posts_for` and responds with JSON" do
       sign_in(user)
       post = Fabricate(:post, user: user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.first["id"]).to eq(post.id)
+    end
+
+    it "returns moderator actions" do
+      sign_in(user)
+      post = Fabricate(:post, user: user, post_type: Post.types[:moderator_action])
       get "/groups/#{group.name}/posts.json"
 
       expect(response.status).to eq(200)
@@ -845,7 +864,7 @@ describe GroupsController do
       end
 
       it 'should not be able to update a group it cannot see' do
-        group.update!(visibility_level: 2)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
         put "/groups/#{group.id}.json", params: { group: { name: 'testing' } }
 

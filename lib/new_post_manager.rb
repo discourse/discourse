@@ -108,6 +108,11 @@ class NewPostManager
 
     return :category if post_needs_approval_in_its_category?(manager)
 
+    return :contains_media if (
+      manager.args[:image_sizes].present? &&
+      user.trust_level < SiteSetting.review_media_unless_trust_level.to_i
+    )
+
     :skip
   end
 

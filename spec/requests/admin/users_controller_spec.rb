@@ -149,6 +149,27 @@ RSpec.describe Admin::UsersController do
       expect(log.details).to match(/because I said so/)
     end
 
+    it "checks if user is suspended" do
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/suspend.json", params: {
+        suspend_until: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_suspended",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.suspend_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
+    end
+
     it "requires suspend_until and reason" do
       expect(user).not_to be_suspended
       put "/admin/users/#{user.id}/suspend.json", params: {}
@@ -749,6 +770,27 @@ RSpec.describe Admin::UsersController do
       reg_user.reload
       expect(reg_user).to be_silenced
     end
+
+    it "checks if user is silenced" do
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so"
+      }
+
+      put "/admin/users/#{user.id}/silence.json", params: {
+        silenced_till: 5.hours.from_now,
+        reason: "because I said so too"
+      }
+
+      expect(response.status).to eq(409)
+      expect(response.parsed_body["message"]).to eq(
+        I18n.t(
+          "user.already_silenced",
+          staff: admin.username,
+          time_ago: FreedomPatches::Rails4.time_ago_in_words(user.silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
+        )
+      )
+    end
   end
 
   describe '#unsilence' do
@@ -1037,15 +1079,44 @@ RSpec.describe Admin::UsersController do
     fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
 
     it 'should merge source user to target user' do
+      Jobs.run_immediately!
       post "/admin/users/#{user.id}/merge.json", params: {
         target_username: target_user.username
       }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["merged"]).to be_truthy
-      expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
       expect(topic.reload.user_id).to eq(target_user.id)
       expect(first_post.reload.user_id).to eq(target_user.id)
+    end
+  end
+
+  describe '#sso_record' do
+    fab!(:sso_record) { SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '') }
+
+    it "deletes the record" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      delete "/admin/users/#{user.id}/sso_record.json"
+      expect(response.status).to eq(200)
+      expect(user.single_sign_on_record).to eq(nil)
+    end
+  end
+
+  describe "#anonymize" do
+    it "will make the user anonymous" do
+      put "/admin/users/#{user.id}/anonymize.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+    end
+
+    it "supports `anonymize_ip`" do
+      Jobs.run_immediately!
+      sl = Fabricate(:search_log, user_id: user.id)
+      put "/admin/users/#{user.id}/anonymize.json?anonymize_ip=127.0.0.2"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+      expect(sl.reload.ip_address).to eq('127.0.0.2')
     end
   end
 

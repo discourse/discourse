@@ -1,4 +1,4 @@
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 
 createWidget("admin-menu-button", {
@@ -153,7 +153,10 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (this.get("currentUser.canManageTopic")) {
+    if (
+      this.get("currentUser.canManageTopic") ||
+      details.get("can_moderate_category")
+    ) {
       if (details.get("can_delete")) {
         this.addActionButton({
           className: "topic-admin-delete",
@@ -247,7 +250,7 @@ export default createWidget("topic-admin-menu", {
       }
     }
 
-    if (this.get("currentUser.canManageTopic")) {
+    if (details.get("can_toggle_topic_visibility")) {
       this.addActionButton({
         className: "topic-admin-visible",
         buttonClass: "popup-menu-btn",
@@ -255,7 +258,9 @@ export default createWidget("topic-admin-menu", {
         icon: visible ? "far-eye-slash" : "far-eye",
         label: visible ? "actions.invisible" : "actions.visible",
       });
+    }
 
+    if (this.get("currentUser.canManageTopic")) {
       if (details.get("can_convert_topic")) {
         this.addActionButton({
           className: "topic-admin-convert",
@@ -269,6 +274,14 @@ export default createWidget("topic-admin-menu", {
             : "actions.make_private",
         });
       }
+
+      this.addActionButton({
+        className: "topic-admin-slow-mode",
+        buttonClass: "popup-menu-btn",
+        action: "showTopicSlowModeUpdate",
+        icon: "hourglass-start",
+        label: "actions.slow_mode",
+      });
 
       if (this.currentUser.get("staff")) {
         this.addActionButton({

@@ -221,14 +221,13 @@
                                   showToken=(action "showToken")}}
           {{/unless}}
           <div class="auth-token-first">
-            <span class="auth-token-device">{{token.device}}</span> &ndash; <span title="{{i18n "user.auth_tokens.ip"}}: {{token.client_ip}}">{{token.location}}</span>
+            {{html-safe (i18n "user.auth_tokens.device_location" device=token.device ip=token.client_ip location=token.location)}}
           </div>
           <div class="auth-token-second">
-            {{token.browser}} |
             {{#if token.is_active}}
-              <span class="active">{{i18n "user.auth_tokens.active"}}</span>
+              {{html-safe (i18n "user.auth_tokens.browser_active" browser=token.browser)}}
             {{else}}
-              {{format-date token.seen_at}}
+              {{html-safe (i18n "user.auth_tokens.browser_last_seen" browser=token.browser date=(format-date token.seen_at))}}
             {{/if}}
           </div>
         </div>

@@ -1,13 +1,13 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import { computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { makeArray } from "discourse-common/lib/helpers";
 import {
   convertIconClass,
   disableMissingIconWarning,
   enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import { ajax } from "discourse/lib/ajax";
+import { computed } from "@ember/object";
 import { isDevelopment } from "discourse-common/config/environment";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],
@@ -55,10 +55,11 @@ export default MultiSelectComponent.extend({
       holder = "ajax-icon-holder";
 
     if (typeof icon === "object") {
-      if ($(`${spriteEl} .${holder}`).length === 0)
+      if ($(`${spriteEl} .${holder}`).length === 0) {
         $(spriteEl).append(
           `<div class="${holder}" style='display: none;'></div>`
         );
+      }
 
       if (!$(`${spriteEl} symbol#${strippedIconName}`).length) {
         $(`${spriteEl} .${holder}`).append(

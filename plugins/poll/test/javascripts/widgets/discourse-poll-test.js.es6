@@ -1,8 +1,63 @@
-import I18n from "I18n";
+import {
+  moduleForWidget,
+  widgetTest,
+} from "discourse/tests/helpers/widget-test";
 import EmberObject from "@ember/object";
-import { moduleForWidget, widgetTest } from "helpers/widget-test";
+import I18n from "I18n";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
-moduleForWidget("discourse-poll");
+let requests = 0;
+
+moduleForWidget("discourse-poll", {
+  pretend(server) {
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+
+    server.put("/polls/vote", () => {
+      ++requests;
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        {
+          poll: {
+            name: "poll",
+            type: "regular",
+            status: "open",
+            results: "always",
+            options: [
+              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+            ],
+            voters: 1,
+            chart_type: "bar",
+            groups: "foo",
+          },
+          vote: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      ];
+    });
+  },
+});
 
 const template = `{{mount-widget
                     widget="discourse-poll"
@@ -41,36 +96,21 @@ widgetTest("can vote", {
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-            ],
-            voters: 1,
-            chart_type: "bar",
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(requests, 1);
-    assert.equal(find(".chosen").length, 1);
-    assert.equal(find(".chosen").text(), "100%yes");
+    assert.equal(queryAll(".chosen").length, 1);
+    assert.equal(queryAll(".chosen").text(), "100%yes");
+    assert.equal(queryAll(".toggle-results").text(), "Show vote");
+
+    await click(".toggle-results");
+    assert.equal(
+      queryAll("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']")
+        .length,
+      1
+    );
+    assert.equal(queryAll(".toggle-results").text(), "Show results");
   },
 });
 
@@ -104,39 +144,14 @@ widgetTest("cannot vote if not member of the right group", {
   },
 
   async test(assert) {
-    let requests = 0;
-
-    /* global server */
-    server.put("/polls/vote", () => {
-      ++requests;
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          poll: {
-            name: "poll",
-            type: "regular",
-            status: "open",
-            results: "always",
-            options: [
-              { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
-              { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-            ],
-            voters: 1,
-            chart_type: "bar",
-            groups: "foo",
-          },
-          vote: ["1f972d1df351de3ce35a787c89faad29"],
-        },
-      ];
-    });
+    requests = 0;
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.equal(
-      find(".poll-container .alert").text(),
+      queryAll(".poll-container .alert").text(),
       I18n.t("poll.results.groups.title", { groups: "foo" })
     );
     assert.equal(requests, 0);
-    assert.equal(find(".chosen").length, 0);
+    assert.equal(queryAll(".chosen").length, 0);
   },
 });

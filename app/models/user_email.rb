@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class UserEmail < ActiveRecord::Base
-  # TODO(2020-04-24): remove
-  self.ignored_columns = ['canonical_email']
-
   belongs_to :user
 
   attr_accessor :skip_validate_email

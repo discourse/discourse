@@ -7,10 +7,18 @@
 pl_PL:
   js:
     presence:
-      replying: "odpowiada"
-      editing: "edytuje"
-      replying_to_topic:
+      replying:
         one: "odpowiada"
         few: "odpowiadają"
+        many: "odpowiadają"
+        other: "odpowiadają"
+      editing:
+        one: "edytuje"
+        few: "edytują"
+        many: "edytują"
+        other: "edytują"
+      replying_to_topic:
+        one: "odpowiada"
+        few: "odpowiada"
         many: "odpowiadają"
         other: "odpowiadają"

@@ -15,11 +15,6 @@
 }
 
 .topic-body {
-  // this ensures consistent top margin on topic posts even if the first line of a post
-  // is a top-margin-less element like a list or image.
-  .regular {
-    margin-top: 15px;
-  }
   padding: 0;
   &:first-of-type {
     border-top: none;
@@ -213,8 +208,12 @@ nav.post-controls {
       background: var(--primary-low);
     }
     .d-icon {
-      margin-left: 5px;
+      margin-right: 5px;
       font-size: $font-down-1;
+    }
+    .d-button-label + .d-icon {
+      margin-left: 5px;
+      margin-right: 0;
     }
   }
 }
@@ -571,9 +570,11 @@ blockquote {
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
-  .topic-meta-data,
-  .cooked {
+  .topic-meta-data {
     padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+  }
+  .cooked {
+    padding: 1em $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
   .group-request {
     padding: 0.5em $topic-body-width-padding 0 $topic-body-width-padding;
@@ -592,10 +593,19 @@ blockquote {
 }
 
 .gap {
-  width: calc(
-    #{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding}
-  );
   box-sizing: border-box;
+}
+
+.topic-area > .loading-container {
+  // loader needs to be same width as posts
+  width: calc(
+    #{$topic-avatar-width} + #{$topic-body-width} +
+      (#{$topic-body-width-padding} * 2)
+  );
+  @media all and (max-width: 790px) {
+    // 16px is the left + right padding on .wrap in common/base/discourse.scss
+    max-width: calc(100vw - 16px);
+  }
 }
 
 /* hide the reply border above the time gap notices */
@@ -633,7 +643,7 @@ blockquote {
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: z("dropdown");
+  z-index: z("dropdown") + 1; // 1 higher than .select-posts
   box-shadow: shadow("card");
   padding: 0.714em;
   margin-bottom: 5px;

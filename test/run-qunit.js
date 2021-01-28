@@ -5,9 +5,7 @@
 // Requires chrome-launcher and chrome-remote-interface from npm
 // An up-to-date version of chrome is also required
 
-/* globals Promise */
-
-var args = process.argv.slice(2);
+let args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 3) {
   console.log("Usage: node run-qunit.js <URL> <timeout> <result_file>");
@@ -23,12 +21,13 @@ const fs = require("fs");
 if (QUNIT_RESULT) {
   (async () => {
     await fs.stat(QUNIT_RESULT, (err, stats) => {
-      if (stats && stats.isFile())
-        fs.unlink(QUNIT_RESULT, unlinkErr => {
+      if (stats && stats.isFile()) {
+        fs.unlink(QUNIT_RESULT, (unlinkErr) => {
           if (unlinkErr) {
             console.log("Error deleting " + QUNIT_RESULT + " " + unlinkErr);
           }
         });
+      }
     });
   })();
 }
@@ -42,8 +41,8 @@ async function runAllTests() {
         "--no-sandbox",
         "--disable-dev-shm-usage",
         "--mute-audio",
-        "--window-size=1440,900"
-      ]
+        "--window-size=1440,900",
+      ],
     };
 
     if (process.env.REMOTE_DEBUG) {
@@ -68,7 +67,8 @@ async function runAllTests() {
         console.log(
           "Unable to establish connection to chrome target - trying again..."
         );
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // eslint-disable-next-line
+        await new Promise((resolve) => setTimeout(resolve, 100));
       } else {
         throw e;
       }
@@ -77,18 +77,19 @@ async function runAllTests() {
 
   const { Inspector, Page, Runtime } = protocol;
 
+  // eslint-disable-next-line
   await Promise.all([Inspector.enable(), Page.enable(), Runtime.enable()]);
 
-  Inspector.targetCrashed(entry => {
+  Inspector.targetCrashed((entry) => {
     console.log("Chrome target crashed:");
     console.log(entry);
   });
 
-  Runtime.exceptionThrown(exceptionInfo => {
+  Runtime.exceptionThrown((exceptionInfo) => {
     console.log(exceptionInfo.exceptionDetails.exception.description);
   });
 
-  Runtime.consoleAPICalled(response => {
+  Runtime.consoleAPICalled((response) => {
     const message = response["args"][0].value;
 
     // Not finished yet, don't add a newline
@@ -114,24 +115,24 @@ async function runAllTests() {
       expression:
         `const QUNIT_FAIL_FAST = ` +
         (qff === "1" || qff === "true").toString() +
-        ";"
+        ";",
     });
     await Runtime.evaluate({
-      expression: `(${qunit_script})();`
+      expression: `(${qunit_script})();`,
     });
 
     if (args[0].indexOf("report_requests=1") > -1) {
       await Runtime.evaluate({
-        expression: "QUnit.config.logAllRequests = true"
+        expression: "QUnit.config.logAllRequests = true",
       });
     }
 
     const timeout = parseInt(args[1] || 300000, 10);
-    var start = Date.now();
+    let start = Date.now();
 
-    var interval;
+    let interval;
 
-    let runTests = async function() {
+    let runTests = async function () {
       if (Date.now() > start + timeout) {
         console.error("\n\nTests timed out\n");
         protocol.close();
@@ -140,7 +141,7 @@ async function runAllTests() {
       }
 
       let numFails = await Runtime.evaluate({
-        expression: `(${check_script})()`
+        expression: `(${check_script})()`,
       });
 
       if (numFails && numFails.result && numFails.result.type !== "undefined") {
@@ -160,7 +161,7 @@ async function runAllTests() {
   });
 }
 
-runAllTests().catch(e => {
+runAllTests().catch((e) => {
   console.log("Failed to run tests: " + e);
   process.exit(1);
 });
@@ -178,12 +179,12 @@ function logQUnit() {
   let durations = {};
 
   let inTest = false;
-  QUnit.testStart(function(context) {
+  QUnit.testStart(function (context) {
     console.log("↪ " + context.module + "::" + context.name);
     inTest = true;
   });
 
-  QUnit.testDone(function(context) {
+  QUnit.testDone(function (context) {
     durations[context.module + "::" + context.name] = context.runtime;
 
     if (context.failed) {
@@ -197,6 +198,7 @@ function logQUnit() {
       assertionErrors = [];
 
       // Pass QUNIT_FAIL_FAST on the command line to quit after the first failure
+      // eslint-disable-next-line
       if (QUNIT_FAIL_FAST) {
         QUnit.config.queue.length = 0;
       }
@@ -211,12 +213,12 @@ function logQUnit() {
     inTest = false;
   });
 
-  QUnit.log(function(context) {
+  QUnit.log(function (context) {
     if (context.result) {
       return;
     }
 
-    var msg = "\n    Assertion Failed:";
+    let msg = "\n    Assertion Failed:";
     if (context.message) {
       msg += " " + context.message;
     }
@@ -229,34 +231,36 @@ function logQUnit() {
     assertionErrors.push(msg);
   });
 
-  QUnit.done(function(context) {
+  QUnit.done(function (context) {
+    console.log("\n");
+
+    console.log("Slowest tests");
+    console.log("----------------------------------------------");
+    let ary = Object.keys(durations).map((key) => ({
+      key: key,
+      value: durations[key],
+    }));
+    ary.sort((p1, p2) => p2.value - p1.value);
+    ary.slice(0, 30).forEach((pair) => {
+      console.log(pair.key + ": " + pair.value + "ms");
+    });
+
     console.log("\n");
 
     if (testErrors.length) {
       console.log("Test Errors");
       console.log("----------------------------------------------");
-      testErrors.forEach(e => {
+      testErrors.forEach((e) => {
         console.error(e);
       });
       console.log("\n");
     }
 
-    console.log("Slowest tests");
-    console.log("----------------------------------------------");
-    let ary = Object.keys(durations).map(key => ({
-      key: key,
-      value: durations[key]
-    }));
-    ary.sort((p1, p2) => p2.value - p1.value);
-    ary.slice(0, 30).forEach(pair => {
-      console.log(pair.key + ": " + pair.value + "ms");
-    });
-
-    var stats = [
+    let stats = [
       "Time: " + context.runtime + "ms",
       "Total: " + context.total,
       "Passed: " + context.passed,
-      "Failed: " + context.failed
+      "Failed: " + context.failed,
     ];
     console.log(stats.join(", "));
 

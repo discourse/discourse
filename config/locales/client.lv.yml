@@ -565,7 +565,6 @@ lv:
         perm_denied_expl: "Jūs neatļāvāt paziņojumus. Atļaujiet paziņojumus jūsu pārlūkprogrammas iestatījumos."
         disable: "Atslēgt paziņojumus"
         enable: "Ieslēgt paziņojumus"
-        each_browser_note: "Piezīme: šis iestatījums jānomaina katrā pārlūkprogrammā. kuru izmantojat."
       dismiss: "Nerādīt"
       dismiss_notifications: "Vairs nerādīt visus"
       dismiss_notifications_tooltip: "Atzīmēt visus nelasītos paziņojumus kā izlasītus"
@@ -579,7 +578,6 @@ lv:
       admin_tooltip: "Šis lietotājs ir administrators"
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_reason: "Iemesls:"
-      github_profile: "Github"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
         label: "Vēstkopas režīms"
@@ -736,7 +734,6 @@ lv:
       password_confirmation:
         title: "Parole vēlreiz"
       auth_tokens:
-        ip: "IP"
         details: "Detaļas"
       last_posted: "Pēdējais ieraksts"
       last_emailed: "Pēdējais e-pasts"
@@ -830,14 +827,10 @@ lv:
         links_tab: "Saites"
         link_created_at: "Radīts"
         link_groups: Grupas
-        create: "Nosūtīt ielūgumu"
-        generate_link: "Kopēt ielūguma saiti"
-        link_generated: "Ielūguma saite gatava!"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"
         bulk_invite:
-          none: "Jūs vēl šeit neesat nevienu ielūdzis. Nosūtiet atsevišķus ielūgumus vai ielūdziet daudzus lietotājus vienlaicīgi,<a href='https://meta.discourse.org/t/send-bulk-invites/16468'> augšupielādējot CSV failu</a>"
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
@@ -977,7 +970,6 @@ lv:
       disable: "Rādīt dzēstos ierakstus"
     private_message_info:
       title: "Ziņa"
-      edit: "Pievienot vai noņemt..."
       remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
     email: "E-pasts"
@@ -1023,7 +1015,6 @@ lv:
       awaiting_approval: "Darbinieki pagaidām nav apstiprinājuši jūsu profilu. Jums nosūtīs e-pastu, kad tas notiks."
       requires_invite: "Atvainojiet, šim forumam var piekļūt tikai ar ielūgumiem."
       not_activated: "Lai ieietu forumā, nepieciešams aktivizēt jūsu profilu. Mēs nosūtījām uz e-pastu %{sentTo} instrukcijas, kā to paveikt."
-      not_allowed_from_ip_address: "Jūs nevarat ieiet no šīs IP adreses."
       admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
       resend_activation_email: "Klikšķiniet šeit, lai saņemtu aktivācijas e-pastu atkārtoti."
       resend_title: "Atkārtoti nosūtīt aktivācijas e-pastu"
@@ -1033,7 +1024,6 @@ lv:
       sent_activation_email_again: "Mēs nosūtijām vēl vienu aktivācijas epastu uz <b>%{currentEmail}</b>. Tas var pienākt dažu minūšu laikā; atcerieties pārbaudīt jūsu surogātpasta mapi."
       to_continue: "Lūdzu ieejiet"
       preferences: "Jums ir jāieiet, lai izmainītu savus iestatījumus."
-      forgot: "Es nevaru atcerēties sava konta informāciju."
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
@@ -1062,7 +1052,6 @@ lv:
       accept_invite: "Pieņemt ielūgumu"
       success: "Jūsu konts ir izveidots un jūs esat ielogojies "
       name_label: "Vārds"
-      password_label: "Iestatīt paroli"
       optional_description: "(pēc izvēles)"
     password_reset:
       continue: "Turpināt %{site_name}"
@@ -1104,7 +1093,6 @@ lv:
       options: "Iespējas"
       whisper: "čuksts"
       unlist: "paslēpts"
-      blockquote_text: "Bloka citāts"
       add_warning: "Šis ir oficiāls brīdinājums."
       toggle_whisper: "Čukstēšana"
       toggle_unlisted: "Paslēpšana no tēmu saraksta"
@@ -1157,8 +1145,7 @@ lv:
       link_description: "ievadiet saites aprakstu šeit"
       link_dialog_title: "Ievietojiet saiti"
       link_optional_text: "neobligāts nosaukums"
-      quote_title: "Bloka citāts"
-      quote_text: "Ierakstiet bloka citāta saturu"
+      blockquote_text: "Bloka citāts"
       code_title: "Formatēts teksts"
       code_text: "piešķirt formatētajam tekstam 4 atstarpju atkāpi"
       paste_code_text: "ierakstiet vai ielīmējiet formatēto tekstu šeit"
@@ -1219,11 +1206,9 @@ lv:
       title: "meklēt tēmās, ierakstos, lietotājos vai kategorijās"
       no_results: "Nav rezultātu."
       no_more_results: "Vairāk nav rezultātu."
-      searching: "Meklējam..."
       post_format: "#%{post_number} - %{username}"
       more_results: "Ir vēl vairāk rezultātu. Lūdzu precizējiet meklēšanas kritērijus."
       search_google_button: "Google"
-      search_google_title: "Meklēt šajā vietnē"
       context:
         user: "Meklēt ierakstus ar @%{username}"
         category: "Meklēt #%{category} sadaļā"
@@ -1254,8 +1239,6 @@ lv:
           noreplies: ir bez atbildēm
           single_user: ir rakstījis tikai viens lietotājs
         post:
-          count:
-            label: Minimālais ierakstu skaits
           time:
             label: Ierakstīts
             before: līdz
@@ -1301,12 +1284,10 @@ lv:
         new: "Jums nav jaunu tēmu."
         read: "Jūs vēl neesat izlasījuši nevienu tēmu."
         posted: "Jūs vel neesat rakstījuši nevienā tēmā."
-        latest: "Nav jaunu tēmu. Neraža."
         bookmarks: "Jūs vēl neesat pievienojuši grāmatzīmēm nevienu tēmu."
         category: "Sadaļā %{category} nav tēmu."
         top: "Nav svarīgu tēmu."
         educate:
-          new: '<p>Jūsu jaunās tēmas parādās šeit.</p> <p>Pēc noklusējuma tēmas tiek uzskatītas par jaunām un parādīsies <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">jauns</span> indikators, ja tās tika izveidotas pēdējo 2 dienu laikā.</p> <p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
           unread: '<p>Jūsu nelasītās tēmas parādās šeit.</p><p>Pēc noklusējuma tēmas tiek uzskatītas par nelasītām un tiks uzskaitītas <span class="badge new-posts badge-notification">1</span> ja jūs:</p><ul><li>Izveidojāt tēmu</li><li>Atbildējāt tēmā</li><li>Lasījāt tēmu vairāk nekā 4 minūtes</li></ul><p>Vai jūs atzīmējāt Sekot vai Skatī tēmas apakšā.</p><p>To var izmainīt jūsu <a href="%{userPrefsUrl}">iestatījumos</a>.</p>'
       bottom:
         latest: "Vairāk jaunāko tēmu nav. "
@@ -1379,10 +1360,8 @@ lv:
       toggle_information: "rādīt / slēpt tēmas informāciju "
       read_more_in_category: "Vēlies lasīt vēl? Pārlūko citas tēmas: %{catLink} vai %{latestLink}."
       read_more: "Vēlies lasīt vēl? %{catLink} or %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Palikusi <a href='{basePath}/unread'>1 nelasīta</a> } other { Palikušas <a href='{basePath}/unread'># nelasītas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 jauna</a> tēma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># jaunas</a> tēmas} } remaining, or {CATEGORY, select, true {pārlūkot citas tēmas iekš {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pārlūkot visas sadaļas
       view_latest_topics: Skatīt jaunākās tēmas
-      suggest_create_topic: Kādēļ gan neizveidot jaunu tēmu?
       jump_reply_up: pāriet uz agrāku atbildi
       jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "
@@ -1459,7 +1438,7 @@ lv:
           "2_8": "Jūs redzēsiet jauno atbilžu skaitu, jo sekojat šai sadaļai."
           "2_4": "Jūs redzēsiet jauno atbilžu skaitu, jo atbildējāt šajā tēmā."
           "2_2": "Jūs redzēsiet jauno atbilžu skaitu, jo jūs sekojat šai tēmai."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "1": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
           "0_7": "Nesaņemt nekādus paziņojumus par šo sadaļu."
@@ -1530,7 +1509,6 @@ lv:
       feature_topic:
         title: "Novietot šo tēmu augšgalā"
         pin: "Nostiprināt šo tēmu sadaļas %{categoryLink} augšgalā līdz"
-        confirm_pin: "Jums jau ir %{count} piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties piespraust vēl vienu tēmu šajā sadaļā."
         unpin: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala."
         unpin_until: "Noņemt šo tēmu no sadaļas %{categoryLink} augšgala vai gaidīt līdz <strong>%{until}</strong>."
         pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
@@ -1541,7 +1519,6 @@ lv:
           one: "Sadaļā %{categoryLink} šobrīd piesprausta %{count} tēma"
           other: "Sadaļā %{categoryLink} šobrīd piespraustas <strong class='badge badge-notification unread'>%{count}</strong> tēmas"
         pin_globally: "Likt šai tēmai parādīties visu tēmu sarakstu augšgalos līdz"
-        confirm_pin_globally: "Jums jau ir %{count} globāli piespraustas tēmas. Pārāk daudz piespraustu tēmu ir apgrūtinājums jauniem un anonīmiem lietotājiem. Vai jūs esat drošs, ka vēlaties globāli piespraust vēl vienu tēmu."
         unpin_globally: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem."
         unpin_globally_until: "Noņemt šo tēmu no visu tēmu sarakstu augšgaliem vai gaidīt līdz <strong>%{until}</strong>."
         global_pin_note: "Lietotāji var atspraust tēmu, katrs sev personīgi."
@@ -1862,7 +1839,6 @@ lv:
       notify_action: "Ziņa"
       official_warning: "Oficiāls brīdinājums"
       delete_spammer: "Dzēst spamotāju"
-      delete_confirm_MF: "Jūs grasāties izdzēst šī lietotāja {IERAKSTUS, plural, one {<b>1</b> ierakstu} other {<b>#</b> ierakstus}} un {TĒMAS, plural, one {<b>1</b> tēmu} other {<b>#</b> tēmas}}, izdzēst viņa profilu, bloķēt reģistrēšanos no viņa IP adreses <b>{ip_address}</b> un pievienot viņa e-pasta adresi <b>{email}</b> pastāvīgajam bloķēto sarakstam. Vai jūs esat pārliecināts, ka šis lietotājs patiešām ir spameris?"
       yes_delete_spammer: "Jā, izdzēst spameri"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(paslēpts)"
@@ -1930,13 +1906,6 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
-    posts_long: "šai tēmā ir %{number} ieraksts"
-    posts_likes_MF: |
-      Šai tēmā ir {count, plural, one {1 atbilde} other {# atbildes}} {ratio, select,
-      low {ar nedaudzām atzinībām}
-      med {ar vidēji daudzām atzinībām}
-      high {ar ļoti daudzām atzinībām}
-      other {}}
     original_post: "Oriģinālais ieraksts"
     views: "Skatījumi"
     views_lowercase:
@@ -1954,7 +1923,6 @@ lv:
       zero: "atzinības"
       one: "atzinība"
       other: "atzinības"
-    likes_long: "šajā tēmā ir %{number} atzinības"
     users: "Lietotāji"
     users_lowercase:
       zero: "lietotāji"
@@ -2730,7 +2698,6 @@ lv:
         suspended_by: "Apturēja"
         silence_reason: "Iemesls"
         delete_all_posts: "Dzēst visus ierakstus"
-        delete_all_posts_confirm_MF: "Jūs grasaties dzēst šos ierakstus. Vai est drošs?"
         moderator: "Moderātors?"
         admin: "Administrators?"
         suspended: "Neapturēts?"

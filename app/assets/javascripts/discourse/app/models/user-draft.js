@@ -1,13 +1,13 @@
+import {
+  NEW_PRIVATE_MESSAGE_KEY,
+  NEW_TOPIC_KEY,
+} from "discourse/models/composer";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
+import User from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
 import { postUrl } from "discourse/lib/utilities";
 import { userPath } from "discourse/lib/url";
-import User from "discourse/models/user";
-import {
-  NEW_TOPIC_KEY,
-  NEW_PRIVATE_MESSAGE_KEY,
-} from "discourse/models/composer";
 
 export default RestModel.extend({
   @discourseComputed("draft_username")
@@ -22,7 +22,9 @@ export default RestModel.extend({
 
   @discourseComputed("topic_id")
   postUrl(topicId) {
-    if (!topicId) return;
+    if (!topicId) {
+      return;
+    }
 
     return postUrl(this.slug, this.topic_id, this.post_number);
   },

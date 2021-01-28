@@ -11,7 +11,7 @@ task "release_note:generate", :from, :to do |t, args|
   sec_changes = Set.new
   perf_changes = Set.new
 
-  `git log #{from}..#{to}`.each_line do |comment|
+  `git log --pretty="tformat:%s" #{from}..#{to}`.each_line do |comment|
     next if comment =~ /^\s*Revert/
     split_comments(comment).each do |line|
       if line =~ /^FIX:/
@@ -46,6 +46,7 @@ end
 def better(line)
   line = remove_prefix(line)
   line = escape_brackets(line)
+  line = remove_pull_request(line)
   line[0] = '\#' if line[0] == '#'
   if line[0]
     line[0] = line[0].capitalize
@@ -64,6 +65,10 @@ def escape_brackets(line)
     .gsub(">", ">`")
     .gsub("[", "`[")
     .gsub("]", "]`")
+end
+
+def remove_pull_request(line)
+  line.gsub(/ \(\#\d+\)$/, "")
 end
 
 def split_comments(text)

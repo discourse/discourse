@@ -1,7 +1,7 @@
+import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { empty } from "@ember/object/computed";
-import Controller, { inject as controller } from "@ember/controller";
 import { topicLevels } from "discourse/lib/notification-levels";
 
 // Support for changing the notification level of various topics

@@ -1,5 +1,5 @@
-import { observes } from "discourse-common/utils/decorators";
 import { createPreviewComponent } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(371, 124, {
   tab: null,
@@ -14,7 +14,8 @@ export default createPreviewComponent(371, 124, {
     return { tab: "/images/wizard/tab.png", image: this.get("field.value") };
   },
 
-  paint(ctx, colors, font, width, height) {
+  paint(options) {
+    const { ctx, width, height } = options;
     this.scaleImage(this.tab, 0, 0, width, height);
     this.scaleImage(this.image, 40, 25, 30, 30);
 

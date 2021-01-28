@@ -18,6 +18,11 @@ body.footer-nav-visible {
     margin-bottom: env(safe-area-inset-bottom);
     padding-bottom: 0px;
   }
+
+  .posts-filtered-notice {
+    transition: all linear 0.1s;
+    bottom: $footer-nav-height + 15;
+  }
 }
 
 .footer-nav {
@@ -83,7 +88,7 @@ body.footer-nav-ipad {
     z-index: z("ipad-header-nav") + 1;
   }
 
-  &.docked .d-header {
-    margin-top: $footer-nav-height;
+  &.docked .d-header-wrap {
+    top: $footer-nav-height;
   }
 }

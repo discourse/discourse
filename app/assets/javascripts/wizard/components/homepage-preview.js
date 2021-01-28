@@ -1,9 +1,9 @@
-import { observes } from "discourse-common/utils/decorators";
 import {
-  createPreviewComponent,
   LOREM,
+  createPreviewComponent,
   darkLightDiff,
 } from "wizard/lib/preview";
+import { observes } from "discourse-common/utils/decorators";
 
 export default createPreviewComponent(659, 320, {
   logo: null,
@@ -21,8 +21,8 @@ export default createPreviewComponent(659, 320, {
     };
   },
 
-  paint(ctx, colors, font, width, height) {
-    this.drawFullHeader(colors, font);
+  paint({ ctx, colors, font, width, height }) {
+    this.drawFullHeader(colors, font, this.logo);
 
     if (this.get("step.fieldsById.homepage_style.value") === "latest") {
       this.drawPills(colors, font, height * 0.15);

@@ -52,7 +52,7 @@
       {{#unless canLoadMore}}
         {{#if canShowOthers}}
           <div class="clearfix">
-            <a href={{model.url}} class="btn">{{i18n "badges.others_count" count=othersCount}}</a>
+            <a id="show-others-with-badge-link" href={{model.url}} class="btn">{{i18n "badges.others_count" count=othersCount}}</a>
           </div>
         {{/if}}
       {{/unless}}

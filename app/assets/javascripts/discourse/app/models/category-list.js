@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import ArrayProxy from "@ember/array/proxy";
-import PreloadStore from "discourse/lib/preload-store";
-import { ajax } from "discourse/lib/ajax";
-import Topic from "discourse/models/topic";
 import Category from "discourse/models/category";
+import I18n from "I18n";
+import PreloadStore from "discourse/lib/preload-store";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
+import { ajax } from "discourse/lib/ajax";
 
 const CategoryList = ArrayProxy.extend({
   init() {
@@ -43,11 +43,7 @@ CategoryList.reopenClass({
       }
 
       if (c.topics) {
-        c.topics = c.topics.map((t) => {
-          const topic = Topic.create(t);
-          topic.set("category", c);
-          return topic;
-        });
+        c.topics = c.topics.map((t) => Topic.create(t));
       }
 
       switch (statPeriod) {

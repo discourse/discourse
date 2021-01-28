@@ -514,12 +514,12 @@ describe User do
 
       UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
       UserAssociatedAccount.create(user_id: user.id, provider_name: "facebook", provider_uid: "1234", info: { email: "test@example.com" })
-      UserAssociatedAccount.create(user_id: user.id, provider_name: "instagram", provider_uid: "examplel123123", info: { nickname: "sam" })
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "discord", provider_uid: "examplel123123", info: { nickname: "sam" })
       UserAssociatedAccount.create(user_id: user.id, provider_name: "google_oauth2", provider_uid: "1", info: { email: "sam@sam.com" })
-      GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "github", provider_uid: "1", info: { nickname: "sam" })
 
       user.reload
-      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'instagram')
+      expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'discord')
 
     end
   end
@@ -1337,6 +1337,29 @@ describe User do
 
   end
 
+  describe '#avatar_template' do
+    it 'uses the small logo if the user is the system user' do
+      logo_small_url = UrlHelper.absolute(SiteSetting.logo_small.url)
+
+      expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
+    end
+
+    it 'uses the system user avatar if the logo is nil' do
+      SiteSetting.logo_small = nil
+      system_user = Discourse.system_user
+      expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
+
+      expect(Discourse.system_user.avatar_template).to eq(expected)
+    end
+
+    it 'uses the regular avatar for other users' do
+      user = Fabricate(:user)
+      expected = User.avatar_template(user.username, user.uploaded_avatar_id)
+
+      expect(user.avatar_template).to eq(expected)
+    end
+  end
+
   describe "update_posts_read!" do
     context "with a UserVisit record" do
       let!(:user) { Fabricate(:user) }
@@ -2050,7 +2073,7 @@ describe User do
     it "sets a random avatar when selectable avatars is enabled" do
       avatar1 = Fabricate(:upload)
       avatar2 = Fabricate(:upload)
-      SiteSetting.selectable_avatars = [avatar1.url, avatar2.url].join("\n")
+      SiteSetting.selectable_avatars = [avatar1, avatar2]
       SiteSetting.selectable_avatars_enabled = true
 
       user = Fabricate(:user)
@@ -2429,6 +2452,68 @@ describe User do
       user = Fabricate(:user, username: "Löwe")
       expect(user.encoded_username).to eq("L%C3%B6we")
       expect(user.encoded_username(lower: true)).to eq("l%C3%B6we")
+    end
+  end
+
+  describe '#update_ip_address!' do
+    it 'updates ip_address correctly' do
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to change { user.reload.ip_address.to_s }.to('127.0.0.1')
+
+      expect do
+        user.update_ip_address!('127.0.0.1')
+      end.to_not change { user.reload.ip_address }
+    end
+
+    describe 'keeping old ip address' do
+      before do
+        SiteSetting.keep_old_ip_address_count = 2
+      end
+
+      it 'tracks old user record correctly' do
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 10.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.0')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(1)
+
+        freeze_time 11.minutes.from_now
+
+        expect do
+          user.update_ip_address!('127.0.0.1')
+        end.to_not change { UserIpAddressHistory.where(user_id: user.id).count }
+
+        expect(UserIpAddressHistory.find_by(
+          user_id: user.id, ip_address: '127.0.0.1'
+        ).updated_at).to eq_time(Time.zone.now)
+
+        freeze_time 12.minutes.from_now
+
+        expect do
+          user.update_ip_address!('0.0.0.1')
+        end.to change { UserIpAddressHistory.where(user_id: user.id).count }.by(0)
+
+        expect(
+          UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
+        ).to eq(['127.0.0.1', '0.0.0.1'])
+      end
+    end
+  end
+
+  describe "#do_not_disturb?" do
+    it "is true when a dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+      expect(user.do_not_disturb?).to eq(true)
+    end
+
+    it "is false when no dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now - 2.day, ends_at: 1.minute.ago)
+      expect(user.do_not_disturb?).to eq(false)
     end
   end
 end

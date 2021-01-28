@@ -139,16 +139,6 @@ te:
     until_posts:
       one: "ఒక టపా"
       other: "%{count} టపాలు"
-    "new-reply": |
-      స్వాగతం %{site_name} &mdash; **పాల్గొన్నందుకు ధన్యవాదాలు!**
-
-      - మీ సమాధానం సంభాషణను కొంత మెరుగు పరిచిందా ?
-
-      - తోటి కమ్యూనిటి సభ్యులతో మర్యాదగా ఉండండి .
-
-      - నిర్మాణాత్మక విమర్శలకు స్వాగతం, కానీ *ఆలోచన*లను విమర్శించండి,వ్యక్తులని కాదు.
-
-      మరింత సమాచారం కోసం ,[వర్గ మార్గదర్శక సూత్రాలను చూడండి](%{base_path}/guidelines).ఈ పట్టిక మొదట మీకే కనిపిస్తుంది%{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -306,15 +296,12 @@ te:
     off_topic:
       title: "విషయాంతరం"
       description: " శీర్షిక మరియు తొలి టపా ప్రకారం ఈ టపా ప్రస్తుత చర్చకు సంబంధంలేనిది. బహుశా వేరేచోటుకు తరలించాలేమో."
-      long_form: "దీన్ని విషయాంతరంగా కేతనించాము"
     spam:
       title: "స్పాము"
-      long_form: "దీన్ని స్పాముగా కేతనించాము"
       email_title: '"%{title}" ప్పాముగా కేతనించాము'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "అసమంజసమైనది"
-      long_form: "దీన్ని అసమంజసమైనదిగా కేతనించాము"
     notify_user:
       email_title: '"%{title}" లో మీ టపా'
       email_body: "%{link}\n\n%{message}"
@@ -325,12 +312,10 @@ te:
       title: "పేజీక"
       description: "ఈ టపాకు పేజీక ఉంచు"
       short_description: "ఈ టపాకు పేజీక ఉంచు"
-      long_form: "ఈ టపాకు పేజీక ఉంచారు"
     like:
       title: "ఇష్టం"
       description: "ఈ టపాను ఇష్టపడు"
       short_description: "ఈ టపాను ఇష్టపడు"
-      long_form: "ఈ టపాను ఇష్టపడ్డారు"
   topic_flag_types:
     spam:
       title: "స్పాము"
@@ -747,10 +732,6 @@ te:
             placeholder: "name@example.com"
       corporate:
         title: "సంస్థ"
-      colors:
-        title: "అలంకారం"
-      themes_further_reading:
-        title: "అలంకారాలు"
       homepage:
         fields:
           homepage_style:

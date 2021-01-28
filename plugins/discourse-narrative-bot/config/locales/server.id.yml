@@ -24,15 +24,6 @@ id:
       long_description: |
         Lencana ini diberikan atas keberhasilan menyelesaikan panduan interaktif pengguna anggota forum lanjutan. Anda telah ahli menggunakan fasilitas lanjutan dalam diskusi — sekarang Anda telah bersertifikat penuh menjadi anggota forum.
   discourse_narrative_bot:
-    bio: "Salam, saya bukan manusia asli. Saya adalah robot yang akan memandu Anda menggunakan forum ini. Untuk berkomunikasi dengan saya, kirimi saya pesan atau panggil **`@%{discobot_username}`** dimana saja."
-    tl2_promotion_message:
-      subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
-      text_body_template: |
-        Sekarang setelah Anda dipromosikan, saatnya untuk belajar tentang beberapa fitur lanjutan!
-
-        Balas pesan ini dengan `@ %{discobot_username} %{reset_trigger}` untuk mencari tahu lebih lanjut tentang apa yang dapat Anda lakukan.
-
-        Kami mengundang Anda untuk terus terlibat - kami menikmati kehadiran Anda.
     timeout:
       message: |-
         Salam @%{username}, hanya ingin menyapa karena saya tidak melihat Anda beberapa waktu.
@@ -48,8 +39,6 @@ id:
       trigger: "lempar"
       invalid: |-
         Maafkan saya, secara matematis tidak mungkin untuk memutar kombinasi dadu. :confounded:
-      not_enough_dice: |-
-        Saya hanya punya %{num_of_dice} dadu. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), Saya tahu!
       out_of_range: |-
         Apakah Anda tahu [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) untuk sebuah dadu seimbang matematis adalah 120?
       results: |-

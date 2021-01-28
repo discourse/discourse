@@ -4,23 +4,6 @@ require 'rails_helper'
 
 describe RemoteTheme do
   context '#import_remote' do
-    def setup_git_repo(files)
-      dir = Dir.tmpdir
-      repo_dir = "#{dir}/#{SecureRandom.hex}"
-      `mkdir #{repo_dir}`
-      `cd #{repo_dir} && git init . `
-      `cd #{repo_dir} && git config user.email 'someone@cool.com'`
-      `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && git config commit.gpgsign 'false'`
-      files.each do |name, data|
-        FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)
-        File.write("#{repo_dir}/#{name}", data)
-        `cd #{repo_dir} && git add #{name}`
-      end
-      `cd #{repo_dir} && git commit -am 'first commit'`
-      repo_dir
-    end
-
     def about_json(love_color: "FAFAFA", tertiary_low_color: "FFFFFF", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
@@ -174,14 +157,29 @@ describe RemoteTheme do
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.colors.find_by(name: 'tertiary_low_color')).to eq(nil)
+    end
 
-      # It should detect local changes
-      @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')
-      @theme.save
-      @theme.reload
+    it "can update themes with overwritten history" do
+      theme = RemoteTheme.import_theme(initial_repo)
+      remote = theme.remote_theme
 
-      expect(remote.diff_local_changes[:diff]).not_to include("similarity index 100%")
-      expect(remote.diff_local_changes[:diff]).to include("background-color: blue")
+      old_version = `cd #{initial_repo} && git rev-parse HEAD`.strip
+      expect(theme.name).to eq('awesome theme')
+      expect(remote.remote_url).to eq(initial_repo)
+      expect(remote.local_version).to eq(old_version)
+      expect(remote.remote_version).to eq(old_version)
+
+      `cd #{initial_repo} && git commit --amend -m "amended commit"`
+      new_version = `cd #{initial_repo} && git rev-parse HEAD`.strip
+
+      # make sure that the amended commit does not exist anymore
+      `cd #{initial_repo} && git reflog expire --all --expire=now`
+      `cd #{initial_repo} && git prune`
+
+      remote.update_remote_version
+      expect(remote.reload.local_version).to eq(old_version)
+      expect(remote.reload.remote_version).to eq(new_version)
+      expect(remote.reload.commits_behind).to eq(-1)
     end
   end
 
@@ -245,6 +243,13 @@ describe RemoteTheme do
       remote.update!(local_version: "new version", commits_behind: 0)
       expect(described_class.out_of_date_themes).to eq([])
     end
+
+    it "ignores disabled out of date themes" do
+      remote.update!(local_version: "old version", remote_version: "new version", commits_behind: 2)
+      theme.update!(enabled: false)
+      expect(described_class.out_of_date_themes).to eq([])
+    end
+
   end
 
   context ".unreachable_themes" do

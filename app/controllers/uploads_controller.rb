@@ -113,7 +113,7 @@ class UploadsController < ApplicationController
       if Discourse.store.internal?
         send_file_local_upload(upload)
       else
-        redirect_to Discourse.store.url_for(upload, force_download: params[:dl] == "1")
+        redirect_to Discourse.store.url_for(upload, force_download: force_download?)
       end
     else
       render_404
@@ -162,11 +162,13 @@ class UploadsController < ApplicationController
     # url_for figures out the full URL, handling multisite DBs,
     # and will return a presigned URL for the upload
     if path_with_ext.blank?
-      return redirect_to Discourse.store.url_for(upload)
+      return redirect_to Discourse.store.url_for(upload, force_download: force_download?)
     end
 
     redirect_to Discourse.store.signed_url_for_path(
-      path_with_ext, expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+      path_with_ext,
+      expires_in: S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS,
+      force_download: force_download?
     )
   end
 
@@ -184,6 +186,10 @@ class UploadsController < ApplicationController
   end
 
   protected
+
+  def force_download?
+    params[:dl] == "1"
+  end
 
   def xhr_not_allowed
     raise Discourse::InvalidParameters.new("XHR not allowed")

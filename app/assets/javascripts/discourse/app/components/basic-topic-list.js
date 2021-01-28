@@ -1,5 +1,5 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { alias, not } from "@ember/object/computed";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({
@@ -10,7 +10,7 @@ export default Component.extend({
 
   @discourseComputed("topicList.loaded")
   loaded() {
-    var topicList = this.topicList;
+    let topicList = this.topicList;
     if (topicList) {
       return topicList.get("loaded");
     } else {

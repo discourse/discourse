@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
+import I18n from "I18n";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   showSelector: true,
@@ -31,7 +31,9 @@ export default Component.extend({
         width += $(item).outerWidth(true);
         const result = width < limit;
 
-        if (result) this.incrementProperty("defaultUsernameCount");
+        if (result) {
+          this.incrementProperty("defaultUsernameCount");
+        }
         return result;
       });
 
@@ -84,7 +86,9 @@ export default Component.extend({
     triggerResize() {
       this.appEvents.trigger("composer:resize");
       const $this = $(this.element).find(".ac-wrap");
-      if ($this.height() >= 150) $this.scrollTop($this.height());
+      if ($this.height() >= 150) {
+        $this.scrollTop($this.height());
+      }
     },
   },
 });

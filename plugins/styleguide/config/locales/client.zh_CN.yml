@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    styleguide:
+      title: "风格指南"
+      welcome: "要开始使用，请从左侧菜单中选择一个部分。"
+      categories:
+        atoms: 原子
+        molecules: 分子
+        organisms: 生物体
+      sections:
+        typography:
+          title: "版式"
+          example: "欢迎来到 Discourse"
+          paragraph: "占位符占位符占位符，那只敏捷的棕毛狐狸跳过了那条懒狗，那只敏捷的棕毛狐狸跳过了那条懒狗，占位符占位符占位符"
+        date_time_inputs:
+          title: "日期/时间 输入"
+        font_scale:
+          title: "字体系统"
+        colors:
+          title: "颜色"
+        icons:
+          title: "图标"
+          full_list: "查看 Font Awesome Icons 的完整列表"
+        input_fields:
+          title: "输入字段"
+        buttons:
+          title: "按钮"
+        dropdowns:
+          title: "下拉菜单"
+        categories:
+          title: "分类"
+        bread_crumbs:
+          title: "面包屑"
+        navigation:
+          title: "导航"
+        navigation_bar:
+          title: "导航栏"
+        navigation_stacked:
+          title: "导航已折叠"
+        categories_list:
+          title: "分类列表"
+        topic_link:
+          title: "主题链接"
+        topic_list_item:
+          title: "主题列表项"
+        topic_statuses:
+          title: "主题状态"
+        topic_list:
+          title: "主题列表"
+        basic_topic_list:
+          title: "基本主题列表"
+        footer_message:
+          title: "页脚消息"
+        signup_cta:
+          title: "注册 CTA"
+        topic_timer_info:
+          title: "主题计时器"
+        topic_footer_buttons:
+          title: "主题页脚按钮"
+        topic_notifications:
+          title: "主题通知"
+        post:
+          title: "帖子"
+        topic_map:
+          title: "主题地图"
+        site_header:
+          title: "网站标题"
+        suggested_topics:
+          title: "推荐主题"
+        post_menu:
+          title: "帖子菜单"
+        modal:
+          title: "模式"
+          header: "模式标题"
+          footer: "模式页脚"
+        user_about:
+          title: "用户关于框"
+        header_icons:
+          title: "标头图标"
+        spinners:
+          title: "下拉列表"

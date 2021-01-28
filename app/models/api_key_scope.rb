@@ -37,7 +37,14 @@ class ApiKeyScope < ActiveRecord::Base
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
           show: { actions: %w[users#show], params: %i[username external_id] },
-          check_emails: { actions: %w[users#check_emails], params: %i[username] }
+          check_emails: { actions: %w[users#check_emails], params: %i[username] },
+          update: { actions: %w[users#update], params: %i[username] },
+          log_out: { actions: %w[admin/users#log_out] },
+          anonymize: { actions: %w[admin/users#anonymize] },
+          delete: { actions: %w[admin/users#destroy] },
+        },
+        email: {
+          receive_emails: { actions: %w[admin/email#handle_mail] }
         }
       }
 
@@ -77,38 +84,14 @@ class ApiKeyScope < ActiveRecord::Base
     end
   end
 
-  def permits?(route_param)
-    path_params = "#{route_param['controller']}##{route_param['action']}"
-
-    mapping[:actions].include?(path_params) && (allowed_parameters.blank? || params_allowed?(route_param))
+  def permits?(env)
+    RouteMatcher.new(**mapping.except(:urls), allowed_param_values: allowed_parameters).match?(env: env)
   end
 
   private
 
-  def params_allowed?(route_param)
-    mapping[:params].all? do |param|
-      param_alias = mapping.dig(:aliases, param)
-      allowed_values = [allowed_parameters[param.to_s]].flatten
-      value = route_param[param.to_s]
-      alias_value = route_param[param_alias.to_s]
-
-      return false if value.present? && alias_value.present?
-
-      value = value || alias_value
-      value = extract_category_id(value) if param_alias == :category_slug_path_with_id
-
-      allowed_values.blank? || allowed_values.include?(value)
-    end
-  end
-
   def mapping
     @mapping ||= self.class.scope_mappings.dig(resource.to_sym, action.to_sym)
-  end
-
-  def extract_category_id(category_slug_with_id)
-    parts = category_slug_with_id.split('/')
-
-    !parts.empty? && parts.last =~ /\A\d+\Z/ ? parts.pop : nil
   end
 end
 

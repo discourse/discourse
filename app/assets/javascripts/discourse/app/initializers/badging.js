@@ -4,10 +4,14 @@ export default {
   after: "message-bus",
 
   initialize(container) {
-    if (!navigator.setAppBadge) return; // must have the Badging API
+    if (!navigator.setAppBadge) {
+      return;
+    } // must have the Badging API
 
     const user = container.lookup("current-user:main");
-    if (!user) return; // must be logged in
+    if (!user) {
+      return;
+    } // must be logged in
 
     this.notifications =
       user.unread_notifications + user.unread_high_priority_notifications;

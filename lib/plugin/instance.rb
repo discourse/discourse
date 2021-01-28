@@ -588,11 +588,13 @@ class Plugin::Instance
 
       # Automatically include all ES6 JS and hbs files
       root_path = "#{root_dir_name}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js') if transpile_js
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
       DiscoursePluginRegistry.register_glob(root_path, 'hbr')
 
       admin_path = "#{root_dir_name}/admin/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(admin_path, 'js', admin: true) if transpile_js
       DiscoursePluginRegistry.register_glob(admin_path, 'js.es6', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
       DiscoursePluginRegistry.register_glob(admin_path, 'hbr', admin: true)
@@ -793,19 +795,79 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_api_key_scope_mapping({ resource => action }, self)
   end
 
+  # Register a new UserApiKey scope, and its allowed routes. Scope will be prefixed
+  # with the (parametetized) plugin name followed by a colon.
+  #
+  # For example, if discourse-awesome-plugin registered this:
+  #
+  # add_user_api_key_scope(:read_my_route,
+  #   methods: :get,
+  #   actions: "mycontroller#myaction",
+  #   formats: :ics,
+  #   parameters: :testparam
+  # )
+  #
+  # The scope registered would be `discourse-awesome-plugin:read_my_route`
+  #
+  # Multiple matchers can be attached by supplying an array of parameter hashes
+  #
+  # See UserApiKeyScope::SCOPES for more examples
+  # And lib/route_matcher.rb for the route matching logic
+  def add_user_api_key_scope(scope_name, matcher_parameters)
+    raise ArgumentError.new("scope_name must be a symbol") if !scope_name.is_a?(Symbol)
+    matcher_parameters = [matcher_parameters] if !matcher_parameters.is_a?(Array)
+
+    prefixed_scope_name = :"#{(name || directory_name).parameterize}:#{scope_name}"
+    DiscoursePluginRegistry.register_user_api_key_scope_mapping(
+      {
+        prefixed_scope_name => matcher_parameters&.map { |m| RouteMatcher.new(**m) }
+      }, self)
+  end
+
   # Register a route which can be authenticated using an api key or user api key
   # in a query parameter rather than a header. For example:
   #
   # add_api_parameter_route(
-  #   method: :get,
-  #   route: "users#bookmarks",
-  #   format: :ics
+  #   methods: :get,
+  #   actions: "users#bookmarks",
+  #   formats: :ics
   # )
   #
   # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
   # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
-  def add_api_parameter_route(method:, route:, format:)
-    DiscoursePluginRegistry.register_api_parameter_route({ method: method, route: route, format: format }, self)
+  def add_api_parameter_route(method: nil, methods: nil,
+                              route: nil, actions: nil,
+                              format: nil, formats: nil)
+
+    if Array(format).include?("*")
+      Discourse.deprecate("* is no longer a valid api_parameter_route format matcher. Use `nil` instead", drop_from: "2.7")
+      # Old API used * as wildcard. New api uses `nil`
+      format = nil
+    end
+
+    # Backwards compatibility with old parameter names:
+    if method || route || format
+      Discourse.deprecate("method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.", drop_from: "2.7")
+      methods ||= method
+      actions ||= route
+      formats ||= format
+    end
+
+    DiscoursePluginRegistry.register_api_parameter_route(
+      RouteMatcher.new(
+        methods: methods,
+        actions: actions,
+        formats: formats
+      ), self)
+  end
+
+  # Register a new demon process to be forked by the Unicorn master.
+  # The demon_class should inherit from Demon::Base.
+  # With great power comes great responsibility - this method should
+  # be used with extreme caution. See `config/unicorn.conf.rb`.
+  def register_demon_process(demon_class)
+    raise "Not a demon class" if !demon_class.ancestors.include?(Demon::Base)
+    DiscoursePluginRegistry.demon_processes << demon_class
   end
 
   protected
@@ -835,8 +897,8 @@ class Plugin::Instance
 
     locales.each do |locale, opts|
       opts = opts.dup
-      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
-      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
+      opts[:client_locale_file] = Dir["#{root_path}/config/locales/client*.#{locale}.yml"].first || ""
+      opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first || ""
       opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]

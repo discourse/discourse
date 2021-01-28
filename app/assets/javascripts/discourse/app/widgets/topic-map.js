@@ -1,8 +1,8 @@
+import { avatarFor, avatarImg } from "discourse/widgets/post";
+import { dateNode, numberNode } from "discourse/helpers/node";
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { avatarImg, avatarFor } from "discourse/widgets/post";
-import { dateNode, numberNode } from "discourse/helpers/node";
 import { replaceEmoji } from "discourse/widgets/emoji";
 
 const LINKS_SHOWN = 5;

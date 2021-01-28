@@ -1,8 +1,8 @@
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { TOPIC_TYPE } from "discourse/plugins/discourse-presence/discourse/lib/presence";
 import { gt } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { TOPIC_TYPE } from "discourse/plugins/discourse-presence/discourse/lib/presence";
 
 export default Component.extend({
   topic: null,

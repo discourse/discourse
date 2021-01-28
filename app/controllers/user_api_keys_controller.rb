@@ -71,7 +71,7 @@ class UserApiKeysController < ApplicationController
       client_id: params[:client_id],
       user_id: current_user.id,
       push_url: params[:push_url],
-      scopes: scopes
+      scopes: scopes.map { |name| UserApiKeyScope.new(name: name) }
     )
 
     # we keep the payload short so it encrypts easily with public key
@@ -147,9 +147,6 @@ class UserApiKeysController < ApplicationController
     if current_key = request.env['HTTP_USER_API_KEY']
       request_key = UserApiKey.with_key(current_key).first
       revoke_key ||= request_key
-      if request_key && request_key.id != revoke_key.id && !request_key.scopes.include?("write")
-        raise Discourse::InvalidAccess
-      end
     end
 
     raise Discourse::NotFound unless revoke_key

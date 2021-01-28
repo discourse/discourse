@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import I18n from "I18n";
 import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
@@ -23,7 +23,7 @@ export default DropdownSelectBoxComponent.extend({
       },
     ];
 
-    if (this.get("currentUser.admin")) {
+    if (this.canAdminGroup) {
       if (this.member.owner) {
         items.push({
           id: "removeOwner",

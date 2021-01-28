@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    styleguide:
+      sections:
+        date_time_inputs:
+          title: "Ngày/giờ nhập"
+        navigation_stacked:
+          title: "Điều hướng xếp chồng lên nhau"
+        topic_statuses:
+          title: "Trạng thái chủ đề"
+        post:
+          title: "Bài đăng"
+        modal:
+          title: "Phương thức"

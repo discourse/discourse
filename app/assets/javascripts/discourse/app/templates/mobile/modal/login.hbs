@@ -1,4 +1,4 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
+{{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{plugin-outlet name="login-before-modal-body" tagName=""}}
   {{#d-modal-body title="login.title" class=modalBodyClasses}}
     {{#if showLoginButtons}}

@@ -65,7 +65,7 @@ jobs:
         if: env.BUILD_TYPE != 'LINT'
         run: |
           sudo apt-get update
-          sudo apt-get -yqq install postgresql-client libpq-dev gifsicle jpegoptim optipng jhead
+          sudo apt-get -yqq install postgresql-client libpq-dev jpegoptim optipng jhead pngcrush pngquant
           wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
 
       - name: Update imagemagick
@@ -91,9 +91,10 @@ jobs:
           gem install bundler -v 2.1.4 --no-doc
           bundle config deployment 'true'
           bundle config without 'development'
+          bundle config path vendor/bundle
 
       - name: Bundler cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: bundler-cache
         with:
           path: vendor/bundle
@@ -109,7 +110,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Yarn cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -146,7 +147,7 @@ jobs:
 
       - name: ESLint (core)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern app/assets/javascripts test/javascripts
+        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern app/assets/javascripts
 
       - name: ESLint (core plugins)
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
@@ -163,7 +164,6 @@ jobs:
           yarn prettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.{js,es6}" \
-            "test/javascripts/**/*.{js,es6}" \
             "plugins/**/assets/stylesheets/**/*.scss" \
             "plugins/**/assets/javascripts/**/*.{js,es6}"
 
@@ -174,6 +174,19 @@ jobs:
           yarn prettier --list-different \
             "plugins/**/assets/stylesheets/**/*.scss" \
             "plugins/**/assets/javascripts/**/*.{js,es6}"
+
+      - name: Ember template lint (core and core plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'
+        run: |
+          yarn ember-template-lint \
+            app/assets/javascripts \
+            plugins/**/assets/javascripts
+
+      - name: Ember template lint (all plugins)
+        if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'PLUGINS'
+        run: |
+          yarn ember-template-lint \
+            plugins/**/assets/javascripts
 
       - name: Core English locale
         if: env.BUILD_TYPE == 'LINT' && env.TARGET == 'CORE'

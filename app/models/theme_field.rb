@@ -20,12 +20,12 @@ class ThemeField < ActiveRecord::Base
     return none unless locale_codes.present?
 
     where(target_id: Theme.targets[:translations], name: locale_codes)
-      .joins(self.sanitize_sql_array([
+      .joins(DB.sql_fragment(
       "JOIN (
         SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
       ) as Y ON Y.locale_code = theme_fields.name",
       *locale_codes.map.with_index { |code, index| [code, index] }
-    ]))
+    ))
       .order("Y.locale_sort_column")
   }
 
@@ -483,7 +483,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   before_save do
-    if will_save_change_to_value? && !will_save_change_to_value_baked?
+    if (will_save_change_to_value? || will_save_change_to_upload_id?) && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
   end

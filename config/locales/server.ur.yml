@@ -56,7 +56,6 @@ ur:
     compile_error:
       unrecognized_extension: "نامعلوم فائل ایکسٹینشن: %{extension}"
     import_error:
-      generic: تِھیم درآمد کرتے ہوئے ایک خرابی کا سامنا کرنا پڑا
       about_json_values: "about.json غلط اقدار پر مشتمل ہے: %{errors}"
       git: "گِٹ رِیپَوزِٹَری کلَون کرنے میں خرابی، رسائی کی اجازت نہیں یا رِیپَوزِٹَری موجود نہیں ہے"
       unpack_failed: "فائل کھولنے میں ناکام"
@@ -176,12 +175,6 @@ ur:
   invite:
     not_found: "آپ کا دعوتی ٹوکن غلط ہے۔ براہ کرم <a href='%{base_url}/about'>سٹاف سے رابطہ کریں</a>۔"
     not_found_json: "آپ کا دعوتی ٹوکن غلط ہے۔ براہ کرم سٹاف سے رابطہ کریں۔"
-    not_found_template: |
-      <p>آپ کا <a href="%{base_url}">%{site_name}</a> کیلئے مدعو کا پہلے سے ہی فائدہ اٹھا لیا گیا۔</p>
-
-      <p>اگر آپ کو اپنا پاسورڈ یاد ہے تو آپ <a href="%{base_url}/login">لاگ اِن</a> کرسکتے ہیں۔</p>
-
-      <p>ورنہ براہ مہربانی <a href="%{base_url}/password-reset">پاسورڈ رِی سَیٹ</a> کریں۔</p>
     error_message: "مدعو قبول کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی سائٹ کے ایڈمِنِسٹریٹر سے رابطہ کریں۔"
     user_exists: "<b>%{email}</b>کو مدعو کرنے کی کوئی ضرورت نہیں ہے، اُن کا <a href='%{base_path}/u/%{username}/summary'>پہلے سے ہی ایک اکاؤنٹ ہے!</a>"
     confirm_email: "<p>آپ تقریباً کام مکمل کر چکے ہیں! ہم نے آپ کے ایمیل پتہ پر ایک ایکٹیویشن میل بھیج دی ہے۔ براہ مہربانی اپنے اکاؤنٹ کو چالو کرنے کیلئے میل میں دی گئی ہدایات پر عمل کریں۔</p> <p>اگر یہ آپ کو موصول نہ ہو، تو اپنا سپَیم فولڈر چیک کریں۔</p>"
@@ -345,26 +338,6 @@ ur:
     until_posts:
       one: "%{count} پوسٹ"
       other: "%{count} پوسٹس"
-    "new-topic": |
-      %{site_name}پر خوش آمدید &mdash؛ **نئی بات چیت شروع کرنے کیلئے شکریہ!**
-
-      - اگر آپ عنوان کو زبان سے پڑھیں تو کیا یہ دِلچسپ سنائی دیتا ہے؟ کیا یہ ایک اچھا خلاصہ ہے؟
-
-      - کون اِس میں دلچسپی رکھے گا؟ یہ کیوں ضروری ہے؟ آپ کو کس قِسم کے جوابات چاہیئیں؟
-
-      - امنے ٹاپک میں عام طور پر استعمال کردہ الفاظ شامل کریں تاکہ دوسرے اِسے *تلاش* کرسکیں۔ اپنے ٹاپک کو متعلقہ ٹاپکس کے ساتھ گروہ کرنے کیلئے، ایک زُمرہ منتخب کریں۔
-
-      مزید کے لئے، [ہماری کمیونٹی کی رہنما ہدایات دیکھیے](%{base_path}/guidelines)۔ یہ پَینل صرف آپ کے پہلے %{education_posts_text} کیلئے ظاہر ہوگا۔
-    "new-reply": |
-      %{site_name}پر خوش آمدید &mdash؛ **شراکت کیلئے شکریہ!**
-
-      - کیا آپ کا جواب کسی طرح سے اِس بات چیت کو بہتر بناتا ہے؟
-
-      - اپنے کمیونٹی کے ارکان کے ساتھ مہربان ہوں۔
-
-      - تعمیراتی تنقید قابل قبول ہے، لیکن تنقید *خیالات* پر کریں، نہ کہ لوگوں پر۔
-
-      مزید کے لئے، [ہماری کمیونٹی کی رہنما ہدایات دیکھیے](%{base_path}/guidelines)۔ یہ پَینل صرف آپ کے پہلے %{education_posts_text} کیلئے ظاہر ہوگا۔
     avatar: |
       ### آپ کے اکاؤنٹ کیلئے ایک تصویر کیسی لگے گی؟
 
@@ -381,14 +354,6 @@ ur:
       متن کو اُجاگر کر کہ ظاہر ہونے والے <b>جواب اقتباس کریں</b> بٹن منتخب کرنے سے ایک اقتباس شامل کرنے کیلئے آپ اپنے پچھلے جواب میں ترمیم کرسکتے ہیں۔
 
       ہر ایک کیلئے اُن ٹاپکس کو پڑھ نا زیادہ آسان ہے جس میں بہت سے چھوٹے، انفرادی جوابات کے مقابلے میں تفصیلی لیکن کم جوابات ہوں۔
-    get_a_room: |
-      ### بات چیت میں ملوث ہونے کیلئے سب کی حوصلہ افزائی کریں
-
-      آپ نے اس خاص ٹاپک میں @%{reply_username} کو %{count} مرتبہ جواب دیا ہے!
-
-      ایک اچھی بحث میں کئی آوازیں اور نقطہ نظر شامل ہوتے ہیں۔ کیا آپ کسی اور کو شامل کرسکتے ہیں؟
-
-      اور مت بھولیے، اگر آپ اِس خاص صارف کے ساتھ عوامی نظر سے دور اپنی بات چیت لمبائی تک جاری رکھنا چاہتے ہیں، تو [انہیں ایک ذاتی پیغام بھیجیں](%{base_path}/u/%{reply_username})۔
     too_many_replies: |
       ### آپ اس ٹاپک پر جوابات کے نمبر کی حد تک پہنچ گئے ہیں
 
@@ -732,43 +697,36 @@ ur:
       title: "موضوع سے ہٹ کر"
       description: "موجودہ بحث جو کہ عنوان اور پہلی پوسٹ سے واضح ہوتی ہے، یہ پوسٹ اُس سے متعلق نہیں ہے، اور غالباً کہیں اور منتقل ہوجانی چاہئیے۔"
       short_description: "بحث سے متعلق نہیں"
-      long_form: "اِس کو موضوع سے ہٹ کر ہونے کے طور پر فلَیگ کیا گیا"
     spam:
       title: "سپَیم"
       description: "یہ پوسٹ ایک اشتہار، یا وَینڈَلِزم ہے۔ یہ مفید یا موجودہ موضوع کے متعلقہ نہیں ہے۔"
       short_description: "یہ ایک اشتہار، یا وَینڈَلِزم ہے"
-      long_form: "اِس کو سپَیم ہونے کے طور پر فلَیگ کیا گیا"
       email_title: '"%{title}" کو سپَیم کے طور پر فلَیگ کیا گیا'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "نامناسب"
       description: 'اِس پوسٹ میں ایسا مواد شامل ہے جو ایک مناسب شخص جارحانہ، غیر مہذب، یا <a href="%{base_path}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کے خلاف سمجھے گا۔'
       short_description: '<a href="%{base_path}/guidelines">ہماری کمیونٹی کے قواعد و ضوابط</a> کی خلاف ورزی'
-      long_form: "اِس کو نامناسب ہونے کے طور پر فلَیگ کیا گیا"
     notify_user:
       title: "@%{username} کو ایک پیغام بھیجیں"
       description: "میں اِس شخص سے اُس کی پوسٹ کے بارے میں براہ راست اور ذاتی طور پر بات کرنا چاہتا ہوں۔"
       short_description: "میں اِس شخص سے اُس کی پوسٹ کے بارے میں براہ راست اور ذاتی طور پر بات کرنا چاہتا ہوں۔"
-      long_form: "پیغام دیا گیا صارف"
       email_title: 'آپ کی "%{title}" میں پوسٹ'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: " کچھ اور"
       description: "اِس پوسٹ پر اسٹاف کی توجہ درکار ہے جس کی وجہ مندرجہ بالا درج وجوہات میں شامل نہیں ہے۔"
       short_description: "اسٹاف کی توجہ کسی اور وجہ کی بناہ پر درکار ہے"
-      long_form: "اِس کو اسٹاف کی توجہ کیلئے فلَیگ کیا گیا"
       email_title: '"%{title}" میں ایک پوسٹ پر اسٹاف کی توجہ درکار ہے'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "بُک مارک"
       description: "اِس پوسٹ کو بُک مارک کریں"
       short_description: "اِس پوسٹ کو بُک مارک کریں"
-      long_form: "اِس پوسٹ کو بُک مارک کیا"
     like:
       title: "لائیک"
       description: " اِس پوسٹ کو لائیک کریں"
       short_description: " اِس پوسٹ کو لائیک کریں"
-      long_form: "اِس کو لائیک کیا"
   user_activity:
     no_default:
       self: "ابھی تک آپ کی کوئی سرگرمی نہیں ہے."
@@ -826,9 +784,7 @@ ur:
     mute_topic: "اِس ٹاپک کیلئے تمام اطلاعات کو خاموش کر دیں، %{link}"
     unwatch_category: "%{category} میں تمام ٹاپکس کو دیکھنا چھوڑ دیں"
     mailing_list_mode: "مَیلِنگ لِسٹ مَوڈ بند کریں"
-    all: "مجھے %{sitename} سے کوئی میل نہ بھیجیں"
     different_user_description: "جس صارف کو ہم نے اِی میل کی، آپ اُس سے مختلف صارف کے طور پر لاگ اِن ہیں۔ براہ مہربانی لاگ آوٹ کریں، یا گمنام مَوڈ میں داخل ہوں، اور دوبارہ کوشش کریں۔"
-    not_found_description: "معذرت، ہم اِس غیر سَبسکرائب کو تلاش نہ کرسکے۔ ممکن ہے کہ آپ کے ای میل میں لِنک کی میعاد ختم ہوگئی ہے؟"
     log_out: "لاگ آُوٹ"
     submit: "ترجیحات محفوظ کریں"
     digest_frequency:
@@ -1190,10 +1146,6 @@ ur:
     sidekiq_warning: 'Sidekiq نہیں چل رہا۔ بہت سے کام، جیسا کہ ای میل بھیجنا، sidekq کی طرف سے اےسِنکرونسلی مکمل کیے جاتے ہیں۔ براہ کرم یقینی بنائیں کہ کم ازکم ایک sidekq پراسیس چل رہا ہے۔ <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq کے بارے میں یہاں سے جانیے</a>۔'
     queue_size_warning: "قطار میں موجود جابز کی تعداد %{queue_size} ہے، جو کہ زیادہ ہے۔ یہ Sidekiq پراسیس کے ساتھ ایک مسئلہ کی نشاندہی کر سکتا ہے، یا آپ کو مزید Sidekiq کارکنوں کو شامل کرنے کی ضرورت ہوسکتی ہے۔"
     memory_warning: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
-    google_oauth2_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گُوگل (OAuth2 (enable_google_oauth2_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور کلائنٹ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    facebook_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ فیس بُک (OAuth2 (enable_facebook_logins کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن اَیپ آئی ڈی اور اَیپ سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    twitter_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ ٹَوِیٹر (enable_twitter_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن قیی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
-    github_config_warning: 'سرور کو ترتیب دیا گیا ہے کہ گِٹ ہَب (enable_github_logins) کے ساتھ سائن اپ اور لاگ اِن کی اجازت ہو، لیکن کلائنٹ آئی ڈی اور سیکرٹ وَیلِیوز مقرر نہیں کیے گئے ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لئے یہ گائیڈ ملاحظہ کریں</a>۔'
     s3_config_warning: 'سرور کو S3 پر فائلوں کو اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
     s3_backup_config_warning: 'سرور کو S3 پر بیک اَپس اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
     image_magick_warning: 'سرور کو بڑی تصاویر کے تھَمب نَیل تخلیق کرنے کیلئے ترتیب دیا گیا ہے، لیکن ImageMagick اِنسٹال نہیں ہے۔ اپنے پسندیدہ پیکیج مینیجر کا استعمال کرکے ImageMagick اِنسٹال کریں یا <a href="https://www.imagemagick.org/script/download.php" target="_blank">تازہ ترین ورژن ڈاؤن لوڈ کریں</a>۔'
@@ -1283,7 +1235,6 @@ ur:
     notification_email: "تمام ضروری سِسٹم ای میلز بھیجنے کیلئے استعمال ہونے والا from: ای میل ایڈریس۔ یہاں درج کردہ ڈومین کا SPF ،DKIM اور ریورس PTR ریکارڈ، ای میل کے پہنچنے کیلئے، صحیح طریقے سے مقرر ہونا لازمی ہے۔"
     email_custom_headers: "اپنی مرضی کے ای میل ہیڈرز کی پائپ سے علیحدہ کردہ فہرست"
     email_subject: "سٹینڈرڈ ای میلز کیلئے اپنی مرضی کا موضوع فارمَیٹ۔ دیکھیے <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    enforce_second_factor: "صارفین کو دوسری فیکٹر توثیق فعال کرنے کیلئے مجبور کرتی ہے۔ تمام صارفین پر لاگو کرنے کیلئے 'تمام' منتخب کریں۔ صرف سٹاف صارفین پر لاگو کرنے کیلئے 'سٹاف' منتخب کریں۔"
     force_https: "صرف HTTPS استعمال کرنے کیلئے اپنی سائٹ کو مجبورکریں۔ انتباہ: جب تک آپ تصدیق نہ کر لیں کہ HTTPS مکمل طور پر سیٹ ہے اور ہر جگہ کام کر رہا ہے، اِس کو فعال نہ کریں! کیا آپ نے اپنا CDN، تمام سماجی لاگ ان، اور بیرونی لوگو / انحصارات کو چیک کر کے یہ یقینی بنا لیا ہے کہ وہ تمام HTTPS سے مطابقت رکھتے ہیں؟"
     same_site_cookies: "سَیم سائٹ کے کُوکِیز کا استعمال کریں، وہ قابل براؤزرز (Lax یا Strict) پر تمام ویکٹر Cross Site Request Forgery کو ختم کر دیتے ہیں۔ انتباہ: Strict صرف اُن سائٹس پر کام کرے گا جو لاگ اِن پر مجبور کرتے ہیں اور SSO کا استعمال کرتے ہیں۔"
     summary_score_threshold: "'اِس ٹاپک کا خلاصہ کریں' میں شامل ہونے کیلئے ایک پوسٹ کا کم از کم سکور"
@@ -1320,9 +1271,6 @@ ur:
     must_approve_users: "سائٹ تک رسائی حاصل کرنے سے پہلے سٹاف کا تمام نئے صارف اکاؤنٹس کو منظور کرنا ضروری ہے۔"
     pending_users_reminder_delay: "ماڈریٹرز کو مطلع کریں اگر نئے صارفین اِس سے زیادہ گھنٹوں سے منظوری کے منتظر ہوں۔ اطلاعات کو غیر فعال کرنے کیلئے -1 سَیٹ کریں۔"
     maximum_session_age: "آخری وزٹ سے ن گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
-    ga_universal_tracking_code: "گُوگل یونیوَرسل اَینَیلَیٹِکس (analytics.js) ٹرَیکِنگ کَوڈ آئی ڈی، مثال: UA-12345678-9؛ دیکھیے <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_domain_name: "گُوگل یونیوَرسل اَینَیلَیٹِکس (analytics.js) ڈَومَین نام، مثال: mysite.com؛ دیکھیے <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
-    ga_universal_auto_link_domains: "گُوگل یونیوَرسل اَینَیلَیٹِکس (analytics.js) کراس ڈَومَین ٹرَیکِنگ فعال کریں۔ اِن ڈومینز کے باہر جانے والے لِنکس کے ساتھ کلائینٹ id شامل کر دی جائے گی۔ <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>گُوگل کی کراس ڈَومَین ٹریکنگ گائیڈ</a> ملاحظہ کریں۔"
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
     allowed_iframes: "iframe src ڈَومَین کے سابقوں کی ایک فہرست جو ڈِسکَورس محفوظ طریقے سے پوسٹس میں شامل ہونے کی اجازت دے سکتا ہے"
@@ -1396,18 +1344,11 @@ ur:
     enable_twitter_logins: "ٹویٹر توثیق فعال کریں۔ twitter_consumer_key اور twitter_consumer_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13395' target='_blank'>ڈسکورس کیلئے ٹویٹر لاگ اِن ترتیب دیں (اور رِچ اَیمبَیڈ)</a>۔"
     twitter_consumer_key: "ٹویٹر توثیق کیلئے کنزِیُومر کِی، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
     twitter_consumer_secret: "ٹویٹر توثیق کیلئے کنزِیُومر سیکرٹ، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
-    enable_instagram_logins: "اِنسٹاگرام توثیق کو فعال کریں، instagram_consumer_key اور instagram_consumer_secret کی ضرورت ہے"
-    instagram_consumer_key: "اِنسٹاگرام توثیق کیلئے کنزِیُومر کلید"
-    instagram_consumer_secret: "اِنسٹاگرام توثیق کیلئے کنزِیُومر سیکرٹ"
     enable_facebook_logins: "فَیسبُک توثیق فعال کریں۔ facebook_app_id اور facebook_app_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13394' target='_blank'>ڈسکورس کیلئے فَیسبُک لاگ اِن ترتیب دیں</a>۔"
     facebook_app_secret: "فَیسبُک توثیق کیلئے اَیپ سیکرٹ، <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a> پر رجسٹر کردہ"
-    enable_github_logins: "گِٹ ہَب توثیق فعال کریں۔ github_client_id اور github_client_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13745' target='_blank'>ڈسکورس کیلئے گِٹ ہَب لاگ اِن ترتیب دیں</a>۔"
-    github_client_id: "گِٹ ہَب توثیق کیلئے کلائنٹ آئی ڈی، <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a> پر رجسٹر کردہ"
-    github_client_secret: "گِٹ ہَب توثیق کیلئے کلائنٹ سیکرٹ، <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a> پر رجسٹر کردہ"
     enable_discord_logins: "صارفین کو بذریعہ ڈِسکَورڈ تصدیق کی اجازت دیں؟"
     discord_client_id: 'ڈِسکَورڈ کلائنٹ ID (ایک کی ضرورت ہے؟ <a href="https://discordapp.com/developers/applications/me">ڈِسکَورڈ ڈَوَیلپر پَورٹل</a> ملاحظہ کریں)'
     discord_secret: "ڈِسکَورڈ سیکرٹ کی۔"
-    discord_trusted_guilds: 'صرف اِن ڈِسکَورڈ گِلڈز کے ممبران کو بذریعہ ڈِسکَورڈ لاگ اِن ہونے کی اجازت دیں۔ گِلڈ کیلئے ہندسوں والی شناخت استعمال کریں۔ مزید معلومات کیلئے، ہدایات کو <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">یہاں</a> چیک کریں۔ کسی بھی گِلڈ کو اجازت دینے کیلئے خالی چھوڑ دیں۔'
     enable_backups: "ایڈمِنِسٹریٹروں کو فورم کے بیک اَپ بنانے کی اجازت دیں"
     allow_restore: "رِیسٹور کی اجازت دیں، جو سائٹ کا تمام ڈیٹا تبدیل کر سکتا ہے! فالس چھوڑ دیں جب تک کہ آپ بیک اَپ بحال نہ کرنے لگیں"
     maximum_backups: "ڈِسک پر رکھے جانے بیک اَپس کی زیادہ سے زیادہ تعداد۔ پرانے بیک اَپس خود کار طریقے سے حذف کر دیے جاتے ہیں"
@@ -1439,13 +1380,10 @@ ur:
     max_bookmarks_per_day: "فی صارف ایک دن کے بُکمارکس کی زیادہ سے زیادہ تعداد۔"
     max_edits_per_day: "فی صارف ایک دن کے ترامیم کی زیادہ سے زیادہ تعداد۔"
     max_topics_per_day: "ایک صارف کے فی دن بنائے گئے ٹاپکس کی زیادہ سے زیادہ تعداد۔"
-    max_personal_messages_per_day: "صارفین کے فی دن بنائے گئے پیغامات کی زیادہ سے زیادہ تعداد۔"
     max_invites_per_day: "ایک صارف کے فی دن بھیجی گئی دعوتوں کی زیادہ سے زیادہ تعداد۔"
     max_topic_invitations_per_day: "ایک صارف کے فی دن بھیجی گئی ٹاپک دعوتوں کی زیادہ سے زیادہ تعداد۔"
     max_logins_per_ip_per_hour: "ایک IP ایڈریس سے فی گھنٹہ لاگ اِنوں کی زیادہ سے زیادہ تعداد"
     max_logins_per_ip_per_minute: "ایک IP ایڈریس سے فی منٹ لاگ اِنوں کی زیادہ سے زیادہ تعداد"
-    max_post_deletions_per_minute: "ایک صارف فی منٹ زیادہ سے زیادہ کتنی پوسٹس حذف کر سکتا ہے۔"
-    max_post_deletions_per_day: "ایک صارف فی دن زیادہ سے زیادہ کتنی پوسٹس حذف کر سکتا ہے۔"
     alert_admins_if_errors_per_minute: "اِیڈمن الرٹ کو متحرک کرنے کیلئے فی منٹ خرابیوں کی تعداد۔ 0 کی وَیلِیو اِس خصوصیت کو غیر فعال کردیتی ہے۔ نوٹ: رِیسٹارٹ ضروری ہے۔"
     alert_admins_if_errors_per_hour: "اِیڈمن الرٹ کو متحرک کرنے کیلئے فی گھنٹہ خرابیوں کی تعداد۔ 0 کی وَیلِیو اِس خصوصیت کو غیر فعال کردیتی ہے۔ نوٹ: رِیسٹارٹ ضروری ہے۔"
     suggested_topics: "ٹاپک کے نچلے حصے پر دکھائے گئے تجویز کردہ ٹاپکس کی تعداد۔"
@@ -1558,7 +1496,6 @@ ur:
     privacy_policy_url: "اگر آپ کے پاس ایک نجی معلومات کی حفاظتی پالیسی کی دستاویز کسی اور جگہ پر ہَوسٹ کی ہوئی ہے جو آپ استعمال کرنا چاہتے ہیں، تو یہاں مکمل URL فراہم کریں۔"
     log_anonymizer_details: "کیا آیک صارف کو گمنام بنانے کے بعد اُس کی تفصیلات رکھی جائیں کہ نہیں۔ GDPR کے ساتھ تعمیل کرتے وقت آپ کو اِسے بند کر دینے کی ضرورت ہوگی۔"
     newuser_spam_host_threshold: "ایک نیا صارف کتنی دفعہ ایک ہی ہَوسٹ کا لِنک اپنی `newuser_spam_host_threshold` پوسٹس کے اندر شائع کر سکتا ہے، اِس سے پہلے کہ وہ سپَیم سمجھا جائے۔"
-    staff_like_weight: "سٹاف کے لائیکس کو کتنا اضافی وزن کا عنصر دیں۔"
     topic_view_duration_hours: "ہر ن گھنٹوں پر فی IP/صارف ایک نیا ٹاپک وِیو شمار کریں"
     user_profile_view_duration_hours: "ہر ن گھنٹوں پر فی IP/صارف ایک نیا صارف پروفائل وِیو شمار کریں"
     levenshtein_distance_spammer_emails: "سپَیمر ای میل کو مَیچ کرتے وقت، فرق حروف کی تعداد جس پر بھی ایک فزِّی میچ ہو سکے گا۔"
@@ -1629,8 +1566,6 @@ ur:
     email_editable: "رجسٹریشن کے بعد صارفین کو اپنا ای میل ایڈریس تبدیل کرنے کی اجازت دیں۔"
     logout_redirect: "لاگ آؤٹ کے بعد براؤزر کو ریڈائرَیکٹ کرنے کا مقام (مثال: https://example.com/logout)"
     allow_uploaded_avatars: "صارفین کو اپنی مرضی کی پروفائل تصاویر اَپ لوڈ کرنے کی اجازت دیں۔"
-    allow_animated_avatars: "صارفین کو اَینیمَیٹِڈ GIF پروفائل تصاویر استعمال کرنے کی اجازت دیں۔ انتباہ: اِس ترتیب کو تبدیل کرنے کے بعد avatars:refresh رَیک ٹاسک چلائیں۔"
-    allow_animated_thumbnails: "اَینیمَیٹِڈ GIFs کے اَینیمَیٹِڈ تھَمب نَیل پیدا کریں۔"
     default_avatars: "URL اوتار کے، جو نئے صارفین کے لئے ڈِیفالٹ کی طور پر استعمال کیے جائیں گے جب تک کہ وہ اُن کو تبدیل نہ کر لیں۔"
     automatically_download_gravatars: "اکاؤنٹ تخلیق یا ای میل کی تبدیلی پر صارفین کے لئے گَرِیوَّٹار ڈاؤن لوڈ کریں۔"
     digest_topics: "ای میل خلاصہ میں شامل کرنے کیلئے مقبول ترین ٹاپکس کی زیادہ سے زیادہ تعداد۔"
@@ -1688,7 +1623,6 @@ ur:
     display_name_on_posts: "اپنے @username کے علاوہ صارف کی پوسٹس پر اُن کا مکمل نام بھی دکھائیں۔"
     show_time_gap_days: "اگر دو پوسٹس اتنے دنوں بعد شائع کی گئے ہوں، تو ٹاپک میں وقت کا فرق دکھائیں۔"
     short_progress_text_threshold: "اگر ٹاپک میں پوسٹس کی تعداد اِس نمبر سے اوپر چلے جاتی ہے، تو پراگرَیس بار صرف موجودہ پوسٹ نمبر دکھائے گا۔ اگر آپ پراگرَیس بار کی چوڑائی کو تبدیل کریں گے، تو آپ کو اِس قدر کو تبدیل کرنے کی ضرورت پر سکتی ہے۔"
-    default_code_lang: "گِٹ ہَب کَوڈ بلاکس پر لاگو ڈِیفالٹ پروگرامِنگ زبان سِنٹیکس ہائلائیٹِنگ (lang-auto، ruby، python وغیرہ)"
     warn_reviving_old_topic_age: "جب کوئی ایسے ٹاپک پر جواب دینا شروع کرے جہاں پچھلا آخری جواب اتنے دنوں سے زیادہ پرانا ہو، تو ایک انتباہ ظاہر کی جائے گی۔ 0 پر سَیٹ کر کہ غیر فعال کریں۔"
     autohighlight_all_code: "تمام پہلے سے فارمَیٹ کردہ کَوڈ بلاکس پر ذبردستی کَوڈ ہائلائیٹِنگ لاگو کریں، یہاں تک کہ جب زبان بھی خاص طور پر واضح نہ کی گئی ہو۔"
     highlighted_languages: "سِنٹیکس ہائلائیٹِنگ کے قوانین شامل کریں۔ (انتباہ: بہت زیادہ زبانوں کو شامل کرنے سے کارکردگی پر اثر ہو سکتا ہے) ڈَیمو کیلئے ملاحظہ کریں: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -1703,7 +1637,6 @@ ur:
     show_create_topics_notice: "اگر سائٹ میں 5 سے کم عوامی ٹاپک موجود ہیں، تو کچھ ٹاپک تخلیق کرنے کیلئے منتظمین کو ایک نوٹس دکھائیں۔"
     delete_drafts_older_than_n_days: "(ن) دنوں سے پرانے ڈرافٹ حذف کریں۔"
     bootstrap_mode_min_users: "بُوٹسٹرَیپ مَوڈ غیر فعال کرنے کیلئے درکار صارفین کی کم از کم تعداد (غیر فعال کرنے کیلئے 0 پر سَیٹ کریں)"
-    prevent_anons_from_downloading_files: "گمنام صارفین کو اٹَیچمنٹس ڈاؤن لوڈ کرنے سے روکیں۔ انتباہ: ایسا کرنے سے کوئی بھی غیر تصویر سائٹ کے اثاثہ جات، جو اٹَیچمنٹ کے طور پرشائع کیے گئے ہوں، بھی کام کرنا چھوڑ دیں گے۔"
     slug_generation_method: "سلَگ تخلیق کا طریقہ منتخب کریں۔ 'انکوڈ کردہ' فیصد انکوڈِنگ سٹرِنگ تخلیق کرے گ۔. 'کوئی بھی نہیں' سلَگ کو غیر فعال کر دے گا۔"
     enable_emoji: "اِیمَوجی فعال کریں"
     enable_emoji_shortcuts: "عام سمائلی ٹیکسٹ جیسا کہ :) :p :( اِیمَوجیوں میں تبدیل کر دیا جائے گا"
@@ -1939,7 +1872,6 @@ ur:
       csrf_detected: "توثیق کا وقت ختم ہوگیا، یا آپ نے براؤزر بدل لیے ہیں۔ براہ مہربانی دوبارہ کوشش کریں۔"
       request_error: "توثیق شروع کرتے وقت ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
       invalid_iat: "سَروَر گھڑی کے اختلافات کی وجہ سے توثیقی ٹوکن کی تصدیق کرنا ممکن نہیں ہے۔ براہ مہربانی دوبارہ کوشش کریں۔"
-    omniauth_error_unknown: "آپ کے لاگ اِن سے نمٹنے میں کچھ خراب ہو گیا، براہ مہربانی دوبارہ کوشش کریں۔"
     omniauth_confirm_title: "بذریعہ %{provider} لاگ اِن کریں۔"
     omniauth_confirm_button: "جاری رکھی"
     authenticator_error_no_valid_email: "%{account} سے وابستہ کسی ای میل پتہ کی اجازت نہیں ہے۔ آپ کو اپنے اکاؤنٹ کو کسی مختلف ای میل ایڈریس کے ساتھ ترتیب دینے کی ضرورت ہوسکتی ہے۔"
@@ -1950,11 +1882,8 @@ ur:
     missing_user_field: "آپ نے تمام صارف فیلڈز مکمل نہیں کی ہیں"
     auth_complete: "تصدیق مکمل ہوگئی ہے۔"
     click_to_continue: "جاری رکھنے کیلئے یہاں کلِک کریں۔"
-    already_logged_in: "افوہ، لگتا ہے کہ آپ کسی اور صارف کیلئے دعوت نامے کو قبول کرنے کی کوشش کر رہے ہیں۔ اگر آپ %{current_user} نہیں ہیں تو، براہ مہربانی لاگ آُوٹ کریں اور دوبارہ کوشش کریں۔"
-    second_factor_title: "دو فیکٹر توثیق"
     second_factor_description: "براہ مہربانی اپنی اَیپ میں سے مطلوبہ توثیقی کَوڈ درج کریں:"
     second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
-    second_factor_backup_title: "دو فیکٹر بیک اپ کوڈ"
     invalid_second_factor_code: "غلط توثیقی کَوڈ۔ ہر کَوڈ صرف ایک بار ہی استعمال کیا جاسکتا ہے۔"
     second_factor_toggle:
       backup_code: "بجائے ایک بیک اپ کوڈ استعمال کریں"
@@ -2823,15 +2752,6 @@ ur:
         اگر آپ نے %{email} کیلئے اکاؤنٹ بنانے کی کوشش نہیں کی یا اپنا ای میل ایڈریس تبدیل کرنے کی، تو فکر مت کریں - آپ اِس پیغام کو آرام سے نظر انداز کر سکتے ہیں۔
 
         اگر آپ کے پاس کوئی سوال ہیں، تو [ہمارے دوستانہ سٹاف سے رابطہ کریں](%{base_url}/about)۔
-    account_second_factor_disabled:
-      title: "دو فیکٹر توثیق غیر فعال"
-      subject_template: "[%{email_prefix}] دو فیکٹر توثیق غیر فعال کردی گئی"
-      text_body_template: |
-        %{site_name} پر آپ کے اکاؤنٹ کیلئے دو فیکٹر توثیق غیر فعال کردی گئی ہے۔ اب آپ صرف اپنے پاسوَرڈ کے ساتھ لاگ اِن کرسکتے ہیں۔ ایک اضافی توثیقی کوڈ کی مزید ضرورت نہیں ہے۔
-
-        اگر آپ نے دو فیکٹر توثیق کو غیر فعال کرنے کا انتخاب نہیں کیا، تو کسی نے آپ کے اکاؤنٹ تک غیر مجاز رسائی حاصل کر لی ہے۔
-
-        اگر آپ کے پاس کوئی سوال ہیں، تو [ہمارے دوستانہ سٹاف سے رابطہ کریں](%{base_url}/about)۔
     digest:
       why: "آپ کے %{last_seen_at} کو آخری وِزِٹ کے بعد سے %{site_link} کا ایک مختصر خلاصہ"
       since_last_visit: "آپ کے کو آخری وِزِٹ کے بعد سے"
@@ -3035,7 +2955,6 @@ ur:
     latte: "لا ٹَیے"
     summer: "موسمِ گرما"
     dark_rose: "گہرا گلابی"
-    default_theme_name: "لائٹ"
     light_theme_name: "لائٹ"
     dark_theme_name: "ڈارک"
     neutral_theme_name: "نیوٹرل"
@@ -3483,8 +3402,6 @@ ur:
     initial_topic_title: ویب سائٹ کارکردگی کی رپورٹیں
   tags:
     title: "ٹیگز"
-    staff_tag_disallowed: '"%{tag}" ٹَیگ صرف سٹاف کی طرف سے لاگو کیا جا سکتا ہے۔'
-    staff_tag_remove_disallowed: '"%{tag}" ٹَیگ صرف سٹاف کی طرف سے ہٹایا جا سکتا ہے۔'
     minimum_required_tags:
       one: "آپ کا کم از کم %{count} ٹیگ منتخب کرنا ضروری ہے۔"
       other: "آپ کا کم از کم %{count} ٹیگز کا انتخاب کرنا ضروری ہے۔"
@@ -3596,10 +3513,6 @@ ur:
           city_for_disputes:
             label: "تنازعات کیلئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
-      colors:
-        title: "تھیم"
-      themes_further_reading:
-        title: "تِھیمز"
       logos:
         title: "لَوگَو"
         fields:
@@ -3647,9 +3560,6 @@ ur:
         disabled: "چونکہ مقامی لاگ اِن غیر فعال ہیں، کسی کو بھی دعوت نامہ بھیجنا ممکن نہیں ہے۔ براہ مہربانی اگلے مرحلے پر آگے بڑھیے۔"
       finished:
         title: "آپ کا ڈِسکورس تیار ہے!"
-        description: |
-          <p>اگر آپ کبھی بھی اِن ترتیبات کو تبدیل کرنا پسند کریں، تو <b>کسی بھی وقت اِس وزرڈ کو دوبارہ چلائیں</b>، یا <a href='%{base_path}/admin' target='_blank'>اپنے ایڈمن سیکشن</a> پر جائیں؛ اِسے سائٹ مینیو میں رِنچ آئیکن کے ساتھ تلاش کریں۔</p>
-          <p>لطف اندوز ہوں اور <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>اپنی نئی کمیونٹی بنانے میں خدا آپ کو کامیاب کرے!</a></p>
   search_logs:
     graph_title: "سرچ شمار"
   joined: "شمولیت اختیار کی"

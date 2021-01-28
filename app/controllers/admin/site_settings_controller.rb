@@ -16,6 +16,10 @@ class Admin::SiteSettingsController < Admin::AdminController
     value.strip! if value.is_a?(String)
     raise_access_hidden_setting(id)
 
+    if SiteSetting.type_supervisor.get_type(id) == :uploaded_image_list
+      value = Upload.get_from_urls(value.split("|")).to_a
+    end
+
     if SiteSetting.type_supervisor.get_type(id) == :upload
       value = Upload.get_from_url(value) || ""
     end

@@ -24,11 +24,22 @@ class VanillaBodyParser
   private
 
   def clean_up(text)
+    # <pre class="CodeBlock">...</pre>
+    text = text.gsub(/\<pre class="CodeBlock"\>(.*?)\<\/pre\>/im) { "\n```\n#{$1}\n```\n" }
+    # <pre>...</pre>
+    text = text.gsub(/\<pre\>(.*?)\<\/pre\>/im) { "\n```\n#{$1}\n```\n" }
+    # <code></code>
+    text = text.gsub("\<code\>\</code\>", "").gsub(/\<code\>(.*?)\<\/code\>/im) { "#{$1}" }
+    # <div class="Quote">...</div>
+    text = text.gsub(/\<div class="Quote"\>(.*?)\<\/div\>/im) { "\n[quote]\n#{$1}\n[/quote]\n" }
+    # [code], [quote]
+    text = text.gsub(/\[\/?code\]/i, "\n```\n").gsub(/\[quote.*?\]/i, "\n" + '\0' + "\n").gsub(/\[\/quote\]/i, "\n" + '\0' + "\n")
+
     text.gsub(/<\/?font[^>]*>/, '').gsub(/<\/?span[^>]*>/, '').gsub(/<\/?div[^>]*>/, '').gsub(/^ +/, '').gsub(/ +/, ' ')
   end
 
   def rich?
-    @row['Format'] == 'Rich'
+    @row['Format'].casecmp?('Rich')
   end
 
   def json
@@ -58,7 +69,7 @@ class VanillaBodyParser
     return parse_quote(insert) if quoting
 
     embed = embed_type.in? ['image', 'link', 'file']
-    parse_embed(insert) if embed
+    parse_embed(insert, embed_type) if embed
   end
 
   def parse_mention(mention)
@@ -87,9 +98,6 @@ class VanillaBodyParser
 
   # In the Quill format used by Vanilla Forums, a line is rendered as `code`
   # when it's followed by a fragment with attributes: {'code-block': true}.
-  # So we open our ``` block when the next fragment has a 'code-block'
-  # attribute and the previous one didn't and we close the ``` block when
-  # the second next fragment does not contain the 'code-block' attribute
   def parse_code(text, fragment, index)
     next_fragment = next_fragment(index)
 
@@ -98,18 +106,27 @@ class VanillaBodyParser
       previous_fragment = previous_fragment(index)
       previous_code = previous_fragment.dig(:attributes, :'code-block')
 
-      # if next is code and previous is not, prepend ```
-      text = "\n```#{text}" unless previous_code
+      if previous_code
+        text = text.gsub(/\\n(.*?)\\n/) { "\n```\n#{$1}\n```\n" }
+      else
+        last_pos = text.rindex(/\n/)
+
+        if last_pos
+          array = [text[0..last_pos].strip, text[last_pos + 1 .. text.length].strip]
+          text = array.join("\n```\n")
+        else
+          text = "\n```\n#{text}"
+        end
+      end
     end
 
     current_code = fragment.dig(:attributes, :'code-block')
-
     if current_code
       second_next_fragment = second_next_fragment(index)
       second_next_code = second_next_fragment.dig(:attributes, :'code-block')
 
       # if current is code and 2 after is not, prepend ```
-      text = "\n```#{text}" unless second_next_code
+      text = "\n```\n#{text}" unless second_next_code
     end
 
     text
@@ -174,7 +191,7 @@ class VanillaBodyParser
     "[quote#{quote_info}]\n#{embed[:body]}\n[/quote]\n\n"""
   end
 
-  def parse_embed(insert)
+  def parse_embed(insert, embed_type)
     embed = insert.dig(:'embed-external', :data)
 
     url = embed[:url]
@@ -193,7 +210,13 @@ class VanillaBodyParser
       end
     end
 
-    "\n[#{embed[:name]}](#{url})\n"
+    if embed_type == "link"
+      "\n[#{embed[:name]}](#{url})\n"
+    elsif embed_type == "image"
+      "\n<img src=\"#{url}\" alt=\"#{embed[:name]}\">\n"
+    else
+      "\n<a href=\"#{url}\">#{embed[:name]}</a>\n"
+    end
   end
 
   def normalize(full_text)

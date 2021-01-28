@@ -1,57 +1,36 @@
-{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id)}}
+{{#d-section tagName="" pageClass="tags" bodyClass=(concat "tag-" tag.id (if category.slug (concat " category-" category.slug)) "")}}
   <div class="container">
     {{discourse-banner user=currentUser banner=site.banner}}
   </div>
 
   <div class="list-controls">
     <div class="container">
-      <section class="navigation-container">
+      <section class="navigation-container tag-navigation">
+
         {{#if showTagFilter}}
-          {{bread-crumbs
-            categories=categories
-            category=category
-            tagId=tag.id
-            noSubcategories=noSubcategories
-          }}
-          {{navigation-bar navItems=navItems filterMode=filterMode}}
+          {{#if additionalTags}}
+            {{!-- Tag intersections don't work with the tag filter, so show the tag heading instead --}}
+            {{tag-heading tag=tag additionalTags=additionalTags}}
+          {{/if}}
         {{else}}
-          <h2 class="tag-show-heading">
-            {{#link-to "tags"}}{{i18n "tagging.tags"}}{{/link-to}}
-            {{d-icon "angle-right"}}
-            {{discourse-tag-bound tagRecord=tag style="simple"}}
-            {{#each additionalTags as |tag|}}
-              <span>&amp;</span>
-              {{discourse-tag tag style="simple"}}
-            {{/each}}
-          </h2>
+          {{tag-heading tag=tag additionalTags=additionalTags}}
         {{/if}}
 
-        {{#if tagNotification}}
-          {{#unless additionalTags}}
-            {{tag-notifications-button
-              onChange=(action "changeTagNotificationLevel")
-              value=tagNotification.notification_level
-            }}
-          {{/unless}}
-        {{/if}}
-
-        {{plugin-outlet name="before-create-topic-button"
-          args=(hash
-            canCreateTopic=canCreateTopic
-            createTopicDisabled=createTopicDisabled
-            createTopicLabel=createTopicLabel)
-        }}
-
-        {{create-topic-button
+        {{d-navigation
+          filterMode=filterMode
           canCreateTopic=canCreateTopic
-          disabled=createTopicDisabled
-          label=createTopicLabel
-          action=(route-action "createTopic")
-        }}
-
-        {{#if showToggleInfo}}
-          {{d-button icon="tag" class="btn-default" label="tagging.info" action=(action "toggleInfo") id="show-tag-info"}}
-        {{/if}}
+          hasDraft=draft
+          createTopic=(route-action "createTopic")
+          category=category
+          tag=tag
+          noSubcategories=noSubcategories
+          tagNotification=tagNotification
+          additionalTags=additionalTags
+          showInfo=showInfo
+          canCreateTopicOnTag=canCreateTopicOnTag
+          changeTagNotificationLevel=(action "changeTagNotificationLevel")
+          toggleInfo=(action "toggleInfo")
+          }}
       </section>
     </div>
   </div>
@@ -60,7 +39,7 @@
     {{tag-info tag=tag list=list deleteAction=(action "deleteTag")}}
   {{/if}}
 
-  {{plugin-outlet name="discovery-list-container-top"}}
+  {{plugin-outlet name="discovery-list-container-top" args=(hash category=category)}}
 
   <div class="container list-container">
     <div class="row">
@@ -68,8 +47,8 @@
         <div id="list-area">
           {{#unless loading}}
             {{#if list.topics}}
-              {{#discovery-topics-list model=list refresh=(action "refresh")}}
-                {{bulk-select-button selected=selected action=(action "refresh")}}
+              {{#discovery-topics-list model=list refresh=(action "refresh")  as |discoveryTopicList|}}
+                {{bulk-select-button selected=selected action=(action "refresh") category=category}}
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
@@ -80,6 +59,8 @@
                   order=order
                   ascending=ascending
                   changeSort=(action "changeSort")
+                  onScroll=discoveryTopicList.saveScrollPosition
+                  scrollOnLoad=true
                 }}
               {{/discovery-topics-list}}
             {{/if}}

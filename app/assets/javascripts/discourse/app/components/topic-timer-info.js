@@ -1,10 +1,10 @@
+import { cancel, later } from "@ember/runloop";
+import Category from "discourse/models/category";
+import Component from "@ember/component";
+import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { cancel, later } from "@ember/runloop";
-import Component from "@ember/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import Category from "discourse/models/category";
-import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
@@ -41,7 +41,9 @@ export default Component.extend({
 
     const topicStatus = this.topicClosed ? "close" : "open";
     const topicStatusKnown = this.topicClosed !== undefined;
-    if (topicStatusKnown && topicStatus === this.statusType) return;
+    if (topicStatusKnown && topicStatus === this.statusType) {
+      return;
+    }
 
     const statusUpdateAt = moment(this.executeAt);
     const duration = moment.duration(statusUpdateAt - moment());
@@ -124,7 +126,10 @@ export default Component.extend({
   },
 
   _noticeKey() {
-    const statusType = this.statusType;
+    let statusType = this.statusType;
+    if (statusType === "silent_close") {
+      statusType = "close";
+    }
 
     if (this.basedOnLastPost) {
       return `topic.status_update_notice.auto_${statusType}_based_on_last_post`;

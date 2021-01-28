@@ -13,7 +13,7 @@ plugins:
   poll_minimum_trust_level_to_create:
     default: 1
     client: true
-    enum: 'TrustLevelSetting'
+    enum: "TrustLevelSetting"
   poll_groupable_user_fields:
     default: ""
     type: list

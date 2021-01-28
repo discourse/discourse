@@ -10,15 +10,6 @@ describe UserActionsController do
       expect(response.status).to eq(400)
     end
 
-    it "returns a 404 for a user with a hidden profile" do
-      UserActionManager.enable
-      post = Fabricate(:post)
-      post.user.user_option.update_column(:hide_profile_and_presence, true)
-
-      get "/user_actions.json", params: { username: post.user.username }
-      expect(response.code).to eq("404")
-    end
-
     it 'renders list correctly' do
       UserActionManager.enable
       post = create_post
@@ -86,6 +77,26 @@ describe UserActionsController do
       parsed = response.parsed_body
 
       expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
+    end
+
+    context 'hidden profiles' do
+      fab!(:post) { Fabricate(:post) }
+
+      before do
+        UserActionManager.enable
+        post.user.user_option.update_column(:hide_profile_and_presence, true)
+      end
+
+      it "returns a 404" do
+        get "/user_actions.json", params: { username: post.user.username }
+        expect(response.code).to eq("404")
+      end
+
+      it "succeeds when `allow_users_to_hide_profile` is false" do
+        SiteSetting.allow_users_to_hide_profile = false
+        get "/user_actions.json", params: { username: post.user.username }
+        expect(response.code).to eq("200")
+      end
     end
 
   end

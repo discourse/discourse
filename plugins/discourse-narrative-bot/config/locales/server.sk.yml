@@ -23,7 +23,6 @@ sk:
       long_description: |
         Tento odznak sa udeľuje po úspešnom ukončení interaktívneho manuálu pokročilého používateľa. Zvládli ste pokročilé nástroje diskusie — a teraz ste plne certifikovaný!
   discourse_narrative_bot:
-    bio: "Ahoji, ja nie som skutočná osoba. Som robot, ktorý Ťa môže naučiť o tejto stránke. Komunikovať so mnou môžeš poslaním správy, alebo zmienkou **`@%{discobot_username}`** kdekoľvek."
     timeout:
       message: |-
         Hej @%{username}, iba kontrolujem, pretože nejaký čas som od Ťeba nič nepočul .
@@ -39,8 +38,6 @@ sk:
       trigger: "zahrať"
       invalid: |-
         Je mi to ľúto, ale je matematicky nemožné zahrať túto kombináciu kociek. :confounded:
-      not_enough_dice: |-
-        Ja mám len %{num_of_dice} kocky. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ja viem!
       out_of_range: |-
         Vieš, že [maximálny počet strán](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pre matematicky férovú kocku je 120?
       results: |-

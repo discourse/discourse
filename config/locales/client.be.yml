@@ -375,7 +375,6 @@ be:
       latest_by: "апошнія па"
       toggle_ordering: "паказаць"
       subcategories: "Падкатэгорыі"
-      n_more: "Катэгорыі (%{count} і больш) ..."
     ip_lookup:
       title: Пошук IP адрасы
       hostname: Імя хосту
@@ -469,7 +468,6 @@ be:
         disable: "Адключыць"
         enable: "Уключыць"
       second_factor:
-        title: "Два фактары аўтэнтыфікацыі"
         name: "Імя"
         disable: "Адключыць"
         save: "Захаваць"
@@ -525,7 +523,6 @@ be:
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
-        ip: "IP"
         details: "дэталі"
         log_out_all: "Выйсці паўсюль"
       last_posted: "Апошняе паведамленне"
@@ -700,7 +697,6 @@ be:
       title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
-      second_factor_title: "Два фактары аўтэнтыфікацыі"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
       email_placeholder: "электронная пошта ці імя карыстальніка"
       caps_lock_warning: "Caps Lock уключаны"
@@ -737,7 +733,6 @@ be:
     invites:
       welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
       name_label: "Назва"
-      password_label: "ўсталяваць пароль"
     password_reset:
       continue: "Працягваюць% {site_name}"
     emoji_set:
@@ -760,7 +755,6 @@ be:
     composer:
       more_emoji: "яшчэ ..."
       options: "Налады"
-      blockquote_text: "цытата"
       posting_not_on_topic: "На якую тэму Вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
       similar_topics: "Ваша тэма падобная на ..."
@@ -801,8 +795,7 @@ be:
       link_dialog_title: "ўставіць гіперспасылку"
       link_optional_text: "неабавязкова назву"
       link_url_placeholder: "Устаўце URL адрас альбо тып для пошуку тэмаў"
-      quote_title: "цытата"
-      quote_text: "цытата"
+      blockquote_text: "цытата"
       code_title: "Папярэдне фарматаваны тэкст"
       paste_code_text: "увядзіце ці ўстаўце код тут"
       upload_title: "спампаваць"
@@ -852,10 +845,8 @@ be:
       title: "пошук тэмаў, пастоў, юзераў альбо катэгорыяў"
       full_page_title: "пошук тэмаў альбо пастоў"
       no_results: "Нічога не знойдзена."
-      searching: "Пошук ..."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
-      search_google_title: "Пошук на гэтым сайце"
       context:
         topic: "Пошук у гэтай тэме"
         private_messages: "Пошук паведамленняў"
@@ -892,7 +883,6 @@ be:
         new: "У вас няма новых тэм."
         read: "Вы яшчэ не прачыталі ніводнай тэмы."
         posted: "Вы яшчэ не дапісвалі ў адну тэму."
-        latest: "Апошніх тэм няма. Шкада."
         bookmarks: "У вас пакуль няма тэмаў у закладках."
         category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
@@ -936,7 +926,6 @@ be:
       read_more: "Хочаце пачытаць яшчэ? %{CatLink} або %{latestLink}."
       browse_all_categories: Паглядзець усе катэгорыі
       view_latest_topics: Праглядзіце апошнія тэмы
-      suggest_create_topic: Чаму б не стварыць тэму?
       jump_reply_up: перайсці да больш ранняй адказы
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
@@ -964,7 +953,7 @@ be:
           "3_2": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
           "3_1": "Вы будзеце атрымліваць апавяшчэнні, таму што вы стварылі гэтую тэму."
           "3": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "Вы ігнаруеце ўсе паведамленні ў гэтай катэгорыі."
           "0_2": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
@@ -1136,7 +1125,6 @@ be:
         email: "Электронная пошта"
     flagging:
       action: "Пазначыць запіс"
-      take_action: "прыняць меры"
       notify_action: "паведамленне"
       delete_spammer: "выдаліць спамера"
       yes_delete_spammer: "Так, выдаліць спамера"
@@ -1148,13 +1136,11 @@ be:
       pinned:
         title: "замацаваныя"
     posts: "паведамленні"
-    posts_long: "паведамлення..."
     original_post: "першы паведамленне"
     views: "прагляды"
     replies: "адказы"
     activity: "актыўнасць"
     likes: "перавагі"
-    likes_long: "у гэтай тэме %{number} пераваг"
     users: "Карыстальнікі"
     category_title: "Катэгорыя"
     history: "гісторыя"

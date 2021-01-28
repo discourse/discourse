@@ -41,15 +41,29 @@ module Stylesheet
       end
 
       register_import "font" do
-        font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+        body_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.base_font }
+        heading_font = DiscourseFonts.fonts.find { |f| f[:key] == SiteSetting.heading_font }
+        contents = +""
 
-        contents = <<~EOF
-          #{font_css(font)}
+        if body_font.present?
+          contents << <<~EOF
+            #{font_css(body_font)}
 
-          :root {
-            --font-family: #{font[:stack]};
-          }
-        EOF
+            :root {
+              --font-family: #{body_font[:stack]};
+            }
+          EOF
+        end
+
+        if heading_font.present?
+          contents << <<~EOF
+            #{font_css(heading_font)}
+
+            :root {
+              --heading-font-family: #{heading_font[:stack]};
+            }
+          EOF
+        end
 
         Import.new("font.scss", source: contents)
       end
@@ -58,9 +72,21 @@ module Stylesheet
         contents = +""
 
         DiscourseFonts.fonts.each do |font|
+          if font[:key] == "system"
+            # Overwrite font definition because the preview canvases in the wizard require explicit @font-face definitions.
+            # uses same technique as https://github.com/jonathantneal/system-font-css
+            font[:variants] = [
+              { src: 'local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma")', weight: 400 },
+              { src: 'local(".SFNS-Bold"), local(".SFNSText-Bold"), local(".HelveticaNeueDeskInterface-Bold"), local(".LucidaGrandeUI"), local("Segoe UI Bold"), local("Ubuntu Bold"), local("Roboto-Bold"), local("DroidSans-Bold"), local("Tahoma Bold")', weight: 700 }
+            ]
+          end
+
           contents << font_css(font)
           contents << <<~EOF
-            .font-#{font[:key].tr("_", "-")} {
+            .body-font-#{font[:key].tr("_", "-")} {
+              font-family: #{font[:stack]};
+            }
+            .heading-font-#{font[:key].tr("_", "-")} h2 {
               font-family: #{font[:stack]};
             }
           EOF
@@ -165,6 +191,13 @@ module Stylesheet
       contents
     end
 
+    def self.import_wcag_overrides(color_scheme_id)
+      if color_scheme_id && ColorScheme.find_by_id(color_scheme_id)&.is_wcag?
+        return "@import \"wcag\";"
+      end
+      ""
+    end
+
     def initialize(options)
       @theme = options[:theme]
       @theme_id = options[:theme_id]
@@ -253,7 +286,8 @@ module Stylesheet
     end
 
     def category_css(category)
-      "body.category-#{category.slug}, body.category-#{category.full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
+      full_slug = category.full_slug.split("-")[0..-2].join("-")
+      "body.category-#{full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def font_css(font)
@@ -261,10 +295,11 @@ module Stylesheet
 
       if font[:variants].present?
         font[:variants].each do |variant|
+          src = variant[:src] ? variant[:src] : "asset-url(\"/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}\") format(\"#{variant[:format]}\")"
           contents << <<~EOF
             @font-face {
               font-family: #{font[:name]};
-              src: asset-url("/fonts/#{variant[:filename]}?v=#{DiscourseFonts::VERSION}") format("#{variant[:format]}");
+              src: #{src};
               font-weight: #{variant[:weight]};
             }
           EOF
@@ -280,11 +315,7 @@ module Stylesheet
     end
 
     def imports(asset, parent_path)
-      if asset[-1] == "*"
-        Dir["#{Stylesheet::Common::ASSET_ROOT}/#{asset}.scss"].map do |path|
-          Import.new(asset[0..-2] + File.basename(path, ".*"))
-        end
-      elsif callback = Importer.special_imports[asset]
+      if callback = Importer.special_imports[asset]
         instance_eval(&callback)
       else
         path, source = match_theme_import(asset, parent_path)

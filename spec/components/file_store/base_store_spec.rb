@@ -47,12 +47,7 @@ RSpec.describe FileStore::BaseStore do
 
   describe '#download' do
     before do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-      SiteSetting.s3_access_key_id = "some key"
-      SiteSetting.s3_secret_access_key = "some secret key"
-      SiteSetting.s3_region = "us-east-1"
-
+      setup_s3
       stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
     end
 
@@ -78,7 +73,7 @@ RSpec.describe FileStore::BaseStore do
     end
 
     it "should return the file when s3 cdn enabled" do
-      SiteSetting.s3_cdn_url = "https://cdn.s3.amazonaws.com"
+      SiteSetting.s3_cdn_url = "https://cdn.s3.#{SiteSetting.s3_region}.amazonaws.com"
       stub_request(:get, Discourse.store.cdn_url(upload_s3.url)).to_return(status: 200, body: "Hello world")
 
       file = store.download(upload_s3)
@@ -90,7 +85,7 @@ RSpec.describe FileStore::BaseStore do
       SiteSetting.login_required = true
       SiteSetting.secure_media = true
 
-      stub_request(:head, "https://s3-upload-bucket.s3.amazonaws.com/")
+      stub_request(:head, "https://s3-upload-bucket.s3.#{SiteSetting.s3_region}.amazonaws.com/")
       signed_url = Discourse.store.signed_url_for_path(upload_s3.url)
       stub_request(:get, signed_url).to_return(status: 200, body: "Hello world")
 

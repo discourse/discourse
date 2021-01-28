@@ -35,13 +35,10 @@
   {{/if}}
 
   {{#if canTakeAction}}
-    {{d-button
-      class="btn-danger"
-      action=(action "takeAction")
-      disabled=submitDisabled
-      title="flagging.take_action_tooltip"
-      icon="gavel"
-      label="flagging.take_action"
+    {{reviewable-bundled-action
+        bundle=flagActions
+        performAction=(action "takeAction")
+        reviewableUpdating=submitDisabled
     }}
   {{/if}}
 

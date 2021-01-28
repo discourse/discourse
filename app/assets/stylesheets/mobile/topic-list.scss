@@ -6,11 +6,6 @@
 // --------------------------------------------------
 
 .list-controls {
-  margin: 10px -3px 5px -3px;
-  .category-breadcrumb.hidden {
-    display: none;
-  }
-
   .container {
     display: flex;
     flex-wrap: wrap;
@@ -20,8 +15,6 @@
       display: flex;
       align-self: stretch;
       align-items: center;
-      margin: 0 3px 10px 3px;
-      order: 10; // always last for consistent placement
     }
   }
 
@@ -34,11 +27,9 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin: 5px 0;
+    margin: 0.5em 0 0;
 
     button {
-      margin: 0 3px;
-
       &.select-kit-header {
         display: flex;
         height: 100%;
@@ -47,36 +38,8 @@
     }
   }
 
-  .select-kit:not(.is-hidden) {
-    display: flex;
-    align-self: stretch;
-    margin-bottom: 10px;
-  }
-
-  .btn:not(.select-kit-header) {
-    margin-bottom: 10px;
-  }
-
-  .categories-admin-dropdown,
-  .tag-notifications-button {
-    order: 2; // after main nav
-  }
-
-  .category-navigation {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    .edit-category {
-      @media screen and (max-width: 374px) {
-        // Hide edit label on very tiny screens
-        .d-icon {
-          margin: 0;
-        }
-        .d-button-label {
-          display: none;
-        }
-      }
-    }
+  .navigation-controls {
+    margin-bottom: 0.667em;
   }
 
   .nav-pills {
@@ -86,7 +49,6 @@
     position: relative;
     .navigation-toggle {
       flex: 0 1 auto;
-      margin-bottom: 5px;
     }
     > li {
       margin-right: 0;
@@ -128,6 +90,23 @@
 
 .list-container .full-width {
   margin-left: 0;
+}
+
+ol.category-breadcrumb {
+  margin: 0 -3px 5px -3px;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 100%;
+  li.select-kit {
+    flex: 1 1 33%;
+    margin: 0 3px 5px 3px;
+    .select-kit-header .selected-name {
+      max-width: 80vw;
+      .badge-wrapper {
+        max-width: 100%;
+      }
+    }
+  }
 }
 
 // Base list
@@ -419,10 +398,6 @@ tr.category-topic-link {
 
 // Misc. stuff
 // --------------------------------------------------
-.btn-group .dropdown-toggle:active,
-.btn-group.open .dropdown-toggle {
-  outline: 0;
-}
 
 .dropdown {
   position: relative;
@@ -431,62 +406,17 @@ tr.category-topic-link {
 .open .dropdown-toggle {
   outline: 0;
 }
-.caret {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  vertical-align: middle;
-  border-top: 4px solid var(--primary);
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
-  content: "";
-  margin-left: 5px;
-}
 
 .fade.in {
   opacity: 1;
 }
 
-ol.category-breadcrumb {
-  margin: 0 0 5px 0;
+.tags-controls {
   display: flex;
-  flex-wrap: wrap;
-  flex: 1 1 100%;
-  li.select-kit {
-    flex: 1 1 33%;
-    margin: 0 3px 5px 3px;
-    .select-kit-header .selected-name {
-      max-width: 80vw;
-      .badge-wrapper {
-        max-width: 100%;
-      }
-    }
-  }
-}
-
-.top-lists {
   h2 {
-    margin-left: 10px;
+    order: -1;
+    margin-right: auto;
   }
-  .topic-list {
-    padding-bottom: 10px;
-  }
-  .btn-default.pull-right {
-    margin-right: 10px;
-  }
-}
-
-.tags-admin-menu {
-  display: none;
-}
-
-.staff.tags-page #create-topic {
-  clear: right;
-}
-
-.topic-list-bottom h3 {
-  clear: both;
-  padding-top: 10px;
 }
 
 .category-logo.aspect-image {
@@ -494,26 +424,7 @@ ol.category-breadcrumb {
   margin: 8px 0;
 
   img {
-    width: auto;
     max-width: 100%;
-    max-height: 150px;
-  }
-}
-
-@supports (--custom: property) {
-  .category-logo.aspect-image {
-    --max-height: 150px;
-    max-height: var(--max-height);
-    width: calc(var(--max-height) * var(--aspect-ratio));
-    max-width: 100%;
-    height: auto;
-
-    img {
-      width: 100%;
-      height: inherit;
-      max-width: initial;
-      max-height: initial;
-    }
   }
 }
 
@@ -538,8 +449,13 @@ td .main-link {
   // so the topic excerpt is full width
   // as the containing div is 80%
   .topic-excerpt {
+    display: block;
     padding-right: 0;
     width: 120%;
+  }
+
+  .topic-excerpt-more {
+    color: var(--tertiary);
   }
 }
 

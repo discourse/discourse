@@ -149,7 +149,6 @@ da:
         disabled: "fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider."
     wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
-    bootstrap_mode_enabled: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{min_users} brugere er tilsluttet."
     bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
     themes:
       default_description: "Standard"
@@ -378,9 +377,6 @@ da:
         name: "Navn"
         fields: "Felter"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlet markering)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlede markeringer)"
         agreed:
           one: "%{count}% er enige"
           other: "%{count}% er enige"
@@ -694,7 +690,6 @@ da:
       topic_stat_sentence_month:
         one: "%{count} nyt emne den sidste måned."
         other: "%{count} nye emner i den sidste måned."
-      n_more: "Kategorier (%{count} mere) ..."
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -772,7 +767,6 @@ da:
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
-        each_browser_note: "Bemærk: Du skal ændre indstillingen i alle dine browsere."
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Afvist"
       dismiss_notifications: "Afvis alle"
@@ -794,7 +788,6 @@ da:
       suspended_notice: "Denne bruger er suspenderet indtil %{date}."
       suspended_permanently: "Denne bruger er udelukket."
       suspended_reason: "Begrundelse: "
-      github_profile: "Github"
       email_activity_summary: "Resumé over aktivitet"
       mailing_list_mode:
         label: "Mailing list tilstand"
@@ -882,24 +875,18 @@ da:
         choose_new: "Vælg et nyt kodeord"
         choose: "Vælg et kodeord"
       second_factor_backup:
-        title: "To-faktor backup koder"
         regenerate: "Regenerér"
         disable: "Deaktiver"
         enable: "Aktiver"
         enable_long: "Aktivér backup koder"
-        manage: "Administrér backup koder. Du har <strong>%{count}</strong> backup koder tilbage."
         copy_to_clipboard: "Kopiér til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
         copied_to_clipboard: "Kopierede til udklipsholder"
-        remaining_codes: "Du har <strong>%{count}</strong> backup koder tilbage."
         use: "Brug en backup kode"
-        enable_prerequisites: "Du skal aktivere en primær anden faktor, før du genererer backup koder."
         codes:
           title: "backup koder genereret"
           description: "Hver af disse backup koder kan kun bruges én gang. Opbevar dem et sted der er sikkert men tilgængeligt."
       second_factor:
-        title: "To-faktor godkendelse"
-        enable: "Administrer To-faktor godkendelse"
         forgot_password: "Glemt kodeord?"
         confirm_password_description: "Bekræft dit kodeord for at fortsætte"
         name: "Navn"
@@ -911,16 +898,10 @@ da:
         show_key_description: "Indtast manuelt"
         short_description: |
           Beskyt din konto med engangs-sikkerhedskoder.
-        extended_description: |
-          To-faktor godkendelse tilføjer ekstra sikkerhed til din konto ved at kræve en engangstoken ud over dit kodeord. Tokens kan genereres på <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> og <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS-</a> enheder.
-        oauth_enabled_warning: "Bemærk, at sociale logins deaktiveres, når To-faktor godkendelse er aktiveret på din konto."
         use: "Brug Autentificeringsapp"
-        enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
         save: "Gem"
         edit: "Rediger"
-        edit_title: "Rediger anden faktor"
-        edit_description: "Navn på anden faktor"
         totp:
           title: "Token-baserede autentificatorer"
           default_name: "Min autentifikator"
@@ -1006,10 +987,8 @@ da:
         title: "Gentag adgangskode"
       auth_tokens:
         title: "Nyligt brugte enheder"
-        ip: "IP"
         details: "Detaljer"
         log_out_all: "Log alle ud "
-        active: "aktiv nu"
         not_you: "Ikke dig?"
         show_all: "Vis alle (%{count})"
         show_few: "Vis færre"
@@ -1120,14 +1099,10 @@ da:
         links_tab: "Links"
         link_created_at: "Oprettet"
         link_groups: grupper
-        create: "Send invitation"
-        generate_link: "Kopier invitations-link"
-        link_generated: "Invitiationslinket blev genereret!"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         invite_link:
           success: "Invitiationslinket blev genereret!"
         bulk_invite:
-          none: "Du har ikke inviteret noget endnu. Send individuelle invitationer eller inviter mange på en gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en CSV-fil</a>."
           success: "Fil uploaded successfuldt, du vil blive meddelt via en beskede når processen er fuldendt."
           error: "Desværre, filen skal være CSV format."
           confirmation_message: "Du er ved at sende email invitationer til alle i den uploadede fil."
@@ -1279,8 +1254,6 @@ da:
       disable: "Vis Slettede Indlæg"
     private_message_info:
       title: "Besked"
-      invite: "Invitér andre ..."
-      edit: "Tilføj eller fjern ..."
       leave_message: "Vil du virkelig forlade denne besked?"
       remove_allowed_user: "Ønsker du virkelig at fjerne %{name} fra denne samtale?"
       remove_allowed_group: "Er du sikker på du vil fjerne %{name} fra denne besked?"
@@ -1323,9 +1296,7 @@ da:
       title: "Log ind"
       username: "Bruger"
       password: "Adgangskode"
-      second_factor_title: "To-faktor godkendelse"
       second_factor_description: "Indtast godkendelseskoden fra din app:"
-      second_factor_backup_title: "To-faktor backup"
       second_factor_backup_description: "Indtast en af dine backup koder:"
       email_placeholder: "e-mail eller brugernavn"
       caps_lock_warning: "Caps Lock er sat til"
@@ -1342,10 +1313,8 @@ da:
       awaiting_approval: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
       requires_invite: "Beklager, det kræve en invitation at blive medlem af dette forum."
       not_activated: "Du kan ikke logge ind endnu. Vi har tidligere sendt en aktiverings-e-mail til dig på <b>%{sentTo}</b>. Følg venligst instruktionerne i den e-mail for at aktivere din konto."
-      not_allowed_from_ip_address: "Du kan ikke logge ind fra den IP adresse."
       admin_not_allowed_from_ip_address: "Du kan ikke logge på som administrator fra denne IP adresse."
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
-      omniauth_disallow_totp: "Din konto har To-faktor godkendelse aktiveret. Log ind med dit kodeord."
       resend_title: "Gensend Aktiverings-e-mail"
       change_email: "Skift e-mailadresse"
       provide_new_email: "Angiv en ny adresse og vi fremsender din bekræftelses-e-mail påny. "
@@ -1354,7 +1323,6 @@ da:
       sent_activation_email_again_generic: "Vi har sendt en anden aktiveringsemail. Det kan tage et par minutter, før det ankommer; husk at checke din spam-mappe."
       to_continue: "Log venligst ind"
       preferences: "Du skal være logget ind for at ændre præferencer."
-      forgot: "Jeg kan ikke huske min kontos detaljer"
       not_approved: "Din konto er endnu ikke blevet godkendt. Du får besked via e-mail når du kan logge ind."
       google_oauth2:
         name: "Google"
@@ -1383,7 +1351,6 @@ da:
       accept_invite: "Accepter Invitation"
       success: "Din konto er blevet oprettet, og du er nu logget ind."
       name_label: "Navn"
-      password_label: "Sæt Kodeord"
       optional_description: "(valgfri)"
     password_reset:
       continue: "Fortsæt til %{site_name}"
@@ -1408,8 +1375,6 @@ da:
       enter: "Indtast"
     conditional_loading_section:
       loading: Loader...
-    category_row:
-      topic_count: "%{count} emner i denne kategori"
     select_kit:
       default_header_text: Vælg...
       no_content: Ingen match fundet
@@ -1425,8 +1390,6 @@ da:
     date_time_picker:
       from: Fra
       to: Til
-      errors:
-        to_before_from: "Til dato skal være senere end fra dato."
     emoji_picker:
       filter_placeholder: Søg efter humørikon
       smileys_&_emotion: Smilys og følelser
@@ -1459,7 +1422,6 @@ da:
       options: "Indstillinger"
       whisper: "hvisken"
       unlist: "Ikke listede"
-      blockquote_text: "Citatblok"
       add_warning: "Dette er en officiel advarsel."
       toggle_whisper: "Slå hvisken til/fra"
       toggle_unlisted: "Slå listning til/fra"
@@ -1468,7 +1430,6 @@ da:
       similar_topics: "Dit emne minder om…"
       drafts_offline: "kladder offline"
       edit_conflict: "rediger konflikt"
-      group_mentioned_limit: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens konfigurerede omtale-grænse for %{max} brugere. Ingen bliver underrettet."
       group_mentioned:
         one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
         other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
@@ -1485,7 +1446,6 @@ da:
         post_length: "Indlægget skal være på mindst %{min} tegn."
         try_like: "Har du prøvet %{heart}knappen?"
         category_missing: "Du skal vælge en kategori."
-        tags_missing: "Du skal vælge mindst %{count}-tags"
       save_edit: "Gem ændringer"
       overwrite_edit: "Overskriv redigering"
       reply_original: "Svar til det oprindelige emne"
@@ -1524,8 +1484,7 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
-      quote_title: "Citatblok"
-      quote_text: "Citatblok"
+      blockquote_text: "Citatblok"
       code_title: "Præformateret tekst"
       code_text: "indryk præformateret tekst med 4 mellemrum"
       paste_code_text: "skriv eller indsæt kode her"
@@ -1553,7 +1512,6 @@ da:
         draft: Kladde
         edit: Rediger
         reply_to_post:
-          label: Besvar et indlæg %{postNumber} af %{postUsername}
           desc: Besvar et specifikt indlæg
         reply_as_new_topic:
           label: Besvar som linket emne
@@ -1571,7 +1529,6 @@ da:
           label: "Nyt emne"
         shared_draft:
           label: "Delt Kladde"
-          desc: "Lav en kladde til et emne, der kun er synligt for hjælperteam"
         toggle_topic_bump:
           label: "Slå emne 'bump' til/fra"
           desc: "Svar uden at ændre den seneste svardato"
@@ -1596,10 +1553,6 @@ da:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} og %{count} anden</span> %{description}"
-        other: "<span>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_consolidated_description:
         one: "kunne godt lide %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -1679,7 +1632,6 @@ da:
       full_page_title: "søg emner eller indlæg"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
-      searching: "Søger…"
       post_format: "#%{post_number} af %{username}"
       results_page: "Søgeresultater for '%{term}'"
       more_results: "Der er flere resultater. Begræns dine søgekriterier."
@@ -1688,7 +1640,6 @@ da:
       or_search_google: "Eller prøv at søge med Google i stedet:"
       search_google: "Prøv at søge med Google i stedet:"
       search_google_button: "Google"
-      search_google_title: "Søg denne side"
       context:
         user: "Søg i indlæg fra @%{username}"
         category: "Søg i #%{category} kategorien"
@@ -1730,8 +1681,6 @@ da:
           noreplies: har ingen svar
           single_user: indeholder en enkelt bruger
         post:
-          count:
-            label: Minimum for antal indlæg
           time:
             label: Sendt
             before: før
@@ -1777,12 +1726,10 @@ da:
         new: "Du har ingen nye emner."
         read: "Du har ikke læst nogen emner endnu."
         posted: "Du har ikke skrevet nogen indlæg endnu."
-        latest: "Der er ikke nogen nye emner. Det er sørgeligt."
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
         educate:
-          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de var oprettet indenfor de sidste 2 dage</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">indstillinger</a></p>'
           unread: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Oprettede dette emne</li><li>Svarede dette emne</li><li>Læste emnet i mere end 4 minutter</li></ul><p> Eller hvis du udtrykkeligt sat emnet til Sporet eller Følger via notifikations indstillinger i bunden af hvert emne.</p><p> Tilgå dine <a href="%{userPrefsUrl}">indstillinger</a> for at ændre dette.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
@@ -1851,10 +1798,8 @@ da:
       toggle_information: "vis/skjul emne detaljer"
       read_more_in_category: "Mere læsestof? Se andre emner i %{catLink} eller %{latestLink}."
       read_more: "Mere læsestof? %{catLink} eller %{latestLink}."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
-      suggest_create_topic: Hvorfor ikke oprette et emne?
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
@@ -1945,7 +1890,7 @@ da:
           "2_8": "Du vil se antallet af nye svar, fordi du følger denne kategori."
           "2_4": "Du vil se antallet af nye svar, fordi du indsendte et svar for dette emne."
           "2_2": "Du vil se antallet af nye svar, fordi du følger dette emne."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "1": "Du vil modtage en notifikation hvis nogen nævner dit @name eller svarer dig."
           "0_7": "Du ignorerer alle notifikationer i denne kategori."
@@ -2022,7 +1967,6 @@ da:
       feature_topic:
         title: "Fremhæv dette emne"
         pin: "Fastgør dette emne til toppen af kategorien %{categoryLink} indtil"
-        confirm_pin: "Du har allerede %{count} fastgjorte emner. Fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et nyt emne i denne kategori?"
         unpin: "Fjern dette emne fra starten af listen i %{categoryLink} kategorien."
         unpin_until: "Fjern dette emne fra toppen af kategorien %{categoryLink} eller vent til <strong>%{until}</strong>."
         pin_note: "Brugere kan unpinne emnet individuelt."
@@ -2032,7 +1976,6 @@ da:
           one: "Emner fastgjort i %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Emner fastgjort i %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Fastgør dette emne til toppen af alle emnelister indtil"
-        confirm_pin_globally: "Du har allerede %{count} globalt fastgjorte emner. For mange fastgjorte emner kan være irriterende for nye og anonyme brugere. Er du sikker på du vil fastgøre et emne mere globalt?"
         unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
         unpin_globally_until: "Fjern dette emne fra toppen af alle emnelister eller vent til <strong>%{until}</strong>."
         global_pin_note: "Brugere kan unpinne emnet individuelt."
@@ -2204,7 +2147,6 @@ da:
         upload: "Beklager, der opstod en fejl ved upload af filen. Prøv venligst igen."
         file_too_large: "Beklager, denne fil er for stor (maksimal størrelse er %{max_size_kb}kb). Hvorfor ikke uploade din store fil til en cloud-delingstjeneste, og derefter indsætte linket?"
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
-        too_many_dragged_and_dropped_files: "Beklager, du kan kun uploade %{max} filer ad gangen."
         upload_not_authorized: "Beklager, filen som du forsøger at uploade, er ikke tiladt (tilladte filendelser: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
@@ -2265,7 +2207,6 @@ da:
         delete_topic_disallowed: "du har ikke tilladelse til at slette dette emne"
         delete_topic: "slet emne"
         add_post_notice: "Tilføj Hjælperteam Notits"
-        remove_post_notice: "Fjern Hjælperteam Notits"
         remove_timer: "fjern timer"
       actions:
         people:
@@ -2337,7 +2278,6 @@ da:
       tags_allowed_tag_groups: "Begræns disse tag grupper til denne kategori:"
       tags_placeholder: "(Valgfri) liste af tiladte mærker"
       tag_groups_placeholder: "(Valgfri) liste af tiladte mærke grupper"
-      manage_tag_groups_link: "Administrer tag grupper her."
       allow_global_tags_label: "Tillad også andre tags"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"
@@ -2449,11 +2389,9 @@ da:
     flagging:
       title: "Tak fordi du hjælper med at holde vores forum civiliseret!"
       action: "Flag indlæg"
-      take_action: "Reagér"
       notify_action: "Besked"
       official_warning: "Officiel Advarsel"
       delete_spammer: "Slet spammer"
-      delete_confirm_MF: "Du er ved at slette <b>{posts}</b> indlæg og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} oprettet af denne bruger, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>{ip_address}</b> og tilføje deres e-mail-adresse <b>{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?"
       yes_delete_spammer: "Ja, slet spammer"
       ip_address_missing: "(Ikke tilgængelig)"
       hidden_email_address: "(skjult)"
@@ -2520,13 +2458,6 @@ da:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
     posts: "Indlæg"
-    posts_long: "%{number} indlæg i dette emne"
-    posts_likes_MF: |
-      Dette emne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med et højt like pr. indlæg forhold}
-      med {med et meget højt like pr. indlæg forhold}
-      high {med et ekstremt højt like pr. indlæg forhold}
-      other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
     views_lowercase:
@@ -2541,7 +2472,6 @@ da:
     likes_lowercase:
       one: "like"
       other: "likes"
-    likes_long: "der er %{number} likes i dette emne"
     users: "Deltagere"
     users_lowercase:
       one: "bruger"
@@ -2797,8 +2727,6 @@ da:
         delete: "Slet"
         confirm_delete: "Er du sikker du vil slette denne tag gruppe?"
         everyone_can_use: "Tags kan bruges af alle"
-        usable_only_by_staff: "Tags er synlige for alle, men kun hjælperteam kan bruge dem"
-        visible_only_to_staff: "Tags er kun synlige for hjælperteam"
       topics:
         none:
           unread: "Du har ingen ulæste emner."
@@ -3533,7 +3461,6 @@ da:
             post_edit: "redigér indlæg"
             post_unlocked: "indlæg ulåst"
             check_personal_message: "check privat besked"
-            disabled_second_factor: "deaktiver To-faktor godkendelse"
             topic_published: "emne offentliggjort"
             post_approved: "indlæg godkendt"
             post_rejected: "indlæg afvist"
@@ -3681,7 +3608,6 @@ da:
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason_hidden_label: "Hvorfor suspenderer du? Teksten er synlig for  denne bruger, når de prøver et log ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
-        suspend_reason_placeholder: "Årsag til suspension"
         suspend_message: "Email Besked"
         suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"
@@ -3707,7 +3633,6 @@ da:
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er ved at slette {POSTS, plural, one {1 post} other {# posts}} og {TOPICS, plural, one {1 topic} other {# topics}}. Er du sikker?"
         silence: "Mådehold (silence)"
         unsilence: "Fjern mådeholdenhed (unsilence)"
         silenced: "Mådeholdt (silenced)?"
@@ -3740,7 +3665,6 @@ da:
         private_topics_count: Private emner
         posts_read_count: Læste indlæg
         post_count: Oprettede indlæg
-        second_factor_enabled: To-faktor godkendelse aktiveret
         topics_entered: Læste emner
         flags_given_count: Afgivne flag
         flags_received_count: Modtagne flag

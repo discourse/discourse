@@ -120,15 +120,12 @@ describe PostActionCreator do
         expect(post.hidden?).to eq(false)
       end
 
-      it 'forces the review to surpass the minimum priority threshold' do
-        Reviewable.set_priorities(high: 40.0)
-        SiteSetting.reviewable_default_visibility = 'high'
+      it 'sets the force_review field' do
         result = PostActionCreator.create(user, post, :spam)
 
         reviewable = result.reviewable
-        reviewable_score = reviewable.reviewable_scores.find_by(user: user)
 
-        expect(reviewable_score.score).to eq(Reviewable.min_score_for_priority)
+        expect(reviewable.force_review).to eq(true)
       end
     end
 

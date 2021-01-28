@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
   # because we want to use the 'type' column and don't want to use STI
   self.inheritance_column = nil
 
-  belongs_to :post, -> { unscope(:where) }
+  belongs_to :post, -> { with_deleted }
 
   has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
@@ -83,6 +83,7 @@ end
 #  updated_at       :datetime         not null
 #  chart_type       :integer          default("bar"), not null
 #  groups           :string
+#  title            :string
 #
 # Indexes
 #

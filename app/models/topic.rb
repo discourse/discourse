@@ -88,7 +88,7 @@ class Topic < ActiveRecord::Base
       Jobs.enqueue(:generate_topic_thumbnails, { topic_id: id, extra_sizes: extra_sizes })
     end
 
-    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?) }
+    infos.each { |i| i[:url] = UrlHelper.cook_url(i[:url], secure: original.secure?, local: true) }
 
     infos.sort_by! { |i| -i[:width] * i[:height] }
   end
@@ -123,7 +123,7 @@ class Topic < ActiveRecord::Base
     end
 
     raw_url = thumbnail&.optimized_image&.url || image_upload&.url
-    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?)
+    UrlHelper.cook_url(raw_url, secure: image_upload&.secure?, local: true) if raw_url
   end
 
   def featured_users
@@ -242,6 +242,7 @@ class Topic < ActiveRecord::Base
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
   has_one :topic_search_data
   has_one :topic_embed, dependent: :destroy
+  has_one :linked_topic, dependent: :destroy
 
   belongs_to :image_upload, class_name: 'Upload'
   has_many :topic_thumbnails, through: :image_upload
@@ -367,7 +368,7 @@ class Topic < ActiveRecord::Base
     self.last_post_user_id ||= user_id
   end
 
-  def inherit_auto_close_from_category
+  def inherit_auto_close_from_category(timer_type: :close)
     if !self.closed &&
        !@ignore_category_auto_close &&
        self.category &&
@@ -378,7 +379,7 @@ class Topic < ActiveRecord::Base
       duration = based_on_last_post ? self.category.auto_close_hours : nil
 
       self.set_or_create_timer(
-        TopicTimer.types[:close],
+        TopicTimer.types[timer_type],
         self.category.auto_close_hours,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
@@ -440,6 +441,7 @@ class Topic < ActiveRecord::Base
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
+    return unless regular?
     if user && user.new_user_posting_on_first_day?
       limit_first_day_topics_per_day
     else
@@ -574,11 +576,15 @@ class Topic < ActiveRecord::Base
   end
 
   def private_message?
-    archetype == Archetype.private_message
+    self.archetype == Archetype.private_message
   end
 
   def regular?
     self.archetype == Archetype.default
+  end
+
+  def open?
+    !self.closed?
   end
 
   MAX_SIMILAR_BODY_LENGTH ||= 200
@@ -597,9 +603,11 @@ class Topic < ActiveRecord::Base
         PrettyText.cook(raw[0...MAX_SIMILAR_BODY_LENGTH].strip)
       )
 
-      if cooked.present?
+      prepared_data = cooked.present? && Search.prepare_data(cooked)
+
+      if prepared_data.present?
         raw_tsquery = Search.set_tsquery_weight_filter(
-          Search.prepare_data(cooked),
+          prepared_data,
           'B'
         )
 
@@ -632,11 +640,11 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb", title: title, raw: raw))
         .where("similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2", title: title, raw: raw)
     else
       similars
-        .select(sanitize_sql_array(["topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title]))
+        .select(DB.sql_fragment("topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb", title: title))
         .where("similarity(topics.title, :title) > 0.2", title: title)
     end
   end
@@ -898,6 +906,7 @@ class Topic < ActiveRecord::Base
                               action_code: opts[:action_code],
                               no_bump: opts[:bump].blank?,
                               topic_id: self.id,
+                              silent: opts[:silent],
                               skip_validations: true,
                               custom_fields: opts[:custom_fields],
                               import_mode: opts[:import_mode])
@@ -1027,12 +1036,40 @@ class Topic < ActiveRecord::Base
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      if invite_existing_muted?(target_user, invited_by)
-        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
+      if MutedUser
+          .where(user: target_user, muted_user: invited_by)
+          .joins(:muted_user)
+          .where('NOT admin AND NOT moderator')
+          .exists?
+        raise NotAllowed.new(I18n.t("topic_invite.muted_invitee"))
       end
 
-      if !allowed_pm_user?(target_user, invited_by)
-        raise NotAllowed.new(I18n.t("topic_invite.not_allowed"))
+      if TopicUser
+          .where(topic: self,
+                 user: target_user,
+                 notification_level: TopicUser.notification_levels[:muted])
+          .exists?
+        raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
+      end
+
+      if !target_user.staff? &&
+         target_user&.user_option&.enable_allowed_pm_users &&
+         !AllowedPmUser.where(user: target_user, allowed_pm_user: invited_by).exists?
+        raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
+      end
+
+      if !target_user.staff? &&
+         invited_by&.user_option&.enable_allowed_pm_users &&
+         !AllowedPmUser.where(user: invited_by, allowed_pm_user: target_user).exists?
+        raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
+      end
+
+      if !target_user.staff? && target_user&.user_option&.enable_allowed_pm_users
+        topic_users = self.topic_allowed_users.pluck(:user_id)
+        allowed_users = AllowedPmUser.where(user: target_user.id, allowed_pm_user_id: topic_users)
+        if (allowed_users - topic_users).size > 0
+          raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
+        end
       end
 
       if private_message?
@@ -1045,63 +1082,6 @@ class Topic < ActiveRecord::Base
         username_or_email, invited_by, self, group_ids, custom_message
       )
     end
-  end
-
-  def invite_existing_muted?(target_user, invited_by)
-    if invited_by.id &&
-       MutedUser.where(user_id: target_user.id, muted_user_id: invited_by.id)
-           .joins(:muted_user)
-           .where('NOT admin AND NOT moderator')
-           .exists?
-      return true
-    end
-
-    if TopicUser.where(
-         topic: self,
-         user: target_user,
-         notification_level: TopicUser.notification_levels[:muted]
-        ).exists?
-      return true
-    end
-
-    false
-  end
-
-  def allowed_pm_user?(target_user, invited_by)
-    return true if target_user.staff?
-    users = TopicAllowedUser.where(topic: self).pluck(:user_id)
-    users << target_user.id << invited_by.id
-    users.uniq
-
-    users_with_allowed_pms = allowed_pms_enabled(users).pluck(:id).uniq
-
-    if users_with_allowed_pms.any?
-      users_sender_can_pm = allowed_pms_enabled(users)
-        .where("allowed_pm_users.allowed_pm_user_id" => invited_by.id)
-        .pluck(:id).uniq
-
-      return false unless users_sender_can_pm.include? target_user.id
-
-      can_users_receive_from_sender = allowed_pms_enabled([invited_by.id])
-        .where("allowed_pm_users.allowed_pm_user_id IN (:user_ids)", user_ids: users.delete(invited_by.id))
-        .pluck(:id).uniq
-
-      users_not_allowed = users_with_allowed_pms - users_sender_can_pm - can_users_receive_from_sender
-      return false if users_not_allowed.any?
-    end
-
-    true
-  end
-
-  def allowed_pms_enabled(user_ids)
-    User
-      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-      .joins("LEFT JOIN allowed_pm_users ON allowed_pm_users.user_id = users.id")
-      .where("
-        user_options.user_id IS NOT NULL AND
-        user_options.user_id IN (:user_ids) AND
-        user_options.enable_allowed_pm_users
-      ", user_ids: user_ids)
   end
 
   def email_already_exists_for?(invite)
@@ -1228,7 +1208,7 @@ class Topic < ActiveRecord::Base
   # NOTE: These are probably better off somewhere else.
   #       Having a model know about URLs seems a bit strange.
   def last_post_url
-    "#{Discourse.base_uri}/t/#{slug}/#{id}/#{posts_count}"
+    "#{Discourse.base_path}/t/#{slug}/#{id}/#{posts_count}"
   end
 
   def self.url(id, slug, post_number = nil)
@@ -1242,7 +1222,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.relative_url(id, slug, post_number = nil)
-    url = +"#{Discourse.base_uri}/t/"
+    url = +"#{Discourse.base_path}/t/"
     url << "#{slug}/" if slug.present?
     url << id.to_s
     url << "/#{post_number}" if post_number.to_i > 1
@@ -1324,12 +1304,13 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil)
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, silent: nil)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
     topic_timer_options.merge!(user: by_user) unless public_topic_timer
+    topic_timer_options.merge!(silent: silent) if silent
     topic_timer = TopicTimer.find_or_initialize_by(topic_timer_options)
     topic_timer.status_type = status_type
 
@@ -1362,10 +1343,9 @@ class Topic < ActiveRecord::Base
         topic_timer.execute_at = num_hours.hours.from_now if num_hours > 0
       else
         timestamp = utc.parse(time)
-        raise Discourse::InvalidParameters unless timestamp
+        raise Discourse::InvalidParameters unless timestamp && timestamp > utc.now
         # a timestamp in client's time zone, like "2015-5-27 12:00"
         topic_timer.execute_at = timestamp
-        topic_timer.errors.add(:execute_at, :invalid) if timestamp < utc.now
       end
     end
 
@@ -1377,6 +1357,8 @@ class Topic < ActiveRecord::Base
       end
 
       if self.persisted?
+        # See TopicTimer.after_save for additional context; the topic
+        # status may be changed by saving.
         topic_timer.save!
       else
         self.topic_timers << topic_timer
@@ -1652,6 +1634,34 @@ class Topic < ActiveRecord::Base
       .first
   end
 
+  def incoming_email_addresses(group: nil, received_before: Time.zone.now)
+    email_addresses = Set.new
+
+    # TODO(martin) Look at improving this N1, it will just get slower the
+    # more replies/incoming emails there are for the topic.
+    self.incoming_email.where("created_at <= ?", received_before).each do |incoming_email|
+      to_addresses = incoming_email.to_addresses_split
+      cc_addresses = incoming_email.cc_addresses_split
+      combined_addresses = [to_addresses, cc_addresses].flatten
+
+      # We only care about the emails addressed to the group or CC'd to the
+      # group if the group is present. If combined addresses is empty we do
+      # not need to do this check, and instead can proceed on to adding the
+      # from address.
+      if group.present? && combined_addresses.any?
+        next if combined_addresses.none? { |address| address =~ group.email_username_regex }
+      end
+
+      email_addresses.add(incoming_email.from_address)
+      email_addresses.merge(combined_addresses)
+    end
+
+    email_addresses.subtract([nil, ''])
+    email_addresses.delete(group.email_username) if group.present?
+
+    email_addresses.to_a
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1785,13 +1795,14 @@ end
 #  featured_link             :string
 #  reviewable_score          :float            default(0.0), not null
 #  image_upload_id           :bigint
+#  slow_mode_seconds         :integer          default(0), not null
 #
 # Indexes
 #
 #  idx_topics_front_page                   (deleted_at,visible,archetype,category_id,id)
 #  idx_topics_user_id_deleted_at           (user_id) WHERE (deleted_at IS NULL)
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
-#  index_topics_on_bumped_at               (bumped_at)
+#  index_forum_threads_on_bumped_at        (bumped_at)
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)
 #  index_topics_on_id_filtered_banner      (id) UNIQUE WHERE (((archetype)::text = 'banner'::text) AND (deleted_at IS NULL))
@@ -1799,5 +1810,6 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_timestamps_private      (bumped_at,created_at,updated_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text = 'private_message'::text))
 #  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

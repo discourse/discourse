@@ -28,7 +28,8 @@ class TopicsController < ApplicationController
     :convert_topic,
     :bookmark,
     :publish,
-    :reset_bump_date
+    :reset_bump_date,
+    :set_slow_mode
   ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -55,7 +56,7 @@ class TopicsController < ApplicationController
     # arrays are not supported
     params[:page] = params[:page].to_i rescue 1
 
-    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
+    opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted, :replies_to_post_number, :filter_upwards_post_id)
     username_filters = opts[:username_filters]
 
     opts[:print] = true if params[:print].present?
@@ -111,6 +112,7 @@ class TopicsController < ApplicationController
             'not in group',
             ex.obj,
             custom_message: 'not_in_group.title_topic',
+            custom_message_params: { group: group.name },
             group: group
           )
         end
@@ -165,6 +167,8 @@ class TopicsController < ApplicationController
 
     topic = Topic.find(params[:id])
     category = Category.find(params[:destination_category_id])
+
+    raise Discourse::InvalidParameters if category.id == SiteSetting.shared_drafts_category.to_i
 
     guardian.ensure_can_publish_topic!(topic, category)
     topic = TopicPublisher.new(topic, current_user, category.id).publish!
@@ -315,39 +319,44 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
-      category = Category.find_by(id: params[:category_id])
-
-      if category || (params[:category_id].to_i == 0)
-        guardian.ensure_can_move_topic_to_category!(category)
+      if topic.shared_draft
+        topic.shared_draft.update(category_id: params[:category_id])
+        params.delete(:category_id)
       else
-        return render_json_error(I18n.t('category.errors.not_found'))
-      end
+        category = Category.find_by(id: params[:category_id])
 
-      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
-        if topic_tags.present?
-          allowed_tags = DiscourseTagging.filter_allowed_tags(
-            guardian,
-            category: category
-          ).map(&:name)
+        if category || (params[:category_id].to_i == 0)
+          guardian.ensure_can_move_topic_to_category!(category)
+        else
+          return render_json_error(I18n.t('category.errors.not_found'))
+        end
 
-          invalid_tags = topic_tags - allowed_tags
+        if category && topic_tags = (params[:tags] || topic.tags.pluck(:name)).reject { |c| c.empty? }
+          if topic_tags.present?
+            allowed_tags = DiscourseTagging.filter_allowed_tags(
+              guardian,
+              category: category
+            ).map(&:name)
 
-          # Do not raise an error on a topic's hidden tags when not modifying tags
-          if params[:tags].blank?
-            invalid_tags.each do |tag_name|
-              if DiscourseTagging.hidden_tag_names.include?(tag_name)
-                invalid_tags.delete(tag_name)
+            invalid_tags = topic_tags - allowed_tags
+
+            # Do not raise an error on a topic's hidden tags when not modifying tags
+            if params[:tags].blank?
+              invalid_tags.each do |tag_name|
+                if DiscourseTagging.hidden_tag_names.include?(tag_name)
+                  invalid_tags.delete(tag_name)
+                end
               end
             end
-          end
 
-          invalid_tags = Tag.where_name(invalid_tags).pluck(:name)
+            invalid_tags = Tag.where_name(invalid_tags).pluck(:name)
 
-          if !invalid_tags.empty?
-            if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
-              return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
-            else
-              return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+            if !invalid_tags.empty?
+              if (invalid_tags & DiscourseTagging.hidden_tag_names).present?
+                return render_json_error(I18n.t('category.errors.disallowed_tags_generic'))
+              else
+                return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+              end
             end
           end
         end
@@ -418,6 +427,8 @@ class TopicsController < ApplicationController
       guardian.ensure_can_close_topic!(@topic)
     when 'archived'
       guardian.ensure_can_archive_topic!(@topic)
+    when 'visible'
+      guardian.ensure_can_toggle_topic_visibility!(@topic)
     else
       guardian.ensure_can_moderate!(@topic)
     end
@@ -834,6 +845,8 @@ class TopicsController < ApplicationController
   end
 
   def feed
+    raise Discourse::NotFound if !Post.exists?(topic_id: params[:topic_id])
+
     @topic_view = TopicView.new(params[:topic_id])
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
@@ -845,6 +858,7 @@ class TopicsController < ApplicationController
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
       topics = TopicQuery.unread_filter(tq.joined_topic_user, current_user.id, staff: guardian.is_staff?).listable_topics
+      topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
         if params[:include_subcategories]
@@ -892,8 +906,14 @@ class TopicsController < ApplicationController
         TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
       end
     else
-      current_user.user_stat.update_column(:new_since, Time.zone.now)
-      TopicTrackingState.publish_dismiss_new(current_user.id)
+      if params[:tracked].to_s == "true"
+        topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
+        topic_users = topics.map { |topic| { topic_id: topic.id, user_id: current_user.id, last_read_post_number: 0 } }
+        TopicUser.insert_all(topic_users) if !topic_users.empty?
+      else
+        current_user.user_stat.update_column(:new_since, Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id)
+      end
     end
     render body: nil
   end
@@ -923,6 +943,26 @@ class TopicsController < ApplicationController
 
     topic.reset_bumped_at
     render body: nil
+  end
+
+  def set_slow_mode
+    topic = Topic.find(params[:topic_id])
+    slow_mode_type = TopicTimer.types[:clear_slow_mode]
+    timer = TopicTimer.find_by(topic: topic, status_type: slow_mode_type)
+
+    guardian.ensure_can_moderate!(topic)
+    topic.update!(slow_mode_seconds: params[:seconds])
+    enabled = params[:seconds].to_i > 0
+
+    time = enabled && params[:enabled_until].present? ? params[:enabled_until] : nil
+
+    topic.set_or_create_timer(
+      slow_mode_type,
+      time,
+      by_user: timer&.user
+    )
+
+    head :ok
   end
 
   private
@@ -1032,7 +1072,8 @@ class TopicsController < ApplicationController
       @topic_view,
       scope: guardian,
       root: false,
-      include_raw: !!params[:include_raw]
+      include_raw: !!params[:include_raw],
+      exclude_suggested_and_related: !!params[:replies_to_post_number] || !!params[:filter_upwards_post_id]
     )
 
     respond_to do |format|

@@ -76,6 +76,9 @@ ru:
       breakdown:
         title: "Результаты опроса"
         votes: "%{count} голосов"
+        breakdown: "Распределение"
+        percentage: "Процент"
+        count: "Количество"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."
@@ -110,6 +113,8 @@ ru:
           step: Шаг
         poll_public:
           label: Показывать проголосовавших (не отмечайте, чтобы голосование было анонимным)
+        poll_title:
+          label: Заголовок (необязательно)
         poll_options:
           label: Введите варианты ответа, по одному в строке
         automatic_close:

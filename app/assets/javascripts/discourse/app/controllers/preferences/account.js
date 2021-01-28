@@ -1,19 +1,19 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { not, or, gt } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
-import discourseComputed from "discourse-common/utils/decorators";
+import { gt, not, or } from "@ember/object/computed";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import Controller from "@ember/controller";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { findAll } from "discourse/models/login-method";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import logout from "discourse/lib/logout";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import { findAll } from "discourse/models/login-method";
-import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
-import logout from "discourse/lib/logout";
-import EmberObject from "@ember/object";
-import bootbox from "bootbox";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -296,7 +296,9 @@ export default Controller.extend(CanCheckEmails, {
         }
       )
         .then(() => {
-          if (!token) logout(); // All sessions revoked
+          if (!token) {
+            logout();
+          } // All sessions revoked
         })
         .catch(popupAjaxError);
     },

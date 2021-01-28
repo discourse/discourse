@@ -1,10 +1,10 @@
 import {
-  emojis,
   aliases,
-  searchAliases,
-  translations,
-  tonableEmojis,
+  emojis,
   replacements,
+  searchAliases,
+  tonableEmojis,
+  translations,
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
@@ -72,7 +72,9 @@ Object.keys(aliases).forEach((name) => {
 });
 
 function isReplacableInlineEmoji(string, index, inlineEmoji) {
-  if (inlineEmoji) return true;
+  if (inlineEmoji) {
+    return true;
+  }
 
   // index depends on regex; when `inlineEmoji` is false, the regex starts
   // with a `\B` character, so there's no need to subtract from the index
@@ -124,7 +126,9 @@ export function performEmojiUnescape(string, opts) {
       isReplacableInlineEmoji(string, index, inlineEmoji);
 
     return url && isReplacable
-      ? `<img src='${url}' ${opts.skipTitle ? "" : `title='${emojiVal}'`} ${
+      ? `<img width="20" height="20" src='${url}' ${
+          opts.skipTitle ? "" : `title='${emojiVal}'`
+        } ${
           opts.lazy ? "loading='lazy' " : ""
         }alt='${emojiVal}' class='${classes}'>`
       : m;
@@ -155,9 +159,12 @@ export function performEmojiEscape(string, opts) {
 
 export function isCustomEmoji(code, opts) {
   code = code.toLowerCase();
-  if (extendedEmoji.hasOwnProperty(code)) return true;
-  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code))
+  if (extendedEmoji.hasOwnProperty(code)) {
     return true;
+  }
+  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code)) {
+    return true;
+  }
   return false;
 }
 
@@ -227,7 +234,9 @@ export function emojiSearch(term, options) {
   // if term matches from beginning
   for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
-    if (item.indexOf(term) === 0) addResult(item);
+    if (item.indexOf(term) === 0) {
+      addResult(item);
+    }
   }
 
   if (searchAliases[term]) {
@@ -236,7 +245,9 @@ export function emojiSearch(term, options) {
 
   for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
-    if (item.indexOf(term) > 0) addResult(item);
+    if (item.indexOf(term) > 0) {
+      addResult(item);
+    }
   }
 
   if (maxResults === -1) {

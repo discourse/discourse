@@ -39,6 +39,7 @@ fa_IR:
   title: "Discourse"
   topics: "موضوعات"
   posts: "فرسته‌ها"
+  views: "بازدیدها"
   loading: "بارگیری..."
   powered_by_html: 'قدرت گرفته از <a href="https://www.discourse.org">دیسکورس</a>، بهترین نمایش با جاوا اسکریپت فعال.'
   sign_up: "ثبت نام"
@@ -56,7 +57,6 @@ fa_IR:
     compile_error:
       unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
-      generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
       git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
   emails:
@@ -130,8 +130,14 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      second_factor_cannot_be_enforced_with_sso_enabled: "اگر SSO فعال باشد، نمی‌توانید 2FA را اجرا کنید."
+  word_connector:
+    comma: "، "
   invite:
+    expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر <a href='%{base_path}/u/%{username}/summary'>حساب کاربری دارند!</a> "
+    disabled_errors:
+      sso_enabled: "دعوت نامه‌ها به خاطر فعال بودن SSO، غیرفعال هستند."
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
@@ -260,26 +266,6 @@ fa_IR:
     until_posts:
       one: "%{count} فرسته"
       other: "%{count} نوشته"
-    "new-topic": |
-      به %{site_name} &mdash خوش آمدید؛ **سپاس که گفت‌وگوی تازه‌ای را می‌آغازید!**
-
-      - اگر عنوان را با صدای بلند بخوانید، جالب به نظر می‌رسد؟‌ خلاصه‌ی خوبی است؟
-
-      - چه کسانی به این موضوع علاقه‌مند خواهند شد؟ چرا موضوع مهم است؟ چه جور پاسخ‌هایی می‌خواهید؟
-
-      - در موضوع خود از کلمه‌های رایج استفاده کنید تا دیگران بتوانند آن را *بیابند*. برای گروه‌بندی موضوع خود با موضوعات مرتبط، یک دسته انتخاب کنید.
-
-      برای اطلاعات بیشتر [دستورالعمل های انجمن را ببینید](%{base_path}/guidelines). این کادر فقط برای اولین %{education_posts_text} شما ظاهر می‌شود.
-    "new-reply": |
-      به %{site_name} &mdash; خوش آمدید **با تشکر از شما برای همکارییتان!**
-
-      - آیا پاسخ شما سطح گفتگو رو بالا می‌برد؟
-
-      - با اعضای انجمن مهربان باشید.
-
-      - از انتقاد سازنده استقبال می‌کنیم, ولی از *نظرات*، انتقاد کنید نه مردم.
-
-      برای اطلاعات بیشتر، [راهنمای انجمن را ببینید](%{base_path}/guidelines). این قسمت برای %{education_posts_text} نمایش داده می‌شود.
     avatar: |
       ### با یک تصویر برای حساب کاربری چطورید؟
 
@@ -562,41 +548,35 @@ fa_IR:
       title: "موضوعات قدیمی"
       description: "این فرسته بر اساس عنوان و اولین فرسته، ربطی به گفت‌وگوی جاری ندارد و باید به جای دیگری منتقل شود."
       short_description: "به بحث مرتبط نیست"
-      long_form: "این موضوع را به عنوان خارج از موضوع پرچم بزن"
     spam:
       title: "هرزنامه"
       description: "این فرسته تبلیغاتی یا خرابکاری است و برای موضوع جاری مفید یا به آن مرتبط نیست."
       short_description: "این یک تبلیغ یا خرابکاری است"
-      long_form: "پرچم‌گذاری به عنوان هرزنامه"
       email_title: '"%{title}" به عنوان هرزنامه پرچم گذاری شد'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "نامناسب"
-      long_form: "به عنوان نامناسب علامت گذاری شده"
     notify_user:
       title: "فرستادن پیام به @%{username}"
-      long_form: "به کاربر پیام داده شد"
       email_title: 'فرسته‌ی شما در « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
       description: "این فرسته، به یک دلیل دیگر که در بالا ذکر نشده، نیاز به توجه مدیران دارد."
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
-      long_form: "برای توجه مدیران پرچم‌گذاری شد"
       email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "نشانک‌گذاری"
       description: "نشانک‌گذاری این فرسته"
       short_description: "نشانک‌گذاری این فرسته"
-      long_form: "این فرسته را نشانک زد"
     like:
       title: "پسندیدن"
       description: "پسندیدن این فرسته"
       short_description: "پسندیدن این فرسته"
-      long_form: "این مورد پسندیده شد"
   user_activity:
     no_bookmarks:
+      search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       others: "نشانه‌گذاری وجود ندارد"
     no_likes_given:
       self: "شما هیچ فرسته‌ای را نپسندیده‌اید."
@@ -619,7 +599,7 @@ fa_IR:
       email_title: 'موضوع "%{title}" نیاز به توجه مدیر دارد. '
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: "<p>این فرسته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
+    user_must_edit: "<p>این نوشته را انجمن پرچم‌گذاری کرده و بطور موقت مخفی است.</p>"
   archetypes:
     regular:
       title: "موضوع عادی"
@@ -636,9 +616,7 @@ fa_IR:
     mute_topic: "نادیده گرفتن تمام اطلاعیه‌های این موضوع، %{link}"
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
-    all: "برای من ایمیلی از %{sitename} اسال نکن"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
-    not_found_description: "با عرض پوزش، نمی‌توانیم لغو اشتراک را پیدا کنیم. ممکن است لینک موجود در ایمیل شما باطل شده باشد."
     log_out: "خروج"
     digest_frequency:
       never: "هیچوقت"
@@ -959,6 +937,7 @@ fa_IR:
     share_links: "مشخص کنید کدام موارد بر روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود. "
     send_welcome_message: "برای تمام کاربران جدید پیام خوش آمدید به همراه راهنمای شروع سریع بفرست."
+    send_tl2_promotion_message: "به کاربران سطح اعتماد ۲ جدید پیامی درباره ارتقا ارسال کنید."
     suppress_reply_directly_below: "وقتی که نوشته فقط یک پاسخ مستقیم دارد، تعداد پاسخ قابل باز شدن را نمایش نده."
     suppress_reply_directly_above: "'در پاسخ به' قابل بزرگ شدن را در نوشته وقتی فقط یک پاسخ بالای این نوشته است، نشان نده."
     suppress_reply_when_quoting: "'در پاسخ به' قابل بزرگ شدن را در نوشته وقتی به یک نوشته پاسخ داده می شود، نشان نده."
@@ -992,9 +971,6 @@ fa_IR:
     enable_signup_cta: "نمایش اطلاعیه برای کاربران ناشناسی که سعی در ایجاد حساب کاربری دارند."
     google_oauth2_client_id: "Client ID برای نرم افزار گوگل شما. "
     google_oauth2_client_secret: "Client secret برای بر نرم افزار گوگل شما. "
-    enable_instagram_logins: "فعالسازی ورود با اینستاگرام، نیازمند \ninstagram_consumer_key and instagram_consumer_secret"
-    instagram_consumer_key: "Consumer key اینستاگرام"
-    instagram_consumer_secret: "Consumer secret اینستاگرام"
     allow_restore: "اجازه بازیابی بده، که می‌تواند تمام اطلاعات سایت را جایگزین کند! نادرست را رها کن مگر اینکه قصد بازیابی نسخه پشتیبان را داری "
     maximum_backups: "حداکثر تعداد پشتیبان برای نگه داری بر روی دیسک. نسخه های پشتیبان قدیمی بطور خودکار پاک شده است"
     automatic_backups_enabled: "فعالسازی پشتیبان‌گیری خودکار در بازه زمانی مشخص"
@@ -1017,7 +993,6 @@ fa_IR:
     max_bookmarks_per_day: "حداکثر تعداد نشانک هر کاربر در روز"
     max_edits_per_day: "حداکثر تعداد ویرایش هر کاربر در روز"
     max_topics_per_day: "حداکثر تعداد موضوعاتی که هر کاربر در روز می توانند ایجاد کند"
-    max_personal_messages_per_day: "حداکثر تعداد پیام هایی که هر کاربر در روز می توانند ایجاد کند"
     max_invites_per_day: "حداکثر تعداد دعوت‌نامه‌هایی که هر کاربر در روز می توانند ارسال کند"
     max_topic_invitations_per_day: "حداکثر تعداد دعوت‌‌نامه‌هایی که یک کاربر می‌تواند برای عناوین در یک روز ارسال کند."
     max_logins_per_ip_per_hour: "حداکثر تعداد ورود به ازای هر آیپی در ساعت"
@@ -1110,7 +1085,6 @@ fa_IR:
     tos_url: "اگر شرایط استفاده از خدمات را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     privacy_policy_url: "اگر سیاست حفظ حریم خصوصی را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     newuser_spam_host_threshold: "یک کاربر چند بار می‌تواند به یک هاست لینک دهد تا `newuser_spam_host_threshold` به عنوان هرزنامه شناخته شود."
-    staff_like_weight: "چه عوامل بیشتری نیاز است تا به همکاران پسند داده شود."
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     user_profile_view_duration_hours: "بازدید‌های پروفایل کاربران را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
     levenshtein_distance_spammer_emails: "هنگامی که تطبیق ایمیل هرزنامه باشد٬ تعداد نویسه‌های متفاوت که هنوز هم به یک تطبق مبهم اجازه خواهد داد."
@@ -1160,8 +1134,6 @@ fa_IR:
     delete_all_posts_max: "حداکثر تعداد نوشته‌هایی که می‌تواند یکباره پاک شود با کلید همه نوشته ها را پاک کن. اگر کاربر بییشتر از این نوشته دارد، نوشته نمی تواند یکبار پاک شود و کاربر نمی تواند حذف شود."
     email_editable: "به کاربران اجازه بده بعد از ثبت نام ایمیل خود را عوض کنند. "
     allow_uploaded_avatars: "اجازه بارگذاری تصاویر سفارشی پروفایل به کاربران"
-    allow_animated_avatars: "اجازه استفاده از تصویر متحرک gif در پروفایل. اخطار: تسک avatars:refresh rake را بعد از انجام این تنظیمات اجرا کنید."
-    allow_animated_thumbnails: "تولید تصاویر بند انگشتی متحرک از تصاویر GIF انیمیشن."
     default_avatars: "لینک برای آواتارهایی که کاربران جدید از آن بطور پیش‌فرض می‌توانند استفاده کنند تا زمانی که آواتار را عوض کنند. "
     automatically_download_gravatars: "Gravatar برای کاربران در زمان ایجاد حساب‌کاربری یا تغییر ایمیل، دانلود شود."
     digest_topics: "حداکثر تعداد موضوعات محبوب برای نمایش در ایمیل خلاصه"
@@ -1199,7 +1171,6 @@ fa_IR:
     display_name_on_posts: "نام و نام‌خانوادگی کاربران را در نوشته نشان بده به‌علاوه‌ی @نام‌کاربری."
     show_time_gap_days: "اگر دو نوشته با این فاصله زمانی از هم نوشته شوند، فاصله زمانی را نشان بده."
     short_progress_text_threshold: "بعد از اینکه تعداد نوشته ها در این موضوع از این تعداد پایین تر آمد٬ نوار پیشرفت تعداد نوشته ها را در حال حاضر نشان می دهد. اگر عرض نوار پیشرفت را تعویض کنید٬ شاید لازم باشد این مقدار را هم عوض کنید. "
-    default_code_lang: " پیش فرض برنامه نویسی زبان سینتکس برجسته شده به بلوک های کد GitHub اعمال بشه. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "وقتی کسی شروع می کند با پاسخ دادن به موضوعی که آخرین پاسخ برمی گردد به خیلی قبل یک هشدار نمایش داده می شود. نمایش با تنظیمات تا 0. "
     autohighlight_all_code: "اعمال زور برای برجسته کردن کد به تمام بلاک های کد تنظیم نشده حتی وقتی به صراحت زبان را مشخص نمی کنند. "
     embed_truncate: "کوتاه کردن نوشته‌های جاسازی شده "
@@ -1209,7 +1180,6 @@ fa_IR:
     show_create_topics_notice: "اگر سایت کمتر از 5 موضوع عمومی دارد٬ مدیران اطلاع بده تا موضوعات بیشتری بسازند."
     delete_drafts_older_than_n_days: "پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن"
     bootstrap_mode_min_users: "حداقل تعداد کاربرانی که نیاز است تا حالت خود‌راه‌انداز غیر‌فعال شود (0 برای غیر‌فعال)"
-    prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این گزینه از هر سایت بدون عکسی جلوگیری می کند. "
     slug_generation_method: "یک روش ایجاد نام یکتا انتخاب کنید. 'encoded' رشته‌ای شامل درصد ایجاد می‌کند. 'none' اسم یکتا را به صورت کلی غیر‌فعال می‌نماید."
     enable_emoji: "فعالسازی شکلک"
     emoji_set: "می‌خواهید شکلک شما چطور باشد؟"
@@ -1385,7 +1355,6 @@ fa_IR:
     errors: "{errors}%"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد،‌ شاید نام‌کاربری و ایمیل قبلا ثبت‌نام شده است. از پیوند بازیابی رمز عبور استفاده کنید."
-    omniauth_error_unknown: "مشکلی در وارد شدن شما به سیستم به وجود آمده‌، لطفا دوباره تلاش کنید."
     omniauth_confirm_button: "ادامه"
     authenticator_error_no_valid_email: "ایمیلی در حساب کاربری %{account} وجود ندارد. باید یک ایمیل به حساب کاربری خود اضافه کنید."
     new_registrations_disabled: "در حال حاضر امکان ثبت نام وجود ندارد."
@@ -1393,8 +1362,6 @@ fa_IR:
     email_too_long: "ایمیل شما بسیار طولانی است. ایمیل باکس ها نباید بیش از 254 نویسه و نام دامنه نباید بیش از 253 نویسه باشد."
     reserved_username: "این نام کاربری مجاز نیست."
     missing_user_field: "شما تمام فیلد‌های کاربری را تکمیل نکرده اید"
-    already_logged_in: "به نظر می‌رسد می‌خواهید دعوت کاربری دیگری را تایید کنید. اگر کاربر %{current_user} نیستید لطفا خارج شده و دوباره وارد سایت شوید."
-    second_factor_title: "احراز هویت دو مرحله ای"
     second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
     second_factor_toggle:
       backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
@@ -1521,6 +1488,8 @@ fa_IR:
         از بودن در انجمن لذت ببرید!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      subject_template: "تبریک می‌گویم به خاطر ارتقا شما به سطح اعتماد!"
     backup_succeeded:
       title: "پشتیبان گیری موفق"
       subject_template: "پشتیبان‌گیری با موفقیت انجام شد"
@@ -1920,6 +1889,9 @@ fa_IR:
     confirm_new_email:
       title: "تایید ایمیل"
       subject_template: "[%{email_prefix}] ایمیل جدیدتان را تایید کنید"
+    confirm_new_email_via_admin:
+      title: "تایید ایمیل جدید"
+      subject_template: "[%{email_prefix}] آدرس ایمیل جدیدتان را تایید کنید"
     confirm_old_email:
       title: "تایید ایمیل قبلی"
       subject_template: "[%{email_prefix}] ایمیل فعلی خود را تایید کنید"
@@ -1939,6 +1911,13 @@ fa_IR:
     signup_after_approval:
       title: "ثبت نام بعد از تایید"
       subject_template: "شما در %{site_name} تایید شدید!"
+    signup_after_reject:
+      title: "بعد از رد شدن ثبت‌نام کنید"
+      subject_template: "شما در %{site_name} رد شدید"
+      text_body_template: |
+        یکی از کارمندان حساب کاربری شما را در %{site_name} رد کرد.
+
+        %{reject_reason}
     signup:
       title: "ثبت‌نام"
       subject_template: "[%{email_prefix}] حساب کاربری خود را تایید کنید."
@@ -2002,7 +1981,6 @@ fa_IR:
     base_theme_name: "پایه"
     light: "روشن"
     dark: "تیره"
-    default_theme_name: "روشن"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
   edit_this_page: "ویرایش این صفحه"
@@ -2235,8 +2213,6 @@ fa_IR:
     initial_topic_title: گزارش عملکرد وب‌سایت
   tags:
     title: "برچسب"
-    staff_tag_disallowed: 'برچسب "%{tag}" فقط توسط کارمندان قابل عمال است.'
-    staff_tag_remove_disallowed: 'برچسب "%{tag}" فقط توسط کارمندان قابل حذف است.'
   rss_by_tag: "موضوعات برچسب خورده %{tag}"
   finish_installation:
     congratulations: "تبریک، دیسکورس را نصب کردید!"
@@ -2304,10 +2280,10 @@ fa_IR:
             label: "پیام‌های خودکار"
       corporate:
         title: "سازمان"
-      colors:
-        title: "قالب"
-      themes_further_reading:
-        title: "قالب‌ها"
+      fonts:
+        fields:
+          font_preview:
+            label: "پیش‌نمایش"
       logos:
         title: "لوگو‌ها"
         fields:

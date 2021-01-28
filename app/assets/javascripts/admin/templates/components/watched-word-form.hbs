@@ -1,7 +1,0 @@
-<b>{{i18n "admin.watched_words.form.label"}}</b>
-{{text-field value=word disabled=formSubmitted class="watched-word-input" autocorrect="off" autocapitalize="off" placeholderKey=placeholderKey}}
-{{d-button class="btn-default" action=(action "submit") disabled=formSubmitted label="admin.watched_words.form.add"}}
-
-{{#if showMessage}}
-  <span class="success-message">{{message}}</span>
-{{/if}}

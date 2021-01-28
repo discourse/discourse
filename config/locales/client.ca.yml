@@ -157,7 +157,6 @@ ca:
     topic_admin_menu: "accions del tema"
     wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
-    bootstrap_mode_enabled: "Per a facilitar el llançament del vostre lloc web nou, esteu en mode d'arrencada. Tots els usuaris nous tindran el nivell de confiança 1 i tindran activitats els correus de resum diari. Això es desactivarà automàticament quan s'hi hagin unit %{min_users} usuaris."
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
     themes:
       default_description: "Per defecte"
@@ -408,9 +407,6 @@ ca:
         name: "Nom"
         fields: "Camps"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} bandera en total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} banderes en total)"
         agreed:
           one: "El %{count}% hi està d'acord"
           other: "El %{count}% hi està d'acord"
@@ -736,7 +732,6 @@ ca:
       topic_stat_sentence_month:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
-      n_more: "Categories (%{count} més) ..."
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -811,7 +806,6 @@ ca:
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         disable: "Desactiva les notificacions"
         enable: "Activa les notificacions"
-        each_browser_note: "Nota: cal canviar aquesta configuració en cada navegador que feu servir."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"
@@ -820,7 +814,6 @@ ca:
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
-        default_description: "Per defecte"
         disable_dark_scheme: "Igual que habitualment"
         dark_instructions: "Podeu previsualitzar l’esquema de colors del mode fosc alternant el mode fosc del dispositiu."
         undo: "Restableix"
@@ -844,7 +837,6 @@ ca:
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"
-      github_profile: "GitHub"
       email_activity_summary: "Resum d'activitat"
       mailing_list_mode:
         label: "Mode de llista de correu"
@@ -934,24 +926,18 @@ ca:
         choose_new: "Trieu una contrasenya nova"
         choose: "Trieu una contrasenya"
       second_factor_backup:
-        title: "Codis de còpia de seguretat de dos factors"
         regenerate: "Regenera"
         disable: "Desactiva"
         enable: "Activa"
         enable_long: "Activa els codis de còpia de seguretat"
-        manage: "Gestiona els codis de còpia de seguretat. Us resten <strong>%{count}</strong> codis de còpia de seguretat. "
         copy_to_clipboard: "Copia al porta-retalls"
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
-        remaining_codes: "Us resten <strong>%{count}</strong> codis de còpia de seguretat."
         use: "Utilitza un codi de còpia de seguretat"
-        enable_prerequisites: "Cal habilitar un segon factor primari abans de generar codis de còpia de seguretat."
         codes:
           title: "Codis de còpia de seguretat generats"
           description: "Cada un dels codis de còpia de seguretat es pot fer servir sols una vegada. Manteniu-los en algun lloc web segur però accessible. "
       second_factor:
-        title: "Autenticació de dos factors"
-        enable: "Gestiona l'autenticació de dos factors"
         forgot_password: "Heu oblidat la contrasenya?"
         confirm_password_description: "Confirmeu la contrasenya per a continuar"
         name: "Nom"
@@ -963,16 +949,10 @@ ca:
         show_key_description: "Introduïu-lo manualment"
         short_description: |
           Protegiu el vostre compte amb codis de seguretat d'un sol ús.
-        extended_description: |
-          L'autenticació de dos factors afegeix seguretat addicional al vostre compte exigint un testimoni únic a més de la vostra contrasenya. Es poden generar testimonis en dispositius <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> i <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Observeu que els inicis de sessió amb xarxes socials seran deshabilitats quan l'autenticació de dos factors s'hagi activat en el vostre compte. "
         use: "Utilitza l'aplicació Authenticator"
-        enforced_notice: "Cal que activeu l'autenticació de dos factors abans d'accedir a aquest lloc web."
         disable: "Desactiva"
         save: "Desa"
         edit: "Edita"
-        edit_title: "Edita el factor segon"
-        edit_description: "Nom del factor segon"
         totp:
           title: "Autenticadors basats en testimonis"
           default_name: "El meu autenticador"
@@ -1076,10 +1056,8 @@ ca:
         title: "Contrasenya una altra vegada"
       auth_tokens:
         title: "Dispositius utilitzats recentment"
-        ip: "IP"
         details: "Detalls"
         log_out_all: "Tanca totes les sessions"
-        active: "actius ara"
         not_you: "No sou vós?"
         show_all: "Mostra'ls tots (%{count})"
         show_few: "Mostra'n menys"
@@ -1191,15 +1169,10 @@ ca:
         links_tab: "Enllaços"
         link_created_at: "Creat"
         link_groups: Grups
-        create: "Envia la invitació"
-        generate_link: "Copia l'enllaç d'invitació"
-        link_generated: "Enllaç d'invitació generat emb èxit!"
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
-        single_user: "Usuari únic"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         bulk_invite:
-          none: "Encara no heu convidat ningú aquí. Envieu invitacions individuals o convideu molta gent d'un sol cop <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviant un fitxer CSV</a>."
           success: "Fitxer carregat amb èxit. Us notificarem amb un missatge quan s'hagi completat el procés."
           error: "El fitxer hauria de tenir format CSV."
           confirmation_message: "Esteu a punt d'enviar invitacions a tothom en el fitxer pujat. "
@@ -1356,8 +1329,6 @@ ca:
       disable: "Mostra publicacions suprimides"
     private_message_info:
       title: "Missatge"
-      invite: "Convideu altres persones..."
-      edit: "Afegeix o elimina..."
       leave_message: "Realment voleu deixar aquest missatge?"
       remove_allowed_user: "De debò voleu eliminar %{name} d'aquest missatge?"
       remove_allowed_group: "De debò voleu eliminar %{name} d'aquest missatge?"
@@ -1402,10 +1373,8 @@ ca:
       title: "Inicia la sessió"
       username: "Usuari"
       password: "Contrasenya"
-      second_factor_title: "Autenticació de dos factors"
       second_factor_description: "Introduïu el codi d'autenticació de la vostra aplicació:"
       second_factor_backup: "Inici de sessió amb codi de còpia de seguretat "
-      second_factor_backup_title: "Còpia de seguretat de dos factors"
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
       second_factor: "Inici de sessió amb l’aplicació Authenticator"
       security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
@@ -1429,10 +1398,8 @@ ca:
       awaiting_approval: "El vostre compte encara no ha estat aprovat per l'equip responsable. Us enviarem un correu quan sigui aprovat."
       requires_invite: "L'accés a aquest fòrum es fa sols amb invitació."
       not_activated: "Encara no podeu iniciar sessió. Abans us hem enviat un correu d'activació a <b>%{sentTo}</b>. Seguiu les instruccions del correu per a activar el compte."
-      not_allowed_from_ip_address: "No podeu iniciar la sessió des d'aquesta adreça IP."
       admin_not_allowed_from_ip_address: "No podeu iniciar la sessió com a administrador des d'aquesta adreça IP."
       resend_activation_email: "Feu clic aquí per a enviar de nou el correu d'activació."
-      omniauth_disallow_totp: "El vostre compte té habilitada l'autenticació de dos factors. Inicieu sessió amb la contrasenya."
       resend_title: "Reenvia el correu d'activació"
       change_email: "Canvi d'adreça de correu"
       provide_new_email: "Proporcioneu una adreça nova i us reenviarem el correu de confirmació."
@@ -1441,7 +1408,6 @@ ca:
       sent_activation_email_again_generic: "S'ha enviat un altre correu d'activació. Pot trigar uns quants minuts a arribar; comproveu la carpeta de correu brossa."
       to_continue: "Inicieu la sessió"
       preferences: "Cal que inicieu la sessió per a canviar les preferències d'usuari."
-      forgot: "No recordo els detalls del meu compte"
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
@@ -1473,7 +1439,6 @@ ca:
       accept_invite: "Accepta la invitació"
       success: "S'ha creat el compte i ara heu iniciat la sessió."
       name_label: "Nom"
-      password_label: "Estableix la contrasenya"
       optional_description: "(opcional)"
     password_reset:
       continue: "Continua a %{site_name}"
@@ -1499,8 +1464,6 @@ ca:
       enter: "Retorn"
     conditional_loading_section:
       loading: Carregant...
-    category_row:
-      topic_count: "%{count}temes en aquesta categoria"
     select_kit:
       default_header_text: Selecciona...
       no_content: No s'han trobat coincidències
@@ -1516,8 +1479,6 @@ ca:
     date_time_picker:
       from: De
       to: A
-      errors:
-        to_before_from: "La data final ha de ser posterior a la data inicial."
     emoji_picker:
       filter_placeholder: Cerca un emoji
       smileys_&_emotion: Emoticones
@@ -1550,7 +1511,6 @@ ca:
       options: "Opcions"
       whisper: "xiuxiueig"
       unlist: "invisible"
-      blockquote_text: "Bloc de citació"
       add_warning: "Aquest és un avís oficial."
       toggle_whisper: "Commuta el xiuxiueig"
       toggle_unlisted: "Commuta invisible"
@@ -1559,7 +1519,6 @@ ca:
       similar_topics: "El tema és semblant a..."
       drafts_offline: "esborranys fora de línia"
       edit_conflict: "edita el conflicte"
-      group_mentioned_limit: "<b>Atenció!</b> Heu mencionat <a href='%{group_link}'>%{group}</a>, però aquest grup té més membres que el límit de mencions configurat per l'administrador: %{max} usuaris. No serà notificat ningú. "
       group_mentioned:
         one: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count}persona</a>. Esteu segur?"
         other: "Si mencioneu %{group}, ho notificareu a <a href='%{group_link}'>%{count} persones</a>. Esteu segur?"
@@ -1576,7 +1535,6 @@ ca:
         post_length: "La publicació ha de tenir un mínim de %{min} caràcters"
         try_like: "Heu provat el botó %{heart}?"
         category_missing: "Heu de triar una categoria"
-        tags_missing: "Cal triar almenys %{count} etiquetes."
         topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
       save_edit: "Desa l'edició"
       overwrite_edit: "Sobreescriu l'edició"
@@ -1618,8 +1576,7 @@ ca:
       link_dialog_title: "Insereix un enllaç"
       link_optional_text: "títol opcional"
       link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
-      quote_title: "Bloc de citació"
-      quote_text: "Bloc de citació"
+      blockquote_text: "Bloc de citació"
       code_title: "Text preformatat"
       code_text: "Text amb sagnat preformatat de 4 espais"
       paste_code_text: "escriviu o enganxeu el codi aquí"
@@ -1647,7 +1604,6 @@ ca:
         draft: Esborrany
         edit: Edita
         reply_to_post:
-          label: Respon a la publicació %{postNumber} de %{postUsername}
           desc: Respon a una publicació específica
         reply_as_new_topic:
           label: Respon com a tema enllaçat
@@ -1665,7 +1621,6 @@ ca:
           label: "Tema nou"
         shared_draft:
           label: "Esborrany compartit"
-          desc: "Esborrany d'un tema que sols serà visible a l'equip responsable"
         toggle_topic_bump:
           label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
@@ -1690,10 +1645,6 @@ ca:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} i %{count} altre</span> %{description}"
-        other: "<span>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -1774,7 +1725,6 @@ ca:
       full_page_title: "cerca temes o publicacions"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
-      searching: "Cercant..."
       post_format: "#%{post_number} per %{username}"
       results_page: "Resultats de la cerca per a '%{term}'"
       more_results: "No hi ha més resultats. Restringiu els criteris de cerca."
@@ -1783,7 +1733,6 @@ ca:
       or_search_google: "O proveu de cercar amb Google:"
       search_google: "Prova de cercar amb Google:"
       search_google_button: "Google"
-      search_google_title: "Cerca en aquest lloc web"
       context:
         user: "Cerca publicacions de @%{username}"
         category: "Cerca en la categoria #%{category} "
@@ -1826,8 +1775,6 @@ ca:
           noreplies: tenen zero respostes
           single_user: contenen un únic usuari
         post:
-          count:
-            label: Recompte mínim de publicacions
           time:
             label: Publicat
             before: abans de
@@ -1873,12 +1820,10 @@ ca:
         new: "No teniu cap tema nou."
         read: "Encara no heu llegit cap tema."
         posted: "Encara no heu publicat cap tema."
-        latest: "No hi ha temes més recents. És una llàstima."
         bookmarks: "Encara no heu marcat temes com a preferits."
         category: "No hi ha temes de %{category}."
         top: "No hi ha temes principals."
         educate:
-          new: '<p>Els vostres temes nous són aquí.</p><p>Per defecte, els temes es consideren nous i mostraran una <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indicació si han estat creats durant els passats 2 dies.</p><p>Aneu a les vostres <a href="%{userPrefsUrl}">preferències</a> per a canviar-ho.</p>'
           unread: '<p>Els vostres temes nous són aquí.</p><p>Per defecte, els temes es consideren sense llegir i mostraran recomptes de no llegits <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>heu creat el tema</li><li>heu respost al tema</li><li>heu llegit el tema durant més de 4 minuts</li></ul><p>o si heu marcat explícitament el tema com a vigilat amb el control de notificació a baix de cada tema.</p><p>Visiteu les vostres <a href="%{userPrefsUrl}">preferències</a> per a canviar-ho.</p>'
       bottom:
         latest: "No hi ha més temes recents."
@@ -1948,10 +1893,8 @@ ca:
       read_more_in_category: "Voleu llegir-ne més? Navegueu per altres temes a %{catLink} o %{latestLink}."
       read_more: "Voleu llegir-ne més? %{catLink} o %{latestLink}."
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      read_more_MF: "Hi ha { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 no llegit</a> } other { are <a href='{basePath}/unread'># no llegits</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nou</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nous</a> temes} } restants, or {CATEGORY, select, true {navegueu per altres temes en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mira els temes més recents
-      suggest_create_topic: Per què no creeu un tema?
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"
@@ -2042,7 +1985,7 @@ ca:
           "2_8": "Veureu un recompte de respostes perquè seguiu aquesta categoria. "
           "2_4": "Rebreu notificacions perquè heu escrit una resposta a aquest tema."
           "2_2": "Rebreu notificacions perquè seguiu aquest tema."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Sereu notificat si algú menciona el vostre @nom o us respon."
           "1": "Sereu notificat si algú us @menciona o us respon."
           "0_7": "No esteu fent cas de les notificacions d'aquesta categoria."
@@ -2119,7 +2062,6 @@ ca:
       feature_topic:
         title: "Destaca aquest tema"
         pin: "Fes que aquest tema aparegui al principi de la categoria %{categoryLink} fins a"
-        confirm_pin: "Ja teniu %{count} temes afixats. Massa temes afixats poden ser pesats per a usuaris nous o anònims. Esteu segur que voleu afixar un altre tema en aquesta categoria?"
         unpin: "Elimina aquest tema del principi de la categoria %{categoryLink}."
         unpin_until: "Elimina aquest tema del principi de la categoria %{categoryLink} o espera fins a <strong>%{until}</strong>."
         pin_note: "Els mateixos usuaris poden desafixar el tema individualment."
@@ -2129,7 +2071,6 @@ ca:
           one: "Temes clavats a hores d'ara%{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temes clavats a hores d'ara%{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Fes que aquest tema aparegui al començament de tots els temes fins a"
-        confirm_pin_globally: "Ja heu arribat a %{count} temes afixats globalment. Massa temes afixats poden ser pesats per als usuaris nous o anònims. Esteu segur que voleu afixar un altre tema globalment?"
         unpin_globally: "Elimina aquest tema del començament de totes les llistes de temes."
         unpin_globally_until: "Elimina aquest tema del començament de totes les llistes fins a <strong>%{until}</strong>."
         global_pin_note: "Els mateixos usuaris poden desafixar el tema individualment."
@@ -2301,7 +2242,6 @@ ca:
         upload: "Ho sentim. S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
         file_too_large: "Ho sentim, el fitxer és massa gros (mida màxima %{max_size_kb} kb). Per què no pugeu el fitxer a un servei en el núvol i llavors enganxeu l'enllaç?"
         too_many_uploads: "Només podeu pujar un fitxer cada vegada."
-        too_many_dragged_and_dropped_files: "Ho sentim, només podeu pujar %{max} fitxers de cop."
         upload_not_authorized: "El fitxer que proveu de pujar no està autoritzat (les extensions autoritzades són: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Els usuaris nous no poden pujar imatges."
         attachment_upload_not_allowed_for_new_user: "Els usuaris nous no poden adjuntar fitxers."
@@ -2364,7 +2304,6 @@ ca:
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
         add_post_notice: "Afegeix un avís a l'equip responsable"
-        remove_post_notice: "Elimina l'avís a l'equip responsable"
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -2440,7 +2379,6 @@ ca:
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
       tag_groups_placeholder: "Llista (opcional) d'etiquetes de grup permeses"
-      manage_tag_groups_link: "Gestioneu els grups d'etiquetes aquí."
       allow_global_tags_label: "Permet també altres etiquetes"
       tag_group_selector_placeholder: "(Opcional) Grup d’etiquetes"
       required_tag_group_description: "Requereix que els temes nous tinguin etiquetes d’un grup d’etiquetes:"
@@ -2554,11 +2492,9 @@ ca:
     flagging:
       title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca la publicació amb bandera "
-      take_action: "Actua"
       notify_action: "Missatge"
       official_warning: "Avís oficial"
       delete_spammer: "Suprimeix generador de brossa"
-      delete_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {<b>1</b> publicació} other {<b>#</b> publicacions}} and {TOPICS, plural, one {<b>1</b> tema} other {<b>#</b> temes}} d'aquest usuari, suprimir el seu compte, blocar identificacions des de l'adreça IP <b>{ip_address}</b> i afegir l'adreça de correu electrònic <b>{email}</b> a una llista de bloqueig permanent. Esteu segur que aquest usuari realment genera brossa?"
       yes_delete_spammer: "Sí, suprimeix generador de brossa"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(amagat)"
@@ -2625,13 +2561,6 @@ ca:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
     posts: "Publicacions"
-    posts_long: "hi ha %{number} publicacions a aquest tema"
-    posts_likes_MF: |
-      Aquest tema té {count, plural, one {1 resposta} other {# respostes}} {ratio, select,
-      low {amb una proporció alta de 'm'agrada' per publicació}
-      med {amb una proporció molt alta de 'm'agrada' per publicació}
-      high {amb una proporció extremament alta de 'm'agrada' per publicació}
-      other {}}
     original_post: "Publicació original"
     views: "Vistes"
     views_lowercase:
@@ -2646,7 +2575,6 @@ ca:
     likes_lowercase:
       one: "'M'agrada'"
       other: "'M'agrada'"
-    likes_long: "aquest tema ha agradat %{number} vegades"
     users: "Usuaris"
     users_lowercase:
       one: "usuari"
@@ -2727,7 +2655,6 @@ ca:
         this_week: "Setmana"
         today: "Avui"
         other_periods: "Vegeu a dalt:"
-    browser_update: 'Malauradament, <a href="https://www.discourse.org/faq/#browser">el vostre navegador és massa antic per a treballar amb aquest lloc web</a>. <a href="https://browsehappy.com">Actualitzeu el navegador</a> per a veure contingut més ric, iniciar sessió i respondre.'
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
@@ -2905,8 +2832,6 @@ ca:
         delete: "Suprimeix"
         confirm_delete: "Esteu segur que voleu suprimir aquest grup d'etiquetes?"
         everyone_can_use: "Etiquetes que poden ser utilitzades per tothom"
-        usable_only_by_staff: "Les etiquetes són visibles per a tothom, però sols l'equip responsable pot fer-les servir."
-        visible_only_to_staff: "Les etiquetes són visibles sols per a l'equip responsable"
       topics:
         none:
           unread: "No teniu temes no llegits."
@@ -3668,7 +3593,6 @@ ca:
             post_edit: "edició de publicació"
             post_unlocked: "publicació desblocada"
             check_personal_message: "revisa missatge personal"
-            disabled_second_factor: "desactiva autenticació de dos factors"
             topic_published: "tema publicat"
             post_approved: "publicació aprovada"
             post_rejected: "publicació rebutjada"
@@ -3823,7 +3747,6 @@ ca:
         suspend_reason_label: "Per què suspeneu aquest usuari? Aquest text <b>serà visible per a tothom</b> en el perfil de l'usuari, i es mostrarà a l'usuari quan vulgui iniciar la sessió. Sigueu breu."
         suspend_reason_hidden_label: "Per què suspeneu aquest usuari? Aquest text es mostrarà a l'usuari quan intenti iniciar la sessió. Sigueu breu. "
         suspend_reason: "Motiu"
-        suspend_reason_placeholder: "Raó de la suspensió"
         suspend_message: "Missatge de correu"
         suspend_message_placeholder: "Opcionalment, doneu més informació sobre la suspensió i s'enviarà per correu a l'usuari."
         suspended_by: "Suspès per"
@@ -3849,7 +3772,6 @@ ca:
         clear_penalty_history:
           title: "Neteja l'historial de penalitzacions"
           description: "els usuaris amb penalitzacions no poden assolir el nivell de confiança 3"
-        delete_all_posts_confirm_MF: "Esteu a punt de suprimir {POSTS, plural, one {1 publicació} other {# publicacions}} i {TOPICS, plural, one {1 tema} other {# temes}}. Esteu segur?"
         silence: "Silencia"
         unsilence: "Desfés el silenciament"
         silenced: "Silenciat?"
@@ -3882,7 +3804,6 @@ ca:
         private_topics_count: Temes privats
         posts_read_count: Publicacions llegides
         post_count: Publicacions creades
-        second_factor_enabled: Autenticació de dos factors activada
         topics_entered: Temes vists
         flags_given_count: Banderes donades
         flags_received_count: Banderes rebudes

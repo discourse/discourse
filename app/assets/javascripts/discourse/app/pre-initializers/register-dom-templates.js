@@ -3,8 +3,8 @@ export default {
 
   initialize: function () {
     $('script[type="text/x-handlebars"]').each(function () {
-      var $this = $(this);
-      var name = $this.attr("name") || $this.data("template-name");
+      let $this = $(this);
+      let name = $this.attr("name") || $this.data("template-name");
 
       if (window.console) {
         window.console.log(

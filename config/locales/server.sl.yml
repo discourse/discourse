@@ -46,6 +46,9 @@ sl:
   submit: "Pošlji"
   anonymous: "Anonimni"
   on_another_topic: "Na drugi temi"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -64,6 +67,9 @@ sl:
       has_already_been_used: "je že v uporabi"
       inclusion: ni vključeno na seznam
       invalid: je neveljavno
+      is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
+      is_invalid_unpretentious: "zdi se nejasno, ena ali več besed je zelo dolga?"
+      is_invalid_quiet: "zdi se nejasno, ali ste ga mislili vnesti z VELIKIMI ZAČETNICAMI?"
       less_than: mora biti manj kot %{count}
       less_than_or_equal_to: mora biti manj ali enako kot %{count}
       not_a_number: ni številka
@@ -92,12 +98,6 @@ sl:
         few: ! "%{count} napake preprečujejo tej %{model} da se shrani"
         other: ! "%{count} napak preprečuje tej %{model} da se shrani"
   invite:
-    not_found_template: |
-      <p>Vaše povabilo na <a href="%{base_url}">%{site_name}</a> je bilo že sprejeto.</p>
-
-      <p>Če poznate svoje geslo, potem se lahko <a href="%{base_url}/login">prijavite</a>.</p>
-
-      <p>Drugače lahko<a href="%{base_url}/password-reset">zamenjate geslo</a>.</p>
     error_message: "Prišlo je do napake med sprejemom povabila. Kontaktirajte administratorja strani."
     user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
     confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
@@ -197,26 +197,6 @@ sl:
       two: "%{count} prispevka"
       few: "%{count} prispevki"
       other: "%{count} prispevkov"
-    "new-topic": |
-      Dobrodošli na %{site_name} &mdash; **hvala za novo temo!**
-
-      - Ali je naslov teme dovolj zanimiv, če ga preberete naglas? Ali je dober povzetek vsebine?
-
-      - Koga bo to zanimalo? Zakaj je pomembno? Kakšne odzive želite?
-
-      - Uporabite splošno uporabljane izraze in tako omogočite da ostali uporabniki *najdejo* vašo temo. Izberite ustrezno kategorijo za vašo temo.
-
-      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
-    "new-reply": |
-      Dobrodošli na %{site_name} &mdash; **hvala za vaš prispevek!**
-
-      - Ali vaš odgovor prispeva k boljši razpravi?
-
-      - Bodite prijazni do ostalih uporabnikov v skupnosti.
-
-      - Konstruktivna kritika je dobrodošla, vendar kritiziraj *ideje* in ne oseb.
-
-      Preberite tudi [pravila skupnosti](%{base_path}/guidelines). To opozorilo se bo pojavilo samo prvi %{education_posts_text}.
     avatar: |
       ### Dodaj sliko svojemu profilu?
 
@@ -529,35 +509,28 @@ sl:
     off_topic:
       title: "Ne ustreza temi"
       description: "Prispevek ne ustreza pogovoru v tej temi kot je definiran z naslovom teme in prvim prispevkom v temi in bi verjetno sodil nekam drugam."
-      long_form: "prijavljeno kot ne ustreza temi"
     spam:
       title: "Neželeno"
       description: "Prispevek sodi med oglaševanje ali vandalizem. Prispevek ni uporaben in bistven za to temo."
       short_description: "To je oglas ali vandalizem"
-      long_form: "prijavljeno kot neželeno"
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprimerno"
       description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
-      long_form: "prijavljeno kot neprimerno"
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
       short_description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
-      long_form: "opozorjen uporabnik"
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Drug razlog"
       description: "Prispevek potrebuje pregled osebja iz drugega razloga."
       short_description: "Potrebuje pregled osebja iz drugega razloga"
-      long_form: "prijavljeno za pregled osebja"
       email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Zaznamek"
-    like:
-      long_form: "je všeč"
   user_activity:
     no_default:
       self: "Nimate nobene aktivnosti."
@@ -723,6 +696,9 @@ sl:
     out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
+    min_trust_level_to_allow_ignore: "Najmanjša raven zaupanja, potrebna za prezrtje uporabnikov"
+    enable_filtered_replies_view: 'Gumb "(n) odgovorov" strne vse druge objave in prikaže samo trenutno objavo in njene odgovore.'
+    shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -850,7 +826,6 @@ sl:
     errors: "%{errors}"
     not_available: "Ni na voljo. Poskusite %{suggestion}?"
     something_already_taken: "Prišlo je do napake, mogoče je uporabniško ime ali e-naslov že registriran. Poskusite povezavo za pozabljeno geslo."
-    omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, poskusite ponovno."
     omniauth_confirm_button: "Nadaljuj"
     authenticator_error_no_valid_email: "E-naslov povezan z računom %{account} ni dovoljen. Morali boste uporabiti drug e-naslov."
     new_registrations_disabled: "Nove registracije uporabniških računov trenutno niso mogoče."
@@ -860,15 +835,26 @@ sl:
     missing_user_field: "Niste vnesli vseh uporabniških podatkov."
     auth_complete: "Avtentikacija je končana."
     click_to_continue: "Kliknite tukaj za nadaljevanje."
-    already_logged_in: "Izgleda da hočete sprejeti povabilo od drugega uporabnika. Če niste %{current_user}, se odjavite in poskusite ponovno."
-    second_factor_title: "Potrjevanje v dveh korakih"
     second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
     second_factor_backup_description: "Vnesite eno od vaših rezervnih potrditvenih kod:"
-    second_factor_backup_title: "Rezervna potrditvena koda"
     invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
     second_factor_toggle:
       backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
+  admin:
+    user:
+      merge_user:
+        updating_username: "Posodabljanje uporabniškega imena ..."
+        changing_post_ownership: "Spreminjanje lastništva objave ..."
+        merging_given_daily_likes: "Združevanje danih dnevnih všečkov ..."
+        merging_user_visits: "Združevanje obiskov uporabnikov ..."
+        updating_site_settings: "Posodabljanje nastavitev mesta..."
+        updating_user_stats: "Posodabljanje uporabniške statistike ..."
+        merging_user_attributes: "Združevanje uporabniških atributov..."
+        updating_user_ids: "Posodabljanje uporabniških ID-jev ..."
+        deleting_source_user: "Brisanje izvornega uporabnika..."
   user:
+    email:
+      does_not_exist: "N/A"
     ip_address:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
@@ -1575,10 +1561,6 @@ sl:
         Če niste vi poizkusili ustvariti račun %{email} ali spremeniti e-naslov, ne skrbite – to e-sporočilo lahko zanemarite.
 
         Če imate kakršnakoli vprašanja [kontaktirajte naše prijazno osebje](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "Preverjanje v dveh korakih onemogočeno"
-      subject_template: "[%{email_prefix}] Preverjanje v dveh korakih onemogočeno"
-      text_body_template: "Preverjanje v dveh korakih je bilo onemogočeno na vašem računu pri %{site_name}. Sedaj se lahko prijavite samo z geslom - dodatna potrditvena koda ni več potrebna.\n\nČe niste sami izklopili preverjanje v dveh korakih je mogoče, da je nekdo posegel v vaš račun. \n\nČe imate kakršnakoli vprašanja [kontaktirajte naše prijazno osebje](%{base_url}/about).\n"
     digest:
       why: "Kratek povzetek %{site_link} od vašega zadnjega obiska %{last_seen_at}"
       since_last_visit: "Od vašega zadnjega obiska"
@@ -2031,10 +2013,6 @@ sl:
             placeholder: "name@example.com"
       corporate:
         title: "Organizacija"
-      colors:
-        title: "Videz"
-      themes_further_reading:
-        title: "Videzi"
       homepage:
         fields:
           homepage_style:

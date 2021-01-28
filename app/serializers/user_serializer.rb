@@ -58,7 +58,8 @@ class UserSerializer < UserCardSerializer
                      :can_change_location,
                      :can_change_website,
                      :user_api_keys,
-                     :user_auth_tokens
+                     :user_auth_tokens,
+                     :user_notification_schedule
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -67,6 +68,10 @@ class UserSerializer < UserCardSerializer
   ###
   ### ATTRIBUTES
   ###
+  #
+  def user_notification_schedule
+    object.user_notification_schedule || UserNotificationSchedule::DEFAULT
+  end
 
   def mailing_list_posts_per_day
     val = Post.estimate_posts_per_day
@@ -131,7 +136,7 @@ class UserSerializer < UserCardSerializer
       {
         id: k.id,
         application_name: k.application_name,
-        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
+        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
         created_at: k.created_at,
         last_used_at: k.last_used_at,
       }

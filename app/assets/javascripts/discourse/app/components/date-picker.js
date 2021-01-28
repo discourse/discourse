@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
@@ -66,7 +66,9 @@ export default Component.extend({
   _handleSelection(value) {
     const formattedDate = moment(value).format(DATE_FORMAT);
 
-    if (!this.element || this.isDestroying || this.isDestroyed) return;
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
 
     if (this.onSelect) {
       this.onSelect(formattedDate);

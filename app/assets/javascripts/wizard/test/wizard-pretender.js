@@ -1,3 +1,5 @@
+import Pretender from "pretender";
+
 // TODO: This file has some copied and pasted functions from `create-pretender` - would be good
 // to centralize that code at some point.
 

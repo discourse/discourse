@@ -60,7 +60,7 @@ class Invite < ActiveRecord::Base
   end
 
   def is_invite_link?
-    max_redemptions_allowed > 1
+    email.blank?
   end
 
   def redeemed?
@@ -313,7 +313,7 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(updated_at: Time.zone.now, expires_at: SiteSetting.invite_expiry_days.days.from_now)
+    self.update_columns(updated_at: Time.zone.now, invalidated_at: nil, expires_at: SiteSetting.invite_expiry_days.days.from_now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 

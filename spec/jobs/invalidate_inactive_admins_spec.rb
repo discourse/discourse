@@ -45,13 +45,11 @@ describe Jobs::InvalidateInactiveAdmins do
 
       context 'with social logins' do
         before do
-          GithubUserInfo.create!(user_id: not_seen_admin.id, screen_name: 'bob', github_user_id: 100)
           UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: not_seen_admin.id, provider_uid: 100, info: { email: "bob@google.account.com" })
         end
 
         it 'removes the social logins' do
           subject
-          expect(GithubUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
           expect(UserAssociatedAccount.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
       end

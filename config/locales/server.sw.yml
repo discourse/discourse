@@ -224,26 +224,6 @@ sw:
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
-    "new-topic": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuanzisha majadiliano mapya!**
-
-      - Je kichwa cha habari ni kizuri ukikisoma kwa sauti? Je Muhtasari ni nzuri?
-
-      - Nani angependa kusoma hiki? Kwa nini ni muhimu? Unategemea upate majibu ya aina gani?
-
-      - Tumia maneno ambayo yanatumika mara kwa mara kwenye mada zako ili watu wengine waweze *kupata* ulichoandika. Kuweka mada yako pamoja na zingine zinazoendana na yako, chagua kategoria.
-
-      Kwa taarifa zaidi, [angalia mwongozo wa jamii yetu](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} ya kwanza tu.
-    "new-reply": |
-      Karibu kwenye %{site_name} &mdash; **asante kwa kuchangia!**
-
-      - Jibu lako linaendeleza majadiliano kwa njia moja au nyingine?
-
-      - Kuwa mstaarabu na wanachama wenzako.
-
-      - Ukosoaji Unaendeleza unakaribishwa, ila kosoa *fikra au wazo*, sio watu.
-
-      Kwa mengine zaidi, [angalia mwongozo wa jamii](%{base_path}/mwongozo). Paneli hii itatokea wakati wa %{education_posts_text} tu.
     avatar: |2
        ### Unaonaje ukiongeza picha kwenye akaunti yako?
 
@@ -439,41 +419,34 @@ sw:
       title: "Mada Isiyohusika"
       description: "Mada hii sio muhimu kwenye majadiliano kama kichwa na chapisho la kwanza linavyoongelea, na inabidi ihamishwe kwenda sehemu nyingine."
       short_description: "Haina umuhimu kwenye majadiliano"
-      long_form: "imeripotiwa kama haihusiki "
     spam:
       title: "Barua Taka"
       description: "Hili ni tangazo, au uharibifu. Sio muhimu kwenye mada ya sasa."
       short_description: "Hili ni tangazo au uharibifu"
-      long_form: "ameripoti hii kuwa barua taka"
       email_title: '"%{title}" imeripotiwa kuwa barua taka'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Haifai"
-      long_form: "imeripotiwa kuwa haiko sawa"
     notify_user:
       title: "Mtumie @%{username} ujumbe"
       description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
       short_description: "Nataka kuongea na huyu mtu moja kwa moja kuhusiana na chapisho lao."
-      long_form: "mtumiaji aliepokea ujumbe"
       email_title: 'Chapisho lako ndani ya "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Kitu Kingine"
       description: "Chapisho hili linahitaji kupitiwa na msaidizi kwa sababu ambayo haijaandikwa juu."
       short_description: "Inahitaji kupitiwa na msaidizi kwa sababu nyingine"
-      long_form: "imeripotiwa ili ipitiwe na msaidizi"
       email_title: 'Chapisho ndani ya "%{title}" linahitaji kupitiwa na mfanyakazi'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Alamisha"
       description: "Alamisha chapisho hili"
       short_description: "Alamisha chapisho hili"
-      long_form: "chapisho hili lilialamishwa"
     like:
       title: "Penda"
       description: "Penda chapisho hili"
       short_description: "Penda chapisho hili"
-      long_form: "ameipenda hii"
   user_activity:
     no_default:
       self: "Bado hauna shughuli."
@@ -519,9 +492,7 @@ sw:
     stop_watching_topic: "Acha kuangalia mada hii, %{link}"
     mute_topic: "Nyamazisha taarifa zote za mada hii, %{link}"
     unwatch_category: "Acha kuangalia mada zote kwenye %{category}"
-    all: "Usinitumie barua yoyote kutoka %{sitename}"
     different_user_description: "Umeingia kama mtu mwingine tofauti na mtu tuliyemtumia barua pepe. Tafadhali toka, au ingia kwenye hali-tumizi ya mtu asiyejulikana, na jaribu tena."
-    not_found_description: "Samahani hatujaona kujiengua. Inawezekana kiungo kwenye barua pepe yako kimepita mda?"
     log_out: "Toka"
     digest_frequency:
       never: "kamwe"
@@ -817,9 +788,6 @@ sw:
     enable_signup_cta: "Onyesha ilani kwa watumiaji wasiojulikana itakayowaambia watengeneze akaunti."
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
-    enable_instagram_logins: "Ruhusu Uhalalishaji wa Instagram, inahitaji instagram_consumer_key na instagram_consumer_secret"
-    instagram_consumer_key: "Ufunguo wa uhalalishaji wa Mtumiaji kupitia Instagram"
-    instagram_consumer_secret: "Uhalalishaji wa Siri wa Mtumiaji kupitia Instagram"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
     allow_restore: "ruhusu urejeshaji, itabadilisha taarifa zote za tovuti! Acha iwe hapana, badilisha kama unataka kurejesha chelezo"
     maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
@@ -833,7 +801,6 @@ sw:
     max_bookmarks_per_day: "Kiwango cha juu cha mialamisho kwa kila mtumiaji kwa siku."
     max_edits_per_day: "Kiwango cha juu cha uhariri kwa kila mtumiaji kwa siku."
     max_topics_per_day: "Kiwango cha juu cha mada mtumiaji anaweza kutengeneza kwa siku."
-    max_personal_messages_per_day: "Kiwango cha juu cha ujumbe mtumiaji anaweza kutengeneza na kutuma kwa siku."
     max_invites_per_day: "Kiwango cha juu cha mialiko mtumiaji anaweza kutuma kwa siku."
     max_topic_invitations_per_day: "Kiwango cha juu cha mialiko ya mada mtumiaji anaweza kutuma kwa siku."
     max_logins_per_ip_per_hour: "Kiwango cha juu cha uingiaji mtumiaji anaruhusiwa kuendana na anwani yake ya mtandao kila saa"
@@ -1016,7 +983,6 @@ sw:
     errors: "%{errors}"
     not_available: "Haipatikani. Jaribu %{suggestion}?"
     something_already_taken: "Tatizo limetokea, labda jina la mtumiaji au barua pepe imesajiliwa tayari. Jaribu kiungo cha kusahau nywila."
-    omniauth_error_unknown: "Tatizo limetokea kwenye mfumo wa kuingia, tafadhali jaribu tena."
     omniauth_confirm_button: "Endelea"
     authenticator_error_no_valid_email: "Barua pepe zinazoendana na %{account}haziruhusiwi. Itakubidi usanidi akaunti yako kupitia barua pepe nyingine."
     new_registrations_disabled: "Usajili wa akaunti mpya hauruhusiwi kwa sasa."
@@ -1026,8 +992,6 @@ sw:
     missing_user_field: "Haujajaza sehemu zote za mtumiaji"
     auth_complete: "Uthibitisho umekamilika."
     click_to_continue: "Bofya hapa kuendelea."
-    already_logged_in: "Inaonekana kuwa unajaribu kukubali mualiko kwa ajili ya mtumiaji mwingine. Kama wewe sio %{current_user}, tafadhali toka nje ya akaunti yako alafu jaribu kuingia tena."
-    second_factor_title: "Uthibitisho wa Vipengele Viwili"
     second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye programu-tumizi:"
     second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
   admin:
@@ -1639,15 +1603,6 @@ sw:
         Kama haujajaribu kutengeneza akaunti ya %{email} au kujaribu kubadilisha barua pepe yako, usijali - unaweza kupuuzia ujumbe huu.
 
         Kama una maswali yoyote, [wasiliana na wasaidizi wetu](%{base_url}/about).
-    account_second_factor_disabled:
-      title: "Uthibitisho wa Pili umesitishwa"
-      subject_template: "Uhalalalishaji wa Viwango Viwili umesitishwa [%{email_prefix}]"
-      text_body_template: |
-        Njia mbili za uthibitisho zimesitishwa kwenye akaunti yako iliyopo %{site_name}. Unaweza kutumia nywila tu kuingia; kodi zaidi ya uthibitisho haihitajiki tna.
-
-        Kama haukuchagua usitisho, kuna mtu atakuwa amepenya na kuingia kwenye akaunti yako.
-
-        Kama una swali lolote, [wasiliana na wasaidizi wetu](%{base_url}/kuhusu).
     digest:
       why: "Muhtasari Mfupi wa %{site_link} toka mara ya mwisho ulivyotembelea %{last_seen_at}"
       since_last_visit: "Kutoka mara ya mwisho ulivyotembelea"
@@ -1810,7 +1765,6 @@ sw:
   color_schemes:
     light: "Hafifu"
     dark: "Nyeusi"
-    default_theme_name: "Hafifu"
     light_theme_name: "Hafifu"
     dark_theme_name: "Nyeusi"
   edit_this_page: "Hariri ukurasa huu"
@@ -2090,8 +2044,6 @@ sw:
     initial_topic_title: Ripoti za Utendaji wa Tovuti
   tags:
     title: "Lebo"
-    staff_tag_disallowed: 'lebo ya "%{tag}" inatumiwa na wasaidizi pekee.'
-    staff_tag_remove_disallowed: 'lebo ya "%{tag}" inaweza kuondolewa na wasaidizi tu.'
   rss_by_tag: "Mada zenye lebo %{tag}"
   finish_installation:
     congratulations: "Hongera, umesakinisha Discourse!"
@@ -2158,10 +2110,6 @@ sw:
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       corporate:
         title: "Shirika"
-      colors:
-        title: "Mandhari"
-      themes_further_reading:
-        title: "Mandhari"
       logos:
         title: "Nembo"
         fields:

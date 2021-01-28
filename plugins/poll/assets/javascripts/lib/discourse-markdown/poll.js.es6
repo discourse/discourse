@@ -3,7 +3,7 @@ import I18n from "I18n";
 
 const DATA_PREFIX = "data-poll-";
 const DEFAULT_POLL_NAME = "poll";
-const WHITELISTED_ATTRIBUTES = [
+const ALLOWED_ATTRIBUTES = [
   "close",
   "max",
   "min",
@@ -81,6 +81,29 @@ function invalidPoll(state, tag) {
   token.content = "[/" + tag + "]";
 }
 
+function getTitle(tokens, startToken) {
+  const startIndex = tokens.indexOf(startToken);
+
+  if (startIndex === -1) {
+    return;
+  }
+
+  const pollTokens = tokens.slice(startIndex);
+  const open = pollTokens.findIndex((token) => token.type === "heading_open");
+  const close = pollTokens.findIndex((token) => token.type === "heading_close");
+
+  if (open === -1 || close === -1) {
+    return;
+  }
+
+  const titleTokens = pollTokens.slice(open + 1, close);
+
+  // Remove the heading element
+  tokens.splice(startIndex + open, close - open + 1);
+
+  return titleTokens;
+}
+
 const rule = {
   tag: "poll",
 
@@ -92,7 +115,9 @@ const rule = {
   },
 
   after: function (state, openToken, raw) {
+    const titleTokens = getTitle(state.tokens, openToken);
     let items = getListItems(state.tokens, openToken);
+
     if (!items) {
       return invalidPoll(state, raw);
     }
@@ -106,7 +131,7 @@ const rule = {
       attributes.push([DATA_PREFIX + "status", "open"]);
     }
 
-    WHITELISTED_ATTRIBUTES.forEach((name) => {
+    ALLOWED_ATTRIBUTES.forEach((name) => {
       if (attrs[name]) {
         attributes.push([DATA_PREFIX + name, attrs[name]]);
       }
@@ -139,8 +164,18 @@ const rule = {
 
     token = new state.Token("poll_open", "div", 1);
     token.attrs = [["class", "poll-container"]];
-
     header.push(token);
+
+    if (titleTokens) {
+      token = new state.Token("title_open", "div", 1);
+      token.attrs = [["class", "poll-title"]];
+      header.push(token);
+
+      header.push(...titleTokens);
+
+      token = new state.Token("title_close", "div", -1);
+      header.push(token);
+    }
 
     // generate the options when the type is "number"
     if (attrs["type"] === "number") {
@@ -175,6 +210,7 @@ const rule = {
         token = new state.Token("list_item_close", "li", -1);
         header.push(token);
       }
+
       token = new state.Token("bullet_item_close", "", -1);
       header.push(token);
     }
@@ -236,10 +272,11 @@ function newApiInit(helper) {
 }
 
 export function setup(helper) {
-  helper.whiteList([
+  helper.allowList([
     "div.poll",
     "div.poll-info",
     "div.poll-container",
+    "div.poll-title",
     "div.poll-buttons",
     "div[data-*]",
     "span.info-number",
@@ -265,7 +302,7 @@ export function setup(helper) {
  * http://www.opensource.org/licenses/bsd-license
  */
 function md5cycle(x, k) {
-  var a = x[0],
+  let a = x[0],
     b = x[1],
     c = x[2],
     d = x[3];
@@ -366,24 +403,26 @@ function ii(a, b, c, d, x, s, t) {
 }
 
 function md51(s) {
-  // Converts the string to UTF-8 "bytes" when necessary
-  if (/[\x80-\xFF]/.test(s)) {
-    s = unescape(encodeURI(s));
-  }
-  var n = s.length,
+  // Converts the string to UTF-8 "bytes"
+  s = unescape(encodeURI(s));
+
+  let n = s.length,
     state = [1732584193, -271733879, -1732584194, 271733878],
     i;
   for (i = 64; i <= s.length; i += 64) {
     md5cycle(state, md5blk(s.substring(i - 64, i)));
   }
   s = s.substring(i - 64);
-  var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  for (i = 0; i < s.length; i++)
+  let tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  for (i = 0; i < s.length; i++) {
     tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
+  }
   tail[i >> 2] |= 0x80 << (i % 4 << 3);
   if (i > 55) {
     md5cycle(state, tail);
-    for (i = 0; i < 16; i++) tail[i] = 0;
+    for (i = 0; i < 16; i++) {
+      tail[i] = 0;
+    }
   }
   tail[14] = n * 8;
   md5cycle(state, tail);
@@ -392,7 +431,7 @@ function md51(s) {
 
 function md5blk(s) {
   /* I figured global was faster.   */
-  var md5blks = [],
+  let md5blks = [],
     i; /* Andy King said do it this way. */
   for (i = 0; i < 64; i += 4) {
     md5blks[i >> 2] =
@@ -404,18 +443,21 @@ function md5blk(s) {
   return md5blks;
 }
 
-var hex_chr = "0123456789abcdef".split("");
+let hex_chr = "0123456789abcdef".split("");
 
 function rhex(n) {
-  var s = "",
+  let s = "",
     j = 0;
-  for (; j < 4; j++)
+  for (; j < 4; j++) {
     s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
+  }
   return s;
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++) x[i] = rhex(x[i]);
+  for (let i = 0; i < x.length; i++) {
+    x[i] = rhex(x[i]);
+  }
   return x.join("");
 }
 

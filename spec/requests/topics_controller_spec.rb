@@ -948,6 +948,28 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(topic.reload.pinned_at).to eq(nil)
       end
+
+      it 'should allow a group moderator to unlist a topic' do
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'visible', enabled: 'false'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.visible).to eq(false)
+        expect(topic.posts.last.action_code).to eq('visible.disabled')
+      end
+
+      it 'should allow a group moderator to list an unlisted topic' do
+        topic.update!(visible: false)
+
+        put "/t/#{topic.id}/status.json", params: {
+          status: 'visible', enabled: 'true'
+        }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.visible).to eq(true)
+        expect(topic.posts.last.action_code).to eq('visible.enabled')
+      end
     end
   end
 
@@ -1183,6 +1205,21 @@ RSpec.describe TopicsController do
         expect(topic.reload.category_id).not_to eq(category.id)
       end
 
+      context 'updating shared drafts' do
+        fab!(:shared_drafts_category) { Fabricate(:category) }
+        fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
+        fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: Fabricate(:category)) }
+
+        it 'changes destination category' do
+          category = Fabricate(:category)
+
+          put "/t/#{topic.id}.json", params: { category_id: category.id }
+
+          expect(response.status).to eq(403)
+          expect(topic.shared_draft.category_id).not_to eq(category.id)
+        end
+      end
+
       describe 'without permission' do
         it "raises an exception when the user doesn't have permission to update the topic" do
           topic.update!(archived: true)
@@ -1275,6 +1312,30 @@ RSpec.describe TopicsController do
           end.not_to change(PostRevision.all, :count)
 
           expect(response.status).to eq(200)
+        end
+
+        describe "when first post is locked" do
+          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
+            SiteSetting.trusted_users_can_edit_others = true
+            user.update!(trust_level: 3)
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+
+            expect(response.status).to eq(403)
+          end
+
+          it "allows staff to edit" do
+            sign_in(Fabricate(:admin))
+            topic.first_post.update!(locked_by_id: admin.id)
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: {
+              title: topic.title + " hello"
+            }
+            expect(response.status).to eq(200)
+          end
         end
 
         context 'tags' do
@@ -1557,6 +1618,30 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(403)
         expect(response.body).to include(I18n.t('invalid_access'))
+      end
+    end
+
+    describe 'when topic is allowed to a group' do
+      let(:group) { Fabricate(:group, public_admission: true) }
+      let(:category) do
+        Fabricate(:category_with_definition).tap do |category|
+          category.set_permissions(group => :full)
+          category.save!
+        end
+      end
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      before do
+        SiteSetting.detailed_404 = true
+      end
+
+      it 'shows a descriptive error message containing the group name' do
+        get "/t/#{topic.id}.json"
+
+        html = CGI.unescapeHTML(response.parsed_body["extras"]["html"])
+        expect(response.status).to eq(403)
+        expect(html).to include(I18n.t('not_in_group.title_topic', group: group.name))
+        expect(html).to include(I18n.t('not_in_group.join_group'))
       end
     end
 
@@ -2048,6 +2133,79 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe '#show filters' do
+      let(:post) { Fabricate(:post) }
+      let(:topic) { post.topic }
+
+      describe 'filter by replies to a post' do
+        let!(:post2) { Fabricate(:post, topic: topic) }
+        let!(:post3) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
+        let!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post2.post_number) }
+        let!(:post5) { Fabricate(:post, topic: topic) }
+        let!(:quote_reply) { Fabricate(:basic_reply, user: user, topic: topic) }
+        let!(:post_reply) { PostReply.create(post_id: post2.id, reply_post_id: quote_reply.id) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            replies_to_post_number: post2.post_number
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          expect(ids).to eq([post.id, post2.id, post3.id, post4.id, quote_reply.id])
+        end
+      end
+
+      describe 'filter upwards by post id' do
+        let!(:post2) { Fabricate(:post, topic: topic) }
+        let!(:post3) { Fabricate(:post, topic: topic) }
+        let!(:post4) { Fabricate(:post, topic: topic, reply_to_post_number: post3.post_number) }
+        let!(:post5) { Fabricate(:post, topic: topic, reply_to_post_number: post4.post_number) }
+        let!(:post6) { Fabricate(:post, topic: topic) }
+
+        it 'should return the right posts' do
+          get "/t/#{topic.id}.json", params: {
+            filter_upwards_post_id: post5.id
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+
+          expect(body.has_key?("suggested_topics")).to eq(false)
+          expect(body.has_key?("related_messages")).to eq(false)
+
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+          # includes topic OP, current post and subsequent posts
+          # but only one level of parents, respecting default max_reply_history = 1
+          expect(ids).to eq([post.id, post4.id, post5.id, post6.id])
+        end
+
+        it 'should respect max_reply_history site setting' do
+          SiteSetting.max_reply_history = 2
+
+          get "/t/#{topic.id}.json", params: {
+            filter_upwards_post_id: post5.id
+          }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          ids = body["post_stream"]["posts"].map { |p| p["id"] }
+
+          # includes 2 levels of replies (post3 and post4)
+          expect(ids).to eq([post.id, post3.id, post4.id, post5.id, post6.id])
+        end
+      end
+
+    end
+
     context "when 'login required' site setting has been enabled" do
       before { SiteSetting.login_required = true }
 
@@ -2376,6 +2534,12 @@ RSpec.describe TopicsController do
       expect(response.body).to_not include("/forum/forum")
       expect(response.body).to include("http://test.localhost/forum/t/#{topic.slug}")
     end
+
+    it 'returns 404 when posts are deleted' do
+      topic.posts.each(&:trash!)
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#invite_group' do
@@ -2543,6 +2707,36 @@ RSpec.describe TopicsController do
           topic_ids: topic_ids, operation: operation
         }
       end
+
+      it "respects the tracked parameter" do
+        # untracked topic
+        category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:regular],
+                                                     category.id)
+        create_post(user: user, topic_id: topic.id)
+        topic.update!(category_id: category.id)
+        create_post(topic_id: topic.id)
+
+        # tracked topic
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post(user: user).topic
+        tracked_topic.update!(category_id: tracked_category.id)
+        create_post(topic_id: tracked_topic.id)
+
+        put "/topics/bulk.json", params: {
+          filter: 'unread',
+          operation: { type: 'dismiss_posts' },
+          tracked: true
+        }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(topic, user).last_read_post_number).to eq(topic.posts.count - 1)
+        expect(TopicUser.get(tracked_topic, user).last_read_post_number).to eq(tracked_topic.posts.count)
+      end
     end
   end
 
@@ -2631,7 +2825,6 @@ RSpec.describe TopicsController do
       sign_in(user)
 
       old_date = 2.years.ago
-
       user.user_stat.update_column(:new_since, old_date)
 
       TopicTrackingState.expects(:publish_dismiss_new).with(user.id)
@@ -2640,6 +2833,35 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       user.reload
       expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
+    end
+
+    describe "when tracked param is true" do
+      it "does not update user_stat.new_since" do
+        sign_in(user)
+
+        old_date = 2.years.ago
+        user.user_stat.update_column(:new_since, old_date)
+
+        put "/topics/reset-new.json?tracked=true"
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.user_stat.new_since.to_date).to eq(old_date.to_date)
+      end
+
+      it "creates topic user records for each unread topic" do
+        sign_in(user)
+        user.user_stat.update_column(:new_since, 2.years.ago)
+
+        tracked_category = Fabricate(:category)
+        CategoryUser.set_notification_level_for_category(user,
+                                                     NotificationLevels.all[:tracking],
+                                                     tracked_category.id)
+        tracked_topic = create_post.topic
+        tracked_topic.update!(category_id: tracked_category.id)
+
+        create_post # This is a new post, but is not tracked so a record will not be created for it
+        expect { put "/topics/reset-new.json?tracked=true" }.to change { TopicUser.where(user_id: user.id, last_read_post_number: 0).count }.by(1)
+      end
     end
 
     context 'category' do
@@ -2826,6 +3048,19 @@ RSpec.describe TopicsController do
       end
     end
 
+    context 'when time is in the past' do
+      it 'returns an error' do
+        freeze_time
+        sign_in(admin)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: Time.current - 1.day,
+          status_type: TopicTimer.types[1]
+        }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context 'when logged in as an admin' do
       before do
         freeze_time
@@ -2944,6 +3179,123 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(400)
           expect(response.body).to include('status_type')
         end
+      end
+    end
+
+    context 'when logged in as a TL4 user' do
+      it "raises an error if the user can't see the topic" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        pm_topic = Fabricate(:private_message_topic)
+
+        post "/t/#{pm_topic.id}/timer.json", params: {
+          time: '24',
+          status_type: TopicTimer.types[1]
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+    end
+  end
+
+  describe '#set_slow_mode' do
+    context 'when not logged in' do
+      it 'returns a forbidden response' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context 'logged in as an admin' do
+      it 'allows admins to set the slow mode interval' do
+        sign_in(admin)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        topic.reload
+        expect(response.status).to eq(200)
+        expect(topic.slow_mode_seconds).to eq(3600)
+      end
+    end
+
+    context 'logged in as a regular user' do
+      it 'does nothing if the user is not TL4' do
+        user.update!(trust_level: TrustLevel[3])
+        sign_in(user)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'allows TL4 users to set the slow mode interval' do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600'
+        }
+
+        topic.reload
+        expect(response.status).to eq(200)
+        expect(topic.slow_mode_seconds).to eq(3600)
+      end
+    end
+
+    context 'auto-disable slow mode' do
+      before { sign_in(admin) }
+
+      let(:timestamp) { 1.week.from_now.to_formatted_s(:iso8601) }
+
+      it 'sets a topic timer to clear the slow mode automatically' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+        execute_at = created_timer.execute_at.to_formatted_s(:iso8601)
+
+        expect(execute_at).to eq(timestamp)
+      end
+
+      it 'deletes the topic timer' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '0', enabled_until: timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+
+        expect(created_timer).to be_nil
+      end
+
+      it 'updates the existing timer' do
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: timestamp
+        }
+
+        updated_timestamp = 1.hour.from_now.to_formatted_s(:iso8601)
+
+        put "/t/#{topic.id}/slow_mode.json", params: {
+          seconds: '3600', enabled_until: updated_timestamp
+        }
+
+        created_timer = TopicTimer.find_by(topic: topic)
+        execute_at = created_timer.execute_at.to_formatted_s(:iso8601)
+
+        expect(execute_at).to eq(updated_timestamp)
       end
     end
   end
@@ -3275,6 +3627,11 @@ RSpec.describe TopicsController do
           result = Topic.find(json['id'])
           expect(result.category_id).to eq(category.id)
           expect(result.visible).to eq(true)
+        end
+
+        it 'fails if the destination category is the shared drafts category' do
+          put "/t/#{topic.id}/publish.json", params: { destination_category_id: shared_drafts_category.id }
+          expect(response.status).to eq(400)
         end
       end
     end

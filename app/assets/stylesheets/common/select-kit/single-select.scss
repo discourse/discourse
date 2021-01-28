@@ -14,4 +14,10 @@
       border-color: var(--tertiary);
     }
   }
+
+  &.is-disabled {
+    .select-kit-header {
+      opacity: 0.5;
+    }
+  }
 }

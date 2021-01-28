@@ -223,7 +223,7 @@ class PostAlerter
     topic.allowed_groups.map do |g|
       {
         group_id: g.id,
-        group_name: g.name.downcase,
+        group_name: g.name,
         inbox_count: DB.query_single(sql, group_id: g.id).first.to_i
       }
     end
@@ -416,8 +416,9 @@ class PostAlerter
     if opts[:skip_send_email_to]&.include?(user.email)
       skip_send_email = true
     elsif original_post.via_email && (incoming_email = original_post.incoming_email)
-      skip_send_email = contains_email_address?(incoming_email.to_addresses, user) ||
-        contains_email_address?(incoming_email.cc_addresses, user)
+      skip_send_email =
+        incoming_email.to_addresses_split.include?(user.email) ||
+        incoming_email.cc_addresses_split.include?(user.email)
     else
       skip_send_email = opts[:skip_send_email]
     end
@@ -458,19 +459,17 @@ class PostAlerter
     end
   end
 
-  def contains_email_address?(addresses, user)
-    return false if addresses.blank?
-    addresses.split(";").include?(user.email)
-  end
-
   def push_notification(user, payload)
+    return if user.do_not_disturb?
+
     if user.push_subscriptions.exists?
       Jobs.enqueue(:send_push_notification, user_id: user.id, payload: payload)
     end
 
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
-        .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes))")
+        .joins(:scopes)
+        .where("user_api_key_scopes.name IN ('push', 'notifications')")
         .where("push_url IS NOT NULL AND push_url <> ''")
         .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
         .where("revoked_at IS NULL")
@@ -554,9 +553,7 @@ class PostAlerter
   end
 
   def group_notifying_via_smtp(post)
-    return nil if !SiteSetting.enable_smtp ||
-                  post.post_type != Post.types[:regular] ||
-                  post.incoming_email
+    return nil if !SiteSetting.enable_smtp || post.post_type != Post.types[:regular]
 
     post.topic.allowed_groups
       .where.not(smtp_server: nil)
@@ -571,55 +568,62 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    # users who interacted with the post by _directly_ emailing the group
-    if group = group_notifying_via_smtp(post)
-      group_email_regex = group.email_username_regex
-      email_addresses = Set[group.email_username]
+    # Users who interacted with the post by _directly_ emailing the group
+    # via the group's email_username. This excludes people who replied via
+    # email to a user_private_message notification email. These people should
+    # not be emailed again by the user_private_message notifications below.
+    emails_to_skip_send = notify_group_direct_emailers(post)
 
-      post.topic.incoming_email.each do |incoming_email|
-        to_addresses = incoming_email.to_addresses&.split(';')
-        cc_addresses = incoming_email.cc_addresses&.split(';')
-
-        next if to_addresses&.none? { |address| address =~ group_email_regex } &&
-                cc_addresses&.none? { |address| address =~ group_email_regex }
-
-        email_addresses.add(incoming_email.from_address)
-        email_addresses.merge(to_addresses) if to_addresses.present?
-        email_addresses.merge(cc_addresses) if cc_addresses.present?
-      end
-
-      email_addresses.subtract([nil, ''])
-
-      if email_addresses.size > 1
-        Jobs.enqueue(:group_smtp_email,
-          group_id: group.id,
-          post_id: post.id,
-          email: email_addresses.to_a - [group.email_username])
-      end
-    end
-
-    # users that aren't part of any mentioned groups
+    # Users that aren't part of any mentioned groups and who did not email
+    # the group directly.
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
       notification_level = TopicUser.get(post.topic, user)&.notification_level
       if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       end
     end
 
-    # users that are part of all mentioned groups
+    # Users that are part of all mentioned groups
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
       case TopicUser.get(post.topic, user)&.notification_level
       when TopicUser.notification_levels[:watching]
         # only create a notification when watching the group
-        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: email_addresses)
+        create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       when TopicUser.notification_levels[:tracking]
         notify_group_summary(user, post)
       end
     end
+  end
+
+  def notify_group_direct_emailers(post)
+    email_addresses = []
+    emails_to_skip_send = []
+    group = group_notifying_via_smtp(post)
+
+    return emails_to_skip_send if group.blank?
+
+    # If the post already has an incoming email, it has been set in the
+    # Email::Receiver or via the GroupSmtpEmail job, and thus it was created
+    # via the IMAP/SMTP flow, so there is no need to notify those involved
+    # in the email chain again.
+    if post.incoming_email.blank?
+      email_addresses = post.topic.incoming_email_addresses(group: group)
+      if email_addresses.any?
+        Jobs.enqueue(:group_smtp_email, group_id: group.id, post_id: post.id, email: email_addresses)
+      end
+    end
+
+    # Add the group's email into the array, because it is used for
+    # skip_send_email_to in the case of user private message notifications
+    # (we do not want the group to be sent any emails from here because it
+    # will make another email for IMAP to pick up in the group's mailbox)
+    emails_to_skip_send = email_addresses.dup if email_addresses.any?
+    emails_to_skip_send << group.email_username
+    emails_to_skip_send
   end
 
   def notify_post_users(post, notified, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)

@@ -33,7 +33,6 @@ after_initialize do
     '../autoload/jobs/narrative_timeout.rb',
     '../autoload/jobs/narrative_init.rb',
     '../autoload/jobs/send_default_welcome_message.rb',
-    '../autoload/jobs/send_advanced_tutorial_message.rb',
     '../autoload/jobs/onceoff/grant_badges.rb',
     '../autoload/jobs/onceoff/remap_old_bot_images.rb',
     '../lib/discourse_narrative_bot/actions.rb',
@@ -109,7 +108,7 @@ after_initialize do
       private
 
       def fetch_avatar(user)
-        avatar_url = UrlHelper.absolute(Discourse.base_uri + user.avatar_template.gsub('{size}', '250'))
+        avatar_url = UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
         FileHelper.download(
           avatar_url.to_s,
           max_file_size: SiteSetting.max_image_size_kb.kilobytes,
@@ -195,7 +194,16 @@ after_initialize do
     return if topic.blank?
 
     first_post = topic.ordered_posts.first
-    PostDestroyer.new(Discourse.system_user, first_post, context: I18n.t('discourse_narrative_bot.new_user_narrative.delete_reason')).destroy
+
+    notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
+    if notification.present?
+      Notification.read(self, notification.id)
+      self.saw_notification_id(notification.id)
+      self.reload
+      self.publish_notifications_state
+    end
+
+    PostDestroyer.new(Discourse.system_user, first_post, skip_staff_log: true).destroy
     DiscourseNarrativeBot::Store.remove(self.id)
   end
 
@@ -282,24 +290,32 @@ after_initialize do
     end
   end
 
-  self.on(:user_promoted) do |args|
-    promoted_from_tl1 = args[:new_trust_level] == TrustLevel[2] &&
-      args[:old_trust_level] == TrustLevel[1]
-
-    if SiteSetting.discourse_narrative_bot_enabled && promoted_from_tl1
-      # The event 'user_promoted' is sometimes called from inside a transaction.
-      # Use this helper to ensure the job is enqueued after commit to prevent
-      # any race conditions.
-      DB.after_commit do
-        Jobs.enqueue(:send_advanced_tutorial_message, user_id: args[:user_id])
-      end
-    end
-  end
-
   UserAvatar.register_custom_user_gravatar_email_hash(
     DiscourseNarrativeBot::BOT_USER_ID,
     "discobot@discourse.org"
   )
+
+  self.on(:system_message_sent) do |args|
+    if args[:message_type] == 'tl2_promotion_message' && SiteSetting.discourse_narrative_bot_enabled
+
+      raw = I18n.t("discourse_narrative_bot.tl2_promotion_message.text_body_template",
+                  discobot_username: ::DiscourseNarrativeBot::Base.new.discobot_username,
+                  reset_trigger: "#{::DiscourseNarrativeBot::TrackSelector.reset_trigger} #{::DiscourseNarrativeBot::AdvancedUserNarrative.reset_trigger}")
+
+      recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
+      recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
+      return if recipient.nil?
+
+      PostCreator.create!(
+        ::DiscourseNarrativeBot::Base.new.discobot_user,
+        title: I18n.t("discourse_narrative_bot.tl2_promotion_message.subject_template"),
+        raw: raw,
+        skip_validations: true,
+        archetype: Archetype.private_message,
+        target_usernames: recipient.username
+      )
+    end
+  end
 
   PostGuardian.class_eval do
     alias_method :existing_can_create_post?, :can_create_post?

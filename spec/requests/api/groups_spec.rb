@@ -11,9 +11,8 @@ describe 'groups' do
   end
 
   path '/admin/groups.json' do
-
     post 'Creates a group' do
-      tags 'Group'
+      tags 'Groups'
       consumes 'application/json'
       parameter name: :group, in: :body, schema: {
         type: :object,
@@ -22,9 +21,9 @@ describe 'groups' do
             type: :object,
             properties: {
               name: { type: :string },
-            }, required: [ 'name' ]
+            }, required: ['name']
           }
-        },
+        }, required: ['group']
       }
 
       produces 'application/json'
@@ -74,6 +73,37 @@ describe 'groups' do
         end
       end
     end
-
   end
+
+  path '/groups/{id}.json' do
+    put 'Update a group' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, schema: { type: :string }
+      parameter name: :group, in: :body, schema: {
+        type: :object,
+        properties: {
+          group: {
+            type: :object,
+            properties: {
+              name: { type: :string },
+            }, required: ['name']
+          }
+        }, required: ['group']
+      }
+
+      produces 'application/json'
+      response '200', 'success response' do
+        schema type: :object, properties: {
+          success: { type: :string, example: "OK" }
+        }
+
+        let(:id) { Fabricate(:group).id }
+        let(:group) { { name: 'awesome' } }
+
+        run_test!
+      end
+    end
+  end
+
 end

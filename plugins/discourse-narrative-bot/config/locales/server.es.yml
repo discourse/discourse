@@ -25,15 +25,6 @@ es:
       long_description: |
         Esta medalla se otorga al completar con éxito el tutorial interactivo para usuarios avanzados. Has dominado las herramientas avanzadas de discusión y ¡ahora tienes licencia completa!
   discourse_narrative_bot:
-    bio: "¡Hola! No soy una persona real, soy un bot que te puede enseñar acerca este sitio. Para interactuar conmigo, envíame un mensaje o menciona **`%{discobot_username}`** en cualquier lugar."
-    tl2_promotion_message:
-      subject_template: "¡Felicitaciones por tu promoción del nivel de confianza!"
-      text_body_template: |
-        Ahora que te han ascendido, ¡es momento de aprender algunas características avanzadas!
-
-        Responde a este mensaje con `@%{discobot_username} %{reset_trigger}` para saber más sobre lo que puedes hacer.
-
-        Te invitamos a que continúes involucrándote – nos gusta tenerte por aquí.
     timeout:
       message: |-
         Hey, @%{username}, te quería decir que estoy pendiente de ti porque no he tenido noticias tuyas en mucho tiempo.
@@ -49,8 +40,9 @@ es:
       trigger: "tirar"
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
-      not_enough_dice: |-
-        Sólo tengo %{num_of_dice} dados. [Vergonzoso](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!
+      not_enough_dice:
+        one: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
+        other: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
       results: |-
@@ -151,7 +143,6 @@ es:
       reset_trigger: "tutorial"
       title: "Certificado de finalización del tutorial de usuario nuevo"
       cert_title: "En reconocimiento a la finalización exitosa del tutorial de nuevo usuario"
-      delete_reason: "El usuario omitió las sugerencias para nuevos usuarios"
       hello:
         title: "¡Saludos!"
         message: |-
@@ -185,13 +176,24 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón me gusta: heart: debajo de esta publicación para avisarme.
+          Si te gusta (¡y a quién no le gustaría!), adelante, presiona el botón me gusta :heart: debajo de esta publicación para avisarme.
 
           ¿Puedes **responder con una imagen?** ¡Cualquier imagen servirá! Arrastra y suelta, presiona el botón de carga o incluso cópialo y pégalo.
         reply: |-
-          Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié heart_eyes
+          Ingeniosa imagen – presioné el botón me gusta :heart: para hacerte saber cuánto lo aprecié :heart_eyes:
         like_not_found: |-
           ¿Te olvidaste de dar me gusta :heart: a mi [publicación?](%{url}) :crying_cat_face:
+      likes:
+        instructions: |-
+          Aquí va una foto de un unicornio:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Si te gusta (¡y a quién no le gustaría!), pulsa el botón me gusta :heart: debajo de este mensaje para que lo sepa.
+        reply: |-
+          ¡Gracias por darle me gusta a mi mensaje!
+        not_found: |-
+          ¿Te has olvidado de darle :heart: me gusta a mi [mensaje](%{url})? :crying_cat_face:
       formatting:
         instructions: |-
           ¿Puedes poner algunas letras en **negrita** o _cursiva_ en tu respuesta?
@@ -281,7 +283,7 @@ es:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de `%{search_answer}`** y esto te llevará automáticamente mente al final.
+          ¿Notaste que estás de nuevo en el principio? Alimenta a este pobre capibara **respondiendo con el emoji de `%{search_answer}`** y esto te llevará automáticamente al final.
         reply: |-
           ¡Lo encontraste! :tada:
 

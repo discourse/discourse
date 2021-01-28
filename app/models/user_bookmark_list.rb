@@ -5,13 +5,17 @@ class UserBookmarkList
 
   PER_PAGE = 20
 
-  attr_reader :bookmarks
+  attr_reader :bookmarks, :per_page
   attr_accessor :more_bookmarks_url
 
   def initialize(user:, guardian:, params:)
     @user = user
     @guardian = guardian
-    @params = params.merge(per_page: PER_PAGE)
+    @params = params
+
+    @params.merge!(per_page: PER_PAGE) if params[:per_page].blank?
+    @params[:per_page] = PER_PAGE if @params[:per_page] > PER_PAGE
+
     @bookmarks = []
   end
 
@@ -21,6 +25,6 @@ class UserBookmarkList
   end
 
   def per_page
-    @per_page ||= PER_PAGE
+    @per_page ||= @params[:per_page]
   end
 end

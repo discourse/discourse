@@ -1,7 +1,7 @@
-import I18n from "I18n";
-import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const EMAIL_LEVELS = {
@@ -62,7 +62,7 @@ export default Controller.extend({
 
   @discourseComputed()
   frequencyEstimate() {
-    var estimate = this.get("model.mailing_list_posts_per_day");
+    let estimate = this.get("model.mailing_list_posts_per_day");
     if (!estimate || estimate < 2) {
       return I18n.t("user.mailing_list_mode.few_per_day");
     } else {

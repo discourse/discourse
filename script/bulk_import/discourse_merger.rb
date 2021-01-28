@@ -9,6 +9,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   # DB_NAME: name of database being merged into the current local db
   # DB_HOST: hostname of database being merged
+  # DB_PASS: password used to access the Discourse database by the postgres user
   # UPLOADS_PATH: absolute path of the directory containing "original"
   #               and "optimized" dirs. e.g. /home/discourse/other-site/public/uploads/default
   # SOURCE_BASE_URL: base url of the site being merged. e.g. https://meta.discourse.org
@@ -16,12 +17,15 @@ class BulkImport::DiscourseMerger < BulkImport::Base
   #             e.g. https://discourse-cdn-sjc1.com/business4
 
   def initialize
+    db_password = ENV["DB_PASS"] || 'import_password'
     local_db = ActiveRecord::Base.connection_config
-    @raw_connection = PG.connect(dbname: local_db[:database], host: 'localhost', port: local_db[:port])
+    @raw_connection = PG.connect(dbname: local_db[:database], host: 'localhost', port: local_db[:port], user: 'postgres', password: db_password)
 
     @source_db_config = {
       dbname: ENV["DB_NAME"] || 'dd_demo',
-      host: ENV["DB_HOST"] || 'localhost'
+      host: ENV["DB_HOST"] || 'localhost',
+      user: 'postgres',
+      password: db_password
     }
 
     raise "SOURCE_BASE_URL missing!" unless ENV['SOURCE_BASE_URL']
@@ -109,7 +113,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         old_user_id = row['id']&.to_i
         if existing = UserEmail.where(email: row.delete('email')).first&.user
           # Merge these users
-          @users[old_user_id.to_s] = existing.id
+          @users[old_user_id] = existing.id
           @merged_user_ids << old_user_id
           next
         else
@@ -122,7 +126,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           end
 
           row['id'] = (@last_user_id += 1)
-          @users[old_user_id.to_s] = row['id']
+          @users[old_user_id] = row['id']
 
           @raw_connection.put_copy_data row.values
         end
@@ -153,7 +157,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
-    [UserAssociatedAccount, GithubUserInfo, Oauth2UserInfo,
+    [UserAssociatedAccount, Oauth2UserInfo,
       SingleSignOnRecord, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
@@ -189,8 +193,16 @@ class BulkImport::DiscourseMerger < BulkImport::Base
                      c1.slug AS slug
                 FROM categories c1
      LEFT OUTER JOIN categories c2 ON c1.parent_category_id = c2.id
-                  ) x ON c.id = x.id"
+                  ) x ON c.id = x.id
+            ORDER BY c.id"
         ).each do |row|
+
+        # using ORDER BY id to import categories in order of creation.
+        # this assumes parent categories were created prior to child categories
+        # and have a lower category id.
+        #
+        # without this definition, categories import in different orders in subsequent imports
+        # and can potentially mess up parent/child structure
 
         source_category_path = row.delete('path')&.squeeze('/')
 
@@ -198,8 +210,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         parent_slug = existing&.parent_category&.slug
         if existing &&
             source_category_path == "/c/#{parent_slug}/#{existing.slug}".squeeze('/')
-          @categories[row['id']] = existing.id
+          @categories[row['id'].to_i] = existing.id
           next
+        elsif existing
+          # if not the exact path as the source,
+          # we still need to avoid a unique index conflict on the slug when importing
+          # if that's the case, we'll append the imported id
+          row['slug'] = "#{row['slug']}-#{row['id']}"
         end
 
         old_user_id = row['user_id'].to_i
@@ -211,10 +228,10 @@ class BulkImport::DiscourseMerger < BulkImport::Base
           row['parent_category_id'] = category_id_from_imported_id(row['parent_category_id'])
         end
 
-        old_id = row['id']
+        old_id = row['id'].to_i
         row['id'] = (last_id += 1)
         imported_ids << old_id
-        @categories[old_id.to_s] = row['id']
+        @categories[old_id] = row['id']
 
         @raw_connection.put_copy_data(row.values)
       end
@@ -234,8 +251,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts 'updating category description topic ids...'
 
     @categories.each do |old_id, new_id|
-      category = Category.find(new_id)
-      if description_topic_id = topic_id_from_imported_id(category.topic_id)
+      category = Category.find(new_id) if new_id.present?
+      if description_topic_id = topic_id_from_imported_id(category&.topic_id)
         category.topic_id = description_topic_id
         category.save!
       end
@@ -321,8 +338,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
         next if Upload.where(sha1: row['sha1']).exists?
 
+        # make sure to get a backup with uploads then convert them to local.
+        # when the backup is restored to a site with s3 uploads, it will upload the items
+        # to the bucket
         rel_filename = row['url'].gsub(/^\/uploads\/[^\/]+\//, '')
-        rel_filename = rel_filename.gsub(/^\/\/[^\/]+\.amazonaws\.com\//, '')
+        # assumes if coming from amazonaws.com that we want to remove everything
+        # but the text after the last `/`, which should leave us the filename
+        rel_filename = rel_filename.gsub(/^\/\/[^\/]+\.amazonaws\.com\/\S+\//, '')
         absolute_filename = File.join(@uploads_path, rel_filename)
 
         old_id = row['id']
@@ -457,11 +479,11 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         row['deleted_by_id'] = user_id_from_imported_id(row['deleted_by_id']) if row['deleted_by_id']
         row['badge_id'] = badge_id_from_imported_id(row['badge_id']) if row['badge_id']
 
-        old_id = row['id']
+        old_id = row['id'].to_i
         if old_id && last_id
           row['id'] = (last_id += 1)
           imported_ids << old_id if has_custom_fields
-          mapping[old_id.to_s] = row['id'] if mapping
+          mapping[old_id] = row['id'] if mapping
         end
 
         if skip_processing
@@ -625,11 +647,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     notification
   end
 
-  def process_github_user_info(r)
-    return nil if GithubUserInfo.where(github_user_id: r['github_user_id']).exists?
-    r
-  end
-
   def process_oauth2_user_info(r)
     return nil if Oauth2UserInfo.where(uid: r['uid'], provider: r['provider']).exists?
     r
@@ -729,7 +746,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     User.where('id >= ?', @first_new_user_id).find_each do |u|
       arr = []
-      sql = "UPDATE users SET"
+      sql = "UPDATE users SET".dup
 
       if new_approved_by_id = user_id_from_imported_id(u.approved_by_id)
         arr << " approved_by_id = #{new_approved_by_id}"

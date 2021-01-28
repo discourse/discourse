@@ -484,7 +484,6 @@ sr:
       admin_tooltip: "Ovaj korisnik je administrator"
       suspended_notice: "Ovaj korisnik je suspendovan do %{date}."
       suspended_reason: "Razlog:"
-      github_profile: "Github"
       email_activity_summary: "Sažetak aktivnosti"
       watched_tags: "Pregledano"
       tracked_tags: "Praćeno"
@@ -591,7 +590,6 @@ sr:
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
-        ip: "IP"
         details: "Detalji"
       last_posted: "Poslednja poruka"
       last_emailed: "Poslednji e-mail"
@@ -659,8 +657,6 @@ sr:
         links_tab: "Linkovi"
         link_created_at: "Napravljeno"
         link_groups: Grupe
-        generate_link: "Kopiraj link pozivnice"
-        link_generated: "Link pozivnice je uspešno kreiran!"
         invite_link:
           success: "Link pozivnice je uspešno kreiran!"
       password:
@@ -836,7 +832,6 @@ sr:
       awaiting_approval: "Vaš nalog nije odobren od osoblja. Poslaćemo vam e-mail kad bude odobren."
       requires_invite: "Žao nam je, pristup ovoj zajednici je moguć samo uz pozivnicu."
       not_activated: "Ne možete se još prijaviti. Ranije smo vam poslali e-mail na <b>%{sentTo}</b>. Molimo sledite uputstva da aktivirate nalog."
-      not_allowed_from_ip_address: "Ne možete se prijaviti s te IP adrese."
       admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
       resend_activation_email: "Pritisnite ovde da ponovno pošaljemo aktivacijski e-mail."
       sent_activation_email_again: "Poslali smo vam drugi aktivacijski e-mail na: <b>%{currentEmail}</b>. Možda zatreba par minuta da stigne; svakako proverite nepoželjnu poštu."
@@ -854,7 +849,6 @@ sr:
       welcome_to: "Dobrodošao na %{site_name}!"
       success: "Tvoj nalog je kreiran i sada si ulogovan."
       name_label: "Ime foruma"
-      password_label: "Postavi Šifru"
     emoji_set:
       apple_international: "Apple/International"
       google: "Google"
@@ -869,7 +863,6 @@ sr:
       emoji: "Emotikoni :)"
       more_emoji: "više..."
       options: "Opcije"
-      blockquote_text: "izdvojeni citat"
       add_warning: "Ovo je službeno upozorenje."
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
@@ -910,8 +903,7 @@ sr:
       link_description: "Unesite opis linka ovde"
       link_dialog_title: "Ubacite Hiperlink"
       link_optional_text: "neobavezan naslov"
-      quote_title: "izdvojeni citat"
-      quote_text: "izdvojeni citat"
+      blockquote_text: "izdvojeni citat"
       code_title: "Pred-formatirani tekst"
       code_text: "uvuci pred-formatirani tekst za 4 mesta"
       paste_code_text: "unesi ili nalepi kod ovde"
@@ -955,7 +947,6 @@ sr:
       title: "pretražite teme, poruke, korisnike ili kategorije"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
-      searching: "Pretraživanje..."
       post_format: "#%{post_number} od %{username}"
       search_google_button: "Google"
       context:
@@ -996,7 +987,6 @@ sr:
         new: "Nemate novih tema."
         read: "Niste još pročitali ni jednu temu."
         posted: "Niste se još objavljivali ni u jendoj temi."
-        latest: "Nema poslednjih tema. To je tužno."
         bookmarks: "Nemate markiranih tema još."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
@@ -1062,10 +1052,8 @@ sr:
       toggle_information: "uključi/isključi detalje teme"
       read_more_in_category: "Želite da pročitate više? Pregledaj druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite da pročitate više? %{catLink} ili %{latestLink}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'>1 unread</a> } other { are <a href='{basePath}/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
-      suggest_create_topic: Zašto ne otvorite temu?
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
@@ -1095,7 +1083,7 @@ sr:
           "3_2": "Primaćete obaveštenja jer posmatrate temu."
           "3_1": "Primaćete obaveštenja jer ste vi otvorili temu."
           "3": "Primaćete obaveštenja jer posmatrate temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "1": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "0_7": "Ignorirate sva obaveštenja iz ove kategorije."
@@ -1364,7 +1352,6 @@ sr:
     flagging:
       title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
-      take_action: "Preduzmi Akciju"
       notify_action: "Privatna poruka"
       delete_spammer: "Obriši korisnika zbog nepoželjnih poruka"
       yes_delete_spammer: "Da, Obriši Korisnika"
@@ -1409,13 +1396,11 @@ sr:
       unlisted:
         help: "Ova tema je ne-listovana; neće se prikazivati na listi tema i može joj se pristupiti samo preko direktnog linka."
     posts: "Poruke"
-    posts_long: "Ima %{number} poruka u ovoj temi"
     original_post: "Originalna Poruka"
     views: "Pregledi"
     replies: "Odgovori"
     activity: "Aktivnosti"
     likes: "Lajkova"
-    likes_long: "ima %{number} like-ova u ovoj temi"
     users: "Korisnici"
     category_title: "Kategorija"
     history: "Istorija"

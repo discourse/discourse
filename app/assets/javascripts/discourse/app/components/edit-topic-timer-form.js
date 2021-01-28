@@ -1,15 +1,15 @@
-import { equal, or, readOnly } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import {
-  PUBLISH_TO_CATEGORY_STATUS_TYPE,
-  OPEN_STATUS_TYPE,
-  DELETE_STATUS_TYPE,
-  CLOSE_STATUS_TYPE,
   BUMP_TYPE,
+  CLOSE_STATUS_TYPE,
   DELETE_REPLIES_TYPE,
+  DELETE_STATUS_TYPE,
+  OPEN_STATUS_TYPE,
+  PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/controllers/edit-topic-timer";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { equal, or, readOnly } from "@ember/object/computed";
+import Component from "@ember/component";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   selection: readOnly("topicTimer.status_type"),
@@ -34,7 +34,9 @@ export default Component.extend({
 
   @discourseComputed("topic.visible")
   excludeCategoryId(visible) {
-    if (visible) return this.get("topic.category_id");
+    if (visible) {
+      return this.get("topic.category_id");
+    }
   },
 
   @observes("selection")

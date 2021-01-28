@@ -10,7 +10,7 @@ export default function handleDescriptor(target, key, desc, params = []) {
       let computedDescriptor;
 
       if (desc.writable) {
-        var val = extractValue(desc);
+        let val = extractValue(desc);
         if (typeof val === "object") {
           let value = {};
           if (val.get) {

@@ -1,14 +1,13 @@
-import getURL from "discourse-common/lib/get-url";
-import { notEmpty } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { Promise } from "rsvp";
-import Category from "discourse/models/category";
+import RestModel from "discourse/models/rest";
 import Session from "discourse/models/session";
-import { isEmpty } from "@ember/utils";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
+import { notEmpty } from "@ember/object/computed";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -138,26 +137,28 @@ const TopicList = RestModel.extend({
         i++;
       });
 
-      if (storeInSession) Session.currentProp("topicList", this);
+      if (storeInSession) {
+        Session.currentProp("topicList", this);
+      }
     });
   },
 });
 
 TopicList.reopenClass({
   topicsFrom(store, result, opts) {
-    if (!result) return;
+    if (!result) {
+      return;
+    }
 
     opts = opts || {};
     let listKey = opts.listKey || "topics";
 
     // Stitch together our side loaded data
 
-    const categories = Category.list(),
-      users = extractByKey(result.users, User),
-      groups = extractByKey(result.primary_groups, EmberObject);
+    const users = extractByKey(result.users, User);
+    const groups = extractByKey(result.primary_groups, EmberObject);
 
     return result.topic_list[listKey].map((t) => {
-      t.category = categories.findBy("id", t.category_id);
       t.posters.forEach((p) => {
         p.user = users[p.user_id];
         p.extraClasses = p.extras;

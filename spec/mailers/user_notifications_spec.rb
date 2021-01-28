@@ -78,7 +78,33 @@ describe UserNotifications do
       expect(subject.from).to eq([SiteSetting.notification_email])
       expect(subject.body).to be_present
     end
+  end
 
+  describe ".confirm_new_email" do
+    let(:opts) do
+      { requested_by_admin: requested_by_admin, email_token: token }
+    end
+    let(:token) { "test123" }
+
+    context "when requested by admin" do
+      let(:requested_by_admin) { true }
+
+      it "uses the requested by admin template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
+
+    context "when not requested by admin" do
+      let(:requested_by_admin) { false }
+
+      it "uses the normal template" do
+        expect(UserNotifications.confirm_new_email(user, opts).body).not_to include(
+          "This email change was requested by a site admin."
+        )
+      end
+    end
   end
 
   describe '.email_login' do
@@ -987,7 +1013,7 @@ describe UserNotifications do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
-            expects_build_with(has_entry(:locale, "en_US"))
+            expects_build_with(has_entry(:locale, "en"))
           end
         end
       end

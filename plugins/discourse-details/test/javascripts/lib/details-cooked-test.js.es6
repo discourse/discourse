@@ -1,6 +1,6 @@
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 
-QUnit.module("lib:details-cooked-test");
+module("lib:details-cooked-test");
 
 const defaultOpts = buildOptions({
   siteSettings: {
@@ -13,7 +13,7 @@ const defaultOpts = buildOptions({
   getURL: (url) => url,
 });
 
-test("details", (assert) => {
+test("details", function (assert) {
   const cooked = (input, expected, text) => {
     assert.equal(
       new PrettyText(defaultOpts).cook(input),

@@ -58,7 +58,7 @@ class Theme < ActiveRecord::Base
       theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!)
     end
 
-    Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
+    Theme.expire_site_cache! if saved_change_to_color_scheme_id? || saved_change_to_user_selectable? || saved_change_to_name?
     notify_with_scheme = saved_change_to_color_scheme_id?
 
     reload
@@ -606,6 +606,7 @@ end
 #  remote_theme_id  :integer
 #  component        :boolean          default(FALSE), not null
 #  enabled          :boolean          default(TRUE), not null
+#  auto_update      :boolean          default(TRUE), not null
 #
 # Indexes
 #

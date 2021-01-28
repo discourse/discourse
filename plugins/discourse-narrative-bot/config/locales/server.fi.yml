@@ -24,15 +24,6 @@ fi:
       long_description: |
         Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
   discourse_narrative_bot:
-    bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
-    tl2_promotion_message:
-      subject_template: "Onnittelut luottamustasonoususta!"
-      text_body_template: |
-        Nyt kun olet noussut, on aika oppia joitakin kehittyneempiä ominaisuuksia!
-
-        Vastaa tähän viestiin `@%{discobot_username} %{reset_trigger}` niin opit lisää, mitä kaikkia valtuuksia sinulla on.
-
-        Toivon mukaan jatkat osallistumista – on mukavaa että olet täällä.
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
@@ -48,8 +39,6 @@ fi:
       trigger: "heitä"
       invalid: |-
         Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia sillä tavalla kuin pyysit. :confounded:
-      not_enough_dice: |-
-        Minulla on vain %{num_of_dice} noppaa. [Häpeällistä](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), tiedän!
       out_of_range: |-
         Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
       results: |-

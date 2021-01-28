@@ -19,6 +19,7 @@ ja:
           insert: 挿入
           advanced_mode: アドバンスドモード
           simple_mode: シンプルモード
+          format_description: "ユーザーに日付を表示するために使用されるフォーマット。タイムゾーン名を表示するにはzz、オフセットを表示するにはZを使用します。"
           timezones_title: 表示するタイムゾーン
           timezones_description: タイムゾーンは、プレビューとフォールバックで日付を表示するために使用されます。
           recurring_title: レジューム

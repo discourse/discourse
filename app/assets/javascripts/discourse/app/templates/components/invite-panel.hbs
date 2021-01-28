@@ -27,7 +27,7 @@
             hasGroups=hasGroups
             usernames=emailOrUsername
             placeholderKey=placeholderKey
-            allowEmails=true
+            allowEmails=canInviteViaEmail
             class="invite-user-input"
             autocomplete="discourse"
             value=emailOrUsername
@@ -75,6 +75,12 @@
         {{/if}}
       </div>
     {{/if}}
+  {{/if}}
+
+  {{#if showApprovalMessage}}
+    <label class="instructions approval-notice">
+      {{i18n "invite.approval_not_required"}}
+    </label>
   {{/if}}
 </div>
 

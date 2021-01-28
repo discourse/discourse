@@ -37,6 +37,10 @@ describe Topic do
         end
 
         describe 'when title contains censored words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             ['pineapple', 'pen'].each { |w| Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor]) }
 
@@ -88,6 +92,10 @@ describe Topic do
 
       describe 'blocked words' do
         describe 'when title contains watched words' do
+          after do
+            WordWatcher.clear_cache!
+          end
+
           it 'should not be valid' do
             Fabricate(:watched_word, word: 'pineapple', action: WatchedWord.actions[:block])
 
@@ -519,6 +527,10 @@ describe Topic do
       expect(Topic.similar_to('some title', '#')).to eq([])
     end
 
+    it 'does not result in invalid statement when prepared data is blank' do
+      expect(Topic.similar_to('some title', 'https://discourse.org/#INCORRECT#URI')).to be_empty
+    end
+
     context 'with a similar topic' do
       fab!(:post) {
         SearchIndexer.enable
@@ -690,6 +702,7 @@ describe Topic do
           it 'fails with an error message' do
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.muted_invitee"))
             expect(topic.allowed_users).to_not include(another_user)
             expect(Post.last).to be_blank
             expect(Notification.last).to be_blank
@@ -725,6 +738,7 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user2)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_pm"))
           end
 
           it 'should succeed for staff even when not allowed' do
@@ -739,14 +753,16 @@ describe Topic do
             AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
             expect { topic.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.sender_does_not_allow_pm"))
           end
 
           it 'should raise error if target_user has not allowed any of the other participants' do
-            user2.user_option.update!(enable_allowed_pm_users: true)
-            AllowedPmUser.create!(user: user2, allowed_pm_user: user)
+            another_user.user_option.update!(enable_allowed_pm_users: true)
+            AllowedPmUser.create!(user: another_user, allowed_pm_user: user)
 
             expect { pm.invite(user, another_user.username) }
               .to raise_error(Topic::NotAllowed)
+              .with_message(I18n.t("topic_invite.receiver_does_not_allow_other_user_pm"))
           end
         end
       end
@@ -1748,10 +1764,13 @@ describe Topic do
 
     it "sets a validation error when given a timestamp in the past" do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], '2013-11-19 5:00', by_user: admin)
 
-      expect(topic.topic_timers.first.execute_at).to eq_time(Time.zone.local(2013, 11, 19, 5, 0))
-      expect(topic.topic_timers.first.errors[:execute_at]).to be_present
+      expect do
+        topic.set_or_create_timer(
+          TopicTimer.types[:close],
+          '2013-11-19 5:00', by_user: admin
+        )
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     it "sets a validation error when give a timestamp of an invalid format" do
@@ -1857,7 +1876,7 @@ describe Topic do
 
         freeze_time 3.hours.from_now
 
-        TopicTimer.ensure_consistency!
+        Jobs::TopicTimerEnqueuer.new.execute
         expect(topic.reload.closed).to eq(true)
       end
     end
@@ -2211,6 +2230,29 @@ describe Topic do
     end
   end
 
+  context "per day personal message limit" do
+    before do
+      SiteSetting.max_personal_messages_per_day = 1
+      SiteSetting.max_topics_per_day = 0
+      SiteSetting.max_topics_in_first_day = 0
+      RateLimiter.enable
+    end
+
+    after do
+      RateLimiter.clear_all!
+      RateLimiter.disable
+    end
+
+    it "limits according to max_personal_messages_per_day" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      expect {
+        create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+  end
+
   describe ".count_exceeds_minimun?" do
     before { SiteSetting.minimum_topics_similar = 20 }
 
@@ -2313,14 +2355,18 @@ describe Topic do
     user.admin = true
     @topic_status_event_triggered = false
 
-    DiscourseEvent.on(:topic_status_updated) do
+    blk = Proc.new do
       @topic_status_event_triggered = true
     end
+
+    DiscourseEvent.on(:topic_status_updated, &blk)
 
     topic.update_status('closed', true, user)
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  ensure
+    DiscourseEvent.off(:topic_status_updated, &blk)
   end
 
   it 'allows users to normalize counts' do
@@ -2696,6 +2742,59 @@ describe Topic do
 
       topic.update_action_counts
       expect(topic.like_count).to eq(1)
+    end
+  end
+
+  describe "#incoming_email_addresses" do
+    fab!(:group) do
+      Fabricate(
+        :group,
+        smtp_server: "imap.gmail.com",
+        smtp_port: 587,
+        email_username: "discourse@example.com",
+        email_password: "discourse@example.com"
+      )
+    end
+
+    fab!(:topic) do
+      Fabricate(:private_message_topic,
+        topic_allowed_groups: [
+          Fabricate.build(:topic_allowed_group, group: group)
+        ]
+      )
+    end
+
+    let!(:incoming1) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, created_at: 20.minutes.ago)
+    end
+    let!(:incoming2) do
+      Fabricate(:incoming_email, from_address: "discourse@example.com", to_addresses: "johnsmith@user.com", topic: topic, post: Fabricate(:post, topic: topic), created_at: 10.minutes.ago)
+    end
+    let!(:incoming3) do
+      Fabricate(:incoming_email, to_addresses: "discourse@example.com", from_address: "johnsmith@user.com", topic: topic, post: topic.posts.first, cc_addresses: "otherguy@user.com", created_at: 2.minutes.ago)
+    end
+    let!(:incoming4) do
+      Fabricate(:incoming_email, to_addresses: "unrelated@test.com", from_address: "discourse@example.com", topic: topic, post: topic.posts.first, created_at: 1.minutes.ago)
+    end
+
+    it "returns an array of all the incoming email addresses" do
+      expect(topic.incoming_email_addresses).to match_array(
+        ["discourse@example.com", "johnsmith@user.com", "otherguy@user.com", "unrelated@test.com"]
+      )
+    end
+
+    it "returns an array of all the incoming email addresses where incoming was received before X" do
+      expect(topic.incoming_email_addresses(received_before: 5.minutes.ago)).to match_array(
+        ["discourse@example.com", "johnsmith@user.com"]
+      )
+    end
+
+    context "when the group is present" do
+      it "excludes incoming emails that are not to or CCd to the group" do
+        expect(topic.incoming_email_addresses(group: group)).not_to include(
+          "unrelated@test.com"
+        )
+      end
     end
   end
 end

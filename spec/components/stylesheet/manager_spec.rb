@@ -143,8 +143,8 @@ describe Stylesheet::Manager do
   end
 
   describe 'color_scheme_digest' do
+    let(:theme) { Fabricate(:theme) }
     it "changes with category background image" do
-      theme = Fabricate(:theme)
       category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
       category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
 
@@ -178,7 +178,6 @@ describe Stylesheet::Manager do
 
     it "updates digest when updating a theme's color definitions" do
       scheme = ColorScheme.base
-      theme = Fabricate(:theme)
       manager = Stylesheet::Manager.new(:color_definitions, theme.id, scheme)
       digest1 = manager.color_scheme_digest
 
@@ -188,6 +187,20 @@ describe Stylesheet::Manager do
       digest2 = manager.color_scheme_digest
 
       expect(digest1).to_not eq(digest2)
+    end
+
+    it "updates digest when setting fonts" do
+      manager = Stylesheet::Manager.new(:desktop_theme, theme.id)
+      digest1 = manager.color_scheme_digest
+      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+      digest2 = manager.color_scheme_digest
+
+      expect(digest1).to_not eq(digest2)
+
+      SiteSetting.heading_font = DiscourseFonts.fonts[4][:key]
+      digest3 = manager.color_scheme_digest
+
+      expect(digest3).to_not eq(digest2)
     end
 
   end
@@ -325,7 +338,7 @@ describe Stylesheet::Manager do
     it "correctly generates precompiled CSS" do
       scheme1 = ColorScheme.create!(name: "scheme1")
       scheme2 = ColorScheme.create!(name: "scheme2")
-      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
+      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
       theme_targets = [:desktop_theme, :mobile_theme]
       color_scheme_targets = ["color_definitions_scheme1_#{scheme1.id}", "color_definitions_scheme2_#{scheme2.id}"]
 
@@ -339,7 +352,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(17) # (2 themes x 7 targets) + 3 color schemes (2 themes, 1 base)
+      expect(results.size).to eq(22) # (2 themes x 8 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -354,7 +367,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(22) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + 3 color schemes (2 themes, 1 base)
+      expect(results.size).to eq(28) # (2 themes x 8 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)

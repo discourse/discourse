@@ -18,23 +18,23 @@ class InvitesController < ApplicationController
     expires_now
 
     invite = Invite.find_by(invite_key: params[:id])
+    if invite.present? && !invite.expired? && !invite.redeemed?
+      store_preloaded("invite_info", MultiJson.dump(
+        invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
+        email: invite.email,
+        username: UserNameSuggester.suggest(invite.email),
+        is_invite_link: invite.is_invite_link?)
+      )
 
-    if invite.present? && !invite.expired?
-      if !invite.redeemed?
-        store_preloaded("invite_info", MultiJson.dump(
-          invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
-          email: invite.email,
-          username: UserNameSuggester.suggest(invite.email),
-          is_invite_link: invite.is_invite_link?)
-        )
-
-        render layout: 'application'
-      else
-        flash.now[:error] = I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
-        render layout: 'no_ember'
-      end
+      render layout: 'application'
     else
-      flash.now[:error] = I18n.t('invite.not_found', base_url: Discourse.base_url)
+      flash.now[:error] = if invite.present? && invite.expired?
+        I18n.t('invite.expired', base_url: Discourse.base_url)
+      elsif invite.present? && invite.redeemed?
+        I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+      else
+        I18n.t('invite.not_found', base_url: Discourse.base_url)
+      end
       render layout: 'no_ember'
     end
   end
@@ -94,8 +94,7 @@ class InvitesController < ApplicationController
     guardian.ensure_can_invite_to_forum!(groups)
     group_ids = groups.map(&:id)
 
-    invite_exists = Invite.exists?(email: params[:email], invited_by_id: current_user.id)
-    if invite_exists && !guardian.can_send_multiple_invites?(current_user)
+    if Invite.exists?(email: params[:email])
       return render json: failed_json, status: 422
     end
 
@@ -254,7 +253,7 @@ class InvitesController < ApplicationController
 
   def ensure_not_logged_in
     if current_user
-      flash[:error] = I18n.t("login.already_logged_in", current_user: current_user.username)
+      flash[:error] = I18n.t("login.already_logged_in")
       render layout: 'no_ember'
       false
     end

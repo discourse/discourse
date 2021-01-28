@@ -8,8 +8,8 @@
 <%- end %>
 <meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background', scheme_id) %>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<%- if Discourse.base_uri.present? %>
-<meta name="discourse-base-uri" content="<%= Discourse.base_uri %>">
+<%- if Discourse.base_path.present? %>
+<meta name="discourse-base-uri" content="<%= Discourse.base_path %>">
 <% end %>
 <%= canonical_link_tag %>
 <%= render_sitelinks_search_tag %>

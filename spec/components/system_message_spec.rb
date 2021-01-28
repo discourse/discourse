@@ -79,6 +79,15 @@ describe SystemMessage do
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to eq([])
     end
-  end
 
+    it 'sends event with post object' do
+      system_message = SystemMessage.new(user)
+      event = DiscourseEvent.track(:system_message_sent) {
+        system_message.create(:tl2_promotion_message)
+      }
+      expect(event[:event_name]).to eq(:system_message_sent)
+      expect(event[:params].first[:post]).to eq(Post.last)
+      expect(event[:params].first[:message_type]).to eq(:tl2_promotion_message)
+    end
+  end
 end

@@ -149,6 +149,7 @@ cs:
     share:
       post: "příspěvek #%{postNumber}"
       close: "zavřít"
+      url: "Zkopírujte a sdílejte URL adresu."
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
@@ -180,9 +181,9 @@ cs:
       banner:
         enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
         disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+    topic_admin_menu: "Akce tématu."
     wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
-    bootstrap_mode_enabled: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{min_users} uživatelů."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     themes:
       default_description: "Výchozí"
@@ -593,7 +594,6 @@ cs:
         few: "%{count} témata"
         many: "%{count} témat"
         other: "%{count} témat"
-      n_more: "Kategorie (a další %{count})..."
     ip_lookup:
       title: Vyhledávání podle IP adresy
       hostname: Hostname
@@ -658,7 +658,6 @@ cs:
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         disable: "Vypnout upozornění"
         enable: "Povolit upozornění"
-        each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
         consent_prompt: "Chcete dostávat upozornění v reálném čase, když někdo odpoví na vaše příspěvky?"
       dismiss: "Označit jako přečtené"
       dismiss_notifications: "Označit vše jako přečtené"
@@ -676,7 +675,6 @@ cs:
       suspended_notice: "Uživatel je suspendován do %{date}."
       suspended_permanently: "Tento uživatel je suspendován."
       suspended_reason: "Důvod: "
-      github_profile: "Github"
       email_activity_summary: "Souhrn aktivit"
       mailing_list_mode:
         label: "Režim elektronická pošta"
@@ -762,7 +760,6 @@ cs:
         choose_new: "Zvolte si nové heslo"
         choose: "Vyber si heslo"
       second_factor_backup:
-        title: "Kódy dvoufaktorové autentizace"
         regenerate: "Vytvořit znovu"
         disable: "Vypnout"
         enable: "Zapnout"
@@ -770,21 +767,16 @@ cs:
         copy_to_clipboard: "Kopírovat do schránky"
         copy_to_clipboard_error: "Chyba při kopírování dat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
-        remaining_codes: "Zbývá vám <strong>%{count}</strong> záložní kód."
         codes:
           title: "Záložní kódy vytvořeny"
           description: "Každý z těchto kódů může být použit jen jednou. Uložte si je někde v bezpečí, ale dostupné."
       second_factor:
-        title: "Dvoufázové přihlašování"
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         name: "Jméno"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
         show_key_description: "Vložit ručně"
-        extended_description: |
-          Dvoufaktorová autentizace přidává další bezpečnostní vrstvu k vašemu účtu, protože vedle hesla vyžaduje ještě i zadání jednorázového kódu, vytvořeného na zařízeních <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> nebo <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
-        oauth_enabled_warning: "Upozorňujeme, že možnost přihlásit se pomocí účtu ze sociální sítě bude vypnuta, jakmila bude na vašem účtu povolena dvoufaktorová autentizace."
         disable: "Vypnout"
         save: "Uložit"
         edit: "Upravit"
@@ -865,10 +857,8 @@ cs:
         title: "Heslo znovu"
       auth_tokens:
         title: "Nedávno použitá zařízení"
-        ip: "IP"
         details: "Podrobnosti"
         log_out_all: "Odhlásit všechny"
-        active: "právě aktivní"
         not_you: "Nejste to vy?"
         show_all: "Ukázat vše (%{count})"
         show_few: "Ukázat méně"
@@ -965,14 +955,10 @@ cs:
         links_tab: "Odkazy"
         link_created_at: "Vytvořený"
         link_groups: Skupiny
-        create: "Poslat pozvánku"
-        generate_link: "Zkopírovat odkaz na pozvánku"
-        link_generated: "Odkaz pozvánky byl úspěšně vygenerován!"
         valid_for: "Odkaz pozvánky je platný pouze pro tuto emailovou adresu: %{email}"
         invite_link:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
         bulk_invite:
-          none: "Nikoho jste zatím nepozval. Můžete poslat individuální pozvánky, případně <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrát CSV soubor</a> a pozvat tak několik lidí najednou."
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
           error: "Omlouváme se, soubor by měl být ve formátu CSV."
       password:
@@ -1141,8 +1127,6 @@ cs:
       disable: "Zobrazit smazané příspěvky"
     private_message_info:
       title: "Zpráva"
-      invite: "Pozvat další..."
-      edit: "Přidat nebo odebrat..."
       leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit %{name} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit %{name} z této zprávy?"
@@ -1182,9 +1166,7 @@ cs:
       title: "Přihlásit se"
       username: "Uživatel"
       password: "Heslo"
-      second_factor_title: "Dvoufázové přihlašování"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
-      second_factor_backup_title: "Dvoufaktorová autentizace"
       second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
       email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
@@ -1200,10 +1182,8 @@ cs:
       awaiting_approval: "Váš účet zatím nebyl schválen členem redakce. Až se tak stane, budeme vás informovat emailem."
       requires_invite: "Promiňte, toto fórum je pouze pro zvané."
       not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email v <b>%{sentTo}</b>. Prosím následujte instrukce v tomto emailu, abychom mohli váš účet aktivovat."
-      not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit."
       admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
-      omniauth_disallow_totp: "Váš účet má zapnutou dvoufaktorovou autentizaci. Prosíme přihlašte se napřed svým heslem."
       resend_title: "Znovu odeslat aktivační email"
       change_email: "Změnit emailovou adresu"
       provide_new_email: "Zadejte novou adresu na kterou chcete zaslat potvrzovací email."
@@ -1211,7 +1191,6 @@ cs:
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>%{currentEmail}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       to_continue: "Přihlaš se, prosím"
       preferences: "Pro to, aby jsi mohl měnit své uživatelské nastavení, se musíš přihlásit."
-      forgot: "Nevybavuju si podrobnosti svého účtu"
       not_approved: "Váš účet zatím nebyl schválen. Až se tak stane, obdržíte oznámení emailem a budete se moci přihlásit."
       google_oauth2:
         name: "Google"
@@ -1239,7 +1218,6 @@ cs:
       accept_invite: "Přijmout pozvání"
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
-      password_label: "Nastavit heslo"
       optional_description: "(volitelné)"
     password_reset:
       continue: "Pokračovat na %{site_name}"
@@ -1307,7 +1285,6 @@ cs:
       options: "Možnosti"
       whisper: "šeptat"
       unlist: "neviditelné"
-      blockquote_text: "Bloková citace"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
       toggle_unlisted: "Přepnout neviditelné"
@@ -1315,7 +1292,6 @@ cs:
       saved_local_draft_tip: "uloženo lokálně"
       similar_topics: "Podobná témata"
       drafts_offline: "koncepty offline"
-      group_mentioned_limit: "<b>Varování!</b> Zmínili jste <a href='%{group_link}'>%{group}</a>, ale protože má tato skupina více členů než je administrátorem nastavený limit maximálního počtu %{max} uživatelů, kteří mohou být informováni, nebude informován nikdo."
       group_mentioned:
         one: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} člověka</a> – jste si jistý/á?"
         few: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} lidi</a> – jste si jistý/á?"
@@ -1331,7 +1307,6 @@ cs:
         title_too_long: "Název nemůže být delší než %{max} znaků"
         post_length: "Příspěvek musí být alespoň %{min} znaků dlouhý"
         category_missing: "Musíte vybrat kategorii"
-        tags_missing: "Vybraných tagů musí být nejméně %{count}"
       save_edit: "Uložit změnu"
       overwrite_edit: "Přepsat úpravu"
       reply_original: "Odpovědět na původní téma"
@@ -1369,8 +1344,7 @@ cs:
       link_description: "sem vložte popis odkazu"
       link_dialog_title: "Vložit odkaz"
       link_optional_text: "volitelný popis"
-      quote_title: "Bloková citace"
-      quote_text: "Bloková citace"
+      blockquote_text: "Bloková citace"
       code_title: "Ukázka kódu"
       code_text: "odsadit předformátovaný text o 4 mezery"
       paste_code_text: "napište nebo vložte kód tady"
@@ -1397,7 +1371,6 @@ cs:
         draft: Koncept
         edit: Upravit
         reply_to_post:
-          label: Odpovědět na příspěvek %{postNumber} od %{postUsername}
           desc: Odpovědět na konkrétní příspěvek
         reply_as_new_topic:
           label: Odpovědět v propojeném tématu
@@ -1415,7 +1388,6 @@ cs:
           label: "Nové téma"
         shared_draft:
           label: "Sdílený koncept"
-          desc: "Navrhnout téma, které uvidí pouze redakce"
         toggle_topic_bump:
           label: "Přepnout zvýraznění tématu"
           desc: "Odpovědět bez ovlivnění data poslední odpovědi"
@@ -1442,12 +1414,6 @@ cs:
       posted: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
-      liked_2: "<span>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        few: "<span>%{username}, %{username2} a %{count} další</span> %{description}"
-        many: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
-        other: "<span>%{username}, %{username2} a %{count} dalších</span> %{description}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1508,7 +1474,6 @@ cs:
       full_page_title: "vyhledávat témata nebo příspěvky"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
-      searching: "Hledám ..."
       post_format: "#%{post_number} od %{username}"
       results_page: "Výsledky hledání pro '%{term}'"
       more_results: "Existuje více výsledků. Prosím zpřesněte kritéria vyhledávání."
@@ -1517,7 +1482,6 @@ cs:
       or_search_google: "Nebo zkuste vyhledávat pomocí Google:"
       search_google: "Zkuste vyhledávat pomocí Google:"
       search_google_button: "Google"
-      search_google_title: "Hledat na tomto webu"
       context:
         user: "Vyhledat příspěvky od @%{username}"
         category: "Hledat v kategorii #%{category}"
@@ -1559,8 +1523,6 @@ cs:
           noreplies: jsou bez odpovědi
           single_user: obsahují jen jednoho uživatele
         post:
-          count:
-            label: Minimální počet příspěvků
           time:
             label: Přidáno
             before: před
@@ -1607,12 +1569,10 @@ cs:
         new: "Nemáte žádná nová témata ke čtení."
         read: "Zatím jste nečetli žádná témata."
         posted: "Zatím jste nepřispěli do žádného tématu."
-        latest: "Nejsou tu žádná témata z poslední doby. To je docela smutné."
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii %{category} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
         educate:
-          new: '<p>Zde se zobrazují vaše nová témata.</p><p>Dle výchozího nastavení se za nové příspěvky, které budou mít štítek<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> , považují příspěvky, které byly vytvořeny během posledních 2 dnů.</p><p>Toto můžete změnit ve svém <a href="%{userPrefsUrl}">nastavení</a>.</p>'
           unread: '<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Podle výchozího nastavení jsou za nepřečtená témata, u kterých se zobrazuje počet nepřečtení <span class="badge new-posts badge-notification">1</span>, považována ta, která jste:</p><ul><li>Vytvořil toto téma</li><li>Odpověděli v tématu</li><li>Četl téma více než 4 minuty</li></ul><p>Nebo pokud jste nastavil téma jako Hlídané či Sledované pomocí nabídky na spodu každého tématu.</p><p>Toto chování můžete změnit v <a href="%{userPrefsUrl}">nastavení</a>.</p>'
       bottom:
         latest: "Nejsou tu žádná další témata z poslední doby."
@@ -1694,10 +1654,8 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v %{catLink} nebo %{latestLink}."
       read_more: "Chcete si přečíst další informace? %{catLink} nebo %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
-      suggest_create_topic: Co takhle založit nové téma?
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
@@ -1783,7 +1741,7 @@ cs:
           "2_8": "Uvidíte počet nových odpovědí, jelikož sledujete tuto kategorii."
           "2_4": "Uvidíte počet nových odpovědí, jelikož jste přispěli do tohoto tématu."
           "2_2": "Uvidíte počet nových odpovědí, jelikož sledujete toto téma."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}u/%{username}/preferences/notifications">read this topic</a>.'
+          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "1": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "0_7": "Ignorujete všechna oznámení v této kategorii."
@@ -1856,7 +1814,6 @@ cs:
       feature_topic:
         title: "Povýšit téma"
         pin: "Zobrazit toto téma na vrcholu kategorie %{categoryLink} dokud"
-        confirm_pin: "Již máte %{count} připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma v této kategorii?"
         unpin: "Odstranit toto téma z vrcholu %{categoryLink} kategorie."
         unpin_until: "Odstranit toto téma z vrcholu kategorie %{categoryLink}, nebo počkat dokud <strong>%{until}</strong>"
         pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
@@ -1868,7 +1825,6 @@ cs:
           many: "Připevněná témata v %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Připevněná témata v %{categoryLink}: <strong class='badge badge-notification unread'>%{count}</strong>"
         pin_globally: "Zobrazit toto téma na vrcholu seznamu všech témat dokud"
-        confirm_pin_globally: "Již máte %{count} globálně připevněných příspěvků. Příliš mnoho připevněných příspěvků může zatěžovat nové nebo anonymní uživatele. Určitě chcete připevnit další téma globálně?"
         unpin_globally: "Odstranit toto téma z vrcholu všech seznamů s tématy."
         unpin_globally_until: "Odstranit toto téma z vrcholu seznamu všech témat nebo počat dokud <strong>%{until}</strong>."
         global_pin_note: "Uživatelé mohou odepnout téma sami pro sebe."
@@ -2260,11 +2216,9 @@ cs:
     flagging:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit příspěvek"
-      take_action: "Zakročit"
       notify_action: "Zpráva"
       official_warning: "Oficiální varování"
       delete_spammer: "Odstranit spamera"
-      delete_confirm_MF: "Chystáte se odstranit {POSTS, plural, one {<b>1</b> příspěvek} other {<b>#</b> příspěvků}} a {TOPICS, plural, one {<b>1</b> téma} other {<b>#</b> témat}} od tohoto uživatele, smazat jeho účet, zablokovat přihlášení z jejich IP adresy <b>{ip_address}</b>, a přidat jejich emailovou adresu <b>{email}</b> na seznam permanentně blokovaných. Jste si jistí, že je tento uživatel opravdu spamer?"
       yes_delete_spammer: "Ano, odstranit spamera"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
@@ -2338,13 +2292,6 @@ cs:
       unlisted:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
-    posts_long: "v tomto tématu je %{number} příspěvků"
-    posts_likes_MF: |
-      Toto téma má {count, plural, one {1 příspěvek} other {# příspěvků}} {ratio, select,
-      low {s vysokým počtem lajků}
-      med {s velmi vysokým počtem lajků}
-      high {s extrémně vysokým počtem lajků}
-      other {}}
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase:
@@ -2365,7 +2312,6 @@ cs:
       few: "líbí se"
       many: "líbí se"
       other: "líbí se"
-    likes_long: "v tomto tématu je %{number} \"Líbí se\""
     users: "Účastníci"
     users_lowercase:
       one: "uživatel"
@@ -2622,8 +2568,6 @@ cs:
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
         everyone_can_use: "Tagy mohou být použity kýmkoliv"
-        usable_only_by_staff: "Tagy jsou viditelné pro všechny, ale jen redaktoři je mohou použít"
-        visible_only_to_staff: "Štítky vidí pouze redaktoři"
       topics:
         none:
           unread: "Nemáte žádná nepřečtená témata."
@@ -3216,7 +3160,6 @@ cs:
             post_edit: "upravit příspěvek"
             post_unlocked: "odemčení příspěvku"
             check_personal_message: "zkontrolovat soukromou zprávu"
-            disabled_second_factor: "Vypnout dvoufázové přihlašování"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -3334,7 +3277,6 @@ cs:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Důvod vyloučení"
         suspend_message: "e-mailová zpráva"
         suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Suspended by"
@@ -3353,7 +3295,6 @@ cs:
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
-        delete_all_posts_confirm_MF: "Chystáte se smazat {POSTS, plural, one {1 příspěvek} other {# příspěvků}} and {TOPICS, plural, one {1 téma} other {# témat}}. Jste si jistí?"
         silence: "Ztišit"
         unsilence: "odmlčet "
         silenced: "Ztišený? "
@@ -3386,7 +3327,6 @@ cs:
         private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
-        second_factor_enabled: Dvoufázové přihlašování povoleno
         topics_entered: Témat zobrazeno
         flags_given_count: Uděleno nahlášení
         flags_received_count: Přijato nahlášení

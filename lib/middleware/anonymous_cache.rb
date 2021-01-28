@@ -163,6 +163,7 @@ module Middleware
       def no_cache_bypass
         request = Rack::Request.new(@env)
         request.cookies['_bypass_cache'].nil? &&
+          (request.path != '/srv/status') &&
           request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end
@@ -327,6 +328,24 @@ module Middleware
       if helper.should_force_anonymous?
         force_anon = env["DISCOURSE_FORCE_ANON"] = true
         helper.force_anonymous!
+      end
+
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+        max_time = GlobalSetting.background_requests_max_queue_length.to_f
+        if max_time > 0 && queue_time.to_f > max_time
+          return [
+            429,
+            {
+              "content-type" => "application/json; charset=utf-8"
+            },
+            [{
+              errors: I18n.t("rate_limiter.slow_down"),
+              extras: {
+                wait_seconds: 5 + (5 * rand).round(2)
+              }
+            }.to_json]
+          ]
+        end
       end
 
       result =

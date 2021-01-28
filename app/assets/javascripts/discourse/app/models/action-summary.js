@@ -1,6 +1,6 @@
-import { or } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
+import { ajax } from "discourse/lib/ajax";
+import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default RestModel.extend({
@@ -32,7 +32,9 @@ export default RestModel.extend({
 
   // Perform this action
   act(post, opts) {
-    if (!opts) opts = {};
+    if (!opts) {
+      opts = {};
+    }
 
     // Mark it as acted
     this.setProperties({

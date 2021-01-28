@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";

@@ -1,25 +1,25 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
   alias,
-  not,
-  gt,
   empty,
-  notEmpty,
   equal,
+  gt,
+  not,
+  notEmpty,
   readOnly,
 } from "@ember/object/computed";
-import { inject as controller } from "@ember/controller";
-import DiscoveryController from "discourse/controllers/discovery";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import { endWith } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
-import { userPath } from "discourse/lib/url";
-import TopicList from "discourse/models/topic-list";
+import DiscoveryController from "discourse/controllers/discovery";
+import I18n from "I18n";
 import Topic from "discourse/models/topic";
+import TopicList from "discourse/models/topic-list";
+import { inject as controller } from "@ember/controller";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
-import deprecated from "discourse-common/lib/deprecated";
+import showModal from "discourse/lib/show-modal";
+import { userPath } from "discourse/lib/url";
 
 const controllerOpts = {
   discovery: controller(),
@@ -27,6 +27,7 @@ const controllerOpts = {
   router: service(),
 
   period: null,
+  canCreateTopicOnCategory: null,
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("discoveryTopics.new"),
@@ -57,9 +58,9 @@ const controllerOpts = {
       return false;
     },
 
-    refresh() {
+    refresh(options = { skipResettingParams: [] }) {
       const filter = this.get("model.filter");
-      this.send("resetParams");
+      this.send("resetParams", options.skipResettingParams);
 
       // Don't refresh if we're still loading
       if (this.get("discovery.loading")) {
@@ -72,29 +73,53 @@ const controllerOpts = {
       this.set("discovery.loading", true);
 
       this.topicTrackingState.resetTracking();
+
       this.store.findFiltered("topicList", { filter }).then((list) => {
         TopicList.hideUniformCategory(list, this.category);
 
-        this.setProperties({ model: list });
-        this.resetSelected();
-
-        if (this.topicTrackingState) {
-          this.topicTrackingState.sync(list, filter);
+        // If query params are present in the current route, we need still need to sync topic
+        // tracking with the topicList without any query params. Then we set the topic
+        // list to the list filtered with query params in the afterRefresh.
+        const params = this.router.currentRoute.queryParams;
+        if (Object.keys(params).length) {
+          this.store
+            .findFiltered("topicList", { filter, params })
+            .then((listWithParams) => {
+              this.afterRefresh(filter, list, listWithParams);
+            });
+        } else {
+          this.afterRefresh(filter, list);
         }
-
-        this.send("loadingComplete");
       });
     },
 
     resetNew() {
-      Topic.resetNew(this.category, !this.noSubcategories).then(() =>
-        this.send("refresh")
+      const tracked =
+        (this.router.currentRoute.queryParams["f"] ||
+          this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+      Topic.resetNew(this.category, !this.noSubcategories, tracked).then(() =>
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        )
       );
     },
 
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
     },
+  },
+
+  afterRefresh(filter, list, listModel = list) {
+    this.setProperties({ model: listModel });
+    this.resetSelected();
+
+    if (this.topicTrackingState) {
+      this.topicTrackingState.sync(list, filter);
+    }
+
+    this.send("loadingComplete");
   },
 
   isFilterPage: function (filter, filterType) {
@@ -136,7 +161,9 @@ const controllerOpts = {
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
-    if (!allLoaded) return;
+    if (!allLoaded) {
+      return;
+    }
 
     const category = this.category;
     if (category) {

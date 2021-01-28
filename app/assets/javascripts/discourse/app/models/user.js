@@ -1,37 +1,35 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { A } from "@ember/array";
-import { isEmpty } from "@ember/utils";
-import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { computed, getProperties } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
-import RestModel from "discourse/models/rest";
-import Bookmark from "discourse/models/bookmark";
-import UserStream from "discourse/models/user-stream";
-import UserPostsStream from "discourse/models/user-posts-stream";
-import Singleton from "discourse/mixins/singleton";
-import { longDate } from "discourse/lib/formatter";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
-import UserActionStat from "discourse/models/user-action-stat";
-import UserAction from "discourse/models/user-action";
-import UserDraftsStream from "discourse/models/user-drafts-stream";
-import Group from "discourse/models/group";
-import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "discourse/lib/preload-store";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
-import Category from "discourse/models/category";
-import { Promise } from "rsvp";
-import deprecated from "discourse-common/lib/deprecated";
-import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { escapeExpression } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { equal, gt, or } from "@ember/object/computed";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { A } from "@ember/array";
+import Badge from "discourse/models/badge";
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
+import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import Singleton from "discourse/mixins/singleton";
+import Site from "discourse/models/site";
+import UserAction from "discourse/models/user-action";
+import UserActionStat from "discourse/models/user-action-stat";
+import UserBadge from "discourse/models/user-badge";
+import UserDraftsStream from "discourse/models/user-drafts-stream";
+import UserPostsStream from "discourse/models/user-posts-stream";
+import UserStream from "discourse/models/user-stream";
+import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { isEmpty } from "@ember/utils";
+import { longDate } from "discourse/lib/formatter";
+import { url } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -40,6 +38,69 @@ export const SECOND_FACTOR_METHODS = {
 };
 
 const isForever = (dt) => moment().diff(dt, "years") < -500;
+
+let userFields = [
+  "bio_raw",
+  "website",
+  "location",
+  "name",
+  "title",
+  "locale",
+  "custom_fields",
+  "user_fields",
+  "muted_usernames",
+  "ignored_usernames",
+  "allowed_pm_usernames",
+  "profile_background_upload_url",
+  "card_background_upload_url",
+  "muted_tags",
+  "tracked_tags",
+  "watched_tags",
+  "watching_first_post_tags",
+  "date_of_birth",
+  "primary_group_id",
+  "user_notification_schedule",
+];
+
+export function addSaveableUserField(fieldName) {
+  userFields.push(fieldName);
+}
+
+let userOptionFields = [
+  "mailing_list_mode",
+  "mailing_list_mode_frequency",
+  "external_links_in_new_tab",
+  "email_digests",
+  "email_in_reply_to",
+  "email_messages_level",
+  "email_level",
+  "email_previous_replies",
+  "color_scheme_id",
+  "dark_scheme_id",
+  "dynamic_favicon",
+  "enable_quoting",
+  "enable_defer",
+  "automatically_unpin_topics",
+  "digest_after_minutes",
+  "new_topic_duration_minutes",
+  "auto_track_topics_after_msecs",
+  "notification_level_when_replying",
+  "like_notification_frequency",
+  "include_tl0_in_digests",
+  "theme_ids",
+  "allow_private_messages",
+  "enable_allowed_pm_users",
+  "homepage_id",
+  "hide_profile_and_presence",
+  "text_size",
+  "title_count_mode",
+  "timezone",
+  "skip_new_user_tips",
+];
+
+export function addSaveableUserOptionField(fieldName) {
+  userOptionFields.push(fieldName);
+}
 
 const User = RestModel.extend({
   hasPMs: gt("private_messages_stats.all", 0),
@@ -267,63 +328,9 @@ const User = RestModel.extend({
   },
 
   save(fields) {
-    let userFields = [
-      "bio_raw",
-      "website",
-      "location",
-      "name",
-      "title",
-      "locale",
-      "custom_fields",
-      "user_fields",
-      "muted_usernames",
-      "ignored_usernames",
-      "allowed_pm_usernames",
-      "profile_background_upload_url",
-      "card_background_upload_url",
-      "muted_tags",
-      "tracked_tags",
-      "watched_tags",
-      "watching_first_post_tags",
-      "date_of_birth",
-      "primary_group_id",
-    ];
-
     const data = this.getProperties(
       userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
     );
-
-    let userOptionFields = [
-      "mailing_list_mode",
-      "mailing_list_mode_frequency",
-      "external_links_in_new_tab",
-      "email_digests",
-      "email_in_reply_to",
-      "email_messages_level",
-      "email_level",
-      "email_previous_replies",
-      "color_scheme_id",
-      "dark_scheme_id",
-      "dynamic_favicon",
-      "enable_quoting",
-      "enable_defer",
-      "automatically_unpin_topics",
-      "digest_after_minutes",
-      "new_topic_duration_minutes",
-      "auto_track_topics_after_msecs",
-      "notification_level_when_replying",
-      "like_notification_frequency",
-      "include_tl0_in_digests",
-      "theme_ids",
-      "allow_private_messages",
-      "enable_allowed_pm_users",
-      "homepage_id",
-      "hide_profile_and_presence",
-      "text_size",
-      "title_count_mode",
-      "timezone",
-      "skip_new_user_tips",
-    ];
 
     if (fields) {
       userOptionFields = userOptionFields.filter(
@@ -335,7 +342,7 @@ const User = RestModel.extend({
       data[s] = this.get(`user_option.${s}`);
     });
 
-    var updatedState = {};
+    let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
       (s) => {
@@ -519,9 +526,14 @@ const User = RestModel.extend({
         if (result && result.user_action) {
           const ua = result.user_action;
 
-          if ((this.get("stream.filter") || ua.action_type) !== ua.action_type)
+          if (
+            (this.get("stream.filter") || ua.action_type) !== ua.action_type
+          ) {
             return;
-          if (!this.get("stream.filter") && !this.inAllStream(ua)) return;
+          }
+          if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+            return;
+          }
 
           ua.title = emojiUnescape(escapeExpression(ua.title));
           const action = UserAction.collapseStream([UserAction.create(ua)]);
@@ -564,7 +576,9 @@ const User = RestModel.extend({
   // The user's stat count, excluding PMs.
   @discourseComputed("statsExcludingPms.@each.count")
   statsCountNonPM() {
-    if (isEmpty(this.statsExcludingPms)) return 0;
+    if (isEmpty(this.statsExcludingPms)) {
+      return 0;
+    }
     let count = 0;
     this.statsExcludingPms.forEach((val) => {
       if (this.inAllStream(val)) {
@@ -577,7 +591,9 @@ const User = RestModel.extend({
   // The user's stats, excluding PMs.
   @discourseComputed("stats.@each.isPM")
   statsExcludingPms() {
-    if (isEmpty(this.stats)) return [];
+    if (isEmpty(this.stats)) {
+      return [];
+    }
     return this.stats.rejectBy("isPM");
   },
 
@@ -591,7 +607,9 @@ const User = RestModel.extend({
       }
 
       const useCardRoute = options && options.forCard;
-      if (options) delete options.forCard;
+      if (options) {
+        delete options.forCard;
+      }
 
       const path = useCardRoute
         ? `${user.get("username")}/card.json`
@@ -602,7 +620,9 @@ const User = RestModel.extend({
       if (!isEmpty(json.user.stats)) {
         json.user.stats = User.groupStats(
           json.user.stats.map((s) => {
-            if (s.count) s.count = parseInt(s.count, 10);
+            if (s.count) {
+              s.count = parseInt(s.count, 10);
+            }
             return UserActionStat.create(s);
           })
         );
@@ -708,41 +728,29 @@ const User = RestModel.extend({
     });
   },
 
-  @observes("muted_category_ids")
-  updateMutedCategories() {
-    this.set("mutedCategories", Category.findByIds(this.muted_category_ids));
+  @discourseComputed("muted_category_ids")
+  mutedCategories(mutedCategoryIds) {
+    return Category.findByIds(mutedCategoryIds);
   },
 
-  @observes("regular_category_ids")
-  updateRegularCategories() {
-    this.set(
-      "regularCategories",
-      Category.findByIds(this.regular_category_ids)
-    );
+  @discourseComputed("regular_category_ids")
+  regularCategories(regularCategoryIds) {
+    return Category.findByIds(regularCategoryIds);
   },
 
-  @observes("tracked_category_ids")
-  updateTrackedCategories() {
-    this.set(
-      "trackedCategories",
-      Category.findByIds(this.tracked_category_ids)
-    );
+  @discourseComputed("tracked_category_ids")
+  trackedCategories(trackedCategoryIds) {
+    return Category.findByIds(trackedCategoryIds);
   },
 
-  @observes("watched_category_ids")
-  updateWatchedCategories() {
-    this.set(
-      "watchedCategories",
-      Category.findByIds(this.watched_category_ids)
-    );
+  @discourseComputed("watched_category_ids")
+  watchedCategories(watchedCategoryIds) {
+    return Category.findByIds(watchedCategoryIds);
   },
 
-  @observes("watched_first_post_category_ids")
-  updateWatchedFirstPostCategories() {
-    this.set(
-      "watchedFirstPostCategories",
-      Category.findByIds(this.watched_first_post_category_ids)
-    );
+  @discourseComputed("watched_first_post_category_ids")
+  watchedFirstPostCategories(wachedFirstPostCategoryIds) {
+    return Category.findByIds(wachedFirstPostCategoryIds);
   },
 
   @discourseComputed("can_delete_account")
@@ -859,14 +867,14 @@ const User = RestModel.extend({
     let titles = [];
 
     (this.groups || []).forEach((group) => {
-      if (group.get("title")) {
-        titles.push(group.get("title"));
+      if (get(group, "title")) {
+        titles.push(get(group, "title"));
       }
     });
 
     (this.badges || []).forEach((badge) => {
-      if (badge.get("allow_title")) {
-        titles.push(badge.get("name"));
+      if (get(badge, "allow_title")) {
+        titles.push(get(badge, "name"));
       }
     });
 
@@ -950,6 +958,37 @@ const User = RestModel.extend({
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
+  },
+
+  enterDoNotDisturbFor(duration) {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "POST",
+      data: { duration },
+    }).then((response) => {
+      return this.updateDoNotDisturbStatus(response.ends_at);
+    });
+  },
+
+  leaveDoNotDisturb() {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "DELETE",
+    }).then(() => {
+      this.updateDoNotDisturbStatus(null);
+    });
+  },
+
+  updateDoNotDisturbStatus(ends_at) {
+    this.set("do_not_disturb_until", ends_at);
+    this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
+  },
+
+  isInDoNotDisturb() {
+    return (
+      this.do_not_disturb_until &&
+      new Date(this.do_not_disturb_until) >= new Date()
+    );
   },
 });
 

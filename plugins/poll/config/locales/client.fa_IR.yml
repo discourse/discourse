@@ -62,5 +62,7 @@ fa_IR:
           step: مرحله
         poll_public:
           label: نمایش رای دهندگان
+        poll_title:
+          label: عنوان (اختیاری)
         poll_options:
           label: در هر خط یک گزینه نظرسنجی را وارد کنید

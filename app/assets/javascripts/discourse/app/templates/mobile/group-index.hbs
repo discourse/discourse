@@ -45,6 +45,7 @@
               {{#if canManageGroup}}
                 {{group-member-dropdown
                   member=user
+                  canAdminGroup=model.can_admin_group
                   onChange=(action "actOnGroup" user)
                 }}
               {{/if}}

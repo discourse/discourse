@@ -373,6 +373,24 @@ describe Notification do
     end
   end
 
+  describe "do not disturb" do
+    it "calls NotificationEmailer.process_notification when user is not in 'do not disturb'" do
+      user = Fabricate(:user)
+      notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      NotificationEmailer.expects(:process_notification).with(notification)
+      notification.save!
+    end
+
+    it "doesn't call NotificationEmailer.process_notification when user is in 'do not disturb'" do
+      freeze_time
+      user = Fabricate(:user)
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+
+      notification = Notification.new(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      NotificationEmailer.expects(:process_notification).with(notification).never
+      notification.save!
+    end
+  end
 end
 
 # pulling this out cause I don't want an observer
@@ -488,6 +506,17 @@ describe Notification do
 
         expect(Notification.last.data_hash[:count]).to eq(5)
       end
+
+      it 'consolidates membership requests with "processed" false if user is in DND' do
+        user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
+
+        create_membership_request_notification
+        create_membership_request_notification
+
+        notification = Notification.last
+        expect(notification.notification_type).to eq(Notification.types[:membership_request_consolidated])
+        expect(notification.shelved_notification).to be_present
+      end
     end
   end
 
@@ -510,6 +539,21 @@ describe Notification do
       Notification.purge_old!
 
       expect(Notification.where(user_id: user.id).pluck(:id)).to contain_exactly(notification4.id, notification3.id)
+    end
+  end
+
+  describe "do not disturb" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "creates a shelved_notification record when created while user is in DND" do
+      user.do_not_disturb_timings.create(starts_at: Time.now, ends_at: 3.days.from_now)
+      notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      expect(notification.shelved_notification).to be_present
+    end
+
+    it "doesn't create a shelved_notification record when created while user is isn't DND" do
+      notification = Notification.create(read: false, user_id: user.id, topic_id: 2, post_number: 1, data: '{}', notification_type: 1)
+      expect(notification.shelved_notification).to be_nil
     end
   end
 end

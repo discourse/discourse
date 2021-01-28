@@ -7,7 +7,5 @@
 id:
   js:
     presence:
-      replying: "membalas"
-      editing: "menyunting"
       replying_to_topic:
         other: "membalas"

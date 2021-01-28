@@ -72,14 +72,38 @@ describe Jobs::PollMailbox do
     end
 
     context "has emails" do
+      let(:oldmail) { file_from_fixtures("old_destination.eml", "emails").read }
+
+      # the date is dynamic here because there is a 1 week cutoff for
+      # the pop3 polling
+      let(:example_email) do
+        email = <<~EMAIL
+        Return-Path: <one@foo.com>
+        From: One <one@foo.com>
+        To: team@bar.com
+        Subject: Testing email
+        Date: #{1.day.ago.strftime("%a, %d %b %Y")} 03:12:43 +0100
+        Message-ID: <34@foo.bar.mail>
+        Mime-Version: 1.0
+        Content-Type: text/plain
+        Content-Transfer-Encoding: 7bit
+
+        This is an email example.
+        EMAIL
+      end
       before do
-        mail1 = Net::POPMail.new(3, nil, nil, nil)
-        mail2 = Net::POPMail.new(3, nil, nil, nil)
+        mail1 = Net::POPMail.new(1, nil, nil, nil)
+        mail2 = Net::POPMail.new(2, nil, nil, nil)
         mail3 = Net::POPMail.new(3, nil, nil, nil)
+        mail4 = Net::POPMail.new(4, nil, nil, nil)
         Net::POP3.any_instance.stubs(:start).yields(Net::POP3.new(nil, nil))
-        Net::POP3.any_instance.stubs(:mails).returns([mail1, mail2, mail3])
+        Net::POP3.any_instance.stubs(:mails).returns([mail1, mail2, mail3, mail4])
         Net::POP3.any_instance.expects(:delete_all).never
-        poller.stubs(:process_popmail)
+        mail1.stubs(:pop).returns(example_email)
+        mail2.stubs(:pop).returns(example_email)
+        mail3.stubs(:pop).returns(example_email)
+        mail4.stubs(:pop).returns(oldmail)
+        poller.expects(:process_popmail).times(3)
       end
 
       it "deletes emails from server when when deleting emails from server is enabled" do
@@ -93,6 +117,11 @@ describe Jobs::PollMailbox do
         SiteSetting.pop3_polling_delete_from_server = false
         poller.poll_pop3
       end
+
+      it "does not process emails > 1 week old" do
+        SiteSetting.pop3_polling_delete_from_server = false
+        poller.poll_pop3
+      end
     end
   end
 
@@ -100,7 +129,7 @@ describe Jobs::PollMailbox do
     def process_popmail(email_name)
       pop_mail = stub("pop mail")
       pop_mail.expects(:pop).returns(email(email_name))
-      Jobs::PollMailbox.new.process_popmail(pop_mail)
+      Jobs::PollMailbox.new.process_popmail(pop_mail.pop)
     end
 
     it "does not reply to a bounced email" do

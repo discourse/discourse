@@ -41,14 +41,9 @@ class EmailUpdater
       UserHistory.create!(action: UserHistory.actions[:add_email], acting_user_id: @user.id)
     end
 
-    if @guardian.is_staff? && !@user.staff?
-      send_email_notification(@user.email, email)
-      update_user_email(old_email, email)
-      send_email(:forgot_password, @user.email_tokens.create!(email: @user.email))
-      return
-    end
-
-    change_req = EmailChangeRequest.find_or_initialize_by(user_id: @user.id, new_email: email)
+    change_req = EmailChangeRequest.find_or_initialize_by(
+      user_id: @user.id, new_email: email, requested_by: @guardian.user
+    )
     if change_req.new_record?
       change_req.old_email = old_email
       change_req.new_email = email
@@ -120,6 +115,7 @@ class EmailUpdater
     else
       @user.user_emails.create!(email: new_email)
     end
+    @user.reload
 
     DiscourseEvent.trigger(:user_updated, @user)
     @user.set_automatic_groups

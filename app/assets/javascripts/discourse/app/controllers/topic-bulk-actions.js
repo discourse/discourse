@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { empty, alias } from "@ember/object/computed";
+import { alias, empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import Category from "discourse/models/category";
 import bootbox from "bootbox";
 
 const _buttons = [];
@@ -68,6 +68,11 @@ addBulkButton("showAppendTagTopics", "append_tags", {
   class: "btn-default",
   enabledSetting: "tagging_enabled",
 });
+addBulkButton("removeTags", "remove_tags", {
+  icon: "tag",
+  class: "btn-default",
+  enabledSetting: "tagging_enabled",
+});
 addBulkButton("deleteTopics", "delete", {
   icon: "trash-alt",
   class: "btn-danger",
@@ -79,6 +84,7 @@ export default Controller.extend(ModalFunctionality, {
 
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
+  processedTopicCount: 0,
 
   onShow() {
     const topics = this.get("model.topics");
@@ -96,21 +102,68 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   perform(operation) {
+    this.set("processedTopicCount", 0);
+    this.send("changeBulkTemplate", "modal/bulk-progress");
     this.set("loading", true);
 
-    const topics = this.get("model.topics");
-    return Topic.bulkOperation(topics, operation)
-      .then((result) => {
-        this.set("loading", false);
-        if (result && result.topic_ids) {
-          return result.topic_ids.map((t) => topics.findBy("id", t));
-        }
-        return result;
-      })
+    return this._processChunks(operation)
       .catch(() => {
         bootbox.alert(I18n.t("generic_error"));
+      })
+      .finally(() => {
         this.set("loading", false);
       });
+  },
+
+  _generateTopicChunks(allTopics) {
+    let startIndex = 0;
+    const chunkSize = 30;
+    const chunks = [];
+
+    while (startIndex < allTopics.length) {
+      let topics = allTopics.slice(startIndex, startIndex + chunkSize);
+      chunks.push(topics);
+      startIndex += chunkSize;
+    }
+
+    return chunks;
+  },
+
+  _processChunks(operation) {
+    const allTopics = this.get("model.topics");
+    const topicChunks = this._generateTopicChunks(allTopics);
+    const topicIds = [];
+
+    const tasks = topicChunks.map((topics) => () => {
+      return Topic.bulkOperation(topics, operation).then((result) => {
+        this.set(
+          "processedTopicCount",
+          this.get("processedTopicCount") + topics.length
+        );
+        return result;
+      });
+    });
+
+    return new Promise((resolve, reject) => {
+      const resolveNextTask = () => {
+        if (tasks.length === 0) {
+          const topics = topicIds.map((id) => allTopics.findBy("id", id));
+          return resolve(topics);
+        }
+
+        tasks
+          .shift()()
+          .then((result) => {
+            if (result && result.topic_ids) {
+              topicIds.push(...result.topic_ids);
+            }
+            resolveNextTask();
+          })
+          .catch(reject);
+      };
+
+      resolveNextTask();
+    });
   },
 
   forEachPerformed(operation, cb) {
@@ -187,11 +240,10 @@ export default Controller.extend(ModalFunctionality, {
 
     changeCategory() {
       const categoryId = parseInt(this.newCategoryId, 10) || 0;
-      const category = Category.findById(categoryId);
 
       this.perform({ type: "change_category", category_id: categoryId }).then(
         (topics) => {
-          topics.forEach((t) => t.set("category", category));
+          topics.forEach((t) => t.set("category_id", categoryId));
           (this.refreshClosure || identity)();
           this.send("closeModal");
         }
@@ -200,6 +252,10 @@ export default Controller.extend(ModalFunctionality, {
 
     resetRead() {
       this.performAndRefresh({ type: "reset_read" });
+    },
+
+    removeTags() {
+      this.performAndRefresh({ type: "remove_tags" });
     },
   },
 });

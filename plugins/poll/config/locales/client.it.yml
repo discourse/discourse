@@ -63,6 +63,12 @@ it:
       automatic_close:
         closes_in: "Chiude in <strong>%{timeLeft}</strong>."
         age: "Chiuso <strong>%{age}</strong>"
+      breakdown:
+        title: "Risultati del sondaggio"
+        votes: "%{count} voti"
+        breakdown: "Ripartizione"
+        percentage: "Percentuale"
+        count: "Conteggio"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
@@ -97,6 +103,8 @@ it:
           step: Passo
         poll_public:
           label: Mostra i votanti
+        poll_title:
+          label: Titolo (facoltativo)
         poll_options:
           label: Inserisci un'opzione di sondaggio per riga
         automatic_close:

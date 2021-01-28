@@ -1,9 +1,11 @@
-import { isEmpty } from "@ember/utils";
-import { cancel, debounce, schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { searchForTerm } from "discourse/lib/search";
 import { bind } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { isEmpty } from "@ember/utils";
+import { prefixProtocol } from "discourse/lib/url";
+import { searchForTerm } from "discourse/lib/search";
 
 export default Controller.extend(ModalFunctionality, {
   _debounced: null,
@@ -26,8 +28,6 @@ export default Controller.extend(ModalFunctionality, {
       element
         .closest(".modal-inner-container")
         .addEventListener("mousedown", this.mouseDown);
-
-      document.activeElement.blur();
     });
   },
 
@@ -146,8 +146,7 @@ export default Controller.extend(ModalFunctionality, {
   actions: {
     ok() {
       const origLink = this.linkUrl;
-      const linkUrl =
-        origLink.indexOf("://") === -1 ? `http://${origLink}` : origLink;
+      const linkUrl = prefixProtocol(origLink);
       const sel = this.toolbarEvent.selected;
 
       if (isEmpty(linkUrl)) {
@@ -179,7 +178,7 @@ export default Controller.extend(ModalFunctionality, {
       }
     },
     search() {
-      this._debounced = debounce(this, this.triggerSearch, 400);
+      this._debounced = discourseDebounce(this, this.triggerSearch, 400);
     },
   },
 });

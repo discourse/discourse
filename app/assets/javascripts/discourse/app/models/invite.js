@@ -1,10 +1,10 @@
 import EmberObject from "@ember/object";
+import { Promise } from "rsvp";
+import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
+import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
-import { Promise } from "rsvp";
-import { isNone } from "@ember/utils";
-import User from "discourse/models/user";
 
 const Invite = EmberObject.extend({
   rescind() {
@@ -35,11 +35,17 @@ Invite.reopenClass({
   },
 
   findInvitedBy(user, filter, search, offset) {
-    if (!user) Promise.resolve();
+    if (!user) {
+      Promise.resolve();
+    }
 
     const data = {};
-    if (!isNone(filter)) data.filter = filter;
-    if (!isNone(search)) data.search = search;
+    if (!isNone(filter)) {
+      data.filter = filter;
+    }
+    if (!isNone(search)) {
+      data.search = search;
+    }
     data.offset = offset || 0;
 
     let path;
@@ -58,7 +64,9 @@ Invite.reopenClass({
   },
 
   findInvitedCount(user) {
-    if (!user) Promise.resolve();
+    if (!user) {
+      Promise.resolve();
+    }
 
     return ajax(
       userPath(`${user.username_lower}/invited_count.json`)

@@ -31,12 +31,13 @@ class UploadRecovery
           data = Upload.extract_url(url)
           next unless data
 
-          sha1 = data[2]
+          upload = Upload.get_from_url(url)
 
-          unless upload = Upload.get_from_url(url)
+          if !upload || upload.verification_status == Upload.verification_statuses[:invalid_etag]
             if @dry_run
               puts "#{post.full_url} #{url}"
             else
+              sha1 = data[2]
               recover_post_upload(post, sha1)
             end
           end
@@ -141,6 +142,8 @@ class UploadRecovery
       end
     end
 
+    upload_exists = Upload.exists?(sha1: sha1)
+
     @object_keys.each do |key|
       if key =~ /#{sha1}/
         tombstone_prefix = FileStore::S3Store::TOMBSTONE_PREFIX
@@ -155,6 +158,8 @@ class UploadRecovery
             options: { acl: "public-read" }
           )
         end
+
+        next if upload_exists
 
         url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
 

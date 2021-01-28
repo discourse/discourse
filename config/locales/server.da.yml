@@ -56,7 +56,6 @@ da:
     compile_error:
       unrecognized_extension: "Ikke anerkendt filtypenavn: %{extension}"
     import_error:
-      generic: Der opstod en fejl under importen af dette tema
       about_json_values: "about.json indeholder ugyldige værdier: %{errors}"
       git: "Fejl ved kloning af git repo, adgang nægtes, eller depot findes ikke"
       unpack_failed: "Kunne ikke pakke filen ud"
@@ -327,26 +326,6 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    "new-topic": |
-      Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
-
-      - Lyder title interessant hvis du læser den højt? Er det et godt resumé?
-      - Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
-      - Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
-
-      For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
-
-      Husk venligst mens du skriver dit svar:
-
-      - Forbedrer dit svar samtalen på en eller anden måde?
-
-      - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
-
-      - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
-
-      For flere tips, [se vores retningslinier](%{base_path}/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
       ### Hvad med et billede til din konto?
 
@@ -600,36 +579,29 @@ da:
     off_topic:
       title: "Uden for emnet"
       description: "Dette indlæg er ikke relevant for denne diskussion som defineret af titlen og det første indlæg. Det skal nok flyttes et andet sted hen."
-      long_form: "markerede dette som uden for emnet"
     spam:
       title: "Spam"
-      long_form: "markerede dette som spam"
       email_title: '"%{title}" blev markeret som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
-      long_form: "markerede dette som stødende"
     notify_user:
       title: "Send @%{username} en besked"
-      long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
       description: "Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href=\"%{base_path}/faq\">Den Gode Tone</a>, <a href=\"%{tos_url}\">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor."
-      long_form: "Har flagged dette overfor administrator"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Bogmærk"
       description: "Bogmærk dette indlæg"
       short_description: "Bogmærk dette indlæg"
-      long_form: "bogmærkede dette indlæg"
     like:
       title: "Like"
       description: "Du liker dette indlæg"
       short_description: "Du liker dette indlæg"
-      long_form: "like dette"
   user_activity:
     no_default:
       self: "Du har endnu ingen aktivitet."
@@ -670,9 +642,7 @@ da:
     mute_topic: "Nulstil alle notifikationer for dette emne/indlæg, %{link}"
     unwatch_category: "Følg ikke længere disse emner i %{category}"
     mailing_list_mode: "Sluk mailing list modus"
-    all: "Send ikke email fra %{sitename} til mig"
     different_user_description: "Du er i øjeblikket logget ind som en anden bruger, end den vi har emailet. Venligst log ud, eller gå i anonym modus, og prøv igen"
-    not_found_description: "Beklager, men vi kunne ikke finde denne afmeldelse. Er det muligt at linket i emailen er udløbet?"
     log_out: "Log ud"
     digest_frequency:
       never: "aldrig"
@@ -1001,7 +971,6 @@ da:
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    enable_instagram_logins: "Aktivér Instagram-login, kræver instagram_consumer_key og instagram_consumer_secret"
     active_user_rate_limit_secs: "Hvor ofte vi opdaterer feltet 'last_seen_at', i sekunder."
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
     max_likes_per_day: "Maksimalt antal likes per bruger per dag."
@@ -1028,7 +997,6 @@ da:
     faq_url: "Hvis du hoster en FAQ et andet sted kan du indtaste den fulde URL her."
     tos_url: "Hvis du hoster dine forretningsbetingelser et andet sted kan du indtaste den fulde URL her."
     privacy_policy_url: "Hvis du hoster din privatlivspolitik et andet sted kan du indtaste den fulde URL her."
-    staff_like_weight: "Hvor meget ekstra vægt har hjælperteamets likes."
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal flagmarkeringer fra unikke brugere, der skal til for automatisk at pause et emne til ingriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
@@ -1057,7 +1025,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
-    default_code_lang: "Standard syntax highlighting som bruges i GitHub kodeblokke (lang-auto, ruby, python etc.)."
     embed_truncate: "Afkort de indlejrede indlæg."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
@@ -1143,7 +1110,6 @@ da:
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
-    omniauth_error_unknown: "Noget gik galt ved behandlingen af dit login, prøv venligst igen."
     omniauth_confirm_button: "Fortsæt"
     authenticator_error_no_valid_email: "Mailadresser, der har tilknytning til %{account}, er ikke tilladt. Du er måske nødt til at bruge en anden mailadresse i forbindelse med din konto."
     new_registrations_disabled: "Det er ikke tilladt at oprette nye brugerkonti på nuværende tidspunkt."
@@ -1151,8 +1117,6 @@ da:
     email_too_long: "Den mailadresse, du har opgivet, er for lang. Navnet i mailadressen må ikke overstige 254 tegn, og domænenavnet må ikke overstige 253 tegn."
     reserved_username: "Dette brugernavn er ikke tilladt."
     missing_user_field: "Du har ikke udfyldt alle felterne"
-    already_logged_in: "Hovsa, det ser ud til, at du forsøger at acceptere en invitation til en anden bruger. Hvis du ikke er %{current_user}, så log venligst ud og prøv igen."
-    second_factor_title: "To-faktor godkendelse"
     second_factor_backup_description: "Indtast en af dine backup koder:"
   admin:
     email:
@@ -1562,7 +1526,6 @@ da:
     base_theme_name: "Base"
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Lys"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Rediger denne side"
@@ -1703,8 +1666,6 @@ da:
     initial_topic_title: Website præstationsrapport
   tags:
     title: "Tags"
-    staff_tag_disallowed: 'Tagget "%{tag}" kan kun tildeles af personalet.'
-    staff_tag_remove_disallowed: 'Tagget "%{tag}" kan kun fjernes af personalet.'
   rss_by_tag: "Emner tagget %{tag}"
   finish_installation:
     register:
@@ -1749,10 +1710,6 @@ da:
             label: "Hjemmeside"
       corporate:
         title: "Organisation"
-      colors:
-        title: "Tema"
-      themes_further_reading:
-        title: "Temaer"
       logos:
         title: "Logoer"
         fields:

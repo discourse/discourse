@@ -163,16 +163,13 @@ describe UserNotificationsHelper do
       let(:upload) { Fabricate(:upload_s3, sha1: "somesha1") }
 
       before do
-        SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
-        SiteSetting.s3_access_key_id = "some key"
-        SiteSetting.s3_secret_access_key = "some secret key"
+        setup_s3
         SiteSetting.logo = upload
       end
 
       it 'should return the right URL' do
         expect(helper.logo_url).to eq(
-          "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/somesha1.png"
+          "http://s3-upload-bucket.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/original/1X/somesha1.png"
         )
       end
 
@@ -181,7 +178,7 @@ describe UserNotificationsHelper do
           GlobalSetting.stubs(:cdn_url).returns('https://some.cdn.com/cluster')
 
           expect(helper.logo_url).to eq(
-            "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/somesha1.png"
+            "http://s3-upload-bucket.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/original/1X/somesha1.png"
           )
         end
       end
