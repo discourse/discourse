@@ -4,11 +4,37 @@ import cookie from "discourse/lib/cookie";
 export default Component.extend({
   classNames: ["create-account"],
 
+  userInputFocus(e) {
+    let label = e.target.parentElement.previousElementSibling;
+    if (!label.classList.contains("value-entered")) {
+      label.classList.toggle("value-entered");
+    }
+  },
+
+  userInputFocusOut(e) {
+    let label = e.target.parentElement.previousElementSibling;
+    if (
+      e.target.value.length === 0 &&
+      label.classList.contains("value-entered")
+    ) {
+      label.classList.toggle("value-entered");
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
     if (cookie("email")) {
       this.set("email", cookie("email"));
+    }
+
+    let userTextFields = document
+      .getElementsByClassName("user-fields")[0]
+      .getElementsByClassName("ember-text-field");
+
+    for (let element of userTextFields) {
+      element.addEventListener("focus", this.userInputFocus);
+      element.addEventListener("focusout", this.userInputFocusOut);
     }
 
     $(this.element).on("keydown.discourse-create-account", (e) => {
@@ -36,5 +62,14 @@ export default Component.extend({
 
     $(this.element).off("keydown.discourse-create-account");
     $(this.element).off("click.dropdown-user-field-label");
+
+    let userTextFields = document
+      .getElementsByClassName("user-fields")[0]
+      .getElementsByClassName("ember-text-field");
+
+    for (let element of userTextFields) {
+      element.removeEventListener("focus", this.userInputFocus);
+      element.removeEventListener("focusout", this.userInputFocusOut);
+    }
   },
 });

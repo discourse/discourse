@@ -104,6 +104,19 @@
 // styles used on
 // login modal only
 .d-modal.login-modal {
+  .modal-inner-container {
+    position: relative;
+  }
+  .modal-header {
+    display: flex;
+    border: none;
+    align-items: flex-end;
+    padding: 0;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: 999;
+  }
   .modal-body,
   #credentials {
     display: flex;
@@ -120,16 +133,65 @@
 // create account
 // modal only
 .d-modal.create-account {
-  .modal-body {
+  .create-account {
+    position: relative;
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+      max-height: 65vh !important;
+    }
+  }
+  .modal-inner-container {
+    position: relative;
+  }
+  .modal-header {
     display: flex;
-    flex-direction: column;
+    border: none;
+    align-items: flex-end;
     padding: 0;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    z-index: 999;
+  }
+  .modal-body {
+    padding: 0;
+    &:after,
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: calc(100% - 1em);
+      pointer-events: none;
+      z-index: 100;
+    }
+    &:after {
+      bottom: 94px;
+      height: 35px;
+      @media screen and (max-height: 650px) {
+        height: 45px;
+      }
+      background-image: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 0.9)
+      );
+    }
+    &:before {
+      top: 80px;
+      height: 25px;
+      background-image: linear-gradient(
+        to top,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
+      );
+    }
+
   }
 
   .login-welcome-header {
     display: flex;
     flex-direction: row;
     padding: 0 1em;
+    margin: 1em 0 0 0;
     .login-welcome-header-text {
       margin-right: 1em;
       h1 {
@@ -153,36 +215,7 @@
     overflow: hidden;
     width: calc(100% - 2em);
     padding: 1em;
-    &:after,
-    &:before {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 100%;
-      pointer-events: none;
-    }
-    &:after {
-      bottom: 0;
-      height: 35px;
-      @media screen and (max-height: 650px) {
-        height: 45px;
-      }
-      background-image: linear-gradient(
-        to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 0.9)
-      );
-    }
-    &:before {
-      top: 0;
-      height: 25px;
-      background-image: linear-gradient(
-        to top,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
-
+    
     .input-group {
       width: 100%;
       position: relative;
@@ -226,6 +259,48 @@
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+    }
+
+    // user fields input groups will
+    // be styled differently
+    .user-fields .input-group {
+      .user-field {
+        &.text {
+          label {
+          color:var(--primary-medium); 
+          font-size:16px;
+          font-weight:normal;
+          position:absolute;
+          pointer-events:none;
+          left: 1em;
+          top:12px;
+          box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
+          transition:0.2s ease all;
+          max-width: calc(100% - 2em);
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          }
+          label.value-entered {
+            top:-8px;
+            left: calc(1em - .25em);
+            background-color: var(--secondary);
+            padding: 0 .25em 0 .25em;
+            font-size:14px;
+            color:var(--primary-high);
+          }
+        }
+        .controls {
+          width: 100%;
+          .checkbox-label {
+            input[type="checkbox"].ember-checkbox {
+              width: 1em !important;
+              min-width: unset;
+            }
+          }
+        }
       }
     }
 
