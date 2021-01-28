@@ -77,6 +77,13 @@ export default Controller.extend(
       return false;
     },
 
+    @discourseComputed()
+    skinToneId() {
+      // random number between 2 -6 to render multiple skin tone waving hands
+      let random = Math.floor(Math.random() * (7 - 2) + 2);
+      return random;
+    },
+
     @discourseComputed("userFields", "hasAtLeastOneLoginButton")
     modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
       const classes = [];

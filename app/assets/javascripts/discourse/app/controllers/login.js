@@ -62,6 +62,13 @@ export default Controller.extend(ModalFunctionality, {
     return showSecondFactor || showSecurityKey ? "hidden" : "";
   },
 
+  @discourseComputed()
+  skinToneId() {
+    // random number between 2 -6 to render multiple skin tone waving hands
+    let random = Math.floor(Math.random() * (7 - 2) + 2);
+    return random;
+  },
+
   @discourseComputed("showSecondFactor", "showSecurityKey")
   secondFactorClass(showSecondFactor, showSecurityKey) {
     return showSecondFactor || showSecurityKey ? "" : "hidden";

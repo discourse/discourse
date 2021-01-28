@@ -3,6 +3,9 @@
 // create account modals
 .login-modal,
 .create-account {
+  #modal-alert {
+    padding: 15px 16px;
+  }
   #login-buttons:not(.hidden) {
     display: flex;
     flex: 0 1 auto;
@@ -153,7 +156,7 @@
     z-index: 999;
   }
   .modal-body {
-    padding: 0;
+    padding: 1em 0;
     &:after,
     &:before {
       content: "";
@@ -164,7 +167,7 @@
       z-index: 100;
     }
     &:after {
-      bottom: 94px;
+      bottom: 93px;
       height: 35px;
       @media screen and (max-height: 650px) {
         height: 45px;
@@ -188,23 +191,25 @@
   }
 
   .login-welcome-header {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
     padding: 0 1em;
     margin: 1em 0 0 0;
-    .login-welcome-header-text {
-      margin-right: 1em;
-      h1 {
-        font-size: 2.75em;
-        margin-bottom: 0;
-      }
-      p {
-        font-size: 1.125em !important;
-        font-weight: bold;
-      }
+    h1 {
+      font-size: 2.75em;
+      margin-bottom: 0;
     }
-    svg {
-      width: 40px;
+    p {
+      font-size: 1.125em !important;
+      align-self: start;
+      margin: 0;
+    }
+    img.waving-hand {
+      width: 35px;
+      height: 35px;
+      margin-left: 1em;
+      align-self: center;
     }
   }
 
@@ -267,7 +272,7 @@
     .user-fields .input-group {
       .user-field {
         &.text {
-          label {
+          label.control-label {
           color:var(--primary-medium); 
           font-size:16px;
           font-weight:normal;
@@ -283,7 +288,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
           }
-          label.value-entered {
+          label.control-label.value-entered {
             top:-8px;
             left: calc(1em - .25em);
             background-color: var(--secondary);

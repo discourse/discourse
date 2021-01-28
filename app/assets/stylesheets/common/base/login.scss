@@ -47,23 +47,23 @@
     padding: 1em 2em;
     .login-welcome-header {
       display: grid;
-      grid-template-columns: auto auto;
-      grid-template-areas: "left right";
-      .login-welcome-header-text {
-        grid-area: left;
-        h1 {
-          font-size: 2.75em;
-          margin-bottom: 0;
-        }
-        p {
-          font-size: 1.125em !important;
-          font-weight: bold;
-        }
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto 1fr;
+      margin: 1em 0 0 0;
+      h1 {
+        font-size: 2.75em;
+        margin-bottom: 0;
       }
-      svg {
-        grid-area: right;
-        width: 40px;
-        margin: 1.5em auto
+      p {
+        font-size: 1.125em !important;
+        align-self: start;
+        margin: 0;
+      }
+      img.waving-hand {
+        width: 35px;
+        height: 35px;
+        margin-left: 1em;
+        align-self: center;
       }
     }
     #credentials {
