@@ -10,7 +10,7 @@ export default Component.extend({
     const model = this.model;
     const rawData = this.get("model.data");
 
-    var data = {
+    let data = {
       labels: rawData.map((r) => r.x),
       datasets: [
         {

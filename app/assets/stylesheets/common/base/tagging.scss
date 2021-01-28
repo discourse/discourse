@@ -258,6 +258,9 @@ header .discourse-tag {
       margin-bottom: 10px;
     }
   }
+  .tag-group-controls {
+    display: flex;
+  }
   .group-tags-list .tag-chooser {
     width: 100%;
   }

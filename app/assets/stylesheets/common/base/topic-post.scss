@@ -1077,31 +1077,19 @@ a.mention-group {
 }
 
 #topic-footer-buttons {
-  padding: 0.5em 0;
+  padding: 0.75em 0;
 
   .topic-footer-main-buttons {
-    margin: 0 0 -0.5em 0;
     display: flex;
     flex-wrap: wrap;
 
-    > .btn {
-      margin: 0 0.5em 0.5em 0;
-      display: inline-flex;
-      align-items: center;
-
-      .d-button-label {
-        display: flex;
-        flex: 1 0 auto;
-        align-items: center;
-      }
+    button {
+      margin-right: 0.54em;
+      height: 100%; // helps select-kit buttons match height
     }
 
     .topic-admin-menu-button-container {
       display: inline-flex;
-    }
-
-    .topic-admin-menu-button-container > span:not(:empty) {
-      margin: 0 0.5em 0.5em 0;
     }
   }
 

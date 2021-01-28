@@ -2,10 +2,10 @@
 //Copyright (c) 2007-2009, MIT Style License <browser-update.org/LICENSE.txt>
 
 (function () {
-  var $buo = function () {
+  let $buo = function () {
     // Sometimes we have to resort to parsing the user agent string. :(
     if (navigator && navigator.userAgent) {
-      var ua = navigator.userAgent;
+      let ua = navigator.userAgent;
 
       // we don't ask Googlebot to update their browser
       if (
@@ -22,10 +22,10 @@
     }
 
     document.getElementsByTagName("body")[0].className += " crawler";
-    var mainElement = document.getElementById("main");
-    var noscriptElements = document.getElementsByTagName("noscript");
+    let mainElement = document.getElementById("main");
+    let noscriptElements = document.getElementsByTagName("noscript");
     // find the element with the "data-path" attribute set
-    for (var i = 0; i < noscriptElements.length; ++i) {
+    for (let i = 0; i < noscriptElements.length; ++i) {
       if (noscriptElements[i].getAttribute("data-path")) {
         // noscriptElements[i].innerHTML contains encoded HTML
         if (noscriptElements[i].childNodes.length > 0) {
@@ -36,7 +36,7 @@
     }
 
     // retrieve localized browser upgrade text
-    var t = I18n.t("browser_update"); // eslint-disable-line no-undef
+    let t = I18n.t("browser_update"); // eslint-disable-line no-undef
     if (t.indexOf(".browser_update]") !== -1) {
       // very old browsers might fail to load even translations
       t =
@@ -44,13 +44,13 @@
     }
 
     // create the notification div HTML
-    var div = document.createElement("div");
+    let div = document.createElement("div");
     div.className = "buorg";
     div.innerHTML = "<div>" + t + "</div>";
 
     // create the notification div stylesheet
-    var sheet = document.createElement("style");
-    var style =
+    let sheet = document.createElement("style");
+    let style =
       ".buorg {position:absolute; z-index:111111; width:100%; top:0px; left:0px; background:#FDF2AB; text-align:left; font-family: sans-serif; color:#000; font-size: 14px;} .buorg div {padding: 8px;} .buorg a, .buorg a:visited {color:#E25600; text-decoration: underline;} @media print { .buorg { display: none !important; } }";
 
     // insert the div and stylesheet into the DOM

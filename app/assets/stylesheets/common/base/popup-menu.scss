@@ -19,12 +19,12 @@
   }
 
   .btn {
-    display: flex;
-    text-align: left;
+    justify-content: left;
     background: none;
     width: 100%;
     padding: 0.75em;
     border-radius: 0;
+    margin: 0;
 
     .d-icon {
       color: var(--primary-medium);

@@ -290,28 +290,29 @@ acceptance("Second Factor Backups", function (needs) {
   });
 });
 
-acceptance("Avatar selector when selectable avatars is enabled", function (
-  needs
-) {
-  needs.user();
-  needs.settings({ selectable_avatars_enabled: true });
-  needs.pretender((server, helper) => {
-    server.get("/site/selectable-avatars.json", () =>
-      helper.response([
-        "https://www.discourse.org",
-        "https://meta.discourse.org",
-      ])
-    );
-  });
+acceptance(
+  "Avatar selector when selectable avatars is enabled",
+  function (needs) {
+    needs.user();
+    needs.settings({ selectable_avatars_enabled: true });
+    needs.pretender((server, helper) => {
+      server.get("/site/selectable-avatars.json", () =>
+        helper.response([
+          "https://www.discourse.org",
+          "https://meta.discourse.org",
+        ])
+      );
+    });
 
-  test("selectable avatars", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-    await click(".pref-avatar .btn");
-    assert.ok(
-      exists(".selectable-avatars", "opens the avatar selection modal")
-    );
-  });
-});
+    test("selectable avatars", async function (assert) {
+      await visit("/u/eviltrout/preferences");
+      await click(".pref-avatar .btn");
+      assert.ok(
+        exists(".selectable-avatars", "opens the avatar selection modal")
+      );
+    });
+  }
+);
 
 acceptance("User Preferences when badges are disabled", function (needs) {
   needs.user();

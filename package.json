@@ -14,7 +14,7 @@
     "bootstrap": "v3.4.1",
     "chart.js": "2.9.3",
     "chartjs-plugin-datalabels": "^0.7.0",
-    "eslint-config-discourse": "^1.1.5",
+    "eslint-config-discourse": "^1.1.8",
     "handlebars": "^4.7.0",
     "highlight.js": "https://github.com/highlightjs/highlight.js",
     "intersection-observer": "^0.5.1",
@@ -38,6 +38,7 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
+    "@mixer/parallel-prettier": "^2.0.1",
     "@arkweid/lefthook": "^0.7.2",
     "chrome-launcher": "^0.12.0",
     "chrome-remote-interface": "^0.25",

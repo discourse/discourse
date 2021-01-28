@@ -162,13 +162,21 @@
 }
 
 .modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
   .btn {
-    margin: 0 5px 5px 0;
+    margin: 0 0.3em 0 0;
     &[href] {
       min-height: unset;
     }
+  }
+
+  .btn,
+  a {
+    margin-bottom: 0.3em;
   }
 }
 

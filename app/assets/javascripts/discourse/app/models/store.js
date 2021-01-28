@@ -114,9 +114,9 @@ export default EmberObject.extend({
   },
 
   find(type, findArgs, opts) {
-    var adapter = this.adapterFor(type);
+    let adapter = this.adapterFor(type);
     return adapter.find(this, type, findArgs, opts).then((result) => {
-      var hydrated = this._hydrateFindResults(result, type, findArgs, opts);
+      let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
 
       if (result.extras) {
         hydrated.set("extras", result.extras);
@@ -139,7 +139,7 @@ export default EmberObject.extend({
     hydrated.set(
       "content",
       hydrated.get("content").map((item) => {
-        var staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
+        let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
         if (staleItem) {
           staleItem.setProperties(item);
         } else {

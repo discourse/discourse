@@ -5,12 +5,12 @@ import discourseComputed from "discourse-common/utils/decorators";
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
   return btoa(
-    encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(
-      match,
-      p1
-    ) {
-      return String.fromCharCode("0x" + p1);
-    })
+    encodeURIComponent(str).replace(
+      /%([0-9A-F]{2})/g,
+      function toSolidBytes(match, p1) {
+        return String.fromCharCode("0x" + p1);
+      }
+    )
   );
 }
 

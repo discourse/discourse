@@ -16,7 +16,7 @@ export default Controller.extend({
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function () {
-    var showFooter;
+    let showFooter;
     if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(
         (s) => s.action_type === this.userActionType
