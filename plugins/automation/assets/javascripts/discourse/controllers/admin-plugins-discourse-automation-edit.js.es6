@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
 
     return automation
       .update()
-      .catch(e => this.set("error", extractError(e)))
+      .catch((e) => this.set("error", extractError(e)))
       .finally(() => this.set("isUpdatingAutomation", false));
   },
 
@@ -28,5 +28,5 @@ export default Ember.Controller.extend({
   @action
   onChangeTrigger(name) {
     set(this.model.automation.trigger, "name", name);
-  }
+  },
 });

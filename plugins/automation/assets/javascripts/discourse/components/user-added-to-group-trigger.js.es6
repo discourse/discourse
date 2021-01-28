@@ -7,8 +7,8 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    Group.findAll().then(groups => {
+    Group.findAll().then((groups) => {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
-  }
+  },
 });

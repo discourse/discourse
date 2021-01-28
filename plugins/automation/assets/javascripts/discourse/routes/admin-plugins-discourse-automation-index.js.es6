@@ -5,5 +5,5 @@ export default DiscourseRoute.extend({
 
   model() {
     return this.store.findAll("discourse-automation-automation");
-  }
+  },
 });

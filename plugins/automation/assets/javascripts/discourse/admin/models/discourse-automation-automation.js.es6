@@ -14,15 +14,15 @@ const Automation = RestModel.extend({
         name: this.trigger.name,
         metadata: {
           group_ids: this.trigger.metadata.group_ids,
-          execute_at: this.trigger.metadata.execute_at
-        }
-      }
+          execute_at: this.trigger.metadata.execute_at,
+        },
+      },
     };
   },
 
   createProperties() {
     return this.getProperties(ATTRIBUTES);
-  }
+  },
 });
 
 export default Automation;

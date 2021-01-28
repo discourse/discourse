@@ -5,5 +5,5 @@ export default Component.extend({
   @action
   onChangeUsername(usernames) {
     this.set("field.metadata.username", usernames.get("firstObject"));
-  }
+  },
 });

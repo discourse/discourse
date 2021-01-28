@@ -5,5 +5,5 @@ export default DiscourseAutomationAdapter.extend({
     return "scriptable";
   },
 
-  jsonMode: true
+  jsonMode: true,
 });

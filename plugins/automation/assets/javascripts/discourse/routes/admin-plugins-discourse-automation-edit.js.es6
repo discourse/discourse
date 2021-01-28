@@ -9,14 +9,14 @@ export default DiscourseRoute.extend({
       scriptables: this.store.findAll("discourse-automation-scriptable"),
       triggerables: ajax(
         `/admin/plugins/discourse-automation/triggerables.json?automation_id=${params.id}`
-      ).then(result => (result ? result.triggerables : [])),
-      automation: this.store.find("discourse-automation-automation", params.id)
+      ).then((result) => (result ? result.triggerables : [])),
+      automation: this.store.find("discourse-automation-automation", params.id),
     });
   },
 
   setupController(controller, model) {
     controller.setProperties({
-      model
+      model,
     });
-  }
+  },
 });

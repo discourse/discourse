@@ -20,7 +20,7 @@ export default Component.extend({
     this.field.metadata.pms.pushObject({
       title: "",
       raw: "",
-      delay: 0
+      delay: 0,
     });
-  }
+  },
 });

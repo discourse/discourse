@@ -5,5 +5,5 @@ export default DiscourseAutomationAdapter.extend({
     return "triggerable";
   },
 
-  jsonMode: true
+  jsonMode: true,
 });

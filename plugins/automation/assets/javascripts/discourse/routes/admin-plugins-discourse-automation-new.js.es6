@@ -6,7 +6,7 @@ export default DiscourseRoute.extend({
   model() {
     return Ember.RSVP.hash({
       scriptables: this.store.findAll("discourse-automation-scriptable"),
-      automation: this.store.createRecord("discourse-automation-automation")
+      automation: this.store.createRecord("discourse-automation-automation"),
     });
-  }
+  },
 });
