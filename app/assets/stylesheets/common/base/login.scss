@@ -31,7 +31,7 @@
 //   }
 // }
 
-.login-modal {
+.login-modal:not(.hidden) {
   min-width: 700px;
   display: flex !important;
   justify-content: space-between;
@@ -125,8 +125,8 @@
   }
   .login-right-side {
     background-color: var(--tertiary);
-    width: calc(40% - 4em);
-    padding: 1em 2em;
+    width: calc(40% - 2em);
+    padding: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -137,8 +137,16 @@
       color: var(--secondary);
     }
     #login-buttons {
-      button:first-of-type {
-        margin-top: 1em !important;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 0;
+      button {
+        &:first-of-type {
+          margin-top: 0 !important;
+        }
+        width: 45%;
+        height: 25px;
       }
     }
   }

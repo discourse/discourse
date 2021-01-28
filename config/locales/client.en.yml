@@ -1718,22 +1718,22 @@ en:
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
-        title: "with Google"
+        title: "Google"
       twitter:
         name: "Twitter"
-        title: "with Twitter"
+        title: "Twitter"
       instagram:
         name: "Instagram"
-        title: "with Instagram"
+        title: "Instagram"
       facebook:
         name: "Facebook"
-        title: "with Facebook"
+        title: "Facebook"
       github:
         name: "GitHub"
-        title: "with GitHub"
+        title: "GitHub"
       discord:
         name: "Discord"
-        title: "with Discord"
+        title: "Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"

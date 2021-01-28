@@ -38,6 +38,7 @@
   form {
     min-width: 300px;
     max-width: 100%;
+    margin: 0;
   }
 
   #modal-alert {
@@ -84,8 +85,7 @@
       padding: 5px 0 0 0;
     }
   }
-  .tip,
-  td label {
+  .tip {
     display: block;
     overflow: hidden;
     word-wrap: break-word;
@@ -315,7 +315,7 @@
   }
 
   .user-fields {
-    margin-bottom: 20px;
+    margin-bottom: 1em;
   }
 
   .user-field {

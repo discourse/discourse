@@ -155,13 +155,15 @@
 // --------------------------------------------------
 
 .btn-social {
-  .d-icon {
-    color: #fff;
-  }
-  color: #fff;
-  background: #666;
+  border-radius: 0.25em;
+  color: var(--primary);
+  background: var(--secondary);
+  border: 1px solid transparent;
   &:hover {
-    color: #fff;
+    border: 1px solid rgba(var(--primary-rgb),.25);
+    color: var(--primary) !important;
+    background: var(--secondary) !important;
+    box-shadow: 0 0 0 2px var(--tertiary-medium);
   }
   &[href] {
     color: var(--secondary);
@@ -180,34 +182,56 @@
     }
     &:hover {
       color: currentColor;
-      background: var(--google-hover);
     }
   }
   &.facebook {
-    background: $facebook;
+    .d-icon {
+      color: $facebook;
+    }
     &:hover {
-      background: var(--facebook-hover);
+      .d-icon {
+        color: $facebook;
+      }
     }
   }
   &.cas {
-    background: var(--cas);
+    .d-icon {
+      color: var(--cas);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--cas);
+      }
+    }
   }
   &.twitter {
-    background: var(--twitter);
+    .d-icon {
+      color: var(--twitter);
+    }
     &:hover {
-      background: var(--twitter-hover);
+      .d-icon {
+        color: var(--twitter);
+      }
     }
   }
   &.github {
-    background: var(--github);
+    .d-icon {
+      color: var(--github);
+    }
     &:hover {
-      background: var(--github-hover);
+      .d-icon {
+        color: var(--github);
+      }
     }
   }
   &.discord {
-    background: var(--discord);
+    .d-icon {
+      color: var(--discord);
+    }
     &:hover {
-      background: var(--discord-hover);
+      .d-icon {
+        color: var(--discord);
+      }
     }
   }
 }
