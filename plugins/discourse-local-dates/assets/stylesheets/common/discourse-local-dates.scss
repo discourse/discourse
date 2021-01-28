@@ -201,7 +201,7 @@
           flex: 1;
           @include ellipsis;
           width: 100%;
-          text-align: left;
+          justify-content: flex-start;
         }
       }
 

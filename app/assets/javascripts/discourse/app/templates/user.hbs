@@ -67,7 +67,7 @@
                 </li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n "admin.user.show_admin_profile"}}</a></li>
+                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}<span class="d-button-label">{{i18n "admin.user.show_admin_profile"}}</span></a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
                               tagName=""

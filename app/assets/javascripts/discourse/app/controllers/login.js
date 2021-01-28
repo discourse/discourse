@@ -403,6 +403,8 @@ export default Controller.extend(ModalFunctionality, {
       skipConfirmation,
     });
 
-    showModal("createAccount", { modalClass: "create-account" });
+    next(() => {
+      showModal("createAccount", { modalClass: "create-account" });
+    });
   },
 });

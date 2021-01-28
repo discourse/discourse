@@ -4,7 +4,7 @@
 
   SO: http://stackoverflow.com/questions/9943435/css3-animation-end-techniques
 **/
-var dummy = document.createElement("div"),
+let dummy = document.createElement("div"),
   eventNameHash = {
     webkit: "webkitTransitionEnd",
     Moz: "transitionend",
@@ -12,8 +12,8 @@ var dummy = document.createElement("div"),
     ms: "MSTransitionEnd",
   };
 
-var transitionEnd = (function () {
-  var retValue;
+let transitionEnd = (function () {
+  let retValue;
   retValue = "transitionend";
   Object.keys(eventNameHash).some(function (vendor) {
     if (vendor + "TransitionProperty" in dummy.style) {

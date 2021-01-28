@@ -1,9 +1,9 @@
 import {
   acceptance,
   exists,
+  invisible,
   queryAll,
   updateCurrentUser,
-  invisible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";

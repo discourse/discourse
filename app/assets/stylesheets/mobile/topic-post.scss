@@ -237,9 +237,19 @@ a.reply-to-tab {
     color: var(--tertiary);
   }
 
+  .topic-footer-main-buttons {
+    display: flex;
+    align-items: stretch;
+  }
+
   .topic-footer-mobile-dropdown {
-    margin: 0 0.5em 0.5em 0;
+    margin: 0 0.75em 0 0;
     width: 160px;
+    display: flex;
+  }
+
+  .select-kit-header {
+    height: 100%;
   }
 
   .topic-notifications-button,

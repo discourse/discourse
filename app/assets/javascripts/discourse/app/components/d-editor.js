@@ -184,7 +184,7 @@ class Toolbar {
     if (button.shortcut) {
       const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
       const mod = mac ? "Meta" : "Ctrl";
-      var shortcutTitle = `${mod}+${button.shortcut}`;
+      let shortcutTitle = `${mod}+${button.shortcut}`;
 
       // Mac users are used to glyphs for shortcut keys
       if (mac) {

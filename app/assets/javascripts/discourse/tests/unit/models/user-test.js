@@ -7,7 +7,7 @@ import sinon from "sinon";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {
-    var user = User.create({ id: 1, username: "eviltrout" });
+    let user = User.create({ id: 1, username: "eviltrout" });
 
     assert.ok(!user.get("staff"), "user is not staff");
 
@@ -19,7 +19,7 @@ module("Unit | Model | user", function () {
   });
 
   test("searchContext", function (assert) {
-    var user = User.create({ id: 1, username: "EvilTrout" });
+    let user = User.create({ id: 1, username: "EvilTrout" });
 
     assert.deepEqual(
       user.get("searchContext"),
@@ -29,7 +29,7 @@ module("Unit | Model | user", function () {
   });
 
   test("isAllowedToUploadAFile", function (assert) {
-    var user = User.create({ trust_level: 0, admin: true });
+    let user = User.create({ trust_level: 0, admin: true });
     assert.ok(
       user.isAllowedToUploadAFile("image"),
       "admin can always upload a file"

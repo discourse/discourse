@@ -25,7 +25,7 @@
 //= require test-shims
 
 // Trick JSHint into allow document.write
-var d = document;
+let d = document;
 d.write(
   '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
 );
@@ -40,14 +40,14 @@ if (window.Logster) {
 }
 Ember.Test.adapter = window.QUnitAdapter.create();
 
-var createPretendServer = requirejs(
+let createPretendServer = requirejs(
   "wizard/test/wizard-pretender",
   null,
   null,
   false
 ).default;
 
-var server;
+let server;
 QUnit.testStart(function () {
   server = createPretendServer();
 });
@@ -56,8 +56,8 @@ QUnit.testDone(function () {
   server.shutdown();
 });
 
-var _testApp = requirejs("wizard/test/helpers/start-app").default();
-var _buildResolver = requirejs("discourse-common/resolver").buildResolver;
+let _testApp = requirejs("wizard/test/helpers/start-app").default();
+let _buildResolver = requirejs("discourse-common/resolver").buildResolver;
 window.setResolver(_buildResolver("wizard").create({ namespace: _testApp }));
 
 Object.keys(requirejs.entries).forEach(function (entry) {

@@ -163,9 +163,9 @@ export default Component.extend(LoadMore, {
   },
 
   click(e) {
-    var self = this;
-    var onClick = function (sel, callback) {
-      var target = $(e.target).closest(sel);
+    let self = this;
+    let onClick = function (sel, callback) {
+      let target = $(e.target).closest(sel);
 
       if (target.length === 1) {
         callback.apply(self, [target]);

@@ -312,7 +312,7 @@ const Category = RestModel.extend({
   },
 });
 
-var _uncategorized;
+let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
@@ -508,7 +508,7 @@ Category.reopenClass({
   },
 
   search(term, opts) {
-    var limit = 5;
+    let limit = 5;
 
     if (opts) {
       if (opts.limit === 0) {
@@ -529,8 +529,8 @@ Category.reopenClass({
 
     const categories = Category.listByActivity();
     const length = categories.length;
-    var i;
-    var data = [];
+    let i;
+    let data = [];
 
     const done = () => {
       return data.length === limit;

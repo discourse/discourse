@@ -29,24 +29,22 @@ export function registerRawHelpers(hbs, handlebarsClass) {
   };
 
   // #each .. in support (as format is transformed to this)
-  hbs.registerHelper("each", function (
-    localName,
-    inKeyword,
-    contextName,
-    options
-  ) {
-    if (typeof contextName === "undefined") {
-      return;
+  hbs.registerHelper(
+    "each",
+    function (localName, inKeyword, contextName, options) {
+      if (typeof contextName === "undefined") {
+        return;
+      }
+      let list = get(this, contextName);
+      let output = [];
+      for (let i = 0; i < list.length; i++) {
+        let innerContext = {};
+        innerContext[localName] = list[i];
+        output.push(options.fn(innerContext));
+      }
+      return output.join("");
     }
-    var list = get(this, contextName);
-    var output = [];
-    for (var i = 0; i < list.length; i++) {
-      let innerContext = {};
-      innerContext[localName] = list[i];
-      output.push(options.fn(innerContext));
-    }
-    return output.join("");
-  });
+  );
 
   function stringCompatHelper(fn) {
     const old = hbs.helpers[fn];

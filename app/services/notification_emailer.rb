@@ -125,7 +125,6 @@ class NotificationEmailer
   end
 
   def self.process_notification(notification, no_delay: false)
-    notification.update(processed: true)
     return if @disabled
 
     email_user   = EmailUser.new(notification, no_delay: no_delay)
