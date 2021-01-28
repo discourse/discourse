@@ -838,7 +838,6 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       muted: "Muted categories"
