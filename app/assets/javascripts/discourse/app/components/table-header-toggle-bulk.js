@@ -2,9 +2,9 @@ import TableHeaderToggleComponent from "discourse/components/table-header-toggle
 
 export default TableHeaderToggleComponent.extend({
   click(e) {
-    var self = this;
-    var onClick = function (sel, callback) {
-      var target = $(e.target).closest(sel);
+    const self = this;
+    const onClick = function (sel, callback) {
+      const target = $(e.target).closest(sel);
 
       if (target.length === 1) {
         callback.apply(self, [target]);
