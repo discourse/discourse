@@ -127,6 +127,13 @@ acceptance("Dashboard", function (needs) {
       "its set the value of the filter from the query params"
     );
   });
+
+  test("new features", async function (assert) {
+    await visit("/admin");
+
+    assert.ok(exists(".dashboard-new-features"));
+    assert.ok(exists(".dashboard-new-features .new-features-release-notes"));
+  });
 });
 
 acceptance("Dashboard: dashboard_visible_tabs", function (needs) {

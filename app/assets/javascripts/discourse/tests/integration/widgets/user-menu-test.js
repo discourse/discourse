@@ -10,224 +10,227 @@ import I18n from "I18n";
 import { click } from "@ember/test-helpers";
 import sinon from "sinon";
 
-discourseModule("Integration | Component | Widget | user-menu", function (
-  hooks
-) {
-  setupRenderingTest(hooks);
+discourseModule(
+  "Integration | Component | Widget | user-menu",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  componentTest("basics", {
-    template: '{{mount-widget widget="user-menu"}}',
+    componentTest("basics", {
+      template: '{{mount-widget widget="user-menu"}}',
 
-    test(assert) {
-      assert.ok(queryAll(".user-menu").length);
-      assert.ok(queryAll(".user-preferences-link").length);
-      assert.ok(queryAll(".user-notifications-link").length);
-      assert.ok(queryAll(".user-bookmarks-link").length);
-      assert.ok(queryAll(".quick-access-panel").length);
-      assert.ok(queryAll(".notifications-dismiss").length);
-    },
-  });
+      test(assert) {
+        assert.ok(queryAll(".user-menu").length);
+        assert.ok(queryAll(".user-preferences-link").length);
+        assert.ok(queryAll(".user-notifications-link").length);
+        assert.ok(queryAll(".user-bookmarks-link").length);
+        assert.ok(queryAll(".quick-access-panel").length);
+        assert.ok(queryAll(".notifications-dismiss").length);
+      },
+    });
 
-  componentTest("notifications", {
-    template: '{{mount-widget widget="user-menu"}}',
+    componentTest("notifications", {
+      template: '{{mount-widget widget="user-menu"}}',
 
-    async test(assert) {
-      const $links = queryAll(".quick-access-panel li a");
+      async test(assert) {
+        const $links = queryAll(".quick-access-panel li a");
 
-      assert.equal($links.length, 5);
-      assert.ok($links[0].href.includes("/t/a-slug/123"));
+        assert.equal($links.length, 5);
+        assert.ok($links[0].href.includes("/t/a-slug/123"));
 
-      assert.ok(
-        $links[1].href.includes(
-          "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
-        )
-      );
+        assert.ok(
+          $links[1].href.includes(
+            "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
+          )
+        );
 
-      assert.equal(
-        $links[1].text,
-        `aquaman ${I18n.t("notifications.liked_consolidated_description", {
-          count: 5,
-        })}`
-      );
-
-      assert.ok($links[2].href.includes("/u/test2/messages/group/test"));
-      assert.ok(
-        $links[2].innerHTML.includes(
-          I18n.t("notifications.group_message_summary", {
+        assert.equal(
+          $links[1].text,
+          `aquaman ${I18n.t("notifications.liked_consolidated_description", {
             count: 5,
-            group_name: "test",
-          })
-        )
-      );
+          })}`
+        );
 
-      assert.ok($links[3].href.includes("/u/test1"));
-      assert.ok(
-        $links[3].innerHTML.includes(
-          I18n.t("notifications.invitee_accepted", { username: "test1" })
-        )
-      );
+        assert.ok($links[2].href.includes("/u/test2/messages/group/test"));
+        assert.ok(
+          $links[2].innerHTML.includes(
+            I18n.t("notifications.group_message_summary", {
+              count: 5,
+              group_name: "test",
+            })
+          )
+        );
 
-      assert.ok($links[4].href.includes("/g/test"));
-      assert.ok(
-        $links[4].innerHTML.includes(
-          I18n.t("notifications.membership_request_accepted", {
-            group_name: "test",
-          })
-        )
-      );
+        assert.ok($links[3].href.includes("/u/test1"));
+        assert.ok(
+          $links[3].innerHTML.includes(
+            I18n.t("notifications.invitee_accepted", { username: "test1" })
+          )
+        );
 
-      const routeToStub = sinon.stub(DiscourseURL, "routeTo");
-      await click(".user-notifications-link");
-      assert.ok(
-        routeToStub.calledWith(queryAll(".user-notifications-link")[0].href),
-        "a second click should redirect to the full notifications page"
-      );
-    },
-  });
+        assert.ok($links[4].href.includes("/g/test"));
+        assert.ok(
+          $links[4].innerHTML.includes(
+            I18n.t("notifications.membership_request_accepted", {
+              group_name: "test",
+            })
+          )
+        );
 
-  componentTest("log out", {
-    template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
+        const routeToStub = sinon.stub(DiscourseURL, "routeTo");
+        await click(".user-notifications-link");
+        assert.ok(
+          routeToStub.calledWith(
+            queryAll(".user-notifications-link").data("url")
+          ),
+          "a second click should redirect to the full notifications page"
+        );
+      },
+    });
 
-    beforeEach() {
-      this.on("logout", () => (this.loggedOut = true));
-    },
+    componentTest("log out", {
+      template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
 
-    async test(assert) {
-      await click(".user-preferences-link");
+      beforeEach() {
+        this.on("logout", () => (this.loggedOut = true));
+      },
 
-      assert.ok(queryAll(".logout").length);
+      async test(assert) {
+        await click(".user-preferences-link");
 
-      await click(".logout button");
-      assert.ok(this.loggedOut);
-    },
-  });
+        assert.ok(queryAll(".logout").length);
 
-  componentTest("private messages - disabled", {
-    template: '{{mount-widget widget="user-menu"}}',
-    beforeEach() {
-      this.siteSettings.enable_personal_messages = false;
-    },
+        await click(".logout button");
+        assert.ok(this.loggedOut);
+      },
+    });
 
-    test(assert) {
-      assert.ok(!queryAll(".user-pms-link").length);
-    },
-  });
+    componentTest("private messages - disabled", {
+      template: '{{mount-widget widget="user-menu"}}',
+      beforeEach() {
+        this.siteSettings.enable_personal_messages = false;
+      },
 
-  componentTest("private messages - enabled", {
-    template: '{{mount-widget widget="user-menu"}}',
-    beforeEach() {
-      this.siteSettings.enable_personal_messages = true;
-    },
+      test(assert) {
+        assert.ok(!queryAll(".user-pms-link").length);
+      },
+    });
 
-    async test(assert) {
-      const userPmsLink = queryAll(".user-pms-link")[0];
-      assert.ok(userPmsLink);
-      await click(".user-pms-link");
+    componentTest("private messages - enabled", {
+      template: '{{mount-widget widget="user-menu"}}',
+      beforeEach() {
+        this.siteSettings.enable_personal_messages = true;
+      },
 
-      const message = queryAll(".quick-access-panel li a")[0];
-      assert.ok(message);
+      async test(assert) {
+        const userPmsLink = queryAll(".user-pms-link").data("url");
+        assert.ok(userPmsLink);
+        await click(".user-pms-link");
 
-      assert.ok(
-        message.href.includes("/t/bug-can-not-render-emoji-properly/174/2"),
-        "should link to the next unread post"
-      );
-      assert.ok(
-        message.innerHTML.includes("mixtape"),
-        "should include the last poster's username"
-      );
-      assert.ok(
-        message.innerHTML.match(/<img.*class="emoji".*>/),
-        "should correctly render emoji in message title"
-      );
+        const message = queryAll(".quick-access-panel li a")[0];
+        assert.ok(message);
 
-      const routeToStub = sinon.stub(DiscourseURL, "routeTo");
-      await click(".user-pms-link");
-      assert.ok(
-        routeToStub.calledWith(userPmsLink.href),
-        "a second click should redirect to the full private messages page"
-      );
-    },
-  });
+        assert.ok(
+          message.href.includes("/t/bug-can-not-render-emoji-properly/174/2"),
+          "should link to the next unread post"
+        );
+        assert.ok(
+          message.innerHTML.includes("mixtape"),
+          "should include the last poster's username"
+        );
+        assert.ok(
+          message.innerHTML.match(/<img.*class="emoji".*>/),
+          "should correctly render emoji in message title"
+        );
 
-  componentTest("bookmarks", {
-    template: '{{mount-widget widget="user-menu"}}',
+        const routeToStub = sinon.stub(DiscourseURL, "routeTo");
+        await click(".user-pms-link");
+        assert.ok(
+          routeToStub.calledWith(userPmsLink),
+          "a second click should redirect to the full private messages page"
+        );
+      },
+    });
 
-    async test(assert) {
-      await click(".user-bookmarks-link");
+    componentTest("bookmarks", {
+      template: '{{mount-widget widget="user-menu"}}',
 
-      const bookmark = queryAll(".quick-access-panel li a")[0];
-      assert.ok(bookmark);
+      async test(assert) {
+        await click(".user-bookmarks-link");
 
-      assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
-      assert.ok(
-        bookmark.innerHTML.includes("someguy"),
-        "should include the last poster's username"
-      );
-      assert.ok(
-        bookmark.innerHTML.match(/<img.*class="emoji".*>/),
-        "should correctly render emoji in bookmark title"
-      );
+        const bookmark = queryAll(".quick-access-panel li a")[0];
+        assert.ok(bookmark);
 
-      const routeToStub = sinon.stub(DiscourseURL, "routeTo");
-      await click(".user-bookmarks-link");
-      assert.ok(
-        routeToStub.calledWith(queryAll(".user-bookmarks-link")[0].href),
-        "a second click should redirect to the full bookmarks page"
-      );
-    },
-  });
+        assert.ok(bookmark.href.includes("/t/yelling-topic-title/119"));
+        assert.ok(
+          bookmark.innerHTML.includes("someguy"),
+          "should include the last poster's username"
+        );
+        assert.ok(
+          bookmark.innerHTML.match(/<img.*class="emoji".*>/),
+          "should correctly render emoji in bookmark title"
+        );
 
-  componentTest("anonymous", {
-    template:
-      '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
+        const routeToStub = sinon.stub(DiscourseURL, "routeTo");
+        await click(".user-bookmarks-link");
+        assert.ok(
+          routeToStub.calledWith(queryAll(".user-bookmarks-link").data("url")),
+          "a second click should redirect to the full bookmarks page"
+        );
+      },
+    });
 
-    beforeEach() {
-      this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
-      this.siteSettings.allow_anonymous_posting = true;
-      this.siteSettings.anonymous_posting_min_trust_level = 3;
+    componentTest("anonymous", {
+      template:
+        '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
-      this.on("toggleAnonymous", () => (this.anonymous = true));
-    },
+      beforeEach() {
+        this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
+        this.siteSettings.allow_anonymous_posting = true;
+        this.siteSettings.anonymous_posting_min_trust_level = 3;
 
-    async test(assert) {
-      await click(".user-preferences-link");
-      assert.ok(queryAll(".enable-anonymous").length);
+        this.on("toggleAnonymous", () => (this.anonymous = true));
+      },
 
-      await click(".enable-anonymous");
-      assert.ok(this.anonymous);
-    },
-  });
+      async test(assert) {
+        await click(".user-preferences-link");
+        assert.ok(queryAll(".enable-anonymous").length);
 
-  componentTest("anonymous - disabled", {
-    template: '{{mount-widget widget="user-menu"}}',
+        await click(".enable-anonymous");
+        assert.ok(this.anonymous);
+      },
+    });
 
-    beforeEach() {
-      this.siteSettings.allow_anonymous_posting = false;
-    },
+    componentTest("anonymous - disabled", {
+      template: '{{mount-widget widget="user-menu"}}',
 
-    async test(assert) {
-      await click(".user-preferences-link");
-      assert.ok(!queryAll(".enable-anonymous").length);
-    },
-  });
+      beforeEach() {
+        this.siteSettings.allow_anonymous_posting = false;
+      },
 
-  componentTest("anonymous - switch back", {
-    template:
-      '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
+      async test(assert) {
+        await click(".user-preferences-link");
+        assert.ok(!queryAll(".enable-anonymous").length);
+      },
+    });
 
-    beforeEach() {
-      this.currentUser.setProperties({ is_anonymous: true });
-      this.siteSettings.allow_anonymous_posting = true;
+    componentTest("anonymous - switch back", {
+      template:
+        '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
-      this.on("toggleAnonymous", () => (this.anonymous = false));
-    },
+      beforeEach() {
+        this.currentUser.setProperties({ is_anonymous: true });
+        this.siteSettings.allow_anonymous_posting = true;
 
-    async test(assert) {
-      await click(".user-preferences-link");
-      assert.ok(queryAll(".disable-anonymous").length);
+        this.on("toggleAnonymous", () => (this.anonymous = false));
+      },
 
-      await click(".disable-anonymous");
-      assert.notOk(this.anonymous);
-    },
-  });
-});
+      async test(assert) {
+        await click(".user-preferences-link");
+        assert.ok(queryAll(".disable-anonymous").length);
+
+        await click(".disable-anonymous");
+        assert.notOk(this.anonymous);
+      },
+    });
+  }
+);

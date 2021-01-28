@@ -17,7 +17,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 
 function customTagArray(fieldName) {
   return computed(fieldName, function () {
-    var val = this.get(fieldName);
+    let val = this.get(fieldName);
     if (!val) {
       return val;
     }
@@ -194,7 +194,7 @@ export default Controller.extend(ModalFunctionality, {
     if (displayingInline) {
       return this.isEitherRevisionHidden ? "hidden-revision-either" : null;
     } else {
-      var result = [];
+      let result = [];
       if (prevHidden) {
         result.push("hidden-revision-previous");
       }
@@ -227,7 +227,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("model.category_id_changes")
   previousCategory(changes) {
     if (changes) {
-      var category = Category.findById(changes["previous"]);
+      let category = Category.findById(changes["previous"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   },
@@ -235,7 +235,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("model.category_id_changes")
   currentCategory(changes) {
     if (changes) {
-      var category = Category.findById(changes["current"]);
+      let category = Category.findById(changes["current"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   },

@@ -186,15 +186,11 @@
         > ul {
           display: inline-flex;
           > li {
-            display: inline;
-            margin-left: 12px;
-            .d-button-label {
-              line-height: 1;
-            }
+            display: inline-flex;
+            margin-left: 0.75em;
           }
 
           a {
-            margin-bottom: 10px;
             width: auto;
           }
         }

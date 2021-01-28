@@ -104,11 +104,21 @@ RSpec.describe ApplicationController do
     end
 
     it 'contains authentication data when cookies exist' do
-      COOKIE_DATA = "someauthenticationdata"
-      cookies['authentication_data'] = COOKIE_DATA
+      cookie_data = "someauthenticationdata"
+      cookies['authentication_data'] = cookie_data
       get '/login'
       expect(response.status).to eq(200)
-      expect(response.body).to include("data-authentication-data=\"#{COOKIE_DATA }\"")
+      expect(response.body).to include("data-authentication-data=\"#{cookie_data}\"")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
+    end
+
+    it 'deletes authentication data cookie even if already authenticated' do
+      sign_in(Fabricate(:user))
+      cookies['authentication_data'] = "someauthenticationdata"
+      get '/'
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("data-authentication-data=")
+      expect(response.headers["Set-Cookie"]).to include("authentication_data=;") # Delete cookie
     end
   end
 

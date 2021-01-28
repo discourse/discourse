@@ -15,9 +15,9 @@ export default function getURL(url) {
     return url;
   }
 
-  const found = url.indexOf(baseUri);
+  const found = url.startsWith(baseUri);
 
-  if (found >= 0 && found < 3) {
+  if (found) {
     return url;
   }
   if (url[0] !== "/") {

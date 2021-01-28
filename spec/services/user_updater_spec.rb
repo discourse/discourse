@@ -251,6 +251,18 @@ describe UserUpdater do
           updater.update(user_notification_schedule: schedule_attrs)
         }.to change { user.do_not_disturb_timings.count }.by(4)
       end
+
+      it "removes do_not_disturb_timings when the schedule is disabled" do
+        updater = UserUpdater.new(acting_user, user)
+        updater.update(user_notification_schedule: schedule_attrs)
+        expect(user.user_notification_schedule.enabled).to eq(true)
+
+        schedule_attrs[:enabled] = false
+        updater.update(user_notification_schedule: schedule_attrs)
+
+        expect(user.user_notification_schedule.enabled).to eq(false)
+        expect(user.do_not_disturb_timings.count).to eq(0)
+      end
     end
 
     context 'when sso overrides bio' do

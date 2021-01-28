@@ -424,6 +424,9 @@ es:
         fields: "Campos"
         reject_reason: "Motivo"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored}, (del último reporte)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (de los últimos %{count} reportes)"
         agreed:
           one: "%{count}% de acuerdo"
           other: "%{count}% de acuerdo"
@@ -841,6 +844,20 @@ es:
         mute_option_title: "No recibirás ninguna notificación relacionada con este usuario."
         normal_option: "Normal"
         normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
+      notification_schedule:
+        title: "Horario de notificaciones"
+        label: "Activar horario personalizado de notificaciones"
+        tip: "Fuera de estas horas, se activará el modo «no molestar» automáticamente."
+        midnight: "Medianoche"
+        none: "Ninguno"
+        monday: "Lunes"
+        tuesday: "Martes"
+        wednesday: "Miércoles"
+        thursday: "Jueves"
+        friday: "Viernes"
+        saturday: "Sábado"
+        sunday: "Domingo"
+        to: "a"
       activity_stream: "Actividad"
       preferences: "Preferencias"
       feature_topic_on_profile:
@@ -870,6 +887,7 @@ es:
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
         disable: "Desactivar notificaciones"
         enable: "Activar notificaciones"
+        each_browser_note: 'Nota: hay que cambiar este ajuste en cada navegador que uses. Todas las notificaciones serán desactivadas en el modo «no molestar», independientemente de este ajuste.'
         consent_prompt: "¿Quieres recibir notificaciones en vivo cuando alguien responda a tus mensajes?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar todo"
@@ -1654,8 +1672,6 @@ es:
     date_time_picker:
       from: Desde
       to: Hasta
-      errors:
-        to_before_from: "La fecha «hasta» debe ser posterior a la fecha «desde»."
     emoji_picker:
       filter_placeholder: Buscar emoji
       smileys_&_emotion: Caras y emociones
@@ -1814,6 +1830,7 @@ es:
           label: "Crear tema"
         shared_draft:
           label: "Borrador compartido"
+          desc: "Inicia un tema-borrador que solo será visible por los usuarios permitidos"
         toggle_topic_bump:
           label: "Alternar bump del tema"
           desc: "Responder sin alterar la fecha de última respuesta"
@@ -1946,6 +1963,7 @@ es:
       or_search_google: "O prueba buscar a través de Google:"
       search_google: "Intenta buscar con Google:"
       search_google_button: "Google"
+      search_button: "Buscar"
       context:
         user: "Buscar publicaciones de @%{username}"
         category: "Buscar la categoría #%{category}"
@@ -2514,7 +2532,7 @@ es:
         other: "ver %{count} publicaciones ocultas"
       notice:
         new_user: "Esta es la primera vez que %{user} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
-        returning_user: "Hace tiempo que no vemos a %{user} — su última publicación fue %{time}. "
+        returning_user: "Hacía tiempo que no veíamos a %{user}, su última publicación fue %{time}."
       unread: "Publicaciones sin leer"
       has_replies:
         one: "%{count} Respuesta"
@@ -2843,6 +2861,7 @@ es:
       list_filters:
         all: "todos los temas"
         none: "sin subcategoría"
+      colors_disabled: "No puedes seleccionar colores porque tienes no tienes activados los estilos de categoría."
     flagging:
       title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
       action: "Reportar publicación"
@@ -2860,6 +2879,7 @@ es:
       notify_action: "Mensaje"
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
+      delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicaciones}} y {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} de este usuario, también eliminarás su cuenta, bloquearás registros desde su dirección IP <b>{ip_address}</b>, y añadirás su correo electrónico <b>{email}</b> a una lista de bloqueos permanentes. ¿Seguro que el usuario es de verdad un spammer?"
       yes_delete_spammer: "Sí, eliminar spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -2926,6 +2946,12 @@ es:
         title: "Este tema es un mensaje personal"
         help: "Este tema es un mensaje personal"
     posts: "Publicaciones"
+    posts_likes_MF: |
+      Este tema tiene {count,  plural, one {# respuesta} other {# respuestas}} {ratio, select,
+       low {con una proporción de me gusta por publicación alta}
+       med {con una proporción de me gusta por publicación muy alta}
+       high {con una proporción de me gusta por publicación extremadamente alta}
+       other {}}
     original_post: "Publicación original"
     views: "Vistas"
     views_lowercase:
@@ -3255,6 +3281,7 @@ es:
     invite:
       custom_message: "Dale a tu invitación un toque personal escribiendo un <a href>mensaje personalizado</a>."
       custom_message_placeholder: "Ingresa tu mensaje personalizado"
+      approval_not_required: "El usuario será aprobado automáticamente en cuanto acepte esta invitación."
       custom_message_template_forum: "¡Hey, deberías unirte a este foro!"
       custom_message_template_topic: "¡Hey, creemos que este tema te va a encantar!"
     forced_anonymous: "Debido a una carga extrema, esto se está mostrando temporalmente a todos como lo vería un usuario que no haya iniciado sesión."
@@ -3276,6 +3303,7 @@ es:
         two_hours: "2 horas"
         tomorrow: "Hasta mañana"
         custom: "Personalizado"
+      set_schedule: "Establecer un horario de notificaciones"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -3303,6 +3331,10 @@ es:
         installed_version: "Instalada"
         latest_version: "Última"
         problems_found: "Algunos consejos con base en tus ajustes actuales"
+        new_features:
+          title: "\U0001F381 Novedades"
+          dismiss: "Ocultar"
+          learn_more: "Más información"
         last_checked: "Ultima comprobación"
         refresh_problems: "Refrescar"
         no_problems: "No se encontró ningún problema."
@@ -3793,6 +3825,7 @@ es:
           install_upload: "Desde tu dispositivo"
           install_git_repo: "Desde un repositorio git"
           install_create: "Crear nuevo"
+          duplicate_remote_theme: "El componente de tema «%{name}» ya está instalado, ¿seguro que quieres instalar otra copia?"
           about_theme: "Acerca de"
           license: "Licencia"
           version: "Versión:"
@@ -3812,6 +3845,7 @@ es:
           check_for_updates: "Buscar actualizaciones"
           updating: "Actualizando..."
           up_to_date: "El tema está actualizado. Última comprobación:"
+          has_overwritten_history: "La versión actual del tema ya no existe, porque el historial de Git ha sido sobreescrito por un force push."
           add: "Agregar"
           theme_settings: "Ajustes del tema"
           no_settings: "Este tema no tiene ajustes."
@@ -3841,17 +3875,6 @@ es:
           color_definitions:
             text: "Definiciones de color"
             title: "Introducir definiciones de colores personalizadas (para usuarios avanzados)"
-            placeholder: |2-
-
-              Usa esta hoja de estilos para añadir colores personalizados a la lista de propiedades personalizadas de CSS.
-
-              Por ejemplo:
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              Añadir un prefijo a los nombres de las propiedades es altamente recomendado para evitar conflictos con plugins y el núcleo.
           head_tag:
             text: "</head>"
             title: "HTML que será insertado antes de la </head> etiqueta"
@@ -4297,6 +4320,7 @@ es:
         clear_penalty_history:
           title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
+        delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {# publicación} other {# publicaciones}} y {TOPICS, plural, one {# tema} other {# temas}}. ¿Estás seguro?"
         silence: "Silenciar"
         unsilence: "Dejar de silenciar"
         silenced: "¿Silenciado?"
@@ -4345,6 +4369,9 @@ es:
         anonymize_yes: "Sí, hacer anónima esta cuenta."
         anonymize_failed: "Hubo un problema al hacer anónima la cuenta."
         delete: "Eliminar usuario"
+        delete_posts:
+          progress:
+            title: "Progreso de la eliminación de publicaciones"
         merge:
           button: "Juntar"
           prompt:
@@ -4356,6 +4383,8 @@ es:
             target_username_placeholder: "Nombre de usuario del nuevo dueño"
             transfer_and_delete: "Transferir y eliminar @%{username}"
             cancel: "Cancelar"
+          progress:
+            title: "Progreso de fusión"
           confirmation:
             title: "Transferir y eliminar @%{username}"
             description: |
@@ -4502,6 +4531,7 @@ es:
         go_back: "Volver a la búsqueda"
         recommended: "Recomendamos personalizar el siguiente texto para que se ajusten a tus necesidades:"
         show_overriden: "Solo mostrar sobrescritos"
+        locale: "Idioma:"
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu busqueda."
       settings:
         show_overriden: "Solo mostrar anulados"

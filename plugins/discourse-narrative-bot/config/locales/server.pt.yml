@@ -22,7 +22,6 @@ pt:
       name: Licenciado
       description: "Completou o nosso tutorial de utilizador avançado"
   discourse_narrative_bot:
-    bio: "Olá. Não sou humano. Sou um bot que pode ensiná-lo acerca deste sítio. Para interagir comigo, envie-me uma mensagem ou mencione-me %{discobot_username} em qualquer lado."
     dice:
       results: |-
         > :game_die: %{results}

@@ -56,7 +56,7 @@ export default Component.extend({
   },
 
   _showUrl($target, url) {
-    const $currentTargetOffset = $target.offset();
+    const currentTargetOffset = $target.offset();
     const $this = $(this.element);
 
     if (isEmpty(url)) {
@@ -69,7 +69,7 @@ export default Component.extend({
     }
 
     const shareLinkWidth = $this.width();
-    let x = $currentTargetOffset.left - shareLinkWidth / 2;
+    let x = currentTargetOffset.left - shareLinkWidth / 2;
     if (x < 25) {
       x = 25;
     }
@@ -78,15 +78,18 @@ export default Component.extend({
     }
 
     const header = $(".d-header");
-    let y = $currentTargetOffset.top - ($this.height() + 20);
+    let y = currentTargetOffset.top - ($this.height() + 20);
     if (y < header.offset().top + header.height()) {
-      y = $currentTargetOffset.top + 10;
+      y = currentTargetOffset.top + 10;
     }
 
-    $this.css({ top: "" + y + "px" });
+    this.element.style.top = `${y}px`;
 
     if (!this.site.mobileView) {
-      $this.css({ left: "" + x + "px" });
+      this.element.style.left = `${x}px`;
+      if (document.documentElement.classList.contains("rtl")) {
+        this.element.style.right = "unset";
+      }
     }
     this.set("link", url);
     this.set("visible", true);

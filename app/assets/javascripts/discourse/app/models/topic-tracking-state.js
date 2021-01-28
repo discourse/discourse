@@ -291,7 +291,7 @@ const TopicTrackingState = EmberObject.extend({
     if (split.length >= 4) {
       filter = split[split.length - 1];
       // c/cat/subcat/6/l/latest
-      var category = Category.findSingleBySlug(
+      let category = Category.findSingleBySlug(
         split.splice(1, split.length - 4).join("/")
       );
       this.set("filterCategory", category);

@@ -819,7 +819,7 @@ class ApplicationController < ActionController::Base
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
-    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").to_s.tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
   end

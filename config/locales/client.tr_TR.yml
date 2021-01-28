@@ -768,6 +768,19 @@ tr_TR:
         mute_option_title: "Bir daha bu kullanıcıyla ilgili bildirim almayacaksın."
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı sizi yanıtlarsa, alıntılarsa ya da sizden bahsederse bildirim alacaksınız."
+      notification_schedule:
+        title: "Bildirim Zamanlaması"
+        label: "Özel bildirim zamanlamasını etkinleştir"
+        tip: "Bu saatler dışında otomatik olarak 'rahatsız etmeyin' durumuna alınacaksınız."
+        midnight: "Gece yarısı"
+        none: "Yok"
+        monday: "Pazartesi"
+        tuesday: "Salı"
+        wednesday: "Çarşamba"
+        thursday: "Perşembe"
+        friday: "Cuma"
+        saturday: "Cumartesi"
+        sunday: "Pazar"
       activity_stream: "Aktivite"
       preferences: "Tercihler"
       feature_topic_on_profile:
@@ -1452,8 +1465,6 @@ tr_TR:
     date_time_picker:
       from: Kimden
       to: Kime
-      errors:
-        to_before_from: "Bugüne kadar olan tarihten itibaren olmalıdır."
     emoji_picker:
       filter_placeholder: Emoji ara
       smileys_&_emotion: Emojiler ve Duygular
@@ -2874,6 +2885,8 @@ tr_TR:
       dismiss: "Yoksay"
     safe_mode:
       enabled: "Güvenli mod etkin, çıkmak için bu tarayıcı penceresini kapat"
+    do_not_disturb:
+      set_schedule: "Bildirim zamanlaması ayarla"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:

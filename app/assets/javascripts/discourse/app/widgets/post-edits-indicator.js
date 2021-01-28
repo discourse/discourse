@@ -1,7 +1,5 @@
 import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { longDate } from "discourse/lib/formatter";
 
 function mult(val) {
@@ -53,24 +51,16 @@ export default createWidget("post-edits-indicator", {
       title = `${I18n.t("post.last_edited_on")} ${date}`;
     }
 
-    const contents = [
-      attrs.version > 1 ? attrs.version - 1 : "",
-      " ",
-      iconNode(icon),
-    ];
-
-    return h(
-      "a",
-      {
-        className,
-        attributes: { title, href: "#" },
-      },
-      contents
-    );
+    return this.attach("flat-button", {
+      icon,
+      translatedTitle: title,
+      className,
+      action: "onPostEditsIndicatorClick",
+      translatedLabel: attrs.version > 1 ? attrs.version - 1 : "",
+    });
   },
 
-  click(e) {
-    e.preventDefault();
+  onPostEditsIndicatorClick() {
     if (this.attrs.wiki && this.attrs.version === 1) {
       this.sendWidgetAction("editPost");
     } else if (this.attrs.canViewEditHistory) {

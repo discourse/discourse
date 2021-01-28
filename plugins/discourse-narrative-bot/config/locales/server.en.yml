@@ -21,7 +21,7 @@ en:
         This badge is granted upon successful completion of the interactive advanced user tutorial. You’ve mastered the advanced tools of discussion — and now you’re fully licensed!
 
   discourse_narrative_bot:
-    bio: "Hi, I’m not a real person. I’m a bot that can teach you about this site. To interact with me, send me a message or mention **`@%{discobot_username}`** anywhere."
+    bio: "Hi, I’m not a real person. I’m a bot that can teach you about this site. To interact with me, send me a message or mention me by name."
 
     tl2_promotion_message:
       subject_template: "Now that you’ve been promoted, it’s time to learn about some advanced features!"

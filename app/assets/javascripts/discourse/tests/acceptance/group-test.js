@@ -261,6 +261,18 @@ acceptance("Group - Authenticated", function (needs) {
       "Awesome Team",
       "it should display the group name"
     );
+
+    await click(".group-details-button button.btn-danger");
+
+    assert.equal(
+      queryAll(".bootbox .modal-body").html(),
+      I18n.t("admin.groups.delete_with_messages_confirm", {
+        count: 2,
+      }),
+      "it should warn about orphan messages"
+    );
+
+    await click(".modal-footer .btn-default");
   });
 
   test("Moderator Viewing Group", async function (assert) {
@@ -280,7 +292,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-add-members-modal .modal-close");
 
-    const memberDropdown = selectKit(".group-member-dropdown:first");
+    const memberDropdown = selectKit(".group-member-dropdown:nth-of-type(1)");
     await memberDropdown.expand();
 
     assert.equal(

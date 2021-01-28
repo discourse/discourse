@@ -737,10 +737,10 @@ class PluginApi {
    * example:
    *
    * api.addUserMenuGlyph({
-   *    label: 'awesome.label',
+   *    title: 'awesome.label',
    *    className: 'my-class',
    *    icon: 'my-icon',
-   *    href: `/some/path`
+   *    data: { url: `/some/path` },
    * });
    *
    */
@@ -1227,11 +1227,11 @@ let _pluginv01;
 
 // from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
 function cmpVersions(a, b) {
-  var i, diff;
-  var regExStrip0 = /(\.0+)+$/;
-  var segmentsA = a.replace(regExStrip0, "").split(".");
-  var segmentsB = b.replace(regExStrip0, "").split(".");
-  var l = Math.min(segmentsA.length, segmentsB.length);
+  let i, diff;
+  let regExStrip0 = /(\.0+)+$/;
+  let segmentsA = a.replace(regExStrip0, "").split(".");
+  let segmentsB = b.replace(regExStrip0, "").split(".");
+  let l = Math.min(segmentsA.length, segmentsB.length);
 
   for (i = 0; i < l; i++) {
     diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);

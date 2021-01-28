@@ -145,11 +145,11 @@ describe InvitesController do
         expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
-      it "allows admin to send multiple invites to same email" do
+      it "does not allow admins to send multiple invites to same email" do
         user = sign_in(admin)
         invite = Invite.invite_by_email("invite@example.com", user)
         post "/invites.json", params: { email: invite.email }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(422)
       end
 
       it "responds with error message in case of validation failure" do

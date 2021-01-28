@@ -72,7 +72,7 @@ export default Controller.extend({
           }
 
           const joinedTags = tags.slice(0, displayN).join(", ");
-          var more = Math.max(0, tags.length - displayN);
+          let more = Math.max(0, tags.length - displayN);
 
           const tagsString =
             more === 0

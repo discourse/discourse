@@ -18,8 +18,12 @@ class UserNotificationSchedule < ActiveRecord::Base
   scope :enabled, -> { where(enabled: true) }
 
   def create_do_not_disturb_timings(delete_existing: false)
-    user.do_not_disturb_timings.where(scheduled: true).destroy_all if delete_existing
+    destroy_scheduled_timings if delete_existing
     UserNotificationScheduleProcessor.create_do_not_disturb_timings_for(self)
+  end
+
+  def destroy_scheduled_timings
+    user.do_not_disturb_timings.where(scheduled: true).destroy_all
   end
 
   private

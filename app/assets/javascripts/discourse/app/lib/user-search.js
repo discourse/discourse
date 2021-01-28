@@ -6,7 +6,7 @@ import { emailValid } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { userPath } from "discourse/lib/url";
 
-var cache = {},
+let cache = {},
   cacheKey,
   cacheTime,
   currentTerm,
@@ -23,7 +23,7 @@ function performSearch(
   groupMembersOf,
   resultsFn
 ) {
-  var cached = cache[term];
+  let cached = cache[term];
   if (cached) {
     resultsFn(cached);
     return;
@@ -52,7 +52,7 @@ function performSearch(
     },
   });
 
-  var returnVal = CANCELLED_STATUS;
+  let returnVal = CANCELLED_STATUS;
 
   oldSearch
     .then(function (r) {
@@ -81,7 +81,7 @@ function performSearch(
     });
 }
 
-var debouncedSearch = function (
+let debouncedSearch = function (
   term,
   topicId,
   categoryId,
@@ -113,7 +113,7 @@ function organizeResults(r, options) {
     return r;
   }
 
-  var exclude = options.exclude || [],
+  let exclude = options.exclude || [],
     limit = options.limit || 5,
     users = [],
     emails = [],
@@ -182,7 +182,7 @@ export default function userSearch(options) {
     options.term = options.term.substring(1);
   }
 
-  var term = options.term || "",
+  let term = options.term || "",
     includeGroups = options.includeGroups,
     includeMentionableGroups = options.includeMentionableGroups,
     includeMessageableGroups = options.includeMessageableGroups,

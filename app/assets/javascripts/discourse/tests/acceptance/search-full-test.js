@@ -160,7 +160,9 @@ acceptance("Search - Full Page", function (needs) {
         '"autocomplete" popup has an entry for "admin"'
       );
 
-      await click(".search-advanced-options .autocomplete ul li a:first");
+      await click(
+        ".search-advanced-options .autocomplete ul li a:nth-of-type(1)"
+      );
 
       assert.ok(
         exists('.search-advanced-options span:contains("admin")'),
@@ -308,7 +310,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update status through advanced search ui", async function (assert) {
     const statusSelector = selectKit(
-      ".search-advanced-options .select-kit#status"
+      ".search-advanced-options .select-kit#search-status-options"
     );
 
     await visit("/search");
@@ -331,7 +333,7 @@ acceptance("Search - Full Page", function (needs) {
 
   test("doesn't update status filter header if wrong value entered through searchbox", async function (assert) {
     const statusSelector = selectKit(
-      ".search-advanced-options .select-kit#status"
+      ".search-advanced-options .select-kit#search-status-options"
     );
 
     await visit("/search");

@@ -379,6 +379,7 @@ de:
   bookmarks:
     errors:
       already_bookmarked_post: "Du kannst denselben Beitrag nicht zweimal zu deinen Lesezeichen hinzufügen."
+      too_many: "Sorry, du hast zu viele Lesezeichen, besuche %{user_bookmarks_url} , um einige zu entfernen."
       cannot_set_past_reminder: "Sie können in der Vergangenheit keine Lesezeichenerinnerung festlegen."
       cannot_set_reminder_in_distant_future: "Sie können eine Lesezeichenerinnerung nicht länger als 10 Jahre in der Zukunft festlegen."
       time_must_be_provided: "die Zeit muss für alle Erinnerungen angegeben werden"
@@ -1653,6 +1654,7 @@ de:
     avatar_sizes: "Liste der Größe von automatisch generierten Profilbildern."
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "Verwende das kleine Logo der Website anstelle des Avatars des Systembenutzers. Das Logo muss vorhanden sein."
     restrict_letter_avatar_colors: "Eine Liste 6stelliger hexadezimaler Farbwerte für den Letter Avatar Hintergrund."
     selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste von Avataren, aus der Benutzer wählen können."
@@ -3440,6 +3442,8 @@ de:
 
         Genieße deinen Aufenthalt!
     signup_after_reject:
+      title: "Anmelden nach Ablehnung"
+      subject_template: "Du wurdest von %{site_name} abgelehnt"
       text_body_template: |
         Ein Team-Mitglied hat dein Konto bei %{site_name} abgelehnt.
 

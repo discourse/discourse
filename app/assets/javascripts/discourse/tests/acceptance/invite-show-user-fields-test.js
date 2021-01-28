@@ -59,7 +59,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
       "submit is still disabled due to lack of user fields"
     );
 
-    await fillIn(".user-field input[type=text]:first", "Barky");
+    await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
 
     assert.ok(
       exists(".invites-show .btn-primary:disabled"),

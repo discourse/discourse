@@ -1391,6 +1391,10 @@ class User < ActiveRecord::Base
     active_do_not_disturb_timings.maximum(:ends_at)
   end
 
+  def shelved_notifications
+    ShelvedNotification.joins(:notification).where("notifications.user_id = ?", self.id)
+  end
+
   protected
 
   def badge_grant

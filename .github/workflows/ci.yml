@@ -65,7 +65,7 @@ jobs:
         if: env.BUILD_TYPE != 'LINT'
         run: |
           sudo apt-get update
-          sudo apt-get -yqq install postgresql-client libpq-dev jpegoptim optipng jhead
+          sudo apt-get -yqq install postgresql-client libpq-dev jpegoptim optipng jhead pngcrush pngquant
           wget -qO- https://raw.githubusercontent.com/discourse/discourse_docker/master/image/base/install-pngquant | sudo sh
 
       - name: Update imagemagick

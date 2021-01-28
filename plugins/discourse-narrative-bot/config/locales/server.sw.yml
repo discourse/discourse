@@ -24,7 +24,6 @@ sw:
       long_description: |
         Hii beji inapewa kwa mtu aliyemaliza kupitia mafunzo yetu ya juu. Umepata mafunzo hayo ya juu kuhusu majadiliano - na sasa umethibitishwa!
   discourse_narrative_bot:
-    bio: "Habari, mimi sio mtu bali ni roboti. Ningependa nikufundishe kuhusu hii tovuti. Kuwasiliana na mimi, nitumie ujumbe au nitaje **@%{discobot_username}** popote."
     timeout:
       message: |-
         Habari @%{username}, nakujulia hali kwa sababu sijakuona nina mda

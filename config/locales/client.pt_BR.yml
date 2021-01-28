@@ -1544,8 +1544,6 @@ pt_BR:
     date_time_picker:
       from: De
       to: Para
-      errors:
-        to_before_from: "Até a data deve ser posterior a partir da data."
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emotion
@@ -2031,7 +2029,7 @@ pt_BR:
         title: "Excluir respostas automaticamente"
       status_update_notice:
         auto_open: "Este tópico abrirá automaticamente em %{timeLeft}."
-        auto_close: "Este tópico fechará automaticamente em %{timeLeft}."
+        auto_close: "Este tópico fechará automaticamente %{timeLeft}."
         auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tópico fechará %{duration} após a última resposta."
         auto_delete: "Este tópico será automaticamente excluído %{timeLeft}."

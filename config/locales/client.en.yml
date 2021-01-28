@@ -210,6 +210,7 @@ en:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
 
+    clear_input: "Clear input"
     edit: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -837,7 +838,6 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       muted: "Muted categories"
@@ -3600,6 +3600,10 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        new_features:
+          title: "🎁 New Features"
+          dismiss: "Dismiss"
+          learn_more: "Learn more"
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -3734,6 +3738,9 @@ en:
         group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
+        delete_with_messages_confirm:
+          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it.<br><br>Are you sure?"
+          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them.<br><br>Are you sure?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
@@ -4162,9 +4169,7 @@ en:
 
               Example:
 
-              :root {
-                --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
+              %{example}
 
               Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
           head_tag:

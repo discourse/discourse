@@ -24,7 +24,6 @@ pt_BR:
       long_description: |
         Este emblema é concedido após a conclusão bem-sucedida do tutorial interativo de usuário avançado. Você dominou as ferramentas avançadas de discussão — e agora está totalmente licenciado!
   discourse_narrative_bot:
-    bio: "Oi, eu não sou uma pessoa real. Eu sou um robô que pode te ensinar sobre este site. Para interagir comigo, me envie uma mensagem ou mencione **`@%{discobot_username}`** em qualquer lugar."
     tl2_promotion_message:
       subject_template: "Agora que você foi promovido, é hora de aprender sobre alguns recursos avançados!"
       text_body_template: |

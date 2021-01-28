@@ -1,3 +1,4 @@
+import { and, readOnly } from "@ember/object/computed";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import Controller from "@ember/controller";
@@ -7,7 +8,6 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
 import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
-import { readOnly } from "@ember/object/computed";
 import { underscore } from "@ember/string";
 
 export default Controller.extend({
@@ -15,11 +15,12 @@ export default Controller.extend({
   saving: false,
   deleting: false,
   panels: null,
-  hiddenTooltip: true,
+  showTooltip: false,
   createdCategory: false,
   expandedMenu: false,
   mobileView: readOnly("site.mobileView"),
   parentParams: null,
+  showDeleteReason: and("showTooltip", "model.cannot_delete_reason"),
 
   @on("init")
   _initPanels() {
@@ -143,7 +144,7 @@ export default Controller.extend({
     },
 
     toggleDeleteTooltip() {
-      this.toggleProperty("hiddenTooltip");
+      this.toggleProperty("showTooltip");
     },
 
     goBack() {

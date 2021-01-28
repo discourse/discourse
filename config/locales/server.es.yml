@@ -260,6 +260,7 @@ es:
   email_template_cant_be_modified: "Esta plantilla de correo electrónico no se puede modificar"
   invalid_whisper_access: "O los susurros no están habilitados o no tienes permitido crear susurros"
   not_in_group:
+    title_topic: "Necesitas solicitar formar parte del grupo «%{group}» para ver este tema"
     title_category: "Debes estar en grupo para ver esta categoría."
     request_membership: "Solicitar membresía"
     join_group: "Unirse al grupo"
@@ -375,6 +376,7 @@ es:
   bookmarks:
     errors:
       already_bookmarked_post: "No puedes guardar la misma publicación en marcadores dos veces."
+      too_many: "Lo sentimos, pero tienes demasiados marcadores. Visita %{user_bookmarks_url} para quitar algunos."
       cannot_set_past_reminder: "No puedes establecer un recordatorio de marcador en el pasado."
       cannot_set_reminder_in_distant_future: "No puedes establecer un recordatorio de marcador más de 10 años en el futuro."
       time_must_be_provided: "se debe indicar el tiempo para todos los recordatorios"
@@ -424,6 +426,26 @@ es:
     until_posts:
       one: "%{count} post"
       other: "%{count} publicaciones"
+    "new-topic": |
+      Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
+
+      - ¿Suena el título interesante si lo lees en alto? ¿Es un buen resumen del contenido?
+
+      - ¿A quién le podría interesar? ¿Por qué importa? ¿Qué tipo de respuestas buscas?
+
+      - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
+
+      Para más información [consulta nuestra nuestra guía](%{base_path}/guidelines). Este panel solo aparecera para tus primeros %{education_posts_text} mensajes.
+    "new-reply": |
+      Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
+
+      - Sé amable con las demás personas de la comunidad.
+
+      - ¿Aporta tu respuesta a la conversación?
+
+      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, y no a las personas.
+
+      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text} mensajes.
     avatar: |
       ### ¿Que tal si agregas una imagen para tu cuenta?
 
@@ -931,7 +953,9 @@ es:
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
     mailing_list_mode: "Desactivar el modo lista de correo"
+    all: "No enviarme ningún correo desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Por favor, cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
+    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo sea antiguo y haya expirado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:

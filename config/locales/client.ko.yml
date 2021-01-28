@@ -164,6 +164,7 @@ ko:
         us_gov_west_1: "AWS GovCloud (미국 서부)"
         us_west_1: "미국 서부 (N. 캘리포니아)"
         us_west_2: "미국 서부 (오리건)"
+    clear_input: "입력 지우기"
     edit: "이 글의 제목과 카테고리 편집"
     expand: "확장"
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
@@ -803,6 +804,19 @@ ko:
         mute_option_title: "이 사용자와 관련된 알림을 받지 않습니다."
         normal_option: "보통"
         normal_option_title: "이 사용자가 사용자님에게 댓글을 작성 하거나, 인용하거나, 멘션하면 알림이 전송됩니다."
+      notification_schedule:
+        title: "알림 일정"
+        label: "사용자 지정 알림 일정 사용"
+        tip: "이 시간 이외에는 자동으로 '방해 금지' 상태가 됩니다."
+        midnight: "한밤중"
+        none: "없음"
+        monday: "월요일"
+        tuesday: "화요일"
+        wednesday: "수요일"
+        thursday: "목요일"
+        friday: "금요일"
+        saturday: "토요일"
+        sunday: "일요일"
       activity_stream: "활동"
       preferences: "환경 설정"
       feature_topic_on_profile:
@@ -1599,8 +1613,6 @@ ko:
     date_time_picker:
       from: 보내는사람
       to: 받는사람
-      errors:
-        to_before_from: "종료 날짜는 시작 날짜보다 이후여야 합니다."
     emoji_picker:
       filter_placeholder: 이모티콘 검색
       smileys_&_emotion: 웃는 얼굴과 감정
@@ -1881,6 +1893,7 @@ ko:
       or_search_google: "혹은 구글에서 검색해볼 수도 있습니다."
       search_google: "대신 구글에서 검색해보세요."
       search_google_button: "구글"
+      search_button: "검색"
       context:
         user: "@%{username}님의 글 검색"
         category: "#%{category} 카테고리에서 검색"
@@ -3149,6 +3162,7 @@ ko:
         two_hours: "2시간"
         tomorrow: "내일까지"
         custom: "사용자 정의"
+      set_schedule: "알림 일정 설정"
   admin_js:
     type_to_filter: "필터를 입력하세요"
     admin:
@@ -3176,6 +3190,9 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 조언"
+        new_features:
+          title: "\U0001F381 새로운 기능"
+          learn_more: "더 보기"
         last_checked: "마지막으로 확인"
         refresh_problems: "새로고침"
         no_problems: "아무런 문제가 발견되지 않았습니다."
@@ -3717,17 +3734,6 @@ ko:
           color_definitions:
             text: "색상 정의"
             title: "사용자 색상 정의 입력 (고급 사용자용)"
-            placeholder: |2-
-
-              이 스타일시트를 사용하여 사용자 정의 CSS 속성 목록에 사용자 정의 색상을 추가합니다.
-
-              예:
-
-              :root {
-              --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};
-              }
-
-              플러그인 및/또는 코어와의 충돌을 피하기 위해 속성 이름 앞에 붙이는 것이 좋습니다.
           head_tag:
             text: "</head>"
             title: "</head> 태그 전에 들어갈 HTML"
@@ -4221,6 +4227,9 @@ ko:
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
+        delete_posts:
+          progress:
+            title: "게시물 삭제 진행률"
         merge:
           button: "병합"
           prompt:
@@ -4232,6 +4241,8 @@ ko:
             target_username_placeholder: "새로운 소유자의 사용자 이름"
             transfer_and_delete: "전송 및 삭제 @ %{username}"
             cancel: "취소"
+          progress:
+            title: "병합 진행률"
           confirmation:
             title: "전송 및 삭제 @ %{username}"
             description: |
@@ -4374,6 +4385,7 @@ ko:
         go_back: "검색으로 돌아가기"
         recommended: "다음의 텍스트를 요구에 맞게 편집하는 것을 권장:"
         show_overriden: "Override 된 설정만 보여주기"
+        locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁히십시오."
       settings:
         show_overriden: "변경된 것들만 보기"

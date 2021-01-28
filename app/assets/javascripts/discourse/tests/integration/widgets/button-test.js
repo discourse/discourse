@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import {
   discourseModule,
+  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -67,6 +68,31 @@ discourseModule("Integration | Component | Widget | button", function (hooks) {
         queryAll("button span.d-button-label").length,
         "it has the label"
       );
+    },
+  });
+
+  componentTest("translatedLabel", {
+    template: '{{mount-widget widget="button" args=args}}',
+
+    beforeEach() {
+      this.set("args", { translatedLabel: "foo bar" });
+    },
+
+    test(assert) {
+      assert.equal(query("button span.d-button-label").innerText, "foo bar");
+    },
+  });
+
+  componentTest("translatedTitle", {
+    template: '{{mount-widget widget="button" args=args}}',
+
+    beforeEach() {
+      this.set("args", { label: "topic.create", translatedTitle: "foo bar" });
+    },
+
+    test(assert) {
+      assert.equal(query("button").title, "foo bar");
+      assert.equal(query("button").ariaLabel, "foo bar");
     },
   });
 });

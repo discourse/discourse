@@ -379,6 +379,7 @@ gl:
   bookmarks:
     errors:
       already_bookmarked_post: "Non podes gardar a mesma publicación nos marcadores dúas veces."
+      too_many: "Desculpe, ten marcadores de máis, revise %{user_bookmarks_url} para retirar algúns."
       cannot_set_past_reminder: "Non podes establecer un recordatorio de marcador no pasado."
       cannot_set_reminder_in_distant_future: "Non podes establecer un recordatorio de marcador máis de 10 anos cara ao futuro."
       time_must_be_provided: "o período debe ser facilitado para todos os recordatorios"
@@ -1653,6 +1654,7 @@ gl:
     avatar_sizes: "Listaxe de tamaños dos avatares xerados automaticamente."
     external_system_avatars_enabled: "Utilizar un servizo externo de avatares."
     external_system_avatars_url: "Enderezo URL do servizo externo para os avatares. As substitucións permitidas son {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "Utilice o pequeno logotipo do sitio no canto do avatar de usuario do sistema. Require que estea presente o logotipo."
     restrict_letter_avatar_colors: "Unha listaxe de valores hexadecimais das cores permitidas para os fondos dos avatares de letras."
     selectable_avatars_enabled: "Obrigar os usuarios a elixiren un avatar da listaxe."
     selectable_avatars: "Listaxe de avatares que os usuarios poden elixir."
@@ -3443,6 +3445,13 @@ gl:
         Cremos nunha comunidade cun [comportamento civilizado](%{base_url}/directrices) en todo momento.
 
         Desfruta a túa estancia!
+    signup_after_reject:
+      title: "Rexistro despois do rexeitamento"
+      subject_template: "Resultou rexeitado en %{site_name}"
+      text_body_template: |
+        Un membro do grupo rexeitou a súa conta en %{site_name}.
+
+        %{reject_reason}
     signup:
       title: "Rexistrarse"
       subject_template: "[%{email_prefix}] Confirma a túa nova conta"

@@ -1,4 +1,3 @@
-import EmberObject from "@ember/object";
 import NavItem from "discourse/models/nav-item";
 
 let topicId = 2000000;
@@ -48,7 +47,7 @@ export function createData(store) {
       website_name: "My Website is Discourse",
       location: "Toronto",
       suspend_reason: "Some reason",
-      displayGroups: [{ name: "Group 1" }, { name: "Group 2" }],
+      groups: [{ name: "Group 1" }, { name: "Group 2" }],
       created_at: moment().subtract(10, "days"),
       last_posted_at: moment().subtract(3, "days"),
       last_seen_at: moment().subtract(1, "days"),
@@ -56,7 +55,7 @@ export function createData(store) {
       invited_by: {
         username: "user_2",
       },
-      trustLevel: { name: "Dummy" },
+      trust_level: 1,
       publicUserFields: [
         {
           field: {
@@ -94,13 +93,13 @@ export function createData(store) {
         {
           id: topicId,
           title: `Example Topic Title ${topicId}`,
-          fancyTitle: `Example Topic Title ${topicId}`,
+          fancy_title: `Example Topic Title ${topicId}`,
           slug: `example-topic-title-${topicId}`,
           posts_count: ((topicId * 1234) % 100) + 1,
           views: ((topicId * 123) % 1000) + 1,
           like_count: topicId % 3,
           created_at: `2017-03-${topicId}`,
-          invisible: false,
+          visible: true,
           posters: [
             { extras: "latest", user },
             { user: createUser() },
@@ -115,25 +114,25 @@ export function createData(store) {
   };
 
   let topic = createTopic({ tags: ["example", "apple"] });
+  topic.details.updateFromJson({
+    can_create_post: true,
+    can_invite_to: false,
+    can_delete: false,
+    can_close_topic: false,
+  });
   topic.setProperties({
-    details: EmberObject.create({
-      can_create_post: true,
-      can_invite_to: false,
-      can_delete: false,
-      can_close_topic: false,
-    }),
-    category: categories[0],
+    category_id: categories[0].id,
     suggested_topics: [topic, topic, topic],
   });
 
-  let invisibleTopic = createTopic({ invisible: true });
+  let invisibleTopic = createTopic({ visible: false });
   let closedTopic = createTopic({ closed: true });
-  closedTopic.set("category", categories[1]);
+  closedTopic.set("category_id", categories[1].id);
   let archivedTopic = createTopic({ archived: true });
   let pinnedTopic = createTopic({ pinned: true });
   pinnedTopic.set("clearPin", () => pinnedTopic.set("pinned", "unpinned"));
   pinnedTopic.set("rePin", () => pinnedTopic.set("pinned", "pinned"));
-  pinnedTopic.set("category", categories[2]);
+  pinnedTopic.set("category_id", categories[2].id);
   let unpinnedTopic = createTopic({ unpinned: true });
   let warningTopic = createTopic({ is_warning: true });
 
@@ -220,7 +219,7 @@ export function createData(store) {
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
 
-      item.set("href", "#");
+      // item.set("href", "#");
 
       if (name === "categories") {
         item.set("styleGuideActive", true);
@@ -255,8 +254,6 @@ export function createData(store) {
     lorem: cooked,
 
     topicTimerUpdateDate: "2017-10-18 18:00",
-
-    categoryNames: categories.map((c) => c.name),
 
     groups: [
       { name: "staff", id: 1, automatic: false },

@@ -61,6 +61,12 @@ module("Unit | Utility | get-url", function () {
     );
 
     assert.equal(
+      getURL("/u/forumadmin"),
+      "/forum/u/forumadmin",
+      "relative url has subfolder even if username contains subfolder"
+    );
+
+    assert.equal(
       getURL(""),
       "/forum",
       "relative url has subfolder without trailing slash"

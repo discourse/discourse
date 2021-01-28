@@ -25,7 +25,8 @@ class GroupShowSerializer < BasicGroupSerializer
                    :email_password,
                    :imap_last_error,
                    :imap_old_emails,
-                   :imap_new_emails
+                   :imap_new_emails,
+                   :message_count
 
   def self.admin_or_owner_attributes(*attrs)
     attributes(*attrs)
