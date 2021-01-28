@@ -21,9 +21,9 @@
       background: var(--secondary);
       border: 1px solid var(--primary-medium);
 
-      &.is-focused {
-        box-shadow: shadow("focus");
-        border-radius: 0;
+      &.is-focused,
+      &:focus {
+        @include default-focus;
       }
     }
 
@@ -41,19 +41,19 @@
     &.is-expanded {
       .select-kit-wrapper {
         display: block;
-        border: 1px solid var(--tertiary);
-        box-shadow: shadow("focus");
-        border-radius: 0;
       }
 
       .multi-select-header {
         border-radius: 0;
-        box-shadow: none;
-        outline: none;
+        @include default-focus;
       }
 
       .select-kit-body {
         border-radius: 0;
+        box-shadow: shadow("dropdown");
+        &.empty-body {
+          visibility: hidden;
+        }
       }
     }
 

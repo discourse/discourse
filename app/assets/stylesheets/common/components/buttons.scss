@@ -44,6 +44,14 @@
       color: $hover-icon-color;
     }
   }
+  &:focus {
+    outline: none;
+    background: $hover-bg-color;
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
   &[href] {
     color: $text-color;
   }
@@ -177,14 +185,16 @@
     .d-icon {
       opacity: 0.9;
     }
-    &:hover {
+    &:hover,
+    &:focus {
       color: currentColor;
       background: var(--google-hover);
     }
   }
   &.facebook {
     background: $facebook;
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--facebook-hover);
     }
   }
@@ -193,19 +203,22 @@
   }
   &.twitter {
     background: var(--twitter);
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--twitter-hover);
     }
   }
   &.github {
     background: var(--github);
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--github-hover);
     }
   }
   &.discord {
     background: var(--discord);
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--discord-hover);
     }
   }
@@ -236,7 +249,6 @@
 .btn-flat {
   background: transparent;
   border: 0;
-  outline: 0;
   line-height: $line-height-small;
   transition: color 0.25s, background 0.25s;
   .d-icon {
@@ -267,10 +279,6 @@
 .btn-link {
   background: transparent;
   border: 0;
-  outline: 0;
   padding: 0;
   color: var(--tertiary);
-  &:focus {
-    outline: 1px currentColor dotted;
-  }
 }

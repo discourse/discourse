@@ -789,7 +789,7 @@ export default Component.extend(
           placementStrategy = inModal ? "fixed" : "absolute";
         }
 
-        const verticalOffset = this.multiSelect ? 0 : 3;
+        const verticalOffset = 3;
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
