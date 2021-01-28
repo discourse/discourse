@@ -34,6 +34,10 @@ en:
         point_in_time:
           datetime:
             label: Datetime
+        post_created_edited:
+          category:
+            label: Category
+            description: Optional, allows to limit trigger execution to this category
       scriptables:
         gift_exchange:
           fields:

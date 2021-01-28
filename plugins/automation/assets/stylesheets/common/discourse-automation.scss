@@ -67,6 +67,15 @@
     }
   }
 
+  .control-group {
+    .control-description {
+      color: var(--primary-medium);
+      width: 100%;
+      margin: 0;
+      padding: 0.25em 0;
+    }
+  }
+
   .pms-field {
     .actions.header {
       display: flex;

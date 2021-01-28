@@ -1,0 +1,16 @@
+<div class="control-group">
+  <label class="control-label">
+    {{i18n "discourse_automation.triggerables.post_created_edited.category.label"}}
+  </label>
+
+  <div class="controls">
+    {{category-chooser
+      value=metadata.category_id
+      onChange=(action (mut metadata.category_id))
+    }}
+
+    <p class="control-description">
+      {{i18n "discourse_automation.triggerables.post_created_edited.category.description"}}
+    </p>
+  </div>
+</div>

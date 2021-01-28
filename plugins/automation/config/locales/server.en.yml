@@ -7,6 +7,8 @@ en:
         title: Point in time
       user_added_to_group:
         title: User added to group
+      post_created_edited:
+        title: Post created/edited
     scriptables:
       gift_exchange:
         title: Gift exchange
