@@ -43,7 +43,7 @@ export default createWidget("post-edits-indicator", {
       className = `${className || ""} wiki`.trim();
 
       if (attrs.version > 1) {
-        title = I18n.t("post.last_edited_on", { dateTime: date });
+        title = I18n.t("post.wiki_last_edited_on", { dateTime: date });
       } else {
         title = I18n.t("post.wiki.about");
       }
