@@ -36,7 +36,7 @@
           <th>
             {{#if isBulk}}
               {{group-member-dropdown
-                isBulk=isBulk
+                bulkSelection=bulkSelection
                 canAdminGroup=model.can_admin_group
                 onChange=(action "actOnSelection" bulkSelection)
               }}

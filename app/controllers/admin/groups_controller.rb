@@ -125,11 +125,31 @@ class Admin::GroupsController < Admin::AdminController
     return can_not_modify_automatic if group.automatic
     guardian.ensure_can_edit_group!(group)
 
-    user = User.find(params[:user_id].to_i)
-    group.group_users.where(user_id: user.id).update_all(owner: false)
-    GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
+    if params[:user_id].present?
+      users = [User.find_by(id: params[:user_id].to_i)]
+    elsif usernames = group_params[:usernames].presence
+      users = User.where(username: usernames.split(","))
+    else
+      raise Discourse::InvalidParameters.new(:user_id)
+    end
+
+    users.each do |user|
+      group.group_users.where(user_id: user.id).update_all(owner: false)
+      GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
+    end
 
     Group.reset_counters(group.id, :group_users)
+
+    render json: success_json
+  end
+
+  def set_primary
+    group = Group.find_by(id: params.require(:id))
+    raise Discourse::NotFound unless group
+
+    users = User.where(username: group_params[:usernames].split(","))
+    users.each { |user| guardian.ensure_can_change_primary_group!(user) }
+    users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
 
     render json: success_json
   end
