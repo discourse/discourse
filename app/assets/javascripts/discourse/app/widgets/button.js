@@ -31,9 +31,13 @@ export const ButtonClass = {
   buildAttributes() {
     const attrs = this.attrs;
     const attributes = {};
+    let title = attrs.translatedTitle;
 
-    if (attrs.title) {
-      const title = I18n.t(attrs.title, attrs.titleOptions);
+    if (!title && attrs.title) {
+      title = I18n.t(attrs.title, attrs.titleOptions);
+    }
+
+    if (title) {
       attributes["aria-label"] = title;
       attributes.title = title;
     }
