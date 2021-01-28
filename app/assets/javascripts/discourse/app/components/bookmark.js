@@ -13,7 +13,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { Promise } from "rsvp";
-import { TIME_SHORTCUT_TYPES } from "discourse/lib/timeShortcut";
+import { TIME_SHORTCUT_TYPES } from "discourse/lib/time-shortcut";
 
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
@@ -80,9 +80,7 @@ export default Component.extend({
 
   _initializeExistingBookmarkData() {
     if (this.existingBookmarkHasReminder) {
-      this.set({
-        prefilledDatetime: this.model.reminderAt,
-      });
+      this.set("prefilledDatetime", this.model.reminderAt);
     }
   },
 

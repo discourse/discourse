@@ -7,7 +7,7 @@ import {
 import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
-} from "discourse/lib/timeShortcut";
+} from "discourse/lib/time-shortcut";
 import discourseComputed, {
   observes,
   on,

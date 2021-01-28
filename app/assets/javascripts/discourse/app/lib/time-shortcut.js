@@ -7,7 +7,7 @@ import {
   nextWeek,
   now,
   tomorrow,
-} from "discourse/lib/timeUtils";
+} from "discourse/lib/time-utils";
 import I18n from "I18n";
 
 export const TIME_SHORTCUT_TYPES = {

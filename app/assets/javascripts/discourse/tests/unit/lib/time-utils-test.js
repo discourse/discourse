@@ -10,7 +10,7 @@ import {
   nextWeek,
   startOfDay,
   tomorrow,
-} from "discourse/lib/timeUtils";
+} from "discourse/lib/time-utils";
 import { test } from "qunit";
 
 const timezone = "Australia/Brisbane";
