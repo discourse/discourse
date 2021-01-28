@@ -4,7 +4,7 @@ import componentTest, {
 import {
   discourseModule,
   fakeTime,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import KeyboardShortcutInitializer from "discourse/initializers/keyboard-shortcuts";
 import { getApplication } from "@ember/test-helpers";
@@ -42,7 +42,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   componentTest("show later this week option if today is < Thursday", {
-    template: template,
+    template,
 
     beforeEach() {
       mockMomentTz("2019-12-10T08:00:00", this.currentUser._timezone);
@@ -56,7 +56,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   componentTest(
     "does not show later this week option if today is >= Thursday",
     {
-      template: template,
+      template,
 
       beforeEach() {
         mockMomentTz("2019-12-13T08:00:00", this.currentUser._timezone);
@@ -72,7 +72,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   );
 
   componentTest("later today does not show if later today is tomorrow", {
-    template: template,
+    template,
 
     beforeEach() {
       mockMomentTz("2019-12-11T22:00:00", this.currentUser._timezone);
@@ -87,7 +87,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   componentTest("later today shows if it is after 5pm but before 6pm", {
-    template: template,
+    template,
 
     beforeEach() {
       mockMomentTz("2019-12-11T14:30:00", this.currentUser._timezone);
@@ -99,7 +99,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   componentTest("later today does not show if it is after 5pm", {
-    template: template,
+    template,
 
     beforeEach() {
       mockMomentTz("2019-12-11T17:00:00", this.currentUser._timezone);
@@ -114,7 +114,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   componentTest("later today does show if it is before the end of the day", {
-    template: template,
+    template,
 
     beforeEach() {
       mockMomentTz("2019-12-11T13:00:00", this.currentUser._timezone);
@@ -126,30 +126,27 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
   });
 
   componentTest("prefills the custom reminder type date and time", {
-    template: template,
+    template,
 
     beforeEach() {
       let name = "test";
       let reminderAt = "2020-05-15T09:45:00";
-      this.model = { id: 1, name: name, reminderAt: reminderAt };
+      this.model = { id: 1, name, reminderAt };
     },
 
     test(assert) {
-      assert.equal(queryAll("#bookmark-name")[0].value, "test");
-      assert.equal(
-        queryAll("#custom-date > .date-picker")[0].value,
-        "2020-05-15"
-      );
-      assert.equal(queryAll("#custom-time")[0].value, "09:45");
+      assert.equal(query("#bookmark-name").value, "test");
+      assert.equal(query("#custom-date > .date-picker").value, "2020-05-15");
+      assert.equal(query("#custom-time").value, "09:45");
     },
   });
 
   componentTest("defaults to 08:00 for custom time", {
-    template: template,
+    template,
 
     async test(assert) {
       await click("#tap_tile_custom");
-      assert.equal(queryAll("#custom-time")[0].value, "08:00");
+      assert.equal(query("#custom-time").value, "08:00");
     },
   });
 });

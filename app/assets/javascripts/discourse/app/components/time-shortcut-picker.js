@@ -3,7 +3,7 @@ import {
   laterToday,
   now,
   parseCustomDatetime,
-} from "discourse/lib/timeUtils";
+} from "discourse/lib/time-utils";
 import {
   TIME_SHORTCUT_TYPES,
   defaultShortcutOptions,
@@ -69,9 +69,9 @@ export default Component.extend({
   selectedDatetime: null,
   prefilledDatetime: null,
 
-  additionalOptionsToShow: [],
-  hiddenOptions: [],
-  customOptions: [],
+  additionalOptionsToShow: null,
+  hiddenOptions: null,
+  customOptions: null,
 
   lastCustomDate: null,
   lastCustomTime: null,
@@ -86,6 +86,9 @@ export default Component.extend({
     this.setProperties({
       customTime: this.defaultCustomReminderTime,
       userTimezone: this.currentUser.resolvedTimezone(this.currentUser),
+      additionalOptionsToShow: this.additionalOptionsToShow || [],
+      hiddenOptions: this.hiddenOptions || [],
+      customOptions: this.customOptions || [],
     });
 
     if (this.prefilledDatetime) {
@@ -189,9 +192,7 @@ export default Component.extend({
     }
 
     if (this.lastCustomDate && this.lastCustomTime) {
-      let lastCustom = options.find(
-        (opt) => opt.id === TIME_SHORTCUT_TYPES.LAST_CUSTOM
-      );
+      let lastCustom = options.findBy("id", TIME_SHORTCUT_TYPES.LAST_CUSTOM);
       lastCustom.time = this.parsedLastCustomDatetime;
       lastCustom.timeFormatted = this.parsedLastCustomDatetime.format(
         I18n.t("dates.long_no_year")
@@ -210,12 +211,7 @@ export default Component.extend({
 
   @action
   selectShortcut(type) {
-    if (
-      this.options
-        .filter((opt) => opt.hidden)
-        .map((opt) => opt.id)
-        .includes(type)
-    ) {
+    if (this.options.filterBy("hidden").mapBy("id").includes(type)) {
       return;
     }
 
@@ -235,7 +231,7 @@ export default Component.extend({
         localStorage.lastCustomDate = this.customDate;
       }
     } else {
-      dateTime = this.options.find((opt) => opt.id === type).time;
+      dateTime = this.options.findBy("id", type).time;
     }
 
     this.setProperties({

@@ -50,7 +50,7 @@ export function parseCustomDatetime(
   currentTimezone,
   parseTimezone = null
 ) {
-  let dateTime = isPresent(time) ? date + " " + time : date;
+  let dateTime = isPresent(time) ? `${date} ${time}` : date;
   parseTimezone = parseTimezone || currentTimezone;
 
   let parsed = moment.tz(dateTime, parseTimezone);

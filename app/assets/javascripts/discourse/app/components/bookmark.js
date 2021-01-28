@@ -6,7 +6,7 @@ import {
   parseCustomDatetime,
   startOfDay,
   tomorrow,
-} from "discourse/lib/timeUtils";
+} from "discourse/lib/time-utils";
 
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Component from "@ember/component";
@@ -80,7 +80,7 @@ export default Component.extend({
 
   _initializeExistingBookmarkData() {
     if (this.existingBookmarkHasReminder) {
-      this.setProperties({
+      this.set({
         prefilledDatetime: this.model.reminderAt,
       });
     }
@@ -126,7 +126,7 @@ export default Component.extend({
     let postEl = document.querySelector(
       `[data-post-id="${this.model.postId}"]`
     );
-    let localDateEl = null;
+    let localDateEl;
     if (postEl) {
       localDateEl = postEl.querySelector(".discourse-local-date");
     }
@@ -141,7 +141,7 @@ export default Component.extend({
   },
 
   _saveBookmark() {
-    let reminderAt = null;
+    let reminderAt;
     if (this.selectedReminderType) {
       reminderAt = this.selectedDatetime;
     }
@@ -178,7 +178,7 @@ export default Component.extend({
     };
 
     if (this.editingExistingBookmark) {
-      return ajax("/bookmarks/" + this.model.id, {
+      return ajax(`/bookmarks/${this.model.id}`, {
         type: "PUT",
         data,
       }).then(() => {
