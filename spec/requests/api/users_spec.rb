@@ -205,14 +205,41 @@ describe 'users' do
 
       parameter name: :period,
                 in: :query,
-                type: :string,
-                required: true,
-                description: 'enum: "daily", "weekly", "monthly", "quarterly", "yearly", "all"'
+                schema: {
+                  type: :string,
+                  enum: ['daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'all']
+                },
+                required: true
+      parameter name: :order,
+                in: :query,
+                schema: {
+                  type: :string,
+                  enum: [
+                    'likes_received',
+                    'likes_given',
+                    'topic_count',
+                    'post_count',
+                    'topics_entered',
+                    'posts_read',
+                    'days_visited'
+                  ]
+                },
+                required: true
+      parameter name: :asc,
+                in: :query,
+                 schema: {
+                   type: :string,
+                   enum: ['true']
+                 }
+      parameter name: :page, in: :query, type: :integer
 
       produces 'application/json'
       response '200', 'directory items response' do
 
         let(:period) { 'weekly' }
+        let(:order) { 'likes_received' }
+        let(:asc) { 'true' }
+        let(:page) { 0 }
 
         expected_response_schema = load_spec_schema('users_public_list_response')
         schema(expected_response_schema)
@@ -224,6 +251,151 @@ describe 'users' do
       end
     end
 
+  end
+
+  path '/admin/users/{id}.json' do
+
+    get 'Get a user by id' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+
+        expected_response_schema = load_spec_schema('admin_user_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+    delete 'Delete a user' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_delete_request')
+
+      parameter name: :id, in: :path, type: :integer, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+        let(:params) { {
+          'delete_posts' => true,
+          'block_email' => false,
+          'block_urls' => false,
+          'block_ip' => false
+        } }
+
+        expected_response_schema = load_spec_schema('user_delete_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+
+  end
+
+  path '/admin/users/list/{flag}.json' do
+
+    get 'Get a list of users' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :flag,
+                in: :path,
+                schema: {
+                  type: :string,
+                  enum: ['active', 'new', 'staff', 'suspended', 'blocked', 'suspect']
+                },
+                required: true
+      parameter name: :order,
+                in: :query,
+                schema: {
+                  type: :string,
+                  enum: [
+                    'created',
+                    'last_emailed',
+                    'seen',
+                    'username',
+                    'email',
+                    'trust_level',
+                    'days_visited',
+                    'posts_read',
+                    'topics_viewed',
+                    'posts',
+                    'read_time'
+                  ]
+                }
+      parameter name: :asc,
+                in: :query,
+                 schema: {
+                   type: :string,
+                   enum: ['true']
+                 }
+      parameter name: :page, in: :query, type: :integer
+      parameter name: :show_emails, in: :query, type: :boolean
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:flag) { 'active' }
+        let(:order) { 'created' }
+        let(:asc) { 'true' }
+        let(:page) { 0 }
+        let(:show_emails) { false }
+
+        expected_response_schema = load_spec_schema('admin_user_list_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/user_actions.json' do
+
+    get 'Get a list of user actions' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :offset, in: :query, type: :integer, required: true
+      parameter name: :username, in: :query, type: :string, required: true
+      parameter name: :filter, in: :query, type: :string, required: true
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:offset) { 0 }
+        let(:username) { Fabricate(:user).username }
+        let(:filter) { '4,5' }
+
+        expected_response_schema = load_spec_schema('user_actions_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
   end
 
 end

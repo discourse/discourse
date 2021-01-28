@@ -10,7 +10,13 @@ RSpec.shared_examples "a JSON endpoint" do |expected_response_status|
     unless valid # for debugging
       puts
       puts "RESPONSE: #{params}"
-      puts "VALIDATION DETAILS: #{schemer.validate(params).to_a[0]["details"]}"
+      validation_result = schemer.validate(params).to_a[0]
+      details = validation_result["details"]
+      if details
+        puts "VALIDATION DETAILS: #{details}"
+      else
+        puts "POSSIBLE ISSUE W/: #{validation_result['data_pointer']}"
+      end
     end
     expect(valid).to eq(true)
   end
