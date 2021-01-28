@@ -17,7 +17,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { action } from "@ember/object";
-import { and } from "@ember/object/computed";
+import { and, equal } from "@ember/object/computed";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // component is destroyed
@@ -151,11 +151,7 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed("selectedShortcut")
-  customDatetimeSelected(selectedShortcut) {
-    return selectedShortcut === TIME_SHORTCUT_TYPES.CUSTOM;
-  },
-
+  customDatetimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM),
   customDatetimeFilled: and("customDate", "customTime"),
 
   @observes("customDate", "customTime")

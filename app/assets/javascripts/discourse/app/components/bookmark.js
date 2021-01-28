@@ -36,6 +36,23 @@ const BOOKMARK_BINDINGS = {
 export default Component.extend({
   tagName: "",
 
+  errorMessage: null,
+  selectedReminderType: null,
+  _closeWithoutSaving: null,
+  _savingBookmarkManually: null,
+  _saving: null,
+  _deleting: null,
+  postDetectedLocalDate: null,
+  postDetectedLocalTime: null,
+  postDetectedLocalTimezone: null,
+  prefilledDatetime: null,
+  userTimezone: null,
+  showOptions: null,
+  model: null,
+
+  _onModalClose: null,
+  afterSave: null,
+
   @on("init")
   _setup() {
     this.setProperties({
