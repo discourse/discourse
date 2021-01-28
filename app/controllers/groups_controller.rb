@@ -614,7 +614,8 @@ class GroupsController < ApplicationController
             :name,
             :grant_trust_level,
             :automatic_membership_email_domains,
-            :publish_read_state
+            :publish_read_state,
+            :allow_unknown_sender_topic_replies
           ])
 
           custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
