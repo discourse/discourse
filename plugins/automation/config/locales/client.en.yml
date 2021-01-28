@@ -24,6 +24,8 @@ en:
             label: Delay (minutes)
         group:
           label: Group
+        text:
+          label: Text
       triggerables:
         user_added_to_group:
           metadata:
