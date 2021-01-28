@@ -320,17 +320,17 @@ class Upload < ActiveRecord::Base
     end
 
     secure_status_did_change = self.secure? != mark_secure
-    self.update(secure_params([mark_secure, reason], source))
+    self.update(secure_params(mark_secure, reason, source))
 
     Discourse.store.update_upload_ACL(self) if Discourse.store.external?
 
     secure_status_did_change
   end
 
-  def secure_params(secure_with_reason, source = "unknown")
+  def secure_params(secure, reason, source = "unknown")
     {
-      secure: secure_with_reason.first,
-      security_last_changed_reason: secure_with_reason.second + " | source: #{source}",
+      secure: secure,
+      security_last_changed_reason: reason + " | source: #{source}",
       security_last_changed_at: Time.zone.now
     }
   end

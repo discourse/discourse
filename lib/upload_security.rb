@@ -52,10 +52,7 @@ class UploadSecurity
       return [false, reason] if perform_check(check)
     end
     secure_context_checks.each do |check, reason|
-      if priority_check?(check)
-        return [perform_check(check), reason]
-      end
-
+      return [perform_check(check), reason] if priority_check?(check)
       return [true, reason] if perform_check(check)
     end
 
@@ -141,9 +138,11 @@ class UploadSecurity
     }
   end
 
+  # the access control check is important because that is the truest indicator
+  # of whether an upload should be secure or not, and thus should be returned
+  # immediately if there is an access control post
   def priority_check?(check)
-    return true if check == :access_control_post_has_secure_media && access_control_post
-    false
+    check == :access_control_post_has_secure_media && access_control_post
   end
 
   def perform_check(check)

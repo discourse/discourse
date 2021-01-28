@@ -132,12 +132,9 @@ class UploadCreator
       add_metadata!
 
       if SiteSetting.secure_media
-        @upload.assign_attributes(
-          @upload.secure_params(
-            UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason,
-            "upload creator"
-          )
-        )
+        secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
+        attrs = @upoad.secure_params(secure, reason, "upload creator")
+        @upload.assign_attributes(attrs)
       end
 
       return @upload unless @upload.save
