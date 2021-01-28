@@ -670,6 +670,7 @@ blockquote {
       .d-icon {
         order: 1;
         transition: color 0.25s;
+        color: var(--primary-med-or-secondary-med);
       }
       .discourse-no-touch & {
         &:hover {
