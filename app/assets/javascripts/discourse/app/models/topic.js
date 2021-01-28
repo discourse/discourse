@@ -1,4 +1,4 @@
-import { and, equal, not, notEmpty, or } from "@ember/object/computed";
+import { and, equal, notEmpty, or } from "@ember/object/computed";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import ActionSummary from "discourse/models/action-summary";
 import Category from "discourse/models/category";
@@ -211,7 +211,11 @@ const Topic = RestModel.extend({
     });
   },
 
-  invisible: not("visible"),
+  @discourseComputed("visible")
+  invisible(visible) {
+    return visible !== undefined ? !visible : undefined;
+  },
+
   deleted: notEmpty("deleted_at"),
 
   @discourseComputed("id")
