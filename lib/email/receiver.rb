@@ -742,7 +742,6 @@ module Email
       post_ids = []
 
       incoming_emails = IncomingEmail.where(message_id: message_ids)
-
       if !group.allow_unknown_sender_topic_replies
         incoming_emails = incoming_emails.addressed_to_user(user)
       end
