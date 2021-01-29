@@ -7,6 +7,8 @@ en:
       edit_automation:
         trigger_section:
           title: Trigger
+      destroy_automation:
+        confirm: Are you sure you want to delete this Automation?
       fields:
         user:
           label: User

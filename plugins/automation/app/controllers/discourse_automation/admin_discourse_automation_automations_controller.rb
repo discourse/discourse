@@ -43,6 +43,12 @@ module DiscourseAutomation
       render_serialized_automation(automation)
     end
 
+    def destroy
+      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation.destroy!
+      render json: success_json
+    end
+
     private
 
     def render_serialized_automation(automation)

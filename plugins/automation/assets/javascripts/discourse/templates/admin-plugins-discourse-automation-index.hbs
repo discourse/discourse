@@ -6,6 +6,7 @@
       <th>{{i18n "discourse_automation.models.automation.version.label"}}</th>
       <th>{{i18n "discourse_automation.models.automation.enabled.label"}}</th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,13 @@
           {{d-button
             icon="pencil-alt"
             action=(action "editAutomation" automation)
+          }}
+        </td>
+        <td>
+          {{d-button
+            icon="trash-alt"
+            class="btn-danger"
+            action=(action "destroyAutomation" automation)
           }}
         </td>
       </tr>

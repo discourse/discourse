@@ -59,6 +59,7 @@ after_initialize do
 
         get '/automations' => 'admin_discourse_automation_automations#index'
         get '/automations/:id' => 'admin_discourse_automation_automations#show'
+        delete '/automations/:id' => 'admin_discourse_automation_automations#destroy'
         put '/automations/:id' => 'admin_discourse_automation_automations#update'
         post '/automations' => 'admin_discourse_automation_automations#create'
       end

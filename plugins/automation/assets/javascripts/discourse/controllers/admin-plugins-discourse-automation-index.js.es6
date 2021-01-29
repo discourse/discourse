@@ -1,3 +1,6 @@
+import I18n from "I18n";
+import bootbox from "bootbox";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 
 export default Ember.Controller.extend({
@@ -8,4 +11,19 @@ export default Ember.Controller.extend({
       automation.id
     );
   },
+
+  @action
+  destroyAutomation(automation) {
+    bootbox.confirm(
+      I18n.t("discourse_automation.destroy_automation.confirm"),
+      result => {
+        if (result) {
+          automation
+            .destroyRecord()
+            .then(() => this.send("triggerRefresh"))
+            .catch(popupAjaxError);
+        }
+      }
+    );
+  }
 });
