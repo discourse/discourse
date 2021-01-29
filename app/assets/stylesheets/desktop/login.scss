@@ -12,7 +12,6 @@
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
-    padding: 0 24px;
     order: 2;
 
     button {
@@ -63,7 +62,6 @@
   .create-account {
     #login-buttons:not(.hidden) {
       justify-content: flex-start;
-      padding-top: 2.7em;
       + .login-form {
         border-right: 1px solid var(--primary-low); // Only show border when login-form is present
       }
@@ -141,6 +139,26 @@
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
     }
+    .modal-body::-webkit-scrollbar {
+      width: 15px;
+      background: var(--tertiary);
+    }
+    
+    .modal-body::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 14px 14px transparent;
+      border: solid 4px transparent;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb),0.5);
+      border: solid 4px transparent;
+      border-radius: 14px;
+    }
+    
+    /* set button(top and bottom of the scrollbar) */
+    .modal-body::-webkit-scrollbar-button {
+      display: none;
+    }
   }
   .modal-inner-container {
     position: relative;
@@ -152,50 +170,49 @@
     padding: 0;
     position: absolute;
     top: 1em;
-    right: 1em;
+    right: 2em;
     z-index: 999;
   }
-  .modal-body {
-    padding: 1em 0;
-    &:after,
-    &:before {
-      content: "";
-      display: block;
-      position: absolute;
-      width: calc(100% - 1em);
-      pointer-events: none;
-      z-index: 100;
-    }
-    &:after {
-      bottom: 93px;
-      height: 35px;
-      @media screen and (max-height: 650px) {
-        height: 45px;
-      }
-      background-image: linear-gradient(
-        to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 0.9)
-      );
-    }
-    &:before {
-      top: 80px;
-      height: 25px;
-      background-image: linear-gradient(
-        to top,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
-
+  .create-account-left {
+    flex-basis: 65%;
+    flex-grow: 1;
+    position: relative;
   }
-
+  .create-account-right {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    padding: 6em 1em;
+    flex-basis: 35%;
+    flex-grow: 1;
+    background: var(--tertiary);
+    h3 {
+      color: var(--secondary);
+      text-align: center;
+    }
+    #login-buttons {
+      button:first-of-type {
+        margin-top: 0;
+      }
+      button {
+        margin-bottom: 1em;
+      }
+    }
+  }
+  .modal-body {
+    display: flex;
+    padding: 0;
+  }
   .login-welcome-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: var(--secondary);
+    z-index: 100;
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
-    padding: 0 1em;
-    margin: 1em 0 0 0;
+    padding: 1em 1em 1em 1em;
     h1 {
       font-size: 2.75em;
       margin-bottom: 0;
@@ -214,12 +231,41 @@
   }
 
   .login-form {
+    form {
+      padding: 1em;
+    }
     position: relative;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    width: calc(100% - 2em);
-    padding: 1em;
+    width: 100%;
+    // &:after,
+    // &:before {
+    //   content: "";
+    //   display: block;
+    //   position: sticky;
+    //   width: 100%;
+    //   pointer-events: none;
+    //   z-index: 100;
+    // }
+    // &:after {
+    //   bottom: 0;
+    //   height: 1em;
+    //   background-image: linear-gradient(
+    //     to bottom,
+    //     rgba(var(--secondary-rgb), 0),
+    //     rgba(var(--secondary-rgb), 0.9)
+    //   );
+    // }
+    // &:before {
+    //   top: 0;
+    //   height: 1em;
+    //   background-image: linear-gradient(
+    //     to top,
+    //     rgba(var(--secondary-rgb), 0),
+    //     rgba(var(--secondary-rgb), 1)
+    //   );
+    // }
     
     .input-group {
       width: 100%;

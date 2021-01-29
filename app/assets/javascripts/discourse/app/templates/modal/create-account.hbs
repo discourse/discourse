@@ -1,10 +1,6 @@
 {{#create-account email=accountEmail disabled=submitDisabled action=(action "createAccount")}}
   {{#unless complete}}
     {{plugin-outlet name="create-account-before-modal-body"}}
-    <div class="login-welcome-header">
-      <h1>Welcome!</h1> <img src="/images/emoji/twitter/wave/{{skinToneId}}.png" alt="" class="waving-hand">
-      <p>{{i18n "create_account.title"}}</p>
-    </div>
     {{#d-modal-body class=modalBodyClasses}}
 
       {{#if skipConfirmation}}
@@ -13,6 +9,10 @@
 
       {{#if showCreateForm}}
         <div class="create-account-left">
+          <div class="login-welcome-header">
+            <h1>Welcome!</h1> <img src="/images/emoji/twitter/wave/{{skinToneId}}.png" alt="" class="waving-hand">
+            <p>{{i18n "create_account.title"}}</p>
+          </div>
           <div class="login-form">
             <form>
               <div class="input-group">
@@ -141,6 +141,7 @@
       {{/if}}
       {{#unless hasAuthOptions}}
         <div class="create-account-right">
+          <h3>Or sign in with...</h3>
           {{login-buttons externalLogin=(action "externalLogin")}}
         </div>
       {{/unless}}

@@ -159,10 +159,10 @@
   background: var(--secondary);
   border: 1px solid transparent;
   &:hover {
-    border: 1px solid rgba(var(--primary-rgb),.25);
+    // border: 1px solid rgba(var(--primary-rgb),.25);
     color: var(--primary) !important;
     background: var(--secondary) !important;
-    box-shadow: 0 0 0 2px var(--tertiary-medium);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
   }
   &[href] {
     color: var(--secondary);
