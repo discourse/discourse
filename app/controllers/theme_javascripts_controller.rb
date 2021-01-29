@@ -11,7 +11,7 @@ class ThemeJavascriptsController < ApplicationController
     only: [:show]
   )
 
-  before_action :is_asset_path, :no_cookies, only: [:show]
+  before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show]
 
   def show
     raise Discourse::NotFound unless last_modified.present?
