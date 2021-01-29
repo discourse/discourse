@@ -10,7 +10,7 @@ class UploadsController < ApplicationController
 
   before_action :is_asset_path, only: [:show, :show_short, :show_secure]
 
-  cdn_action only: [:show, :show_short, :show_secure]
+  apply_cdn_headers only: [:show, :show_short, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 

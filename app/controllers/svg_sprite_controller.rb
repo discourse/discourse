@@ -3,7 +3,7 @@
 class SvgSpriteController < ApplicationController
   skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :search, :svg_icon]
 
-  cdn_action only: [:show, :search, :svg_icon]
+  apply_cdn_headers only: [:show, :search, :svg_icon]
 
   requires_login except: [:show, :svg_icon]
 

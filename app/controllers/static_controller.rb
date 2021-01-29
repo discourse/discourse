@@ -7,7 +7,7 @@ class StaticController < ApplicationController
   skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
   skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
-  cdn_action only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  apply_cdn_headers only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
   MODAL_PAGES = ['password_reset', 'signup']
