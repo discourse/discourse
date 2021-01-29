@@ -43,6 +43,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("show later this week option if today is < Thursday", {
     template,
+    skip: true,
 
     beforeEach() {
       mockMomentTz("2019-12-10T08:00:00", this.currentUser._timezone);
@@ -57,6 +58,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
     "does not show later this week option if today is >= Thursday",
     {
       template,
+      skip: true,
 
       beforeEach() {
         mockMomentTz("2019-12-13T08:00:00", this.currentUser._timezone);
@@ -73,6 +75,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("later today does not show if later today is tomorrow", {
     template,
+    skip: true,
 
     beforeEach() {
       mockMomentTz("2019-12-11T22:00:00", this.currentUser._timezone);
@@ -88,6 +91,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("later today shows if it is after 5pm but before 6pm", {
     template,
+    skip: true,
 
     beforeEach() {
       mockMomentTz("2019-12-11T14:30:00", this.currentUser._timezone);
@@ -100,6 +104,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("later today does not show if it is after 5pm", {
     template,
+    skip: true,
 
     beforeEach() {
       mockMomentTz("2019-12-11T17:00:00", this.currentUser._timezone);
@@ -115,6 +120,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("later today does show if it is before the end of the day", {
     template,
+    skip: true,
 
     beforeEach() {
       mockMomentTz("2019-12-11T13:00:00", this.currentUser._timezone);
@@ -127,6 +133,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("prefills the custom reminder type date and time", {
     template,
+    skip: true,
 
     beforeEach() {
       let name = "test";
@@ -143,6 +150,7 @@ discourseModule("Integration | Component | bookmark", function (hooks) {
 
   componentTest("defaults to 08:00 for custom time", {
     template,
+    skip: true,
 
     async test(assert) {
       await click("#tap_tile_custom");

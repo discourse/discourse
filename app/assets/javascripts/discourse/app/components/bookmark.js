@@ -50,7 +50,6 @@ export default Component.extend({
   showOptions: null,
   model: null,
 
-  _onModalClose: null,
   afterSave: null,
 
   @on("init")
