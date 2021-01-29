@@ -20,14 +20,17 @@ export default Ember.Controller.extend({
       .save(this.form.getProperties("name", "script"))
       .then(() => {
         this._resetForm();
-        this.transitionToRoute("adminPlugins.discourse-automation.index");
+        this.transitionToRoute(
+          "adminPlugins.discourse-automation.edit",
+          automation.id
+        );
       })
-      .catch((e) => {
+      .catch(e => {
         this.set("error", extractError(e));
       });
   },
 
   _resetForm() {
     this.set("form", EmberObject.create({ name: null, script: null }));
-  },
+  }
 });
