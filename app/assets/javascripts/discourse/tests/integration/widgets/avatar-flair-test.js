@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | avatar-flair",
@@ -12,7 +13,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("avatar flair with an icon", {
-      template: '{{mount-widget widget="avatar-flair" args=args}}',
+      template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
           primary_group_flair_url: "fa-bars",
@@ -32,7 +33,7 @@ discourseModule(
     });
 
     componentTest("avatar flair with an image", {
-      template: '{{mount-widget widget="avatar-flair" args=args}}',
+      template: hbs`{{mount-widget widget="avatar-flair" args=args}}`,
       beforeEach() {
         this.set("args", {
           primary_group_flair_url: "/images/avatar.png",

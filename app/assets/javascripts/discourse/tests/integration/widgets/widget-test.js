@@ -9,7 +9,8 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { click } from "@ember/test-helpers";
 import { createWidget } from "discourse/widgets/widget";
-import hbs from "discourse/widgets/hbs-compiler";
+import hbs from "htmlbars-inline-precompile";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import { next } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
@@ -17,12 +18,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("widget attributes are passed in via args", {
-    template: `{{mount-widget widget="hello-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hello-test" args=args}}`,
 
     beforeEach() {
       createWidget("hello-test", {
         tagName: "div.test",
-        template: hbs`Hello {{attrs.name}}`,
+        template: widgetHbs`Hello {{attrs.name}}`,
       });
 
       this.set("args", { name: "Robin" });
@@ -34,11 +35,11 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("hbs template - no tagName", {
-    template: `{{mount-widget widget="hbs-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-test", {
-        template: hbs`<div class='test'>Hello {{attrs.name}}</div>`,
+        template: widgetHbs`<div class='test'>Hello {{attrs.name}}</div>`,
       });
 
       this.set("args", { name: "Robin" });
@@ -50,12 +51,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("hbs template - with tagName", {
-    template: `{{mount-widget widget="hbs-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-test", {
         tagName: "div.test",
-        template: hbs`Hello {{attrs.name}}`,
+        template: widgetHbs`Hello {{attrs.name}}`,
       });
 
       this.set("args", { name: "Robin" });
@@ -67,11 +68,11 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("hbs template - with data attributes", {
-    template: `{{mount-widget widget="hbs-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-test", {
-        template: hbs`<div class='mydiv' data-my-test='hello world'></div>`,
+        template: widgetHbs`<div class='mydiv' data-my-test='hello world'></div>`,
       });
     },
 
@@ -81,7 +82,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("buildClasses", {
-    template: `{{mount-widget widget="classname-test" args=args}}`,
+    template: hbs`{{mount-widget widget="classname-test" args=args}}`,
 
     beforeEach() {
       createWidget("classname-test", {
@@ -104,7 +105,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("buildAttributes", {
-    template: `{{mount-widget widget="attributes-test" args=args}}`,
+    template: hbs`{{mount-widget widget="attributes-test" args=args}}`,
 
     beforeEach() {
       createWidget("attributes-test", {
@@ -125,7 +126,7 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("buildId", {
-    template: `{{mount-widget widget="id-test" args=args}}`,
+    template: hbs`{{mount-widget widget="id-test" args=args}}`,
 
     beforeEach() {
       createWidget("id-test", {
@@ -143,13 +144,13 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("widget state", {
-    template: `{{mount-widget widget="state-test"}}`,
+    template: hbs`{{mount-widget widget="state-test"}}`,
 
     beforeEach() {
       createWidget("state-test", {
         tagName: "button.test",
         buildKey: () => `button-test`,
-        template: hbs`{{state.clicks}} clicks`,
+        template: widgetHbs`{{state.clicks}} clicks`,
 
         defaultState() {
           return { clicks: 0 };
@@ -165,19 +166,19 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
       assert.ok(queryAll("button.test").length, "it renders the button");
       assert.equal(queryAll("button.test").text(), "0 clicks");
 
-      await click(queryAll("button"));
+      await click(queryAll("button")[0]);
       assert.equal(queryAll("button.test").text(), "1 clicks");
     },
   });
 
   componentTest("widget update with promise", {
-    template: `{{mount-widget widget="promise-test"}}`,
+    template: hbs`{{mount-widget widget="promise-test"}}`,
 
     beforeEach() {
       createWidget("promise-test", {
         tagName: "button.test",
         buildKey: () => "promise-test",
-        template: hbs`
+        template: widgetHbs`
           {{#if state.name}}
             {{state.name}}
           {{else}}
@@ -199,20 +200,20 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     async test(assert) {
       assert.equal(queryAll("button.test").text().trim(), "No name");
 
-      await click(queryAll("button"));
+      await click(queryAll("button")[0]);
       assert.equal(queryAll("button.test").text().trim(), "Robin");
     },
   });
 
   componentTest("widget attaching", {
-    template: `{{mount-widget widget="attach-test"}}`,
+    template: hbs`{{mount-widget widget="attach-test"}}`,
 
     beforeEach() {
       createWidget("test-embedded", { tagName: "div.embedded" });
 
       createWidget("attach-test", {
         tagName: "div.container",
-        template: hbs`{{attach widget="test-embedded" attrs=attrs}}`,
+        template: widgetHbs`{{attach widget="test-embedded" attrs=attrs}}`,
       });
     },
 
@@ -223,14 +224,14 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("magic attaching by name", {
-    template: `{{mount-widget widget="attach-test"}}`,
+    template: hbs`{{mount-widget widget="attach-test"}}`,
 
     beforeEach() {
       createWidget("test-embedded", { tagName: "div.embedded" });
 
       createWidget("attach-test", {
         tagName: "div.container",
-        template: hbs`{{test-embedded attrs=attrs}}`,
+        template: widgetHbs`{{test-embedded attrs=attrs}}`,
       });
     },
 
@@ -241,17 +242,17 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("custom attrs to a magic attached widget", {
-    template: `{{mount-widget widget="attach-test"}}`,
+    template: hbs`{{mount-widget widget="attach-test"}}`,
 
     beforeEach() {
       createWidget("testing", {
         tagName: "span.value",
-        template: hbs`{{attrs.value}}`,
+        template: widgetHbs`{{attrs.value}}`,
       });
 
       createWidget("attach-test", {
         tagName: "div.container",
-        template: hbs`{{testing value=(concat "hello" " " "world")}}`,
+        template: widgetHbs`{{testing value=(concat "hello" " " "world")}}`,
       });
     },
 
@@ -262,11 +263,11 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("handlebars d-icon", {
-    template: `{{mount-widget widget="hbs-icon-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-icon-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-icon-test", {
-        template: hbs`{{d-icon "arrow-down"}}`,
+        template: widgetHbs`{{d-icon "arrow-down"}}`,
       });
     },
 
@@ -278,11 +279,11 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   componentTest("handlebars i18n", {
     _translations: I18n.translations,
 
-    template: `{{mount-widget widget="hbs-i18n-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-i18n-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-i18n-test", {
-        template: hbs`
+        template: widgetHbs`
           <span class='string'>{{i18n "hbs_test0"}}</span>
           <span class='var'>{{i18n attrs.key}}</span>
           <a href title={{i18n "hbs_test0"}}>test</a>
@@ -312,12 +313,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("handlebars #each", {
-    template: `{{mount-widget widget="hbs-each-test" args=args}}`,
+    template: hbs`{{mount-widget widget="hbs-each-test" args=args}}`,
 
     beforeEach() {
       createWidget("hbs-each-test", {
         tagName: "ul",
-        template: hbs`
+        template: widgetHbs`
           {{#each attrs.items as |item|}}
             <li>{{item}}</li>
           {{/each}}
@@ -336,12 +337,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("widget decorating", {
-    template: `{{mount-widget widget="decorate-test"}}`,
+    template: hbs`{{mount-widget widget="decorate-test"}}`,
 
     beforeEach() {
       createWidget("decorate-test", {
         tagName: "div.decorate",
-        template: hbs`main content`,
+        template: widgetHbs`main content`,
       });
 
       withPluginApi("0.1", (api) => {
@@ -363,12 +364,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("widget settings", {
-    template: `{{mount-widget widget="settings-test"}}`,
+    template: hbs`{{mount-widget widget="settings-test"}}`,
 
     beforeEach() {
       createWidget("settings-test", {
         tagName: "div.settings",
-        template: hbs`age is {{settings.age}}`,
+        template: widgetHbs`age is {{settings.age}}`,
         settings: { age: 36 },
       });
     },
@@ -379,12 +380,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("override settings", {
-    template: `{{mount-widget widget="ov-settings-test"}}`,
+    template: hbs`{{mount-widget widget="ov-settings-test"}}`,
 
     beforeEach() {
       createWidget("ov-settings-test", {
         tagName: "div.settings",
-        template: hbs`age is {{settings.age}}`,
+        template: widgetHbs`age is {{settings.age}}`,
         settings: { age: 36 },
       });
 
@@ -399,12 +400,12 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
   });
 
   componentTest("get accessor", {
-    template: `{{mount-widget widget="get-accessor-test"}}`,
+    template: hbs`{{mount-widget widget="get-accessor-test"}}`,
 
     beforeEach() {
       createWidget("get-accessor-test", {
         tagName: "div.test",
-        template: hbs`Hello {{transformed.name}}`,
+        template: widgetHbs`Hello {{transformed.name}}`,
         transform() {
           return {
             name: this.get("currentUser.username"),

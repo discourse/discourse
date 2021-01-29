@@ -1,7 +1,8 @@
+import { TestModuleForComponent, render } from "@ember/test-helpers";
 import EmberObject from "@ember/object";
+import { setupRenderingTest as EmberSetupRenderingTest } from "ember-qunit";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import { TestModuleForComponent } from "@ember/test-helpers";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { autoLoadModules } from "discourse/initializers/auto-load-modules";
@@ -9,7 +10,13 @@ import createStore from "discourse/tests/helpers/create-store";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 import { test } from "qunit";
 
+const LEGACY_ENV = !EmberSetupRenderingTest;
+
 export function setupRenderingTest(hooks) {
+  if (!LEGACY_ENV) {
+    return EmberSetupRenderingTest.apply(this, arguments);
+  }
+
   let testModule;
 
   hooks.before(function () {
@@ -40,57 +47,84 @@ export default function (name, opts) {
     return;
   }
 
-  test(name, function (assert) {
+  if (typeof opts.template === "string") {
+    let testName = QUnit.config.currentModule.name + " " + name;
+    // eslint-disable-next-line
+    console.warn(
+      `${testName} skipped; template must be compiled and not a string`
+    );
+    return;
+  }
+
+  test(name, async function (assert) {
     this.site = Site.current();
     this.session = Session.current();
 
-    this.registry.register("site-settings:main", currentSettings(), {
-      instantiate: false,
-    });
-    this.registry.register("capabilities:main", EmberObject);
-    this.registry.register("site:main", this.site, { instantiate: false });
-    this.registry.register("session:main", this.session, {
-      instantiate: false,
-    });
-    this.registry.injection("component", "siteSettings", "site-settings:main");
-    this.registry.injection("component", "appEvents", "service:app-events");
-    this.registry.injection("component", "capabilities", "capabilities:main");
-    this.registry.injection("component", "site", "site:main");
-    this.registry.injection("component", "session", "session:main");
+    let owner = LEGACY_ENV ? this.registry : this.owner;
+    let store;
+    if (LEGACY_ENV) {
+      this.registry.register("site-settings:main", currentSettings(), {
+        instantiate: false,
+      });
+      this.registry.register("capabilities:main", EmberObject);
+      this.registry.register("site:main", this.site, { instantiate: false });
+      this.registry.register("session:main", this.session, {
+        instantiate: false,
+      });
+      this.registry.injection(
+        "component",
+        "siteSettings",
+        "site-settings:main"
+      );
+      this.registry.injection("component", "appEvents", "service:app-events");
+      this.registry.injection("component", "capabilities", "capabilities:main");
+      this.registry.injection("component", "site", "site:main");
+      this.registry.injection("component", "session", "session:main");
 
-    this.siteSettings = currentSettings();
+      this.siteSettings = currentSettings();
+      store = createStore();
+      this.registry.register("service:store", store, { instantiate: false });
+    } else {
+      this.container = owner;
+      store = this.container.lookup("service:store");
+    }
     autoLoadModules(this.container, this.registry);
 
-    const store = createStore();
     if (!opts.anonymous) {
       const currentUser = User.create({ username: "eviltrout" });
       this.currentUser = currentUser;
-      this.registry.register("current-user:main", this.currentUser, {
+
+      owner.unregister("current-user:main");
+      owner.register("current-user:main", currentUser, {
         instantiate: false,
       });
-      this.registry.injection("component", "currentUser", "current-user:main");
-      this.registry.register(
+      if (LEGACY_ENV) {
+        owner.injection("component", "currentUser", "current-user:main");
+      } else {
+        owner.inject("component", "currentUser", "current-user:main");
+      }
+      owner.unregister("topic-tracking-state:main");
+      owner.register(
         "topic-tracking-state:main",
         TopicTrackingState.create({ currentUser }),
         { instantiate: false }
       );
     }
 
-    this.registry.register("service:store", store, { instantiate: false });
-
     if (opts.beforeEach) {
       opts.beforeEach.call(this, store);
     }
 
+    $.fn.autocomplete = function () {};
     andThen(() => {
-      return this.render(opts.template);
+      return LEGACY_ENV ? this.render(opts.template) : render(opts.template);
     });
 
     andThen(() => {
       return opts.test.call(this, assert);
-    }).finally(() => {
+    }).finally(async () => {
       if (opts.afterEach) {
-        andThen(() => {
+        await andThen(() => {
           return opts.afterEach.call(opts);
         });
       }

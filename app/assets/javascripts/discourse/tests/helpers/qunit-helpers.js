@@ -9,8 +9,10 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { getApplication, getContext } from "@ember/test-helpers";
 import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
 import { later, run } from "@ember/runloop";
+import { moduleFor, setupApplicationTest } from "ember-qunit";
 import HeaderComponent from "discourse/components/site-header";
 import { Promise } from "rsvp";
 import Site from "discourse/models/site";
@@ -20,11 +22,9 @@ import { clearHTMLCache } from "discourse/helpers/custom-html";
 import createStore from "discourse/tests/helpers/create-store";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/models/store";
-import { getApplication } from "@ember/test-helpers";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { isEmpty } from "@ember/utils";
 import { mapRoutes } from "discourse/mapping-router";
-import { moduleFor } from "ember-qunit";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { resetDecorators } from "discourse/widgets/widget";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
@@ -37,6 +37,8 @@ import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+
+const LEGACY_ENV = !setupApplicationTest;
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -111,6 +113,18 @@ export function discourseModule(name, options) {
         this.owner = this.container;
         this.siteSettings = currentSettings();
       });
+
+      this.getController = function (controllerName, properties) {
+        let controller = this.container.lookup(`controller:${controllerName}`);
+        if (!LEGACY_ENV) {
+          controller.application = {};
+        }
+        controller.siteSettings = this.siteSettings;
+        if (properties) {
+          controller.setProperties(properties);
+        }
+        return controller;
+      };
 
       this.moduleName = name;
 
@@ -201,16 +215,22 @@ export function acceptance(name, optionsOrCallback) {
         resetSite(currentSettings(), siteChanges);
       }
 
-      getApplication().__registeredObjects__ = false;
-      getApplication().reset();
+      if (LEGACY_ENV) {
+        getApplication().__registeredObjects__ = false;
+        getApplication().reset();
+      }
       this.container = getOwner(this);
-      if (loggedIn) {
+      if (LEGACY_ENV && loggedIn) {
         updateCurrentUser({
           appEvents: this.container.lookup("service:app-events"),
         });
       }
+
       setURLContainer(this.container);
       setDefaultOwner(this.container);
+      if (!this.owner) {
+        this.owner = this.container;
+      }
 
       if (options.beforeEach) {
         options.beforeEach.call(this);
@@ -247,8 +267,11 @@ export function acceptance(name, optionsOrCallback) {
           initializer.teardown(this.container);
         }
       });
-      app.__registeredObjects__ = false;
-      app.reset();
+
+      if (LEGACY_ENV) {
+        app.__registeredObjects__ = false;
+        app.reset();
+      }
 
       // We do this after reset so that the willClearRender will have already fired
       resetWidgetCleanCallbacks();
@@ -290,10 +313,23 @@ export function acceptance(name, optionsOrCallback) {
   if (callback) {
     // New, preferred way
     module(name, function (hooks) {
+      needs.hooks = hooks;
       hooks.beforeEach(setup.beforeEach);
       hooks.afterEach(setup.afterEach);
-      needs.hooks = hooks;
       callback(needs);
+
+      if (!LEGACY_ENV && getContext) {
+        setupApplicationTest(hooks);
+
+        hooks.beforeEach(function () {
+          // This hack seems necessary to allow `DiscourseURL` to use the testing router
+          let ctx = getContext();
+          this.container.registry.unregister("router:main");
+          this.container.registry.register("router:main", ctx.owner.router, {
+            instantiate: false,
+          });
+        });
+      }
     });
   } else {
     // Old way
@@ -371,8 +407,9 @@ export async function selectDate(selector, date) {
   });
 }
 
-export function queryAll() {
-  return window.find(...arguments);
+export function queryAll(selector, context) {
+  context = context || "#ember-testing";
+  return $(selector, context);
 }
 
 export function query() {

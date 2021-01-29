@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";

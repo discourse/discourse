@@ -6,13 +6,14 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("adding a value", {
-    template: "{{value-list values=values}}",
+    template: hbs`{{value-list values=values}}`,
 
     skip: true,
 
@@ -39,7 +40,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
   });
 
   componentTest("removing a value", {
-    template: "{{value-list values=values}}",
+    template: hbs`{{value-list values=values}}`,
 
     beforeEach() {
       this.set("values", "vinkas\nosama");
@@ -66,7 +67,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
   });
 
   componentTest("selecting a value", {
-    template: "{{value-list values=values choices=choices}}",
+    template: hbs`{{value-list values=values choices=choices}}`,
 
     beforeEach() {
       this.setProperties({
@@ -93,7 +94,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
   });
 
   componentTest("array support", {
-    template: "{{value-list values=values inputType='array'}}",
+    template: hbs`{{value-list values=values inputType='array'}}`,
 
     beforeEach() {
       this.set("values", ["vinkas", "osama"]);
@@ -120,7 +121,7 @@ discourseModule("Integration | Component | value-list", function (hooks) {
   });
 
   componentTest("delimiter support", {
-    template: "{{value-list values=values inputDelimiter='|'}}",
+    template: hbs`{{value-list values=values inputDelimiter='|'}}`,
 
     beforeEach() {
       this.set("values", "vinkas|osama");

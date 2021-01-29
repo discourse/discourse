@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | small-user-list",
@@ -12,7 +13,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("renders avatars and support for unknown", {
-      template: '{{mount-widget widget="small-user-list" args=args}}',
+      template: hbs`{{mount-widget widget="small-user-list" args=args}}`,
       beforeEach() {
         this.set("args", {
           users: [

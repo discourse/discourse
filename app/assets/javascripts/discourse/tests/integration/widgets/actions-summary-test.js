@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | Widget | actions-summary",
@@ -12,7 +13,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("post deleted", {
-      template: '{{mount-widget widget="actions-summary" args=args}}',
+      template: hbs`{{mount-widget widget="actions-summary" args=args}}`,
       beforeEach() {
         this.set("args", {
           deleted_at: "2016-01-01",

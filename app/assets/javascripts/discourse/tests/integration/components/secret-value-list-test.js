@@ -7,6 +7,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | secret-value-list",
@@ -14,7 +15,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("adding a value", {
-      template: "{{secret-value-list values=values}}",
+      template: hbs`{{secret-value-list values=values}}`,
 
       async test(assert) {
         this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");
@@ -54,7 +55,7 @@ discourseModule(
     });
 
     componentTest("adding an invalid value", {
-      template: "{{secret-value-list values=values}}",
+      template: hbs`{{secret-value-list values=values}}`,
 
       async test(assert) {
         await fillIn(".new-value-input.key", "someString");
@@ -83,7 +84,7 @@ discourseModule(
     });
 
     componentTest("removing a value", {
-      template: "{{secret-value-list values=values}}",
+      template: hbs`{{secret-value-list values=values}}`,
 
       async test(assert) {
         this.set("values", "firstKey|FirstValue\nsecondKey|secondValue");

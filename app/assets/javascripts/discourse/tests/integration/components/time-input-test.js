@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function setTime(time) {
@@ -16,7 +17,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
   });
 
   componentTest("default", {
-    template: `{{time-input hours=hours minutes=minutes}}`,
+    template: hbs`{{time-input hours=hours minutes=minutes}}`,
 
     beforeEach() {
       this.setProperties({ hours: "14", minutes: "58" });
@@ -28,7 +29,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
   });
 
   componentTest("prevents mutations", {
-    template: `{{time-input hours=hours minutes=minutes}}`,
+    template: hbs`{{time-input hours=hours minutes=minutes}}`,
 
     beforeEach() {
       this.setProperties({ hours: "14", minutes: "58" });
@@ -42,7 +43,7 @@ discourseModule("Integration | Component | time-input", function (hooks) {
   });
 
   componentTest("allows mutations through actions", {
-    template: `{{time-input hours=hours minutes=minutes onChange=onChange}}`,
+    template: hbs`{{time-input hours=hours minutes=minutes onChange=onChange}}`,
 
     beforeEach() {
       this.setProperties({ hours: "14", minutes: "58" });
