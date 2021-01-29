@@ -755,6 +755,17 @@ RSpec.describe ApplicationController do
       end
     end
 
+    context "cdn requests" do
+      before do
+        GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
+      end
+
+      it "should block the dynamic routes" do
+        get "/"
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "set_locale_from_accept_language_header enabled" do
       context "accept-language header differs from default locale" do
         before do
