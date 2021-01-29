@@ -194,13 +194,12 @@ export default Component.extend(LoadMore, {
   keyDown(e) {
     if (e.keyCode === 13 || e.keyCode === 32) {
       // enter or space
-      let self = this;
 
       let onKeyDown = (sel, callback) => {
         let target = $(e.target).closest(sel);
 
         if (target.length === 1) {
-          callback.apply(self, [target]);
+          callback.apply(this, [target]);
         }
       };
 
