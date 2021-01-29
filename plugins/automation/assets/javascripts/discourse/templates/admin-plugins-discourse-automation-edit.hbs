@@ -17,23 +17,6 @@
           }}
         </div>
       </div>
-
-      <div class="control-group">
-        <label class="control-label">
-          {{i18n "discourse_automation.models.automation.script.label"}}
-        </label>
-
-        <div class="controls">
-          {{dropdown-select-box
-            value=automation.script.id
-            content=model.scriptables.content
-            class="scripts-list"
-            onChange=(action (mut automation.script.id))
-            options=(hash filterable=true)
-          }}
-        </div>
-      </div>
-
       <div class="alert alert-info script-doc">{{automation.script.doc}}</div>
     </section>
 
