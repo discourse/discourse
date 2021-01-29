@@ -104,7 +104,7 @@ after_initialize do
   end
 
   on(:post_edited) do |post|
-    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITEDs
+    name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
 
     DiscourseAutomation::Trigger
       .where(name: name)
