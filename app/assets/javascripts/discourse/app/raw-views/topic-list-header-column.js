@@ -45,4 +45,31 @@ export default EmberObject.extend({
 
     return name.join(" ");
   },
+
+  @discourseComputed
+  ariaPressed() {
+    const aria = [];
+
+    if (this.sortable) {
+      if (this.isSorting) {
+        aria.push(true);
+      } else {
+        aria.push(false);
+      }
+    }
+
+    return aria;
+  },
+
+  @discourseComputed
+  ariaSort() {
+    const sort = [];
+    const asc = this.parent.ascending ? "ascending" : "descending";
+
+    if (this.isSorting) {
+      sort.push(asc);
+    }
+
+    return sort;
+  },
 });

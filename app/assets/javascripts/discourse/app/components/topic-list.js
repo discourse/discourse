@@ -190,4 +190,23 @@ export default Component.extend(LoadMore, {
       this.rerender();
     });
   },
+
+  keyDown(e) {
+    if (e.keyCode === 13 || e.keyCode === 32) {
+      // enter or space
+      let self = this;
+      let onKeyDown = function (sel, callback) {
+        let target = $(e.target).closest(sel);
+
+        if (target.length === 1) {
+          callback.apply(self, [target]);
+        }
+      };
+
+      onKeyDown("th.sortable", function (e2) {
+        this.changeSort(e2.data("sort-order"));
+        this.rerender();
+      });
+    }
+  },
 });
