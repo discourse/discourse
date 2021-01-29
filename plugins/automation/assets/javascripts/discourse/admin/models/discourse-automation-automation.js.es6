@@ -19,7 +19,6 @@ const Automation = RestModel.extend({
 
   createProperties() {
     return this.getProperties(ATTRIBUTES);
-  },
   }
 });
 
