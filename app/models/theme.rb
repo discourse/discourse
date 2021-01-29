@@ -598,7 +598,7 @@ class Theme < ActiveRecord::Base
       if field.type_id == ThemeField.types[:theme_upload_var]
         if upload = field.upload
           url = upload_cdn_path(upload.url)
-          contents << "$#{field.name}: unquote(\"#{url}\");\n"
+          contents << "$#{field.name}: unquote(\"#{url}\");"
         end
       else
         contents << to_scss_variable(field.name, field.value)
@@ -617,7 +617,7 @@ class Theme < ActiveRecord::Base
 
   def to_scss_variable(name, value)
     escaped = SassC::Script::Value::String.quote(value, sass: true)
-    "$#{name}: unquote(#{escaped});\n"
+    "$#{name}: unquote(#{escaped});"
   end
 
   def find_disable_action_log

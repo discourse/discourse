@@ -11,9 +11,12 @@ module Stylesheet
     def self.compile_asset(asset, options = {})
       file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
 
-      if Importer.special_imports[asset.to_s]
+      if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
-        file += options[:theme_variables].to_s if options[:theme_variables]
+        file += options[:theme_variables].to_s
+        file += Importer.new({ theme_id: options[:theme_id] }).theme_import(asset)
+      elsif Importer.special_imports[asset.to_s]
+        filename = "theme_#{options[:theme_id]}.scss"
         file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"

@@ -64,6 +64,13 @@ describe Stylesheet::Manager do
 
     # our theme better have a name with the theme_id as part of it
     expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
+
+    manager = Stylesheet::Manager.new(:embedded_theme, theme.id)
+    manager.compile(force: true)
+
+    css = File.read(manager.stylesheet_fullpath)
+    expect(css).to match(/\.embedded/)
+    expect(css).to match(/\.child_embedded/)
   end
 
   describe 'digest' do

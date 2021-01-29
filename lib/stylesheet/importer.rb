@@ -123,23 +123,6 @@ module Stylesheet
         Import.new("category_background.scss", source: contents)
       end
 
-      register_import "embedded_theme" do
-        next unless @theme_id
-
-        theme_import(:common, :embedded_scss)
-      end
-
-      register_import "mobile_theme" do
-        next unless @theme_id
-
-        theme_import(:mobile, :scss)
-      end
-
-      register_import "desktop_theme" do
-        next unless @theme_id
-
-        theme_import(:desktop, :scss)
-      end
     end
 
     register_imports!
@@ -195,22 +178,27 @@ module Stylesheet
       end
     end
 
-    def theme_import(target, attr)
+    def theme_import(target)
+      attr = target == :embedded_theme ? :embedded_scss : :scss
+      target = target.to_s.gsub("_theme", "").to_sym
+
+      contents = +""
+
       fields = theme.list_baked_fields(target, attr)
       fields.map do |field|
         value = field.value
         if value.present?
           filename = "theme_#{field.theme.id}/#{field.target_name}-#{field.name}-#{field.theme.name.parameterize}.scss"
-          with_comment = <<~COMMENT
+          contents << <<~COMMENT
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
 
           #{value}
           COMMENT
-          Import.new(filename, source: with_comment)
         end
-      end.compact
+      end
+      contents
     end
 
     def theme
