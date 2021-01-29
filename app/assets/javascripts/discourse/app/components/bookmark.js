@@ -97,6 +97,14 @@ export default Component.extend({
   _initializeExistingBookmarkData() {
     if (this.existingBookmarkHasReminder) {
       this.set("prefilledDatetime", this.model.reminderAt);
+
+      let parsedDatetime = parseCustomDatetime(
+        this.prefilledDatetime,
+        null,
+        this.userTimezone
+      );
+
+      this.set("selectedDatetime", parsedDatetime);
     }
   },
 
