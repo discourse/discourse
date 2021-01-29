@@ -48,17 +48,17 @@ export default EmberObject.extend({
 
   @discourseComputed
   ariaPressed() {
-    const aria = [];
+    const pressed = [];
 
     if (this.sortable) {
       if (this.isSorting) {
-        aria.push(true);
+        pressed.push(true);
       } else {
-        aria.push(false);
+        pressed.push(false);
       }
     }
 
-    return aria;
+    return pressed;
   },
 
   @discourseComputed
