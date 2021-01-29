@@ -61,7 +61,8 @@ class BulkImport::VBulletin < BulkImport::Base
     import_user_profiles
     import_categories
     import_topics
-    import_posts
+    import_topic_first_posts
+    import_replies
 
     import_likes
 
@@ -71,7 +72,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     # --- need writing below
     #create_permalink_file
-    #jimport_attachments
+    #import_attachments
     #import_avatars
     #import_signatures
   end
@@ -100,7 +101,8 @@ class BulkImport::VBulletin < BulkImport::Base
     puts "Importing users..."
 
     users = mysql_stream <<-SQL
-        SELECT u.userid, u.username, u.email, u.joindate, u.birthday, u.ipaddress, u.usergroupid, ub.bandate, ub.liftdate
+        SELECT u.userid, u.username, u.joindate, u.birthday, 
+               u.ipaddress, u.usergroupid, ub.bandate, ub.liftdate, u.email
           FROM #{DB_PREFIX}user u
      LEFT JOIN #{DB_PREFIX}userban ub ON ub.userid = u.userid
          WHERE u.userid > #{@last_imported_user_id}
@@ -110,16 +112,19 @@ class BulkImport::VBulletin < BulkImport::Base
     create_users(users) do |row|
       u = {
         imported_id: row[0],
-        username: normalize_text(row[1]),
+        username: normalize_text(row[1].truncate(60)),
         name: normalize_text(row[1]),
-        created_at: Time.zone.at(row[3]),
-        date_of_birth: parse_birthday(row[4]),
-        primary_group_id: group_id_from_imported_id(row[6]),
+        email: row[8],
+        created_at: Time.zone.at(row[2]),
+        date_of_birth: parse_birthday(row[3]),
+        primary_group_id: group_id_from_imported_id(row[5]),
+        admin: row[5] == 6,
+        moderator: row[5] == 7
       }
-      u[:ip_address] = row[5][/\b(?:\d{1,3}\.){3}\d{1,3}\b/] if row[5].present?
+      u[:ip_address] = row[4][/\b(?:\d{1,3}\.){3}\d{1,3}\b/] if row[4].present?
       if row[7]
-        u[:suspended_at] = Time.zone.at(row[7])
-        u[:suspended_till] = row[8] > 0 ? Time.zone.at(row[8]) : SUSPENDED_TILL
+        u[:suspended_at] = Time.zone.at(row[6])
+        u[:suspended_till] = row[7] > 0 ? Time.zone.at(row[7]) : SUSPENDED_TILL
       end
       u
     end
@@ -273,7 +278,7 @@ class BulkImport::VBulletin < BulkImport::Base
              t.open, t.userid AS postuserid, t.publishdate AS dateline,
              nv.count views, 1 AS visible, t.sticky
             FROM #{DB_PREFIX}node t
-       LEFT JOIN #{DB_PREFIX} nodeview nv ON nv.nodeid = t.nodeid
+       LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid = t.nodeid
            WHERE t.parentid IN (SELECT nodeid from #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
              AND t.contenttypeid = #{@text_typeid}
              AND t.parentid != 7
@@ -300,14 +305,46 @@ class BulkImport::VBulletin < BulkImport::Base
       }
 
       t[:pinned_at] = created_at if row[8] == 1
-      p t if title.nil?
 
       t
     end
+
   end
 
-  def import_posts
-    puts "Importing posts..."
+  def import_topic_first_posts
+    puts "Importing topic first posts..."
+
+    topics = mysql_stream <<-SQL
+      SELECT t.nodeid, t.parentid, t.userid, 
+             t.publishdate, 1 AS visible, rawtext
+            FROM #{DB_PREFIX}node t
+       LEFT JOIN #{DB_PREFIX}nodeview nv ON nv.nodeid = t.nodeid
+       LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid = t.nodeid
+           WHERE t.parentid IN (SELECT nodeid from #{DB_PREFIX}node WHERE contenttypeid = #{@channel_typeid} )
+             AND t.contenttypeid = #{@text_typeid}
+             AND t.parentid != 7
+             AND (t.unpublishdate = 0 OR t.unpublishdate IS NULL)
+             AND t.approved = 1 AND t.showapproved = 1
+        ORDER BY t.nodeid
+    SQL
+
+    create_posts(topics) do |row|
+      
+      post = {
+        imported_id: row[0],
+        user_id: user_id_from_imported_id(row[2]),
+        topic_id: topic_id_from_imported_id(row[0]),
+        created_at: Time.zone.at(row[3]),
+        hidden: row[4] != 1,
+        raw: normalize_text(row[5]),
+      }
+
+      post
+    end
+  end
+
+  def import_replies
+    puts "Importing replies..."
 
     posts = mysql_stream <<-SQL
       SELECT p.nodeid, p.userid, p.parentid,
@@ -323,6 +360,7 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_posts(posts) do |row|
+      
       post = {
         imported_id: row[0],
         user_id: user_id_from_imported_id(row[1]),
@@ -331,6 +369,7 @@ class BulkImport::VBulletin < BulkImport::Base
         hidden: row[5] == 0,
         raw: normalize_text(row[3]),
       }
+      p post
 
       post
     end
@@ -375,11 +414,13 @@ class BulkImport::VBulletin < BulkImport::Base
             FROM #{DB_PREFIX}node t
        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.nodeid
            WHERE pm.msgtype = 'message'
+             AND t.parentid = 8
              AND t.nodeid > #{@last_imported_topic_id}
         ORDER BY t.nodeid
     SQL
 
     create_topics(topics) do |row|
+      p row if row[1].nil?
       key = [row[1], row[2]]
 
       next if @imported_topics.has_key?(key)
@@ -410,7 +451,7 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
     ).each do |row|
       next unless topic_id = topic_id_from_imported_id(row[2] + PRIVATE_OFFSET)
-      next unless user_id = user_id_from_imported_id(id)
+      next unless user_id = user_id_from_imported_id(row[1])
       allowed_users << [topic_id, user_id]
     end
 
