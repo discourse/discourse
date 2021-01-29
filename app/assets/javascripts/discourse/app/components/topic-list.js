@@ -195,7 +195,8 @@ export default Component.extend(LoadMore, {
     if (e.keyCode === 13 || e.keyCode === 32) {
       // enter or space
       let self = this;
-      let onKeyDown = function (sel, callback) {
+
+      let onKeyDown = (sel, callback) => {
         let target = $(e.target).closest(sel);
 
         if (target.length === 1) {
@@ -203,7 +204,7 @@ export default Component.extend(LoadMore, {
         }
       };
 
-      onKeyDown("th.sortable", function (e2) {
+      onKeyDown("th.sortable", (e2) => {
         this.changeSort(e2.data("sort-order"));
         this.rerender();
       });
