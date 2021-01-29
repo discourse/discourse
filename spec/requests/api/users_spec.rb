@@ -336,12 +336,12 @@ describe 'users' do
   path '/user_avatar/{username}/refresh_gravatar.json' do
 
     before do
-      stub_request(:get, /https:\/\/www.gravatar.com\/avatar\/\w+.png\?d=404&reset_cache=\w+&s=360/).
+      stub_request(:get, /https:\/\/www.gravatar.com\/avatar\/\w+.png\?d=404&reset_cache=\S+&s=360/).
         with(
           headers: {
                'Accept' => '*/*',
                'Accept-Encoding' => 'gzip',
-               'Host' => 'www.gravatar.com',
+               'Host' => 'www.gravatar.com'
           }).
         to_return(status: 200, body: "", headers: {})
     end
