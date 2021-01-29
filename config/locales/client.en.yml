@@ -663,6 +663,10 @@ en:
             imap_ssl: "Use SSL for IMAP"
             username: "Username"
             password: "Password"
+          settings:
+            title: "Settings"
+            allow_unknown_sender_topic_replies: "Allow unknown sender topic replies."
+            allow_unknown_sender_topic_replies_hint: "Allows unknown senders to reply to group topics. If this is not enabled, replies from email addresses not already included on the IMAP email thread or invited to the topic will create a new topic."
           mailboxes:
             synchronized: "Synchronized Mailbox"
             none_found: "No mailboxes were found in this email account."
@@ -838,7 +842,6 @@ en:
       posts: "Posts"
       topics: "Topics"
       latest: "Latest"
-      latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       muted: "Muted categories"

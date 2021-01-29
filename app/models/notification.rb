@@ -4,13 +4,14 @@ class Notification < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  has_one :shelved_notification
+
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
   validates_presence_of :data
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :unprocessed, lambda { where(processed: false) }
   scope :recent, lambda { |n = nil| n ||= 10; order('notifications.created_at desc').limit(n) }
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
@@ -283,10 +284,11 @@ class Notification < ActiveRecord::Base
   end
 
   def send_email
-    if skip_send_email
-      return update(processed: true)
-    end
-    NotificationEmailer.process_notification(self) unless user.do_not_disturb?
+    return if skip_send_email
+
+    user.do_not_disturb? ?
+      ShelvedNotification.create(notification_id: self.id) :
+      NotificationEmailer.process_notification(self)
   end
 
 end

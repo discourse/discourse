@@ -680,6 +680,10 @@ class ApplicationController < ActionController::Base
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
+  def apply_cdn_headers
+    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
+  end
+
   def self.requires_login(arg = {})
     @requires_login_arg = arg
   end

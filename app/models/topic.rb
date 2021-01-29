@@ -865,6 +865,14 @@ class Topic < ActiveRecord::Base
             Jobs.enqueue(:notify_category_change, post_id: post.id, notified_user_ids: notified_user_ids)
           end
         end
+
+        # when a topic changes category we may need to make uploads
+        # linked to posts secure/not secure depending on whether the
+        # category is private. this is only done if the category
+        # has actually changed to avoid noise.
+        DB.after_commit do
+          Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
+        end
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
@@ -872,13 +880,6 @@ class Topic < ActiveRecord::Base
       if Topic.update_featured_topics != false
         CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
         CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
-      end
-
-      # when a topic changes category we may need to make uploads
-      # linked to posts secure/not secure depending on whether the
-      # category is private
-      DB.after_commit do
-        Jobs.enqueue(:update_topic_upload_security, topic_id: self.id)
       end
     end
 

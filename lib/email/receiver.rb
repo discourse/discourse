@@ -741,18 +741,31 @@ module Email
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
       post_ids = []
 
-      incoming_emails = IncomingEmail
-        .where(message_id: message_ids)
-        .addressed_to_user(user)
-        .pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
+      incoming_emails = IncomingEmail.where(message_id: message_ids)
+      if !group.allow_unknown_sender_topic_replies
+        incoming_emails = incoming_emails.addressed_to_user(user)
+      end
+
+      incoming_emails = incoming_emails.pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
 
       incoming_emails.each do |post_id, from_address, to_addresses, cc_addresses|
-        post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
-                               contains_email_address_of_user?(to_addresses, user) ||
-                               contains_email_address_of_user?(cc_addresses, user)
+        if group.allow_unknown_sender_topic_replies
+          post_ids << post_id
+        else
+          post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
+            contains_email_address_of_user?(to_addresses, user) ||
+            contains_email_address_of_user?(cc_addresses, user)
+        end
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
+
+        # this must be done for the unknown user (who is staged) to
+        # be allowed to post a reply in the topic
+        if group.allow_unknown_sender_topic_replies
+          post.topic.topic_allowed_users.find_or_create_by!(user_id: user.id)
+        end
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,

@@ -1223,8 +1223,6 @@ class PluginApi {
   }
 }
 
-let _pluginv01;
-
 // from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
 function cmpVersions(a, b) {
   let i, diff;
@@ -1244,16 +1242,24 @@ function cmpVersions(a, b) {
 
 function getPluginApi(version) {
   version = version.toString();
+
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    if (!_pluginv01) {
-      _pluginv01 = new PluginApi(version, getOwner(this));
+    const owner = getOwner(this);
+    let pluginApi = owner.lookup("plugin-api:main");
+
+    if (!pluginApi) {
+      pluginApi = new PluginApi(version, owner);
+      owner.registry.register("plugin-api:main", pluginApi, {
+        instantiate: false,
+      });
     }
 
     // We are recycling the compatible object, but let's update to the higher version
-    if (_pluginv01.version < version) {
-      _pluginv01.version = version;
+    if (pluginApi.version < version) {
+      pluginApi.version = version;
     }
-    return _pluginv01;
+
+    return pluginApi;
   } else {
     // eslint-disable-next-line no-console
     console.warn(`Plugin API v${version} is not supported`);
@@ -1305,8 +1311,4 @@ function decorate(klass, evt, cb, id) {
     }
   });
   klass.reopen(mixin);
-}
-
-export function resetPluginApi() {
-  _pluginv01 = null;
 }

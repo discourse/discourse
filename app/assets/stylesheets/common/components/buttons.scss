@@ -13,25 +13,24 @@
   $hover-bg-color: var(--primary-medium),
   $hover-icon-color: var(--primary-low)
 ) {
-  display: inline-block;
-  margin: 0;
-  padding: 6px 12px;
-  min-height: 30px;
-  border: none;
   box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.53em 0.8em;
+  border: none;
   font-weight: normal;
+  font-size: $font-0;
+  line-height: normal;
   color: $text-color;
   background: $bg-color;
-  font-size: $font-0;
-  line-height: $line-height-small;
-  text-align: center;
   cursor: pointer;
   transition: all 0.25s;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
     transition: color 0.25s;
-    line-height: $line-height-medium; // Match button text line-height
   }
   &.no-text {
     .d-icon {

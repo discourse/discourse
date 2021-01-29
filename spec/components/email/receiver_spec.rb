@@ -951,14 +951,34 @@ describe Email::Receiver do
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
       end
 
-      it "creates a new topic when the sender is not known" do
+      it "creates a new topic when the sender is not known and the group does not allow unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        group.update(allow_unknown_sender_topic_replies: false)
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
       end
 
       it "creates a new topic when the referenced message id is not known" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+      end
+
+      it "includes the sender on the topic when the message id is known, the sender is not known, and the group allows unknown senders to reply to topics" do
+        IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+        group.update(allow_unknown_sender_topic_replies: true)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+      end
+
+      context "when the sender is not in the topic allowed users" do
+        before do
+          user = User.find_by_email("two@foo.com")
+          topic.topic_allowed_users.find_by(user: user).destroy
+        end
+
+        it "adds them to the topic at the same time" do
+          IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
+          group.update(allow_unknown_sender_topic_replies: true)
+          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        end
       end
     end
   end

@@ -82,7 +82,7 @@ class Plugin::Metadata
     "discourse-staff-alias",
   ])
 
-  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version, :transpile_js]
+  FIELDS ||= [:name, :about, :version, :authors, :contact_emails, :url, :required_version, :transpile_js]
   attr_accessor(*FIELDS)
 
   def self.parse(text)

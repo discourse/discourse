@@ -173,7 +173,6 @@
 #bulk-select {
   position: fixed;
   right: 20px;
-  top: 130px;
   background-color: var(--secondary);
   z-index: z("dropdown");
   @supports (position: sticky) {
