@@ -951,9 +951,9 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def update_uploads_secure_status
+  def update_uploads_secure_status(source:)
     if Discourse.store.external?
-      self.uploads.each { |upload| upload.update_secure_status }
+      self.uploads.each { |upload| upload.update_secure_status(source: source) }
     end
   end
 

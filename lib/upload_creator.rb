@@ -130,6 +130,13 @@ class UploadCreator
       end
 
       add_metadata!
+
+      if SiteSetting.secure_media
+        secure, reason = UploadSecurity.new(@upload, @opts.merge(creating: true)).should_be_secure_with_reason
+        attrs = @upload.secure_params(secure, reason, "upload creator")
+        @upload.assign_attributes(attrs)
+      end
+
       return @upload unless @upload.save
 
       DiscourseEvent.trigger(:before_upload_creation, @file, is_image, @opts[:for_export])
@@ -424,7 +431,6 @@ class UploadCreator
     @upload.for_export          = true if @opts[:for_export]
     @upload.for_site_setting    = true if @opts[:for_site_setting]
     @upload.for_gravatar        = true if @opts[:for_gravatar]
-    @upload.secure = UploadSecurity.new(@upload, @opts).should_be_secure?
   end
 
   private

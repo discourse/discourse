@@ -8,9 +8,7 @@ class UploadsController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, only: [:show, :show_short, :show_secure]
-
-  cdn_action only: [:show, :show_short, :show_secure]
+  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 

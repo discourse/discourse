@@ -37,7 +37,6 @@ class Discourse::Cors
       Discourse.apply_cdn_headers(headers)
     elsif cors_origins
       origin = nil
-
       if origin = env['HTTP_ORIGIN']
         origin = nil unless cors_origins.include?(origin)
       end

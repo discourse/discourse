@@ -681,17 +681,8 @@ class ApplicationController < ActionController::Base
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
-  def block_cdn_requests
-    raise Discourse::NotFound if Discourse.is_cdn_request?(request.env, request.method)
-  end
-
   def apply_cdn_headers
     Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
-  end
-
-  def self.cdn_action(args = {})
-    skip_before_action :block_cdn_requests, args
-    before_action :apply_cdn_headers, args
   end
 
   def self.requires_login(arg = {})
