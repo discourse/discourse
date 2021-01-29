@@ -227,7 +227,7 @@ describe 'users' do
                 required: true
       parameter name: :asc,
                 in: :query,
-                 schema: {
+                schema: {
                    type: :string,
                    enum: ['true']
                  }
@@ -308,6 +308,68 @@ describe 'users' do
 
   end
 
+  path '/admin/users/{id}/log_out.json' do
+
+    post 'Log a user out' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:id) { Fabricate(:user).id }
+
+        expected_response_schema = load_spec_schema('success_ok_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/user_avatar/{username}/refresh_gravatar.json' do
+
+    before do
+      stub_request(:get, /https:\/\/www.gravatar.com\/avatar\/\w+.png\?d=404&reset_cache=\w+&s=360/).
+        with(
+          headers: {
+               'Accept' => '*/*',
+               'Accept-Encoding' => 'gzip',
+               'Host' => 'www.gravatar.com',
+          }).
+        to_return(status: 200, body: "", headers: {})
+    end
+
+    post 'Refresh gravatar' do
+      tags 'Users', 'Admin'
+      consumes 'application/json'
+      expected_request_schema = nil
+
+      parameter name: :username, in: :path, type: :string, required: true
+
+      produces 'application/json'
+      response '200', 'response' do
+
+        let(:user) { Fabricate(:user) }
+        let(:username) { user.username }
+
+        expected_response_schema = load_spec_schema('user_refresh_gravatar_response')
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path '/admin/users/list/{flag}.json' do
 
     get 'Get a list of users' do
@@ -342,7 +404,7 @@ describe 'users' do
                 }
       parameter name: :asc,
                 in: :query,
-                 schema: {
+                schema: {
                    type: :string,
                    enum: ['true']
                  }
