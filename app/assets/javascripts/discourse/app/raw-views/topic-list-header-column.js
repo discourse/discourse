@@ -48,28 +48,21 @@ export default EmberObject.extend({
 
   @discourseComputed
   ariaPressed() {
-    const pressed = [];
-
     if (this.sortable) {
       if (this.isSorting) {
-        pressed.push(true);
+        return true;
       } else {
-        pressed.push(false);
+        return false;
       }
     }
-
-    return pressed;
   },
 
   @discourseComputed
   ariaSort() {
-    const sort = [];
-    const asc = this.parent.ascending ? "ascending" : "descending";
-
     if (this.isSorting) {
-      sort.push(asc);
+      return this.parent.ascending ? "ascending" : "descending";
+    } else {
+      return "none";
     }
-
-    return sort;
   },
 });
