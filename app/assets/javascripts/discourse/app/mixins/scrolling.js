@@ -49,7 +49,6 @@ const Scrolling = Mixin.create({
       let debouncedScrollMethod = () => {
         discourseDebounce(this, onScrollMethod, opts.debounce);
       };
-
       ScrollingDOMMethods.bindOnScroll(debouncedScrollMethod, opts.name);
     } else {
       ScrollingDOMMethods.bindOnScroll(onScrollMethod, opts.name);
