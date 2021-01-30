@@ -2596,7 +2596,7 @@ en:
         username_placeholder: "username"
         action: "Send Invite"
         help: "invite others to this topic via email or notifications"
-        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
         sso_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
