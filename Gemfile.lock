@@ -360,7 +360,7 @@ GEM
       rspec-expectations (~> 3.10)
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
-    rspec-support (3.10.1)
+    rspec-support (3.10.2)
     rswag-specs (2.3.2)
       activesupport (>= 3.1, < 7.0)
       json-schema (~> 2.2)
