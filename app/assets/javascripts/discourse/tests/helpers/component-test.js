@@ -63,7 +63,10 @@ export default function (name, opts) {
 
     const store = createStore();
     if (!opts.anonymous) {
-      const currentUser = User.create({ username: "eviltrout" });
+      const currentUser = User.create({
+        username: "eviltrout",
+        timezone: "Australia/Brisbane",
+      });
       this.currentUser = currentUser;
       this.registry.register("current-user:main", this.currentUser, {
         instantiate: false,
