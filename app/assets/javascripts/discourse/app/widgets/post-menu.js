@@ -241,7 +241,8 @@ registerButton("replies", (attrs, state, siteSettings) => {
     icon = state.repliesShown ? "chevron-up" : "chevron-down";
 
   if (siteSettings.enable_filtered_replies_view) {
-    action = "filterRepliesView";
+    action = "toggleFilteredRepliesView";
+    icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
@@ -259,7 +260,9 @@ registerButton("replies", (attrs, state, siteSettings) => {
     className: "show-replies",
     titleOptions: { count: replyCount },
     title: siteSettings.enable_filtered_replies_view
-      ? "post.filtered_replies_hint"
+      ? state.filteredRepliesShown
+        ? "post.view_all_posts"
+        : "post.filtered_replies_hint"
       : "post.has_replies",
     labelOptions: { count: replyCount },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
