@@ -245,6 +245,9 @@ en:
     now: "just now"
     read_more: "read more"
     more: "More"
+    x_more:
+      one: "%{count} More"
+      other: "%{count} More"
     less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"

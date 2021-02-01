@@ -5,7 +5,13 @@
     <label for="last-seen">{{i18n "admin.email.last_seen_user"}}</label>
     {{date-picker-past value=lastSeen id="last-seen"}}
     <label>{{i18n "admin.email.user"}}:</label>
-    {{user-selector single="true" usernames=username canReceiveUpdates=true}}
+    {{email-group-user-chooser
+      value=username
+      onChange=(action "updateUsername")
+      options=(hash
+        maximum=1
+      )
+    }}
     {{d-button
       class="btn-primary digest-refresh-button"
       action=(action "refresh")
