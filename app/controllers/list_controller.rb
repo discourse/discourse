@@ -58,7 +58,7 @@ class ListController < ApplicationController
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
 
-      if guardian.can_create_shared_draft? && @category.present?
+      if guardian.can_see_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
           # On shared drafts, show the destination category
           list.topics.each do |t|
