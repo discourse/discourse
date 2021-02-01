@@ -11,7 +11,7 @@ export default DropdownSelectBoxComponent.extend({
     showFullTitle: false,
   },
 
-  contentAll() {
+  contentBulk() {
     const items = [];
 
     items.push({
@@ -125,7 +125,7 @@ export default DropdownSelectBoxComponent.extend({
     "member.primary",
     function () {
       return this.bulkSelection !== undefined
-        ? this.contentAll()
+        ? this.contentBulk()
         : this.contentSingle();
     }
   ),
