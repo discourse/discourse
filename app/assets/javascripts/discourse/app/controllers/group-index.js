@@ -54,8 +54,11 @@ export default Controller.extend({
         "application.showFooter":
           this.model.members.length >= this.model.user_count,
         loading: false,
-        bulkSelection: [],
       });
+
+      if (this.refresh) {
+        this.set("bulkSelection", []);
+      }
     });
   },
 
@@ -198,6 +201,16 @@ export default Controller.extend({
       isBulk: !this.isBulk,
       bulkSelection: [],
     });
+  },
+
+  @action
+  bulkSelectAll() {
+    $("input.bulk-select:not(:checked)").click();
+  },
+
+  @action
+  bulkClearAll() {
+    $("input.bulk-select:checked").click();
   },
 
   @action

@@ -23,12 +23,16 @@
     {{#load-more selector=".group-members tr" action=(action "loadMore")}}
       <table class="group-members">
         <thead>
+          <th class="bulk-select">
+            {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+          </th>
           {{#if isBulk}}
-            <th class="bulk-select">
-              {{flat-button class="bulk-select" icon="list" action=(action "toggleBulkSelect") title="topics.bulk.toggle"}}
+            <th class="bulk-select-buttons">
+              {{d-button action=(action "bulkSelectAll") label="topics.bulk.select_all"}}
+              {{d-button action=(action "bulkClearAll") label="topics.bulk.clear_all"}}
             </th>
           {{/if}}
-          {{table-header-toggle-bulk order=order asc=asc field="username_lower" labelKey="username" isBulk=isBulk toggleBulkSelect=(action "toggleBulkSelect") class="avatar"}}
+          {{table-header-toggle order=order asc=asc field="username_lower" labelKey="username" class="username"}}
           <th class="group-owner"></th>
           {{table-header-toggle order=order asc=asc field="added_at" labelKey="groups.member_added"}}
           {{table-header-toggle order=order asc=asc field="last_posted_at" labelKey="last_post"}}
@@ -53,7 +57,7 @@
                 </td>
               {{/if}}
 
-              <td class="avatar">
+              <td class="avatar" colspan="2">
                 {{user-info user=m skipName=skipName}}
               </td>
 

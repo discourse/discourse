@@ -107,43 +107,48 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  .bulk-select {
-    width: 30px;
-  }
-
-  .avatar {
-    text-align: left;
-  }
-
-  th.sortable:first-child {
-    width: 30%;
-    text-align: left;
-  }
-
-  th.sortable:last-child {
-    width: 5%;
-  }
-
-  th.group-members-actions {
-    width: 5%;
-  }
-
   th {
     text-align: center;
-  }
 
-  tr {
-    .user-info {
-      display: block;
-      .avatar-flair {
-        color: var(--primary);
-      }
+    &.bulk-select {
+      height: 30px;
+      width: 30px;
     }
 
-    td {
-      text-align: center;
-      color: var(--primary-medium);
-      padding: 0.8em 0;
+    &.bulk-select-buttons {
+      text-align: left;
+      width: 20%;
+    }
+
+    &.username {
+      text-align: left;
+      width: 30%;
+    }
+
+    &.bulk-select-buttons + .username {
+      width: 10%;
+    }
+
+    &.group-members-actions {
+      width: 5%;
+    }
+  }
+
+  td {
+    color: var(--primary-medium);
+    padding: 0.8em 0;
+    text-align: center;
+
+    &.avatar {
+      text-align: left;
+    }
+  }
+
+  .user-info {
+    display: block;
+
+    .avatar-flair {
+      color: var(--primary);
     }
   }
 }
