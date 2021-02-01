@@ -26,7 +26,7 @@ class Theme < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
   has_many :upload_fields, -> { where(type_id: ThemeField.types[:theme_upload_var]).preload(:upload) }, class_name: 'ThemeField'
-  has_many :scss_fields, -> { where(type_id: ThemeField.types[:scss]) }, class_name: 'ThemeField'
+  has_many :extra_scss_fields, -> { where(target_id: Theme.targets[:extra_scss]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -586,7 +586,7 @@ class Theme < ActiveRecord::Base
   end
 
   def scss_load_paths
-    return if self.scss_fields.empty?
+    return if self.extra_scss_fields.empty?
 
     @exporter ||= ThemeStore::ZipExporter.new(self)
     ["#{@exporter.export_dir}/scss", "#{@exporter.export_dir}/stylesheets"]
