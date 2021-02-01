@@ -24,7 +24,7 @@
   {{#if useDuration}}
     <div class="controls">
       <label class="control-label">{{i18n durationTranslationKey}}</label>
-      {{text-field class="topic-timer-duration" type="number" value=topicTimer.duration min="1"}}
+      {{text-field id="topic_timer_duration" class="topic-timer-duration" type="number" value=topicTimer.duration min="1"}}
     </div>
   {{/if}}
   {{#if showTopicStatusInfo}}
@@ -32,7 +32,7 @@
       {{topic-timer-info
         statusType=statusType
         executeAt=executeAt
-        basedOnLastPost=basedOnLastPost
+        basedOnLastPost=topicTimer.based_on_last_post
         duration=topicTimer.duration
         categoryId=topicTimer.category_id
       }}

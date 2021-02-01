@@ -4,7 +4,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Topic - Edit timer", function (needs) {
@@ -24,99 +24,50 @@ acceptance("Topic - Edit timer", function (needs) {
     );
   });
 
-  test("default", async function (assert) {
-    updateCurrentUser({ moderator: true });
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
-
-    await visit("/t/internationalization-localization");
-    await click(".toggle-admin-menu");
-    await click(".topic-admin-status-update button");
-
-    assert.equal(
-      futureDateInputSelector.header().label(),
-      "Select a timeframe"
-    );
-    assert.equal(futureDateInputSelector.header().value(), null);
-  });
-
   test("autoclose - specific time", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
-
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-
-    assert.ok(futureDateInputSelector.header().label().includes("Next week"));
-    assert.equal(futureDateInputSelector.header().value(), "next_week");
+    await click("#tap_tile_next_week");
 
     const regex = /will automatically close in/g;
-    const html = queryAll(".future-date-input .topic-status-info")
+    const html = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex.test(html));
   });
 
-  skip("autoclose", async function (assert) {
+  test("autoclose", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-
-    assert.ok(futureDateInputSelector.header().label().includes("Next week"));
-    assert.equal(futureDateInputSelector.header().value(), "next_week");
+    await click("#tap_tile_next_week");
 
     const regex1 = /will automatically close in/g;
-    const html1 = queryAll(".future-date-input .topic-status-info")
+    const html1 = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex1.test(html1));
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("pick_date_and_time");
-
-    await fillIn(".future-date-input .date-picker", "2099-11-24");
-
-    assert.ok(
-      futureDateInputSelector.header().label().includes("Pick date and time")
-    );
-    assert.equal(
-      futureDateInputSelector.header().value(),
-      "pick_date_and_time"
-    );
+    await click("#tap_tile_custom");
+    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
 
     const regex2 = /will automatically close in/g;
-    const html2 = queryAll(".future-date-input .topic-status-info")
+    const html2 = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex2.test(html2));
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("set_based_on_last_post");
-
-    await fillIn(".future-date-input input[type=number]", "2");
-
-    assert.ok(
-      futureDateInputSelector
-        .header()
-        .label()
-        .includes("Close based on last post")
-    );
-    assert.equal(
-      futureDateInputSelector.header().value(),
-      "set_based_on_last_post"
-    );
+    await click("#tap_tile_set_based_on_last_post");
+    await fillIn("#topic_timer_duration", "2");
 
     const regex3 = /This topic will close.*after the last reply/g;
-    const html3 = queryAll(".future-date-input .topic-status-info")
+    const html3 = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex3.test(html3));
@@ -125,7 +76,6 @@ acceptance("Topic - Edit timer", function (needs) {
   test("close temporarily", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
@@ -134,40 +84,19 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("open");
 
-    assert.equal(
-      futureDateInputSelector.header().label(),
-      "Select a timeframe"
-    );
-    assert.equal(futureDateInputSelector.header().value(), null);
-
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-
-    assert.ok(futureDateInputSelector.header().label().includes("Next week"));
-    assert.equal(futureDateInputSelector.header().value(), "next_week");
+    await click("#tap_tile_next_week");
 
     const regex1 = /will automatically open in/g;
-    const html1 = queryAll(".future-date-input .topic-status-info")
+    const html1 = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex1.test(html1));
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("pick_date_and_time");
-
-    await fillIn(".future-date-input .date-picker", "2099-11-24");
-
-    assert.equal(
-      futureDateInputSelector.header().label(),
-      "Pick date and time"
-    );
-    assert.equal(
-      futureDateInputSelector.header().value(),
-      "pick_date_and_time"
-    );
+    await click("#tap_tile_custom");
+    await fillIn(".tap-tile-date-input .date-picker", "2099-11-24");
 
     const regex2 = /will automatically open in/g;
-    const html2 = queryAll(".future-date-input .topic-status-info")
+    const html2 = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex2.test(html2));
@@ -177,7 +106,6 @@ acceptance("Topic - Edit timer", function (needs) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
     const categoryChooser = selectKit(".modal-body .category-chooser");
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
@@ -189,23 +117,13 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(categoryChooser.header().label(), "uncategorized");
     assert.equal(categoryChooser.header().value(), null);
 
-    assert.equal(
-      futureDateInputSelector.header().label(),
-      "Select a timeframe"
-    );
-    assert.equal(futureDateInputSelector.header().value(), null);
-
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue("7");
 
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-
-    assert.ok(futureDateInputSelector.header().label().includes("Next week"));
-    assert.equal(futureDateInputSelector.header().value(), "next_week");
+    await click("#tap_tile_next_week");
 
     const regex = /will be published to #dev/g;
-    const text = queryAll(".future-date-input .topic-status-info")
+    const text = queryAll(".edit-topic-timer-modal .topic-status-info")
       .text()
       .trim();
     assert.ok(regex.test(text));
@@ -228,7 +146,6 @@ acceptance("Topic - Edit timer", function (needs) {
   test("auto delete", async function (assert) {
     updateCurrentUser({ moderator: true });
     const timerType = selectKit(".select-kit.timer-type");
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
@@ -237,20 +154,10 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("delete");
 
-    assert.equal(
-      futureDateInputSelector.header().label(),
-      "Select a timeframe"
-    );
-    assert.equal(futureDateInputSelector.header().value(), null);
-
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("two_weeks");
-
-    assert.ok(futureDateInputSelector.header().label().includes("Two Weeks"));
-    assert.equal(futureDateInputSelector.header().value(), "two_weeks");
+    await click("#tap_tile_two_weeks");
 
     const regex = /will be automatically deleted/g;
-    const html = queryAll(".future-date-input .topic-status-info")
+    const html = queryAll(".edit-topic-timer-modal .topic-status-info")
       .html()
       .trim();
     assert.ok(regex.test(html));
@@ -258,14 +165,12 @@ acceptance("Topic - Edit timer", function (needs) {
 
   test("Inline delete timer", async function (assert) {
     updateCurrentUser({ moderator: true });
-    const futureDateInputSelector = selectKit(".future-date-input-selector");
 
     await visit("/t/internationalization-localization");
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
-    await futureDateInputSelector.expand();
-    await futureDateInputSelector.selectRowByValue("next_week");
-    await click(".modal-footer button.btn-primary");
+    await click("#tap_tile_next_week");
+    await click(".edit-topic-timer-buttons button.btn-primary");
 
     const removeTimerButton = queryAll(
       ".topic-status-info .topic-timer-remove"

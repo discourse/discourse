@@ -179,7 +179,11 @@ export default Component.extend({
       return false;
     }
 
-    if (useDuration) {
+    if (isCustom && updateTime) {
+      if (moment(updateTime) < moment()) {
+        return false;
+      }
+    } else if (useDuration) {
       return duration;
     }
 
