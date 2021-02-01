@@ -7,13 +7,12 @@ import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or, readOnly } from "@ember/object/computed";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
-import { schedule } from "@ember/runloop";
 import { now, startOfDay, thisWeekend } from "discourse/lib/time-utils";
 
 export default Component.extend({
@@ -101,22 +100,13 @@ export default Component.extend({
     return ["none", "start_of_next_business_week"];
   },
 
-  @observes("statusType")
-  _updateBasedOnLastPost() {
-    if (!this.autoClose) {
-      schedule("afterRender", () => {
-        this.set("topicTimer.based_on_last_post", false);
-      });
-    }
-  },
-
   isCustom: equal("timerType", "custom"),
   isBasedOnLastPost: equal("timerType", "set_based_on_last_post"),
   includeBasedOnLastPost: equal("statusType", CLOSE_STATUS_TYPE),
 
   @discourseComputed(
     "topicTimer.updateTime",
-    "duration",
+    "topicTimer.duration",
     "isBasedOnLastPost",
     "isBasedOnDuration",
     "durationType"
@@ -135,7 +125,11 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("isBasedOnLastPost", "duration", "model.last_posted_at")
+  @discourseComputed(
+    "isBasedOnLastPost",
+    "topicTimer.duration",
+    "model.last_posted_at"
+  )
   willCloseImmediately(isBasedOnLastPost, duration, lastPostedAt) {
     if (isBasedOnLastPost && duration) {
       let closeDate = moment(lastPostedAt);
@@ -161,7 +155,6 @@ export default Component.extend({
 
   @discourseComputed(
     "statusType",
-    "input",
     "isCustom",
     "topicTimer.updateTime",
     "willCloseImmediately",
@@ -171,7 +164,6 @@ export default Component.extend({
   )
   showTopicStatusInfo(
     statusType,
-    input,
     isCustom,
     updateTime,
     willCloseImmediately,
@@ -197,6 +189,10 @@ export default Component.extend({
   @action
   onTimeSelected(type, time) {
     this.set("timerType", type);
+    this.set(
+      "topicTimer.based_on_last_post",
+      this.timerType === "set_based_on_last_post"
+    );
     this.onChangeInput(type, time);
   },
 });

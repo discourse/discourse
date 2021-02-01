@@ -17,21 +17,21 @@
       }}
     </div>
   {{/if}}
-  {{#if autoDeleteReplies}}
+  {{#if showFutureDateInput}}
+    <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
+    {{time-shortcut-picker prefilledDatetime=(readonly topicTimer.updateTime) onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
+  {{/if}}
+  {{#if useDuration}}
     <div class="controls">
       <label class="control-label">{{i18n durationTranslationKey}}</label>
       {{text-field class="topic-timer-duration" type="number" value=topicTimer.duration min="1"}}
     </div>
   {{/if}}
-  {{#if showFutureDateInput}}
-    <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
-    {{time-shortcut-picker prefilledDatetime=(readonly topicTimer.updateTime) onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
-  {{/if}}
   {{#if showTopicStatusInfo}}
     <div class="alert alert-info">
       {{topic-timer-info
         statusType=statusType
-        executeAt=topicTimer.updateTime
+        executeAt=executeAt
         basedOnLastPost=basedOnLastPost
         duration=topicTimer.duration
         categoryId=topicTimer.category_id
@@ -39,3 +39,4 @@
     </div>
   {{/if}}
 </form>
+
