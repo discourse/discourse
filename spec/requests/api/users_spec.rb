@@ -460,4 +460,54 @@ describe 'users' do
     end
   end
 
+  path '/session/forgot_password.json' do
+    post 'Send password reset email' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_password_reset_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('user_password_reset_response')
+        schema expected_response_schema
+
+        let(:user) { Fabricate(:user) }
+        let(:params) { { 'login' => user.username } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path '/users/password-reset/{token}.json' do
+    put 'Change password' do
+      tags 'Users'
+      consumes 'application/json'
+      expected_request_schema = load_spec_schema('user_password_change_request')
+      parameter name: :token, in: :path, type: :string, required: true
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = nil
+
+        let(:user) { Fabricate(:user) }
+        let(:token) { user.email_tokens.create(email: user.email).token }
+        let(:params) { {
+          'username' => user.username,
+          'password' => 'NH8QYbxYS5Zv5qEFzA4jULvM'
+        } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
 end

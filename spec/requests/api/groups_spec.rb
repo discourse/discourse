@@ -196,6 +196,31 @@ describe 'groups' do
         end
       end
     end
+
+    delete 'Remove group members' do
+      tags 'Groups'
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      expected_request_schema = load_spec_schema('group_remove_members_request')
+      parameter name: :params, in: :body, schema: expected_request_schema
+
+      produces 'application/json'
+      response '200', 'success response' do
+        expected_response_schema = load_spec_schema('group_remove_members_response')
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).id }
+        let(:user) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user) }
+        let(:usernames) { "#{user.username},#{user2.username}" }
+        let(:params) { { 'usernames' => usernames } }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
   end
 
   path '/groups.json' do
