@@ -224,6 +224,7 @@ export default Component.extend({
     if (event.target.value) {
       results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
         maxResults: 10,
+        diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
         .join("");
