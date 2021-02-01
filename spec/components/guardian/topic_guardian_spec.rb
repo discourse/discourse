@@ -37,6 +37,35 @@ describe TopicGuardian do
     end
   end
 
+  describe '#can_see_shared_draft?' do
+    it 'when shared_drafts are disabled (existing shared drafts)' do
+      SiteSetting.shared_drafts_min_trust_level = 'admin'
+
+      expect(Guardian.new(admin).can_see_shared_draft?).to eq(true)
+    end
+
+    it 'when user is a moderator and access is set to admin' do
+      SiteSetting.shared_drafts_category = category.id
+      SiteSetting.shared_drafts_min_trust_level = 'admin'
+
+      expect(Guardian.new(moderator).can_see_shared_draft?).to eq(false)
+    end
+
+    it 'when user is a moderator and access is set to staff' do
+      SiteSetting.shared_drafts_category = category.id
+      SiteSetting.shared_drafts_min_trust_level = 'staff'
+
+      expect(Guardian.new(moderator).can_see_shared_draft?).to eq(true)
+    end
+
+    it 'when user is TL3 and access is set to TL2' do
+      SiteSetting.shared_drafts_category = category.id
+      SiteSetting.shared_drafts_min_trust_level = '2'
+
+      expect(Guardian.new(tl3_user).can_see_shared_draft?).to eq(true)
+    end
+  end
+
   describe '#can_edit_topic?' do
     context 'when the topic is a shared draft' do
       let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2])  }
