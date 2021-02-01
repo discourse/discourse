@@ -152,16 +152,17 @@
     .modal-body::-webkit-scrollbar {
       width: 15px;
       background: var(--tertiary);
+      border: 4px solid transparent;
     }
     
     .modal-body::-webkit-scrollbar-track {
       box-shadow: inset 0 0 14px 14px transparent;
-      border: solid 4px transparent;
+      border: 4px solid transparent;
     }
     
     .modal-body::-webkit-scrollbar-thumb {
       box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb),0.5);
-      border: solid 4px transparent;
+      border: 4px solid transparent;
       border-radius: 14px;
     }
     
