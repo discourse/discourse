@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -36,7 +37,7 @@ discourseModule(
     });
 
     componentTest("selection behavior", {
-      template: `
+      template: hbs`
       {{dropdown-select-box
         value=value
         content=content
@@ -60,7 +61,7 @@ discourseModule(
     });
 
     componentTest("options.showFullTitle=false", {
-      template: `
+      template: hbs`
       {{dropdown-select-box
         value=value
         content=content
@@ -95,7 +96,7 @@ discourseModule(
     });
 
     componentTest("options.showFullTitle=true", {
-      template: `
+      template: hbs`
       {{dropdown-select-box
         value=value
         content=content

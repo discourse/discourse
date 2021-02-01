@@ -7,10 +7,11 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
+import hbs from "htmlbars-inline-precompile";
 
 function postStreamTest(name, attrs) {
   componentTest(name, {
-    template: `{{mount-widget widget="post-stream" args=(hash posts=posts)}}`,
+    template: hbs`{{mount-widget widget="post-stream" args=(hash posts=posts)}}`,
     beforeEach() {
       const site = this.container.lookup("site:main");
       let posts = attrs.posts.call(this);

@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import hbs from "htmlbars-inline-precompile";
 
 const topCategoryIds = [2, 3, 1];
 let mutedCategoryIds = [];
@@ -18,7 +19,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("prioritize faq", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.siteSettings.faq_url = "http://example.com/faq";
@@ -32,7 +33,7 @@ discourseModule(
     });
 
     componentTest("prioritize faq - user has read", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.siteSettings.faq_url = "http://example.com/faq";
@@ -46,7 +47,7 @@ discourseModule(
     });
 
     componentTest("staff menu - not staff", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.currentUser.set("staff", false);
@@ -58,7 +59,7 @@ discourseModule(
     });
 
     componentTest("staff menu - moderator", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.currentUser.set("moderator", true);
@@ -72,7 +73,7 @@ discourseModule(
     });
 
     componentTest("staff menu - admin", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.currentUser.setProperties({ admin: true });
@@ -84,7 +85,7 @@ discourseModule(
     });
 
     componentTest("logged in links", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
         assert.ok(queryAll(".new-topics-link").length);
@@ -93,7 +94,7 @@ discourseModule(
     });
 
     componentTest("general links", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
       anonymous: true,
 
       test(assert) {
@@ -110,7 +111,7 @@ discourseModule(
     let maxCategoriesToDisplay;
 
     componentTest("top categories - anonymous", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
       anonymous: true,
 
       beforeEach() {
@@ -131,7 +132,7 @@ discourseModule(
     });
 
     componentTest("top categories - allow_uncategorized_topics", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
       anonymous: true,
 
       beforeEach() {
@@ -154,7 +155,7 @@ discourseModule(
     });
 
     componentTest("top categories", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.siteSettings.header_dropdown_category_count = 8;
@@ -216,7 +217,7 @@ discourseModule(
     });
 
     componentTest("badges link - disabled", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.siteSettings.enable_badges = false;
@@ -228,7 +229,7 @@ discourseModule(
     });
 
     componentTest("badges link", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
         assert.ok(queryAll(".badge-link").length);
@@ -236,7 +237,7 @@ discourseModule(
     });
 
     componentTest("user directory link", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
         assert.ok(queryAll(".user-directory-link").length);
@@ -244,7 +245,7 @@ discourseModule(
     });
 
     componentTest("user directory link - disabled", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       beforeEach() {
         this.siteSettings.enable_user_directory = false;
@@ -256,7 +257,7 @@ discourseModule(
     });
 
     componentTest("general links", {
-      template: '{{mount-widget widget="hamburger-menu"}}',
+      template: hbs`{{mount-widget widget="hamburger-menu"}}`,
 
       test(assert) {
         assert.ok(queryAll(".about-link").length);

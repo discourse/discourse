@@ -7,6 +7,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function dateInput() {
   return queryAll(".date-picker")[0];
@@ -32,7 +33,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("default", {
-    template: `{{date-time-input date=date}}`,
+    template: hbs`{{date-time-input date=date}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE_TIME });
@@ -45,7 +46,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
   });
 
   componentTest("prevents mutations", {
-    template: `{{date-time-input date=date}}`,
+    template: hbs`{{date-time-input date=date}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE_TIME });
@@ -60,7 +61,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
   });
 
   componentTest("allows mutations through actions", {
-    template: `{{date-time-input date=date onChange=onChange}}`,
+    template: hbs`{{date-time-input date=date onChange=onChange}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE_TIME });
@@ -76,7 +77,7 @@ discourseModule("Integration | Component | date-time-input", function (hooks) {
   });
 
   componentTest("can hide time", {
-    template: `{{date-time-input date=date showTime=false}}`,
+    template: hbs`{{date-time-input date=date showTime=false}}`,
 
     beforeEach() {
       this.setProperties({ date: DEFAULT_DATE_TIME });

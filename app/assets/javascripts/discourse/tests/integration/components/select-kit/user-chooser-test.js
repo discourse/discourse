@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 discourseModule(
@@ -14,7 +15,7 @@ discourseModule(
     });
 
     componentTest("displays usernames", {
-      template: `{{user-chooser value=value}}`,
+      template: hbs`{{user-chooser value=value}}`,
 
       beforeEach() {
         this.set("value", ["bob", "martin"]);
@@ -26,7 +27,7 @@ discourseModule(
     });
 
     componentTest("can remove a username", {
-      template: `{{user-chooser value=value}}`,
+      template: hbs`{{user-chooser value=value}}`,
 
       beforeEach() {
         this.set("value", ["bob", "martin"]);

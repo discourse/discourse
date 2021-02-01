@@ -4,6 +4,7 @@ import componentTest, {
 import EmberObject from "@ember/object";
 import { click } from "@ember/test-helpers";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -11,8 +12,9 @@ discourseModule("Integration | Component | badge-title", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("badge title", {
-    template:
-      "{{badge-title selectableUserBadges=selectableUserBadges user=user}}",
+    template: hbs`
+      {{badge-title selectableUserBadges=selectableUserBadges user=user}}
+    `,
 
     beforeEach() {
       this.set("subject", selectKit());

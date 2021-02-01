@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
+import hbs from "htmlbars-inline-precompile";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -20,7 +21,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("basics", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       skip: true,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
@@ -39,7 +40,7 @@ discourseModule(
     });
 
     componentTest("basics - minimized", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_small_url = smallLogo;
@@ -56,7 +57,7 @@ discourseModule(
     });
 
     componentTest("no logo", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = "";
         this.siteSettings.site_logo_small_url = "";
@@ -71,7 +72,7 @@ discourseModule(
     });
 
     componentTest("no logo - minimized", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = "";
         this.siteSettings.site_logo_small_url = "";
@@ -85,7 +86,7 @@ discourseModule(
     });
 
     componentTest("mobile logo", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_mobile_logo_url = mobileLogo;
         this.siteSettings.site_logo_small_url = smallLogo;
@@ -99,7 +100,7 @@ discourseModule(
     });
 
     componentTest("mobile without logo", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.site.mobileView = true;
@@ -112,7 +113,7 @@ discourseModule(
     });
 
     componentTest("logo with dark mode alternative", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_dark_url = darkLogo;
@@ -140,7 +141,7 @@ discourseModule(
     });
 
     componentTest("mobile logo with dark mode alternative", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_mobile_logo_url = mobileLogo;
@@ -170,7 +171,7 @@ discourseModule(
     });
 
     componentTest("dark mode enabled but no dark logo set", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_dark_url = "";
@@ -191,7 +192,7 @@ discourseModule(
     });
 
     componentTest("dark logo set but no dark mode", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_dark_url = darkLogo;
@@ -208,7 +209,7 @@ discourseModule(
     });
 
     componentTest("dark color scheme and dark logo set", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_dark_url = darkLogo;
@@ -232,7 +233,7 @@ discourseModule(
     });
 
     componentTest("dark color scheme and dark logo not set", {
-      template: '{{mount-widget widget="home-logo" args=args}}',
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
       beforeEach() {
         this.siteSettings.site_logo_url = bigLogo;
         this.siteSettings.site_logo_dark_url = "";

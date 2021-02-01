@@ -2,19 +2,8 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-
-function template(options = []) {
-  return `
-    {{multi-select
-      value=value
-      content=content
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -43,7 +32,12 @@ discourseModule(
     });
 
     componentTest("content", {
-      template: template(),
+      template: hbs`
+      {{multi-select
+        value=value
+        content=content
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this);

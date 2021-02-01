@@ -7,13 +7,14 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { fillIn } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import sinon from "sinon";
 
 discourseModule("Integration | Component | text-field", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("renders correctly with no properties set", {
-    template: `{{text-field}}`,
+    template: hbs`{{text-field}}`,
 
     test(assert) {
       assert.ok(queryAll("input[type=text]").length);
@@ -21,7 +22,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
   });
 
   componentTest("support a placeholder", {
-    template: `{{text-field placeholderKey="placeholder.i18n.key"}}`,
+    template: hbs`{{text-field placeholderKey="placeholder.i18n.key"}}`,
 
     beforeEach() {
       sinon.stub(I18n, "t").returnsArg(0);
@@ -37,7 +38,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
   });
 
   componentTest("sets the dir attribute to ltr for Hebrew text", {
-    template: `{{text-field value='זהו שם עברי עם מקום עברי'}}`,
+    template: hbs`{{text-field value='זהו שם עברי עם מקום עברי'}}`,
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
     },
@@ -48,7 +49,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
   });
 
   componentTest("sets the dir attribute to ltr for English text", {
-    template: `{{text-field value='This is a ltr title'}}`,
+    template: hbs`{{text-field value='This is a ltr title'}}`,
     beforeEach() {
       this.siteSettings.support_mixed_text_direction = true;
     },
@@ -59,7 +60,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
   });
 
   componentTest("supports onChange", {
-    template: `{{text-field class="tf-test" value=value onChange=changed}}`,
+    template: hbs`{{text-field class="tf-test" value=value onChange=changed}}`,
     beforeEach() {
       this.called = false;
       this.newValue = null;
@@ -79,7 +80,7 @@ discourseModule("Integration | Component | text-field", function (hooks) {
   });
 
   componentTest("supports onChangeImmediate", {
-    template: `{{text-field class="tf-test" value=value onChangeImmediate=changed}}`,
+    template: hbs`{{text-field class="tf-test" value=value onChangeImmediate=changed}}`,
     beforeEach() {
       this.called = false;
       this.newValue = null;
