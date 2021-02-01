@@ -68,7 +68,8 @@ class BulkImport::VBulletin < BulkImport::Base
 
     import_private_topics
     import_topic_allowed_users
-    import_private_posts
+    import_private_first_posts
+    import_private_replies
 
     # --- need writing below
     #create_permalink_file
@@ -369,7 +370,6 @@ class BulkImport::VBulletin < BulkImport::Base
         hidden: row[5] == 0,
         raw: normalize_text(row[3]),
       }
-      p post
 
       post
     end
@@ -407,28 +407,22 @@ class BulkImport::VBulletin < BulkImport::Base
   def import_private_topics
     puts "Importing private topics..."
 
-    @imported_topics = {}
-
     topics = mysql_stream <<-SQL
       SELECT t.nodeid, t.title, t.userid, t.publishdate AS dateline
             FROM #{DB_PREFIX}node t
        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.nodeid
            WHERE pm.msgtype = 'message'
              AND t.parentid = 8
-             AND t.nodeid > #{@last_imported_topic_id}
+             AND t.nodeid > #{@last_imported_private_topic_id - PRIVATE_OFFSET}
         ORDER BY t.nodeid
     SQL
 
     create_topics(topics) do |row|
-      p row if row[1].nil?
-      key = [row[1], row[2]]
-
-      next if @imported_topics.has_key?(key)
-      @imported_topics[key] = row[0] + PRIVATE_OFFSET
+      title = row[0] || "No title given"
       {
         archetype: Archetype.private_message,
         imported_id: row[0] + PRIVATE_OFFSET,
-        title: row[1],
+        title: title,
         user_id: user_id_from_imported_id(row[2]),
         created_at: Time.zone.at(row[3]),
       }
@@ -446,8 +440,7 @@ class BulkImport::VBulletin < BulkImport::Base
         FROM #{DB_PREFIX}node t
         LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = t.parentid
        WHERE pm.msgtype = 'message'
-         AND t.nodeid > (#{@last_imported_private_topic_id - PRIVATE_OFFSET})
-       ORDER BY t.nodeid
+       ORDER BY t.parentid
     SQL
     ).each do |row|
       next unless topic_id = topic_id_from_imported_id(row[2] + PRIVATE_OFFSET)
@@ -463,34 +456,54 @@ class BulkImport::VBulletin < BulkImport::Base
     end
   end
 
-  def import_private_posts
-    puts "Importing private posts..."
+  def import_private_first_posts
+    puts "Importing private message first posts..."
 
     posts = mysql_stream <<-SQL
-      SELECT p.nodeid, p.title, p.userid, p.parentid,
+      SELECT p.nodeid, p.userid,
              CONVERT(CAST(rawtext AS BINARY)USING utf8),
              p.publishdate
         FROM #{DB_PREFIX}node p
         LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid = p.nodeid
         LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = p.nodeid
-       WHERE (p.nodeid = pm.nodeid OR p.parentid = pm.nodeid)
-         AND p.contenttypeid = #{@text_typeid}
-         AND p.nodeid > #{@last_imported_post_id}
+       WHERE pm.msgtype = 'message'
+         AND p.parentid = 8
        ORDER BY p.nodeid
     SQL
 
     create_posts(posts) do |row|
-      title = extract_pm_title(row[1])
-      key = [title, row[2]]
-
-      next unless topic_id = topic_id_from_imported_id(@imported_topics[key])
-
       {
         imported_id: row[0] + PRIVATE_OFFSET,
-        topic_id: topic_id,
-        user_id: user_id_from_imported_id(row[2]),
-        created_at: Time.zone.at(row[5]),
-        raw: normalize_text(row[4]),
+        topic_id: topic_id_from_imported_id(row[0] + PRIVATE_OFFSET),
+        user_id: user_id_from_imported_id(row[1]),
+        created_at: Time.zone.at(row[3]),
+        raw: normalize_text(row[2]),
+      }
+    end
+  end
+
+  def import_private_replies
+    puts "Importing private replies..."
+
+    posts = mysql_stream <<-SQL
+      SELECT p.nodeid, p.userid, p.parentid,
+             CONVERT(CAST(rawtext AS BINARY)USING utf8),
+             p.publishdate
+        FROM #{DB_PREFIX}node p
+        LEFT JOIN #{DB_PREFIX}text txt ON txt.nodeid = p.nodeid
+        LEFT JOIN #{DB_PREFIX}privatemessage pm ON pm.nodeid = p.nodeid
+       WHERE pm.msgtype = 'message'
+         AND p.parentid != 8
+       ORDER BY p.nodeid
+    SQL
+
+    create_posts(posts) do |row|
+      {
+        imported_id: row[0] + PRIVATE_OFFSET,
+        topic_id: topic_id_from_imported_id(row[2] + PRIVATE_OFFSET),
+        user_id: user_id_from_imported_id(row[1]),
+        created_at: Time.zone.at(row[4]),
+        raw: normalize_text(row[3]),
       }
     end
   end
