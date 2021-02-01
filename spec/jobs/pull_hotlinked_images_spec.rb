@@ -42,6 +42,15 @@ describe Jobs::PullHotlinkedImages do
       Jobs.run_immediately!
     end
 
+    it 'does nothing if topic has been deleted' do
+      post = Fabricate(:post, raw: "<img src='#{image_url}'>")
+      post.topic.destroy!
+
+      expect do
+        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
+      end.to change { Upload.count }.by(0)
+    end
+
     it 'does nothing if there are no large images to pull' do
       post = Fabricate(:post, raw: 'bob bob')
       orig = post.updated_at
