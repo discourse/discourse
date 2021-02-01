@@ -593,7 +593,7 @@ class Theme < ActiveRecord::Base
   end
 
   def scss_variables
-    return "" if all_theme_variables.empty? && included_settings.empty?
+    return if all_theme_variables.empty? && included_settings.empty?
 
     contents = +""
 

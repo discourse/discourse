@@ -248,7 +248,7 @@ class Stylesheet::Manager
         @target,
          rtl: rtl,
          theme_id: theme&.id,
-         theme_variables: theme&.scss_variables,
+         theme_variables: theme&.scss_variables.to_s,
          source_map_file: source_map_filename,
          color_scheme_id: @color_scheme&.id,
          load_paths: theme&.scss_load_paths

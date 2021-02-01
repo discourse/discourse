@@ -344,7 +344,7 @@ class ThemeField < ActiveRecord::Base
 
   def compile_scss
     scss = <<~SCSS
-      @import "common/foundation/variables"; @import "common/foundation/mixins"; #{self.theme.scss_variables} #{self.value}
+      @import "common/foundation/variables"; @import "common/foundation/mixins"; #{self.theme.scss_variables.to_s} #{self.value}
     SCSS
 
     Stylesheet::Compiler.compile(scss,

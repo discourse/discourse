@@ -807,16 +807,19 @@ HTML
   end
 
   describe "scss_variables" do
-    it "is empty string by default" do
-      expect(theme.scss_variables).to eq("")
+    it "is empty by default" do
+      expect(theme.scss_variables).to eq(nil)
     end
 
-    it "works" do
+    it "includes settings and uploads when set" do
       theme.set_field(target: :settings, name: :yaml, value: "background_color: red\nfont_size: 25px")
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+      theme.set_field(type: :theme_upload_var, target: :common, name: "bobby", upload_id: upload.id)
       theme.save!
 
       expect(theme.scss_variables).to include("$background_color: unquote(\"red\")")
       expect(theme.scss_variables).to include("$font_size: unquote(\"25px\")")
+      expect(theme.scss_variables).to include("$bobby: ")
     end
   end
 

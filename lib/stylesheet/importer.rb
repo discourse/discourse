@@ -140,7 +140,7 @@ module Stylesheet
 
       if resolved_ids
         theme = Theme.find_by_id(theme_id)
-        contents << theme.scss_variables
+        contents << theme&.scss_variables.to_s
         Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
           contents << "// Color definitions from #{theme.name}\n\n"
           contents << row.value
