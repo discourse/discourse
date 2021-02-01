@@ -19,12 +19,18 @@
   {{/if}}
   {{#if showFutureDateInput}}
     <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
-    {{time-shortcut-picker prefilledDatetime=(readonly topicTimer.updateTime) onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
+    {{time-shortcut-picker prefilledDatetime=topicTimer.execute_at onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
   {{/if}}
   {{#if useDuration}}
     <div class="controls">
       <label class="control-label">{{i18n durationTranslationKey}}</label>
       {{text-field id="topic_timer_duration" class="topic-timer-duration" type="number" value=topicTimer.duration min="1"}}
+    </div>
+  {{/if}}
+  {{#if willCloseImmediately}}
+    <div class="warning">
+      {{d-icon "exclamation-triangle"}}
+      {{willCloseI18n}}
     </div>
   {{/if}}
   {{#if showTopicStatusInfo}}

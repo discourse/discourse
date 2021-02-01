@@ -83,11 +83,12 @@ export default Controller.extend(ModalFunctionality, {
 
           this.set("model.closed", result.closed);
         } else {
-          this.set("model.topic_timer", EmberObject.create({}));
+          this.set(
+            "model.topic_timer",
+            EmberObject.create({ status_type: this.defaultStatusType })
+          );
 
-          this.setProperties({
-            selection: null,
-          });
+          this.send("onChangeInput", null, null);
         }
       })
       .catch(popupAjaxError)
@@ -109,8 +110,13 @@ export default Controller.extend(ModalFunctionality, {
     this.send("onChangeInput", null, time);
 
     if (!this.get("topicTimer.status_type")) {
-      this.send("onChangeStatusType", this.publicTimerTypes[0].id);
+      this.send("onChangeStatusType", this.defaultStatusType);
     }
+  },
+
+  @discourseComputed("publicTimerTypes")
+  defaultStatusType(publicTimerTypes) {
+    return publicTimerTypes[0].id;
   },
 
   actions: {

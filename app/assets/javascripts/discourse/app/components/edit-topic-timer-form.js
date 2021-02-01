@@ -26,6 +26,7 @@ export default Component.extend({
   showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
   showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
   useDuration: or("isBasedOnLastPost", "autoDeleteReplies"),
+  originalTopicTimerTime: null,
 
   @discourseComputed("autoDeleteReplies")
   durationType(autoDeleteReplies) {
@@ -119,7 +120,7 @@ export default Component.extend({
     durationType
   ) {
     if (isBasedOnLastPost || isBasedOnDuration) {
-      return moment().add(parseFloat(duration, 0), durationType).format(FORMAT);
+      return moment().add(parseFloat(duration), durationType).format(FORMAT);
     } else {
       return updateTime;
     }
