@@ -601,8 +601,8 @@ describe Search do
       expect(result.posts.pluck(:id)).to eq([post2.id, post.id])
     end
 
-    it 'aggregates searches in a topic by returning the post with the highest rank' do
-      _post = Fabricate(:post, topic: topic, raw: "this is a play post")
+    it 'aggregates searches in a topic by returning the post with the lowest post number' do
+      post = Fabricate(:post, topic: topic, raw: "this is a play post")
       post2 = Fabricate(:post, topic: topic, raw: "play play playing played play")
       post3 = Fabricate(:post, raw: "this is a play post")
 
@@ -613,7 +613,7 @@ describe Search do
       results = Search.execute('play')
 
       expect(results.posts.map(&:id)).to eq([
-        post2.id,
+        post.id,
         post3.id
       ])
     end
@@ -1892,9 +1892,11 @@ describe Search do
 
     it 'allows to define custom order' do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_order(:chars) do |posts|
-        posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
+        posts.reorder("MAX(LENGTH(posts.raw)) DESC")
       end
+
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
     end
   end
