@@ -85,7 +85,6 @@ class AdminDashboardData
       'dashboard.bad_favicon_url',
       'dashboard.poll_pop3_timeout',
       'dashboard.poll_pop3_auth_error',
-      'dashboard.deprecated_api_usage',
     ]
 
     add_problem_check :rails_env_check, :host_names_check, :force_https_check,
