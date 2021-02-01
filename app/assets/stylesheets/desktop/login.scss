@@ -139,6 +139,16 @@
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
     }
+    .modal-body {
+      scrollbar-color: rgba(var(--primary-rgb),0.5) var(--tertiary);
+    }
+    // Safari Hack
+    @media not all and (min-resolution:.001dpcm)
+    { @supports (-webkit-appearance:none) {
+        .modal-body {
+          will-change: transform;
+        }
+    }}
     .modal-body::-webkit-scrollbar {
       width: 15px;
       background: var(--tertiary);
@@ -169,23 +179,36 @@
     align-items: flex-end;
     padding: 0;
     position: absolute;
-    top: 1em;
-    right: 2em;
+    top: 0.5em;
+    right: 1em;
     z-index: 999;
   }
   .create-account-left {
     flex-basis: 65%;
     flex-grow: 1;
     position: relative;
+    height: 100%;
   }
+  @media not all and (min-resolution:.001dpcm)
+  { @supports (-webkit-appearance:none) {
+      .create-account-left {
+        width: 65%;
+        flex-basis: unset;
+        flex-grow: 0;
+      }
+    }}
   .create-account-right {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    padding: 6em 1em;
+    padding: 1em 0 0 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex-basis: 35%;
     flex-grow: 1;
     background: var(--tertiary);
+
     h3 {
       color: var(--secondary);
       text-align: center;
@@ -199,6 +222,22 @@
       }
     }
   }
+  // Safari Hack
+  @media not all and (min-resolution:.001dpcm)
+  { @supports (-webkit-appearance:none) {
+      .create-account-right {
+        position: absolute;
+        top: 0;
+        right: 1em;
+        padding: 6em 0 0 1em;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background: var(--tertiary);
+        width: calc(35% - 2em);
+        height: 100%;
+      }
+    }}
   .modal-body {
     display: flex;
     padding: 0;
@@ -268,7 +307,6 @@
     // }
     
     .input-group {
-      width: 100%;
       position: relative;
       display: flex;
       flex-direction: column;

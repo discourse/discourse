@@ -1640,7 +1640,7 @@ en:
 
     create_account:
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
-      title: "Let's create your account"
+      title: "Create your account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
     forgot_password:
@@ -1661,7 +1661,7 @@ en:
 
     email_login:
       link_label: "Email me a login link"
-      button_label: "with email"
+      button_label: "Log in with email"
       emoji: "lock emoji"
       complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with a login link shortly."
       complete_email: "If an account matches <b>%{email}</b>, you should receive an email with a login link shortly."
@@ -1721,22 +1721,22 @@ en:
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google_oauth2:
         name: "Google"
-        title: "Google"
+        title: "Log in with Google"
       twitter:
         name: "Twitter"
-        title: "Twitter"
+        title: "Log in with Twitter"
       instagram:
         name: "Instagram"
-        title: "Instagram"
+        title: "Log in with Instagram"
       facebook:
         name: "Facebook"
-        title: "Facebook"
+        title: "Log in with Facebook"
       github:
         name: "GitHub"
-        title: "GitHub"
+        title: "Log in with GitHub"
       discord:
         name: "Discord"
-        title: "Discord"
+        title: "Log in with Discord"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"

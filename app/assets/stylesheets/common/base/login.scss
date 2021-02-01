@@ -12,25 +12,6 @@
   display: none;
 }
 
-// .modal-inner-container {
-//   position: relative;
-// }
-
-// .modal-header {
-//   display: flex;
-//   align-items: center;
-//   position: absolute;
-//   right: 10px;
-//   top: 10px;
-//   color: white;
-//   .btn .d-icon {
-//     color: var(--secondary);
-//     &:hover {
-//       color: var(--tertiary-high) !important;
-//     }
-//   }
-// }
-
 .login-modal:not(.hidden) {
   min-width: 700px;
   display: flex !important;
@@ -131,22 +112,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    p {
-      font-weight: bold;
-      font-size: 1.25em !important;
-      color: var(--secondary);
-    }
     #login-buttons {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      padding: 0;
       button {
-        &:first-of-type, &:nth-of-type(2) {
-          margin-top: 0 !important;
-        }
-        width: 45%;
-        height: 25px;
         &.login-with-email-button {
           background-color: var(--secondary);
           border-radius: 4px;

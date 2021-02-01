@@ -11,7 +11,7 @@
         <div class="create-account-left">
           <div class="login-welcome-header">
             <h1>Welcome!</h1> <img src="/images/emoji/twitter/wave/{{skinToneId}}.png" alt="" class="waving-hand">
-            <p>{{i18n "create_account.title"}}</p>
+            <p>Let's {{i18n "create_account.title"}}</p>
           </div>
           <div class="login-form">
             <form>
@@ -141,7 +141,6 @@
       {{/if}}
       {{#unless hasAuthOptions}}
         <div class="create-account-right">
-          <h3>Or sign in with...</h3>
           {{login-buttons externalLogin=(action "externalLogin")}}
         </div>
       {{/unless}}
