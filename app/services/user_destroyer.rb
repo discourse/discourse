@@ -122,7 +122,7 @@ class UserDestroyer
   end
 
   def delete_posts(user, category_topic_ids, opts)
-    user.posts.each do |post|
+    user.posts.find_each do |post|
       if post.is_first_post? && category_topic_ids.include?(post.topic_id)
         post.update!(user: Discourse.system_user)
       else
