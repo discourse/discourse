@@ -1,4 +1,4 @@
-{{#d-modal-body title="topic.topic_status_update.title" autoFocus="false"}}
+{{#d-modal-body title="topic.topic_status_update.title" autoFocus="false" id="topic-timer-modal"}}
   {{edit-topic-timer-form
     topic=model
     topicTimer=topicTimer
@@ -8,19 +8,20 @@
     onChangeInput=(action "onChangeInput")
     onChangeDuration=(action "onChangeDuration")
   }}
+
+  <div class="control-group">
+    {{d-button class="btn-primary"
+        disabled=saveDisabled
+        label="topic.topic_status_update.save"
+        action=(action "saveTimer")}}
+
+    {{conditional-loading-spinner size="small" condition=loading}}
+
+    {{#if topicTimer.execute_at}}
+      {{d-button class="pull-right btn-danger"
+          action=(action "removeTimer")
+          label="topic.topic_status_update.remove"}}
+    {{/if}}
+  </div>
 {{/d-modal-body}}
 
-<div class="modal-footer">
-  {{d-button class="btn-primary"
-      disabled=saveDisabled
-      label="topic.topic_status_update.save"
-      action=(action "saveTimer")}}
-
-  {{conditional-loading-spinner size="small" condition=loading}}
-
-  {{#if topicTimer.execute_at}}
-    {{d-button class="pull-right btn-danger"
-        action=(action "removeTimer")
-        label="topic.topic_status_update.remove"}}
-  {{/if}}
-</div>

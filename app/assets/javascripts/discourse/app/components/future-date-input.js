@@ -3,8 +3,6 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import I18n from "I18n";
-import { PUBLISH_TO_CATEGORY_STATUS_TYPE } from "discourse/controllers/edit-topic-timer";
-import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   selection: null,
@@ -107,48 +105,6 @@ export default Component.extend({
 
     if (this.label) {
       this.set("displayLabel", I18n.t(this.label));
-    }
-  },
-
-  @discourseComputed(
-    "statusType",
-    "input",
-    "isCustom",
-    "date",
-    "time",
-    "willCloseImmediately",
-    "categoryId",
-    "displayNumberInput",
-    "duration"
-  )
-  showTopicStatusInfo(
-    statusType,
-    input,
-    isCustom,
-    date,
-    time,
-    willCloseImmediately,
-    categoryId,
-    displayNumberInput,
-    duration
-  ) {
-    if (!statusType || willCloseImmediately) {
-      return false;
-    }
-
-    if (statusType === PUBLISH_TO_CATEGORY_STATUS_TYPE && isEmpty(categoryId)) {
-      return false;
-    }
-
-    if (isCustom) {
-      if (date) {
-        return moment(`${date}${time ? " " + time : ""}`).isAfter(moment());
-      }
-      return time;
-    } else if (displayNumberInput) {
-      return duration;
-    } else {
-      return input;
     }
   },
 

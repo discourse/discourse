@@ -5,6 +5,7 @@ export const LATER_TODAY_CUTOFF_HOUR = 17;
 export const LATER_TODAY_MAX_HOUR = 18;
 export const MOMENT_MONDAY = 1;
 export const MOMENT_THURSDAY = 4;
+export const MOMENT_SATURDAY = 6;
 
 export function now(timezone) {
   return moment.tz(timezone);
@@ -16,6 +17,10 @@ export function startOfDay(momentDate, startOfDayHour = START_OF_DAY_HOUR) {
 
 export function tomorrow(timezone) {
   return startOfDay(now(timezone).add(1, "day"));
+}
+
+export function thisWeekend(timezone) {
+  return startOfDay(now(timezone).day(MOMENT_SATURDAY));
 }
 
 export function laterToday(timezone) {

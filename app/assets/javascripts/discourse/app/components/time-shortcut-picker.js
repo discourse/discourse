@@ -196,6 +196,12 @@ export default Component.extend({
       lastCustom.hidden = false;
     }
 
+    customOptions.forEach((opt) => {
+      if (!opt.timeFormatted && opt.time) {
+        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
+      }
+    });
+
     let customOptionIndex = options.findIndex(
       (opt) => opt.id === TIME_SHORTCUT_TYPES.CUSTOM
     );
