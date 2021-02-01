@@ -245,6 +245,9 @@ en:
     now: "just now"
     read_more: "read more"
     more: "More"
+    x_more:
+      one: "%{count} More"
+      other: "%{count} More"
     less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"
@@ -1852,7 +1855,7 @@ en:
 
     shared_drafts:
       title: "Shared Drafts"
-      notice: "This topic is only visible to those who can see the <b>%{category}</b> category."
+      notice: "This topic is only visible to those who can publish shared drafts."
       destination_category: "Destination Category"
       publish: "Publish Shared Draft"
       confirm_publish: "Are you sure you want to publish this draft?"
@@ -2788,11 +2791,13 @@ en:
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
+
       filtered_replies_viewing:
         one: "Viewing %{count} reply to"
         other: "Viewing %{count} replies to"
 
       in_reply_to: "Load parent post"
+      view_all_posts: "View all posts"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."

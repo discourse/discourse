@@ -24,6 +24,7 @@ export default MultiSelectComponent.extend({
     includeMessageableGroups: false,
     allowEmails: false,
     groupMembersOf: undefined,
+    excludeCurrentUser: false,
   },
 
   content: computed("value.[]", function () {

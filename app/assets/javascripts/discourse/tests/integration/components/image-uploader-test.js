@@ -6,13 +6,15 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | image-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("with image", {
-    template:
-      "{{image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}",
+    template: hbs`
+      {{image-uploader imageUrl='/images/avatar.png' placeholderUrl='/not/used.png'}}
+    `,
 
     async test(assert) {
       assert.equal(
@@ -44,7 +46,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
   });
 
   componentTest("without image", {
-    template: "{{image-uploader}}",
+    template: hbs`{{image-uploader}}`,
 
     test(assert) {
       assert.equal(
@@ -68,7 +70,7 @@ discourseModule("Integration | Component | image-uploader", function (hooks) {
   });
 
   componentTest("with placeholder", {
-    template: "{{image-uploader placeholderUrl='/images/avatar.png'}}",
+    template: hbs`{{image-uploader placeholderUrl='/images/avatar.png'}}`,
 
     test(assert) {
       assert.equal(

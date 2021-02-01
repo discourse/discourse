@@ -617,9 +617,8 @@ class TopicQuery
 
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
-    can_create_shared = guardian.can_create_shared_draft?
 
-    if can_create_shared
+    if guardian.can_see_shared_draft?
       if options[:destination_category_id]
         destination_category_id = get_category_id(options[:destination_category_id])
         topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)

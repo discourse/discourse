@@ -5,6 +5,7 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function fromDateInput() {
   return queryAll(".from.d-date-time-input .date-picker")[0];
@@ -30,7 +31,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("default", {
-      template: `{{date-time-input-range from=from to=to}}`,
+      template: hbs`{{date-time-input-range from=from to=to}}`,
 
       beforeEach() {
         this.setProperties({ from: DEFAULT_DATE_TIME, to: null });

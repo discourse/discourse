@@ -542,7 +542,10 @@ export default Component.extend({
             }
           }
 
-          const options = emojiSearch(term, { maxResults: 5 });
+          const options = emojiSearch(term, {
+            maxResults: 5,
+            diversity: this.emojiStore.diversity,
+          });
 
           return resolve(options);
         })

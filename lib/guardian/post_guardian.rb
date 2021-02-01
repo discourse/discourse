@@ -142,7 +142,7 @@ module PostGuardian
       can_create_post?(post.topic) &&
       post.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
       can_see_category?(post.topic.category) &&
-      can_create_shared_draft?
+      can_see_shared_draft?
     )
 
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)

@@ -87,6 +87,7 @@ export default Component.extend(
           isHidden: false,
           isExpanded: false,
           isFilterExpanded: false,
+          enterDisabled: false,
           hasSelection: false,
           hasNoContent: true,
           highlighted: null,
@@ -570,64 +571,75 @@ export default Component.extend(
 
     _searchWrapper(filter) {
       this.clearErrors();
-      this.setProperties({ mainCollection: [], "selectKit.isLoading": true });
+      this.setProperties({
+        mainCollection: [],
+        "selectKit.isLoading": true,
+        "selectKit.enterDisabled": true,
+      });
       this._safeAfterRender(() => this.popper && this.popper.update());
 
       let content = [];
 
-      return Promise.resolve(this.search(filter)).then((result) => {
-        content = content.concat(makeArray(result));
-        content = this.selectKit.modifyContent(content).filter(Boolean);
+      return Promise.resolve(this.search(filter))
+        .then((result) => {
+          content = content.concat(makeArray(result));
+          content = this.selectKit.modifyContent(content).filter(Boolean);
 
-        if (this.selectKit.valueProperty) {
-          content = content.uniqBy(this.selectKit.valueProperty);
-        } else {
-          content = content.uniq();
-        }
-
-        if (this.selectKit.options.limitMatches) {
-          content = content.slice(0, this.selectKit.options.limitMatches);
-        }
-
-        const noneItem = this.selectKit.noneItem;
-        if (
-          this.selectKit.options.allowAny &&
-          filter &&
-          this.getName(noneItem) !== filter
-        ) {
-          filter = this.createContentFromInput(filter);
-          if (this.validateCreate(filter, content)) {
-            this.selectKit.set("newItem", this.defaultItem(filter, filter));
-            content.unshift(this.selectKit.newItem);
+          if (this.selectKit.valueProperty) {
+            content = content.uniqBy(this.selectKit.valueProperty);
+          } else {
+            content = content.uniq();
           }
-        }
 
-        const hasNoContent = isEmpty(content);
+          if (this.selectKit.options.limitMatches) {
+            content = content.slice(0, this.selectKit.options.limitMatches);
+          }
 
-        if (
-          this.selectKit.hasSelection &&
-          noneItem &&
-          this.selectKit.options.autoInsertNoneItem
-        ) {
-          content.unshift(noneItem);
-        }
+          const noneItem = this.selectKit.noneItem;
+          if (
+            this.selectKit.options.allowAny &&
+            filter &&
+            this.getName(noneItem) !== filter
+          ) {
+            filter = this.createContentFromInput(filter);
+            if (this.validateCreate(filter, content)) {
+              this.selectKit.set("newItem", this.defaultItem(filter, filter));
+              content.unshift(this.selectKit.newItem);
+            }
+          }
 
-        this.set("mainCollection", content);
+          const hasNoContent = isEmpty(content);
 
-        this.selectKit.setProperties({
-          highlighted:
-            this.singleSelect && this.value
-              ? this.itemForValue(this.value, this.mainCollection)
-              : this.mainCollection.firstObject,
-          isLoading: false,
-          hasNoContent,
+          if (
+            this.selectKit.hasSelection &&
+            noneItem &&
+            this.selectKit.options.autoInsertNoneItem
+          ) {
+            content.unshift(noneItem);
+          }
+
+          this.set("mainCollection", content);
+
+          this.selectKit.setProperties({
+            highlighted:
+              this.singleSelect && this.value
+                ? this.itemForValue(this.value, this.mainCollection)
+                : this.mainCollection.firstObject,
+            isLoading: false,
+            hasNoContent,
+          });
+
+          this._safeAfterRender(() => {
+            this.popper && this.popper.update();
+            this._focusFilter();
+          });
+        })
+        .finally(() => {
+          if (this.isDestroyed || this.isDestroying) {
+            return;
+          }
+          this.set("selectKit.enterDisabled", false);
         });
-
-        this._safeAfterRender(() => {
-          this.popper && this.popper.update();
-          this._focusFilter();
-        });
-      });
     },
 
     _safeAfterRender(fn) {
@@ -854,11 +866,12 @@ export default Component.extend(
                   }
 
                   const popperElement = data.state.elements.popper;
-                  if (
+                  const topPlacement =
                     popperElement &&
-                    popperElement.getAttribute("data-popper-placement") ===
-                      "top-start"
-                  ) {
+                    popperElement
+                      .getAttribute("data-popper-placement")
+                      .startsWith("top-");
+                  if (topPlacement) {
                     this.element.classList.remove("is-under");
                     this.element.classList.add("is-above");
                   } else {
@@ -868,6 +881,20 @@ export default Component.extend(
 
                   wrapper.style.width = `${this.element.offsetWidth}px`;
                   wrapper.style.height = `${height}px`;
+                  if (placementStrategy === "fixed") {
+                    const rects = this.element.getClientRects()[0];
+                    const bodyRects = body && body.getClientRects()[0];
+                    wrapper.style.position = "fixed";
+                    wrapper.style.left = `${rects.left}px`;
+                    if (topPlacement && bodyRects) {
+                      wrapper.style.top = `${rects.top - bodyRects.height}px`;
+                    } else {
+                      wrapper.style.top = `${rects.top}px`;
+                    }
+                    if (isDocumentRTL()) {
+                      wrapper.style.right = "unset";
+                    }
+                  }
                 }
               },
             },
