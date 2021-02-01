@@ -138,9 +138,8 @@
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
-    }
-    .modal-body {
-      scrollbar-color: rgba(var(--primary-rgb),0.5) var(--tertiary);
+      scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
+      background: var(--tertiary);
     }
     // Safari Hack
     @media not all and (min-resolution:.001dpcm)
@@ -151,8 +150,7 @@
     }}
     .modal-body::-webkit-scrollbar {
       width: 15px;
-      background: var(--tertiary);
-      border: 4px solid transparent;
+      // background: transparent;
     }
     
     .modal-body::-webkit-scrollbar-track {
@@ -189,6 +187,7 @@
     flex-grow: 1;
     position: relative;
     height: 100%;
+    overflow: hidden;
   }
   @media not all and (min-resolution:.001dpcm)
   { @supports (-webkit-appearance:none) {
@@ -208,8 +207,6 @@
     justify-content: center;
     flex-basis: 35%;
     flex-grow: 1;
-    background: var(--tertiary);
-
     h3 {
       color: var(--secondary);
       text-align: center;
@@ -236,7 +233,7 @@
         justify-content: flex-start;
         background: var(--tertiary);
         width: calc(35% - 2em);
-        height: 100%;
+        bottom: 0;
       }
     }}
   .modal-body {
@@ -271,14 +268,11 @@
   }
 
   .login-form {
-    form {
-      padding: 1em;
-    }
+    background: var(--secondary);
+    padding: 1em;
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    width: 100%;
     // &:after,
     // &:before {
     //   content: "";
