@@ -174,7 +174,7 @@ createWidget("filter-show-all", {
   },
 
   click() {
-    this.sendWidgetAction("cancelFilter", this.attrs.streamFilters);
+    this.sendWidgetAction("cancelFilter");
     this.appEvents.trigger(
       "post-stream:filter-show-all",
       this.attrs.streamFilters

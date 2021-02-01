@@ -2773,11 +2773,13 @@ en:
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
+
       filtered_replies_viewing:
         one: "Viewing %{count} reply to"
         other: "Viewing %{count} replies to"
 
       in_reply_to: "Load parent post"
+      view_all_posts: "View all posts"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
