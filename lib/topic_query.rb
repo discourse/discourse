@@ -900,6 +900,7 @@ class TopicQuery
       list = list
         .references("cu")
         .joins("LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}")
+        .joins("LEFT JOIN dismissed_topic_users ON dismissed_topic_users.topic_id = topics.id AND dismissed_topic_users.user_id = #{user.id}")
         .where("topics.category_id = :category_id
                 OR COALESCE(category_users.notification_level, :default) <> :muted
                 OR tu.notification_level > :regular",
@@ -971,7 +972,7 @@ class TopicQuery
   def remove_already_seen_for_category(list, user)
     if user
       list = list
-        .where("category_users.last_seen_at IS NULL OR topics.created_at > category_users.last_seen_at")
+        .where("dismissed_topic_users.id IS NULL")
     end
 
     list

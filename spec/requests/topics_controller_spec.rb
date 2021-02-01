@@ -2867,28 +2867,24 @@ RSpec.describe TopicsController do
     context 'category' do
       fab!(:category) { Fabricate(:category) }
       fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+      fab!(:category_topic) { Fabricate(:topic, category: category) }
+      fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory) }
 
-      it 'updates last_seen_at for main category' do
+      it 'dismisses topics for main category' do
         sign_in(user)
-        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
-        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
 
         TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category.id.to_s)
 
         put "/topics/reset-new.json?category_id=#{category.id}"
 
-        expect(category_user.reload.last_seen_at).not_to be_nil
-        expect(subcategory_user.reload.last_seen_at).to be_nil
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([category_topic.id])
       end
 
-      it 'updates last_seen_at for main category and subcategories' do
+      it 'dismisses topics for main category and subcategories' do
         sign_in(user)
-        category_user = CategoryUser.create!(category_id: category.id, user_id: user.id)
-        subcategory_user = CategoryUser.create!(category_id: subcategory.id, user_id: user.id)
         put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
-        expect(category_user.reload.last_seen_at).not_to be_nil
-        expect(subcategory_user.reload.last_seen_at).not_to be_nil
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq([category_topic.id, subcategory_topic.id].sort)
       end
     end
   end
