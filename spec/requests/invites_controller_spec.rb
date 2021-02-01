@@ -443,6 +443,7 @@ describe InvitesController do
             end
 
             it "does not send password reset email if sso is enabled" do
+              invite # create the invite before enabling SSO
               SiteSetting.sso_url = "https://www.example.com/sso"
               SiteSetting.enable_sso = true
               put "/invites/show/#{invite.invite_key}.json"
