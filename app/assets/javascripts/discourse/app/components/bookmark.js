@@ -203,18 +203,17 @@ export default Component.extend({
       return ajax(`/bookmarks/${this.model.id}`, {
         type: "PUT",
         data,
-      }).then(() => {
-        this._executeAfterSave(reminderAtISO);
+      }).then((response) => {
+        this._executeAfterSave(response, reminderAtISO);
       });
     } else {
       return ajax("/bookmarks", { type: "POST", data }).then((response) => {
-        this.set("model.id", response.id);
-        this._executeAfterSave(reminderAtISO);
+        this._executeAfterSave(response, reminderAtISO);
       });
     }
   },
 
-  _executeAfterSave(reminderAtISO) {
+  _executeAfterSave(response, reminderAtISO) {
     if (!this.afterSave) {
       return;
     }
@@ -222,7 +221,7 @@ export default Component.extend({
       reminderAt: reminderAtISO,
       reminderType: this.selectedReminderType,
       autoDeletePreference: this.autoDeletePreference,
-      id: this.model.id,
+      id: this.model.id || response.id,
       name: this.model.name,
     });
   },
