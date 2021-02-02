@@ -129,8 +129,8 @@ export default Component.extend({
   },
 
   @discourseComputed("durationType")
-  durationTranslationKey(durationType) {
-    return `topic.topic_status_update.num_of_${durationType}`;
+  durationLabel(durationType) {
+    return I18n.t(`topic.topic_status_update.num_of_${durationType}`);
   },
 
   @discourseComputed(
@@ -172,11 +172,10 @@ export default Component.extend({
 
   @action
   onTimeSelected(type, time) {
-    this.set("timerType", type);
-    this.set(
-      "topicTimer.based_on_last_post",
-      this.timerType === "set_based_on_last_post"
-    );
+    this.setProperties({
+      "topicTimer.based_on_last_post": type === "set_based_on_last_post",
+      timerType: type,
+    });
     this.onChangeInput(type, time);
   },
 });
