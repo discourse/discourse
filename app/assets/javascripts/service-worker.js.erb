@@ -41,12 +41,13 @@ cdnUrls = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url
 
 if (cdnUrls.length > 0) {
   var cdnCacheName = "cdn-" + cacheVersion;
+  var cdnUrl = "<%= "#{GlobalSetting.cdn_url}" %>";
 
   var appendQueryStringPlugin = {
     requestWillFetch: function (args) {
       var request = args.request;
 
-      if (request.url.includes("avatar") || request.url.includes("emoji")) {
+      if (request.url.startsWith(cdnUrl)) {
         var url = new URL(request.url);
         // Using this temporary query param to force browsers to redownload images from server.
         url.searchParams.append('refresh', 'true');
