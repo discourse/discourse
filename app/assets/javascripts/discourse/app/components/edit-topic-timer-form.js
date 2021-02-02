@@ -145,7 +145,7 @@ export default Component.extend({
       const diff = Math.round(
         (new Date() - new Date(lastPostedAt)) / (1000 * 60 * 60)
       );
-      return I18n.t("topic.auto_close_immediate", { count: diff });
+      return I18n.t("topic.auto_close_momentarily", { count: diff });
     }
   },
 

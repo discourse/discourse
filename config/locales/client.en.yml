@@ -2448,6 +2448,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_close_momentarily:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
 
       timeline:
         back: "Back"
