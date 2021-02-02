@@ -1,6 +1,10 @@
 {{#login-modal loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{plugin-outlet name="login-before-modal-body" tagName=""}}
-  {{#d-modal-body title="login.title" class=modalBodyClasses}}
+  {{#d-modal-body class=modalBodyClasses}}
+    <div class="login-welcome-header">
+      <h1>Welcome Back</h1> <img src="/images/emoji/twitter/wave/{{skinToneId}}.png" alt="" class="waving-hand">
+      <p>Sign in to your account</p>
+    </div>
     {{#if showLoginButtons}}
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
@@ -13,12 +17,12 @@
       <form id="login-form" method="post">
         <div id="credentials" class={{credentialsClass}}>
           <div class="input-group">
-            {{input value=loginName type="email" placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
-            <label for="login-account-name">{{i18n "login.username"}}</label>
+            {{input value=loginName class=(value-entered loginName)type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
+            <label class="alt-placeholder" for="login-account-name">{{i18n "login.username"}}</label>
           </div>
           <div class="input-group">
-            {{input value=loginPassword type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
-            <label for="login-account-password">{{i18n "login.password"}}</label>
+            {{input value=loginPassword class=(value-entered loginPassword) type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}
+            <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
             <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
           </div>
         </div>

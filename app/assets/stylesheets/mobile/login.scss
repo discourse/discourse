@@ -1,39 +1,66 @@
 // shared styles
 // used in both login and
 // create account modals
-.login-modal,
-.create-account {
+.d-modal.login-modal:not(.hidden),
+.d-modal.create-account {
+  .modal-body {
+    padding: 0;
+  }
   &.fixed-modal .modal-inner-container {
     max-width: 350px;
     max-height: 90vh;
+    position: relative;
   }
 
   .close {
     padding: 0;
   }
 
+  .modal-header {
+    display: flex;
+    border: none;
+    align-items: flex-end;
+    padding: 0;
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    z-index: 999;
+  }
+
+  .login-welcome-header {
+    padding: 1.5em 1em;
+    width: 100%;
+    margin: 0 auto;
+  }
+
   #login-buttons:not(.hidden) {
     display: flex;
     flex: 1 0 auto;
     flex-wrap: wrap;
-    justify-content: center;
-    width: 102%;
-    padding-bottom: 10px;
-    margin-left: -2%;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1em;
+    margin: 0;
 
     button {
+      border: 1px solid var(--primary-low);
+      max-width: 48%;
       flex: 1 1 47%;
-      max-width: 70%;
-      margin: 1% 0 1% 2%;
-      font-size: $font-0;
+      margin: 0 0.5em 0.5em 0;
+      font-size: $font-down-1;
       white-space: nowrap;
-      @media screen and (max-width: 360px) {
-        font-size: $font-0;
-      }
     }
+    // 'right side' buttons
+    button:nth-child(even) {
+      margin: 0 0 0.5em 0;
+    }
+  }
 
-    + #login-form {
-      border-top: 1px solid var(--primary-low);
+  #login-form, .login-form {
+    padding: 1em;
+    border-top: 1px solid var(--primary-low);
+    .input-group {
+      margin-bottom: 1em;
     }
   }
 
@@ -45,34 +72,6 @@
 
   table {
     width: 100%;
-  }
-
-  tr {
-    &.input td label {
-      margin-top: 0.75em;
-    }
-
-    td label {
-      max-width: 280px;
-      display: block;
-      overflow: hidden;
-      word-wrap: break-word;
-    }
-
-    &:not(.instructions) td {
-      padding: 2px 0 0 0;
-    }
-
-    &:not(.password-confirmation) {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  .tip {
-    &:not(:empty) + td {
-      display: none;
-    }
   }
 
   .modal-body input[type="text"],
@@ -105,19 +104,10 @@
 .d-modal.login-modal {
   #credentials {
     width: 100%;
-    tr {
-      display: flex;
-      flex-direction: column;
-    }
   }
 
   #login-form {
     margin-bottom: 0.75em;
-    td {
-      padding: 0;
-      width: 100%;
-      margin: 0 auto;
-    }
 
     label {
       float: left;
@@ -129,13 +119,6 @@
       font-size: $font-up-1;
       clear: left;
       margin-top: 0;
-    }
-  }
-
-  tr {
-    td label {
-      margin-top: 0.75em;
-      padding: 4px 0;
     }
   }
 }
@@ -154,16 +137,9 @@
 .create-account .modal-body {
   display: flex;
   flex-direction: column;
-  tr.instructions {
-    label {
-      color: var(--primary-med-or-secondary-med);
-    }
-  }
-
   #login-buttons {
     border-bottom: 1px solid var(--primary-low);
   }
-
   .login-form {
     margin-bottom: 0.75em;
   }

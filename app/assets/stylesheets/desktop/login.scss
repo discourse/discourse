@@ -105,25 +105,64 @@
 
 // styles used on
 // login modal only
-.d-modal.login-modal {
-  .modal-inner-container {
-    position: relative;
-  }
-  .modal-header {
+.login-modal:not(.hidden) {
+  padding: 0 !important;
+  .login-left-side {
+    width: calc(60% - 4em);
     display: flex;
-    border: none;
-    align-items: flex-end;
-    padding: 0;
-    position: absolute;
-    top: 1em;
-    right: 1em;
-    z-index: 999;
+    flex-direction: column;
+    padding: 1em 2em;
+    .login-welcome-header {
+      h1 {
+        font-size: 2.75em;
+      }
+      p {
+        font-size: 1.125em !important;
+      }
+    }
+    #credentials {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+    .modal-footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0;
+      border: 0;
+    }
+  }
+  .login-right-side {
+    background-color: var(--tertiary);
+    width: 40%;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    #login-buttons {
+      button {
+        &.login-with-email-button {
+          background-color: var(--secondary);
+          border-radius: 4px;
+          &:hover {
+            color: var(--primary) !important;
+            background: var(--secondary) !important;
+            box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
+            .d-icon {
+              color: var(--primary) !important;
+            }
+          }
+        }
+      }
+    }
   }
   .modal-body,
   #credentials {
     display: flex;
     align-items: center;
-    padding: 15px 0;
 
     &.hidden {
       display: none;
@@ -141,6 +180,7 @@
       max-height: 65vh !important;
       scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
       background: var(--tertiary);
+      flex-direction: row-reverse;
     }
     // Safari Hack
     @media not all and (min-resolution:.001dpcm)
@@ -170,34 +210,22 @@
       display: none;
     }
   }
-  .modal-inner-container {
-    position: relative;
-  }
-  .modal-header {
-    display: flex;
-    border: none;
-    align-items: flex-end;
-    padding: 0;
-    position: absolute;
-    top: 0.5em;
-    right: 1em;
-    z-index: 999;
-  }
-  .create-account-left {
+  .create-account-form {
     flex-basis: 65%;
     flex-grow: 1;
     height: 100%;
+    background: var(--secondary);
   }
   // Safari hack
   @media not all and (min-resolution:.001dpcm)
   { @supports (-webkit-appearance:none) {
-      .create-account-left {
+      .create-account-form {
         width: 65%;
         flex-basis: unset;
         flex-grow: 0;
       }
     }}
-  .create-account-right {
+  .create-account-login-buttons {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
@@ -223,7 +251,7 @@
   // Safari Hack
   @media not all and (min-resolution:.001dpcm)
   { @supports (-webkit-appearance:none) {
-      .create-account-right {
+      .create-account-login-buttons {
         position: absolute;
         top: 0;
         right: 1em;
@@ -235,35 +263,19 @@
         width: calc(35% - 2em);
         bottom: 0;
       }
-    }}
+  }}
   .modal-body {
     display: flex;
     padding: 0;
   }
   .login-welcome-header {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    background-color: var(--secondary);
-    z-index: 100;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
     padding: 1em 1em 1em 1em;
     h1 {
       font-size: 2.75em;
-      margin-bottom: 0;
     }
     p {
       font-size: 1.125em !important;
       align-self: start;
-      margin: 0;
-    }
-    img.waving-hand {
-      width: 35px;
-      height: 35px;
-      margin-left: 1em;
-      align-self: center;
     }
   }
 
