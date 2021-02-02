@@ -1731,17 +1731,16 @@ RSpec.describe SessionController do
         expect(json["error_type"]).to eq("rate_limit")
       end
 
-      it 'rate limits second factor attempts' do
+      it 'rate limits second factor attempts by IP' do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do
+        3.times do |x|
           post "/session.json", params: {
-            login: user.username,
+            login: "#{user.username}#{x}",
             password: 'myawesomepassword',
             second_factor_token: '000000'
           }
-
           expect(response.status).to eq(200)
         end
 
@@ -1754,6 +1753,33 @@ RSpec.describe SessionController do
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["error_type"]).to eq("rate_limit")
+      end
+
+      it 'rate limits second factor attempts by login' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        3.times do |x|
+          post "/session.json", params: {
+            login: user.username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+          expect(response.status).to eq(200)
+        end
+
+        [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
+          post "/session.json", params: {
+            login: username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
+
+          expect(response.status).to eq(429)
+          json = response.parsed_body
+          expect(json["error_type"]).to eq("rate_limit")
+        end
       end
     end
   end
