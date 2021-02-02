@@ -3,6 +3,7 @@
 // create account modals
 .login-modal,
 .create-account {
+  min-width: 700px;
   #modal-alert {
     padding: 15px 16px;
   }
@@ -185,10 +186,9 @@
   .create-account-left {
     flex-basis: 65%;
     flex-grow: 1;
-    position: relative;
     height: 100%;
-    overflow: hidden;
   }
+  // Safari hack
   @media not all and (min-resolution:.001dpcm)
   { @supports (-webkit-appearance:none) {
       .create-account-left {
