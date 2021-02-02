@@ -24,6 +24,14 @@ describe Jobs::CloseTopic do
     end
   end
 
+  it "publishes to the topic message bus so the topic status reloads" do
+    MessageBus.expects(:publish).at_least_once
+    MessageBus.expects(:publish).with("/topic/#{topic.id}", reload_topic: true).once
+    freeze_time(61.minutes.from_now) do
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+    end
+  end
+
   describe 'when trying to close a topic that has already been closed' do
     it 'should delete the topic timer' do
       freeze_time(topic.public_topic_timer.execute_at + 1.minute)
