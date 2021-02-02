@@ -595,6 +595,9 @@ class SessionController < ApplicationController
   def rate_limit_second_factor_totp
     return if params[:second_factor_token].blank?
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    if params[:login].present?
+      RateLimiter.new(nil, "second-factor-min-#{params[:login]}", 3, 1.minute).performed!
+    end
   end
 
   def render_sso_error(status:, text:)
