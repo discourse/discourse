@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action, get } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -15,6 +16,13 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed("username", "targetUsername")
   mergeDisabled(username, targetUsername) {
     return !targetUsername || username === targetUsername;
+  },
+
+  @discourseComputed("username")
+  mergeButtonText(username) {
+    return I18n.t(`admin.user.merge.confirmation.transfer_and_delete`, {
+      username,
+    });
   },
 
   @action
