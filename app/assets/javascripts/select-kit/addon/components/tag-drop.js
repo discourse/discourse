@@ -171,32 +171,30 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   actions: {
     onChange(tagId, tag) {
-      let url;
-
-      switch (tagId) {
-        case ALL_TAGS_ID:
-          url = this.allTagsUrl;
-          break;
-        case NO_TAG_ID:
-          url = this.noTagsUrl;
-          break;
-        default:
-          if (this.currentCategory) {
-            url = `/tags/c/${Category.slugFor(this.currentCategory)}/${
-              this.currentCategory.id
-            }`;
-          } else {
-            url = "/tag";
-          }
-
-          if (tag && tag.targetTagId) {
-            url += `/${tag.targetTagId.toLowerCase()}`;
-          } else {
-            url += `/${tagId.toLowerCase()}`;
-          }
+      const category = this.currentCategory;
+      if (tag && tag.targetTagId) {
+        tagId = tag.targetTagId;
+      }
+      if (tagId === NO_TAG_ID) {
+        tagId = NONE_TAG_ID;
       }
 
-      DiscourseURL.routeTo(getURL(url));
+      let url;
+
+      if (category) {
+        url = category.url;
+        if (this.noSubcategories) {
+          url += "/none";
+        }
+      }
+
+      if (tagId !== ALL_TAGS_ID) {
+        url = url
+          ? "/tags" + url + "/" + tagId.toLowerCase()
+          : "/tag/" + tagId.toLowerCase();
+      }
+
+      DiscourseURL.routeToUrl(url || "/");
     },
   },
 });
