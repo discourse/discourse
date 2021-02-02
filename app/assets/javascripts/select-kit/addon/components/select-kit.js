@@ -883,16 +883,20 @@ export default Component.extend(
                   wrapper.style.height = `${height}px`;
                   if (placementStrategy === "fixed") {
                     const rects = this.element.getClientRects()[0];
-                    const bodyRects = body && body.getClientRects()[0];
-                    wrapper.style.position = "fixed";
-                    wrapper.style.left = `${rects.left}px`;
-                    if (topPlacement && bodyRects) {
-                      wrapper.style.top = `${rects.top - bodyRects.height}px`;
-                    } else {
-                      wrapper.style.top = `${rects.top}px`;
-                    }
-                    if (isDocumentRTL()) {
-                      wrapper.style.right = "unset";
+
+                    if (rects) {
+                      const bodyRects = body && body.getClientRects()[0];
+
+                      wrapper.style.position = "fixed";
+                      wrapper.style.left = `${rects.left}px`;
+                      if (topPlacement && bodyRects) {
+                        wrapper.style.top = `${rects.top - bodyRects.height}px`;
+                      } else {
+                        wrapper.style.top = `${rects.top}px`;
+                      }
+                      if (isDocumentRTL()) {
+                        wrapper.style.right = "unset";
+                      }
                     }
                   }
                 }
