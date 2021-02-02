@@ -59,23 +59,9 @@ export default Component.extend({
       },
       {
         icon: "far-calendar-plus",
-        id: "two_months",
-        label: "topic.auto_update_input.two_months",
-        time: startOfDay(now().add(2, "months")),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
         id: "three_months",
         label: "topic.auto_update_input.three_months",
         time: startOfDay(now().add(3, "months")),
-        timeFormatKey: "dates.long_no_year",
-      },
-      {
-        icon: "far-calendar-plus",
-        id: "four_months",
-        label: "topic.auto_update_input.four_months",
-        time: startOfDay(now().add(4, "months")),
         timeFormatKey: "dates.long_no_year",
       },
       {
