@@ -277,10 +277,7 @@ class SessionController < ApplicationController
 
     return invalid_credentials if params[:password].length > User.max_password_length
 
-    login = params[:login].strip
-    login = login[1..-1] if login[0] == "@"
-
-    if user = User.find_by_username_or_email(login)
+    if user = User.find_by_username_or_email(normalized_login_param)
 
       # If their password is correct
       unless user.confirm_password?(params[:password])
@@ -408,12 +405,12 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    user = User.find_by_username_or_email(params[:login])
+    user = User.find_by_username_or_email(normalized_login_param)
 
     if user
       RateLimiter.new(nil, "forgot-password-login-day-#{user.username}", 6, 1.day).performed!
     else
-      RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 5, 1.hour).performed!
+      RateLimiter.new(nil, "forgot-password-login-hour-#{normalized_login_param}", 5, 1.hour).performed!
     end
 
     user_presence = user.present? && user.human? && !user.staged
@@ -481,6 +478,16 @@ class SessionController < ApplicationController
   end
 
   protected
+
+  def normalized_login_param
+    login = params[:login].to_s
+    if login.present?
+      login = login[1..-1] if login[0] == "@"
+      User.normalize_username(login.strip)[0..100]
+    else
+      nil
+    end
+  end
 
   def check_local_login_allowed(user: nil, check_login_via_email: false)
     # admin-login can get around enabled SSO/disabled local logins
@@ -595,6 +602,9 @@ class SessionController < ApplicationController
   def rate_limit_second_factor_totp
     return if params[:second_factor_token].blank?
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    if normalized_login_param.present?
+      RateLimiter.new(nil, "second-factor-min-#{normalized_login_param}", 3, 1.minute).performed!
+    end
   end
 
   def render_sso_error(status:, text:)
