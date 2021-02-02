@@ -33,7 +33,7 @@ export default createWidget("quick-access-item", {
     return result;
   },
 
-  html({ href, icon }) {
+  html({ href, title, icon }) {
     let content = this._contentHtml();
 
     if (href) {
@@ -44,7 +44,7 @@ export default createWidget("quick-access-item", {
       }
     }
 
-    return h("a", { attributes: this._linkAttributes(href) }, [
+    return h("a", { attributes: this._linkAttributes(href, title) }, [
       iconNode(icon),
       new RawHtml({
         html: `<div>${this._usernameHtml()}${content}</div>`,
@@ -60,8 +60,8 @@ export default createWidget("quick-access-item", {
     }
   },
 
-  _linkAttributes(href) {
-    return { href };
+  _linkAttributes(href, title) {
+    return { href, title };
   },
 
   _contentHtml() {
