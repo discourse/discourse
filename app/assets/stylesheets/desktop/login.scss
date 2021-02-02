@@ -16,11 +16,13 @@
     order: 2;
 
     button {
-      display: flex;
-      text-align: left;
+      &:first-of-type {
+        margin-top: 2.8em;
+      }
+      &:last-of-type {
+        margin-bottom: 3em;
+      }
       margin: 0.35em;
-      white-space: nowrap;
-      align-items: center;
       &:lang(zh_CN) {
         min-width: 200px;
       }
@@ -35,54 +37,12 @@
     }
   }
 
-  form {
-    min-width: 300px;
-    max-width: 100%;
-    margin: 0;
-  }
-
   #modal-alert {
     max-width: 100%;
     margin-bottom: 0;
     padding: 8px 16px;
   }
 
-  .login-modal {
-    #login-buttons:not(.hidden) {
-      button {
-        &:first-of-type {
-          margin-top: 2.8em;
-        }
-        &:last-of-type {
-          margin-bottom: 3em;
-        }
-      }
-    }
-  }
-
-  .create-account {
-    #login-buttons:not(.hidden) {
-      justify-content: flex-start;
-      + .login-form {
-        border-right: 1px solid var(--primary-low); // Only show border when login-form is present
-      }
-    }
-  }
-
-  #login-form {
-    box-sizing: border-box;
-    flex: 1 0 auto;
-    + #login-buttons {
-      border-left: 1px solid var(--primary-low); // Only show border when login-form is present
-    }
-  }
-
-  tr:not(.instructions) {
-    td {
-      display: flex;
-      padding: 5px 0 0 0;
-    }
-  }
   .tip {
     display: block;
     overflow: hidden;
@@ -96,8 +56,7 @@
 }
 
 .has-alt-auth {
-  .tip,
-  td label {
+  .tip {
     max-width: 100%;
   }
 }
@@ -336,17 +295,8 @@
   .user-field {
     display: flex;
     flex-direction: column;
-
     &.confirm {
       margin-top: 5px;
-    }
-
-    > label {
-      width: auto;
-    }
-
-    .controls {
-      margin-left: 0;
     }
   }
 
@@ -384,11 +334,7 @@
 
 .login-form {
   .tip {
-    &:not(:empty) + td {
-      display: none;
-    }
-    &:not(:empty),
-    &:empty + td {
+    &:not(:empty) {
       min-height: 1.75em;
       &.bad .svg-icon {
         vertical-align: middle;
