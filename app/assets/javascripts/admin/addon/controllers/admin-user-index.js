@@ -315,9 +315,8 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.delete_all_posts"),
+          icon: iconHTML("exclamation-triangle"),
+          label: I18n.t("admin.user.delete_all_posts"),
           class: "btn btn-danger",
           callback: () => {
             const progressModal = openProgressModal();
@@ -367,10 +366,9 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.anonymize_yes"),
+          label: I18n.t("admin.user.anonymize_yes"),
           class: "btn btn-danger",
+          icon: iconHTML("exclamation-triangle"),
           callback: () => {
             performAnonymize();
           },
@@ -435,9 +433,8 @@ export default Controller.extend(CanCheckEmails, {
           link: true,
         },
         {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.delete_and_block"),
+          icon: iconHTML("exclamation-triangle"),
+          label: I18n.t("admin.user.delete_and_block"),
           class: "btn btn-danger",
           callback: () => {
             performDestroy(true);
