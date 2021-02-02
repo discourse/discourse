@@ -108,18 +108,11 @@ export default Component.extend({
   @discourseComputed(
     "topicTimer.updateTime",
     "topicTimer.duration",
-    "isBasedOnLastPost",
-    "isBasedOnDuration",
+    "useDuration",
     "durationType"
   )
-  executeAt(
-    updateTime,
-    duration,
-    isBasedOnLastPost,
-    isBasedOnDuration,
-    durationType
-  ) {
-    if (isBasedOnLastPost || isBasedOnDuration) {
+  executeAt(updateTime, duration, useDuration, durationType) {
+    if (useDuration) {
       return moment().add(parseFloat(duration), durationType).format(FORMAT);
     } else {
       return updateTime;
