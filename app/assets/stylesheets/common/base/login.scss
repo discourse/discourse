@@ -75,8 +75,11 @@
         border: 1px solid var(--tertiary);
         box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb),.25);
       }
+      label.more-info {
+        color: var(--primary-medium);
+      }
       label.alt-placeholder {
-        color:#999; 
+        color: var(--primary-medium); 
         font-size:16px;
         font-weight:normal;
         position:absolute;
@@ -86,16 +89,66 @@
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
         transition:0.2s ease all; 
       }
-      input:focus + label, input.value-entered + label.alt-placeholder {
+      input:focus + label.alt-placeholder, input.value-entered + label.alt-placeholder {
         top:-8px;
         left: calc(1em - .25em);
         background-color: var(--secondary);
         padding: 0 .25em 0 .25em;
         font-size:14px;
-        color:#999;
+        color: var(--primary-medium);;
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+    }
+
+    // user fields input groups will
+    // be styled differently
+    .user-fields .input-group {
+      .user-field {
+        &.text {
+          &.value-entered label.control-label {
+            top:-8px;
+            left: calc(1em - .25em);
+            background-color: var(--secondary);
+            padding: 0 .25em 0 .25em;
+            font-size:14px;
+            color:var(--primary-high);
+          }
+          label.control-label {
+          color:var(--primary-medium); 
+          font-size:16px;
+          font-weight:normal;
+          position:absolute;
+          pointer-events:none;
+          left: 1em;
+          top:12px;
+          box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
+          transition:0.2s ease all;
+          max-width: calc(100% - 2em);
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          }
+          label.control-label.value-entered {
+            top:-8px;
+            left: calc(1em - .25em);
+            background-color: var(--secondary);
+            padding: 0 .25em 0 .25em;
+            font-size:14px;
+            color:var(--primary-high);
+          }
+        }
+        .controls {
+          width: 100%;
+          .checkbox-label {
+            input[type="checkbox"].ember-checkbox {
+              width: 1em !important;
+              min-width: unset;
+            }
+          }
+        }
       }
     }
   }

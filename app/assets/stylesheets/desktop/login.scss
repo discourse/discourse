@@ -72,7 +72,6 @@
   #login-form {
     box-sizing: border-box;
     flex: 1 0 auto;
-    padding: 0 24px;
     + #login-buttons {
       border-left: 1px solid var(--primary-low); // Only show border when login-form is present
     }
@@ -185,13 +184,13 @@
     // Safari Hack
     @media not all and (min-resolution:.001dpcm)
     { @supports (-webkit-appearance:none) {
-        .modal-body {
+        .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
           will-change: transform;
+          flex-direction: unset;
         }
     }}
     .modal-body::-webkit-scrollbar {
       width: 15px;
-      // background: transparent;
     }
     
     .modal-body::-webkit-scrollbar-track {
@@ -209,8 +208,38 @@
     .modal-body::-webkit-scrollbar-button {
       display: none;
     }
+    .modal-footer {
+      height: calc(94px - 23px);
+    }
   }
   .create-account-form {
+    &:after,
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: calc(65% - 19px);
+      pointer-events: none;
+      z-index: 100;
+    }
+    &:after {
+      bottom: 96px;
+      height: 1em;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 0.9)
+      );
+    }
+    &:before {
+      top: calc(7em + 5px);
+      height: 1em;
+      background-image: linear-gradient(
+        to top,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
+      );
+    }
     flex-basis: 65%;
     flex-grow: 1;
     height: 100%;
@@ -284,122 +313,17 @@
     padding: 1em;
     position: relative;
     display: flex;
-    flex-direction: column;
-    // &:after,
-    // &:before {
-    //   content: "";
-    //   display: block;
-    //   position: sticky;
-    //   width: 100%;
-    //   pointer-events: none;
-    //   z-index: 100;
-    // }
-    // &:after {
-    //   bottom: 0;
-    //   height: 1em;
-    //   background-image: linear-gradient(
-    //     to bottom,
-    //     rgba(var(--secondary-rgb), 0),
-    //     rgba(var(--secondary-rgb), 0.9)
-    //   );
-    // }
-    // &:before {
-    //   top: 0;
-    //   height: 1em;
-    //   background-image: linear-gradient(
-    //     to top,
-    //     rgba(var(--secondary-rgb), 0),
-    //     rgba(var(--secondary-rgb), 1)
-    //   );
-    // }
+    flex-direction: column; 
     
     .input-group {
-      position: relative;
-      display: flex;
-      flex-direction: column;
       margin-bottom: 1em;
       input {
-        padding: .75em .5em;
-        border-radius: 0.25em;
-        min-width: 250px;
         width: 100%;
-        box-shadow: none;
-        margin-bottom: .25em;
-      }
-      input:focus {
-        outline: none;
-        border: 1px solid var(--tertiary);
-        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb),.25);
-      }
-      label.more-info {
-        color: var(--primary-medium);
       }
       label.alt-placeholder {
-        color:var(--primary-medium); 
-        font-size:16px;
-        font-weight:normal;
-        position:absolute;
-        pointer-events:none;
-        left: 1em;
         top:12px;
-        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
-        transition:0.2s ease all; 
-      }
-      input:focus + label.alt-placeholder, input.value-entered + label.alt-placeholder {
-        top:-8px;
-        left: calc(1em - .25em);
-        background-color: var(--secondary);
-        padding: 0 .25em 0 .25em;
-        font-size:14px;
-        color:var(--primary-high);
-      }
-      input.alt-placeholder:invalid {
-        color: var(--primary);
       }
     }
-
-    // user fields input groups will
-    // be styled differently
-    .user-fields .input-group {
-      .user-field {
-        &.text {
-          label.control-label {
-          color:var(--primary-medium); 
-          font-size:16px;
-          font-weight:normal;
-          position:absolute;
-          pointer-events:none;
-          left: 1em;
-          top:12px;
-          box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
-          transition:0.2s ease all;
-          max-width: calc(100% - 2em);
-          white-space: nowrap;
-          display: inline-block;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          }
-          label.control-label.value-entered {
-            top:-8px;
-            left: calc(1em - .25em);
-            background-color: var(--secondary);
-            padding: 0 .25em 0 .25em;
-            font-size:14px;
-            color:var(--primary-high);
-          }
-        }
-        .controls {
-          width: 100%;
-          .checkbox-label {
-            input[type="checkbox"].ember-checkbox {
-              width: 1em !important;
-              min-width: unset;
-            }
-          }
-        }
-      }
-    }
-
     .password-confirmation {
       display: none;
     }

@@ -29,7 +29,6 @@
 
   .login-welcome-header {
     padding: 1.5em 1em;
-    width: 100%;
     margin: 0 auto;
   }
 
@@ -38,7 +37,6 @@
     flex: 1 0 auto;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: 100%;
     padding: 1em;
     margin: 0;
 
@@ -60,7 +58,23 @@
     padding: 1em;
     border-top: 1px solid var(--primary-low);
     .input-group {
+      input {
+        height: 2.25em;
+        margin-bottom: 0.25em;
+      }
       margin-bottom: 1em;
+      label.alt-placeholder {
+        top:8px;
+      }
+      input:focus + label, input.value-entered + label.alt-placeholder {
+        top:-10px;
+      }
+      input.alt-placeholder:invalid {
+        color: var(--primary);
+      }
+      label.more-info {
+        color: var(--primary-medium);
+      }
     }
   }
 
@@ -70,8 +84,37 @@
     flex-direction: column;
   }
 
-  table {
-    width: 100%;
+  .user-fields .input-group {
+    .text.user-field {
+      label.control-label {
+        top:8px;
+      }
+      &.value-entered label.control-label {
+        top:-6px;
+        left: calc(1em - .25em);
+        background-color: var(--secondary);
+        padding: 0 .25em 0 .25em;
+        font-size:14px;
+        color:var(--primary-medium);
+      }
+      label.control-label.value-entered {
+        top:-6px;
+        left: calc(1em - .25em);
+        background-color: var(--secondary);
+        padding: 0 .25em 0 .25em;
+        font-size:14px;
+        color:var(--primary-medium);
+      }
+    }
+    .controls {
+      width: 100%;
+      .checkbox-label {
+        align-items: center;
+        input[type="checkbox"].ember-checkbox {
+          height: 15px;
+        }
+      }
+    }
   }
 
   .modal-body input[type="text"],

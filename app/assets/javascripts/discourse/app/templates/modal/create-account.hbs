@@ -136,7 +136,11 @@
                 <div class="user-fields">
                   {{#each userFields as |f|}}
                     <div class="input-group">
-                      {{user-field field=f.field value=f.value}}
+                      {{!-- adding the value-entered class here to
+                      be able to detect if the user field has a value
+                      entered --}}
+                      {{user-field field=f.field value=f.value
+                      class=(value-entered f.value)}}
                     </div>
                   {{/each}}
                 </div>
