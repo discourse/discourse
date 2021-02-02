@@ -720,7 +720,6 @@ ca:
       posts: "Publicacions"
       topics: "Temes"
       latest: "Més recents"
-      latest_by: "més recent per"
       toggle_ordering: "commuta el control de l'ordre"
       subcategories: "Subcategories"
       topic_sentence:
@@ -1288,15 +1287,6 @@ ca:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
     learn_more: "per a saber-ne més..."
-    all_time: "total"
-    all_time_desc: "total de temes creats"
-    year: "any"
-    year_desc: "temes creats durant els darrers 365 dies"
-    month: "mes"
-    month_desc: "temes creats durant els darrers 30 dies"
-    week: "setmana"
-    week_desc: "temes creats durant els darrers 7 dies"
-    day: "dia"
     first_post: Primera publicació
     mute: Silencia
     unmute: Desfés el silenciament
@@ -1318,8 +1308,6 @@ ca:
       value_prop: "Quan creeu un compte, recordem exactament el que heu llegit, de manera que sempre torneu allà on ho vau deixar. També rebreu notificacions, ací i via correu, quan algú us respon. I podeu dir que us agraden les publicacions per a compartir l'amor. :heartpulse:"
     summary:
       enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
-      description: "Hi ha <b>%{replyCount}</b> respostes."
-      description_time: "Hi ha <b>%{replyCount}</b> respostes amb un temps de lectura estimat de <b>%{readingTime} minuts</b>."
       enable: "Resumeix aquest tema"
       disable: "Mostra totes les publicacions"
     deleted_filter:
@@ -1500,7 +1488,6 @@ ca:
       default: Emojis personalitzats
     shared_drafts:
       title: "Esborranys compartits"
-      notice: "Aquest tema sols és visible per als qui poden veure la categoria <b>%{category}</b>."
       destination_category: "Categoria de destinació"
       publish: "Publica l'esborrany compartit"
       confirm_publish: "Esteu segur que voleu publicar aquest esborrany?"
@@ -1529,10 +1516,7 @@ ca:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "El títol és obligatori"
-        title_too_short: "El títol ha de tenir un mínim de %{min} caràcters"
-        title_too_long: "El títol ha de tenir un màxim de %{max} caràcters"
         post_missing: "La publicació no pot estar buida"
-        post_length: "La publicació ha de tenir un mínim de %{min} caràcters"
         try_like: "Heu provat el botó %{heart}?"
         category_missing: "Heu de triar una categoria"
         topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
@@ -1965,7 +1949,6 @@ ca:
         go: "vés"
         jump_bottom: "salta a la darrera publicació"
         jump_prompt: "salta a..."
-        jump_prompt_of: "de %{count} publicacions"
         jump_prompt_long: "Salta a..."
         jump_bottom_with_number: "salta a la publicació %{post_number}"
         jump_prompt_to_date: "fins a la data"
@@ -2100,7 +2083,6 @@ ca:
         username_placeholder: "nom d'usuari"
         action: "Envia la invitació"
         help: "Convida altres a aquest tema per correu o amb notificacions."
-        to_forum: "Enviarem un breu correu electrònic al vostre contacte amb una autorització per a unir-s'hi immediatament en fer clic en un enllaç. No cal iniciar sessió."
         sso_enabled: "Introduïu el nom d'usuari de la persona a qui voleu convidar a aquest tema."
         to_topic_blank: "Escriviu el nom d'usuari o l'adreça electrònica de la persona a qui voleu convidar a aquest tema."
         to_topic_email: "Heu introduït una adreça de correu electrònic. Us enviarem una invitació que permetrà al vostre contacte respondre immediatament a aquest tema."
@@ -2205,8 +2187,6 @@ ca:
       edit_reason: "Motiu:"
       post_number: "publicació %{number}"
       ignored: "Contingut ignorat"
-      wiki_last_edited_on: "wiki editada per darrera vegada "
-      last_edited_on: "publicació editada per darrera vegada el"
       reply_as_new_topic: "Respon com a tema enllaçat"
       reply_as_new_private_message: "Respon amb un missatge nou als mateixos destinataris."
       continue_discussion: "Continuant la discussió de %{postLink}:"

@@ -198,6 +198,8 @@ zh_CN:
     now: "刚才"
     read_more: "阅读更多"
     more: "更多"
+    x_more:
+      other: "%{count} 更多"
     less: "更少"
     never: "从未"
     every_30_minutes: "每30分钟"
@@ -483,6 +485,19 @@ zh_CN:
       reject_reason:
         title: "你为什么拒绝这个用户？"
         send_email: "发送拒绝邮件"
+    time_shortcut:
+      later_today: "今天晚些时候"
+      next_business_day: "下一个工作日"
+      tomorrow: "明天"
+      next_week: "下周"
+      post_local_date: "发布日期"
+      later_this_week: "本周晚些时候"
+      start_of_next_business_week: "星期一"
+      start_of_next_business_week_alt: "下周一"
+      next_month: "下个月"
+      custom: "自定义日期和时间"
+      none: "不需要"
+      last_custom: "最近"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a>发表了<a href='%{topicUrl}'>该主题</a>"
       you_posted_topic: "<a href='%{userUrl}'>你</a>发表了<a href='%{topicUrl}'>该主题</a>"
@@ -568,6 +583,10 @@ zh_CN:
             imap_ssl: "为 IMAP 使用 SSL"
             username: "用户名"
             password: "密码"
+          settings:
+            title: "设置"
+            allow_unknown_sender_topic_replies: "允许从未知发件人主题的回复。"
+            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组主题。如果未启用此功能，则来自尚未包含在IMAP电子邮件线程中或未邀请该主题的电子邮件地址的回复将创建一个新主题。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -740,7 +759,6 @@ zh_CN:
       posts: "新帖"
       topics: "主题"
       latest: "最新"
-      latest_by: "最新发表："
       toggle_ordering: "排序控制"
       subcategories: "子分类"
       muted: "静音的分类"
@@ -1402,15 +1420,6 @@ zh_CN:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a>超出了站点设置中的限制{limit, plural, one {# error/hour} other {# errors/hour}}。"
       exceeded_minute_MF: "<b>{relativeAge}</b>1 – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a>已经超出站点设置限制 {limit, plural, one {# error/minute} other {# errors/minute}}。"
     learn_more: "了解更多…"
-    all_time: "总量"
-    all_time_desc: "创建的主题总量"
-    year: "年"
-    year_desc: "365 天内创建的主题"
-    month: "月"
-    month_desc: "30 天内创建的主题"
-    week: "周"
-    week_desc: "7 天内创建的主题"
-    day: "天"
     first_post: 最早帖子
     mute: 静音
     unmute: 取消静音
@@ -1432,8 +1441,6 @@ zh_CN:
       value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartpulse:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
-      description: "有 <b>%{replyCount}</b> 个回复。"
-      description_time: "有 <b>%{replyCount}</b> 个回复，大约要花 <b>%{readingTime} 分钟</b>阅读。"
       enable: "概括本主题"
       disable: "显示所有帖子"
     deleted_filter:
@@ -1635,7 +1642,6 @@ zh_CN:
       default: 自定义表情符号
     shared_drafts:
       title: "共享草稿"
-      notice: "只有那些可以看到<b>%{category}</b>分类的人才能看到此主题。"
       destination_category: "目标分类"
       publish: "发布共享草稿"
       confirm_publish: "你确定要发布此草稿吗？"
@@ -1665,10 +1671,7 @@ zh_CN:
       reference_topic_title: "回复：%{title}"
       error:
         title_missing: "标题为空"
-        title_too_short: "标题过短，至少 %{min} 个字"
-        title_too_long: "标题过长，最多 %{max} 个字"
         post_missing: "帖子不能为空"
-        post_length: "帖子至少要有%{min} 个字符"
         try_like: "你尝试过使用%{heart}按钮了吗？"
         category_missing: "未选择分类"
         tags_missing:
@@ -2174,7 +2177,6 @@ zh_CN:
         go: "前往"
         jump_bottom: "跳至最后一个帖子"
         jump_prompt: "跳到…"
-        jump_prompt_of: "%{count} 帖子"
         jump_prompt_long: "跳到……"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
         jump_prompt_to_date: "至今"
@@ -2311,7 +2313,7 @@ zh_CN:
         username_placeholder: "用户名"
         action: "发送邀请"
         help: "通过电子邮件或通知邀请其他人到该主题"
-        to_forum: "将发送一封简洁的邮件，让你的朋友无需注册即可用链接参与讨论。"
+        to_forum: "我们会发送一封简短的邮件，让你的朋友通过点击链接即可参与讨论。"
         sso_enabled: "输入其用户名，邀请其人到本主题。"
         to_topic_blank: "输入你要邀请到这个主题的用户名或电子邮件地址。"
         to_topic_email: "你输入了邮箱地址。我们将发送一封邮件邀请，让你的朋友可直接回复该主题。"
@@ -2423,8 +2425,6 @@ zh_CN:
       edit_reason: "理由： "
       post_number: "帖子 %{number}"
       ignored: "忽视的内容"
-      wiki_last_edited_on: "维基最后修改于"
-      last_edited_on: "最后修改于"
       reply_as_new_topic: "回复为联结主题"
       reply_as_new_private_message: "向相同的收件人回复新私信"
       continue_discussion: "自 %{postLink} 继续讨论："
@@ -2524,7 +2524,6 @@ zh_CN:
         unlock_post_description: "允许发布者编辑帖子"
         delete_topic_disallowed_modal: "你无权删除该贴。如果你真想删除，向版主提交原因并标记。"
         delete_topic_disallowed: "你无权删除此主题"
-        delete_topic_confirm_modal: "这个话题目前有超过 %{minViews} 个浏览，可能是一个受欢迎的搜索目标。 你确定要完全删除该主题，而不是对其进行编辑以改善它吗？"
         delete_topic_confirm_modal_yes: "是，删除此主题"
         delete_topic_confirm_modal_no: "不，保留这个话题"
         delete_topic_error: "删除此主题时发生错误"
@@ -3320,7 +3319,6 @@ zh_CN:
             effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
-            automatic_membership_user_count: "拥有新邮件域名的 %{count} 位用户将被添加到群组中。"
             primary_group: "自动设置为主要群组"
         name_placeholder: "群组名，没有空格，和用户名一样的规则"
         primary: "主要群组"

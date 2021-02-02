@@ -794,7 +794,6 @@ bs_BA:
       posts: "Odgovori"
       topics: "Teme"
       latest: "Zadnje"
-      latest_by: "zadnje od"
       toggle_ordering: "toggle ordering control"
       subcategories: "Podkategorije"
       muted: "Prigušene kategorije"
@@ -1419,15 +1418,6 @@ bs_BA:
     too_few_topics_notice_MF: >-
       Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više sadržaja za čitati i odgovoriti na — preporučujemo barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     learn_more: "saznaj više..."
-    all_time: "ukupno"
-    all_time_desc: "ukupno kreiranih tema"
-    year: "godina"
-    year_desc: "teme otvorene u zadnjih 365 dana"
-    month: "mjesec"
-    month_desc: "teme otvorene u zadnjih 30 dana"
-    week: "sedmica"
-    week_desc: "teme otvorene u zadnjih 7 dana"
-    day: "dan"
     first_post: Prva objava
     mute: Utišaj
     unmute: Normalno
@@ -1451,8 +1441,6 @@ bs_BA:
       value_prop: "Kada stvorite račun, sjećamo se točno onoga što ste pročitali, pa se uvijek vraćate na mjesto gdje ste stali. Također dobivate obavijesti, ovdje i putem e-pošte, kad god vam netko odgovara. I možete lajkati :heartpulse: tuđe postove i reagirati na iste reakcijama."
     summary:
       enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
-      description: "Trenutno postoji <b>%{replyCount}</b> odgovora."
-      description_time: "Trenutno postoje <b>%{replyCount}</b> odgovora sa procijenjenim vremenom čitanja od <b>%{readingTime} minuta</b>."
       enable: "Napravi sažetak ove teme"
       disable: "Prikaži sve objave"
     deleted_filter:
@@ -1635,7 +1623,6 @@ bs_BA:
       default: Sopstveni emotikoni
     shared_drafts:
       title: "Dijeljene skice"
-      notice: "Ova tema je vidljiva onima koji mogu da vide <b>%{category}</b> kategoriju."
       destination_category: "Kategorija destinacije"
       publish: "Objavi dijeljenu skicu"
       confirm_publish: "Da li ste sigurni da želite objaviti ovu skicu?"
@@ -1665,10 +1652,7 @@ bs_BA:
       reference_topic_title: "RE:%{title}"
       error:
         title_missing: "Naslov je obavezan"
-        title_too_short: "Naslov mora biti najmanje %{min} karaktera"
-        title_too_long: "Naslov ne može biti duži od %{max} karaktera"
         post_missing: "Objava ne može biti prazna"
-        post_length: "Odgovor mora biti najmanje %{min} karaktera"
         try_like: "Dail ste pokušali%{heart}dugme?"
         category_missing: "Morate odabrati kategoriju"
         topic_template_not_modified: "Molimo da dodate detalje i specifikacije za vašu temu tako što ćete izmijeniti template teme."
@@ -2112,7 +2096,6 @@ bs_BA:
         go: "idi"
         jump_bottom: "idi na posljednju objavu"
         jump_prompt: "skoči na..."
-        jump_prompt_of: "od %{count} objava"
         jump_prompt_long: "Skoči na ..."
         jump_bottom_with_number: "skoči na post %{post_number}"
         jump_prompt_to_date: "do datuma"
@@ -2249,7 +2232,6 @@ bs_BA:
         username_placeholder: "korisničko ime"
         action: "Email pozivnica"
         help: "pošalji pozivnicu svojim prijateljima tako da i oni mogu odgovoriti na ovu temu. Bey registracije."
-        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         sso_enabled: "Unesite korisničko ime osobe koju želite da pozovete u ovu temu."
         to_topic_blank: "Unesite korisničko ime ili e-mail adresu osobe koju želite da pozovete u ovu temu."
         to_topic_email: "Unijeli ste e-mail adresu. Poslat ćemo e-mailom pozivnicu koja će omogućiti vašem prijatelju da odmah odgovori na ovu temu."
@@ -2362,8 +2344,6 @@ bs_BA:
       edit_reason: "Razlog: "
       post_number: "post %{number}"
       ignored: "Ignorisani sadržaj"
-      wiki_last_edited_on: "wiki zanji put izmijenjen"
-      last_edited_on: "post last edited on"
       reply_as_new_topic: "Odgovori kroz novu povezanu Temu"
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
@@ -3233,7 +3213,6 @@ bs_BA:
             effects: Efekti
             trust_levels_none: "Ništa"
             automatic_membership_email_domains: "Korisnici koji se registriraju s email domenom koja točno odgovora jednoj na ovom popisu biti će automatski dodani u ovu grupu:"
-            automatic_membership_user_count: "%{count} korisnika ima nove domene e-pošte i bit će dodani u grupu."
             primary_group: "Automatski postavi kao primarnu grupu"
         name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
         primary: "Primary Group"

@@ -586,7 +586,6 @@ cs:
       posts: "Příspěvky"
       topics: "Témata"
       latest: "Aktuální"
-      latest_by: "latest by"
       toggle_ordering: "Přepnout editaci pořadí"
       subcategories: "Podkategorie"
       topic_sentence:
@@ -1084,15 +1083,6 @@ cs:
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
     learn_more: "více informací..."
-    all_time: "celkem"
-    all_time_desc: "témat vytvořeno"
-    year: "rok"
-    year_desc: "témata za posledních 365 dní"
-    month: "měsíc"
-    month_desc: "témata za posledních 30 dní"
-    week: "týden"
-    week_desc: "témata za posledních 7 dní"
-    day: "den"
     first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
@@ -1116,8 +1106,6 @@ cs:
       value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli ti někdo odpoví. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartpulse:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      description: "Je tu <b>%{replyCount}</b> odpovědí."
-      description_time: "Je tu <b>%{replyCount}</b> odpovědí o odhadovaném času čtení <b>%{readingTime} minut</b>."
       enable: "Přepnout na \"nejlepší příspěvky\""
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
@@ -1274,7 +1262,6 @@ cs:
       default: Vlastní emoji
     shared_drafts:
       title: "Sdílené koncepty"
-      notice: "Toto téma uvidí pouze uživatelé, kteří mohou vidět kategorii <b>%{category}</b>"
       destination_category: "Cílová kategorie"
       publish: "Zveřejnit sdílený koncept"
       confirm_publish: "Určitě chceš zveřejnit tento koncept?"
@@ -1303,9 +1290,6 @@ cs:
       duplicate_link: "Zdá se, že odkaz na <b>%{domain}</b> už uvedl v tomto tématu <b>@ %{username}</b> v <a href='%{post_url}'>odpovědi %{ago}</a> - opravdu chcete odkaz poslat znovu?"
       error:
         title_missing: "Název musí být vyplněn"
-        title_too_short: "Název musí být dlouhý alespoň %{min} znaků"
-        title_too_long: "Název nemůže být delší než %{max} znaků"
-        post_length: "Příspěvek musí být alespoň %{min} znaků dlouhý"
         category_missing: "Musíte vybrat kategorii"
       save_edit: "Uložit změnu"
       overwrite_edit: "Přepsat úpravu"
@@ -1722,7 +1706,6 @@ cs:
         go: "go"
         jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
-        jump_prompt_of: "%{count} příspěvků"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
@@ -1856,7 +1839,6 @@ cs:
         username_placeholder: "uživatelské jméno"
         action: "Poslat pozvánku"
         help: "pozval ostatní do tohoto tématu pomocí emailu nebo notifikací"
-        to_forum: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit s pomocí kliknutí na odkaz. Nebude potřeba registrace."
         sso_enabled: "Zadej uživatelské jméno člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_blank: "Zadej uživatelské jméno a email člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_email: "Zadal jste emailovou adresu. Pošleme na ni pozvánku, s jejíž pomocí bude moci váš kamarád ihned odpovědět do tohoto tématu."
@@ -1946,8 +1928,6 @@ cs:
       quote_reply: "Cituj"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
-      wiki_last_edited_on: "wiki naposledy upravena"
-      last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět v propojeném tématu"
       reply_as_new_private_message: "Odpověď poslat jako zprávu stejným příjemcům. "
       continue_discussion: "Pokračování diskuze z %{postLink}:"

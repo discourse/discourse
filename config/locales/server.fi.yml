@@ -2241,22 +2241,6 @@ fi:
     flags_agreed_and_post_deleted:
       title: "Henkilökunta poisti liputetun viestin"
       subject_template: "Henkilökunta poisti liputetun viestin"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle että [viestisi](%{base_url}%{url}) poistettiin.
-
-        %{flag_reason}
-
-        Yhteisö liputti viestin ja henkilökunnan jäsen päätti poistaa sen.
-
-        [details="Katsele poistettua viestiä klikkaamalla"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Kertaa [yhteisön säännöt](%{base_url}/guidelines) jos kaipaat lisätietoa.
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.

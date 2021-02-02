@@ -448,7 +448,6 @@ uk:
       email_already_used_in_category: "'%{email}' вже використовується категорією'%{category_name}'."
       cant_allow_membership_requests: "Ви не можете дозволяти користувацькі заявки для групи без будь-яких власників."
       already_requested_membership: "Ви вже запросили членство в цій групі."
-      adding_too_many_users: "Одночасно можна додати щонайбільше %{limit} користувачів"
     default_names:
       everyone: "усі"
       admins: "адміністратори"

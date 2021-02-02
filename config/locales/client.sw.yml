@@ -518,7 +518,6 @@ sw:
       posts: "Machapisho"
       topics: "Mada"
       latest: "Hivi Karibuni"
-      latest_by: "hivi karibuni na"
       toggle_ordering: "swichi udhibiti wa oda"
       subcategories: "Kategoria mtoto"
       topic_sentence:
@@ -975,15 +974,6 @@ sw:
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
       logout_disabled: "Kutoka kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
     learn_more: "jifunze zaidi..."
-    all_time: "jumla"
-    all_time_desc: "jumla ya mada zilizotengenezwa"
-    year: "mwaka"
-    year_desc: "mada zilizotengenezwa ndani ya siku 365 "
-    month: "mwezi"
-    month_desc: "mada zilizotengenezwa ndani ya siku 30 zilizopita"
-    week: "wiki"
-    week_desc: "mada zilizotengenezwa ndani ya siku 7"
-    day: "siku"
     first_post: Chapisho la kwanza
     mute: Nyamazisha
     unmute: Toa kwenye Ukimya
@@ -1003,8 +993,6 @@ sw:
       hidden_for_session: "OK, Nitakuuliza tena kesho. Unaweza kutumia 'Ingia' kutengeneza akaunti pia."
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
-      description: "Kuna majibu <b>%{replyCount}</b>. "
-      description_time: "Kuna majibu <b>%{replyCount}</b> yenye mda wa kusoma wa dakika <b>%{readingTime} </b>."
       enable: "Tengeneza Muhtasari wa Hii Mada."
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
@@ -1154,7 +1142,6 @@ sw:
       default: Ishara binafsi
     shared_drafts:
       title: "Maswadajaribio Gawiza"
-      notice: "Mada hii inapatikana kwa watu wanaoweza kuona kategoria <b>%{category}</b>."
       destination_category: "Kategoria Pokezi"
       publish: "Chapisha Mswadajaribio Gawiza"
       confirm_publish: "Unauhakika unataka kuchapisha mswadajaribio huu?"
@@ -1181,9 +1168,6 @@ sw:
       duplicate_link: "Inaonekana linki yako <b>%{domain}</b> imechapishwa tayari kwenye topiki na <b>@%{username}</b> kwenye <a href='%{post_url}'>jibu la %{ago}</a> – una uhakina unataka kuchapisha tena?"
       error:
         title_missing: "Kichwa cha habari ni muhimu"
-        title_too_short: "Kichwa kinatakiwa kuwa na tarakimu japo %{min}"
-        title_too_long: "Kichwa hakitakiwi kuwa na tarakimu zaidi ya %{max}"
-        post_length: "Posti/Chapisho linatakiwa kuwa na tarakimu japo %{min}"
         category_missing: "Ni sharti uchague kategoria"
       save_edit: "Hifadhi Uhariri"
       reply_original: "Jibu kwenye Mada ya Kwanza"
@@ -1563,7 +1547,6 @@ sw:
         go: "nenda"
         jump_bottom: "fikia chapisho la mwisho"
         jump_prompt: "ruka kwenda..."
-        jump_prompt_of: "machapisho %{count} ya"
         jump_bottom_with_number: "fikia chapisho %{post_number}"
         jump_prompt_or: "au"
         total: jumla ya machapisho
@@ -1682,7 +1665,6 @@ sw:
         username_placeholder: "jina la mtumiaji"
         action: "Tuma Mualiko"
         help: "Wakaribishe watu wengine kwenye mada kupitia barua pepe au taarifa"
-        to_forum: "Tutatuma barua fupi kumruhusu rafiki yako aingie mara moja kupitia kiungo, haitaji kujiunga."
         sso_enabled: "Andika jina la mtumiaji la mtu ambaye ungependa kumualika kwenye mada hii."
         to_topic_blank: "Andika jina la mtumiaji au barua pepe ya mtu ambaye ungependa kumualika kwenye mada hii."
         to_topic_email: "Umeandika barua pepe. Tutatuma mualiko utakao mruhusu rafiki yako kujibu mada hii."
@@ -1752,8 +1734,6 @@ sw:
       quote_reply: "Nukulu"
       edit_reason: "Sababu:"
       post_number: "%{namba} chapisho"
-      wiki_last_edited_on: "uhariri wa wiki ulifanyika"
-      last_edited_on: "uhariri wa chapisho ulifanyika"
       reply_as_new_topic: "Jibu kama mada iliyounganishwa"
       reply_as_new_private_message: "Jibu kama ujumbe mpya kwenda kwa wapokeaji wale wale"
       continue_discussion: "Endelea majadiliano kuanzia %{postLink}:"
