@@ -680,7 +680,6 @@ hu:
       posts: "Bejegyzések"
       topics: "Témák"
       latest: "Legutóbbi"
-      latest_by: "utolsó hozzászóló"
       toggle_ordering: "rendezés megfordítása"
       subcategories: "Alkategóriák"
       topic_sentence:
@@ -1203,15 +1202,6 @@ hu:
       login_disabled: "A belépés le van tiltva, amíg az oldal \"csak olvasható\" módban van."
       logout_disabled: "A kilépés le van tiltva, amíg az oldal \"csak olvasható\" módban van."
     learn_more: "tovább..."
-    all_time: "Összes"
-    all_time_desc: "összes létrehozott téma"
-    year: "év"
-    year_desc: "az utóbbi 365 napban létrehozott témakörök"
-    month: "hónap"
-    month_desc: "az utóbbi 30 napban létrehozott témakörök"
-    week: "hét"
-    week_desc: "az utóbbi 7 napban létrehozott témakörök"
-    day: "nap"
     first_post: Első bejegyzés
     mute: Elnémít
     unmute: Némítás feloldása
@@ -1230,7 +1220,6 @@ hu:
       hidden_for_session: "Rendben, holnap emlékeztetni foglak. Bármikor használhatod a 'Belépés' gombot, hogy csinálj magadnak egy fiókot."
     summary:
       enabled_description: "A téma összefoglalását látod: a legérdekesebb bejegyzéseket a közösség határozta meg."
-      description: "Összesen <b>%{count}</b> válasz."
       enable: "Téma összefoglalása"
       disable: "Összes bejegyzés mutatása"
     deleted_filter:
@@ -1369,7 +1358,6 @@ hu:
       default: Egyéni emodzsik
     shared_drafts:
       title: "Megosztott vázlatok"
-      notice: "Ez a téma azoknak látható akik látják a <b>%{category}</b>kategóriát"
       destination_category: "Cél kategória"
       publish: "Közzétenni a megosztott vázlatot"
       confirm_publish: "Biztosan közzé akarod tenni ezt a vázlatot?"
@@ -1393,9 +1381,6 @@ hu:
         private: "Említetted %{username} de nem lesznek értesítve mivel képtelenek megnézni ezt a személyes üzenetet. Megkell hívnod őket ehez a személyes üzenethez"
       error:
         title_missing: "A címet kötelező megadni"
-        title_too_short: "A címnek legalább %{min} karakter hosszúnak kell lennie"
-        title_too_long: "A cím nem lehet hosszabb, mint %{max} katakter."
-        post_length: "A bejegyzésnek legalább %{min} karakter hosszúnak kell lennie"
         category_missing: "Ki kéne választanod egy kategóriát"
       save_edit: "Módosítások mentése"
       overwrite_edit: "Módosítások mentése"
@@ -1712,7 +1697,6 @@ hu:
         go: "ugrás"
         jump_bottom: "Ugrás az utolsó bejegyzéshez"
         jump_prompt: "ugrás..."
-        jump_prompt_of: "a %{count} bejegyzésből"
         jump_bottom_with_number: "ugrás a következő bejegyzéshez: %{post_number}"
         jump_prompt_to_date: "Mostanáig"
         jump_prompt_or: "vagy"
@@ -1874,8 +1858,6 @@ hu:
       quote_reply: "Idézet"
       edit_reason: "Ok:"
       post_number: "bejegyzés %{number}"
-      wiki_last_edited_on: "Wiki utoljára szerkesztve"
-      last_edited_on: "utoljára szerkesztve"
       reply_as_new_topic: "Válasz csatolt üzenetként"
       follow_quote: "ugrás az idézett bejegyzéshez"
       show_full: "Teljes bejegyzés megtekintése"

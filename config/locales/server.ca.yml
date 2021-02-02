@@ -2078,7 +2078,6 @@ ca:
     flags_agreed_and_post_deleted:
       title: "Publicació marcada amb bandera eliminada per l'equip responsable"
       subject_template: "Publicació marcada amb bandera eliminada per l'equip responsable"
-      text_body_template: "Bon dia,\n\nAquest és un missatge automàtic de %{site_name} per a fer-vos saber que [el vostre missatge](%{base_url}%{url}) s'ha eliminat.\n\n %{flag_reason}\n\nLa comunitat ha marcat aquest missatge amb una bandera, i un membre de l'equip responsable ha optat per eliminar-lo. \n\n[details = 'Feu clic per a ampliar la publicació eliminada']\n``` markdown \n%{flagged_post_raw_content}\n```\n[/details]\n\nConsulteu les nostres [directrius comunitàries](%{base_url}/guidelines) per a obtenir més informació.\n"
     usage_tips:
       text_body_template: "Per a obtenir uns quants consells ràpids sobre com començar com a usuari nou, [consulteu aquesta entrada del bloc](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/). \n\nA mesura que hi participeu, us coneixerem i es retiraran les limitacions temporals d'usuari nou. Amb el pas del temps guanyareu [nivells de confiança](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclouen capacitats especials per a ajudar-nos a gestionar la comunitat junts.\n"
     welcome_user:

@@ -222,6 +222,9 @@ sv:
     now: "nyss"
     read_more: "läs mer"
     more: "Mer"
+    x_more:
+      one: "Ytterligare %{count}"
+      other: "Ytterligare %{count}"
     less: "Mindre"
     never: "aldrig"
     every_30_minutes: "var 30:e minut"
@@ -519,6 +522,19 @@ sv:
       reject_reason:
         title: "Varför avvisar du den här användaren?"
         send_email: "Skicka avvisningsmeddelande"
+    time_shortcut:
+      later_today: "Senare idag"
+      next_business_day: "Nästa vardag"
+      tomorrow: "Imorgon"
+      next_week: "Nästa vecka"
+      post_local_date: "Datum i inlägget"
+      later_this_week: "Senare denna vecka"
+      start_of_next_business_week: "Måndag"
+      start_of_next_business_week_alt: "Nästa måndag"
+      next_month: "Nästa månad"
+      custom: "Anpassa datum och tid"
+      none: "Ingen behövs"
+      last_custom: "Senaste"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> skrev <a href='%{topicUrl}'>ämnet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Du</a> skrev <a href='%{topicUrl}'>ämnet</a>"
@@ -605,6 +621,10 @@ sv:
             imap_ssl: "Använd SSL för IMAP"
             username: "Användarnamn"
             password: "Lösenord"
+          settings:
+            title: "Inställningar"
+            allow_unknown_sender_topic_replies: "Tillåt okända avsändares ämnesvar."
+            allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte är aktiverat kommer svar från e-postadresser som inte redan ingår i IMAP-e-posttråden eller inbjudna till ämnet att skapa ett nytt ämne."
           mailboxes:
             synchronized: "Synkroniserad brevlåda"
             none_found: "Inga brevlådor hittades för detta e-postkonto."
@@ -778,13 +798,21 @@ sv:
       posts: "Inlägg"
       topics: "Ämnen"
       latest: "Senaste"
-      latest_by: "senast efter"
       toggle_ordering: "slå av/på sorteringskontroll"
       subcategories: "Underkategorier"
       muted: "Tystade kategorier"
       topic_sentence:
         one: "%{count} ämne"
         other: "%{count} ämnen"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "vecka"
+        month: "månad"
+      topic_stat_all_time:
+        one: "%{number} totalt"
+        other: "%{number} totalt"
       topic_stat_sentence_week:
         one: "%{count} nytt ämne under senaste veckan."
         other: "%{count} nya ämnen under senaste veckan."
@@ -1398,6 +1426,7 @@ sv:
       avatar:
         title: "Profilbild"
         header_title: "profil, meddelanden, bokmärken och inställningar"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Titel"
         none: "(ingen)"
@@ -1455,15 +1484,6 @@ sv:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
     learn_more: "lär dig mer..."
-    all_time: "totalt"
-    all_time_desc: "totalt antal ämnen skapade"
-    year: "år"
-    year_desc: "ämnen skapade de senaste 365 dagarna"
-    month: "månad"
-    month_desc: "ämnen skapade de senaste 30 dagarna"
-    week: "vecka"
-    week_desc: "ämnen skapade de senaste 7 dagarna"
-    day: "dag"
     first_post: Första inlägget
     mute: Tysta
     unmute: Avtysta
@@ -1486,8 +1506,10 @@ sv:
       value_prop: "När du skapar ett konto så kommer vi ihåg precis vad du har läst, så att du alltid kan komma tillbaka precis där du lämnade oss. Du kan också få notifieringar, här och via e-post, närhelst någon svarar dig. Du kan också gilla inlägg för att sprida kärlek. :heartpulse: "
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
-      description: "Det finns <b>%{replyCount}</b> svar."
-      description_time: "Det finns <b>%{replyCount}</b> svar med en uppskattad lästid på <b>%{readingTime} minuter</b>."
+      description:
+        one: "Det finns <b>%{count}</b> svar."
+        other: "Det finns <b>%{count}</b> svar."
+      description_time_MF: "Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>."
       enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
     deleted_filter:
@@ -1695,7 +1717,6 @@ sv:
       default: Anpassa emojis
     shared_drafts:
       title: "Delade utkast"
-      notice: "Detta ämne är enbart synligt för de som kan se kategorin <b>%{category}</b>."
       destination_category: "Målkategori"
       publish: "Publicera delat utkast"
       confirm_publish: "Är du säker på att du vill publicera detta utkast?"
@@ -1727,10 +1748,16 @@ sv:
       reference_topic_title: "SV: %{title}"
       error:
         title_missing: "Du måste ange en rubrik"
-        title_too_short: "Rubriken måste vara minst %{min} tecken lång."
-        title_too_long: "Rubriken får inte vara längre än %{max} tecken"
+        title_too_short:
+          one: "Rubriken måste innehålla minst %{count} tecken"
+          other: "Rubriken måste innehålla minst %{count} tecken"
+        title_too_long:
+          one: "Rubriken får inte vara längre än %{count} tecken"
+          other: "Rubriken får inte vara längre än %{count} tecken"
         post_missing: "Inlägg får inte vara tomt"
-        post_length: "Inlägg måste vara minst %{min} tecken långa."
+        post_length:
+          one: "Inlägget måste innehålla minst %{count} tecken"
+          other: "Inlägget måste innehålla minst %{count} tecken"
         try_like: "Har du provat %{heart}-knappen?"
         category_missing: "Du måste välja en kategori"
         tags_missing:
@@ -2255,7 +2282,9 @@ sv:
         go: "gå"
         jump_bottom: "hoppa till sista inlägget"
         jump_prompt: "hoppa till..."
-        jump_prompt_of: "av %{count} inlägg"
+        jump_prompt_of:
+          one: "av %{count} inlägg"
+          other: "av %{count} inlägg"
         jump_prompt_long: "Hoppa till..."
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         jump_prompt_to_date: "till datum"
@@ -2395,7 +2424,7 @@ sv:
         username_placeholder: "användarnamn"
         action: "Skicka inbjudan"
         help: "bjud in andra till detta ämne via e-post eller aviseringar"
-        to_forum: "Vi skickar ett kort e-postmeddelande så att din vän omedelbart kan delta genom att klicka på en länk. Ingen inloggning krävs."
+        to_forum: "Vi skickar ett kort e-postmeddelande så att din vän omedelbart kan delta genom att klicka på en länk."
         sso_enabled: "Ange användarnamnet för personen som du vill bjuda in till detta ämne."
         to_topic_blank: "Ange användarnamnet eller e-postadressen för personen som du vill bjuda in till detta ämne."
         to_topic_email: "Du har angett en e-postadress. Vi skickar en inbjudan som ger din vän möjlighet att svara på detta ämne direkt."
@@ -2516,8 +2545,6 @@ sv:
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
       ignored: "Ignorerat innehåll"
-      wiki_last_edited_on: "wiki senast redigerad den"
-      last_edited_on: "inlägg senast ändrat den"
       reply_as_new_topic: "Svara som länkat ämne"
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
@@ -2556,6 +2583,7 @@ sv:
         one: "Visar %{count} svar på"
         other: "Visar %{count} svar på"
       in_reply_to: "Ladda överordnat inlägg"
+      view_all_posts: "Visa alla inlägg"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -2627,7 +2655,9 @@ sv:
         unlock_post_description: "tillåt att postaren redigerar inlägget"
         delete_topic_disallowed_modal: "Du har inte behörighet att radera detta ämne. Om du verkligen vill radera det, skapa en flagga för att uppmärksamma moderatorn tillsammans med orsak."
         delete_topic_disallowed: "du har inte behörighet att radera detta ämne"
-        delete_topic_confirm_modal: "Detta ämne har för närvarande över %{minViews} visningar och kan vara ett populärt sökmål. Är du säker på att du vill ta bort det här ämnet helt, istället för att redigera det för att förbättra det?"
+        delete_topic_confirm_modal:
+          one: "Detta ämne har för närvarande över %{count} visning och kan vara ett populärt sökmål. Är du säker på att du vill ta bort det här ämnet helt, istället för att redigera det för att förbättra det?"
+          other: "Detta ämne har för närvarande över %{count} visningar och kan vara ett populärt sökmål. Är du säker på att du vill ta bort det här ämnet helt, istället för att redigera det för att förbättra det?"
         delete_topic_confirm_modal_yes: "Ja, ta bort det här ämnet"
         delete_topic_confirm_modal_no: "Nej, behåll detta ämne"
         delete_topic_error: "Ett fel inträffade när det här ämnet togs bort"
@@ -3232,6 +3262,7 @@ sv:
         one: "%{tags} och %{count} till"
         other: "%{tags} och %{count} till"
       delete_no_unused_tags: "Det finns inga oanvända taggar."
+      tag_list_joiner: ", "
       delete_unused: "Radera oanvända taggar"
       delete_unused_description: "Radera alla taggar som inte är kopplade till något ämne eller personliga meddelanden"
       cancel_delete_unused: "Avbryt"
@@ -3456,7 +3487,9 @@ sv:
             effects: Effekter
             trust_levels_none: "Inga"
             automatic_membership_email_domains: "Användare som registrerar sig med en e-postadress vars domän exakt matchar en domän i den här listan kommer automatiskt att bli tillagda i den här gruppen:"
-            automatic_membership_user_count: "%{count} användarna har de nya e-postdomänerna och kommer att läggas till i gruppen."
+            automatic_membership_user_count:
+              one: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
+              other: "%{count} användare har de nya e-postdomänerna och kommer att läggas till i gruppen."
             primary_group: "Automatiskt inställd som primär grupp"
         name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         primary: "Primär grupp"

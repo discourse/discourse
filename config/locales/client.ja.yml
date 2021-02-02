@@ -722,7 +722,6 @@ ja:
       posts: "投稿"
       topics: "トピック"
       latest: "最近の投稿"
-      latest_by: "最新投稿: "
       toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ:"
       muted: "ミュートされたカテゴリ"
@@ -1365,15 +1364,6 @@ ja:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {# エラー/時間}}</a>サイト設定制限の {limit, plural, other {# エラー/時間}} を超えました 。"
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {＃エラー/分}}</a> サイト設定制限の {limit, plural, other {＃エラー/分}} 超えました。"
     learn_more: "より詳しく..."
-    all_time: "合計"
-    all_time_desc: "作成されたトピックの総数"
-    year: "年"
-    year_desc: "過去一年間に投稿されたトピック"
-    month: "月"
-    month_desc: "過去30日間に投稿されたトピック"
-    week: "週"
-    week_desc: "過去7日間に投稿されたトピック"
-    day: "日"
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
@@ -1395,8 +1385,6 @@ ja:
       value_prop: "アカウントを作成した後、いま読んでいるページへ戻ります。また、新しい投稿があった場合はこことメールにてお知らせします。 いいね！を使って好きな投稿をみんなに教えましょう。 :heartbeat:"
     summary:
       enabled_description: "トピックのまとめを表示されています。"
-      description: "<b>%{replyCount}</b>件の返信があります。"
-      description_time: "<b>%{replyCount}</b> 件の返信があります。 概ね <b>%{readingTime} 分</b>で読める文量です。"
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示する"
     deleted_filter:
@@ -1598,7 +1586,6 @@ ja:
       default: カスタム絵文字
     shared_drafts:
       title: "共有ドラフト"
-      notice: "このトピックは、 <b>%{category}</b> カテゴリを表示できる人にのみ表示されます。"
       publish: "共有ドラフトの公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピック公開中..."
@@ -1625,10 +1612,7 @@ ja:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "タイトルを入力してください。"
-        title_too_short: "タイトルは%{min}文字以上必要です。"
-        title_too_long: "タイトルは最長で%{max}未満です。"
         post_missing: "空白の投稿はできません"
-        post_length: "投稿は%{min}文字以上必要です。"
         try_like: " %{heart} ボタンは試しましたか？"
         category_missing: "カテゴリを選択してください。"
         tags_missing:
@@ -1981,7 +1965,6 @@ ja:
         go: "へ"
         jump_bottom: "最後の投稿へ"
         jump_prompt: "ジャンプする..."
-        jump_prompt_of: "%{count} 投稿"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         jump_prompt_or: "または"
         total: 投稿の合計
@@ -2107,7 +2090,6 @@ ja:
         username_placeholder: "ユーザ名"
         action: "招待を送る"
         help: "このトピックに他のユーザをメールまたは通知で招待する。"
-        to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         sso_enabled: "このトピックに招待したい人のユーザ名を入れてください"
         to_topic_blank: "このトピックに招待したい人のユーザ名かメールアドレスを入れてください"
         to_topic_email: "あなたはメールアドレスを入力しました。フレンドがすぐにこのトピックへ返信できるようにメールで招待します。"
@@ -2181,8 +2163,6 @@ ja:
       edit_reason: "理由: "
       post_number: "投稿%{number}"
       ignored: "無視したコンテンツ"
-      wiki_last_edited_on: "wikiの最終編集日"
-      last_edited_on: "投稿の最終編集日"
       reply_as_new_topic: "トピックのリンクを付けて返信"
       reply_as_new_private_message: "同じ受信者へ新しいメッセージとして返信"
       continue_discussion: "%{postLink} から:"

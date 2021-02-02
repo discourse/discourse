@@ -407,7 +407,6 @@ fr:
       email_already_used_in_category: "« %{email} » est déjà utilisée par la catégorie « %{category_name} »."
       cant_allow_membership_requests: "Vous ne pouvez pas autoriser les requêtes d'adhésion pour un groupe sans propriétaires."
       already_requested_membership: "Vous avez déjà demandé à adhérer à ce groupe."
-      adding_too_many_users: "Un maximum de %{limit} utilisateurs peuvent être ajoutés à la fois"
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -2104,6 +2103,7 @@ fr:
   most_posts: "Le plus de messages"
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Bienvenue dans notre communauté ! Voici les sujets récents les plus populaires."
     not_seen_in_a_month: "Heureux de vous revoir parmi nous ! Nous ne vous avons pas vu depuis un moment. Voici les sujets les plus populaires depuis votre absence."
@@ -2514,22 +2514,6 @@ fr:
     flags_agreed_and_post_deleted:
       title: "Le message signalé a été retiré par un responsable"
       subject_template: "Le message signalé a été retiré par un responsable"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que [votre message](%{base_url}%{url}) a été retiré.
-
-        %{flag_reason}
-
-        Ce message a été signalé par la communauté et un responsable a décidé de le retirer.
-
-        [details="Cliquez pour voir le message retiré"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Pour plus d'informations, veuillez consulter notre [charte communautaire](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Pour connaître quelques astuces qui vont vous aider à démarrer en tant que nouveau membre, [rendez-vous sur cette page](https://meta.discourse.org/t/fr-trucs-et-astuces-pour-nouveaux-utilisateurs/84100/).

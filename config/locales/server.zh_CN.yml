@@ -388,7 +388,6 @@ zh_CN:
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
       cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
       already_requested_membership: "你已请求成为该群组的成员。"
-      adding_too_many_users: "最多可以同时添加 %{limit} 个用户"
     default_names:
       everyone: "任何人"
       admins: "管理员"
@@ -2446,18 +2445,17 @@ zh_CN:
       text_body_template: |
         你好，
 
-        这是%{site_name}通知你[你的帖子](%{base_url}%{url})已被删除的自动消息。
+        这是一则由%{site_name}自动发送的消息，告知[你的帖子](%{base_url}%{url})被移除了。
 
         %{flag_reason}
 
-        该帖子被社区标记，管理人员选择将其删除。
+        这个帖子被社区所标记后，工作人员选择将其移除。
 
-        [details="点击以展开被删除的帖子"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
 
-        有关详细信息，请查看我们的[社区指引](%{base_url}/guidelines)。
+        要了解详情，请阅读我们的[社区守则](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。

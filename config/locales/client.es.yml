@@ -187,6 +187,7 @@ es:
         us_gov_west_1: "AWS GovCloud (EEUU-oeste)"
         us_west_1: "EEUU oeste (norte de California)"
         us_west_2: "EEUU oeste (Oregon)"
+    clear_input: "Borrar"
     edit: "editar el título y la categoría de este tema"
     expand: "Expandir"
     not_implemented: "¡Lo sentimos! Esa característica no se ha implementado todavía."
@@ -604,6 +605,9 @@ es:
             imap_ssl: "Usar SSL para IMAP"
             username: "Nombre de usuario"
             password: "Contraseña"
+          settings:
+            title: "Ajustes"
+            allow_unknown_sender_topic_replies: "Permitir respuestas a temas de remitentes desconocidos."
           mailboxes:
             synchronized: "Bandeja de correo sincronizada"
             none_found: "No se han encontrado bandejas de correo para esta cuenta de correo electrónico."
@@ -777,7 +781,6 @@ es:
       posts: "Publicaciones"
       topics: "Temas"
       latest: "Recientes"
-      latest_by: "recientes por"
       toggle_ordering: "cambiar orden"
       subcategories: "Subcategorías"
       muted: "Categorías silenciadas"
@@ -1453,15 +1456,6 @@ es:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hour} other {# errors/hour}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minute} other {# errors/minute}}."
     learn_more: "saber más..."
-    all_time: "total"
-    all_time_desc: "total de temas creados"
-    year: "año"
-    year_desc: "temas creados en los últimos 365 días"
-    month: "mes"
-    month_desc: "temas creados en los últimos 30 días"
-    week: "semana"
-    week_desc: "temas creados en los últimos 7 días"
-    day: "día"
     first_post: Primera publicación
     mute: Silenciar
     unmute: No silenciar
@@ -1484,8 +1478,6 @@ es:
       value_prop: "Cuando creas una cuenta, recordamos exactamente lo que has leído de modo que puedas retomar lo que leías justo donde lo dejaste. También recibes notificaciones, por aquí y por correo electrónico, cuando alguien responde a tus mensajes. ¡También puedes darle «me gusta» a los mensajes para compartir amor! :heartpulse:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
-      description: "Hay <b>%{replyCount}</b> respuestas."
-      description_time: "Hay <b>%{replyCount}</b> respuestas con un tiempo de lectura estimado de <b>%{readingTime} minutos</b>."
       enable: "Resumir este tema"
       disable: "Ver todas las publicaciones"
     deleted_filter:
@@ -1693,7 +1685,6 @@ es:
       default: Emojis personalizados
     shared_drafts:
       title: "Borradores Compartidos"
-      notice: "Este tema es visible solamente por quienes pueden ver la categoría <b>%{category}</b>."
       destination_category: "Categoría de destino"
       publish: "Publicar borrador compartido"
       confirm_publish: "¿Estás seguro de que quieres publicar este borrador?"
@@ -1725,10 +1716,7 @@ es:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Es necesario un título"
-        title_too_short: "El título debe tener por lo menos %{min} caracteres"
-        title_too_long: "El título no puede tener más de %{max} caracteres."
         post_missing: "La publicación no puede estar vacía"
-        post_length: "La publicación debe tener por lo menos %{min} caracteres."
         try_like: "¿Has probado el botón %{heart}?"
         category_missing: "Debes escoger una categoría."
         tags_missing:
@@ -2252,7 +2240,6 @@ es:
         go: "ir"
         jump_bottom: "saltar a la última publicación"
         jump_prompt: "saltar a..."
-        jump_prompt_of: "de %{count} publicaciones"
         jump_prompt_long: "Saltar a..."
         jump_bottom_with_number: "saltar a la publicación %{post_number}"
         jump_prompt_to_date: "hasta hoy"
@@ -2392,7 +2379,6 @@ es:
         username_placeholder: "nombre de usuario"
         action: "Enviar invitación"
         help: "invitar a otros a este tema mediante correo electrónico o notificaciones"
-        to_forum: "Enviaremos un correo electrónico breve con un enlace que le que permitirá a tu amigo unirse inmediatamente, sin necesidad de iniciar sesión."
         sso_enabled: "ingresa el nombre de usuario de la persona a la que quieres invitar a este tema."
         to_topic_blank: "Ingresa el nombre de usuario o correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ingresaste una dirección de correo electrónico. Nosotros enviaremos una invitación a tu amigo que le permitirá responder inmediatamente a este tema."
@@ -2513,8 +2499,6 @@ es:
       edit_reason: "Motivo:"
       post_number: "publicación %{number}"
       ignored: "Contenido ignorado"
-      wiki_last_edited_on: "wiki editada por última vez el"
-      last_edited_on: "publicación editada por última vez el"
       reply_as_new_topic: "Responder como tema enlazado"
       reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde %{postLink}:"
@@ -2624,7 +2608,6 @@ es:
         unlock_post_description: "permitir que el usuario que realizó esta publicación la edite"
         delete_topic_disallowed_modal: "No tienes permiso para eliminar este tema. Si de verdad quieres que se elimine, repórtalo y explica tus motivos a los moderadores."
         delete_topic_disallowed: "no tienes permiso para eliminar este tema"
-        delete_topic_confirm_modal: "Este tema tiene más de %{minViews} visitas y podría ser un resultado de búsqueda popular. ¿Seguro que quieres eliminar por completo este tema, en lugar de editarlo o mejorarlo?"
         delete_topic_confirm_modal_yes: "Sí, eliminar este tema"
         delete_topic_confirm_modal_no: "No, mantener este tema"
         delete_topic_error: "Ha ocurrido un error al eliminar este tema"
@@ -3453,7 +3436,6 @@ es:
             effects: Efectos
             trust_levels_none: "Ninguno"
             automatic_membership_email_domains: "Los usuarios que se registren con un dominio de correo electrónico que esté en esta lista se añadirán automáticamente a este grupo:"
-            automatic_membership_user_count: "%{count} usuarios tienen los nuevos dominios de email y serán añadidos al grupo."
             primary_group: "Establecer automáticamente como grupo principal"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que los nombres de usuarios"
         primary: "Grupo principal"

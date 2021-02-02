@@ -2167,22 +2167,6 @@ pt_BR:
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automatizada de %{site_name} para informá-lo de que a [sua postagem](%{base_url}%{url}) foi removida.
-
-        %{flag_reason}
-
-        Esta postagem foi sinalizada pela comunidade e um membro da staff optou por removê-la.
-
-        [details="Clique para expandir a postagem removida"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Por favor, reveja nossas [diretrizes da comunidade](%{base_url}/guidelines) para detalhes.
     usage_tips:
       text_body_template: |
         Para algumas dicas rápidas sobre como começar como um novo usuário, [confira este post no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

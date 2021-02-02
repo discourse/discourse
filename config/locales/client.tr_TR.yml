@@ -487,6 +487,19 @@ tr_TR:
       reject_reason:
         title: "Bu kullanıcıyı neden reddediyorsunuz?"
         send_email: "Ret e-postası gönder"
+    time_shortcut:
+      later_today: "Bugün ilerleyen saatlerde"
+      next_business_day: "Bir sonraki iş günü"
+      tomorrow: "Yarın"
+      next_week: "Gelecek hafta"
+      post_local_date: "Gönderideki tarih"
+      later_this_week: "Bu hafta içinde"
+      start_of_next_business_week: "Pazartesi"
+      start_of_next_business_week_alt: "Gelecek pazartesi"
+      next_month: "Gelecek ay"
+      custom: "Özel tarih ve saat"
+      none: "Hiçbiri"
+      last_custom: "Son"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>konuyu</a> açtı"
       you_posted_topic: "<a href='%{topicUrl}'>konuyu</a> <a href='%{userUrl}'>sen</a> açtın"
@@ -561,6 +574,8 @@ tr_TR:
           credentials:
             username: "Kullanıcı Adı"
             password: "Şifre"
+          settings:
+            title: "Ayarlar"
         membership:
           title: Üyelik
           access: Erişim
@@ -706,7 +721,6 @@ tr_TR:
       posts: "Gönderiler"
       topics: "Konular"
       latest: "En Son"
-      latest_by: "son gönderen"
       toggle_ordering: "talep kontrolünü değiştir"
       subcategories: "Alt kategoriler"
       topic_sentence:
@@ -1276,15 +1290,6 @@ tr_TR:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
     learn_more: "daha fazlasını öğren..."
-    all_time: "toplam"
-    all_time_desc: "oluşturulan tüm konular "
-    year: "yıl"
-    year_desc: "son 365 günde oluşturulan konular"
-    month: "ay"
-    month_desc: "son 30 günde oluşturulan konular"
-    week: "hafta"
-    week_desc: "son 7 günde oluşturulan konular"
-    day: "gün"
     first_post: İlk gönderi
     mute: Sessiz
     unmute: Sessiz iptali
@@ -1306,8 +1311,6 @@ tr_TR:
       value_prop: "Bir hesap oluşturduğunuzda, ne okuduğunuzu kaydediyoruz, böylece her zaman kaldığınız yerden okumaya devam edebiliyorsunuz. Ayrıca, burada ve e-posta yoluyla, biri size yanıt verdiğinde bildirim alıyorsunuz ve sediğinizi paylaşmak için gönderileri beğenebiliyorsunuz. :Heartpulse:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
-      description: "<b>%{replyCount}</b> adet cevap var."
-      description_time: "Tahmini okuma süresi <b>%{readingTime} dakika</b> olan <b>%{replyCount}</b> cevap var."
       enable: "Bu Konuyu Özetle"
       disable: "Tüm Gönderileri Göster"
     deleted_filter:
@@ -1486,7 +1489,6 @@ tr_TR:
       default: Özel emojiler
     shared_drafts:
       title: "Paylaşılan taslaklar"
-      notice: "Bu konu, yalnızca <b>%{category}</b> kategorisini görebilen kişiler tarafından görülebilir."
       destination_category: "Hedef Kategori"
       publish: "Paylaşılan Taslağı Yayımla"
       confirm_publish: "Bu taslağı yayımlamak istediğine emin misin?"
@@ -1515,10 +1517,7 @@ tr_TR:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Başlık gerekli"
-        title_too_short: "Başlık en az %{min} karakter olmalı"
-        title_too_long: "Başlık %{max} karakterden daha uzun olamaz"
         post_missing: "Gönderi boş olamaz"
-        post_length: "Gönderi en az %{min} karakter olmalı"
         try_like: "%{heart} düğmesini denediniz mi?"
         category_missing: "Bir kategori seçmelisin"
         topic_template_not_modified: "Lütfen konu şablonunu düzenleyerek daha fazla ayrıntı ekleyin."
@@ -1963,7 +1962,6 @@ tr_TR:
         go: "git"
         jump_bottom: "son gönderiye geç"
         jump_prompt: "geç"
-        jump_prompt_of: " %{count} gönderinin"
         jump_prompt_long: "Atla..."
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         jump_prompt_to_date: "şimdiye kadar"
@@ -2098,7 +2096,6 @@ tr_TR:
         username_placeholder: "kullanıcı adı"
         action: "Davet Gönder"
         help: "e-posta veya bildiri aracılığıyla başkalarını bu konuya davet et"
-        to_forum: "Arkadaşına, giriş yapması gerekmeden, bağlantıya tıklayarak katılabilmesi için kısa bir e-posta göndereceğiz. "
         sso_enabled: "Bu konuya davet etmek istediğin kişinin kullanıcı adını gir."
         to_topic_blank: "Bu konuya davet etmek istediğin kişinin kullanıcı adını veya e-posta adresini gir."
         to_topic_email: "Bir e-posta adresi girdin. Arkadaşının bu konuya hemen cevap verebilmesini sağlayacak bir davetiyeyi e-posta ile göndereceğiz. "
@@ -2204,8 +2201,6 @@ tr_TR:
       edit_reason: "Neden: "
       post_number: "gönderi %{number}"
       ignored: "Yoksayılan içerik"
-      wiki_last_edited_on: "son düzenlenmiş wiki"
-      last_edited_on: "son düzenlenmiş gönderi"
       reply_as_new_topic: "Bağlantılı Konu Olarak Cevapla"
       reply_as_new_private_message: "Aynı alıcıyı yeni bir mesajla cevapla"
       continue_discussion: "%{postLink} Gönderisinden tartışılmaya devam ediliyor:"

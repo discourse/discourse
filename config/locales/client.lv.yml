@@ -496,7 +496,6 @@ lv:
       posts: "Raksti"
       topics: "Tēmas"
       latest: "Jaunākie"
-      latest_by: "jaunāks par"
       toggle_ordering: "mainīt secības kontroli"
       subcategories: "Apakšsadaļas"
       topic_sentence:
@@ -933,15 +932,6 @@ lv:
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
     learn_more: "uzzināt vairāk..."
-    all_time: "kopā"
-    all_time_desc: "pavisam izveidotas tēmas"
-    year: "gads"
-    year_desc: "pēdējās 365 dienās izveidotie ieraksti"
-    month: "mēnesis"
-    month_desc: "pēdējās 30 dienās izveidotās tēmas"
-    week: "nedēļa"
-    week_desc: "pēdējās 7 dienās izveidotās tēmas"
-    day: "diena"
     first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
@@ -959,8 +949,6 @@ lv:
       hidden_for_session: "Labi, pajautāšu jums rīt. Starp citu, vienmēr var piereģistrēties, spiežot \"Ieiet sistēmā\"."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
-      description: "Ir <b>%{replyCount}</b> atbildes."
-      description_time: "Ir <b>%{replyCount}</b> atbildes ar paredzamo lasīšanas laiku: <b>%{readingTime} minūtes</b>."
       enable: "Tēmas kopsavilkums"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
@@ -1110,9 +1098,6 @@ lv:
       duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
-        title_too_short: "Nosaukumā jābūt vismaz %{min} burtiem"
-        title_too_long: "Nosaukums nevar būt garāks par %{max} burtiem"
-        post_length: "Ierakstā jābūt vismaz %{min} burtiem"
         category_missing: "Jums ir jāizvēlas sadaļa"
       save_edit: "Saglabāt izmaiņas"
       reply_original: "Atbildēt sākotnējā tēmā"
@@ -1420,7 +1405,6 @@ lv:
         go: "doties"
         jump_bottom: "pāriet pie pēdējā ieraksta"
         jump_prompt: "pāriet pie..."
-        jump_prompt_of: "no %{count} ierakstiem"
         jump_bottom_with_number: "pāriet pie ieraksta %{post_number}"
         jump_prompt_or: "vai"
         total: kopējais ierakstu skaits
@@ -1549,7 +1533,6 @@ lv:
         username_placeholder: "lietotājvārds"
         action: "Nosūtīt ielūgumu"
         help: "Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus"
-        to_forum: "Mēs nosūtīsim īsu e-pastu, kas ļaus jūsu draugam nekavējoties pievienoties, uzklikšķinot uz saites un bez ienākšanas forumā."
         sso_enabled: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu."
         to_topic_blank: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu vai e-pastu."
         to_topic_email: "Jūs esat ievadījis e-pasta adresi. Mēs nosūtīsim e-pastā ielūgumu, kas ļaus jūsu draugam nekavējoties atbildēt šai tēmā."
@@ -1621,8 +1604,6 @@ lv:
       quote_reply: "Citāts"
       edit_reason: "Iemesls:"
       post_number: "ieraksts %{number}"
-      wiki_last_edited_on: "wiki pēdējo reizi rediģēta"
-      last_edited_on: "ieraksts pēdējo reizi rediģēts"
       reply_as_new_topic: "Atbildēt jaunā saistītā tēmā"
       reply_as_new_private_message: "Atbildēt jaunā vēstulē tiem pašiem adresātiem"
       continue_discussion: "Turpinot diskusiju no %{postLink}:"

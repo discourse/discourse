@@ -969,22 +969,6 @@ sl:
     flags_agreed_and_post_deleted:
       title: "Prijavljen prispevek odstranjen s strani osebja"
       subject_template: "Prijavljen prispevek odstranjen s strani osebja"
-      text_body_template: |
-        Pozdravljeni,
-
-        To je samodejno sporočilo od %{site_name} da je bil [vaš prispevek](%{base_url}%{url}) odstranjen.
-
-        %{flag_reason}
-
-        Ta prispevek je bil prijavljen s strani skupnosti in član osebja foruma se je odločil da ga odstrani.
-
-        [details="Izberi za prikaz odstranjenega prispevka"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Za več informacij preberite [pravila skupnosti](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Za nekaj napotkov kot novemu uporabniku priporočamo [tole blog objavo (v angleščini)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

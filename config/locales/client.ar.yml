@@ -918,7 +918,6 @@ ar:
       posts: "المشاركات"
       topics: "المواضيع"
       latest: "آخر المواضيع"
-      latest_by: "الاحدث بـ"
       toggle_ordering: "تبديل التحكم في الترتيب"
       subcategories: "أقسام فرعية"
       muted: "الفئات المكتومة"
@@ -1640,15 +1639,6 @@ ar:
       exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}</a> تجاوز حد إعداد الموقع {limit, plural, one {# خطأ / ساعة} two {# أخطاء / ساعة} few {# أخطاء / ساعة} many {# أخطاء / ساعة} other {# أخطاء / ساعة}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, zero {} one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}</a> تجاوز حد إعداد الموقع {limit, plural, one {# خطأ / دقيقة} two {# أخطاء / دقيقة} few {# أخطاء / دقيقة} many {# أخطاء / دقيقة} other {# أخطاء / دقيقة}}."
     learn_more: "اطّلع على المزيد..."
-    all_time: "المجموع"
-    all_time_desc: "عدد المواضيع المنشأة"
-    year: "عام"
-    year_desc: "المواضيع المكتوبة خلال 365 يوم الماضية"
-    month: "شهر"
-    month_desc: "المواضيع المكتوبة خلال 30 يوم الماضية"
-    week: "أسبوع"
-    week_desc: " المواضيع التي كتبت خلال 7 أيام الماضية"
-    day: "يوم"
     first_post: أوّل مشاركة
     mute: كتم
     unmute: إلغاء الكتم
@@ -1675,8 +1665,6 @@ ar:
       value_prop: "حين تسجّل حسابًا نتذكّر بالضبط ما كنت تقرأه، فلا تخشَ من أن تعود ولا ترى ما كان أمامك البتّة. كما وستستلم الإخطارات (هنا وعبر البريد) متى ما ردّ أحدهم عليك. وطبعًا، يمكنك إبداء إعجابك بالمشاركات ومشاركة الجميع الشعور بالرفق. :heartpulse:"
     summary:
       enabled_description: "أنت تطالع ملخّصًا لهذا الموضوع، أي أكثر المنشورات الجديرة بالاهتمام حسب نظرة المجتمع."
-      description: "هناك <b>%{replyCount}</b> من الردود."
-      description_time: "هناك <b>%{replyCount}</b> من الردود، ووقت القراءة المتوقّع هو <b>%{readingTime} من الدّقائق</b>."
       enable: "لخّص هذا الموضوع"
       disable: "اعرض كلّ المشاركات"
     deleted_filter:
@@ -1894,7 +1882,6 @@ ar:
       default: الإيموجي المخصّصة
     shared_drafts:
       title: "المسودّات المشتركة"
-      notice: "لا يظهر هذا الموضوع إلّا لمن يرى فئة <b>%{category}</b>."
       destination_category: "وجهة التصنيف"
       publish: "نشر المسودة المشتركة"
       confirm_publish: "أمتأكّد من نشر هذه المسودّة؟"
@@ -1934,10 +1921,7 @@ ar:
       reference_topic_title: "ردّ: %{title}"
       error:
         title_missing: "العنوان مطلوب"
-        title_too_short: "العنوان يجب أن يكون علي الاقل %{min} حرف"
-        title_too_long: "العنوان يجب أن لا يزيد عن %{max} حرف"
         post_missing: "لا يمكن أن تكون المشاركة فارغة"
-        post_length: "المنشور يجب أن يكون علي الاقل %{min} حرف"
         try_like: "هل جرّبت نقر زر %{heart}؟"
         category_missing: "عليك اختيار فئة"
         tags_missing:
@@ -2474,7 +2458,6 @@ ar:
         go: "اذهب"
         jump_bottom: "انتقل لآخر منشور"
         jump_prompt: "انتقل إلى..."
-        jump_prompt_of: "من %{count} منشورات"
         jump_prompt_long: "انتقل إلى..."
         jump_bottom_with_number: "انتقل إلى المشاركة رقم %{post_number}"
         jump_prompt_to_date: "إلى التاريخ"
@@ -2626,7 +2609,6 @@ ar:
         username_placeholder: "اسم المستخدم"
         action: "أرسل دعوة"
         help: "دعوة الآخرين إلى هذا الموضوع عبر البريد الإلكتروني أو الإشعارات"
-        to_forum: "سنُرسل بريد إلكترني يتيح لصديقك الانضمام مباشرةً بنقر رابط فيه، تسجيل الدخول غير مطلوب."
         sso_enabled: "أدخِل اسم المستخدم لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_blank: "أدخِل اسم المستخدم (أو عنوان بريده) لمَن تريد دعوته إلى هذا الموضوع."
         to_topic_email: "لقد أدخلت عنوان بريد إلكترونيّ. سنرسل بريدً إلكترونياً يحتوي دعوة تتيح لصديقك الرّد مباشرة على هذا الموضوع."
@@ -2783,8 +2765,6 @@ ar:
       edit_reason: "السبب:"
       post_number: "المنشور %{number}"
       ignored: "محتوى تم تجاهله"
-      wiki_last_edited_on: "آخر تعديل على الـ wiki في "
-      last_edited_on: "آخر تعديل على المنشور في "
       reply_as_new_topic: "التعليق على الموضوع الاصلي"
       reply_as_new_private_message: "الرد في رسالة جديدة علي نفس المستلم"
       continue_discussion: "تكملة النقاش من %{postLink}:"
@@ -2920,7 +2900,6 @@ ar:
         unlock_post_description: "اسمح لكاتب المشاركة تعديلها"
         delete_topic_disallowed_modal: "لا تملك التصريح لحذف هذا الموضوع. إن أردت حذفه حقًا فأرسِل إشارة إلى أحد المشرفين مع سبب الحذف المنطقي."
         delete_topic_disallowed: "لا تملك التصريح لحذف هذا الموضوع"
-        delete_topic_confirm_modal: "هذا الموضوع يحتوي حاليا على أكثر من %{minViews} مشاهدة، وقد يكون مشهورًا في نتائج البحث. هل متأكد من حذف هذا الموضوع بالكامل، بدلاً من تعديله لتحسينه؟"
         delete_topic_confirm_modal_yes: "نعم، احذف الموضوع"
         delete_topic_confirm_modal_no: "لا، أبقِ الموضوع"
         delete_topic_error: "حدث عُطل أثناء حذف هذا الموضوع"
@@ -4139,10 +4118,10 @@ ar:
             text: "تعريفات الألوان"
             title: "أدخِل تعريفات الألوان المخصّصة (للمستخدمين المتقدّمين فقط)"
           head_tag:
-            text: "</head>"
+            text: "</‎head>"
             title: "رقْم HTML الذي سيُدرج قبل وسم ‎</head>‎"
           body_tag:
-            text: "</body>"
+            text: "</‎body>"
             title: "رقْم HTML الذي سيُدرج قبل وسم ‎</body>‎"
         colors:
           select_base:

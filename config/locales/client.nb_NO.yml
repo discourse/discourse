@@ -599,7 +599,6 @@ nb_NO:
       posts: "Innlegg"
       topics: "Emner"
       latest: "Siste"
-      latest_by: "siste av"
       toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
@@ -1063,15 +1062,6 @@ nb_NO:
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
     learn_more: "lær mer…"
-    all_time: "totalt"
-    all_time_desc: "totalt antall emner opprettet"
-    year: "år"
-    year_desc: "emner opprettet de siste 365 dagene"
-    month: "måned"
-    month_desc: "emner opprettet de siste 30 dagene"
-    week: "uke"
-    week_desc: "emner opprettet de siste 7 dagene"
-    day: "dag"
     first_post: Første innlegg
     mute: Ignorer
     unmute: Fjern ignorering
@@ -1091,8 +1081,6 @@ nb_NO:
       hidden_for_session: "OK, jeg spør igjen i morgen. Du kan også registrere en konto når du vil!"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
-      description: "Det finnes <b>%{replyCount}</b> svar."
-      description_time: "Det finnes <b>%{replyCount}</b> svar med en forventet lesetid på <b>%{readingTime} minutter</b>."
       enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
@@ -1240,7 +1228,6 @@ nb_NO:
       default: Egendefinerte emoji-er
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emnet er kun synlig for dem som kan se <b>%{category}</b>-kategorien."
       destination_category: "Målkategori"
       publish: "Publiser delt kladd"
       confirm_publish: "Er du sikker på at du vil publisere denne kladden?"
@@ -1267,9 +1254,6 @@ nb_NO:
       duplicate_link: "Det ser ut til at lenken din til <b>%{domain}</b> allerede ble publisert i emnet av <b>@%{username}</b> i <a href='%{post_url}'>et svar %{ago}</a>. Er du sikker på at du vil publisere den igjen?"
       error:
         title_missing: "Tittel er påkrevd"
-        title_too_short: "Tittel må være på minst %{min} tegn"
-        title_too_long: "Tittel kan ikke være mer enn %{max} tegn"
-        post_length: "Innlegget må være på minst %{min} tegn"
         try_like: "Har du prøvd %{heart}-knappen?"
         category_missing: "Du må velge en kategori"
       save_edit: "Lagre endring"
@@ -1661,7 +1645,6 @@ nb_NO:
         go: "gå"
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
-        jump_prompt_of: "av %{count} innlegg"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
@@ -1791,7 +1774,6 @@ nb_NO:
         username_placeholder: "brukernavn"
         action: "Send Invitasjon"
         help: "Inviter andre til dette emnet via e-post eller varsler"
-        to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         sso_enabled: "Oppgi brukernavnet til personen du ønsker å invitere til dette emnet."
         to_topic_blank: "Oppgi brukernavnet eller e-postadressen til personen du ønsker å invitere til dette emnet."
         to_topic_email: "Du har oppgitt en e-postadresse. Vi vil sende en invitasjon som lar vennen din svare på dette emnet umiddelbart."
@@ -1867,8 +1849,6 @@ nb_NO:
       quote_reply: "Sitat"
       edit_reason: "Begrunnelse:"
       post_number: "innlegg %{number}"
-      wiki_last_edited_on: "wikien sist redigert"
-      last_edited_on: "innlegg sist redigert"
       reply_as_new_topic: "Svar med lenket mne"
       reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra %{postLink}:"
