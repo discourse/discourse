@@ -66,10 +66,8 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_set_based_on_last_post");
     await fillIn("#topic_timer_duration", "2");
 
-    const regex3 = /This topic will close.*after the last reply/g;
-    const html3 = queryAll(".edit-topic-timer-modal .topic-status-info")
-      .html()
-      .trim();
+    const regex3 = /last post in the topic is already/g;
+    const html3 = queryAll(".edit-topic-timer-modal .warning").html().trim();
     assert.ok(regex3.test(html3));
   });
 
