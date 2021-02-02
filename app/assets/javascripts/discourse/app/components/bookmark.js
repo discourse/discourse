@@ -22,6 +22,7 @@ import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty, or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { later } from "@ember/runloop";
 
 // global shortcuts that interfere with these modal shortcuts, they are rebound when the
 // modal is closed
@@ -83,9 +84,11 @@ export default Component.extend({
 
   @on("didInsertElement")
   _prepareUI() {
-    if (this.site.isMobileDevice) {
-      document.getElementById("bookmark-name").blur();
-    }
+    later(() => {
+      if (this.site.isMobileDevice) {
+        document.getElementById("bookmark-name").blur();
+      }
+    });
 
     // we want to make sure the options panel opens so the user
     // knows they have set these options previously.
@@ -319,9 +322,11 @@ export default Component.extend({
   additionalTimeShortcutOptions() {
     let additional = [];
 
-    let later = laterToday(this.userTimezone);
     if (
-      !later.isSame(tomorrow(this.userTimezone), "date") &&
+      !laterToday(this.userTimezone).isSame(
+        tomorrow(this.userTimezone),
+        "date"
+      ) &&
       now(this.userTimezone).hour() < LATER_TODAY_CUTOFF_HOUR
     ) {
       additional.push(TIME_SHORTCUT_TYPES.LATER_TODAY);
