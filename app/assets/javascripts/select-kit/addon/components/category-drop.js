@@ -1,10 +1,9 @@
 import Category from "discourse/models/category";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import I18n from "I18n";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { computed } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 import { readOnly } from "@ember/object/computed";
 
 export const NO_CATEGORIES_ID = "no-categories";
@@ -107,8 +106,6 @@ export default ComboBoxComponent.extend({
 
   parentCategoryName: readOnly("selectKit.options.parentCategory.name"),
 
-  parentCategoryUrl: readOnly("selectKit.options.parentCategory.url"),
-
   allCategoriesLabel: computed(
     "parentCategoryName",
     "selectKit.options.subCategory",
@@ -122,22 +119,6 @@ export default ComboBoxComponent.extend({
       return I18n.t("categories.all");
     }
   ),
-
-  allCategoriesUrl: computed(
-    "parentCategoryUrl",
-    "selectKit.options.subCategory",
-    function () {
-      return getURL(
-        this.selectKit.options.subCategory
-          ? `${this.parentCategoryUrl}/all` || "/"
-          : "/"
-      );
-    }
-  ),
-
-  noCategoriesUrl: computed("parentCategoryUrl", function () {
-    return getURL(`${this.parentCategoryUrl}/none`);
-  }),
 
   search(filter) {
     if (filter) {
@@ -164,22 +145,13 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      let url;
-
-      if (category) {
-        url = category.url;
-        if (categoryId === NO_CATEGORIES_ID) {
-          url += "/none";
-        }
-      }
-
-      if (this.tagId) {
-        url = url
-          ? "/tags" + url + "/" + this.tagId.toLowerCase()
-          : "/tag/" + this.tagId.toLowerCase();
-      }
-
-      DiscourseURL.routeToUrl(url || "/");
+      DiscourseURL.routeToUrl(
+        getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        )
+      );
     },
   },
 
