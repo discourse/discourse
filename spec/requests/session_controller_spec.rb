@@ -1769,15 +1769,17 @@ RSpec.describe SessionController do
           expect(response.status).to eq(200)
         end
 
-        post "/session.json", params: {
-          login: user.username,
-          password: 'myawesomepassword',
-          second_factor_token: '000000'
-        }
+        [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
+          post "/session.json", params: {
+            login: username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
 
-        expect(response.status).to eq(429)
-        json = response.parsed_body
-        expect(json["error_type"]).to eq("rate_limit")
+          expect(response.status).to eq(429)
+          json = response.parsed_body
+          expect(json["error_type"]).to eq("rate_limit")
+        end
       end
     end
   end
