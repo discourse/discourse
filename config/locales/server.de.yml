@@ -408,7 +408,9 @@ de:
       email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
       cant_allow_membership_requests: "Du kannst Mitgliedschaftsanfragen nicht für eine Gruppe ohne Eigentümer erlauben."
       already_requested_membership: "Du hast die Gruppenmitgliedschaft für diese Gruppe bereits angefragt."
-      adding_too_many_users: "Maximal %{limit} Benutzer können auf einmal hinzugefügt werden"
+      adding_too_many_users:
+        one: "Maximal %{count} Benutzer kann auf einmal hinzugefügt werden"
+        other: "Maximal %{count} Benutzer können auf einmal hinzugefügt werden"
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -2115,6 +2117,7 @@ de:
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Willkommen bei unserer Community! Dies sind die derzeit beliebtesten Themen."
     not_seen_in_a_month: "Willkommen zurück! Wir haben dich länger nicht gesehen. Während deiner Abwesenheit waren dies die beliebtesten Themen."
@@ -2565,13 +2568,11 @@ de:
 
         Dieser Beitrag wurde von der Community gemeldet und ein Team-Mitglied hat entschieden, ihn zu entfernen.
 
-        [details="Klicke, um den gelöschten Beitrag auszuklappen"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
-        [/details]
 
-        Bitte sieh Dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
+        Bitte sieh dir unsere [Verhaltensregeln](%{base_url}/guidelines) für weitere Informationen an.
     usage_tips:
       text_body_template: |
         Für einige schnelle Tipps, um als neuer Benutzer loszulegen, [schaue einmal diesen Blog-Beitrag an](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

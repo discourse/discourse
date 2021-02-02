@@ -13,14 +13,13 @@
   {{/d-modal-body}}
 
   <div class="modal-footer">
-    {{#d-button
+    {{d-button
       class="btn-primary"
       action=(action "showConfirmation")
       icon="trash-alt"
       disabled=mergeDisabled
+      translatedLabel=mergeButtonText
     }}
-      {{i18n "admin.user.merge.prompt.transfer_and_delete" username=username}}
-    {{/d-button}}
     {{d-button
       action=(action "close")
       label="admin.user.merge.prompt.cancel"

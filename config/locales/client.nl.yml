@@ -770,7 +770,6 @@ nl:
       posts: "Berichten"
       topics: "Topics"
       latest: "Nieuwste"
-      latest_by: "nieuwste door"
       toggle_ordering: "sorteermethode omschakelen"
       subcategories: "Subcategorieën"
       muted: "Genegeerde categorieën"
@@ -1431,15 +1430,6 @@ nl:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
     learn_more: "meer info..."
-    all_time: "totaal"
-    all_time_desc: "aantal aangemaakte topics"
-    year: "jaar"
-    year_desc: "in de afgelopen 365 dagen aangemaakte topics"
-    month: "maand"
-    month_desc: "in de afgelopen 30 dagen aangemaakte topics"
-    week: "week"
-    week_desc: "in de afgelopen 7 dagen aangemaakte topics"
-    day: "dag"
     first_post: Eerste bericht
     mute: Negeren
     unmute: Tonen
@@ -1462,8 +1452,6 @@ nl:
       value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de meeste interessante berichten zoals bepaald door de gemeenschap."
-      description: "Er zijn <b>%{replyCount}</b> antwoorden."
-      description_time: "Er zijn <b>%{replyCount}</b> antwoorden met een geschatte leestijd van <b>%{readingTime} minuten</b>."
       enable: "Dit topic samenvatten"
       disable: "Alle berichten tonen"
     deleted_filter:
@@ -1671,7 +1659,6 @@ nl:
       default: Eigen emoji
     shared_drafts:
       title: "Gedeelde concepten"
-      notice: "Dit topic is alleen zichtbaar voor degenen die de categorie <b>%{category}</b> kunnen zien."
       destination_category: "Bestemmingscategorie"
       publish: "Gedeeld concept publiceren"
       confirm_publish: "Weet u zeker dat u dit concept wilt publiceren?"
@@ -1703,10 +1690,7 @@ nl:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Titel is vereist"
-        title_too_short: "Titel moet minstens %{min} tekens bevatten"
-        title_too_long: "Titel kan niet langer zijn dan %{max} tekens"
         post_missing: "Bericht kan niet leeg zijn"
-        post_length: "Bericht moet minstens %{min} tekens bevatten"
         try_like: "Hebt u de knop %{heart} geprobeerd?"
         category_missing: "U moet een categorie kiezen"
         tags_missing:
@@ -2227,7 +2211,6 @@ nl:
         go: "gaan"
         jump_bottom: "naar laatste bericht"
         jump_prompt: "springen naar..."
-        jump_prompt_of: "van %{count} berichten"
         jump_prompt_long: "Springen naar..."
         jump_bottom_with_number: "naar bericht %{post_number}"
         jump_prompt_to_date: "tot datum"
@@ -2367,7 +2350,6 @@ nl:
         username_placeholder: "gebruikersnaam"
         action: "Uitnodiging sturen"
         help: "anderen uitnodigen voor dit topic via e-mail of meldingen"
-        to_forum: "We sturen een kort mailtje waarmee uw vriend(in) direct kan deelnemen door op een koppeling te klikken; er is geen aanmelding vereist."
         sso_enabled: "Voer de gebruikersnaam in van de persoon die u voor dit topic wilt uitnodigen."
         to_topic_blank: "Voer de gebruikersnaam of het e-mailadres in van de persoon die u voor dit topic wilt uitnodigen."
         to_topic_email: "U hebt een e-mailadres ingevoerd. We sturen een uitnodiging per e-mail waarmee uw vriend(in) direct op dit topic kan antwoorden."
@@ -2488,8 +2470,6 @@ nl:
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
       ignored: "Genegeerde inhoud"
-      wiki_last_edited_on: "wiki laatst bewerkt op"
-      last_edited_on: "bericht laatst bewerkt op"
       reply_as_new_topic: "Antwoorden als gekoppeld topic"
       reply_as_new_private_message: "Antwoorden als nieuw bericht naar dezelfde ontvangers"
       continue_discussion: "Voortzetting van de discussie %{postLink}:"
@@ -2591,7 +2571,6 @@ nl:
         unlock_post_description: "toestaan dat de schrijver dit bericht bewerkt"
         delete_topic_disallowed_modal: "U hebt geen toestemming om dit topic te verwijderen. Als u echt wilt dat het wordt verwijderd, plaats dan een markering voor aandacht van een moderator, en voeg de reden bij."
         delete_topic_disallowed: "u hebt geen toestemming om dit topic te verwijderen"
-        delete_topic_confirm_modal: "Dit topic heeft momenteel meer dan %{minViews} weergaven en kan een populaire zoekbestemming zijn. Weet u zeker dat u dit topic volledig wilt verwijderen, in plaats van het te bewerken voor verbetering?"
         delete_topic_confirm_modal_yes: "Ja, dit topic verwijderen"
         delete_topic_confirm_modal_no: "Nee, dit topic behouden"
         delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
@@ -3390,7 +3369,6 @@ nl:
             effects: Effecten
             trust_levels_none: "Geen"
             automatic_membership_email_domains: "Gebruikers die zich met een e-maildomein registeren dat precies overeenkomt met een domein in deze lijst worden automatisch aan deze groep toegevoegd:"
-            automatic_membership_user_count: "%{count} gebruikers hebben de nieuwe e-maildomeinen en worden aan de groep toegevoegd."
             primary_group: "Automatisch instellen als primaire groep"
         name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
         primary: "Primaire groep"

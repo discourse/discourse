@@ -30,6 +30,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         bookmark.topic_id,
         bookmark.post_number || bookmark.linked_post_number
       ),
+      title: bookmark.name,
       content: bookmark.title,
       username: bookmark.post_user_username,
     });

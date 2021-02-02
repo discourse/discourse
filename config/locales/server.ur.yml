@@ -2105,24 +2105,6 @@ ur:
     flags_agreed_and_post_deleted:
       title: "فلَیگ کردہ پوسٹ سٹاف کی طرف سے ہٹا دی گئی"
       subject_template: "فلَیگ کردہ پوسٹ سٹاف کی طرف سے ہٹا دی گئی"
-      text_body_template: |
-        ہیلو،
-
-        یہ %{site_name} کی طرف سے ایک خود کار پیغام ہے تاکہ آپ کو بتایا جاسکے کہ [آپ کی پوسٹ](%{base_url}%{url}) حذف کر دی گئی تھی۔
-
-        <>
-
-        %{flag_reason}
-
-        یہ پوسٹ کمیونٹی کی طرف سے فلَیگ کی گئی تھی اور سٹاف کے ایک رکن نے اِسے ہٹانے کا انتخاب کیا۔
-
-        [details="ہٹائی گئی پوسٹ کو کھولنے کیلئے کلک کریں"]
-        ``` مارکڈائون
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        اضافی رہنمائی کیلئے، براہ کرم ہماری [کمیونٹی کی رہنما ہدایات](%{base_url}/guidelines) دیکھیے۔
     usage_tips:
       text_body_template: |
         نئے صارف کے طور پر شروعات کرنے پر چند فوری تجاویز کیلئے، [اِس بلاگ پوسٹ کو دیکھیں](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)۔

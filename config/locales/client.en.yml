@@ -865,6 +865,15 @@ en:
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "week"
+        month: "month"
+      topic_stat_all_time:
+        one: "%{number} total"
+        other: "%{number} total"
       topic_stat_sentence_week:
         one: "%{count} new topic in the past week."
         other: "%{count} new topics in the past week."
@@ -1516,6 +1525,7 @@ en:
       avatar:
         title: "Profile Picture"
         header_title: "profile, messages, bookmarks and preferences"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Title"
         none: "(none)"
@@ -1592,16 +1602,6 @@ en:
 
     learn_more: "learn more..."
 
-    all_time: "total"
-    all_time_desc: "total topics created"
-    year: "year"
-    year_desc: "topics created in the last 365 days"
-    month: "month"
-    month_desc: "topics created in the last 30 days"
-    week: "week"
-    week_desc: "topics created in the last 7 days"
-    day: "day"
-
     first_post: First post
     mute: Mute
     unmute: Unmute
@@ -1626,8 +1626,11 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>%{replyCount}</b> replies."
-      description_time: "There are <b>%{replyCount}</b> replies with an estimated read time of <b>%{readingTime} minutes</b>."
+      description:
+        one: "There is <b>%{count}</b> reply."
+        other: "There are <b>%{count}</b> replies."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
+      description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
 
@@ -1891,10 +1894,16 @@ en:
 
       error:
         title_missing: "Title is required"
-        title_too_short: "Title must be at least %{min} characters"
-        title_too_long: "Title can't be more than %{max} characters"
+        title_too_short:
+          one: "Title must be at least %{count} character"
+          other: "Title must be at least %{count} characters"
+        title_too_long:
+          one: "Title can't be more than %{count} character"
+          other: "Title can't be more than %{count} characters"
         post_missing: "Post can’t be empty"
-        post_length: "Post must be at least %{min} characters"
+        post_length:
+          one: "Post must be at least %{count} character"
+          other: "Post must be at least %{count} characters"
         try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
         tags_missing:
@@ -2464,7 +2473,9 @@ en:
         go: "go"
         jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
-        jump_prompt_of: "of %{count} posts"
+        jump_prompt_of:
+          one: "of %{count} post"
+          other: "of %{count} posts"
         jump_prompt_long: "Jump to..."
         jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
@@ -2753,8 +2764,8 @@ en:
       edit_reason: "Reason: "
       post_number: "post %{number}"
       ignored: "Ignored content"
-      wiki_last_edited_on: "wiki last edited on"
-      last_edited_on: "post last edited on"
+      wiki_last_edited_on: "wiki last edited on %{dateTime}"
+      last_edited_on: "post last edited on %{dateTime}"
       reply_as_new_topic: "Reply as linked Topic"
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
@@ -2880,7 +2891,9 @@ en:
         unlock_post_description: "allow the poster to edit this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
-        delete_topic_confirm_modal: "This topic currently has over %{minViews} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+        delete_topic_confirm_modal:
+          one: "This topic currently has over %{count} view and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+          other: "This topic currently has over %{count} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
         delete_topic_confirm_modal_yes: "Yes, delete this topic"
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
@@ -3510,6 +3523,8 @@ en:
         one: "%{tags} and %{count} more"
         other: "%{tags} and %{count} more"
       delete_no_unused_tags: "There are no unused tags."
+      # Example: "tag1, tag2, tag3"
+      tag_list_joiner: ", "
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
@@ -3753,7 +3768,9 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_user_count: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_count:
+              one: "%{count} user has the new email domains and will be added to the group."
+              other: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"

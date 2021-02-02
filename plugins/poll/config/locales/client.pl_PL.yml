@@ -116,6 +116,6 @@ pl_PL:
         poll_title:
           label: Tytuł (opcjonalnie)
         poll_options:
-          label: Wprowadź jedną opcję ankiety w jednej linii
+          label: Wprowadź jedną opcję ankiety osobno w linii
         automatic_close:
           label: Automatycznie zamknij ankietę

@@ -605,6 +605,10 @@ gl:
             imap_ssl: "Use SSL para IMAP"
             username: "Nome do usuario"
             password: "Contrasinal"
+          settings:
+            title: "Configuración"
+            allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
+            allow_unknown_sender_topic_replies_hint: "Permítelles aos remitentes descoñecidos responder a temas do grupo. Se isto non está activado, as respostas desde enderezos de correo electrónico non incluídos no fío de correo electrónico IMAP ou convidados ao tema crearán un novo tema."
           mailboxes:
             synchronized: "Caixa de correo sincronizada"
             none_found: "Non se atoparon caixas de correo nesta conta de correo electrónico."
@@ -778,7 +782,6 @@ gl:
       posts: "Publicacións"
       topics: "Temas"
       latest: "Últimos"
-      latest_by: "últimos de"
       toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
       muted: "Categorías silenciadas"
@@ -1455,15 +1458,6 @@ gl:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
     learn_more: "saber máis..."
-    all_time: "total"
-    all_time_desc: "total de temas creados"
-    year: "ano"
-    year_desc: "temas creados nos últimos 365 días"
-    month: "mes"
-    month_desc: "temas creados nos últimos 30 días"
-    week: "semana"
-    week_desc: "temas creados nos últimos 7 días"
-    day: "día"
     first_post: Publicación inicial
     mute: Silenciar
     unmute: Non silenciar
@@ -1486,8 +1480,6 @@ gl:
       value_prop: "Cando crea unha conta, lembramos exactamente o que ten lido, polo que sempre volve onde o deixou. Tamén recibe notificacións, desde aquí e por correo electrónico cando alguén lle responde. E pode amosarlle aprecio ás publicacións para compartir o amor. :heartpulse:"
     summary:
       enabled_description: "Estás vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade"
-      description: "Hai <b>%{replyCount}</b> respostas."
-      description_time: "Hai <b>%{replyCount}</b> respostas cun tempo estimado de lectura de <b>%{readingTime} minutos</b>."
       enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
@@ -1695,7 +1687,6 @@ gl:
       default: Emojis personalizados
     shared_drafts:
       title: "Borradores compartidos"
-      notice: "Este tema só é visíbel para aqueles que poden ver a categoría <b>%{category}</b>."
       destination_category: "Categoría de destino"
       publish: "Publicar borrador compartido"
       confirm_publish: "Confirmas a publicación deste borrador?"
@@ -1727,10 +1718,7 @@ gl:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "O título é obrigatorio"
-        title_too_short: "O título debe ter alomenos %{min} caracteres"
-        title_too_long: "O título non debe ter máis de %{max} caracteres"
         post_missing: "A publicación non pode estar baleira"
-        post_length: "A publicación debe ter alomenos %{min} caracteres"
         try_like: "Probaches o botón %{heart}?"
         category_missing: "Debes seleccionar unha categoría"
         tags_missing:
@@ -2255,7 +2243,6 @@ gl:
         go: "ir"
         jump_bottom: "ir á última publicación"
         jump_prompt: "ir a..."
-        jump_prompt_of: "de %{count} publicacións"
         jump_prompt_long: "Ir a..."
         jump_bottom_with_number: "ir á publicación %{post_number}"
         jump_prompt_to_date: "ata a data"
@@ -2395,7 +2382,7 @@ gl:
         username_placeholder: "nome do usuario"
         action: "Enviar convite"
         help: "convidar a outros a este tema por correo electrónico ou notificacións"
-        to_forum: "Enviaremos un correo electrónico permitindo ao teu amigo que se una inmediatamente ao premer nunha ligazón. Non require iniciar sesión."
+        to_forum: "Enviarémoslle un breve correo electrónico ao seu amigo para que poida participar inmediatamente facendo clic nunha ligazón."
         sso_enabled: "Introduce o nome do usuario da persoa que desexas convidar a este tema."
         to_topic_blank: "Introduce o nome do usuario ou o correo electrónico da persoa que desexas convidar a este tema."
         to_topic_email: "Introduciches un enderezo de correo-e. Enviarémosche un convite que permitirá os teus amigos responder inmediatamente a este tema."
@@ -2516,8 +2503,6 @@ gl:
       edit_reason: "Razón:"
       post_number: "publicación %{number}"
       ignored: "Contido ignorado"
-      wiki_last_edited_on: "a última edición do wiki foi o"
-      last_edited_on: "última edición da publicación"
       reply_as_new_topic: "Responder como tema ligado"
       reply_as_new_private_message: "Responder como nova mensaxe aos mesmos destinatarios"
       continue_discussion: "Continuar a discusión de %{postLink}:"
@@ -2627,7 +2612,6 @@ gl:
         unlock_post_description: "permitir que o autor edite esta publicación"
         delete_topic_disallowed_modal: "Non tes permiso para eliminar este tema. Se desexas eliminalo, denúnciao para que o revise o moderador e xustifica a causa da denuncia."
         delete_topic_disallowed: "non tes permiso para eliminar este tema"
-        delete_topic_confirm_modal: "Este tema ten agora máis de %{minViews} visualizacións e pode ser un destino de busca popular. Confirma que quere eliminar este tema por completo, en vez de editalo para melloralo?"
         delete_topic_confirm_modal_yes: "Si, eliminar este tema"
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
@@ -3456,7 +3440,6 @@ gl:
             effects: Efectos
             trust_levels_none: "Ningún"
             automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
-            automatic_membership_user_count: "%{count} usuarios teñen novos dominios de correo electrónico e serán engadidos ao grupo."
             primary_group: "Estabelecer automaticamente como grupo primario"
         name_placeholder: "Nome do grupo sen espazos, como na regra do nome do usuario"
         primary: "Grupo primario"

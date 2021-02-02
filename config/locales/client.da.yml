@@ -678,7 +678,6 @@ da:
       posts: "Indlæg"
       topics: "Emner"
       latest: "Seneste"
-      latest_by: "seneste af"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
       topic_sentence:
@@ -1213,15 +1212,6 @@ da:
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
     learn_more: "Læs mere…"
-    all_time: "i alt"
-    all_time_desc: "emner oprettet i alt"
-    year: "år"
-    year_desc: "Indlæg oprettet i de seneste 365 dage"
-    month: "måned"
-    month_desc: "Indlæg oprettet i de seneste 30 dage"
-    week: "uge"
-    week_desc: "Indlæg oprettet i de seneste 7 dage"
-    day: "dag"
     first_post: Første indlæg
     mute: Mute
     unmute: Unmute
@@ -1243,8 +1233,6 @@ da:
       value_prop: "Når du opretter en konto, husker vi nøjagtigt, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også notifikationer her og via email, når nogen svarer til dig. Og du kan synes godt om indlæg for at dele kærligheden. : Heartpulse:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
-      description: "Der er <b>%{replyCount}</b> svar."
-      description_time: "Der er <b>%{replyCount}</b> svar med en estimeret læsetid på <b>%{readingTime} minutter</b>."
       enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
@@ -1411,7 +1399,6 @@ da:
       default: Brugerdefineret humørikoner
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emne er kun synligt for dem, der kan se kategorien <b>%{category}</b> ."
       destination_category: "Destinations-kategori"
       publish: "Offentliggør delt kladde"
       confirm_publish: "Er du sikker på, at du vil offentliggøre dette udkast?"
@@ -1440,10 +1427,7 @@ da:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Titlen er påkrævet"
-        title_too_short: "Titlen skal være på mindst %{min} tegn"
-        title_too_long: "Titlen skal være kortere end %{max} tegn."
         post_missing: "Indlæg kan ikke være tomt"
-        post_length: "Indlægget skal være på mindst %{min} tegn."
         try_like: "Har du prøvet %{heart}knappen?"
         category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
@@ -1870,7 +1854,6 @@ da:
         go: "start"
         jump_bottom: "Hop til sidste indlæg"
         jump_prompt: "spring til..."
-        jump_prompt_of: "af %{count} indlæg"
         jump_prompt_long: "Hop til..."
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         jump_prompt_to_date: "til dato"
@@ -2005,7 +1988,6 @@ da:
         username_placeholder: "brugernavn"
         action: "Send invitation"
         help: "inviter andre til dette emne via email eller notifikationer"
-        to_forum: "Vi sender din ven en kort e-mail, som gør det muligt at tilmelde sig øjeblikkeligt ved at klikke på et link, uden det er nødvendigt at logge ind."
         sso_enabled: "Indtast brugernavnet på den person, du gerne vil invitere til dette emne."
         to_topic_blank: "Indtast brugernavnet eller en email adresse på den person, du gerne vil invitere til dette emne."
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
@@ -2110,8 +2092,6 @@ da:
       edit_reason: "Reason: "
       post_number: "indlæg %{number}"
       ignored: "Ignoreret indhold"
-      wiki_last_edited_on: "wiki sidst redigeret den"
-      last_edited_on: "indlæg sidst redigeret den"
       reply_as_new_topic: "Svar som linket emne"
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"

@@ -222,6 +222,9 @@ de:
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
+    x_more:
+      one: "%{count} weiterer"
+      other: "%{count} weitere"
     less: "Weniger"
     never: "nie"
     every_30_minutes: "alle 30 Minuten"
@@ -519,6 +522,19 @@ de:
       reject_reason:
         title: "Warum lehnst du diesen Benutzer ab?"
         send_email: "Ablehnungs-E-Mail senden"
+    time_shortcut:
+      later_today: "Im Laufe des Tages"
+      next_business_day: "Nächster Arbeitstag"
+      tomorrow: "Morgen"
+      next_week: "Nächste Woche"
+      post_local_date: "Datum im Beitrag"
+      later_this_week: "Später in dieser Woche"
+      start_of_next_business_week: "Montag"
+      start_of_next_business_week_alt: "Am kommenden Montag"
+      next_month: "Nächsten Monat"
+      custom: "Datum und Uhrzeit auswählen"
+      none: "Nicht notwendig"
+      last_custom: "Zuletzt gewählter Termin"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> hat <a href='%{topicUrl}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"%{userUrl}\">Du</a> hast <a href=\"%{topicUrl}\">das Thema</a> verfasst"
@@ -605,6 +621,8 @@ de:
             imap_ssl: "SSL für IMAP verwenden"
             username: "Benutzername"
             password: "Passwort"
+          settings:
+            title: "Einstellungen"
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail Konto wurden keine Postfächer gefunden."
@@ -778,13 +796,21 @@ de:
       posts: "Beiträge"
       topics: "Themen"
       latest: "Aktuelle Themen"
-      latest_by: "neuester Beitrag von"
       toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
       muted: "Stummgeschaltete Kategorien"
       topic_sentence:
         one: "%{count} Thema"
         other: "%{count} Themen"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "Woche"
+        month: "Monat"
+      topic_stat_all_time:
+        one: "%{number} gesamt"
+        other: "%{number} gesamt"
       topic_stat_sentence_week:
         one: "%{count} neues Thema in der letzten Woche."
         other: "%{count} neue Themen in der letzten Woche."
@@ -1398,6 +1424,7 @@ de:
       avatar:
         title: "Profilbild"
         header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Titel"
         none: "(keiner)"
@@ -1455,15 +1482,6 @@ de:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}} überschritten."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Webseiten-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehler/Minute}} überschritten."
     learn_more: "mehr erfahren…"
-    all_time: "gesamt"
-    all_time_desc: "Erstellte Themen"
-    year: "Jahr"
-    year_desc: "Themen, die in den letzten 365 Tagen erstellt wurden"
-    month: "Monat"
-    month_desc: "Themen, die in den letzten 30 Tagen erstellt wurden"
-    week: "Woche"
-    week_desc: "Themen, die in den letzten 7 Tagen erstellt wurden"
-    day: "Tag"
     first_post: Erster Beitrag
     mute: Stummschalten
     unmute: Stummschaltung aufheben
@@ -1486,8 +1504,10 @@ de:
       value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn jemand auf deine Beiträge antwortet. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartpulse:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
-      description: "Es gibt <b>%{replyCount}</b> Antworten."
-      description_time: "Es gibt <b>%{replyCount}</b> Antworten mit einer geschätzten Lesezeit von <b>%{readingTime} Minuten</b>."
+      description:
+        one: "Es gibt <b>%{count}</b> Antwort."
+        other: "Es gibt <b>%{count}</b> Antworten."
+      description_time_MF: "Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>."
       enable: "Zusammenfassung vom Thema erstellen"
       disable: "Alle Beiträge anzeigen"
     deleted_filter:
@@ -1695,7 +1715,6 @@ de:
       default: Benutzerdefinierte Emojis
     shared_drafts:
       title: "Gemeinsame Vorlagen"
-      notice: "Das Thema ist nur sichtbar für die, die die <b>%{category}</b>-Kategorie sehen können."
       destination_category: "Ziel-Kategorie"
       publish: "Gemeinsame Vorlage veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
@@ -1727,10 +1746,16 @@ de:
       reference_topic_title: "AW: %{title}"
       error:
         title_missing: "Titel ist erforderlich"
-        title_too_short: "Titel muss mindestens %{min} Zeichen lang sein"
-        title_too_long: "Titel darf maximal %{max} Zeichen lang sein"
+        title_too_short:
+          one: "Titel muss mindestens %{count} Zeichen lang sein"
+          other: "Titel muss mindestens %{count} Zeichen lang sein"
+        title_too_long:
+          one: "Titel darf maximal %{count} Zeichen lang sein"
+          other: "Titel darf maximal %{count} Zeichen lang sein"
         post_missing: "Beitrag darf nicht leer sein"
-        post_length: "Beitrag muss mindestens %{min} Zeichen lang sein"
+        post_length:
+          one: "Beitrag muss mindestens %{count} Zeichen lang sein"
+          other: "Beitrag muss mindestens %{count} Zeichen lang sein"
         try_like: "Hast du schon die %{heart}-Schaltfläche ausprobiert?"
         category_missing: "Du musst eine Kategorie auswählen"
         tags_missing:
@@ -2167,7 +2192,7 @@ de:
       slow_mode_update:
         title: "Langsamer Modus"
         select: "Benutzer dürfen nur einmal in diesem Thema schreiben:"
-        description: "Um eine durchdachte Diskussion in schnellen oder umstrittenen Diskussionen zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut posten."
+        description: "Um in schnellen oder umstrittenen Diskussionen eine durchdachte Diskussion zu fördern, müssen Benutzer warten, bevor sie in diesem Thema erneut einen Beitrag verfassen können."
         save: "Aktivieren"
         enabled_until: "(Optional) Aktiviert bis:"
         remove: "Deaktivieren"
@@ -2255,7 +2280,9 @@ de:
         go: "Los"
         jump_bottom: "springe zum letzten Beitrag"
         jump_prompt: "springe zu..."
-        jump_prompt_of: "von %{count} Beiträgen"
+        jump_prompt_of:
+          one: "von %{count} Beitrag"
+          other: "von %{count} Beiträgen"
         jump_prompt_long: "Zu ... springen"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         jump_prompt_to_date: "zu Datum"
@@ -2395,7 +2422,6 @@ de:
         username_placeholder: "Benutzername"
         action: "Einladung versenden"
         help: "per E-Mail oder Benachrichtigung weitere Personen zu diesem Thema einladen"
-        to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
         sso_enabled: "Gib den Benutzername der Person ein, die du zu diesem Thema einladen willst."
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
         to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
@@ -2516,8 +2542,8 @@ de:
       edit_reason: "Grund: "
       post_number: "Beitrag %{number}"
       ignored: "Ignorierter Inhalt"
-      wiki_last_edited_on: "Wiki zuletzt bearbeitet am"
-      last_edited_on: "Beitrag zuletzt bearbeitet am"
+      wiki_last_edited_on: "Wiki zuletzt bearbeitet am %{dateTime}"
+      last_edited_on: "Beitrag zuletzt bearbeitet am %{dateTime}"
       reply_as_new_topic: "Mit verknüpftem Thema antworten"
       reply_as_new_private_message: "Antworte als neue Nachricht an die gleichen Empfänger"
       continue_discussion: "Fortsetzung der Diskussion von %{postLink}:"
@@ -2556,6 +2582,7 @@ de:
         one: "Zeige %{count} Antwort an"
         other: "Zeige %{count} Antworten an"
       in_reply_to: "Übergeordneten Beitrag laden"
+      view_all_posts: "Alle Beiträge anzeigen"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -2627,7 +2654,9 @@ de:
         unlock_post_description: "erlaube, dass der Autor den Beitrag bearbeitet"
         delete_topic_disallowed_modal: "Du hast keine Berechtigung, dieses Thema zu löschen. Wenn du wirklich möchtest, dass es gelöscht wird, melde es mit einer Begründung, um einen Moderator darauf aufmerksam zu machen."
         delete_topic_disallowed: "du hast keine Berechtigung, dieses Thema zu löschen"
-        delete_topic_confirm_modal: "Dieses Thema hat derzeit mehr als %{minViews} Aufrufe und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
+        delete_topic_confirm_modal:
+          one: "Dieses Thema hat derzeit mehr als %{count} Aufruf und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
+          other: "Dieses Thema hat derzeit mehr als %{count} Aufrufe und kann ein beliebtes Suchziel sein. Sind Sie sicher, dass Sie dieses Thema vollständig löschen wollen, anstatt es zu bearbeiten, um es zu verbessern?"
         delete_topic_confirm_modal_yes: "Ja, dieses Thema löschen"
         delete_topic_confirm_modal_no: "Nein, dieses Thema behalten"
         delete_topic_error: "Beim Löschen dieses Themas ist ein Fehler aufgetreten"
@@ -3232,6 +3261,7 @@ de:
         one: "%{tags} und%{count} weiteres"
         other: "%{tags} und %{count} weitere"
       delete_no_unused_tags: "Es gibt keine ungenutzten Schlagwörter."
+      tag_list_joiner: ", "
       delete_unused: "Nicht verwendete Schlagwörter löschen"
       delete_unused_description: "Alle Schlagwörter löschen, die keinem Thema und keiner Nachricht zugewiesen sind."
       cancel_delete_unused: "Abbrechen"
@@ -3456,7 +3486,9 @@ de:
             effects: Effekte
             trust_levels_none: "Keine"
             automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
-            automatic_membership_user_count: "%{count} Benutzer haben die neuen E-Mail-Domänen und werden der Gruppe hinzugefügt."
+            automatic_membership_user_count:
+              one: "%{count} Benutzer hat die neuen E-Mail-Domänen und wird der Gruppe hinzugefügt."
+              other: "%{count} Benutzer haben die neuen E-Mail-Domänen und werden der Gruppe hinzugefügt."
             primary_group: "Automatisch als Hauptgruppe festlegen"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         primary: "Hauptgruppe"

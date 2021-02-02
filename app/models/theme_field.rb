@@ -343,10 +343,14 @@ class ThemeField < ActiveRecord::Base
   end
 
   def compile_scss
-    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"common/foundation/mixins\"; @import \"theme_variables\"; @import \"theme_field\";",
-      "theme.scss",
-      theme_field: self.value.dup,
-      theme: self.theme
+    scss = <<~SCSS
+      @import "common/foundation/variables"; @import "common/foundation/mixins"; #{self.theme.scss_variables.to_s} #{self.value}
+    SCSS
+
+    Stylesheet::Compiler.compile(scss,
+      "#{Theme.targets[self.target_id]}.scss",
+      theme: self.theme,
+      load_paths: self.theme.scss_load_paths
     )
   end
 

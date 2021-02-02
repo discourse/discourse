@@ -463,6 +463,18 @@ pt:
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
         ok: "CONFIRMAR"
       example_username: "nome de utilizador"
+    time_shortcut:
+      later_today: "Hoje, mais tarde"
+      next_business_day: "Próximo dia útil"
+      tomorrow: "Amanhã"
+      next_week: "Próxima semana"
+      post_local_date: "Data no post"
+      later_this_week: "No final desta semana"
+      start_of_next_business_week: "Segunda-feira"
+      start_of_next_business_week_alt: "Próxima Segunda-feira"
+      next_month: "Próximo mês"
+      custom: "Data e hora personalizadas"
+      last_custom: "Último"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
       you_posted_topic: "<a href='%{userUrl}'></a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -699,7 +711,6 @@ pt:
       posts: "Publicações"
       topics: "Tópicos"
       latest: "Recentes"
-      latest_by: "recentes por"
       toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
       topic_sentence:
@@ -1217,15 +1228,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    all_time: "total"
-    all_time_desc: "total de tópicos criados"
-    year: "ano"
-    year_desc: "tópicos criados nos últimos 365 dias"
-    month: "mês"
-    month_desc: "tópicos criados nos últimos 30 dias"
-    week: "semana"
-    week_desc: "tópicos criados nos últimos 7 dias"
-    day: "dia"
     first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
@@ -1247,8 +1249,6 @@ pt:
       value_prop: "Quando cria uma conta, nós lembramo-nos exatamente o que já leu, por isso volta sempre ao sítio onde parou. Também recebe notificações, aqui e por email, cada vez que alguém lhe responde. E pode gostar das publicações para interagir com outros utilizadores. :heartpulse:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      description: "Existem <b>%{replyCount}</b> respostas."
-      description_time: "Existem <b>%{replyCount}</b> respostas com um tempo de leitura estimado de <b>%{readingTime} minutos</b>."
       enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
     deleted_filter:
@@ -1410,7 +1410,6 @@ pt:
       default: Emojis Personalizados
     shared_drafts:
       title: "Rascunhos Partilhados"
-      notice: "Este tópico só está visível aos utilizadores que conseguem ver a categoria <b>%{category}</b>."
       destination_category: "Categoria Destino"
       publish: "Publicar Rascunho Partilhado"
       confirm_publish: "Tem a certeza que quer publicar este rascunho?"
@@ -1438,10 +1437,7 @@ pt:
       duplicate_link: "Parce que a sua hiperligação para <b>%{domain}</b> já foi publicada neste tópico por <b>@%{username}</b> numa <a href='%{post_url}'>resposta %{ago}</a> – tem a certeza que a quer publicar novamente?"
       error:
         title_missing: "O título é obrigatório"
-        title_too_short: "O título tem que ter pelo menos %{min} carateres."
-        title_too_long: "O título não pode conter mais do que %{max} carateres."
         post_missing: "A mensagem não pode estar vazia"
-        post_length: "A publicação tem que ter pelo menos %{min} carateres"
         try_like: "Já experimentou o botão %{heart}?"
         category_missing: "Tem de escolher uma categoria"
       save_edit: "Guardar Edição"
@@ -1843,7 +1839,6 @@ pt:
         go: "ir"
         jump_bottom: "ir para a última publicação"
         jump_prompt: "ir para..."
-        jump_prompt_of: "de %{count} mensagens"
         jump_bottom_with_number: "ir para a mensagem %{post_number}"
         jump_prompt_to_date: "ir para data"
         jump_prompt_or: "ou"
@@ -1974,7 +1969,6 @@ pt:
         username_placeholder: "nome de utilizador"
         action: "Enviar Convite"
         help: "convidar outros para este tópico via email ou notificações"
-        to_forum: "Enviaremos um breve email que permitirá ao seu amigo juntar-se imediatamente clicando numa ligação, não sendo necessário ter sessão iniciada."
         sso_enabled: "Introduza o nome de utilizador da pessoa que gostaria de convidar para este tópico."
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
@@ -2059,7 +2053,6 @@ pt:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
-      last_edited_on: "última edição da mensagem em"
       reply_as_new_topic: "Responder com novo Tópico"
       continue_discussion: "Continuar a discussão de %{postLink}:"
       follow_quote: "ir para a publicação citada"

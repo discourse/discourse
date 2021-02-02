@@ -405,7 +405,6 @@ es:
       email_already_used_in_category: "«%{email}» ya está siendo utilizado por la categoría «%{category_name}»."
       cant_allow_membership_requests: "No puedes permitir solicitudes de membresía de un grupo sin ningún propietario."
       already_requested_membership: "Ya has solicitado la membresía de este grupo."
-      adding_too_many_users: "Se pueden añadir un máximo de %{limit} usuarios a la vez"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -1903,6 +1902,7 @@ es:
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo bootstrap (establece en 0 para desactivar esta opción)"
+    prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_media: 'Limita el acceso a los medios subidos (imágenes, video, audio). Si está habilitado «inicio de sesión requerido», solo los usuarios que hayan iniciado sesión pueden acceder a los medios subidos. En caso contrario, se limitará el acceso únicamente a los medios subidos en mensajes privados. ADVERTENCIA: se deben habilitar las subidas S3 antes de poder habilitar esta configuración. Ver <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> para más detalles.'
     secure_media_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente serían quitadas de los correos electrónicos si su tamaño es menor que la configuración de 'secure media max email embed image size kb'."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» deshabilitará completamente el slug."
@@ -1930,6 +1930,7 @@ es:
     blur_tl0_flagged_posts_media: "Difuminar imágenes en publicaciones reportadas para ocultar contenido potencialmente delicado."
     enable_page_publishing: "Permitir que los miembros del personal publiquen temas en nuevas URL con su propio estilo."
     show_published_pages_login_required: "Los usuarios anónimos pueden ver páginas publicadas, incluso cuando sea necesario iniciar sesión."
+    skip_auto_delete_reply_likes: "Al eliminar automáticamente respuestas antiguas, no eliminar mensajes con este número de \"me gusta\" o más."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios correos electrónicos de resumen por defecto."
     default_include_tl0_in_digests: "Incluir publicaciones de usuarios nuevos en los correos electrónicos de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_level: "Establecer nivel por defecto de las notificaciones por correo electrónico para los temas regulares."
@@ -1990,6 +1991,7 @@ es:
     governing_law: "Ley que rige"
     city_for_disputes: "Ciudad de disputas"
     shared_drafts_category: "Habilite la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del staff."
+    shared_drafts_min_trust_level: "Permitir a los usuarios ver y editar borradores compartidos."
     push_notifications_prompt: "Mostrar aviso del consentimiento del usuario."
     push_notifications_icon: "El icono de la medalla que aparece en el menú de notificaciones. Se recomienda un PNG monocromático de 96 × 96 con transparencia."
     base_font: "Fuente base para la mayoría de texto en el sitio. Los temas lo pueden sobreescribir a través de la propiedad personalizada de CSS `--font-family`."
@@ -2477,22 +2479,6 @@ es:
     flags_agreed_and_post_deleted:
       title: "Tema reportado y eliminado por el staff"
       subject_template: "Tema reportado y eliminado por el staff"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que [tu publicación](%{base_url}%{url}) fue eliminada.
-
-        %{flag_reason}
-
-        La publicación ha sido reportada por la comunidad y un miembro del equipo de la página decidió eliminarla.
-
-        [details="Haz clic para expandir la publicación eliminada"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Por favor, revisa las [directrices de la comunidad](%{base_url}/directrices) para más información.
     usage_tips:
       text_body_template: |
         Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

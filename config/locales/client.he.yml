@@ -270,6 +270,11 @@ he:
     now: "ממש עכשיו"
     read_more: "המשך קריאה"
     more: "להרחבה"
+    x_more:
+      one: "עוד %{count}"
+      two: "עוד %{count}"
+      many: "עוד %{count}"
+      other: "עוד %{count}"
     less: "צמצום"
     never: "אף פעם"
     every_30_minutes: "כל 30 דקות"
@@ -483,6 +488,11 @@ he:
         fields: "שדות"
         reject_reason: "סיבה"
       user_percentage:
+        summary:
+          one: "%{agreed}, %{disagreed}, %{ignored} (של הסימון האחרון)"
+          two: "%{agreed}, %{disagreed}, %{ignored} (של %{count} הסימונים האחרונים)"
+          many: "%{agreed}, %{disagreed}, %{ignored} (של %{count} הסימונים האחרונים)"
+          other: "%{agreed}, %{disagreed}, %{ignored} (של %{count} הסימונים האחרונים)"
         agreed:
           one: "%{count}% מסכים"
           two: "%{count}% מסכימים"
@@ -586,6 +596,19 @@ he:
       reject_reason:
         title: "למה בחרת לדחות את המשתמש הזה?"
         send_email: "שליחת הודעה דחייה בדוא״ל"
+    time_shortcut:
+      later_today: "בהמשך היום"
+      next_business_day: "יום העסקים הבא"
+      tomorrow: "מחר"
+      next_week: "בשבוע הבא"
+      post_local_date: "תאריך בפוסט"
+      later_this_week: "בהמשך השבוע"
+      start_of_next_business_week: "יום שני"
+      start_of_next_business_week_alt: "יום שני הבא"
+      next_month: "חודש הבא"
+      custom: "תאריך ושעה מותאמים אישית"
+      none: "אין צורך"
+      last_custom: "האחרון"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> פרסם <a href='%{topicUrl}'>את הנושא</a>"
       you_posted_topic: "<a href='%{userUrl}'>את/ה</a> פרסמת <a href='%{topicUrl}'>את הנושא</a>"
@@ -674,6 +697,10 @@ he:
             imap_ssl: "להשתמש ב־SSL ל־IMAP"
             username: "שם משתמש"
             password: "סיסמה"
+          settings:
+            title: "הגדרות"
+            allow_unknown_sender_topic_replies: "לאפשר תגובות לנושאים משולחים בלתי־ידועים."
+            allow_unknown_sender_topic_replies_hint: "מאפשר לשולחים בלתי־ידועים להגיב לנושאים קבוצתיים. אם האפשרות מבוטלת, תגובות מכתובות דוא״ל שאינן מופיעות בשרשור דוא״ל IMAP או שהוזמנו לנושא תיצורנה נושא חדש."
           mailboxes:
             synchronized: "תיבת דוא״ל מסונכרנת"
             none_found: "לא נמצאו תיבות דוא״ל בחשבון הדוא״ל הזה."
@@ -849,7 +876,6 @@ he:
       posts: "פוסטים"
       topics: "נושאים"
       latest: "לאחרונה"
-      latest_by: "לאחרונה על ידי"
       toggle_ordering: "שינוי בקר סדר"
       subcategories: "תתי קטגוריות"
       muted: "קטגוריות מושתקות"
@@ -1556,15 +1582,6 @@ he:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה חרגה} other {# שגיאות בשעה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה חרגה} other {# שגיאות בדקה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}."
     learn_more: "למד עוד..."
-    all_time: "סך הכל"
-    all_time_desc: "כל הנושאים שנוצרו"
-    year: "שנה"
-    year_desc: "נושאים שפורסמו ב־365 הימים האחרונים"
-    month: "חודש"
-    month_desc: "נושאים שפורסמו ב־30 הימים האחרונים"
-    week: "שבוע"
-    week_desc: "נושאים שפורסמו ב־7 הימים האחרונים"
-    day: "יום"
     first_post: פוסט ראשון
     mute: השתק
     unmute: ביטול השתקה
@@ -1589,8 +1606,6 @@ he:
       value_prop: "בעת יצירת החשבון, אנו זוכרים במדויק מה קראת, לכן תמיד יתאפשר לך לחזור להיכן שהפסקת. נוסף על כך, יישלחו אליך התראות, כאן ודרך דוא״ל כשמתקבלת תגובה על משהו שכתבת. יש לך גם אפשרות לסמן לייק פוסטים שאהבת כדי להוסיף ולהפיץ אהבה. :heartpulse:"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
-      description: "ישנן <b>%{replyCount}</b> תגובות."
-      description_time: "יש <b>%{replyCount}</b> תגובות עם זמן קריאה מוערך של <b>%{readingTime} דקות</b>."
       enable: "סכם נושא זה"
       disable: "הצג את כל הפוסטים"
     deleted_filter:
@@ -1810,7 +1825,7 @@ he:
       default: אמוג׳ים מותאמים
     shared_drafts:
       title: "טיוטות משותפות"
-      notice: "הנושא הזה ניתן לצפייה עבור מי שיכולים לצפות בקטגורית <b>%{category}</b>."
+      notice: "הנושא הזה זמין לצפייה לאלו שיכולים לפרסם טיוטות שיתופיות."
       destination_category: "קטגוריית יעד"
       publish: "פרסום טיוטה משותפת"
       confirm_publish: "לפרסם את הטיוטה הזו?"
@@ -1846,10 +1861,7 @@ he:
       reference_topic_title: "תגובה: %{title}"
       error:
         title_missing: "יש להזין כותרת."
-        title_too_short: "על הכותרת להיות באורך %{min} תווים לפחות."
-        title_too_long: "על הכותרת להיות באורך %{max} לכל היותר."
         post_missing: "הפוסט לא יכול להיות ריק"
-        post_length: "על הפוסט להיות באורך %{min} תווים לפחות"
         try_like: "האם ניסית את כפתור ה-%{heart}?"
         category_missing: "עליך לבחור קטגוריה."
         tags_missing:
@@ -2179,7 +2191,7 @@ he:
         reset_read: "איפוס נקראו"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
-        dismiss_read: "בטלו את כל אלו שלא-נקראו"
+        dismiss_read: "התעלמות מאלו שלא נקראו"
         dismiss_button: "ביטול..."
         dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         also_dismiss_topics: "הפסיקו לעקוב אחרי נושאים אלו כדי שהם לא יופיעו שוב בתור לא-נקראו"
@@ -2411,7 +2423,6 @@ he:
         go: "קדימה"
         jump_bottom: "מעבר לפוסט האחרון"
         jump_prompt: "קפצו אל..."
-        jump_prompt_of: "מתוך %{count} פוסטים"
         jump_prompt_long: "מעבר אל…"
         jump_bottom_with_number: "קפיצה לפוסט %{post_number}"
         jump_prompt_to_date: "עד לתאריך"
@@ -2557,7 +2568,7 @@ he:
         username_placeholder: "שם משתמש"
         action: "שלח הזמנה"
         help: "הזמינו אנשים אחרים לנושא זה דרך דואר אלקטרוני או התראות"
-        to_forum: "אנו נשלח הודעה קצרה בדוא״ל שתאפשר לחברים שלך להצטרף באופן מיידי על ידי לחיצה על קישור וללא צורך בכניסה למערכת."
+        to_forum: "אנו נשלח הודעה קצרה בדוא״ל שתאפשר לחברים שלך להצטרף באופן מיידי בלחיצה על קישור."
         sso_enabled: "הכניסו את שם המשתמש של האדם שברצונכם להזמין לנושא זה."
         to_topic_blank: "הכניסו את שם המשתמש או כתובת הדואר האלקטרוני של האדם שברצונכם להזמין לנושא זה."
         to_topic_email: "מילאת כתובת דוא״ל. אנחנו נשלח לך הזמנה בדוא״ל שתאפשר לחבריך להשיב לנושא הזה מיידית."
@@ -2696,8 +2707,6 @@ he:
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
       ignored: "תוכן בהתעלמות"
-      wiki_last_edited_on: "וויקי נערך לאחרונה ב"
-      last_edited_on: "הפוסט נערך לאחרונה ב"
       reply_as_new_topic: "תגובה כנושא מקושר"
       reply_as_new_private_message: "תגובה כהודעה חדשה לאותם נמענים"
       continue_discussion: "ממשיך את הדיון מ %{postLink}:"
@@ -2750,6 +2759,7 @@ he:
         many: "מוצגות %{count} תגובות אל"
         other: "מוצגות %{count} תגובות אל"
       in_reply_to: "טעינת הפוסט ההורה"
+      view_all_posts: "הצגת כל הפוסטים"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -2827,7 +2837,6 @@ he:
         unlock_post_description: "לאפשר למפרסם לערוך את הפוסט הזה"
         delete_topic_disallowed_modal: "אין לך הרשאות למחוק את הנושא הזה. כדי למחוק אותו לצמיתות, יש לסמן אותו בדגל כדי שיקבל את תשומת לב הפיקוח לרבות סיבת הסימון."
         delete_topic_disallowed: "אין לך הרשאה למחוק את הנושא הזה"
-        delete_topic_confirm_modal: "לנושא זה יש למעלה מ־%{minViews} צפיות והוא עשוי להיות יעד חיפוש נפוץ. למחוק את הנושא הזה לחלוטין במקום לערוך ולשפר אותו?"
         delete_topic_confirm_modal_yes: "כן, למחוק את הנושא הזה"
         delete_topic_confirm_modal_no: "לא, להשאיר את הנושא הזה"
         delete_topic_error: "אירעה שגיאה בעת מחיקת הנושא"
@@ -3722,7 +3731,6 @@ he:
             effects: אפקטים
             trust_levels_none: "ללא"
             automatic_membership_email_domains: "משתמשים שנרשמים עם שם תחום (דומיין) דוא״ל שתואם בדיוק לאחד מהרשימה, יתווספו באופן אוטומטי לקבוצה זו:"
-            automatic_membership_user_count: "ל־%{count} משתמשים יש את כתובות הדוא״ל בשם התחום החדש ויתווספו לקבוצה."
             primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
         name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
         primary: "קבוצה ראשית"
