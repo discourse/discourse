@@ -1,26 +1,24 @@
 <div class="future-date-input">
-  {{#unless isBasedOnDuration}}
-    <div class="control-group">
-      <label class={{labelClasses}}>{{displayLabel}}</label>
-      {{future-date-input-selector
-        minimumResultsForSearch=-1
-        statusType=statusType
-        value=(readonly selection)
-        input=(readonly input)
-        includeDateTime=includeDateTime
-        includeWeekend=includeWeekend
-        includeFarFuture=includeFarFuture
-        includeMidFuture=includeMidFuture
-        includeNow=includeNow
-        clearable=clearable
-        onChangeInput=onChangeInput
-        onChange=(action (mut selection))
-        options=(hash
-          none="topic.auto_update_input.none"
-        )
-      }}
-    </div>
-  {{/unless}}
+  <div class="control-group">
+    <label class={{labelClasses}}>{{displayLabel}}</label>
+    {{future-date-input-selector
+      minimumResultsForSearch=-1
+      statusType=statusType
+      value=(readonly selection)
+      input=(readonly input)
+      includeDateTime=includeDateTime
+      includeWeekend=includeWeekend
+      includeFarFuture=includeFarFuture
+      includeMidFuture=includeMidFuture
+      includeNow=includeNow
+      clearable=clearable
+      onChangeInput=onChangeInput
+      onChange=(action (mut selection))
+      options=(hash
+        none="topic.auto_update_input.none"
+      )
+    }}
+  </div>
 
   {{#if displayDateAndTimePicker}}
     <div class="control-group">
@@ -36,21 +34,5 @@
       {{d-icon "far-clock"}}
       {{input placeholder="--:--" type="time" class="time-input" value=time disabled=timeInputDisabled}}
     </div>
-  {{/if}}
-
-  {{#if displayNumberInput}}
-    <div class="control-group">
-      <label>
-        {{durationLabel}}
-        {{text-field value=duration type="number"}}
-      </label>
-    </div>
-
-    {{#if willCloseImmediately}}
-      <div class="warning">
-        {{d-icon "exclamation-triangle"}}
-        {{willCloseI18n}}
-      </div>
-    {{/if}}
   {{/if}}
 </div>

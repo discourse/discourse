@@ -129,7 +129,7 @@ export default Component.extend({
   @discourseComputed(
     "isBasedOnLastPost",
     "topicTimer.duration",
-    "model.last_posted_at"
+    "topic.last_posted_at"
   )
   willCloseImmediately(isBasedOnLastPost, duration, lastPostedAt) {
     if (isBasedOnLastPost && duration) {
@@ -139,7 +139,7 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("isBasedOnLastPost", "model.last_posted_at")
+  @discourseComputed("isBasedOnLastPost", "topic.last_posted_at")
   willCloseI18n(isBasedOnLastPost, lastPostedAt) {
     if (isBasedOnLastPost) {
       const diff = Math.round(
