@@ -92,13 +92,9 @@
           </td>
           <td class='posters'>
             <% t.posters.each do |poster| %>
-              <% if poster.moreCount %>
-                <a class="posters-more-count"><% poster.moreCount %></a>
-              <% else %>
-                <a href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extraClasses %>">
-                  <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= h("#{poster.user.username} - #{poster.description}") %>' aria-label='<%= h("#{poster.user.username} - #{poster.description}") %>'>
-                </a>
-              <% end %>
+              <a href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extras %>">
+                <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= h(poster.name_and_description) %>' aria-label='<%= h(poster.name_and_description) %>'>
+              </a>
             <% end %>
           </td>
           <td class="replies">

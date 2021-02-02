@@ -1281,7 +1281,7 @@ describe GroupsController do
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 1
+              count: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")
