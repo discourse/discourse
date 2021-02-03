@@ -1366,6 +1366,14 @@ describe GroupsController do
         expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
       end
 
+      it "rejects unknown emails when local logins are disabled" do
+        SiteSetting.enable_local_logins = false
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      end
+
       it "will find users by email, and invite the correct user" do
         new_user = Fabricate(:user)
         expect(new_user.group_ids.include?(group.id)).to eq(false)

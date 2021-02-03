@@ -333,15 +333,15 @@ class GroupsController < ApplicationController
     end
 
     if users.empty? && emails.empty?
-      raise Discourse::InvalidParameters.new(
-        I18n.t("usernames_or_emails_required")
-      )
+      raise Discourse::InvalidParameters.new(I18n.t("usernames_or_emails_required"))
     end
 
-    if SiteSetting.enable_sso? && emails.any?
-      raise Discourse::InvalidParameters.new(
-        I18n.t("no_invites_with_sso")
-      )
+    if emails.any?
+      if SiteSetting.enable_sso?
+        raise Discourse::InvalidParameters.new(I18n.t("no_invites_with_sso"))
+      elsif !SiteSetting.enable_local_logins?
+        raise Discourse::InvalidParameters.new(I18n.t("no_invites_without_local_logins"))
+      end
     end
 
     if users.length > ADD_MEMBERS_LIMIT

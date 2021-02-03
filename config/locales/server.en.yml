@@ -449,6 +449,7 @@ en:
         other: "Maximum %{count} users can be added at once"
       usernames_or_emails_required: "Usernames or emails must be present"
       no_invites_with_sso: "You can invite only registered users when SSO is enabled"
+      no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
     default_names:
       everyone: "everyone"
       admins: "admins"
