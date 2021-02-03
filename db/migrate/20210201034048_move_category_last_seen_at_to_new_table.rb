@@ -4,7 +4,7 @@ class MoveCategoryLastSeenAtToNewTable < ActiveRecord::Migration[6.0]
   def up
     sql = <<~SQL
       INSERT INTO dismissed_topic_users (user_id, topic_id, created_at)
-      SELECT users.id as user_id, topics.id as topic_id, category_users.last_seen_at
+      SELECT users.id, topics.id, category_users.last_seen_at
       FROM category_users
       JOIN users ON users.id = category_users.user_id
       JOIN categories ON categories.id = category_users.category_id

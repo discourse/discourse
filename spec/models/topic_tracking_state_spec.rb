@@ -563,7 +563,7 @@ describe TopicTrackingState do
     end
   end
 
-  it "correctly handles seen topics" do
+  it "correctly handles dismissed topics" do
     freeze_time 1.minute.ago
     user = Fabricate(:user)
     post

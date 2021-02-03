@@ -551,7 +551,7 @@ class TopicQuery
     result = remove_muted_topics(result, @user)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     result = remove_muted_tags(result, @user, options)
-    result = remove_already_seen_for_category(result, @user)
+    result = remove_dismissed(result, @user)
 
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:new, result, @user, options)
@@ -969,10 +969,9 @@ class TopicQuery
     end
   end
 
-  def remove_already_seen_for_category(list, user)
+  def remove_dismissed(list, user)
     if user
-      list = list
-        .where("dismissed_topic_users.id IS NULL")
+      list = list.where("dismissed_topic_users.id IS NULL")
     end
 
     list

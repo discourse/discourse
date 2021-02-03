@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class CleanDismissedTopicUsers < ::Jobs::Scheduled
     every 1.day
 
@@ -33,8 +32,7 @@ module Jobs
                             last_visit: User::NewTopicDuration::LAST_VISIT,
                             always: User::NewTopicDuration::ALWAYS,
                             default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-                            min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
-                            max_new_topics: SiteSetting.max_new_topics)
+                            min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime)
       DB.exec(sql)
     end
 
