@@ -542,6 +542,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def rate_limit_second_factor!(user)
+    return if params[:second_factor_token].blank?
+
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+    if user
+      RateLimiter.new(nil, "second-factor-min-#{user.username}", 3, 1.minute).performed!
+    end
+  end
+
   private
 
   def locale_from_header
