@@ -795,7 +795,7 @@ HTML
       expect(css).to include("p{color:blue}")
     end
 
-    it "works for child themes" do
+    it "works for child themes and includes child theme SCSS in parent theme" do
       child_theme.set_field(target: :common, name: :scss, value: '@import "my_files/moremagic"')
       child_theme.save!
 
