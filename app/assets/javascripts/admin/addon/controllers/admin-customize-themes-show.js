@@ -369,25 +369,29 @@ export default Controller.extend({
 
     switchType() {
       const relatives = this.get("model.component")
-        ? this.parentThemes
+        ? this.get("model.parentThemes")
         : this.get("model.childThemes");
+
+      let message = I18n.t(`${this.convertKey}_alert_generic`);
+
       if (relatives && relatives.length > 0) {
-        const names = relatives.map((relative) => relative.get("name"));
-        bootbox.confirm(
-          I18n.t(`${this.convertKey}_alert`, {
-            relatives: names.join(", "),
-          }),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (result) => {
-            if (result) {
-              this.commitSwitchType();
-            }
-          }
-        );
-      } else {
-        this.commitSwitchType();
+        message = I18n.t(`${this.convertKey}_alert`, {
+          relatives: relatives
+            .map((relative) => relative.get("name"))
+            .join(", "),
+        });
       }
+
+      bootbox.confirm(
+        message,
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        (result) => {
+          if (result) {
+            this.commitSwitchType();
+          }
+        }
+      );
     },
 
     enableComponent() {
