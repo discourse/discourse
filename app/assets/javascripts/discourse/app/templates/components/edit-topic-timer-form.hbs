@@ -4,12 +4,12 @@
       class="timer-type"
       onChange=onChangeStatusType
       content=timerTypes
-      value=selection
+      value=statusType
     }}
   </div>
   {{#if publishToCategory}}
     <div class="control-group">
-      <label>{{i18n "topic.topic_status_update.publish_to"}}</label>
+      <label class="control-label">{{i18n "topic.topic_status_update.publish_to"}}</label>
       {{category-chooser
         value=topicTimer.category_id
         excludeCategoryId=excludeCategoryId
@@ -18,21 +18,31 @@
     </div>
   {{/if}}
   {{#if showFutureDateInput}}
-    <div class="control-group">
-      {{future-date-input
-        input=(readonly topicTimer.updateTime)
-        duration=(readonly topicTimer.duration)
-        label="topic.topic_status_update.when"
-        statusType=selection
-        includeWeekend=true
+    <label class="control-label">{{i18n "topic.topic_status_update.when"}}</label>
+    {{time-shortcut-picker prefilledDatetime=topicTimer.execute_at onTimeSelected=onTimeSelected customOptions=customTimeShortcutOptions hiddenOptions=hiddenTimeShortcutOptions}}
+  {{/if}}
+  {{#if useDuration}}
+    <div class="controls">
+      <label class="control-label">{{durationLabel}}</label>
+      {{text-field id="topic_timer_duration" class="topic-timer-duration" type="number" value=topicTimer.duration min="1"}}
+    </div>
+  {{/if}}
+  {{#if willCloseImmediately}}
+    <div class="warning">
+      {{d-icon "exclamation-triangle"}}
+      {{willCloseI18n}}
+    </div>
+  {{/if}}
+  {{#if showTopicStatusInfo}}
+    <div class="alert alert-info">
+      {{topic-timer-info
+        statusType=statusType
+        executeAt=executeAt
         basedOnLastPost=topicTimer.based_on_last_post
-        onChangeInput=onChangeInput
-        onChangeDuration=onChangeDuration
+        duration=topicTimer.duration
         categoryId=topicTimer.category_id
-        lastPostedAt=model.last_posted_at
-        isBasedOnDuration=autoDeleteReplies
-        durationType=durationType
       }}
     </div>
   {{/if}}
 </form>
+

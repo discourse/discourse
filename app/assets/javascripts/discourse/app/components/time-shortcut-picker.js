@@ -92,31 +92,48 @@ export default Component.extend({
     });
 
     if (this.prefilledDatetime) {
-      let parsedDatetime = parseCustomDatetime(
-        this.prefilledDatetime,
-        null,
-        this.userTimezone
-      );
-
-      if (parsedDatetime.isSame(laterToday())) {
-        return this.set("selectedShortcut", TIME_SHORTCUT_TYPES.LATER_TODAY);
-      }
-
-      this.setProperties({
-        customDate: parsedDatetime.format("YYYY-MM-DD"),
-        customTime: parsedDatetime.format("HH:mm"),
-        selectedShortcut: TIME_SHORTCUT_TYPES.CUSTOM,
-      });
+      this.parsePrefilledDatetime();
     }
 
     this._bindKeyboardShortcuts();
     this._loadLastUsedCustomDatetime();
   },
 
+  @observes("prefilledDatetime")
+  prefilledDatetimeChanged() {
+    if (this.prefilledDatetime) {
+      this.parsePrefilledDatetime();
+    } else {
+      this.setProperties({
+        customDate: null,
+        customTime: null,
+        selectedShortcut: null,
+      });
+    }
+  },
+
   @on("willDestroyElement")
   _resetKeyboardShortcuts() {
     KeyboardShortcuts.unbind(BINDINGS);
     KeyboardShortcuts.unpause(GLOBAL_SHORTCUTS_TO_PAUSE);
+  },
+
+  parsePrefilledDatetime() {
+    let parsedDatetime = parseCustomDatetime(
+      this.prefilledDatetime,
+      null,
+      this.userTimezone
+    );
+
+    if (parsedDatetime.isSame(laterToday())) {
+      return this.set("selectedShortcut", TIME_SHORTCUT_TYPES.LATER_TODAY);
+    }
+
+    this.setProperties({
+      customDate: parsedDatetime.format("YYYY-MM-DD"),
+      customTime: parsedDatetime.format("HH:mm"),
+      selectedShortcut: TIME_SHORTCUT_TYPES.CUSTOM,
+    });
   },
 
   _loadLastUsedCustomDatetime() {
@@ -195,6 +212,12 @@ export default Component.extend({
       );
       lastCustom.hidden = false;
     }
+
+    customOptions.forEach((opt) => {
+      if (!opt.timeFormatted && opt.time) {
+        opt.timeFormatted = opt.time.format(I18n.t(opt.timeFormatKey));
+      }
+    });
 
     let customOptionIndex = options.findIndex(
       (opt) => opt.id === TIME_SHORTCUT_TYPES.CUSTOM

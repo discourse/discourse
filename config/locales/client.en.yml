@@ -2402,7 +2402,8 @@ en:
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
-        time_frame_required: Please select a time frame
+        time_frame_required: "Please select a time frame"
+        min_duration: "Duration must be greater than 0"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -2456,6 +2457,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_close_momentarily:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
 
       timeline:
         back: "Back"

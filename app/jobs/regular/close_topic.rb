@@ -24,6 +24,8 @@ module Jobs
 
       # this handles deleting the topic timer as wel, see TopicStatusUpdater
       topic.update_status('autoclosed', true, user, { silent: silent })
+
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
   end
 end

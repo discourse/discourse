@@ -31,6 +31,8 @@ module Jobs
       end
 
       topic.inherit_auto_close_from_category(timer_type: :close)
+
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
   end
 end
