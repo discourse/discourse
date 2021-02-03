@@ -454,6 +454,7 @@ describe InvitesController do
             end
 
             it "does not send password reset email if local login is disabled" do
+              invite # create the invite before enabling SSO
               SiteSetting.enable_local_logins = false
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
