@@ -131,6 +131,57 @@ describe UsersEmailController do
           user.reload
           expect(user.email).to eq("new.n.cool@example.com")
         end
+
+        context "rate limiting" do
+          before { RateLimiter.clear_all!; RateLimiter.enable }
+          after  { RateLimiter.disable }
+
+          it "rate limits by IP" do
+            freeze_time
+
+            3.times do
+              put "/u/confirm-new-email", params: {
+                token: "blah",
+                second_factor_token: "000000",
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }
+
+              expect(response.status).to eq(302)
+            end
+
+            put "/u/confirm-new-email", params: {
+              token: "blah",
+              second_factor_token: "000000",
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }
+
+            expect(response.status).to eq(429)
+          end
+
+          it "rate limits by username" do
+            freeze_time
+
+            3.times do |x|
+              user.email_change_requests.last.update(change_state: 1)
+              put "/u/confirm-new-email", params: {
+                token: user.email_tokens.last.token,
+                second_factor_token: "000000",
+                second_factor_method: UserSecondFactor.methods[:totp]
+              }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+              expect(response.status).to eq(302)
+            end
+
+              user.email_change_requests.last.update(change_state: 2)
+            put "/u/confirm-new-email", params: {
+              token: user.email_tokens.last.token,
+              second_factor_token: "000000",
+              second_factor_method: UserSecondFactor.methods[:totp]
+            }, env: { "REMOTE_ADDR": "1.2.3.4" }
+
+            expect(response.status).to eq(429)
+          end
+        end
       end
 
       context "security key required" do
