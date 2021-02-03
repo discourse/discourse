@@ -103,18 +103,23 @@
     #login-buttons {
       button {
         &.login-with-email-button {
-          background-color: var(--secondary);
           border-radius: 4px;
+          .d-icon {
+            color: #000 !important;
+          }
           &:hover {
-            color: var(--primary) !important;
-            background: var(--secondary) !important;
             box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
             .d-icon {
-              color: var(--primary) !important;
+              color: #000 !important;
             }
           }
         }
       }
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    .login-right-side {
+      background: rgba(var(--tertiary-rgb),0.5);
     }
   }
   .modal-body,
@@ -139,6 +144,11 @@
       scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
       background: var(--tertiary);
       flex-direction: row-reverse;
+    }
+    @media (prefers-color-scheme: dark) {
+      .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+        background: rgba(var(--tertiary-rgb),0.5);
+      }
     }
     // Safari Hack
     @media not all and (min-resolution:.001dpcm)
@@ -244,12 +254,12 @@
         position: absolute;
         top: 0;
         right: 1em;
-        padding: 6em 0 0 1em;
+        padding: 6em 0 0 0;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        background: var(--tertiary);
         bottom: 0;
+        width: 32%;
       }
   }}
   .modal-body {

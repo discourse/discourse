@@ -155,12 +155,12 @@
 
 .btn-social, .login-with-email-button {
   border-radius: 0.25em;
-  color: var(--primary);
-  background: var(--secondary);
+  color: #000;
+  background: #ffffff;
   border: 1px solid transparent;
   &:hover {
-    color: var(--primary) !important;
-    background: var(--secondary) !important;
+    color: #000 !important;
+    background: #ececec !important;
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
   }
   &[href] {
@@ -181,6 +181,7 @@
       color: currentColor;
     }
   }
+
   &.facebook {
     .d-icon {
       color: $facebook;

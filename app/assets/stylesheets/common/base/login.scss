@@ -131,7 +131,7 @@
           position:absolute;
           pointer-events:none;
           left: 1em;
-          top:18px;
+          top:12px;
           transition:0.2s ease all;
           max-width: calc(100% - 2em);
           white-space: nowrap;
@@ -141,7 +141,7 @@
           }
           &.value-entered label.control-label,
           label.control-label.value-entered {
-            top:-4px;
+            top:-8px;
             left: calc(1em - .25em);
             background-color: var(--secondary);
             padding: 0 .25em 0 .25em;
