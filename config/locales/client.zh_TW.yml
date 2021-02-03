@@ -608,7 +608,6 @@ zh_TW:
       posts: "貼文"
       topics: "話題"
       latest: "最新"
-      latest_by: "最新自"
       toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類"
       topic_sentence:
@@ -1113,15 +1112,6 @@ zh_TW:
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
     learn_more: "進一步了解..."
-    all_time: "總數"
-    all_time_desc: "開啟的話題總量"
-    year: "年"
-    year_desc: "最近 365 天內開啟的話題"
-    month: "月"
-    month_desc: "最近 30 天內開啟的話題"
-    week: "週"
-    week_desc: "最近 7 天內開啟的話題"
-    day: "天"
     first_post: 第一篇貼文
     mute: 靜音
     unmute: 取消靜音
@@ -1142,8 +1132,6 @@ zh_TW:
       value_prop: "當你註冊帳號後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次造訪時回到你上次閲讀到的地方。你也可以選擇接受新貼文的網頁和郵件通知，也可以按任何貼文讚來分享你的感謝。:heartbeat:"
     summary:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
-      description: "有 <b>%{replyCount}</b> 個回覆。"
-      description_time: "有 <b>%{replyCount}</b> 個回覆，大約要花 <b>%{readingTime} 分鐘</b>閲讀。"
       enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
@@ -1303,7 +1291,6 @@ zh_TW:
       default: 自訂表情符號
     shared_drafts:
       title: "共享草稿"
-      notice: "\\b只有能瀏覽<b>%{category}</b>分類的使用者能看到這個話題"
       destination_category: "指定分類"
       publish: "發佈共享草稿"
       confirm_publish: "您確定要發佈這份草稿嗎？"
@@ -1330,9 +1317,6 @@ zh_TW:
       duplicate_link: "您連到<b>%{domain}</b>的連結已被<b>@%{username}</b><a href='%{post_url}'>於%{ago}前發在其他話題下的回覆</a>，確定要再次發佈嗎？"
       error:
         title_missing: "標題為必填欄位"
-        title_too_short: "標題必須至少 %{min} 個字"
-        title_too_long: "標題不能超過 %{max} 個字"
-        post_length: "貼文必須至少 %{min} 個字。"
         try_like: "您用過%{heart}了嗎？"
         category_missing: "你必須選擇一個分類。"
       save_edit: "儲存編輯"
@@ -1729,7 +1713,6 @@ zh_TW:
         go: "前往"
         jump_bottom: "跳至最後一則貼文"
         jump_prompt: "跳到..."
-        jump_prompt_of: "%{count} 貼文"
         jump_bottom_with_number: "跳至第 %{post_number} 篇貼文"
         jump_prompt_to_date: "至今"
         jump_prompt_or: "或"
@@ -1858,7 +1841,6 @@ zh_TW:
         username_placeholder: "使用者名稱"
         action: "送出邀請"
         help: "通過電子郵件或通知邀請其他人到該話題"
-        to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
         sso_enabled: "輸入其使用者名，邀請其人到本話題。"
         to_topic_blank: "輸入你想邀請的使用者的使用者名稱或電子郵件地址到該話題"
         to_topic_email: "你輸入了郵箱地址。我們將發送一封郵件邀請，讓你的朋友可直接回覆該話題。"
@@ -1955,8 +1937,6 @@ zh_TW:
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
       ignored: "忽略內容"
-      wiki_last_edited_on: "共筆最後編輯時間"
-      last_edited_on: "貼文最近編輯的時間"
       reply_as_new_topic: "回覆為關連的話題"
       reply_as_new_private_message: "回覆作為新訊息給同一收件人"
       continue_discussion: "繼續 %{postLink} 的討論:"

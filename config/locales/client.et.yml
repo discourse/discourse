@@ -514,7 +514,6 @@ et:
       posts: "Postitust"
       topics: "Teemat"
       latest: "Viimased"
-      latest_by: "viimased kasutajalt"
       toggle_ordering: "lülita järjestus"
       subcategories: "Alamfoorumid"
       topic_sentence:
@@ -972,15 +971,6 @@ et:
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
     learn_more: "uuri veel..."
-    all_time: "kokku"
-    all_time_desc: "kokku teemasid loodud"
-    year: "aasta"
-    year_desc: "teemat loodud viimase 365 päeva jooksul"
-    month: "kuu"
-    month_desc: "teemat loodud viimase 30 päeva jooksul"
-    week: "nädal"
-    week_desc: "teemat loodud viimase 7 päeva jooksul"
-    day: "päev"
     first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
@@ -997,8 +987,6 @@ et:
       hidden_for_session: "OK, küsin homme uuesti. Samuti võid konto alati 'Logi sisse' lingi alt luua."
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
-      description: "Kokku on <b>%{replyCount}</b> vastust."
-      description_time: "Kokku on <b>%{replyCount}</b> vastust mille lugemiseks kulub hinnanguliselt <b>%{readingTime} minutit</b>."
       enable: "Võta see teema kokku"
       disable: "Näita kõiki postitusi"
     deleted_filter:
@@ -1151,9 +1139,6 @@ et:
         private: "Mainisid kasutajat %{username} kuid teda ei teavitata, kuna tal puudub juurdepääs käesoleva privaatsõnumi juurde. Kutsu ta seda privaatsõnumit vaatama."
       error:
         title_missing: "Pealkiri on kohustuslik"
-        title_too_short: "Pealkiri peab olema vähemalt %{min} sümbolit pikk"
-        title_too_long: "Pealkiri ei saa olla pikem kui %{max} sümbolit"
-        post_length: "Postitus peab olema vähemalt %{min} sümbolit pikk"
         try_like: "Oled sa proovinud %{heart} nuppu?"
         category_missing: "Pead valima foorumi"
       save_edit: "Salvesta muudatused"
@@ -1499,7 +1484,6 @@ et:
         go: "mine"
         jump_bottom: "hüppa viimase postituse juurde"
         jump_prompt: "mine..."
-        jump_prompt_of: "%{count} postitusest"
         jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         jump_prompt_or: "või"
         total: postitusi kokku
@@ -1624,7 +1608,6 @@ et:
         username_placeholder: "kasutajanimi"
         action: "Saada kutse"
         help: "kutsu teisi siia teemasse meili või teavitustega"
-        to_forum: "Saadame su sõbrale lühikese meili koos viitega, mis lubab tal teemaga ühe klikiga liituda, sisselogimist nõudmata."
         sso_enabled: "Sisesta selle isiku kasutajanimi, keda soovid siia teemasse kutsuda."
         to_topic_blank: "Sisesta selle isiku kasutajanimi või meiliaadress, keda soovid siia teemasse kutsuda."
         to_topic_email: "Sisestasid meiliaadressi. Saadame su sõbrale kutse, mis lubab tal kohe sellesse teemasse vastata."
@@ -1696,8 +1679,6 @@ et:
       quote_reply: "Tsitaat"
       edit_reason: "Põhjus:"
       post_number: "postitus %{number}"
-      wiki_last_edited_on: "viimati muudeti wikit"
-      last_edited_on: "postitus viimati muudetud"
       reply_as_new_topic: "Vasta viitega teemale"
       reply_as_new_private_message: "Vasta uue sõnumina samadele adressaatidele"
       continue_discussion: "Jätkates vestlust viitelt %{postLink}:"

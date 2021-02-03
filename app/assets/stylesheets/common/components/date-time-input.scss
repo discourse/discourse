@@ -6,7 +6,7 @@
 
   .date-picker,
   .fields {
-    border: 0;
+    border-color: transparent;
   }
 
   .d-date-time-input {
@@ -15,9 +15,9 @@
   }
 
   .d-time-input {
-    .select-kit.combo-box {
+    .combo-box {
       .select-kit-header {
-        border: none;
+        border-color: transparent;
       }
     }
   }

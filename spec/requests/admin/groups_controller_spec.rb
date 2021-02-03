@@ -157,11 +157,28 @@ RSpec.describe Admin::GroupsController do
   end
 
   describe '#remove_owner' do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
+
     it 'should work' do
       group.add_owner(user)
 
       delete "/admin/groups/#{group.id}/owners.json", params: {
         user_id: user.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.where(owner: true)).to eq([])
+    end
+
+    it 'should work with multiple users' do
+      group.add_owner(user)
+      group.add_owner(user3)
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: "#{user.username},#{user2.username},#{user3.username}"
+        }
       }
 
       expect(response.status).to eq(200)
@@ -190,41 +207,33 @@ RSpec.describe Admin::GroupsController do
     end
   end
 
-  describe "#bulk_perform" do
-    fab!(:group) do
-      Fabricate(:group,
-        name: "test",
-        primary_group: true,
-        title: 'WAT',
-        grant_trust_level: 3
-      )
-    end
+  describe "#set_primary" do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
 
-    fab!(:user) { Fabricate(:user, trust_level: 2) }
-    fab!(:user2) { Fabricate(:user, trust_level: 4) }
+    it 'sets with multiple users' do
+      user2.update!(primary_group_id: group.id)
 
-    it "can assign users to a group by email or username" do
-      Jobs.run_immediately!
-
-      put "/admin/groups/bulk.json", params: {
-        group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "true"
       }
 
       expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(3)
+    end
 
-      user.reload
-      expect(user.primary_group).to eq(group)
-      expect(user.title).to eq("WAT")
-      expect(user.trust_level).to eq(3)
+    it 'unsets with multiple users' do
+      user.update!(primary_group_id: group.id)
+      user3.update!(primary_group_id: group.id)
 
-      user2.reload
-      expect(user2.primary_group).to eq(group)
-      expect(user2.title).to eq("WAT")
-      expect(user2.trust_level).to eq(4)
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "false"
+      }
 
-      json = response.parsed_body
-      expect(json['message']).to eq("2 users have been added to the group.")
-      expect(json['users_not_added'][0]).to eq("doesnt_exist")
+      expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(0)
     end
   end
 

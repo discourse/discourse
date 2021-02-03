@@ -1937,22 +1937,6 @@ zh_TW:
     flags_agreed_and_post_deleted:
       title: "被投訴貼文已被版主移除"
       subject_template: "被投訴貼文已被版主移除"
-      text_body_template: |
-        您好，
-
-        這是一封由 %{site_name} 系統自動發送的訊息，讓您知道[您的貼文](%{base_url}%{url}) 已被移除。
-
-        %{flag_reason}
-
-        由於該貼文被其他人檢舉，一名工作人員選擇將其刪除。
-
-        [details="點擊展開已移除的貼文"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        想知道更多訊息，請查看更多指南 [指南說明](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         提供給新手使用者的操作技巧查看，[部落格文章（英文）](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。

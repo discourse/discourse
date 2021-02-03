@@ -162,6 +162,10 @@ def dependencies
       public: true,
       skip_versioning: true
     }, {
+      source: 'workbox-cacheable-response/build/.',
+      destination: 'workbox',
+      public: true
+    }, {
       source: '@popperjs/core/dist/umd/popper.js'
     }, {
       source: '@popperjs/core/dist/umd/popper.js.map',

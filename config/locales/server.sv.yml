@@ -408,7 +408,9 @@ sv:
       email_already_used_in_category: "'%{email}' används redan av kategorin '%{category_name}'."
       cant_allow_membership_requests: "Du kan inte tillåta begäran om medlemskap för en grupp utan ägare."
       already_requested_membership: "Du har redan begärt medlemskap i denna grupp."
-      adding_too_many_users: "Max %{limit} användare kan läggas till på en gång"
+      adding_too_many_users:
+        one: "Maximalt %{count} användare kan läggas till samtidigt"
+        other: "Maximalt %{count} användare kan läggas till samtidigt"
     default_names:
       everyone: "alla"
       admins: "administratörer"
@@ -2095,6 +2097,7 @@ sv:
   most_posts: "Flest inlägg"
   most_recent_poster: "Senaste skribent"
   frequent_poster: "Flitig skribent"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Välkommen till vårt forum! De här är våra mest populära nya ämnen."
     not_seen_in_a_month: "Välkommen tillbaka! Vi har inte sett dig på ett tag. Dessa ämnen var mest aktiva medan du var borta."
@@ -2515,21 +2518,19 @@ sv:
       title: "Flaggat inlägg raderat av personal"
       subject_template: "Flaggat inlägg raderat av personal"
       text_body_template: |
-        Hejsan,
+        Hej,
 
-        Detta är ett automatiskt meddelande från %{site_name} för att informera dig om att [ditt inlägg](%{base_url}%{url}) togs bort.
+        Det här är ett automatiskt meddelande från %{site_name} för att informera dig om att [ditt inlägg](%{base_url}%{url}) har tagits bort.
 
         %{flag_reason}
 
-        Detta inlägg flaggades av forumet och personalen valde att radera det.
+        Det här inlägget flaggades av forumet och personalen valde att ta bort det.
 
-        [details="Klicka för att expandera raderade inlägget"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
-        [/details]
 
-        Läs våra [forumriktlinjer](%{base_url}/riktlinjer) för mer information.
+        Läs mer ingående information i våra [forumriktlinjer](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         För att få ett par tips och förslag hur du kommer igång som ny användare, [gå till detta blogginlägg](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

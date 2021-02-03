@@ -245,6 +245,9 @@ en:
     now: "just now"
     read_more: "read more"
     more: "More"
+    x_more:
+      one: "%{count} More"
+      other: "%{count} More"
     less: "Less"
     never: "never"
     every_30_minutes: "every 30 minutes"
@@ -572,6 +575,20 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
+    time_shortcut:
+      later_today: "Later today"
+      next_business_day: "Next business day"
+      tomorrow: "Tomorrow"
+      next_week: "Next week"
+      post_local_date: "Date in post"
+      later_this_week: "Later this week"
+      start_of_next_business_week: "Monday"
+      start_of_next_business_week_alt: "Next Monday"
+      next_month: "Next month"
+      custom: "Custom date and time"
+      none: "None needed"
+      last_custom: "Last"
+
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> posted <a href='%{topicUrl}'>the topic</a>"
       you_posted_topic: "<a href='%{userUrl}'>You</a> posted <a href='%{topicUrl}'>the topic</a>"
@@ -768,7 +785,22 @@ en:
         make_owner_description: "Make <b>%{username}</b> an owner of this group"
         remove_owner: "Remove as Owner"
         remove_owner_description: "Remove <b>%{username}</b> as an owner of this group"
+        make_primary: "Make Primary"
+        make_primary_description: "Make this the primary group for <b>%{username}</b>"
+        remove_primary: "Remove as Primary"
+        remove_primary_description: "Remove this as the primary group for <b>%{username}</b>"
+        remove_members: "Remove Members"
+        remove_members_description: "Remove selected users from this group"
+        make_owners: "Make Owners"
+        make_owners_description: "Make selected users owners of this group"
+        remove_owners: "Remove Owners"
+        remove_owners_description: "Remove selected users as owners of this group"
+        make_all_primary: "Make All Primary"
+        make_all_primary_description: "Make this the primary group for all selected users"
+        remove_all_primary: "Remove as Primary"
+        remove_all_primary_description: "Remove this group as primary"
         owner: "Owner"
+        primary: "Primary"
         forbidden: "You're not allowed to view the members."
       topics: "Topics"
       posts: "Posts"
@@ -848,6 +880,15 @@ en:
       topic_sentence:
         one: "%{count} topic"
         other: "%{count} topics"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "week"
+        month: "month"
+      topic_stat_all_time:
+        one: "%{number} total"
+        other: "%{number} total"
       topic_stat_sentence_week:
         one: "%{count} new topic in the past week."
         other: "%{count} new topics in the past week."
@@ -1499,6 +1540,7 @@ en:
       avatar:
         title: "Profile Picture"
         header_title: "profile, messages, bookmarks and preferences"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Title"
         none: "(none)"
@@ -1575,16 +1617,6 @@ en:
 
     learn_more: "learn more..."
 
-    all_time: "total"
-    all_time_desc: "total topics created"
-    year: "year"
-    year_desc: "topics created in the last 365 days"
-    month: "month"
-    month_desc: "topics created in the last 30 days"
-    week: "week"
-    week_desc: "topics created in the last 7 days"
-    day: "day"
-
     first_post: First post
     mute: Mute
     unmute: Unmute
@@ -1609,8 +1641,11 @@ en:
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
-      description: "There are <b>%{replyCount}</b> replies."
-      description_time: "There are <b>%{replyCount}</b> replies with an estimated read time of <b>%{readingTime} minutes</b>."
+      description:
+        one: "There is <b>%{count}</b> reply."
+        other: "There are <b>%{count}</b> replies."
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
+      description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
       enable: "Summarize This Topic"
       disable: "Show All Posts"
 
@@ -1838,7 +1873,7 @@ en:
 
     shared_drafts:
       title: "Shared Drafts"
-      notice: "This topic is only visible to those who can see the <b>%{category}</b> category."
+      notice: "This topic is only visible to those who can publish shared drafts."
       destination_category: "Destination Category"
       publish: "Publish Shared Draft"
       confirm_publish: "Are you sure you want to publish this draft?"
@@ -1874,10 +1909,16 @@ en:
 
       error:
         title_missing: "Title is required"
-        title_too_short: "Title must be at least %{min} characters"
-        title_too_long: "Title can't be more than %{max} characters"
+        title_too_short:
+          one: "Title must be at least %{count} character"
+          other: "Title must be at least %{count} characters"
+        title_too_long:
+          one: "Title can't be more than %{count} character"
+          other: "Title can't be more than %{count} characters"
         post_missing: "Post can’t be empty"
-        post_length: "Post must be at least %{min} characters"
+        post_length:
+          one: "Post must be at least %{count} character"
+          other: "Post must be at least %{count} characters"
         try_like: "Have you tried the %{heart} button?"
         category_missing: "You must choose a category"
         tags_missing:
@@ -2376,7 +2417,8 @@ en:
         remove: "Remove Timer"
         publish_to: "Publish To:"
         when: "When:"
-        time_frame_required: Please select a time frame
+        time_frame_required: "Please select a time frame"
+        min_duration: "Duration must be greater than 0"
       auto_update_input:
         none: "Select a timeframe"
         now: "Now"
@@ -2430,6 +2472,9 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
+      auto_close_momentarily:
+        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
 
       timeline:
         back: "Back"
@@ -2443,7 +2488,9 @@ en:
         go: "go"
         jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
-        jump_prompt_of: "of %{count} posts"
+        jump_prompt_of:
+          one: "of %{count} post"
+          other: "of %{count} posts"
         jump_prompt_long: "Jump to..."
         jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
@@ -2596,7 +2643,7 @@ en:
         username_placeholder: "username"
         action: "Send Invite"
         help: "invite others to this topic via email or notifications"
-        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
         sso_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
@@ -2732,8 +2779,8 @@ en:
       edit_reason: "Reason: "
       post_number: "post %{number}"
       ignored: "Ignored content"
-      wiki_last_edited_on: "wiki last edited on"
-      last_edited_on: "post last edited on"
+      wiki_last_edited_on: "wiki last edited on %{dateTime}"
+      last_edited_on: "post last edited on %{dateTime}"
       reply_as_new_topic: "Reply as linked Topic"
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from %{postLink}:"
@@ -2773,11 +2820,13 @@ en:
       filtered_replies_hint:
         one: "View this post and its reply"
         other: "View this post and its %{count} replies"
+
       filtered_replies_viewing:
         one: "Viewing %{count} reply to"
         other: "Viewing %{count} replies to"
 
       in_reply_to: "Load parent post"
+      view_all_posts: "View all posts"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -2857,7 +2906,9 @@ en:
         unlock_post_description: "allow the poster to edit this post"
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
-        delete_topic_confirm_modal: "This topic currently has over %{minViews} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+        delete_topic_confirm_modal:
+          one: "This topic currently has over %{count} view and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
+          other: "This topic currently has over %{count} views and may be a popular search destination. Are you sure you want to delete this topic entirely, instead of editing it to improve it?"
         delete_topic_confirm_modal_yes: "Yes, delete this topic"
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
@@ -3487,6 +3538,8 @@ en:
         one: "%{tags} and %{count} more"
         other: "%{tags} and %{count} more"
       delete_no_unused_tags: "There are no unused tags."
+      # Example: "tag1, tag2, tag3"
+      tag_list_joiner: ", "
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
       cancel_delete_unused: "Cancel"
@@ -3699,10 +3752,6 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
-        bulk_add:
-          title: "Bulk Add to Group"
-          complete_users_not_added: "These users were not added (make sure they have an account):"
-          paste: "Paste a list of usernames or emails, one per line:"
         add_members:
           as_owner: "Set user(s) as owner(s) of this group"
         manage:
@@ -3730,7 +3779,9 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_user_count: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_count:
+              one: "%{count} user has the new email domains and will be added to the group."
+              other: "%{count} users have the new email domains and will be added to the group."
             primary_group: "Automatically set as primary group"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
@@ -4072,7 +4123,9 @@ en:
           convert: "Convert"
           convert_component_alert: "Are you sure you want to convert this component to theme? It will be removed as a component from %{relatives}."
           convert_component_tooltip: "Convert this component to theme"
+          convert_component_alert_generic: "Are you sure you want to convert this component to theme?"
           convert_theme_alert: "Are you sure you want to convert this theme to component? It will be removed as a parent from %{relatives}."
+          convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"

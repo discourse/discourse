@@ -2,19 +2,8 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-
-function template(options = []) {
-  return `
-    {{list-setting
-      value=value
-      choices=choices
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
 
 discourseModule(
   "Integration | Component | select-kit/list-setting",
@@ -26,7 +15,12 @@ discourseModule(
     });
 
     componentTest("default", {
-      template: template(),
+      template: hbs`
+      {{list-setting
+        value=value
+        choices=choices
+      }}
+    `,
 
       beforeEach() {
         this.set("value", ["bold", "italic"]);

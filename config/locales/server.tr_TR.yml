@@ -2213,22 +2213,6 @@ tr_TR:
     flags_agreed_and_post_deleted:
       title: "Raporlanmış gönderi personel tarafından kaldırıldı"
       subject_template: "Raporlanmış gönderi personel tarafından kaldırıldı"
-      text_body_template: |
-        Merhaba,
-
-        Bu, [gönderinizin](%{base_url}%{url}) kaldırıldığını haber vermek için %{site_name}tarafından gönderilmiş otomatik bir mesajdır.
-
-        Bu gönderi topluluk tarafından raporlanmıştı ve personel tarafından kaldırlması seçildi.
-
-        %{flag_reason}
-
-        [details="Click to expand restored post"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Detaylar için [topluluk yönergelerine](%{base_url}/guidelines) başvurun.
     usage_tips:
       text_body_template: |
         Yeni bir kullanıcı olarak başlamak için birkaç küçük ipucu,[bu blog gönderisini inceleyin](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).

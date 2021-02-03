@@ -518,6 +518,19 @@ fr:
       reject_reason:
         title: "Pourquoi refusez-vous cet utilisateur ?"
         send_email: "Envoyer le courriel de refus"
+    time_shortcut:
+      later_today: "Plus tard aujourd'hui"
+      next_business_day: "Prochain jour ouvré"
+      tomorrow: "Demain"
+      next_week: "Semaine prochaine"
+      post_local_date: "Date venant du message"
+      later_this_week: "Plus tard cette semaine"
+      start_of_next_business_week: "Lundi"
+      start_of_next_business_week_alt: "Lundi prochain"
+      next_month: "Mois prochain"
+      custom: "Date et heure personnalisées"
+      none: "Aucun"
+      last_custom: "Dernier"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vous</a> avez démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -604,6 +617,10 @@ fr:
             imap_ssl: "Utiliser SSL pour IMAP"
             username: "Nom d'utilisateur"
             password: "Mot de passe"
+          settings:
+            title: "Paramètres"
+            allow_unknown_sender_topic_replies: "Autoriser des réponses par un expéditeur inconnu."
+            allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses courriel qui ne sont pas déjà incluses dans le fil de discussion IMAP ou invitées au sujet créeront un nouveau sujet."
           mailboxes:
             synchronized: "Boîte aux lettres synchronisée"
             none_found: "Aucune boîte aux lettres n'a été trouvée pour ce compte de courriel."
@@ -777,13 +794,21 @@ fr:
       posts: "Messages"
       topics: "Sujets"
       latest: "Récents"
-      latest_by: "dernier sujet de"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
       muted: "Catégories mises sous silence"
       topic_sentence:
         one: "%{count} sujet"
         other: "%{count} sujets"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "semaine"
+        month: "mois"
+      topic_stat_all_time:
+        one: "%{number} au total"
+        other: "%{number} au total"
       topic_stat_sentence_week:
         one: "%{count} nouveau sujet dans la dernière semaine."
         other: "%{count} nouveaux sujets dans la dernière semaine."
@@ -1396,6 +1421,7 @@ fr:
       avatar:
         title: "Image de profil"
         header_title: "profil, messages, signets et préférences"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Titre"
         none: "(aucun)"
@@ -1453,15 +1479,6 @@ fr:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
     learn_more: "en savoir plus…"
-    all_time: "total"
-    all_time_desc: "nombre total de sujets créés"
-    year: "an"
-    year_desc: "sujets créés durant les 365 derniers jours"
-    month: "mois"
-    month_desc: "sujets créés durant les 30 derniers jours"
-    week: "semaine"
-    week_desc: "sujets créés durant les 7 derniers jours"
-    day: "jour"
     first_post: Premier message
     mute: Désactiver
     unmute: Activer
@@ -1484,8 +1501,9 @@ fr:
       value_prop: "Quand vous créez un compte, nous retenons ce que vous avez lu pour qu'à votre retour vous puissiez continuer là on vous vous êtes arrêté. Vous recevez aussi des notifications, ici et par courriel, dès que quelqu'un vous répond. Et vous pouvez aimer les messages pour partager vos coups de cœurs. :heartpulse:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
-      description: "Il y a <b>%{replyCount}</b> réponses."
-      description_time: "Il y a <b>%{replyCount}</b> réponses avec un temps de lecture estimé à <b>%{readingTime} minutes</b>."
+      description:
+        one: "Il y a <b>%{count}</b> réponse."
+        other: "Il y a <b>%{count}</b> réponses."
       enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
     deleted_filter:
@@ -1693,7 +1711,6 @@ fr:
       default: Émojis personnalisés
     shared_drafts:
       title: "Brouillons partagés"
-      notice: "Ce sujet n'est visible que pour ceux qui peuvent voir la catégorie <b>%{category}</b>."
       destination_category: "Catégorie de destination"
       publish: "Publier le brouillon partagé"
       confirm_publish: "Êtes-vous sûr de vouloir publier ce brouillon ?"
@@ -1725,10 +1742,16 @@ fr:
       reference_topic_title: "RE : %{title}"
       error:
         title_missing: "Le titre est obligatoire."
-        title_too_short: "Le titre doit avoir au moins %{min} caractères"
-        title_too_long: "Le titre ne doit pas dépasser les %{max} caractères"
+        title_too_short:
+          one: "Le titre doit avoir au moins %{count} caractère"
+          other: "Le titre doit avoir au moins %{count} caractères"
+        title_too_long:
+          one: "Le titre ne doit pas dépasser les %{count} caractères"
+          other: "Le titre ne doit pas dépasser les %{count} caractères"
         post_missing: "Le message ne peut être vide"
-        post_length: "Le message doit avoir au moins %{min} caractères"
+        post_length:
+          one: "Le message doit avoir au moins %{count} caractère"
+          other: "Le message doit avoir au moins %{count} caractères"
         try_like: "Avez-vous essayé le bouton %{heart} ?"
         category_missing: "Vous devez choisir une catégorie"
         tags_missing:
@@ -2153,6 +2176,7 @@ fr:
       read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans %{catLink} ou %{latestLink}."
       read_more: "Vous voulez en lire plus ? %{catLink} ou %{latestLink}."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
+      read_more_MF: "Il reste { UNREAD, plural, =0 {} one { 1 sujet <a href='{basePath}/unread'>non lu</a> } other { # sujets <a href='{basePath}/unread'>non lus</a> } } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} } 1 <a href='{basePath}/new'>nouveau</a> sujet } other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/new'>nouveaux</a> sujets} }, ou { CATEGORY, select, true { consulter les autres sujets dans {catLink} } false { {latestLink} } other { } }"
       bumped_at_title_MF: "{FIRST_POST} : {CREATED_AT}\n{LAST_POST} : {BUMPED_AT}"
       browse_all_categories: Voir toutes les catégories
       browse_all_tags: Parcourir toutes les étiquettes
@@ -2252,7 +2276,9 @@ fr:
         go: "aller"
         jump_bottom: "aller au dernier message"
         jump_prompt: "aller à…"
-        jump_prompt_of: "sur %{count} messages"
+        jump_prompt_of:
+          one: "sur %{count} message"
+          other: "sur %{count} messages"
         jump_prompt_long: "Aller à…"
         jump_bottom_with_number: "aller au message %{post_number}"
         jump_prompt_to_date: "à la date"
@@ -2392,7 +2418,6 @@ fr:
         username_placeholder: "nom d'utilisateur"
         action: "Envoyer une invitation"
         help: "inviter d'autres personnes sur ce sujet par courriel ou notifications"
-        to_forum: "Nous allons envoyer un courriel à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans avoir à saisir un identifiant."
         sso_enabled: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse courriel de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse courriel. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
@@ -2513,8 +2538,6 @@ fr:
       edit_reason: "Raison : "
       post_number: "message %{number}"
       ignored: "Contenu ignoré"
-      wiki_last_edited_on: "wiki modifié pour la dernière fois le"
-      last_edited_on: "message modifié pour la dernière fois le"
       reply_as_new_topic: "Répondre par un nouveau sujet"
       reply_as_new_private_message: "Répondre par un nouveau message direct adressé aux mêmes destinataires"
       continue_discussion: "Suite du sujet %{postLink} :"
@@ -2624,7 +2647,9 @@ fr:
         unlock_post_description: "permettre l'utilisateur de modifier le message"
         delete_topic_disallowed_modal: "Vous n'avez pas le permission de supprimer ce sujet. Si vous souhaitez vraiment le voir supprimé, signalez-le aux modérateurs avec une explication."
         delete_topic_disallowed: "vous n'avez pas la permission de supprimer ce sujet"
-        delete_topic_confirm_modal: "Ce sujet a actuellement plus de %{minViews} vues et peut être une destination de recherche populaire. Voulez-vous vraiment supprimer entièrement ce sujet au lieu de le modifier pour l'améliorer ?"
+        delete_topic_confirm_modal:
+          one: "Ce sujet a actuellement plus de %{count} vue et peut être un résultat de recherche populaire. Voulez-vous vraiment supprimer ce sujet au lieu de le modifier pour l'améliorer ?"
+          other: "Ce sujet a actuellement plus de %{count} vues et peut être un résultat de recherche populaire. Voulez-vous vraiment supprimer ce sujet au lieu de le modifier pour l'améliorer ?"
         delete_topic_confirm_modal_yes: "Oui, supprimer ce sujet"
         delete_topic_confirm_modal_no: "Non, conserver ce sujet"
         delete_topic_error: "Une erreur s'est produite lors de la suppression de ce sujet"
@@ -3229,6 +3254,7 @@ fr:
         one: "%{tags} et %{count} de plus"
         other: "%{tags} et %{count} de plus"
       delete_no_unused_tags: "Il n'y a pas d'étiquettes inutilisées."
+      tag_list_joiner: ", "
       delete_unused: "Supprimer les étiquettes inutilisées"
       delete_unused_description: "Supprimer toutes les étiquettes qui ne sont pas associées à des sujets ou messages directs"
       cancel_delete_unused: "Annuler"
@@ -3453,7 +3479,6 @@ fr:
             effects: Effets
             trust_levels_none: "Aucun"
             automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe :"
-            automatic_membership_user_count: "%{count} utilisateurs ont les nouveaux domaines de courriel et seront ajoutés au groupe."
             primary_group: "Définir comme groupe principal automatiquement"
         name_placeholder: "Nom du groupe (sans espaces, mêmes règles que pour les noms d'utilisateurs)"
         primary: "Groupe principal"

@@ -3,22 +3,8 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-
-function template(options = []) {
-  return `
-    {{single-select
-      value=value
-      content=content
-      nameProperty=nameProperty
-      valueProperty=valueProperty
-      onChange=onChange
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -54,7 +40,7 @@ discourseModule(
     });
 
     componentTest("content", {
-      template: "{{single-select content=content}}",
+      template: hbs`{{single-select content=content}}`,
 
       beforeEach() {
         setDefaultState(this);
@@ -84,7 +70,15 @@ discourseModule(
     });
 
     componentTest("value", {
-      template: template(),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this);
@@ -100,7 +94,18 @@ discourseModule(
     });
 
     componentTest("options.filterable", {
-      template: template(["filterable=filterable"]),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+        options=(hash
+          filterable=filterable
+        )
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this, { filterable: true });
@@ -121,10 +126,19 @@ discourseModule(
     });
 
     componentTest("options.limitMatches", {
-      template: template([
-        "limitMatches=limitMatches",
-        "filterable=filterable",
-      ]),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+        options=(hash
+          limitMatches=limitMatches
+          filterable=filterable
+        )
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this, { limitMatches: 1, filterable: true });
@@ -143,7 +157,7 @@ discourseModule(
     });
 
     componentTest("valueAttribute (deprecated)", {
-      template: `
+      template: hbs`
       {{single-select
         value=value
         content=content
@@ -172,7 +186,18 @@ discourseModule(
     });
 
     componentTest("none:string", {
-      template: template(['none="test.none"']),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+        options=(hash
+          none="test.none"
+        )
+      }}
+    `,
 
       beforeEach() {
         I18n.translations[I18n.locale].js.test = { none: "(default)" };
@@ -189,7 +214,18 @@ discourseModule(
     });
 
     componentTest("none:object", {
-      template: template(["none=none"]),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+        options=(hash
+          none=none
+        )
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this, { none: { value: null, name: "(default)" } });
@@ -205,7 +241,18 @@ discourseModule(
     });
 
     componentTest("content is a basic array", {
-      template: template(['none="test.none"']),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+        options=(hash
+          none="test.none"
+        )
+      }}
+    `,
 
       beforeEach() {
         I18n.translations[I18n.locale].js.test = { none: "(default)" };
@@ -232,7 +279,15 @@ discourseModule(
     });
 
     componentTest("selected value can be 0", {
-      template: template(),
+      template: hbs`
+      {{single-select
+        value=value
+        content=content
+        nameProperty=nameProperty
+        valueProperty=valueProperty
+        onChange=onChange
+      }}
+    `,
 
       beforeEach() {
         setDefaultState(this, {
@@ -255,8 +310,15 @@ discourseModule(
     });
 
     componentTest("prevents propagating click event on header", {
-      template:
-        "{{#d-button icon='times' action=onClick}}{{single-select options=(hash preventsClickPropagation=true) value=value content=content}}{{/d-button}}",
+      template: hbs`
+      {{#d-button icon='times' action=onClick}}
+        {{single-select
+          options=(hash preventsClickPropagation=true)
+          value=value
+          content=content
+        }}
+      {{/d-button}}
+    `,
 
       beforeEach() {
         this.setProperties({
@@ -274,8 +336,13 @@ discourseModule(
     });
 
     componentTest("labelProperty", {
-      template:
-        '{{single-select labelProperty="foo" value=value content=content}}',
+      template: hbs`
+      {{single-select
+        labelProperty="foo"
+        value=value
+        content=content
+      }}
+    `,
 
       beforeEach() {
         this.setProperties({
@@ -296,8 +363,13 @@ discourseModule(
     });
 
     componentTest("titleProperty", {
-      template:
-        '{{single-select titleProperty="foo" value=value content=content}}',
+      template: hbs`
+      {{single-select
+        titleProperty="foo"
+        value=value
+        content=content
+      }}
+    `,
 
       beforeEach() {
         this.setProperties({
@@ -318,8 +390,7 @@ discourseModule(
     });
 
     componentTest("langProperty", {
-      template:
-        '{{single-select langProperty="foo" value=value content=content}}',
+      template: hbs`{{single-select langProperty="foo" value=value content=content}}`,
 
       beforeEach() {
         this.setProperties({

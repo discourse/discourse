@@ -28,6 +28,9 @@
     border: 1px solid var(--primary-medium);
     font-size: $font-0;
     transition: none;
+    &:focus {
+      border-color: var(--tertiary);
+    }
   }
   .select-kit {
     .select-kit-collection {

@@ -4,18 +4,8 @@ import componentTest, {
 import I18n from "I18n";
 import createStore from "discourse/tests/helpers/create-store";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-
-function template(options = []) {
-  return `
-    {{category-chooser
-      value=value
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
 
 discourseModule(
   "Integration | Component | select-kit/category-chooser",
@@ -27,7 +17,11 @@ discourseModule(
     });
 
     componentTest("with value", {
-      template: template(),
+      template: hbs`
+        {{category-chooser
+          value=value
+        }}
+      `,
 
       beforeEach() {
         this.set("value", 2);
@@ -40,7 +34,15 @@ discourseModule(
     });
 
     componentTest("with excludeCategoryId", {
-      template: template(["excludeCategoryId=2"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            excludeCategoryId=2
+          )
+        }}
+      `,
+
       async test(assert) {
         await this.subject.expand();
 
@@ -49,7 +51,14 @@ discourseModule(
     });
 
     componentTest("with scopedCategoryId", {
-      template: template(["scopedCategoryId=2"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            scopedCategoryId=2
+          )
+        }}
+      `,
 
       async test(assert) {
         await this.subject.expand();
@@ -81,7 +90,14 @@ discourseModule(
     });
 
     componentTest("with allowUncategorized=null", {
-      template: template(["allowUncategorized=null"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=null
+          )
+        }}
+      `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = false;
@@ -94,7 +110,15 @@ discourseModule(
     });
 
     componentTest("with allowUncategorized=null rootNone=true", {
-      template: template(["allowUncategorized=null", "none=true"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=null
+            none=true
+          )
+        }}
+      `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = false;
@@ -107,7 +131,15 @@ discourseModule(
     });
 
     componentTest("with disallowed uncategorized, none", {
-      template: template(["allowUncategorized=null", "none='test.root'"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=null
+            none="test.root"
+          )
+        }}
+      `,
 
       beforeEach() {
         I18n.translations[I18n.locale].js.test = { root: "root none label" };
@@ -121,7 +153,14 @@ discourseModule(
     });
 
     componentTest("with allowed uncategorized", {
-      template: template(["allowUncategorized=true"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=true
+          )
+        }}
+      `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = true;
@@ -134,7 +173,15 @@ discourseModule(
     });
 
     componentTest("with allowed uncategorized and none=true", {
-      template: template(["allowUncategorized=true", "none=true"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=true
+            none=true
+          )
+        }}
+      `,
 
       beforeEach() {
         this.siteSettings.allow_uncategorized_topics = true;
@@ -147,7 +194,15 @@ discourseModule(
     });
 
     componentTest("with allowed uncategorized and none", {
-      template: template(["allowUncategorized=true", "none='test.root'"]),
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash
+            allowUncategorized=true
+            none="test.root"
+          )
+        }}
+      `,
 
       beforeEach() {
         I18n.translations[I18n.locale].js.test = { root: "root none label" };
@@ -161,7 +216,11 @@ discourseModule(
     });
 
     componentTest("filter is case insensitive", {
-      template: template(),
+      template: hbs`
+        {{category-chooser
+          value=value
+        }}
+      `,
 
       async test(assert) {
         await this.subject.expand();
@@ -179,11 +238,11 @@ discourseModule(
     });
 
     componentTest("filter works with non english characters", {
-      template: `
-      {{category-chooser
-        value=value
-      }}
-    `,
+      template: hbs`
+        {{category-chooser
+          value=value
+        }}
+      `,
 
       beforeEach() {
         const store = createStore();
@@ -203,12 +262,12 @@ discourseModule(
     });
 
     componentTest("decodes entities in row title", {
-      template: `
-      {{category-chooser
-        value=value
-        options=(hash scopedCategoryId=1)
-      }}
-    `,
+      template: hbs`
+        {{category-chooser
+          value=value
+          options=(hash scopedCategoryId=1)
+        }}
+      `,
 
       beforeEach() {
         const store = createStore();

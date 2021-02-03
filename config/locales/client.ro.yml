@@ -778,7 +778,6 @@ ro:
       posts: "Postări"
       topics: "Subiecte"
       latest: "Cele mai recente"
-      latest_by: "Cele mai recente după"
       toggle_ordering: "Comută criteriu de aranjare"
       subcategories: "Subcategorii"
       muted: "Categorii dezactivate"
@@ -1327,15 +1326,6 @@ ro:
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
     learn_more: "află mai multe..."
-    all_time: "total"
-    all_time_desc: "total subiecte create"
-    year: "an"
-    year_desc: "subiecte create în ultimele 365 de zile"
-    month: "lună"
-    month_desc: "subiecte create în ultimele 30 de zile"
-    week: "săptămană"
-    week_desc: "subiecte create în ultimele 7 zile"
-    day: "zi"
     first_post: Prima postare
     mute: Blochează
     unmute: Deblochează
@@ -1358,8 +1348,6 @@ ro:
       value_prop: "Când creezi un cont, ne amintim exact ce ai citit, astfel încât să te întorci întotdeauna de unde ai rămas. Primești de asemenea notificări, aici și prin e-mail, ori de câte ori cineva îți răspunde. Și poți aprecia și comentariile bune. :heartpulse:"
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
-      description: "Există <b>%{replyCount}</b> răspunsuri."
-      description_time: "Există <b>%{replyCount}</b> răspunsuri cu un timp necesar pentru citire estimat la <b>%{readingTime} minute</b>."
       enable: "Fă rezumatul acestui subiect"
       disable: "Arată toate postările"
     deleted_filter:
@@ -1492,7 +1480,6 @@ ro:
       recent: Folosite recent
       default: Emojii personalizate
     shared_drafts:
-      notice: "Această discuție este vizibilă doar pentru cei care pot accesa categoria <b>%{category}</b>."
       publishing: "Se postează discuția ..."
     composer:
       emoji: "Emoji :)"
@@ -1517,9 +1504,6 @@ ro:
       duplicate_link: "Se pare că link-ul dv. către <b>%{domain}</b> a fost deja postat în cadrul discuției de către <b>@%{username}</b> în <a href='%{post_url}'> un răspuns %{ago} în urmă</a> – sunteți sigur că vreți să îl postați din nou?"
       error:
         title_missing: "Trebuie un titlu"
-        title_too_short: "Titlul trebuie să aibă minim %{min} (de) caractere"
-        title_too_long: "Titlul nu poate avea mai mult de %{max} (de) caractere"
-        post_length: "Postarea trebuie să aibă minim %{min} (de) caractere"
         category_missing: "Trebuie să alegi o categorie"
       save_edit: "Salvează editarea"
       reply_original: "Răspunde la subiectul inițial"
@@ -1890,7 +1874,6 @@ ro:
         go: "mergi"
         jump_bottom: "sari la ultimul mesaj"
         jump_prompt: "sari la..."
-        jump_prompt_of: "din %{count} postări"
         jump_bottom_with_number: "sari la mesajul %{post_number}"
         jump_prompt_or: "sau"
         total: toate postările
@@ -2017,7 +2000,6 @@ ro:
         username_placeholder: "nume utilizator"
         action: "Trimite o invitație"
         help: "invită alţi utilizatori la această discuţie via email sau notificare"
-        to_forum: "Vom trimite un email scurt prietenilor tăi ca să participe făcând click pe o adresă, fără a fi nevoie de autentificare."
         sso_enabled: "Introdu numele de utilizator al persoanei pe care dorești să o inviți la acest subiect."
         to_topic_blank: "Introdu numele de utilizator sau adresa de email a persoanei pe care dorești să o inviți la acest subiect."
         to_topic_email: "Ai introdus o adresă de email. Vom trimite către ea un email cu o invitație ce îi va permite prietenului tău să răspundă imediat la acest subiect."
@@ -2094,7 +2076,6 @@ ro:
       quote_reply: "Citează"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea %{number}"
-      last_edited_on: "postare editată ultima oară la"
       reply_as_new_topic: "Răspunde cu link către subiect"
       reply_as_new_private_message: "Răspunde cu un mesaj nou aceluiași destinatar"
       continue_discussion: "În continuarea discuției de la %{postLink}:"

@@ -27,7 +27,11 @@
   }
 
   &.in-focus {
-    border-color: $tertiary;
+    @include default-focus;
+
+    textarea {
+      outline: 0;
+    }
   }
 
   &.disabled {
@@ -95,6 +99,9 @@
   overflow: auto;
   cursor: default;
   -webkit-overflow-scrolling: touch;
+  // the below gives text little space to overflow without being cropped (e.g., Õ in headings)
+  padding-top: 1em;
+  margin-top: -1em;
 }
 
 .d-editor-input,
@@ -107,11 +114,6 @@
   word-wrap: break-word;
   -webkit-appearance: none;
   border-radius: 0;
-  &:focus {
-    box-shadow: none;
-    border: 0;
-    outline: 0;
-  }
 }
 
 .d-editor-input {
@@ -167,12 +169,15 @@
   }
   .d-editor-preview-wrapper {
     max-width: 100%;
-    margin: 10px 0 0 0;
+    margin: 0;
+    padding: 0;
   }
   .d-editor-preview {
     background-color: var(--primary-very-low);
-    padding: 5px;
+    margin-top: 1em;
+    padding: 0.667em;
     &:empty {
+      margin: 0;
       padding: 0;
     }
   }
