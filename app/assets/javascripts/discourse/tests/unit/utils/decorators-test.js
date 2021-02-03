@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { afterRender } from "discourse-common/utils/decorators";
-import componentTest from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 const fooComponent = Component.extend({
-  layoutName: "foo-component",
-
   classNames: ["foo-component"],
 
   baz: null,
@@ -29,23 +29,25 @@ const fooComponent = Component.extend({
   },
 });
 
-moduleForComponent("utils:decorators", { integration: true });
+discourseModule("utils:decorators", function (hooks) {
+  setupRenderingTest(hooks);
 
-componentTest("afterRender", {
-  template: "{{foo-component baz=baz}}",
+  componentTest("afterRender", {
+    template: hbs`{{foo-component baz=baz}}`,
 
-  beforeEach() {
-    this.registry.register("component:foo-component", fooComponent);
-    this.set("baz", 0);
-  },
+    beforeEach() {
+      this.registry.register("component:foo-component", fooComponent);
+      this.set("baz", 0);
+    },
 
-  test(assert) {
-    assert.ok(exists(document.querySelector(".foo-component")));
-    assert.equal(this.baz, 1);
+    async test(assert) {
+      assert.ok(exists(document.querySelector(".foo-component")));
+      assert.equal(this.baz, 1);
 
-    this.clearRender();
+      await this.clearRender();
 
-    assert.ok(!exists(document.querySelector(".foo-component")));
-    assert.equal(this.baz, 1);
-  },
+      assert.ok(!exists(document.querySelector(".foo-component")));
+      assert.equal(this.baz, 1);
+    },
+  });
 });

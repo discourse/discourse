@@ -1,25 +1,23 @@
-import EmberObject from "@ember/object";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | preferences/account", function () {
   test("updating of associated accounts", function (assert) {
-    const controller = this.owner.lookup("controller:preferences/account");
-    controller.setProperties({
+    const controller = this.getController("preferences/account", {
       siteSettings: {
         enable_google_oauth2_logins: true,
       },
-      model: EmberObject.create({
+      model: {
         id: 70,
         second_factor_enabled: true,
         is_anonymous: true,
-      }),
-      currentUser: EmberObject.create({
+      },
+      currentUser: {
         id: 1234,
-      }),
-      site: EmberObject.create({
+      },
+      site: {
         isMobileDevice: false,
-      }),
+      },
     });
 
     assert.equal(controller.get("canUpdateAssociatedAccounts"), false);

@@ -52,7 +52,9 @@ define("@ember/test-helpers", () => {
       return window[attr](...arguments);
     };
   });
-  helpers.triggerKeyEvent = window.keyEvent;
+  helpers.triggerKeyEvent = function () {
+    return window.keyEvent(...arguments);
+  };
   return helpers;
 });
 define("pretender", () => {
