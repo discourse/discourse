@@ -729,9 +729,7 @@ class UsersController < ApplicationController
     token = params[:token]
     password_reset_find_user(token, committing_change: true)
 
-    if params[:second_factor_token].present?
-      RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    end
+    rate_limit_second_factor!(@user)
 
     # no point doing anything else if we can't even find
     # a user from the token
