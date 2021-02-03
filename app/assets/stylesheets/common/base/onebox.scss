@@ -49,7 +49,7 @@ a.loading-onebox {
       max-width: 25%;
       height: auto;
       float: left;
-      margin-right: 10px;
+      margin-right: 1em;
     }
     h3,
     h4 {
@@ -96,12 +96,15 @@ a.loading-onebox {
 aside.onebox {
   border: 5px solid var(--primary-low);
   margin-bottom: 1em;
-  padding: 12px 25px 12px 12px;
+  padding: 1em;
   font-size: $font-0;
   background: var(--secondary);
 
   header {
-    margin-bottom: 8px;
+    align-items: center;
+    display: flex;
+    margin-bottom: 1em;
+
     a[href] {
       color: var(--primary-med-or-secondary-med);
       text-decoration: none;
@@ -115,6 +118,7 @@ aside.onebox {
   @include onebox-favicon("githubcommit", "github");
   @include onebox-favicon("githubpullrequest", "github");
   @include onebox-favicon("githubissue", "github");
+  @include onebox-favicon("githubfile", "github");
   @include onebox-favicon("githubgist", "github");
   @include onebox-favicon("amazon", "amazon");
   @include onebox-favicon("instagram", "instagram");
@@ -148,7 +152,7 @@ aside.onebox {
       height: auto;
       width: auto;
       float: left;
-      margin-right: 10px;
+      margin-right: 1em;
       &.onebox-full-image {
         max-height: none;
         max-width: none;
@@ -173,7 +177,7 @@ aside.onebox {
         width: calc(128px * var(--magic-ratio));
         max-width: 20%;
         float: left;
-        margin-right: 10px;
+        margin-right: 1em;
         height: auto;
 
         img {
@@ -188,6 +192,7 @@ aside.onebox {
 
       // full size images for instagram, twitter, etc.
       .aspect-image-full-size {
+        margin: 0.5em 0;
         max-height: 100%;
         width: calc(500px * var(--aspect-ratio));
         max-width: 100%;
@@ -198,7 +203,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          padding: 5px 5px 5px 5px;
         }
       }
 
@@ -331,6 +335,10 @@ blockquote {
   }
 }
 
+pre.onebox {
+  margin-bottom: 0;
+}
+
 // -- Onebox Github Code Blob --
 pre.onebox code ol.lines li:before {
   position: absolute;
@@ -377,6 +385,16 @@ pre.onebox code li.selected {
 
 pre.onebox code {
   white-space: normal;
+}
+
+.onebox-warning-message {
+  margin-top: 5px;
+  color: var(--primary-med-or-secondary-med);
+  img.emoji {
+    width: 20px;
+    height: 20px;
+    float: none;
+  }
 }
 
 // Onebox - Github - PR, Commit & Issue
@@ -644,12 +662,18 @@ aside.onebox.stackexchange .onebox-body {
 .onebox {
   &.allowlistedgeneric,
   &.whitelistedgeneric,
-  &.gfycat {
+  &.gfycat,
+  &.githubfolder {
     .site-icon {
       width: 16px;
       height: 16px;
-      margin-right: 3px;
+      margin-right: 0.5em;
     }
+  }
+  &.category-onebox {
+    border: 1px solid var(--primary-low);
+    padding-left: calc(1em - 5px);
+    margin-left: 5px;
   }
 }
 
@@ -671,6 +695,20 @@ aside.onebox.stackexchange .onebox-body {
     position: relative;
   }
   div.description {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+.onebox.githubfolder {
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    &.onebox-full-image {
+      max-height: 60px;
+      max-width: 60px;
+    }
+  }
+  .label1 {
     color: var(--primary-med-or-secondary-med);
   }
 }
@@ -764,4 +802,10 @@ aside.onebox.stackexchange .onebox-body {
       }
     }
   }
+}
+
+aside.onebox.preview-error .site-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5em;
 }

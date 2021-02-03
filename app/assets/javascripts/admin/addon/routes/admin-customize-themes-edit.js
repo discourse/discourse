@@ -28,6 +28,10 @@ export default Route.extend({
     const fields = wrapper.model
       .get("fields")
       [wrapper.target].map((f) => f.name);
+    if (wrapper.model.remote_theme && wrapper.model.remote_theme.is_git) {
+      this.transitionTo("adminCustomizeThemes.index");
+      return;
+    }
     if (!fields.includes(wrapper.field_name)) {
       this.transitionTo(
         "adminCustomizeThemes.edit",

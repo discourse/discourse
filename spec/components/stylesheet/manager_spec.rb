@@ -64,6 +64,13 @@ describe Stylesheet::Manager do
 
     # our theme better have a name with the theme_id as part of it
     expect(new_link).to include("/stylesheets/desktop_theme_#{theme.id}_")
+
+    manager = Stylesheet::Manager.new(:embedded_theme, theme.id)
+    manager.compile(force: true)
+
+    css = File.read(manager.stylesheet_fullpath)
+    expect(css).to match(/\.embedded/)
+    expect(css).to match(/\.child_embedded/)
   end
 
   describe 'digest' do
@@ -285,7 +292,7 @@ describe Stylesheet::Manager do
       let(:scheme) { ColorScheme.base }
 
       it "includes theme color definitions in color scheme" do
-        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile
+        stylesheet = Stylesheet::Manager.new(:color_definitions, theme.id, scheme).compile(force: true)
         expect(stylesheet).to include("--special: rebeccapurple")
       end
 
@@ -338,7 +345,7 @@ describe Stylesheet::Manager do
     it "correctly generates precompiled CSS" do
       scheme1 = ColorScheme.create!(name: "scheme1")
       scheme2 = ColorScheme.create!(name: "scheme2")
-      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin]
+      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
       theme_targets = [:desktop_theme, :mobile_theme]
       color_scheme_targets = ["color_definitions_scheme1_#{scheme1.id}", "color_definitions_scheme2_#{scheme2.id}"]
 
@@ -352,7 +359,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(17) # (2 themes x 7 targets) + 3 color schemes (2 themes, 1 base)
+      expect(results.size).to eq(22) # (2 themes x 8 targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^#{tar}_(#{scheme1.id}|#{scheme2.id})$/ }).to eq(2)
       end
@@ -367,7 +374,7 @@ describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
 
-      expect(results.size).to eq(22) # (2 themes x 7 targets) + (1 no/default/core theme x 5 core targets) + 3 color schemes (2 themes, 1 base)
+      expect(results.size).to eq(28) # (2 themes x 8 targets) + (1 no/default/core theme x 6 core targets) + 6 color schemes (2 custom theme schemes, 4 base schemes)
 
       core_targets.each do |tar|
         expect(results.count { |target| target =~ /^(#{tar}_(#{scheme1.id}|#{scheme2.id})|#{tar})$/ }).to eq(3)

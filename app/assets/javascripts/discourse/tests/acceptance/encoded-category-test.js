@@ -1,8 +1,7 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Encoded Sub Category Discovery", function (needs) {
   needs.settings({

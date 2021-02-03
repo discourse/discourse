@@ -302,6 +302,7 @@ fa_IR:
     drafts:
       resume: "از سر گیری"
       remove: "پاک کردن"
+      remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "درفت جدید برای مبحث"
       new_private_message: "درفت جدید برای پیام"
       topic_reply: "پاسخ درفت"
@@ -415,10 +416,8 @@ fa_IR:
         email: "ایمیل"
         name: "نام"
         fields: "فیلدها"
+        reject_reason: "دلیل"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored}(%{count}پرچم)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count}پرچم)"
         agreed:
           one: "%{count}% موافقت شده"
           other: "%{count}% موافقت شده"
@@ -506,6 +505,9 @@ fa_IR:
           one: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
           other: "شما <strong>%{count}</strong> نوشته در انتظار دارید"
         ok: "باشه"
+      reject_reason:
+        title: "چرا این کاربر را رد می‌کنید؟"
+        send_email: "ارسال ایمیل رد شدن"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> <a href='%{topicUrl}'>یک موضوع</a> ایجاد کرد"
       you_posted_topic: "<a href='%{userUrl}'>شما یک </a><a href='%{topicUrl}'>موضوع</a> جدید ایجاد کردید."
@@ -587,6 +589,8 @@ fa_IR:
             imap_ssl: "از SSL برای IMAP استفاده کنید"
             username: "نام‌کاربری"
             password: "رمزعبور"
+          settings:
+            title: "تنظیمات"
           mailboxes:
             disabled: "غیرفعال شده"
         membership:
@@ -741,7 +745,6 @@ fa_IR:
       posts: "نوشته‌ها"
       topics: "موضوعات"
       latest: "آخرین"
-      latest_by: "آخرین توسط"
       toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "دسته‌‌بندی‌های فرزند"
       topic_sentence:
@@ -804,6 +807,19 @@ fa_IR:
         mute_option_title: "هیچ اگاه سازی از این کاربر دریافت نمیکنید"
         normal_option: "معمولی"
         normal_option_title: "اگر این کاربر به شما پاسخ دهد، از شما نقل قول کند و یا شما را صدا کند، اگاه سازی دریافت میکنید"
+      notification_schedule:
+        title: "زمان‌بندی آگاه‌سازی"
+        label: "فعال سازی زمان‌بندی سفارشی آگاه‌سازی"
+        midnight: "نیمه شب"
+        none: "هیچ کدام"
+        monday: "دوشنبه"
+        tuesday: "سه‌شنبه"
+        wednesday: "چهار شنبه"
+        thursday: "پنج‌شنبه"
+        friday: "جمعه"
+        saturday: "شنبه"
+        sunday: "یک‌شنبه"
+        to: "به"
       activity_stream: "فعالیت"
       preferences: "تنظیمات"
       feature_topic_on_profile:
@@ -832,7 +848,6 @@ fa_IR:
         perm_denied_expl: "شما دسترسی دریافت اعلان را بسته‌اید. در تنظیمات مرورگر خود آن‌را فعال کنید."
         disable: "غیرفعال کردن اعلانات"
         enable: "فعال کردن اعلانات"
-        each_browser_note: "نکته: شما باید این تنظیمات را در هر مرورگری که استفاده میکنید تغییر دهید."
         consent_prompt: "ایا مایلید وقتی دیگران به شما پاسخ میدهند، اگاه سازی زنده دریافت کنید؟"
       dismiss: "نخواستیم"
       dismiss_notifications: "پنهان کردن همه"
@@ -841,7 +856,6 @@ fa_IR:
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_schemes:
-        default_description: "پیش‌فرض"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
       dark_mode: "حالت تاریک"
@@ -1191,7 +1205,6 @@ fa_IR:
         links_tab: "پیوندها"
         link_created_at: "ساخته شده"
         link_groups: گروه ها
-        create: "ارسال دعوتنامه "
         valid_for: "لینک دعوت فقط برای این ایمیل معتبر است: %{email}"
         invite_link:
           success: "لینک دعوت با موفقیت ایجاد شد!"
@@ -1313,15 +1326,6 @@ fa_IR:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
     learn_more: "بیشتر بدانید..."
-    all_time: "مجموع"
-    all_time_desc: "مجموع موضوعات ایجاد شده"
-    year: "سال"
-    year_desc: "موضوعاتی که در 365 روز گذشته ایحاد شده‌اند"
-    month: "ماه"
-    month_desc: "موضوعاتی که در 30 روز گذشته ساخته شده اند"
-    week: "هفته"
-    week_desc: "موضوعاتی که در 7 روز گذشته باز شده‌اند"
-    day: "روز"
     first_post: نوشته نخست
     mute: بی‌صدا
     unmute: صدادار
@@ -1344,8 +1348,6 @@ fa_IR:
       value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
-      description: "<b>%{replyCount}</b> پاسخ وجود دارد."
-      description_time: " <b>%{replyCount}</b> پاسخ با زمان برآورد شده <b>%{readingTime} دقیقه</b> برای خواندن وجود دارد."
       enable: "خلاصه‌ی این موضوع"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
@@ -1517,7 +1519,6 @@ fa_IR:
       default: ایموجی های مخصوص
     shared_drafts:
       title: "درفت مشترک"
-      notice: "این موضوع فقط برای افرادی که به دسته بندی <b>%{category}</b>دسترسی دارند نمایش داده می‌شود."
       destination_category: "دسته بندی مقصد"
       publish: "درفت مشترک را منتشر کن"
       confirm_publish: "از انتشار درفت مطمئنید؟"
@@ -1528,7 +1529,6 @@ fa_IR:
       options: "گزینه‌ها"
       whisper: "زمزمه"
       unlist: "از فهرست پاک شده"
-      blockquote_text: "نقل‌قول"
       add_warning: "این یک هشدار رسمی است."
       toggle_whisper: "تغییر وضعیت زمزمه"
       toggle_unlisted: "تغییر وضعیت از لیست خارج شده"
@@ -1546,10 +1546,7 @@ fa_IR:
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       error:
         title_missing: "عنوان الزامی است"
-        title_too_short: "عنوان دست‌کم باید %{min} نویسه باشد"
-        title_too_long: "عنوان نمی‌تواند بیش‌تر از %{max} نویسه باشد"
         post_missing: "فرسته نمی‌تواند خالی باشد."
-        post_length: "نوشته باید دست‌کم %{min} نویسه داشته باشد"
         try_like: "دکمه‌ی %{heart} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
       save_edit: "ذخیره ویرایش"
@@ -1590,8 +1587,7 @@ fa_IR:
       link_description: "توضیحات لینک را اینجا وارد کنید."
       link_dialog_title: "افزودن پیوند"
       link_optional_text: "عنوان اختیاری"
-      quote_title: "نقل‌قول"
-      quote_text: "نقل‌قول"
+      blockquote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
       code_text: "متن قالب‌بندی شده را با 4 فاصله دندانه‌دار کن"
       paste_code_text: "کد را در اینجا بنویسید یا بچسبانید"
@@ -1636,7 +1632,6 @@ fa_IR:
           label: "موضوع جدید"
         shared_draft:
           label: "درفت اشتراکی"
-          desc: "درفت یک مبحث که تنها توسط کارکنان قابل مشاهده است"
         toggle_topic_bump:
           label: "فعالسازی بالا آوردن مبحث در لیست"
           desc: "بدون تغییر زمان اخرین پاسخ، پاسخ دهید."
@@ -1746,6 +1741,7 @@ fa_IR:
       or_search_google: "یا به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google: "به‌جای این، جست‌وجو با گوگل را امتحان کنید:"
       search_google_button: "گوگل"
+      search_button: "جسنجو"
       context:
         user: "جستجوی نوشته‌ها با @%{username}"
         category: "جستجوی دسته‌بندی #%{category}"
@@ -1917,7 +1913,6 @@ fa_IR:
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟موضوعات دیگر را در %{catLink} یا %{latestLink} مرور کنید."
       read_more: "می‌خواهید بیشتر بخوانید؟ %{catLink} یا %{latestLink}."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>یک پیام خوانده نشده</a> } other { <a href='{basePath}/unread'># پیام خوانده نشده</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'>1 موضوع جدید</a> } other { {BOTH, select, true{و } false { } other{}} <a href='{basePath}/new'># موضوع جدید</a> } } وجود دارد, یا {CATEGORY, select, true {نمایش سایر موضوعات دسته‌بندی {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
       view_latest_topics: مشاهده آخرین موضوع
       jump_reply_up: رفتن به جدید ترین پاسخ
@@ -1996,7 +1991,6 @@ fa_IR:
         go: "برو"
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
-        jump_prompt_of: "از %{count} نوشته"
         jump_prompt_long: "برو به ..."
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_to_date: "تا تاریخ"
@@ -2131,7 +2125,6 @@ fa_IR:
         username_placeholder: "نام‌کاربری"
         action: "ارسال دعوتنامه "
         help: "دعوت دیگران به این موضوع با ایمیل یا اطلاعیه‌ها"
-        to_forum: "ما ایمیلی کوتاه برای شما می فرستیم که دوست شما با کلیک کردن بر روی لینک سریعا ملحق شود، به ورود به سیستم نیازی نیست. "
         sso_enabled: "نام کاربری کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_blank: "نام کاربری یا ایمیل کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_email: "شما یک ایمیل آدرس وارد کردید. ما یک ایمیل خواهیم فرستاد که به دوستان شما اجازه می دهد سریعا به این موضوع پاسخ دهند."
@@ -2228,8 +2221,6 @@ fa_IR:
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
       ignored: "محتوای نادیده گرفته‌شد"
-      wiki_last_edited_on: "دانشنامه آخرین بار در این زمان ویرایش شده"
-      last_edited_on: "نوشته آخرین بار ویرایش شده در"
       reply_as_new_topic: "پاسخگویی به عنوان یک موضوع لینک شده"
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
       continue_discussion: "ادامه دادن بحث از %{postLink}:"
@@ -2321,7 +2312,8 @@ fa_IR:
         delete_topic_error: "خطایی در هنگام حذف این موضوع رخ داده است."
         delete_topic: "حذف موضوع"
         add_post_notice: "اطلاعیه کارکنان را اضافه کنید"
-        remove_post_notice: "اطلاعیه کارکنان را پاک کنید"
+        change_post_notice: "تغییر اطلاعیه همکاران"
+        delete_post_notice: "حذف اطلاعیه همکاران"
         remove_timer: "حذف زمان‌سنج"
       actions:
         people:
@@ -2427,6 +2419,12 @@ fa_IR:
       change_in_category_topic: "ویرایش توضیحات"
       already_used: "این رنگ توسط یک دسته بندی دیگر گزیده شده است"
       security: "امنیت"
+      security_add_group: "افزودن گروه"
+      permissions:
+        group: "گروه"
+        see: "دیدن"
+        reply: "پاسخ"
+        create: "ایجاد"
       special_warning: "اخطار: این دسته‌بندی از پیش تعریف شده است و تنظیمات امینتی آن قابل تغییر نیست. اگر شما نمی‌خواهید از این دسته‌بندی استفاده کنید، به جای تغییر کاربرد حذفش کنید."
       images: "تصاویر"
       email_in: "آدرس ایمیل های دریافتی سفارشی:"
@@ -2504,7 +2502,6 @@ fa_IR:
       notify_action: "پیام"
       official_warning: "اخطار رسمی"
       delete_spammer: "پاک کردن هرزنگار"
-      delete_confirm_MF: "شما در حال حذف {POSTS, plural, one {<b>1</b> نوشته} other {<b>#</b> نوشته}} و {TOPICS, plural, one {<b>1</b> موضوع} other {<b>#</b> موضوع}} از این کاربر هستید، حذف حساب کاربری و جلوگیری از ثبت نام با آیپی <b>{ip_address}</b> و ایمیل <b>{email}</b> که به لیست دائمی سیاه منتقل می‌شوند. ادامه می‌دهید؟"
       yes_delete_spammer: "بله، هرزنگار پاک شود"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2571,12 +2568,6 @@ fa_IR:
         title: "این تاپیک یک پیام‌خصوصی است"
         help: "این تاپیک یک پیام‌خصوصی است"
     posts: "نوشته‌ها"
-    posts_likes_MF: |
-      این موضوع دارای {count, plural, one {1 پاسخ} other {# پاسخ}} است {ratio, select,
-      low {و مورد پسند دیگران واقع شده است}
-      med {و بسیار مورد پسند دیگران واقع شده است}
-      high {و به شدت مورد پسند دیگران واقع شده است}
-      other {}}
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
@@ -2863,6 +2854,17 @@ fa_IR:
       dismiss: "نخواستیم"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
+    do_not_disturb:
+      title: "مزاحم نشود برای..."
+      label: "مزاحم نشود"
+      remaining: "%{remaining} باقی‌مانده"
+      options:
+        half_hour: "۳۰ دقیقه"
+        one_hour: "۱ ساعت"
+        two_hours: "۲ ساعت"
+        tomorrow: "تا فردا"
+        custom: "سفارشی"
+      set_schedule: "تنظیم زمان‌بندی آگاه‌سازی"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -3313,10 +3315,10 @@ fa_IR:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
           head_tag:
-            text: "</head>"
+            text: "</‎head>"
             title: "کد HTML که قبل از برچسب </head> اضافه می‌شود"
           body_tag:
-            text: "</body>"
+            text: "</‎body>"
             title: "کد HTML که قبل از برچسب </body> اضافه می‌شود"
           yaml:
             text: "YAML"
@@ -3501,6 +3503,7 @@ fa_IR:
             change_name: "تغییر دادن نام"
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"
+            delete_group: "حذف گروه"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
@@ -3605,7 +3608,6 @@ fa_IR:
         suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
-        suspend_reason_placeholder: "دلیل تعلیق شدن"
         suspend_message_placeholder: "به صورت اختیاری اطلاعات بیشتری درمورد تعلیق ارائه دهید تا به رایانامه کاربر ارسال شود."
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
@@ -3614,7 +3616,6 @@ fa_IR:
         delete_all_posts: "پاک کردن همه‌ی نوشته‌ها"
         delete_posts_progress: "درحال حذف فرسته‌ها..."
         penalty_post_edit: "ویرایش فرسته"
-        delete_all_posts_confirm_MF: "شما در حال حذف {POSTS, plural, one {1 نوشته} other {# نوشته}} and {TOPICS, plural, one {1 نوشته} other {# موضوع}} هستید. ادامه می‌دهید؟"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
         suspended: "تعلیق شد؟"
@@ -3781,8 +3782,10 @@ fa_IR:
         go_back: "بازگشت به جستجو"
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
+        locale: "زبان:"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
+        history: "مشاهده تاریخچه تغییر"
         reset: "بازنشانی"
         none: "هیچی"
       site_settings:

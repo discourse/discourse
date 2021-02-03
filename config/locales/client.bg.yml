@@ -612,7 +612,6 @@ bg:
       posts: "Публикации"
       topics: "Теми"
       latest: "Последни"
-      latest_by: "последни от"
       toggle_ordering: "включете контрол на подредбата"
       subcategories: "Подкатегории"
       topic_sentence:
@@ -695,7 +694,6 @@ bg:
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         disable: "Деактивиране на Известията"
         enable: "Активиране на Известията"
-        each_browser_note: "Забележка: Трябва да промените тази настройка при всички браузъри, които използвате."
         consent_prompt: "Искате ли известявания в реално време, когато хората отговарят на вашите публикации?"
       dismiss: "Отмени"
       dismiss_notifications: "Отмени всички"
@@ -950,7 +948,6 @@ bg:
         links_tab: "Връзки"
         link_created_at: "Създадени"
         link_groups: Групи
-        create: "Изпрати покана"
         bulk_invite:
           success: "Файлът е качен успешно. Ще бъдете информирани чрез съобщение, когато процесът завърши."
       password:
@@ -1050,15 +1047,6 @@ bg:
       login_disabled: "Влизането е изключено, докато страницата е в режим само за четене."
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     learn_more: "научете повече..."
-    all_time: "общо"
-    all_time_desc: "общо създадени теми"
-    year: "година"
-    year_desc: "теми създадени през последните 365 дни"
-    month: "месец"
-    month_desc: "теми, създадени през последните 30 дни"
-    week: "седмица"
-    week_desc: "теми създадени през последните 7 дни"
-    day: "ден"
     first_post: Първа публикация
     mute: Заглушаване
     unmute: Премахване на заглушаване
@@ -1080,8 +1068,6 @@ bg:
       value_prop: "Когато създадете профил, ще отбелязваме това, което сте чели, така че да можете да продължите от там, откъдето сте спрели. Можете също така да получавате известия тук и по електронната поща, когато има нови мнения. Също така ще може да маркирате любимите си публикации."
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
-      description: "Има <b>%{replyCount}</b> отговора."
-      description_time: "В момента има <b>%{replyCount}</b> отговора прочетени за <b>%{readingTime} минути</b>."
       enable: "Обобщи Тази Тема"
       disable: "Покажи всички публикации"
     deleted_filter:
@@ -1201,7 +1187,6 @@ bg:
       options: "Опции"
       whisper: "шепот"
       unlist: "скрити"
-      blockquote_text: "Текстов блок"
       add_warning: "Това е официално предупреждение."
       toggle_whisper: "Включи шепот"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
@@ -1210,9 +1195,6 @@ bg:
       drafts_offline: "чернови офлайн"
       error:
         title_missing: "Заглавието е задължително"
-        title_too_short: "Заглавието трябва да е минимум %{min} символа"
-        title_too_long: "Заглавието не може да е повече от %{max} символа"
-        post_length: "Публикацията трябва да е най-малко %{min} символа."
         category_missing: "Трябва да изберете категория"
       save_edit: "Запази редакцията"
       reply_original: "Отговори на Оригинална Тема"
@@ -1242,8 +1224,7 @@ bg:
       link_description: "добави описание на връзката тук"
       link_dialog_title: "Добави хипервръзка"
       link_optional_text: "заглавие по избор"
-      quote_title: "Текстов блок"
-      quote_text: "Текстов блок"
+      blockquote_text: "Текстов блок"
       code_title: "Форматиран текст"
       code_text: "Избутай текста с 4 интервала"
       paste_code_text: "въведете или поставете кода тук"
@@ -1445,7 +1426,6 @@ bg:
       toggle_information: "Показване / скриване на подробна информация за дадена тема "
       read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в %{catLink} или %{latestLink}."
       read_more: "Искате да прочетете повече ? %{catLink} или %{latestLink}."
-      read_more_MF: "Има { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 непрочетено</a> } other { <a href='{basePath}/unread'># непрочетени </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 нова </a> тема} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># теми </a>} } или {CATEGORY, select, true {потърси други теми в {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
       jump_reply_up: към по ранен отговор
@@ -1599,7 +1579,6 @@ bg:
         username_placeholder: "потребителско име"
         action: "Изпрати покана"
         help: "поканете другите да се присъединят към тази тема чрез имейл или уведомление"
-        to_forum: "Изпратихме кратък имейл, който позволява на Вашия приятел, да се включи в разговора, само с едно натискане върху връзката. Не се изисква вход в системата."
         sso_enabled: "Въведете потребителското име на човека който желаете да поканите към в тема."
         to_topic_blank: "Въведете потребителско име или имейл адрес на човека който желаете да поканите към тази тема."
         to_topic_email: "Вие въведохте имейл адрес. Ние ще изпратим имейл чрез която вашият приятел може да отговори веднака на тази тема."
@@ -1666,7 +1645,6 @@ bg:
     post:
       edit_reason: "Причина: "
       post_number: "публикация %{number} "
-      last_edited_on: "публикацията последно е редактирана на "
       reply_as_new_topic: "Отговори като свързана тема"
       continue_discussion: "Продължаване на дискусията от %{postLink}: "
       follow_quote: "отиди на цитираната публикация "
@@ -1949,12 +1927,6 @@ bg:
       unlisted:
         help: "Тази тема е скрита; не се появява в списъка с теми и може да бъде достъпна само с директен линк."
     posts: "Публикации"
-    posts_likes_MF: |
-      Тази тема има {count, plural, one {1 reply} other {# replies}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "Оригинална публикация"
     views: "Прегледи"
     views_lowercase:

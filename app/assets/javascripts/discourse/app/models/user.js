@@ -1,37 +1,35 @@
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { A } from "@ember/array";
-import { isEmpty } from "@ember/utils";
-import { gt, equal, or } from "@ember/object/computed";
-import EmberObject, { get, computed, getProperties } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
-import RestModel from "discourse/models/rest";
-import Bookmark from "discourse/models/bookmark";
-import UserStream from "discourse/models/user-stream";
-import UserPostsStream from "discourse/models/user-posts-stream";
-import Singleton from "discourse/mixins/singleton";
-import { longDate } from "discourse/lib/formatter";
-import discourseComputed from "discourse-common/utils/decorators";
-import Badge from "discourse/models/badge";
-import UserBadge from "discourse/models/user-badge";
-import UserActionStat from "discourse/models/user-action-stat";
-import UserAction from "discourse/models/user-action";
-import UserDraftsStream from "discourse/models/user-drafts-stream";
-import Group from "discourse/models/group";
-import { emojiUnescape } from "discourse/lib/text";
-import PreloadStore from "discourse/lib/preload-store";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
-import Category from "discourse/models/category";
-import { Promise } from "rsvp";
-import deprecated from "discourse-common/lib/deprecated";
-import Site from "discourse/models/site";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { escapeExpression } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import { equal, gt, or } from "@ember/object/computed";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { A } from "@ember/array";
+import Badge from "discourse/models/badge";
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import PreloadStore from "discourse/lib/preload-store";
+import { Promise } from "rsvp";
+import RestModel from "discourse/models/rest";
+import Singleton from "discourse/mixins/singleton";
+import Site from "discourse/models/site";
+import UserAction from "discourse/models/user-action";
+import UserActionStat from "discourse/models/user-action-stat";
+import UserBadge from "discourse/models/user-badge";
+import UserDraftsStream from "discourse/models/user-drafts-stream";
+import UserPostsStream from "discourse/models/user-posts-stream";
+import UserStream from "discourse/models/user-stream";
+import { ajax } from "discourse/lib/ajax";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emojiUnescape } from "discourse/lib/text";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { isEmpty } from "@ember/utils";
+import { longDate } from "discourse/lib/formatter";
+import { url } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -61,6 +59,7 @@ let userFields = [
   "watching_first_post_tags",
   "date_of_birth",
   "primary_group_id",
+  "user_notification_schedule",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -343,7 +342,7 @@ const User = RestModel.extend({
       data[s] = this.get(`user_option.${s}`);
     });
 
-    var updatedState = {};
+    let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
       (s) => {
@@ -959,6 +958,37 @@ const User = RestModel.extend({
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
+  },
+
+  enterDoNotDisturbFor(duration) {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "POST",
+      data: { duration },
+    }).then((response) => {
+      return this.updateDoNotDisturbStatus(response.ends_at);
+    });
+  },
+
+  leaveDoNotDisturb() {
+    return ajax({
+      url: "/do-not-disturb.json",
+      type: "DELETE",
+    }).then(() => {
+      this.updateDoNotDisturbStatus(null);
+    });
+  },
+
+  updateDoNotDisturbStatus(ends_at) {
+    this.set("do_not_disturb_until", ends_at);
+    this.appEvents.trigger("do-not-disturb:changed", this.do_not_disturb_until);
+  },
+
+  isInDoNotDisturb() {
+    return (
+      this.do_not_disturb_until &&
+      new Date(this.do_not_disturb_until) >= new Date()
+    );
   },
 });
 

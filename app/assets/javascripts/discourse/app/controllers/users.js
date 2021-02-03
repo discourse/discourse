@@ -1,8 +1,10 @@
-import { equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseDebounce from "discourse/lib/debounce";
+import { action } from "@ember/object";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: controller(),
@@ -12,6 +14,7 @@ export default Controller.extend({
   asc: null,
   name: "",
   group: null,
+  nameInput: null,
   exclude_usernames: null,
   isLoading: false,
 
@@ -28,6 +31,8 @@ export default Controller.extend({
   loadUsers(params) {
     this.set("isLoading", true);
 
+    this.set("nameInput", params.name);
+
     this.store
       .find("directoryItem", params)
       .then((model) => {
@@ -36,7 +41,6 @@ export default Controller.extend({
           model,
           lastUpdatedAt: lastUpdatedAt ? longDate(lastUpdatedAt) : null,
           period: params.period,
-          nameInput: params.name,
         });
       })
       .finally(() => {
@@ -44,23 +48,27 @@ export default Controller.extend({
       });
   },
 
-  @observes("nameInput")
-  _setName: discourseDebounce(function () {
-    this.set("name", this.nameInput);
-  }, 500),
+  @action
+  onFilterChanged(filter) {
+    discourseDebounce(this, this._setName, filter, 500);
+  },
+
+  _setName(name) {
+    this.set("name", name);
+  },
 
   @observes("model.canLoadMore")
-  _showFooter: function () {
+  _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
-  actions: {
-    loadMore() {
-      this.model.loadMore();
-    },
+  @action
+  loadMore() {
+    this.model.loadMore();
+  },
 
-    updateGroupParam(selectedGroups, currentSelection) {
-      this.set("group", currentSelection ? currentSelection.name : null);
-    },
+  @action
+  updateGroupParam(selectedGroups, currentSelection) {
+    this.set("group", currentSelection ? currentSelection.name : null);
   },
 });

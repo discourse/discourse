@@ -415,10 +415,8 @@ pt_BR:
         email: "E-mail"
         name: "Nome"
         fields: "Campos"
+        reject_reason: "Motivo"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalização no total)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} sinalizações no total)"
         agreed:
           one: "%{count}% concorda"
           other: "%{count}% concordam"
@@ -592,6 +590,10 @@ pt_BR:
             imap_ssl: "Usar SSL para IMAP"
             username: "Nome de Usuário"
             password: "Senha"
+          settings:
+            title: "Configurações"
+            allow_unknown_sender_topic_replies: "Permitir que remetentes desconhecidos respondam a tópicos."
+            allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos respondam a tópicos de grupo. Se não estiver habilitado, respostas de endereços de e-mail não incluídos no tópico de e-mail IMAP ou convidados para o tópico irão criar um novo tópico."
           mailboxes:
             synchronized: "Caixa de Correio Sincronizada"
             none_found: "Nenhuma caixa de correio foi encontrada nesta conta de e-mail."
@@ -751,7 +753,6 @@ pt_BR:
       posts: "Postagens"
       topics: "Tópicos"
       latest: "Últimos"
-      latest_by: "últimos por"
       toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
       topic_sentence:
@@ -845,7 +846,7 @@ pt_BR:
         perm_denied_expl: "Você negou permissão para notificações. Permita notificações nas configurações do seu navegador."
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
-        each_browser_note: "Obs.: Você deve modificar esta configuração em todos os navegadores que você usa."
+        each_browser_note: 'Nota: Você deve alterar esta configuração em cada navegador que você usa. Todas as notificações serão desabilitadas quando em "não perturbe", independente desta configuração.'
         consent_prompt: "Você quer notificações ao vivo quando as pessoas respondem às suas postagens?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar Tudo"
@@ -857,7 +858,7 @@ pt_BR:
       allow_private_messages: "Permitir que outros usuários me enviem mensagens pessoais"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Habilitar resposta citando o texto destacado"
-      enable_defer: "Habilitar adiar para marcar tópicos não lidos"
+      enable_defer: "Habilitar adiar para marcar tópicos como não lidos"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -867,7 +868,7 @@ pt_BR:
       silenced_tooltip: "Este usuário está silenciado"
       suspended_notice: "Este usuário está suspenso até %{date}."
       suspended_permanently: "Este usuário está suspenso."
-      suspended_reason: "Motivo:"
+      suspended_reason: "Motivo: "
       email_activity_summary: "Resumo de Atividades"
       mailing_list_mode:
         label: "Modo lista de correio"
@@ -1225,7 +1226,6 @@ pt_BR:
         link_url: "Link"
         link_created_at: "Criado"
         link_groups: Grupos
-        create: "Enviar Convite"
         valid_for: "Link do convite é válido apenas para este endereço de e-mail: %{email}"
         invite_link:
           success: "Link do convite gerado com sucesso!"
@@ -1353,15 +1353,6 @@ pt_BR:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
     learn_more: "saber mais..."
-    all_time: "total"
-    all_time_desc: "total de tópicos criados"
-    year: "ano"
-    year_desc: "tópicos criados nos últimos 365 dias"
-    month: "mês"
-    month_desc: "tópicos criados nos últimos 30 dias"
-    week: "semana"
-    week_desc: "tópicos criados nos últimos 7 dias"
-    day: "dia"
     first_post: Primeira postagem
     mute: Silenciar
     unmute: Remover Silêncio
@@ -1384,8 +1375,6 @@ pt_BR:
       value_prop: "Quando você cria uma conta, lembramos exatamente o que você leu, para que você volte sempre de onde parou. Você também recebe notificações, aqui e via e-mail, sempre que alguém responder a você. E você pode gostar de postagens para compartilhar o amor. :heartpulse:"
     summary:
       enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes conforme determinados pela comunidade."
-      description: "Existem <b>%{replyCount}</b> respostas."
-      description_time: "Existem <b>%{replyCount}</b> respostas com tempo de leitura estimado de <b>%{readingTime} minutos</b>."
       enable: "Resumir Este Tópico"
       disable: "Exibir Todas as Postagens"
     deleted_filter:
@@ -1547,8 +1536,6 @@ pt_BR:
     date_time_picker:
       from: De
       to: Para
-      errors:
-        to_before_from: "Até a data deve ser posterior a partir da data."
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emotion
@@ -1570,7 +1557,6 @@ pt_BR:
       default: Emojis personalizados
     shared_drafts:
       title: "Rascunhos Compartilhados"
-      notice: "Este tópico só é visível para aqueles que podem ver a categoria <b>%{category}</b>."
       destination_category: "Categoria de Destino"
       publish: "Publicar Rascunho Compartilhado"
       confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
@@ -1581,7 +1567,6 @@ pt_BR:
       options: "Opções"
       whisper: "sussuro"
       unlist: "não listado"
-      blockquote_text: "Bloco de Citação"
       add_warning: "Esta é uma advertência oficial."
       toggle_whisper: "Alternar Sussuro"
       toggle_unlisted: "Alternar Não Listado"
@@ -1600,10 +1585,7 @@ pt_BR:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Título é obrigatório"
-        title_too_short: "Título precisa ter no mínimo %{min} caracteres"
-        title_too_long: "Título não pode ter mais de %{max} caracteres"
         post_missing: "A postagem não pode estar vazia"
-        post_length: "Postagem precisa ter no mínimo %{min} caracteres"
         try_like: "Você já tentou o botão %{heart}?"
         category_missing: "Você precisa escolher uma categoria"
         topic_template_not_modified: "Por favor, adicione detalhes e especificações ao seu tópico editando o modelo do tópico."
@@ -1647,10 +1629,9 @@ pt_BR:
       link_dialog_title: "Inserir Hyperlink"
       link_optional_text: "título opcional"
       link_url_placeholder: "Cole uma URL ou digite para pesquisar tópicos"
-      quote_title: "Bloco de Citação"
-      quote_text: "Bloco de Citação"
+      blockquote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
-      code_text: "identar texto pré-formatado por 4 espaços"
+      code_text: "recuar o texto pré-formatado em 4 espaços"
       paste_code_text: "digite ou cole o código aqui"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
@@ -1694,7 +1675,6 @@ pt_BR:
           label: "Novo Tópico"
         shared_draft:
           label: "Rascunho Compartilhado"
-          desc: "Elabore um tópico que será visível somente para a staff"
         toggle_topic_bump:
           label: "Alternar promoção de tópico"
           desc: "Responder sem alterar a data da última resposta"
@@ -1935,7 +1915,7 @@ pt_BR:
         title: "Editar"
       defer:
         help: "Marcar como não lido"
-        title: "Delegar"
+        title: "Adiar"
       feature_on_profile:
         help: "Adicionar um link para este tópico em seu cartão de usuário e perfil"
         title: "Recurso no Perfil"
@@ -1982,7 +1962,6 @@ pt_BR:
       read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
       read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
-      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 não lido</a> } other { <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas as categorias
       view_latest_topics: ver últimos tópicos
@@ -2038,7 +2017,7 @@ pt_BR:
         title: "Excluir respostas automaticamente"
       status_update_notice:
         auto_open: "Este tópico abrirá automaticamente em %{timeLeft}."
-        auto_close: "Este tópico fechará automaticamente em %{timeLeft}."
+        auto_close: "Este tópico fechará automaticamente %{timeLeft}."
         auto_publish_to_category: "Este tópico será publicado em <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Este tópico fechará %{duration} após a última resposta."
         auto_delete: "Este tópico será automaticamente excluído %{timeLeft}."
@@ -2060,7 +2039,6 @@ pt_BR:
         go: "ir"
         jump_bottom: "pular para a última postagem"
         jump_prompt: "pular para..."
-        jump_prompt_of: "de %{count} postagens"
         jump_prompt_long: "Pular para..."
         jump_bottom_with_number: "pular para postagem %{post_number}"
         jump_prompt_to_date: "até agora"
@@ -2195,7 +2173,6 @@ pt_BR:
         username_placeholder: "nome de usuário"
         action: "Enviar Convite"
         help: "Convidar outros para este tópico por e-mail ou notificação"
-        to_forum: "Nós vamos mandar um e-mail curto permitindo seu amigo a entrar e responder a este tópico clicando em um link, sem necessidade de entrar."
         sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
         to_topic_blank: "Entrar o nome de usuário ou endereço de e-mail da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de e-mail. Nós enviaremos um convite por e-mail que permite seu amigo responder imediatamente a este tópico."
@@ -2314,8 +2291,6 @@ pt_BR:
       edit_reason: "Motivo:"
       post_number: "resposta %{number}"
       ignored: "Conteúdo ignorado"
-      wiki_last_edited_on: "wiki última vez editada em"
-      last_edited_on: "resposta editada pela última vez em"
       reply_as_new_topic: "Responder como um Tópico linkado"
       reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão do %{postLink}:"
@@ -2323,8 +2298,8 @@ pt_BR:
       show_full: "Exibir mensagem completa"
       show_hidden: "Ver o conteúdo ignorado."
       deleted_by_author:
-        one: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} hora a exceto se forem sinalizadas)"
-        other: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} horas a exceto se forem sinalizadas)"
+        one: "(postagem retirada pelo autor, será automaticamente excluída em %{count} hora a menos que seja sinalizada)"
+        other: "(postagem retirada pelo autor, será automaticamente excluída em %{count} horas a menos que seja sinalizada)"
       collapse: "colapso"
       expand_collapse: "expandir/encolher"
       locked: "um membro da equipe bloqueou este post de ser editado"
@@ -2414,7 +2389,6 @@ pt_BR:
         delete_topic_disallowed: "você não tem permissão para apagar este tópico"
         delete_topic: "apagar tópico"
         add_post_notice: "Adicionar Aviso da Staff"
-        remove_post_notice: "Remover Aviso da Staff"
         remove_timer: "remover contador"
       actions:
         people:
@@ -2631,7 +2605,6 @@ pt_BR:
       notify_action: "Mensagem"
       official_warning: "Aviso Oficial"
       delete_spammer: "Apagar Spammer"
-      delete_confirm_MF: "Você está prestes a remover {POSTS, plural, one {<b>1</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>{ip_address}</b>, e adicionando o e-mail dele <b>{e-mail}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(escondido)"
@@ -2698,12 +2671,6 @@ pt_BR:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
     posts: "Postagens"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-      low {com uma proporção alta de curtidas}
-      med {com uma proporção muito alta de curtidas}
-      high {com uma proporção extremamente alta de curtidas}
-      other {}}
     original_post: "Resposta original"
     views: "Visualizações"
     views_lowercase:
@@ -2711,7 +2678,7 @@ pt_BR:
       other: "visualizações"
     replies: "Respostas"
     views_long:
-      one: "este tópico foi visto uma vez"
+      one: "este tópico foi visto %{count} vez"
       other: "este tópico foi visto %{number} vezes"
     activity: "Atividade"
     likes: "Curtidas"
@@ -2954,8 +2921,8 @@ pt_BR:
       delete_synonym_confirm: 'Você tem certeza que deseja excluir o sinônimo "%{tag_name}"?'
       delete_tag: "Apagar marcação"
       delete_confirm:
-        one: "Tem certeza de que deseja excluir esta tag e removê-la de um tópico para o qual ela está atribuída?"
-        other: "Tem certeza de que deseja excluir esta tag e removê-la de %{count} tópicos aos quais ela está atribuída?"
+        one: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópico para o qual ela está atribuída?"
+        other: "Tem certeza de que deseja excluir esta etiqueta e removê-la de %{count} tópicos aos quais ela está atribuída?"
       delete_confirm_no_topics: "Tem certeza de que deseja excluir esta tag?"
       delete_confirm_synonyms:
         one: "O sinônimo dela também será excluído."
@@ -2972,16 +2939,16 @@ pt_BR:
       upload_instructions: "Uma por linha, opcionalmente com um grupo de etiquetas no formato 'nome_etiqueta,grupo_etiqueta'."
       upload_successful: "Etiquetas enviadas com sucesso"
       delete_unused_confirmation:
-        one: "%{count} etiqueta será excluída: %{etiquetas}"
-        other: "%{count} etiquetas serão excluídas: %{etiquetas}"
+        one: "%{count} etiqueta será excluída: %{tags}"
+        other: "%{count} etiquetas serão excluídas: %{tags}"
       delete_unused_confirmation_more_tags:
-        one: "%{etiquetas} e %{count} mais"
-        other: "%{etiquetas} e %{count} mais"
+        one: "%{tags} e %{count} mais"
+        other: "%{tags} e %{count} mais"
       delete_unused: "Excluir Etiquetas Não Usadas"
       delete_unused_description: "Excluir todas as etiquetas que não estão anexadas a nenhum tópico ou mensagem pessoal"
       cancel_delete_unused: "Cancelar"
       filters:
-        without_category: "%{filter} %{category} Tópicos"
+        without_category: "%{filter} %{tag} Tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
         untagged_without_category: "%{filter} tópicos não etiquetados"
         untagged_with_category: "%{filter} tópicos não etiquetados em %{category}"
@@ -3039,6 +3006,15 @@ pt_BR:
       dismiss: "Descartar"
     safe_mode:
       enabled: "O modo seguro está habilitado. Para sair do modo seguro feche esta janela do navegador"
+    do_not_disturb:
+      title: "Não perturbe por..."
+      label: "Não perturbe"
+      remaining: "%{remaining} restantes"
+      options:
+        half_hour: "30 minutos"
+        one_hour: "1 hora"
+        two_hours: "2 horas"
+        tomorrow: "Até amanhã"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -3179,7 +3155,6 @@ pt_BR:
             effects: Efeitos
             trust_levels_none: "Nenhum"
             automatic_membership_email_domains: "Os usuários que se registrarem em um domínio de e-mail que corresponda exatamente a um nesta lista serão adicionados automaticamente a este grupo:"
-            automatic_membership_user_count: "%{count} usuários têm os novos domínios de e-mail e serão adicionados ao grupo."
             primary_group: "Definir automaticamente como grupo principal"
         name_placeholder: "Nome do grupo, sem espaços, igual à regra de nome de usuário"
         primary: "Grupo Primário"
@@ -3364,7 +3339,7 @@ pt_BR:
           error: "Houve um erro ao carregar '%{filename}': %{message}"
         operations:
           is_running: "Uma operação está sendo executada..."
-          failed: "A %{operação} falhou. Por favor, cheque os registros."
+          failed: "A %{operation} falhou. Por favor, cheque os registros."
           cancel:
             label: "Cancelar"
             title: "Cancelar a operação atual"
@@ -3828,6 +3803,7 @@ pt_BR:
             override_upload_secure_status: "Sobrescrever o status seguro do upload"
             page_published: "página publicada"
             page_unpublished: "página despublicada"
+            delete_group: "apagar grupo"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de e-mail serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -3958,7 +3934,6 @@ pt_BR:
         suspend_reason_label: "Por que você está suspendendo? Este texto <b>será visível para todos</b> na página de perfil deste usuário, e será mostrado ao usuário quando ele tentar se logar. Seja breve."
         suspend_reason_hidden_label: "Por que você está suspendendo? Este texto será exibido para o usuário quando ele tentar efetuar login. Mantenha-o curto."
         suspend_reason: "Motivo"
-        suspend_reason_placeholder: "Razão de Suspensão"
         suspend_message: "Mensagem de e-mail"
         suspend_message_placeholder: "Opcionalmente, forneça mais informações sobre a suspensão e ela será enviada para o usuário por e-mail."
         suspended_by: "Suspenso por"
@@ -3984,7 +3959,6 @@ pt_BR:
         clear_penalty_history:
           title: "Limpar Histórico de Penalidades"
           description: "usuários com penalidades não podem alcançar TL3"
-        delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
         silence: "Silenciar"
         unsilence: "Remover silenciamento"
         silenced: "Silenciado?"
@@ -4032,6 +4006,9 @@ pt_BR:
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Apagar Usuário"
+        delete_posts:
+          progress:
+            title: "Progresso da exclusão de postagens"
         merge:
           button: "Mesclar"
           prompt:
@@ -4065,7 +4042,7 @@ pt_BR:
           one: "Não é possível excluir todas as mensagens. Algumas mensagens são mais antigas do que %{count} dia. (Configuração delete_user_max_post_age.)"
           other: "Não é possível remover todas as mensagens. Algumas mensagens são mais antigas do que %{count} dias. (Configuração delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Não pode remover porque o usuário tem mais de uma mensagem (delete_all_posts_max)"
+          one: "Não pode remover porque o usuário tem mais de %{count} mensagem (delete_all_posts_max)"
           other: "Não pode remover porque o usuário tem mais de %{count} mensagens. (delete_all_posts_max)"
         delete_confirm: "Geralmente é preferível anonimizar usuários ao invés de excluí-los, para evitar remover conteúdo de discussões existentes.<br><br>Você tem CERTEZA de que deseja excluir este usuário? Esta ação é permanente!"
         delete_and_block: "Deletar e <b>bloquear</b> este e-mail e endereço IP"

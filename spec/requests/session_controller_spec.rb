@@ -580,6 +580,22 @@ RSpec.describe SessionController do
       expect(response.body).to include(I18n.t('sso.blank_id_error'))
     end
 
+    it 'can handle invalid sso email validation errors' do
+      SiteSetting.blocked_email_domains = "test.com"
+      sso = get_sso("/")
+      sso.email = "test@test.com"
+      sso.external_id = '123'
+      sso.username = 'sam'
+
+      messages = track_log_messages(level: Logger::WARN) do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end
+
+      expect(messages.length).to eq(0)
+      expect(response.status).to eq(500)
+      expect(response.body).to include(I18n.t("sso.email_error", email: ERB::Util.html_escape("test@test.com")))
+    end
+
     it 'can handle invalid sso external ids due to banned word' do
       sso = get_sso("/")
       sso.email = "test@test.com"
@@ -1715,17 +1731,16 @@ RSpec.describe SessionController do
         expect(json["error_type"]).to eq("rate_limit")
       end
 
-      it 'rate limits second factor attempts' do
+      it 'rate limits second factor attempts by IP' do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do
+        3.times do |x|
           post "/session.json", params: {
-            login: user.username,
+            login: "#{user.username}#{x}",
             password: 'myawesomepassword',
             second_factor_token: '000000'
           }
-
           expect(response.status).to eq(200)
         end
 
@@ -1738,6 +1753,33 @@ RSpec.describe SessionController do
         expect(response.status).to eq(429)
         json = response.parsed_body
         expect(json["error_type"]).to eq("rate_limit")
+      end
+
+      it 'rate limits second factor attempts by login' do
+        RateLimiter.enable
+        RateLimiter.clear_all!
+
+        3.times do |x|
+          post "/session.json", params: {
+            login: user.username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+          expect(response.status).to eq(200)
+        end
+
+        [user.username + " ", user.username.capitalize, user.username].each_with_index do |username , x|
+          post "/session.json", params: {
+            login: username,
+            password: 'myawesomepassword',
+            second_factor_token: '000000'
+          }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
+
+          expect(response.status).to eq(429)
+          json = response.parsed_body
+          expect(json["error_type"]).to eq("rate_limit")
+        end
       end
     end
   end
@@ -1763,13 +1805,18 @@ RSpec.describe SessionController do
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it 'redirects to /login for SSO' do
+    it 'redirects to /login when SSO and login_required' do
       SiteSetting.sso_url = "https://example.com/sso"
       SiteSetting.enable_sso = true
 
       user = sign_in(Fabricate(:user))
       delete "/session/#{user.username}.json", xhr: true
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["redirect_url"]).to eq("/")
 
+      SiteSetting.login_required = true
+      user = sign_in(Fabricate(:user))
+      delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
       expect(response.parsed_body["redirect_url"]).to eq("/login")
     end

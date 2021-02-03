@@ -30,7 +30,7 @@ class ReviewablesController < ApplicationController
       additional_filters: additional_filters.reject { |_, v| v.blank? }
     }
 
-    %i[priority username from_date to_date type sort_order].each do |filter_key|
+    %i[priority username reviewed_by from_date to_date type sort_order].each do |filter_key|
       filters[filter_key] = params[filter_key]
     end
 
@@ -188,6 +188,8 @@ class ReviewablesController < ApplicationController
       if error = claim_error?(reviewable)
         return render_json_error(error)
       end
+
+      args.merge!(reject_reason: params[:reject_reason], send_email: params[:send_email] != "false") if reviewable.type == 'ReviewableUser'
 
       result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e

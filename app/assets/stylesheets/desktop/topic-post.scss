@@ -208,8 +208,12 @@ nav.post-controls {
       background: var(--primary-low);
     }
     .d-icon {
-      margin-left: 5px;
+      margin-right: 5px;
       font-size: $font-down-1;
+    }
+    .d-button-label + .d-icon {
+      margin-left: 5px;
+      margin-right: 0;
     }
   }
 }
@@ -566,7 +570,9 @@ blockquote {
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
-  .topic-meta-data,
+  .topic-meta-data {
+    padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
+  }
   .cooked {
     padding: 1em $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
@@ -637,7 +643,7 @@ blockquote {
 .selected-posts {
   width: 200px;
   position: fixed;
-  z-index: z("dropdown");
+  z-index: z("dropdown") + 1; // 1 higher than .select-posts
   box-shadow: shadow("card");
   padding: 0.714em;
   margin-bottom: 5px;

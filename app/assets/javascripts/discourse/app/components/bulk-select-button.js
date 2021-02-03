@@ -1,5 +1,5 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
+import { schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend({
@@ -9,13 +9,11 @@ export default Component.extend({
     this._super(...arguments);
 
     schedule("afterRender", () => {
-      let mainOutletPadding =
-        window.getComputedStyle(document.querySelector("#main-outlet"))
-          .paddingTop || 0;
+      let headerHeight =
+        document.querySelector(".d-header-wrap").offsetHeight || 0;
 
-      document.querySelector(
-        ".bulk-select-container"
-      ).style.top = mainOutletPadding;
+      document.querySelector(".bulk-select-container").style.top =
+        headerHeight + 20 + "px";
     });
   },
 

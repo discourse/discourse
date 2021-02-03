@@ -116,7 +116,39 @@ describe InlineOneboxer do
       expect(onebox[:title]).to eq("Hello 🍕 with an emoji")
     end
 
+    it "will append the post number post auther's username to the title" do
+      topic = Fabricate(:topic, title: "Inline oneboxer")
+      Fabricate(:post, topic: topic) # OP
+      Fabricate(:post, topic: topic)
+      lookup = -> (number) do
+        InlineOneboxer.lookup(
+          "#{topic.url}/#{number}",
+          skip_cache: true
+        )[:title]
+      end
+      posts = topic.reload.posts.order("post_number ASC")
+
+      expect(lookup.call(0)).to eq("Inline oneboxer")
+      expect(lookup.call(1)).to eq("Inline oneboxer")
+      expect(lookup.call(2)).to eq("Inline oneboxer - #2 by #{posts[1].user.username}")
+
+      Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+      posts = topic.reload.posts.order("post_number ASC")
+      # because the last post in the topic is a whisper, the onebox title
+      # will be the first regular post directly before our whisper
+      expect(lookup.call(3)).to eq("Inline oneboxer - #2 by #{posts[1].user.username}")
+      expect(lookup.call(99)).to eq("Inline oneboxer - #2 by #{posts[1].user.username}")
+
+      Fabricate(:post, topic: topic)
+      posts = topic.reload.posts.order("post_number ASC")
+      # username not appended to whisper posts
+      expect(lookup.call(3)).to eq("Inline oneboxer - #3")
+      expect(lookup.call(4)).to eq("Inline oneboxer - #4 by #{posts[3].user.username}")
+      expect(lookup.call(99)).to eq("Inline oneboxer - #4 by #{posts[3].user.username}")
+    end
+
     it "will not crawl domains that aren't allowlisted" do
+      SiteSetting.enable_inline_onebox_on_all_domains = false
       onebox = InlineOneboxer.lookup("https://eviltrout.com", skip_cache: true)
       expect(onebox).to be_blank
     end

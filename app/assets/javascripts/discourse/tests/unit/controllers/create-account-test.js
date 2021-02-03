@@ -1,6 +1,6 @@
-import { test } from "qunit";
 import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 discourseModule("Unit | Controller | create-account", function () {
   test("basicUsernameValidation", async function (assert) {
@@ -8,13 +8,10 @@ discourseModule("Unit | Controller | create-account", function () {
       const controller = await this.owner.lookup("controller:create-account");
       controller.set("accountUsername", username);
 
+      let validation = controller.basicUsernameValidation(username);
+      assert.ok(validation.failed, "username should be invalid: " + username);
       assert.equal(
-        controller.get("basicUsernameValidation.failed"),
-        true,
-        "username should be invalid: " + username
-      );
-      assert.equal(
-        controller.get("basicUsernameValidation.reason"),
+        validation.reason,
         expectedReason,
         "username validation reason: " + username + ", " + expectedReason
       );
@@ -33,13 +30,10 @@ discourseModule("Unit | Controller | create-account", function () {
       prefilledUsername: "porkchops",
     });
 
+    let validation = controller.basicUsernameValidation("porkchops");
+    assert.ok(validation.ok, "Prefilled username is valid");
     assert.equal(
-      controller.get("basicUsernameValidation.ok"),
-      true,
-      "Prefilled username is valid"
-    );
-    assert.equal(
-      controller.get("basicUsernameValidation.reason"),
+      validation.reason,
       I18n.t("user.username.prefilled"),
       "Prefilled username is valid"
     );

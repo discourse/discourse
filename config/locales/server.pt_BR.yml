@@ -182,6 +182,12 @@ pt_BR:
       secure_media_requirements: "Uploads S3 devem ser habilitados antes da habilitação de media segura."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode forçar 2FA se a autenticação local está desabilitada."
     conflicting_google_user_id: 'O ID da Conta do Google para esta conta foi alterado. A intervenção do pessoal é necessária por razões de segurança. Por favor contate a equipe e aponte-os para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Desculpe, não foi possível gerar uma visualização para esta página web, porque o servidor '%{hostname}' não pôde ser encontrado. Em vez de uma pré-visualização, apenas um link aparecerá em sua postagem. :cry:"
+      error_response: "Desculpe, não foi possível gerar uma visualização para esta página da Web, porque o servidor web retornou um código de erro %{status_code}. Em vez de uma pré-visualização, apenas um link aparecerá em sua postagem. :cry:"
+      missing_data:
+        one: "Desculpe, não foi possível gerar uma pré-visualização para esta página da Web, porque a seguinte tag OEmbed/OpenGraph não foi encontrada: %{missing_attributes}"
+        other: "Desculpe, não foi possível gerar uma pré-visualização para esta página da Web, porque as seguintes tags OEmbed/OpenGraph não foram encontradas: %{missing_attributes}"
   invite:
     not_found: "Seu token de convite é inválido. Entre em <a href='%{base_url}/about'>contato com a staff</a>."
     not_found_json: "Seu token de convite é inválido. Por favor entre em contato com a staff."
@@ -217,7 +223,6 @@ pt_BR:
   email_template_cant_be_modified: "Este modelo de e-mail não pode ser modificado"
   invalid_whisper_access: "Os sussurros não estão habilitados ou você não tem acesso para criar postagens de sussurro"
   not_in_group:
-    title_topic: "Você precisa estar em um grupo para ver este tópico."
     title_category: "Você deve estar em um grupo para ver esta categoria."
     request_membership: "Pedir para participar"
     join_group: "Entrar no Grupo"
@@ -371,21 +376,11 @@ pt_BR:
 
       - O título parece interessante se você ler em voz alta? É um bom resumo?
 
-      - Quem estaria interessado nisto? Por que é relevante? Que tipo de resposta você quer?
+      - Quem estaria interessado nisto? Por que é relevante? Que tipo de respostas você quer?
 
-      - Incluir palavras geralmente usadas no seu tópico para que outros possam *encontrar*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
+      - Inclua as palavras mais usadas no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou tag).
 
       Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
-    "new-reply": |
-      Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
-
-      - Sua resposta melhora a conversa de alguma forma?
-
-      - Seja gentil aos seus companheiros membros da comunidade.
-
-      - Críticas construtivas são bem-vindas, mas critique *idéias*, não pessoas.
-
-      Para mais, [veja nosso guia da comunidade](%{base_path}/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -530,9 +525,9 @@ pt_BR:
 
       Obrigado por ser uma parte importante desta comunidade!
 
-      (Para mais informações sobre níveis de confiança, [veja este tópico][confiança]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
+      (Para mais informações sobre níveis de confiança, [veja este tópico][trust]. Observe que somente os membros que continuarem a cumprir os requisitos ao longo do tempo permanecerão regulares.)
 
-      [confiança]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de Início Rápido do Administrador"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -768,7 +763,7 @@ pt_BR:
       description: 'Esta postagem contém conteúdo que uma pessoa razoável consideraria ofensiva, abusiva ou uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       short_description: 'Uma violação das <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>'
     notify_user:
-      title: "Envie ao(à) @ %{nome de usuário} uma mensagem"
+      title: "Enviar uma mensagem para @%{username}"
       description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
       short_description: "Eu quero falar com essa pessoa diretamente e pessoalmente sobre o seu post."
       email_title: 'Sobre a sua postagem "%{title}"'
@@ -853,9 +848,7 @@ pt_BR:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
     unwatch_category: "Parar de observar todos os tópicos na categoria %{category}"
     mailing_list_mode: "Desativar o modo lista de discussão"
-    all: "Não me envie nenhum email de %{sitename}"
     different_user_description: "No momento, você está logado como um usuário diferente daquele para o qual mandamos email. Por favor, saia ou entre no modo anônimo de seu navegador e tente novamente."
-    not_found_description: "Desculpe, não conseguimos encontrar esse cancelamento de inscrição. É possível que o link no seu email tenha expirado?"
     log_out: "Sair"
     submit: "Salvar preferências"
     digest_frequency:
@@ -1450,8 +1443,6 @@ pt_BR:
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um usuário pode enviar por dia."
     max_logins_per_ip_per_hour: "Número máximo de logins permitidos por endereço IP por hora"
     max_logins_per_ip_per_minute: "Número máximo de logins permitidos por endereço IP por minuto"
-    max_post_deletions_per_minute: "Número máximo de postagens que um usuário pode excluir por minuto."
-    max_post_deletions_per_day: "Número máximo de postagens que um usuário pode excluir por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minutos para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
     alert_admins_if_errors_per_hour: "Número de erros por hora para desencadear um alerta aos administradores. Um valor igual a 0 desabilita esse recurso. NOTA: requer reinicialização."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
@@ -1621,7 +1612,7 @@ pt_BR:
     email_in: 'Permitir que os usuários postem novos tópicos por e-mail (requer pesquisa manual ou POP3). Configure os endereços na guia "Configurações" de cada categoria.'
     email_in_min_trust: "O nível de confiança mínimo que um usuário necessita ter para ser permitido a postar novos tópicos via email."
     email_in_spam_header: "O cabeçalho do email para detectar spam."
-    email_prefix: "A [etiqueta] usada no assunto dos emails. Ele será por padrão 'título' se não configurada."
+    email_prefix: "A [label] usada no assunto dos emails. Ele será por padrão 'título' se não configurada."
     email_site_title: "O título do site usado como o enviador dos emails do site. Por padrão será 'título' se não for configurado. Se o seu 'título' contiver caracteres que não são permitidos em strings de enviador de emails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário com base no endereço de e-mail."
     minimum_topics_similar: "Quantos tópicos devem existir antes que tópicos semelhantes sejam apresentados ao compor novos tópicos."
@@ -1697,7 +1688,6 @@ pt_BR:
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: "Apagar rascunhos mais antigos do que (N) dias."
     bootstrap_mode_min_users: "Número mínimo de usuários necessários para desativar o modo de bootstrap (definido como 0 para desativado)"
-    prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
     slug_generation_method: "Escolha um método para geração de slug. 'Codificado' irá gerar strings com '%'. 'Nenhum' irá desabilitar a geração de slugs."
     enable_emoji: "Habilitar emoji"
     enable_emoji_shortcuts: "Texto em smiley comum como :): p :( será convertido em emojis"
@@ -1732,7 +1722,7 @@ pt_BR:
     default_other_notification_level_when_replying: "Nível de notificação padrão global quando o usuário responde a um tópico."
     default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a resposta de cotação para texto realçado por padrão."
-    default_other_enable_defer: "Habilitar a funcionalidade de tópico adiar por padrão."
+    default_other_enable_defer: "Habilitar a funcionalidade de adiar tópico por padrão."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do navegador por padrão."
     default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
     default_topics_automatic_unpin: "Desvincular tópicos automaticamente quando o usuário alcança a parte inferior por padrão."
@@ -1770,6 +1760,7 @@ pt_BR:
     governing_law: "Lei Aplicável"
     city_for_disputes: "Cidade para Disputas"
     shared_drafts_category: "Habilitar o recurso Rascunhos Compartilhados, designando uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão suprimidos das listas de tópicos para usuários da staff."
+    shared_drafts_min_trust_level: "Permitir usuários visualizar e editar os Rascunhos Compartilhas"
     push_notifications_prompt: "Exibir o prompt de consentimento do usuário."
     short_title: "O título abreviado será usado na tela inicial do usuário, no iniciador ou em outros locais onde o espaço possa ser limitado. Deveria ser limitado a 12 caracteres."
     dashboard_general_tab_activity_metrics: "Escolher relatórios para serem exibidos como métricas de atividade na guia geral."
@@ -1825,8 +1816,8 @@ pt_BR:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Buscar resultados para '%{term}'"
-    audio: "[áudio]"
-    video: "[vídeo]"
+    audio: "[audio]"
+    video: "[video]"
   sso:
     login_error: "Erro de Login"
     not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
@@ -1966,7 +1957,7 @@ pt_BR:
     content_matches_auto_block_regex: "Conteúdo corresponde a regex de bloco automático"
     username:
       short: "deve ter no mínimo %{min} caracteres"
-      long: "precisa ter não mais que ${max} caracteres"
+      long: "precisa ter não mais que %{max} caracteres"
       too_long: "é muito longo"
       characters: "deve incluir apenas números, letras, traços, pontos e sublinhados"
       unique: "tem que ser único"
@@ -2176,22 +2167,6 @@ pt_BR:
     flags_agreed_and_post_deleted:
       title: "Postagem sinalizada removida pela equipe"
       subject_template: "Postagem sinalizada removida pela equipe"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automatizada de %{site_name} para informá-lo de que a [sua postagem](%{base_url}%{url}) foi removida.
-
-        %{flag_reason}
-
-        Esta postagem foi sinalizada pela comunidade e um membro da staff optou por removê-la.
-
-        [details="Clique para expandir a postagem removida"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        Por favor, reveja nossas [diretrizes da comunidade](%{base_url}/guidelines) para detalhes.
     usage_tips:
       text_body_template: |
         Para algumas dicas rápidas sobre como começar como um novo usuário, [confira este post no blog](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
@@ -3300,7 +3275,7 @@ pt_BR:
       name: Leitor
       description: Leu todas as respostas em um tópico com mais de 100 respostas
       long_description: |
-        Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! : slight_smile:
+        Esse emblema é concedido na primeira vez que você lê um tópico longo com mais de 100 respostas. Ler uma conversa de perto ajuda você a acompanhar a discussão, entender diferentes pontos de vista e leva a conversas mais interessantes. Quanto mais você lê, melhor a conversa fica. Como gostamos de dizer, a leitura é fundamental! :slight_smile:
     popular_link:
       name: Link Popular
       description: Postou um link externo com 50 clicks

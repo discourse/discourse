@@ -207,6 +207,7 @@ class ApplicationController < ActionController::Base
       403,
       include_ember: true,
       custom_message: e.custom_message,
+      custom_message_params: e.custom_message_params,
       group: e.group
     )
   end
@@ -679,6 +680,10 @@ class ApplicationController < ActionController::Base
     raise ApplicationController::RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
   end
 
+  def apply_cdn_headers
+    Discourse.apply_cdn_headers(response.headers) if Discourse.is_cdn_request?(request.env, request.method)
+  end
+
   def self.requires_login(arg = {})
     @requires_login_arg = arg
   end
@@ -802,16 +807,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
 
     if !SiteSetting.login_required? || @current_user
-      key = "page_not_found_topics"
-      if @topics_partial = Discourse.redis.get(key)
-        @topics_partial = @topics_partial.html_safe
-      else
+      key = "page_not_found_topics:#{I18n.locale}"
+      @topics_partial = Discourse.cache.fetch(key, expires_in: 10.minutes) do
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
-        Discourse.redis.setex(key, 10.minutes, @topics_partial)
-      end
+        render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+      end.html_safe
     end
 
     @container_class = "wrap not-found-container"
@@ -821,7 +823,7 @@ class ApplicationController < ActionController::Base
 
     params[:slug] = params[:slug].first if params[:slug].kind_of?(Array)
     params[:id] = params[:id].first if params[:id].kind_of?(Array)
-    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").to_s.tr('-', ' ')
 
     render_to_string status: opts[:status], layout: opts[:layout], formats: [:html], template: '/exceptions/not_found'
   end

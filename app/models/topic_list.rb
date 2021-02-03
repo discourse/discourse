@@ -64,7 +64,11 @@ class TopicList < DraftableList
 
   def preload_key
     if @category
-      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      if @opts[:no_subcategories]
+        "topic_list_#{@category.url.sub(/^\//, '')}/none/l/#{@filter}"
+      else
+        "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      end
     else
       "topic_list_#{@filter}"
     end
@@ -129,6 +133,8 @@ class TopicList < DraftableList
       )
       ft.topic_list = self
     end
+
+    ActiveRecord::Associations::Preloader.new.preload(@topics, [:image_upload, topic_thumbnails: :optimized_image])
 
     if preloaded_custom_fields.present?
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)

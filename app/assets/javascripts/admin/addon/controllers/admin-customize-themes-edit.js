@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import { url } from "discourse/lib/computed";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { url } from "discourse/lib/computed";
 
 export default Controller.extend({
   section: null,
@@ -63,6 +63,10 @@ export default Controller.extend({
           );
         }
       }
+    },
+
+    goBack() {
+      this.replaceRoute(this.showRouteName, this.model.id);
     },
   },
 });

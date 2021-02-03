@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
-import Mixin from "@ember/object/mixin";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import Mixin from "@ember/object/mixin";
+import discourseComputed from "discourse-common/utils/decorators";
+import { isEmpty } from "@ember/utils";
 
 export default Mixin.create({
   @discourseComputed()

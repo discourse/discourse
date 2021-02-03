@@ -461,6 +461,15 @@ describe GroupsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body.first["id"]).to eq(post.id)
     end
+
+    it "returns moderator actions" do
+      sign_in(user)
+      post = Fabricate(:post, user: user, post_type: Post.types[:moderator_action])
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.first["id"]).to eq(post.id)
+    end
   end
 
   describe "#members" do
@@ -1272,7 +1281,7 @@ describe GroupsController do
 
             expect(response.parsed_body["errors"]).to include(I18n.t(
               "groups.errors.adding_too_many_users",
-              limit: 1
+              count: 1
             ))
           ensure
             GroupsController.send(:remove_const, "ADD_MEMBERS_LIMIT")

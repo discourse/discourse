@@ -157,8 +157,8 @@
       }
       background-image: linear-gradient(
         to bottom,
-        rgba(var(--secondary-rgb), 0) 0%,
-        rgba(var(--secondary-rgb), 0.9) 100%
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 0.9)
       );
     }
     &:before {
@@ -166,8 +166,8 @@
       height: 25px;
       background-image: linear-gradient(
         to top,
-        rgba(var(--secondary-rgb), 0) 0%,
-        rgba(var(--secondary-rgb), 1) 100%
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
       );
     }
     form {
@@ -294,7 +294,8 @@
   h2 {
     margin-bottom: 12px;
   }
-  input {
+  input:not([type="checkbox"]) {
+    // 80% width on checkboxes messes up the layout for custom fields
     width: 80%;
   }
 }

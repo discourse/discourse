@@ -1,11 +1,11 @@
-import { Promise } from "rsvp";
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
+import { Promise } from "rsvp";
+import { action } from "@ember/object";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["d-date-input"],

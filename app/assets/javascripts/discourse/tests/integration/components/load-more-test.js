@@ -1,28 +1,34 @@
-import { moduleForComponent } from "ember-qunit";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import { configureEyeline } from "discourse/lib/eyeline";
-import componentTest from "discourse/tests/helpers/component-test";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
-moduleForComponent("load-more", { integration: true });
+discourseModule("Integration | Component | load-more", function (hooks) {
+  setupRenderingTest(hooks);
 
-componentTest("updates once after initialization", {
-  template: `
-    {{#load-more selector=".numbers tr" action=loadMore}}
-      <table class="numbers"><tr></tr></table>
-    {{/load-more}}`,
+  componentTest("updates once after initialization", {
+    template: hbs`
+      {{#load-more selector=".numbers tr" action=loadMore}}
+        <table class="numbers"><tr></tr></table>
+      {{/load-more}}
+    `,
 
-  beforeEach() {
-    this.set("loadMore", () => this.set("loadedMore", true));
-    configureEyeline({
-      skipUpdate: false,
-      rootElement: "#ember-testing",
-    });
-  },
+    beforeEach() {
+      this.set("loadMore", () => this.set("loadedMore", true));
+      configureEyeline({
+        skipUpdate: false,
+        rootElement: "#ember-testing",
+      });
+    },
 
-  afterEach() {
-    configureEyeline();
-  },
+    afterEach() {
+      configureEyeline();
+    },
 
-  test(assert) {
-    assert.ok(this.loadedMore);
-  },
+    test(assert) {
+      assert.ok(this.loadedMore);
+    },
+  });
 });

@@ -1,7 +1,7 @@
+import { classify, dasherize } from "@ember/string";
+import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
 import { get } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { classify, dasherize } from "@ember/string";
 
 const _options = {};
 
@@ -105,12 +105,13 @@ export function buildResolver(baseName) {
         dashed = dasherize(suffix),
         moduleName = Object.keys(requirejs.entries).find(function (e) {
           return (
-            e.indexOf(suffix, e.length - suffix.length) !== -1 ||
-            e.indexOf(dashed, e.length - dashed.length) !== -1
+            e.indexOf("/templates/") === -1 &&
+            (e.indexOf(suffix, e.length - suffix.length) !== -1 ||
+              e.indexOf(dashed, e.length - dashed.length) !== -1)
           );
         });
 
-      var module;
+      let module;
       if (moduleName) {
         module = requirejs(moduleName, null, null, true /* force sync */);
         if (module && module["default"]) {
@@ -199,7 +200,7 @@ export function buildResolver(baseName) {
 
     findPluginMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        var pluginParsedName = this.parseName(
+        let pluginParsedName = this.parseName(
           parsedName.fullName.replace(
             "template:",
             "template:javascripts/mobile/"
@@ -211,7 +212,7 @@ export function buildResolver(baseName) {
 
     findMobileTemplate(parsedName) {
       if (_options.mobileView) {
-        var mobileParsedName = this.parseName(
+        let mobileParsedName = this.parseName(
           parsedName.fullName.replace("template:", "template:mobile/")
         );
         return this.findTemplate(mobileParsedName);
@@ -240,15 +241,15 @@ export function buildResolver(baseName) {
     },
 
     findUnderscoredTemplate(parsedName) {
-      var decamelized = parsedName.fullNameWithoutType.decamelize();
-      var underscored = decamelized.replace(/\-/g, "_");
+      let decamelized = parsedName.fullNameWithoutType.decamelize();
+      let underscored = decamelized.replace(/\-/g, "_");
       return Ember.TEMPLATES[underscored];
     },
 
     // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
-      var decamelized = parsedName.fullNameWithoutType.decamelize();
+      let decamelized = parsedName.fullNameWithoutType.decamelize();
       if (decamelized.indexOf("components") === 0) {
         let comPath = `admin/templates/${decamelized}`;
         const compTemplate =

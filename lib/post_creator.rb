@@ -36,6 +36,7 @@ class PostCreator
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
   #   draft_key               - the key of the draft we are creating (will be deleted on success)
+  #   silent                  - Do not update topic stats and fields like last_post_user_id
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -59,21 +60,20 @@ class PostCreator
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
     # If we don't do this we introduce a rather risky dependency
     @user = user
-    @opts = opts || {}
-    opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
-    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw] && opts[:raw].include?("\u0000")
-    opts.delete(:reply_to_post_number) unless opts[:topic_id]
-    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
-    @guardian = opts[:guardian] if opts[:guardian]
-
     @spam = false
+    @opts = opts || {}
+
+    opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
+    opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
+    opts[:visible] = false if opts[:visible].nil? && opts[:hidden_reason_id].present?
+
+    opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
 
   def pg_clean_up(str)
     str.gsub("\u0000", "")
   end
 
-  # True if the post was considered spam
   def spam?
     @spam
   end
@@ -83,7 +83,7 @@ class PostCreator
   end
 
   def guardian
-    @guardian ||= Guardian.new(@user)
+    @guardian ||= @opts[:guardian] || Guardian.new(@user)
   end
 
   def valid?
@@ -419,8 +419,7 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    return if !SiteSetting.secure_media?
-    @post.update_uploads_secure_status
+    @post.update_uploads_secure_status(source: "post creator") if SiteSetting.secure_media?
   end
 
   def delete_owned_bookmarks
@@ -507,13 +506,12 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper]
+    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      @topic.update_columns(attrs)
     end
 
     @topic.update_columns(attrs)

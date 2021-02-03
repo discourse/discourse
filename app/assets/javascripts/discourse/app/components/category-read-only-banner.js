@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { and } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @discourseComputed

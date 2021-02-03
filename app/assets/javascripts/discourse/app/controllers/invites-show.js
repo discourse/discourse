@@ -1,18 +1,18 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
 import { alias, notEmpty, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import getUrl from "discourse-common/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
-import { ajax } from "discourse/lib/ajax";
-import { emailValid } from "discourse/lib/utilities";
-import PasswordValidation from "discourse/mixins/password-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
-import NameValidation from "discourse/mixins/name-validation";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import { findAll as findLoginMethods } from "discourse/models/login-method";
 import EmberObject from "@ember/object";
+import I18n from "I18n";
+import NameValidation from "discourse/mixins/name-validation";
+import PasswordValidation from "discourse/mixins/password-validation";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
+import UsernameValidation from "discourse/mixins/username-validation";
+import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emailValid } from "discourse/lib/utilities";
+import { findAll as findLoginMethods } from "discourse/models/login-method";
+import getUrl from "discourse-common/lib/get-url";
+import { isEmpty } from "@ember/utils";
 
 export default Controller.extend(
   PasswordValidation,

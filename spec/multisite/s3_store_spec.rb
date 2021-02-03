@@ -169,7 +169,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
     let(:s3_bucket) { resource.bucket("some-really-cool-bucket") }
-    let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
+    let(:s3_helper) { store.s3_helper }
     let(:s3_object) { stub }
 
     before(:each) do

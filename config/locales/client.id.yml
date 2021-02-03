@@ -624,7 +624,6 @@ id:
       posts: "Post"
       topics: "Topik"
       latest: "Terbaru"
-      latest_by: "Terbaru oleh"
       toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
       topic_sentence:
@@ -704,7 +703,6 @@ id:
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
-        each_browser_note: "Catatan : Anda harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
@@ -1050,15 +1048,6 @@ id:
     home: "Beranda"
     read_only_mode:
       logout_disabled: "Logout di-nonaktifkan saat situs dalam mode hanya-baca."
-    all_time: "total"
-    all_time_desc: "total topik yang dibuat"
-    year: "tahun"
-    year_desc: "topik yang dibuat dalam 365 hari terakhir"
-    month: "bulan"
-    month_desc: "topik yang dibuat dalam 30 hari terakhir"
-    week: "minggu"
-    week_desc: "topik yang dibuat dalam 7 hari terakhir"
-    day: "hari"
     first_post: Tulisan pertama
     mute: Bisu
     unmute: Buka Bisu
@@ -1074,7 +1063,6 @@ id:
       hide_session: "Ingat saya besok"
       hide_forever: "tidak, terima kasih"
     summary:
-      description: "Terdapat <b>%{replyCount}</b> balasan."
       enable: "Rangkum Topik Ini"
       disable: "Tampilkan Semua Postingan"
     deleted_filter:
@@ -1187,16 +1175,12 @@ id:
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
-      blockquote_text: "Blok Kutipan"
       add_warning: "Ini adalah peringatan resmi."
       similar_topics: "Topik anda mirip dengan..."
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Judul harus ada"
-        title_too_short: "Judul setidaknya %{min} karakter"
-        title_too_long: "Judul tidak boleh lebih dari %{max} karakter"
         post_missing: "Tulisan tidak boleh kosong"
-        post_length: "Tulisan setidaknya harus %{min} karakter"
         try_like: "Sudahkah Anda mencoba tombol %{heart}?"
         category_missing: "Anda harus memilih kategori"
       save_edit: "Simpah Ubahan"
@@ -1232,8 +1216,7 @@ id:
       link_dialog_title: "Sisipkan Tautan"
       link_optional_text: "judul opsional"
       link_url_placeholder: "Tempel URL atau ketik untuk mencari topik"
-      quote_title: "Blok Kutipan"
-      quote_text: "Blok Kutipan"
+      blockquote_text: "Blok Kutipan"
       code_title: "Teks terformat"
       paste_code_text: "ketik atau tempel kode di sini"
       upload_title: "Unggah"

@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Session from "discourse/models/session";
 
 module("Unit | Model | session", function () {

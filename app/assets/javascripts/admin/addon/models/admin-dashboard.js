@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 
 const GENERAL_ATTRIBUTES = [
   "updated_at",
@@ -14,6 +14,7 @@ AdminDashboard.reopenClass({
     return ajax("/admin/dashboard.json").then((json) => {
       const model = AdminDashboard.create();
       model.set("version_check", json.version_check);
+
       return model;
     });
   },

@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import EmberObject from "@ember/object";
 import {
   moduleForWidget,
   widgetTest,
 } from "discourse/tests/helpers/widget-test";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 let requests = 0;

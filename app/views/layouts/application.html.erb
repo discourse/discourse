@@ -9,6 +9,8 @@
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
+    <%= render partial: "common/discourse_stylesheet" %>
+
     <%- if SiteSetting.enable_escaped_fragments? %>
       <meta name="fragment" content="!">
     <%- end %>
@@ -51,7 +53,6 @@
         <meta name="apple-itunes-app" content="app-id=<%= SiteSetting.ios_app_id %><%= ios_app_argument %>">
     <%- end %>
 
-    <%= render partial: "common/discourse_stylesheet" %>
 
     <%= yield :head %>
 
@@ -59,8 +60,8 @@
 
     <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
 
-    <%- if !current_user && (data = cookies.delete(:authentication_data, path: Discourse.base_path("/"))) %>
-      <meta id="data-authentication" data-authentication-data="<%= data %>">
+    <%- if authentication_data %>
+      <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
   </head>
 

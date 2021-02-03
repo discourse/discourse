@@ -1,8 +1,7 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Emoji", function (needs) {
   needs.user();

@@ -1,6 +1,6 @@
 import {
-  sectionById,
   findNote,
+  sectionById,
 } from "discourse/plugins/styleguide/discourse/lib/styleguide";
 import { createData } from "discourse/plugins/styleguide/discourse/lib/dummy-data";
 

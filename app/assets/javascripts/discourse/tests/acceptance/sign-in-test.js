@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -152,10 +154,6 @@ acceptance("Signing In", function () {
       "the username validation is bad"
     );
     await click(".modal-footer .btn-primary");
-    assert.ok(
-      exists("#new-account-username:focus"),
-      "username field is focused"
-    );
 
     await fillIn("#new-account-username", "goodtuna");
     assert.ok(

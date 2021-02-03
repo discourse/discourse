@@ -1,7 +1,7 @@
-import Component from "@ember/component";
 import BufferedContent from "discourse/mixins/buffered-content";
-import SiteSetting from "admin/models/site-setting";
+import Component from "@ember/component";
 import SettingComponent from "admin/mixins/setting-component";
+import SiteSetting from "admin/models/site-setting";
 import { readOnly } from "@ember/object/computed";
 
 export default Component.extend(BufferedContent, SettingComponent, {

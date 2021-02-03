@@ -1,12 +1,13 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
-import I18n from "I18n";
-import { run } from "@ember/runloop";
 import {
   acceptance,
   controllerFor,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
+import { run } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 acceptance("Modal", function (needs) {
@@ -54,15 +55,15 @@ acceptance("Modal", function (needs) {
       "modal should reappear"
     );
 
-    await keyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keyup", 27);
     assert.ok(
       queryAll(".d-modal:visible").length === 0,
       "ESC should close the modal"
     );
 
-    Ember.TEMPLATES["modal/not-dismissable"] = Ember.HTMLBars.compile(
-      '{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}'
-    );
+    Ember.TEMPLATES[
+      "modal/not-dismissable"
+    ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
 
     run(() => showModal("not-dismissable", {}));
 
@@ -73,7 +74,7 @@ acceptance("Modal", function (needs) {
       queryAll(".d-modal:visible").length === 1,
       "modal should not disappear when you click outside"
     );
-    await keyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keyup", 27);
     assert.ok(
       queryAll(".d-modal:visible").length === 1,
       "ESC should not close the modal"
@@ -81,7 +82,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    Ember.TEMPLATES["modal/test-raw-title-panels"] = Ember.HTMLBars.compile("");
+    Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
       { id: "test2", rawTitle: "Test 2" },
@@ -98,10 +99,10 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    Ember.TEMPLATES["modal/test-title"] = Ember.HTMLBars.compile("");
-    Ember.TEMPLATES["modal/test-title-with-body"] = Ember.HTMLBars.compile(
-      "{{#d-modal-body}}test{{/d-modal-body}}"
-    );
+    Ember.TEMPLATES["modal/test-title"] = hbs``;
+    Ember.TEMPLATES[
+      "modal/test-title-with-body"
+    ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;
 
     await visit("/");
 
@@ -139,7 +140,7 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     await click(".toggle-admin-menu");
     await click(".topic-admin-status-update button");
-    await keyEvent(".d-modal", "keyup", 13);
+    await triggerKeyEvent(".d-modal", "keyup", 13);
 
     assert.ok(
       queryAll("#modal-alert:visible").length === 1,
@@ -150,7 +151,7 @@ acceptance("Modal Keyboard Events", function (needs) {
       "hitting Enter does not dismiss modal due to alert error"
     );
 
-    await keyEvent("#main-outlet", "keyup", 27);
+    await triggerKeyEvent("#main-outlet", "keyup", 27);
     assert.ok(
       queryAll(".d-modal:visible").length === 0,
       "ESC should close the modal"
@@ -160,7 +161,7 @@ acceptance("Modal Keyboard Events", function (needs) {
 
     await click(".d-editor-button-bar .btn.link");
 
-    await keyEvent(".d-modal", "keyup", 13);
+    await triggerKeyEvent(".d-modal", "keyup", 13);
     assert.ok(
       queryAll(".d-modal:visible").length === 0,
       "modal should disappear on hitting Enter"

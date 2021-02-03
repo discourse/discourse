@@ -6,7 +6,7 @@ class Reviewable < ActiveRecord::Base
   class InvalidAction < StandardError
     def initialize(action_id, klass)
       @action_id, @klass = action_id, klass
-      super("Can't peform `#{action_id}` on #{klass.name}")
+      super("Can't perform `#{action_id}` on #{klass.name}")
     end
   end
 
@@ -197,11 +197,6 @@ class Reviewable < ActiveRecord::Base
     user_accuracy_bonus = ReviewableScore.user_accuracy_bonus(user)
     sub_total = ReviewableScore.calculate_score(user, type_bonus, take_action_bonus)
 
-    # We can force a reviewable to hit the threshold, for example with queued posts
-    if force_review && sub_total < Reviewable.min_score_for_priority
-      sub_total = Reviewable.min_score_for_priority
-    end
-
     rs = reviewable_scores.new(
       user: user,
       status: ReviewableScore.statuses[:pending],
@@ -215,7 +210,7 @@ class Reviewable < ActiveRecord::Base
     rs.reason = reason.to_s if reason
     rs.save!
 
-    update(score: self.score + rs.score, latest_score: rs.created_at)
+    update(score: self.score + rs.score, latest_score: rs.created_at, force_review: force_review)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
     rs
@@ -442,6 +437,7 @@ class Reviewable < ActiveRecord::Base
     offset: nil,
     priority: nil,
     username: nil,
+    reviewed_by: nil,
     sort_order: nil,
     from_date: nil,
     to_date: nil,
@@ -475,11 +471,23 @@ class Reviewable < ActiveRecord::Base
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
     result = result.where("reviewables.created_at <= ?", to_date) if to_date
 
-    if min_score > 0 && status == :pending && type.nil?
-      result = result.where(
-        "reviewables.score >= ? OR reviewables.type IN (?)",
-        min_score, [ReviewableQueuedPost.name, ReviewableUser.name]
+    if reviewed_by
+      reviewed_by_id = User.find_by_username(reviewed_by)&.id
+      return [] if reviewed_by_id.nil?
+
+      result = result.joins(<<~SQL
+        INNER JOIN(
+          SELECT reviewable_id
+          FROM reviewable_histories
+          WHERE reviewable_history_type = #{ReviewableHistory.types[:transitioned]} AND
+          status <> #{Reviewable.statuses[:pending]} AND created_by_id = #{reviewed_by_id}
+        ) AS rh ON rh.reviewable_id = reviewables.id
+      SQL
       )
+    end
+
+    if min_score > 0 && status == :pending
+      result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
     elsif min_score > 0
       result = result.where("reviewables.score >= ?", min_score)
     end
@@ -696,6 +704,8 @@ end
 #  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  force_review            :boolean          default(FALSE), not null
+#  reject_reason           :text
 #
 # Indexes
 #

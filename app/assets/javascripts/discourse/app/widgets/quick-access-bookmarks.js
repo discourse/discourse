@@ -1,8 +1,8 @@
-import { h } from "virtual-dom";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import UserAction from "discourse/models/user-action";
 import { ajax } from "discourse/lib/ajax";
 import { createWidgetFrom } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
 import { postUrl } from "discourse/lib/utilities";
 
 const ICON = "bookmark";
@@ -30,6 +30,7 @@ createWidgetFrom(QuickAccessPanel, "quick-access-bookmarks", {
         bookmark.topic_id,
         bookmark.post_number || bookmark.linked_post_number
       ),
+      title: bookmark.name,
       content: bookmark.title,
       username: bookmark.post_user_username,
     });

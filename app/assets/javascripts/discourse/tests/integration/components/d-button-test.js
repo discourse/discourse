@@ -1,191 +1,207 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import componentTest from "discourse/tests/helpers/component-test";
-moduleForComponent("d-button", { integration: true });
+import hbs from "htmlbars-inline-precompile";
 
-componentTest("icon only button", {
-  template: '{{d-button icon="plus" tabindex="3"}}',
+discourseModule("Integration | Component | d-button", function (hooks) {
+  setupRenderingTest(hooks);
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.btn.btn-icon.no-text").length,
-      "it has all the classes"
-    );
-    assert.ok(queryAll("button .d-icon.d-icon-plus").length, "it has the icon");
-    assert.equal(
-      queryAll("button").attr("tabindex"),
-      "3",
-      "it has the tabindex"
-    );
-  },
-});
+  componentTest("icon only button", {
+    template: hbs`{{d-button icon="plus" tabindex="3"}}`,
 
-componentTest("icon and text button", {
-  template: '{{d-button icon="plus" label="topic.create"}}',
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-icon.no-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button .d-icon.d-icon-plus").length,
+        "it has the icon"
+      );
+      assert.equal(
+        queryAll("button").attr("tabindex"),
+        "3",
+        "it has the tabindex"
+      );
+    },
+  });
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.btn.btn-icon-text").length,
-      "it has all the classes"
-    );
-    assert.ok(queryAll("button .d-icon.d-icon-plus").length, "it has the icon");
-    assert.ok(
-      queryAll("button span.d-button-label").length,
-      "it has the label"
-    );
-  },
-});
+  componentTest("icon and text button", {
+    template: hbs`{{d-button icon="plus" label="topic.create"}}`,
 
-componentTest("text only button", {
-  template: '{{d-button label="topic.create"}}',
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-icon-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button .d-icon.d-icon-plus").length,
+        "it has the icon"
+      );
+      assert.ok(
+        queryAll("button span.d-button-label").length,
+        "it has the label"
+      );
+    },
+  });
 
-  test(assert) {
-    assert.ok(queryAll("button.btn.btn-text").length, "it has all the classes");
-    assert.ok(
-      queryAll("button span.d-button-label").length,
-      "it has the label"
-    );
-  },
-});
+  componentTest("text only button", {
+    template: hbs`{{d-button label="topic.create"}}`,
 
-componentTest("form attribute", {
-  template: '{{d-button form="login-form"}}',
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button span.d-button-label").length,
+        "it has the label"
+      );
+    },
+  });
 
-  test(assert) {
-    assert.ok(exists("button[form=login-form]"), "it has the form attribute");
-  },
-});
+  componentTest("form attribute", {
+    template: hbs`{{d-button form="login-form"}}`,
 
-componentTest("link-styled button", {
-  template: '{{d-button display="link"}}',
+    test(assert) {
+      assert.ok(exists("button[form=login-form]"), "it has the form attribute");
+    },
+  });
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.btn-link:not(.btn)").length,
-      "it has the right classes"
-    );
-  },
-});
+  componentTest("link-styled button", {
+    template: hbs`{{d-button display="link"}}`,
 
-componentTest("isLoading button", {
-  template: "{{d-button isLoading=isLoading}}",
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn-link:not(.btn)").length,
+        "it has the right classes"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("isLoading", true);
-  },
+  componentTest("isLoading button", {
+    template: hbs`{{d-button isLoading=isLoading}}`,
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.is-loading .loading-icon").length,
-      "it has a spinner showing"
-    );
-    assert.ok(
-      queryAll("button[disabled]").length,
-      "while loading the button is disabled"
-    );
+    beforeEach() {
+      this.set("isLoading", true);
+    },
 
-    this.set("isLoading", false);
+    test(assert) {
+      assert.ok(
+        queryAll("button.is-loading .loading-icon").length,
+        "it has a spinner showing"
+      );
+      assert.ok(
+        queryAll("button[disabled]").length,
+        "while loading the button is disabled"
+      );
 
-    assert.notOk(
-      queryAll("button .loading-icon").length,
-      "it doesn't have a spinner showing"
-    );
-    assert.ok(
-      queryAll("button:not([disabled])").length,
-      "while not loading the button is enabled"
-    );
-  },
-});
+      this.set("isLoading", false);
 
-componentTest("disabled button", {
-  template: "{{d-button disabled=disabled}}",
+      assert.notOk(
+        queryAll("button .loading-icon").length,
+        "it doesn't have a spinner showing"
+      );
+      assert.ok(
+        queryAll("button:not([disabled])").length,
+        "while not loading the button is enabled"
+      );
+    },
+  });
 
-  beforeEach() {
-    this.set("disabled", true);
-  },
+  componentTest("disabled button", {
+    template: hbs`{{d-button disabled=disabled}}`,
 
-  test(assert) {
-    assert.ok(queryAll("button[disabled]").length, "the button is disabled");
+    beforeEach() {
+      this.set("disabled", true);
+    },
 
-    this.set("disabled", false);
+    test(assert) {
+      assert.ok(queryAll("button[disabled]").length, "the button is disabled");
 
-    assert.ok(
-      queryAll("button:not([disabled])").length,
-      "the button is enabled"
-    );
-  },
-});
+      this.set("disabled", false);
 
-componentTest("aria-label", {
-  template:
-    "{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}",
+      assert.ok(
+        queryAll("button:not([disabled])").length,
+        "the button is enabled"
+      );
+    },
+  });
 
-  beforeEach() {
-    I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
-  },
+  componentTest("aria-label", {
+    template: hbs`{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}`,
 
-  test(assert) {
-    this.set("ariaLabel", "test.fooAriaLabel");
+    beforeEach() {
+      I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
+    },
 
-    assert.equal(
-      queryAll("button")[0].getAttribute("aria-label"),
-      I18n.t("test.fooAriaLabel")
-    );
+    test(assert) {
+      this.set("ariaLabel", "test.fooAriaLabel");
 
-    this.setProperties({
-      ariaLabel: null,
-      translatedAriaLabel: "bar",
-    });
+      assert.equal(
+        queryAll("button")[0].getAttribute("aria-label"),
+        I18n.t("test.fooAriaLabel")
+      );
 
-    assert.equal(queryAll("button")[0].getAttribute("aria-label"), "bar");
-  },
-});
+      this.setProperties({
+        ariaLabel: null,
+        translatedAriaLabel: "bar",
+      });
 
-componentTest("title", {
-  template: "{{d-button title=title translatedTitle=translatedTitle}}",
+      assert.equal(queryAll("button")[0].getAttribute("aria-label"), "bar");
+    },
+  });
 
-  beforeEach() {
-    I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
-  },
+  componentTest("title", {
+    template: hbs`{{d-button title=title translatedTitle=translatedTitle}}`,
 
-  test(assert) {
-    this.set("title", "test.fooTitle");
-    assert.equal(
-      queryAll("button")[0].getAttribute("title"),
-      I18n.t("test.fooTitle")
-    );
+    beforeEach() {
+      I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
+    },
 
-    this.setProperties({
-      title: null,
-      translatedTitle: "bar",
-    });
+    test(assert) {
+      this.set("title", "test.fooTitle");
+      assert.equal(
+        queryAll("button")[0].getAttribute("title"),
+        I18n.t("test.fooTitle")
+      );
 
-    assert.equal(queryAll("button")[0].getAttribute("title"), "bar");
-  },
-});
+      this.setProperties({
+        title: null,
+        translatedTitle: "bar",
+      });
 
-componentTest("label", {
-  template: "{{d-button label=label translatedLabel=translatedLabel}}",
+      assert.equal(queryAll("button")[0].getAttribute("title"), "bar");
+    },
+  });
 
-  beforeEach() {
-    I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
-  },
+  componentTest("label", {
+    template: hbs`{{d-button label=label translatedLabel=translatedLabel}}`,
 
-  test(assert) {
-    this.set("label", "test.fooLabel");
+    beforeEach() {
+      I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
+    },
 
-    assert.equal(
-      queryAll("button .d-button-label").text(),
-      I18n.t("test.fooLabel")
-    );
+    test(assert) {
+      this.set("label", "test.fooLabel");
 
-    this.setProperties({
-      label: null,
-      translatedLabel: "bar",
-    });
+      assert.equal(
+        queryAll("button .d-button-label").text(),
+        I18n.t("test.fooLabel")
+      );
 
-    assert.equal(queryAll("button .d-button-label").text(), "bar");
-  },
+      this.setProperties({
+        label: null,
+        translatedLabel: "bar",
+      });
+
+      assert.equal(queryAll("button .d-button-label").text(), "bar");
+    },
+  });
 });

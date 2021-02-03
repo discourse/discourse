@@ -586,7 +586,6 @@ cs:
       posts: "Příspěvky"
       topics: "Témata"
       latest: "Aktuální"
-      latest_by: "latest by"
       toggle_ordering: "Přepnout editaci pořadí"
       subcategories: "Podkategorie"
       topic_sentence:
@@ -658,7 +657,6 @@ cs:
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         disable: "Vypnout upozornění"
         enable: "Povolit upozornění"
-        each_browser_note: "Poznámka: Musíš změnit tuto volbu v každém prohlížeči, který používáš."
         consent_prompt: "Chcete dostávat upozornění v reálném čase, když někdo odpoví na vaše příspěvky?"
       dismiss: "Označit jako přečtené"
       dismiss_notifications: "Označit vše jako přečtené"
@@ -956,7 +954,6 @@ cs:
         links_tab: "Odkazy"
         link_created_at: "Vytvořený"
         link_groups: Skupiny
-        create: "Poslat pozvánku"
         valid_for: "Odkaz pozvánky je platný pouze pro tuto emailovou adresu: %{email}"
         invite_link:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
@@ -1086,15 +1083,6 @@ cs:
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
     learn_more: "více informací..."
-    all_time: "celkem"
-    all_time_desc: "témat vytvořeno"
-    year: "rok"
-    year_desc: "témata za posledních 365 dní"
-    month: "měsíc"
-    month_desc: "témata za posledních 30 dní"
-    week: "týden"
-    week_desc: "témata za posledních 7 dní"
-    day: "den"
     first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
@@ -1118,8 +1106,6 @@ cs:
       value_prop: "Pokud si založíš účet, budeme si přesně pamatovat, co jsi četl, takže se vždycky vrátíš do bodu, odkud jsi odešel. Také budeš dostávat upozornění zde a přes e-mail, kdykoli ti někdo odpoví. A můžeš přidávat 'to se mi líbí' a šířit tak lásku. :heartpulse:"
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      description: "Je tu <b>%{replyCount}</b> odpovědí."
-      description_time: "Je tu <b>%{replyCount}</b> odpovědí o odhadovaném času čtení <b>%{readingTime} minut</b>."
       enable: "Přepnout na \"nejlepší příspěvky\""
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
@@ -1276,7 +1262,6 @@ cs:
       default: Vlastní emoji
     shared_drafts:
       title: "Sdílené koncepty"
-      notice: "Toto téma uvidí pouze uživatelé, kteří mohou vidět kategorii <b>%{category}</b>"
       destination_category: "Cílová kategorie"
       publish: "Zveřejnit sdílený koncept"
       confirm_publish: "Určitě chceš zveřejnit tento koncept?"
@@ -1287,7 +1272,6 @@ cs:
       options: "Možnosti"
       whisper: "šeptat"
       unlist: "neviditelné"
-      blockquote_text: "Bloková citace"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
       toggle_unlisted: "Přepnout neviditelné"
@@ -1306,9 +1290,6 @@ cs:
       duplicate_link: "Zdá se, že odkaz na <b>%{domain}</b> už uvedl v tomto tématu <b>@ %{username}</b> v <a href='%{post_url}'>odpovědi %{ago}</a> - opravdu chcete odkaz poslat znovu?"
       error:
         title_missing: "Název musí být vyplněn"
-        title_too_short: "Název musí být dlouhý alespoň %{min} znaků"
-        title_too_long: "Název nemůže být delší než %{max} znaků"
-        post_length: "Příspěvek musí být alespoň %{min} znaků dlouhý"
         category_missing: "Musíte vybrat kategorii"
       save_edit: "Uložit změnu"
       overwrite_edit: "Přepsat úpravu"
@@ -1347,8 +1328,7 @@ cs:
       link_description: "sem vložte popis odkazu"
       link_dialog_title: "Vložit odkaz"
       link_optional_text: "volitelný popis"
-      quote_title: "Bloková citace"
-      quote_text: "Bloková citace"
+      blockquote_text: "Bloková citace"
       code_title: "Ukázka kódu"
       code_text: "odsadit předformátovaný text o 4 mezery"
       paste_code_text: "napište nebo vložte kód tady"
@@ -1392,7 +1372,6 @@ cs:
           label: "Nové téma"
         shared_draft:
           label: "Sdílený koncept"
-          desc: "Navrhnout téma, které uvidí pouze redakce"
         toggle_topic_bump:
           label: "Přepnout zvýraznění tématu"
           desc: "Odpovědět bez ovlivnění data poslední odpovědi"
@@ -1659,7 +1638,6 @@ cs:
       toggle_information: "zobrazit/skrýt detaily tématu"
       read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v %{catLink} nebo %{latestLink}."
       read_more: "Chcete si přečíst další informace? %{catLink} nebo %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Zbývá <a href='{basePath}/unread'>1 nepřečtené</a> téma } other { Je tu <a href='{basePath}/unread'># nepřečtených</a> témat } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 nové</a> téma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># nových</a> témat} }, nebo {CATEGORY, select, true {zobrazit další témata v kategorii {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       jump_reply_up: přejít na předchozí odpověď
@@ -1728,7 +1706,6 @@ cs:
         go: "go"
         jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
-        jump_prompt_of: "%{count} příspěvků"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
@@ -1862,7 +1839,6 @@ cs:
         username_placeholder: "uživatelské jméno"
         action: "Poslat pozvánku"
         help: "pozval ostatní do tohoto tématu pomocí emailu nebo notifikací"
-        to_forum: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit s pomocí kliknutí na odkaz. Nebude potřeba registrace."
         sso_enabled: "Zadej uživatelské jméno člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_blank: "Zadej uživatelské jméno a email člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_email: "Zadal jste emailovou adresu. Pošleme na ni pozvánku, s jejíž pomocí bude moci váš kamarád ihned odpovědět do tohoto tématu."
@@ -1952,8 +1928,6 @@ cs:
       quote_reply: "Cituj"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
-      wiki_last_edited_on: "wiki naposledy upravena"
-      last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět v propojeném tématu"
       reply_as_new_private_message: "Odpověď poslat jako zprávu stejným příjemcům. "
       continue_discussion: "Pokračování diskuze z %{postLink}:"
@@ -2225,7 +2199,6 @@ cs:
       notify_action: "Zpráva"
       official_warning: "Oficiální varování"
       delete_spammer: "Odstranit spamera"
-      delete_confirm_MF: "Chystáte se odstranit {POSTS, plural, one {<b>1</b> příspěvek} other {<b>#</b> příspěvků}} a {TOPICS, plural, one {<b>1</b> téma} other {<b>#</b> témat}} od tohoto uživatele, smazat jeho účet, zablokovat přihlášení z jejich IP adresy <b>{ip_address}</b>, a přidat jejich emailovou adresu <b>{email}</b> na seznam permanentně blokovaných. Jste si jistí, že je tento uživatel opravdu spamer?"
       yes_delete_spammer: "Ano, odstranit spamera"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
@@ -2299,12 +2272,6 @@ cs:
       unlisted:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
-    posts_likes_MF: |
-      Toto téma má {count, plural, one {1 příspěvek} other {# příspěvků}} {ratio, select,
-      low {s vysokým počtem lajků}
-      med {s velmi vysokým počtem lajků}
-      high {s extrémně vysokým počtem lajků}
-      other {}}
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase:
@@ -3290,7 +3257,6 @@ cs:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Důvod vyloučení"
         suspend_message: "e-mailová zpráva"
         suspend_message_placeholder: "Případě poskytněte více informací o pozastavení, které budou poslány na uživatelův email."
         suspended_by: "Suspended by"
@@ -3309,7 +3275,6 @@ cs:
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
-        delete_all_posts_confirm_MF: "Chystáte se smazat {POSTS, plural, one {1 příspěvek} other {# příspěvků}} and {TOPICS, plural, one {1 téma} other {# témat}}. Jste si jistí?"
         silence: "Ztišit"
         unsilence: "odmlčet "
         silenced: "Ztišený? "

@@ -340,7 +340,7 @@ var bootbox = window.bootbox || (function(document, $) {
             }
 
             if (handlers[i]['icon']) {
-                icon = "<i class='"+handlers[i]['icon']+"'></i> ";
+                icon = handlers[i]['icon'];
             }
 
             if (handlers[i]['href']) {
@@ -350,7 +350,7 @@ var bootbox = window.bootbox || (function(document, $) {
                 href = _defaultHref;
             }
 
-            buttons = buttons + "<a data-handler='"+i+"' class='"+_class+"' href='" + href + "'>"+icon+""+label+"</a>";
+            buttons = buttons + "<a data-handler='"+i+"' class='"+_class+"' href='" + href + "'>"+icon+"<span class='d-button-label'>"+label+"</span></a>";
 
             callbacks[i] = callback;
         }

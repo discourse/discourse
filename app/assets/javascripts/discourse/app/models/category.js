@@ -1,14 +1,15 @@
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import RestModel from "discourse/models/rest";
-import { on } from "discourse-common/utils/decorators";
-import PermissionType from "discourse/models/permission-type";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import PermissionType from "discourse/models/permission-type";
+import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { get } from "@ember/object";
 import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+
+const STAFF_GROUP_NAME = "staff";
 
 const Category = RestModel.extend({
   permissions: null,
@@ -22,15 +23,13 @@ const Category = RestModel.extend({
     this.set("availableGroups", availableGroups);
 
     const groupPermissions = this.group_permissions;
+
     if (groupPermissions) {
       this.set(
         "permissions",
         groupPermissions.map((elem) => {
           availableGroups.removeObject(elem.group_name);
-          return {
-            group_name: elem.group_name,
-            permission: PermissionType.create({ id: elem.permission_type }),
-          };
+          return elem;
         })
       );
     }
@@ -231,7 +230,12 @@ const Category = RestModel.extend({
   _permissionsForUpdate() {
     const permissions = this.permissions;
     let rval = {};
-    permissions.forEach((p) => (rval[p.group_name] = p.permission.id));
+    if (permissions.length) {
+      permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
+    } else {
+      // empty permissions => staff-only access
+      rval[STAFF_GROUP_NAME] = PermissionType.FULL;
+    }
     return rval;
   },
 
@@ -246,9 +250,20 @@ const Category = RestModel.extend({
     this.availableGroups.removeObject(permission.group_name);
   },
 
-  removePermission(permission) {
-    this.permissions.removeObject(permission);
-    this.availableGroups.addObject(permission.group_name);
+  removePermission(group_name) {
+    const permission = this.permissions.findBy("group_name", group_name);
+    if (permission) {
+      this.permissions.removeObject(permission);
+      this.availableGroups.addObject(group_name);
+    }
+  },
+
+  updatePermission(group_name, type) {
+    this.permissions.forEach((p, i) => {
+      if (p.group_name === group_name) {
+        this.set(`permissions.${i}.permission_type`, type);
+      }
+    });
   },
 
   @discourseComputed("topics")
@@ -297,7 +312,7 @@ const Category = RestModel.extend({
   },
 });
 
-var _uncategorized;
+let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
@@ -475,24 +490,12 @@ Category.reopenClass({
     return ajax(`/c/${id}/show.json`);
   },
 
-  reloadBySlug(slug, parentSlug) {
-    return parentSlug
-      ? ajax(`/c/${parentSlug}/${slug}/find_by_slug.json`)
-      : ajax(`/c/${slug}/find_by_slug.json`);
-  },
-
   reloadBySlugPath(slugPath) {
     return ajax(`/c/${slugPath}/find_by_slug.json`);
   },
 
   reloadCategoryWithPermissions(params, store, site) {
-    if (params.slug && params.slug.match(/^\d+-category/)) {
-      const id = parseInt(params.slug, 10);
-      return this.reloadById(id).then((result) =>
-        this._includePermissions(result.category, store, site)
-      );
-    }
-    return this.reloadBySlug(params.slug, params.parentSlug).then((result) =>
+    return this.reloadBySlugPath(params.slug).then((result) =>
       this._includePermissions(result.category, store, site)
     );
   },
@@ -505,7 +508,7 @@ Category.reopenClass({
   },
 
   search(term, opts) {
-    var limit = 5;
+    let limit = 5;
 
     if (opts) {
       if (opts.limit === 0) {
@@ -526,8 +529,8 @@ Category.reopenClass({
 
     const categories = Category.listByActivity();
     const length = categories.length;
-    var i;
-    var data = [];
+    let i;
+    let data = [];
 
     const done = () => {
       return data.length === limit;

@@ -4,4 +4,7 @@
 # To work with us on translations, join this project:
 # https://translate.discourse.org/
 
-vi: 
+vi:
+  site_settings:
+    styleguide_enabled: "Bật đường dẫn `/styleguide` để hỗ trợ việc tạo kiểu của Discourse"
+    styleguide_admin_only: "Giới hạn khả năng hiển thị của styleguide đối với quản trị viên"

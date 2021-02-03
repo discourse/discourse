@@ -1,9 +1,9 @@
-import deprecated from "discourse-common/lib/deprecated";
 import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
+import deprecated from "discourse-common/lib/deprecated";
 import { isPresent } from "@ember/utils";
-import { makeArray } from "discourse-common/lib/helpers";
 import layout from "select-kit/templates/components/multi-select";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],
@@ -27,6 +27,31 @@ export default SelectKitComponent.extend({
     return this._super(filter).filter(
       (content) => !makeArray(this.selectedContent).includes(content)
     );
+  },
+
+  append(values) {
+    const existingItems = values
+      .map((value) => {
+        const defaultItem = this.defaultItem(value, value);
+        const existingItem =
+          this.findValue(this.mainCollection, defaultItem) ||
+          this.findName(this.mainCollection, defaultItem);
+        if (!existingItem) {
+          if (this.validateCreate(value, this.content)) {
+            return value;
+          }
+        } else if (this.validateSelect(existingItem)) {
+          return this.getValue(existingItem);
+        }
+      })
+      .filter(Boolean);
+
+    const newValues = makeArray(this.value).concat(existingItems);
+    const newContent = makeArray(this.selectedContent).concat(
+      makeArray(existingItems)
+    );
+
+    this.selectKit.change(newValues, newContent);
   },
 
   deselect(item) {

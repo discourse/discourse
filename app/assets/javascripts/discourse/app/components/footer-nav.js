@@ -1,9 +1,9 @@
-import { throttle } from "@ember/runloop";
-import MountWidget from "discourse/components/mount-widget";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
+import MountWidget from "discourse/components/mount-widget";
 import Scrolling from "discourse/mixins/scrolling";
 import { observes } from "discourse-common/utils/decorators";
-import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { throttle } from "@ember/runloop";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
 

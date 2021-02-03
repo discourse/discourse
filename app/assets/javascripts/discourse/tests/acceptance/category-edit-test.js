@@ -1,10 +1,13 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit, currentURL } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import {
+  acceptance,
+  queryAll,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
-import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -24,7 +27,7 @@ acceptance("Category Edit", function (needs) {
     await fillIn("input.category-name", "testing");
     assert.equal(queryAll(".badge-category").text(), "testing");
 
-    await fillIn("#edit-text-color", "#ff0000");
+    await fillIn(".edit-text-color input", "#ff0000");
 
     await click(".edit-category-topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");

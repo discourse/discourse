@@ -7,6 +7,16 @@ class Search
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
+  def self.on_preload(&blk)
+    (@preload ||= Set.new) << blk
+  end
+
+  def self.preload(results, object)
+    if @preload
+      @preload.each { |preload| preload.call(results, object) }
+    end
+  end
+
   def self.per_facet
     5
   end
@@ -164,7 +174,7 @@ class Search
   end
 
   attr_accessor :term
-  attr_reader :clean_term
+  attr_reader :clean_term, :guardian
 
   def initialize(term, opts = nil)
     @opts = opts || {}
@@ -173,6 +183,7 @@ class Search
     @blurb_length = @opts[:blurb_length]
     @valid = true
     @page = @opts[:page]
+    @search_all_pms = false
 
     term = term.to_s.dup
 
@@ -191,7 +202,7 @@ class Search
       @original_term = Search.escape_string(@term)
     end
 
-    if @search_pms || @opts[:type_filter] == 'private_messages'
+    if @search_pms || @search_all_pms || @opts[:type_filter] == 'private_messages'
       @opts[:type_filter] = "private_messages"
       @search_context ||= @guardian.user
 
@@ -265,14 +276,11 @@ class Search
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
-        begin
-          if route = Discourse.route_for(@term)
-            if route[:controller] == "topics" && route[:action] == "show"
-              topic_id = (route[:id] || route[:topic_id]).to_i
-              single_topic(topic_id) if topic_id > 0
-            end
+        if route = Discourse.route_for(@term)
+          if route[:controller] == "topics" && route[:action] == "show"
+            topic_id = (route[:id] || route[:topic_id]).to_i
+            single_topic(topic_id) if topic_id > 0
           end
-        rescue ActionController::RoutingError
         end
       end
     end
@@ -283,6 +291,8 @@ class Search
       topics = @results.posts.map(&:topic)
       Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
     end
+
+    Search.preload(@results, self)
 
     @results
   end
@@ -329,6 +339,10 @@ class Search
           )
         SQL
     end
+  end
+
+  advanced_filter(/^in:all-pms$/i) do |posts|
+    posts.private_posts if @guardian.is_admin?
   end
 
   advanced_filter(/^in:tagged$/i) do |posts|
@@ -603,7 +617,14 @@ class Search
   end
 
   advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/i) do |posts, match|
-    user_id = User.where(staged: false).where(username_lower: match.downcase).pluck_first(:id)
+    username = match.downcase
+
+    user_id = User.where(staged: false).where(username_lower: username).pluck_first(:id)
+
+    if !user_id && username == "me"
+      user_id = @guardian.user&.id
+    end
+
     if user_id
       posts.where("posts.user_id = #{user_id}")
     else
@@ -727,6 +748,9 @@ class Search
         nil
       elsif word =~ /^in:personal-direct$/i
         @search_pms = true
+        nil
+      elsif word =~ /^in:all-pms$/i
+        @search_all_pms = true
         nil
       elsif word =~ /^personal_messages:(.+)$/i
         if user = User.find_by_username($1)
@@ -933,7 +957,11 @@ class Search
       if @search_context.present?
         if @search_context.is_a?(User)
           if type_filter === "private_messages"
-            @guardian.is_admin? ? posts.private_posts_for_user(@search_context) : posts
+            if @guardian.is_admin? && !@search_all_pms
+              posts.private_posts_for_user(@search_context)
+            else
+              posts
+            end
           else
             posts.where("posts.user_id = #{@search_context.id}")
           end
@@ -1251,7 +1279,7 @@ class Search
             #{ts_config},
             t1.fancy_title,
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
-            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
+            'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'', HighlightAll=true'
           ) AS topic_title_headline",
           "TS_HEADLINE(
             #{ts_config},

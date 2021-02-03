@@ -1,8 +1,7 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();

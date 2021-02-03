@@ -1,14 +1,13 @@
-import { test, module } from "qunit";
-import {
-  default as getURL,
-  setupURL,
-  setupS3CDN,
+import getURL, {
+  getAbsoluteURL,
   getURLWithCDN,
   isAbsoluteURL,
-  getAbsoluteURL,
   setPrefix,
+  setupS3CDN,
+  setupURL,
   withoutPrefix,
 } from "discourse-common/lib/get-url";
+import { module, test } from "qunit";
 
 module("Unit | Utility | get-url", function () {
   test("isAbsoluteURL", function (assert) {
@@ -59,6 +58,12 @@ module("Unit | Utility | get-url", function () {
       getURL("/u/neil"),
       "/forum/u/neil",
       "relative url has subfolder"
+    );
+
+    assert.equal(
+      getURL("/u/forumadmin"),
+      "/forum/u/forumadmin",
+      "relative url has subfolder even if username contains subfolder"
     );
 
     assert.equal(

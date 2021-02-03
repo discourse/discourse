@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import Controller, { inject as controller } from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   adminSiteSettings: controller(),

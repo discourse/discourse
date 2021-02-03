@@ -24,7 +24,6 @@ fi:
       long_description: |
         Tämä ansiomerkki myönnetään, kun suoritat menestyksellä vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet taitosi osoittanut.
   discourse_narrative_bot:
-    bio: "Moi! En ole ihminen. Olen botti, ja tarjoan opetusta sivuston käyttämisestä. Jos haluat jutella, lähetä yksityisviesti tai mainitse **`@%{discobot_username}`** missä vain."
     timeout:
       message: |-
         Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.

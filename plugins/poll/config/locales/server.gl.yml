@@ -14,7 +14,7 @@ gl:
     poll_export_data_explorer_query_id: "ID da Consulta do Explorador de Datos que se usa para exportar os resultados da enquisa (0 para deshabilitar)."
   poll:
     poll: "enquisa"
-    invalid_argument: "O valor '%{value}' non é válido para o argumento '%{argument}'."
+    invalid_argument: "O valor «%{value}» non é válido para o argumento «%{argument}»."
     multiple_polls_without_name: "Hai múltiples enquisas sen nome. Utiliza o atributo '<code>nome</code>' para singularizar as túas enquisas."
     multiple_polls_with_same_name: "Hai múltiples enquisas co mesmo nome: <strong>%{name}</strong>. Utiliza o atributo '<code>nome</code>' para singularizar as túas enquisas."
     default_poll_must_have_at_least_1_option: "A enquisa debe ter polo menos unha opción"
@@ -40,7 +40,7 @@ gl:
     user_cant_post_in_topic: "Non pode votar porque non pode publicar neste tema."
     topic_must_be_open_to_vote: "O tema debe estar aberto para votalo."
     poll_must_be_open_to_vote: "A enquisa debe estar aberta para votala."
-    topic_must_be_open_to_toggle_status: "O tema debe estar aberto para cambiarlle o estado."
+    topic_must_be_open_to_toggle_status: "O tema debe estar aberto para trocalo de estado."
     only_staff_or_op_can_toggle_status: "Soamente un membro do equipo ou o publicador orixinal poden trocar o estado dunha enquisa."
     insufficient_rights_to_create: "Non ten permiso para crear enquisas"
     email:

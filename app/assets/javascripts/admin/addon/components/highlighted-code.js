@@ -1,5 +1,5 @@
+import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 
 export default Component.extend({

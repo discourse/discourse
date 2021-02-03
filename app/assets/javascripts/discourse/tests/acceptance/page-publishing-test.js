@@ -1,7 +1,6 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Page Publishing", function (needs) {
   needs.user();
@@ -27,9 +26,9 @@ acceptance("Page Publishing", function (needs) {
 
   test("can publish a page via modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:eq(0) button.show-more-actions");
-    await click(".topic-post:eq(0) button.show-post-admin-menu");
-    await click(".topic-post:eq(0) .publish-page");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
+    await click(".topic-post:nth-of-type(1) .publish-page");
 
     await fillIn(".publish-slug", "bad-slug");
     assert.ok(!exists(".valid-slug"));

@@ -1,6 +1,6 @@
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import { computed, action } from "@ember/object";
+import I18n from "I18n";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";

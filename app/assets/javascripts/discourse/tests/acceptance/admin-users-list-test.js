@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Admin - Users List", function (needs) {
   needs.user();
@@ -12,7 +14,7 @@ acceptance("Admin - Users List", function (needs) {
     await visit("/admin/users/list/active");
 
     assert.ok(exists(".users-list .user"));
-    assert.ok(!exists(".user:eq(0) .email small"), "escapes email");
+    assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
   });
 
   test("sorts users", async function (assert) {

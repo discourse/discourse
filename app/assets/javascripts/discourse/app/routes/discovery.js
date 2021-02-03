@@ -4,8 +4,8 @@
 **/
 import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import User from "discourse/models/user";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(OpenComposer, {

@@ -2,8 +2,11 @@
 
 class StrippedLengthValidator < ActiveModel::EachValidator
   def self.validate(record, attribute, value, range)
-    unless value.nil?
-      stripped_length = value.strip.length
+    if !value.nil?
+      html_comments_regexp = /<!--(.*?)-->/
+      stripped_length = value.gsub(html_comments_regexp, '')
+      stripped_length = stripped_length.strip.length
+
       record.errors.add attribute, (I18n.t('errors.messages.too_short', count: range.begin)) unless
           stripped_length >= range.begin
       record.errors.add attribute, (I18n.t('errors.messages.too_long_validation', max: range.end, length: stripped_length)) unless

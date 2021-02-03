@@ -1,7 +1,6 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit, currentURL } from "@ember/test-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Click Track", function (needs) {
   let tracked = false;
@@ -19,7 +18,7 @@ acceptance("Click Track", function (needs) {
       "card should not appear"
     );
 
-    await click("article[data-post-id=3651] a.mention");
+    await click('article[data-post-id="3651"] a.mention');
     assert.ok(queryAll(".user-card.show").length === 1, "card appear");
     assert.equal(currentURL(), "/t/internationalization-localization/280");
     assert.ok(!tracked);

@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Topic - Anonymous", function () {
   test("Enter a Topic", async function (assert) {

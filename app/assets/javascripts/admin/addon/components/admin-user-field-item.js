@@ -1,17 +1,16 @@
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
-import { empty } from "@ember/object/computed";
-import { scheduleOnce } from "@ember/runloop";
-import Component from "@ember/component";
-import UserField from "admin/models/user-field";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { propertyEqual } from "discourse/lib/computed";
-import { i18n } from "discourse/lib/computed";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
+import { i18n, propertyEqual } from "discourse/lib/computed";
+import Component from "@ember/component";
+import I18n from "I18n";
+import UserField from "admin/models/user-field";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { empty } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { scheduleOnce } from "@ember/runloop";
 
 export default Component.extend(bufferedProperty("userField"), {
   editing: empty("userField.id"),

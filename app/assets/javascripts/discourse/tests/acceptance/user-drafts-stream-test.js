@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  queryAll,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
 
 acceptance("User Drafts", function (needs) {
   needs.user();

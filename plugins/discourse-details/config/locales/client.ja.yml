@@ -10,4 +10,4 @@ ja:
       title: 詳細を隠す
     composer:
       details_title: サマリー
-      details_text: "こちらの文字は表示させません。"
+      details_text: "この文字は表示されません。"

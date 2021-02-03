@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
-import TopicTrackingState from "discourse/models/topic-tracking-state";
-import createStore from "discourse/tests/helpers/create-store";
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
+import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
 
 module("Unit | Model | topic-tracking-state", function (hooks) {
@@ -290,6 +290,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     };
 
     assert.equal(state.countNew(1), 1);
+    assert.equal(state.countNew(1, undefined, true), 0);
     assert.equal(state.countNew(1, "missing-tag"), 0);
     assert.equal(state.countNew(2), 1);
     assert.equal(state.countNew(3), 0);
@@ -327,7 +328,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(state.countNew(4), 0);
   });
 
-  test("mute topic", function (assert) {
+  test("mute and unmute topic", function (assert) {
     let currentUser = User.create({
       username: "chuck",
       muted_category_ids: [],
@@ -335,14 +336,19 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     const state = TopicTrackingState.create({ currentUser });
 
-    state.trackMutedTopic(1);
+    state.trackMutedOrUnmutedTopic({ topic_id: 1, message_type: "muted" });
     assert.equal(currentUser.muted_topics[0].topicId, 1);
 
-    state.pruneOldMutedTopics();
+    state.trackMutedOrUnmutedTopic({ topic_id: 2, message_type: "unmuted" });
+    assert.equal(currentUser.unmuted_topics[0].topicId, 2);
+
+    state.pruneOldMutedAndUnmutedTopics();
     assert.equal(state.isMutedTopic(1), true);
+    assert.equal(state.isUnmutedTopic(2), true);
 
     this.clock.tick(60000);
-    state.pruneOldMutedTopics();
+    state.pruneOldMutedAndUnmutedTopics();
     assert.equal(state.isMutedTopic(1), false);
+    assert.equal(state.isUnmutedTopic(2), false);
   });
 });

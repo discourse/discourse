@@ -1,0 +1,13 @@
+<div class="admin-new-feature-item">
+  <div class="new-feature-emoji">{{item.emoji}}</div>
+  <div class="new-feature-content">
+    <div class="header">
+      {{#if item.link}}
+        <a href={{item.link}} target="_blank" rel="noopener noreferrer">{{item.title}}</a>
+      {{else}}
+        {{item.title}}
+      {{/if}}
+    </div>
+    <div class="feature-description">{{item.description}}</div>
+  </div>
+</div>

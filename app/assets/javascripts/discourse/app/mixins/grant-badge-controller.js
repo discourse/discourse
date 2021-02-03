@@ -1,8 +1,8 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { empty } from "@ember/object/computed";
+import Mixin from "@ember/object/mixin";
 import UserBadge from "discourse/models/user-badge";
 import { convertIconClass } from "discourse-common/lib/icon-library";
-import Mixin from "@ember/object/mixin";
+import discourseComputed from "discourse-common/utils/decorators";
+import { empty } from "@ember/object/computed";
 
 export default Mixin.create({
   @discourseComputed("allBadges.[]", "userBadges.[]")

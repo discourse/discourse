@@ -1,8 +1,8 @@
-import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
+import DiscourseURL from "discourse/lib/url";
+import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
 import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("post-link-arrow", {

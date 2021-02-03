@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
-import Component from "@ember/component";
 import { on } from "discourse-common/utils/decorators";
 import { set } from "@ember/object";
 
@@ -94,9 +94,9 @@ export default Component.extend({
   _splitValues(values, delimiter) {
     if (values && values.length) {
       const keys = ["key", "secret"];
-      var res = [];
+      let res = [];
       values.split(delimiter).forEach(function (str) {
-        var object = {};
+        let object = {};
         str.split("|").forEach(function (a, i) {
           object[keys[i]] = a;
         });

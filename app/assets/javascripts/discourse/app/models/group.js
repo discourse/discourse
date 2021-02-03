@@ -1,14 +1,14 @@
-import EmberObject from "@ember/object";
-import { equal } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
+import EmberObject from "@ember/object";
 import GroupHistory from "discourse/models/group-history";
+import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 
 const Group = RestModel.extend({
   user_count: 0,
@@ -234,6 +234,8 @@ const Group = RestModel.extend({
       default_notification_level: this.default_notification_level,
       membership_request_template: this.membership_request_template,
       publish_read_state: this.publish_read_state,
+      allow_unknown_sender_topic_replies: this
+        .allow_unknown_sender_topic_replies,
     };
 
     ["muted", "regular", "watching", "tracking", "watching_first_post"].forEach(

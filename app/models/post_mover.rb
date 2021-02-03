@@ -71,7 +71,7 @@ class PostMover
     create_temp_table
     delete_invalid_post_timings
     move_each_post
-    notify_users_that_posts_have_moved
+    create_moderator_post_in_original_topic
     update_statistics
     update_user_actions
     update_last_post_stats
@@ -438,19 +438,6 @@ class PostMover
     UserAction.synchronize_target_topic_ids(posts.map(&:id))
   end
 
-  def notify_users_that_posts_have_moved
-    enqueue_notification_job
-    create_moderator_post_in_original_topic
-  end
-
-  def enqueue_notification_job
-    Jobs.enqueue(
-      :notify_moved_posts,
-      post_ids: post_ids,
-      moved_by_id: user.id
-    )
-  end
-
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
     move_type_str.sub!("topic", "message") if @move_to_pm
@@ -537,6 +524,12 @@ class PostMover
 
   def enqueue_jobs(topic)
     @post_creator.enqueue_jobs if @post_creator
+
+    Jobs.enqueue(
+      :notify_moved_posts,
+      post_ids: post_ids,
+      moved_by_id: user.id
+    )
 
     Jobs.enqueue(
       :delete_inaccessible_notifications,

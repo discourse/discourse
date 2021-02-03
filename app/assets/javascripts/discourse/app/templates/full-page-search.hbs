@@ -4,8 +4,8 @@
   <div class="search-advanced">
     {{#unless site.mobileView}}
       <div class="search-bar">
-        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searchButtonDisabled}}
+        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" aria-label=(i18n "search.full_page_title") enter=(action "search") hasAutofocus=hasAutofocus}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" ariaLabel="search.search_button" disabled=searchButtonDisabled}}
       </div>
     {{/unless}}
 
@@ -87,7 +87,7 @@
                   {{/if}}
 
                   <a href={{result.url}} {{action "logClick" result.topic_id}} class="search-link">
-                    {{topic-status topic=result.topic disableActions=true showPrivateMessageIcon=true}}
+                    {{raw "topic-status" topic=result.topic showPrivateMessageIcon=true}}
                     <span class="topic-title">
                       {{#if result.useTopicTitleHeadline}}
                         {{html-safe result.topicTitleHeadline}}
@@ -104,16 +104,16 @@
                       {{category-link result.topic.category.parentCategory}}
                     {{/if}}
                     {{category-link result.topic.category hideParent=true}}
-                    {{#each result.topic.tags as |tag|}}
-                      {{discourse-tag tag isPrivateMessage=isPrivateMessage}}
-                    {{/each}}
+                    {{#if result.topic}}
+                      {{discourse-tags result.topic}}
+                    {{/if}}
                     {{plugin-outlet name="full-page-search-category" args=(hash result=result)}}
                   </div>
                 </div>
 
                 <div class="blurb container">
                   <span class="date">
-                    {{format-age result.created_at}}
+                    {{format-date result.created_at format="tiny"}}
                     {{#if result.blurb}}
                       -
                     {{/if}}
@@ -193,7 +193,7 @@
     {{#if site.mobileView}}
       <div class="search-bar">
         {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searchButtonDisabled}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" ariaLabel="search.search_button" disabled=searchButtonDisabled}}
       </div>
     {{/if}}
 
@@ -203,9 +203,9 @@
         <span>{{i18n "search.advanced.title"}}</span>
       </div>
     {{else}}
-      <span class="search-advanced-title">
+      <h1 class="search-advanced-title">
         {{i18n "search.advanced.title"}}
-      </span>
+      </h1>
     {{/if}}
 
     {{#if site.mobileView}}

@@ -2,8 +2,8 @@
 
 class UserSummarySerializer < ApplicationSerializer
 
-  class TopicSerializer < ListableTopicSerializer
-    attributes :category_id, :like_count
+  class TopicSerializer < BasicTopicSerializer
+    attributes :category_id, :like_count, :created_at
   end
 
   class ReplySerializer < ApplicationSerializer

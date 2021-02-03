@@ -106,7 +106,6 @@ describe TagsController do
     end
 
     context "when user can admin tags" do
-
       it "succesfully retrieve all tags" do
         sign_in(admin)
 
@@ -117,7 +116,88 @@ describe TagsController do
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(2)
       end
+    end
 
+    context "with hidden tags" do
+      before do
+        create_hidden_tags(["staff1"])
+      end
+
+      it "is returned to admins" do
+        sign_in(admin)
+        get "/tags.json"
+        expect(response.parsed_body["tags"].map { |t| t["text"] }).to include("staff1")
+        expect(response.parsed_body["extras"]["categories"]).to be_empty
+      end
+
+      it "is not returned to anon" do
+        get "/tags.json"
+        expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+        expect(response.parsed_body["extras"]["categories"]).to be_empty
+      end
+
+      it "is not returned to regular user" do
+        sign_in(user)
+        get "/tags.json"
+        expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+        expect(response.parsed_body["extras"]["categories"]).to be_empty
+      end
+
+      context "restricted to a category" do
+        before do
+          category.tags = [Tag.find_by_name("staff1")]
+        end
+
+        it "is returned to admins" do
+          sign_in(admin)
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to include("staff1")
+          categories = response.parsed_body["extras"]["categories"]
+          expect(categories.length).to eq(1)
+          expect(categories.first["tags"].map { |t| t["text"] }).to include("staff1")
+        end
+
+        it "is not returned to anon" do
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+          expect(response.parsed_body["extras"]["categories"]).to be_empty
+        end
+
+        it "is not returned to regular user" do
+          sign_in(user)
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+          expect(response.parsed_body["extras"]["categories"]).to be_empty
+        end
+      end
+
+      context "listed by group" do
+        before do
+          SiteSetting.tags_listed_by_group = true
+        end
+
+        it "is returned to admins" do
+          sign_in(admin)
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+          tag_groups = response.parsed_body["extras"]["tag_groups"]
+          expect(tag_groups.length).to eq(1)
+          expect(tag_groups.first["tags"].map { |t| t["text"] }).to include("staff1")
+        end
+
+        it "is not returned to anon" do
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+          expect(response.parsed_body["extras"]["tag_groups"]).to be_empty
+        end
+
+        it "is not returned to regular user" do
+          sign_in(user)
+          get "/tags.json"
+          expect(response.parsed_body["tags"].map { |t| t["text"] }).to_not include("staff1")
+          expect(response.parsed_body["extras"]["tag_groups"]).to be_empty
+        end
+      end
     end
   end
 
@@ -203,6 +283,13 @@ describe TagsController do
         expect(topic_ids).to include(topic_in_category.id)
         expect(topic_ids).to_not include(topic_out_of_category.id)
         expect(topic_ids).to_not include(topic_in_category_without_tag.id)
+      end
+
+      it "should produce the right next topic URL" do
+        get "/tags/c/#{category.slug_path.join("/")}/#{category.id}/#{tag.name}.json?per_page=1"
+
+        expect(response.parsed_body['topic_list']['more_topics_url'])
+          .to start_with("/tags/c/#{category.slug_path.join('/')}/#{category.id}/#{tag.name}")
       end
     end
 

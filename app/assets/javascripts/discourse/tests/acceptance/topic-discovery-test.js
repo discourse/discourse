@@ -1,12 +1,14 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -20,7 +22,7 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
     assert.equal(
-      queryAll("a[data-user-card=eviltrout]:first img.avatar").attr("title"),
+      queryAll("a[data-user-card=eviltrout] img.avatar").attr("title"),
       "Evil Trout - Most Posts",
       "it shows user's full name in avatar title"
     );
@@ -75,12 +77,12 @@ acceptance("Topic Discovery", function (needs) {
   test("Clearing state after leaving a category", async function (assert) {
     await visit("/c/dev");
     assert.ok(
-      exists(".topic-list-item[data-topic-id=11994] .topic-excerpt"),
+      exists('.topic-list-item[data-topic-id="11994"] .topic-excerpt'),
       "it expands pinned topics in a subcategory"
     );
     await visit("/");
     assert.ok(
-      !exists(".topic-list-item[data-topic-id=11557] .topic-excerpt"),
+      !exists('.topic-list-item[data-topic-id="11557"] .topic-excerpt'),
       "it doesn't expand all pinned in the latest category"
     );
   });

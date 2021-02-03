@@ -1,25 +1,25 @@
-import { default as getURL, getURLWithCDN } from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import PostCooked from "discourse/widgets/post-cooked";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import { createWidget, applyDecorators } from "discourse/widgets/widget";
-import RawHtml from "discourse/widgets/raw-html";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { transformBasicPost } from "discourse/lib/transform-post";
-import { postTransformCallbacks } from "discourse/widgets/post-stream";
-import { h } from "virtual-dom";
-import DiscourseURL from "discourse/lib/url";
-import { dateNode } from "discourse/helpers/node";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import {
-  translateSize,
   avatarUrl,
   formatUsername,
+  translateSize,
 } from "discourse/lib/utilities";
-import hbs from "discourse/widgets/hbs-compiler";
-import { relativeAgeMediumSpan } from "discourse/lib/formatter";
-import { prioritizeNameInUx } from "discourse/lib/settings";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import DiscourseURL from "discourse/lib/url";
+import I18n from "I18n";
+import PostCooked from "discourse/widgets/post-cooked";
 import { Promise } from "rsvp";
+import RawHtml from "discourse/widgets/raw-html";
 import bootbox from "bootbox";
+import { dateNode } from "discourse/helpers/node";
+import { h } from "virtual-dom";
+import hbs from "discourse/widgets/hbs-compiler";
+import { iconNode } from "discourse-common/lib/icon-library";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { transformBasicPost } from "discourse/lib/transform-post";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -120,18 +120,16 @@ createWidget("select-post", {
 createWidget("reply-to-tab", {
   tagName: "a.reply-to-tab",
   buildKey: (attrs) => `reply-to-tab-${attrs.id}`,
-
+  title: "post.in_reply_to",
   defaultState() {
     return { loading: false };
   },
 
   html(attrs, state) {
-    if (state.loading) {
-      return I18n.t("loading");
-    }
+    const icon = state.loading ? h("div.spinner.small") : iconNode("share");
 
     return [
-      iconNode("share"),
+      icon,
       " ",
       avatarImg("small", {
         template: attrs.replyToAvatarTemplate,
@@ -405,7 +403,12 @@ createWidget("post-contents", {
       result.push(this.attach("expand-post-button", attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    const extraState = {
+      state: {
+        repliesShown: !!state.repliesBelow.length,
+        filteredRepliesShown: state.filteredRepliesShown,
+      },
+    };
     result.push(this.attach("post-menu", attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
@@ -434,6 +437,26 @@ createWidget("post-contents", {
       attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
     const createdAt = new Date(attrs.created_at);
     return lastWikiEdit ? lastWikiEdit : createdAt;
+  },
+
+  toggleFilteredRepliesView() {
+    const post = this.findAncestorModel();
+    const controller = this.register.lookup("controller:topic");
+    if (post.get("topic.postStream.filterRepliesToPostNumber")) {
+      controller.send(
+        "cancelFilter",
+        post.get("topic.postStream.filterRepliesToPostNumber")
+      );
+      this.state.filteredRepliesShown = false;
+    } else {
+      this.state.filteredRepliesShown = true;
+      post
+        .get("topic.postStream")
+        .filterReplies(post.post_number, post.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
   },
 
   toggleRepliesBelow(goToPost = "false") {
@@ -617,6 +640,17 @@ createWidget("post-article", {
   toggleReplyAbove(goToPost = "false") {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
+    if (this.siteSettings.enable_filtered_replies_view) {
+      const post = this.findAncestorModel();
+      const controller = this.register.lookup("controller:topic");
+      return post
+        .get("topic.postStream")
+        .filterUpwards(this.attrs.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
+
     // jump directly on mobile
     if (this.attrs.mobileView) {
       const topicUrl = this._getTopicUrl();
@@ -640,8 +674,10 @@ createWidget("post-article", {
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
           this.state.repliesAbove = posts.map((p) => {
-            p.shareUrl = `${topicUrl}/${p.post_number}`;
-            return transformWithCallbacks(p);
+            let result = transformWithCallbacks(p);
+            result.shareUrl = `${topicUrl}/${p.post_number}`;
+            result.asPost = this.store.createRecord("post", p);
+            return result;
           });
         });
     }

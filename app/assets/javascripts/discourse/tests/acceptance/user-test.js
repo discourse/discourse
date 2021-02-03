@@ -1,9 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
 
 acceptance("User Routes", function (needs) {
   needs.user();
@@ -14,15 +15,21 @@ acceptance("User Routes", function (needs) {
     );
   });
   test("Invalid usernames", async function (assert) {
-    await visit("/u/eviltrout%2F..%2F..%2F/summary");
+    try {
+      await visit("/u/eviltrout%2F..%2F..%2F/summary");
+    } catch (e) {
+      if (e.message !== "TransitionAborted") {
+        throw e;
+      }
+    }
 
-    assert.equal(currentPath(), "exception-unknown");
+    assert.equal(currentRouteName(), "exception-unknown");
   });
 
   test("Unicode usernames", async function (assert) {
     await visit("/u/%E3%83%A9%E3%82%A4%E3%82%AA%E3%83%B3/summary");
 
-    assert.equal(currentPath(), "user.summary");
+    assert.equal(currentRouteName(), "user.summary");
   });
 
   test("Invites", async function (assert) {
@@ -52,8 +59,8 @@ acceptance("User Routes", function (needs) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-activity-page").length, "has the body class");
     assert.equal(
-      currentPath(),
-      "user.userActivity.index",
+      currentRouteName(),
+      "userActivity.index",
       "it defaults to activity"
     );
     assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
@@ -83,7 +90,7 @@ acceptance("User Routes", function (needs) {
       "has draft action buttons"
     );
 
-    await click(".user-stream button.resume-draft:eq(0)");
+    await click(".user-stream button.resume-draft:nth-of-type(1)");
     assert.ok(
       exists(".d-editor-input"),
       "composer is visible after resuming a draft"

@@ -362,6 +362,58 @@ describe Email::Styles do
           expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
         end
       end
+
+      context "when there is an inline-avatar in the onebox" do
+        let(:html) do
+          <<~HTML
+<p><a class="mention" href="/u/martin">@martin</a> check this out:</p>
+<aside class="onebox githubpullrequest">
+  <header class="source">
+      <a href="https://github.com/discourse/discourse/pull/11140" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row">
+  <div class="github-info-container">
+    <h4>
+      <a href="https://github.com/discourse/discourse/pull/11140" target="_blank" rel="noopener">FEATURE: Implement edit functionality for post notices</a>
+    </h4>
+    <div class="branches">
+      <code>discourse:master</code> ← <code>discourse:feature/post_notices_edit</code>
+    </div>
+
+    <div class="github-info">
+      <div class="date">
+        opened <span class="discourse-local-date" data-format="ll" data-date="2020-11-05" data-time="20:33:53" data-timezone="UTC">08:33PM - 05 Nov 20 UTC</span>
+      </div>
+      <div class="user">
+        <a href="https://github.com/udan11" target="_blank" rel="noopener">
+          <img alt="udan11" src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="onebox-avatar-inline" width="20" height="20">
+          udan11
+        </a>
+      </div>
+      <div class="lines" title="2 commits changed 27 files with 250 additions and 224 deletions">
+        <a href="https://github.com/discourse/discourse/pull/11140/files" target="_blank" rel="noopener">
+          <span class="added">+250</span>
+          <span class="removed">-224</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+  </article>
+  <div class="onebox-metadata">
+  </div>
+  <div style="clear: both"></div>
+</aside>
+          HTML
+        end
+        it "keeps the special onebox styles" do
+          strip_and_inline
+          expect(@frag.to_s).to include("cid:email/test.png")
+          expect(@frag.css('[data-sripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 20px; height: 20px; float: none; vertical-align: middle; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
+        end
+      end
     end
   end
 end

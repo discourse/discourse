@@ -39,6 +39,7 @@ ko:
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
+  views: "조회"
   loading: "로딩중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a> 으로 호스팅되고 있습니다. JavaScript 가 활성화되어 있을 때 가장 멋지게 보입니다.'
   sign_up: "회원가입"
@@ -50,6 +51,9 @@ ko:
   remove_posts_deleted_by_author: "글쓴이에 의해 삭제된 글"
   redirect_warning: "선택한 링크가 실제로 포럼에 게시되어 있는지 확인할 수 없습니다. 계속 진행하려면 아래 링크를 선택하십시오."
   on_another_topic: "다른 주제에"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "%{username}님의 글 #%{post_number}"
   themes:
     bad_color_scheme: "테마, 유효하지 않은 색상 표를 업데이트 할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"
@@ -140,6 +144,9 @@ ko:
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
       is_invalid: "문장이 불분명합니다."
+      is_invalid_meaningful: "불분명해 보이지만, 대부분의 단어에 같은 문자가 계속해서 포함되어 있습니까?"
+      is_invalid_unpretentious: "명확하지 않은 것 같습니다. 하나 이상의 단어가 매우 깁니다."
+      is_invalid_quiet: "명확하지 않은 것 같습니다. 모두 대문자로 입력 하시겠습니까?"
       invalid_timezone: "&#39;%{tz}&#39;은 (는) 유효한 시간대가 아닙니다"
       contains_censored_words: "검열된 단어가 있습니다: %{censored_words}"
       less_than: '%{count}보다 작아야 함'
@@ -188,6 +195,13 @@ ko:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
       cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
     conflicting_google_user_id: '이 계정의 Google 계정 ID가 변경되었습니다. 보안상의 이유로 직원의 개입이 필요합니다. 직원에게 연락하여 <br> <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "죄송합니다. '%{hostname}'서버를 찾을 수 없어 웹 페이지에 대한 미리보기를 생성 할 수 없습니다. 미리보기 대신 게시물에 링크만 표시됩니다. :cry:"
+      error_response: "죄송합니다. 웹 서버에서 오류 코드 %{status_code} 를 반환했기 때문에 웹 페이지에 대한 미리보기를 생성 할 수 없습니다. 미리보기 대신 게시물에 링크만 표시됩니다. :cry:"
+      missing_data:
+        other: "죄송합니다. 다음 oEmbed / OpenGraph 태그를 찾을 수 없어 웹 페이지에 대한 미리보기를 생성 할 수 없습니다: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
     expired: "초대 토큰이 만료되었습니다. <a href='%{base_url}/about'>관리자에게 문의</a>하십시오."
     not_found: "초대 토큰이 유효하지 않습니다. <a href='%{base_url}/about'>직원에게 문의</a> 하십시오."
@@ -243,7 +257,7 @@ ko:
   email_template_cant_be_modified: "이 이메일 템플릿은 수정할 수 없습니다"
   invalid_whisper_access: "속삭임이 활성화되어 있지 않거나 속삭임 게시물을 작성할 수있는 권한이 없습니다"
   not_in_group:
-    title_topic: "이 주제를 보려면 그룹에 있어야합니다."
+    title_topic: "이 항목을 보려면 '%{group}' 그룹의 가입을 요청해야 합니다."
     title_category: "이 카테고리를 보려면 그룹에 속해 있어야합니다."
     request_membership: "회원 신청"
     join_group: "그룹 참여하기"
@@ -347,6 +361,7 @@ ko:
   bookmarks:
     errors:
       already_bookmarked_post: "동일한 게시물을 두 번 북마크 할 수 없습니다."
+      too_many: "죄송합니다. 북마크가 너무 많습니다. 일부를 삭제하려면 %{user_bookmarks_url}을 방문하세요."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
       time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
@@ -373,7 +388,6 @@ ko:
       email_already_used_in_category: "'%{email}' 는 '%{category_name}' 카테고리에서 이미 사용중입니다."
       cant_allow_membership_requests: "그룹 가입을 승인하려면 그룹 소유자의 승인이 필요합니다."
       already_requested_membership: "이 그룹의 회원 자격을 이미 요청하셨습니다."
-      adding_too_many_users: "한 번에 최대 %{limit}명의 사용자를 추가 할 수 있습니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -393,28 +407,26 @@ ko:
   education:
     until_posts:
       other: "글 %{count}개"
-    "new-topic": |2
+    "new-topic": |
+      %{site_name} &mdash;에 오신 것을 환영합니다. **새로운 대화를 시작해 주셔서 감사합니다!**
 
-      %{site_name}에 오신 것을 환영합니다 &mdash; **새로운 대화를 시작해서 감사합니다.**
+      - 제목을 소리 내어 읽었을 때 흥미롭게 들리나요? 잘 요약되었나요?
 
-      - 제목을 큰소리로 읽어봤을 때 흥미롭게 들리던가요? 좋은 요약문인가요?
+      - 누가 관심을 가질까요? 왜 중요한가요? 어떤 종류의 응답을 원하시나요?
 
-      - 누가 무엇때문에 관심을 보일까요? 어떤 대답을 듣고 싶나요?
-
-      - 사람들이 *검색*할 수 있도록 토픽에 흔히 사용하는 단어를 집어넣으세요. 관련 토픽과 같이 엮으려면 해당 카테고리를 선택하시고요.
+      - 다른 사람들이 찾을 수 있도록 주제에 자주 사용되는 단어를 포함하세요. 주제를 관련 주제로 그룹화하려면 카테고리 (또는 태그)를 선택하십시오.
 
       이 글은 당신의 첫 %{education_posts_text} 에서만 나옵니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)을 참조하세요.
-    "new-reply": |2
+    "new-reply": |
+      %{site_name} &mdash; ** 참여해 주셔서 감사합니다! **
 
-      %{site_name}에 오신것을 환영합니다! &mdash; **참여해주셔서 감사합니다!**
+      - 다른 커뮤니티 회원에게 친절하게 대하세요.
 
-      - 당신의 댓글이 어떤 식으로든 토론을 발전시키나요?
+      - 댓글이 대화를 개선합니까?
 
-      - 당신의 커뮤니티 회원에게 예의를 갖춰주세요.
+      - 건설적인 비판은 환영하지만 사람이 아닌 *글 내용*을 비판하십시오.
 
-      - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
-
-      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](%{base_path}/guidelines)를 참조하여 주세요.
+      자세한 내용은 [커뮤니티 가이드 라인 참조](%{base_path}/guidelines). 이 패널은 처음 %{education_posts_text}에 대해서만 표시됩니다.
     avatar: |2
 
       ### 계정에 사진을 걸어두는 건 어떠세요?
@@ -833,6 +845,7 @@ ko:
       others: "활동 없음."
     no_bookmarks:
       self: "북마크된 게시물이 없습니다. 북마크를 사용하면 특정 게시물을 빠르게 확인 할 수 있습니다."
+      search: "검색어와 일치하는 북마크를 찾을 수 없습니다."
       others: "북마크가 없습니다"
     no_likes_given:
       self: "좋아요한 게시글이 없습니다"
@@ -903,7 +916,7 @@ ko:
     mailing_list_mode: "메일링 리스트 모드 끄기"
     all: "%{sitename}에서 오는 메일은 전부 받지 않기"
     different_user_description: "우리가 메일을 보낸 사용자가 아닌 다른 사용자로 로그인되어 있습니다. 로그아웃하시거나, 익명 모드를 켜시고 다시 시도해주세요."
-    not_found_description: "죄송합니다. 구독 해지할 수 없습니다. 이메일의 구독해지 링크 기한이 만료되지는 않았나요?"
+    not_found_description: "죄송합니다. 구독 취소를 찾을 수 없습니다. 이메일의 링크가 너무 오래되어 만료되었을 수 있습니다."
     log_out: "로그아웃"
     submit: "환경 설정 저장"
     digest_frequency:
@@ -1281,6 +1294,7 @@ ko:
     github_config_warning: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
     s3_config_warning: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
     s3_backup_config_warning: '서버가 백업을 S3에 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정으로</a> 이동하여 <a href="%{base_path}/admin/site_settings">설정</a> 을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">&quot;S3에 이미지 업로드를 설정하는 방법&quot;을 참조하십시오. 자세한 내용은</a> .'
+    s3_cdn_warning: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
     image_magick_warning: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
     failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
     subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
@@ -1330,15 +1344,15 @@ ko:
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
     allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
     allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 글을 허용합니다. allow_duplicate_topic_titles는 false 여야합니다."
-    unique_posts_mins: "같은 컨텐츠를 다시 글 할 수 있는 기간(분)"
+    unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 글을 작성하기 위해서 필요한 시간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
     site_description: "이 사이트를 한 문장으로 설명해 주세요. 설명 메타태그에 사용됩니다."
     short_site_description: "홈페이지의 제목 태그에 사용 된 간단한 설명입니다."
     contact_email: "이 사이트를 담당하는 주요 담당자의 이메일 주소입니다. 긴급한 문제에 대한 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식뿐만 아니라 중요한 알림에 사용됩니다."
     contact_url: "이 사이트의 연락처 URL. 긴급한 문제에 대해서는 <a href='%{base_path}/about' target='_blank'>/ about</a> 문의 양식에 사용됩니다."
-    crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
-    download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경. 이미지가 깨지는 것을 막을 수 있습니다."
+    crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
+    download_remote_images_to_local: "원격 이미지를 다운로드하여 로컬 이미지로 변환합니다. 이렇게 하면 이미지가 손상되지 않습니다."
     download_remote_images_threshold: "원격의 이미지를 로컬에 다운받기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인을 통해서 원격 이미지를 다운로드 하지 않는다. ` | `를 구분자로 한 리스트"
     editing_grace_period: "글 작성 후, 편집해도 히스토리에 남기지 않는 시간 (단위: 초)"
@@ -1366,6 +1380,7 @@ ko:
     enable_inline_onebox_on_all_domains: "inline_onebox_domain_whitelist 사이트 설정을 무시하고 모든 도메인에서 인라인 onebox를 허용하십시오."
     force_custom_user_agent_hosts: "모든 요청에서 사용자 정의 onebox 사용자 에이전트를 사용할 호스트. (특히 사용자 에이전트의 액세스를 제한하는 호스트에 유용합니다)."
     max_oneboxes_per_post: "포스트 당 최대 박스링크(Onebox)의 수"
+    facebook_app_access_token: "Facebook 앱 ID 및 시크릿에서 생성 된 토큰입니다. Instagram onebox를 생성하는 데 사용됩니다."
     logo: "사이트 왼쪽 상단의 로고 이미지 높이가 120이고 가로 세로 비율이 3 : 1보다 큰 넓은 직사각형 이미지를 사용하십시오. 비워두면 사이트 제목 텍스트가 표시됩니다."
     logo_small: "아래로 스크롤하면 사이트 왼쪽 상단에 작은 로고 이미지가 표시됩니다. 정사각형 120 × 120 이미지를 사용하십시오. 비워두면 홈 글리프가 표시됩니다."
     digest_logo: "사이트 이메일 요약 상단에 사용 된 대체 로고 이미지. 넓은 직사각형 이미지를 사용하십시오. SVG 이미지를 사용하지 마십시오. 비워두면`logo` 설정의 이미지가 사용됩니다."
@@ -1558,22 +1573,22 @@ ko:
     top_topics_formula_least_likes_per_post_multiplier: "인기 토픽 계산 공식에서 포스트당 최소 좋아요 가중치 설정: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rebake_old_posts_count: "15분마다 HTML로 리빌드할 옛날 포스트의 수"
     enable_safe_mode: "사용자가 안전 모드로 들어가 플러그인을 디버깅 할 수 있도록합니다."
-    rate_limit_create_topic: "사용자가 글타래를 생성하고 난 후 다음 글타래를 생성할 때 까지의 대기 기간(초)"
-    rate_limit_create_post: "사용자가 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
-    rate_limit_new_user_create_topic: "새로운 사용자 글타래를 생성하고 난 후 다음 글타래를 생성할 때 까지의 대기 기간(초)"
-    rate_limit_new_user_create_post: "새로운 사용자 포스팅을하고 난 후 다음 포스팅까지 대기 기간(초)"
+    rate_limit_create_topic: "글을 작성 후 다른 글을 작성하기 위해서는 (n)초 동안 기다려야 합니다."
+    rate_limit_create_post: "사용자가 댓글 작성 후 다른 댓글을 작성하기 위해서는 (n)초를 기다려야합니다."
+    rate_limit_new_user_create_topic: "새로 가입한 사용자가 글을 작성 후 다른 글을 작성하기 위해서는 (n)초를 기다려야합니다."
+    rate_limit_new_user_create_post: "새로 가입한 사용자가 댓글을 작성 후 다른 댓글을 작성하기 위해서는 (n)초를 기다려야합니다."
     max_likes_per_day: "사용자가 하루동안 할 수 있는 최대 좋아요 개수"
     max_flags_per_day: "사용자가 하루동안 할 수 있는 최대 신고 개수"
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
-    max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
+    max_topics_per_day: "사용자가 하루에 작성 할 수 있는 최대 글 수입니다."
     max_personal_messages_per_day: "사용자가 하루에 작성 할 수있는 최대 새 개인 메시지 수입니다."
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
     max_logins_per_ip_per_minute: "1분 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
-    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다."
-    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다."
+    max_post_deletions_per_minute: "사용자가 분당 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
+    max_post_deletions_per_day: "사용자가 하루에 삭제할 수있는 최대 게시물 수입니다. 게시물 삭제를 비활성화하려면 0으로 설정합니다."
     invite_link_max_redemptions_limit: "초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 발생시키기 위한 1분당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 발생시키기 위한 시간당 에러 수. 0으로 설정하면 기능 해제됨. 주의: 재시작이 필요합니다."
@@ -1596,6 +1611,7 @@ ko:
     avatar_sizes: "자동 생성 아바타 사이즈 목록"
     external_system_avatars_enabled: "외부 아바타 시스템을 사용하기"
     external_system_avatars_url: "외부 아바타 서비스의 URL. {username} {first_letter} {color} {size} 의 대체가 허용됨"
+    use_site_small_logo_as_system_avatar: "시스템 사용자 아바타 대신 사이트의 작은 로고를 사용하십시오. 로고가 있어야 합니다."
     restrict_letter_avatar_colors: "문자 아바타 배경에 사용되는 6 자리 16 진수 색상 값 목록입니다."
     selectable_avatars_enabled: "사용자가 목록에서 아바타를 선택하도록합니다."
     selectable_avatars: "사용자가 선택할 수있는 아바타 목록."
@@ -1603,7 +1619,7 @@ ko:
     png_to_jpg_quality: "변환된 JPG 파일의 퀄리티(1은 최하, 99는 최상, 100은 해제)"
     recompress_original_jpg_quality: "업로드된 이미지 파일의 품질 (1은 최저 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
     image_preview_jpg_quality: "크기가 조정된 이미지 파일의 품질 (1은 가장 낮은 품질, 99는 최고 품질, 100은 사용하지 않도록 설정)"
-    allow_staff_to_upload_any_file_in_pm: "운영진이 보내는 개인메시지에 모든 파일 첨부 허용"
+    allow_staff_to_upload_any_file_in_pm: "관리자는 개인메시지에 파일 첨부를 허용합니다."
     strip_image_metadata: "스트립 이미지 메타 데이터."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율. 너비 / 높이의 결과를 입력하십시오."
     simultaneous_uploads: "글 작성기에서 끌어서 놓을 수 있는 최대 파일 수"
@@ -1647,6 +1663,7 @@ ko:
     min_trust_level_to_allow_profile_background: "프로필 배경을 업로드하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_user_card_background: "사용자 카드 배경을 업로드하는데 필요한 최소 회원 레벨"
     min_trust_level_to_allow_invite: "사용자를 초대하는 데 필요한 최소 회원 등급"
+    min_trust_level_to_allow_ignore: "사용자를 무시하는데 필요한 최소 회원등급"
     allowed_link_domains: "링크를 삽입 할 수 있는 레벨이 아닌 사용자가 연결할 수 있는 도메인"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_embedded_media: "새 사용자가 게시물에 추가 할 수있는 미디어 항목 수입니다."
@@ -1656,7 +1673,7 @@ ko:
     max_mentions_per_post: "글 당 사용할 수 있는 최대 @name 알림의 수"
     max_users_notified_per_group_mention: "그룹이 멘션을 받으면 알림을 받는 최대사용자의 수(최대치에 도달하면 알림이 전송되지 않음)"
     enable_mentions: "사용자가 다른 사용자를 언급 할 수 있도록합니다."
-    create_thumbnails: "글의 너무 큰 크기의 이미지는 thumnails와 lightbox를 만든다."
+    create_thumbnails: "게시물에 맞지 않는 큰 이미지는 썸네일 이미지와 라이트 박스 이미지를 만듭니다."
     email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 글의 변경하고 완료할 수 있는 기회를 준다."
     personal_email_time_window_seconds: "개인 메시지 알림 이메일을 보내기 전에 사용자가 메시지를 편집하고 마무리 할 수 있도록 (n) 초 동안 기다리십시오."
     email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
@@ -1666,6 +1683,7 @@ ko:
     body_min_entropy: "글 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     allow_uppercase_posts: "제목과 내용을 모두 대문자로 작성하는 것을 허용하기"
     max_consecutive_replies: "다른 답변을 추가하지 못하기 전에 사용자가 주제에서 한 행에 게시해야하는 게시물 수입니다."
+    enable_filtered_replies_view: '“(n)개의 댓글” 버튼은 다른 모든 게시물을 축소하고 현재 게시물과 해당 댓글만 표시합니다.'
     title_fancy_entities: "주제 제목에서 일반적인 ASCII 문자를 멋진 HTML 엔티티로 변환 <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>하십시오.</a>"
     min_title_similar_length: "유사 글타래에 대한 체크가 있기 전, 최소 제목 글자 수"
     desktop_category_page_style: "/categories 페이지의 비주얼 스타일"
@@ -1871,11 +1889,11 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 체계."
     embed_post_limit: "글 개수가 최대치입니다."
     embed_username_required: "토픽 생성을 위한 사용자명이 필요합니다."
-    notify_about_flags_after: "이 몇 시간 후에 처리되지 않은 플래그가있는 경우 중재자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하십시오."
+    notify_about_flags_after: "이 시간이 지난 후에도 처리되지 않은 신고가있는 경우 관리자에게 개인 메시지를 보냅니다. 비활성화하려면 0으로 설정하십시오."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: "(n) 일지난 임시 보관글 삭제하기"
     bootstrap_mode_min_users: "부트 스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수 (비활성화하려면 0으로 설정)"
-    prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
+    prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록합니다."
     secure_media: '모든 업로드 (이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. &quot;로그인 필요&quot;가 활성화 된 경우 로그인 한 사용자 만 업로드에 액세스 할 수 있습니다. 그렇지 않으면 개인 메시지 및 개인 범주의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고 :이 설정은 복잡하며 관리에 대한 깊은 이해가 필요합니다. 세부 사항 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">은 메타에</a> 대한 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">보안 매체 주제</a> 를 참조하십시오.'
     secure_media_allow_embed_images_in_emails: "크기가 '이메일에 포함을 허용하는 보안 미디어 kb 크기' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지를 포함 할 수 있습니다."
     secure_media_max_email_embed_image_size_kb: "'이메일에 포함을 허용하는 보안 미디어' 설정이 활성화 된 경우 이메일에 포함되는 보안 이미지의 크기 제한입니다. 해당 설정을 사용하지 않으면 이 설정이 적용되지 않습니다."
@@ -1901,8 +1919,10 @@ ko:
     returning_user_notice_tl: "사용자에게 다시 게시 알림을 표시하는 데 필요한 최소 신뢰 수준입니다."
     returning_users_days: "사용자가 돌아오는 것으로 간주되기까지 며칠이 경과해야합니다."
     review_media_unless_trust_level: "관리자는 회원레벨이 낮은 사용자의 게시물에 임베디드 미디어가 포함 된 경우 이를 검토합니다."
+    blur_tl0_flagged_posts_media: "잠재적인 NSFW 콘텐츠를 숨기기 위해 신고된 게시물 이미지를 흐리게 처리합니다."
     enable_page_publishing: "직원이 자신의 스타일을 사용하여 주제를 새 URL에 게시 할 수 있습니다."
     show_published_pages_login_required: "익명 사용자는 로그인이 필요한 경우에도 게시된 페이지를 볼 수 있습니다."
+    skip_auto_delete_reply_likes: "이전 답글을 자동으로 삭제하는 경우 좋아요 수가 이 이상인 게시물 삭제를 건너 뜁니다."
     default_email_digest_frequency: "사용자가 기본적으로 요약 이메일을받는 빈도입니다."
     default_include_tl0_in_digests: "기본적으로 새 사용자의 게시물을 요약 이메일에 포함시킵니다. 사용자는 원하는대로이를 변경할 수 있습니다."
     default_email_level: "일반 주제에 대한 기본 이메일 알림 레벨을 설정하십시오."
@@ -1963,6 +1983,7 @@ ko:
     governing_law: "준거법"
     city_for_disputes: "분쟁의 도시"
     shared_drafts_category: "주제 초안의 범주를 지정하여 공유 초안 기능을 사용하십시오. 이 범주의 주제는 직원 사용자의 주제 목록에서 표시되지 않습니다."
+    shared_drafts_min_trust_level: "사용자가 공유 초안을 보고 편집할 수 있도록 허용합니다."
     push_notifications_prompt: "사용자 동의 프롬프트를 표시합니다."
     push_notifications_icon: "알림 모서리에 나타나는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG 이미지를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는`--font-family` CSS 사용자 정의 속성을 통해 재정의 할 수 있습니다."
@@ -1976,6 +1997,7 @@ ko:
     gravatar_login_url: "사용자에게 Gravatar 서비스에 대한 로그인을 제공하는 gravatar_base_url과 관련된 URL"
     share_quote_buttons: "견적 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "견적 공유 버턴을 표시할 시기를 결정합니다. 익명 사용자만 또는 모든 사용자에게 표시하지 않습니다. "
+    create_revision_on_bulk_topic_moves: "주제가 대량으로 새 카테고리로 이동되면 첫 번째 게시물에 대한 개정판을 만듭니다."
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -2164,6 +2186,18 @@ ko:
   admin:
     email:
       sent_test: "전송됨!"
+    user:
+      merge_user:
+        updating_username: "사용자명 업데이트 중..."
+        changing_post_ownership: "글 작성자 변경 중..."
+        merging_given_daily_likes: "일일 좋아요 병합 중..."
+        merging_post_timings: "게시 시간 병합 중..."
+        merging_user_visits: "사용자 방문 병합 중..."
+        updating_site_settings: "사이트 설정 업데이트 중..."
+        updating_user_stats: "사용자 통계 업데이트 중..."
+        merging_user_attributes: "사용자 속성 병합 중..."
+        updating_user_ids: "사용자 ID 업데이트 중..."
+        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "&#39;%{email}&#39;에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -2188,6 +2222,7 @@ ko:
       not_allowed: "이 이메일 제공업체는 허용되지 않습니다. 다른 이메일 제공 업체를 사용하세요."
       blocked: "는 허용되지 않습니다"
       revoked: "'%{email}'로 %{date}까지는 이메일을 보내지 않습니다."
+      does_not_exist: "N/A"
     ip_address:
       blocked: "이 IP주소에서는 가입이 안됩니다."
       max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
@@ -2302,9 +2337,9 @@ ko:
     text_body_template: |
       요청하신 [사이트 백업 다운로드](%{backup_file_path})입니다.
 
-      보안상의 이유로 이 다운로드 링크를 이메일 주소로 보냈습니다.
+      보안상의 이유로 다운로드 링크가 이메일 주소로 발송되었습니다.
 
-      (이 다운로드를 요청하지 *않은* 경우, 누군가가 사용자님의 사이트에 대한 관리자 액세스 권한을 가지고 있을 가능성이 있다는점에 대해 우려해야합니다.)
+      (이 다운로드를 요청하지 *않은* 경우, 누군가가 사용자님의 사이트에 대한 관리자 액세스 권한을 가지고 있을 가능성이 있습니다.)
     no_token: |
       죄송합니다. 이 백업 다운로드 링크는 이미 사용되었거나 만료되었습니다.
   admin_confirmation_mailer:
@@ -2442,22 +2477,6 @@ ko:
     flags_agreed_and_post_deleted:
       title: "직원이 신고 한 소식을 삭제했습니다."
       subject_template: "직원이 신고 한 소식을 삭제했습니다."
-      text_body_template: |
-        안녕하세요,
-
-        [사용자님의 게시물](%{base_url}%{url})이 삭제되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
-
-        %{flag_reason}
-
-        이 게시물은 신고로 인해 관리자가 삭제하기로 결정했습니다.
-
-        [details="클릭해 삭제된 게시물 확인"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        자세한 사항은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 살펴보세요.
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
@@ -2509,10 +2528,6 @@ ko:
         [prefs]: %{user_preferences_url}
     tl2_promotion_message:
       subject_template: "회원 레벨 승격을 축하합니다!"
-      text_body_template: |
-        [회원 레벨](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)으로 승격했습니다.
-
-        앞으로도 많은 참여를 부탁드립니다 - 사용자님들과 함께하는 것이 즐겁습니다.
     backup_succeeded:
       title: "백업 성공"
       subject_template: "백업 성공"
@@ -2660,11 +2675,10 @@ ko:
     email_reject_parsing:
       title: "이메일 거부 파싱"
       subject_template: "[%{email_prefix}] 이메일 문제-인식 할 수없는 콘텐츠"
-      text_body_template: |2
+      text_body_template: |
+        죄송합니다. %{destination} (제목 %{former_title})에 대한 이메일 메시지가 작동하지 않았습니다.
 
-        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
-
-        이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
+        이메일에서 내용을 찾을 수 없습니다. **답장이 이메일 상단에 있는지 확인하세요** -- 한 줄 답변은 처리 할 수 없습니다.
     email_reject_invalid_access:
       title: "이메일이 잘못된 액세스를 거부"
       subject_template: "[%{email_prefix}] 이메일 문제-잘못된 액세스"
@@ -3326,6 +3340,13 @@ ko:
         사이트 이용은 [커뮤니티의 가이드라인](%{base_url}/guidelines)을 참고해 주시기 바랍니다.
 
         즐거운 시간 되세요!
+    signup_after_reject:
+      title: "거부 후 가입"
+      subject_template: "%{site_name}에서 거부되었습니다."
+      text_body_template: |
+        관리자가 %{site_name}의 사용자님 계정을 거부했습니다.
+
+        %{reject_reason}
     signup:
       title: "가입하기"
       subject_template: "[%{email_prefix}] 새 계정 확인"
@@ -3470,13 +3491,13 @@ ko:
 
       사이트 운영자는 조건에 따라 다른 서비스를 제공 할 수 있습니다. 이 약관은 사이트 이용에만 적용됩니다.
 
-      건너 뛰기:
+      바로가기:
 
-      - [Important Terms](#heading--important-terms)
-      - [Your Permission to Use the Forum](#heading--permission)
-      - [Conditions for Use of the Forum](#heading--conditions)
-      - [Acceptable Use](#heading--acceptable-use)
-      - [Content Standards](#heading--content-standards)
+      - [중요 용어](#heading--important-terms)
+      - [사이트 사용 권한](#heading--permission)
+      - [사이트 이용 조건](#heading--conditions)
+      - [허용되는 사용](#heading--acceptable-use)
+      - [콘텐츠 표준](#heading--content-standards)
       - [Enforcement](#heading--enforcement)
       - [Your Account](#heading--your-account)
       - [Your Content](#heading--your-content)
@@ -3524,21 +3545,21 @@ ko:
 
       7. 사용자님은 이 사이트와 제휴하거나 이 사이트의 보증을 받았다고 거짓으로 암시해서는 안됩니다.
 
-      8. You may not hyperlink to images or other non-hypertext content on the forum on other webpages.
+      8. 다른 웹 페이지의 포럼에있는 이미지 또는 기타 하이퍼 텍스트가 아닌 콘텐츠에 하이퍼 링크를 사용할 수 없습니다.
 
-      9. You may not remove any marks showing proprietary ownership from materials you download from the forum.
+      9. 포럼에서 다운로드 한 자료의 소유권을 나타내는 표시를 제거 할 수 없습니다.
 
-      10. You may not show any part of the forum on other websites with `<iframe>`.
+      10. `<iframe>`을 사용하여 다른 웹 사이트를 표시 할 수 없습니다.
 
-      11. You may not disable, avoid, or circumvent any security or access restrictions of the forum.
+      11. 사이트의 보안 또는 접근 제한을 비활성화, 회피 또는 우회 할 수 없습니다.
 
-      12. You may not strain infrastructure of the forum with an unreasonable volume of requests, or requests designed to impose an unreasonable load on information systems underlying the forum.
+      12. 불합리한 양의 요청 또는 포럼 기반 정보 시스템에 불합리한 부하를 부과하도록 설계된 요청으로 사이트의 인프라에 부담을 주어서는 안됩니다.
 
-      13. You may not impersonate others through the forum.
+      13. 사이트를 통해 다른 사람을 사칭 할 수 없습니다.
 
-      14. You may not encourage or help anyone in violation of these terms.
+      14. 이 약관을 위반하는 사람을 격려하거나 도울 수 없습니다.
 
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">콘텐츠 표준</a></h2>
 
       1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
 

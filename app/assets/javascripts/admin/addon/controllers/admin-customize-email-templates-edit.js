@@ -1,11 +1,10 @@
+import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import Controller from "@ember/controller";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { action } from "@ember/object";
-import { inject as controller } from "@ember/controller";
 import bootbox from "bootbox";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import discourseComputed from "discourse-common/utils/decorators";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(bufferedProperty("emailTemplate"), {
   adminCustomizeEmailTemplates: controller(),

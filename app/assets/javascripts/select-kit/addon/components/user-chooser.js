@@ -1,10 +1,9 @@
+import userSearch, {
+  eagerCompleteSearch,
+  skipSearch,
+} from "discourse/lib/user-search";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { computed } from "@ember/object";
-import {
-  default as userSearch,
-  skipSearch,
-  eagerCompleteSearch,
-} from "discourse/lib/user-search";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default MultiSelectComponent.extend({
@@ -25,6 +24,7 @@ export default MultiSelectComponent.extend({
     includeMessageableGroups: false,
     allowEmails: false,
     groupMembersOf: undefined,
+    excludeCurrentUser: false,
   },
 
   content: computed("value.[]", function () {

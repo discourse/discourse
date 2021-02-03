@@ -41,27 +41,47 @@ pl_PL:
           title: "Nawigacja"
         navigation_bar:
           title: "Pasek nawigacyjny"
+        navigation_stacked:
+          title: "Panel ustawień"
         categories_list:
           title: "Lista Kategorii"
         topic_link:
           title: "Łącze tematu"
+        topic_list_item:
+          title: "Temat na liście tematów"
         topic_statuses:
           title: "Statusy tematów"
         topic_list:
           title: "Lista tematów"
-        latest_topic_list:
-          title: "Lista Ostatnich Tematów"
+        basic_topic_list:
+          title: "Podstawowa lista tematów"
         footer_message:
           title: "Wiadomość w stopce"
+        signup_cta:
+          title: "Zarejestruj CTA"
+        topic_timer_info:
+          title: "Liczniki tematów"
+        topic_footer_buttons:
+          title: "Przyciski stopki tematu"
+        topic_notifications:
+          title: "Powiadomienia tematu"
         post:
           title: "Wpis"
         topic_map:
           title: "Mapa tematu"
+        site_header:
+          title: "Nagłówek witryny"
         suggested_topics:
           title: "Sugerowane tematy"
         post_menu:
           title: "Menu postu"
         modal:
           title: "Modalne"
+          header: "Tytuł modalu"
+          footer: "Stopka modalu"
+        user_about:
+          title: "Blok o użytkowniku"
         header_icons:
           title: "Ikony nagłówka"
+        spinners:
+          title: "Ładowanie"

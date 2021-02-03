@@ -1,5 +1,5 @@
-import { moduleForComponent } from "ember-qunit";
 import { componentTest } from "wizard/test/helpers/component-test";
+import { moduleForComponent } from "ember-qunit";
 
 moduleForComponent("invite-list", { integration: true });
 
@@ -72,7 +72,7 @@ componentTest("can add users", {
     );
     assert.ok(document.querySelectorAll(".new-user .invalid").length === 1);
 
-    await click(".invite-list .invite-list-user:eq(0) .remove-user");
+    await click(".invite-list .invite-list-user:nth-of-type(1) .remove-user");
     assert.ok(
       document.querySelectorAll(".users-list .invite-list-user").length === 0,
       "removed the user"

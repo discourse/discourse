@@ -63,8 +63,9 @@ class RemoteThemeSerializer < ApplicationSerializer
 end
 
 class ThemeSerializer < BasicThemeSerializer
-  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id,
-             :settings, :errors, :supported?, :description, :enabled?, :disabled_at
+  attributes :color_scheme, :color_scheme_id, :user_selectable, :auto_update,
+             :remote_theme_id, :settings, :errors, :supported?, :description,
+             :enabled?, :disabled_at
 
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object

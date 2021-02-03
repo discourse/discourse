@@ -1,6 +1,6 @@
-import Service from "@ember/service";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
+import updateTabCount from "discourse/lib/update-tab-count";
 
 export default Service.extend({
   appEvents: service(),
@@ -82,6 +82,11 @@ export default Service.extend({
 
     let displayCount = this._displayCount();
     let dynamicFavicon = this.currentUser && this.currentUser.dynamic_favicon;
+
+    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+      document.title = title;
+      return;
+    }
     if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
@@ -100,7 +105,7 @@ export default Service.extend({
         url = getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
 
-      new window.Favcount(url).set(this._displayCount());
+      updateTabCount(url, this._displayCount());
     }
   },
 });

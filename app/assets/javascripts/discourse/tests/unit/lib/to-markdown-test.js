@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import toMarkdown from "discourse/lib/to-markdown";
 
 module("Unit | Utility | to-markdown", function () {
@@ -35,6 +35,12 @@ module("Unit | Utility | to-markdown", function () {
 
     html = `<a href="https://discourse.org">Disc\n\n\nour\n\nse</a>`;
     markdown = `[Disc our se](https://discourse.org)`;
+    assert.equal(toMarkdown(html), markdown);
+  });
+
+  test("converts a link which is an attachment", function (assert) {
+    let html = `<a class="attachment" href="https://discourse.org/pdfs/stuff.pdf">stuff.pdf</a>`;
+    let markdown = `[stuff.pdf|attachment](https://discourse.org/pdfs/stuff.pdf)`;
     assert.equal(toMarkdown(html), markdown);
   });
 

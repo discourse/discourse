@@ -1,5 +1,5 @@
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
 
 const LivePostCounts = EmberObject.extend({});
 

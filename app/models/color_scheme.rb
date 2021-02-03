@@ -50,7 +50,7 @@ class ColorScheme < ActiveRecord::Base
       "tertiary" =>          '416376',
       "quaternary" =>        '5e99b9',
       "header_background" => '86bddb',
-      "header_primary" =>    'ffffff',
+      "header_primary" =>    '203243',
       "highlight" =>         '86bddb',
       "danger" =>            'bf3c3c',
       "success" =>           '70db82',

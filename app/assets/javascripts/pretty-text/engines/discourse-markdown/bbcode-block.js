@@ -191,7 +191,7 @@ function findInlineCloseTag(state, openTag, start, max) {
 }
 
 function applyBBCode(state, startLine, endLine, silent, md) {
-  var nextLine,
+  let nextLine,
     oldParent,
     oldLineMax,
     rule,

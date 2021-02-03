@@ -1,10 +1,12 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
-  moduleForWidget,
-  widgetTest,
-} from "discourse/tests/helpers/widget-test";
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
-moduleForWidget("home-logo");
+import hbs from "htmlbars-inline-precompile";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -13,234 +15,241 @@ const darkLogo = "/images/d-logo-sketch.png?dark";
 const title = "Cool Forum";
 const prefersDark = "(prefers-color-scheme: dark)";
 
-widgetTest("basics", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  skip: true,
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.siteSettings.title = title;
-    this.set("args", { minimized: false });
-  },
+discourseModule(
+  "Integration | Component | Widget | home-logo",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  test(assert) {
-    assert.ok(queryAll(".title").length === 1);
+    componentTest("basics", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      skip: true,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_small_url = smallLogo;
+        this.siteSettings.title = title;
+        this.set("args", { minimized: false });
+      },
 
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-    assert.equal(queryAll("#site-logo").attr("alt"), title);
-  },
-});
+      test(assert) {
+        assert.ok(queryAll(".title").length === 1);
 
-widgetTest("basics - minimized", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.siteSettings.title = title;
-    this.set("args", { minimized: true });
-  },
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+        assert.equal(queryAll("#site-logo").attr("alt"), title);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img.logo-small").length === 1);
-    assert.equal(queryAll("img.logo-small").attr("src"), smallLogo);
-    assert.equal(queryAll("img.logo-small").attr("alt"), title);
-    assert.equal(queryAll("img.logo-small").attr("width"), 36);
-  },
-});
+    componentTest("basics - minimized", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_small_url = smallLogo;
+        this.siteSettings.title = title;
+        this.set("args", { minimized: true });
+      },
 
-widgetTest("no logo", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = "";
-    this.siteSettings.site_logo_small_url = "";
-    this.siteSettings.title = title;
-    this.set("args", { minimized: false });
-  },
+      test(assert) {
+        assert.ok(queryAll("img.logo-small").length === 1);
+        assert.equal(queryAll("img.logo-small").attr("src"), smallLogo);
+        assert.equal(queryAll("img.logo-small").attr("alt"), title);
+        assert.equal(queryAll("img.logo-small").attr("width"), 36);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("h1#site-text-logo.text-logo").length === 1);
-    assert.equal(queryAll("#site-text-logo").text(), title);
-  },
-});
+    componentTest("no logo", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = "";
+        this.siteSettings.site_logo_small_url = "";
+        this.siteSettings.title = title;
+        this.set("args", { minimized: false });
+      },
 
-widgetTest("no logo - minimized", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = "";
-    this.siteSettings.site_logo_small_url = "";
-    this.siteSettings.title = title;
-    this.set("args", { minimized: true });
-  },
+      test(assert) {
+        assert.ok(queryAll("h1#site-text-logo.text-logo").length === 1);
+        assert.equal(queryAll("#site-text-logo").text(), title);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll(".d-icon-home").length === 1);
-  },
-});
+    componentTest("no logo - minimized", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = "";
+        this.siteSettings.site_logo_small_url = "";
+        this.siteSettings.title = title;
+        this.set("args", { minimized: true });
+      },
 
-widgetTest("mobile logo", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_mobile_logo_url = mobileLogo;
-    this.siteSettings.site_logo_small_url = smallLogo;
-    this.site.mobileView = true;
-  },
+      test(assert) {
+        assert.ok(queryAll(".d-icon-home").length === 1);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-mobile").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
-  },
-});
+    componentTest("mobile logo", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_mobile_logo_url = mobileLogo;
+        this.siteSettings.site_logo_small_url = smallLogo;
+        this.site.mobileView = true;
+      },
 
-widgetTest("mobile without logo", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.site.mobileView = true;
-  },
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-mobile").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-  },
-});
+    componentTest("mobile without logo", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.site.mobileView = true;
+      },
 
-widgetTest("logo with dark mode alternative", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_dark_url = darkLogo;
-    Session.currentProp("darkModeAvailable", true);
-  },
-  afterEach() {
-    Session.currentProp("darkModeAvailable", null);
-  },
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+    componentTest("logo with dark mode alternative", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_dark_url = darkLogo;
+        Session.currentProp("darkModeAvailable", true);
+      },
+      afterEach() {
+        Session.currentProp("darkModeAvailable", null);
+      },
 
-    assert.equal(
-      queryAll("picture source").attr("media"),
-      prefersDark,
-      "includes dark mode media attribute"
-    );
-    assert.equal(
-      queryAll("picture source").attr("srcset"),
-      darkLogo,
-      "includes dark mode alternative logo source"
-    );
-  },
-});
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
 
-widgetTest("mobile logo with dark mode alternative", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_mobile_logo_url = mobileLogo;
-    this.siteSettings.site_mobile_logo_dark_url = darkLogo;
-    Session.currentProp("darkModeAvailable", true);
+        assert.equal(
+          queryAll("picture source").attr("media"),
+          prefersDark,
+          "includes dark mode media attribute"
+        );
+        assert.equal(
+          queryAll("picture source").attr("srcset"),
+          darkLogo,
+          "includes dark mode alternative logo source"
+        );
+      },
+    });
 
-    this.site.mobileView = true;
-  },
-  afterEach() {
-    Session.currentProp("darkModeAvailable", null);
-  },
+    componentTest("mobile logo with dark mode alternative", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_mobile_logo_url = mobileLogo;
+        this.siteSettings.site_mobile_logo_dark_url = darkLogo;
+        Session.currentProp("darkModeAvailable", true);
 
-  test(assert) {
-    assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
+        this.site.mobileView = true;
+      },
+      afterEach() {
+        Session.currentProp("darkModeAvailable", null);
+      },
 
-    assert.equal(
-      queryAll("picture source").attr("media"),
-      prefersDark,
-      "includes dark mode media attribute"
-    );
-    assert.equal(
-      queryAll("picture source").attr("srcset"),
-      darkLogo,
-      "includes dark mode alternative logo source"
-    );
-  },
-});
+      test(assert) {
+        assert.equal(queryAll("#site-logo").attr("src"), mobileLogo);
 
-widgetTest("dark mode enabled but no dark logo set", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_dark_url = "";
-    Session.currentProp("darkModeAvailable", true);
-  },
-  afterEach() {
-    Session.currentProp("darkModeAvailable", null);
-  },
+        assert.equal(
+          queryAll("picture source").attr("media"),
+          prefersDark,
+          "includes dark mode media attribute"
+        );
+        assert.equal(
+          queryAll("picture source").attr("srcset"),
+          darkLogo,
+          "includes dark mode alternative logo source"
+        );
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-    assert.ok(
-      queryAll("picture").length === 0,
-      "does not include alternative logo"
-    );
-  },
-});
+    componentTest("dark mode enabled but no dark logo set", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_dark_url = "";
+        Session.currentProp("darkModeAvailable", true);
+      },
+      afterEach() {
+        Session.currentProp("darkModeAvailable", null);
+      },
 
-widgetTest("dark logo set but no dark mode", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_dark_url = darkLogo;
-  },
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+        assert.ok(
+          queryAll("picture").length === 0,
+          "does not include alternative logo"
+        );
+      },
+    });
 
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
-    assert.ok(
-      queryAll("picture").length === 0,
-      "does not include alternative logo"
-    );
-  },
-});
+    componentTest("dark logo set but no dark mode", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_dark_url = darkLogo;
+      },
 
-widgetTest("dark color scheme and dark logo set", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_dark_url = darkLogo;
-    Session.currentProp("defaultColorSchemeIsDark", true);
-  },
-  afterEach() {
-    Session.currentProp("defaultColorSchemeIsDark", null);
-  },
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(
-      queryAll("#site-logo").attr("src"),
-      darkLogo,
-      "uses dark logo"
-    );
-    assert.ok(
-      queryAll("picture").length === 0,
-      "does not add dark mode alternative"
-    );
-  },
-});
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(queryAll("#site-logo").attr("src"), bigLogo);
+        assert.ok(
+          queryAll("picture").length === 0,
+          "does not include alternative logo"
+        );
+      },
+    });
 
-widgetTest("dark color scheme and dark logo not set", {
-  template: '{{mount-widget widget="home-logo" args=args}}',
-  beforeEach() {
-    this.siteSettings.site_logo_url = bigLogo;
-    this.siteSettings.site_logo_dark_url = "";
-    Session.currentProp("defaultColorSchemeIsDark", true);
-  },
-  afterEach() {
-    Session.currentProp("defaultColorSchemeIsDark", null);
-  },
-  test(assert) {
-    assert.ok(queryAll("img#site-logo.logo-big").length === 1);
-    assert.equal(
-      queryAll("#site-logo").attr("src"),
-      bigLogo,
-      "uses regular logo on dark scheme if no dark logo"
-    );
-  },
-});
+    componentTest("dark color scheme and dark logo set", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_dark_url = darkLogo;
+        Session.currentProp("defaultColorSchemeIsDark", true);
+      },
+      afterEach() {
+        Session.currentProp("defaultColorSchemeIsDark", null);
+      },
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(
+          queryAll("#site-logo").attr("src"),
+          darkLogo,
+          "uses dark logo"
+        );
+        assert.ok(
+          queryAll("picture").length === 0,
+          "does not add dark mode alternative"
+        );
+      },
+    });
+
+    componentTest("dark color scheme and dark logo not set", {
+      template: hbs`{{mount-widget widget="home-logo" args=args}}`,
+      beforeEach() {
+        this.siteSettings.site_logo_url = bigLogo;
+        this.siteSettings.site_logo_dark_url = "";
+        Session.currentProp("defaultColorSchemeIsDark", true);
+      },
+      afterEach() {
+        Session.currentProp("defaultColorSchemeIsDark", null);
+      },
+      test(assert) {
+        assert.ok(queryAll("img#site-logo.logo-big").length === 1);
+        assert.equal(
+          queryAll("#site-logo").attr("src"),
+          bigLogo,
+          "uses regular logo on dark scheme if no dark logo"
+        );
+      },
+    });
+  }
+);

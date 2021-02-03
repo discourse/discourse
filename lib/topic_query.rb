@@ -146,7 +146,7 @@ class TopicQuery
 
         # strip out users in groups you already belong to
         target_users = target_users
-          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', my_group_ids])}")
+          .joins("LEFT JOIN group_users gu ON gu.user_id = topic_allowed_users.user_id AND #{DB.sql_fragment('gu.group_id IN (?)', my_group_ids)}")
           .where('gu.group_id IS NULL')
       end
 
@@ -617,17 +617,24 @@ class TopicQuery
 
     drafts_category_id = SiteSetting.shared_drafts_category.to_i
     viewing_shared = category_id && category_id == drafts_category_id
-    can_create_shared = guardian.can_create_shared_draft?
 
-    if can_create_shared && options[:destination_category_id]
-      destination_category_id = get_category_id(options[:destination_category_id])
-      topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
-      result.where(id: topic_ids)
-    elsif can_create_shared && viewing_shared
-      result.includes(:shared_draft).references(:shared_draft)
-    else
-      result.where('topics.category_id != ?', drafts_category_id)
+    if guardian.can_see_shared_draft?
+      if options[:destination_category_id]
+        destination_category_id = get_category_id(options[:destination_category_id])
+        topic_ids = SharedDraft.where(category_id: destination_category_id).pluck(:topic_id)
+
+        return result.where(id: topic_ids)
+      end
+
+      if viewing_shared
+        return result.includes(:shared_draft).references(:shared_draft)
+      end
+
+    elsif viewing_shared
+      return result.joins('LEFT OUTER JOIN shared_drafts sd ON sd.topic_id = topics.id').where('sd.id IS NULL')
     end
+
+    result.where('topics.category_id != ?', drafts_category_id)
   end
 
   def apply_ordering(result, options)
@@ -873,8 +880,6 @@ class TopicQuery
     result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
     result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
-    result = preload_thumbnails(result)
-
     result = TopicQuery.apply_custom_filters(result, self)
 
     result
@@ -1016,7 +1021,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_users ta2
           ON topics.id = ta2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['ta2.user_id IN (?)', user_ids])}
+          AND #{DB.sql_fragment('ta2.user_id IN (?)', user_ids)}
         ")
     end
 
@@ -1025,7 +1030,7 @@ class TopicQuery
         messages.joins("
           LEFT JOIN topic_allowed_groups tg2
           ON topics.id = tg2.topic_id
-          AND #{ActiveRecord::Base.sanitize_sql_array(['tg2.group_id IN (?)', group_ids])}
+          AND #{DB.sql_fragment('tg2.group_id IN (?)', group_ids)}
         ")
     end
 
@@ -1048,7 +1053,7 @@ class TopicQuery
             LEFT JOIN group_users gu
             ON gu.user_id = #{@user.id.to_i}
             AND gu.group_id = _tg.group_id
-            WHERE #{ActiveRecord::Base.sanitize_sql_array(['gu.group_id IN (?)', group_ids])}
+            WHERE #{DB.sql_fragment('gu.group_id IN (?)', group_ids)}
           ) tg ON topics.id = tg.topic_id
         ")
         .where("tg.topic_id IS NOT NULL")
@@ -1087,6 +1092,7 @@ class TopicQuery
     result = result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
     result = remove_muted_categories(result, @user)
+    result = remove_muted_topics(result, @user)
 
     # If we are in a category, prefer it for the random results
     if topic.category_id
@@ -1113,10 +1119,6 @@ class TopicQuery
     end
 
     result.order('topics.bumped_at DESC')
-  end
-
-  def preload_thumbnails(result)
-    result.preload(:image_upload, topic_thumbnails: :optimized_image)
   end
 
   private

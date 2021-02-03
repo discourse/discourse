@@ -1,80 +1,103 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
-  moduleForWidget,
-  widgetTest,
-} from "discourse/tests/helpers/widget-test";
+  discourseModule,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 
-moduleForWidget("header");
+discourseModule("Integration | Component | Widget | header", function (hooks) {
+  setupRenderingTest(hooks);
 
-widgetTest("rendering basics", {
-  template: '{{mount-widget widget="header"}}',
-  test(assert) {
-    assert.ok(queryAll("header.d-header").length);
-    assert.ok(queryAll("#site-logo").length);
-  },
-});
+  componentTest("rendering basics", {
+    template: hbs`{{mount-widget widget="header"}}`,
+    test(assert) {
+      assert.ok(queryAll("header.d-header").length);
+      assert.ok(queryAll("#site-logo").length);
+    },
+  });
 
-widgetTest("sign up / login buttons", {
-  template:
-    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
-  anonymous: true,
+  componentTest("sign up / login buttons", {
+    template: hbs`
+      {{mount-widget
+        widget="header"
+        showCreateAccount=showCreateAccount
+        showLogin=showLogin
+        args=args
+      }}
+    `,
+    anonymous: true,
 
-  beforeEach() {
-    this.set("args", { canSignUp: true });
-    this.on("showCreateAccount", () => (this.signupShown = true));
-    this.on("showLogin", () => (this.loginShown = true));
-  },
+    beforeEach() {
+      this.set("args", { canSignUp: true });
+      this.set("showCreateAccount", () => (this.signupShown = true));
+      this.set("showLogin", () => (this.loginShown = true));
+    },
 
-  async test(assert) {
-    assert.ok(queryAll("button.sign-up-button").length);
-    assert.ok(queryAll("button.login-button").length);
+    async test(assert) {
+      assert.ok(queryAll("button.sign-up-button").length);
+      assert.ok(queryAll("button.login-button").length);
 
-    await click("button.sign-up-button");
-    assert.ok(this.signupShown);
+      await click("button.sign-up-button");
+      assert.ok(this.signupShown);
 
-    await click("button.login-button");
-    assert.ok(this.loginShown);
-  },
-});
+      await click("button.login-button");
+      assert.ok(this.loginShown);
+    },
+  });
 
-widgetTest("anon when login required", {
-  template:
-    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
-  anonymous: true,
+  componentTest("anon when login required", {
+    template: hbs`
+      {{mount-widget
+        widget="header"
+        showCreateAccount=showCreateAccount
+        showLogin=showLogin
+        args=args
+      }}
+    `,
+    anonymous: true,
 
-  beforeEach() {
-    this.set("args", { canSignUp: true });
-    this.on("showCreateAccount", () => (this.signupShown = true));
-    this.on("showLogin", () => (this.loginShown = true));
-    this.siteSettings.login_required = true;
-  },
+    beforeEach() {
+      this.set("args", { canSignUp: true });
+      this.set("showCreateAccount", () => (this.signupShown = true));
+      this.set("showLogin", () => (this.loginShown = true));
+      this.siteSettings.login_required = true;
+    },
 
-  test(assert) {
-    assert.ok(exists("button.login-button"));
-    assert.ok(exists("button.sign-up-button"));
-    assert.ok(!exists("#search-button"));
-    assert.ok(!exists("#toggle-hamburger-menu"));
-  },
-});
+    test(assert) {
+      assert.ok(exists("button.login-button"));
+      assert.ok(exists("button.sign-up-button"));
+      assert.ok(!exists("#search-button"));
+      assert.ok(!exists("#toggle-hamburger-menu"));
+    },
+  });
 
-widgetTest("logged in when login required", {
-  template:
-    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
+  componentTest("logged in when login required", {
+    template: hbs`
+      {{mount-widget
+        widget="header"
+        showCreateAccount=showCreateAccount
+        showLogin=showLogin
+        args=args
+      }}
+    `,
 
-  beforeEach() {
-    this.set("args", { canSignUp: true });
-    this.on("showCreateAccount", () => (this.signupShown = true));
-    this.on("showLogin", () => (this.loginShown = true));
-    this.siteSettings.login_required = true;
-  },
+    beforeEach() {
+      this.set("args", { canSignUp: true });
+      this.set("showCreateAccount", () => (this.signupShown = true));
+      this.set("showLogin", () => (this.loginShown = true));
+      this.siteSettings.login_required = true;
+    },
 
-  test(assert) {
-    assert.ok(!exists("button.login-button"));
-    assert.ok(!exists("button.sign-up-button"));
-    assert.ok(exists("#search-button"));
-    assert.ok(exists("#toggle-hamburger-menu"));
-    assert.ok(exists("#current-user"));
-  },
+    test(assert) {
+      assert.ok(!exists("button.login-button"));
+      assert.ok(!exists("button.sign-up-button"));
+      assert.ok(exists("#search-button"));
+      assert.ok(exists("#toggle-hamburger-menu"));
+      assert.ok(exists("#current-user"));
+    },
+  });
 });

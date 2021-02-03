@@ -17,6 +17,7 @@ end
 
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
+  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -142,6 +143,7 @@ module Discourse
     attr_reader :obj
     attr_reader :opts
     attr_reader :custom_message
+    attr_reader :custom_message_params
     attr_reader :group
 
     def initialize(msg = nil, obj = nil, opts = nil)
@@ -150,6 +152,7 @@ module Discourse
       @opts = opts || {}
       @obj = obj
       @custom_message = opts[:custom_message] if @opts[:custom_message]
+      @custom_message_params = opts[:custom_message_params] if @opts[:custom_message_params]
       @group = opts[:group] if @opts[:group]
     end
   end
@@ -412,7 +415,7 @@ module Discourse
     unless uri.is_a?(URI)
       uri = begin
         URI(uri)
-      rescue URI::Error
+      rescue ArgumentError, URI::Error
       end
     end
 
@@ -914,6 +917,24 @@ module Discourse
 
   def self.is_parallel_test?
     ENV['RAILS_ENV'] == "test" && ENV['TEST_ENV_NUMBER']
+  end
+
+  CDN_REQUEST_METHODS ||= ["GET", "HEAD", "OPTIONS"]
+
+  def self.is_cdn_request?(env, request_method)
+    return unless CDN_REQUEST_METHODS.include?(request_method)
+
+    cdn_hostnames = GlobalSetting.cdn_hostnames
+    return if cdn_hostnames.blank?
+
+    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
+    cdn_hostnames.include?(requested_hostname)
+  end
+
+  def self.apply_cdn_headers(headers)
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = CDN_REQUEST_METHODS.join(", ")
+    headers
   end
 end
 

@@ -1,10 +1,10 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   acceptance,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 
 acceptance("Poll Builder - polls are disabled", function (needs) {
   needs.user();

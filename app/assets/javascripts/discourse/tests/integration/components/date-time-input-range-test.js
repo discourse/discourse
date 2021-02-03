@@ -1,8 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
-
-moduleForComponent("date-time-input-range", { integration: true });
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function fromDateInput() {
   return queryAll(".from.d-date-time-input .date-picker")[0];
@@ -22,17 +25,24 @@ function toTimeInput() {
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
-componentTest("default", {
-  template: `{{date-time-input-range from=from to=to}}`,
+discourseModule(
+  "Integration | Component | date-time-input-range",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.setProperties({ from: DEFAULT_DATE_TIME, to: null });
-  },
+    componentTest("default", {
+      template: hbs`{{date-time-input-range from=from to=to}}`,
 
-  test(assert) {
-    assert.equal(fromDateInput().value, "January 29, 2019");
-    assert.equal(fromTimeInput().dataset.name, "14:45");
-    assert.equal(toDateInput().value, "");
-    assert.equal(toTimeInput().dataset.name, "--:--");
-  },
-});
+      beforeEach() {
+        this.setProperties({ from: DEFAULT_DATE_TIME, to: null });
+      },
+
+      test(assert) {
+        assert.equal(fromDateInput().value, "January 29, 2019");
+        assert.equal(fromTimeInput().dataset.name, "14:45");
+        assert.equal(toDateInput().value, "");
+        assert.equal(toTimeInput().dataset.name, "--:--");
+      },
+    });
+  }
+);

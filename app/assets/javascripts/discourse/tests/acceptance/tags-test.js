@@ -1,14 +1,83 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
-  updateCurrentUser,
   acceptance,
+  exists,
+  invisible,
+  queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 
 acceptance("Tags", function (needs) {
   needs.user();
+
+  needs.pretender((server, helper) => {
+    server.get("/tag/test/notifications", () =>
+      helper.response({
+        tag_notification: { id: "test", notification_level: 2 },
+      })
+    );
+
+    server.get("/tag/test/l/unread.json", () =>
+      helper.response({
+        users: [
+          {
+            id: 42,
+            username: "foo",
+            name: "Foo",
+            avatar_template: "/user_avatar/localhost/foo/{size}/10265_2.png",
+          },
+        ],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          per_page: 30,
+          top_tags: [],
+          tags: [{ id: 42, name: "test", topic_count: 1, staff: false }],
+          topics: [
+            {
+              id: 42,
+              title: "Hello world",
+              fancy_title: "Hello world",
+              slug: "hello-world",
+              posts_count: 1,
+              reply_count: 1,
+              highest_post_number: 1,
+              created_at: "2020-01-01T00:00:00.000Z",
+              last_posted_at: "2020-01-01T00:00:00.000Z",
+              bumped: true,
+              bumped_at: "2020-01-01T00:00:00.000Z",
+              archetype: "regular",
+              unseen: false,
+              last_read_post_number: 1,
+              unread: 0,
+              new_posts: 1,
+              pinned: false,
+              unpinned: null,
+              visible: true,
+              closed: true,
+              archived: false,
+              notification_level: 3,
+              bookmarked: false,
+              liked: true,
+              tags: ["test"],
+              views: 42,
+              like_count: 42,
+              has_summary: false,
+              last_poster_username: "foo",
+              pinned_globally: false,
+              featured_link: null,
+              posters: [],
+            },
+          ],
+        },
+      })
+    );
+
+    server.put("/topics/bulk", () => helper.response({}));
+  });
 
   test("list the tags", async function (assert) {
     await visit("/tags");
@@ -18,6 +87,13 @@ acceptance("Tags", function (needs) {
       $('*[data-tag-name="eviltrout"]').length,
       "shows the eviltrout tag"
     );
+  });
+
+  test("dismiss notifications", async function (assert) {
+    await visit("/tag/test/l/unread");
+    await click("button.dismiss-read");
+    await click(".dismiss-read-modal button.btn-primary");
+    assert.ok(invisible(".dismiss-read-modal"));
   });
 });
 
@@ -102,7 +178,7 @@ acceptance("Tags listed by group", function (needs) {
       "shown in given order and with tags that are not in a group"
     );
     assert.deepEqual(
-      $(".tag-list:first .discourse-tag")
+      $(".tag-list:nth-of-type(1) .discourse-tag")
         .toArray()
         .map((i) => {
           return $(i).text();
@@ -111,7 +187,7 @@ acceptance("Tags listed by group", function (needs) {
       "shows the tags in default sort (by count)"
     );
     assert.deepEqual(
-      $(".tag-list:first .discourse-tag")
+      $(".tag-list:nth-of-type(1) .discourse-tag")
         .toArray()
         .map((i) => {
           return $(i).attr("href");
@@ -158,6 +234,28 @@ acceptance("Tag info", function (needs) {
     });
 
     server.get("/tag/planters/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 1,
+              name: "planters",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+
+    server.get("/tags/c/faq/4/planters/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -250,6 +348,15 @@ acceptance("Tag info", function (needs) {
     assert.ok(!exists("#delete-tag"), "can't delete tag");
   });
 
+  test("can filter tags page by category", async function (assert) {
+    await visit("/tag/planters");
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click('.category-breadcrumb .category-row[data-name="faq"]');
+
+    assert.equal(currentURL(), "/tags/c/faq/4/planters");
+  });
+
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true });
 
@@ -271,10 +378,17 @@ acceptance("Tag info", function (needs) {
       "delete UI is visible"
     );
 
-    await click(".unlink-synonym:first");
+    await click(".unlink-synonym:nth-of-type(1)");
     assert.ok(
       queryAll(".tag-info .synonyms-list .tag-box").length === 1,
       "removed a synonym"
     );
+  });
+
+  test("composer will not set tags if user cannot create them", async function (assert) {
+    await visit("/tag/planters");
+    await click("#create-topic");
+    let composer = this.owner.lookup("controller:composer");
+    assert.equal(composer.get("model").tags, null);
   });
 });

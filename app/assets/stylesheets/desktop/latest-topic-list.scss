@@ -11,6 +11,11 @@
   .more-topics {
     margin-top: 1em;
   }
+
+  .posts-map {
+    font-size: $font-up-1;
+    font-weight: bold;
+  }
 }
 
 .latest-topic-list-item {
@@ -53,6 +58,6 @@
   }
 
   .topic-last-activity a {
-    color: var(--primary-med-or-secondary-high);
+    color: var(--primary-low-mid-or-secondary-high);
   }
 }

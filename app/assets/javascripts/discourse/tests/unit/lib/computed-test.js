@@ -1,18 +1,18 @@
-import sinon from "sinon";
-import { test } from "qunit";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
 import {
-  setting,
+  fmt,
+  htmlSafe,
+  i18n,
   propertyEqual,
   propertyNotEqual,
-  fmt,
-  i18n,
+  setting,
   url,
-  htmlSafe,
 } from "discourse/lib/computed";
-import { setPrefix } from "discourse-common/lib/get-url";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { setPrefix } from "discourse-common/lib/get-url";
+import sinon from "sinon";
+import { test } from "qunit";
 
 discourseModule("Unit | Utility | computed", function (hooks) {
   hooks.beforeEach(function () {
@@ -45,7 +45,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("propertyEqual", function (assert) {
-    var t = EmberObject.extend({
+    let t = EmberObject.extend({
       same: propertyEqual("cookies", "biscuits"),
     }).create({
       cookies: 10,
@@ -58,7 +58,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("propertyNotEqual", function (assert) {
-    var t = EmberObject.extend({
+    let t = EmberObject.extend({
       diff: propertyNotEqual("cookies", "biscuits"),
     }).create({
       cookies: 10,
@@ -71,7 +71,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("fmt", function (assert) {
-    var t = EmberObject.extend({
+    let t = EmberObject.extend({
       exclaimyUsername: fmt("username", "!!! %@ !!!"),
       multiple: fmt("username", "mood", "%@ is %@"),
     }).create({
@@ -105,7 +105,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("i18n", function (assert) {
-    var t = EmberObject.extend({
+    let t = EmberObject.extend({
       exclaimyUsername: i18n("username", "!!! %@ !!!"),
       multiple: i18n("username", "mood", "%@ is %@"),
     }).create({
@@ -139,7 +139,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("url", function (assert) {
-    var t, testClass;
+    let t, testClass;
 
     testClass = EmberObject.extend({
       userUrl: url("username", "/u/%@"),

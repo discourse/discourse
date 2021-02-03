@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import { observes } from "discourse-common/utils/decorators";
 import bootbox from "bootbox";
+import { empty } from "@ember/object/computed";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   /**

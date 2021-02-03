@@ -1,11 +1,11 @@
-import { next } from "@ember/runloop";
 import buildStaticRoute from "discourse/routes/build-static-route";
+import { next } from "@ember/runloop";
 
 const SignupRoute = buildStaticRoute("signup");
 
 SignupRoute.reopen({
   beforeModel() {
-    var canSignUp = this.controllerFor("application").get("canSignUp");
+    let canSignUp = this.controllerFor("application").get("canSignUp");
 
     if (!this.siteSettings.login_required) {
       this.replaceWith("discovery.latest").then((e) => {

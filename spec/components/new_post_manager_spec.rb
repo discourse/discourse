@@ -363,8 +363,6 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      Reviewable.set_priorities(high: 20.5)
-      SiteSetting.reviewable_default_visibility = 'high'
       SiteSetting.tagging_enabled = true
       SiteSetting.min_trust_to_create_tag = 0
       SiteSetting.min_trust_level_to_tag_topics = 0
@@ -384,7 +382,7 @@ describe NewPostManager do
       expect(reviewable).to be_present
       expect(reviewable.payload['title']).to eq('this is the title of the queued post')
       expect(reviewable.reviewable_scores).to be_present
-      expect(reviewable.score).to eq(20.5)
+      expect(reviewable.force_review).to eq(true)
       expect(reviewable.reviewable_by_moderator?).to eq(true)
       expect(reviewable.category).to be_present
       expect(reviewable.payload['tags']).to eq(['hello', 'world'])

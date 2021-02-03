@@ -1,17 +1,15 @@
-import { skip } from "qunit";
-import { test, module } from "qunit";
-import { buildQuote } from "discourse/lib/quote";
-import Post from "discourse/models/post";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import { module, skip, test } from "qunit";
+import Post from "discourse/models/post";
+import { buildQuote } from "discourse/lib/quote";
+import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
-import { deepMerge } from "discourse-common/lib/object";
-import QUnit from "qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const rawOpts = {
   siteSettings: {
@@ -1555,5 +1553,38 @@ var bar = 'bar';
         <span class=\"placeholder-icon video\"></span>
       </div></p>`
     );
+  });
+
+  test("typographer arrows", function (assert) {
+    const enabledTypographer = {
+      siteSettings: { enable_markdown_typographer: true },
+    };
+
+    // Replace arrows
+    assert.cookedOptions(
+      "--> <--",
+      enabledTypographer,
+      "<p> \u2192 \u2190 </p>"
+    );
+    assert.cookedOptions("a -> b", enabledTypographer, "<p>a \u2192 b</p>");
+    assert.cookedOptions("a <- b", enabledTypographer, "<p>a \u2190 b</p>");
+    assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
+    assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
+    assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+
+    // Don't replace arrows
+    assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
+    assert.cookedOptions(
+      "(<--not an arrow)",
+      enabledTypographer,
+      "<p>(&lt;–not an arrow)</p>"
+    );
+    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
+    assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
+    assert.cookedOptions("-->asd", enabledTypographer, "<p>–&gt;asd</p>");
+    assert.cookedOptions(" -->asd ", enabledTypographer, "<p>–&gt;asd</p>");
+    assert.cookedOptions(" -->asd", enabledTypographer, "<p>–&gt;asd</p>");
   });
 });

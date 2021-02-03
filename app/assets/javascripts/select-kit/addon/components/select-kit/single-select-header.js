@@ -5,4 +5,7 @@ import layout from "select-kit/templates/components/select-kit/single-select-hea
 export default SelectKitHeaderComponent.extend(UtilsMixin, {
   layout,
   classNames: ["single-select-header"],
+  attributeBindings: ["role"],
+
+  role: "combobox",
 });

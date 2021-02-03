@@ -1,47 +1,47 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { debounce, later, next, schedule, throttle } from "@ember/runloop";
-import Component from "@ember/component";
-import userSearch from "discourse/lib/user-search";
+import {
+  authorizesOneOrMoreImageExtensions,
+  displayErrorForUpload,
+  getUploadMarkdown,
+  validateUploadedFiles,
+} from "discourse/lib/uploads";
+import {
+  cacheShortUploadUrl,
+  resolveAllShortUrls,
+} from "pretty-text/upload-short-url";
+import {
+  caretPosition,
+  clipboardHelpers,
+  formatUsername,
+  inCodeBlock,
+  tinyAvatar,
+} from "discourse/lib/utilities";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
 import {
-  linkSeenMentions,
-  fetchUnseenMentions,
-} from "discourse/lib/link-mentions";
-import {
-  linkSeenHashtags,
   fetchUnseenHashtags,
+  linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
+import {
+  fetchUnseenMentions,
+  linkSeenMentions,
+} from "discourse/lib/link-mentions";
+import { later, next, run, schedule, throttle } from "@ember/runloop";
+import Component from "@ember/component";
 import Composer from "discourse/models/composer";
-import { ajax } from "discourse/lib/ajax";
 import EmberObject from "@ember/object";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import {
-  tinyAvatar,
-  formatUsername,
-  clipboardHelpers,
-  caretPosition,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
-import {
-  validateUploadedFiles,
-  authorizesOneOrMoreImageExtensions,
-  getUploadMarkdown,
-  displayErrorForUpload,
-} from "discourse/lib/uploads";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
-
-import {
-  cacheShortUploadUrl,
-  resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
+import userSearch from "discourse/lib/user-search";
 
 const REBUILD_SCROLL_MAP_EVENTS = ["composer:resized", "composer:typed-reply"];
 
@@ -239,7 +239,9 @@ export default Component.extend({
     if (replyLength < 1) {
       reason = I18n.t("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", { min: minimumPostLength });
+      reason = I18n.t("composer.error.post_length", {
+        count: minimumPostLength,
+      });
       const tl = this.get("currentUser.trust_level");
       if (tl === 0 || tl === 1) {
         reason +=
@@ -536,10 +538,10 @@ export default Component.extend({
 
   _warnMentionedGroups($preview) {
     schedule("afterRender", () => {
-      var found = this.warnedGroupMentions || [];
+      let found = this.warnedGroupMentions || [];
       $preview.find(".mention-group.notify").each((idx, e) => {
         const $e = $(e);
-        var name = $e.data("name");
+        let name = $e.data("name");
         if (found.indexOf(name) === -1) {
           this.groupsMentioned([
             {
@@ -693,63 +695,73 @@ export default Component.extend({
 
       const isUploading = validateUploadedFiles(data.files, opts);
 
-      this.setProperties({ uploadProgress: 0, isUploading });
+      run(() => {
+        this.setProperties({ uploadProgress: 0, isUploading });
+      });
 
       return isUploading;
     });
 
     $element.on("fileuploadprogressall", (e, data) => {
-      this.set(
-        "uploadProgress",
-        parseInt((data.loaded / data.total) * 100, 10)
-      );
+      run(() => {
+        this.set(
+          "uploadProgress",
+          parseInt((data.loaded / data.total) * 100, 10)
+        );
+      });
     });
 
     $element.on("fileuploadsend", (e, data) => {
-      this._pasted = false;
-      this._validUploads++;
+      run(() => {
+        this._pasted = false;
+        this._validUploads++;
 
-      this._setUploadPlaceholderSend(data);
+        this._setUploadPlaceholderSend(data);
 
-      this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
+        this.appEvents.trigger("composer:insert-text", this.uploadPlaceholder);
 
-      if (data.xhr && data.originalFiles.length === 1) {
-        this.set("isCancellable", true);
-        this._xhr = data.xhr();
-      }
+        if (data.xhr && data.originalFiles.length === 1) {
+          this.set("isCancellable", true);
+          this._xhr = data.xhr();
+        }
+      });
     });
 
     $element.on("fileuploaddone", (e, data) => {
-      let upload = data.result;
-      this._setUploadPlaceholderDone(data);
-      if (!this._xhr || !this._xhr._userCancelled) {
-        const markdown = uploadMarkdownResolvers.reduce(
-          (md, resolver) => resolver(upload) || md,
-          getUploadMarkdown(upload)
-        );
+      run(() => {
+        let upload = data.result;
+        this._setUploadPlaceholderDone(data);
+        if (!this._xhr || !this._xhr._userCancelled) {
+          const markdown = uploadMarkdownResolvers.reduce(
+            (md, resolver) => resolver(upload) || md,
+            getUploadMarkdown(upload)
+          );
 
-        cacheShortUploadUrl(upload.short_url, upload);
-        this.appEvents.trigger(
-          "composer:replace-text",
-          this.uploadPlaceholder.trim(),
-          markdown
-        );
-        this._resetUpload(false);
-      } else {
-        this._resetUpload(true);
-      }
+          cacheShortUploadUrl(upload.short_url, upload);
+          this.appEvents.trigger(
+            "composer:replace-text",
+            this.uploadPlaceholder.trim(),
+            markdown
+          );
+          this._resetUpload(false);
+        } else {
+          this._resetUpload(true);
+        }
+      });
     });
 
     $element.on("fileuploadfail", (e, data) => {
-      this._setUploadPlaceholderDone(data);
-      this._resetUpload(true);
+      run(() => {
+        this._setUploadPlaceholderDone(data);
+        this._resetUpload(true);
 
-      const userCancelled = this._xhr && this._xhr._userCancelled;
-      this._xhr = null;
+        const userCancelled = this._xhr && this._xhr._userCancelled;
+        this._xhr = null;
 
-      if (!userCancelled) {
-        displayErrorForUpload(data, this.siteSettings);
-      }
+        if (!userCancelled) {
+          displayErrorForUpload(data, this.siteSettings);
+        }
+      });
     });
 
     if (this.site.mobileView) {
@@ -895,7 +907,7 @@ export default Component.extend({
       // Paint mentions
       const unseenMentions = linkSeenMentions($preview, this.siteSettings);
       if (unseenMentions.length) {
-        debounce(
+        discourseDebounce(
           this,
           this._renderUnseenMentions,
           $preview,
@@ -910,7 +922,7 @@ export default Component.extend({
       // Paint category and tag hashtags
       const unseenHashtags = linkSeenHashtags($preview);
       if (unseenHashtags.length > 0) {
-        debounce(this, this._renderUnseenHashtags, $preview, 450);
+        discourseDebounce(this, this._renderUnseenHashtags, $preview, 450);
       }
 
       // Paint oneboxes
@@ -937,7 +949,7 @@ export default Component.extend({
         }
       };
 
-      debounce(this, paintFunc, 450);
+      discourseDebounce(this, paintFunc, 450);
 
       // Short upload urls need resolution
       resolveAllShortUrls(ajax, this.siteSettings, $preview[0]);

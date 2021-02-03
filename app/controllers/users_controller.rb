@@ -647,8 +647,7 @@ class UsersController < ApplicationController
         success: true,
         active: user.active?,
         message: activation.message,
-        user_id: user.id
-      }
+      }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken && user.errors[:primary_email]&.include?(I18n.t('errors.messages.taken'))
       session["user_created_message"] = activation.success_message
 
@@ -658,9 +657,8 @@ class UsersController < ApplicationController
 
       render json: {
         success: true,
-        active: user.active?,
-        message: activation.success_message,
-        user_id: user.id
+        active: false,
+        message: activation.success_message
       }
     else
       errors = user.errors.to_hash
@@ -1043,18 +1041,14 @@ class UsersController < ApplicationController
   def search_users
     term = params[:term].to_s.strip
 
-    topic_id = params[:topic_id]
-    topic_id = topic_id.to_i if topic_id
-
-    category_id = params[:category_id].to_i if category_id.present?
+    topic_id = params[:topic_id].to_i if params[:topic_id].present?
+    category_id = params[:category_id].to_i if params[:category_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
     group_names = params[:groups] || []
     group_names << params[:group] if params[:group]
-    if group_names.present?
-      @groups = Group.where(name: group_names)
-    end
+    @groups = Group.where(name: group_names) if group_names.present?
 
     options = {
      topic_allowed_users: topic_allowed_users,
@@ -1062,13 +1056,8 @@ class UsersController < ApplicationController
      groups: @groups
     }
 
-    if topic_id
-      options[:topic_id] = topic_id
-    end
-
-    if category_id
-      options[:category_id] = category_id
-    end
+    options[:topic_id] = topic_id if topic_id
+    options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
 
@@ -1077,8 +1066,10 @@ class UsersController < ApplicationController
 
     to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
     groups =
-      if current_user
+      if term.present? && current_user
         if params[:include_groups] == 'true'
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == 'true'
@@ -1087,10 +1078,6 @@ class UsersController < ApplicationController
           Group.messageable(current_user)
         end
       end
-
-    # blank term is only handy for in-topic search of users after @
-    # we do not want group results ever if term is blank
-    groups = nil if term.blank?
 
     if groups
       groups = Group.search_groups(term, groups: groups)
@@ -1110,33 +1097,37 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    type = params[:type]
-    upload_id = params[:upload_id]
-
     if SiteSetting.sso_overrides_avatar
       return render json: failed_json, status: 422
     end
 
-    if !SiteSetting.allow_uploaded_avatars
-      if type == "uploaded" || type == "custom"
-        return render json: failed_json, status: 422
-      end
+    type = params[:type]
+
+    invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != 'system'
+    if invalid_type
+      return render json: failed_json, status: 422
     end
 
-    upload = Upload.find_by(id: upload_id)
-
-    # old safeguard
-    user.create_user_avatar unless user.user_avatar
-
-    guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
-
-    if AVATAR_TYPES_WITH_UPLOAD.include?(type)
-
-      if !upload
-        return render_json_error I18n.t("avatar.missing")
+    if type.blank? || type == 'system'
+      upload_id = nil
+    else
+      if !SiteSetting.allow_uploaded_avatars
+        return render json: failed_json, status: 422
       end
 
-      if type == "gravatar"
+      upload_id = params[:upload_id]
+      upload = Upload.find_by(id: upload_id)
+
+      if upload.nil?
+        return render_json_error I18n.t('avatar.missing')
+      end
+
+      # old safeguard
+      user.create_user_avatar unless user.user_avatar
+
+      guardian.ensure_can_pick_avatar!(user.user_avatar, upload)
+
+      if type == 'gravatar'
         user.user_avatar.gravatar_upload_id = upload_id
       else
         user.user_avatar.custom_upload_id = upload_id
@@ -1542,7 +1533,9 @@ class UsersController < ApplicationController
         if bookmark_list.bookmarks.empty?
           render json: {
             bookmarks: [],
-            no_results_help: I18n.t("user_activity.no_bookmarks.self")
+            no_results_help: I18n.t(
+              params[:q].present? ? "user_activity.no_bookmarks.search" : "user_activity.no_bookmarks.self"
+            )
           }
         else
           page = params[:page].to_i + 1
@@ -1620,6 +1613,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
+    permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
     result = params
       .permit(permitted, theme_ids: [])

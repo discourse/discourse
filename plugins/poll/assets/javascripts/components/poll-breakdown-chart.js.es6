@@ -1,10 +1,10 @@
-import I18n from "I18n";
 import Component from "@ember/component";
-import { mapBy } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import I18n from "I18n";
 import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import discourseComputed from "discourse-common/utils/decorators";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { htmlSafe } from "@ember/template";
+import { mapBy } from "@ember/object/computed";
 
 export default Component.extend({
   // Arguments:

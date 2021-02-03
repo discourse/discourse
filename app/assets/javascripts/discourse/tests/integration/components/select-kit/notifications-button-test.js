@@ -1,43 +1,55 @@
-import componentTest from "discourse/tests/helpers/component-test";
-import {
-  testSelectKitModule,
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
-testSelectKitModule("notifications-button");
+discourseModule(
+  "Integration | Component | select-kit/notifications-button",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-componentTest("default", {
-  template: `
-    {{notifications-button
-      value=value
-      options=(hash
-        i18nPrefix=i18nPrefix
-        i18nPostfix=i18nPostfix
-      )
-    }}
-  `,
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
 
-  beforeEach() {
-    this.set("value", 1);
+    componentTest("default", {
+      template: hbs`
+      {{notifications-button
+        value=value
+        options=(hash
+          i18nPrefix=i18nPrefix
+          i18nPostfix=i18nPostfix
+        )
+      }}
+    `,
 
-    setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
-  },
+      beforeEach() {
+        this.set("value", 1);
 
-  async test(assert) {
-    assert.ok(this.subject.header().value());
+        setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
+      },
 
-    assert.ok(
-      this.subject
-        .header()
-        .label()
-        .includes(`${this.i18nPrefix}.regular${this.i18nPostfix}`),
-      "it shows the regular choice when value is not set"
-    );
+      async test(assert) {
+        assert.ok(this.subject.header().value());
 
-    const icon = this.subject.header().icon()[0];
-    assert.ok(
-      icon.classList.contains("d-icon-d-regular"),
-      "it shows the correct icon"
-    );
-  },
-});
+        assert.ok(
+          this.subject
+            .header()
+            .label()
+            .includes(`${this.i18nPrefix}.regular${this.i18nPostfix}`),
+          "it shows the regular choice when value is not set"
+        );
+
+        const icon = this.subject.header().icon()[0];
+        assert.ok(
+          icon.classList.contains("d-icon-d-regular"),
+          "it shows the correct icon"
+        );
+      },
+    });
+  }
+);

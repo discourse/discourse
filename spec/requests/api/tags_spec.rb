@@ -60,46 +60,22 @@ describe 'tags' do
     post 'Creates a tag group' do
       tags 'Tags'
       consumes 'application/json'
-      parameter name: :post_body, in: :body, schema: {
-        type: :object,
-        properties: {
-          name: { type: :string }
-        },
-        required: [ 'name' ]
-      }
+      expected_request_schema = load_spec_schema('tag_group_create_request')
+
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces 'application/json'
       response '200', 'tag group created' do
-        schema type: :object, properties: {
-          tag_group: {
-            type: :object,
-            properties: {
-              id: { type: :integer },
-              name: { type: :string },
-              tag_names: {
-                type: :array,
-                items: {
-                },
-              },
-              parent_tag_name: {
-                type: :array,
-                items: {
-                },
-              },
-              one_per_topic: { type: :boolean },
-              permissions: {
-                type: :object,
-                properties: {
-                  everyone: { type: :integer },
-                }
-              },
-            }
-          },
-        }
+        expected_response_schema = load_spec_schema('tag_group_create_response')
 
-        let(:post_body) { { name: 'todo' } }
+        let(:params) { { 'name' => 'todo' } }
 
-        run_test!
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
 

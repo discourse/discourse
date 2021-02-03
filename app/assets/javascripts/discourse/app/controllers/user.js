@@ -1,14 +1,17 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { alias, or, gt, not, and } from "@ember/object/computed";
-import EmberObject, { set, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
+import Controller, { inject } from "@ember/controller";
+import EmberObject, { computed, set } from "@ember/object";
+import { alias, and, gt, not, or } from "@ember/object/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import User from "discourse/models/user";
+import I18n from "I18n";
+import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
   indexStream: false,
@@ -169,7 +172,57 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     adminDelete() {
-      this.adminTools.deleteUser(this.get("model.id"));
+      const userId = this.get("model.id");
+      const message = I18n.t("admin.user.delete_confirm");
+      const location = document.location.pathname;
+
+      const performDestroy = (block) => {
+        bootbox.dialog(I18n.t("admin.user.deleting_user"));
+        let formData = { context: location };
+        if (block) {
+          formData["block_email"] = true;
+          formData["block_urls"] = true;
+          formData["block_ip"] = true;
+        }
+        formData["delete_posts"] = true;
+
+        this.adminTools
+          .deleteUser(userId, formData)
+          .then((data) => {
+            if (data.deleted) {
+              document.location = getURL("/admin/users/list/active");
+            } else {
+              bootbox.alert(I18n.t("admin.user.delete_failed"));
+            }
+          })
+          .catch(() => bootbox.alert(I18n.t("admin.user.delete_failed")));
+      };
+
+      const buttons = [
+        {
+          label: I18n.t("composer.cancel"),
+          class: "btn",
+          link: true,
+        },
+        {
+          label:
+            `${iconHTML("exclamation-triangle")} ` +
+            I18n.t("admin.user.delete_and_block"),
+          class: "btn btn-danger",
+          callback: function () {
+            performDestroy(true);
+          },
+        },
+        {
+          label: I18n.t("admin.user.delete_dont_block"),
+          class: "btn btn-primary",
+          callback: function () {
+            performDestroy(false);
+          },
+        },
+      ];
+
+      bootbox.dialog(message, buttons, { classes: "delete-user-modal" });
     },
 
     updateNotificationLevel(level) {

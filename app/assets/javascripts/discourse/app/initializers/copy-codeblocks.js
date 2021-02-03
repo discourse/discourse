@@ -1,9 +1,9 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { cancel, later } from "@ember/runloop";
-import { Promise } from "rsvp";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { Promise } from "rsvp";
 import { guidFor } from "@ember/object/internals";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 // http://github.com/feross/clipboard-copy
 function clipboardCopy(text) {
@@ -63,6 +63,8 @@ export default {
   name: "copy-codeblocks",
 
   initialize(container) {
+    const siteSettings = container.lookup("site-settings:main");
+
     withPluginApi("0.8.7", (api) => {
       function _cleanUp() {
         Object.values(_copyCodeblocksClickHandlers || {}).forEach((handler) =>
@@ -112,7 +114,6 @@ export default {
           return;
         }
 
-        const siteSettings = container.lookup("site-settings:main");
         if (!siteSettings.show_copy_button_on_codeblocks) {
           return;
         }

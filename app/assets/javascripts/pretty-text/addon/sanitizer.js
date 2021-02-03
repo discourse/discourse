@@ -126,6 +126,12 @@ export function sanitize(text, allowLister) {
           return "-STRIP-";
         }
 
+        if (tag === "video" && name === "autoplay") {
+          // This might give us duplicate 'muted' atttributes
+          // but they will be deduped by later processing
+          return "autoplay muted";
+        }
+
         // Heading ids must begin with `heading--`
         if (
           ["h1", "h2", "h3", "h4", "h5", "h6"].indexOf(tag) !== -1 &&

@@ -9,6 +9,7 @@ RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 require 'rubygems'
 require 'bundler/setup'
 require 'digest'
+require 'fileutils'
 
 dev_mode = false
 

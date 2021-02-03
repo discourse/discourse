@@ -1301,6 +1301,21 @@ describe Post do
     end
   end
 
+  describe ".hide!" do
+    after do
+      Discourse.redis.flushdb
+    end
+
+    it "should ignore the duplicate check" do
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post, user: p1.user)
+      SiteSetting.unique_posts_mins = 10
+      p1.store_unique_post_key
+      p2.reload.hide!(PostActionType.types[:off_topic])
+      expect(p2).to be_hidden
+    end
+  end
+
   describe ".unhide!" do
     before { SiteSetting.unique_posts_mins = 5 }
 
@@ -1480,7 +1495,7 @@ describe Post do
         SiteSetting.secure_media = true
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1492,7 +1507,7 @@ describe Post do
         SiteSetting.secure_media = false
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],
@@ -1505,7 +1520,7 @@ describe Post do
         private_category = Fabricate(:private_category, group: Fabricate(:group))
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: post).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, true],
@@ -1516,11 +1531,11 @@ describe Post do
       it "does not mark an upload as secure if it has already been used in a public topic" do
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user))
         post.link_post_uploads
-        post.update_uploads_secure_status
+        post.update_uploads_secure_status(source: "test")
 
         pm = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         pm.link_post_uploads
-        pm.update_uploads_secure_status
+        pm.update_uploads_secure_status(source: "test")
 
         expect(PostUpload.where(post: pm).joins(:upload).pluck(:upload_id, :secure)).to contain_exactly(
           [attachment_upload.id, false],

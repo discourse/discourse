@@ -11,7 +11,7 @@
 //= require route-recognizer
 //= require pretender/pretender
 //= require locales/i18n
-//= require locales/en_US
+//= require locales/en
 //= require discourse-loader
 
 // Our base application

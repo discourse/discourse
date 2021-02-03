@@ -1,0 +1,17 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "delete_posts": {
+      "type": "boolean"
+    },
+    "block_email": {
+      "type": "boolean"
+    },
+    "block_urls": {
+      "type": "boolean"
+    },
+    "block_ip": {
+      "type": "boolean"
+    }
+  }
+}

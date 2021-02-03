@@ -37,7 +37,14 @@ class ApiKeyScope < ActiveRecord::Base
           bookmarks: { actions: %w[users#bookmarks], params: %i[username] },
           sync_sso: { actions: %w[admin/users#sync_sso], params: %i[sso sig] },
           show: { actions: %w[users#show], params: %i[username external_id] },
-          check_emails: { actions: %w[users#check_emails], params: %i[username] }
+          check_emails: { actions: %w[users#check_emails], params: %i[username] },
+          update: { actions: %w[users#update], params: %i[username] },
+          log_out: { actions: %w[admin/users#log_out] },
+          anonymize: { actions: %w[admin/users#anonymize] },
+          delete: { actions: %w[admin/users#destroy] },
+        },
+        email: {
+          receive_emails: { actions: %w[admin/email#handle_mail] }
         }
       }
 

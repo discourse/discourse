@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Dashboard", function (needs) {
   needs.user();
@@ -124,6 +126,13 @@ acceptance("Dashboard", function (needs) {
       88,
       "its set the value of the filter from the query params"
     );
+  });
+
+  test("new features", async function (assert) {
+    await visit("/admin");
+
+    assert.ok(exists(".dashboard-new-features"));
+    assert.ok(exists(".dashboard-new-features .new-features-release-notes"));
   });
 });
 

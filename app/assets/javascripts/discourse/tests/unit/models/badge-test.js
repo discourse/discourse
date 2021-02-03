@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import Badge from "discourse/models/badge";
 
 module("Unit | Model | badge", function () {

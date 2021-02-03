@@ -7,7 +7,7 @@ div.edit-category {
   grid-template-rows: auto auto auto;
   grid-row-gap: 1em;
   grid-column-gap: 1.5em;
-  grid-template-areas: "header header" "sidebar content" "sidebar footer";
+  grid-template-areas: "header header" "sidebar content" "sidebar warning" "sidebar footer";
 
   .edit-category-title {
     grid-area: header;
@@ -27,6 +27,10 @@ div.edit-category {
     }
   }
 
+  .edit-category-content {
+    grid-area: content;
+  }
+
   #list-area & h2 {
     margin: 0;
   }
@@ -35,15 +39,15 @@ div.edit-category {
     margin-bottom: 1em;
   }
 
+  .warning {
+    background-color: var(--tertiary-low);
+    padding: 0.5em 2.5em 0.5em 1em;
+    margin-top: 0;
+  }
+
   .edit-category-tab-general {
     .category-chooser {
       width: unquote("min(340px, 90%)");
-    }
-
-    .warning {
-      background-color: var(--tertiary-low);
-      padding: 0.5em 2.5em 0.5em 1em;
-      margin-top: 0;
     }
   }
 
@@ -69,11 +73,6 @@ div.edit-category {
         top: -13px;
         left: 200px;
       }
-    }
-
-    .add-permission {
-      position: relative;
-      top: 0.1em;
     }
 
     .permission-list {
@@ -142,36 +141,82 @@ div.edit-category {
     }
   }
 
+  .edit-category-delete-warning {
+    grid-area: warning;
+  }
+
   .edit-category-footer {
     grid-area: footer;
     display: flex;
     justify-content: space-between;
     align-self: start;
-    padding-bottom: 2em;
+    padding: 0 1.5em 2em 0;
+  }
+}
 
-    .disable-info {
-      position: relative;
-      .cannot-delete-reason {
-        position: absolute;
-        bottom: 125%;
-        right: 0px;
-        width: 250px;
-        background: var(--primary);
-        color: var(--secondary);
-        text-align: center;
-        border-radius: 2px;
-        padding: 12px 8px;
+.category-permissions-table {
+  max-width: 450px;
+  margin-bottom: 2em;
 
-        &::after {
-          top: 100%;
-          left: 57%;
-          border: solid transparent;
-          content: " ";
-          position: absolute;
-          border-top-color: var(--primary);
-          border-width: 8px;
-        }
+  .permission-row {
+    border-bottom: 1px solid var(--primary-low);
+    display: flex;
+    &.row-header {
+      font-weight: bold;
+      border-bottom: 2px solid var(--primary-low);
+    }
+    .group-name,
+    .options {
+      display: flex;
+      box-sizing: border-box;
+      text-align: center;
+      width: 50%;
+      margin: 0px;
+      align-items: center;
+    }
+    .group-name {
+      text-align: left;
+      padding: 0.5em;
+      padding-left: 0;
+      .group-name-label {
+        @include ellipsis;
       }
+    }
+    .cell,
+    .btn-flat {
+      width: 33%;
+      padding: 0.5em;
+    }
+    .btn-flat:hover {
+      background-color: transparent;
+    }
+    .btn-flat .d-icon-check-square,
+    .btn-flat:hover .d-icon-check-square {
+      color: var(--success);
+    }
+  }
+
+  .remove-permission {
+    margin-left: 0.5em;
+    padding: 0.15em;
+    color: var(--danger);
+    &:hover {
+      color: var(--danger-hover);
+    }
+  }
+
+  .row-empty {
+    padding: 0.5em 0;
+  }
+
+  .row-empty {
+    color: var(--primary-medium);
+  }
+
+  .add-group {
+    margin: 1em 0;
+    .group-name {
+      width: 100%;
     }
   }
 }

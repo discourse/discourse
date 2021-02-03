@@ -1,10 +1,13 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
-
-moduleForComponent("date-time-input", { integration: true });
+import hbs from "htmlbars-inline-precompile";
 
 function dateInput() {
   return queryAll(".date-picker")[0];
@@ -26,58 +29,62 @@ async function pika(year, month, day) {
 
 const DEFAULT_DATE_TIME = moment("2019-01-29 14:45");
 
-componentTest("default", {
-  template: `{{date-time-input date=date}}`,
+discourseModule("Integration | Component | date-time-input", function (hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
-  },
+  componentTest("default", {
+    template: hbs`{{date-time-input date=date}}`,
 
-  test(assert) {
-    assert.equal(dateInput().value, "January 29, 2019");
-    assert.equal(timeInput().dataset.name, "14:45");
-  },
-});
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE_TIME });
+    },
 
-componentTest("prevents mutations", {
-  template: `{{date-time-input date=date}}`,
+    test(assert) {
+      assert.equal(dateInput().value, "January 29, 2019");
+      assert.equal(timeInput().dataset.name, "14:45");
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
-  },
+  componentTest("prevents mutations", {
+    template: hbs`{{date-time-input date=date}}`,
 
-  async test(assert) {
-    await click(dateInput());
-    await pika(2019, 0, 2);
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE_TIME });
+    },
 
-    assert.ok(this.date.isSame(DEFAULT_DATE_TIME));
-  },
-});
+    async test(assert) {
+      await click(dateInput());
+      await pika(2019, 0, 2);
 
-componentTest("allows mutations through actions", {
-  template: `{{date-time-input date=date onChange=onChange}}`,
+      assert.ok(this.date.isSame(DEFAULT_DATE_TIME));
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
-    this.set("onChange", setDate);
-  },
+  componentTest("allows mutations through actions", {
+    template: hbs`{{date-time-input date=date onChange=onChange}}`,
 
-  async test(assert) {
-    await click(dateInput());
-    await pika(2019, 0, 2);
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE_TIME });
+      this.set("onChange", setDate);
+    },
 
-    assert.ok(this.date.isSame(moment("2019-01-02 14:45")));
-  },
-});
+    async test(assert) {
+      await click(dateInput());
+      await pika(2019, 0, 2);
 
-componentTest("can hide time", {
-  template: `{{date-time-input date=date showTime=false}}`,
+      assert.ok(this.date.isSame(moment("2019-01-02 14:45")));
+    },
+  });
 
-  beforeEach() {
-    this.setProperties({ date: DEFAULT_DATE_TIME });
-  },
+  componentTest("can hide time", {
+    template: hbs`{{date-time-input date=date showTime=false}}`,
 
-  async test(assert) {
-    assert.notOk(exists(timeInput()));
-  },
+    beforeEach() {
+      this.setProperties({ date: DEFAULT_DATE_TIME });
+    },
+
+    async test(assert) {
+      assert.notOk(exists(timeInput()));
+    },
+  });
 });

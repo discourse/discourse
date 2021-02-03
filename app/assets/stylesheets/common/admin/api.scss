@@ -100,7 +100,8 @@ table.api-keys {
 
         .value-list,
         .select-kit,
-        input[type="text"] {
+        input[type="text"],
+        input[type="text"].filter-input {
           width: 100%;
           margin: 0;
         }
@@ -225,7 +226,7 @@ table.api-keys {
     display: none;
   }
   input {
-    max-width: calc(100% - 10px;);
+    max-width: calc(100% - 10px);
   }
   .select-kit,
   .select-kit.multi-select {

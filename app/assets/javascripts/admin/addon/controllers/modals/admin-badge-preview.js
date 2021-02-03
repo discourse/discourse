@@ -1,6 +1,6 @@
-import I18n from "I18n";
 import { alias, map } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 

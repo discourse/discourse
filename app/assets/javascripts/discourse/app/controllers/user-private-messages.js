@@ -1,10 +1,10 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { alias, equal, and } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
+import { alias, and, equal } from "@ember/object/computed";
+import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
+import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   userTopicsList: controller("user-topics-list"),
@@ -40,7 +40,7 @@ export default Controller.extend({
 
   bulkOperation(operation) {
     const selected = this.selected;
-    var params = { type: operation };
+    let params = { type: operation };
     if (this.isGroup) {
       params.group = this.groupFilter;
     }

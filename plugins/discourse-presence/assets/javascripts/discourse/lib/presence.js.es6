@@ -1,5 +1,5 @@
-import EmberObject from "@ember/object";
 import { cancel, later } from "@ember/runloop";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 

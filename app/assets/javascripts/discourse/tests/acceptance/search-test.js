@@ -1,10 +1,12 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 
 acceptance("Search - Anonymous", function (needs) {
   let calledEmpty = false;
@@ -28,7 +30,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.ok(!exists(".search-menu .results ul li"), "no results by default");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
     assert.ok(
       exists(".search-menu .results ul li .topic-title[data-topic-id]"),
@@ -54,7 +56,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
 
     await fillIn("#search-term", "evil");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
   });
 
@@ -97,7 +99,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "a proper");
     await click(".search-context input[type='checkbox']");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
     assert.ok(exists(".search-menu .results ul li"), "it shows results");
 
@@ -187,9 +189,11 @@ acceptance("Search - with tagging enabled", function (needs) {
     await click("#search-button");
 
     await fillIn("#search-term", "dev");
-    await keyEvent("#search-term", "keyup", 16);
+    await triggerKeyEvent("#search-term", "keyup", 16);
 
-    const tags = queryAll(".search-menu .results ul li:eq(0) .discourse-tags")
+    const tags = queryAll(
+      ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
+    )
       .text()
       .trim();
 

@@ -1,7 +1,7 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
-import showModal from "discourse/lib/show-modal";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   model(params) {

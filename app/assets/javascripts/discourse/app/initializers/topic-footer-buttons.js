@@ -1,7 +1,7 @@
 import I18n from "I18n";
-import showModal from "discourse/lib/show-modal";
-import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
+import showModal from "discourse/lib/show-modal";
 
 const SHARE_PRIORITY = 1000;
 const BOOKMARK_PRIORITY = 900;

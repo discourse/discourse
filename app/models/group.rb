@@ -303,7 +303,7 @@ class Group < ActiveRecord::Base
       .where(groups: { id: id })
       .where('topics.archetype <> ?', Archetype.private_message)
       .where('topics.visible')
-      .where(post_type: Post.types[:regular])
+      .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
     if opts[:category_id].present?
       result = result.where('topics.category_id = ?', opts[:category_id].to_i)
@@ -750,7 +750,7 @@ class Group < ActiveRecord::Base
   end
 
   def flair_url
-    flair_icon.presence || flair_upload&.short_path
+    flair_icon.presence || flair_upload&.url
   end
 
   [:muted, :regular, :tracking, :watching, :watching_first_post].each do |level|
@@ -836,6 +836,11 @@ class Group < ActiveRecord::Base
       group_name: self.full_name.presence || self.name,
       group_path: "/g/#{self.name}"
     )
+  end
+
+  def message_count
+    return 0 unless self.has_messages
+    TopicAllowedGroup.where(group_id: self.id).joins(:topic).count
   end
 
   protected
@@ -1021,6 +1026,10 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  publish_read_state                 :boolean          default(FALSE), not null
+#  members_visibility_level           :integer          default(0), not null
+#  flair_icon                         :string
+#  flair_upload_id                    :integer
 #  smtp_server                        :string
 #  smtp_port                          :integer
 #  smtp_ssl                           :boolean
@@ -1032,13 +1041,10 @@ end
 #  imap_last_uid                      :integer          default(0), not null
 #  email_username                     :string
 #  email_password                     :string
-#  publish_read_state                 :boolean          default(FALSE), not null
-#  members_visibility_level           :integer          default(0), not null
-#  flair_icon                         :string
-#  flair_upload_id                    :integer
 #  imap_last_error                    :text
 #  imap_old_emails                    :integer
 #  imap_new_emails                    :integer
+#  allow_unknown_sender_topic_replies :boolean          default(FALSE)
 #
 # Indexes
 #

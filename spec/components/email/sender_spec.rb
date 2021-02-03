@@ -439,7 +439,7 @@ describe Email::Sender do
         @secure_image_file = file_from_fixtures("logo.png", "images")
         @secure_image = UploadCreator.new(@secure_image_file, "logo.png")
           .create_for(Discourse.system_user.id)
-        @secure_image.update_secure_status(secure_override_value: true)
+        @secure_image.update_secure_status(override: true)
         @secure_image.update(access_control_post_id: reply.id)
         reply.update(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
         reply.rebake!
@@ -486,12 +486,15 @@ describe Email::Sender do
 
         context "when the uploaded secure image has an optimized image" do
           let!(:optimized) { Fabricate(:optimized_image, upload: @secure_image) }
-          let!(:optimized_image_file) { file_from_fixtures("logo-dev.png", "images") }
+          let!(:optimized_image_file) { file_from_fixtures("smallest.png", "images") }
 
-          it "uses the email styles and the optimized image to inline secure images and attaches the secure image upload to the email" do
+          before do
             Discourse.store.store_optimized_image(optimized_image_file, optimized)
             optimized.update(url: Discourse.store.absolute_base_url + '/' + optimized.url)
             Discourse.store.cache_file(optimized_image_file, File.basename("#{optimized.sha1}.png"))
+          end
+
+          it "uses the email styles and the optimized image to inline secure images and attaches the secure image upload to the email" do
             Email::Sender.new(message, :valid_type).send
             expect(message.attachments.length).to eq(4)
             expect(message.attachments.map(&:filename))
@@ -499,7 +502,13 @@ describe Email::Sender do
             expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(optimized_image_file))
             expect(message.html_part.body).to include("cid:")
             expect(message.html_part.body).to include("embedded-secure-image")
+          end
+
+          it "uses the optimized image size in the max size limit calculation, not the original image size" do
+            SiteSetting.email_total_attachment_size_limit_kb = 45
+            Email::Sender.new(message, :valid_type).send
             expect(message.attachments.length).to eq(4)
+            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(File.read(optimized_image_file))
           end
         end
       end

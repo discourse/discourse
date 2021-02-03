@@ -444,7 +444,8 @@ module DiscourseTagging
     tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
-    tag.gsub!(/\s+/, '-')
+    tag.gsub!(/[[:space:]]+/, '-')
+    tag.gsub!(/[^[:word:][:punct:]]+/, '')
     tag.squeeze!('-')
     tag.gsub!(TAGS_FILTER_REGEXP, '')
     tag[0...SiteSetting.max_tag_length]
@@ -481,6 +482,7 @@ module DiscourseTagging
   # tags that failed to be added, with errors on each Tag.
   def self.add_or_create_synonyms_by_name(target_tag, synonym_names)
     tag_names = DiscourseTagging.tags_for_saving(synonym_names, Guardian.new(Discourse.system_user)) || []
+    tag_names -= [target_tag.name]
     existing = Tag.where_name(tag_names).all
     target_tag.synonyms << existing
     (tag_names - target_tag.synonyms.map(&:name)).each do |name|

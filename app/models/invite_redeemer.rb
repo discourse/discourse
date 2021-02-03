@@ -100,9 +100,8 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     end
 
     @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
-    if invite.is_invite_link? && @invited_user_record.present?
+    if @invited_user_record.present?
       Invite.increment_counter(:redemption_count, invite.id)
-    elsif @invited_user_record.present?
       delete_duplicate_invites
     end
 
@@ -145,7 +144,7 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def approve_account_if_needed
-    if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user)
+    if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user, status: Reviewable.statuses[:pending])
       reviewable_user.perform(
         invite.invited_by,
         :approve_user,

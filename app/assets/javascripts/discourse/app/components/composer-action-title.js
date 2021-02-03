@@ -1,15 +1,15 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
-  PRIVATE_MESSAGE,
-  CREATE_TOPIC,
   CREATE_SHARED_DRAFT,
-  REPLY,
+  CREATE_TOPIC,
   EDIT,
   EDIT_SHARED_DRAFT,
+  PRIVATE_MESSAGE,
+  REPLY,
 } from "discourse/models/composer";
+import Component from "@ember/component";
+import I18n from "I18n";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 const TITLES = {

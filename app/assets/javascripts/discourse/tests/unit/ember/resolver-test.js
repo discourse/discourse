@@ -1,12 +1,12 @@
-import { test, module } from "qunit";
-import { setResolverOption, buildResolver } from "discourse-common/resolver";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
+import { module, test } from "qunit";
 
 let originalTemplates;
 let resolver;
 
 function lookupTemplate(assert, name, expectedTemplate, message) {
-  var parseName = resolver.parseName(name);
-  var result = resolver.resolveTemplate(parseName);
+  let parseName = resolver.parseName(name);
+  let result = resolver.resolveTemplate(parseName);
   assert.equal(result, expectedTemplate, message);
 }
 

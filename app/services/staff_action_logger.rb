@@ -821,7 +821,7 @@ class StaffActionLogger
 
   def params(opts = nil)
     opts ||= {}
-    { acting_user_id: @admin.id, context: opts[:context] }
+    { acting_user_id: @admin.id, context: opts[:context], details: opts[:details] }
   end
 
   def validate_category(category)

@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 /* global BreakString:true */
 
 module("Unit | Utility | breakString", function () {

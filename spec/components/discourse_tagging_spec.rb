@@ -546,6 +546,10 @@ describe DiscourseTagging do
         SiteSetting.force_lowercase_tags = false
         expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
       end
+
+      it "removes zero-width spaces" do
+        expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
+      end
     end
   end
 
@@ -596,6 +600,14 @@ describe DiscourseTagging do
     it "can add existing tag with wrong case" do
       expect {
         expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name.upcase])).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "removes target tag name from synonyms if present " do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag1.name, tag2.name])).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)

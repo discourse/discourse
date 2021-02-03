@@ -1,8 +1,9 @@
-import I18n from "I18n";
-import { next } from "@ember/runloop";
 import Component from "@ember/component";
+import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
+import { isDocumentRTL } from "discourse/lib/text-direction";
+import { next } from "@ember/runloop";
 
 export default Component.extend({
   @discourseComputed("theme.targets", "onlyOverridden", "showAdvanced")
@@ -43,9 +44,17 @@ export default Component.extend({
 
   @discourseComputed("currentTargetName", "fieldName")
   placeholder(targetName, fieldName) {
-    return fieldName && fieldName === "color_definitions"
-      ? I18n.t("admin.customize.theme.color_definitions.placeholder")
-      : "";
+    if (fieldName && fieldName === "color_definitions") {
+      const example =
+        ":root {\n" +
+        "  --mytheme-tertiary-or-quaternary: #{dark-light-choose($tertiary, $quaternary)};\n" +
+        "}";
+
+      return I18n.t("admin.customize.theme.color_definitions.placeholder", {
+        example: isDocumentRTL() ? `<div dir="ltr">${example}</div>` : example,
+      });
+    }
+    return "";
   },
 
   @discourseComputed("fieldName", "currentTargetName", "theme")

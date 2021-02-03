@@ -1,10 +1,10 @@
+import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
-import Controller, { inject as controller } from "@ember/controller";
+import bootbox from "bootbox";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   application: controller(),
@@ -16,7 +16,7 @@ export default Controller.extend({
 
   @observes("userActionType", "model.stream.itemsLoaded")
   _showFooter: function () {
-    var showFooter;
+    let showFooter;
     if (this.userActionType) {
       const stat = (this.get("model.stats") || []).find(
         (s) => s.action_type === this.userActionType

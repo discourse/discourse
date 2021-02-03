@@ -1,8 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PREFIX = "javascripts/single-test/connectors";
@@ -11,12 +14,8 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    Ember.TEMPLATES[
-      `${PREFIX}/discovery-list-container-top/foo`
-    ] = Ember.HTMLBars.compile("FOO");
-    Ember.TEMPLATES[
-      `${PREFIX}/discovery-list-container-top/bar`
-    ] = Ember.HTMLBars.compile("BAR");
+    Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`] = hbs`FOO`;
+    Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`] = hbs`BAR`;
 
     withPluginApi("0.8.38", (api) => {
       api.decoratePluginOutlet(

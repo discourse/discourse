@@ -1,15 +1,10 @@
-import I18n from "I18n";
-import { get } from "@ember/object";
+import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
-import { or, gt } from "@ember/object/computed";
+import I18n from "I18n";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
+import { get } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { ajax } from "discourse/lib/ajax";
-import { escapeExpression } from "discourse/lib/utilities";
-import highlightSyntax from "discourse/lib/highlight-syntax";
-import { url } from "discourse/lib/computed";
-import bootbox from "bootbox";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];
@@ -23,7 +18,6 @@ const Theme = RestModel.extend({
   isPendingUpdates: gt("remote_theme.commits_behind", 0),
   hasEditedFields: gt("editedFields.length", 0),
   hasParents: gt("parent_themes.length", 0),
-  diffLocalChangesUrl: url("id", "/admin/themes/%@/diff_local_changes"),
 
   @discourseComputed("theme_fields.[]")
   targets() {
@@ -259,6 +253,11 @@ const Theme = RestModel.extend({
     }
   },
 
+  @discourseComputed("recentlyInstalled", "component", "hasParents")
+  warnUnassignedComponent(recent, component, hasParents) {
+    return recent && component && !hasParents;
+  },
+
   removeChildTheme(theme) {
     const childThemes = this.childThemes;
     childThemes.removeObject(theme);
@@ -292,37 +291,9 @@ const Theme = RestModel.extend({
   },
 
   updateToLatest() {
-    return ajax(this.diffLocalChangesUrl).then((json) => {
-      if (json && json.error) {
-        bootbox.alert(
-          I18n.t("generic_error_with_reason", {
-            error: json.error,
-          })
-        );
-      } else if (json && json.diff) {
-        bootbox.confirm(
-          I18n.t("admin.customize.theme.update_confirm") +
-            `<pre><code class="diff">${escapeExpression(
-              json.diff
-            )}</code></pre>`,
-          I18n.t("cancel"),
-          I18n.t("admin.customize.theme.update_confirm_yes"),
-          (result) => {
-            if (result) {
-              return this.save({ remote_update: true }).then(() =>
-                this.set("changed", false)
-              );
-            }
-          }
-        );
-        // TODO: Models shouldn't be updating the DOM
-        highlightSyntax(undefined, this.siteSettings, this.session);
-      } else {
-        return this.save({ remote_update: true }).then(() =>
-          this.set("changed", false)
-        );
-      }
-    });
+    return this.save({ remote_update: true }).then(() =>
+      this.set("changed", false)
+    );
   },
 
   changed: false,

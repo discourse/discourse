@@ -1,9 +1,9 @@
+import Component from "@ember/component";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
-import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
   saving: null,

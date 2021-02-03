@@ -1,5 +1,4 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with pie charts", function (needs) {
   needs.user();

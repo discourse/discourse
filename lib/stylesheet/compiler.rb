@@ -9,16 +9,19 @@ module Stylesheet
   class Compiler
 
     def self.compile_asset(asset, options = {})
+      file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
 
-      if Importer.special_imports[asset.to_s]
+      if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
-        file = "@import \"common/foundation/variables\"; @import \"common/foundation/mixins\";"
-        file += " @import \"theme_variables\";" if Importer::THEME_TARGETS.include?(asset.to_s)
+        file += options[:theme_variables].to_s
+        file += Importer.new({ theme_id: options[:theme_id] }).theme_import(asset)
+      elsif Importer.special_imports[asset.to_s]
+        filename = "theme_#{options[:theme_id]}.scss"
         file += " @import \"#{asset}\";"
       else
         filename = "#{asset}.scss"
         path = "#{Stylesheet::Common::ASSET_ROOT}/#{filename}"
-        file = File.read path
+        file += File.read path
 
         if asset.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET
           file += Stylesheet::Importer.import_color_definitions(options[:theme_id])
@@ -33,6 +36,9 @@ module Stylesheet
     def self.compile(stylesheet, filename, options = {})
       source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map"
 
+      load_paths = [Stylesheet::Common::ASSET_ROOT]
+      load_paths += options[:load_paths] if options[:load_paths]
+
       engine = SassC::Engine.new(stylesheet,
                                  importer: Importer,
                                  filename: filename,
@@ -43,7 +49,7 @@ module Stylesheet
                                  theme: options[:theme],
                                  theme_field: options[:theme_field],
                                  color_scheme_id: options[:color_scheme_id],
-                                 load_paths: [Stylesheet::Common::ASSET_ROOT])
+                                 load_paths: load_paths)
 
       result = engine.render
 

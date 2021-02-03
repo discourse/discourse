@@ -27,7 +27,7 @@ module Oneboxer
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net']
+    @force_get_hosts ||= ['http://us.battle.net', 'https://news.yahoo.com/']
   end
 
   def self.force_custom_user_agent_hosts
@@ -99,30 +99,55 @@ module Oneboxer
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
+      next if onebox.blank?
 
-      if onebox
-        parsed_onebox = Nokogiri::HTML5::fragment(onebox)
-        next unless parsed_onebox.children.count > 0
+      parsed_onebox = Nokogiri::HTML5::fragment(onebox)
+      next if parsed_onebox.children.blank?
 
-        if element&.parent&.node_name&.downcase == "p" &&
-           element.parent.children.count == 1 &&
-           HTML5_BLOCK_ELEMENTS.include?(parsed_onebox.children[0].node_name.downcase)
-          element = element.parent
+      changed = true
+
+      parent = element.parent
+      if parent&.node_name&.downcase == "p" &&
+        parsed_onebox.children.any? { |child| HTML5_BLOCK_ELEMENTS.include?(child.node_name.downcase) }
+
+        siblings = parent.children
+        element_idx = siblings.find_index(element)
+        before_idx = first_significant_element_index(siblings, element_idx - 1, -1)
+        after_idx = first_significant_element_index(siblings, element_idx + 1, +1)
+
+        if before_idx < 0 && after_idx >= siblings.size
+          parent.replace parsed_onebox
+        elsif before_idx < 0
+          parent.children = siblings[after_idx..siblings.size]
+          parent.add_previous_sibling(parsed_onebox)
+        elsif after_idx >= siblings.size
+          parent.children = siblings[0..before_idx]
+          parent.add_next_sibling(parsed_onebox)
+        else
+          parent_rest = parent.dup
+
+          parent.children = siblings[0..before_idx]
+          parent_rest.children = siblings[after_idx..siblings.size]
+
+          parent.add_next_sibling(parent_rest)
+          parent.add_next_sibling(parsed_onebox)
         end
-
-        changed = true
-        element.swap parsed_onebox.to_html
-      end
-    end
-
-    # strip empty <p> elements
-    doc.css("p").each do |p|
-      if p.children.empty? && doc.children.count > 1
-        p.remove
+      else
+        element.replace parsed_onebox
       end
     end
 
     Result.new(doc, changed)
+  end
+
+  def self.first_significant_element_index(elements, index, step)
+    while index >= 0 && index < elements.size &&
+      (elements[index].node_name.downcase == "br" ||
+        (elements[index].node_name.downcase == "text" && elements[index].to_html.strip.blank?))
+      index = index + step
+    end
+
+    index
   end
 
   def self.is_previewing?(user_id)
@@ -170,7 +195,7 @@ module Oneboxer
   end
 
   def self.onebox_raw(url, opts = {})
-    url = URI(url).to_s
+    url = UrlHelper.escape_uri(url).to_s
     local_onebox(url, opts) || external_onebox(url)
   rescue => e
     # no point warning here, just cause we have an issue oneboxing a url
@@ -188,9 +213,10 @@ module Oneboxer
       when "uploads" then local_upload_html(url)
       when "topics"  then local_topic_html(url, route, opts)
       when "users"   then local_user_html(url, route)
+      when "list"    then local_category_html(url, route)
       end
 
-    html = html.presence || "<a href='#{url}'>#{url}</a>"
+    html = html.presence || "<a href='#{URI(url).to_s}'>#{URI(url).to_s}</a>"
     { onebox: html, preview: html }
   end
 
@@ -261,7 +287,7 @@ module Oneboxer
         quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.mustache")
+      template = template("discourse_topic_onebox")
       Mustache.render(template, args)
     end
   end
@@ -287,10 +313,28 @@ module Oneboxer
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.mustache")
-      Mustache.render(template, args)
+      Mustache.render(template("discourse_user_onebox"), args)
     else
       nil
+    end
+  end
+
+  def self.local_category_html(url, route)
+    return unless route[:category_slug_path_with_id]
+    category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
+
+    if Guardian.new.can_see_category?(category)
+      args = {
+        url: category.url,
+        name: category.name,
+        color: category.color,
+        logo_url: category.uploaded_logo&.url,
+        description: category.description,
+        has_subcategories: category.subcategories.present?,
+        subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }
+      }
+
+      Mustache.render(template("discourse_category_onebox"), args)
     end
   end
 
@@ -313,12 +357,26 @@ module Oneboxer
   def self.external_onebox(url)
     Discourse.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
       fd = FinalDestination.new(url,
-                              ignore_redirects: ignore_redirects,
-                              ignore_hostnames: blocked_domains,
-                              force_get_hosts: force_get_hosts,
-                              force_custom_user_agent_hosts: force_custom_user_agent_hosts,
-                              preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+                                ignore_redirects: ignore_redirects,
+                                ignore_hostnames: blocked_domains,
+                                force_get_hosts: force_get_hosts,
+                                force_custom_user_agent_hosts: force_custom_user_agent_hosts,
+                                preserve_fragment_url_hosts: preserve_fragment_url_hosts)
       uri = fd.resolve
+
+      if fd.status != :resolved
+        args = { link: url }
+        if fd.status == :invalid_address
+          args[:error_message] = I18n.t("errors.onebox.invalid_address", hostname: fd.hostname)
+        elsif fd.status_code
+          args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
+        end
+
+        error_box = blank_onebox
+        error_box[:preview] = preview_error_onebox(args)
+        return error_box
+      end
+
       return blank_onebox if uri.blank? || blocked_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
 
       options = {
@@ -326,13 +384,56 @@ module Oneboxer
         sanitize_config: Onebox::DiscourseOneboxSanitizeConfig::Config::DISCOURSE_ONEBOX,
         allowed_iframe_origins: allowed_iframe_origins,
         hostname: GlobalSetting.hostname,
+        facebook_app_access_token: SiteSetting.facebook_app_access_token,
       }
 
       options[:cookie] = fd.cookie if fd.cookie
 
       r = Onebox.preview(uri.to_s, options)
+      result = { onebox: r.to_s, preview: r&.placeholder_html.to_s }
 
-      { onebox: r.to_s, preview: r&.placeholder_html.to_s }
+      # NOTE: Call r.errors after calling placeholder_html
+      if r.errors.any?
+        missing_attributes = r.errors.keys.map(&:to_s).sort.join(I18n.t("word_connector.comma"))
+        error_message = I18n.t("errors.onebox.missing_data", missing_attributes: missing_attributes, count: r.errors.keys.size)
+        args = r.data.merge(error_message: error_message)
+
+        if result[:preview].blank?
+          result[:preview] = preview_error_onebox(args)
+        else
+          doc = Nokogiri::HTML5::fragment(result[:preview])
+          aside = doc.at('aside')
+
+          if aside
+            # Add an error message to the preview that was returned
+            error_fragment = preview_error_onebox_fragment(args)
+            aside.add_child(error_fragment)
+            result[:preview] = doc.to_html
+          end
+        end
+      end
+
+      result
+    end
+  end
+
+  def self.preview_error_onebox(args, is_fragment = false)
+    args[:title] ||= args[:link] if args[:link]
+    args[:error_message] = PrettyText.unescape_emoji(args[:error_message]) if args[:error_message]
+
+    template_name = is_fragment ? "preview_error_fragment_onebox" : "preview_error_onebox"
+    Mustache.render(template(template_name), args)
+  end
+
+  def self.preview_error_onebox_fragment(args)
+    preview_error_onebox(args, true)
+  end
+
+  def self.template(template_name)
+    @template_cache ||= {}
+    @template_cache[template_name] ||= begin
+      full_path = "#{Rails.root}/lib/onebox/templates/#{template_name}.mustache"
+      File.read(full_path)
     end
   end
 

@@ -10,6 +10,7 @@
     background-color: var(--secondary);
     border-bottom: 1px solid var(--primary-low);
     padding: 1em 0.53em;
+    list-style: none;
 
     &.moderator-action {
       background-color: var(--highlight-medium);
@@ -141,6 +142,9 @@
     color: var(--primary);
     &.d-icon-heart {
       color: var(--love);
+    }
+    &.d-icon-far-trash-alt {
+      color: var(--secondary);
     }
   }
 }

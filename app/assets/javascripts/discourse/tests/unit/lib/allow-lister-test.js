@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import AllowLister from "pretty-text/allow-lister";
 
 module("Unit | Utility | allowLister", function () {

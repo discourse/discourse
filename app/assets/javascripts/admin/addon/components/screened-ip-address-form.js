@@ -1,8 +1,9 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { schedule } from "@ember/runloop";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import I18n from "I18n";
+import ScreenedIpAddress from "admin/models/screened-ip-address";
 import bootbox from "bootbox";
+import { schedule } from "@ember/runloop";
 
 /**
   A form to create an IP address that will be blocked or allowed.
@@ -14,9 +15,6 @@ import bootbox from "bootbox";
   the new record is successfully saved. It is called with the new ScreenedIpAddress record
   as an argument.
 **/
-
-import ScreenedIpAddress from "admin/models/screened-ip-address";
-import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["screened-ip-address-form"],

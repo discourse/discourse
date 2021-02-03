@@ -3,20 +3,20 @@ en:
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
     short_date_no_year: "D MMM"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    short_date: "D MMM YYYY"
+    short_date: "D MMM, YYYY"
     # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-    long_date: "D MMMM YYYY LT"
+    long_date: "MMMM D, YYYY h:mma"
 
   datetime_formats: &datetime_formats
     formats:
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      short: "%d-%m-%Y"
+      short: "%m-%d-%Y"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      short_no_year: "%-d %B"
+      short_no_year: "%B %-d"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      date_only: "%-d %B %Y"
+      date_only: "%B %-d, %Y"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
-      long: "%-d %B %Y %H:%M"
+      long: "%B %-d, %Y, %l:%M%P"
       # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
       no_day: "%B %Y"
   date:
@@ -46,6 +46,7 @@ en:
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
+  views: "views"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   sign_up: "Sign Up"
@@ -58,6 +59,9 @@ en:
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
 
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
   themes:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
@@ -205,6 +209,16 @@ en:
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
+      error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      missing_data:
+        one: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
+        other: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
+
+  word_connector:
+    # Connects words with a comma. Example: "foo, bar"
+    comma: ", "
 
   activemodel:
     errors:
@@ -270,7 +284,7 @@ en:
   email_template_cant_be_modified: "This email template can't be modified"
   invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
   not_in_group:
-    title_topic: "You must be in a group to see this topic."
+    title_topic: "You need to request membership to the '%{group}' group to see this topic."
     title_category: "You must be in a group to see this category."
     request_membership: "Request Membership"
     join_group: "Join Group"
@@ -399,6 +413,7 @@ en:
   bookmarks:
     errors:
       already_bookmarked_post: "You cannot bookmark the same post twice."
+      too_many: "Sorry, you have too many bookmarks, visit %{user_bookmarks_url} to remove some."
       cannot_set_past_reminder: "You cannot set a bookmark reminder in the past."
       cannot_set_reminder_in_distant_future: "You cannot set a bookmark reminder more than 10 years in the future."
       time_must_be_provided: "time must be provided for all reminders"
@@ -429,7 +444,9 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
       already_requested_membership: "You have already requested membership for this group."
-      adding_too_many_users: "Maximum %{limit} users can be added at once"
+      adding_too_many_users:
+        one: "Maximum %{count} user can be added at once"
+        other: "Maximum %{count} users can be added at once"
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -459,16 +476,16 @@ en:
 
       - Who would be interested in this? Why does it matter? What kind of responses do you want?
 
-      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category (or tag).
 
       For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
 
     "new-reply": |
       Welcome to %{site_name} &mdash; **thanks for contributing!**
 
-      - Does your reply improve the conversation in some way?
-
       - Be kind to your fellow community members.
+
+      - Does your reply improve the conversation?
 
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
@@ -943,6 +960,7 @@ en:
       others: "No activity."
     no_bookmarks:
       self: "You have no bookmarked posts; bookmarks allow you to quickly refer to specific posts."
+      search: "No bookmarks found with the provided search query."
       others: "No bookmarks."
     no_likes_given:
       self: "You have not liked any posts."
@@ -1019,9 +1037,9 @@ en:
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
     mailing_list_mode: "Turn off mailing list mode"
-    all: "Don't send me any mail from %{sitename}"
+    all: "Don’t send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
-    not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
+    not_found_description: "Sorry, we couldn't find this unsubscribe. It’s possible the link in your email is too old and has expired?"
     log_out: "Log Out"
     submit: "Save preferences"
     digest_frequency:
@@ -1402,6 +1420,7 @@ en:
     github_config_warning: 'The server is configured to allow signup and login with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
     s3_config_warning: 'The server is configured to upload files to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to S3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="%{base_path}/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    s3_cdn_warning: 'The server is configured to upload files to S3, but there is no S3 CDN configured. This can lead to expensive S3 costs and slower site performance. <a href="https://meta.discourse.org/t/-/148916" target="_blank">See "Using Object Storage for Uploads" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
@@ -1490,6 +1509,7 @@ en:
     enable_inline_onebox_on_all_domains: "Ignore inline_onebox_domain_allowlist site setting and allow inline onebox on all domains."
     force_custom_user_agent_hosts: "Hosts for which to use the custom onebox user agent on all requests. (Especially useful for hosts that limit access by user agent)."
     max_oneboxes_per_post: "Maximum number of oneboxes in a post."
+    facebook_app_access_token: "A token generated from your Facebook app ID and secret. Used to generate Instagram oneboxes."
 
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
@@ -1729,8 +1749,8 @@ en:
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
 
-    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute."
-    max_post_deletions_per_day: "Maximum number of posts a user can delete per day."
+    max_post_deletions_per_minute: "Maximum number of posts a user can delete per minute. Set to 0 to disable post deletions."
+    max_post_deletions_per_day: "Maximum number of posts a user can delete per day. Set to 0 to disable post deletions."
 
     invite_link_max_redemptions_limit: "Maximum redemptions allowed for invite links can't be more than this value."
 
@@ -1759,6 +1779,7 @@ en:
 
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+    use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
 
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
@@ -1827,6 +1848,7 @@ en:
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
+    min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
@@ -1849,6 +1871,7 @@ en:
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     allow_uppercase_posts: "Allow all caps in a topic title or a post body."
     max_consecutive_replies: "Number of posts a user has to make in a row in a topic before being prevented from adding another reply."
+    enable_filtered_replies_view: '"(n) replies" button collapses all other posts and only shows the current post and its replies.'
 
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
 
@@ -2130,7 +2153,7 @@ en:
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
+    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_media: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If “login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> for details.'
     secure_media_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure media max email embed image size kb' setting."
     secure_media_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure media allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
@@ -2164,6 +2187,7 @@ en:
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
+    skip_auto_delete_reply_likes: "When automatically deleting old replies, skip deleting posts with this number of likes or more."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
@@ -2238,6 +2262,7 @@ en:
     city_for_disputes: "City for Disputes"
 
     shared_drafts_category: "Enable the Shared Drafts feature by designating a category for topic drafts. Topics in this category will be suppressed from topic lists for staff users."
+    shared_drafts_min_trust_level: "Allow users to see and edit Shared Drafts."
 
     push_notifications_prompt: "Display user consent prompt."
     push_notifications_icon: "The badge icon that appears in the notification corner. A 96×96 monochromatic PNG with transparency is recommended."
@@ -2338,6 +2363,8 @@ en:
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  # Example: "Original Poster, Most Recent Poster"
+  poster_description_joiner: ", "
 
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
@@ -2481,7 +2508,18 @@ en:
   admin:
     email:
       sent_test: "sent!"
-
+    user:
+      merge_user:
+        updating_username: "Updating username..."
+        changing_post_ownership: "Changing post ownership..."
+        merging_given_daily_likes: "Merging given daily likes..."
+        merging_post_timings: "Merging post timings..."
+        merging_user_visits: "Merging user visits..."
+        updating_site_settings: "Updating site settings..."
+        updating_user_stats: "Updating user stats..."
+        merging_user_attributes: "Merging user attributes..."
+        updating_user_ids: "Updating user ids..."
+        deleting_source_user: "Deleting source user..."
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
@@ -2808,11 +2846,9 @@ en:
 
         This post was flagged by the community and a staff member opted to remove it.
 
-        [details="Click to expand removed post"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
-        [/details]
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
 
@@ -2872,7 +2908,9 @@ en:
     tl2_promotion_message:
       subject_template: "Congratulations on your trust level promotion!"
       text_body_template: |
-        We’ve promoted you up a [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        We’ve promoted you up another [trust level](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+
+        As an experienced user, you might appreciate [this list of handy tips and tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         We invite you to keep getting involved – we enjoy having you around.
 
@@ -3807,6 +3845,14 @@ en:
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
         Enjoy your stay!
+
+    signup_after_reject:
+      title: "Signup After Reject"
+      subject_template: "You've been rejected on %{site_name}"
+      text_body_template: |
+        A staff member rejected your account on %{site_name}.
+
+        %{reject_reason}
 
     signup:
       title: "Signup"

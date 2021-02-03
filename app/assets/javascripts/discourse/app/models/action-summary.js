@@ -1,6 +1,6 @@
-import { or } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
+import { ajax } from "discourse/lib/ajax";
+import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default RestModel.extend({

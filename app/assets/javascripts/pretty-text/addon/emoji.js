@@ -1,10 +1,10 @@
 import {
-  emojis,
   aliases,
-  searchAliases,
-  translations,
-  tonableEmojis,
+  emojis,
   replacements,
+  searchAliases,
+  tonableEmojis,
+  translations,
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
@@ -210,6 +210,7 @@ export function emojiExists(code) {
 let toSearch;
 export function emojiSearch(term, options) {
   const maxResults = (options && options["maxResults"]) || -1;
+  const diversity = options && options.diversity;
   if (maxResults === 0) {
     return [];
   }
@@ -227,7 +228,11 @@ export function emojiSearch(term, options) {
   function addResult(t) {
     const val = aliasHash[t] || t;
     if (results.indexOf(val) === -1) {
-      results.push(val);
+      if (diversity && diversity > 1 && isSkinTonableEmoji(val)) {
+        results.push(`${val}:t${diversity}`);
+      } else {
+        results.push(val);
+      }
     }
   }
 

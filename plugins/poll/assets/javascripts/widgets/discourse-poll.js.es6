@@ -1,18 +1,18 @@
 import I18n from "I18n";
-import { h } from "virtual-dom";
+import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
+import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
+import { avatarFor } from "discourse/widgets/post";
+import { createWidget } from "discourse/widgets/widget";
+import evenRound from "discourse/plugins/poll/lib/even-round";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
-import loadScript from "discourse/lib/load-script";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
-import { avatarFor } from "discourse/widgets/post";
-import RawHtml from "discourse/widgets/raw-html";
-import { createWidget } from "discourse/widgets/widget";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
-import evenRound from "discourse/plugins/poll/lib/even-round";
 
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
@@ -553,7 +553,7 @@ function pieChartConfig(data, labels, opts = {}) {
 }
 
 function stripHtml(html) {
-  var doc = new DOMParser().parseFromString(html, "text/html");
+  let doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
 }
 

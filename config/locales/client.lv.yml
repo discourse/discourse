@@ -496,7 +496,6 @@ lv:
       posts: "Raksti"
       topics: "Tēmas"
       latest: "Jaunākie"
-      latest_by: "jaunāks par"
       toggle_ordering: "mainīt secības kontroli"
       subcategories: "Apakšsadaļas"
       topic_sentence:
@@ -565,7 +564,6 @@ lv:
         perm_denied_expl: "Jūs neatļāvāt paziņojumus. Atļaujiet paziņojumus jūsu pārlūkprogrammas iestatījumos."
         disable: "Atslēgt paziņojumus"
         enable: "Ieslēgt paziņojumus"
-        each_browser_note: "Piezīme: šis iestatījums jānomaina katrā pārlūkprogrammā. kuru izmantojat."
       dismiss: "Nerādīt"
       dismiss_notifications: "Vairs nerādīt visus"
       dismiss_notifications_tooltip: "Atzīmēt visus nelasītos paziņojumus kā izlasītus"
@@ -828,7 +826,6 @@ lv:
         links_tab: "Saites"
         link_created_at: "Radīts"
         link_groups: Grupas
-        create: "Nosūtīt ielūgumu"
         valid_for: "Ielūguma saite ir derīga tikai šai e-pasta adresei: %{email}"
         invite_link:
           success: "Ielūguma saite gatava!"
@@ -935,15 +932,6 @@ lv:
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
     learn_more: "uzzināt vairāk..."
-    all_time: "kopā"
-    all_time_desc: "pavisam izveidotas tēmas"
-    year: "gads"
-    year_desc: "pēdējās 365 dienās izveidotie ieraksti"
-    month: "mēnesis"
-    month_desc: "pēdējās 30 dienās izveidotās tēmas"
-    week: "nedēļa"
-    week_desc: "pēdējās 7 dienās izveidotās tēmas"
-    day: "diena"
     first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
@@ -961,8 +949,6 @@ lv:
       hidden_for_session: "Labi, pajautāšu jums rīt. Starp citu, vienmēr var piereģistrēties, spiežot \"Ieiet sistēmā\"."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
-      description: "Ir <b>%{replyCount}</b> atbildes."
-      description_time: "Ir <b>%{replyCount}</b> atbildes ar paredzamo lasīšanas laiku: <b>%{readingTime} minūtes</b>."
       enable: "Tēmas kopsavilkums"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
@@ -1095,7 +1081,6 @@ lv:
       options: "Iespējas"
       whisper: "čuksts"
       unlist: "paslēpts"
-      blockquote_text: "Bloka citāts"
       add_warning: "Šis ir oficiāls brīdinājums."
       toggle_whisper: "Čukstēšana"
       toggle_unlisted: "Paslēpšana no tēmu saraksta"
@@ -1113,9 +1098,6 @@ lv:
       duplicate_link: "Izskatās, ka jūsu saiti uz <b>%{domain}</b> tēmā jau ievietoja <b>@%{username}</b> <a href='%{post_url}'>ierakstā %{ago}</a> - vai jūs tiešām vēlaties to ievietot vēlreiz?"
       error:
         title_missing: "Vajadzīgs nosaukums"
-        title_too_short: "Nosaukumā jābūt vismaz %{min} burtiem"
-        title_too_long: "Nosaukums nevar būt garāks par %{max} burtiem"
-        post_length: "Ierakstā jābūt vismaz %{min} burtiem"
         category_missing: "Jums ir jāizvēlas sadaļa"
       save_edit: "Saglabāt izmaiņas"
       reply_original: "Atbildēt sākotnējā tēmā"
@@ -1148,8 +1130,7 @@ lv:
       link_description: "ievadiet saites aprakstu šeit"
       link_dialog_title: "Ievietojiet saiti"
       link_optional_text: "neobligāts nosaukums"
-      quote_title: "Bloka citāts"
-      quote_text: "Ierakstiet bloka citāta saturu"
+      blockquote_text: "Bloka citāts"
       code_title: "Formatēts teksts"
       code_text: "piešķirt formatētajam tekstam 4 atstarpju atkāpi"
       paste_code_text: "ierakstiet vai ielīmējiet formatēto tekstu šeit"
@@ -1364,7 +1345,6 @@ lv:
       toggle_information: "rādīt / slēpt tēmas informāciju "
       read_more_in_category: "Vēlies lasīt vēl? Pārlūko citas tēmas: %{catLink} vai %{latestLink}."
       read_more: "Vēlies lasīt vēl? %{catLink} or %{latestLink}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Palikusi <a href='{basePath}/unread'>1 nelasīta</a> } other { Palikušas <a href='{basePath}/unread'># nelasītas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 jauna</a> tēma} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># jaunas</a> tēmas} } remaining, or {CATEGORY, select, true {pārlūkot citas tēmas iekš {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pārlūkot visas sadaļas
       view_latest_topics: Skatīt jaunākās tēmas
       jump_reply_up: pāriet uz agrāku atbildi
@@ -1425,7 +1405,6 @@ lv:
         go: "doties"
         jump_bottom: "pāriet pie pēdējā ieraksta"
         jump_prompt: "pāriet pie..."
-        jump_prompt_of: "no %{count} ierakstiem"
         jump_bottom_with_number: "pāriet pie ieraksta %{post_number}"
         jump_prompt_or: "vai"
         total: kopējais ierakstu skaits
@@ -1554,7 +1533,6 @@ lv:
         username_placeholder: "lietotājvārds"
         action: "Nosūtīt ielūgumu"
         help: "Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus"
-        to_forum: "Mēs nosūtīsim īsu e-pastu, kas ļaus jūsu draugam nekavējoties pievienoties, uzklikšķinot uz saites un bez ienākšanas forumā."
         sso_enabled: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu."
         to_topic_blank: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu vai e-pastu."
         to_topic_email: "Jūs esat ievadījis e-pasta adresi. Mēs nosūtīsim e-pastā ielūgumu, kas ļaus jūsu draugam nekavējoties atbildēt šai tēmā."
@@ -1626,8 +1604,6 @@ lv:
       quote_reply: "Citāts"
       edit_reason: "Iemesls:"
       post_number: "ieraksts %{number}"
-      wiki_last_edited_on: "wiki pēdējo reizi rediģēta"
-      last_edited_on: "ieraksts pēdējo reizi rediģēts"
       reply_as_new_topic: "Atbildēt jaunā saistītā tēmā"
       reply_as_new_private_message: "Atbildēt jaunā vēstulē tiem pašiem adresātiem"
       continue_discussion: "Turpinot diskusiju no %{postLink}:"
@@ -1844,7 +1820,6 @@ lv:
       notify_action: "Ziņa"
       official_warning: "Oficiāls brīdinājums"
       delete_spammer: "Dzēst spamotāju"
-      delete_confirm_MF: "Jūs grasāties izdzēst šī lietotāja {IERAKSTUS, plural, one {<b>1</b> ierakstu} other {<b>#</b> ierakstus}} un {TĒMAS, plural, one {<b>1</b> tēmu} other {<b>#</b> tēmas}}, izdzēst viņa profilu, bloķēt reģistrēšanos no viņa IP adreses <b>{ip_address}</b> un pievienot viņa e-pasta adresi <b>{email}</b> pastāvīgajam bloķēto sarakstam. Vai jūs esat pārliecināts, ka šis lietotājs patiešām ir spameris?"
       yes_delete_spammer: "Jā, izdzēst spameri"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(paslēpts)"
@@ -1912,12 +1887,6 @@ lv:
       unlisted:
         help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
-    posts_likes_MF: |
-      Šai tēmā ir {count, plural, one {1 atbilde} other {# atbildes}} {ratio, select,
-      low {ar nedaudzām atzinībām}
-      med {ar vidēji daudzām atzinībām}
-      high {ar ļoti daudzām atzinībām}
-      other {}}
     original_post: "Oriģinālais ieraksts"
     views: "Skatījumi"
     views_lowercase:
@@ -2710,7 +2679,6 @@ lv:
         suspended_by: "Apturēja"
         silence_reason: "Iemesls"
         delete_all_posts: "Dzēst visus ierakstus"
-        delete_all_posts_confirm_MF: "Jūs grasaties dzēst šos ierakstus. Vai est drošs?"
         moderator: "Moderātors?"
         admin: "Administrators?"
         suspended: "Neapturēts?"

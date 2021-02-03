@@ -1,12 +1,12 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
   needs.user();

@@ -1,5 +1,5 @@
-import loadScript from "discourse/lib/load-script";
 import deprecated from "discourse-common/lib/deprecated";
+import loadScript from "discourse/lib/load-script";
 
 /*global hljs:true */
 let _moreLanguages = [];

@@ -1,5 +1,5 @@
-import { scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
+import { scheduleOnce } from "@ember/runloop";
 export default Component.extend({
   classNames: ["modal-body"],
   fixed: false,

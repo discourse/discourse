@@ -1,62 +1,99 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
-  moduleForWidget,
-  widgetTest,
-} from "discourse/tests/helpers/widget-test";
+  discourseModule,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
-moduleForWidget("button");
+discourseModule("Integration | Component | Widget | button", function (hooks) {
+  setupRenderingTest(hooks);
 
-widgetTest("icon only button", {
-  template: '{{mount-widget widget="button" args=args}}',
+  componentTest("icon only button", {
+    template: hbs`{{mount-widget widget="button" args=args}}`,
 
-  beforeEach() {
-    this.set("args", { icon: "far-smile" });
-  },
+    beforeEach() {
+      this.set("args", { icon: "far-smile" });
+    },
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.btn.btn-icon.no-text").length,
-      "it has all the classes"
-    );
-    assert.ok(
-      queryAll("button .d-icon.d-icon-far-smile").length,
-      "it has the icon"
-    );
-  },
-});
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-icon.no-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button .d-icon.d-icon-far-smile").length,
+        "it has the icon"
+      );
+    },
+  });
 
-widgetTest("icon and text button", {
-  template: '{{mount-widget widget="button" args=args}}',
+  componentTest("icon and text button", {
+    template: hbs`{{mount-widget widget="button" args=args}}`,
 
-  beforeEach() {
-    this.set("args", { icon: "plus", label: "topic.create" });
-  },
+    beforeEach() {
+      this.set("args", { icon: "plus", label: "topic.create" });
+    },
 
-  test(assert) {
-    assert.ok(
-      queryAll("button.btn.btn-icon-text").length,
-      "it has all the classes"
-    );
-    assert.ok(queryAll("button .d-icon.d-icon-plus").length, "it has the icon");
-    assert.ok(
-      queryAll("button span.d-button-label").length,
-      "it has the label"
-    );
-  },
-});
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-icon-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button .d-icon.d-icon-plus").length,
+        "it has the icon"
+      );
+      assert.ok(
+        queryAll("button span.d-button-label").length,
+        "it has the label"
+      );
+    },
+  });
 
-widgetTest("text only button", {
-  template: '{{mount-widget widget="button" args=args}}',
+  componentTest("text only button", {
+    template: hbs`{{mount-widget widget="button" args=args}}`,
 
-  beforeEach() {
-    this.set("args", { label: "topic.create" });
-  },
+    beforeEach() {
+      this.set("args", { label: "topic.create" });
+    },
 
-  test(assert) {
-    assert.ok(queryAll("button.btn.btn-text").length, "it has all the classes");
-    assert.ok(
-      queryAll("button span.d-button-label").length,
-      "it has the label"
-    );
-  },
+    test(assert) {
+      assert.ok(
+        queryAll("button.btn.btn-text").length,
+        "it has all the classes"
+      );
+      assert.ok(
+        queryAll("button span.d-button-label").length,
+        "it has the label"
+      );
+    },
+  });
+
+  componentTest("translatedLabel", {
+    template: hbs`{{mount-widget widget="button" args=args}}`,
+
+    beforeEach() {
+      this.set("args", { translatedLabel: "foo bar" });
+    },
+
+    test(assert) {
+      assert.equal(query("button span.d-button-label").innerText, "foo bar");
+    },
+  });
+
+  componentTest("translatedTitle", {
+    template: '{{mount-widget widget="button" args=args}}',
+
+    beforeEach() {
+      this.set("args", { label: "topic.create", translatedTitle: "foo bar" });
+    },
+
+    test(assert) {
+      assert.equal(query("button").title, "foo bar");
+      assert.equal(query("button").ariaLabel, "foo bar");
+    },
+  });
 });

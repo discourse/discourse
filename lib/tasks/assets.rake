@@ -36,11 +36,6 @@ task 'assets:precompile:before' do
 
   require 'sprockets'
   require 'digest/sha1'
-
-  # Needed for proper source maps with a CDN
-  load "#{Rails.root}/lib/global_path.rb"
-  include GlobalPath
-
 end
 
 task 'assets:precompile:css' => 'environment' do
@@ -78,6 +73,20 @@ end
 
 def assets_path
   "#{Rails.root}/public/assets"
+end
+
+def global_path_klass
+  @global_path_klass ||= Class.new do
+    extend GlobalPath
+  end
+end
+
+def cdn_path(p)
+  global_path_klass.cdn_path(p)
+end
+
+def cdn_relative_path(p)
+  global_path_klass.cdn_relative_path(p)
 end
 
 def compress_node(from, to)

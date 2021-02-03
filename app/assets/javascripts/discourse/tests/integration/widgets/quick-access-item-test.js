@@ -1,35 +1,43 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
 import {
-  moduleForWidget,
-  widgetTest,
-} from "discourse/tests/helpers/widget-test";
-
-moduleForWidget("quick-access-item");
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 const CONTENT_DIV_SELECTOR = "li > a > div";
 
-widgetTest("content attribute is escaped", {
-  template: '{{mount-widget widget="quick-access-item" args=args}}',
+discourseModule(
+  "Integration | Component | Widget | quick-access-item",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.set("args", { content: "<b>bold</b>" });
-  },
+    componentTest("content attribute is escaped", {
+      template: hbs`{{mount-widget widget="quick-access-item" args=args}}`,
 
-  test(assert) {
-    const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
-    assert.equal(contentDiv.innerText, "<b>bold</b>");
-  },
-});
+      beforeEach() {
+        this.set("args", { content: "<b>bold</b>" });
+      },
 
-widgetTest("escapedContent attribute is not escaped", {
-  template: '{{mount-widget widget="quick-access-item" args=args}}',
+      test(assert) {
+        const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
+        assert.equal(contentDiv.innerText, "<b>bold</b>");
+      },
+    });
 
-  beforeEach() {
-    this.set("args", { escapedContent: "&quot;quote&quot;" });
-  },
+    componentTest("escapedContent attribute is not escaped", {
+      template: hbs`{{mount-widget widget="quick-access-item" args=args}}`,
 
-  test(assert) {
-    const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
-    assert.equal(contentDiv.innerText, '"quote"');
-  },
-});
+      beforeEach() {
+        this.set("args", { escapedContent: "&quot;quote&quot;" });
+      },
+
+      test(assert) {
+        const contentDiv = queryAll(CONTENT_DIV_SELECTOR)[0];
+        assert.equal(contentDiv.innerText, '"quote"');
+      },
+    });
+  }
+);

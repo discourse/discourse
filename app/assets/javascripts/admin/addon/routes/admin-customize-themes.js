@@ -1,5 +1,6 @@
 import Route from "@ember/routing/route";
 import showModal from "discourse/lib/show-modal";
+import { showUnassignedComponentWarning } from "admin/routes/admin-customize-themes-show";
 
 export default Route.extend({
   model() {
@@ -13,7 +14,17 @@ export default Route.extend({
 
   actions: {
     installModal() {
-      showModal("admin-install-theme", { admin: true });
+      const currentTheme = this.controllerFor("adminCustomizeThemes.show")
+        .model;
+      if (currentTheme && currentTheme.warnUnassignedComponent) {
+        showUnassignedComponentWarning(currentTheme, (result) => {
+          if (!result) {
+            showModal("admin-install-theme", { admin: true });
+          }
+        });
+      } else {
+        showModal("admin-install-theme", { admin: true });
+      }
     },
 
     addTheme(theme) {

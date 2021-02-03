@@ -1,9 +1,9 @@
-import sinon from "sinon";
-import { test, module } from "qunit";
-import DiscourseURL, { userPath, prefixProtocol } from "discourse/lib/url";
-import { setPrefix } from "discourse-common/lib/get-url";
-import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import DiscourseURL, { prefixProtocol, userPath } from "discourse/lib/url";
+import { module, test } from "qunit";
 import User from "discourse/models/user";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setPrefix } from "discourse-common/lib/get-url";
+import sinon from "sinon";
 
 module("Unit | Utility | url", function () {
   test("isInternal with a HTTP url", function (assert) {
@@ -94,6 +94,17 @@ module("Unit | Utility | url", function () {
     assert.equal(
       prefixProtocol("www.discourse.org/mailto:foo"),
       "https://www.discourse.org/mailto:foo"
+    );
+  });
+
+  test("routeTo redirects secure media URLS because they are server side only", async function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+    DiscourseURL.routeTo("/secure-media-uploads/original/1X/test.pdf");
+    assert.ok(
+      DiscourseURL.redirectTo.calledWith(
+        "/secure-media-uploads/original/1X/test.pdf"
+      )
     );
   });
 });

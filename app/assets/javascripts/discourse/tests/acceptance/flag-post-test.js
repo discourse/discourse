@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 async function openFlagModal() {

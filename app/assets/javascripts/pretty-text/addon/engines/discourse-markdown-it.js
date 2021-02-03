@@ -1,7 +1,7 @@
 import AllowLister from "pretty-text/allow-lister";
-import { sanitize } from "pretty-text/sanitizer";
-import guid from "pretty-text/guid";
 import deprecated from "discourse-common/lib/deprecated";
+import guid from "pretty-text/guid";
+import { sanitize } from "pretty-text/sanitizer";
 
 export const ATTACHMENT_CSS_CLASS = "attachment";
 

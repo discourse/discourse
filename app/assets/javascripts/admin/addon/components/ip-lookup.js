@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import { later } from "@ember/runloop";
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import AdminUser from "admin/models/admin-user";
-import copyText from "discourse/lib/copy-text";
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import copyText from "discourse/lib/copy-text";
+import discourseComputed from "discourse-common/utils/decorators";
+import { later } from "@ember/runloop";
 
 export default Component.extend({
   classNames: ["ip-lookup"],

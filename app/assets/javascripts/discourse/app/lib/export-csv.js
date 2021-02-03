@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import bootbox from "bootbox";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {

@@ -1,13 +1,16 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, currentURL } from "@ember/test-helpers";
+import {
+  acceptance,
+  count,
+  exists,
+} from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Anonymous", function () {
   test("Root URL", async function (assert) {
     await visit("/u/eviltrout");
     assert.ok($("body.user-summary-page").length, "has the body class");
-    assert.equal(currentPath(), "user.summary", "it defaults to summary");
+    assert.equal(currentRouteName(), "user.summary", "it defaults to summary");
   });
 
   test("Filters", async function (assert) {

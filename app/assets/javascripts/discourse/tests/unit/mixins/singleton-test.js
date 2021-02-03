@@ -1,13 +1,13 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import EmberObject from "@ember/object";
 import Singleton from "discourse/mixins/singleton";
 
 module("Unit | Mixin | singleton", function () {
   test("current", function (assert) {
-    var DummyModel = EmberObject.extend({});
+    let DummyModel = EmberObject.extend({});
     DummyModel.reopenClass(Singleton);
 
-    var current = DummyModel.current();
+    let current = DummyModel.current();
     assert.present(current, "current returns the current instance");
     assert.equal(
       current,
@@ -22,9 +22,9 @@ module("Unit | Mixin | singleton", function () {
   });
 
   test("currentProp reading", function (assert) {
-    var DummyModel = EmberObject.extend({});
+    let DummyModel = EmberObject.extend({});
     DummyModel.reopenClass(Singleton);
-    var current = DummyModel.current();
+    let current = DummyModel.current();
 
     assert.blank(
       DummyModel.currentProp("evil"),
@@ -39,14 +39,14 @@ module("Unit | Mixin | singleton", function () {
   });
 
   test("currentProp writing", function (assert) {
-    var DummyModel = EmberObject.extend({});
+    let DummyModel = EmberObject.extend({});
     DummyModel.reopenClass(Singleton);
 
     assert.blank(
       DummyModel.currentProp("adventure"),
       "by default attributes are blank"
     );
-    var result = DummyModel.currentProp("adventure", "time");
+    let result = DummyModel.currentProp("adventure", "time");
     assert.equal(result, "time", "it returns the new value");
     assert.equal(
       DummyModel.currentProp("adventure"),
@@ -70,7 +70,7 @@ module("Unit | Mixin | singleton", function () {
   });
 
   test("createCurrent", function (assert) {
-    var Shoe = EmberObject.extend({});
+    let Shoe = EmberObject.extend({});
     Shoe.reopenClass(Singleton, {
       createCurrent: function () {
         return Shoe.create({ toes: 5 });
@@ -85,7 +85,7 @@ module("Unit | Mixin | singleton", function () {
   });
 
   test("createCurrent that returns null", function (assert) {
-    var Missing = EmberObject.extend({});
+    let Missing = EmberObject.extend({});
     Missing.reopenClass(Singleton, {
       createCurrent: function () {
         return null;

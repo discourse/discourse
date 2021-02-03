@@ -1,5 +1,5 @@
-import Component from "@ember/component";
 import Category from "discourse/models/category";
+import Component from "@ember/component";
 import { computed } from "@ember/object";
 
 export default Component.extend({

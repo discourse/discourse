@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
-import optionalService from "discourse/lib/optional-service";
-import showModal from "discourse/lib/show-modal";
-import { dasherize } from "@ember/string";
-import { set } from "@ember/object";
+import Component from "@ember/component";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { dasherize } from "@ember/string";
+import discourseComputed from "discourse-common/utils/decorators";
+import optionalService from "discourse/lib/optional-service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { set } from "@ember/object";
+import showModal from "discourse/lib/show-modal";
 
 let _components = {};
 
@@ -110,6 +110,10 @@ export default Component.extend({
         `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
           type: "PUT",
+          data: {
+            send_email: reviewable.sendEmail,
+            reject_reason: reviewable.rejectReason,
+          },
         }
       )
         .then((result) => {
@@ -222,11 +226,20 @@ export default Component.extend({
       }
 
       let msg = action.get("confirm_message");
+      let requireRejectReason = action.get("require_reject_reason");
       if (msg) {
         bootbox.confirm(msg, (answer) => {
           if (answer) {
             return this._performConfirmed(action);
           }
+        });
+      } else if (requireRejectReason) {
+        showModal("reject-reason-reviewable", {
+          title: "review.reject_reason.title",
+          model: this.reviewable,
+        }).setProperties({
+          performConfirmed: this._performConfirmed.bind(this),
+          action,
         });
       } else {
         return this._performConfirmed(action);

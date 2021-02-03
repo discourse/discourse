@@ -60,7 +60,7 @@ class Invite < ActiveRecord::Base
   end
 
   def is_invite_link?
-    max_redemptions_allowed > 1
+    email.blank?
   end
 
   def redeemed?

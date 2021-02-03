@@ -1,6 +1,6 @@
-import { schedule } from "@ember/runloop";
 import Component from "@ember/component";
 import cookie from "discourse/lib/cookie";
+import { schedule } from "@ember/runloop";
 
 export default Component.extend({
   didInsertElement() {

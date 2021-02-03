@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
-import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
+import I18n from "I18n";
 import Invite from "discourse/models/invite";
-import { i18n } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import { emailValid } from "discourse/lib/utilities";
 import { getNativeContact } from "discourse/lib/pwa-utils";
+import { i18n } from "discourse/lib/computed";
+import { isEmpty } from "@ember/utils";
 
 export default Component.extend({
   tagName: null,
@@ -20,9 +20,9 @@ export default Component.extend({
   isStaff: readOnly("currentUser.staff"),
   isAdmin: readOnly("currentUser.admin"),
 
-  // If this isn't defined, it will proxy to the user topic on the preferences
-  // page which is wrong.
-  emailOrUsername: null,
+  // invitee is either a user, group or email
+  invitee: null,
+  isInviteeGroup: false,
   hasCustomMessage: false,
   customMessage: null,
   inviteIcon: "envelope",
@@ -41,7 +41,7 @@ export default Component.extend({
 
   @discourseComputed(
     "isAdmin",
-    "emailOrUsername",
+    "invitee",
     "invitingToTopic",
     "isPrivateTopic",
     "groupIds",
@@ -50,7 +50,7 @@ export default Component.extend({
   )
   disabled(
     isAdmin,
-    emailOrUsername,
+    invitee,
     invitingToTopic,
     isPrivateTopic,
     groupIds,
@@ -60,24 +60,22 @@ export default Component.extend({
     if (saving) {
       return true;
     }
-    if (isEmpty(emailOrUsername)) {
+    if (isEmpty(invitee)) {
       return true;
     }
 
-    const emailTrimmed = emailOrUsername.trim();
-
     // when inviting to forum, email must be valid
-    if (!invitingToTopic && !emailValid(emailTrimmed)) {
+    if (!invitingToTopic && !emailValid(invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(emailTrimmed)) {
+    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(emailTrimmed)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
       return true;
     }
 
@@ -90,7 +88,7 @@ export default Component.extend({
 
   @discourseComputed(
     "isAdmin",
-    "emailOrUsername",
+    "invitee",
     "inviteModel.saving",
     "isPrivateTopic",
     "groupIds",
@@ -98,7 +96,7 @@ export default Component.extend({
   )
   disabledCopyLink(
     isAdmin,
-    emailOrUsername,
+    invitee,
     saving,
     isPrivateTopic,
     groupIds,
@@ -110,24 +108,22 @@ export default Component.extend({
     if (saving) {
       return true;
     }
-    if (isEmpty(emailOrUsername)) {
+    if (isEmpty(invitee)) {
       return true;
     }
 
-    const email = emailOrUsername.trim();
-
     // email must be valid
-    if (!emailValid(email)) {
+    if (!emailValid(invitee)) {
       return true;
     }
 
     // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(email)) {
+    if (!isAdmin && isPrivateTopic && emailValid(invitee)) {
       return true;
     }
 
     // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && isEmpty(groupIds) && emailValid(email)) {
+    if (isPrivateTopic && isEmpty(groupIds) && emailValid(invitee)) {
       return true;
     }
 
@@ -179,7 +175,7 @@ export default Component.extend({
   // Show Groups? (add invited user to private group)
   @discourseComputed(
     "isGroupOwnerOrAdmin",
-    "emailOrUsername",
+    "invitee",
     "isPrivateTopic",
     "isPM",
     "invitingToTopic",
@@ -187,7 +183,7 @@ export default Component.extend({
   )
   showGroups(
     isGroupOwnerOrAdmin,
-    emailOrUsername,
+    invitee,
     isPrivateTopic,
     isPM,
     invitingToTopic,
@@ -197,20 +193,20 @@ export default Component.extend({
       isGroupOwnerOrAdmin &&
       canInviteViaEmail &&
       !isPM &&
-      (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic)
+      (emailValid(invitee) || isPrivateTopic || !invitingToTopic)
     );
   },
 
-  @discourseComputed("emailOrUsername")
-  showCustomMessage(emailOrUsername) {
-    return this.inviteModel === this.currentUser || emailValid(emailOrUsername);
+  @discourseComputed("invitee")
+  showCustomMessage(invitee) {
+    return this.inviteModel === this.currentUser || emailValid(invitee);
   },
 
   // Instructional text for the modal.
   @discourseComputed(
     "isPM",
     "invitingToTopic",
-    "emailOrUsername",
+    "invitee",
     "isPrivateTopic",
     "isAdmin",
     "canInviteViaEmail"
@@ -218,7 +214,7 @@ export default Component.extend({
   inviteInstructions(
     isPM,
     invitingToTopic,
-    emailOrUsername,
+    invitee,
     isPrivateTopic,
     isAdmin,
     canInviteViaEmail
@@ -236,9 +232,9 @@ export default Component.extend({
         return I18n.t("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
-        if (isEmpty(emailOrUsername)) {
+        if (isEmpty(invitee)) {
           return I18n.t("topic.invite_reply.to_topic_blank");
-        } else if (emailValid(emailOrUsername)) {
+        } else if (emailValid(invitee)) {
           this.set("inviteIcon", "envelope");
           return I18n.t("topic.invite_reply.to_topic_email");
         } else {
@@ -257,18 +253,18 @@ export default Component.extend({
     return isPrivateTopic ? "required" : "optional";
   },
 
-  @discourseComputed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
-  successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
-    if (this.hasGroups) {
+  @discourseComputed("isPM", "invitee", "invitingExistingUserToTopic")
+  successMessage(isPM, invitee, invitingExistingUserToTopic) {
+    if (this.isInviteeGroup) {
       return I18n.t("topic.invite_private.success_group");
     } else if (isPM) {
       return I18n.t("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
       return I18n.t("topic.invite_reply.success_existing_email", {
-        emailOrUsername,
+        invitee,
       });
-    } else if (emailValid(emailOrUsername)) {
-      return I18n.t("topic.invite_reply.success_email", { emailOrUsername });
+    } else if (emailValid(invitee)) {
+      return I18n.t("topic.invite_reply.success_email", { invitee });
     } else {
       return I18n.t("topic.invite_reply.success_username");
     }
@@ -295,7 +291,8 @@ export default Component.extend({
   // Reset the modal to allow a new user to be invited.
   reset() {
     this.setProperties({
-      emailOrUsername: null,
+      invitee: null,
+      isInviteeGroup: false,
       hasCustomMessage: false,
       customMessage: null,
       invitingExistingUserToTopic: false,
@@ -346,9 +343,9 @@ export default Component.extend({
       model.setProperties({ saving: false, error: true });
     };
 
-    if (this.hasGroups) {
+    if (this.isInviteeGroup) {
       return this.inviteModel
-        .createGroupInvite(this.emailOrUsername.trim())
+        .createGroupInvite(this.invitee.trim())
         .then((data) => {
           model.setProperties({ saving: false, finished: true });
           this.get("inviteModel.details.allowed_groups").pushObject(
@@ -359,7 +356,7 @@ export default Component.extend({
         .catch(onerror);
     } else {
       return this.inviteModel
-        .createInvite(this.emailOrUsername.trim(), groupIds, this.customMessage)
+        .createInvite(this.invitee.trim(), groupIds, this.customMessage)
         .then((result) => {
           model.setProperties({ saving: false, finished: true });
           if (!this.invitingToTopic && userInvitedController) {
@@ -379,7 +376,7 @@ export default Component.extend({
             this.appEvents.trigger("post-stream:refresh", { force: true });
           } else if (
             this.invitingToTopic &&
-            emailValid(this.emailOrUsername.trim()) &&
+            emailValid(this.invitee.trim()) &&
             result &&
             result.user
           ) {
@@ -407,7 +404,7 @@ export default Component.extend({
     }
 
     return model
-      .generateInviteLink(this.emailOrUsername.trim(), groupIds, topicId)
+      .generateInviteLink(this.invitee.trim(), groupIds, topicId)
       .then((result) => {
         model.setProperties({
           saving: false,
@@ -465,7 +462,23 @@ export default Component.extend({
   @action
   searchContact() {
     getNativeContact(this.capabilities, ["email"], false).then((result) => {
-      this.set("emailOrUsername", result[0].email[0]);
+      this.set("invitee", result[0].email[0]);
     });
+  },
+
+  @action
+  updateInvitee(selected, content) {
+    const invitee = content.findBy("id", selected[0]);
+    if (invitee) {
+      this.setProperties({
+        invitee: invitee.id.trim(),
+        isInviteeGroup: invitee.isGroup || false,
+      });
+    } else {
+      this.setProperties({
+        invitee: null,
+        isInviteeGroup: false,
+      });
+    }
   },
 });

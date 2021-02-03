@@ -1,5 +1,5 @@
-import discourseComputed from "discourse-common/utils/decorators";
 import RestModel from "discourse/models/rest";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default RestModel.extend({
   @discourseComputed("count", "pm_count")

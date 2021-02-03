@@ -1,7 +1,7 @@
-import I18n from "I18n";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";

@@ -53,8 +53,6 @@ nl:
           title: "Topicstatussen"
         topic_list:
           title: "Topiclijst"
-        latest_topic_list:
-          title: "Lijst met nieuwste topics"
         footer_message:
           title: "Voettekstbericht"
         signup_cta:

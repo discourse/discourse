@@ -17,13 +17,13 @@ describe Stylesheet::Compiler do
 
   context "with a theme" do
     let!(:theme) { Fabricate(:theme) }
-    let!(:upload) { Fabricate(:upload) }
+    let!(:upload) { UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(Discourse.system_user.id) }
     let!(:upload_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "primary", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
     let!(:stylesheet_theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "scss", value: "body { background: $primary }", type_id: ThemeField.types[:scss]) }
     before { stylesheet_theme_field.save! }
 
     it "theme stylesheet should be able to access theme asset variables" do
-      css, _map = Stylesheet::Compiler.compile_asset("desktop_theme", theme_id: theme.id)
+      css, _map = Stylesheet::Compiler.compile_asset("desktop_theme", theme_id: theme.id, theme_variables: theme.scss_variables)
       expect(css).to include(upload.url)
     end
 
@@ -105,5 +105,28 @@ describe Stylesheet::Compiler do
       end
     end
 
+  end
+
+  describe "indexes" do
+    it "include all SCSS files in their respective folders" do
+      refs = []
+
+      Dir.glob(Rails.root.join('app/assets/stylesheets/**/*/')).each do |dir|
+        Dir.glob("#{dir}_index.scss").each do |indexfile|
+          contents = File.read indexfile
+
+          files = Dir["#{dir}*.scss"]
+          files -= Dir["#{dir}_index.scss"]
+          files.each do |path|
+            filename = File.basename(path, ".scss")
+            if !contents.match(/@import "#{filename}";/)
+              refs << "#{filename} import missing in #{indexfile}"
+            end
+          end
+        end
+      end
+
+      expect(refs).to eq([])
+    end
   end
 end

@@ -1,12 +1,12 @@
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import EmberObject, { setProperties } from "@ember/object";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
+import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import TopicTimer from "discourse/models/topic-timer";
+import { alias } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const OPEN_STATUS_TYPE = "open";
@@ -83,11 +83,12 @@ export default Controller.extend(ModalFunctionality, {
 
           this.set("model.closed", result.closed);
         } else {
-          this.set("model.topic_timer", EmberObject.create({}));
+          this.set(
+            "model.topic_timer",
+            EmberObject.create({ status_type: this.defaultStatusType })
+          );
 
-          this.setProperties({
-            selection: null,
-          });
+          this.send("onChangeInput", null, null);
         }
       })
       .catch(popupAjaxError)
@@ -106,7 +107,16 @@ export default Controller.extend(ModalFunctionality, {
       }
     }
 
-    this.send("onChangeInput", time);
+    this.send("onChangeInput", null, time);
+
+    if (!this.get("topicTimer.status_type")) {
+      this.send("onChangeStatusType", this.defaultStatusType);
+    }
+  },
+
+  @discourseComputed("publicTimerTypes")
+  defaultStatusType(publicTimerTypes) {
+    return publicTimerTypes[0].id;
   },
 
   actions: {
@@ -114,8 +124,11 @@ export default Controller.extend(ModalFunctionality, {
       this.set("topicTimer.status_type", value);
     },
 
-    onChangeInput(value) {
-      this.set("topicTimer.updateTime", value);
+    onChangeInput(_type, time) {
+      if (moment.isMoment(time)) {
+        time = time.format(FORMAT);
+      }
+      this.set("topicTimer.updateTime", time);
     },
 
     onChangeDuration(value) {
@@ -129,6 +142,18 @@ export default Controller.extend(ModalFunctionality, {
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
+          "alert-error"
+        );
+        return;
+      }
+
+      if (
+        this.get("topicTimer.duration") &&
+        !this.get("topicTimer.updateTime") &&
+        this.get("topicTimer.duration") < 1
+      ) {
+        this.flash(
+          I18n.t("topic.topic_status_update.min_duration"),
           "alert-error"
         );
         return;

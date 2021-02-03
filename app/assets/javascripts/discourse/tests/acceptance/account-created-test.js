@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click, fillIn } from "@ember/test-helpers";
-import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import PreloadStore from "discourse/lib/preload-store";
+import { test } from "qunit";
 
 acceptance("Account Created", function () {
   test("account created - message", async function (assert) {
@@ -40,7 +42,7 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .resend");
 
-    assert.equal(currentPath(), "account-created.resent");
+    assert.equal(currentRouteName(), "account-created.resent");
     const email = queryAll(".account-created .ac-message b").text();
     assert.equal(email, "eviltrout@example.com");
   });
@@ -57,12 +59,12 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .edit-email");
 
-    assert.equal(currentPath(), "account-created.edit-email");
+    assert.equal(currentRouteName(), "account-created.edit-email");
     assert.ok(queryAll(".activation-controls .btn-primary:disabled").length);
 
     await click(".activation-controls .edit-cancel");
 
-    assert.equal(currentPath(), "account-created.index");
+    assert.equal(currentRouteName(), "account-created.index");
   });
 
   test("account created - update email - submit", async function (assert) {
@@ -85,7 +87,7 @@ acceptance("Account Created", function () {
 
     await click(".activation-controls .btn-primary");
 
-    assert.equal(currentPath(), "account-created.resent");
+    assert.equal(currentRouteName(), "account-created.resent");
     const email = queryAll(".account-created .ac-message b").text();
     assert.equal(email, "newemail@example.com");
   });

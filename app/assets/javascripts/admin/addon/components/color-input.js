@@ -1,8 +1,8 @@
-import { schedule } from "@ember/runloop";
-import Component from "@ember/component";
-import { computed, action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import loadScript, { loadCSS } from "discourse/lib/load-script";
+import Component from "@ember/component";
 import { observes } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
 
 /**
   An input field for a color.

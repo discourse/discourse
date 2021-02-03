@@ -1,8 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { moduleForComponent } from "ember-qunit";
-import componentTest from "discourse/tests/helpers/component-test";
-
-moduleForComponent("user-selector", { integration: true });
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import {
+  discourseModule,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 function paste(element, text) {
   let e = new Event("paste");
@@ -10,47 +13,51 @@ function paste(element, text) {
   element.dispatchEvent(e);
 }
 
-componentTest("pasting a list of usernames", {
-  template: `{{user-selector usernames=usernames class="test-selector"}}`,
+discourseModule("Integration | Component | user-selector", function (hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.set("usernames", "evil,trout");
-  },
+  componentTest("pasting a list of usernames", {
+    template: hbs`{{user-selector usernames=usernames class="test-selector"}}`,
 
-  test(assert) {
-    let element = queryAll(".test-selector")[0];
+    beforeEach() {
+      this.set("usernames", "evil,trout");
+    },
 
-    assert.equal(this.get("usernames"), "evil,trout");
-    paste(element, "zip,zap,zoom");
-    assert.equal(this.get("usernames"), "evil,trout,zip,zap,zoom");
-    paste(element, "evil,abc,abc,abc");
-    assert.equal(this.get("usernames"), "evil,trout,zip,zap,zoom,abc");
+    test(assert) {
+      let element = queryAll(".test-selector")[0];
 
-    this.set("usernames", "");
-    paste(element, "names with spaces");
-    assert.equal(this.get("usernames"), "names,with,spaces");
+      assert.equal(this.get("usernames"), "evil,trout");
+      paste(element, "zip,zap,zoom");
+      assert.equal(this.get("usernames"), "evil,trout,zip,zap,zoom");
+      paste(element, "evil,abc,abc,abc");
+      assert.equal(this.get("usernames"), "evil,trout,zip,zap,zoom,abc");
 
-    this.set("usernames", null);
-    paste(element, "@eviltrout,@codinghorror sam");
-    assert.equal(this.get("usernames"), "eviltrout,codinghorror,sam");
+      this.set("usernames", "");
+      paste(element, "names with spaces");
+      assert.equal(this.get("usernames"), "names,with,spaces");
 
-    this.set("usernames", null);
-    paste(element, "eviltrout\nsam\ncodinghorror");
-    assert.equal(this.get("usernames"), "eviltrout,sam,codinghorror");
-  },
-});
+      this.set("usernames", null);
+      paste(element, "@eviltrout,@codinghorror sam");
+      assert.equal(this.get("usernames"), "eviltrout,codinghorror,sam");
 
-componentTest("excluding usernames", {
-  template: `{{user-selector usernames=usernames excludedUsernames=excludedUsernames class="test-selector"}}`,
+      this.set("usernames", null);
+      paste(element, "eviltrout\nsam\ncodinghorror");
+      assert.equal(this.get("usernames"), "eviltrout,sam,codinghorror");
+    },
+  });
 
-  beforeEach() {
-    this.set("usernames", "mark");
-    this.set("excludedUsernames", ["jeff", "sam", "robin"]);
-  },
+  componentTest("excluding usernames", {
+    template: hbs`{{user-selector usernames=usernames excludedUsernames=excludedUsernames class="test-selector"}}`,
 
-  test(assert) {
-    let element = queryAll(".test-selector")[0];
-    paste(element, "roman,penar,jeff,robin");
-    assert.equal(this.get("usernames"), "mark,roman,penar");
-  },
+    beforeEach() {
+      this.set("usernames", "mark");
+      this.set("excludedUsernames", ["jeff", "sam", "robin"]);
+    },
+
+    test(assert) {
+      let element = queryAll(".test-selector")[0];
+      paste(element, "roman,penar,jeff,robin");
+      assert.equal(this.get("usernames"), "mark,roman,penar");
+    },
+  });
 });

@@ -15,7 +15,7 @@ class SiteTextSerializer < ApplicationSerializer
     if options[:overridden_keys]
       options[:overridden_keys].include?(object[:id])
     else
-      TranslationOverride.exists?(locale: I18n.locale, translation_key: object[:id])
+      TranslationOverride.exists?(locale: object[:locale], translation_key: object[:id])
     end
   end
 

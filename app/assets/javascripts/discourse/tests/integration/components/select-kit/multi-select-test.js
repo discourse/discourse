@@ -1,19 +1,9 @@
-import componentTest from "discourse/tests/helpers/component-test";
-import { testSelectKitModule } from "discourse/tests/helpers/select-kit-helper";
-
-testSelectKitModule("multi-select");
-
-function template(options = []) {
-  return `
-    {{multi-select
-      value=value
-      content=content
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
-}
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -32,32 +22,48 @@ const setDefaultState = (ctx, options) => {
   ctx.setProperties(properties);
 };
 
-componentTest("content", {
-  template: template(),
+discourseModule(
+  "Integration | Component | select-kit/multi-select",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  beforeEach() {
-    setDefaultState(this);
-  },
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
 
-  async test(assert) {
-    await this.subject.expand();
+    componentTest("content", {
+      template: hbs`
+      {{multi-select
+        value=value
+        content=content
+      }}
+    `,
 
-    const content = this.subject.displayedContent();
-    assert.equal(content.length, 3, "it shows rows");
-    assert.equal(
-      content[0].name,
-      this.content.firstObject.name,
-      "it has the correct name"
-    );
-    assert.equal(
-      content[0].id,
-      this.content.firstObject.id,
-      "it has the correct value"
-    );
-    assert.equal(
-      this.subject.header().value(),
-      null,
-      "it doesn't set a value from the content"
-    );
-  },
-});
+      beforeEach() {
+        setDefaultState(this);
+      },
+
+      async test(assert) {
+        await this.subject.expand();
+
+        const content = this.subject.displayedContent();
+        assert.equal(content.length, 3, "it shows rows");
+        assert.equal(
+          content[0].name,
+          this.content.firstObject.name,
+          "it has the correct name"
+        );
+        assert.equal(
+          content[0].id,
+          this.content.firstObject.id,
+          "it has the correct value"
+        );
+        assert.equal(
+          this.subject.header().value(),
+          null,
+          "it doesn't set a value from the content"
+        );
+      },
+    });
+  }
+);

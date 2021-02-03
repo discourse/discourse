@@ -1,21 +1,21 @@
-import { skip, test } from "qunit";
 import {
-  escapeExpression,
-  emailValid,
-  extractDomainFromUrl,
-  avatarUrl,
-  getRawSize,
   avatarImg,
-  initializeDefaultHomepage,
-  defaultHomepage,
-  setDefaultHomepage,
+  avatarUrl,
   caretRowCol,
-  setCaretPosition,
-  toAsciiPrintable,
-  slugify,
+  defaultHomepage,
+  emailValid,
+  escapeExpression,
+  extractDomainFromUrl,
   fillMissingDates,
+  getRawSize,
   inCodeBlock,
+  initializeDefaultHomepage,
+  setCaretPosition,
+  setDefaultHomepage,
+  slugify,
+  toAsciiPrintable,
 } from "discourse/lib/utilities";
+import { skip, test } from "qunit";
 import Handlebars from "handlebars";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 
@@ -71,7 +71,7 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("avatarUrl", function (assert) {
-    var rawSize = getRawSize;
+    let rawSize = getRawSize;
     assert.blank(avatarUrl("", "tiny"), "no template returns blank");
     assert.equal(
       avatarUrl("/fake/template/{size}.png", "tiny"),
@@ -85,7 +85,7 @@ discourseModule("Unit | Utilities", function () {
     );
   });
 
-  var setDevicePixelRatio = function (value) {
+  let setDevicePixelRatio = function (value) {
     if (Object.defineProperty && !window.hasOwnProperty("devicePixelRatio")) {
       Object.defineProperty(window, "devicePixelRatio", { value: 2 });
     } else {
@@ -94,10 +94,10 @@ discourseModule("Unit | Utilities", function () {
   };
 
   test("avatarImg", function (assert) {
-    var oldRatio = window.devicePixelRatio;
+    let oldRatio = window.devicePixelRatio;
     setDevicePixelRatio(2);
 
-    var avatarTemplate = "/path/to/avatar/{size}.png";
+    let avatarTemplate = "/path/to/avatar/{size}.png";
     assert.equal(
       avatarImg({ avatarTemplate: avatarTemplate, size: "tiny" }),
       "<img alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
@@ -164,7 +164,7 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("caretRowCol", function (assert) {
-    var textarea = document.createElement("textarea");
+    let textarea = document.createElement("textarea");
     const content = document.createTextNode("01234\n56789\n012345");
     textarea.appendChild(content);
     document.body.appendChild(textarea);

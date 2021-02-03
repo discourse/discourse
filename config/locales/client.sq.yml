@@ -425,7 +425,6 @@ sq:
       posts: "Postime"
       topics: "Tema"
       latest: "Të fundit"
-      latest_by: "e fundit nga"
       toggle_ordering: "toggle ordering control"
       subcategories: "Nënkategori"
       topic_sentence:
@@ -488,7 +487,6 @@ sq:
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         disable: "Çaktivizoni njoftimet"
         enable: "Aktivizoni njoftimet"
-        each_browser_note: "Shënim: Duhet të ndryshoni këtë rregullim (setting) në çdo shfletues që përdorni. "
       dismiss: "Hiqe"
       dismiss_notifications: "Hiqini të gjitha"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
@@ -732,7 +730,6 @@ sq:
         links_tab: "Lidhjet"
         link_created_at: "Krijuar"
         link_groups: Grupet
-        create: "Dërgoni ftesën"
         bulk_invite:
           success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
@@ -832,15 +829,6 @@ sq:
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
       logout_disabled: "Nuk mund të shkëputeni nga faqja sepse faqja është përkohësisht në formatin vetëm-lexim."
     learn_more: "mëso më shumë..."
-    all_time: "total"
-    all_time_desc: "totali i temave të krijuara"
-    year: "vit"
-    year_desc: "temat e krijuara në 365 ditët e fundit"
-    month: "muaj"
-    month_desc: "temat e krijuara në 30 ditët e fundit"
-    week: "javë"
-    week_desc: "temat e krijuara në 7 ditët e fundit"
-    day: "ditë"
     first_post: Postimi i parë
     mute: Hesht
     unmute: Çaktivizo heshtjen
@@ -856,8 +844,6 @@ sq:
       hidden_for_session: "OK, do t'ju rikujtojmë nesër. Sidoqoftë, ju mund të përdorni butonin 'Identifikohu' për të hapur një llogari. "
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
-      description: "Ka <b>%{replyCount}</b> përgjigje."
-      description_time: "Ka <b>%{replyCount}</b> përgjigje, do ju duhen rreth <b>%{readingTime} minuta për t'i lexuar</b>."
       enable: "Përmblidhe këtë Temë"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
@@ -969,7 +955,6 @@ sq:
       options: "Opsione"
       whisper: "pëshpëritje"
       unlist: "çlistuar"
-      blockquote_text: "Citim"
       add_warning: "Ky është një paralajmërim zyrtar."
       toggle_whisper: "Pëshpëritje?"
       toggle_unlisted: "Toggle Unlisted"
@@ -984,9 +969,6 @@ sq:
         private: "Ju përmendët %{username} , por ky anëtar nuk do të njoftohet sepse nuk kanë akses në këtë mesazh privat. Do t'ju duhet t'a ftoni anëtarin në këtë mesazh. "
       error:
         title_missing: "Titulli është i nevojshëm"
-        title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
-        title_too_long: "Titulli nuk mund të ketë më shumë se %{max} shkronja"
-        post_length: "Postimi duhet të ketë të paktën {{min} shkronja."
         category_missing: "Duhet të zgjidhni një kategori"
       save_edit: "Ruani modifikimet"
       reply_original: "Përgjigjuni temës origjinale"
@@ -1018,8 +1000,7 @@ sq:
       link_description: "shkruaj përshkrimin e lidhjes këtu"
       link_dialog_title: "Vendosni një lidhje"
       link_optional_text: "titull fakultativ"
-      quote_title: "Citim"
-      quote_text: "Citim"
+      blockquote_text: "Citim"
       code_title: "Tekst i paraformatuar"
       code_text: "shkruani 4 hapësira (space) për të filluar tekstin e paraformatuar"
       paste_code_text: "shkruani ose ngjisni kodin këtu"
@@ -1200,7 +1181,6 @@ sq:
       toggle_information: "më shumë mbi temën"
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në %{catLink} ose %{latestLink}."
       read_more: "Dëshironi të lexoni më shumë? %{catLink} ose %{latestLink}."
-      read_more_MF: "Keni { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 shkrim të palexuar</a> } other { <a href='{basePath}/unread'># shkrime të palexuara</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{dhe } false {është } other{}} <a href='{basePath}/new'>1 shkrim të ri</a>} other { {BOTH, select, true{dhe } false {} other{}} <a href='{basePath}/new'># shkrime të reja</a>} } akoma, ose {CATEGORY, select, true {shiko temat e tjera në kategorinë {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
       jump_reply_up: hidhe tek përgjigja paraardhëse
@@ -1343,7 +1323,6 @@ sq:
         username_placeholder: "emri i përdoruesit"
         action: "Dërgoni ftesën"
         help: "fto të tjerë në këtë temë nëpërmjet emailit ose njoftimeve"
-        to_forum: "Do të dërgojmë një email të shkurtër që do ta lejojë mikun tuaj të regjistrohet menjëherë duke klikuar një lidhje, pa kërkuar hyrjen në sistem."
         sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"
         to_topic_email: "Ju keni shtuar një adresë email. Ne do t'i dërgojmë një ftesë në email që do ta lejojë mikun tuaj t'i përgjigjet menjëherë kësaj teme."
@@ -1406,7 +1385,6 @@ sq:
     post:
       edit_reason: "Arsyeja:"
       post_number: "postimi %{number}"
-      last_edited_on: "redaktimi i fundit u krye më"
       reply_as_new_topic: "Përgjigju në një temë të re të ndërlidhur"
       continue_discussion: "Vazhdim i diskutimit nga tema %{postLink}:"
       follow_quote: "shko tek tema e cituar"
@@ -1656,12 +1634,6 @@ sq:
       unlisted:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase:

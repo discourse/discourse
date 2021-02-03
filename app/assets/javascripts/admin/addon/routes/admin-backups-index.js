@@ -1,5 +1,5 @@
-import Route from "@ember/routing/route";
 import Backup from "admin/models/backup";
+import Route from "@ember/routing/route";
 
 export default Route.extend({
   activate() {
@@ -12,7 +12,9 @@ export default Route.extend({
   },
 
   model() {
-    return Backup.find();
+    return Backup.find().then((backups) =>
+      backups.map((backup) => Backup.create(backup))
+    );
   },
 
   deactivate() {

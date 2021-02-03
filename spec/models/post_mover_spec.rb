@@ -75,6 +75,7 @@ describe PostMover do
           notification = p2.user.notifications.where(notification_type: Notification.types[:moved_post]).first
 
           expect(notification.topic_id).to eq(p2.topic_id)
+          expect(notification.topic_id).not_to eq(old_topic_id)
           expect(notification.post_number).to eq(1)
 
           # no message for person who made the move
@@ -84,6 +85,7 @@ describe PostMover do
           notification = p6.user.notifications.where(notification_type: Notification.types[:moved_post]).first
 
           expect(notification.topic_id).to eq(p2.topic_id)
+          expect(notification.topic_id).not_to eq(old_topic_id)
 
           # this is the 3rd post we moved
           expect(notification.post_number).to eq(3)
@@ -541,7 +543,7 @@ describe PostMover do
             # Should notify correctly
             notification = p2.user.notifications.where(notification_type: Notification.types[:moved_post]).first
 
-            expect(notification.topic_id).to eq(p2.topic_id)
+            expect(notification.topic_id).to eq(destination_topic.id)
             expect(notification.post_number).to eq(p2.post_number)
 
             # Should update last reads
@@ -1145,6 +1147,7 @@ describe PostMover do
           notification = p2.user.notifications.where(notification_type: Notification.types[:moved_post]).first
 
           expect(notification.topic_id).to eq(p2.topic_id)
+          expect(notification.topic_id).not_to eq(old_message_id)
           expect(notification.post_number).to eq(1)
 
           # no message for person who made the move

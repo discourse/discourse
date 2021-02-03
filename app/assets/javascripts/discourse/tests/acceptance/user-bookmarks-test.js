@@ -1,11 +1,13 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance("User's bookmarks", function (needs) {
   needs.user();
@@ -14,7 +16,7 @@ acceptance("User's bookmarks", function (needs) {
     await visit("/u/eviltrout/activity/bookmarks");
     assert.ok(queryAll(".bookmark-list-item").length > 0);
 
-    const dropdown = selectKit(".bookmark-actions-dropdown:eq(0)");
+    const dropdown = selectKit(".bookmark-actions-dropdown:nth-of-type(1)");
     await dropdown.expand();
     await dropdown.selectRowByValue("remove");
 

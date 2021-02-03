@@ -1337,6 +1337,29 @@ describe User do
 
   end
 
+  describe '#avatar_template' do
+    it 'uses the small logo if the user is the system user' do
+      logo_small_url = Discourse.store.cdn_url(SiteSetting.logo_small.url)
+
+      expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
+    end
+
+    it 'uses the system user avatar if the logo is nil' do
+      SiteSetting.logo_small = nil
+      system_user = Discourse.system_user
+      expected = User.avatar_template(system_user.username, system_user.uploaded_avatar_id)
+
+      expect(Discourse.system_user.avatar_template).to eq(expected)
+    end
+
+    it 'uses the regular avatar for other users' do
+      user = Fabricate(:user)
+      expected = User.avatar_template(user.username, user.uploaded_avatar_id)
+
+      expect(user.avatar_template).to eq(expected)
+    end
+  end
+
   describe "update_posts_read!" do
     context "with a UserVisit record" do
       let!(:user) { Fabricate(:user) }
@@ -2479,6 +2502,18 @@ describe User do
           UserIpAddressHistory.where(user_id: user.id).pluck(:ip_address).map(&:to_s)
         ).to eq(['127.0.0.1', '0.0.0.1'])
       end
+    end
+  end
+
+  describe "#do_not_disturb?" do
+    it "is true when a dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now, ends_at: 1.day.from_now)
+      expect(user.do_not_disturb?).to eq(true)
+    end
+
+    it "is false when no dnd timing is present for the current time" do
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: Time.zone.now - 2.day, ends_at: 1.minute.ago)
+      expect(user.do_not_disturb?).to eq(false)
     end
   end
 end

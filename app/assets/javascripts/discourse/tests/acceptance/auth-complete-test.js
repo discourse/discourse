@@ -1,7 +1,6 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Auth Complete", function (needs) {
   needs.hooks.beforeEach(() => {
@@ -23,7 +22,11 @@ acceptance("Auth Complete", function (needs) {
   test("when login not required", async function (assert) {
     await visit("/");
 
-    assert.equal(currentPath(), "discovery.latest", "it stays on the homepage");
+    assert.equal(
+      currentRouteName(),
+      "discovery.latest",
+      "it stays on the homepage"
+    );
 
     assert.ok(
       exists("#discourse-modal div.create-account"),
@@ -35,7 +38,7 @@ acceptance("Auth Complete", function (needs) {
     this.siteSettings.login_required = true;
     await visit("/");
 
-    assert.equal(currentPath(), "login", "it redirects to the login page");
+    assert.equal(currentRouteName(), "login", "it redirects to the login page");
 
     assert.ok(
       exists("#discourse-modal div.create-account"),

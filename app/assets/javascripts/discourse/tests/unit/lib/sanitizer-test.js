@@ -1,5 +1,5 @@
-import { test, module } from "qunit";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { module, test } from "qunit";
 import { hrefAllowed } from "pretty-text/sanitizer";
 
 module("Unit | Utility | sanitizer", function () {
@@ -165,6 +165,38 @@ module("Unit | Utility | sanitizer", function () {
     assert.equal(
       pt.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`),
       `<h6 id="heading--discourse">Test Heading</h6>`
+    );
+  });
+
+  test("autoplay videos must be muted", function (assert) {
+    let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay src="http://example.com/music.mp4"/>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.ok(
+      pt
+        .sanitize(
+          `<p>Hey</p><video autoplay muted><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
+    );
+    assert.notOk(
+      pt
+        .sanitize(
+          `<p>Hey</p><video><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
+        )
+        .match(/muted/)
     );
   });
 

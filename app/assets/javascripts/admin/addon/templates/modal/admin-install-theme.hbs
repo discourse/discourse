@@ -103,6 +103,11 @@
 
 {{#unless popular}}
   <div class="modal-footer">
+    {{#if duplicateRemoteThemeWarning}}
+      <div class="install-theme-warning">
+        ⚠️ {{duplicateRemoteThemeWarning}}
+      </div>
+    {{/if}}
     {{d-button action=(action "installTheme") disabled=installDisabled class="btn btn-primary" label=submitLabel}}
     {{d-modal-cancel close=(route-action "closeModal")}}
   </div>

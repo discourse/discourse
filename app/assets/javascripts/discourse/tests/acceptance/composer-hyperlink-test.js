@@ -1,8 +1,10 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Hyperlink", function (needs) {
   needs.user();
@@ -71,21 +73,21 @@ acceptance("Composer - Hyperlink", function (needs) {
 
     await click(".d-editor button.link");
     await fillIn(".modal-body .link-url", "http://google.com");
-    await keyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
     assert.ok(
       !exists(".internal-link-results"),
       "does not show internal links search dropdown when inputting a url"
     );
 
     await fillIn(".modal-body .link-url", "local");
-    await keyEvent(".modal-body .link-url", "keyup", 32);
+    await triggerKeyEvent(".modal-body .link-url", "keyup", 32);
     assert.ok(
       exists(".internal-link-results"),
       "shows internal links search dropdown when entering keywords"
     );
 
-    await keyEvent(".insert-link", "keydown", 40);
-    await keyEvent(".insert-link", "keydown", 13);
+    await triggerKeyEvent(".insert-link", "keydown", 40);
+    await triggerKeyEvent(".insert-link", "keydown", 13);
 
     assert.ok(
       !exists(".internal-link-results"),

@@ -1,7 +1,6 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Static", function () {
   test("Static Pages", async function (assert) {
@@ -23,7 +22,7 @@ acceptance("Static", function () {
 
     await visit("/login");
     assert.equal(
-      currentPath(),
+      currentRouteName(),
       "discovery.latest",
       "it redirects them to latest unless `login_required`"
     );

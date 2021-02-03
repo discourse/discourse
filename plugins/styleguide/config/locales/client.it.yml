@@ -53,8 +53,8 @@ it:
           title: "Stati degli Argomenti"
         topic_list:
           title: "Elenco Argomenti"
-        latest_topic_list:
-          title: "Elenco Argomenti Recenti"
+        basic_topic_list:
+          title: "Elenco argomenti di base"
         footer_message:
           title: "Messaggio Piè Pagina"
         signup_cta:
@@ -69,6 +69,8 @@ it:
           title: "Messaggio"
         topic_map:
           title: "Mappa Argomento"
+        site_header:
+          title: "Intestazione del Sito"
         suggested_topics:
           title: "Argomenti suggeriti"
         post_menu:

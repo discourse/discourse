@@ -15,6 +15,7 @@ module Jobs
 
       post = Post.find_by(id: @post_id)
       return if post.blank?
+      return if post.topic.blank?
 
       raw = post.raw.dup
       start_raw = raw.dup

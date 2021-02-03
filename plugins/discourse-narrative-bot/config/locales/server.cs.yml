@@ -23,7 +23,6 @@ cs:
       long_description: |
         Tento odznak je udělen za úspěšné dokončení pokročilého interaktivního tutoriálu pro uživatele. Zvládli jste pokročilé nástroje diskuse — a nyní jste plně licencováni!
   discourse_narrative_bot:
-    bio: "Ahoj, já nejsem člověk. Jsem robot, který Vás může naučit něco o tomto webu. Pro interakci se mnou mi pošlete zprávu nebo kdekoliv zmiňte **%{discobot_username}**."
     timeout:
       message: |-
         Ahoj @%{username}, jen se ozývám, protože jsem od Vás nějakou dobu nic neslyšel.

@@ -441,10 +441,6 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} flag)"
-          few: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count} zastavica)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (ukupno %{count}kazni )"
         agreed:
           one: "%{count}% slaže"
           few: "%{count}% slaže"
@@ -798,7 +794,6 @@ bs_BA:
       posts: "Odgovori"
       topics: "Teme"
       latest: "Zadnje"
-      latest_by: "zadnje od"
       toggle_ordering: "toggle ordering control"
       subcategories: "Podkategorije"
       muted: "Prigušene kategorije"
@@ -896,7 +891,6 @@ bs_BA:
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         disable: "Isključi obavjesti"
         enable: "Uključi obavijesti"
-        each_browser_note: "Napomena: Ovu opciju morate promjeniti na svakom pregledniku."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
@@ -1291,7 +1285,6 @@ bs_BA:
         link_redemption_stats: "Opozivi"
         link_groups: Grupa
         link_expires_at: Ističe
-        create: "Email pozivnica"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         invite_link:
           title: "Link pozivnice"
@@ -1425,15 +1418,6 @@ bs_BA:
     too_few_topics_notice_MF: >-
       Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više sadržaja za čitati i odgovoriti na — preporučujemo barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     learn_more: "saznaj više..."
-    all_time: "ukupno"
-    all_time_desc: "ukupno kreiranih tema"
-    year: "godina"
-    year_desc: "teme otvorene u zadnjih 365 dana"
-    month: "mjesec"
-    month_desc: "teme otvorene u zadnjih 30 dana"
-    week: "sedmica"
-    week_desc: "teme otvorene u zadnjih 7 dana"
-    day: "dan"
     first_post: Prva objava
     mute: Utišaj
     unmute: Normalno
@@ -1457,8 +1441,6 @@ bs_BA:
       value_prop: "Kada stvorite račun, sjećamo se točno onoga što ste pročitali, pa se uvijek vraćate na mjesto gdje ste stali. Također dobivate obavijesti, ovdje i putem e-pošte, kad god vam netko odgovara. I možete lajkati :heartpulse: tuđe postove i reagirati na iste reakcijama."
     summary:
       enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
-      description: "Trenutno postoji <b>%{replyCount}</b> odgovora."
-      description_time: "Trenutno postoje <b>%{replyCount}</b> odgovora sa procijenjenim vremenom čitanja od <b>%{readingTime} minuta</b>."
       enable: "Napravi sažetak ove teme"
       disable: "Prikaži sve objave"
     deleted_filter:
@@ -1620,8 +1602,6 @@ bs_BA:
     date_time_picker:
       from: Od
       to: Ka
-      errors:
-        to_before_from: "Ciljani datum mora biti kasniji od početnog datuma."
     emoji_picker:
       filter_placeholder: Pretraži emotikone
       smileys_&_emotion: Smeješci i osječaj
@@ -1643,7 +1623,6 @@ bs_BA:
       default: Sopstveni emotikoni
     shared_drafts:
       title: "Dijeljene skice"
-      notice: "Ova tema je vidljiva onima koji mogu da vide <b>%{category}</b> kategoriju."
       destination_category: "Kategorija destinacije"
       publish: "Objavi dijeljenu skicu"
       confirm_publish: "Da li ste sigurni da želite objaviti ovu skicu?"
@@ -1654,7 +1633,6 @@ bs_BA:
       options: "Opcije"
       whisper: "šapat"
       unlist: "nelistan"
-      blockquote_text: "Citiranje"
       add_warning: "Ovo je zvanično upozorenje."
       toggle_whisper: " Prekidač za Šapat"
       toggle_unlisted: "Prekidač za Listan"
@@ -1674,10 +1652,7 @@ bs_BA:
       reference_topic_title: "RE:%{title}"
       error:
         title_missing: "Naslov je obavezan"
-        title_too_short: "Naslov mora biti najmanje %{min} karaktera"
-        title_too_long: "Naslov ne može biti duži od %{max} karaktera"
         post_missing: "Objava ne može biti prazna"
-        post_length: "Odgovor mora biti najmanje %{min} karaktera"
         try_like: "Dail ste pokušali%{heart}dugme?"
         category_missing: "Morate odabrati kategoriju"
         topic_template_not_modified: "Molimo da dodate detalje i specifikacije za vašu temu tako što ćete izmijeniti template teme."
@@ -1720,8 +1695,7 @@ bs_BA:
       link_description: "ubaci opis linka"
       link_dialog_title: "Unesi Link"
       link_optional_text: "naslov neobavezan"
-      quote_title: "\"Blockquote\" izdvojeni citat"
-      quote_text: "\"Blockquote\" izdvojeni citat"
+      blockquote_text: "Citiranje"
       code_title: "Formatiran Tekst"
       code_text: "Unapred formatirani tekst za 4 razmaka"
       paste_code_text: "ukucaj ili zalijepi kod ovdje"
@@ -1766,7 +1740,6 @@ bs_BA:
           label: "Nova tema"
         shared_draft:
           label: "Dijeljena skica"
-          desc: "Skiciraj temu koja će biti vidljiva samo administratorima"
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
@@ -2050,7 +2023,6 @@ bs_BA:
       toggle_information: "uključi detalje teme"
       read_more_in_category: "Želite dalje čitati? Pregledajte druge teme u %{catLink} ili %{latestLink}."
       read_more: "Želite li dalje čitati? %{catLink} Ili %{latestLink}."
-      read_more_MF: "Postoj{ UNREAD, plural, =0 {} one {i <a href='{basePath}/unread'>1 nepročitana</a> } few {e <a href='{basePath}/unread'># nepročitane</a> } other {i <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {i } other{}} <a href='{basePath}/new'>1 nova</a> tema} few {} other { {BOTH, select, true{i } false {e } other{}} <a href='{basePath}/new'># novih</a> tema} } preostalih za čitati, ili {CATEGORY, select, true {pogledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
       jump_reply_up: jump to earlier reply
@@ -2124,7 +2096,6 @@ bs_BA:
         go: "idi"
         jump_bottom: "idi na posljednju objavu"
         jump_prompt: "skoči na..."
-        jump_prompt_of: "od %{count} objava"
         jump_prompt_long: "Skoči na ..."
         jump_bottom_with_number: "skoči na post %{post_number}"
         jump_prompt_to_date: "do datuma"
@@ -2261,7 +2232,6 @@ bs_BA:
         username_placeholder: "korisničko ime"
         action: "Email pozivnica"
         help: "pošalji pozivnicu svojim prijateljima tako da i oni mogu odgovoriti na ovu temu. Bey registracije."
-        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         sso_enabled: "Unesite korisničko ime osobe koju želite da pozovete u ovu temu."
         to_topic_blank: "Unesite korisničko ime ili e-mail adresu osobe koju želite da pozovete u ovu temu."
         to_topic_email: "Unijeli ste e-mail adresu. Poslat ćemo e-mailom pozivnicu koja će omogućiti vašem prijatelju da odmah odgovori na ovu temu."
@@ -2374,8 +2344,6 @@ bs_BA:
       edit_reason: "Razlog: "
       post_number: "post %{number}"
       ignored: "Ignorisani sadržaj"
-      wiki_last_edited_on: "wiki zanji put izmijenjen"
-      last_edited_on: "post last edited on"
       reply_as_new_topic: "Odgovori kroz novu povezanu Temu"
       reply_as_new_private_message: "Odgovori kao nova poruka istim primaocima"
       continue_discussion: "Nastavak diskusije od teme %{postLink}:"
@@ -2477,7 +2445,6 @@ bs_BA:
         delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
         delete_topic: "obriši temu"
         add_post_notice: "Dodaj obavještenje moderatora"
-        remove_post_notice: "Ukloni obavijest osoblja"
         remove_timer: "ukloni tajmer"
       actions:
         people:
@@ -2747,12 +2714,6 @@ bs_BA:
         title: "Ova tema je lična poruka"
         help: "Ova tema je lična poruka"
     posts: "Odgovori"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
-      low {with a high like to post ratio}
-      med {with a very high like to post ratio}
-      high {with an extremely high like to post ratio}
-      other {}}
     original_post: "Originalni Odgovor"
     views: "Pregledi"
     views_lowercase:
@@ -3252,7 +3213,6 @@ bs_BA:
             effects: Efekti
             trust_levels_none: "Ništa"
             automatic_membership_email_domains: "Korisnici koji se registriraju s email domenom koja točno odgovora jednoj na ovom popisu biti će automatski dodani u ovu grupu:"
-            automatic_membership_user_count: "%{count} korisnika ima nove domene e-pošte i bit će dodani u grupu."
             primary_group: "Automatski postavi kao primarnu grupu"
         name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
         primary: "Primary Group"
@@ -4000,7 +3960,6 @@ bs_BA:
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Zašto suspendirate? Ovaj tekst će biti prikazan korisniku kada se pokušaju prijaviti."
         suspend_reason: "Reason"
-        suspend_reason_placeholder: "Razlog suspenzije"
         suspend_message: "Email Message"
         suspend_message_placeholder: "Opciono, pružite više informacija o suspenziji i on će biti poslan e-poštom korisniku."
         suspended_by: "Suspended by"

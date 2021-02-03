@@ -1,8 +1,7 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Badges", function (needs) {
   needs.user();
@@ -17,7 +16,7 @@ acceptance("Badges", function (needs) {
 
     assert.ok(exists(".badge-card"), "has the badge in the listing");
     assert.ok(exists(".user-info"), "has the list of users with that badge");
-    assert.ok(!exists(".badge-card:eq(0) script"));
+    assert.ok(!exists(".badge-card:nth-of-type(1) script"));
   });
 
   test("shows correct badge titles to choose from", async function (assert) {

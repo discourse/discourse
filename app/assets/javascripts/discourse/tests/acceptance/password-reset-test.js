@@ -1,13 +1,15 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click, fillIn } from "@ember/test-helpers";
-import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
-import DiscourseURL from "discourse/lib/url";
 import sinon from "sinon";
+import { test } from "qunit";
 
 acceptance("Password Reset", function (needs) {
   needs.pretender((server, helper) => {

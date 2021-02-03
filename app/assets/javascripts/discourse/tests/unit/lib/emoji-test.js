@@ -1,8 +1,8 @@
-import { test } from "qunit";
-import { emojiSearch } from "pretty-text/emoji";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { emojiUnescape } from "discourse/lib/text";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import { emojiSearch } from "pretty-text/emoji";
+import { emojiUnescape } from "discourse/lib/text";
+import { test } from "qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 discourseModule("Unit | Utility | emoji", function () {
   test("emojiUnescape", function (assert) {
@@ -136,5 +136,18 @@ discourseModule("Unit | Utility | emoji", function () {
 
     // able to find middle of line search
     assert.equal(emojiSearch("check", { maxResults: 3 }).length, 3);
+
+    // appends diversity
+    assert.deepEqual(emojiSearch("woman_artist", { diversity: 5 }), [
+      "woman_artist:t5",
+    ]);
+    assert.deepEqual(emojiSearch("woman_artist", { diversity: 2 }), [
+      "woman_artist:t2",
+    ]);
+
+    // no diversity appended for emojis that can't be diversified
+    assert.deepEqual(emojiSearch("green_apple", { diversity: 3 }), [
+      "green_apple",
+    ]);
   });
 });

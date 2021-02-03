@@ -1,8 +1,8 @@
+import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import DiscourseURL from "discourse/lib/url";
-import Category from "discourse/models/category";
-import EmberObject from "@ember/object";
 
 const Permalink = EmberObject.extend({
   save: function () {

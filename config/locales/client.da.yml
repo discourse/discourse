@@ -377,9 +377,6 @@ da:
         name: "Navn"
         fields: "Felter"
       user_percentage:
-        summary:
-          one: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlet markering)"
-          other: "%{agreed}, %{disagreed}, %{ignored} (%{count} samlede markeringer)"
         agreed:
           one: "%{count}% er enige"
           other: "%{count}% er enige"
@@ -681,7 +678,6 @@ da:
       posts: "Indlæg"
       topics: "Emner"
       latest: "Seneste"
-      latest_by: "seneste af"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
       topic_sentence:
@@ -770,7 +766,6 @@ da:
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         disable: "Deaktiver notifikationer"
         enable: "Aktiver notifikationer"
-        each_browser_note: "Bemærk: Du skal ændre indstillingen i alle dine browsere."
         consent_prompt: "Ønsker du live notifikationer, når folk svarer på dine indlæg?"
       dismiss: "Afvist"
       dismiss_notifications: "Afvis alle"
@@ -1103,7 +1098,6 @@ da:
         links_tab: "Links"
         link_created_at: "Oprettet"
         link_groups: grupper
-        create: "Send invitation"
         valid_for: "Imvitationslinket er kun gyldigt for emailadressen: %{email}"
         invite_link:
           success: "Invitiationslinket blev genereret!"
@@ -1218,15 +1212,6 @@ da:
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
       logout_disabled: "Log ud er deaktiveret mens websitet er i læs kun tilstand"
     learn_more: "Læs mere…"
-    all_time: "i alt"
-    all_time_desc: "emner oprettet i alt"
-    year: "år"
-    year_desc: "Indlæg oprettet i de seneste 365 dage"
-    month: "måned"
-    month_desc: "Indlæg oprettet i de seneste 30 dage"
-    week: "uge"
-    week_desc: "Indlæg oprettet i de seneste 7 dage"
-    day: "dag"
     first_post: Første indlæg
     mute: Mute
     unmute: Unmute
@@ -1248,8 +1233,6 @@ da:
       value_prop: "Når du opretter en konto, husker vi nøjagtigt, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også notifikationer her og via email, når nogen svarer til dig. Og du kan synes godt om indlæg for at dele kærligheden. : Heartpulse:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
-      description: "Der er <b>%{replyCount}</b> svar."
-      description_time: "Der er <b>%{replyCount}</b> svar med en estimeret læsetid på <b>%{readingTime} minutter</b>."
       enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
@@ -1395,8 +1378,6 @@ da:
     date_time_picker:
       from: Fra
       to: Til
-      errors:
-        to_before_from: "Til dato skal være senere end fra dato."
     emoji_picker:
       filter_placeholder: Søg efter humørikon
       smileys_&_emotion: Smilys og følelser
@@ -1418,7 +1399,6 @@ da:
       default: Brugerdefineret humørikoner
     shared_drafts:
       title: "Delte kladder"
-      notice: "Dette emne er kun synligt for dem, der kan se kategorien <b>%{category}</b> ."
       destination_category: "Destinations-kategori"
       publish: "Offentliggør delt kladde"
       confirm_publish: "Er du sikker på, at du vil offentliggøre dette udkast?"
@@ -1429,7 +1409,6 @@ da:
       options: "Indstillinger"
       whisper: "hvisken"
       unlist: "Ikke listede"
-      blockquote_text: "Citatblok"
       add_warning: "Dette er en officiel advarsel."
       toggle_whisper: "Slå hvisken til/fra"
       toggle_unlisted: "Slå listning til/fra"
@@ -1448,10 +1427,7 @@ da:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Titlen er påkrævet"
-        title_too_short: "Titlen skal være på mindst %{min} tegn"
-        title_too_long: "Titlen skal være kortere end %{max} tegn."
         post_missing: "Indlæg kan ikke være tomt"
-        post_length: "Indlægget skal være på mindst %{min} tegn."
         try_like: "Har du prøvet %{heart}knappen?"
         category_missing: "Du skal vælge en kategori."
       save_edit: "Gem ændringer"
@@ -1492,8 +1468,7 @@ da:
       link_description: "skriv linkets beskrivelse her"
       link_dialog_title: "Indsæt link"
       link_optional_text: "evt. titel"
-      quote_title: "Citatblok"
-      quote_text: "Citatblok"
+      blockquote_text: "Citatblok"
       code_title: "Præformateret tekst"
       code_text: "indryk præformateret tekst med 4 mellemrum"
       paste_code_text: "skriv eller indsæt kode her"
@@ -1538,7 +1513,6 @@ da:
           label: "Nyt emne"
         shared_draft:
           label: "Delt Kladde"
-          desc: "Lav en kladde til et emne, der kun er synligt for hjælperteam"
         toggle_topic_bump:
           label: "Slå emne 'bump' til/fra"
           desc: "Svar uden at ændre den seneste svardato"
@@ -1808,7 +1782,6 @@ da:
       toggle_information: "vis/skjul emne detaljer"
       read_more_in_category: "Mere læsestof? Se andre emner i %{catLink} eller %{latestLink}."
       read_more: "Mere læsestof? %{catLink} eller %{latestLink}."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'>1 ulæst</a> } other { er <a href='{basePath}/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
       jump_reply_up: hop til tidligere svar
@@ -1881,7 +1854,6 @@ da:
         go: "start"
         jump_bottom: "Hop til sidste indlæg"
         jump_prompt: "spring til..."
-        jump_prompt_of: "af %{count} indlæg"
         jump_prompt_long: "Hop til..."
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         jump_prompt_to_date: "til dato"
@@ -2016,7 +1988,6 @@ da:
         username_placeholder: "brugernavn"
         action: "Send invitation"
         help: "inviter andre til dette emne via email eller notifikationer"
-        to_forum: "Vi sender din ven en kort e-mail, som gør det muligt at tilmelde sig øjeblikkeligt ved at klikke på et link, uden det er nødvendigt at logge ind."
         sso_enabled: "Indtast brugernavnet på den person, du gerne vil invitere til dette emne."
         to_topic_blank: "Indtast brugernavnet eller en email adresse på den person, du gerne vil invitere til dette emne."
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
@@ -2121,8 +2092,6 @@ da:
       edit_reason: "Reason: "
       post_number: "indlæg %{number}"
       ignored: "Ignoreret indhold"
-      wiki_last_edited_on: "wiki sidst redigeret den"
-      last_edited_on: "indlæg sidst redigeret den"
       reply_as_new_topic: "Svar som linket emne"
       reply_as_new_private_message: "Svar med ny besked til de samme modtagere"
       continue_discussion: "Fortsætter debatten fra %{postLink}:"
@@ -2218,7 +2187,6 @@ da:
         delete_topic_disallowed: "du har ikke tilladelse til at slette dette emne"
         delete_topic: "slet emne"
         add_post_notice: "Tilføj Hjælperteam Notits"
-        remove_post_notice: "Fjern Hjælperteam Notits"
         remove_timer: "fjern timer"
       actions:
         people:
@@ -2404,7 +2372,6 @@ da:
       notify_action: "Besked"
       official_warning: "Officiel Advarsel"
       delete_spammer: "Slet spammer"
-      delete_confirm_MF: "Du er ved at slette <b>{posts}</b> indlæg og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} oprettet af denne bruger, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>{ip_address}</b> og tilføje deres e-mail-adresse <b>{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?"
       yes_delete_spammer: "Ja, slet spammer"
       ip_address_missing: "(Ikke tilgængelig)"
       hidden_email_address: "(skjult)"
@@ -2471,12 +2438,6 @@ da:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
     posts: "Indlæg"
-    posts_likes_MF: |
-      Dette emne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
-      low {med et højt like pr. indlæg forhold}
-      med {med et meget højt like pr. indlæg forhold}
-      high {med et ekstremt højt like pr. indlæg forhold}
-      other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
     views_lowercase:
@@ -3627,7 +3588,6 @@ da:
         suspend_reason_label: "Hvorfor suspenderer du? Denne tekst <b>er synlig for alle</b> på brugerens profilside, og vises til brugeren når de prøver at logge ind. Fat dig i korthed."
         suspend_reason_hidden_label: "Hvorfor suspenderer du? Teksten er synlig for  denne bruger, når de prøver et log ind. Fat dig i korthed."
         suspend_reason: "Begrundelse"
-        suspend_reason_placeholder: "Årsag til suspension"
         suspend_message: "Email Besked"
         suspend_message_placeholder: "Angiv eventuelt mere information om suspensionen, og den vil blive sendt til brugeren."
         suspended_by: "Suspenderet af"
@@ -3653,7 +3613,6 @@ da:
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er ved at slette {POSTS, plural, one {1 post} other {# posts}} og {TOPICS, plural, one {1 topic} other {# topics}}. Er du sikker?"
         silence: "Mådehold (silence)"
         unsilence: "Fjern mådeholdenhed (unsilence)"
         silenced: "Mådeholdt (silenced)?"

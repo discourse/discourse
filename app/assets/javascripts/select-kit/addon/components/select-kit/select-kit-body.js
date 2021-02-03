@@ -1,16 +1,18 @@
 import Component from "@ember/component";
-import { computed } from "@ember/object";
 import { bind } from "@ember/runloop";
+import { computed } from "@ember/object";
 import layout from "select-kit/templates/components/select-kit/select-kit-body";
 
 export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
-  attributeBindings: ["selectKitId:data-select-kit-id"],
+  attributeBindings: ["role", "selectKitId:data-select-kit-id"],
   selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-body`;
   }),
   rootEventType: "click",
+
+  role: "listbox",
 
   init() {
     this._super(...arguments);

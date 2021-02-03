@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import {
   bufferToBase64,
-  stringToBuffer,
   isWebauthnSupported,
+  stringToBuffer,
 } from "discourse/lib/webauthn";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 // model for this controller is user
 export default Controller.extend(ModalFunctionality, {

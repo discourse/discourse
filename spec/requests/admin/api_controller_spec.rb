@@ -222,7 +222,7 @@ describe Admin::ApiController do
 
         scopes = response.parsed_body['scopes']
 
-        expect(scopes.keys).to contain_exactly('topics', 'users')
+        expect(scopes.keys).to contain_exactly('topics', 'users', 'email')
       end
     end
   end

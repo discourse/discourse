@@ -327,7 +327,6 @@ te:
       posts: "టపాలు"
       topics: "విషయాలు"
       latest: "తాజా"
-      latest_by: "నుండి తాజా"
       toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
       subcategories: "ఉప వర్గాలు"
     ip_lookup:
@@ -596,13 +595,6 @@ te:
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    year: "సంవత్సరం"
-    year_desc: "గత 365 రోజులలో సృష్టించిన విషయాలు"
-    month: "నెల"
-    month_desc: "గత 30 రోజులలో సృష్టించిన విషయాలు"
-    week: "వారం"
-    week_desc: "గత 7 రోజులలో సృష్టించిన విషయాలు"
-    day: "రోజు"
     first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
@@ -690,7 +682,6 @@ te:
       flags: కేతనాలు
     composer:
       options: "ఎంపికలు"
-      blockquote_text: "బ్లాక్ కోట్"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
       saved_local_draft_tip: "స్థానికంగా భద్రం"
@@ -698,9 +689,6 @@ te:
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
-        title_too_short: "శీర్షిక కనీసం %{min} అక్షరాలు ఉండాలి"
-        title_too_long: "శీర్షిక %{max} అక్షరాలకు మించి ఉండకూడదు"
-        post_length: "టపా కనీసం %{min} అక్షరాలు కలిగి ఉండాలి"
         category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
       save_edit: "దాచి సవరించు"
       reply_original: "మూల విషయంకు జవాబివ్వు"
@@ -725,8 +713,7 @@ te:
       link_description: "లంకె వివరణ ఇక్కడ రాయండి"
       link_dialog_title: "హైపర్ లంకె చొప్పించండి"
       link_optional_text: "ఐచ్చిక శీర్షిక"
-      quote_title: "బ్లాక్ కోట్"
-      quote_text: "బ్లాక్ కోట్"
+      blockquote_text: "బ్లాక్ కోట్"
       code_title: "ముందే అలంకరించిన పాఠ్యం"
       code_text: "ముందే అలంకరించిన పాఠ్యాన్ని 4 జాగాలు జరుపు"
       upload_title: "ఎగుమతించు"
@@ -944,7 +931,6 @@ te:
       invite_reply:
         title: "ఆహ్వానించు"
         username_placeholder: "వాడుకరి పేరు"
-        to_forum: "మేము మీ స్నేహితునికి ఒక ఈమెయిల్ పంపుతాము. అందులోని లంకె ద్వారా వారు లాగిన్ అవసరం లేకుండానే నేరుగా ఈ చర్చలో పాల్గొనవచ్చు, జవాబివ్వవచ్చు."
         email_placeholder: "name@example.com"
       login_reply: "జవాబివ్వడానికి లాగిన్ అవ్వండి"
       filters:
@@ -990,7 +976,6 @@ te:
     post:
       edit_reason: "కారణం:"
       post_number: "టపా %{number}"
-      last_edited_on: "టపా చివర సవరించిన కాలం"
       reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
       continue_discussion: "%{postLink} నుండి చర్చ కొనసాగుతుంది;"
       follow_quote: "కోటెడ్ టపాకు వెళ్లు"

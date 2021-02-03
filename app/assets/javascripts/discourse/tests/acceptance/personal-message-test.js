@@ -1,9 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Personal Message", function (needs) {
   needs.user();

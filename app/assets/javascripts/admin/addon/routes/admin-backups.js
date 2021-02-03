@@ -1,14 +1,15 @@
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import EmberObject from "@ember/object";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
-import BackupStatus from "admin/models/backup-status";
 import Backup from "admin/models/backup";
+import BackupStatus from "admin/models/backup-status";
+import DiscourseRoute from "discourse/routes/discourse";
+import EmberObject from "@ember/object";
+import I18n from "I18n";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
+import { extractError } from "discourse/lib/ajax-error";
+import getURL from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
@@ -74,7 +75,11 @@ export default DiscourseRoute.extend({
 
     startBackup(withUploads) {
       this.transitionTo("admin.backups.logs");
-      Backup.start(withUploads);
+      Backup.start(withUploads).then((result) => {
+        if (!result.success) {
+          bootbox.alert(result.message);
+        }
+      });
     },
 
     destroyBackup(backup) {
@@ -135,7 +140,14 @@ export default DiscourseRoute.extend({
         I18n.t("yes_value"),
         (confirmed) => {
           if (confirmed) {
-            Backup.rollback();
+            Backup.rollback().then((result) => {
+              if (!result.success) {
+                bootbox.alert(result.message);
+              } else {
+                // redirect to homepage (session might be lost)
+                window.location = getURL("/");
+              }
+            });
           }
         }
       );
@@ -152,12 +164,22 @@ export default DiscourseRoute.extend({
     },
 
     remoteUploadSuccess() {
-      Backup.find().then((backups) => {
-        this.controllerFor("adminBackupsIndex").set(
-          "model",
-          backups.map((backup) => Backup.create(backup))
-        );
-      });
+      Backup.find()
+        .then((backups) => backups.map((backup) => Backup.create(backup)))
+        .then((backups) => {
+          this.controllerFor("adminBackupsIndex").set(
+            "model",
+            backups.map((backup) => Backup.create(backup))
+          );
+        })
+        .catch((error) => {
+          bootbox.alert(
+            I18n.t("admin.backups.backup_storage_error", {
+              error_message: extractError(error),
+            })
+          );
+          return [];
+        });
     },
   },
 });

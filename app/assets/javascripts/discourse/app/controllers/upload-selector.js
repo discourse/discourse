@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import { equal } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import discourseComputed from "discourse-common/utils/decorators";
 import {
   allowsAttachments,
   authorizedExtensions,
   authorizesAllExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
+import Controller from "@ember/controller";
+import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import discourseComputed from "discourse-common/utils/decorators";
+import { equal } from "@ember/object/computed";
 
 export default Controller.extend(ModalFunctionality, {
   imageUrl: null,

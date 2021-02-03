@@ -1,7 +1,5 @@
 // Styles for /admin section
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
 $mobile-breakpoint: 700px;
@@ -59,8 +57,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 1) 0%,
-        rgba(var(--secondary-rgb), 0) 100%
+        rgba(var(--secondary-rgb), 1),
+        rgba(var(--secondary-rgb), 0)
       );
     }
     &:after {
@@ -71,8 +69,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0) 0%,
-        rgba(var(--secondary-rgb), 1) 100%
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
       );
     }
   }
@@ -205,6 +203,12 @@ $mobile-breakpoint: 700px;
     }
     .reseed {
       float: right;
+    }
+    .locale {
+      margin-bottom: 0.5em;
+    }
+    .locale-search {
+      width: 50%;
     }
   }
   .text-highlight {
@@ -471,8 +475,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 1) 0%,
-        rgba(var(--primary-low-rgb), 0) 100%
+        rgba(var(--primary-low-rgb), 1),
+        rgba(var(--primary-low-rgb), 0)
       );
     }
 
@@ -484,8 +488,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 0) 0%,
-        rgba(var(--primary-low-rgb), 1) 100%
+        rgba(var(--primary-low-rgb), 0),
+        rgba(var(--primary-low-rgb), 1)
       );
     }
   }

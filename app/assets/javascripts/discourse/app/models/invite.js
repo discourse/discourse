@@ -1,10 +1,10 @@
 import EmberObject from "@ember/object";
+import { Promise } from "rsvp";
+import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
+import { isNone } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
-import { Promise } from "rsvp";
-import { isNone } from "@ember/utils";
-import User from "discourse/models/user";
 
 const Invite = EmberObject.extend({
   rescind() {

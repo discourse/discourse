@@ -1,6 +1,6 @@
+import { ButtonClass } from "discourse/widgets/button";
 import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
-import { ButtonClass } from "discourse/widgets/button";
 
 createWidget(
   "post-admin-menu-button",
@@ -141,7 +141,7 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
 
   if (attrs.canManage) {
     contents.push({
-      icon: "cog",
+      icon: "sync-alt",
       label: "post.controls.rebake",
       action: "rebakePost",
       className: "popup-menu-button rebuild-html",

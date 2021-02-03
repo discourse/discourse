@@ -1,8 +1,8 @@
+import { computed, defineProperty } from "@ember/object";
 import Component from "@ember/component";
-import { defineProperty, computed } from "@ember/object";
-import deprecated from "discourse-common/lib/deprecated";
-import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
 import { afterRender } from "discourse-common/utils/decorators";
+import { buildArgsWithDeprecations } from "discourse/lib/plugin-connectors";
+import deprecated from "discourse-common/lib/deprecated";
 
 let _decorators = {};
 

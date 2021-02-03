@@ -1,13 +1,13 @@
-import { later } from "@ember/runloop";
 import {
-  localCache,
   failedCache,
-  setLocalCache,
-  setFailedCache,
-  resetLocalCache,
-  resetFailedCache,
+  localCache,
   normalize,
+  resetFailedCache,
+  resetLocalCache,
+  setFailedCache,
+  setLocalCache,
 } from "pretty-text/oneboxer-cache";
+import { later } from "@ember/runloop";
 
 let timeout;
 const loadingQueue = [];

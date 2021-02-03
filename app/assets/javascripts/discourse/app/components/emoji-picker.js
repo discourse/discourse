@@ -1,20 +1,18 @@
-import { observes } from "discourse-common/utils/decorators";
-import { bind } from "discourse-common/utils/decorators";
-import { htmlSafe } from "@ember/template";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { schedule, later } from "@ember/runloop";
-import Component from "@ember/component";
-import { emojiUrlFor } from "discourse/lib/text";
-import { createPopper } from "@popperjs/core";
+import { bind, observes } from "discourse-common/utils/decorators";
 import {
+  emojiSearch,
   extendedEmojiList,
   isSkinTonableEmoji,
-  emojiSearch,
 } from "pretty-text/emoji";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
+import { escapeExpression, safariHacksDisabled } from "discourse/lib/utilities";
+import { later, schedule } from "@ember/runloop";
+import Component from "@ember/component";
+import { createPopper } from "@popperjs/core";
+import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
+import { underscore } from "@ember/string";
 
 function customEmojis() {
   const list = extendedEmojiList();
@@ -152,6 +150,7 @@ export default Component.extend({
     ].map((name, index) => {
       return {
         name,
+        title: `emoji_picker.${underscore(name)}_tone`,
         icon: index + 1 === this.selectedDiversity ? "check" : "",
       };
     });
@@ -225,6 +224,7 @@ export default Component.extend({
     if (event.target.value) {
       results.innerHTML = emojiSearch(event.target.value.toLowerCase(), {
         maxResults: 10,
+        diversity: this.emojiStore.diversity,
       })
         .map(this._replaceEmoji)
         .join("");

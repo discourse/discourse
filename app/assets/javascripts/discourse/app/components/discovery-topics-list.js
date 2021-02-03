@@ -1,6 +1,6 @@
+import { observes, on } from "discourse-common/utils/decorators";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import { on, observes } from "discourse-common/utils/decorators";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
 import { inject as service } from "@ember/service";

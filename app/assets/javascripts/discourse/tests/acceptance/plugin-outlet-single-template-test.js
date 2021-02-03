@@ -1,16 +1,16 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 
 const CONNECTOR =
   "javascripts/single-test/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    Ember.TEMPLATES[CONNECTOR] = Ember.HTMLBars.compile(
-      `<span class='hello-username'>{{model.username}}</span>`
-    );
+    Ember.TEMPLATES[
+      CONNECTOR
+    ] = hbs`<span class='hello-username'>{{model.username}}</span>`;
   });
 
   needs.hooks.afterEach(() => {

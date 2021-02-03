@@ -302,7 +302,7 @@ export function setup(helper) {
  * http://www.opensource.org/licenses/bsd-license
  */
 function md5cycle(x, k) {
-  var a = x[0],
+  let a = x[0],
     b = x[1],
     c = x[2],
     d = x[3];
@@ -403,18 +403,17 @@ function ii(a, b, c, d, x, s, t) {
 }
 
 function md51(s) {
-  // Converts the string to UTF-8 "bytes" when necessary
-  if (/[\x80-\xFF]/.test(s)) {
-    s = unescape(encodeURI(s));
-  }
-  var n = s.length,
+  // Converts the string to UTF-8 "bytes"
+  s = unescape(encodeURI(s));
+
+  let n = s.length,
     state = [1732584193, -271733879, -1732584194, 271733878],
     i;
   for (i = 64; i <= s.length; i += 64) {
     md5cycle(state, md5blk(s.substring(i - 64, i)));
   }
   s = s.substring(i - 64);
-  var tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   for (i = 0; i < s.length; i++) {
     tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
   }
@@ -432,7 +431,7 @@ function md51(s) {
 
 function md5blk(s) {
   /* I figured global was faster.   */
-  var md5blks = [],
+  let md5blks = [],
     i; /* Andy King said do it this way. */
   for (i = 0; i < 64; i += 4) {
     md5blks[i >> 2] =
@@ -444,10 +443,10 @@ function md5blk(s) {
   return md5blks;
 }
 
-var hex_chr = "0123456789abcdef".split("");
+let hex_chr = "0123456789abcdef".split("");
 
 function rhex(n) {
-  var s = "",
+  let s = "",
     j = 0;
   for (; j < 4; j++) {
     s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
@@ -456,7 +455,7 @@ function rhex(n) {
 }
 
 function hex(x) {
-  for (var i = 0; i < x.length; i++) {
+  for (let i = 0; i < x.length; i++) {
     x[i] = rhex(x[i]);
   }
   return x.join("");

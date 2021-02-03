@@ -17,7 +17,7 @@
       {{#topic-title cancelled=(action "cancelEditingTopic") save=(action "finishedEditingTopic") model=model}}
         {{#if editingTopic}}
           <div class="edit-topic-title">
-            {{private-message-glyph shouldShow=model.isPrivateMessage}}
+            {{private-message-glyph shouldShow=model.isPrivateMessage tagName=""}}
 
             {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
 
@@ -65,9 +65,10 @@
                   href=pmPath
                   title="topic_statuses.personal_message.title"
                   ariaLabel="user.messages.inbox"
+                  tagName=""
                 }}
               {{else}}
-                {{private-message-glyph shouldShow=model.isPrivateMessage}}
+                {{private-message-glyph shouldShow=model.isPrivateMessage  tagName=""}}
               {{/if}}
             {{/unless}}
 
@@ -199,9 +200,11 @@
                 canCreatePost=model.details.can_create_post
                 multiSelect=multiSelect
                 selectedPostsCount=selectedPostsCount
+                filteredPostsCount=model.postStream.filteredPostsCount
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
                 showReadIndicator=model.show_read_indicator
+                streamFilters=model.postStream.streamFilters
                 showFlags=(action "showPostFlags")
                 editPost=(action "editPost")
                 showHistory=(route-action "showHistory")
@@ -221,7 +224,8 @@
                 unhidePost=(action "unhidePost")
                 replyToPost=(action "replyToPost")
                 toggleWiki=(action "toggleWiki")
-                toggleSummary=(action "toggleSummary")
+                showSummary=(action "showSummary")
+                cancelFilter=(action "cancelFilter")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
                 topVisibleChanged=(action "topVisibleChanged")
@@ -299,7 +303,7 @@
                   removeTopicTimer=(action "removeTopicTimer" model.topic_timer.status_type "topic_timer")}}
 
               {{#if showSelectedPostsAtBottom}}
-                <div class="selected-posts {{unless multiSelect "hidden"}}">
+                <div class="selected-posts {{unless multiSelect "hidden"}} {{if showSelectedPostsAtBottom "hidden"}}">
                   {{selected-posts
                     selectedPostsCount=selectedPostsCount
                     canSelectAll=canSelectAll

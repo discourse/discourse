@@ -152,7 +152,7 @@ class Tag < ActiveRecord::Base
   end
 
   def full_url
-    "#{Discourse.base_url}/tag/#{self.name}"
+    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
   def index_search

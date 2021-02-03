@@ -1079,13 +1079,12 @@ RSpec.describe Admin::UsersController do
     fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
 
     it 'should merge source user to target user' do
+      Jobs.run_immediately!
       post "/admin/users/#{user.id}/merge.json", params: {
         target_username: target_user.username
       }
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["merged"]).to be_truthy
-      expect(response.parsed_body["user"]["id"]).to eq(target_user.id)
       expect(topic.reload.user_id).to eq(target_user.id)
       expect(first_post.reload.user_id).to eq(target_user.id)
     end
@@ -1101,6 +1100,23 @@ RSpec.describe Admin::UsersController do
       delete "/admin/users/#{user.id}/sso_record.json"
       expect(response.status).to eq(200)
       expect(user.single_sign_on_record).to eq(nil)
+    end
+  end
+
+  describe "#anonymize" do
+    it "will make the user anonymous" do
+      put "/admin/users/#{user.id}/anonymize.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+    end
+
+    it "supports `anonymize_ip`" do
+      Jobs.run_immediately!
+      sl = Fabricate(:search_log, user_id: user.id)
+      put "/admin/users/#{user.id}/anonymize.json?anonymize_ip=127.0.0.2"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body['username']).to be_present
+      expect(sl.reload.ip_address).to eq('127.0.0.2')
     end
   end
 

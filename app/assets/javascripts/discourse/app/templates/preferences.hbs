@@ -42,6 +42,9 @@
         {{i18n "user.preferences_nav.interface"}}
       {{/link-to}}
     </li>
+
+    {{plugin-outlet name="user-preferences-nav-under-interface" args=(hash model=model)}}
+
     {{#if model.userApiKeys}}
       <li class="nav-apps">
         {{#link-to "preferences.apps"}}

@@ -1,9 +1,9 @@
-import { test, module } from "qunit";
+import { currentRouteName, visit } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import { run } from "@ember/runloop";
 import startApp from "wizard/test/helpers/start-app";
-import { visit } from "@ember/test-helpers";
 
-var wizard;
+let wizard;
 module("Acceptance: wizard", {
   beforeEach() {
     wizard = startApp();
@@ -21,7 +21,7 @@ function exists(selector) {
 test("Wizard starts", async function (assert) {
   await visit("/");
   assert.ok(exists(".wizard-column-contents"));
-  assert.equal(currentPath(), "step");
+  assert.equal(currentRouteName(), "step");
 });
 
 test("Going back and forth in steps", async function (assert) {

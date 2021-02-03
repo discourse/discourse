@@ -1,13 +1,13 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { visit, click, fillIn } from "@ember/test-helpers";
-import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
+import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Review", function (needs) {
   needs.user();
 
-  const user = ".reviewable-item[data-reviewable-id=1234]";
+  const user = '.reviewable-item[data-reviewable-id="1234"]';
 
   test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
@@ -36,6 +36,33 @@ acceptance("Review", function (needs) {
     );
   });
 
+  test("Reject user", async function (assert) {
+    await visit("/review");
+    await click(
+      `${user} .reviewable-actions button[data-name="Delete User..."]`
+    );
+    await click(`${user} li[data-value="reject_user_delete"]`);
+    assert.ok(
+      queryAll(".reject-reason-reviewable-modal:visible .title")
+        .html()
+        .includes(I18n.t("review.reject_reason.title")),
+      "it opens reject reason modal when user is rejected"
+    );
+
+    await click(".modal-footer button[aria-label='Close']");
+
+    await click(
+      `${user} .reviewable-actions button[data-name="Delete User..."]`
+    );
+    await click(`${user} li[data-value="reject_user_block"]`);
+    assert.ok(
+      queryAll(".reject-reason-reviewable-modal:visible .title")
+        .html()
+        .includes(I18n.t("review.reject_reason.title")),
+      "it opens reject reason modal when user is rejected and blocked"
+    );
+  });
+
   test("Settings", async function (assert) {
     await visit("/review/settings");
 
@@ -44,7 +71,9 @@ acceptance("Review", function (needs) {
       "has a list of bonuses"
     );
 
-    const field = selectKit(".reviewable-score-type:eq(0) .field .combo-box");
+    const field = selectKit(
+      ".reviewable-score-type:nth-of-type(1) .field .combo-box"
+    );
     await field.expand();
     await field.selectRowByValue("5");
     await click(".save-settings");
@@ -92,12 +121,18 @@ acceptance("Review", function (needs) {
   });
 
   test("Editing a reviewable", async function (assert) {
-    const topic = ".reviewable-item[data-reviewable-id=4321]";
+    const topic = '.reviewable-item[data-reviewable-id="4321"]';
     await visit("/review");
     assert.ok(queryAll(`${topic} .reviewable-action.approve`).length);
     assert.ok(!queryAll(`${topic} .category-name`).length);
-    assert.equal(queryAll(`${topic} .discourse-tag:eq(0)`).text(), "hello");
-    assert.equal(queryAll(`${topic} .discourse-tag:eq(1)`).text(), "world");
+    assert.equal(
+      queryAll(`${topic} .discourse-tag:nth-of-type(1)`).text(),
+      "hello"
+    );
+    assert.equal(
+      queryAll(`${topic} .discourse-tag:nth-of-type(2)`).text(),
+      "world"
+    );
 
     assert.equal(
       queryAll(`${topic} .post-body`).text().trim(),
@@ -139,9 +174,18 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.save-edit`);
 
-    assert.equal(queryAll(`${topic} .discourse-tag:eq(0)`).text(), "hello");
-    assert.equal(queryAll(`${topic} .discourse-tag:eq(1)`).text(), "world");
-    assert.equal(queryAll(`${topic} .discourse-tag:eq(2)`).text(), "monkey");
+    assert.equal(
+      queryAll(`${topic} .discourse-tag:nth-of-type(1)`).text(),
+      "hello"
+    );
+    assert.equal(
+      queryAll(`${topic} .discourse-tag:nth-of-type(2)`).text(),
+      "world"
+    );
+    assert.equal(
+      queryAll(`${topic} .discourse-tag:nth-of-type(3)`).text(),
+      "monkey"
+    );
 
     assert.equal(
       queryAll(`${topic} .post-body`).text().trim(),

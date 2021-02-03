@@ -1,10 +1,10 @@
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import {
   acceptance,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
+import { visit } from "@ember/test-helpers";
 
 acceptance("Email Disabled Banner", function (needs) {
   needs.user();

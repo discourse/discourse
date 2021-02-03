@@ -44,7 +44,8 @@ class BadgeGranter
 
   def grant
     return if @granted_by && !Guardian.new(@granted_by).can_grant_badges?(@user)
-    return unless @badge.enabled?
+    return unless @badge.present? && @badge.enabled?
+    return if @user.blank?
     return if @badge.badge_grouping_id == BadgeGrouping::GettingStarted && @badge.id != Badge::NewUserOfTheMonth && @user.user_option.skip_new_user_tips
 
     find_by = { badge_id: @badge.id, user_id: @user.id }

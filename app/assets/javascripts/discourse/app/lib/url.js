@@ -1,12 +1,12 @@
-import { isEmpty } from "@ember/utils";
-import EmberObject from "@ember/object";
+import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 import { next, schedule } from "@ember/runloop";
-import offsetCalculator from "discourse/lib/offset-calculator";
+import EmberObject from "@ember/object";
 import LockOn from "discourse/lib/lock-on";
-import { defaultHomepage } from "discourse/lib/utilities";
-import User from "discourse/models/user";
-import { default as getURL, withoutPrefix } from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
+import User from "discourse/models/user";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { isEmpty } from "@ember/utils";
+import offsetCalculator from "discourse/lib/offset-calculator";
 import { setOwner } from "@ember/application";
 
 const rewrites = [];
@@ -16,6 +16,7 @@ const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
+  /^\/secure-media-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,
@@ -145,6 +146,7 @@ const DiscourseURL = EmberObject.extend({
       }
 
       lockon = new LockOn(selector, {
+        originalTopOffset: opts.originalTopOffset,
         finished() {
           _transitioning = false;
           lockon = null;
@@ -245,7 +247,7 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = window.location.pathname;
+    const oldPath = `${window.location.pathname}${window.location.search}`;
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls

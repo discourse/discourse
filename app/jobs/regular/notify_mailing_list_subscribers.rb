@@ -65,6 +65,10 @@ module Jobs
         users = users.where(approved: true)
       end
 
+      if SiteSetting.mute_all_categories_by_default
+        users = users.watching_topic_when_mute_categories_by_default(post.topic)
+      end
+
       DiscourseEvent.trigger(:notify_mailing_list_subscribers, users, post)
       users.find_each do |user|
         if Guardian.new(user).can_see?(post)

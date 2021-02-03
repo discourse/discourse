@@ -1,8 +1,8 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import I18n from "I18n";
-import UserDraft from "discourse/models/user-draft";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import User from "discourse/models/user";
+import UserDraft from "discourse/models/user-draft";
 
 module("Unit | Model | user-draft", function () {
   test("stream", function (assert) {

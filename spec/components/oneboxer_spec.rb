@@ -3,11 +3,16 @@
 require 'rails_helper'
 
 describe Oneboxer do
+  def response(file)
+    file = File.join("spec", "fixtures", "onebox", "#{file}.response")
+    File.exists?(file) ? File.read(file) : ""
+  end
+
   it "returns blank string for an invalid onebox" do
     stub_request(:head, "http://boom.com")
     stub_request(:get, "http://boom.com").to_return(body: "")
 
-    expect(Oneboxer.preview("http://boom.com")).to eq("")
+    expect(Oneboxer.preview("http://boom.com", invalidate_oneboxes: true)).to include("Sorry, we were unable to generate a preview for this web page")
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
@@ -191,6 +196,7 @@ describe Oneboxer do
         <head>
           <meta property="og:title" content="Onebox1">
           <meta property="og:description" content="this is bodycontent">
+          <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
         </head>
         <body>
            <p>body</p>
@@ -210,6 +216,7 @@ describe Oneboxer do
       # Disable all onebox iframes:
       SiteSetting.allowed_onebox_iframes = ""
       output = Oneboxer.onebox("https://www.youtube.com/watch?v=dQw4w9WgXcQ", invalidate_oneboxes: true)
+
       expect(output).not_to include("<iframe") # Generic onebox
       expect(output).to include("allowlistedgeneric")
 
@@ -246,6 +253,74 @@ describe Oneboxer do
 
     expect(Oneboxer.onebox("https://blocklist.ed/iframes", invalidate_oneboxes: true)).to be_empty
     expect(Oneboxer.onebox("https://allowlist.ed/iframes", invalidate_oneboxes: true)).to match("iframe src")
+  end
+
+  context 'missing attributes' do
+    before do
+      stub_request(:head, url)
+    end
+
+    let(:url) { "https://example.com/fake-url/" }
+
+    it 'handles a missing description' do
+      stub_request(:get, url).to_return(body: response("missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description")
+    end
+
+    it 'handles a missing description and image' do
+      stub_request(:get, url).to_return(body: response("missing_description_and_image"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("could not be found: description, image")
+    end
+
+    it 'video with missing description returns a placeholder' do
+      stub_request(:get, url).to_return(body: response("video_missing_description"))
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include("onebox-placeholder-container")
+    end
+  end
+
+  context 'facebook_app_access_token' do
+    it 'providing a token should attempt to use new endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      access_token = 'abc123'
+
+      SiteSetting.facebook_app_access_token = access_token
+
+      stub_request(:head, url)
+      stub_request(:get, "https://graph.facebook.com/v9.0/instagram_oembed?url=#{url}&access_token=#{access_token}").to_return(body: response("instagram_new"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).not_to include('instagram-description')
+    end
+
+    it 'unconfigured token should attempt to use old endpoint' do
+      url = "https://www.instagram.com/p/CHLkBERAiLa"
+      stub_request(:head, url)
+      stub_request(:get, "https://api.instagram.com/oembed/?url=#{url}").to_return(body: response("instagram_old"))
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include('instagram-description')
+    end
+  end
+
+  describe '#apply' do
+    it 'generates valid HTML' do
+      raw = "Before Onebox\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Before Onebox</p>
+        <div>onebox</div>
+        <p>After Onebox</p>
+      HTML
+
+      raw = "Before Onebox\nhttps://example.com\nhttps://example.com\nAfter Onebox"
+      cooked = Oneboxer.apply(PrettyText.cook(raw)) { '<div>onebox</div>' }
+      doc = Nokogiri::HTML5::fragment(cooked.to_html)
+      expect(doc.to_html).to match_html <<~HTML
+        <p>Before Onebox</p>
+        <div>onebox</div>
+        <div>onebox</div>
+        <p>After Onebox</p>
+      HTML
+    end
   end
 
 end

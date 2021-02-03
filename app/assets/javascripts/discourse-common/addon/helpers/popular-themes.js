@@ -51,6 +51,13 @@ export const POPULAR_THEMES = [
     component: true,
   },
   {
+    name: "Gifs Search",
+    value: "https://github.com/discourse/discourse-gifs",
+    description: "Adds a button to easily search and insert GIFs in posts.",
+    meta_url: "https://meta.discourse.org/t/discourse-gifs-component/158738",
+    component: true,
+  },
+  {
     name: "Category Banners",
     value: "https://github.com/discourse/discourse-category-banners",
     preview:
@@ -83,14 +90,6 @@ export const POPULAR_THEMES = [
     preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
     description: "Lets you build a header menu with submenus (dropdowns).",
     meta_url: "https://meta.discourse.org/t/header-submenus/94584",
-    component: true,
-  },
-  {
-    name: "Alternative Logos",
-    value: "https://github.com/discourse/discourse-alt-logo",
-    description: "Add alternative logos for dark / light themes.",
-    meta_url:
-      "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
     component: true,
   },
   {

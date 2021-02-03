@@ -9,8 +9,6 @@
 //= require popper.js
 //= require bootstrap-modal.js
 //= require caret_position
-//= require favcount.js
-//= require jquery.ba-resize.js
 //= require jquery.color.js
 //= require jquery.fileupload.js
 //= require jquery.iframe-transport.js

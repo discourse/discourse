@@ -1,8 +1,7 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { test } from "qunit";
 
 acceptance("Login with email - hide email address taken", function (needs) {
   needs.settings({

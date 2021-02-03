@@ -1,5 +1,5 @@
-import { lookupCache } from "pretty-text/oneboxer-cache";
 import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
+import { lookupCache } from "pretty-text/oneboxer-cache";
 
 const ONEBOX = 1;
 const INLINE = 2;

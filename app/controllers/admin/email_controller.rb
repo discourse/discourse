@@ -147,7 +147,7 @@ class Admin::EmailController < Admin::AdminController
     retry_count = 0
 
     begin
-      Jobs.enqueue(:process_email, mail: params[:email], retry_on_rate_limit: true)
+      Jobs.enqueue(:process_email, mail: params[:email], retry_on_rate_limit: true, source: :handle_mail)
     rescue JSON::GeneratorError => e
       if retry_count == 0
         params[:email] = params[:email].force_encoding('iso-8859-1').encode("UTF-8")

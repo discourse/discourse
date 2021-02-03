@@ -155,7 +155,7 @@ class Stylesheet::Manager
     color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
     color_schemes = color_schemes.compact.uniq
 
-    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin]
+    targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin, :wizard]
     targets += Discourse.find_plugin_css_assets(include_disabled: true, mobile_view: true, desktop_view: true)
 
     themes.each do |id, name, color_scheme_id|
@@ -248,8 +248,10 @@ class Stylesheet::Manager
         @target,
          rtl: rtl,
          theme_id: theme&.id,
+         theme_variables: theme&.scss_variables.to_s,
          source_map_file: source_map_filename,
-         color_scheme_id: @color_scheme&.id
+         color_scheme_id: @color_scheme&.id,
+         load_paths: theme&.scss_load_paths
       )
     rescue SassC::SyntaxError => e
       if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)

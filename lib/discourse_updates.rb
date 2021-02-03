@@ -115,6 +115,42 @@ module DiscourseUpdates
       keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
+    def perform_new_feature_check
+      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      json = JSON.parse(response.body)
+      Discourse.redis.set(new_features_key, response.body)
+    end
+
+    def unseen_new_features(user_id)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+
+      last_seen = new_features_last_seen(user_id)
+
+      if last_seen.present?
+        entries.select! { |item| Time.zone.parse(item["created_at"]) > last_seen }
+      end
+
+      entries.select! do |item|
+        item["discourse_version"].nil? || Discourse.has_needed_version?(Discourse::VERSION::STRING, item["discourse_version"]) rescue nil
+      end
+
+      entries.sort { |item| Time.zone.parse(item["created_at"]) }
+    end
+
+    def new_features_last_seen(user_id)
+      last_seen = Discourse.redis.get new_features_last_seen_key(user_id)
+      return nil if last_seen.blank?
+      Time.zone.parse(last_seen)
+    end
+
+    def mark_new_features_as_seen(user_id)
+      entries = JSON.parse(Discourse.redis.get(new_features_key)) rescue nil
+      return nil if entries.nil?
+      last_seen = entries.max_by { |x| x["created_at"] }
+      Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
+    end
+
     private
 
     def last_installed_version_key
@@ -143,6 +179,18 @@ module DiscourseUpdates
 
     def missing_versions_key_prefix
       'missing_version'
+    end
+
+    def new_features_endpoint
+      'https://meta.discourse.org/new-features.json'
+    end
+
+    def new_features_key
+      'new_features'
+    end
+
+    def new_features_last_seen_key(user_id)
+      "new_features_last_seen_user_#{user_id}"
     end
   end
 end

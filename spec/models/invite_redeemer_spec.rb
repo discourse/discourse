@@ -189,8 +189,30 @@ describe InviteRedeemer do
       expect(invite.invited_users.first).to be_present
     end
 
+    context "ReviewableUser" do
+      it "approves pending record" do
+        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
+        reviewable.status = Reviewable.statuses[:pending]
+        reviewable.save!
+        invite_redeemer.redeem
+
+        reviewable.reload
+        expect(reviewable.status).to eq(Reviewable.statuses[:approved])
+      end
+
+      it "does not raise error if record is not pending" do
+        reviewable = ReviewableUser.needs_review!(target: Fabricate(:user, email: invite.email), created_by: invite.invited_by)
+        reviewable.status = Reviewable.statuses[:ignored]
+        reviewable.save!
+        invite_redeemer.redeem
+
+        reviewable.reload
+        expect(reviewable.status).to eq(Reviewable.statuses[:ignored])
+      end
+    end
+
     context 'invite_link' do
-      fab!(:invite_link) { Fabricate(:invite, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
+      fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
       let(:invite_redeemer) { InviteRedeemer.new(invite: invite_link, email: 'foo@example.com') }
 
       it 'works as expected' do

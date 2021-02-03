@@ -580,7 +580,6 @@ sk:
       posts: "Príspevky"
       topics: "Témy"
       latest: "Najnovšie"
-      latest_by: "najnovšie podľa"
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
@@ -651,7 +650,6 @@ sk:
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
-        each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
       dismiss_notifications: "Zahodiť všetko"
@@ -943,7 +941,6 @@ sk:
         links_tab: "Odkazy"
         link_created_at: "Vytvorené"
         link_groups: Skupiny
-        create: "Pošli pozvánku"
         valid_for: "Pozývací link je platný len pre túto emailovú adresu: %{email}"
         invite_link:
           success: "Pozývací link bol úspešne vygenerovaný!"
@@ -1057,15 +1054,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    all_time: "celkovo"
-    all_time_desc: "celkovo vytvorených tém"
-    year: "rok"
-    year_desc: "témy vytvorené za posledných 365 dní"
-    month: "mesiac"
-    month_desc: "témy vytvorené za posledných 30 dní"
-    week: "týždeň"
-    week_desc: "témy vytvorené za posledných 7 dní"
-    day: "deň"
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
@@ -1084,8 +1072,6 @@ sk:
       hidden_for_session: "Fajn, opýtam sa vás to zajtra. Stále môžete na vytvorenie účtu použiť aj možnosť 'Prihlásenie'."
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "<b>%{replyCount}</b> odpovedí."
-      description_time: "<b>%{replyCount}</b> odpovedí s odhadovaným časom čítania <b>%{readingTime} minút</b>."
       enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
@@ -1203,7 +1189,6 @@ sk:
       more_emoji: "viac ..."
       options: "Možnosti"
       whisper: "šepot"
-      blockquote_text: "Úvodzovky"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
@@ -1217,9 +1202,6 @@ sk:
         other: "Zmienením %{group}, upozorníte <a href='%{group_link}'>%{count} ľudí</a> – ste si istý?"
       error:
         title_missing: "Názov je povinný"
-        title_too_short: "Názov musí mať minimálne %{min} znakov"
-        title_too_long: "Názov nesmie byť dlhší než %{max} znakov"
-        post_length: "Príspevok musí mať minimálne %{min} znakov"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
       reply_original: "Odpovedať na pôvodnú tému"
@@ -1250,8 +1232,7 @@ sk:
       link_description: "tu zadaj popis odkazu"
       link_dialog_title: "Vložte hyperlink"
       link_optional_text: "nepovinný názov"
-      quote_title: "Úvodzovky"
-      quote_text: "Úvodzovky"
+      blockquote_text: "Úvodzovky"
       code_title: "Preformátovaný text"
       code_text: "Odsaďte preformátovaný text 4 medzerami"
       paste_code_text: "sem zadajte alebo vložte kód"
@@ -1468,7 +1449,6 @@ sk:
       toggle_information: "zmeniť detaily témy"
       read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v %{catLink} alebo v %{latestLink}."
       read_more: "Chcete si prečítať viac? %{catLink} alebo v %{latestLink}."
-      read_more_MF: "Máte { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 neprečítanú</a> } other { <a href='{basePath}/unread'># neprečítané</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{a} false { } other{}} <a href='{basePath}/new'>1 novú</a> tému} other { {BOTH, select, true{a } false {} other{}} <a href='{basePath}/new'># nových</a> tém} } na prečítanie, prípadne {CATEGORY, select, true {si pozrite iné témy v {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Prezrieť všetky kategórie
       view_latest_topics: zobraziť najnošie témy
       jump_reply_up: prejsť na predchádzajúcu odpoveď
@@ -1636,7 +1616,6 @@ sk:
         username_placeholder: "používateľské meno"
         action: "Pošli pozvánku"
         help: "pozvite ostatných k tejto téme prostredníctvom emailu, alebo upozornení"
-        to_forum: "Pošleme krátký email dovoľujúci Vášmu priateľovi okamžité pripojenie kliknutím na odkaz bez potreby prihlasovania"
         sso_enabled: "Zadajte používateľské meno osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_blank: "Zadajte používateľské meno alebo email osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_email: "Zadali ste emailovú adresu. Pošleme pozvánku ktorá umožní Vášmu priateľovi okamžitú odpoveď k tejto téme."
@@ -1711,7 +1690,6 @@ sk:
       quote_reply: "Citácia"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
-      last_edited_on: "príspevok naposledy upravený"
       reply_as_new_topic: "Odpoveď ako súvisiaca téma"
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
@@ -1973,17 +1951,6 @@ sk:
       unlisted:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
-    posts_likes_MF: |2
-
-      Táto téma obsahuje {count, plural, one {1 odpoveď} other {# odpovedí}} {ratio, select,
-
-      low {s vysokým pomerom "Páči sa" na príspevok}
-
-      med {s veľmi vysokým pomerom "Páči sa" na príspevok}
-
-      high {s extrémne vysokým pomerom "Páči sa" na príspevok}
-
-      other {}}
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:

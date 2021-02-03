@@ -1,13 +1,12 @@
+import Controller, { inject } from "@ember/controller";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Topic from "discourse/models/topic";
+import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
-import { alias } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import { inject } from "@ember/controller";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import DiscourseURL from "discourse/lib/url";
-import Topic from "discourse/models/topic";
 
 export default Controller.extend(ModalFunctionality, {
   topicController: inject("topic"),

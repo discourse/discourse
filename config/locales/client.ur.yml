@@ -373,9 +373,6 @@ ur:
         name: "نام"
         fields: "فیلڈز"
       user_percentage:
-        summary:
-          one: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگ)"
-          other: "%{agreed}، %{disagreed}، %{ignored} (%{count} کُل فلَیگز)"
         agreed:
           one: "%{count}٪ متفق"
           other: "%{count}٪ متفق"
@@ -673,7 +670,6 @@ ur:
       posts: "پوسٹ"
       topics: "ٹاپک"
       latest: "تازہ ترین"
-      latest_by: "تک تازہ ترین"
       toggle_ordering: "ترتیب کاری کا کنٹرول ٹاگل کریں"
       subcategories: "ذیلی زمرے"
       topic_sentence:
@@ -759,7 +755,6 @@ ur:
         perm_denied_expl: "آپ نے اطلاعات کے لئے اجازت دینے سے انکار کر دیا۔ اپنے براؤزر کی سیٹِنگ سے اطلاعات کی اجازت دیں۔"
         disable: "اطلاعات غیر فعال کریں"
         enable: "اطلاعات فعال کریں"
-        each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
         consent_prompt: "جب لوگ آپ کی پوسٹس کا جواب دیں تو کیا آپ لائیو اطلاعات چاہتے ہیں؟"
       dismiss: "بر خاست کریں"
       dismiss_notifications: "سب بر خاست کریں"
@@ -1088,7 +1083,6 @@ ur:
         links_tab: "لنکس"
         link_created_at: "بنایا گیا"
         link_groups: گروپس
-        create: "دعوت بھیجیں"
         valid_for: "دعوت لنک صرف اِس اِی میل اِیڈریس کے لئے درست ہے:%{email}"
         invite_link:
           success: "دعوت لنک کامیابی سے بن گیا!"
@@ -1203,15 +1197,6 @@ ur:
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
     learn_more: "اورجانیے..."
-    all_time: "کُل"
-    all_time_desc: "کُل ٹاپک بنائے گئے"
-    year: "سال"
-    year_desc: "پچھلے 365 دنوں میں بنائے گئے ٹاپک"
-    month: "مہینہ"
-    month_desc: "پچھلے 30 دنوں میں بنائے گئے ٹاپک"
-    week: "ہفتہ"
-    week_desc: "پچھلے 7 دنوں میں بنائے گئے ٹاپک"
-    day: "دن"
     first_post: پہلی پوسٹ
     mute: خاموش کریں
     unmute: آواز چالو کریں
@@ -1233,8 +1218,6 @@ ur:
       value_prop: "جب آپ ایک اکاؤنٹ بناتے ہیں، ہم بالکل یاد رکھتے ہیں کہ آپ نے کیا پڑھا ہے، تاکہ جہاں سے آپ نے پڑھنا چھوڑا ہو بلکل وہاں ہی پر آپ کو ہمیشہ واپس پہنچایا جا سکے۔ جب بھی کوئی آپ کو جواب دیتا ہے، آپ کو یہاں اور اِی میل پر اطلاع بھی دے دی جاتی ہے۔ اور آپ محبت کو بانٹںے کیلئے پوسٹ لائیک کر سکتے ہیں۔ :heartpulse:"
     summary:
       enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
-      description: "<b>%{replyCount}<b/> جوابات موجود ہیں۔"
-      description_time: "<b>%{replyCount}</b> جوابات موجود ہیں جن کو پڑھنے کے وقت کا تخمینہ < %{readingTime} </b منٹ<b> ہے۔"
       enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
     deleted_filter:
@@ -1383,8 +1366,6 @@ ur:
     date_time_picker:
       from: سے
       to: کیلئے
-      errors:
-        to_before_from: "'کب تک' کی تاریخ 'کب سے' کی تاریخ کے بعد ہونا ضروری ہے۔"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
       smileys_&_emotion: سمائیلیاں اور جذبات
@@ -1406,7 +1387,6 @@ ur:
       default: اپنی مرضی کے اِیمَوجی
     shared_drafts:
       title: "مشترکہ ڈرافٹس"
-      notice: "یہ ٹاپک صرف اُن لوگوں کیلئے نظر آتا ہے جو <b>%{category}</b> زُمرَہ کو دیکھ سکتے ہیں۔"
       destination_category: "مطلوبہ زُمرَہ"
       publish: "مشترکہ ڈرافٹس شائع کریں"
       confirm_publish: "کیا آپ واقعی اِس ڈرافٹ کو شائع کرنا چاہتے ہیں؟"
@@ -1417,7 +1397,6 @@ ur:
       options: "اختیارات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
-      blockquote_text: "بلاک متن"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
       toggle_unlisted: "غیر مندرج ٹَوگل کریں"
@@ -1436,10 +1415,7 @@ ur:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "عنوان درکار ہے"
-        title_too_short: "عنوان میں کم از کم %{min} حروف ہونا ضروری ہے"
-        title_too_long: "عنوان %{max} حروف سے زیادہ نہیں ہو سکتا"
         post_missing: "پوسٹ خالی نہیں ہو سکتی"
-        post_length: "پوسٹ میں کم از کم %{min} حروف ہونا ضروری ہے"
         try_like: "کیا آپ نے %{heart} بٹن اِستعمال کیا ہے؟"
         category_missing: "ایک زمرہ کا انتخاب کرنا ضروری ہے"
         topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
@@ -1481,8 +1457,7 @@ ur:
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_title: "ہائپرلِنک ڈالیں"
       link_optional_text: "اختیاری عنوان"
-      quote_title: "بلاک کوٹ"
-      quote_text: "بلاک کوٹ"
+      blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
       code_text: "حاشیہ نے ٹَیکسٹ کو پہلے سے 4 خالی جگہوں سے فارمیٹ کر دیا"
       paste_code_text: "کوڈ یہاں ٹائپ یا پیسٹ کریں"
@@ -1527,7 +1502,6 @@ ur:
           label: "نیا ٹاپک"
         shared_draft:
           label: "مشترکہ ڈرافٹ"
-          desc: "ایک ٹاپک ڈرافٹ کریں جو صرف سٹاف کو نظر آسکے"
         toggle_topic_bump:
           label: "ٹاپک بَمپ ٹَوگل کریں"
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
@@ -1799,7 +1773,6 @@ ur:
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>1 غیر پڑھا</a> } other { <a href='{basePath}/unread'># غیر پڑھے</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{اور } false {} other{}} <a href='{basePath}/new'>1 نیا</a> ٹاپک} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># نئے</a> ٹاپکس} } باقی، یا {CATEGORY, select, true {میں دیگر ٹاپکس براؤز کریں {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
       jump_reply_up: اِس سے پرانے جواب پر جائیں
@@ -1872,7 +1845,6 @@ ur:
         go: "جائیں"
         jump_bottom: "آخری پوسٹ پر جائیں"
         jump_prompt: "پر جائیں..."
-        jump_prompt_of: "%{count} پوسٹس کے"
         jump_prompt_long: "پر جائیں..."
         jump_bottom_with_number: "پوسٹ %{post_number} پر جائیں"
         jump_prompt_to_date: "اِس تاریخ تک"
@@ -2007,7 +1979,6 @@ ur:
         username_placeholder: "صارف نام"
         action: "دعوت بھیجیں"
         help: "اِی میل یا اطلاعات کے ذریعے اس ٹاپک کے لیے دوسروں کو مدعو کریں"
-        to_forum: "ہم آپ کے دوست کو ایک مختصر ای میل بھیجیں گے تاکہ وہ ایک لنک پر کلک کر کہ فوری طور پر شامل ہو سکے، لاگ اِن کی ضرورت بھی نہیں۔"
         sso_enabled: "اُس شخص کا صارف نام درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔"
         to_topic_blank: "اُس شخص کا صارف نام یا اِیمیل ایڈریس درج کریں جسے آپ اِس ٹاپک میں مدعو کرنا چاہتے ہیں۔"
         to_topic_email: "آپ نے ایک اِیمیل ایڈریس درج کیا ہے۔ ہم ایک دعوت نامہ اِیمیل کریں گے جس سے آپ کے دوست کو فوری طور پر اِس ٹاپک پر جواب دینے کی اجازت مل جائے گی۔"
@@ -2112,8 +2083,6 @@ ur:
       edit_reason: "وجہ:"
       post_number: "پوسٹ %{number}"
       ignored: "نظر انداز کردہ مواد"
-      wiki_last_edited_on: "وِکی کو آخری بار ترمیم کیا گیا"
-      last_edited_on: "پوسٹ کو آخری بار ترمیم کیا گیا"
       reply_as_new_topic: "منسلک ٹاپک کے طور پر جواب دیں"
       reply_as_new_private_message: "اُنہی وصول کنندگان کو نئے پیغام کے طور پر جواب دیں"
       continue_discussion: "%{postLink} سے بحث جاری:"
@@ -2209,7 +2178,6 @@ ur:
         delete_topic_disallowed: "آپ کے پاس اِس ٹاپک کو حذف کرنے کی اجازت نہیں ہے۔"
         delete_topic: "ٹاپک حذف کریں"
         add_post_notice: "اسٹاف نوٹِس شامل کریں"
-        remove_post_notice: "اسٹاف نوٹِس ہٹائیں"
         remove_timer: "ٹائمر ہٹائیں"
       actions:
         people:
@@ -2393,7 +2361,6 @@ ur:
       notify_action: "پیغام"
       official_warning: "آفیشل انتباہ"
       delete_spammer: "سپیم کرنے والے کو حذف کریں"
-      delete_confirm_MF: "آپ اِس صارف سے {POSTS, plural, one {<b>1</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>1</b> ٹاپک} other {<b>#</b> ٹاپکس}} حذف کرنے، اُن کا اکائونٹ ختم کرنے، ان کے آئی پی ایڈریس <b>{ip_address}</b> سے سائن اَپ بلاک کرنے، اور اُن کے اِیمیل ایڈریس کو <b>{email}</b> مستقل بلاک کی فہرست میں ڈالنے لگے ہیں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی ایک سپیمر ہے؟"
       yes_delete_spammer: "جی ہاں، سپیم کرنے والے کو حذف کریں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -2460,12 +2427,6 @@ ur:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
     posts: "پوسٹس"
-    posts_likes_MF: |
-      اِس ٹاپک {count, plural, one {کا 1 جواب} other {کے # جوابات ہیں}} {ratio, select,
-      low {لائیک پر پوسٹ کے اونچے تناسب کے ساتھ}
-      med {لائیک پر پوسٹ کے بہت اونچے تناسب کے ساتھ}
-      high {لائیک پر پوسٹ کے انتہائی اونچے تناسب کے ساتھ}
-      other {}}
     original_post: "اصل پوسٹ"
     views: "وِیوز"
     views_lowercase:
@@ -3253,7 +3214,7 @@ ur:
             text: "</head>"
             title: "HTML جو </head> ٹیگ سے پہلے داخل کی جائے گی"
           body_tag:
-            text: "</body>"
+            text: "</‎body>"
             title: "HTML جو </body> ٹیگ سے پہلے داخل کی جائے گی"
           yaml:
             text: "YAML"
@@ -3630,7 +3591,6 @@ ur:
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
-        suspend_reason_placeholder: "وجہ معطلی"
         suspend_message: "اِی مَیل پیغام"
         suspend_message_placeholder: "اختیاریطور پر معطلی کے بارے میں مزید معلومات فراہم کریں اور یہ صارف کو ای میل کر دی جائیں گی۔"
         suspended_by: "کی طرف سے معطل کیا گیا"
@@ -3656,7 +3616,6 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ {POSTS, plural, one {1 پوسٹ} other {# پوسٹس}} and {TOPICS, plural, one {1 ٹاپک} other {# ٹاپکس}} حذف کرنے والے ہیں۔ کیا آپ کو یقین ہے؟"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"

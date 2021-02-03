@@ -1,56 +1,59 @@
-import { moduleForComponent } from "ember-qunit";
+import componentTest, {
+  setupRenderingTest,
+} from "discourse/tests/helpers/component-test";
+import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import componentTest from "discourse/tests/helpers/component-test";
-
-moduleForComponent("time-input", {
-  integration: true,
-
-  beforeEach() {
-    this.set("subject", selectKit());
-  },
-});
 
 function setTime(time) {
   this.setProperties(time);
 }
 
-componentTest("default", {
-  template: `{{time-input hours=hours minutes=minutes}}`,
+discourseModule("Integration | Component | time-input", function (hooks) {
+  setupRenderingTest(hooks);
 
-  beforeEach() {
-    this.setProperties({ hours: "14", minutes: "58" });
-  },
+  hooks.beforeEach(function () {
+    this.set("subject", selectKit());
+  });
 
-  test(assert) {
-    assert.equal(this.subject.header().name(), "14:58");
-  },
-});
+  componentTest("default", {
+    template: hbs`{{time-input hours=hours minutes=minutes}}`,
 
-componentTest("prevents mutations", {
-  template: `{{time-input hours=hours minutes=minutes}}`,
+    beforeEach() {
+      this.setProperties({ hours: "14", minutes: "58" });
+    },
 
-  beforeEach() {
-    this.setProperties({ hours: "14", minutes: "58" });
-  },
+    test(assert) {
+      assert.equal(this.subject.header().name(), "14:58");
+    },
+  });
 
-  async test(assert) {
-    await this.subject.expand();
-    await this.subject.selectRowByIndex(3);
-    assert.equal(this.subject.header().name(), "14:58");
-  },
-});
+  componentTest("prevents mutations", {
+    template: hbs`{{time-input hours=hours minutes=minutes}}`,
 
-componentTest("allows mutations through actions", {
-  template: `{{time-input hours=hours minutes=minutes onChange=onChange}}`,
+    beforeEach() {
+      this.setProperties({ hours: "14", minutes: "58" });
+    },
 
-  beforeEach() {
-    this.setProperties({ hours: "14", minutes: "58" });
-    this.set("onChange", setTime);
-  },
+    async test(assert) {
+      await this.subject.expand();
+      await this.subject.selectRowByIndex(3);
+      assert.equal(this.subject.header().name(), "14:58");
+    },
+  });
 
-  async test(assert) {
-    await this.subject.expand();
-    await this.subject.selectRowByIndex(3);
-    assert.equal(this.subject.header().name(), "00:45");
-  },
+  componentTest("allows mutations through actions", {
+    template: hbs`{{time-input hours=hours minutes=minutes onChange=onChange}}`,
+
+    beforeEach() {
+      this.setProperties({ hours: "14", minutes: "58" });
+      this.set("onChange", setTime);
+    },
+
+    async test(assert) {
+      await this.subject.expand();
+      await this.subject.selectRowByIndex(3);
+      assert.equal(this.subject.header().name(), "00:45");
+    },
+  });
 });

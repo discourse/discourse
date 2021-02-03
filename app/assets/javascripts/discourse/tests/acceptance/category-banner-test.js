@@ -1,8 +1,11 @@
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  queryAll,
+  visible,
+} from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { test } from "qunit";
 
 acceptance("Category Banners", function (needs) {
   needs.user();

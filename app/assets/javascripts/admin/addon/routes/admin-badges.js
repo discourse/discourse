@@ -1,8 +1,8 @@
-import I18n from "I18n";
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import BadgeGrouping from "discourse/models/badge-grouping";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
 
 export default DiscourseRoute.extend({
   _json: null,

@@ -222,26 +222,6 @@ et:
     until_posts:
       one: "%{count} postitus"
       other: "%{count} postitust"
-    "new-topic": |
-      Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
-
-      - Kas pealkiri kõlab kuvitavalt kui sa seda kõvasti loed? Kas see on hea kokkuvõte?
-
-      - Kas võiksid olla sellest huvitatud? Miks see oluline on? Millist tagasisidet sa soovid?
-
-      - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    "new-reply": |
-      Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
-
-      - Kas sinu vastus parandab vestlust mingil moel?
-
-      - Ole kommuuni liikmete vastu lahke.
-
-      - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
-
-      Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
   activerecord:
     attributes:
       category:

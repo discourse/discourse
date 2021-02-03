@@ -183,27 +183,6 @@ bs_BA:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-  education:
-    "new-topic": |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
-
-      - Does the title accurately describe your topic? Does it sound interesting?
-
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
-
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
-    "new-reply": |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
-
-      - Does your reply improve the conversation in some way?
-
-      - Be kind to your fellow community members.
-
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
   activerecord:
     attributes:
       category:
@@ -731,7 +710,6 @@ bs_BA:
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
-    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:

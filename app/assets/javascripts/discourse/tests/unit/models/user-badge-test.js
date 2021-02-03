@@ -1,4 +1,4 @@
-import { test, module } from "qunit";
+import { module, test } from "qunit";
 import UserBadge from "discourse/models/user-badge";
 import badgeFixtures from "discourse/tests/fixtures/user-badges";
 
