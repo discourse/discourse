@@ -193,10 +193,21 @@ module Stylesheet
           // Theme: #{field.theme.name}
           // Target: #{field.target_name} #{field.name}
           // Last Edited: #{field.updated_at}
-
-          #{value}
           COMMENT
+
+          if field.theme_id == theme.id
+            contents << value
+          else
+            css, source_map = begin
+              field.compile_scss
+            rescue SassC::SyntaxError => e
+              raise Discourse::ScssError, e.message
+            end
+
+            contents << css
+          end
         end
+
       end
       contents
     end
