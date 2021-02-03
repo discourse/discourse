@@ -1,35 +1,35 @@
 import MultiSelectFilterComponent from "select-kit/components/multi-select/multi-select-filter";
+import { action } from "@ember/object";
 
 export default MultiSelectFilterComponent.extend({
   classNames: ["email-group-user-chooser-filter"],
 
-  actions: {
-    onPaste(event) {
-      const data = event.originalEvent.clipboardData;
+  @action
+  onPaste(event) {
+    const data = event.originalEvent.clipboardData;
 
-      if (!data) {
-        return;
-      }
+    if (!data) {
+      return;
+    }
 
-      const recipients = [];
-      data
-        .getData("text")
-        .split(/[, \n]+/)
-        .forEach((recipient) => {
-          recipient = recipient.replace(/^@+/, "").trim();
-          if (recipient.length > 0) {
-            recipients.push(recipient);
-          }
-        });
+    const recipients = [];
+    data
+      .getData("text")
+      .split(/[, \n]+/)
+      .forEach((recipient) => {
+        recipient = recipient.replace(/^@+/, "").trim();
+        if (recipient.length > 0) {
+          recipients.push(recipient);
+        }
+      });
 
-      if (recipients.length > 0) {
-        event.stopPropagation();
-        event.preventDefault();
+    if (recipients.length > 0) {
+      event.stopPropagation();
+      event.preventDefault();
 
-        this.selectKit.append(recipients);
+      this.selectKit.append(recipients);
 
-        return false;
-      }
-    },
+      return false;
+    }
   },
 });
