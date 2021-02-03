@@ -162,7 +162,7 @@ describe UsersEmailController do
             freeze_time
 
             3.times do |x|
-              user.email_change_requests.last.update(change_state: 1)
+              user.email_change_requests.last.update(change_state: EmailChangeRequest.states[:complete])
               put "/u/confirm-new-email", params: {
                 token: user.email_tokens.last.token,
                 second_factor_token: "000000",
@@ -172,7 +172,7 @@ describe UsersEmailController do
               expect(response.status).to eq(302)
             end
 
-              user.email_change_requests.last.update(change_state: 2)
+            user.email_change_requests.last.update(change_state: EmailChangeRequest.states[:authorizing_new])
             put "/u/confirm-new-email", params: {
               token: user.email_tokens.last.token,
               second_factor_token: "000000",
