@@ -50,6 +50,11 @@ acceptance("Managing Group Membership", function (needs) {
       "it should disable group allow_membership_request input"
     );
 
+    assert.ok(
+      queryAll(".group-flair-inputs").length === 1,
+      "it should display avatar flair inputs"
+    );
+
     await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 

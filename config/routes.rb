@@ -95,6 +95,7 @@ Discourse::Application.routes.draw do
         member do
           put "owners" => "groups#add_owners"
           delete "owners" => "groups#remove_owner"
+          put "primary" => "groups#set_primary"
         end
       end
       resources :groups, except: [:create], constraints: AdminConstraint.new do

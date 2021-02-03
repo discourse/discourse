@@ -157,11 +157,28 @@ RSpec.describe Admin::GroupsController do
   end
 
   describe '#remove_owner' do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
+
     it 'should work' do
       group.add_owner(user)
 
       delete "/admin/groups/#{group.id}/owners.json", params: {
         user_id: user.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(group.group_users.where(owner: true)).to eq([])
+    end
+
+    it 'should work with multiple users' do
+      group.add_owner(user)
+      group.add_owner(user3)
+
+      delete "/admin/groups/#{group.id}/owners.json", params: {
+        group: {
+          usernames: "#{user.username},#{user2.username},#{user3.username}"
+        }
       }
 
       expect(response.status).to eq(200)
@@ -187,6 +204,36 @@ RSpec.describe Admin::GroupsController do
 
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to eq(["You cannot modify an automatic group"])
+    end
+  end
+
+  describe "#set_primary" do
+    let(:user2) { Fabricate(:user) }
+    let(:user3) { Fabricate(:user) }
+
+    it 'sets with multiple users' do
+      user2.update!(primary_group_id: group.id)
+
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "true"
+      }
+
+      expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(3)
+    end
+
+    it 'unsets with multiple users' do
+      user.update!(primary_group_id: group.id)
+      user3.update!(primary_group_id: group.id)
+
+      put "/admin/groups/#{group.id}/primary.json", params: {
+        group: { usernames: "#{user.username},#{user2.username},#{user3.username}" },
+        primary: "false"
+      }
+
+      expect(response.status).to eq(200)
+      expect(User.where(primary_group_id: group.id).size).to eq(0)
     end
   end
 
