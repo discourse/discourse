@@ -4,7 +4,6 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: controller(),
