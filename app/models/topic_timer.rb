@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class TopicTimer < ActiveRecord::Base
+  self.ignored_columns = [
+    "duration" # TODO(2021-06-01): remove
+  ]
+
   include Trashable
 
   belongs_to :user
@@ -237,7 +241,7 @@ end
 #  updated_at         :datetime         not null
 #  category_id        :integer
 #  public_type        :boolean          default(TRUE)
-#  duration           :integer
+#  duration_minutes   :integer
 #
 # Indexes
 #

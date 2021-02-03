@@ -527,12 +527,12 @@ class PostCreator
 
       if topic_timer &&
          topic_timer.based_on_last_post &&
-         topic_timer.duration.to_i > 0
+         topic_timer.duration_minutes.to_i > 0
 
         @topic.set_or_create_timer(TopicTimer.types[:close],
           nil,
           based_on_last_post: topic_timer.based_on_last_post,
-          duration: topic_timer.duration
+          duration_minutes: topic_timer.duration_minutes
         )
       end
     end
