@@ -1346,6 +1346,26 @@ describe GroupsController do
         end
       end
 
+      it "adds known users by email when SSO is enabled" do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+
+        expect do
+          put "/groups/#{group.id}/members.json", params: { emails: other_user.email }
+        end.to change { group.users.count }.by(1)
+
+        expect(response.status).to eq(200)
+      end
+
+      it "rejects unknown emails when SSO is enabled" do
+        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.enable_sso = true
+        put "/groups/#{group.id}/members.json", params: { emails: "newuser@example.com" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["error_type"]).to eq("invalid_parameters")
+      end
+
       it "will find users by email, and invite the correct user" do
         new_user = Fabricate(:user)
         expect(new_user.group_ids.include?(group.id)).to eq(false)

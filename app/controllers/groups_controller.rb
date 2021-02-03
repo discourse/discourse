@@ -334,14 +334,22 @@ class GroupsController < ApplicationController
 
     if users.empty? && emails.empty?
       raise Discourse::InvalidParameters.new(
-        'usernames or emails must be present'
+        I18n.t("usernames_or_emails_required")
       )
     end
+
+    if SiteSetting.enable_sso? && emails.any?
+      raise Discourse::InvalidParameters.new(
+        I18n.t("no_invites_with_sso")
+      )
+    end
+
     if users.length > ADD_MEMBERS_LIMIT
       return render_json_error(
         I18n.t("groups.errors.adding_too_many_users", count: ADD_MEMBERS_LIMIT)
       )
     end
+
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
     if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
       render_json_error(I18n.t(
