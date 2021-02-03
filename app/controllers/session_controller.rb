@@ -3,7 +3,6 @@
 class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password)
   before_action :rate_limit_login, only: %i(create email_login)
-  before_action :rate_limit_second_factor_totp, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy one_time_password)
 
@@ -277,7 +276,10 @@ class SessionController < ApplicationController
 
     return invalid_credentials if params[:password].length > User.max_password_length
 
-    if user = User.find_by_username_or_email(normalized_login_param)
+    user = User.find_by_username_or_email(normalized_login_param)
+    rate_limit_second_factor!(user)
+
+    if user.present?
 
       # If their password is correct
       unless user.confirm_password?(params[:password])
@@ -354,6 +356,8 @@ class SessionController < ApplicationController
     user = matched_token&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
+
+    rate_limit_second_factor!(user)
 
     if user.present? && !authenticate_second_factor(user)
       return render(json: @second_factor_failure_payload)
@@ -597,14 +601,6 @@ class SessionController < ApplicationController
       SiteSetting.max_logins_per_ip_per_minute,
       1.minute
     ).performed!
-  end
-
-  def rate_limit_second_factor_totp
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
-    if normalized_login_param.present?
-      RateLimiter.new(nil, "second-factor-min-#{normalized_login_param}", 3, 1.minute).performed!
-    end
   end
 
   def render_sso_error(status:, text:)
