@@ -3752,10 +3752,6 @@ en:
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
-        bulk_add:
-          title: "Bulk Add to Group"
-          complete_users_not_added: "These users were not added (make sure they have an account):"
-          paste: "Paste a list of usernames or emails, one per line:"
         add_members:
           as_owner: "Set user(s) as owner(s) of this group"
         manage:
