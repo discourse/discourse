@@ -135,7 +135,7 @@ export default Controller.extend(ModalFunctionality, Evented, {
         type: "POST",
         data: { mapping: JSON.stringify(data) },
       })
-        .then(() => this.send("closeModal"))
+        .then(() => window.location.reload())
         .catch(popupAjaxError);
     },
   },
