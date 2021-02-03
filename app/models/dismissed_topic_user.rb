@@ -3,6 +3,13 @@
 class DismissedTopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
+
+  def self.lookup_for(user, topics)
+    return [] if user.blank? || topics.blank?
+
+    topic_ids = topics.map(&:id)
+    DismissedTopicUser.where(topic_id: topic_ids, user_id: user.id).pluck(:topic_id)
+  end
 end
 
 # == Schema Information
