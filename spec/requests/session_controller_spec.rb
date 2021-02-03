@@ -1735,11 +1735,12 @@ RSpec.describe SessionController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do |x|
+        6.times do |x|
           post "/session.json", params: {
             login: "#{user.username}#{x}",
             password: 'myawesomepassword',
-            second_factor_token: '000000'
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
           }
           expect(response.status).to eq(200)
         end
@@ -1747,7 +1748,8 @@ RSpec.describe SessionController do
         post "/session.json", params: {
           login: user.username,
           password: 'myawesomepassword',
-          second_factor_token: '000000'
+          second_factor_token: '000000',
+          second_factor_method: UserSecondFactor.methods[:totp]
         }
 
         expect(response.status).to eq(429)
@@ -1759,11 +1761,12 @@ RSpec.describe SessionController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do |x|
+        6.times do |x|
           post "/session.json", params: {
             login: user.username,
             password: 'myawesomepassword',
-            second_factor_token: '000000'
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
           }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
 
           expect(response.status).to eq(200)
@@ -1773,7 +1776,8 @@ RSpec.describe SessionController do
           post "/session.json", params: {
             login: username,
             password: 'myawesomepassword',
-            second_factor_token: '000000'
+            second_factor_token: '000000',
+            second_factor_method: UserSecondFactor.methods[:totp]
           }, env: { "REMOTE_ADDR": "1.2.4.#{x}" }
 
           expect(response.status).to eq(429)
