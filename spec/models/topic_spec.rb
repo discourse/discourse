@@ -1112,6 +1112,8 @@ describe Topic do
     end
 
     context 'visibility' do
+      let(:category) { Fabricate(:category_with_definition) }
+
       context 'disable' do
         it 'should not be visible and have correct counts' do
           topic.update_status('visible', false, @user)
@@ -1119,6 +1121,14 @@ describe Topic do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'decreases topic_count of topic category' do
+          topic.update!(category: category)
+          Category.update_stats
+
+          expect { topic.update_status('visible', false, @user) }
+            .to change { category.reload.topic_count }.by(-1)
         end
 
         it 'removes itself as featured topic on user profiles' do
@@ -1141,6 +1151,13 @@ describe Topic do
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.bumped_at).to eq_time(@original_bumped_at)
+        end
+
+        it 'increases topic_count of topic category' do
+          topic.update!(category: category, visible: false)
+
+          expect { topic.update_status('visible', true, @user) }
+            .to change { category.reload.topic_count }.by(1)
         end
       end
     end
@@ -2144,6 +2161,11 @@ describe Topic do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
         expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
       end
+
+      it "doesn't subtract 1 if topic is unlisted" do
+        topic = Fabricate(:topic, category: category, visible: false)
+        expect { topic.trash!(moderator) }.to_not change { category.reload.topic_count }
+      end
     end
 
     it "trashes topic embed record" do
@@ -2167,6 +2189,11 @@ describe Topic do
 
       it "doesn't add 1 if topic is not deleted" do
         topic = Fabricate(:topic, category: category)
+        expect { topic.recover! }.to_not change { category.reload.topic_count }
+      end
+
+      it "doesn't add 1 if topic is not visible" do
+        topic = Fabricate(:topic, category: category, visible: false)
         expect { topic.recover! }.to_not change { category.reload.topic_count }
       end
     end
