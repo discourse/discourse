@@ -207,6 +207,9 @@
     border-top: 1px solid var(--primary-low);
     padding-top: 0.75em;
     margin-top: -1px;
+    &:focus {
+      outline: none;
+    }
     h3 {
       padding: 0 0.4em;
       font-weight: bold;

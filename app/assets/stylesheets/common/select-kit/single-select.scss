@@ -9,12 +9,16 @@
     }
   }
 
-  &.is-expanded {
-    .select-kit-header {
-      border-color: var(--tertiary);
-    }
+  &.is-expanded .select-kit-header:not(.btn),
+  .select-kit-header:not(.btn):focus,
+  .select-kit-header:not(.btn):active {
+    @include default-focus;
   }
 
+  .select-kit-header.btn:focus,
+  .select-kit-header.btn:active {
+    outline: none;
+  }
   &.is-disabled {
     .select-kit-header {
       opacity: 0.5;
