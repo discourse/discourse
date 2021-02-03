@@ -100,9 +100,6 @@ Discourse::Application.routes.draw do
       end
       resources :groups, except: [:create], constraints: AdminConstraint.new do
         collection do
-          get 'bulk'
-          get 'bulk-complete' => 'groups#bulk'
-          put 'bulk' => 'groups#bulk_perform'
           put "automatic_membership_count" => "groups#automatic_membership_count"
         end
       end

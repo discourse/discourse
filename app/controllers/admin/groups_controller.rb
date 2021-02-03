@@ -1,41 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::GroupsController < Admin::AdminController
-  def bulk
-  end
-
-  def bulk_perform
-    group = Group.find_by(id: params[:group_id].to_i)
-    raise Discourse::NotFound unless group
-    users_added = 0
-
-    users = (params[:users] || []).map { |user| user.downcase!; user }
-    valid_emails = {}
-    valid_usernames = {}
-
-    valid_users = User.joins(:user_emails)
-      .where("username_lower IN (:users) OR lower(user_emails.email) IN (:users)", users: users)
-      .pluck(:id, :username_lower, :"user_emails.email")
-
-    valid_users.map! do |id, username_lower, email|
-      valid_emails[email] = valid_usernames[username_lower] = id
-      id
-    end
-
-    valid_users.uniq!
-    invalid_users = users.reject { |u| valid_emails[u] || valid_usernames[u] }
-    group.bulk_add(valid_users) if valid_users.present?
-    users_added = valid_users.count
-
-    response = success_json.merge(users_not_added: invalid_users)
-
-    if users_added > 0
-      response[:message] = I18n.t('groups.success.bulk_add', count: users_added)
-    end
-
-    render json: response
-  end
-
   def create
     guardian.ensure_can_create_group!
 
