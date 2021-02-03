@@ -9,11 +9,9 @@ module BackupRestore
   LOGS_CHANNEL = "/admin/backups/logs"
 
   def self.backup!(user_id, opts = {})
-    puts "BACKUP!"
     if opts[:fork] == false
       BackupRestore::Backuper.new(user_id, opts).run
     else
-      puts "ELSE"
       spawn_process!(:backup, user_id, opts)
     end
   end
@@ -173,7 +171,6 @@ module BackupRestore
   end
 
   def self.spawn_process!(type, user_id, opts)
-    puts "SPAWN_PROCESS"
     script = File.join(Rails.root, "script", "spawn_backup_restore.rb")
     command = ["bundle", "exec", "ruby", script, type, user_id, opts.to_json].map(&:to_s)
 
