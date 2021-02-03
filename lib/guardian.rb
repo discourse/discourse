@@ -395,7 +395,9 @@ class Guardian
   end
 
   def can_bulk_invite_to_forum?(user)
-    user.admin?
+    user.admin? &&
+    !SiteSetting.enable_sso &&
+    SiteSetting.enable_local_logins
   end
 
   def can_send_invite_links?(user)

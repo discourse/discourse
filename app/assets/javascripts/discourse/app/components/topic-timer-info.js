@@ -39,6 +39,10 @@ export default Component.extend({
       return;
     }
 
+    if (this.isDestroyed) {
+      return;
+    }
+
     const topicStatus = this.topicClosed ? "close" : "open";
     const topicStatusKnown = this.topicClosed !== undefined;
     if (topicStatusKnown && topicStatus === this.statusType) {

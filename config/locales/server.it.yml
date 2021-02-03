@@ -407,7 +407,6 @@ it:
       email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
       cant_allow_membership_requests: "Non è possibile permettere le richieste di adesione in un gruppo senza proprietari."
       already_requested_membership: "Hai già richiesto di iscriverti a questo gruppo."
-      adding_too_many_users: "È possibile aggiungere un massimo di %{limit} utenti contemporaneamente"
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -2348,7 +2347,6 @@ it:
     flags_agreed_and_post_deleted:
       title: "Post segnalato rimosso dallo staff"
       subject_template: "Post segnalato rimosso dallo staff"
-      text_body_template: "Ciao,\n\nQuesto è un messaggio automatico da %{site_name} per informarti che [il tuo messaggio] (%{base_url}%{url}) è stato rimosso. \n\n%{flag_reason}\n\nIl messaggio è stato segnalato dalla comunità e un membro dello staff ha deciso di rimuoverlo. \n\n[details=\"Fai clic per espandere il post rimosso\"] \n```markdown\n%{flagged_post_raw_content}\n```[/ details]\n\nPer ulteriori dettagli, consulta le nostre [linee guida della community] (%{base_url}/guidelines).\n"
     usage_tips:
       text_body_template: |
         Per leggere alcuni veloci suggerimenti su come iniziare se sei un nuovo utente [dai una lettura a questo articolo](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)

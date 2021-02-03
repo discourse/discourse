@@ -589,6 +589,8 @@ fa_IR:
             imap_ssl: "از SSL برای IMAP استفاده کنید"
             username: "نام‌کاربری"
             password: "رمزعبور"
+          settings:
+            title: "تنظیمات"
           mailboxes:
             disabled: "غیرفعال شده"
         membership:
@@ -743,7 +745,6 @@ fa_IR:
       posts: "نوشته‌ها"
       topics: "موضوعات"
       latest: "آخرین"
-      latest_by: "آخرین توسط"
       toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "دسته‌‌بندی‌های فرزند"
       topic_sentence:
@@ -1325,15 +1326,6 @@ fa_IR:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
     learn_more: "بیشتر بدانید..."
-    all_time: "مجموع"
-    all_time_desc: "مجموع موضوعات ایجاد شده"
-    year: "سال"
-    year_desc: "موضوعاتی که در 365 روز گذشته ایحاد شده‌اند"
-    month: "ماه"
-    month_desc: "موضوعاتی که در 30 روز گذشته ساخته شده اند"
-    week: "هفته"
-    week_desc: "موضوعاتی که در 7 روز گذشته باز شده‌اند"
-    day: "روز"
     first_post: نوشته نخست
     mute: بی‌صدا
     unmute: صدادار
@@ -1356,8 +1348,6 @@ fa_IR:
       value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
-      description: "<b>%{replyCount}</b> پاسخ وجود دارد."
-      description_time: " <b>%{replyCount}</b> پاسخ با زمان برآورد شده <b>%{readingTime} دقیقه</b> برای خواندن وجود دارد."
       enable: "خلاصه‌ی این موضوع"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
@@ -1529,7 +1519,6 @@ fa_IR:
       default: ایموجی های مخصوص
     shared_drafts:
       title: "درفت مشترک"
-      notice: "این موضوع فقط برای افرادی که به دسته بندی <b>%{category}</b>دسترسی دارند نمایش داده می‌شود."
       destination_category: "دسته بندی مقصد"
       publish: "درفت مشترک را منتشر کن"
       confirm_publish: "از انتشار درفت مطمئنید؟"
@@ -1557,10 +1546,7 @@ fa_IR:
       duplicate_link: "به نظر می‌رسد پیوند شما به <b>%{domain}</b> قبلاً در یک مبحث توسط <b>@ %{username}</b> در <a href='%{post_url}'>پاسخ به %{ago} ارسال شده است</a> - مطمئن هستید که می خواهید دوباره آن را بفرستید؟"
       error:
         title_missing: "عنوان الزامی است"
-        title_too_short: "عنوان دست‌کم باید %{min} نویسه باشد"
-        title_too_long: "عنوان نمی‌تواند بیش‌تر از %{max} نویسه باشد"
         post_missing: "فرسته نمی‌تواند خالی باشد."
-        post_length: "نوشته باید دست‌کم %{min} نویسه داشته باشد"
         try_like: "دکمه‌ی %{heart} را امتحان کرده‌اید؟ "
         category_missing: "باید یک دسته‌بندی انتخاب کنید"
       save_edit: "ذخیره ویرایش"
@@ -2005,7 +1991,6 @@ fa_IR:
         go: "برو"
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
-        jump_prompt_of: "از %{count} نوشته"
         jump_prompt_long: "برو به ..."
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_to_date: "تا تاریخ"
@@ -2140,7 +2125,6 @@ fa_IR:
         username_placeholder: "نام‌کاربری"
         action: "ارسال دعوتنامه "
         help: "دعوت دیگران به این موضوع با ایمیل یا اطلاعیه‌ها"
-        to_forum: "ما ایمیلی کوتاه برای شما می فرستیم که دوست شما با کلیک کردن بر روی لینک سریعا ملحق شود، به ورود به سیستم نیازی نیست. "
         sso_enabled: "نام کاربری کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_blank: "نام کاربری یا ایمیل کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_email: "شما یک ایمیل آدرس وارد کردید. ما یک ایمیل خواهیم فرستاد که به دوستان شما اجازه می دهد سریعا به این موضوع پاسخ دهند."
@@ -2237,8 +2221,6 @@ fa_IR:
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
       ignored: "محتوای نادیده گرفته‌شد"
-      wiki_last_edited_on: "دانشنامه آخرین بار در این زمان ویرایش شده"
-      last_edited_on: "نوشته آخرین بار ویرایش شده در"
       reply_as_new_topic: "پاسخگویی به عنوان یک موضوع لینک شده"
       reply_as_new_private_message: "پاسخ به عنوان پیام جدید به همین دریافت کنندگان"
       continue_discussion: "ادامه دادن بحث از %{postLink}:"
@@ -3333,10 +3315,10 @@ fa_IR:
             text: "کد CSS جاسازی شده"
             title: "کد CSS سفارشی مد نظرتان را اینجا وارد کنید"
           head_tag:
-            text: "</head>"
+            text: "</‎head>"
             title: "کد HTML که قبل از برچسب </head> اضافه می‌شود"
           body_tag:
-            text: "</body>"
+            text: "</‎body>"
             title: "کد HTML که قبل از برچسب </body> اضافه می‌شود"
           yaml:
             text: "YAML"

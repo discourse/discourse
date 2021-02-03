@@ -50,6 +50,17 @@ describe Invite do
     end
   end
 
+  context "SSO validation" do
+    it "prevents creating an email invite when SSO is enabled" do
+      SiteSetting.sso_url = "https://www.example.com/sso"
+      SiteSetting.enable_sso = true
+
+      invite = Fabricate.build(:invite, email: "test@mail.com")
+      expect(invite).not_to be_valid
+      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("invite.disabled_errors.sso_enabled"))
+    end
+  end
+
   context '#create' do
     context 'saved' do
       subject { Fabricate(:invite) }

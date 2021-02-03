@@ -733,7 +733,6 @@ vi:
       posts: "Bài viết"
       topics: "Chủ đề"
       latest: "Mới nhất"
-      latest_by: "mới nhất bởi"
       toggle_ordering: "chuyển lệnh kiểm soát"
       subcategories: "Phân loại phụ"
       muted: "Các danh mục bị ẩn"
@@ -1382,15 +1381,6 @@ vi:
       exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}."
     learn_more: "tìm hiểu thêm..."
-    all_time: "tổng cộng"
-    all_time_desc: "tổng số chủ đề đã tạo"
-    year: "năm"
-    year_desc: "chủ đề được tạo ra trong 365 ngày qua"
-    month: "tháng"
-    month_desc: "chủ đề được tạo ra trong 30 ngày qua"
-    week: "tuần"
-    week_desc: "chủ đề được tạo ra trong 7 ngày qua"
-    day: "ngày"
     first_post: Bài viết đầu tiên
     mute: Im lặng
     unmute: Bỏ im lặng
@@ -1412,8 +1402,6 @@ vi:
       value_prop: "Khi bạn tạo tài khoản, chúng tôi nhớ chính xác những gì bạn đã đọc, vì vậy bạn luôn quay lại ngay nơi bạn đã dừng lại. Bạn cũng nhận được thông báo, tại đây và qua email, bất cứ khi nào ai đó trả lời bạn. Và bạn có thể thích bài viết để chia sẻ. :heartpulse:"
     summary:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
-      description: "Có <b>%{replyCount}</b> trả lời."
-      description_time: "Có <b>%{replyCount}</b> trả lời với thời gian đọc ước tính khoảng <b>%{readingTime} phút</b>."
       enable: "Tóm tắt lại chủ đề"
       disable: "HIển thị tất cả các bài viết"
     deleted_filter:
@@ -1615,7 +1603,6 @@ vi:
       default: Biểu tượng cảm xúc tùy chỉnh
     shared_drafts:
       title: "Thư nháp được Chia sẻ"
-      notice: "Chủ đề này chỉ hiển thị cho những người có thể xem danh mục <b>%{category}</b>."
       destination_category: "Loại điểm đến"
       publish: "Xuất bản bản nháp"
       confirm_publish: "Bạn có chắc chắn muốn xuất bản bản nháp này không?"
@@ -1645,10 +1632,7 @@ vi:
       reference_topic_title: "Trả lời đến: %{title}"
       error:
         title_missing: "Tiêu đề là bắt buộc"
-        title_too_short: "Tiêu để phải có ít nhất %{min} ký tự"
-        title_too_long: "Tiêu đề có tối đa %{max} ký tự"
         post_missing: "Bài đăng không được để trống"
-        post_length: "Bài viết phải có ít nhất %{min} ký tự"
         try_like: "Bạn đã thử nút %{heart} chưa?"
         category_missing: "Bạn phải chọn một phân loại"
         tags_missing:
@@ -2152,7 +2136,6 @@ vi:
         go: "đi tới"
         jump_bottom: "nhảy tới bài viết cuối cùng"
         jump_prompt: "Nhảy đến..."
-        jump_prompt_of: "của %{count} bài viết"
         jump_prompt_long: "Chuyển đến ..."
         jump_bottom_with_number: "nhảy tới bài viết %{post_number}"
         jump_prompt_to_date: "đến nay"
@@ -2289,7 +2272,6 @@ vi:
         username_placeholder: "tên người dùng"
         action: "Gửi Lời Mời"
         help: "mời người khác tham gia chủ đề thông qua email hoặc thông báo"
-        to_forum: "Chúng tôi sẽ gửi một email tóm tắt cho phép bạn của bạn gia nhập trực tiệp bằng cách nhấp chuột vào một đường dẫn, không cần phải đăng nhập."
         sso_enabled: "Nhập tên đăng nhập hoặc địa chỉ email của người mà bạn muốn mời vào chủ đề này."
         to_topic_blank: "Nhập tên đăng nhập hoặc địa chỉ email của người bạn muốn mời đến chủ đề này."
         to_topic_email: "Bạn vừa điền địa chỉ email, website sẽ gửi lời mời cho phép bạn bè của bạn có thể trả lời chủ đề này."
@@ -2401,8 +2383,6 @@ vi:
       edit_reason: "Lý do: "
       post_number: "bài viết %{number}"
       ignored: "Nội dung bị bỏ qua"
-      wiki_last_edited_on: "wiki được chỉnh sửa lần cuối vào"
-      last_edited_on: "đã sửa bài viết lần cuối lúc"
       reply_as_new_topic: "Trả lời như là liên kết đến Chủ đề"
       reply_as_new_private_message: "Trả lời dưới dạng tin nhắn mới cho cùng người nhận"
       continue_discussion: "Tiếp tục thảo luận từ %{postLink}:"
@@ -2502,7 +2482,6 @@ vi:
         unlock_post_description: "cho phép người đăng chỉnh sửa bài đăng này"
         delete_topic_disallowed_modal: "Bạn không có quyền xóa chủ đề này. Nếu bạn thực sự muốn xóa nó, hãy gửi cờ để người kiểm duyệt chú ý cùng với lý do."
         delete_topic_disallowed: "bạn không có quyền xóa chủ đề này"
-        delete_topic_confirm_modal: "Chủ đề này hiện có hơn %{minViews} lượt xem và có thể là điểm đến tìm kiếm phổ biến. Bạn có chắc chắn muốn xóa hoàn toàn chủ đề này thay vì chỉnh sửa để cải thiện chủ đề không?"
         delete_topic_confirm_modal_yes: "Có, xóa chủ đề này"
         delete_topic_confirm_modal_no: "Không, giữ chủ đề này"
         delete_topic_error: "Đã xảy ra lỗi khi xóa chủ đề này"
@@ -3284,7 +3263,6 @@ vi:
             effects: Các hiệu ứng
             trust_levels_none: "Không có gì"
             automatic_membership_email_domains: "Các thành viên đã đăng ký với đuôi email khớp với một trong danh sách này sẽ được tự động thêm vào nhóm:"
-            automatic_membership_user_count: "%{count} người dùng có domain email mới và sẽ được thêm vào nhóm."
             primary_group: "Tự động cài là nhóm chính"
         name_placeholder: "Tên nhóm, không có khoảng trắng, tương tự như luật đặt tên người dùng"
         primary: "Nhóm Chính"

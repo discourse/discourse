@@ -794,7 +794,6 @@ sl:
       posts: "Prispevki"
       topics: "Teme"
       latest: "Najnovejše"
-      latest_by: "najnovejše po"
       toggle_ordering: "preklop nadzora razvrščanja"
       subcategories: "Pod Kategorija"
       muted: "Utišane kategorije"
@@ -1456,15 +1455,6 @@ sl:
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
       logout_disabled: "Odjava je onemogočena dokler je stran v načinu za branje."
     learn_more: "izvedite več..."
-    all_time: "skupaj"
-    all_time_desc: "skupaj ustvarjenih tem"
-    year: "leto"
-    year_desc: "teme, ustvarjene v preteklih 365 dneh"
-    month: "mesec"
-    month_desc: "teme, ustvarjene v preteklih 30 dneh"
-    week: "teden"
-    week_desc: "teme, ustvarjene v preteklih 7 dneh"
-    day: "dan"
     first_post: Prvi prispevek
     mute: Utišano
     unmute: Povrni glasnost
@@ -1489,8 +1479,6 @@ sl:
       value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
       enabled_description: "Ogledujete si povzetek teme: najbolj zanimive prispevke, kot jih je določila skupnost."
-      description: "Obstaja <b>%{replyCount}</b> odgovorov."
-      description_time: "Obstaja <b>%{replyCount}</b> odgovorov z ocenjenim časom branja <b>%{readingTime} minut</b>."
       enable: "Pripravi povzetek teme"
       disable: "Prikaži vse prispevke"
     deleted_filter:
@@ -1685,7 +1673,6 @@ sl:
       default: Emojiji po meri
     shared_drafts:
       title: "Skupni osnutki"
-      notice: "Ta tema je vidna samo tistim, ki lahko vidijo kategorijo <b>%{category}</b>."
       destination_category: "Ciljna kategorija"
       publish: "Objavi skupni osnutek"
       confirm_publish: "Ali ste prepričani da hočete objaviti ta osnutek?"
@@ -1716,10 +1703,7 @@ sl:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Naslov je obvezen"
-        title_too_short: "Naslov mora vsebovati vsaj %{min} znakov"
-        title_too_long: "Naslov ne more imeti več kot %{max} znakov"
         post_missing: "Prispevek ne more biti prazen"
-        post_length: "Prispevek mora vsebovati vsaj %{min} znakov"
         try_like: "Ste že uporabili %{heart} gumb za všečkanje?"
         category_missing: "Izbrati morate kategorijo"
         tags_missing:
@@ -2243,7 +2227,6 @@ sl:
         go: "pojdi"
         jump_bottom: "skoči na zadnji prispevek"
         jump_prompt: "skoči na..."
-        jump_prompt_of: "od %{count} prispevkov"
         jump_prompt_long: "Skoči na..."
         jump_bottom_with_number: "skoči na prispevek %{post_number}"
         jump_prompt_to_date: "na datum"
@@ -2389,7 +2372,6 @@ sl:
         username_placeholder: "uporabniško ime"
         action: "Pošlji povabilo"
         help: "povabi ostale v to temo preko e-sporočila ali obvestil"
-        to_forum: "Poslali bomo kratko e-sporočilo s povezavo preko katere se bo vaš prijatelj lahko prijavil."
         sso_enabled: "Vnesite uporabniško ime osebe, ki bi jo povabili v to temo."
         to_topic_blank: "Vnesite uporabniško ime ali e-naslov osebe, ki bi ga radi povabili v to temo."
         to_topic_email: "Vnesli ste e-naslov. Poslali bomo vabilo preko e-sporočila, ki bo vašemu prijatelju omogočila, da bo neposredno odgovoril v temo."
@@ -2514,8 +2496,6 @@ sl:
       edit_reason: "Razlog: "
       post_number: "prispevek %{number}"
       ignored: "Prezrta vsebina"
-      wiki_last_edited_on: "wiki zadnjič spremenjen"
-      last_edited_on: "prispevek zadnjič spremenjen"
       reply_as_new_topic: "Odgovori v novi povezani temi"
       reply_as_new_private_message: "Odgovori kot zasebno sporočilo z enakimi naslovniki"
       continue_discussion: "Nadaljevanje pogovora iz %{postLink}:"

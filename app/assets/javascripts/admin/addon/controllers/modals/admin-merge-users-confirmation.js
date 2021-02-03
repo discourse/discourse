@@ -22,6 +22,13 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
+  @discourseComputed("username")
+  mergeButtonText(username) {
+    return I18n.t(`admin.user.merge.confirmation.transfer_and_delete`, {
+      username,
+    });
+  },
+
   @discourseComputed("value", "text")
   mergeDisabled(value, text) {
     return !value || text !== value;

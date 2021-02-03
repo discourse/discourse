@@ -7,12 +7,13 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("icon only button", {
-    template: '{{d-button icon="plus" tabindex="3"}}',
+    template: hbs`{{d-button icon="plus" tabindex="3"}}`,
 
     test(assert) {
       assert.ok(
@@ -32,7 +33,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("icon and text button", {
-    template: '{{d-button icon="plus" label="topic.create"}}',
+    template: hbs`{{d-button icon="plus" label="topic.create"}}`,
 
     test(assert) {
       assert.ok(
@@ -51,7 +52,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("text only button", {
-    template: '{{d-button label="topic.create"}}',
+    template: hbs`{{d-button label="topic.create"}}`,
 
     test(assert) {
       assert.ok(
@@ -66,7 +67,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("form attribute", {
-    template: '{{d-button form="login-form"}}',
+    template: hbs`{{d-button form="login-form"}}`,
 
     test(assert) {
       assert.ok(exists("button[form=login-form]"), "it has the form attribute");
@@ -74,7 +75,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("link-styled button", {
-    template: '{{d-button display="link"}}',
+    template: hbs`{{d-button display="link"}}`,
 
     test(assert) {
       assert.ok(
@@ -85,7 +86,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("isLoading button", {
-    template: "{{d-button isLoading=isLoading}}",
+    template: hbs`{{d-button isLoading=isLoading}}`,
 
     beforeEach() {
       this.set("isLoading", true);
@@ -115,7 +116,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("disabled button", {
-    template: "{{d-button disabled=disabled}}",
+    template: hbs`{{d-button disabled=disabled}}`,
 
     beforeEach() {
       this.set("disabled", true);
@@ -134,8 +135,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("aria-label", {
-    template:
-      "{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}",
+    template: hbs`{{d-button ariaLabel=ariaLabel translatedAriaLabel=translatedAriaLabel}}`,
 
     beforeEach() {
       I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
@@ -159,7 +159,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("title", {
-    template: "{{d-button title=title translatedTitle=translatedTitle}}",
+    template: hbs`{{d-button title=title translatedTitle=translatedTitle}}`,
 
     beforeEach() {
       I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
@@ -182,7 +182,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
   });
 
   componentTest("label", {
-    template: "{{d-button label=label translatedLabel=translatedLabel}}",
+    template: hbs`{{d-button label=label translatedLabel=translatedLabel}}`,
 
     beforeEach() {
       I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };

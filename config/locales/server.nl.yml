@@ -2674,6 +2674,10 @@ nl:
     editor:
       name: Bewerker
       description: Eerste berichtbewerking
+    wiki_editor:
+      description: Eerste wiki bewerking
+      long_description: |
+        Deze badge wordt toegekend als u voor het eerst een wiki-bericht bewerkt.
     basic_user:
       name: Basis
       description: Alle essentiële gemeenschapsfuncties <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">toegekend</a>
@@ -2747,9 +2751,13 @@ nl:
     read_guidelines:
       name: Richtlijnen gelezen
       description: Heeft de <a href="%{base_uri}/guidelines">gemeenschapsrichtlijnen</a> gelezen
+      long_description: |
+        Deze badge wordt toegekend als je de <a href="%{base_uri}/guidelines">richtlijnen hebt gelezen</a>. Het opvolgen en delen van deze eenvoudige richtlijnen draagt bij aan een veilige, leuke en duurzame community voor iedereen. Bedenk altijd dat er een mens, net zoals u, aan de andere kant van het scherm zit. Wees aardig!
     reader:
       name: Lezer
       description: Heeft alle antwoorden in een topic met meer dan 100 antwoorden gelezen
+      long_description: |
+        Deze badge wordt toegekend wanneer je voor het eerst een topic met meer dan 100 antwoorden hebt gelezen. Als je een gesprek zorgvuldig volgt, kan je de discussie volgen, de verschillende standpunten begrijpen en leidt vaker tot interessante gesprekken. Hoe meer je leest, hoe beter het gesprek wordt. Zoals we zeggen, lezen is fundamenteel! :slight_smile:
     popular_link:
       name: Populaire koppeling
       description: Heeft een externe koppeling met 50 klikken geplaatst
@@ -2790,11 +2798,16 @@ nl:
       description: Heeft een emoji in een bericht gebruikt
     first_mention:
       description: Heeft een gebruiker genoemd in een bericht
+    first_onebox:
+      name: Eerste Onebox
     first_reply_by_email:
       name: Eerste antwoord via e-mail
       description: Bericht beantwoord via e-mail
     new_user_of_the_month:
       name: "Nieuwe gebruiker van de maand"
+      description: Uitstekende bijdragen in hun eerste maand
+      long_description: |
+        Deze badge wordt elke maand aan twee nieuwe gebruikers toegekend om hen te feliciteren met hun uitstekende bijdragen, gemeten aan de hand van hoe vaak hun berichten werden gewaardeerd en door wie.
     enthusiast:
       name: Liefhebber
       description: Heeft 10 opeenvolgende dagen bezocht

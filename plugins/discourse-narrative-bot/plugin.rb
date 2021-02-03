@@ -22,6 +22,7 @@ if Rails.env == "development"
 end
 
 require_relative 'lib/discourse_narrative_bot/welcome_post_type_site_setting.rb'
+register_asset 'stylesheets/discourse-narrative-bot.scss'
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-narrative-bot", "db", "fixtures").to_s
@@ -49,6 +50,11 @@ after_initialize do
 
   # Disable welcome message because that is what the bot is supposed to replace.
   SiteSetting.send_welcome_message = false if SiteSetting.send_welcome_message
+
+  certificate_path = "#{Discourse.base_url}/discobot/certificate.svg"
+  if SiteSetting.discourse_narrative_bot_enabled && !SiteSetting.allowed_iframes.include?(certificate_path)
+    SiteSetting.allowed_iframes = SiteSetting.allowed_iframes.split('|').append("#{Discourse.base_url}/discobot/certificate.svg").join('|')
+  end
 
   require_dependency 'plugin_store'
 
@@ -94,8 +100,7 @@ after_initialize do
         raise Discourse::NotFound if user.blank?
 
         hijack do
-          avatar_data = fetch_avatar(user)
-          generator = CertificateGenerator.new(user, params[:date], avatar_data)
+          generator = CertificateGenerator.new(user, params[:date], avatar_url(user))
 
           svg = params[:type] == 'advanced' ? generator.advanced_user_track : generator.new_user_track
 
@@ -107,16 +112,8 @@ after_initialize do
 
       private
 
-      def fetch_avatar(user)
-        avatar_url = UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
-        FileHelper.download(
-          avatar_url.to_s,
-          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-          tmp_file_name: 'narrative-bot-avatar',
-          follow_redirect: true
-        )&.read
-      rescue OpenURI::HTTPError
-        # Ignore if fetching image returns a non 200 response
+      def avatar_url(user)
+        UrlHelper.absolute(Discourse.base_path + user.avatar_template.gsub('{size}', '250'))
       end
     end
   end

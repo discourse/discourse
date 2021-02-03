@@ -1,0 +1,12 @@
+{{#if item.isUser}}
+  {{avatar item imageSize="tiny"}}
+  <span class="identifier">{{format-username item.id}}</span>
+  <span class="name">{{item.name}}</span>
+{{else if item.isGroup}}
+  {{d-icon "users"}}
+  <span class="identifier">{{item.id}}</span>
+  <span class="name">{{item.full_name}}</span>
+{{else}}
+  {{d-icon "envelope"}}
+  <span class="identifier">{{item.id}}</span>
+{{/if}}

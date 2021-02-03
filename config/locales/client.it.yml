@@ -774,7 +774,6 @@ it:
       posts: "Messaggi"
       topics: "Argomenti"
       latest: "Più recenti"
-      latest_by: "i più recenti di"
       toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
       muted: "Categorie silenziate"
@@ -1437,15 +1436,6 @@ it:
       exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di impostazione del sito di {limit, plural, one {# errore/ora} other {# errori/ora}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di impostazione del sito di {limit, plural, one {# errore/minuto} other {# errori/minuto}}."
     learn_more: "per saperne di più..."
-    all_time: "totale"
-    all_time_desc: "totale argomenti creati"
-    year: "all'anno"
-    year_desc: "argomenti creati negli ultimi 365 giorni"
-    month: "al mese"
-    month_desc: "argomenti creati negli ultimi 30 giorni"
-    week: "a settimana"
-    week_desc: "argomenti creati negli ultimi 7 giorni"
-    day: "al giorno"
     first_post: Primo messaggio
     mute: Ignora
     unmute: Attiva
@@ -1468,8 +1458,6 @@ it:
       value_prop: "Quando crei un account, potremo ricordare esattamente cosa hai letto, in modo che tu possa riprendere esattamente da dove hai lasciato. Riceverai inoltre notifiche, qui o via email, quando qualcuno ti risponde. Potrai anche mettere \"Mi piace\" per mostrare il tuo apprezzamento :heartpulse:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
-      description: "Ci sono <b>%{replyCount}</b> risposte."
-      description_time: "Ci sono <b>%{replyCount}</b> risposte con un tempo stimato di lettura di <b>%{readingTime} minuti</b>."
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
     deleted_filter:
@@ -1677,7 +1665,6 @@ it:
       default: Emoji personalizzate
     shared_drafts:
       title: "Bozze condivise"
-      notice: "L'argomento è visibile solo a chi può vedere la categoria <b>%{category}</b>."
       destination_category: "Categoria di destinazione"
       publish: "Pubblica Bozza Condivisa"
       confirm_publish: "Confermi la pubblicazione di questa bozza?"
@@ -1709,10 +1696,7 @@ it:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Il titolo è richiesto"
-        title_too_short: "Il titolo deve essere lungo almeno %{min} caratteri"
-        title_too_long: "Il titolo non può essere più lungo di %{max} caratteri"
         post_missing: "Il messaggio non può essere vuoto"
-        post_length: "Il messaggio deve essere lungo almeno %{min} caratteri"
         try_like: "Hai provato ad usare il pulsante %{heart} ?"
         category_missing: "Devi scegliere una categoria"
         tags_missing:
@@ -2236,7 +2220,6 @@ it:
         go: "vai"
         jump_bottom: "salta all'ultimo messaggio"
         jump_prompt: "vai a..."
-        jump_prompt_of: "di %{count} messaggi"
         jump_prompt_long: "Salta a..."
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         jump_prompt_to_date: "ad oggi"
@@ -2376,7 +2359,6 @@ it:
         username_placeholder: "nome utente"
         action: "Invia Invito"
         help: "invita altri su questo argomento via email o tramite notifiche"
-        to_forum: "Invieremo una breve email che permetterà al tuo amico di partecipare subito cliccando un collegamento, senza bisogno di connettersi."
         sso_enabled: "Inserisci il nome utente della persona che vorresti invitare su questo argomento."
         to_topic_blank: "Inserisci il nome utente o l'indirizzo email della persona che vorresti invitare su questo argomento."
         to_topic_email: "Hai inserito un indirizzo email. Invieremo una email di invito che permetterà al tuo amico di rispondere subito a questo argomento."
@@ -2497,8 +2479,6 @@ it:
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
       ignored: "Contenuto ignorato"
-      wiki_last_edited_on: "ultima modifica alla wiki"
-      last_edited_on: "ultima modifica al messaggio:"
       reply_as_new_topic: "Rispondi come Argomento collegato"
       reply_as_new_private_message: "Rispondi come nuovo messaggio agli stessi destinatari"
       continue_discussion: "Continua la discussione da %{postLink}:"
@@ -2608,7 +2588,6 @@ it:
         unlock_post_description: "consenti all'autore di modificare questo messaggio"
         delete_topic_disallowed_modal: "Non hai il permesso di eliminare questo Argomento. Se davvero lo vuoi eliminare, segnalalo all'attenzione dei moderatori spiegando le tue motivazioni."
         delete_topic_disallowed: "non hai il permesso di eliminare questo argomento"
-        delete_topic_confirm_modal: "Questo argomento ha attualmente più di %{minViews} visualizzazioni e potrebbe essere una destinazione di ricerca popolare. Sei sicuro di voler eliminare completamente questo argomento, invece di modificarlo per migliorarlo?"
         delete_topic_confirm_modal_yes: "Sì, elimina questo argomento"
         delete_topic_confirm_modal_no: "No, mantieni questo argomento"
         delete_topic_error: "Si è verificato un errore durante l'eliminazione di questo argomento"
@@ -3432,7 +3411,6 @@ it:
             effects: Effetti
             trust_levels_none: "Nessuno"
             automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
-            automatic_membership_user_count: "%{count} utenti hanno i nuovi domini email e verranno aggiunti al gruppo."
             primary_group: "Imposta automaticamente come gruppo principale"
         name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"

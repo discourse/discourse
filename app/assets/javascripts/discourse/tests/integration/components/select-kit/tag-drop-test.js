@@ -4,6 +4,7 @@ import componentTest, {
 import I18n from "I18n";
 import Site from "discourse/models/site";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { set } from "@ember/object";
@@ -21,19 +22,6 @@ function initTags(context) {
     secondCategory: childCategories.firstObject,
     tagId: "jeff",
   });
-}
-
-function template(options = []) {
-  return `
-    {{tag-drop
-      firstCategory=firstCategory
-      secondCategory=secondCategory
-      tagId=tagId
-      options=(hash
-        ${options.join("\n")}
-      )
-    }}
-  `;
 }
 
 discourseModule(
@@ -65,7 +53,16 @@ discourseModule(
     });
 
     componentTest("default", {
-      template: template(["tagId=tagId"]),
+      template: hbs`
+      {{tag-drop
+        firstCategory=firstCategory
+        secondCategory=secondCategory
+        tagId=tagId
+        options=(hash
+          tagId=tagId
+        )
+      }}
+    `,
 
       beforeEach() {
         initTags(this);

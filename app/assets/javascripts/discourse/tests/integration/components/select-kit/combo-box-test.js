@@ -3,6 +3,7 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -34,7 +35,7 @@ discourseModule(
     });
 
     componentTest("options.clearable", {
-      template: `
+      template: hbs`
       {{combo-box
         value=value
         content=content
@@ -61,7 +62,7 @@ discourseModule(
         );
         assert.equal($header.value(), DEFAULT_VALUE);
 
-        await click($header.el().find(".btn-clear"));
+        await click($header.el().find(".btn-clear")[0]);
 
         assert.notOk(
           exists($header.el().find(".btn-clear")),
@@ -72,7 +73,7 @@ discourseModule(
     });
 
     componentTest("options.{caretUpIcon,caretDownIcon}", {
-      template: `
+      template: hbs`
       {{combo-box
         value=value
         content=content

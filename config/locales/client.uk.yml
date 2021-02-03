@@ -853,7 +853,6 @@ uk:
       posts: "Повідомлення"
       topics: "Теми"
       latest: "Останні"
-      latest_by: "Останні від"
       toggle_ordering: "показати/сховати елемент керування для впорядкування"
       subcategories: "Підкатегорії"
       muted: "Приглушені категорії"
@@ -1546,15 +1545,6 @@ uk:
       exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}."
       exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}."
     learn_more: "дізнатися більше..."
-    all_time: "всього"
-    all_time_desc: "всього створено тем"
-    year: "рік"
-    year_desc: "теми, що були створені у останні 365 днів"
-    month: "місяць"
-    month_desc: "теми, що були створені у останні 30 днів"
-    week: "тиждень"
-    week_desc: "теми, що були створені у останні 7 днів"
-    day: "день"
     first_post: Перший допис
     mute: Mute
     unmute: Unmute
@@ -1579,8 +1569,6 @@ uk:
       value_prop: "Коли ви створюєте обліковий запис, ми точно пам’ятаємо, що ви прочитали, тому ви завжди повертаєтеся туди, де зупинилися. Ви також отримуєте повідомлення, тут та електронною поштою, коли хтось відповідає вам. І ви можете, в повідомленнях, поставити - мені подобається. :heartpulse:"
     summary:
       enabled_description: "Ви переглядаєте витяг з теми - тільки найцікавіші повідомлення на думку спільноти."
-      description: "Є <b>%{replyCount}</b> відповідей."
-      description_time: "<b>%{replyCount}</b> відповідей з передбачуваним часом прочитання близько <b>%{readingTime} хвилин</b>."
       enable: "Підсумки цієї теми"
       disable: "Показати всі дописи"
     deleted_filter:
@@ -1800,7 +1788,6 @@ uk:
       default: Призначені для користувача смайли
     shared_drafts:
       title: "загальні Чернетки"
-      notice: "Ці теми видно тільки тим, хто може бачити <b>%{category}</b> категорію."
       destination_category: "Категорія Призначення"
       publish: "Публікація Спільної чернетки"
       confirm_publish: "Ви впевнені, що хочете опублікувати цю чернетку?"
@@ -1836,10 +1823,7 @@ uk:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Заголовок є необхідним"
-        title_too_short: "Заголовок має бути мінімум %{min} символів"
-        title_too_long: "Заголовок не може бути менше, ніж %{max} символів"
         post_missing: "Повідомлення не може бути порожнім"
-        post_length: "Найменший розмір допису має бути %{min} символів"
         try_like: "Ви пробували натиснути на %{heart} кнопку?"
         category_missing: "Ви повинні обрати категорію"
         tags_missing:
@@ -2401,7 +2385,6 @@ uk:
         go: "=>"
         jump_bottom: "перейти до останнього допису"
         jump_prompt: "перейти до..."
-        jump_prompt_of: "з %{count} повідомлень"
         jump_prompt_long: "Перейти до..."
         jump_bottom_with_number: "перейти до допису %{post_number}"
         jump_prompt_to_date: "дата"
@@ -2547,7 +2530,6 @@ uk:
         username_placeholder: "ім'я користувача"
         action: "Надіслати запрошення"
         help: "запросити інших в цю тему за допомогою email або повідомлень"
-        to_forum: "Буде відправлено короткого листа, яке дозволить вашому другу приєднатися просто клікнувши на посилання без необхідності входу на сайт."
         sso_enabled: "Введіть псевдонім користувача, якого ви хочете запросити в цю тему."
         to_topic_blank: "Введіть псевдонім або email користувача, якого ви хочете запросити в цю тему."
         to_topic_email: "Ви вказали адресу електронної пошти. Ми відправимо запрошення, яке дозволить вашому другу негайно відповісти в цій темі."
@@ -2686,8 +2668,6 @@ uk:
       edit_reason: "Причина: "
       post_number: "допис %{number}"
       ignored: "проігнороване зміст"
-      wiki_last_edited_on: "вики редагував"
-      last_edited_on: "допис востаннє редаговано"
       reply_as_new_topic: "Відповісти в новій пов’язаної темі"
       reply_as_new_private_message: "Відповісти новим повідомленням тем же адресатам"
       continue_discussion: "В продовження дискусії %{postLink}:"
@@ -2817,7 +2797,6 @@ uk:
         unlock_post_description: "Дозволити автору редагувати цей пост"
         delete_topic_disallowed_modal: "У вас немає дозволу на видалення цієї теми. Якщо ви дійсно хочете, щоб вона була видалена, використовуйте функцію прапора модератору разом з аргументацією."
         delete_topic_disallowed: "у вас немає дозволу на видалення цієї теми"
-        delete_topic_confirm_modal: "На даний момент ця тема має понад %{minViews} переглядів і може бути популярним місцем для пошуку. Ви впевнені, що хочете повністю видалити цю тему, а не редагувати її, щоб покращити?"
         delete_topic_confirm_modal_yes: "Так, видалити цю тему"
         delete_topic_confirm_modal_no: "Ні, зберегти цю тему"
         delete_topic_error: "Сталася помилка під час видалення теми"
@@ -3707,7 +3686,6 @@ uk:
             effects: Ефекти
             trust_levels_none: "Відсутня"
             automatic_membership_email_domains: "Користувачі, зареєстровані c адресою електронної пошти, яка точно збігається з доменом в цьому списку, будуть автоматично додані до цієї групи: "
-            automatic_membership_user_count: "%{count} користувачів мають нові домени електронної пошти і будуть додані до групи."
             primary_group: "Автоматично встановлюється в якості основної групи"
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"

@@ -960,6 +960,13 @@ const User = RestModel.extend({
     }
   },
 
+  setPrimaryGroup(primaryGroupId) {
+    return ajax(`/admin/users/${this.id}/primary_group`, {
+      type: "PUT",
+      data: { primary_group_id: primaryGroupId },
+    });
+  },
+
   enterDoNotDisturbFor(duration) {
     return ajax({
       url: "/do-not-disturb.json",

@@ -6,6 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import EmberObject from "@ember/object";
+import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 
 discourseModule(
@@ -14,7 +15,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("sets notification as read on middle click", {
-      template: '{{mount-widget widget="default-notification-item" args=args}}',
+      template: hbs`{{mount-widget widget="default-notification-item" args=args}}`,
       beforeEach() {
         this.set(
           "args",

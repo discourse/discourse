@@ -44,6 +44,14 @@
       color: $hover-icon-color;
     }
   }
+  &:focus {
+    outline: none;
+    background: $hover-bg-color;
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
   &[href] {
     color: $text-color;
   }
@@ -177,7 +185,8 @@
     .d-icon {
       opacity: 0.9;
     }
-    &:hover {
+    &:hover,
+    &:focus {
       color: currentColor;
     }
   }
@@ -259,7 +268,6 @@
 .btn-flat {
   background: transparent;
   border: 0;
-  outline: 0;
   line-height: $line-height-small;
   transition: color 0.25s, background 0.25s;
   .d-icon {
@@ -290,10 +298,6 @@
 .btn-link {
   background: transparent;
   border: 0;
-  outline: 0;
   padding: 0;
   color: var(--tertiary);
-  &:focus {
-    outline: 1px currentColor dotted;
-  }
 }

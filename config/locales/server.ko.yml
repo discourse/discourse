@@ -361,6 +361,7 @@ ko:
   bookmarks:
     errors:
       already_bookmarked_post: "동일한 게시물을 두 번 북마크 할 수 없습니다."
+      too_many: "죄송합니다. 북마크가 너무 많습니다. 일부를 삭제하려면 %{user_bookmarks_url}을 방문하세요."
       cannot_set_past_reminder: "과거에는 북마크 미리 알림을 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "앞으로 10 년 이상 책갈피 알림을 설정할 수 없습니다."
       time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
@@ -387,7 +388,6 @@ ko:
       email_already_used_in_category: "'%{email}' 는 '%{category_name}' 카테고리에서 이미 사용중입니다."
       cant_allow_membership_requests: "그룹 가입을 승인하려면 그룹 소유자의 승인이 필요합니다."
       already_requested_membership: "이 그룹의 회원 자격을 이미 요청하셨습니다."
-      adding_too_many_users: "한 번에 최대 %{limit}명의 사용자를 추가 할 수 있습니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -2477,22 +2477,6 @@ ko:
     flags_agreed_and_post_deleted:
       title: "직원이 신고 한 소식을 삭제했습니다."
       subject_template: "직원이 신고 한 소식을 삭제했습니다."
-      text_body_template: |
-        안녕하세요,
-
-        [사용자님의 게시물](%{base_url}%{url})이 삭제되었음을 알려 드리기 위해 %{site_name} 에서 보낸 자동 메시지입니다.
-
-        %{flag_reason}
-
-        이 게시물은 신고로 인해 관리자가 삭제하기로 결정했습니다.
-
-        [details="클릭해 삭제된 게시물 확인"]
-        ``` markdown
-        %{flagged_post_raw_content}
-        ```
-        [/details]
-
-        자세한 사항은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 살펴보세요.
     usage_tips:
       text_body_template: |
         신규 사용자를 위한 몇 가지 간단한 도움말은 [이 블로그 게시물](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)을 참조하세요.
@@ -3359,6 +3343,10 @@ ko:
     signup_after_reject:
       title: "거부 후 가입"
       subject_template: "%{site_name}에서 거부되었습니다."
+      text_body_template: |
+        관리자가 %{site_name}의 사용자님 계정을 거부했습니다.
+
+        %{reject_reason}
     signup:
       title: "가입하기"
       subject_template: "[%{email_prefix}] 새 계정 확인"

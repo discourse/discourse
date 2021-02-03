@@ -3,7 +3,7 @@ import { test } from "qunit";
 
 discourseModule("Unit | Controller | history", function () {
   test("displayEdit", async function (assert) {
-    const HistoryController = this.owner.lookup("controller:history");
+    const HistoryController = this.getController("history");
 
     HistoryController.setProperties({
       model: { last_revision: 3, current_revision: 3, can_edit: false },

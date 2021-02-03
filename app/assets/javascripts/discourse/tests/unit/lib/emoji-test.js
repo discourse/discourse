@@ -136,5 +136,18 @@ discourseModule("Unit | Utility | emoji", function () {
 
     // able to find middle of line search
     assert.equal(emojiSearch("check", { maxResults: 3 }).length, 3);
+
+    // appends diversity
+    assert.deepEqual(emojiSearch("woman_artist", { diversity: 5 }), [
+      "woman_artist:t5",
+    ]);
+    assert.deepEqual(emojiSearch("woman_artist", { diversity: 2 }), [
+      "woman_artist:t2",
+    ]);
+
+    // no diversity appended for emojis that can't be diversified
+    assert.deepEqual(emojiSearch("green_apple", { diversity: 3 }), [
+      "green_apple",
+    ]);
   });
 });

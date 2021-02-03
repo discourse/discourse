@@ -4,6 +4,7 @@ import componentTest, {
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const buildTopic = function (level, archetype = "regular") {
@@ -31,8 +32,12 @@ discourseModule(
     });
 
     componentTest("the header has a localized title", {
-      template:
-        "{{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}",
+      template: hbs`
+        {{topic-notifications-button
+          notificationLevel=topic.details.notification_level
+          topic=topic
+        }}
+      `,
 
       beforeEach() {
         this.set("topic", buildTopic(1));
@@ -56,8 +61,12 @@ discourseModule(
     });
 
     componentTest("the header has a localized title", {
-      template:
-        "{{topic-notifications-button notificationLevel=topic.details.notification_level topic=topic}}",
+      template: hbs`
+        {{topic-notifications-button
+          notificationLevel=topic.details.notification_level
+          topic=topic
+        }}
+      `,
 
       beforeEach() {
         I18n.translations.en.js.topic.notifications.tracking_pm.title = `${originalTranslation} PM`;

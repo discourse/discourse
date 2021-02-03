@@ -1339,7 +1339,7 @@ describe User do
 
   describe '#avatar_template' do
     it 'uses the small logo if the user is the system user' do
-      logo_small_url = UrlHelper.absolute(SiteSetting.logo_small.url)
+      logo_small_url = Discourse.store.cdn_url(SiteSetting.logo_small.url)
 
       expect(Discourse.system_user.avatar_template).to eq(logo_small_url)
     end

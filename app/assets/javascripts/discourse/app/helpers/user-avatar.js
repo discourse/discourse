@@ -1,4 +1,5 @@
 import { avatarImg, formatUsername } from "discourse/lib/utilities";
+import I18n from "I18n";
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { prioritizeNameInUx } from "discourse/lib/settings";
@@ -59,7 +60,10 @@ function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // preprend the username before the description
-          title = displayName + " - " + description;
+          title = I18n.t("user.avatar.name_and_description", {
+            name: displayName,
+            description,
+          });
         }
       }
     }

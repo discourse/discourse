@@ -5,12 +5,13 @@ import {
   discourseModule,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule("Integration | Component | iframed-html", function (hooks) {
   setupRenderingTest(hooks);
 
   componentTest("appends the html into the iframe", {
-    template: `{{iframed-html html="<h1 id='find-me'>hello</h1>" className='this-is-an-iframe'}}`,
+    template: hbs`{{iframed-html html="<h1 id='find-me'>hello</h1>" className='this-is-an-iframe'}}`,
 
     async test(assert) {
       const iframe = queryAll("iframe.this-is-an-iframe");

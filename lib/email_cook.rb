@@ -3,10 +3,6 @@
 # A very simple formatter for imported emails
 class EmailCook
 
-  def self.url_regexp
-    @url_regexp ||= /((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/
-  end
-
   def self.raw_regexp
     @raw_regexp ||= /^\[plaintext\]$\n(.*)\n^\[\/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[\/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[\/elided\]$)?/m
   end
@@ -25,17 +21,21 @@ class EmailCook
 
   def link_string!(line, unescaped_line)
     unescaped_line = unescaped_line.strip
-    unescaped_line.scan(EmailCook.url_regexp).each do |m|
-      url = m[0]
-
-      if unescaped_line == url
-        # this could be oneboxed
-        val = %|<a href="#{url}" class="onebox" target="_blank">#{url}</a>|
-      else
-        val = %|<a href="#{url}">#{url}</a>|
+    line.gsub!(/\S+/) do |str|
+      if str.match?(/^(https?:\/\/)[\S]+$/i)
+        begin
+          url = URI.parse(str).to_s
+          if unescaped_line == url
+            # this could be oneboxed
+            str = %|<a href="#{url}" class="onebox" target="_blank">#{url}</a>|
+          else
+            str = %|<a href="#{url}">#{url}</a>|
+          end
+        rescue URI::Error
+          # don't fail if uri does not parse
+        end
       end
-
-      line.gsub!(url, val)
+      str
     end
   end
 

@@ -444,7 +444,12 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
       already_requested_membership: "You have already requested membership for this group."
-      adding_too_many_users: "Maximum %{limit} users can be added at once"
+      adding_too_many_users:
+        one: "Maximum %{count} user can be added at once"
+        other: "Maximum %{count} users can be added at once"
+      usernames_or_emails_required: "Usernames or emails must be present"
+      no_invites_with_sso: "You can invite only registered users when SSO is enabled"
+      no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -1427,8 +1432,6 @@ en:
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
     missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
     bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
-    deprecated_api_usage: "We detected an API request using a deprecated authentication method. Please update it to use <a href='https://meta.discourse.org/t/-/22706'>header based auth</a>. After updating this message may take 24 hours to disappear."
-    update_mail_receiver: "We detected an outdated version of mail-receiver. Click <a href='https://meta.discourse.org/t/-/133491'>here</a> for update instructions. After updating this message may take 24 hours to disappear."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."
@@ -2361,6 +2364,8 @@ en:
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  # Example: "Original Poster, Most Recent Poster"
+  poster_description_joiner: ", "
 
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
@@ -2842,11 +2847,9 @@ en:
 
         This post was flagged by the community and a staff member opted to remove it.
 
-        [details="Click to expand removed post"]
         ``` markdown
         %{flagged_post_raw_content}
         ```
-        [/details]
 
         Please review our [community guidelines](%{base_url}/guidelines) for details.
 

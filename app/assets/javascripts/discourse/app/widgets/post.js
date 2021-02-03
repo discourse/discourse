@@ -403,7 +403,12 @@ createWidget("post-contents", {
       result.push(this.attach("expand-post-button", attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
+    const extraState = {
+      state: {
+        repliesShown: !!state.repliesBelow.length,
+        filteredRepliesShown: state.filteredRepliesShown,
+      },
+    };
     result.push(this.attach("post-menu", attrs, extraState));
 
     const repliesBelow = state.repliesBelow;
@@ -434,15 +439,24 @@ createWidget("post-contents", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
-  filterRepliesView() {
+  toggleFilteredRepliesView() {
     const post = this.findAncestorModel();
     const controller = this.register.lookup("controller:topic");
-    post
-      .get("topic.postStream")
-      .filterReplies(post.post_number, post.id)
-      .then(() => {
-        controller.updateQueryParams();
-      });
+    if (post.get("topic.postStream.filterRepliesToPostNumber")) {
+      controller.send(
+        "cancelFilter",
+        post.get("topic.postStream.filterRepliesToPostNumber")
+      );
+      this.state.filteredRepliesShown = false;
+    } else {
+      this.state.filteredRepliesShown = true;
+      post
+        .get("topic.postStream")
+        .filterReplies(post.post_number, post.id)
+        .then(() => {
+          controller.updateQueryParams();
+        });
+    }
   },
 
   toggleRepliesBelow(goToPost = "false") {

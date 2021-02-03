@@ -186,7 +186,7 @@ class PostDestroyer
   end
 
   def permanent?
-    @opts[:permanent] && @user == @post.user && @post.topic.private_message?
+    @opts[:force_destroy] || (@opts[:permanent] && @user == @post.user && @post.topic.private_message?)
   end
 
   # When a user 'deletes' their own post. We just change the text.
@@ -247,9 +247,10 @@ class PostDestroyer
   end
 
   def make_previous_post_the_last_one
-    last_post = Post
+    last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
       .select(:created_at, :user_id, :post_number)
       .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
+      .where.not(user_id: nil)
       .order('created_at desc')
       .limit(1)
       .first

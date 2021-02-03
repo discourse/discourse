@@ -7,8 +7,12 @@ export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
   attributeBindings: ["role", "selectKitId:data-select-kit-id"],
+  classNameBindings: ["emptyBody:empty-body"],
   selectKitId: computed("selectKit.uniqueID", function () {
     return `${this.selectKit.uniqueID}-body`;
+  }),
+  emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
+    return !this.selectKit.filter && this.selectKit.hasNoContent;
   }),
   rootEventType: "click",
 

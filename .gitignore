@@ -137,10 +137,8 @@ node_modules
 # ignore generated api documentation files
 openapi/*
 
-# ignore custom VSCode config files
-.vscode/*
-!.vscode/launch.json
-!.vscode/tasks.json
+# ignore VSCode config files
+.vscode
 
 # ignore direnv
 .envrc

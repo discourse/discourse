@@ -290,7 +290,7 @@ describe UserDestroyer do
         before do
           @post = Fabricate(:post_with_external_links, user: user)
           TopicLink.extract_from(@post)
-          TopicLink.any_instance.stubs(:internal).returns(true)
+          TopicLink.where(user: user).update_all(internal: true)
         end
 
         it "doesn't add ScreenedUrl records" do

@@ -779,4 +779,37 @@ RSpec.describe ListController do
       end
     end
   end
+
+  describe "shared drafts" do
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+
+    fab!(:topic1) { Fabricate(:topic, category: category1) }
+    fab!(:topic2) { Fabricate(:topic, category: category2) }
+
+    fab!(:shared_draft_topic) { Fabricate(:topic, category: category1) }
+    fab!(:shared_draft) { Fabricate(:shared_draft, topic: shared_draft_topic, category: category2) }
+
+    it "are not displayed if they are disabled" do
+      SiteSetting.shared_drafts_category = ""
+      sign_in(admin)
+
+      get "/c/#{category1.slug}/#{category1.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts']).to eq(nil)
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic1.id, shared_draft_topic.id)
+    end
+
+    it "are displayed in both shared drafts category and target category" do
+      SiteSetting.shared_drafts_category = category1.id
+      sign_in(admin)
+
+      get "/c/#{category1.slug}/#{category1.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts']).to be_nil
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic1.id, shared_draft_topic.id)
+
+      get "/c/#{category2.slug}/#{category2.id}.json"
+      expect(response.parsed_body['topic_list']['shared_drafts'].map { |t| t['id'] }).to contain_exactly(shared_draft_topic.id)
+      expect(response.parsed_body['topic_list']['topics'].map { |t| t['id'] }).to contain_exactly(topic2.id)
+    end
+  end
 end

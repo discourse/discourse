@@ -580,7 +580,6 @@ sk:
       posts: "Príspevky"
       topics: "Témy"
       latest: "Najnovšie"
-      latest_by: "najnovšie podľa"
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
       topic_sentence:
@@ -1055,15 +1054,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    all_time: "celkovo"
-    all_time_desc: "celkovo vytvorených tém"
-    year: "rok"
-    year_desc: "témy vytvorené za posledných 365 dní"
-    month: "mesiac"
-    month_desc: "témy vytvorené za posledných 30 dní"
-    week: "týždeň"
-    week_desc: "témy vytvorené za posledných 7 dní"
-    day: "deň"
     first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
@@ -1082,8 +1072,6 @@ sk:
       hidden_for_session: "Fajn, opýtam sa vás to zajtra. Stále môžete na vytvorenie účtu použiť aj možnosť 'Prihlásenie'."
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      description: "<b>%{replyCount}</b> odpovedí."
-      description_time: "<b>%{replyCount}</b> odpovedí s odhadovaným časom čítania <b>%{readingTime} minút</b>."
       enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
@@ -1214,9 +1202,6 @@ sk:
         other: "Zmienením %{group}, upozorníte <a href='%{group_link}'>%{count} ľudí</a> – ste si istý?"
       error:
         title_missing: "Názov je povinný"
-        title_too_short: "Názov musí mať minimálne %{min} znakov"
-        title_too_long: "Názov nesmie byť dlhší než %{max} znakov"
-        post_length: "Príspevok musí mať minimálne %{min} znakov"
         category_missing: "Musíte vybrať kategóriu"
       save_edit: "Uložiť úpravy"
       reply_original: "Odpovedať na pôvodnú tému"
@@ -1631,7 +1616,6 @@ sk:
         username_placeholder: "používateľské meno"
         action: "Pošli pozvánku"
         help: "pozvite ostatných k tejto téme prostredníctvom emailu, alebo upozornení"
-        to_forum: "Pošleme krátký email dovoľujúci Vášmu priateľovi okamžité pripojenie kliknutím na odkaz bez potreby prihlasovania"
         sso_enabled: "Zadajte používateľské meno osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_blank: "Zadajte používateľské meno alebo email osoby, ktorú by ste radi pozvali k tejto téme"
         to_topic_email: "Zadali ste emailovú adresu. Pošleme pozvánku ktorá umožní Vášmu priateľovi okamžitú odpoveď k tejto téme."
@@ -1706,7 +1690,6 @@ sk:
       quote_reply: "Citácia"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
-      last_edited_on: "príspevok naposledy upravený"
       reply_as_new_topic: "Odpoveď ako súvisiaca téma"
       continue_discussion: "Pokračovanie diskusie z %{postLink}:"
       follow_quote: "prejsť na citovaný príspevok"
