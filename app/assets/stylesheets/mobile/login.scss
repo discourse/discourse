@@ -10,6 +10,7 @@
     max-width: 350px;
     max-height: 90vh;
     position: relative;
+    overflow: hidden;
   }
 
   .close {
@@ -41,6 +42,7 @@
     margin: 0;
 
     button {
+      padding: 0.53em 0.53em 0.53em 0.43em;
       border: 1px solid var(--primary-low);
       max-width: 48%;
       flex: 1 1 47%;

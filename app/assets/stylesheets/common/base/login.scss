@@ -54,6 +54,12 @@
       align-self: center;
     }
   }
+  #login-buttons {
+    button {
+      justify-content: flex-start;
+      min-width: fit-content;
+    }
+  }
 }
 
 .login-modal:not(.hidden),
