@@ -4,17 +4,17 @@ import cookie from "discourse/lib/cookie";
 export default Component.extend({
   classNames: ["create-account"],
 
-  userInputFocus(e) {
-    let label = e.target.parentElement.previousElementSibling;
+  userInputFocus(event) {
+    let label = event.target.parentElement.previousElementSibling;
     if (!label.classList.contains("value-entered")) {
       label.classList.toggle("value-entered");
     }
   },
 
-  userInputFocusOut(e) {
-    let label = e.target.parentElement.previousElementSibling;
+  userInputFocusOut(event) {
+    let label = event.target.parentElement.previousElementSibling;
     if (
-      e.target.value.length === 0 &&
+      event.target.value.length === 0 &&
       label.classList.contains("value-entered")
     ) {
       label.classList.toggle("value-entered");
