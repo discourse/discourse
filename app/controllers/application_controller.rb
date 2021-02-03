@@ -545,10 +545,10 @@ class ApplicationController < ActionController::Base
   def rate_limit_second_factor!(user)
     return if params[:second_factor_token].blank?
 
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
 
     if user
-      RateLimiter.new(nil, "second-factor-min-#{user.username}", 3, 1.minute).performed!
+      RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
     end
   end
 

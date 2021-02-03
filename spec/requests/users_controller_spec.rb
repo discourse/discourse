@@ -331,7 +331,7 @@ describe UsersController do
 
           token = user.email_tokens.create!(email: user.email).token
 
-          3.times do
+          6.times do
             put "/u/password-reset/#{token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
@@ -353,7 +353,7 @@ describe UsersController do
 
           token = user.email_tokens.create!(email: user.email).token
 
-          3.times do |x|
+          6.times do |x|
             put "/u/password-reset/#{token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
@@ -4025,7 +4025,7 @@ describe UsersController do
       staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
       token = ROTP::TOTP.new(staged_totp_key).now
 
-      4.times do |x|
+      7.times do |x|
         post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }
       end
 
@@ -4040,7 +4040,7 @@ describe UsersController do
       staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
       token = ROTP::TOTP.new(staged_totp_key).now
 
-      4.times do |x|
+      7.times do |x|
         post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }, env: { "REMOTE_ADDR": "1.2.3.#{x}"  }
       end
 

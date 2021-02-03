@@ -1735,7 +1735,7 @@ RSpec.describe SessionController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do |x|
+        6.times do |x|
           post "/session.json", params: {
             login: "#{user.username}#{x}",
             password: 'myawesomepassword',
@@ -1761,7 +1761,7 @@ RSpec.describe SessionController do
         RateLimiter.enable
         RateLimiter.clear_all!
 
-        3.times do |x|
+        6.times do |x|
           post "/session.json", params: {
             login: user.username,
             password: 'myawesomepassword',

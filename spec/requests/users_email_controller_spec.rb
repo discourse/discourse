@@ -139,7 +139,7 @@ describe UsersEmailController do
           it "rate limits by IP" do
             freeze_time
 
-            3.times do
+            6.times do
               put "/u/confirm-new-email", params: {
                 token: "blah",
                 second_factor_token: "000000",
@@ -161,7 +161,7 @@ describe UsersEmailController do
           it "rate limits by username" do
             freeze_time
 
-            3.times do |x|
+            6.times do |x|
               user.email_change_requests.last.update(change_state: EmailChangeRequest.states[:complete])
               put "/u/confirm-new-email", params: {
                 token: user.email_tokens.last.token,
