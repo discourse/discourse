@@ -24,7 +24,7 @@
     padding: 0;
     position: absolute;
     top: 0.5em;
-    right: 0.5em;
+    right: 1em;
     z-index: 999;
   }
 
@@ -44,21 +44,36 @@
     button {
       padding: 0.53em 0.53em 0.53em 0.43em;
       border: 1px solid var(--primary-low);
-      max-width: 48%;
+      max-width: 49%;
       flex: 1 1 47%;
       margin: 0 0.5em 0.5em 0;
       font-size: $font-down-1;
       white-space: nowrap;
+      &:nth-child(even) {
+        margin: 0 0 0.5em 0;
+      }
     }
-    // 'right side' buttons
-    button:nth-child(even) {
-      margin: 0 0 0.5em 0;
+  }
+
+  @media screen and (max-width: 325px) {
+    #login-buttons:not(.hidden) {
+      justify-content: center;
+      button {
+        font-size: $font-down-2;
+      }
     }
   }
 
   #login-form, .login-form {
     padding: 1em;
     border-top: 1px solid var(--primary-low);
+    
+    form {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
+
     .input-group {
       input {
         height: 2.25em;
@@ -80,27 +95,14 @@
     }
   }
 
-  form {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-
   .user-fields .input-group {
     .text.user-field {
       label.control-label {
         top:8px;
       }
-      &.value-entered label.control-label {
-        top:-6px;
-        left: calc(1em - .25em);
-        background-color: var(--secondary);
-        padding: 0 .25em 0 .25em;
-        font-size:14px;
-        color:var(--primary-medium);
-      }
+      &.value-entered label.control-label,
       label.control-label.value-entered {
-        top:-6px;
+        top: -10px;
         left: calc(1em - .25em);
         background-color: var(--secondary);
         padding: 0 .25em 0 .25em;
@@ -108,13 +110,10 @@
         color:var(--primary-medium);
       }
     }
-    .controls {
-      width: 100%;
-      .checkbox-label {
-        align-items: center;
-        input[type="checkbox"].ember-checkbox {
-          height: 15px;
-        }
+    .controls .checkbox-label {
+      align-items: center;
+      input[type="checkbox"].ember-checkbox {
+        height: 15px;
       }
     }
   }
@@ -158,13 +157,6 @@
       float: left;
       display: block;
     }
-    textarea,
-    input,
-    select {
-      font-size: $font-up-1;
-      clear: left;
-      margin-top: 0;
-    }
   }
 }
 
@@ -199,16 +191,6 @@
   .user-field {
     display: flex;
     flex-direction: column;
-
-    > label {
-      width: auto;
-    }
-    .controls {
-      margin-left: 0;
-      label {
-        line-height: $line-height-medium;
-      }
-    }
   }
 }
 

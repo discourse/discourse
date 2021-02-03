@@ -18,7 +18,7 @@
         <div id="credentials" class={{credentialsClass}}>
           <div class="input-group">
             {{input value=loginName class=(value-entered loginName)type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled=showSecondFactor}}
-            <label class="alt-placeholder" for="login-account-name">{{i18n "login.username"}}</label>
+            <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
           </div>
           <div class="input-group">
             {{input value=loginPassword class=(value-entered loginPassword) type="password" id="login-account-password" maxlength="200" disabled=showSecondFactor}}

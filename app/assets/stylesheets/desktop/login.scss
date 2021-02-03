@@ -191,7 +191,7 @@
       );
     }
     &:before {
-      top: calc(7em + 5px);
+      top: calc(7em + 4px);
       height: 1em;
       background-image: linear-gradient(
         to top,
@@ -249,7 +249,6 @@
         flex-direction: column;
         justify-content: flex-start;
         background: var(--tertiary);
-        width: calc(35% - 2em);
         bottom: 0;
       }
   }}

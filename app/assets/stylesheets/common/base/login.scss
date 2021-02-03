@@ -12,6 +12,7 @@
   display: none;
 }
 
+// Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal {
   .modal-inner-container {
@@ -21,14 +22,12 @@
     padding: 0;
   }
   .modal-header {
-    display: flex;
-    border: none;
-    align-items: flex-end;
+    border-bottom: none;
     padding: 0;
     position: absolute;
     top: 0.5em;
     right: 1em;
-    z-index: 999;
+    z-index: 1;
   }
   .login-welcome-header {
     position: -webkit-sticky;
@@ -60,8 +59,18 @@
       min-width: fit-content;
     }
   }
+  .modal-footer {
+    .inline-spinner {
+      display: inline-flex;
+    }
+  }
+  &.awaiting-approval {
+    display: none;
+  }
 }
 
+
+// Login Form Styles
 .login-modal:not(.hidden),
 .create-account {
   #login-form,.login-form {
@@ -69,7 +78,10 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 2em;
+      margin-bottom: 1em;
+      &:last-child {
+        margin-bottom: 2em;
+      }
       input {
         padding: .75em .5em;
         border-radius: 0.25em;
@@ -113,23 +125,13 @@
     .user-fields .input-group {
       .user-field {
         &.text {
-          &.value-entered label.control-label {
-            top:-8px;
-            left: calc(1em - .25em);
-            background-color: var(--secondary);
-            padding: 0 .25em 0 .25em;
-            font-size:14px;
-            color:var(--primary-high);
-          }
           label.control-label {
           color:var(--primary-medium); 
           font-size:16px;
-          font-weight:normal;
           position:absolute;
           pointer-events:none;
           left: 1em;
-          top:12px;
-          box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
+          top:18px;
           transition:0.2s ease all;
           max-width: calc(100% - 2em);
           white-space: nowrap;
@@ -137,8 +139,9 @@
           overflow: hidden;
           text-overflow: ellipsis;
           }
+          &.value-entered label.control-label,
           label.control-label.value-entered {
-            top:-8px;
+            top:-4px;
             left: calc(1em - .25em);
             background-color: var(--secondary);
             padding: 0 .25em 0 .25em;
@@ -146,13 +149,10 @@
             color:var(--primary-high);
           }
         }
-        .controls {
-          width: 100%;
-          .checkbox-label {
-            input[type="checkbox"].ember-checkbox {
-              width: 1em !important;
-              min-width: unset;
-            }
+        .controls .checkbox-label {
+          input[type="checkbox"].ember-checkbox {
+            width: 1em !important;
+            min-width: unset;
           }
         }
       }
@@ -164,18 +164,6 @@
   cursor: pointer;
 }
 
-.login-modal,
-.create-account {
-  .modal-footer {
-    .inline-spinner {
-      display: inline-flex;
-    }
-  }
-  &.awaiting-approval {
-    display: none;
-  }
-}
-
 .create-account {
   .disclaimer {
     color: var(--primary-medium);
@@ -183,31 +171,14 @@
   }
 
   .user-field {
-    > label {
-      margin-top: 0.75em;
-      margin-bottom: 0;
-      padding-top: 5px;
-    }
-    &:first-of-type > label {
-      margin-top: 0;
-    }
-
     input[type="text"] {
       margin-bottom: 0;
       width: 100%;
     }
-
     .select-kit {
       width: 100%;
     }
-
     .controls {
-      padding-top: 5px;
-      label {
-        width: auto;
-        text-align: left;
-        font-weight: normal;
-      }
       .instructions {
         margin-top: 0.15em;
         color: var(--primary-medium);

@@ -159,7 +159,6 @@
   background: var(--secondary);
   border: 1px solid transparent;
   &:hover {
-    // border: 1px solid rgba(var(--primary-rgb),.25);
     color: var(--primary) !important;
     background: var(--secondary) !important;
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
@@ -174,7 +173,6 @@
   &.google_oauth2 {
     background: var(--google);
     color: #333;
-    border: 1px solid var(--primary-low);
     // non-FA SVG icon for Google in login-buttons.hbs
     .d-icon {
       opacity: 0.9;
