@@ -328,6 +328,58 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.equal(state.countNew(4), 0);
   });
 
+  test("dismissNew", function (assert) {
+    let currentUser = User.create({
+      username: "chuck",
+    });
+
+    const state = TopicTrackingState.create({ currentUser });
+
+    state.states["t112"] = {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1,
+      is_seen: false,
+      tags: ["foo"],
+    };
+
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      topic_id: 112,
+      payload: { category_id: 2 },
+    });
+    assert.equal(state.states["t112"].is_seen, false);
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      topic_id: 112,
+      payload: { category_id: 1 },
+    });
+    assert.equal(state.states["t112"].is_seen, true);
+
+    state.states["t112"].is_seen = false;
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      topic_id: 112,
+      payload: { tag_id: "bar" },
+    });
+    assert.equal(state.states["t112"].is_seen, false);
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      topic_id: 112,
+      payload: { tag_id: "foo" },
+    });
+    assert.equal(state.states["t112"].is_seen, true);
+
+    state.states["t112"].is_seen = false;
+    state.dismissNewTopic({
+      message_type: "dismiss_new",
+      topic_id: 112,
+      payload: {},
+    });
+    assert.equal(state.states["t112"].is_seen, true);
+  });
+
   test("mute and unmute topic", function (assert) {
     let currentUser = User.create({
       username: "chuck",

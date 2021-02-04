@@ -899,8 +899,11 @@ class TopicsController < ApplicationController
       end
       DismissTopics.new(current_user, Topic.where(category_id: category_ids)).perform!
       category_ids.each do |category_id|
-        TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
+        TopicTrackingState.publish_dismiss_new(current_user.id, category_id: category_id)
       end
+    elsif params[:tag_id].present?
+      DismissTopics.new(current_user, Topic.joins(:tags).where(tags: { name: params[:tag_id] })).perform!
+      TopicTrackingState.publish_dismiss_new(current_user.id, tag_id: params[:tag_id])
     else
       if params[:tracked].to_s == "true"
         topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)

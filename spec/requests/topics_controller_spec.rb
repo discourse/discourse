@@ -2873,7 +2873,7 @@ RSpec.describe TopicsController do
       it 'dismisses topics for main category' do
         sign_in(user)
 
-        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category.id.to_s)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, category_id: category.id.to_s)
 
         put "/topics/reset-new.json?category_id=#{category.id}"
 
@@ -2885,6 +2885,20 @@ RSpec.describe TopicsController do
         put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
         expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq([category_topic.id, subcategory_topic.id].sort)
+      end
+    end
+
+    context 'tag' do
+      fab!(:tag) { Fabricate(:tag) }
+      fab!(:tag_topic) { Fabricate(:topic) }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
+      fab!(:topic) { Fabricate(:topic) }
+
+      it 'dismisses topics for tag' do
+        sign_in(user)
+        TopicTrackingState.expects(:publish_dismiss_new).with(user.id, tag_id: tag.name)
+        put "/topics/reset-new.json?tag_id=#{tag.name}"
+        expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
       end
     end
   end

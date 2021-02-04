@@ -775,6 +775,11 @@ Topic.reopenClass({
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
+  resetNewTag(tag) {
+    const data = { tag_id: tag.id };
+    return ajax("/topics/reset-new", { type: "PUT", data });
+  },
+
   idForSlug(slug) {
     return ajax(`/t/id_for/${slug}`);
   },

@@ -4,6 +4,7 @@ import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
+import Topic from "discourse/models/topic";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import { queryParams } from "discourse/controllers/discovery-sortable";
@@ -109,9 +110,18 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     return this.isFilterPage(filter, "unread") && topicsLength > 0;
   },
 
+  @discourseComputed("list.filter", "list.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this.isFilterPage(filter, "new") && topicsLength > 0;
+  },
+
   actions: {
     dismissReadPosts() {
       showModal("dismiss-read", { title: "topics.bulk.dismiss_read" });
+    },
+
+    resetNew() {
+      Topic.resetNewTag(this.tag).then(() => this.send("refresh", {}));
     },
 
     changeSort(order) {
