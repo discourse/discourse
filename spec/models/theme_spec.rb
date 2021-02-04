@@ -795,13 +795,16 @@ HTML
       expect(css).to include("p{color:blue}")
     end
 
-    it "works for child themes" do
+    it "works for child themes and includes child theme SCSS in parent theme" do
       child_theme.set_field(target: :common, name: :scss, value: '@import "my_files/moremagic"')
       child_theme.save!
 
       manager = Stylesheet::Manager.new(:desktop_theme, child_theme.id)
       css, _map = manager.compile(force: true)
       expect(css).to include("body{background:green}")
+
+      parent_css, _parent_map = compiler
+      expect(parent_css).to include("body{background:green}")
     end
 
   end

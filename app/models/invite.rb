@@ -39,6 +39,7 @@ class Invite < ActiveRecord::Base
 
   validate :ensure_max_redemptions_allowed
   validate :user_doesnt_already_exist
+  validate :ensure_no_invalid_email_invites
   attr_accessor :email_already_exists
 
   scope :single_use_invites, -> { where('invites.max_redemptions_allowed = 1') }
@@ -353,6 +354,16 @@ class Invite < ActiveRecord::Base
       if !self.max_redemptions_allowed.between?(2, SiteSetting.invite_link_max_redemptions_limit)
         errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: SiteSetting.invite_link_max_redemptions_limit))
       end
+    end
+  end
+
+  def ensure_no_invalid_email_invites
+    return if email.blank?
+
+    if SiteSetting.enable_sso?
+      errors.add(:email, I18n.t("invite.disabled_errors.sso_enabled"))
+    elsif !SiteSetting.enable_local_logins?
+      errors.add(:email, I18n.t("invite.disabled_errors.local_logins_disabled"))
     end
   end
 end

@@ -231,6 +231,7 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
 
   has_many :topic_users
+  has_many :dismissed_topic_users
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
@@ -250,6 +251,7 @@ class Topic < ActiveRecord::Base
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :category_user_data
+  attr_accessor :dismissed
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants

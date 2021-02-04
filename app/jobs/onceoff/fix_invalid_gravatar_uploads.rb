@@ -6,7 +6,7 @@ module Jobs
       Upload.where(original_filename: "gravatar.png").find_each do |upload|
         # note, this still feels pretty expensive for a once off
         # we may need to re-evaluate this
-        extension = FastImage.type(Discourse.store.path_for(upload))
+        extension = FastImage.type(Discourse.store.path_for(upload)) rescue nil
         current_extension = upload.extension
 
         if extension.to_s.downcase != current_extension.to_s.downcase

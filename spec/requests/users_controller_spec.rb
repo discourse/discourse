@@ -323,7 +323,6 @@ describe UsersController do
       end
 
       context "rate limiting" do
-
         before { RateLimiter.clear_all!; RateLimiter.enable }
         after  { RateLimiter.disable }
 
@@ -332,7 +331,7 @@ describe UsersController do
 
           token = user.email_tokens.create!(email: user.email).token
 
-          3.times do
+          6.times do
             put "/u/password-reset/#{token}", params: {
               second_factor_token: 123456,
               second_factor_method: 1
@@ -349,6 +348,27 @@ describe UsersController do
           expect(response.status).to eq(429)
         end
 
+        it "rate limits reset passwords by username" do
+          freeze_time
+
+          token = user.email_tokens.create!(email: user.email).token
+
+          6.times do |x|
+            put "/u/password-reset/#{token}", params: {
+              second_factor_token: 123456,
+              second_factor_method: 1
+            }, env: { "REMOTE_ADDR": "1.2.3.#{x}" }
+
+            expect(response.status).to eq(200)
+          end
+
+          put "/u/password-reset/#{token}", params: {
+            second_factor_token: 123456,
+            second_factor_method: 1
+          }, env: { "REMOTE_ADDR": "1.2.3.4" }
+
+          expect(response.status).to eq(429)
+        end
       end
 
       context '2 factor authentication required' do
@@ -3995,6 +4015,36 @@ describe UsersController do
 
       expect(response.status).to eq(200)
       expect(user.user_second_factors.count).to eq(1)
+    end
+
+    it "rate limits by IP address" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }
+      end
+
+      expect(response.status).to eq(429)
+    end
+
+    it "rate limits by username" do
+      RateLimiter.enable
+      RateLimiter.clear_all!
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      7.times do |x|
+        post "/users/enable_second_factor_totp.json", params: { name: "test", second_factor_token: token  }, env: { "REMOTE_ADDR": "1.2.3.#{x}"  }
+      end
+
+      expect(response.status).to eq(429)
     end
 
     context "when an incorrect token is provided" do

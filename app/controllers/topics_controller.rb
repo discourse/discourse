@@ -897,12 +897,8 @@ class TopicsController < ApplicationController
       if params[:include_subcategories] == 'true'
         category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
       end
+      DismissTopics.new(current_user, Topic.where(category_id: category_ids)).perform!
       category_ids.each do |category_id|
-        current_user
-          .category_users
-          .where(category_id: category_id)
-          .first_or_initialize
-          .update!(last_seen_at: Time.zone.now)
         TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
       end
     else

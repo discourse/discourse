@@ -27,8 +27,7 @@
     }
 
     &:focus {
-      outline: 1px solid var(--tertiary);
-      outline-offset: 0;
+      @include default-focus;
     }
   }
 

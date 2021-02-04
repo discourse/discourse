@@ -38,7 +38,7 @@ describe ThemesInstallTask do
     end
 
     let :scss_data do
-      "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
+      "@font-face { font-family: magic; src: url($font)}; body {color: fuchsia;}"
     end
 
     let :theme_repo do
