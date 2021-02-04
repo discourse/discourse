@@ -98,7 +98,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
         Time.zone.now - topic.created_at
       end
 
-    # all of the results above are in seconds, this brings them]
+    # all of the results above are in seconds, this brings them
     # back to the actual minutes integer
     num_minutes = (num_minutes / 1.minute).round
 
