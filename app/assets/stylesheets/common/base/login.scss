@@ -65,11 +65,11 @@
   }
 }
 
-
 // Login Form Styles
 .login-modal:not(.hidden),
 .create-account {
-  #login-form,.login-form {
+  #login-form,
+  .login-form {
     .input-group {
       position: relative;
       display: flex;
@@ -79,7 +79,7 @@
         margin-bottom: 2em;
       }
       input {
-        padding: .75em .5em;
+        padding: 0.75em 0.5em;
         border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
@@ -87,28 +87,29 @@
       input:focus {
         outline: none;
         border: 1px solid var(--tertiary);
-        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb),.25);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
       }
       label.more-info {
         color: var(--primary-medium);
       }
       label.alt-placeholder {
-        color: var(--primary-medium); 
-        font-size:16px;
-        font-weight:normal;
-        position:absolute;
-        pointer-events:none;
+        color: var(--primary-medium);
+        font-size: 16px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
         left: 1em;
-        top:10px;
-        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb),.0);
-        transition:0.2s ease all; 
+        top: 10px;
+        box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+        transition: 0.2s ease all;
       }
-      input:focus + label.alt-placeholder, input.value-entered + label.alt-placeholder {
-        top:-8px;
-        left: calc(1em - .25em);
+      input:focus + label.alt-placeholder,
+      input.value-entered + label.alt-placeholder {
+        top: -8px;
+        left: calc(1em - 0.25em);
         background-color: var(--secondary);
-        padding: 0 .25em 0 .25em;
-        font-size:$font-down-1;
+        padding: 0 0.25em 0 0.25em;
+        font-size: $font-down-1;
         color: var(--primary-medium);
       }
       input.alt-placeholder:invalid {
@@ -122,27 +123,27 @@
       .user-field {
         &.text {
           label.control-label {
-          color:var(--primary-medium); 
-          font-size:16px;
-          position:absolute;
-          pointer-events:none;
-          left: 1em;
-          top:12px;
-          transition:0.2s ease all;
-          max-width: calc(100% - 2em);
-          white-space: nowrap;
-          display: inline-block;
-          overflow: hidden;
-          text-overflow: ellipsis;
+            color: var(--primary-medium);
+            font-size: 16px;
+            position: absolute;
+            pointer-events: none;
+            left: 1em;
+            top: 12px;
+            transition: 0.2s ease all;
+            max-width: calc(100% - 2em);
+            white-space: nowrap;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
           &.value-entered label.control-label,
           label.control-label.value-entered {
-            top:-8px;
-            left: calc(1em - .25em);
+            top: -8px;
+            left: calc(1em - 0.25em);
             background-color: var(--secondary);
-            padding: 0 .25em 0 .25em;
-            font-size:14px;
-            color:var(--primary-high);
+            padding: 0 0.25em 0 0.25em;
+            font-size: 14px;
+            color: var(--primary-high);
           }
         }
         .controls .checkbox-label {

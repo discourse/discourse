@@ -46,16 +46,17 @@
       justify-content: center;
       button {
         font-size: $font-down-2;
-      &:nth-child(even) {
-        margin: 0 0 0.5em 0;
+        &:nth-child(even) {
+          margin: 0 0 0.5em 0;
         }
       }
     }
   }
 
-  #login-form, .login-form {
+  #login-form,
+  .login-form {
     padding: 1em;
-    
+
     form {
       display: flex;
       justify-content: center;
@@ -69,10 +70,11 @@
       }
       margin-bottom: 1em;
       label.alt-placeholder {
-        top:8px;
+        top: 8px;
       }
-      input:focus + label, input.value-entered + label.alt-placeholder {
-        top:-10px;
+      input:focus + label,
+      input.value-entered + label.alt-placeholder {
+        top: -10px;
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
@@ -86,16 +88,16 @@
   .user-fields .input-group {
     .text.user-field {
       label.control-label {
-        top:8px;
+        top: 8px;
       }
       &.value-entered label.control-label,
       label.control-label.value-entered {
         top: -10px;
-        left: calc(1em - .25em);
+        left: calc(1em - 0.25em);
         background-color: var(--secondary);
-        padding: 0 .25em 0 .25em;
-        font-size:14px;
-        color:var(--primary-medium);
+        padding: 0 0.25em 0 0.25em;
+        font-size: 14px;
+        color: var(--primary-medium);
       }
     }
     .controls .checkbox-label {

@@ -8,9 +8,9 @@
     padding: 15px 16px;
   }
   .btn-flat.btn.modal-close svg {
-    color: rgba(var(--primary-rgb),0.5);
+    color: rgba(var(--primary-rgb), 0.5);
     &:hover {
-      color: rgba(var(--primary-rgb),0.85);
+      color: rgba(var(--primary-rgb), 0.85);
     }
   }
   #login-buttons:not(.hidden) {
@@ -117,7 +117,7 @@
             color: #000 !important;
           }
           &:hover {
-            box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
+            box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
             .d-icon {
               color: #000 !important;
             }
@@ -128,7 +128,7 @@
   }
   @media (prefers-color-scheme: dark) {
     .login-right-side {
-      background: rgba(var(--tertiary-rgb),0.5);
+      background: rgba(var(--tertiary-rgb), 0.5);
     }
   }
   .modal-body,
@@ -155,7 +155,7 @@
     }
     @media (prefers-color-scheme: dark) {
       .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-        background: rgba(var(--tertiary-rgb),0.5);
+        background: rgba(var(--tertiary-rgb), 0.5);
       }
     }
     .modal-footer {
@@ -166,9 +166,9 @@
     display: grid;
     grid-template-columns: 65% 35%;
     grid-template-rows: 20% 80%;
-    grid-template-areas: 
-    "header login-buttons"
-    "form login-buttons";
+    grid-template-areas:
+      "header login-buttons"
+      "form login-buttons";
   }
   .create-account-login-buttons {
     grid-area: login-buttons;
@@ -244,28 +244,28 @@
         width: 100%;
       }
       label.alt-placeholder {
-        top:12px;
+        top: 12px;
       }
     }
     .password-confirmation {
       display: none;
     }
-    scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
+    scrollbar-color: rgba(var(--primary-rgb), 0.5) transparent;
     &::-webkit-scrollbar {
       width: 15px;
     }
-    
+
     &::-webkit-scrollbar-track {
       box-shadow: inset 0 0 14px 14px transparent;
       border: 4px solid transparent;
     }
-    
+
     &::-webkit-scrollbar-thumb {
-      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb),0.5);
+      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb), 0.5);
       border: 4px solid transparent;
       border-radius: 14px;
     }
-    
+
     /* set button(top and bottom of the scrollbar) */
     &::-webkit-scrollbar-button {
       display: none;

@@ -161,7 +161,8 @@
 // Social buttons
 // --------------------------------------------------
 
-.btn-social, .login-with-email-button {
+.btn-social,
+.login-with-email-button {
   border-radius: 0.25em;
   color: #000;
   background: #ffffff;
@@ -169,7 +170,7 @@
   &:hover {
     color: #000 !important;
     background: #ececec !important;
-    box-shadow: 0 0 0 2px rgba(var(--primary-rgb),.25);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
   }
   &[href] {
     color: var(--secondary);
