@@ -328,7 +328,9 @@
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
-      &:hover {
+      &:hover,
+      &:focus {
+        outline: none;
         color: var(--danger);
       }
     }
