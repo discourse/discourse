@@ -146,7 +146,7 @@ export default Controller.extend(ModalFunctionality, {
       if (
         this.get("topicTimer.duration_minutes") &&
         !this.get("topicTimer.updateTime") &&
-        this.get("topicTimer.duration_minutes") < 1
+        this.get("topicTimer.duration_minutes") <= 0
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.min_duration"),
