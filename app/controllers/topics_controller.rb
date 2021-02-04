@@ -473,6 +473,7 @@ class TopicsController < ApplicationController
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
     options.merge!(duration_minutes: params[:duration_minutes].to_i) if params[:duration_minutes].present?
+    options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     topic_status_update = topic.set_or_create_timer(
       status_type,
