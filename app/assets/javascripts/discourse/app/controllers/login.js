@@ -18,6 +18,7 @@ import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import { helperContext } from "discourse-common/lib/helpers";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -63,9 +64,12 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed()
-  skinToneId() {
+  wavingHandURL() {
+    const emojiSet = helperContext().siteSettings.emoji_set;
+
     // random number between 2 -6 to render multiple skin tone waving hands
-    return Math.floor(Math.random() * (7 - 2) + 2);
+    const random = Math.floor(Math.random() * (7 - 2) + 2);
+    return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
   },
 
   @discourseComputed("showSecondFactor", "showSecurityKey")
