@@ -7,6 +7,12 @@
   #modal-alert {
     padding: 15px 16px;
   }
+  .btn-flat.btn.modal-close svg {
+    color: rgba(var(--primary-rgb),0.5);
+    &:hover {
+      color: rgba(var(--primary-rgb),0.85);
+    }
+  }
   #login-buttons:not(.hidden) {
     display: flex;
     flex: 0 1 auto;
@@ -83,6 +89,9 @@
       flex-direction: column;
       align-items: flex-start !important;
     }
+    #login-form {
+      margin: 1em 0 0 0;
+    }
     .modal-footer {
       display: flex;
       flex-direction: row;
@@ -141,99 +150,32 @@
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
-      scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
       background: var(--tertiary);
-      flex-direction: row-reverse;
+      overflow: hidden;
     }
     @media (prefers-color-scheme: dark) {
       .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
         background: rgba(var(--tertiary-rgb),0.5);
       }
     }
-    // Safari Hack
-    @media not all and (min-resolution:.001dpcm)
-    { @supports (-webkit-appearance:none) {
-        .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-          will-change: transform;
-          flex-direction: unset;
-        }
-    }}
-    .modal-body::-webkit-scrollbar {
-      width: 15px;
-    }
-    
-    .modal-body::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 14px 14px transparent;
-      border: 4px solid transparent;
-    }
-    
-    .modal-body::-webkit-scrollbar-thumb {
-      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb),0.5);
-      border: 4px solid transparent;
-      border-radius: 14px;
-    }
-    
-    /* set button(top and bottom of the scrollbar) */
-    .modal-body::-webkit-scrollbar-button {
-      display: none;
-    }
     .modal-footer {
       height: calc(94px - 23px);
     }
   }
   .create-account-form {
-    &:after,
-    &:before {
-      content: "";
-      display: block;
-      position: absolute;
-      width: calc(65% - 19px);
-      pointer-events: none;
-      z-index: 100;
-    }
-    &:after {
-      bottom: 96px;
-      height: 1em;
-      background-image: linear-gradient(
-        to bottom,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 0.9)
-      );
-    }
-    &:before {
-      top: calc(7em + 4px);
-      height: 1em;
-      background-image: linear-gradient(
-        to top,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
-      );
-    }
-    flex-basis: 65%;
-    flex-grow: 1;
-    height: 100%;
-    background: var(--secondary);
+    display: grid;
+    grid-template-columns: 65% 35%;
+    grid-template-rows: 20% 80%;
+    grid-template-areas: 
+    "header login-buttons"
+    "form login-buttons";
   }
-  // Safari hack
-  @media not all and (min-resolution:.001dpcm)
-  { @supports (-webkit-appearance:none) {
-      .create-account-form {
-        width: 65%;
-        flex-basis: unset;
-        flex-grow: 0;
-      }
-    }}
   .create-account-login-buttons {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    padding: 1em 0 0 1em;
+    grid-area: login-buttons;
+    padding: 1em;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-content: center;
-    flex-basis: 35%;
-    flex-grow: 1;
     h3 {
       color: var(--secondary);
       text-align: center;
@@ -247,26 +189,12 @@
       }
     }
   }
-  // Safari Hack
-  @media not all and (min-resolution:.001dpcm)
-  { @supports (-webkit-appearance:none) {
-      .create-account-login-buttons {
-        position: absolute;
-        top: 0;
-        right: 1em;
-        padding: 6em 0 0 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        bottom: 0;
-        width: 32%;
-      }
-  }}
   .modal-body {
     display: flex;
     padding: 0;
   }
   .login-welcome-header {
+    grid-area: header;
     padding: 1em 1em 1em 1em;
     h1 {
       font-size: 2.75em;
@@ -280,10 +208,36 @@
   .login-form {
     background: var(--secondary);
     padding: 1em;
-    position: relative;
-    display: flex;
-    flex-direction: column; 
-    
+    grid-area: form;
+    overflow-y: scroll;
+    &:after,
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 65%;
+      pointer-events: none;
+      z-index: 100;
+      margin-left: -1em;
+    }
+    &:after {
+      bottom: 96px;
+      height: 1em;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 0.9)
+      );
+    }
+    &:before {
+      top: calc(8em + 4px);
+      height: 1em;
+      background-image: linear-gradient(
+        to top,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
+      );
+    }
     .input-group {
       margin-bottom: 1em;
       input {
@@ -294,6 +248,26 @@
       }
     }
     .password-confirmation {
+      display: none;
+    }
+    scrollbar-color: rgba(var(--primary-rgb),0.5) transparent;
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 14px 14px transparent;
+      border: 4px solid transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb),0.5);
+      border: 4px solid transparent;
+      border-radius: 14px;
+    }
+    
+    /* set button(top and bottom of the scrollbar) */
+    &::-webkit-scrollbar-button {
       display: none;
     }
   }

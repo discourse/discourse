@@ -7,19 +7,19 @@
         {{loading-spinner size="large"}}
       {{/if}}
 
-      {{#unless hasAuthOptions}}
-        <div class="create-account-login-buttons">
-          {{login-buttons externalLogin=(action "externalLogin")}}
-        </div>
-      {{/unless}}
-
       {{#if showCreateForm}}
         <div class="create-account-form">
           <div class="login-welcome-header">
             <h1>{{i18n "create_account.header_title"}}</h1> <img src="/images/emoji/twitter/wave/{{skinToneId}}.png" alt="" class="waving-hand">
             <p>{{i18n "create_account.subheader_title"}}</p>
           </div>
+          {{#unless hasAuthOptions}}
+            <div class="create-account-login-buttons">
+              {{login-buttons externalLogin=(action "externalLogin")}}
+            </div>
+          {{/unless}}
           <div class="login-form">
+
             <form>
               <div class="input-group">
                 {{#if emailValidated}}

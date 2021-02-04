@@ -25,19 +25,15 @@
     border-bottom: none;
     padding: 0;
     position: absolute;
-    top: 0.5em;
+    top: 1em;
     right: 1em;
-    z-index: 1;
+    z-index: 999;
   }
   .login-welcome-header {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
     z-index: 100;
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
-    margin-bottom: 1em;
     background: var(--secondary);
     h1 {
       margin-bottom: 0;

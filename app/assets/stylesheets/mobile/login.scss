@@ -17,17 +17,6 @@
     padding: 0;
   }
 
-  .modal-header {
-    display: flex;
-    border: none;
-    align-items: flex-end;
-    padding: 0;
-    position: absolute;
-    top: 0.5em;
-    right: 1em;
-    z-index: 999;
-  }
-
   .login-welcome-header {
     padding: 1.5em 1em;
     margin: 0 auto;
@@ -66,7 +55,6 @@
 
   #login-form, .login-form {
     padding: 1em;
-    border-top: 1px solid var(--primary-low);
     
     form {
       display: flex;
@@ -166,8 +154,22 @@
 
 #discourse-modal .create-account .modal-body {
   max-height: 60vh !important;
+  overflow: hidden;
   @media screen and (max-height: 575px) {
     max-height: 50vh !important;
+  }
+}
+
+.d-modal.create-account {
+  .create-account-form {
+    overflow-y: auto;
+    .login-welcome-header {
+      width: calc(100% - 2em);
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+      background-color: var(--secondary);
+    }
   }
 }
 
