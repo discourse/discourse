@@ -1648,8 +1648,9 @@ class Topic < ActiveRecord::Base
   def update_category_topic_count_by(num)
     if category_id.present?
       Category
-        .where(['id = ?', category_id])
-        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+        .where('id = ?', category_id)
+        .where('topic_id != ?', self.id)
+        .update_all("topic_count = topic_count + #{num.to_i}")
     end
   end
 
