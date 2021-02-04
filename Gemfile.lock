@@ -93,7 +93,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    css_parser (1.8.0)
+    css_parser (1.9.0)
       addressable
     debug_inspector (1.0.0)
     diff-lcs (1.4.4)
