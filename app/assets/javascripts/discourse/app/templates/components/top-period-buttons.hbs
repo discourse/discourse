@@ -1,5 +1,3 @@
 {{#each periods as |p|}}
-  {{#d-button action=(action "changePeriod") class="btn-default" actionParam=p}}
-    {{period-title p}}
-  {{/d-button}}
+  {{d-button action=(action "changePeriod") class="btn-default" actionParam=p  translatedLabel=(period-title p)}}
 {{/each}}
