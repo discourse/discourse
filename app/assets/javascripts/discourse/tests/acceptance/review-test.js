@@ -49,7 +49,7 @@ acceptance("Review", function (needs) {
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer button[aria-label='Close']");
+    await click(".modal-footer button[aria-label='cancel']");
 
     await click(
       `${user} .reviewable-actions button[data-name="Delete User..."]`

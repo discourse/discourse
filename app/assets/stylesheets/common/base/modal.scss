@@ -167,16 +167,16 @@
   align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
+  --btn-bottom-margin: 0.3em;
   .btn {
-    margin: 0 0.3em 0 0;
+    margin: 0 0.75em var(--btn-bottom-margin) 0;
     &[href] {
       min-height: unset;
     }
   }
 
-  .btn,
   a {
-    margin-bottom: 0.3em;
+    margin-bottom: var(--btn-bottom-margin);
   }
 }
 
