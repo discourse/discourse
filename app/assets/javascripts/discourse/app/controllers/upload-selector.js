@@ -56,7 +56,7 @@ export default Controller.extend(ModalFunctionality, {
         const imageUrl = this.imageUrl || "";
         const toolbarEvent = this.toolbarEvent;
 
-        if (imageUrl.match(/\.(jpg|jpeg|png|gif|heic|heif)$/)) {
+        if (imageUrl.match(/\.(jpg|jpeg|png|gif|heic|heif|webp)$/)) {
           toolbarEvent.addText(`![](${imageUrl})`);
         } else {
           toolbarEvent.addText(imageUrl);
