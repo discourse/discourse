@@ -28,6 +28,12 @@ describe DismissTopics do
       expect(dismissed_topic_user.created_at).not_to be_nil
     end
 
+    it 'respects seen topics' do
+      Fabricate(:topic_user, user: user, topic: topic1)
+      Fabricate(:topic_user, user: user, topic: topic2)
+      expect { described_class.new(user, Topic.all).perform! }.to change { DismissedTopicUser.count }.by(0)
+    end
+
     it 'respects new_topic_duration_minutes' do
       user.user_option.update!(new_topic_duration_minutes: 70)
 

@@ -186,7 +186,7 @@ const TopicTrackingState = EmberObject.extend({
       const topic = this.states[k];
       if (
         (!data.payload.category_id ||
-          topic.category_id === parseInt(data.payload.category_id, 0)) &&
+          topic.category_id === parseInt(data.payload.category_id, 10)) &&
         (!data.payload.tag_id || topic.tags.includes(data.payload.tag_id))
       ) {
         this.states[k] = Object.assign({}, topic, {

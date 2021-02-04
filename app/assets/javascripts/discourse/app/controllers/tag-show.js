@@ -121,7 +121,21 @@ export default Controller.extend(BulkTopicSelection, FilterModeMixin, {
     },
 
     resetNew() {
-      Topic.resetNewTag(this.tag).then(() => this.send("refresh", {}));
+      const tracked =
+        (this.router.currentRoute.queryParams["f"] ||
+          this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+      Topic.resetNew(
+        this.category,
+        !this.noSubcategories,
+        tracked,
+        this.tag
+      ).then(() =>
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        )
+      );
     },
 
     changeSort(order) {
