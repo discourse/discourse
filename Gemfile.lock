@@ -325,7 +325,7 @@ GEM
       optimist (>= 3.0.0)
     rchardet (1.8.0)
     redis (4.2.5)
-    redis-namespace (1.8.0)
+    redis-namespace (1.8.1)
       redis (>= 3.0.4)
     regexp_parser (2.0.3)
     request_store (1.5.0)
