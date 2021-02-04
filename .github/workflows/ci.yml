@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_types: ["BACKEND", "FRONTEND", "LINT"]
+        build_types: ["FRONTEND"]
         target: ["PLUGINS", "CORE"]
         os: [ubuntu-latest]
         ruby: ["2.6"]
