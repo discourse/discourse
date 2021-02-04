@@ -672,6 +672,20 @@
   }
 }
 
+.bulk-notification-list {
+  margin-bottom: 1.5em;
+}
+
+.notification-level-radio {
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 0.5em;
+  .description {
+    width: 100%;
+    margin-top: 0.25em;
+  }
+}
+
 .modal.edit-slow-mode-modal {
   .slow-mode-label {
     display: inline-flex;
