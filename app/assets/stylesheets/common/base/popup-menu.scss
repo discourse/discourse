@@ -32,6 +32,7 @@
       align-self: flex-start;
     }
 
+    &:focus,
     &:hover {
       color: var(--primary);
       background: var(--tertiary-low);
@@ -50,6 +51,7 @@
         color: var(--primary);
       }
 
+      &:focus,
       &:hover {
         .d-icon,
         .d-button-label {
