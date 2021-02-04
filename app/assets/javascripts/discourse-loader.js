@@ -118,10 +118,13 @@ var define, requirejs;
         all: Ember.RSVP.all,
       },
       "@ember/string": {
+        w: Ember.String.w,
         dasherize: Ember.String.dasherize,
+        decamelize: Ember.String.decamelize,
+        camelize: Ember.String.camelize,
         classify: Ember.String.classify,
         underscore: Ember.String.underscore,
-        camelize: Ember.String.camelize,
+        capitalize: Ember.String.capitalize,
       },
       "@ember/template": {
         htmlSafe: Ember.String.htmlSafe,

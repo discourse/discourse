@@ -2,6 +2,11 @@
   // TODO: These are needed to load plugins because @ember has its own loader.
   // We should find a nicer way to do this.
   const EMBER_MODULES = {
+    "@ember/application": {
+      default: Ember.Application,
+      setOwner: Ember.setOwner,
+      getOwner: Ember.getOwner,
+    },
     "@ember/array": {
       default: Ember.Array,
       A: Ember.A,
@@ -13,12 +18,24 @@
     "@ember/component": {
       default: Ember.Component,
     },
+    "@ember/component/helper": {
+      default: Ember.Helper,
+    },
+    "@ember/component/text-field": {
+      default: Ember.TextField,
+    },
+    "@ember/component/text-area": {
+      default: Ember.TextArea,
+    },
     "@ember/controller": {
       default: Ember.Controller,
       inject: Ember.inject.controller,
     },
     "@ember/debug": {
       warn: Ember.warn,
+    },
+    "@ember/error": {
+      default: Ember.error,
     },
     "@ember/object": {
       action: Ember._action,
@@ -64,6 +81,9 @@
       uniq: Ember.computed.uniq,
       uniqBy: Ember.computed.uniqBy,
     },
+    "@ember/object/internals": {
+      guidFor: Ember.guidFor,
+    },
     "@ember/object/mixin": { default: Ember.Mixin },
     "@ember/object/proxy": { default: Ember.ObjectProxy },
     "@ember/object/promise-proxy-mixin": { default: Ember.PromiseProxyMixin },
@@ -107,6 +127,7 @@
       isNone: Ember.isNone,
       isPresent: Ember.isPresent,
     },
+    jquery: { default: $ },
     rsvp: {
       asap: Ember.RSVP.asap,
       all: Ember.RSVP.all,
