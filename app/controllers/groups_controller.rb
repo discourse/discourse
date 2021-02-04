@@ -351,7 +351,9 @@ class GroupsController < ApplicationController
     end
 
     usernames_already_in_group = group.users.where(id: users.map(&:id)).pluck(:username)
-    if usernames_already_in_group.present? && usernames_already_in_group.length == users.length
+    if usernames_already_in_group.present? &&
+      usernames_already_in_group.length == users.length &&
+      emails.blank?
       render_json_error(I18n.t(
         "groups.errors.member_already_exist",
         username: usernames_already_in_group.sort.join(", "),
