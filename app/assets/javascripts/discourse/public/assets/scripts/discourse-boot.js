@@ -142,7 +142,7 @@
       reject: Ember.RSVP.reject,
       map: Ember.RSVP.map,
       filter: Ember.RSVP.filter,
-      default: Ember.RSVP.default,
+      default: Ember.RSVP,
       Promise: Ember.RSVP.Promise,
       EventTarget: Ember.RSVP.EventTarget,
     },
