@@ -51,10 +51,19 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  li {
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
     float: left;
-    margin-bottom: var(--nav-space);
     margin-right: 0.5em;
+    height: 100%;
+    margin-bottom: 0;
+  }
+
+  .select-kit-header {
+    align-self: stretch;
+    height: 100%;
+    margin-bottom: var(--nav-space);
   }
 }
 
