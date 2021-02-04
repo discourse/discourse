@@ -16,7 +16,7 @@ acceptance("Topic - Edit timer", function (needs) {
         execute_at: new Date(
           new Date().getTime() + 1 * 60 * 60 * 1000
         ).toISOString(),
-        duration: 1,
+        duration_minutes: 1440,
         based_on_last_post: false,
         closed: false,
         category_id: null,

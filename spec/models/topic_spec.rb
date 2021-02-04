@@ -1752,7 +1752,7 @@ describe Topic do
 
     it 'can take a number of hours as a string and can handle based on last post' do
       freeze_time now
-      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration: '18')
+      topic.set_or_create_timer(TopicTimer.types[:close], nil, by_user: admin, based_on_last_post: true, duration_minutes: '1080')
       expect(topic.topic_timers.first.execute_at).to eq_time(18.hours.from_now)
     end
 

@@ -3,7 +3,7 @@
 class TopicTimerSerializer < ApplicationSerializer
   attributes :id,
              :execute_at,
-             :duration,
+             :duration_minutes,
              :based_on_last_post,
              :status_type,
              :category_id

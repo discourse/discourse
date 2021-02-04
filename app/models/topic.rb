@@ -378,14 +378,14 @@ class Topic < ActiveRecord::Base
        !public_topic_timer&.execute_at
 
       based_on_last_post = self.category.auto_close_based_on_last_post
-      duration = based_on_last_post ? self.category.auto_close_hours : nil
+      duration_minutes = based_on_last_post ? self.category.auto_close_hours * 60 : nil
 
       self.set_or_create_timer(
         TopicTimer.types[timer_type],
         self.category.auto_close_hours,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
-        duration_minutes: duration * 60
+        duration_minutes: duration_minutes
       )
     end
   end
@@ -1308,11 +1308,12 @@ class Topic < ActiveRecord::Base
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
   #  * duration_minutes: The duration of the timer in minutes, which is used if the timer is based
-  #              on the last post or if the timer type is delete_replies.
+  #                      on the last post or if the timer type is delete_replies.
   #  * silent: Affects whether the close topic timer status change will be silent or not.
   def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration_minutes: nil, silent: nil)
     return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank?
 
+    duration_minutes = duration_minutes.to_i if duration_minutes
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
     topic_timer_options.merge!(user: by_user) unless public_topic_timer
@@ -1332,7 +1333,7 @@ class Topic < ActiveRecord::Base
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
 
         topic_timer.duration_minutes = duration_minutes
-        topic_timer.execute_at = last_post_created_at + duration_minutes.hours
+        topic_timer.execute_at = last_post_created_at + duration_minutes.minutes
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
@@ -1340,7 +1341,7 @@ class Topic < ActiveRecord::Base
         first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
 
         topic_timer.duration_minutes = duration_minutes
-        topic_timer.execute_at = first_reply_created_at + duration_minutes.days
+        topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
       end
     else

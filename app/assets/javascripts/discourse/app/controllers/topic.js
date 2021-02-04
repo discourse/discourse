@@ -1099,13 +1099,7 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     removeTopicTimer(statusType, topicTimer) {
-      TopicTimer.updateStatus(
-        this.get("model.id"),
-        null,
-        null,
-        statusType,
-        null
-      )
+      TopicTimer.update(this.get("model.id"), null, null, statusType, null)
         .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
         .catch((error) => popupAjaxError(error));
     },
