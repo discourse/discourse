@@ -64,8 +64,8 @@ describe Stylesheet::Importer do
   end
 
   context "#import_color_definitions" do
-    let(:scss) { ":root { --custom-color: green}" }
-    let(:scss_child) { ":root { --custom-color: red}" }
+    let(:scss) { ":root{--custom-color: green}" }
+    let(:scss_child) { ":root{--custom-color: red}" }
 
     let(:theme) do
       Fabricate(:theme).tap do |t|
@@ -74,7 +74,7 @@ describe Stylesheet::Importer do
       end
     end
 
-    let(:child) { Fabricate(:theme, component: true).tap { |t|
+    let(:child) { Fabricate(:theme, component: true, name: "Child Theme").tap { |t|
       t.set_field(target: :common, name: "color_definitions", value: scss_child)
       t.save!
     }}
@@ -90,6 +90,7 @@ describe Stylesheet::Importer do
 
       styles = Stylesheet::Importer.import_color_definitions(theme.id)
       expect(styles).to include(scss_child)
+      expect(styles).to include("Color definitions from Child Theme")
     end
 
     it "should include default theme color definitions" do
