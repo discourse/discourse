@@ -183,15 +183,17 @@ ImageMagick is used for generating avatars (including for test fixtures).
     brew install imagemagick
 
 ImageMagick is going to want to use the Helvetica font to generate the
-letter-avatars:
+letter-avatars. To make it available we need to extract it from the system
+fonts:
 
 ```sh
-brew install fondu
+brew install fontforge
 cd ~/Library/Fonts
-fondu /System/Library/Fonts/Helvetica.dfont
+export HELVETICA_FONT=/System/Library/Fonts/Helvetica.ttc # The extension might be dfont instead
+fontforge -c "[open(u'%s(%s)' % ('$HELVETICA_FONT', font)).generate('%s.ttf' % font) for font in fontsInFile('$HELVETICA_FONT')]"
 mkdir ~/.magick
 cd ~/.magick
-curl https://www.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
+curl https://legacy.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
 find /System/Library/Fonts /Library/Fonts ~/Library/Fonts -name "*.[to]tf" | perl type_gen -f - > type.xml
 cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6
 ```
