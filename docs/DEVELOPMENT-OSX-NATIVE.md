@@ -193,7 +193,7 @@ export HELVETICA_FONT=/System/Library/Fonts/Helvetica.ttc # The extension might 
 fontforge -c "[open(u'%s(%s)' % ('$HELVETICA_FONT', font)).generate('%s.ttf' % font) for font in fontsInFile('$HELVETICA_FONT')]"
 mkdir ~/.magick
 cd ~/.magick
-curl https://legacy.imagemagick.org/Usage/scripts/imagick_type_gen > 
+curl https://legacy.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
 find /System/Library/Fonts /Library/Fonts ~/Library/Fonts -name "*.[to]tf" | perl type_gen -f - > type.xml
 cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6
 ```
