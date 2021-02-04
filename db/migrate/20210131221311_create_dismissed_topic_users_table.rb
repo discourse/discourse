@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateDimissedTopicUsersTable < ActiveRecord::Migration[6.0]
+class CreateDismissedTopicUsersTable < ActiveRecord::Migration[6.0]
   def change
     create_table :dismissed_topic_users do |t|
       t.integer :user_id
