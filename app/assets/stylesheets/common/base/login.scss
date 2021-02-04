@@ -108,8 +108,8 @@
         left: calc(1em - .25em);
         background-color: var(--secondary);
         padding: 0 .25em 0 .25em;
-        font-size:14px;
-        color: var(--primary-medium);;
+        font-size:$font-down-1;
+        color: var(--primary-medium);
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
