@@ -1,33 +1,23 @@
 <tr class="group-manage-logs-row">
   <td>
-    {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.action key="action")}}
-      {{log.actionTitle}}
-    {{/d-button}}
+    {{d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.action key="action") translatedLabel=log.actionTitle}}
   </td>
 
   <td>
     <span>{{avatar log.acting_user imageSize="tiny"}}</span>
-
-    {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.acting_user.username key="acting_user")}}
-      {{log.acting_user.username}}
-    {{/d-button}}
+    {{d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.acting_user.username key="acting_user") translatedLabel=log.acting_user.username}}
   </td>
 
   <td>
     {{#if log.target_user}}
       <span>{{avatar log.target_user imageSize="tiny"}}</span>
-
-      {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.target_user.username key="target_user")}}
-        {{log.target_user.username}}
-      {{/d-button}}
+      {{d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.target_user.username key="target_user") translatedLabel=log.target_user.username}}
     {{/if}}
   </td>
 
   <td>
     {{#if log.subject}}
-      {{#d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.subject key="subject")}}
-        {{log.subject}}
-      {{/d-button}}
+      {{d-button class="btn-default" action=(action "filter") actionParam=(hash value=log.subject key="subject") translatedLabel=log.subject}}
     {{/if}}
   </td>
 

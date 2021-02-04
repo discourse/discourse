@@ -2257,6 +2257,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         notification_level: "Notifications"
+        change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>%{count}</b> topic."
@@ -2266,7 +2267,10 @@ en:
         choose_new_tags: "Choose new tags for these topics:"
         choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
-        remove_tags: "Remove Tags"
+        remove_tags: "Remove All Tags"
+        confirm_remove_tags:
+          one: "All tags will be removed from this topic. Are you sure?"
+          other: "All tags will be removed from <b>%{count}</b> topics. Are you sure?"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"

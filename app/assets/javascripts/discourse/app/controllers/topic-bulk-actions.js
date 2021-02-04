@@ -255,7 +255,16 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     removeTags() {
-      this.performAndRefresh({ type: "remove_tags" });
+      bootbox.confirm(
+        I18n.t("topics.bulk.confirm_remove_tags", {
+          count: this.get("model.topics").length,
+        }),
+        (result) => {
+          if (result) {
+            this.performAndRefresh({ type: "remove_tags" });
+          }
+        }
+      );
     },
   },
 });

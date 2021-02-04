@@ -141,9 +141,15 @@ module Stylesheet
       if resolved_ids
         theme = Theme.find_by_id(theme_id)
         contents << theme&.scss_variables.to_s
-        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |row|
-          contents << "// Color definitions from #{theme.name}\n\n"
-          contents << row.value
+        Theme.list_baked_fields(resolved_ids, :common, :color_definitions).each do |field|
+          contents << "// Color definitions from #{field.theme.name}\n\n"
+
+          if field.theme_id == theme.id
+            contents << field.value
+          else
+            contents << field.compiled_css
+          end
+          contents << "\n\n"
         end
       end
       contents
@@ -198,13 +204,7 @@ module Stylesheet
           if field.theme_id == theme.id
             contents << value
           else
-            css, source_map = begin
-              field.compile_scss
-            rescue SassC::SyntaxError => e
-              raise Discourse::ScssError, e.message
-            end
-
-            contents << css
+            contents << field.compiled_css
           end
         end
 

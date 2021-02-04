@@ -354,6 +354,18 @@ class ThemeField < ActiveRecord::Base
     )
   end
 
+  def compiled_css
+    css, _source_map = begin
+      compile_scss
+    rescue SassC::SyntaxError => e
+      # We don't want to raise a blocking error here
+      # admin theme editor or discourse_theme CLI will show it nonetheless
+      Rails.logger.error "SCSS compilation error: #{e.message}"
+      ["", nil]
+    end
+    css
+  end
+
   def ensure_scss_compiles!
     result = ["failed"]
     begin

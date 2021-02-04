@@ -166,12 +166,11 @@ nav.post-controls {
       border: none;
       margin-left: 3px;
       &.d-hover,
-      &:focus {
+      &:focus,
+      &:active {
+        outline: none;
         background: var(--primary-low);
         color: var(--primary);
-      }
-      &:active {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
       }
       &.hidden {
         display: none;

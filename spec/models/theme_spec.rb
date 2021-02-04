@@ -807,6 +807,13 @@ HTML
       expect(parent_css).to include("body{background:green}")
     end
 
+    it "does not fail if child theme has SCSS errors" do
+      child_theme.set_field(target: :common, name: :scss, value: 'p {color: $missing_var;}')
+      child_theme.save!
+
+      parent_css, _parent_map = compiler
+      expect(parent_css).to include("sourceMappingURL")
+    end
   end
 
   describe "scss_variables" do
