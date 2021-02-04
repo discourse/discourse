@@ -54,25 +54,6 @@ class NewPostManager
     manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
   end
 
-  def self.matches_auto_silence_regex?(manager)
-    args = manager.args
-
-    pattern = SiteSetting.auto_silence_first_post_regex
-
-    return false unless pattern.present?
-    return false unless is_first_post?(manager)
-
-    begin
-      regex = Regexp.new(pattern, Regexp::IGNORECASE)
-    rescue => e
-      Rails.logger.warn "Invalid regex in auto_silence_first_post_regex #{e}"
-      return false
-    end
-
-    "#{args[:title]} #{args[:raw]}" =~ regex
-
-  end
-
   def self.exempt_user?(user)
     user.staff?
   end
@@ -102,7 +83,7 @@ class NewPostManager
 
     return :fast_typer if is_fast_typer?(manager)
 
-    return :auto_silence_regex if matches_auto_silence_regex?(manager)
+    return :auto_silence_regex if is_first_post?(manager) && WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").first_requires_approval?
 
     return :staged if SiteSetting.approve_unless_staged? && user.staged?
 
@@ -165,7 +146,7 @@ class NewPostManager
     I18n.with_locale(SiteSetting.default_locale) do
       if is_fast_typer?(manager)
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
-      elsif matches_auto_silence_regex?(manager)
+      elsif is_first_post?(manager) && WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").first_requires_approval?
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
       elsif reason == :email_spam && is_first_post?(manager)
         UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.email_in_spam_header"))
@@ -181,6 +162,7 @@ class NewPostManager
     SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
     SiteSetting.approve_unless_staged ||
     WordWatcher.words_for_action_exists?(:require_approval) ||
+    WordWatcher.words_for_action_exists?(:first_require_approval) ||
     handlers.size > 1
   end
 
