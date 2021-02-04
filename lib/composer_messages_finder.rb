@@ -78,7 +78,7 @@ class ComposerMessagesFinder
     # - "disable avatar education message" is enabled
     # - "sso overrides avatar" is enabled
     # - "allow uploaded avatars" is disabled
-    return if SiteSetting.disable_avatar_education_message || SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
+    return if SiteSetting.disable_avatar_education_message || SiteSetting.discourse_connect_overrides_avatar || !SiteSetting.allow_uploaded_avatars
 
     # If we got this far, log that we've nagged them about the avatar
     UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: @user.id)

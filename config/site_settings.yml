@@ -423,31 +423,31 @@ login:
     default: ""
     type: list
     list_type: simple
-  external_auth_skip_create_confirm:
+  auth_skip_create_confirm:
     default: false
     client: true
-  external_auth_immediately:
+  auth_immediately:
     default: true
-  enable_sso:
+  enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
-  sso_allows_all_return_paths: false
-  enable_sso_provider: false
-  verbose_sso_logging: false
+  discourse_connect_allows_all_return_paths: false
+  enable_discourse_connect_provider: false
+  verbose_discourse_connect_logging: false
   verbose_auth_token_logging:
     hidden: true
     default: true
   max_suspicious_distance_km:
     hidden: true
     default: 500
-  sso_url:
+  discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-  sso_secret:
+  discourse_connect_secret:
     default: ""
     secret: true
-  sso_provider_secrets:
+  discourse_connect_provider_secrets:
     default: ""
     type: list
     list_type: secret
@@ -455,22 +455,22 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
-  sso_overrides_groups: false
-  sso_overrides_bio: false
-  sso_overrides_email:
+  discourse_connect_overrides_groups: false
+  discourse_connect_overrides_bio: false
+  auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
-  sso_overrides_username: false
-  sso_overrides_name: false
-  sso_overrides_avatar:
+  auth_overrides_username: false
+  auth_overrides_name: false
+  discourse_connect_overrides_avatar:
     default: false
     client: true
-  sso_overrides_profile_background: false
-  sso_overrides_location: false
-  sso_overrides_website: false
-  sso_overrides_card_background: false
-  sso_not_approved_url: ""
+  discourse_connect_overrides_profile_background: false
+  discourse_connect_overrides_location: false
+  discourse_connect_overrides_website: false
+  discourse_connect_overrides_card_background: false
+  discourse_connect_not_approved_url: ""
   blocked_email_domains:
     default: "mailinator.com"
     type: list

@@ -23,7 +23,7 @@ class UserApiKeysController < ApplicationController
     unless current_user
       cookies[:destination_url] = request.fullpath
 
-      if SiteSetting.enable_sso?
+      if SiteSetting.enable_discourse_connect?
         redirect_to path('/session/sso')
       else
         redirect_to path('/login')
@@ -115,7 +115,7 @@ class UserApiKeysController < ApplicationController
     unless current_user
       cookies[:destination_url] = request.fullpath
 
-      if SiteSetting.enable_sso?
+      if SiteSetting.enable_discourse_connect?
         redirect_to path('/session/sso')
       else
         redirect_to path('/login')

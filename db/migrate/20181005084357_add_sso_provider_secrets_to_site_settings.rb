@@ -2,12 +2,14 @@
 
 class AddSsoProviderSecretsToSiteSettings < ActiveRecord::Migration[5.2]
   def up
-    return unless SiteSetting.enable_sso_provider && SiteSetting.sso_secret.present?
-    sso_secret = SiteSetting.sso_secret
-    sso_secret_insert = ActiveRecord::Base.connection.quote("*|#{sso_secret}")
-
-    execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
-             VALUES ('sso_provider_secrets', 8, #{sso_secret_insert}, now(), now())"
+    execute <<~SQL
+      INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+      SELECT 'sso_provider_secrets', 8, '*|' || value, now(), now()
+      FROM site_settings WHERE name = 'sso_secret'
+      AND EXISTS (
+        SELECT 1 FROM site_settings WHERE name = 'enable_sso_provider' AND value = 't'
+      )
+    SQL
   end
 
   def down

@@ -755,7 +755,7 @@ const User = RestModel.extend({
 
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
-    return !this.siteSettings.enable_sso && canDeleteAccount;
+    return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
   },
 
   delete: function () {

@@ -57,7 +57,7 @@ describe Invite do
 
       invite = Fabricate.build(:invite, email: "test@mail.com")
       expect(invite).not_to be_valid
-      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("invite.disabled_errors.sso_enabled"))
+      expect(invite.errors.details[:email].first[:error]).to eq(I18n.t("invite.disabled_errors.discourse_connect_enabled"))
     end
   end
 

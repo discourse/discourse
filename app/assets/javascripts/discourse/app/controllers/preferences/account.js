@@ -71,7 +71,8 @@ export default Controller.extend(CanCheckEmails, {
       return false;
     } else {
       return (
-        !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
+        !this.siteSettings.enable_discourse_connect &&
+        this.siteSettings.enable_local_logins
       );
     }
   },

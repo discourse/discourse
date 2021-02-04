@@ -590,7 +590,7 @@ export default Controller.extend(CanCheckEmails, {
 
     deleteSSORecord() {
       return bootbox.confirm(
-        I18n.t("admin.user.sso.confirm_delete"),
+        I18n.t("admin.user.discourse_connect.confirm_delete"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         (confirmed) => {

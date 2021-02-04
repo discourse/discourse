@@ -138,8 +138,8 @@ describe ComposerMessagesFinder do
       expect(finder.check_avatar_notification).to be_blank
     end
 
-    it "doesn't notify users if 'sso_overrides_avatar' setting is enabled" do
-      SiteSetting.sso_overrides_avatar = true
+    it "doesn't notify users if 'discourse_connect_overrides_avatar' setting is enabled" do
+      SiteSetting.discourse_connect_overrides_avatar = true
       expect(finder.check_avatar_notification).to be_blank
     end
 

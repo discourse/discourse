@@ -351,9 +351,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "should update name/username/email when sso_overrides is enabled" do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
-        SiteSetting.sso_overrides_name = true
-        SiteSetting.sso_overrides_username = true
+        SiteSetting.auth_overrides_email = true
+        SiteSetting.auth_overrides_name = true
+        SiteSetting.auth_overrides_username = true
 
         UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
 
@@ -371,7 +371,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       it "will not update email if not verified" do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
+        SiteSetting.auth_overrides_email = true
 
         OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:email_verified] = false
 
@@ -387,9 +387,9 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(user.email).to eq('email@example.com')
       end
 
-      it "shows error when sso_overrides_email causes a validation error" do
+      it "shows error when auth_overrides_email causes a validation error" do
         SiteSetting.email_editable = false
-        SiteSetting.sso_overrides_email = true
+        SiteSetting.auth_overrides_email = true
 
         UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: '123545')
 
@@ -454,12 +454,12 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       context 'when sso_payload cookie exist' do
         before do
-          SiteSetting.enable_sso_provider = true
-          SiteSetting.sso_secret = "topsecret"
+          SiteSetting.enable_discourse_connect_provider = true
+          SiteSetting.discourse_connect_secret = "topsecret"
 
           @sso = SingleSignOn.new
           @sso.nonce = "mynonce"
-          @sso.sso_secret = SiteSetting.sso_secret
+          @sso.sso_secret = SiteSetting.discourse_connect_secret
           @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
           cookies[:sso_payload] = @sso.payload
 

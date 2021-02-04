@@ -361,7 +361,7 @@ class Invite < ActiveRecord::Base
     return if email.blank?
 
     if SiteSetting.enable_sso?
-      errors.add(:email, I18n.t("invite.disabled_errors.sso_enabled"))
+      errors.add(:email, I18n.t("invite.disabled_errors.discourse_connect_enabled"))
     elsif !SiteSetting.enable_local_logins?
       errors.add(:email, I18n.t("invite.disabled_errors.local_logins_disabled"))
     end
