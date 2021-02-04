@@ -3,6 +3,11 @@
     {{form-error error=error}}
 
     <section class="script-section form-section edit">
+      <div class="automation-presentation">
+        <h2 class="automation-name">{{automation.script.name}}</h2>
+        <p class="automation-doc">{{automation.script.doc}}</p>
+      </div>
+
       <div class="control-group">
         <label class="control-label">
           {{i18n "discourse_automation.models.automation.name.label"}}
@@ -17,15 +22,12 @@
           }}
         </div>
       </div>
-
-      <div class="alert alert-info script-doc">
-        <b>{{automation.script.name}}</b><br />
-        {{automation.script.doc}}
-      </div>
     </section>
 
     <section class="trigger-section form-section edit">
-      <h2 class="title">{{i18n "discourse_automation.edit_automation.trigger_section.title"}}</h2>
+      <h2 class="title">
+        {{i18n "discourse_automation.edit_automation.trigger_section.title"}}
+      </h2>
 
       <div class="control-group">
         <label class="control-label">
@@ -50,7 +52,9 @@
     </section>
 
     <section class="fields-section form-section edit">
-      <h2 class="title">Fields</h2>
+      <h2 class="title">
+        {{i18n "discourse_automation.edit_automation.fields_section.title"}}
+      </h2>
 
       <div class="control-group">
         {{#each automation.fields as |field|}}

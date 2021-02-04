@@ -6,7 +6,9 @@ en:
       update: Update
       edit_automation:
         trigger_section:
-          title: Trigger
+          title: When...
+        fields_section:
+          title: Options
       destroy_automation:
         confirm: Are you sure you want to delete this Automation?
       fields:
@@ -61,7 +63,7 @@ en:
             label: Name
         automation:
           name:
-            label: Name
+            label: Automation’s name
           script:
             label: Script
           version:

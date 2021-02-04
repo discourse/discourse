@@ -1,7 +1,3 @@
-<h3 class="field-title">
-  {{i18n (concat "discourse_automation.scriptables." automation.script.id ".fields." field.name ".label")}}
-</h3>
-
 {{#if field.placeholders}}
   <div class="placeholders-list">
     {{#each field.placeholders as |placeholder|}}
@@ -13,4 +9,5 @@
 {{component (concat "da-" field.component "-field")
   field=field
   onChangeField=onChangeField
+  label=(i18n (concat "discourse_automation.scriptables." automation.script.id ".fields." field.name ".label"))
 }}

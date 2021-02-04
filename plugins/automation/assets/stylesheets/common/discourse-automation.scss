@@ -25,6 +25,29 @@
 }
 
 .discourse-automation-form {
+  .form-horizontal {
+    .control-label {
+      margin: 0.25em 0.25em 0.25em 0;
+    }
+  }
+
+  .automation-presentation {
+    background: var(--primary-very-low);
+    padding: 0.5em;
+
+    .automation-name {
+      font-size: $font-up-2;
+    }
+
+    .automation-doc {
+      margin: 0;
+    }
+  }
+
+  .automation-presentation + .control-group {
+    margin-top: 2em;
+  }
+
   .scripts-list {
     width: 210px;
 
@@ -73,6 +96,12 @@
       width: 100%;
       margin: 0;
       padding: 0.25em 0;
+    }
+  }
+
+  .text-field {
+    .ember-text-field {
+      width: 300px;
     }
   }
 
