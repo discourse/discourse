@@ -43,14 +43,13 @@
 
       <div class="control-group">
         <div class="controls">
-          {{#d-button
+          {{d-button
             class="btn-primary"
             action=(action "saveEmail")
             type="submit"
             disabled=saveDisabled
+            translatedLabel=saveButtonText
           }}
-            {{saveButtonText}}
-          {{/d-button}}
         </div>
       </div>
     {{/if}}

@@ -75,9 +75,7 @@
       {{/unless}}
 
       {{#if showSignupLink}}
-        {{#d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
-          {{i18n "create_account.title"}}
-        {{/d-button}}
+        {{d-button class="btn-large" id="new-account-link" action=(route-action "showCreateAccount") label="create_account.title"}}
       {{/if}}
     {{/if}}
   </div>

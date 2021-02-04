@@ -182,9 +182,7 @@
         }}
 
         {{#unless hasAuthOptions}}
-          {{#d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted}}
-            {{i18n "log_in"}}
-          {{/d-button}}
+          {{d-button class="btn-large" id="login-link" action=(route-action "showLogin") disabled=formSubmitted label="log_in"}}
         {{/unless}}
 
         <div class="disclaimer">{{html-safe disclaimerHtml}}</div>
