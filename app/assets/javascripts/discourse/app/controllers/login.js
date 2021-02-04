@@ -65,8 +65,7 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed()
   skinToneId() {
     // random number between 2 -6 to render multiple skin tone waving hands
-    let random = Math.floor(Math.random() * (7 - 2) + 2);
-    return random;
+    return Math.floor(Math.random() * (7 - 2) + 2);
   },
 
   @discourseComputed("showSecondFactor", "showSecurityKey")

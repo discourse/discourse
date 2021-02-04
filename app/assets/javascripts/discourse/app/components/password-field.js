@@ -7,26 +7,26 @@ import TextField from "discourse/components/text-field";
 export default TextField.extend({
   canToggle: false,
 
-  keyPress(e) {
+  keyPress(event) {
     if (
-      (e.which >= 65 && e.which <= 90 && !e.shiftKey) ||
-      (e.which >= 97 && e.which <= 122 && e.shiftKey)
+      (event.which >= 65 && event.which <= 90 && !event.shiftKey) ||
+      (event.which >= 97 && event.which <= 122 && event.shiftKey)
     ) {
       this.set("canToggle", true);
       this.set("capsLockOn", true);
     } else if (
-      (e.which >= 65 && e.which <= 90 && e.shiftKey) ||
-      (e.which >= 97 && e.which <= 122 && !e.shiftKey)
+      (event.which >= 65 && event.which <= 90 && event.shiftKey) ||
+      (event.which >= 97 && event.which <= 122 && !event.shiftKey)
     ) {
       this.set("canToggle", true);
       this.set("capsLockOn", false);
     }
   },
 
-  keyUp(e) {
-    this._super(e);
+  keyUp(event) {
+    this._super(event);
 
-    if (e.which === 20 && this.canToggle) {
+    if (event.which === 20 && this.canToggle) {
       this.toggleProperty("capsLockOn");
     }
   },
