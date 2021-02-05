@@ -22,6 +22,12 @@ export default Component.extend(FilterModeMixin, {
     return category && this.currentUser;
   },
 
+  // don't show tag notification menu on tag intersections
+  @discourseComputed("tagNotification", "additionalTags")
+  showTagNotifications(tagNotification, additionalTags) {
+    return tagNotification && !additionalTags;
+  },
+
   @discourseComputed("category", "createTopicDisabled")
   categoryReadOnlyBanner(category, createTopicDisabled) {
     if (category && this.currentUser && createTopicDisabled) {
