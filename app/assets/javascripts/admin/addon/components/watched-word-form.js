@@ -15,6 +15,11 @@ export default Component.extend({
   actionKey: null,
   showMessage: false,
 
+  @discourseComputed("actionKey")
+  canReplace(actionKey) {
+    return actionKey === "link";
+  },
+
   @discourseComputed("regularExpressions")
   placeholderKey(regularExpressions) {
     return (
@@ -56,6 +61,7 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
+          replacement: this.canReplace ? this.replacement : undefined,
           action: this.actionKey,
         });
 

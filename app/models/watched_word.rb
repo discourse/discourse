@@ -8,7 +8,8 @@ class WatchedWord < ActiveRecord::Base
       censor: 2,
       require_approval: 3,
       flag: 4,
-      first_requires_approval: 5
+      first_requires_approval: 5,
+      link: 6
     )
   end
 
@@ -38,6 +39,7 @@ class WatchedWord < ActiveRecord::Base
   def self.create_or_update_word(params)
     new_word = normalize_word(params[:word])
     w = WatchedWord.where("word ILIKE ?", new_word).first || WatchedWord.new(word: new_word)
+    w.replacement = params[:replacement] if params[:replacement]
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
     w.save
@@ -58,11 +60,12 @@ end
 #
 # Table name: watched_words
 #
-#  id         :integer          not null, primary key
-#  word       :string           not null
-#  action     :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  word        :string           not null
+#  action      :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  replacement :string
 #
 # Indexes
 #

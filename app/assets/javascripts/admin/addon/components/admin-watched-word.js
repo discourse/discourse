@@ -1,17 +1,9 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   classNames: ["watched-word"],
-  watchedWord: null,
-  xIcon: iconHTML("times").htmlSafe(),
-
-  init() {
-    this._super(...arguments);
-    this.set("watchedWord", this.get("word.word"));
-  },
 
   click() {
     this.word
