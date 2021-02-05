@@ -333,11 +333,11 @@ basic:
     default: ""
     hidden: true
   base_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
   heading_font:
-    default: "helvetica"
+    default: "arial"
     enum: "BaseFontSetting"
     refresh: true
 

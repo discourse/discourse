@@ -37,7 +37,7 @@ describe Stylesheet::Importer do
 
   it "includes font variable" do
     expect(compile_css("desktop"))
-      .to include(":root{--font-family: Helvetica, Arial, sans-serif}")
+      .to include(":root{--font-family: Arial, sans-serif}")
   end
 
   it "includes separate body and heading font declarations" do
