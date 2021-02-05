@@ -7,7 +7,7 @@ import {
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
 } from "discourse/controllers/edit-topic-timer";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { equal, or, readOnly } from "@ember/object/computed";
 import I18n from "I18n";
 import { action } from "@ember/object";
@@ -26,7 +26,19 @@ export default Component.extend({
   showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
   showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
   useDuration: or("isBasedOnLastPost", "autoDeleteReplies"),
-  originalTopicTimerTime: null,
+  duration: null,
+
+  @on("init")
+  preloadDuration() {
+    if (!this.useDuration || !this.topicTimer.duration_minutes) {
+      return;
+    }
+    if (this.durationType === "days") {
+      this.set("duration", this.topicTimer.duration_minutes / 60 / 24);
+    } else {
+      this.set("duration", this.topicTimer.duration_minutes / 60);
+    }
+  },
 
   @discourseComputed("autoDeleteReplies")
   durationType(autoDeleteReplies) {
@@ -93,13 +105,12 @@ export default Component.extend({
 
   @discourseComputed(
     "topicTimer.updateTime",
-    "topicTimer.duration",
-    "useDuration",
-    "durationType"
+    "topicTimer.duration_minutes",
+    "useDuration"
   )
-  executeAt(updateTime, duration, useDuration, durationType) {
+  executeAt(updateTime, duration, useDuration) {
     if (useDuration) {
-      return moment().add(parseFloat(duration), durationType).format(FORMAT);
+      return moment().add(parseFloat(duration), "minutes").format(FORMAT);
     } else {
       return updateTime;
     }
@@ -107,13 +118,13 @@ export default Component.extend({
 
   @discourseComputed(
     "isBasedOnLastPost",
-    "topicTimer.duration",
+    "topicTimer.duration_minutes",
     "topic.last_posted_at"
   )
   willCloseImmediately(isBasedOnLastPost, duration, lastPostedAt) {
     if (isBasedOnLastPost && duration) {
       let closeDate = moment(lastPostedAt);
-      closeDate = closeDate.add(duration, "hours");
+      closeDate = closeDate.add(duration, "minutes");
       return closeDate < moment();
     }
   },
@@ -140,7 +151,7 @@ export default Component.extend({
     "willCloseImmediately",
     "topicTimer.category_id",
     "useDuration",
-    "topicTimer.duration"
+    "topicTimer.duration_minutes"
   )
   showTopicStatusInfo(
     statusType,
@@ -177,5 +188,14 @@ export default Component.extend({
       timerType: type,
     });
     this.onChangeInput(type, time);
+  },
+
+  @action
+  durationChanged(newDuration) {
+    if (this.durationType === "days") {
+      this.set("topicTimer.duration_minutes", newDuration * 60 * 24);
+    } else {
+      this.set("topicTimer.duration_minutes", newDuration * 60);
+    }
   },
 });

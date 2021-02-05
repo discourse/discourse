@@ -7,7 +7,7 @@ describe Jobs::DeleteReplies do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:topic_timer) do
-    Fabricate(:topic_timer, status_type: TopicTimer.types[:delete_replies], duration: 2, user: admin, topic: topic, execute_at: 2.days.from_now)
+    Fabricate(:topic_timer, status_type: TopicTimer.types[:delete_replies], duration_minutes: 2880, user: admin, topic: topic, execute_at: 2.days.from_now)
   end
 
   before do

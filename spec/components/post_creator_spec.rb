@@ -345,7 +345,7 @@ describe PostCreator do
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
               created_at: Time.zone.now - 24.hours,
-              duration: 12
+              duration_minutes: 12 * 60
             )
           end
 

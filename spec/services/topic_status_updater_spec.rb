@@ -59,7 +59,7 @@ describe TopicStatusUpdater do
     Fabricate(:post, topic: topic)
 
     topic.set_or_create_timer(
-      TopicTimer.types[:close], nil, based_on_last_post: true, duration: 10
+      TopicTimer.types[:close], nil, based_on_last_post: true, duration_minutes: 600
     )
 
     TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)

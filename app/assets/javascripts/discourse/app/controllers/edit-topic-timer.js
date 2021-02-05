@@ -60,24 +60,24 @@ export default Controller.extend(ModalFunctionality, {
 
   topicTimer: alias("model.topic_timer"),
 
-  _setTimer(time, duration, statusType, basedOnLastPost, categoryId) {
+  _setTimer(time, durationMinutes, statusType, basedOnLastPost, categoryId) {
     this.set("loading", true);
 
-    TopicTimer.updateStatus(
+    TopicTimer.update(
       this.get("model.id"),
       time,
       basedOnLastPost,
       statusType,
       categoryId,
-      duration
+      durationMinutes
     )
       .then((result) => {
-        if (time || duration) {
+        if (time || durationMinutes) {
           this.send("closeModal");
 
           setProperties(this.topicTimer, {
             execute_at: result.execute_at,
-            duration: result.duration,
+            duration_minutes: result.duration_minutes,
             category_id: result.category_id,
           });
 
@@ -131,14 +131,10 @@ export default Controller.extend(ModalFunctionality, {
       this.set("topicTimer.updateTime", time);
     },
 
-    onChangeDuration(value) {
-      this.set("topicTimer.duration", value);
-    },
-
     saveTimer() {
       if (
         !this.get("topicTimer.updateTime") &&
-        !this.get("topicTimer.duration")
+        !this.get("topicTimer.duration_minutes")
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.time_frame_required"),
@@ -148,9 +144,9 @@ export default Controller.extend(ModalFunctionality, {
       }
 
       if (
-        this.get("topicTimer.duration") &&
+        this.get("topicTimer.duration_minutes") &&
         !this.get("topicTimer.updateTime") &&
-        this.get("topicTimer.duration") < 1
+        this.get("topicTimer.duration_minutes") <= 0
       ) {
         this.flash(
           I18n.t("topic.topic_status_update.min_duration"),
@@ -161,7 +157,7 @@ export default Controller.extend(ModalFunctionality, {
 
       this._setTimer(
         this.get("topicTimer.updateTime"),
-        this.get("topicTimer.duration"),
+        this.get("topicTimer.duration_minutes"),
         this.get("topicTimer.status_type"),
         this.get("topicTimer.based_on_last_post"),
         this.get("topicTimer.category_id")
