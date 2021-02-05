@@ -60,6 +60,7 @@ class BootstrapController < ApplicationController
       preloaded: @preloaded,
     }
     bootstrap[:extra_locales] = extra_locales if extra_locales.present?
+    bootstrap[:csrf_token] = form_authenticity_token if current_user
 
     render_json_dump(bootstrap: bootstrap)
   end
