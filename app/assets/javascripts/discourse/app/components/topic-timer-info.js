@@ -63,15 +63,11 @@ export default Component.extend({
       } else if (minutesLeft > 2) {
         rerenderDelay = 60000;
       }
-      let durationHours = parseInt(this.duration, 0) || 0;
-
-      if (isDeleteRepliesType) {
-        durationHours *= 24;
-      }
+      let durationMinutes = parseInt(this.durationMinutes, 0) || 0;
 
       let options = {
         timeLeft: duration.humanize(true),
-        duration: moment.duration(durationHours, "hours").humanize(),
+        duration: moment.duration(durationMinutes, "minutes").humanize(),
       };
 
       const categoryId = this.categoryId;

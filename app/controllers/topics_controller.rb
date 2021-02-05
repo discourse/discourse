@@ -461,7 +461,7 @@ class TopicsController < ApplicationController
         invalid_param(:status_type)
       end
     based_on_last_post = params[:based_on_last_post]
-    params.require(:duration) if based_on_last_post
+    params.require(:duration_minutes) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
@@ -472,6 +472,7 @@ class TopicsController < ApplicationController
     }
 
     options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(duration_minutes: params[:duration_minutes].to_i) if params[:duration_minutes].present?
     options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
     topic_status_update = topic.set_or_create_timer(
@@ -483,7 +484,7 @@ class TopicsController < ApplicationController
     if topic.save
       render json: success_json.merge!(
         execute_at: topic_status_update&.execute_at,
-        duration: topic_status_update&.duration,
+        duration_minutes: topic_status_update&.duration_minutes,
         based_on_last_post: topic_status_update&.based_on_last_post,
         closed: topic.closed,
         category_id: topic_status_update&.category_id

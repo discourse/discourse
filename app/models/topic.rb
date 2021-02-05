@@ -378,14 +378,14 @@ class Topic < ActiveRecord::Base
        !public_topic_timer&.execute_at
 
       based_on_last_post = self.category.auto_close_based_on_last_post
-      duration = based_on_last_post ? self.category.auto_close_hours : nil
+      duration_minutes = based_on_last_post ? self.category.auto_close_hours * 60 : nil
 
       self.set_or_create_timer(
         TopicTimer.types[timer_type],
         self.category.auto_close_hours,
         by_user: Discourse.system_user,
         based_on_last_post: based_on_last_post,
-        duration: duration
+        duration_minutes: duration_minutes
       )
     end
   end
@@ -1307,8 +1307,18 @@ class Topic < ActiveRecord::Base
   #  * by_user: User who is setting the topic's status update.
   #  * based_on_last_post: True if time should be based on timestamp of the last post.
   #  * category_id: Category that the update will apply to.
-  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, silent: nil)
-    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration.blank?
+  #  * duration: TODO(2021-06-01): DEPRECATED - do not use
+  #  * duration_minutes: The duration of the timer in minutes, which is used if the timer is based
+  #                      on the last post or if the timer type is delete_replies.
+  #  * silent: Affects whether the close topic timer status change will be silent or not.
+  def set_or_create_timer(status_type, time, by_user: nil, based_on_last_post: false, category_id: SiteSetting.uncategorized_category_id, duration: nil, duration_minutes: nil, silent: nil)
+    return delete_topic_timer(status_type, by_user: by_user) if time.blank? && duration_minutes.blank? && duration.blank?
+
+    duration_minutes = duration_minutes ? duration_minutes.to_i : 0
+
+    # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+    # have been fixed to use duration_minutes
+    duration = duration ? duration.to_i : 0
 
     public_topic_timer = !!TopicTimer.public_types[status_type]
     topic_timer_options = { topic: self, public_type: public_topic_timer }
@@ -1319,22 +1329,37 @@ class Topic < ActiveRecord::Base
 
     time_now = Time.zone.now
     topic_timer.based_on_last_post = !based_on_last_post.blank?
-    topic_timer.duration = duration
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
     end
 
     if topic_timer.based_on_last_post
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         last_post_created_at = self.ordered_posts.last.present? ? self.ordered_posts.last.created_at : time_now
-        topic_timer.execute_at = last_post_created_at + duration.hours
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = last_post_created_at + duration_minutes.minutes
         topic_timer.created_at = last_post_created_at
       end
     elsif topic_timer.status_type == TopicTimer.types[:delete_replies]
-      if duration > 0
+      if duration > 0 || duration_minutes > 0
         first_reply_created_at = (self.ordered_posts.where("post_number > 1").minimum(:created_at) || time_now)
-        topic_timer.execute_at = first_reply_created_at + duration.days
+
+        # TODO(2021-06-01): deprecated - remove this when plugins calling set_or_create_timer
+        # have been fixed to use duration_minutes
+        if duration > 0
+          duration_minutes = duration * 60 * 24
+        end
+
+        topic_timer.duration_minutes = duration_minutes
+        topic_timer.execute_at = first_reply_created_at + duration_minutes.minutes
         topic_timer.created_at = first_reply_created_at
       end
     else
