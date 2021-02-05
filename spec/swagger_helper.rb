@@ -13,7 +13,7 @@ def load_spec_schema(name)
   SpecSchemas::SpecLoader.new(name).load
 end
 
-def description
+def api_docs_description
   <<~HEREDOC
     This page contains the documentation on how to use Discourse through API calls.
 
@@ -95,7 +95,7 @@ RSpec.configure do |config|
           url: 'https://discourse-meta.s3-us-west-1.amazonaws.com/optimized/3X/9/d/9d543e92b15b06924249654667a81441a55867eb_1_690x184.png',
         },
         version: 'latest',
-        description: description
+        description: api_docs_description
       },
       paths: {},
       servers: [
