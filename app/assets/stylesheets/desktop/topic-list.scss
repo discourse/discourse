@@ -192,6 +192,18 @@ button.dismiss-read {
   margin-left: 10px;
 }
 
+.category-breadcrumb {
+  // only target the top-level li, not dropdowns
+  > li {
+    height: 100%;
+  }
+  .select-kit-header {
+    align-self: stretch;
+    height: 100%;
+    margin-bottom: var(--nav-space);
+  }
+}
+
 .category-heading {
   p {
     line-height: $line-height-large;
