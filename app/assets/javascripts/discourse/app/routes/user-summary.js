@@ -11,10 +11,4 @@ export default DiscourseRoute.extend({
 
     return user.summary();
   },
-
-  actions: {
-    didTransition() {
-      this.controllerFor("user").set("indexStream", true);
-    },
-  },
 });
