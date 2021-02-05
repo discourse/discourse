@@ -65,15 +65,15 @@
   {{/if}}
 
   {{#if tag}}
-    {{#if tagNotification}}
-      {{#unless additionalTags}}
-        {{!-- don't show tag notification menu on tag intersections --}}
+    {{#unless category}}
+      {{!-- don't show tag notification menu on category pages --}}
+      {{#if showTagNotifications}}
         {{tag-notifications-button
           onChange=changeTagNotificationLevel
           value=tagNotification.notification_level
         }}
-      {{/unless}}
-    {{/if}}
+      {{/if}}
+    {{/unless}}
   {{/if}}
 
 </div>
