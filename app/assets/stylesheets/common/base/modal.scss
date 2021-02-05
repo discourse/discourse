@@ -294,22 +294,32 @@
 }
 
 .reply-where-modal {
-  .modal-footer {
-    a {
-      display: block;
+  max-width: 400px;
+
+  h1 {
+    margin: 0;
+    font-size: $font-up-2;
+  }
+
+  .d-modal-cancel {
+    width: 100%;
+    margin: 0.5em 0;
+  }
+
+  .btn {
+    display: block;
+    text-align: left;
+    font-size: $font-up-1;
+    line-height: $line-height-medium;
+    margin-bottom: 0.75em;
+    font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+    &:first-of-type {
+      margin-top: 0.25em;
     }
-    .d-modal-cancel {
-      margin: 1em 0 0.5em;
-    }
-    .btn {
-      text-align: left;
-      font-size: $font-up-2;
-      line-height: $line-height-medium;
-      margin-bottom: 10px;
-      font-weight: bold;
-      .topic-title {
-        font-weight: normal;
-      }
+    .topic-title {
+      font-weight: normal;
     }
   }
 }
