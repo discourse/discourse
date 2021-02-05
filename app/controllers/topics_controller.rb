@@ -850,7 +850,7 @@ class TopicsController < ApplicationController
 
     begin
       @topic_view = TopicView.new(params[:topic_id])
-    rescue Discourse::NotLoggedIn => ex
+    rescue Discourse::NotLoggedIn
       raise Discourse::NotFound
     rescue Discourse::InvalidAccess => ex
 
