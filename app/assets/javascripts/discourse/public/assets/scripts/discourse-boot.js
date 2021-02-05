@@ -195,6 +195,16 @@
 
       let locale = data.bootstrap.locale_script;
 
+      if (data.bootstrap.csrf_token) {
+        const csrfParam = document.createElement("meta");
+        csrfParam.setAttribute("name", "csrf-param");
+        csrfParam.setAttribute("content", "authenticity_token");
+        head.append(csrfParam);
+        const csrfToken = document.createElement("meta");
+        csrfToken.setAttribute("name", "csrf-token");
+        csrfToken.setAttribute("content", data.bootstrap.csrf_token);
+        head.append(csrfToken);
+      }
       (data.bootstrap.stylesheets || []).forEach((s) => {
         let link = document.createElement("link");
         link.setAttribute("rel", "stylesheet");
