@@ -202,7 +202,9 @@ nav.post-controls {
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
-    &:hover {
+    &:hover,
+    &:focus {
+      outline: none;
       color: var(--primary);
       background: var(--primary-low);
     }
