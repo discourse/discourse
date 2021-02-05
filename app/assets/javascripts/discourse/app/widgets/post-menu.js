@@ -568,6 +568,15 @@ export default createWidget("post-menu", {
       }
     }
 
+    const extraPostControls = applyDecorators(
+      this,
+      "extra-post-controls",
+      attrs,
+      state
+    );
+
+    postControls.push(extraPostControls);
+
     const extraControls = applyDecorators(this, "extra-controls", attrs, state);
     const beforeExtraControls = applyDecorators(
       this,
