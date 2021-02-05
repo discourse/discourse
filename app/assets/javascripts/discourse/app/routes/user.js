@@ -11,14 +11,6 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
-    willTransition(transition) {
-      // will reset the indexStream when transitioning to routes that aren't "indexStream"
-      // otherwise the "header" will jump
-      const isIndexStream = transition.targetName === "user.summary";
-      this.controllerFor("user").set("indexStream", isIndexStream);
-      return true;
-    },
-
     undoRevokeApiKey(key) {
       key.undoRevoke();
     },
