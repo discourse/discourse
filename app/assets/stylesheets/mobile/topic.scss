@@ -50,8 +50,14 @@
     margin-bottom: env(safe-area-inset-bottom);
   }
   html.rtl & {
-    right: 0;
-    left: 1em;
+    /**
+     * This should be the other way around, but it has to be "wrong" here
+     * because our RTL CSS is generated using the `rtlit` gem which flips
+     * left to right and right to left, so this will be corrected when it
+     * goes through rtlit.
+     */
+    left: unset;
+    right: 1em;
   }
 }
 
