@@ -266,8 +266,8 @@ export default class Widget {
       result.parentWidget = this;
       result.dirtyKeys = this.dirtyKeys;
 
-      if (otherOpts.tagNameOverride) {
-        result.tagName = otherOpts.tagNameOverride;
+      if (otherOpts.tagName) {
+        result.tagName = otherOpts.tagName;
       }
 
       return result;

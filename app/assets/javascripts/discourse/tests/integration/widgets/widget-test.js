@@ -419,14 +419,14 @@ discourseModule("Integration | Component | Widget | base", function (hooks) {
     },
   });
 
-  componentTest("tagNameOverride", {
+  componentTest("tagName", {
     template: hbs`{{mount-widget widget="tag-name-override-test"}}`,
 
     beforeEach() {
       createWidget("test-override", { tagName: "div.not-override" });
 
       createWidget("tag-name-override-test", {
-        template: widgetHbs`{{attach widget="test-override" attrs=attrs otherOpts=(hash tagNameOverride="section.override")}}`,
+        template: widgetHbs`{{attach widget="test-override" attrs=attrs otherOpts=(hash tagName="section.override")}}`,
       });
     },
 

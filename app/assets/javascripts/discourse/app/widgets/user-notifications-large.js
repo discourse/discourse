@@ -25,7 +25,7 @@ createWidget("large-notification-item", {
         {},
         {
           fallbackWidgetName: "default-notification-item",
-          tagNameOverride: "div",
+          tagName: "div",
         }
       ),
       h("span.time", dateNode(attrs.created_at)),
