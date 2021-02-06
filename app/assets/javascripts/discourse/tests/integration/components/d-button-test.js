@@ -220,7 +220,7 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
       this.set("ariaExpanded", "false");
 
-      assert.equal(query("button").ariaExpanded, "false");
+      assert.equal(query("button").ariaExpanded, "true");
 
       this.set("ariaExpanded", "true");
 
