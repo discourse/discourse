@@ -27,6 +27,10 @@
         {{i18n "user_action_groups.11"}}
       {{/link-to}}
     </li>
+    {{plugin-outlet
+      name="user-notifications-bottom"
+      connectorTagName="li"
+      args=(hash model=model)}}
   {{/mobile-nav}}
 
 {{/d-section}}
