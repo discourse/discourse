@@ -106,19 +106,7 @@ const TopicTrackingState = EmberObject.extend({
       }
 
       if (data.message_type === "dismiss_new") {
-        Object.keys(tracker.states).forEach((k) => {
-          const topic = tracker.states[k];
-          if (
-            !data.payload.category_id ||
-            topic.category_id === parseInt(data.payload.category_id, 0)
-          ) {
-            tracker.states[k] = Object.assign({}, topic, {
-              is_seen: true,
-            });
-          }
-        });
-        tracker.notifyPropertyChange("states");
-        tracker.incrementMessageCount();
+        tracker.dismissNewTopic(data);
       }
 
       if (["new_topic", "unread", "read"].includes(data.message_type)) {
@@ -191,6 +179,23 @@ const TopicTrackingState = EmberObject.extend({
       createdAt: Date.now(),
     });
     this.currentUser && this.currentUser.set(key, topics);
+  },
+
+  dismissNewTopic(data) {
+    Object.keys(this.states).forEach((k) => {
+      const topic = this.states[k];
+      if (
+        (!data.payload.category_id ||
+          topic.category_id === parseInt(data.payload.category_id, 10)) &&
+        (!data.payload.tag_id || topic.tags.includes(data.payload.tag_id))
+      ) {
+        this.states[k] = Object.assign({}, topic, {
+          is_seen: true,
+        });
+      }
+    });
+    this.notifyPropertyChange("states");
+    this.incrementMessageCount();
   },
 
   pruneOldMutedAndUnmutedTopics() {

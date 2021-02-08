@@ -13,7 +13,12 @@ class DismissTopics
   private
 
   def rows
-    @rows ||= @topics_scope.where("created_at >= ?", since_date).order(created_at: :desc).limit(SiteSetting.max_new_topics).map do |topic|
+    @rows ||= @topics_scope
+      .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}")
+      .where("topics.created_at >= ?", since_date)
+      .where("topic_users.id IS NULL")
+      .order("topics.created_at DESC")
+      .limit(SiteSetting.max_new_topics).map do |topic|
       {
         topic_id: topic.id,
         user_id: @user.id,

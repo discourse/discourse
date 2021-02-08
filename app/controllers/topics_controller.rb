@@ -898,10 +898,21 @@ class TopicsController < ApplicationController
       if params[:include_subcategories] == 'true'
         category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
       end
-      DismissTopics.new(current_user, Topic.where(category_id: category_ids)).perform!
+
+      topic_scope =
+        if params[:tag_id]
+          Topic.where(category_id: category_ids).joins(:tags).where(tags: { name: params[:tag_id] })
+        else
+          Topic.where(category_id: category_ids)
+        end
+
+      DismissTopics.new(current_user, topic_scope).perform!
       category_ids.each do |category_id|
-        TopicTrackingState.publish_dismiss_new(current_user.id, category_id)
+        TopicTrackingState.publish_dismiss_new(current_user.id, category_id: category_id, tag_id: params[:tag_id])
       end
+    elsif params[:tag_id].present?
+      DismissTopics.new(current_user, Topic.joins(:tags).where(tags: { name: params[:tag_id] })).perform!
+      TopicTrackingState.publish_dismiss_new(current_user.id, tag_id: params[:tag_id])
     else
       if params[:tracked].to_s == "true"
         topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)

@@ -215,8 +215,10 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
-  def self.publish_dismiss_new(user_id, category_id = nil)
-    payload = category_id ? { category_id: category_id } : {}
+  def self.publish_dismiss_new(user_id, category_id: nil, tag_id: nil)
+    payload = {}
+    payload[:category_id] = category_id if category_id
+    payload[:tag_id] = tag_id if tag_id
     message = {
       message_type: "dismiss_new",
       payload: payload

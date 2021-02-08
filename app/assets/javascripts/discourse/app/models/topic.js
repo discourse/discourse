@@ -766,12 +766,16 @@ Topic.reopenClass({
     });
   },
 
-  resetNew(category, include_subcategories, tracked = false) {
+  resetNew(category, include_subcategories, tracked = false, tag = false) {
     const data = { tracked };
     if (category) {
       data.category_id = category.id;
       data.include_subcategories = include_subcategories;
     }
+    if (tag) {
+      data.tag_id = tag.id;
+    }
+
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
