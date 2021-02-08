@@ -418,5 +418,33 @@ discourseModule(
         );
       },
     });
+
+    componentTest("name", {
+      template: hbs`{{single-select value=value content=content}}`,
+
+      beforeEach() {
+        this.setProperties({
+          content: [{ id: 1, name: "john" }],
+          value: null,
+        });
+      },
+
+      async test(assert) {
+        assert.equal(
+          this.subject.header().el()[0].getAttribute("name"),
+          I18n.t("select_kit.select_to_filter")
+        );
+
+        await this.subject.expand();
+        await this.subject.selectRowByValue(1);
+
+        assert.equal(
+          this.subject.header().el()[0].getAttribute("name"),
+          I18n.t("select_kit.filter_by", {
+            name: this.content.firstObject.name,
+          })
+        );
+      },
+    });
   }
 );
