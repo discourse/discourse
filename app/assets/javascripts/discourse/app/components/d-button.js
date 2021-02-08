@@ -4,7 +4,6 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { isPresent } from "@ember/utils";
 
 export default Component.extend({
   tagName: "button",
@@ -97,13 +96,11 @@ export default Component.extend({
 
   @discourseComputed("ariaExpanded")
   computedAriaExpanded(ariaExpanded) {
-    if (isPresent(ariaExpanded)) {
-      if (ariaExpanded === true) {
-        return "true";
-      }
-      if (ariaExpanded === false) {
-        return "false";
-      }
+    if (ariaExpanded === true) {
+      return "true";
+    }
+    if (ariaExpanded === false) {
+      return "false";
     }
   },
 
