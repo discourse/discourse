@@ -3,7 +3,9 @@
 // create account modals
 .login-modal,
 .create-account {
-  min-width: 700px;
+  &.has-auth-alt {
+    min-width: 700px;
+  }
   #modal-alert {
     padding: 15px 16px;
   }
@@ -46,7 +48,8 @@
   #modal-alert {
     max-width: 100%;
     margin-bottom: 0;
-    padding: 8px 16px;
+    padding: 8px 40px 8px 16px;
+    min-height: 35px;
   }
 
   .tip {
@@ -71,11 +74,23 @@
 // login modal only
 .login-modal:not(.hidden) {
   padding: 0 !important;
+  @media (prefers-color-scheme: dark) {
+    &.has-alt-auth {
+      background: rgba(var(--tertiary-rgb), 0.5);
+    }
+  }
+  &.has-alt-auth {
+    background: var(--tertiary);
+    .login-left-side {
+      width: calc(60% - 4em);
+    }
+  }
   .login-left-side {
-    width: calc(60% - 4em);
+    background: var(--secondary);
+    width: calc(100% - 4em);
     display: flex;
     flex-direction: column;
-    padding: 1em 2em;
+    padding: 1em 4em 1em 2em;
     .login-welcome-header {
       h1 {
         font-size: 2.75em;
@@ -102,6 +117,9 @@
     }
   }
   .login-right-side {
+    display: none;
+  }
+  &.has-alt-auth .login-right-side {
     background-color: var(--tertiary);
     width: 40%;
     padding: 1em;
@@ -126,11 +144,6 @@
       }
     }
   }
-  @media (prefers-color-scheme: dark) {
-    .login-right-side {
-      background: rgba(var(--tertiary-rgb), 0.5);
-    }
-  }
   .modal-body,
   #credentials {
     display: flex;
@@ -147,6 +160,7 @@
 // modal only
 .d-modal.create-account {
   .create-account {
+    max-width: 500px;
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
@@ -159,10 +173,10 @@
       }
     }
     .modal-footer {
-      height: calc(94px - 23px);
+      // height: calc(94px - 23px);
     }
   }
-  .create-account-form {
+  &.has-alt-auth .create-account-form {
     display: grid;
     grid-template-columns: 65% 35%;
     grid-template-rows: 20% 80%;
@@ -170,7 +184,15 @@
       "header login-buttons"
       "form login-buttons";
   }
+  .create-account-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
   .create-account-login-buttons {
+    display: none;
+  }
+  &.has-alt-auth .create-account-login-buttons {
     grid-area: login-buttons;
     padding: 1em;
     display: flex;
@@ -205,6 +227,14 @@
     }
   }
 
+  &:not(.has-alt-auth) .login-form {
+    &:after,
+    &:before {
+      width: 100%;
+    }
+  }
+
+  &.has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
     padding: 1em;
@@ -221,16 +251,16 @@
       margin-left: -1em;
     }
     &:after {
-      bottom: 96px;
+      bottom: 93px;
       height: 1em;
       background-image: linear-gradient(
         to bottom,
         rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 0.9)
+        rgba(var(--secondary-rgb), 1)
       );
     }
     &:before {
-      top: calc(8em + 4px);
+      top: calc(8em - 10px);
       height: 1em;
       background-image: linear-gradient(
         to top,
