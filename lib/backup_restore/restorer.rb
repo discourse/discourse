@@ -9,7 +9,7 @@ module BackupRestore
 
     attr_reader :success
 
-    def initialize(user_id:, filename:, factory:, disable_emails: true)
+    def initialize(user_id:, filename:, factory:, disable_emails: true, location:)
       @user_id = user_id
       @filename = filename
       @factory = factory
@@ -24,7 +24,7 @@ module BackupRestore
       @current_db = RailsMultisite::ConnectionManagement.current_db
 
       @system = factory.create_system_interface
-      @backup_file_handler = factory.create_backup_file_handler(@filename, @current_db)
+      @backup_file_handler = factory.create_backup_file_handler(@filename, @current_db, location)
       @database_restorer = factory.create_database_restorer(@current_db)
       @uploads_restorer = factory.create_uploads_restorer
     end
