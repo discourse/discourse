@@ -50,20 +50,20 @@ def api_docs_description
     as an HTTP header like this:
 
     ```
-    curl -X GET "http://127.0.0.1:3000/admin/users/list/active.json" \
-    -H "Api-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19" \
+    curl -X GET "http://127.0.0.1:3000/admin/users/list/active.json" \\
+    -H "Api-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19" \\
     -H "Api-Username: system"
     ```
 
     and this is how POST requests will look:
 
     ```
-    curl -X POST "http://127.0.0.1:3000/categories" \
-    -H "Content-Type: multipart/form-data;" \
-    -H "Api-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19" \
-    -H "Api-Username: system" \
-    -F "name=89853c20-4409-e91a-a8ea-f6cdff96aaaa" \
-    -F "color=49d9e9" \
+    curl -X POST "http://127.0.0.1:3000/categories" \\
+    -H "Content-Type: multipart/form-data;" \\
+    -H "Api-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19" \\
+    -H "Api-Username: system" \\
+    -F "name=89853c20-4409-e91a-a8ea-f6cdff96aaaa" \\
+    -F "color=49d9e9" \\
     -F "text_color=f0fcfd"
     ```
 

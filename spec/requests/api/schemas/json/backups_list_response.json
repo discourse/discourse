@@ -1,7 +1,7 @@
 {
   "type": "array",
   "minItems": 1,
-  "uniqItems": true,
+  "uniqueItems": true,
   "items": {
     "type": "object",
     "properties": {
