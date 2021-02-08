@@ -265,6 +265,11 @@ export default class Widget {
       const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       result.dirtyKeys = this.dirtyKeys;
+
+      if (otherOpts.tagName) {
+        result.tagName = otherOpts.tagName;
+      }
+
       return result;
     } else {
       throw new Error(
