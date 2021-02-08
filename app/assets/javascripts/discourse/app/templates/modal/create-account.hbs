@@ -33,7 +33,7 @@
                     {{/if}}
                   </label>
                 {{/if}}
-                <label class="more-info">{{i18n "user.email.instructions"}}</label>
+                <label class="more-info" for="new-account-email">{{i18n "user.email.instructions"}}</label>
                 {{input-tip validation=emailValidation id="account-email-validation"}}
               </div>
 
@@ -51,7 +51,7 @@
                   </label>
                 {{/if}}
 
-                <label class="more-info">{{i18n "user.username.instructions"}}</label>
+                <label class="more-info" for="new-account-username">{{i18n "user.username.instructions"}}</label>
                 {{input-tip validation=usernameValidation id="username-validation"}}
               </div>
 
@@ -72,7 +72,7 @@
                     </label>
                   {{/if}}
 
-                  <label class="more-info">{{nameInstructions}}</label>
+                  <label class="more-info" for="new-account-name">{{nameInstructions}}</label>
                   {{input-tip validation=nameValidation}}
                 {{/if}}
               </div>
@@ -99,7 +99,7 @@
                     {{/if}}
                   </label>
 
-                  <label class="more-info">{{passwordInstructions}}</label>
+                  <label class="more-info" for="new-account-password">{{passwordInstructions}}</label>
                   {{input-tip validation=passwordValidation}}
                   <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
                     {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
@@ -117,7 +117,7 @@
                 <div class="input-group">
                   {{input value=inviteCode class=(value-entered inviteCode) id="inviteCode"}}
                   <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
-                  <label class="more-info">{{i18n "user.invite_code.instructions"}}</label>
+                  <label class="more-info" for="invite-code">{{i18n "user.invite_code.instructions"}}</label>
                 </div>
               {{/if}}
 
