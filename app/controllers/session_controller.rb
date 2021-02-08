@@ -29,7 +29,7 @@ class SessionController < ApplicationController
       if SiteSetting.verbose_discourse_connect_logging
         Rails.logger.warn("Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}")
       end
-      redirect_to discourse_connect_url(sso)
+      redirect_to sso_url(sso)
     else
       render body: nil, status: 404
     end
