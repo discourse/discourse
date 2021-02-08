@@ -503,6 +503,20 @@ RSpec.describe SessionController do
     end
   end
 
+  describe '#sso' do
+    before do
+      SiteSetting.discourse_connect_url = "http://example.com/discourse_sso"
+      SiteSetting.enable_discourse_connect = true
+      SiteSetting.discourse_connect_secret = "shjkfdhsfkjh"
+    end
+
+    it "redirects correctly" do
+      get "/session/sso"
+      expect(response.status).to eq(302)
+      expect(response.location).to start_with(SiteSetting.discourse_connect_url)
+    end
+  end
+
   describe '#sso_login' do
     before do
       @sso_url = "http://example.com/discourse_sso"
