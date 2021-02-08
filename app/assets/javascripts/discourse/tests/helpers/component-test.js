@@ -47,7 +47,7 @@ export default function (name, opts) {
     return;
   }
 
-  if (typeof opts.template === "string") {
+  if (typeof opts.template === "string" && !LEGACY_ENV) {
     let testName = QUnit.config.currentModule.name + " " + name;
     // eslint-disable-next-line
     console.warn(
