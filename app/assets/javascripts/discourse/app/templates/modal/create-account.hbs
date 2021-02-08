@@ -33,8 +33,8 @@
                     {{/if}}
                   </label>
                 {{/if}}
-                <label class="more-info" for="new-account-email">{{i18n "user.email.instructions"}}</label>
                 {{input-tip validation=emailValidation id="account-email-validation"}}
+                <label class="more-info" for="new-account-email">{{i18n "user.email.instructions"}}</label>
               </div>
 
               <div class="input-group">
@@ -51,8 +51,8 @@
                   </label>
                 {{/if}}
 
-                <label class="more-info" for="new-account-username">{{i18n "user.username.instructions"}}</label>
                 {{input-tip validation=usernameValidation id="username-validation"}}
+                <label class="more-info" for="new-account-username">{{i18n "user.username.instructions"}}</label>
               </div>
 
               <div class="input-group">
@@ -72,8 +72,8 @@
                     </label>
                   {{/if}}
 
-                  <label class="more-info" for="new-account-name">{{nameInstructions}}</label>
                   {{input-tip validation=nameValidation}}
+                  <label class="more-info" for="new-account-name">{{nameInstructions}}</label>
                 {{/if}}
               </div>
 
@@ -99,8 +99,8 @@
                     {{/if}}
                   </label>
 
-                  <label class="more-info" for="new-account-password">{{passwordInstructions}}</label>
                   {{input-tip validation=passwordValidation}}
+                  <label class="more-info" for="new-account-password">{{passwordInstructions}}</label>
                   <div class="caps-lock-warning {{unless capsLockOn " hidden"}}">
                     {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
                   </div>

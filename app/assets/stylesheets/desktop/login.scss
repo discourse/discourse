@@ -81,8 +81,10 @@
   }
   &.has-alt-auth {
     background: var(--tertiary);
+    min-width: 700px;
     .login-left-side {
       width: calc(60% - 4em);
+      padding: 1em 2em;
     }
   }
   .login-left-side {
@@ -160,7 +162,6 @@
 // modal only
 .d-modal.create-account {
   .create-account {
-    max-width: 500px;
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
@@ -176,7 +177,7 @@
       // height: calc(94px - 23px);
     }
   }
-  &.has-alt-auth .create-account-form {
+  .has-alt-auth .create-account-form {
     display: grid;
     grid-template-columns: 65% 35%;
     grid-template-rows: 20% 80%;
@@ -192,7 +193,7 @@
   .create-account-login-buttons {
     display: none;
   }
-  &.has-alt-auth .create-account-login-buttons {
+  .has-alt-auth .create-account-login-buttons {
     grid-area: login-buttons;
     padding: 1em;
     display: flex;
@@ -227,14 +228,14 @@
     }
   }
 
-  &:not(.has-alt-auth) .login-form {
+  :not(.has-alt-auth) .login-form {
     &:after,
     &:before {
       width: 100%;
     }
   }
 
-  &.has-alt-auth .login-form,
+  .has-alt-auth .login-form,
   .login-form {
     background: var(--secondary);
     padding: 1em;

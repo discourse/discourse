@@ -115,6 +115,9 @@
       input.alt-placeholder:invalid {
         color: var(--primary);
       }
+      .tip:not(:empty) + label.more-info {
+        display: none;
+      }
     }
 
     // user fields input groups will
