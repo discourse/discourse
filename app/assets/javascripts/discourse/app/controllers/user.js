@@ -57,6 +57,15 @@ export default Controller.extend(CanCheckEmails, {
   hasReceivedWarnings: gt("model.warnings_received_count", 0),
   hasRejectedPosts: gt("model.number_of_rejected_posts", 0),
 
+  collapsedInfoState: computed("collapsedInfo", function () {
+    return {
+      isExpanded: !this.collapsedInfo,
+      icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
+      label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
+      action: this.collapsedInfo ? "expandProfile" : "collapseProfile",
+    };
+  }),
+
   showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
