@@ -206,10 +206,12 @@ discourseModule("Integration | Component | d-button", function (hooks) {
     },
   });
 
-  componentTest("ariaExpanded", {
-    template: "{{d-button ariaExpanded=ariaExpanded}}",
+  componentTest("aria-expanded", {
+    template: hbs`{{d-button ariaExpanded=ariaExpanded}}`,
 
     test(assert) {
+      assert.equal(query("button").ariaExpanded, null);
+
       this.set("ariaExpanded", true);
 
       assert.equal(query("button").ariaExpanded, "true");
@@ -220,16 +222,16 @@ discourseModule("Integration | Component | d-button", function (hooks) {
 
       this.set("ariaExpanded", "false");
 
-      assert.equal(query("button").ariaExpanded, "true");
+      assert.equal(query("button").ariaExpanded, null);
 
       this.set("ariaExpanded", "true");
 
-      assert.equal(query("button").ariaExpanded, "true");
+      assert.equal(query("button").ariaExpanded, null);
     },
   });
 
-  componentTest("ariaControls", {
-    template: "{{d-button ariaControls=ariaControls}}",
+  componentTest("aria-controls", {
+    template: hbs`{{d-button ariaControls=ariaControls}}`,
 
     test(assert) {
       this.set("ariaControls", "foo-bar");

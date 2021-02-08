@@ -96,7 +96,12 @@ export default Component.extend({
 
   @discourseComputed("ariaExpanded")
   computedAriaExpanded(ariaExpanded) {
-    return ariaExpanded ? "true" : "false";
+    if (ariaExpanded === true) {
+      return "true";
+    }
+    if (ariaExpanded === false) {
+      return "false";
+    }
   },
 
   click(event) {
