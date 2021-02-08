@@ -1829,6 +1829,8 @@ en:
         other: "+ %{count} subcategories"
 
     select_kit:
+      filter_by: "Filter by: %{name}"
+      select_to_filter: "Select a value to filter"
       default_header_text: Select...
       no_content: No matches found
       filter_placeholder: Search...
