@@ -444,8 +444,8 @@ describe InvitesController do
 
             it "does not send password reset email if sso is enabled" do
               invite # create the invite before enabling SSO
-              SiteSetting.sso_url = "https://www.example.com/sso"
-              SiteSetting.enable_sso = true
+              SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+              SiteSetting.enable_discourse_connect = true
               put "/invites/show/#{invite.invite_key}.json"
               expect(response.status).to eq(200)
 

@@ -179,7 +179,7 @@ class UsersController < ApplicationController
     end
   rescue Discourse::InvalidAccess
     if current_user&.staff?
-      render_json_error(I18n.t('errors.messages.sso_overrides_username'))
+      render_json_error(I18n.t('errors.messages.auth_overrides_username'))
     else
       render json: failed_json, status: 403
     end
@@ -412,8 +412,8 @@ class UsersController < ApplicationController
       ))
     else
       if current_user&.staff?
-        message = if SiteSetting.enable_sso
-          I18n.t("invite.disabled_errors.sso_enabled")
+        message = if SiteSetting.enable_discourse_connect
+          I18n.t("invite.disabled_errors.discourse_connect_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
@@ -436,8 +436,8 @@ class UsersController < ApplicationController
       render json: MultiJson.dump(invites: serialize_data(invites.to_a, InviteLinkSerializer), can_see_invite_details:  guardian.can_see_invite_details?(inviter))
     else
       if current_user&.staff?
-        message = if SiteSetting.enable_sso
-          I18n.t("invite.disabled_errors.sso_enabled")
+        message = if SiteSetting.enable_discourse_connect
+          I18n.t("invite.disabled_errors.discourse_connect_enabled")
         elsif !SiteSetting.enable_local_logins
           I18n.t("invite.disabled_errors.local_logins_disabled")
         end
@@ -909,7 +909,7 @@ class UsersController < ApplicationController
 
   def account_created
     if current_user.present?
-      if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+      if SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
         return redirect_to(session_sso_provider_url + "?" + payload)
       elsif destination_url = cookies.delete(:destination_url)
         return redirect_to(destination_url)
@@ -958,7 +958,7 @@ class UsersController < ApplicationController
         elsif destination_url = cookies[:destination_url]
           cookies[:destination_url] = nil
           return redirect_to(destination_url)
-        elsif SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
+        elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
           return redirect_to(session_sso_provider_url + "?" + payload)
         end
       else
@@ -1095,7 +1095,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    if SiteSetting.sso_overrides_avatar
+    if SiteSetting.discourse_connect_overrides_avatar
       return render json: failed_json, status: 422
     end
 
@@ -1276,7 +1276,7 @@ class UsersController < ApplicationController
   end
 
   def list_second_factors
-    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
 
     unless params[:password].empty?
       RateLimiter.new(nil, "login-hr-#{request.remote_ip}", SiteSetting.max_logins_per_ip_per_hour, 1.hour).performed!
@@ -1448,7 +1448,7 @@ class UsersController < ApplicationController
   end
 
   def second_factor_check_confirmed_password
-    raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
 
     raise Discourse::InvalidAccess.new unless current_user && secure_session_confirmed?
   end

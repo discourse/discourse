@@ -1263,7 +1263,7 @@ en:
         set_primary: "Set Primary Email"
         destroy: "Remove Email"
         add_email: "Add Alternate Email"
-        sso_override_instructions: "Email can be updated from SSO provider."
+        auth_override_instructions: "Email can be updated from authentication provider."
         no_secondary: "No secondary emails"
         instructions: "Never shown to the public."
         admin_note: "Note: An admin user changing another non-admin user's email indicates the user has lost access to their original email account, so a reset password email will be sent to their new address. The user's email will not change until they complete the reset password process."
@@ -2648,7 +2648,7 @@ en:
         action: "Send Invite"
         help: "invite others to this topic via email or notifications"
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
-        sso_enabled: "Enter the username of the person you'd like to invite to this topic."
+        discourse_connect_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
         to_topic_username: "You've entered a username. We'll send a notification with a link inviting them to this topic."
@@ -3863,7 +3863,7 @@ en:
               wordpress: Necessary for the WordPress wp-discourse plugin to work.
             users:
               bookmarks: List user bookmarks. It returns bookmark reminders when using the ICS format.
-              sync_sso: Synchronize a user using SSO.
+              sync_sso: Synchronize a user using DiscourseConnect.
               show: Obtain information about an user.
               check_emails: List user emails.
               update: Update user profile information.
@@ -4853,8 +4853,8 @@ en:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Trust level locked. Will never be promoted."
           locked_will_not_be_demoted: "Trust level locked. Will never be demoted."
-        sso:
-          title: "Single Sign On"
+        discourse_connect:
+          title: "DiscourseConnect Single Sign On"
           external_id: "External ID"
           external_username: "Username"
           external_name: "Name"
@@ -4862,7 +4862,7 @@ en:
           external_avatar_url: "Profile Picture URL"
           last_payload: "Last Payload"
           delete_sso_record: "Delete SSO Record"
-          confirm_delete: "Are you sure you would like to delete this single sign on (SSO) record?"
+          confirm_delete: "Are you sure you would like to delete this DiscourseConnect record?"
 
       user_fields:
         title: "User Fields"

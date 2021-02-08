@@ -690,8 +690,8 @@ describe Guardian do
     end
 
     it 'returns false for all users when sso is enabled' do
-      SiteSetting.sso_url = "https://www.example.com/sso"
-      SiteSetting.enable_sso = true
+      SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.enable_discourse_connect = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_falsey
       expect(Guardian.new(moderator).can_invite_via_email?(topic)).to be_falsey
@@ -2714,9 +2714,9 @@ describe Guardian do
 
     context 'when SSO username override is active' do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_username = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_username = true
       end
 
       it "is false for admins" do
@@ -2799,9 +2799,9 @@ describe Guardian do
     context 'when SSO email override is active' do
       before do
         SiteSetting.email_editable = false
-        SiteSetting.sso_url = "https://www.example.com/sso"
-        SiteSetting.enable_sso = true
-        SiteSetting.sso_overrides_email = true
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+        SiteSetting.auth_overrides_email = true
       end
 
       it "is false for admins" do
@@ -2878,8 +2878,8 @@ describe Guardian do
 
       context 'when SSO is disabled' do
         before do
-          SiteSetting.enable_sso = false
-          SiteSetting.sso_overrides_name = false
+          SiteSetting.enable_discourse_connect = false
+          SiteSetting.auth_overrides_name = false
         end
 
         it 'is true for admins' do
@@ -2897,13 +2897,13 @@ describe Guardian do
 
       context 'when SSO is enabled' do
         before do
-          SiteSetting.sso_url = "https://www.example.com/sso"
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
         end
 
         context 'when SSO name override is active' do
           before do
-            SiteSetting.sso_overrides_name = true
+            SiteSetting.auth_overrides_name = true
           end
 
           it 'is false for admins' do
@@ -2921,7 +2921,7 @@ describe Guardian do
 
         context 'when SSO name override is not active' do
           before do
-            SiteSetting.sso_overrides_name = false
+            SiteSetting.auth_overrides_name = false
           end
 
           it 'is true for admins' do

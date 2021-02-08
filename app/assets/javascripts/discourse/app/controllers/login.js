@@ -392,7 +392,7 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     const skipConfirmation =
-      options && this.siteSettings.external_auth_skip_create_confirm;
+      options && this.siteSettings.auth_skip_create_confirm;
 
     const createAccountController = this.createAccount;
     createAccountController.setProperties({

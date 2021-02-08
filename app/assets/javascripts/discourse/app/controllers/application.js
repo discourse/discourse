@@ -13,7 +13,7 @@ export default Controller.extend({
     return (
       !this.siteSettings.invite_only &&
       this.siteSettings.allow_new_registrations &&
-      !this.siteSettings.enable_sso
+      !this.siteSettings.enable_discourse_connect
     );
   },
 

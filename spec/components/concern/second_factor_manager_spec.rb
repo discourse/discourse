@@ -111,8 +111,8 @@ RSpec.describe SecondFactorManager do
 
     describe 'when SSO is enabled' do
       it 'should return false' do
-        SiteSetting.sso_url = 'http://someurl.com'
-        SiteSetting.enable_sso = true
+        SiteSetting.discourse_connect_url = 'http://someurl.com'
+        SiteSetting.enable_discourse_connect = true
 
         expect(user.totp_enabled?).to eq(false)
       end
@@ -437,8 +437,8 @@ RSpec.describe SecondFactorManager do
 
       describe 'when SSO is enabled' do
         it 'should return false' do
-          SiteSetting.sso_url = 'http://someurl.com'
-          SiteSetting.enable_sso = true
+          SiteSetting.discourse_connect_url = 'http://someurl.com'
+          SiteSetting.enable_discourse_connect = true
 
           expect(user_backup.backup_codes_enabled?).to eq(false)
         end

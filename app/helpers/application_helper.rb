@@ -548,7 +548,7 @@ module ApplicationHelper
   def can_sign_up?
     SiteSetting.allow_new_registrations &&
     !SiteSetting.invite_only &&
-    !SiteSetting.enable_sso
+    !SiteSetting.enable_discourse_connect
   end
 
   def rss_creator(user)

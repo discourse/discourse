@@ -127,8 +127,8 @@ describe UploadsController do
         expect(response.status).to eq(422)
       end
 
-      it 'ensures sso_overrides_avatar is not enabled when uploading an avatar' do
-        SiteSetting.sso_overrides_avatar = true
+      it 'ensures discourse_connect_overrides_avatar is not enabled when uploading an avatar' do
+        SiteSetting.discourse_connect_overrides_avatar = true
         post "/uploads.json", params: { file: logo, type: "avatar" }
         expect(response.status).to eq(422)
       end

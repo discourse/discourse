@@ -44,7 +44,7 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def include_external_id?
-    SiteSetting.enable_sso
+    SiteSetting.enable_discourse_connect
   end
 
 end

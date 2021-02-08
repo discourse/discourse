@@ -120,15 +120,15 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_change_bio
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_bio)
   end
 
   def can_change_location
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_location)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_location)
   end
 
   def can_change_website
-    !(SiteSetting.enable_sso && SiteSetting.sso_overrides_website)
+    !(SiteSetting.enable_discourse_connect && SiteSetting.discourse_connect_overrides_website)
   end
 
   def user_api_keys
