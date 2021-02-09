@@ -6,7 +6,7 @@ module Jobs
     def execute(args)
       post = Post.find_by(id: args[:post_id])
 
-      if post
+      if post && post.topic
         TopicTrackingState.publish_unmuted(post.topic)
         if post.post_number > 1
           TopicTrackingState.publish_muted(post.topic)
