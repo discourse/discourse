@@ -56,12 +56,13 @@ module BackupRestore
       @system.disable_readonly_mode
 
       clear_category_cache
-      clear_emoji_cache
-      clear_theme_cache
       clear_stats
       reload_translations
 
       @uploads_restorer.restore(@tmp_directory)
+
+      clear_emoji_cache
+      clear_theme_cache
 
       after_restore_hook
     rescue Compression::Strategy::ExtractFailed
@@ -134,6 +135,8 @@ module BackupRestore
     def clear_emoji_cache
       log "Clearing emoji cache..."
       Emoji.clear_cache
+    rescue => ex
+      log "Something went wrong while clearing emoji cache.", ex
     end
 
     def reload_translations
@@ -172,6 +175,8 @@ module BackupRestore
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
       Stylesheet::Manager.cache.clear
+    rescue => ex
+      log "Something went wrong while clearing theme cache.", ex
     end
 
     def clear_stats
