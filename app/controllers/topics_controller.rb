@@ -848,7 +848,24 @@ class TopicsController < ApplicationController
   def feed
     raise Discourse::NotFound if !Post.exists?(topic_id: params[:topic_id])
 
-    @topic_view = TopicView.new(params[:topic_id])
+    begin
+      @topic_view = TopicView.new(params[:topic_id])
+    rescue Discourse::NotLoggedIn
+      raise Discourse::NotFound
+    rescue Discourse::InvalidAccess => ex
+
+      deleted = guardian.can_see_topic?(ex.obj, false) ||
+        (!guardian.can_see_topic?(ex.obj) &&
+         ex.obj&.access_topic_via_group &&
+         ex.obj.deleted_at)
+
+      raise Discourse::NotFound.new(
+        nil,
+        check_permalinks: deleted,
+        original_path: ex.obj.relative_url
+      )
+    end
+
     discourse_expires_in 1.minute
     render 'topics/show', formats: [:rss]
   end

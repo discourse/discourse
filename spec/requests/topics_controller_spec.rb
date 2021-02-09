@@ -2540,6 +2540,12 @@ RSpec.describe TopicsController do
       get "/t/foo/#{topic.id}.rss"
       expect(response.status).to eq(404)
     end
+
+    it 'returns 404 when the topic is deleted' do
+      topic.trash!
+      get "/t/foo/#{topic.id}.rss"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe '#invite_group' do
