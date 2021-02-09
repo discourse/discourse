@@ -169,8 +169,9 @@ task 'emails:test', [:email] => [:environment] do |_, args|
   begin
     puts "Sending to #{email}. . . "
     Email::Sender.new(TestMailer.send_test(email), :test_message).send
-  rescue
+  rescue => error
     puts "Sending mail failed."
+    puts error.message
   else
     puts <<~STR
       Mail accepted by SMTP server.
