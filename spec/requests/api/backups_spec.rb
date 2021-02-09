@@ -4,8 +4,8 @@ require 'swagger_helper'
 describe 'backups' do
 
   let(:admin) { Fabricate(:admin) }
-  let(:backup_filename) { "2014-02-10-065935.tar.gz" }
-  let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
+  let(:backup_filename) { "2021-02-10-065935.tar.gz" }
+  let(:backup_filename2) { "2021-02-11-065935.tar.gz" }
 
   def create_backup_files(*filenames)
     @paths = filenames.map do |filename|
