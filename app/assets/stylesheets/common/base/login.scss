@@ -121,6 +121,22 @@
       }
     }
 
+    #second-factor {
+      input {
+        width: 100%;
+        padding: 0.75em 0.5em;
+        border-radius: 0.25em;
+        min-width: 250px;
+        box-shadow: none;
+        margin-bottom: 2em;
+      }
+      input:focus {
+        outline: none;
+        border: 1px solid var(--tertiary);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+      }
+    }
+
     // user fields input groups will
     // be styled differently
     .user-fields .input-group {

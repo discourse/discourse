@@ -77,13 +77,21 @@ export default Controller.extend(ModalFunctionality, {
     return showSecondFactor || showSecurityKey ? "" : "hidden";
   },
 
-  @discourseComputed("awaitingApproval", "hasAtLeastOneLoginButton")
-  modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
+  @discourseComputed(
+    "awaitingApproval",
+    "hasAtLeastOneLoginButton",
+    "showSecondFactor"
+  )
+  modalBodyClasses(
+    awaitingApproval,
+    hasAtLeastOneLoginButton,
+    showSecondFactor
+  ) {
     const classes = ["login-modal"];
     if (awaitingApproval) {
       classes.push("awaiting-approval");
     }
-    if (hasAtLeastOneLoginButton) {
+    if (hasAtLeastOneLoginButton && !showSecondFactor) {
       classes.push("has-alt-auth");
     }
     return classes.join(" ");
