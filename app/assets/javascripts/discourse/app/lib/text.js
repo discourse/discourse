@@ -21,6 +21,7 @@ function getOpts(opts) {
       customEmojiTranslation: context.site.custom_emoji_translation,
       siteSettings: context.siteSettings,
       formatUsername,
+      watchedWordsLinks: context.site.watched_words_links,
     },
     opts
   );
