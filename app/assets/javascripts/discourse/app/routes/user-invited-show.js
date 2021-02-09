@@ -1,7 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Invite from "discourse/models/invite";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   model(params) {
@@ -27,57 +25,5 @@ export default DiscourseRoute.extend({
       totalInvites: model.invites.length,
       invitesCount: this.invitesCount,
     });
-  },
-
-  actions: {
-    showInvite() {
-      const panels = [
-        {
-          id: "invite",
-          title: "user.invited.single_user",
-          model: {
-            inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show"),
-          },
-        },
-      ];
-
-      if (this.get("currentUser.staff")) {
-        panels.push({
-          id: "invite-link",
-          title: "user.invited.multiple_user",
-          model: {
-            inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show"),
-          },
-        });
-        panels.reverse();
-      }
-
-      showModal("share-and-invite", {
-        modalClass: "share-and-invite",
-        panels,
-      });
-    },
-
-    editInvite(inviteKey) {
-      const inviteLink = getAbsoluteURL(`/invites/${inviteKey}`);
-      this.currentUser.setProperties({ finished: true, inviteLink });
-      const panels = [
-        {
-          id: "invite-link",
-          title: "user.invited.invite_link.title",
-          model: {
-            inviteModel: this.currentUser,
-            userInvitedShow: this.controllerFor("user-invited-show"),
-          },
-        },
-      ];
-
-      showModal("share-and-invite", {
-        modalClass: "share-and-invite",
-        panels,
-      });
-    },
   },
 });

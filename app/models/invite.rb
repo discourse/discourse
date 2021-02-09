@@ -2,6 +2,7 @@
 
 class Invite < ActiveRecord::Base
   class UserExists < StandardError; end
+
   include RateLimiter::OnCreateRecord
   include Trashable
 
@@ -25,6 +26,7 @@ class Invite < ActiveRecord::Base
   has_many :groups, through: :invited_groups
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
+
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
 
@@ -76,71 +78,53 @@ class Invite < ActiveRecord::Base
     expires_at < Time.zone.now
   end
 
+  def link
+    "#{Discourse.base_url}/invites/#{invite_key}"
+  end
+
   # link_valid? indicates whether the invite link can be used to log in to the site
   def link_valid?
     invalidated_at.nil?
   end
 
-  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
-    if !expired? && !destroyed? && link_valid?
-      InviteRedeemer.new(invite: self, email: self.email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
-    end
-  end
-
-  def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
-    create_invite_by_email(email, invited_by,
-      topic: topic,
-      group_ids: group_ids,
-      custom_message: custom_message,
-      emailed_status: emailed_status_types[:pending]
-    )
-  end
-
-  def self.generate_single_use_invite_link(email, invited_by, topic = nil, group_ids = nil)
-    invite = create_invite_by_email(email, invited_by,
-      topic: topic,
-      group_ids: group_ids,
-      emailed_status: emailed_status_types[:not_required]
-    )
-
-    "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
-  end
-
-  # Create an invite for a user, supplying an optional topic
-  #
-  # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, opts = nil)
+  def self.generate(invited_by, opts = nil)
     opts ||= {}
 
-    topic = opts[:topic]
-    group_ids = opts[:group_ids]
-    custom_message = opts[:custom_message]
-    emailed_status = opts[:emailed_status] || emailed_status_types[:pending]
-    lower_email = Email.downcase(email)
+    email = Email.downcase(opts[:email]) if opts[:email].present?
 
-    if user = find_user_by_email(lower_email)
-      raise UserExists.new(I18n.t("invite.user_exists",
-        email: lower_email,
+    if user = find_user_by_email(email)
+      raise UserExists.new(I18n.t(
+        "invite.user_exists",
+        email: email,
         username: user.username,
         base_path: Discourse.base_path
       ))
     end
 
-    invite = Invite.with_deleted
-      .where(email: lower_email, invited_by_id: invited_by.id)
-      .order('created_at DESC')
-      .first
+    if email.present?
+      invite = Invite
+        .with_deleted
+        .where(email: email, invited_by_id: invited_by.id)
+        .order('created_at DESC')
+        .first
 
-    if invite && (invite.expired? || invite.deleted_at)
-      invite.destroy
-      invite = nil
+      if invite && (invite.expired? || invite.deleted_at)
+        invite.destroy
+        invite = nil
+      end
+    end
+
+    emailed_status = if invite&.emailed_status == emailed_status_types[:not_required]
+      emailed_status_types[:not_required]
+    elsif opts[:emailed_status].present?
+      opts[:emailed_status]
+    elsif email.present?
+      emailed_status_types[:pending]
+    else
+      emailed_status_types[:not_required]
     end
 
     if invite
-      if invite.emailed_status == Invite.emailed_status_types[:not_required]
-        emailed_status = invite.emailed_status
-      end
-
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
@@ -148,57 +132,47 @@ class Invite < ActiveRecord::Base
         emailed_status: emailed_status
       )
     else
-      create_args = {
-        invited_by: invited_by,
-        email: lower_email,
-        emailed_status: emailed_status
-      }
+      create_args = opts.slice(:invite_key, :email, :moderator, :custom_message, :max_redemptions_allowed, :expires_at)
+      create_args[:invited_by] = invited_by
+      create_args[:email] = email
+      create_args[:emailed_status] = emailed_status
 
-      create_args[:moderator] = true if opts[:moderator]
-      create_args[:custom_message] = custom_message if custom_message
       invite = Invite.create!(create_args)
     end
 
-    if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
-      invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
-      # to correct association
-      topic.reload
+    topic_id = opts[:topic]&.id || opts[:topic_id]
+    if topic_id.present?
+      invite.topic_invites.find_or_create_by!(topic_id: topic_id)
     end
 
+    group_ids = opts[:group_ids]
     if group_ids.present?
-      group_ids = group_ids - invite.invited_groups.pluck(:group_id)
-
       group_ids.each do |group_id|
-        invite.invited_groups.create!(group_id: group_id)
+        invite.invited_groups.find_or_create_by!(group_id: group_id)
       end
     end
 
     if emailed_status == emailed_status_types[:pending]
-      invite.update_column(:emailed_status, Invite.emailed_status_types[:sending])
+      invite.update_column(:emailed_status, emailed_status_types[:sending])
       Jobs.enqueue(:invite_email, invite_id: invite.id)
     end
 
     invite.reload
-    invite
   end
 
-  def self.generate_multiple_use_invite_link(invited_by:, max_redemptions_allowed: 5, expires_at: 1.month.from_now, group_ids: nil)
-    Invite.transaction do
-      create_args = {
-        invited_by: invited_by,
-        max_redemptions_allowed: max_redemptions_allowed.to_i,
-        expires_at: expires_at,
-        emailed_status: emailed_status_types[:not_required]
-      }
-      invite = Invite.create!(create_args)
+  def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
+    generate(invited_by,
+      email: email,
+      topic: topic,
+      group_ids: group_ids,
+      custom_message: custom_message,
+      emailed_status: emailed_status_types[:pending]
+    )
+  end
 
-      if group_ids.present?
-        now = Time.zone.now
-        invited_groups = group_ids.map { |group_id| { group_id: group_id, invite_id: invite.id, created_at: now, updated_at: now } }
-        InvitedGroup.insert_all(invited_groups)
-      end
-
-      "#{Discourse.base_url}/invites/#{invite.invite_key}"
+  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+    if !expired? && !destroyed? && link_valid?
+      InviteRedeemer.new(invite: self, email: self.email, username: username, name: name, password: password, user_custom_fields: user_custom_fields, ip_address: ip_address).redeem
     end
   end
 

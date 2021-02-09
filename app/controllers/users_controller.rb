@@ -407,7 +407,12 @@ class UsersController < ApplicationController
       inviter = fetch_user_from_params(include_inactive: current_user.staff? || SiteSetting.show_inactive_accounts)
 
       invites = if guardian.can_see_invite_details?(inviter) && filter_by == "pending"
-        Invite.find_pending_invites_from(inviter, offset)
+        Invite
+          .where('redemption_count < max_redemptions_allowed')
+          .where(invited_by: inviter)
+          .order(updated_at: :desc)
+          .limit(SiteSetting.invites_per_page)
+          .offset(offset)
       elsif filter_by == "redeemed"
         Invite.find_redeemed_invites_from(inviter, offset)
       else

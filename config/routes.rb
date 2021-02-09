@@ -821,6 +821,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, except: [:show]
     get "/invites/:id" => "invites#show", constraints: { format: :html }
+    put "/invites/:id" => "invites#update"
 
     post "invites/upload_csv" => "invites#upload_csv"
     post "invites/rescind-all" => "invites#rescind_all_invites"

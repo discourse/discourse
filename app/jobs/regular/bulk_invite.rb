@@ -107,7 +107,8 @@ module Jobs
           end
         else
           if @total_invites > Invite::BULK_INVITE_EMAIL_LIMIT
-            invite = Invite.create_invite_by_email(email, @current_user,
+            invite = Invite.generate(@current_user,
+              email: email,
               topic: topic,
               group_ids: groups.map(&:id),
               emailed_status: Invite.emailed_status_types[:bulk_pending]

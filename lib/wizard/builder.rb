@@ -276,10 +276,10 @@ class Wizard
             users = JSON.parse(updater.fields[:invite_list])
 
             users.each do |u|
-              args = {}
+              args = { email: u['email'] }
               args[:moderator] = true if u['role'] == 'moderator'
               begin
-                Invite.create_invite_by_email(u['email'], @wizard.user, args)
+                Invite.generate(@wizard.user, args)
               rescue => e
                 updater.errors.add(:invite_list, e.message.concat("<br>"))
               end

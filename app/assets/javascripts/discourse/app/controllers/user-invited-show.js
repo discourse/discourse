@@ -1,6 +1,9 @@
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import showModal from "discourse/lib/show-modal";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { equal, reads } from "@ember/object/computed";
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Invite from "discourse/models/invite";
@@ -59,7 +62,6 @@ export default Controller.extend({
 
   canInviteToForum: reads("currentUser.can_invite_to_forum"),
   canBulkInvite: reads("currentUser.admin"),
-  canSendInviteLink: reads("currentUser.staff"),
 
   @discourseComputed("totalInvites", "inviteLinks")
   showSearch(totalInvites, inviteLinks) {
@@ -88,74 +90,82 @@ export default Controller.extend({
     }
   },
 
-  @discourseComputed("invitesCount.total", "invitesCount.links")
-  linksLabel(invitesCountTotal, invitesCountLinks) {
-    if (invitesCountTotal > 50) {
-      return I18n.t("user.invited.links_tab_with_count", {
-        count: invitesCountLinks,
-      });
-    } else {
-      return I18n.t("user.invited.links_tab");
-    }
+  @action
+  showInvite() {
+    showModal("create-invite");
   },
 
-  actions: {
-    rescind(invite) {
-      invite.rescind();
-      return false;
-    },
+  @action
+  editInvite(invite) {
+    const controller = showModal("create-invite");
+    controller.setProperties({ showAdvanced: true });
+    controller.setInvite(invite);
+  },
 
-    rescindAll() {
-      bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), (confirm) => {
-        if (confirm) {
-          Invite.rescindAll()
-            .then(() => {
-              this.set("rescindedAll", true);
-            })
-            .catch(popupAjaxError);
+  @action
+  showInviteLink(invite) {
+    const controller = showModal("create-invite");
+    controller.setProperties({ showAdvanced: true, showOnly: true });
+    controller.setInvite(invite);
+  },
+
+  @action
+  rescind(invite) {
+    invite.rescind();
+    return false;
+  },
+
+  @action
+  rescindAll() {
+    bootbox.confirm(I18n.t("user.invited.rescind_all_confirm"), (confirm) => {
+      if (confirm) {
+        Invite.rescindAll()
+          .then(() => {
+            this.set("rescindedAll", true);
+          })
+          .catch(popupAjaxError);
+      }
+    });
+  },
+
+  @action
+  reinvite(invite) {
+    invite.reinvite();
+    return false;
+  },
+
+  @action
+  reinviteAll() {
+    bootbox.confirm(I18n.t("user.invited.reinvite_all_confirm"), (confirm) => {
+      if (confirm) {
+        Invite.reinviteAll()
+          .then(() => this.set("reinvitedAll", true))
+          .catch(popupAjaxError);
+      }
+    });
+  },
+
+  @action
+  loadMore() {
+    const model = this.model;
+
+    if (this.canLoadMore && !this.invitesLoading) {
+      this.set("invitesLoading", true);
+      Invite.findInvitedBy(
+        this.user,
+        this.filter,
+        this.searchTerm,
+        model.invites.length
+      ).then((invite_model) => {
+        this.set("invitesLoading", false);
+        model.invites.pushObjects(invite_model.invites);
+        if (
+          invite_model.invites.length === 0 ||
+          invite_model.invites.length < this.siteSettings.invites_per_page
+        ) {
+          this.set("canLoadMore", false);
         }
       });
-    },
-
-    reinvite(invite) {
-      invite.reinvite();
-      return false;
-    },
-
-    reinviteAll() {
-      bootbox.confirm(
-        I18n.t("user.invited.reinvite_all_confirm"),
-        (confirm) => {
-          if (confirm) {
-            Invite.reinviteAll()
-              .then(() => this.set("reinvitedAll", true))
-              .catch(popupAjaxError);
-          }
-        }
-      );
-    },
-
-    loadMore() {
-      const model = this.model;
-
-      if (this.canLoadMore && !this.invitesLoading) {
-        this.set("invitesLoading", true);
-        Invite.findInvitedBy(
-          this.user,
-          this.filter,
-          this.searchTerm,
-          model.invites.length
-        ).then((invite_model) => {
-          this.set("invitesLoading", false);
-          model.invites.pushObjects(invite_model.invites);
-          if (
-            invite_model.invites.length === 0 ||
-            invite_model.invites.length < this.siteSettings.invites_per_page
-          ) {
-            this.set("canLoadMore", false);
-          }
-        });
-      }
-    },
+    }
   },
 });
