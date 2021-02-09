@@ -108,6 +108,7 @@ class DiscourseCLI < Thor
 
   desc "restore", "Restore a Discourse backup"
   option :disable_emails, type: :boolean, default: true
+  option :location, type: :string, enum: ["local", "s3"], desc: "Override the backup location"
   def restore(filename = nil)
 
     if File.exist?('/usr/local/bin/discourse')
@@ -124,7 +125,7 @@ class DiscourseCLI < Thor
     if !filename
       puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
 
-      store = BackupRestore::BackupStore.create
+      store = BackupRestore::BackupStore.create(location: options[:location])
       store.files.each do |file|
         puts "#{discourse} restore #{file.filename}"
       end
@@ -138,6 +139,7 @@ class DiscourseCLI < Thor
         user_id: Discourse.system_user.id,
         filename: filename,
         disable_emails: options[:disable_emails],
+        location: options[:location],
         factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id)
       )
       restorer.run
