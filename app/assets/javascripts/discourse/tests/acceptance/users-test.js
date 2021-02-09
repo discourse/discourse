@@ -25,4 +25,10 @@ acceptance("User Directory", function () {
     assert.ok($("body.users-page").length, "has the body class");
     assert.ok(exists(".directory table tr"), "has a list of users");
   });
+
+  test("group-chooser is availabe", async function (assert) {
+    await visit("/u");
+    assert.ok($("body.users-page").length, "has the body class");
+    assert.ok(exists(".group-chooser"), "has a group-chooser");
+  });
 });
