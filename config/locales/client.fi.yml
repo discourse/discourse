@@ -1972,7 +1972,6 @@ fi:
         choose_new_tags: "Valitse tunnisteet näille ketjuille:"
         choose_append_tags: "Valitse ketjuille lisättävät uudet tunnisteet:"
         changed_tags: "Ketjujen tunnisteet muutettiin."
-        remove_tags: "Poista tunnisteita"
         progress:
           one: "Edetty: <strong>%{count}</strong> ketju"
           other: "Edetty: <strong>%{count}</strong> ketjua"
@@ -2100,7 +2099,7 @@ fi:
         remove: "Poista ajastin"
         publish_to: "Mihin julkaistaan:"
         when: "Milloin:"
-        time_frame_required: Valitse ajanjakso
+        time_frame_required: "Valitse ajanjakso"
       auto_update_input:
         none: "Valitse ajanjakso"
         now: "Nyt"
@@ -2303,13 +2302,11 @@ fi:
         username_placeholder: "käyttäjätunnus"
         action: "Lähetä kutsu"
         help: "Kutsu muita tähän ketjuun sähköpostin tai palstan ilmoitusten kautta"
-        sso_enabled: "Syötä henkilön käyttäjätunnus, jonka haluaisit kutsua tähän ketjuun."
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
         to_topic_username: "Annoit käyttäjänimen. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         to_username: "Kirjoita henkilön käyttäjänimi, jonka haluat kutsua. Lähetämme hänelle ilmoituksen, jossa on linkki ja kutsu tähän ketjuun."
         email_placeholder: "nimi@esimerkki.fi"
-        success_email: "Olemme lähettäneet kutsun osoitteeseen <b>%{emailOrUsername}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."
         error: "Emme valitettavasti onnistuneet kutsumaan tätä henkilöä. Ehkäpä hänet on jo kutsuttu? (Huomaa, että kutsumistiheyttä rajoitetaan)"
         success_existing_email: "On jo olemassa käyttäjä sähköpostiosoitteella <b>%{emailOrUsername}</b>. Hänet kutsuttiin osallistumaan tähän ketjuun."
@@ -3315,10 +3312,6 @@ fi:
             available: "Ryhmän nimi on käytettävissä"
             not_available: "Ryhmän nimi ei ole käytettävissä"
             blank: "Ryhmällä on oltava nimi"
-        bulk_add:
-          title: "Liitä ryhmään useita"
-          complete_users_not_added: "Näitä käyttäjiä ei liitetty (varmistu että heillä on käyttäjätili):"
-          paste: "Liitä luettelo käyttäjänimistä tai sähköposteista, yksi per rivi:"
         add_members:
           as_owner: "Tee käyttäjistä ryhmän isäntiä"
         manage:
@@ -4318,13 +4311,6 @@ fi:
           on_grace_period: "Tällä hetkellä siirtymäajalla, ei alenneta"
           locked_will_not_be_promoted: "Luottamustaso lukittu. Ei koskaan ylennetä."
           locked_will_not_be_demoted: "Luottamustaso lukittu. Ei koskaan alenneta."
-        sso:
-          title: "Kertakirjautuminen"
-          external_id: "Ulkopuolinen ID"
-          external_username: "Käyttäjätunnus"
-          external_name: "Nimi"
-          external_email: "Sähköposti"
-          external_avatar_url: "Profiilikuvan URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."

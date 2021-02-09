@@ -1323,13 +1323,11 @@ sq:
         username_placeholder: "emri i përdoruesit"
         action: "Dërgoni ftesën"
         help: "fto të tjerë në këtë temë nëpërmjet emailit ose njoftimeve"
-        sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"
         to_topic_email: "Ju keni shtuar një adresë email. Ne do t'i dërgojmë një ftesë në email që do ta lejojë mikun tuaj t'i përgjigjet menjëherë kësaj teme."
         to_topic_username: "Ju shtuat një emër përdoruesi. Ne do t'i dërgojmë një njoftim me një lidhje duke i ftuar ata në këtë temë."
         to_username: "Vendosni emrin e përdoruesit që dëshironi të ftoni. Sistemi do i dërgojë një njoftim me një lidhje drejt kësaj teme. "
         email_placeholder: "emri@adresa.com"
-        success_email: "Sistemi dërgoi një ftesë për <b>%{emailOrUsername}</b>. Do t'ju njoftojmë kur ftesa të jetë pranuar. Shikoni edhe faqen Ftesat nën profilin tuaj të anëtarit për të parë statusin e ftesave. "
         success_username: "Ky anëtar u ftua të marrë pjesë në këtë temë. "
         error: "Nuk e ftuam dot këtë person. A ka mundësi që të jetë ftuar më parë?"
       login_reply: "Identifikohu për t'u Përgjigjur"
@@ -1930,9 +1928,6 @@ sq:
       groups:
         new:
           title: "Grup i ri"
-        bulk_add:
-          title: "Shto në masë tek grupi"
-          paste: "Ngjit një listë përdoruesisht ose adresash email, 1 për çdo rresht:"
         manage:
           interaction:
             email: Email
@@ -2459,13 +2454,6 @@ sq:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Niveli i besimit i kyçur. Nuk do të promovohet kurrë. "
           locked_will_not_be_demoted: "Niveli i besimit i kyçur. Nuk do të rikthehet kurrë. "
-        sso:
-          title: "Single Sign On"
-          external_id: "ID i jashtëm"
-          external_username: "Emri i përdoruesit"
-          external_name: "Emri"
-          external_email: "Email"
-          external_avatar_url: "URL e fotos së profilit"
       user_fields:
         title: "Fushat e përdoruesit"
         help: "Shto fusha që përdoruesit mund të plotësojnë."

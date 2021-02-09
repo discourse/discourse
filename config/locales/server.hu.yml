@@ -152,6 +152,7 @@ hu:
     not_found_json: "A meghívási token érvénytelen. Lépjen kapcsolatba a stábbal."
     error_message: "Hiba történt a meghívó elfogadásakor. Lépjen kapcsolatba az oldal rendszergazdájával."
     user_exists: "Nincs szükség <b>%{email}</b> meghívására, már <a href='%{base_path}/u/%{username}/summary'>rendelkezik fiókkal.</a>"
+    confirm_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
   backup:
     operation_already_running: "Egy művelet jelenleg is fut. Most nem indítható új feladat."
     backup_file_should_be_tar_gz: "A biztonsági mentésnek .tar.gz archívumnak kell lennie."
@@ -448,6 +449,7 @@ hu:
     please_continue: "Megerősítettük a fiókját, most visszairányítjuk a kezdőoldalra."
     continue_button: "Tovább a(z) %{site_name} oldalra"
     welcome_to: "Üdvözöljük a(z) %{site_name} oldalon."
+    activated: "Ezt a fiókot már aktiválták."
     admin_confirm:
       title: "Adminisztrátori fiók megerősítése"
       grant: "Adminisztrátori hozzáférés adása"
@@ -792,6 +794,7 @@ hu:
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
     wait_approval: "Köszönjük, hogy regisztrált! Értesíteni fogjuk, amint elfogadták a kérelmét."
     active: "A fiókja aktív és készen áll a használatra."
+    activate_email: "<p>Mindjárt készen is vagyunk! Elküldtünk egy megerősítő e-mailt a <b>%{email}</b> címre. Kérlek, kövesd a benne található instrukciókat, és aktiváld a fiókodat.</p><p>Ha pár percen belül nem érkezne meg, ne felejtsd el a <b>SPAM</b> és a <b>Promóciók</b> mappában is ellenőrizni!</p>"
     admin_not_allowed_from_ip_address: "Nem léphet be erről az IP-címről adminisztrátorként."
     suspended: "Nem jelentkezhet be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve eddig: %{date}: %{reason}"
@@ -809,6 +812,7 @@ hu:
     email:
       sent_test: "elküldve."
   user:
+    deactivated: "Deaktiváltuk a túl sok innen visszapattanó e-mail miatt: '%{email}'."
     username:
       short: "nem lehet rövidebb, mint %{min} karakter"
       long: "nem lehet hosszabb, mint %{max} karakter"
@@ -1030,6 +1034,13 @@ hu:
       subject_template: "[%{email_prefix}] Bejelentkezés"
     signup:
       title: "Feliratkozás"
+      text_body_template: |
+        Üdvözöl a %{site_name}!
+
+        Kattints az alábbi linkre, hogy megerősítésd és aktiváld a fiókodat:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ha a fenti link valamiért nem működne, másold ki és illeszd be a böngésződ címsorába!
   page_not_found:
     popular_topics: "Népszerű"
     recent_topics: "Friss"

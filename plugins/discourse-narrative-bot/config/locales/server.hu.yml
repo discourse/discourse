@@ -141,13 +141,13 @@ hu:
       hello:
         title: "Üdvözlet!"
         message: |-
-          Köszönjük, hogy csatlakozott a(z) %{title} oldalhoz, és üdvözöljük!
+          Köszönjük, hogy csatlakoztál a(z) %{title} oldalhoz, és üdvözlünk!
 
-          – Csak egy robot vagyok, de [a barátságos stábunk](%{base_uri}/about) is itt van, hogy segítsen, ha egy emberrel kell beszélnie.
+          – Én ugyan csak egy robot vagyok, de itt [a barátságos stábunkat](%{base_uri}/about) is elérheted, ha élő emberrel szeretnél beszélni.
 
-          – Biztonsági okokból ideiglenesen korlátozzuk, hogy mit tehetnek az új felhasználók. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fog kapni, ahogy megismerjük.
+          – A frissen regisztrált felhasználók jogköreit biztonsági okokból ideiglenesen korlátozzuk. A jövőben [új képességeket](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (és [jelvényeket](%{base_uri}/badges)) fogsz kapni, és ahogy megismerünk, egyre jobban fognak bővülni a lehetőségeid is!
 
-          – Mindig hiszünk a [civilizált közösségi viselkedében](%{base_uri}/guidelines).
+          – Kérjük, mindig tartsd be a [civilizált közösségi viselkedés](%{base_uri}/guidelines) írott és íratlan szabályait!
       certificate:
         alt: "Igazoló oklevél"
     advanced_user_narrative:

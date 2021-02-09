@@ -1111,7 +1111,6 @@ bs_BA:
         set_primary: "Postavi primarnu e-poštu"
         destroy: "Ukloni e-poštu"
         add_email: "Dodaj zamjensku e-poštu"
-        sso_override_instructions: "E-pošta se može ažurirati od SSO provajdera."
         no_secondary: "Nema sekundarnih emailova"
         instructions: "Nikada nije prikazan javnosti."
         ok: "Izgleda dobro. Poslat ćemo email sa potvrdom."
@@ -2035,7 +2034,7 @@ bs_BA:
         remove: "Ukloni tajmer"
         publish_to: "Objavi u:"
         when: "Kada:"
-        time_frame_required: Odaberite vremenski okvir
+        time_frame_required: "Odaberite vremenski okvir"
       auto_update_input:
         none: "Označi vremenski period"
         later_today: "Na kraju dana"
@@ -2232,13 +2231,11 @@ bs_BA:
         username_placeholder: "korisničko ime"
         action: "Email pozivnica"
         help: "pošalji pozivnicu svojim prijateljima tako da i oni mogu odgovoriti na ovu temu. Bey registracije."
-        sso_enabled: "Unesite korisničko ime osobe koju želite da pozovete u ovu temu."
         to_topic_blank: "Unesite korisničko ime ili e-mail adresu osobe koju želite da pozovete u ovu temu."
         to_topic_email: "Unijeli ste e-mail adresu. Poslat ćemo e-mailom pozivnicu koja će omogućiti vašem prijatelju da odmah odgovori na ovu temu."
         to_topic_username: "Unijeli ste korisničko ime. Na isto ćemo poslati obavještenje sa linkom pozivnice na ovu temu."
         to_username: "Unesite korisničko ime osobe koju želite pozvati. Poslati ćemo obavještenje sa linkom pozivnice na ovu temu."
         email_placeholder: "name@example.com"
-        success_email: "Poslali smo e-mailom pozivnicu ka <b>%{emailOrUsername}</b>. Obavjestiti ćemo vas kada pozivnica bude iskorištena. Provjerite tab pozivnica na vašoj profilnoj stranici kako bi ste upratili sve vaše pozivnice."
         success_username: "Pozvali smo tog korisnika da prisustvuje u ovoj temi."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
         success_existing_email: "Korisnik sa emailom <b>%{emailOrUsername}</b> već postoji. Pozvali smo tog korisnika da se pridruži u raspravi na ovu temu."
@@ -3185,10 +3182,6 @@ bs_BA:
             available: "Ime grupe je dostupno"
             not_available: "Naziv grupe nije dostupan"
             blank: "Naziv grupe ne može biti prazan"
-        bulk_add:
-          title: "Dodaj u grupu"
-          complete_users_not_added: "Ovi korisnici nisu dodani (provjerite imaju li račun):"
-          paste: "Zalijepite popis korisničkih imena ili e-poruka, po jedan u retku:"
         add_members:
           as_owner: "Postavite korisnika kao vlasnike ove grupe"
         manage:
@@ -4109,13 +4102,6 @@ bs_BA:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Trust level locked. Will never be promoted."
           locked_will_not_be_demoted: "Trust level locked. Will never be demoted."
-        sso:
-          title: "Single Sign On"
-          external_id: "External ID"
-          external_username: "Nadimak"
-          external_name: "Ime"
-          external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "User Fields"
         help: "Add fields that your users can fill out."

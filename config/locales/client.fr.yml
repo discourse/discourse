@@ -1163,7 +1163,6 @@ fr:
         set_primary: "Définir comme adresse courriel principale"
         destroy: "Supprimer l'adresse courriel"
         add_email: "Ajouter une adresse courriel alternative"
-        sso_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur SSO."
         no_secondary: "Aucune adresse courriel secondaire"
         instructions: "Jamais visible publiquement."
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse courriel d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine, donc un courriel de réinitialisation du mot de passe sera envoyé à sa nouvelle adresse. L'adresse courriel de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
@@ -2083,7 +2082,6 @@ fr:
         choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
         choose_append_tags: "Choisissez de nouvelles étiquettes à ajouter à ces sujets :"
         changed_tags: "Les étiquettes de ces sujets ont été modifiées."
-        remove_tags: "Supprimer des étiquettes"
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
@@ -2212,7 +2210,7 @@ fr:
         remove: "Supprimer la planification"
         publish_to: "Publier dans :"
         when: "Quand :"
-        time_frame_required: Veuillez sélectionner un intervalle de temps
+        time_frame_required: "Veuillez sélectionner un intervalle de temps"
       auto_update_input:
         none: "Sélectionner un intervalle de temps"
         now: "Maintenant"
@@ -2418,13 +2416,11 @@ fr:
         username_placeholder: "nom d'utilisateur"
         action: "Envoyer une invitation"
         help: "inviter d'autres personnes sur ce sujet par courriel ou notifications"
-        sso_enabled: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse courriel de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse courriel. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
         to_topic_username: "Vous avez entré un nom d'utilisateur. Nous allons lui envoyer une notification avec un lien l'invitant sur ce sujet."
         to_username: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter. Nous enverrons une notification avec un lien l'invitant sur ce sujet."
         email_placeholder: "nom@exemple.com"
-        success_email: "Nous avons envoyé une invitation à <b>%{emailOrUsername}</b>. Nous vous avertirons lorsqu'il l'aura acceptée. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
         error: "Désolé, nous n'avons pas pu inviter cette personne. Elle a peut-être déjà été invitée ? (Le nombre d'invitations est limité)"
         success_existing_email: "Un utilisateur avec le courriel <b>%{emailOrUsername}</b> existe déjà. Nous avons invité cet utilisateur à participer à ce sujet."
@@ -3449,10 +3445,6 @@ fr:
             available: "Nom de groupe disponible"
             not_available: "Nom de groupe indisponible"
             blank: "Le nom du groupe ne peut être vide"
-        bulk_add:
-          title: "Ajouter au groupe en masse"
-          complete_users_not_added: "Ces utilisateurs n'ont pas été ajoutés (vérifiez qu'ils ont un compte) :"
-          paste: "Coller une liste de noms d'utilisateurs ou de courriels, un par ligne :"
         add_members:
           as_owner: "Rendre des utilisateurs propriétaires de ce groupe"
         manage:
@@ -3552,7 +3544,6 @@ fr:
               wordpress: Nécessaire pour le fonctionnement de l'extension WordPress wp-discourse.
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
-              sync_sso: Synchroniser un utilisateur en utilisant SSO.
               show: Obtenir des informations sur un utilisateur.
               check_emails: Lister les courriels d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
@@ -4499,15 +4490,6 @@ fr:
           on_grace_period: "Actuellement en période de grâce, ne sera pas rétrogradé."
           locked_will_not_be_promoted: "Niveau de confiance verrouillé. Ne sera jamais promu."
           locked_will_not_be_demoted: "Niveau de confiance verrouillé. Ne sera jamais rétrogradé."
-        sso:
-          title: "Authentification unique (SSO)"
-          external_id: "ID Externe"
-          external_username: "Nom d'utilisateur"
-          external_name: "Nom"
-          external_email: "Courriel"
-          external_avatar_url: "URL de l'image de profil"
-          delete_sso_record: "Supprimer l'enregistrement SSO"
-          confirm_delete: "Êtes-vous sûr de vouloir supprimer cet enregistrement d'authentification unique (SSO) ?"
       user_fields:
         title: "Champs utilisateurs"
         help: "Ajoutez des champs que vos utilisateurs pourront remplir."

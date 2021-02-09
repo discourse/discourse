@@ -645,7 +645,22 @@ pt:
         make_owner_description: "Fazer com que <b>%{username}</b> seja dono(a) deste grupo"
         remove_owner: "Remover Privilégios de Dono"
         remove_owner_description: "Remover <b>%{username}</b> como dono(a) deste grupo"
+        make_primary: "Tornar Principal"
+        make_primary_description: "Tornar este o grupo principal para <b>%{username}</b>"
+        remove_primary: "Remover como Principal"
+        remove_primary_description: "Remover este como o grupo principal para <b>%{username}</b>"
+        remove_members: "Remover Membros"
+        remove_members_description: "Remover usuários selecionados deste grupo"
+        make_owners: "Criar Proprietários"
+        make_owners_description: "Tornar os usuários selecionados proprietários deste grupo"
+        remove_owners: "Remover Proprietários"
+        remove_owners_description: "Remover os usuários selecionados de proprietários deste grupo"
+        make_all_primary: "Tornar tudo Principal"
+        make_all_primary_description: "Tornar este o grupo principal para todos os usuários selecionados"
+        remove_all_primary: "Remover como Principal"
+        remove_all_primary_description: "Remover este grupo como principal"
         owner: "Dono(a)"
+        primary: "Principal"
       topics: "Tópicos"
       posts: "Publicações"
       mentions: "Menções"
@@ -1781,7 +1796,7 @@ pt:
         remove: "Remover Temporizador"
         publish_to: "Publicar para:"
         when: "Quando:"
-        time_frame_required: Por favor selecione um intervalo de tempo
+        time_frame_required: "Por favor selecione um intervalo de tempo"
       auto_update_input:
         none: "Selecione um intervalo de tempo"
         later_today: "Hoje, mais tarde"
@@ -1969,13 +1984,11 @@ pt:
         username_placeholder: "nome de utilizador"
         action: "Enviar Convite"
         help: "convidar outros para este tópico via email ou notificações"
-        sso_enabled: "Introduza o nome de utilizador da pessoa que gostaria de convidar para este tópico."
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
         to_topic_username: "Introduziu um nome de utilizador. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
         to_username: "Introduza o nome de utilizador da pessoa que deseja convidar. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
         email_placeholder: "nome@exemplo.com"
-        success_email: "Enviámos por email um convite para <b>%{emailOrUsername}</b>. Iremos notificá-lo quando o convite for utilizado. Verifique o separador de convites na sua página de utilizador para acompanhar os seus convites."
         success_username: "Convidámos esse utilizador para participar neste tópico."
         error: "Pedimos desculpa, não conseguimos convidar essa pessoa. Talvez já tenha sido convidado? (Os convites são limitados)"
         success_existing_email: "Já existe um utilizador com o email <b>%{emailOrUsername}</b>. Convidámos esse utilizador a participar neste tópico."
@@ -2620,9 +2633,6 @@ pt:
         new:
           title: "Novo Grupo"
           create: "Criar"
-        bulk_add:
-          title: "Adicionar ao Grupo em Massa"
-          paste: "Colar uma lista de nomes de utilizador ou emails, um por linha:"
         manage:
           interaction:
             email: E-mail
@@ -3243,13 +3253,6 @@ pt:
           on_grace_period: "Atualmente no período de carência da promoção, não será despromovido."
           locked_will_not_be_promoted: "Nível de Confiança bloqueado. Nunca será promovido."
           locked_will_not_be_demoted: "Nível de Confiança bloqueado. Nunca será despromovido."
-        sso:
-          title: "Inscrição Única"
-          external_id: "ID Externo"
-          external_username: "Nome de Utilizador"
-          external_name: "Nome"
-          external_email: "Email"
-          external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
         title: "Campos de utilizador"
         help: "Adicione campos que os seus utilizadores poderão preencher."

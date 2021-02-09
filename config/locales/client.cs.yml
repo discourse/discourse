@@ -1839,13 +1839,11 @@ cs:
         username_placeholder: "uživatelské jméno"
         action: "Poslat pozvánku"
         help: "pozval ostatní do tohoto tématu pomocí emailu nebo notifikací"
-        sso_enabled: "Zadej uživatelské jméno člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_blank: "Zadej uživatelské jméno a email člověka, kterého chceš pozvat do tohoto tématu."
         to_topic_email: "Zadal jste emailovou adresu. Pošleme na ni pozvánku, s jejíž pomocí bude moci váš kamarád ihned odpovědět do tohoto tématu."
         to_topic_username: "Zadali jste uživatelské jméno. Zašleme pozvánku s odkazem do tohoto tématu."
         to_username: "Zadejte uživatelské jméno člověka, kterého chcete pozvat. Zašleme pozvánku s odkazem do tohoto tématu."
         email_placeholder: "jmeno@priklad.cz"
-        success_email: "Zaslali jsme pozvánku na <b>%{emailOrUsername}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
         success_username: "Pozvali jsme zadaného uživatele, aby se zúčastnil tématu."
         error: "Bohužel se nepodařilo pozvat tuto osobu. Možná už byla pozvána? (Počet opakovaných pozvánek je omezen)."
         success_existing_email: "Uživatel s e-mailem<b>%{emailOrUsername}</b> již existuje. Pozvali jsme ho, aby se zúčastnil tohoto tématu."
@@ -2644,10 +2642,6 @@ cs:
             available: "Název skupiny je k dispozici"
             not_available: "Název skupiny není k dispozici"
             blank: "Název skupiny nemůže být prázdný"
-        bulk_add:
-          title: "Hromadné přidání do skupiny"
-          complete_users_not_added: "Tito uživatelé nebyli přidáni (ujistěte se, že mají účet):"
-          paste: "Vložte seznam uživatelských jmen a e-mailů, jeden záznam na řádek:"
         manage:
           interaction:
             email: Email
@@ -3409,13 +3403,6 @@ cs:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Úroveň důvěryhodnosti uzamčena. Nikdy nebude povýšen."
           locked_will_not_be_demoted: "Úroveň důvěryhodnosti uzamčena. Nikdy nebude degradován."
-        sso:
-          title: "Jednorázové přihlášení"
-          external_id: "Externí ID"
-          external_username: "Uživatelské jméno"
-          external_name: "Jméno"
-          external_email: "Email"
-          external_avatar_url: "URL na profilový obrázek"
       user_fields:
         title: "User Fields"
         help: "Přidej fields, které tvoji uživatelé mohou vyplnit."

@@ -1665,13 +1665,11 @@ sw:
         username_placeholder: "jina la mtumiaji"
         action: "Tuma Mualiko"
         help: "Wakaribishe watu wengine kwenye mada kupitia barua pepe au taarifa"
-        sso_enabled: "Andika jina la mtumiaji la mtu ambaye ungependa kumualika kwenye mada hii."
         to_topic_blank: "Andika jina la mtumiaji au barua pepe ya mtu ambaye ungependa kumualika kwenye mada hii."
         to_topic_email: "Umeandika barua pepe. Tutatuma mualiko utakao mruhusu rafiki yako kujibu mada hii."
         to_topic_username: "Umeandika jina la mtumiaji. Tutamtumia taarifa zenye mualiko kwenye mada hii."
         to_username: "Umeandika jina la mtumiaji la mtu ambaye ungependa kumualika. Tutamtumia taarifa zenye kiungo tukimualika kwenye mada hii."
         email_placeholder: "name@example.com"
-        success_email: "Tumetuma barua kwenda kwa <b>%{emailOrUsername}</b>. Tutakutumia mualiko ukipatikana. Angalia kichupo cha mialiko kwenye ukurasa wa mtumiaji kufuatilia mialiko yako."
         success_username: "Tumemkaribisha mtumiaji kushiriki kwenye mada hii."
         error: "Samahani, tumeshindwa kumkaribisha mtu huyo. Labda ameshakaribishwa? (Mialiko ina kikomo cha kiwango)"
         success_existing_email: "Mtumiaji mwenye barua pepe <b>%{emailOrUsername}</b>tayari yupo.Tumemualika mtumiaji huyo ashiriki kwenye mada hii."
@@ -2303,10 +2301,6 @@ sw:
             available: "Jina la kikundi lipo"
             not_available: "Jina la kikundi halipo"
             blank: "Jina la kikundi haliwezi kuwa wazi"
-        bulk_add:
-          title: "Ongeza Wengi kwenye Kikundi"
-          complete_users_not_added: "Watumiaji hawa hawajaongezwa (hakikisha wana akaunti):"
-          paste: "Bandika orodha ya majina ya watumiaji au barua pepe, moja kila mstari:"
         add_members:
           as_owner: "Fanya w(m)umiaji kuwa w(m)amiliki wa kikundi hiki"
         manage:
@@ -3022,13 +3016,6 @@ sw:
           on_grace_period: "Kwa sasa upo kwenye kipindi cha kupanda daraja, hautashushwa daraja."
           locked_will_not_be_promoted: "Kiwango cha Uaminifu kimefungwa. Hautawai kupanda daraja."
           locked_will_not_be_demoted: "Kiwango cha Uaminifu kimefungwa. Hautashushwa Daraja."
-        sso:
-          title: "Ingia Mara Moja"
-          external_id: "Utambulisho wa kutoka nje"
-          external_username: "Jina la mtumiaji"
-          external_name: "Jina"
-          external_email: "Barua Pepe"
-          external_avatar_url: "Linki au kiungo cha Picha ya Mtumiaji"
       user_fields:
         title: "Sehemu za Watumiaji"
         help: "Ongeza sehemu za taarifa ambazo watumiaji wanahitaji kujaza."

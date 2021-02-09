@@ -168,7 +168,6 @@ ko:
       wrong_length:
         other: 잘못된 길이 (%{count} 글자여야 함)
       other_than: " %{count} 글자가 아니어야 합니다."
-      sso_overrides_username: "`sso_overrides_username` 설정이 활성화되어 있으므로 SSO 제공자 측에서 사용자 이름을 업데이트해야합니다."
     template:
       body: ! "다음 필드에 문제가 있음:"
       header:
@@ -190,7 +189,6 @@ ko:
       share_quote_facebook_requirements: "페이스북으로의 공유를 활성화 하려면 페이스북 앱 ID를 설정해야 합니다."
       second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야합니다: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화 된 경우 2FA를 시행 할 수 없습니다."
-      second_factor_cannot_be_enforced_with_sso_enabled: "SSO가 활성화된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용되는 경우 로컬 로그인을 비활성화 할 수 없습니다. 로컬 로그인을 비활성화하기 전에 강제 2FA를 비활성화하십시오."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
       cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
@@ -217,7 +215,6 @@ ko:
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
     disabled_errors:
-      sso_enabled: "SSO가 활성화되어 있기 때문에 초대가 비활성화되었습니다."
       local_logins_disabled: "'로컬 로그인 사용' 설정이 비활성화되어 있으므로 초대를 사용할 수 없습니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
   bulk_invite:
@@ -388,6 +385,10 @@ ko:
       email_already_used_in_category: "'%{email}' 는 '%{category_name}' 카테고리에서 이미 사용중입니다."
       cant_allow_membership_requests: "그룹 가입을 승인하려면 그룹 소유자의 승인이 필요합니다."
       already_requested_membership: "이 그룹의 회원 자격을 이미 요청하셨습니다."
+      adding_too_many_users:
+        other: "한 번에 최대 %{count}명의 사용자를 추가 할 수 있습니다."
+      usernames_or_emails_required: "아이디 또는 이메일이 있어야합니다."
+      no_invites_without_local_logins: "로컬 로그인이 비활성화된 경우 등록된 사용자만 초대할 수 있습니다."
     default_names:
       everyone: "모든 사람"
       admins: "관리자"
@@ -1302,8 +1303,6 @@ ko:
       other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='%{base_path}/logs' target='_blank'>로그</a>에서 확인하세요."
     missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
     bad_favicon_url: "파비콘이로드되지 않습니다. <a href='%{base_path}/admin/site_settings'>사이트</a> 설정에서 즐겨 찾기 아이콘 설정을 확인하십시오."
-    deprecated_api_usage: "더 이상 사용되지 않는 인증 방법을 사용하여 API 요청을 감지했습니다. <a href='https://meta.discourse.org/t/-/22706'>헤더 기반 인증</a> 을 사용하도록 업데이트하십시오. 이 메시지를 업데이트 한 후 사라지는 데 24 시간이 걸릴 수 있습니다."
-    update_mail_receiver: "오래된 메일 수신자 버전이 감지되었습니다. 업데이트 지침을 보려면 <a href='https://meta.discourse.org/t/-/133491'>여기</a> 를 클릭 <a href='https://meta.discourse.org/t/-/133491'>하십시오</a> . 이 메시지를 업데이트 한 후 사라지는 데 24 시간이 걸릴 수 있습니다."
     poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
     poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
     force_https_warning: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
@@ -1400,7 +1399,6 @@ ko:
     detailed_404: "특정 주제에 액세스 할 수없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고 : URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     enforce_second_factor: "사용자가 2단계 인증을 사용하도록합니다. 모든 사용자에게 적용하려면 '모두'를 선택하십시오. 관리자에게만 적용하려면 '관리자'를 선택하십시오."
     force_https: "사이트가 HTTPS를 사용하도록 강제합니다. 경고: HTTPS가 완벽히 적용되어 있는 것을 확인하기 전까지는 이 옵션을 켜지마세요. CDN, 소셜 로그인, 외부 링크로 가져오는 자료, 로고들이 HTTPS호환성이 있는지 확인하셨나요?"
-    same_site_cookies: "동일 사이트 쿠키를 사용합니다. 지원되는 브라우저에서 사이트 간 요청 위조의 가능성이 있는 모든 매개체를 (관대 또는 엄격하게) 제거합니다. 경고: 엄격한 통제는 로그인을 강제하거나 SSO를 사용하는 경우에만 적용됩니다."
     summary_score_threshold: "요약본에 포함되기 위한 글의 최소 점수 값"
     summary_posts_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제의 최소 게시물. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
     summary_likes_required: "&#39;이 주제 요약&#39;이 활성화되기 전에 주제에서 최소 좋아요를 찾습니다. 이 설정에 대한 변경 사항은 일주일 이내에 소급 적용됩니다."
@@ -1508,26 +1506,6 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
-    external_auth_skip_create_confirm: 외부 인증을 통해 가입하는 경우 계정 생성 팝업을 건너 뜁니다. sso_overrides_email, sso_overrides_username 및 sso_overrides_name과 함께 사용하는 것이 가장 좋습니다.
-    external_auth_immediately: "사용자 상호 작용없이 자동으로 외부 로그인 시스템으로 리디렉션됩니다. 이것은 login_required가 true이고 외부 인증 방법이 하나만 있는 경우에만 적용됩니다."
-    enable_sso: "외부사이트 Single Sign On, SSO를 통해 로그인 활성화(경고: 유저의 이메일 주소는 반드시 외부에서 확인해야합니다!)"
-    verbose_sso_logging: "자세한 SSO 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/ logs에 기록</a>"
-    enable_sso_provider: "/ session / sso_provider 엔드 포인트에서 Discourse SSO 제공자 프로토콜을 구현하려면 sso_provider_secrets를 설정해야합니다."
-    sso_url: " 싱글 사인 온(SSO)엔드포인트의 URL (http:// 또는 https:// 포함 필수)"
-    sso_secret: "SSO 정보 암호화 인증에 사용 될 암호 문자열, 10글자 이상이어야 합니다."
-    sso_provider_secrets: "Discourse를 SSO 공급자로 사용하는 도메인 비밀 쌍 목록입니다. SSO 비밀이 10 자 이상인지 확인하십시오. 와일드 카드 기호 *를 사용하면 도메인이나 도메인의 일부만 일치시킬 수 있습니다 (예 : * .example.com)."
-    sso_overrides_bio: "사용자 프로필에서 사용자 bio를 덮어쓰고 사용자의 변경을 금지"
-    sso_overrides_groups: "모든 수동 그룹 구성원을 groups sso 속성에 지정된 그룹과 동기화하십시오 (경고 : 그룹을 지정하지 않으면 모든 수동 그룹 구성원이 사용자에 대해 지워짐)"
-    sso_overrides_email: "로그인 할 때마다 로컬 이메일을 무시하고 외부 사이트 이메일 SSO 페이로드로 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 로컬 이메일의 정규화로 인해 불일치가 발생할 수 있습니다.)"
-    sso_overrides_username: "로그인 할 때마다 외부 사이트 SSO 페이로드의 사용자 이름으로  로컬 사용자 이름을 재정의하고 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다. (경고: 사용자 이름 길이/요구 사항의 차이로 인해 불일치가 발생할 수 있음)"
-    sso_overrides_name: "로그인 할 때마다 사용자의 로컬 전체 이름을 무시하고 SSO 페이로드의 외부 사이트 전체 이름을 사용해 로컬 변경을 방지합니다. 모든 인증 공급자에 적용됩니다."
-    sso_overrides_avatar: "SSO 페이로드에서 외부 사이트 아바타로 사용자 아바타를 재정의합니다. 활성화하면 사용자가 Discourse에서 아바타를 업로드 할 수 없습니다."
-    sso_overrides_location: "사용자의 위치를 무시하고 SSO 페이로드의 외부 위치로 로컬 변경을 방지합니다."
-    sso_overrides_website: "사용자의 외부 위치를 SSO 페이로드의 웹 사이트로 재정의하고 로컬 변경을 방지합니다."
-    sso_overrides_profile_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 프로필 배경을 재정의합니다."
-    sso_overrides_card_background: "SSO 페이로드에서 외부 사이트 아바타로 사용자 카드 배경을 재정의합니다."
-    sso_not_approved_url: "승인안된 SSO 계정은 이 URL로 이동"
-    sso_allows_all_return_paths: "SSO로 제공된 return_paths를 위한 도메인 제한 해제 (기본 return path는 현재 사이트로 설정)"
     enable_local_logins: "로컬 사용자 이름 및 비밀번호 로그인 기반 계정을 활성화하십시오. 초대가 작동하려면 활성화해야합니다. 경고 : 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
@@ -2025,8 +2003,6 @@ ko:
       email_editable_enabled: "이 설정을 활성화하기 전에 &#39;이메일 편집 가능&#39;을 비활성화해야합니다."
       staged_users_disabled: "이 설정을 활성화하기 전에 먼저 &#39;단계별 사용자&#39;를 활성화해야합니다."
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 &#39;이메일로 회신&#39;을 활성화해야합니다."
-      sso_url_is_empty: "이 설정을 활성화하기 전에 &#39;sso url&#39;을 설정해야합니다."
-      sso_invite_only: "sso를 활성화하고 동시에 초대 할 수 없습니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 &#39;로컬 로그인 활성화&#39;를 활성화해야합니다."
       min_username_length_exists: "최소 사용자 이름 길이를 가장 짧은 사용자 이름 (%{username}) 이상으로 설정할 수 없습니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
@@ -2044,10 +2020,6 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.example.com"
-        value: "SSO 비밀"
   search:
     extreme_load_error: "사이트의로드가 심하고 검색이 사용 중지되었습니다. 나중에 다시 시도하십시오."
     within_post: "#%{post_number} by %{username}"
@@ -2058,20 +2030,11 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
-  sso:
-    login_error: "로그인 에러"
-    not_found: "귀하의 계정을 찾을 수 없습니다. 사이트 관리자에게 문의하십시오."
-    account_not_approved: "귀하의 계정은 승인 대기 중입니다. 승인되면 이메일 알림을 받게됩니다."
-    unknown_error: "계정에 문제가 있습니다. 사이트 관리자에게 문의하십시오."
-    timeout_expired: "계정 로그인 시간이 초과되었습니다. 다시 로그인하십시오."
-    no_email: "이메일 주소가 제공되지 않았습니다. 사이트 관리자에게 문의하십시오."
-    blank_id_error: "`external_id`가 필요하지만 비어있었습니다"
-    email_error: "이메일 주소 <b>%{email}로</b> 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
-    missing_secret: "비밀이 누락되어 SSO 인증에 실패했습니다. 이 문제를 해결하려면 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 글타래들입니다."
     not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 글타래들입니다."

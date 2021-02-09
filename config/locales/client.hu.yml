@@ -950,7 +950,6 @@ hu:
         set_primary: "Elsődleges e-mail-cím beállítása"
         destroy: "E-mail-cím eltávolítása"
         add_email: "Alternatív e-mail-cím hozzáadása"
-        sso_override_instructions: "Az e-mail-címet az SSO-szolgáltató tudja frissíteni."
         no_secondary: "Nincsenek másodlagos e-mail-címek"
         ok: "E-mail küldünk a megerősítéshez"
         required: "Adjon meg egy e-mail-címet"
@@ -1479,7 +1478,7 @@ hu:
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> elfogadta a meghívásodat"
       linked: "<span>%{username}</span> %{description}"
-      granted_badge: "Megszerzett '%{description}'"
+      granted_badge: "Új jelvény: '%{description}'"
       topic_reminder: "<span>%{username}</span> %{description}"
       watching_first_post: "<span>Új téma</span>%{description} "
       group_message_summary:
@@ -1586,6 +1585,7 @@ hu:
         new: "Nincsenek új témakörök."
         read: "Még egy témakört sem olvastál el."
         posted: "Még egy témakörhöz sem szóltál hozzá."
+        ready_to_create: "Hozd létre "
         bookmarks: "Még nem adtál hozzá témakört a könyvjelzőidhez."
         category: "Nincsenek témakörök a %{category} kategóriában."
         top: "Nincsenek top témák"
@@ -1649,6 +1649,7 @@ hu:
       read_more: "Szeretnél mégtöbbet olvasni? %{catLink} vagy %{latestLink}."
       browse_all_categories: Böngéssz a kategóriák között
       view_latest_topics: legújabb témák megtekintése
+      suggest_create_topic: az első témát te!
       jump_reply_up: ugrás régebbi válaszhoz
       jump_reply_down: ugrás újabb válaszhoz
       deleted: "Ez a témakör ki lett törölve"
@@ -1659,7 +1660,7 @@ hu:
         remove: "Időzítő eltávolítása"
         publish_to: "Közzététel itt:"
         when: "Mikor:"
-        time_frame_required: Kérjük, válassz ki egy időkeretet
+        time_frame_required: "Kérjük, válassz ki egy időkeretet"
       auto_update_input:
         later_today: "A mai nap folyamán"
         tomorrow: "Holnap"
@@ -1799,7 +1800,6 @@ hu:
         username_placeholder: "felhasználónév"
         action: "Meghívó küldése"
         help: "mások meghívása ebbe a témába e-mailben vagy értesítéssel"
-        sso_enabled: "Írd be annak a felhasználónevét, akit meg szeretnél hívni ebbe a témába."
         to_topic_blank: "Adja meg a témába meghívandó személy felhasználónevét vagy e-mail-címét."
         to_username: "Írd be annak a felhasználónevét, akit meg szeretnél hívni. Értesítést fogunk neki küldeni, ennek a témának a linkjével."
         email_placeholder: "nev@pelda.hu"
@@ -3014,13 +3014,6 @@ hu:
           flagged_by_users: "Felhasználók, akik megjelölték"
           likes_given: "Adott tetszésnyilvánítások"
           likes_received: "Kapott kedvelések"
-        sso:
-          title: "Single Sign On"
-          external_id: "Külső ID"
-          external_username: "Felhasználónév"
-          external_name: "Név"
-          external_email: "Email"
-          external_avatar_url: "Profilkép URL-je"
       user_fields:
         title: "Felhasználói mezők"
         untitled: "Címtelen"

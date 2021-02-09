@@ -161,7 +161,6 @@ pt:
         one: tem o comprimento errado (deve ter %{count} caracter)
         other: tem o comprimento errado (deve ter %{count} caracteres)
       other_than: "tem que ser diferente de %{count}"
-      sso_overrides_username: "Nome de utilizador precisa de ser atualizado do lado do fornecedor de SSO, visto a configuração `sso_overrides_username` estar ativada."
     template:
       body: ! "Ocorreram problemas com os seguintes campos:"
       header:
@@ -185,14 +184,12 @@ pt:
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."
-      second_factor_cannot_be_enforced_with_sso_enabled: "Você não pode aplicar o 2FA se o SSO estiver ativado."
   invite:
     not_found_json: "O seu token de convite é inválido. Por favor contacte a equipa de apoio."
     error_message: "Ocorreu um erro ao aceitar o convite. Entre em contato com o administrador do site."
     confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
     cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
     disabled_errors:
-      sso_enabled: "Os convites estão desativados porque o SSO está ativado."
       local_logins_disabled: "Os convites são desativados porque a opção “ativar logins locais” está desativada."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
   bulk_invite:
@@ -935,11 +932,6 @@ pt:
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
-    enable_sso: "Ativar inscrição única através de um sítio externo (AVISO: OS ENDEREÇOS DE EMAIL DOS UTILIZADORES *DEVEM* SER VALIDADOS PELO SÍTIO EXTERNO!)"
-    sso_url: "URL da terminação de single-sign-on (tem de incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação SSO, garanta que tem 10 ou mais caracteres"
-    sso_overrides_bio: "Sobrepõe-se à biografia do utilizador e previne o utilizador de a mudar"
-    sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
@@ -1222,12 +1214,6 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
-  sso:
-    login_error: "Erro de Início de Sessão"
-    not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
-    account_not_approved: "A sua conta ainda não foi aprovada. Receberá uma notificação por email quando a sua conta for aprovada."
-    unknown_error: "Existe um problema com a sua conta. Por favor contacte o administrador do site."
-    timeout_expired: "Expirou o tempo de login, por favor tente entrar de novo."
   original_poster: "Participante Original"
   most_posts: "Maior parte das mensagens"
   most_recent_poster: "Participante Mais Recente"

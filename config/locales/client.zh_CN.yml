@@ -586,7 +586,7 @@ zh_CN:
           settings:
             title: "设置"
             allow_unknown_sender_topic_replies: "允许从未知发件人主题的回复。"
-            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组主题。如果未启用此功能，则来自尚未包含在IMAP电子邮件线程中或未邀请该主题的电子邮件地址的回复将创建一个新主题。"
+            allow_unknown_sender_topic_replies_hint: "允许未知发件人回复群组主题。如果未启用此功能，那么不在IMAP邮件对话中的，且未被邀请至该主题的电子邮件地址的回复将会创建一个新的主题。"
           mailboxes:
             synchronized: "已同步的邮箱"
             none_found: "未在此电子邮件帐户中找到任何邮箱。"
@@ -687,7 +687,22 @@ zh_CN:
         make_owner_description: "使<b>%{username}</b>成为群组所有者"
         remove_owner: "撤销所有者"
         remove_owner_description: "把<b>%{username}</b>从群组所有者中移除"
+        make_primary: "设为主要"
+        make_primary_description: "为<b>%{username}</b>设为主要群组"
+        remove_primary: "移除主要"
+        remove_primary_description: "为<b>%{username}</b>移除这个主要群组"
+        remove_members: "移除成员"
+        remove_members_description: "从该群组中删除选定的用户"
+        make_owners: "设为所有者"
+        make_owners_description: "使选定的用户成为该群组的所有者"
+        remove_owners: "移除所有者"
+        remove_owners_description: "从该群组中移除选定的所有者"
+        make_all_primary: "全部设为主要"
+        make_all_primary_description: "为选定的用户设置这个主要群组"
+        remove_all_primary: "移除主要"
+        remove_all_primary_description: "移除这个主要群组"
         owner: "所有者"
+        primary: "主要"
         forbidden: "你不可以查看成员列表。"
       topics: "主题"
       posts: "帖子"
@@ -764,6 +779,13 @@ zh_CN:
       muted: "静音的分类"
       topic_sentence:
         other: "%{count} 主题"
+      topic_stat:
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "周"
+        month: "月"
+      topic_stat_all_time:
+        other: "总计 %{number}"
       topic_stat_sentence_week:
         other: "过去一周有%{count}个新主题。"
       topic_stat_sentence_month:
@@ -1115,7 +1137,7 @@ zh_CN:
         set_primary: "设置为主邮箱"
         destroy: "删除邮箱"
         add_email: "添加次要邮箱"
-        sso_override_instructions: "电子邮件地址可以通过SSO登录来更新。"
+        auth_override_instructions: "身份验证提供商可以更新电子邮件。"
         no_secondary: "没有次邮箱"
         instructions: "绝不会被公开显示"
         admin_note: "注意：一位管理员用户更改另一位非管理员用户的电子邮件，则表明该用户已失去了其原始电子邮件帐户的访问权限，因此重置密码的电子邮件将发送到其新邮箱。在用户完成重置密码流程之前，用户的电子邮件不会被更改。"
@@ -1363,6 +1385,7 @@ zh_CN:
       avatar:
         title: "头像"
         header_title: "个人信息、私信、收藏和设置"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "头衔"
         none: "（无）"
@@ -1441,6 +1464,9 @@ zh_CN:
       value_prop: "当你创建了账户，我们就可以准确地记录你的阅读进度，你再次访问时就可以回到之前离开的地方。当有人回复你，你可以通过这里或电子邮件收到通知。并且你还可以通过点赞帖子向他人分享你的喜爱之情。:heartpulse:"
     summary:
       enabled_description: "你正在查看主题的精简摘要版本：一些社区公认有意思的帖子。"
+      description:
+        other: "总计<b>%{count}</b>个回复。"
+      description_time_MF: "总计{replyCount, plural, one {<b>#</b>} other {<b>#</b>}}个回复，预计阅读时间为<b>{readingTime, plural,one {#}other {#}}分钟</b>。"
       enable: "概括本主题"
       disable: "显示所有帖子"
     deleted_filter:
@@ -1604,6 +1630,8 @@ zh_CN:
       plus_subcategories:
         other: "+ %{count} 个子类别"
     select_kit:
+      filter_by: "筛选器: %{name}"
+      select_to_filter: "选择要筛选的值"
       default_header_text: 选择…
       no_content: 无符合的结果
       filter_placeholder: 搜索……
@@ -1642,6 +1670,7 @@ zh_CN:
       default: 自定义表情符号
     shared_drafts:
       title: "共享草稿"
+      notice: "这个主题只有可发布共享草稿的用户可见。"
       destination_category: "目标分类"
       publish: "发布共享草稿"
       confirm_publish: "你确定要发布此草稿吗？"
@@ -1671,7 +1700,13 @@ zh_CN:
       reference_topic_title: "回复：%{title}"
       error:
         title_missing: "标题为空"
+        title_too_short:
+          other: "标题至少需要%{count}个字符"
+        title_too_long:
+          other: "标题不能多于%{count}个字符"
         post_missing: "帖子不能为空"
+        post_length:
+          other: "帖子至少需要%{count}个字符"
         try_like: "你尝试过使用%{heart}按钮了吗？"
         category_missing: "未选择分类"
         tags_missing:
@@ -1985,6 +2020,7 @@ zh_CN:
         close_topics: "关闭主题"
         archive_topics: "存档主题"
         notification_level: "通知"
+        change_notification_level: "更改通知级别"
         choose_new_category: "选择新分类："
         selected:
           other: "已选择 <b>%{count}</b>个主题"
@@ -1993,7 +2029,9 @@ zh_CN:
         choose_new_tags: "为主题选择新标签："
         choose_append_tags: "为这些主题添加新标签："
         changed_tags: "主题的标签被修改"
-        remove_tags: "移除标签"
+        remove_tags: "移除所有标签"
+        confirm_remove_tags:
+          other: "所有的标签都将从<b>%{count}</b>个主题中移除。你确定吗？"
         progress:
           other: "进度： <strong>%{count}</strong> 主题"
       none:
@@ -2114,7 +2152,8 @@ zh_CN:
         remove: "撤销计时器"
         publish_to: "发布至："
         when: "时间："
-        time_frame_required: 请选择一个时间范围
+        time_frame_required: "请选择一个时间范围"
+        min_duration: "持续时间必须大于0"
       auto_update_input:
         none: "选择时间范围"
         now: "当前"
@@ -2166,6 +2205,8 @@ zh_CN:
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
         other: "主题中的最后一个帖子已经存在 %{count} 小时，因此该主题将立即关闭。"
+      auto_close_momentarily:
+        other: "最后的回帖已经是%{count}小时前了，因此这个主题将会被立即关闭。"
       timeline:
         back: "返回"
         back_description: "回到最后一个未读帖子"
@@ -2177,6 +2218,8 @@ zh_CN:
         go: "前往"
         jump_bottom: "跳至最后一个帖子"
         jump_prompt: "跳到…"
+        jump_prompt_of:
+          other: "第%{count}帖"
         jump_prompt_long: "跳到……"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
         jump_prompt_to_date: "至今"
@@ -2314,13 +2357,13 @@ zh_CN:
         action: "发送邀请"
         help: "通过电子邮件或通知邀请其他人到该主题"
         to_forum: "我们会发送一封简短的邮件，让你的朋友通过点击链接即可参与讨论。"
-        sso_enabled: "输入其用户名，邀请其人到本主题。"
+        discourse_connect_enabled: "输入你要邀请到这个主题的用户名。"
         to_topic_blank: "输入你要邀请到这个主题的用户名或电子邮件地址。"
         to_topic_email: "你输入了邮箱地址。我们将发送一封邮件邀请，让你的朋友可直接回复该主题。"
         to_topic_username: "你输入了用户名。我们将发送一个至该主题链接的邀请通知。"
         to_username: "输入你想邀请的人的用户名。我们将发送一个至该主题链接的邀请通知。"
         email_placeholder: "name@example.com"
-        success_email: "我们发了一封邮件邀请<b>%{emailOrUsername}</b>。邀请被接受后你会收到通知。检查用户页中的邀请标签页来追踪你的邀请。"
+        success_email: "我们已发送了一封邀请邮件到<b>%{invitee}</b>。邀请被接受后我们会通知你。查看你的用户页面中的邀请选项卡可以追踪你的邀请进展。"
         success_username: "我们已经邀请了该用户参与该主题。"
         error: "抱歉，我们不能邀请这个人。可能他已经被邀请了？（邀请有频率限制）"
         success_existing_email: "用户<b>%{emailOrUsername}</b>已存在。我们已经邀请了该用户参与该主题。"
@@ -2425,6 +2468,8 @@ zh_CN:
       edit_reason: "理由： "
       post_number: "帖子 %{number}"
       ignored: "忽视的内容"
+      wiki_last_edited_on: "维基最后编辑于%{dateTime}"
+      last_edited_on: "帖子最后编辑于%{dateTime}"
       reply_as_new_topic: "回复为联结主题"
       reply_as_new_private_message: "向相同的收件人回复新私信"
       continue_discussion: "自 %{postLink} 继续讨论："
@@ -2456,6 +2501,7 @@ zh_CN:
       filtered_replies_viewing:
         other: "查看 %{count} 个回复"
       in_reply_to: "加载父帖子"
+      view_all_posts: "查看所有帖子"
       errors:
         create: "抱歉，在创建你的帖子时发生了错误。请重试。"
         edit: "抱歉，在编辑你的帖子时发生了错误。请重试。"
@@ -2524,6 +2570,8 @@ zh_CN:
         unlock_post_description: "允许发布者编辑帖子"
         delete_topic_disallowed_modal: "你无权删除该贴。如果你真想删除，向版主提交原因并标记。"
         delete_topic_disallowed: "你无权删除此主题"
+        delete_topic_confirm_modal:
+          other: "当前这个主题已被浏览超过 %{count} 次，可能是一个受欢迎的搜索结果。 你确定要完全删除该主题，而不是对其进行编辑以改善它吗？"
         delete_topic_confirm_modal_yes: "是，删除此主题"
         delete_topic_confirm_modal_no: "不，保留这个话题"
         delete_topic_error: "删除此主题时发生错误"
@@ -3096,6 +3144,7 @@ zh_CN:
       delete_unused_confirmation_more_tags:
         other: "%{tags}和%{count}更多"
       delete_no_unused_tags: "没有未使用的标签。"
+      tag_list_joiner: ", "
       delete_unused: "删除未使用的标签"
       delete_unused_description: "删除所有未与主题或私信关联的标签"
       cancel_delete_unused: "取消"
@@ -3289,10 +3338,6 @@ zh_CN:
             available: "群组名可用"
             not_available: "群组名不可用"
             blank: "群组名不能为空"
-        bulk_add:
-          title: "批量添加到群组"
-          complete_users_not_added: "这些用户还没有被添加（请确保他们已经有账户了）："
-          paste: "粘贴用户名邮件列表，一行一个："
         add_members:
           as_owner: "设置用户为此群组拥有者"
         manage:
@@ -3319,6 +3364,8 @@ zh_CN:
             effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
+            automatic_membership_user_count:
+              other: "%{count}个拥有域名邮件地址的用户将会被添加到这个群组中。"
             primary_group: "自动设置为主要群组"
         name_placeholder: "群组名，没有空格，和用户名一样的规则"
         primary: "主要群组"
@@ -3394,7 +3441,7 @@ zh_CN:
               wordpress: 需要 WordPress 才能使 wp-discourse 插件正常工作。
             users:
               bookmarks: 列出用户书签。使用 ICS 格式时，它将返回书签提醒。
-              sync_sso: 使用 SSO 同步用户。
+              sync_sso: 使用 DiscoursetConnect 同步用户。
               show: 获取有关用户的信息。
               check_emails: 列出用户电子邮件。
               update: 更新用户个人资料信息。
@@ -3650,7 +3697,9 @@ zh_CN:
           convert: "转换"
           convert_component_alert: "你确定转换此组件到主题吗？将会从组件%{relatives}中移除。"
           convert_component_tooltip: "转换此组件到主题"
+          convert_component_alert_generic: "你确定要将这个组件转换成主题吗？"
           convert_theme_alert: "你确定转换此组件到主题吗？它将作为%{relatives}的父级删除。"
+          convert_theme_alert_generic: "你确定要将这个主题转换成组件吗？"
           convert_theme_tooltip: "转换此主题到组件"
           inactive_themes: "未使用的主题："
           inactive_components: "未使用的组件："
@@ -4350,16 +4399,16 @@ zh_CN:
           on_grace_period: "目前在升级宽限期，不会被降级。"
           locked_will_not_be_promoted: "信任等级被锁定。将不再被提升。"
           locked_will_not_be_demoted: "信任等级被锁定。将不再被降级。"
-        sso:
-          title: "单点登录"
+        discourse_connect:
+          title: "DiscourseConnect 单点登录"
           external_id: "外部 ID"
           external_username: "用户名"
-          external_name: "外部系统中的名字"
-          external_email: "电子邮件"
-          external_avatar_url: "头像URL"
+          external_name: "昵称"
+          external_email: "邮箱"
+          external_avatar_url: "头像 URL"
           last_payload: "上次 Payload"
-          delete_sso_record: "删除SSO记录"
-          confirm_delete: "你确定要删除此单点登录（SSO）记录吗？"
+          delete_sso_record: "删除 SSO 记录"
+          confirm_delete: "你确定要删除 DiscourseConnect 记录吗？"
       user_fields:
         title: "用户属性"
         help: "增加用户能填写的字段。"

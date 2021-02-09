@@ -1723,11 +1723,6 @@ be:
           flagged_posts: "абскарджаны паведамлення"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
-        sso:
-          external_id: "знешні ID"
-          external_username: "Імя карыстальніка"
-          external_name: "Імя"
-          external_email: "Электронная пошта"
       user_fields:
         untitled: "без загалоўка"
         type: "тып поля"

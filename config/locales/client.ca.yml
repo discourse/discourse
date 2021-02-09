@@ -1008,7 +1008,6 @@ ca:
         set_primary: "Estableix el correu electrònic principal"
         destroy: "Elimina el correu electrònic"
         add_email: "Afegeix un correu electrònic alternatiu"
-        sso_override_instructions: "L'adreça de correu es pot actualitzar des d'un proveïdor SSO"
         no_secondary: "Sense adreces de correu secundàries"
         instructions: "No es mostra mai en públic."
         ok: "Us enviarem un correu electrònic de confirmació"
@@ -1889,7 +1888,7 @@ ca:
         remove: "Elimina el temporitzador"
         publish_to: "Publica en:"
         when: "Quan:"
-        time_frame_required: Seleccioneu un període de temps
+        time_frame_required: "Seleccioneu un període de temps"
       auto_update_input:
         none: "Seleccioneu un període de temps"
         later_today: "Més tard avui"
@@ -2083,13 +2082,11 @@ ca:
         username_placeholder: "nom d'usuari"
         action: "Envia la invitació"
         help: "Convida altres a aquest tema per correu o amb notificacions."
-        sso_enabled: "Introduïu el nom d'usuari de la persona a qui voleu convidar a aquest tema."
         to_topic_blank: "Escriviu el nom d'usuari o l'adreça electrònica de la persona a qui voleu convidar a aquest tema."
         to_topic_email: "Heu introduït una adreça de correu electrònic. Us enviarem una invitació que permetrà al vostre contacte respondre immediatament a aquest tema."
         to_topic_username: "Heu introduït un nom d'usuari. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         to_username: "Introduïu el nom d'usuari de la persona a qui voleu convidar. Li enviarem una notificació amb l'enllaç d'invitació a aquest tema."
         email_placeholder: "nom@exemple.com"
-        success_email: "Hem enviat una invitació a <b>%{emailOrUsername}</b>. Us notificarem quan s'accepti. Consulteu la pestanya d'invitacions de la vostra pàgina personal per a mantenir el seguiment de les invitacions."
         success_username: "Hem convidat aquest usuari a participar en aquest tema."
         error: "No hem pogut convidar aquesta persona. Potser ja ha estat convidada. (Les invitacions són restringides per freqüència.)"
         success_existing_email: "Ja existeix un usuari amb l'adreça <b>%{emailOrUsername}</b>. Hem convidat aquest usuari a participar en aquest tema."
@@ -2942,10 +2939,6 @@ ca:
             available: "El nom de grup és disponible"
             not_available: "El nom de grup no és disponible"
             blank: "El nom de grup no pot restar en blanc"
-        bulk_add:
-          title: "Afegeix a grup massivament"
-          complete_users_not_added: "Aquests usuaris no han estat afegits (assegureu-vos que tenen un compte)"
-          paste: "Enganxeu una llista de noms d'usuaris o de correus, un per línia:"
         add_members:
           as_owner: "Estableix usuaris com a propietaris d'aquest grup"
         manage:
@@ -3882,13 +3875,6 @@ ca:
           on_grace_period: "Actualment en període de gràcia de promoció. No serà degradat. "
           locked_will_not_be_promoted: "Nivell de confiança blocat. No serà promogut mai. "
           locked_will_not_be_demoted: "Nivell de confiança blocat. No es degradarà mai."
-        sso:
-          title: "Single Sign On (SSO)"
-          external_id: "ID extern"
-          external_username: "Nom d'usuari"
-          external_name: "Nom"
-          external_email: "Correu electrònic"
-          external_avatar_url: "URL de la imatge de perfil"
       user_fields:
         title: "Camps d'usuari"
         help: "Afegeix camps que els usuaris poden emplenar."

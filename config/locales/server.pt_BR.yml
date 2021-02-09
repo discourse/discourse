@@ -160,7 +160,6 @@ pt_BR:
         one: tem o tamanho errado (precisa ter %{count} caractere)
         other: tem o tamanho errado (precisa ser %{count} caracteres)
       other_than: "precisa ser outro que não %{count}"
-      sso_overrides_username: "O nome de usuário deve ser atualizado no provedor de SSO, visto que a configuração 'sso_overrides_username' está habilitada."
     template:
       body: ! "Houve problemas com os seguintes campos:"
       header:
@@ -381,6 +380,16 @@ pt_BR:
       - Inclua as palavras mais usadas no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria (ou tag).
 
       Para mais, [veja os guias da comunidade](%{base_path}/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
+    "new-reply": |
+      Bem-vindo ao %{site_name} &mdash; ** obrigado por contribuir! **
+
+      - Seja gentil com os outros membros da comunidade.
+
+      - Sua resposta melhora a conversa?
+
+      - Crítica construtiva é bem-vinda, mas critique *ideias*, não pessoas.
+
+      Para saber mais, [consulte nossas diretrizes da comunidade] (%{base_path}/guidelines). Este painel aparecerá apenas para suas primeiras %{education_posts_text}.
     avatar: |
       ### Que tal usar uma imagem para a sua conta?
 
@@ -1299,7 +1308,6 @@ pt_BR:
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Veja <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     force_https: "Force seu site a usar apenas HTTPS. AVISO: NÃO ative até que você tenha verificado que o HTTPS está completamente configurado e funcionando em absolutamente todos os lugares! Você verificou se seu CDN, todos os logins sociais e quaisquer logos e dependências externos são todos compatíveis com HTTPS, também?"
-    same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos os vetores Cross Site Request Forgery nos navegadores suportados (Lax ou Strict). Aviso: o Strict funcionará apenas em sites que forçam o login e usem o SSO."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Número máximo de postagens retornadas por 'Resumir Este Tópico'"
@@ -1380,19 +1388,6 @@ pt_BR:
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
     password_unique_characters: "Número mínimo de caracteres únicos que uma senha deve ter."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_sso: "Permite autenticação única atráves de site externo (AVISO: OS ENDEREÇOS DE E-MAIL *DEVEM* SER VALIDADOS PELO SITE EXTERNO!)"
-    verbose_sso_logging: "Registrar diagnósticos detalhados relacionados a SSO em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementar o protocolo do provedor Discourse SSO no terminal /session/sso_provider, requer que sso_provider_secrets seja definido"
-    sso_url: "URL do ponto final do logon único (SSO) (deve incluir http:// ou https://)"
-    sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
-    sso_provider_secrets: "Uma lista de pares de domínio-segredo que estão usando o Discourse como um provedor de SSO. Certifique-se de que o segredo de SSO tenha 10 caracteres ou mais. O símbolo curinga * pode ser usado para corresponder a qualquer domínio ou apenas parte dele (por exemplo, *.example.com)."
-    sso_overrides_bio: "Sobrescreve a bio de usuário e impede o usuário de mudá-la."
-    sso_overrides_groups: "Sincronize todos os membros do grupo manual com grupos especificados no atributo sso do grupo (ATENÇÃO: se você não especificar grupos, todos os membros do grupo manual serão limpos para o usuário)"
-    sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo do payload do SSO. Se habilitado, os usuários não poderão fazer upload de avatares no Discourse."
-    sso_overrides_profile_background: "Substitui o plano de fundo do perfil do usuário pelo avatar do site externo da carga útil do SSO."
-    sso_overrides_card_background: "Substitui o plano de fundo do cartão do usuário pelo avatar do site externo da carga útil do SSO."
-    sso_not_approved_url: "Redireciona contas não aprovadas no login externo para este endereço"
-    sso_allows_all_return_paths: "Não restrinja o domínio para return_paths fornecidos pelo SSO (por padrão, o caminho de retorno deve estar no site atual)"
     enable_local_logins: "Ativar contas locais de login com nome de usuário e senha. Isso deve estar ativado para convites para o trabalho. ATENÇÃO: se estiver desabilitado, você pode não conseguir fazer o login se você não configurou anteriormente pelo menos um método de login alternativo."
     enable_local_logins_via_email: "Permitir que os usuários solicitem um link de login com um clique para serem enviados por e-mail."
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
@@ -1791,8 +1786,6 @@ pt_BR:
       email_editable_enabled: "Você deve desativar o \"e-mail editável\" antes de ativar essa configuração."
       staged_users_disabled: "Você deve primeiro ativar os \"usuários preparados\" antes de ativar essa configuração."
       reply_by_email_disabled: "Você deve primeiro ativar \"responder por e-mail\" antes de ativar essa configuração."
-      sso_url_is_empty: "Você deve definir um 'sso url' antes de habilitar essa configuração."
-      sso_invite_only: "Você não pode habilitar o sso e convidar ao mesmo tempo."
       enable_local_logins_disabled: "Você deve primeiro habilitar 'habilitar logins locais' antes de ativar esta configuração."
       min_username_length_exists: "Você não pode definir o comprimento de nome de usuário mínimo acima do nome de usuário mais curto (%{username})."
       min_username_length_range: "Você não pode colocar o mínimo acima do máximo."
@@ -1804,10 +1797,6 @@ pt_BR:
         low_weight_invalid: "Você não pode definir o peso como maior ou igual a 1 ou menor que 'category_search_priority_very_low_weight'."
         very_high_weight_invalid: "Você não pode definir o peso para ser menor que 'category_search_priority_high_weight'."
       unicode_usernames_avatars: "Os avatares internos do sistema não suportam nomes de usuário Unicode."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.exemplo.com.br"
-        value: "Segredo SSO"
   search:
     extreme_load_error: "O site está sob carga extrema, a busca está desabilitada, tente novamente mais tarde"
     within_post: "#%{post_number} por %{username}"
@@ -1818,14 +1807,6 @@ pt_BR:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[video]"
-  sso:
-    login_error: "Erro de Login"
-    not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
-    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por email quando ela for aprovada."
-    unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
-    timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
-    no_email: "Nenhum endereço de e-mail foi fornecido. Por favor, entre em contato com o administrador do site."
-    email_error: "Uma conta não pôde ser registrada com o endereço de e-mail <b>%{email}</b>. Por favor, entre em contato com o administrador do site."
   original_poster: "Autor Original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Autor Mais Recente"

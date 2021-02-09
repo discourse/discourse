@@ -1797,13 +1797,6 @@ te:
           on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
           locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
           locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
-        sso:
-          title: "ఒక సైన్ ఆన్"
-          external_id: "బాహ్య ఐడీ"
-          external_username: "సభ్యనామం"
-          external_name: "పేరు"
-          external_email: "ఈమెయిల్"
-          external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
         help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."

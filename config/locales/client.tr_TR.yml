@@ -726,6 +726,9 @@ tr_TR:
       topic_sentence:
         one: "%{count} konu"
         other: "%{count} konu"
+      topic_stat_unit:
+        week: "hafta"
+        month: "ay"
       topic_stat_sentence_week:
         one: "geçen haftadan beri%{count} yeni konu."
         other: "geçen haftadan beri %{count} yeni konu."
@@ -1012,7 +1015,6 @@ tr_TR:
         secondary: "İkincil E-postalar"
         primary_label: "Ana"
         update_email: "\"E-posta Adresi\"ni Değiştir"
-        sso_override_instructions: "E-posta SSO sağlayıcısından güncellenebilir."
         no_secondary: "İkincil e-posta adresi mevcut değil"
         instructions: "Hiç kimseye gösterilmedi."
         ok: "Onaylaman için sana e-posta göndereceğiz"
@@ -1240,6 +1242,7 @@ tr_TR:
       avatar:
         title: "Profil Resmi"
         header_title: "profil, mesajlar, işaretlenenler ve tercihler"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "Başlık"
         none: "(hiçbiri)"
@@ -1902,7 +1905,8 @@ tr_TR:
         remove: "Zamanlayıcıyı Kaldır"
         publish_to: "Şuraya Yayınla:"
         when: "Ne zaman:"
-        time_frame_required: Bir zaman dilimi seç
+        time_frame_required: "Bir zaman dilimi seç"
+        min_duration: "Süre sıfırdan büyük olmalıdır"
       auto_update_input:
         none: "Zaman aralığı seç"
         later_today: "Bugün ilerleyen saatlerde"
@@ -1947,6 +1951,7 @@ tr_TR:
         auto_delete: "Bu konu otomatik olarak silinecek %{timeLeft}."
         auto_bump: "Bu konu otomatik olarak patlayacak%{timeLeft}."
         auto_reminder: "%{timeLeft} Bu konu hakkında hatırlatılacaksınız"
+        auto_delete_replies: "Bu konudaki cevaplar yazıldıktan %{duration} sonra otomatik olarak silinir."
       auto_close_title: "Otomatik Kapatma Ayarları"
       auto_close_immediate:
         one: "Konudaki son gönderi zaten %{count} saat eski, bu yüzden konu hemen kapatılacak."
@@ -2096,13 +2101,11 @@ tr_TR:
         username_placeholder: "kullanıcı adı"
         action: "Davet Gönder"
         help: "e-posta veya bildiri aracılığıyla başkalarını bu konuya davet et"
-        sso_enabled: "Bu konuya davet etmek istediğin kişinin kullanıcı adını gir."
         to_topic_blank: "Bu konuya davet etmek istediğin kişinin kullanıcı adını veya e-posta adresini gir."
         to_topic_email: "Bir e-posta adresi girdin. Arkadaşının bu konuya hemen cevap verebilmesini sağlayacak bir davetiyeyi e-posta ile göndereceğiz. "
         to_topic_username: "Bir kullanıcı adı girdin. Kullanıcıya, bu konuya davet bağlantısı içeren bir bildirim göndereceğiz."
         to_username: "Davet etmek istediğin kişinin kullanıcı adını gir. Kullanıcıya, bu konuya davet bağlantısı içeren bir bildirim göndereceğiz."
         email_placeholder: "isim@örnek.com"
-        success_email: "<b>%{emailOrUsername}</b> kullanıcısına davet e-postalandı. Davet kabul edildiğinde sana bir bildirim göndereceğiz. Davetlerini takip etmek için kullanıcı sayfandaki davetler sekmesine göz atmalısın. "
         success_username: "Kullanıcıyı bu konuya katılması için davet ettik."
         error: "Üzgünüz, kullanıcıyı davet edemedik. Zaten davet edilmiş olabilir mi? (Davetler oran sınırlarına tabiidir.)"
         success_existing_email: "<b>%{emailOrUsername}</b> e-posta adresine sahip bir kullanıcı zaten var. Bu kullanıcıyı bu konuya katılmaya davet ettik."
@@ -2991,10 +2994,6 @@ tr_TR:
             available: "Grup adı uygun"
             not_available: "Grup adı mevcut değil"
             blank: "Grup adı boş olamaz"
-        bulk_add:
-          title: "Toplu Grup Ekle"
-          complete_users_not_added: "Bu kullanıcılar eklenmedi (kullanıcıların hesaplarının olduğundan emin ol):"
-          paste: "Kullanıcı adlarının veya e-postalarının bir listesini, her satıra birer adet olacak şekilde yapıştır:"
         add_members:
           as_owner: "Kullanıcıyı/Kullanıcıları, bu grubun sahibi/sahipleri olarak ayarla"
         manage:
@@ -3945,13 +3944,6 @@ tr_TR:
           on_grace_period: "Şu an terfisi tolerans süresinde, seviyesi düşürülmeyecek"
           locked_will_not_be_promoted: "Güven seviyesi kilitlendi. Seviyesi hiçbir zaman yükseltilmeyecek."
           locked_will_not_be_demoted: "Güven seviyesi kilitlendi. Seviyesi hiçbir zaman düşürülmeyecek."
-        sso:
-          title: "Tek Oturum Açma"
-          external_id: "Harici Kimlik"
-          external_username: "Kullanıcı adı"
-          external_name: "İsim"
-          external_email: "E-posta"
-          external_avatar_url: "Profil URL Resmi"
       user_fields:
         title: "Kullanıcı Alanları"
         help: "Kullanıcıların doldurabileceği alanlar ekle"

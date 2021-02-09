@@ -750,6 +750,12 @@ fa_IR:
       topic_sentence:
         one: "%{count} موضوع"
         other: "%{count} موضوع"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "هفته"
+        month: "ماه"
       topic_stat_sentence_week:
         one: "%{count} مبحث جدید در هفته ی گذشته"
         other: "%{count} مبحث جدید در هفته ی گذشته"
@@ -1041,7 +1047,7 @@ fa_IR:
         secondary: "آدرس ایمیل ثانویه"
         primary_label: "اصلی"
         update_email: "تغییر ایمیل"
-        sso_override_instructions: "ایمیل را میتوانید از طریق SSO به روزرسانی کنید"
+        auth_override_instructions: "ایمیل را از طریق ارائه دهنده احراز هویت می‌توانید به‌روزرسانی کنید."
         no_secondary: "بدون ایمیل ثانویه"
         instructions: "هرگز به عموم نمایش داده نخواهد شد"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
@@ -1275,6 +1281,7 @@ fa_IR:
       avatar:
         title: "عکس نمایه"
         header_title: "نمایه، پیام‌ها، نشانک‌ها و تنظیمات شخصی"
+        name_and_description: "%{name} - %{description}"
       title:
         title: "عنوان"
         none: "(هیچی)"
@@ -1348,6 +1355,9 @@ fa_IR:
       value_prop: "وقتی یک حساب کاربری بسازید، دقیقا به جایی که پیشتر مطالعه می‌کردید برمی‌گردید. در ضمن وقتی کسی به شما پاسخ داد، آگاه‌سازی ایمیلی هم دریافت می‌کنید. و می‌توانید نوشته‌های خوب را لایک کنید و محبت را در فضا توسعه دهید :heartpulse:"
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
+      description:
+        one: "<b>%{count}</b> پاسخ داده شده."
+        other: "<b>%{count}</b> پاسخ داده شده."
       enable: "خلاصه‌ی این موضوع"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
@@ -1484,6 +1494,8 @@ fa_IR:
     conditional_loading_section:
       loading: بارگذاری...
     select_kit:
+      filter_by: "فیلتر توسط: %{name}"
+      select_to_filter: "مقداری برای فیلتر کردن انتخاب کنید"
       default_header_text: انتخاب...
       no_content: چیزی یافت نشد.
       filter_placeholder: جستجو...
@@ -1830,7 +1842,6 @@ fa_IR:
         choose_new_tags: "انتخاب برچسب‌های جدید برای این موضوعات:"
         choose_append_tags: "انتخاب برچسب‌های جدید برای افزودن به این موضوعات:"
         changed_tags: "انتخاب برچسب برای موضوعاتی که عوض شدند"
-        remove_tags: "حذف برچسب‌ها"
         progress:
           one: "پیشرفت: <strong>%{count}</strong> موضوع"
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
@@ -1933,7 +1944,8 @@ fa_IR:
         remove: "حذف زمان‌سنج"
         publish_to: "انتشار در:"
         when: "در زمان:"
-        time_frame_required: یک بازه ی زمانی انتخاب کنید
+        time_frame_required: "یک بازه ی زمانی انتخاب کنید"
+        min_duration: "مدت زمان باید بیشتر از ۰ باشد"
       auto_update_input:
         none: "انتخاب یک دوره‌زمانی"
         later_today: "امروز"
@@ -1991,6 +2003,9 @@ fa_IR:
         go: "برو"
         jump_bottom: "پرش به آخرین نوشته"
         jump_prompt: "پرش به..."
+        jump_prompt_of:
+          one: "از %{count} نوشته"
+          other: "از %{count} نوشته"
         jump_prompt_long: "برو به ..."
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         jump_prompt_to_date: "تا تاریخ"
@@ -2125,13 +2140,12 @@ fa_IR:
         username_placeholder: "نام‌کاربری"
         action: "ارسال دعوتنامه "
         help: "دعوت دیگران به این موضوع با ایمیل یا اطلاعیه‌ها"
-        sso_enabled: "نام کاربری کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
+        discourse_connect_enabled: "نام‌کاربری کسی که می‌خواهید برای این موضوع دعوت کنید را وارد نمایید."
         to_topic_blank: "نام کاربری یا ایمیل کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_email: "شما یک ایمیل آدرس وارد کردید. ما یک ایمیل خواهیم فرستاد که به دوستان شما اجازه می دهد سریعا به این موضوع پاسخ دهند."
         to_topic_username: "شما نام کاربری شخصی را وارد کرده‌اید. ما این امر را به اطلاع او رسانده و او را به این موضوع دعوت می‌کنیم."
         to_username: "نام کاربری شخصی که می‌خواهید او را دعوت کنید، وارد کنید. ما این امر را به اطلاع او رسانده و او را به این عنوان دعوت می‌کنیم."
         email_placeholder: "name@example.com"
-        success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> %{emailOrUsername} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
         success_username: "ما آن کاربر را برای شرکت در این جستار دعوت کردیم."
         error: "متاسفیم٬‌ ما آن شخص را نمی توانیم دعوت کنیم. شاید قبلا دعوت شده اند. (فراخوان ها تعداد محدودی دارند)"
         success_existing_email: "یک کاربر با رایانامه <b>%{emailOrUsername}</b> وجو دارد. ما آن کاربر را برای شرکت در این مبحث دعوت کردیم."
@@ -2800,6 +2814,7 @@ fa_IR:
       delete_unused_confirmation_more_tags:
         one: "%{tags} و %{count} بیشتر"
         other: "%{tags}و %{count} بیشتر"
+      tag_list_joiner: "، "
       delete_unused: "پاک کردن برچسب های استفاده نشده"
       delete_unused_description: "پاک کردن همه ی برچسب هایی که به هیچ مبحث یا پیامی تعلق ندارند"
       cancel_delete_unused: "لغو کردن"
@@ -2967,10 +2982,6 @@ fa_IR:
             available: "نام گروه در دسترس است"
             not_available: "نام گروه در دسترس نیست"
             blank: "نام گروه نمی‌تواند خالی باشد"
-        bulk_add:
-          title: "اضافه کردن تعداد زیادی به گروه"
-          complete_users_not_added: "این کاربران اضافه نشدند (مطمئن شوید که حساب عضو هستند)"
-          paste: "یک لیست از نام های کاربری و یا ایمیل ها وارد کنید, در هر خط فقط یکی:"
         add_members:
           as_owner: "قراردادن کاربر(ها) به‌عنوان مالک(مالکان) این گروه"
         manage:
@@ -3731,13 +3742,12 @@ fa_IR:
           on_grace_period: "در حال حاضر در مهلت ارتقا٬ تنزل نخواهد گرفت."
           locked_will_not_be_promoted: "سطح اعتماد بسته شده. دیگر ترفیع درجه نخواهد گرفت."
           locked_will_not_be_demoted: "سطح اعتماد بسته شده. دیگردرجه تنزل نخواهد گرفت."
-        sso:
-          title: "ورود یکپارچه به سیستم"
-          external_id: " شناسه خارجی"
+        discourse_connect:
+          external_id: "شناسه خارجی"
           external_username: "نام‌کاربری"
           external_name: "نام"
           external_email: "ایمیل"
-          external_avatar_url: "لینک تصویر نمایه"
+          external_avatar_url: "نشانی اینترنتی تصویر پروفایل"
       user_fields:
         title: "زمینه‌های کاربر"
         help: "زمینه‌هایی را که کاربرانتان می‌توانند پر کنند اضافه کنید."

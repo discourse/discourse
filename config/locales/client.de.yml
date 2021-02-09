@@ -164,7 +164,7 @@ de:
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird in den nächsten 24 Stunden deaktiviert."
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Deine Seite funktioniert vielleicht nicht, weil Theme/Komponent %{theme} Fehler hat. Deaktiviere es in %{path}."
+      broken_theme_alert: "Deine Seite funktioniert vielleicht nicht, weil Theme/Komponente %{theme} Fehler hat. Deaktiviere es in %{path}."
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -261,7 +261,7 @@ de:
       user_count: "Benutzer"
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
-      contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die diese Website betreffen, kontaktiere uns bitte unter %{contact_info}."
+      contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
     bookmarked:
       title: "Lesezeichen setzen"
       clear_bookmarks: "Lesezeichen entfernen"
@@ -313,7 +313,7 @@ de:
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diese Vorlage löschen möchtest?"
       new_topic: "Neues Thema Entwurf"
-      new_private_message: "Neuer privater Nachrichten Entwurf"
+      new_private_message: "Neuer Entwurf für private Nachrichten"
       topic_reply: "Antwort Entwurf"
       abandon:
         confirm: "Du hast schon einen anderen Entwurf in diesem Thema geöffnet. Bist du sicher, dass du ihn verwerfen möchtest?"
@@ -346,10 +346,10 @@ de:
     undo: "Rückgängig machen"
     revert: "Verwerfen"
     failed: "Fehlgeschlagen"
-    switch_to_anon: "Anonymen Modus beginnen"
-    switch_from_anon: "Anonymen Modus beenden"
+    switch_to_anon: "Anonymen Modus aktivieren"
+    switch_from_anon: "Anonymen Modus deaktivieren"
     banner:
-      close: "Diesen Banner ausblenden."
+      close: "Dieses Banner ausblenden."
       edit: "Diesen Ankündigungsbanner bearbeiten >>"
     pwa:
       install_banner: "Möchtest du <a href>%{title} auf diesem Gerät installieren?</a>"
@@ -403,7 +403,7 @@ de:
         title: "Einstellungen"
         priorities:
           title: "Überprüfbare Prioritäten"
-      moderation_history: "Moderationshistorie"
+      moderation_history: "Moderationsverlauf"
       view_all: "Alle anzeigen"
       grouped_by_topic: "Gruppiert nach Thema"
       none: "Es sind keine Einträge zur Überprüfung vorhanden."
@@ -623,6 +623,8 @@ de:
             password: "Passwort"
           settings:
             title: "Einstellungen"
+            allow_unknown_sender_topic_replies: "Unbekannte Absender Antworten auf ein Thema erlauben."
+            allow_unknown_sender_topic_replies_hint: "Erlaubt unbekannten Absendern auf Gruppenthemen zu antworten. Wenn dies nicht aktiviert ist, Antworten von E-Mail-Adressen, die nicht bereits im IMAP-E-Mail-Thread enthalten sind oder zum Thema eingeladen werden, werden ein neues Thema erstellen."
           mailboxes:
             synchronized: "Synchronisierte Mailbox"
             none_found: "In diesem E-Mail Konto wurden keine Postfächer gefunden."
@@ -724,7 +726,22 @@ de:
         make_owner_description: "Füge <b>%{username}</b> als Eigentümer dieser Gruppe hinzu"
         remove_owner: "Als Eigentümer entfernen"
         remove_owner_description: "Entferne <b>%{username}</b> als Eigentümer dieser Gruppe"
+        make_primary: "als primär einstellen"
+        make_primary_description: "Dies zur primären Gruppe für <b>%{username}</b> machen"
+        remove_primary: "Als Primär entfernen"
+        remove_primary_description: "Entferne dies als primäre Gruppe für <b>%{username}</b>"
+        remove_members: "Mitglieder entfernen"
+        remove_members_description: "Ausgewählte Benutzer aus dieser Gruppe entfernen"
+        make_owners: "Als Eigentümer hinzufügen"
+        make_owners_description: "Ausgewählte Benutzer Besitzer dieser Gruppe machen"
+        remove_owners: "Besitzer entfernen"
+        remove_owners_description: "Ausgewählte Benutzer als Besitzer dieser Gruppe entfernen"
+        make_all_primary: "Alle als primär machen"
+        make_all_primary_description: "Dies zur primären Gruppe für alle ausgewählten Benutzer machen"
+        remove_all_primary: "Als Primär entfernen"
+        remove_all_primary_description: "Diese Gruppe als primäre Gruppe entfernen"
         owner: "Eigentümer"
+        primary: "Primär"
         forbidden: "Du hast nicht das Recht, die Mitglieder zu sehen."
       topics: "Themen"
       posts: "Beiträge"
@@ -746,7 +763,7 @@ de:
           description: "Du wirst über jeden neuen Beitrag in jeder Nachricht benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
-          description: "Du wirst über neue Nachrichten in dieser Gruppe informiert, aber nicht über Antworten auf diese Nachrichten. "
+          description: "Du wirst über neue Nachrichten in dieser Gruppe informiert, aber nicht über Antworten auf diese Nachrichten."
         tracking:
           title: "Verfolgen"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
@@ -894,7 +911,7 @@ de:
         save: "Speichern"
         clear:
           title: "Filter zurücksetzen"
-          warning: "Willst du wirklich dein Thema entfernen? "
+          warning: "Willst du wirklich dein Thema entfernen?"
       use_current_timezone: "Aktuelle Zeitzone verwenden"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
       expand_profile: "Erweitern"
@@ -926,7 +943,7 @@ de:
         not_first_time: "Nicht dein erstes Mal?"
         skip_link: "Überspringe diese Tipps"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
-      color_scheme_default_on_all_devices: "Mache diese Farbschemas zum Standard für alle meine Geräte"
+      color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
       color_schemes:
         default_description: "Theme Standard"
@@ -1166,7 +1183,7 @@ de:
         set_primary: "Primäre E-Mail Adresse festlegen"
         destroy: "E-Mail entfernen"
         add_email: "Alternative E-Mail Adresse hinzufügen"
-        sso_override_instructions: "E-Mail kann vom SSO-Provider aktualisiert werden."
+        auth_override_instructions: "E-Mails können vom Authentifizierungsanbieter aktualisiert werden."
         no_secondary: "Keine weiteren E-Mail-Adressen"
         instructions: "Nie öffentlich gezeigt."
         admin_note: "Hinweis: Ein Administrator, der die E-Mail-Adresse eines anderen Nicht-Administratorbenutzers ändert, zeigt an, dass der Benutzer den Zugriff auf sein ursprüngliches E-Mail-Konto verloren hat. Daher wird eine E-Mail zum Zurücksetzen des Kennworts an seine neue Adresse gesendet. Die E-Mail-Adresse des Benutzers ändert sich erst, wenn der Vorgang zum Zurücksetzen des Kennworts abgeschlossen ist."
@@ -1184,9 +1201,9 @@ de:
         revoke: "Entziehen"
         cancel: "Abbrechen"
         not_connected: "(nicht verbunden)"
-        confirm_modal_title: "Verbinde %{provider} Konto "
+        confirm_modal_title: "Verbinde %{provider} Konto"
         confirm_description:
-          account_specific: "Dein %{provider} Konto '%{account_description}' wird für die Authentifizierung genutzt werden. "
+          account_specific: "Dein %{provider} Konto '%{account_description}' wird für die Authentifizierung genutzt werden."
           generic: "Dein %{provider} Konto wird für die Authentifzierung genutzt werden."
       name:
         title: "Name"
@@ -1631,7 +1648,7 @@ de:
       accept_title: "Einladung"
       emoji: "Umschlag Emoji"
       welcome_to: "Willkommen bei %{site_name}!"
-      invited_by: "Du wurdest eingeladen von: "
+      invited_by: "Du wurdest eingeladen von:"
       social_login_available: "Du wirst dich auch über andere sozialen Netzwerken mit dieser E-Mail-Adresse anmelden können."
       your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>"
       accept_invite: "Einladung annehmen"
@@ -1674,16 +1691,18 @@ de:
         one: "+ %{count} Unterkategorie"
         other: "+ %{count} Unterkategorien"
     select_kit:
+      filter_by: "Filtern nach: %{name}"
+      select_to_filter: "Wählen Sie einen zu filternden Wert aus"
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
       filter_placeholder: Suchen…
       filter_placeholder_with_any: Suchen oder erzeugen
       create: "Erstelle: '%{content}'"
       max_content_reached:
-        one: "Du kannst nur einen Eintrag auswählen."
+        one: "Du kannst nur %{count} Eintrag auswählen."
         other: "Du kannst nur %{count} Einträge auswählen."
       min_content_not_reached:
-        one: "Wähle mindestens einen Eintrag aus."
+        one: "Wähle mindestens %{count} Eintrag aus."
         other: "Wähle mindestens %{count} Einträge aus."
       invalid_selection_length:
         one: "Die Auswahl muss mindestens %{count} Zeichen umfassen."
@@ -1715,6 +1734,7 @@ de:
       default: Benutzerdefinierte Emojis
     shared_drafts:
       title: "Gemeinsame Vorlagen"
+      notice: "Dieses Thema ist nur für diejenigen sichtbar, die gemeinsame Entwürfe veröffentlichen können."
       destination_category: "Ziel-Kategorie"
       publish: "Gemeinsame Vorlage veröffentlichen"
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
@@ -1737,7 +1757,7 @@ de:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
       group_mentioned:
-        one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
+        one: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du %{group} erwähnst, bist du dabei, <a href='%{group_link}'>%{count} Personen</a> zu benachrichtigen – bist du dir sicher?"
       cannot_see_mention:
         category: "Du hast %{username} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
@@ -2078,6 +2098,7 @@ de:
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
         notification_level: "Benachrichtigungen"
+        change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
@@ -2087,7 +2108,10 @@ de:
         choose_new_tags: "Neue Schlagwörter für die gewählten Themen wählen:"
         choose_append_tags: "Wähle neue Schlagwörter, die diesen Themen hinzugefügt werden sollen:"
         changed_tags: "Die Schlagwörter der gewählten Themen wurden geändert."
-        remove_tags: "Tags entfernen"
+        remove_tags: "Alle Tags entfernen"
+        confirm_remove_tags:
+          one: "Alle Tags werden aus diesem Thema entfernt. Sind Sie sicher?"
+          other: "Alle Tags werden aus <b>%{count}</b> Themen entfernt. Sind Sie sicher?"
         progress:
           one: "Fortschritt: <strong>%{count}</strong> Thema"
           other: "Fortschritt: <strong>%{count}</strong> Themen"
@@ -2216,7 +2240,8 @@ de:
         remove: "Zeitschaltuhr deaktivieren"
         publish_to: "Veröffentlichen in:"
         when: "Wann:"
-        time_frame_required: Bitte wähle einen Zeitrahmen aus
+        time_frame_required: "Bitte wähle einen Zeitrahmen aus"
+        min_duration: "Die Dauer muss größer als 0 sein"
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         now: "Jetzt"
@@ -2269,6 +2294,9 @@ de:
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
         other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
+      auto_close_momentarily:
+        one: "Der letzte Beitrag im Thema ist bereits %{count} Stunden alt, daher wird das Thema vorübergehend geschlossen."
+        other: "Der letzte Beitrag im Thema ist bereits %{count} Stunden alt, daher wird das Thema kurzzeitig geschlossen."
       timeline:
         back: "Zurück"
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
@@ -2422,13 +2450,14 @@ de:
         username_placeholder: "Benutzername"
         action: "Einladung versenden"
         help: "per E-Mail oder Benachrichtigung weitere Personen zu diesem Thema einladen"
-        sso_enabled: "Gib den Benutzername der Person ein, die du zu diesem Thema einladen willst."
+        to_forum: "Wir senden eine kurze E-Mail, damit dein/e Freund/in sofort beitreten kann, indem die Person auf einen Link klickt."
+        discourse_connect_enabled: "Gib den Benutzernamen der Person ein, die du zu diesem Thema einladen möchtest."
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
         to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
         to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden eine Benachrichtigung versenden und mit einem Link zur Teilnahme an diesem Thema einladen."
         to_username: "Gib den Benutzername der Person ein, die du einladen möchtest. Wir werden eine Benachrichtigung versenden und mit einem Link zur Teilnahme an diesem Thema einladen."
         email_placeholder: "name@example.com"
-        success_email: "Wir haben an <b>%{emailOrUsername}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
+        success_email: "Wir haben eine Einladung an <b>%{invitee}</b>gesendet. Wir werden dich benachrichtigen, wenn die Einladung eingelöst wird. Überprüfe die Registerkarte Einladungen auf deiner Benutzerseite, um deine Einladungen zu verfolgen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
         error: "Es tut uns leid, wir konnten diese Person nicht einladen. Wurde diese Person vielleicht schon eingeladen? (Einladungen sind in ihrer Zahl beschränkt)"
         success_existing_email: "Ein Benutzer mit der E-Mail-Adresse <b>%{emailOrUsername}</b> existiert bereits. Wir haben den Benutzer eingeladen, sich an diesem Thema zu beteiligen."
@@ -2815,7 +2844,7 @@ de:
       images: "Bilder"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
-      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
+      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben, "
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       mailinglist_mirror: "Kategorie spiegelt eine Mailingliste"
       show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
@@ -2837,7 +2866,7 @@ de:
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
-      position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
+      position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern, "
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
       minimum_required_tags: "Minimal Anzahl an Schlagwörtern, die ein Thema erfordert"
       parent: "Übergeordnete Kategorie"
@@ -3250,7 +3279,7 @@ de:
       sort_by_name: "Name"
       manage_groups: "Schlagwort-Gruppen verwalten"
       manage_groups_description: "Gruppen definieren, um Schlagwörter zu organisieren"
-      upload: "Schlagwärter hochladen"
+      upload: "Schlagwörter hochladen"
       upload_description: "Lade eine CSV-Datei hoch, um mehrere Schlagwörter auf einmal zu erstellen"
       upload_instructions: "Eine pro Zeile, optional mit einer Schlagwortgruppe nach dem Schema 'schlagwort_name,schlagwort_gruppe'."
       upload_successful: "Schlagwörter erfolgreich hochgeladen"
@@ -3456,10 +3485,6 @@ de:
             available: "Gruppenname ist verfügbar"
             not_available: "Gruppenname ist nicht verfügbar"
             blank: "Gruppenname darf nicht leer sein"
-        bulk_add:
-          title: "Mehrere der Gruppe hinzufügen"
-          complete_users_not_added: "Diese Benutzer wurden nicht hinzugefügt (stelle sicher, dass sie ein Konto haben):"
-          paste: "Füge eine Liste an Benutzernamen oder E-Mail-Adressen ein (ein Eintrag je Zeile):"
         add_members:
           as_owner: "Mache Benutzer zu Eigentümern dieser Gruppe"
         manage:
@@ -3565,7 +3590,7 @@ de:
               wordpress: Notwendig, damit das WordPress-WP-Diskurs-Plugin funktioniert.
             users:
               bookmarks: Benutzer-Lesezeichen auflisten. Es gibt Lesezeichenerinnerungen zurück, wenn Sie das ICS-Format verwenden.
-              sync_sso: Synchronisieren Sie einen Benutzer mit SSO.
+              sync_sso: Synchronisiere einen Benutzer mit DiscourseConnect.
               show: Informationen über einen Benutzer abrufen.
               check_emails: Benutzer-E-Mails auflisten.
               update: Benutzerprofil Informationen aktualisieren.
@@ -3823,7 +3848,9 @@ de:
           convert: "Umwandeln"
           convert_component_alert: "Bist Du sicher, dass du diese Komponente in ein Theme umwandeln möchtest? Sie wird als Komponente entfernt von %{relatives}."
           convert_component_tooltip: "Wandle diese Komponente in ein Theme um"
+          convert_component_alert_generic: "Sind Sie sicher, dass Sie diese Komponente in das Theme konvertieren möchten?"
           convert_theme_alert: "Bist Du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest? Sie wird als übergeordnetes Element entfernt von %{relatives}."
+          convert_theme_alert_generic: "Sind Sie sicher, dass Sie dieses Theme in Komponente konvertieren möchten?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
@@ -4497,7 +4524,7 @@ de:
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
         trust_level_locked_tip: "Die Vertrauensstufe ist gesperrt. Das System wird den Benutzer nicht befördern oder zurückstufen."
-        trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder zurückstufen. "
+        trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder zurückstufen."
         lock_trust_level: "Vertrauensstufe sperren"
         unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
@@ -4529,16 +4556,16 @@ de:
           on_grace_period: "Wird nicht zurückgestuft. Derzeit gilt die Schonfrist der letzten Beförderung."
           locked_will_not_be_promoted: "Vertrauensstufe ist gesperrt. Wird nie befördert werden."
           locked_will_not_be_demoted: "Vertrauensstufe ist gesperrt. Wird nie zurückgestuft werden."
-        sso:
-          title: "Single Sign-on"
+        discourse_connect:
+          title: "DiscourseConnect Single Sign On"
           external_id: "Externe ID"
           external_username: "Benutzername"
           external_name: "Name"
           external_email: "E-Mail"
-          external_avatar_url: "URL des Profilbilds"
+          external_avatar_url: "Profilbild URL"
           last_payload: "Letzte Nutzlast"
           delete_sso_record: "SSO-Datensatz löschen"
-          confirm_delete: "Sind Sie sicher, dass Sie diesen SSO-Datensatz (Single Sign On) löschen möchten?"
+          confirm_delete: "Bist du sicher, dass du diesen DiscourseConnect-Eintrag löschen möchtest?"
       user_fields:
         title: "Benutzerfelder"
         help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
@@ -4739,7 +4766,7 @@ de:
         alt: "benutzerdefinierte Emoji-Vorschau"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
-        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des Host. "
+        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des Host."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
         sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"
