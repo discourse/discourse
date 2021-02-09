@@ -3,8 +3,15 @@
 // create account modals
 .login-modal,
 .create-account {
-  &.has-auth-alt {
-    min-width: 700px;
+  .modal-body {
+    &.has-alt-auth {
+      background: var(--tertiary);
+    }
+    @media (prefers-color-scheme: dark) {
+      &.has-alt-auth {
+        background: rgba(var(--tertiary-rgb), 0.5);
+      }
+    }
   }
   #modal-alert {
     padding: 15px 16px;
@@ -74,13 +81,7 @@
 // login modal only
 .login-modal:not(.hidden) {
   padding: 0 !important;
-  @media (prefers-color-scheme: dark) {
-    &.has-alt-auth {
-      background: rgba(var(--tertiary-rgb), 0.5);
-    }
-  }
   &.has-alt-auth {
-    background: var(--tertiary);
     min-width: 700px;
     .login-left-side {
       width: calc(60% - 4em);
@@ -122,7 +123,6 @@
     display: none;
   }
   &.has-alt-auth .login-right-side {
-    background-color: var(--tertiary);
     width: 40%;
     padding: 1em;
     display: flex;
@@ -165,16 +165,7 @@
     position: relative;
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
       max-height: 65vh !important;
-      background: var(--tertiary);
       overflow: hidden;
-    }
-    @media (prefers-color-scheme: dark) {
-      .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
-        background: rgba(var(--tertiary-rgb), 0.5);
-      }
-    }
-    .modal-footer {
-      // height: calc(94px - 23px);
     }
   }
   .has-alt-auth .create-account-form {
@@ -274,7 +265,7 @@
       input {
         width: 100%;
       }
-      label.alt-placeholder {
+      input:not(.value-entered):not(:focus) + label.alt-placeholder {
         top: 12px;
       }
     }

@@ -1712,7 +1712,7 @@ en:
 
     login:
       header_title: "Welcome Back"
-      subheader_title: "Sign in to your account"
+      subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
       password: "Password"
