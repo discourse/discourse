@@ -6,7 +6,7 @@ module BackupRestore
 
     delegate :log, to: :@logger, private: true
 
-    def initialize(logger, filename, current_db, root_tmp_directory = Rails.root, location = nil)
+    def initialize(logger, filename, current_db, root_tmp_directory: Rails.root, location: nil)
       @logger = logger
       @filename = filename
       @current_db = current_db

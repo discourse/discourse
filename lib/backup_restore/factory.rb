@@ -28,7 +28,7 @@ module BackupRestore
     end
 
     def create_backup_file_handler(filename, current_db, location)
-      BackupFileHandler.new(logger, filename, current_db, location)
+      BackupFileHandler.new(logger, filename, current_db, location: location)
     end
   end
 end
