@@ -1058,7 +1058,6 @@ ro:
         set_primary: "Setează e-mail principal"
         destroy: "Elimină e-mail"
         add_email: "Adaugă e-mail alternativ"
-        sso_override_instructions: "E-mailul poate fi actualizat de la furnizorul SSO."
         no_secondary: "Nici un e-mail secundar"
         instructions: "Niciodată arătat publicului."
         admin_note: "Notă: Un utilizator de administrator care modifică adresa email a altui utilizator non-administrator indică faptul că utilizatorul a pierdut accesul la contul de email original, astfel încât un email de resetare a parolei va fi trimis la noua adresă. Adresa email a utilizatorului nu se va schimba până când acesta nu finalizează procesul de resetare a parolei."
@@ -2000,13 +1999,11 @@ ro:
         username_placeholder: "nume utilizator"
         action: "Trimite o invitație"
         help: "invită alţi utilizatori la această discuţie via email sau notificare"
-        sso_enabled: "Introdu numele de utilizator al persoanei pe care dorești să o inviți la acest subiect."
         to_topic_blank: "Introdu numele de utilizator sau adresa de email a persoanei pe care dorești să o inviți la acest subiect."
         to_topic_email: "Ai introdus o adresă de email. Vom trimite către ea un email cu o invitație ce îi va permite prietenului tău să răspundă imediat la acest subiect."
         to_topic_username: "Ai introdus un nume utilizator. Îi vom trimite o notificare cu link pentru a-l invita la acest subiect."
         to_username: "Introdu numele de utilizator al persoanei pe care dorești să o inviți. Îi vom trimite o notificare cu link pentru a o invita la acest subiect."
         email_placeholder: "nume@exemplu.com"
-        success_email: "Am trimis o invitație către <b>%{emailOrUsername}</b>.. Te vom anunţa când invitația este folosită. Verifică tab-ul de invitații pe pagina ta de utilizator pentru a monitoriza invitațiile. "
         success_username: "Am invitat acest utilizator să participe la această discuţie."
         error: "Ne pare rău, nu am putut invita persoana indicată. Poate că a fost deja invitată? (Invitaţiile sunt limitate)"
       login_reply: "Autentifică-te pentru a răspunde."
@@ -2729,10 +2726,6 @@ ro:
         new:
           title: "Grup nou"
           create: "Creează"
-        bulk_add:
-          title: "Adaugă în grup mai mulți utilizatori odată"
-          complete_users_not_added: "Acești utilizatori nu au fost adăugați (asigură-te că au cont):"
-          paste: "Lipește o listă de utilizatori sau email-uri, câte unul pe linie:"
         manage:
           interaction:
             email: Email
@@ -3424,13 +3417,6 @@ ro:
           on_grace_period: "În prezent, în perioada de grație a promovării, nu va fi retrogradat."
           locked_will_not_be_promoted: "Nivelul de încredere blocat. Nu va fi niciodată promovat."
           locked_will_not_be_demoted: "Nivelul de încredere blocat. Nu va fi niciodată retrogradat."
-        sso:
-          title: "Autentificare unică"
-          external_id: "ID Extern"
-          external_username: "Nume utilizator"
-          external_name: "Nume"
-          external_email: "Email"
-          external_avatar_url: "URL poză de profil"
       user_fields:
         title: "Câmpuri utilizator"
         help: "Adaugă câmpuri pe care utilizatorii le pot completa."

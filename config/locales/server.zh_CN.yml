@@ -168,7 +168,7 @@ zh_CN:
       wrong_length:
         other: 长度错误（应为 %{count} 个字）
       other_than: "必须不为 %{count}"
-      sso_overrides_username: "当`sso_overrides_username`设置是启用的，用户名需要在SSO提供商处更新。"
+      auth_overrides_username: "由于启用了 `auth_overrides_username` 设置，因此需要在身份验证提供商处更新用户名。"
     template:
       body: ! "以下字段有问题："
       header:
@@ -190,7 +190,7 @@ zh_CN:
       share_quote_facebook_requirements: "你必须设置一个Facebook app id 才能启用Facebook的引用分享功能。"
       second_factor_cannot_enforce_with_socials: "你不能在启用社交登录时强制启用双重认证。你必须先禁用以下登录方式：%{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录则无法强制启用2FA。"
-      second_factor_cannot_be_enforced_with_sso_enabled: "如果启用了 SSO，则无法强制启用 2FA。"
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行 2FA。"
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制启用2FA则不能禁用本地登录。在禁用本地登录之前，请禁用强制启用2FA。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "你无法启用S3上传，因为S3上传已经全局启用了，另外这样站点级的启用可能会导致上传的文件出现严重问题"
       cors_origins_should_not_have_trailing_slash: "你不应该将尾随斜线 (/) 添加到 Cross Origins。"
@@ -217,7 +217,7 @@ zh_CN:
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
     cant_invite_to_group: "你未被允许邀请用户到指定的群组。请确保你是群组的所有者。"
     disabled_errors:
-      sso_enabled: "由于已启用 SSO，邀请功能已被禁用。"
+      discourse_connect_enabled: "邀请已禁用，因为已启用 DiscourseConnect。"
       local_logins_disabled: "由于“启用本地登录”设置为禁用，邀请功能也被禁用。"
       invalid_access: "您没有权限查看所请求的资源。"
   bulk_invite:
@@ -388,6 +388,11 @@ zh_CN:
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
       cant_allow_membership_requests: "对没有拥有者的群组，你无法批准成员请求。"
       already_requested_membership: "你已请求成为该群组的成员。"
+      adding_too_many_users:
+        other: "单次最多可添加%{count}个用户"
+      usernames_or_emails_required: "用户名和电子邮件是必须的"
+      no_invites_with_discourse_connect: "启用 DiscourseConnect 时，您只能邀请注册用户"
+      no_invites_without_local_logins: "本地登录禁用时，你只能邀请已经注册的用户"
     default_names:
       everyone: "任何人"
       admins: "管理员"
@@ -1296,8 +1301,6 @@ zh_CN:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='%{base_path}/logs' target='_blank'>日志</a>寻找详情。"
     missing_mailgun_api_key: "服务器设置使用Mailgun发送邮件，但并未设置验证webhook私信的API密钥。"
     bad_favicon_url: "网站图标无法载入。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的图标设置。"
-    deprecated_api_usage: "我们检测到了不建议使用的身份验证方法的API请求。请更新以使用<a href='https://meta.discourse.org/t/-/22706'>基于header的认证</a> 。更新后，此消息可能需要24小时才能消失。"
-    update_mail_receiver: "我们检测到一个过时的电子邮件收信人版本。点击<a href='https://meta.discourse.org/t/-/133491'>这里</a>查看更新说明。更新后，此消息后可能需要24小时才会消失。"
     poll_pop3_timeout: "连接 POP3 服务器超时。无法获取进站邮件。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务商。"
     poll_pop3_auth_error: "连接至 POP3 服务器因身份验证错误而失败。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
     force_https_warning: "你的网站使用了SSL。但是，你的网站设置中尚未启用`<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
@@ -1394,7 +1397,7 @@ zh_CN:
     detailed_404: "为用户提供关于他们为什么不能访问特定主题的更多细节。注意：这是不安全的，因为用户将知道一个 URL 是否链接到一个有效的主题。"
     enforce_second_factor: "强制用户启用双重验证。选择“all”以强制所有用户启用。选择“staff”仅强制管理人员。"
     force_https: "强制使用 https。警告：开启前必须确认 HTTPS 已经配置并能够正常使用！你检查了 CDN、第三方登录和站外的 logo / 依赖是否支持 HTTPS 了吗？"
-    same_site_cookies: "使用 Same-site cookies以消除所有跨站请求伪造（CSRF）的攻击面（Lax 或 Strict）。警告：Strict 仅在强制登录并使用 SSO 的站点有效。"
+    same_site_cookies: "使用 Same-site cookies 以消除所有跨站请求伪造的攻击面 (Lax 或 Strict)。警告：Strict 仅在强制登录并使用外部身份验证方法的网站上有效。"
     summary_score_threshold: "一个帖子被加入到“主题摘要”中所需的最小分值"
     summary_posts_required: "一个主题启用“主题摘要”前最少需要有多少个回帖。修改此设置会影响过去一个星期。"
     summary_likes_required: "主题启用“主题摘要”前至少需要收到多少个赞。修改此设置会影响过去一个星期。"
@@ -1502,26 +1505,18 @@ zh_CN:
     min_admin_password_length: "管理员最短密码长度"
     password_unique_characters: "密码中必须包含几个不同的字符。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
-    external_auth_skip_create_confirm: 当通过外部授权注册时，跳过创建账户的弹出式窗口，最好与 sso_overrides_email, sso_overrides_username 和 sso_overrides_name 一起使用。
-    external_auth_immediately: "自动重定向到外部登录系统而无需用户交互。仅在启用login_required并且只有一个外部认证方法时有效"
-    enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
-    verbose_sso_logging: "将详细的SSO相关诊断记录到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "在端点/session/sso_provider实现Discourse SSO provider协议，需要设置sso_provider_secrets"
-    sso_url: "单点登录 URL 入口（必须包含 http:// 或 https://）"
-    sso_secret: "用于加密验证SSO信息的密钥字符串，请确保是 10 个字符或者更长"
-    sso_provider_secrets: "使用Discourse作为SSO provider的域名与密钥对列表。确保SSO密钥为10个字符或更长。通配符 * 可用于匹配任何域名或仅匹配其中的一部分（例如* .example.com）。"
-    sso_overrides_bio: "覆盖用户个人信息中的用户简介并禁止用户修改"
-    sso_overrides_groups: "将所有手动创建的群组与SSO属性中指定的群组同步（警告：如果你没有指定群组，那么将为用户清除所有手动创建的群组的成员资格）"
-    sso_overrides_email: "每次登录都使用 SSO 信息中的外部站点的邮件地址覆盖本地邮件地址，并且禁止本地修改邮件地址。（警告：由于本地邮件的规范化，邮件地址可能会有所差异）"
-    sso_overrides_username: "每次登录都使用 SSO 信息中的的用户名覆盖本地用户名，并且禁止本地修改用户名。（警告：因本地用户名的长度或其它要求，用户名可能会有所差异）"
-    sso_overrides_name: "每次登录都使用 SSO 信息中的外部站点的全名覆盖本地全名，并且禁止本地的全名修改。"
-    sso_overrides_avatar: "使用SSO信息中的外部站点头像覆盖用户头像。如果启用，则不允许用户在Discourse上传头像。"
-    sso_overrides_location: "使用SSO信息中的位置覆盖用户位置，并且禁止本地修改。"
-    sso_overrides_website: "使用SSO信息中的外部位置覆盖用户网站，并且禁止本地修改。"
-    sso_overrides_profile_background: "使用SSO信息中的外部站点的头像覆盖用户资料背景"
-    sso_overrides_card_background: "使用SSO信息中的外部站点的头像覆盖用户卡片背景。"
-    sso_not_approved_url: "将未经授权的SSO账户重定向至这个 URL"
-    sso_allows_all_return_paths: "不限制 SSO 所提供的 return_paths 中的域名（默认情况下返回的地址必须位于当前站点）"
+    auth_skip_create_confirm: 当通过外部授权注册时，跳过创建账户的弹出式窗口，最好与 auth_overrides_email, auth_overrides_username 和 auth_overrides_name 一起使用。
+    auth_immediately: "自动重定向到外部登录系统而无需用户交互。仅在启用 login_required 并且只有一个外部认证方法时有效"
+    enable_discourse_connect: "通过 DiscourseConnect (以前称为“ Discourse SSO”)启用登录(警告：用户的电子邮件地址*必须*由外部站点进行验证！)"
+    verbose_discourse_connect_logging: "将详细的 DiscourseConnect 相关日志记录为 <a href='%{base_path}/logs' target='_blank'>/ 日志</a>"
+    enable_discourse_connect_provider: "在 /session/sso_provider 端点上实现 DiscourseConnect (以前称为“ Discourse SSO”) 协议，需要设置 discourse_connect_provider_secrets"
+    discourse_connect_url: "DiscourseConnect 终端节点的 URL (必须包含 http://或 https://)"
+    discourse_connect_secret: "用于加密验证 DiscourseConnect 信息的密钥字符串，请确保是 10 个字符或者更长"
+    discourse_connect_provider_secrets: "使用 DiscourseConnect 的域名与密钥对列表。确保 SSO 密钥为 10 个字符或更长。通配符 * 可用于匹配任何域名或仅匹配其中的一部分(例如* .example.com)。"
+    discourse_connect_overrides_bio: "覆盖用户个人资料中的用户个人资料，并阻止用户对其进行更改"
+    discourse_connect_overrides_groups: "同步制定群组中手动创建的群组成员的群组属性。\n(警告：如果你不指定群组，所有的手动群组成员资格将被用户清除)"
+    auth_overrides_email: "在每次登录时用外部网站的电子邮件覆盖本地电子邮件，并防止本地更改。适用于所有身份验证提供程序。(警告：由于本地电子邮件的规范化，可能会出现差异)"
+    auth_overrides_username: "在每次登录时，用外部网站的用户名覆盖本地用户名，并防止本地更改。 适用于所有身份验证提供程序。(警告: 由于用户名长度/要求的不同，可能会出现差异)"
     enable_local_logins: "启用基于本地用户名和密码登录的账户。必须启用此选项才能使邀请生效。警告：如果禁用，且之前未配置至少一种备用登录方法，则可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件将一键登录链接发送给他们。"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
@@ -1968,7 +1963,7 @@ zh_CN:
     tags_sort_alphabetically: "按照字母顺序显示标签。默认按流行度显示。"
     tags_listed_by_group: "按照<a href='%{base_path}/tags' target='_blank'>标签页</a>上的标签组列出标签。"
     tag_style: "标签的视觉样式。"
-    allow_staff_to_tag_pms: "允许管理人员对个人信息打标签"
+    allow_staff_to_tag_pms: "允许管理人员对私信打标签"
     min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
     suppress_overlapping_tags_in_list: "如果标签匹配了主题标题中的词，不显示该标签"
     remove_muted_tags_from_latest: "在最新主题列表中，不显示仅有静音标签的主题。"
@@ -2019,8 +2014,6 @@ zh_CN:
       email_editable_enabled: "你必须先禁用 'email editable' 再启用该设置。"
       staged_users_disabled: "你必须先启用“暂存用户”再启用该设置。"
       reply_by_email_disabled: "你必须先启用 '用 email 回复' 再启用该设置。"
-      sso_url_is_empty: "必须设置“sso url”才能启用此设置。"
-      sso_invite_only: "你不能够同时启用SSO和仅邀请模式。"
       enable_local_logins_disabled: "必须先启用“启用本地登录”，才能启用此设置。"
       min_username_length_exists: "不能设置最小用户名长度大于最短用户名（%{username}）。"
       min_username_length_range: "不能将最小值设置为高于最大值。"
@@ -2038,10 +2031,6 @@ zh_CN:
         leading_trailing_slash: "正则表达式不能以斜杠作为开头或结尾。"
       unicode_usernames_avatars: "内置的头像系统不支持Unicode用户名。"
       list_value_count: "该列表必须包含%{count}个值。"
-    placeholder:
-      sso_provider_secrets:
-        key: "www.example.com"
-        value: "SSO密钥"
   search:
     extreme_load_error: "站点处于高负荷状态，搜索已关闭，稍后再试。"
     within_post: "#%{post_number} 由 %{username}"
@@ -2052,20 +2041,11 @@ zh_CN:
     results_page: "关于“%{term}”的搜索结果"
     audio: "[音频]"
     video: "[视频]"
-  sso:
-    login_error: "登录错误"
-    not_found: "无法找到你的账户。请联系站点管理人员。"
-    account_not_approved: "你的账户尚未被审核通过。一旦你的账户获得批准，你就会收到一封电子邮件提醒。"
-    unknown_error: "你的账户发生了问题。请联系站点管理人员。"
-    timeout_expired: "账户登录超时，请重新尝试登录。"
-    no_email: "没有找到邮件地址。请联系站点管理员。"
-    blank_id_error: "`external_id`是必需的，但现在空缺"
-    email_error: "不能注册邮箱为<b>%{email}</b>的账户。请联系站点管理员。"
-    missing_secret: "由于缺少密钥，SSO 身份验证失败。请与站点管理员联系以修复此问题。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "最新发帖者"
   frequent_poster: "频繁发帖者"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "欢迎来到我们的社区！这些都是最近热门主题。"
     not_seen_in_a_month: "欢迎回来！我们已经好久没见到你了。这些是你不在时的最热门主题。"
@@ -3383,10 +3363,10 @@ zh_CN:
     offline_page_message: "你似乎正处于离线状态！请检查网络连接并重试。"
   login_required:
     welcome_message: |
-      ##[欢迎来到 %{title}](#welcome)
+      ## [欢迎来到 %{title}](#welcome)
       你需要一个账户。请创建一个账户或者登录以继续。
     welcome_message_invite_only: |
-      ##[欢迎来到%{title}](#welcome)
+      ## [欢迎来到%{title}](#welcome)
       你需要一个账号。请从现有用户处获取一个邀请或者登录。
   deleted: "已删除"
   image: "图片"
@@ -3604,37 +3584,37 @@ zh_CN:
 
       你使用论坛的许可受以下条件限制：
 
-      你必须至少十三岁。
+      1.你必须至少十三岁。
 
-      2.如果公司直接与你联系，表示你可能不会，你可能不再使用该论坛。
+      2.如果公司直接与你表示不能，你不能继续使用该论坛。
 
       3.你必须按照[可接受使用](#heading--accepted-use)和[内容标准](#heading--content-standards)使用论坛。
 
       <h2 id =“heading--acceptable-use”><a href="#heading--acceptable-use">可接受的使用</a></h2>
 
-      你可能不会使用论坛违法。
+      1.你不能使用论坛违法。
 
-      2.未经他们的特别许可，你不得在论坛上使用或尝试使用他人的账户。
+      2.未经特别许可，你不得在论坛上使用或尝试使用他人的账户。
 
       3.你不得在论坛上购买，出售或以其他方式交易用户名或其他唯一标识符。
 
       4.你不得通过论坛发送广告，连锁信或其他请求，或使用论坛收集商业邮件列表或数据库的地址或其他个人数据。
 
-      5.你可能无法自动访问论坛或监控论坛，例如使用网络爬虫，浏览器插件或插件，或其他非Web浏览器的计算机程序。如果你运行一个搜索引擎，你可以抓取论坛为其公开搜索引擎编制索引。
+      5.你不能使用程序自动访问论坛或监控论坛，例如使用网络爬虫，浏览器插件或插件，或其他非Web浏览器的计算机程序。如果你运行一个搜索引擎，你可以抓取论坛为其公开搜索引擎编制索引。
 
       6.你不能使用论坛将邮件发送到通讯组列表，新闻组或组邮件别名。
 
-      7.你不得虚假暗示你与公司有关联或认可。
+      7.你不得虚假暗示你与本公司有关联或得到许可。
 
-      8.你不得在其他网页的论坛上超链接到图像或其他非超文本内容。
+      8.你不得在其他论坛上超链接到本论坛的图片或其他非超文本内容。
 
       9.你不得从论坛下载的资料中删除任何显示所有权的标记。
 
-      10.你可能无法使用“<iframe>”在其他网站上显示论坛的任何部分。
+      10.你可能无法使用`<iframe>`在其他网站上显示论坛的任何部分。
 
       11.你不得禁用，避免或绕过论坛的任何安全或访问限制。
 
-      12.你可能不会对论坛的基础设施施加不合理的请求量，或者旨在对论坛底层信息系统施加不合理负担的请求。
+      12.你不能对论坛的基础设施施加不合理的请求量，或者旨在对论坛底层信息系统施加不合理负担的请求。
 
       13.你不得通过论坛冒充他人。
 
@@ -3710,11 +3690,11 @@ zh_CN:
 
       <h2 id =“heading--dispute”><a href="#heading--disputes"> Disputes </a></h2>
 
-      %{governing_law} 将管辖与这些条款或你对论坛的使用相关的任何争议。
+      %{governing_law}将管辖与这些条款或你对论坛的使用相关的任何争议。
 
       你和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。你和公司都不会反对这些法院的管辖权，论坛或地点。
 
-      ***除了寻求禁令或根据“计算机欺诈和滥用法案”提出的索赔外，你和公司将通过约束美国仲裁协会的仲裁来解决任何争议。仲裁将遵循AAA的商业仲裁规则和消费者相关争议的补充程序。仲裁将在加利福尼亚州旧金山举行。你将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
+      ***除了寻求禁令或根据“计算机欺诈和滥用法案”提出的索赔外，你和公司将通过约束美国仲裁协会的仲裁来解决任何争议。仲裁将遵循AAA的商业仲裁规则和消费者相关争议的补充程序。仲裁将在 %{city_for_disputes}举行。你将作为个人解决任何争议，而不是作为集体诉讼或其他代表诉讼的一部分，无论是作为原告还是集体成员。未经公司许可，任何仲裁员均不得将任何争议与任何其他仲裁合并。***
 
       任何仲裁裁决将包括仲裁费用，合理的律师费和证人的合理费用。你和公司可以在任何有管辖权的法院进行仲裁裁决。
 
@@ -3738,7 +3718,7 @@ zh_CN:
 
       该公司最后更新了这些条款于2018年7月12日，并可能再次更新这些条款。该公司将发布所有更新到论坛。对于包含重大更改的更新，如果你已创建账户并提供有效的邮件地址，则公司同意通过邮件通知你。该公司还可以在论坛上通过特殊消息或警报宣布更新。
 
-      一旦你收到这些条款的更新通知，你必须同%{governing_law}意新条款才能继续使用论坛。
+      一旦你收到这些条款的更新通知，你必须同意新条款才能继续使用论坛。
   privacy_topic:
     title: "隐私政策"
     body: |

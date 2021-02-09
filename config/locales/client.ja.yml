@@ -1061,7 +1061,6 @@ ja:
         set_primary: "プライマリメールアドレスの設定"
         destroy: "メールアドレスを削除"
         add_email: "代替メールアドレスを追加"
-        sso_override_instructions: "メールはSSOプロバイダから更新することができます。"
         no_secondary: "その他のメールアドレスはありません"
         instructions: "他人に公開はされません"
         admin_note: "注：管理者ユーザーが別の非管理者ユーザーの電子メールを変更すると、そのユーザーは元の電子メールアカウントでアクセスできなくなるため、パスワードのリセットメールが新しいアドレスに送信されます。ユーザーのメールアドレスは、パスワードのリセットプロセスが完了するまで変更されません。"
@@ -2090,13 +2089,11 @@ ja:
         username_placeholder: "ユーザ名"
         action: "招待を送る"
         help: "このトピックに他のユーザをメールまたは通知で招待する。"
-        sso_enabled: "このトピックに招待したい人のユーザ名を入れてください"
         to_topic_blank: "このトピックに招待したい人のユーザ名かメールアドレスを入れてください"
         to_topic_email: "あなたはメールアドレスを入力しました。フレンドがすぐにこのトピックへ返信できるようにメールで招待します。"
         to_topic_username: "ユーザ名を入力しました。このトピックへの招待リンクの通知を送信します。"
         to_username: "招待したい人のユーザ名を入れてください。このトピックへの招待リンクの通知を送信します。"
         email_placeholder: "name@example.com"
-        success_email: "<b>%{emailOrUsername}</b>に招待を送信しました。招待が受理されたらお知らせします。招待した人はユーザページの招待タブにて確認できます。"
         success_username: "ユーザをこのトピックへ招待しました。"
         error: "申し訳ありません。その人を招待できませんでした。すでに招待を送信していませんか？ (招待できる数には限りがあります)"
         success_existing_email: "<b>%{emailOrUsername}</b>はすでにこのトピックへ招待済みです。"
@@ -2702,9 +2699,6 @@ ja:
           name:
             too_short: "グループ名が短すぎます"
             blank: "グループ名は空白にできません"
-        bulk_add:
-          title: "グループに一括追加"
-          paste: "1行ごとにユーザ名またはメールアドレスを貼り付けてください:"
         manage:
           interaction:
             email: Eメール
@@ -3278,13 +3272,6 @@ ja:
           on_grace_period: "現在の昇格期間中は、降格されません"
           locked_will_not_be_promoted: "トラストレベルはロックされています。昇格することはありません"
           locked_will_not_be_demoted: "トラストレベルはロックされています。降格することはありません"
-        sso:
-          title: "シングルサインオン"
-          external_id: "External ID"
-          external_username: "ユーザ名"
-          external_name: "名前"
-          external_email: "メール"
-          external_avatar_url: "プロフィール画像URL"
       user_fields:
         title: "ユーザフィールド"
         help: "ユーザが記入する項目(フィールド)を追加します"

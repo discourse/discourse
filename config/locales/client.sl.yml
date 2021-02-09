@@ -1133,7 +1133,6 @@ sl:
         set_primary: "Nastavite primarni e-poštni naslov"
         destroy: "Odstrani e-poštni naslov"
         add_email: "Dodajte nadomestni e-poštni naslov"
-        sso_override_instructions: "E-naslov se lahko spremeni pri SSO ponudniku."
         no_secondary: "Ni dodatnih e-naslovov"
         instructions: "se nikoli ne prikaže javno"
         admin_note: "Opomba: Kadar skrbnik spremeni e-naslov drugega uporabnika, ki ni skrbnik, je to indikator, da je uporabnik izgubil dostop do svojega izvornega e-poštnega računa, zato bo e-poštno sporočilo za ponastavitev gesla poslano na nov naslov. Uporabnikov e-naslov ne bo spremenjen, dokler ne zaključi postopka ponastavitve gesla."
@@ -2019,7 +2018,6 @@ sl:
         choose_new_tags: "Izberite nove oznake za te teme:"
         choose_append_tags: "Izberite nove oznake da se dodajo na te teme:"
         changed_tags: "Oznake na teh temah so bile spremenjene."
-        remove_tags: "Odstrani oznake"
         progress:
           one: "Napredek: <strong>%{count}</strong> tema"
           two: "Napredek: <strong>%{count}</strong> temi"
@@ -2161,7 +2159,7 @@ sl:
         remove: "Odstrani opomnik"
         publish_to: "Objavi v:"
         when: "Kdaj:"
-        time_frame_required: Izberite časovni okvir
+        time_frame_required: "Izberite časovni okvir"
       auto_update_input:
         none: "Izberi časovni okvir"
         now: "Zdaj"
@@ -2372,13 +2370,11 @@ sl:
         username_placeholder: "uporabniško ime"
         action: "Pošlji povabilo"
         help: "povabi ostale v to temo preko e-sporočila ali obvestil"
-        sso_enabled: "Vnesite uporabniško ime osebe, ki bi jo povabili v to temo."
         to_topic_blank: "Vnesite uporabniško ime ali e-naslov osebe, ki bi ga radi povabili v to temo."
         to_topic_email: "Vnesli ste e-naslov. Poslali bomo vabilo preko e-sporočila, ki bo vašemu prijatelju omogočila, da bo neposredno odgovoril v temo."
         to_topic_username: "Vnesli ste uporabniško ime. Poslali mu bomo obvestilo s povezavo na to temo."
         to_username: "Vnesite uporabniško ime osebe, ki bi jo povabili v to temo. Poslali mu bomo obvestilo s povezavo na to temo."
         email_placeholder: "name@example.com"
-        success_email: "Poslali smo povabilo na <b>%{emailOrUsername}</b>. Obvestili vas bomo, ko se bo uporabnik prvič prijavil. Na vaši uporabniški strani lahko v zavihku Povabila spremljate stanje vaših povabil."
         success_username: "Povabili smo uporabnika, da sodeluje v tej temi."
         error: "Nismo mogli povabiti to osebo. Mogoče je ta oseba že povabljena? (povabila so omejena)"
         success_existing_email: "Uporabnik z e-naslovom <b>%{emailOrUsername}</b> že obstaja. Tega uporabnika smo povabili, da sodeluje v tej temi."
@@ -3399,8 +3395,6 @@ sl:
             available: "Ime skupine je na voljo"
             not_available: "Ime skupine ni na voljo"
             blank: "Ime skupine ne more biti prazno"
-        bulk_add:
-          title: "Množično dodajanje v skupino"
         add_members:
           as_owner: "Dodaj uporabnika(-e) in skrbnika(-e) za to skupino"
         manage:
@@ -3460,7 +3454,6 @@ sl:
               read_lists: Preberite sezname tem, kot so najboljše, nove, najnovejše, itd. Podpira tudi RSS.
               wordpress: Potrebno za delovanje vtičnika wp-discourse za WordPress.
             users:
-              sync_sso: Sinhronizirajte uporabnika z uporabo SSO.
               show: Pridobi informacije o uporabniku.
       web_hooks:
         create: "Ustvari"
@@ -3960,11 +3953,6 @@ sl:
           on_grace_period: "Trenutno v času mirovanja promocije, ne bo ponižan."
           locked_will_not_be_promoted: "Nivo zaupanja zaklenjen. Ne bo nikoli povišan."
           locked_will_not_be_demoted: "Nivo zaupanja zaklenjen. Ne bo nikoli znižan."
-        sso:
-          external_username: "Uporabniško ime"
-          external_name: "Ime"
-          external_email: "E-naslov"
-          external_avatar_url: "URL do profilne slike"
       user_fields:
         title: "Podatki uporabnika"
         create: "Dodaj podatek uporabnika"

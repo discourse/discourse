@@ -91,7 +91,6 @@ en_GB:
         scopes:
           descriptions:
             users:
-              sync_sso: Synchronise a user using SSO.
               anonymize: Anonymise user accounts.
       backups:
         upload:

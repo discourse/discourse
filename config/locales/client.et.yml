@@ -1608,13 +1608,11 @@ et:
         username_placeholder: "kasutajanimi"
         action: "Saada kutse"
         help: "kutsu teisi siia teemasse meili või teavitustega"
-        sso_enabled: "Sisesta selle isiku kasutajanimi, keda soovid siia teemasse kutsuda."
         to_topic_blank: "Sisesta selle isiku kasutajanimi või meiliaadress, keda soovid siia teemasse kutsuda."
         to_topic_email: "Sisestasid meiliaadressi. Saadame su sõbrale kutse, mis lubab tal kohe sellesse teemasse vastata."
         to_topic_username: "Sisestasid kasutajanime. Saadame su sõbrale kutse, mis lubab tal viivitamatult sellesse teemasse vastata."
         to_username: "Sisesta selle isiku kasutajanimi, keda soovid kutsuda. Saadame talle teavituse koos viitega, mis sisaldab kutset siia teemasse."
         email_placeholder: "nimi@kuskil.ee"
-        success_email: "Saatsime kutse kasutajale <b>%{emailOrUsername}</b>. Teatame sulle, kui kutse on aktsepteeritud. Vaata kutsete sakki sinu saadetud kutsete osas ülevaate saamiseks."
         success_username: "Oleme kutsunud selle kasutaja teemas osalema."
         error: "Vabanda, meil ei õnnestunud seda kasutajat kutsuda. Kas on võimalik et ta on juba kutsutud? (Kutsete saatmise sagedus on piiratud)"
       login_reply: "Vastamiseks logi sisse"
@@ -2278,9 +2276,6 @@ et:
             available: "Grupi nimi on saadaval"
             not_available: "Grupi nimi pole saadaval"
             blank: "Grupi nimi ei saa olla tühi"
-        bulk_add:
-          title: "Lisa massina gruppi"
-          paste: "Kleebi kas"
         manage:
           interaction:
             email: E-post
@@ -2960,13 +2955,6 @@ et:
           on_grace_period: "Hetkel edutamisel halastusperiood, madalamale ei viida."
           locked_will_not_be_promoted: "Usaldustase lukustatud. Ei edutata kunagi."
           locked_will_not_be_demoted: "Usaldustase lukustatud. Ei alandata kunagi."
-        sso:
-          title: "Single Sign On"
-          external_id: "Väline ID"
-          external_username: "Kasutajanimi"
-          external_name: "Nimi"
-          external_email: "Meiliaadress"
-          external_avatar_url: "Profiili pildi URL"
       user_fields:
         title: "Kasutajaväljad"
         help: "Lisa välju, mida kasutajad saavad täita."

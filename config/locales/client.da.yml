@@ -940,7 +940,6 @@ da:
         secondary: "Sekundære emails"
         primary_label: "Primær"
         update_email: "Skift e-mail-adresse"
-        sso_override_instructions: "Email kan opdateres fra SSO-udbyderen."
         no_secondary: "Ingen sekundære emails"
         instructions: "Vis aldrig offentligt"
         ok: "Vi vil sende dig en bekræftelses email"
@@ -1794,7 +1793,7 @@ da:
         remove: "Fjern timerfunktion"
         publish_to: "Udgiv I:"
         when: "Hvornår:"
-        time_frame_required: Vælg en tidsramme
+        time_frame_required: "Vælg en tidsramme"
       auto_update_input:
         none: "Vælg en tidsramme"
         later_today: "Senere i dag"
@@ -1988,13 +1987,11 @@ da:
         username_placeholder: "brugernavn"
         action: "Send invitation"
         help: "inviter andre til dette emne via email eller notifikationer"
-        sso_enabled: "Indtast brugernavnet på den person, du gerne vil invitere til dette emne."
         to_topic_blank: "Indtast brugernavnet eller en email adresse på den person, du gerne vil invitere til dette emne."
         to_topic_email: "Du har indtastet en email adresse. Vi vil sende en e-mail invitation, der giver din ven direkte adgang til at svare på dette emne."
         to_topic_username: "Du har indtastet et brugernavn. Vi sender en notifikation med en invitation til denne tråd."
         to_username: "Indtast brugernavnet på den person du vil invitere. Vi sender en notifikation med et link til denne tråd."
         email_placeholder: "e-mail-adresse"
-        success_email: "Vi har e-mailet en invitation til <b>%{emailOrUsername}</b>. Vi notificerer dig, når invitationen er blevet accepteret. Kig på invitations fanebladet på din bruger side for at se status på dine invitationer."
         success_username: "Vi har inviteret brugeren til at deltage i dette emne."
         error: "Beklager, vi kunne ikke invitere denne person. Måske er de allerede inviteret? (der er begrænsning på hvor mange gange man kan invitere en person)"
         success_existing_email: "En bruger med email <b>%{emailOrUsername}</b> eksisterer allerede. Vi har opfordret denne bruger til at deltage i dette emne."
@@ -2837,10 +2834,6 @@ da:
             available: "Gruppenavnet er tilgængeligt"
             not_available: "Gruppenavnet er ikke tilgængelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        bulk_add:
-          title: "Tilføj mange brugere til gruppe"
-          complete_users_not_added: "Disse brugere blev ikke tilføjet (sørg for at sikre, at de har en konto):"
-          paste: "Indsæt en liste brugerne eller emails, én per linje:"
         add_members:
           as_owner: "Angiv bruger (e) som ejer (e) af denne gruppe"
         manage:
@@ -3743,13 +3736,6 @@ da:
           on_grace_period: "Er i øjeblikket i forfremmelses prøve periode, vil ikke blive degraderet."
           locked_will_not_be_promoted: "Tillidsniveau låst. Vil aldrig blive forfremmet."
           locked_will_not_be_demoted: "Tillidsniveau låst. Vil aldrig blive degraderet."
-        sso:
-          title: "Single Sign On"
-          external_id: "Externt ID"
-          external_username: "Brugernavn"
-          external_name: "Navn"
-          external_email: "Email"
-          external_avatar_url: "Profilbillede URL"
       user_fields:
         title: "Bruger felter"
         help: "Tilføj felter, som dine brugere kan udfylde"

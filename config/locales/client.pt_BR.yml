@@ -1057,7 +1057,6 @@ pt_BR:
         set_primary: "Defina o E-mail Primário"
         destroy: "Retire o e-mail"
         add_email: "Adicione E-mail Alternativo"
-        sso_override_instructions: "E-mail pode ser atualizado do provedor de SSO."
         no_secondary: "Nenhum e-mail secundário"
         instructions: "Nunca visível publicamente."
         ok: "Nós enviaremos um e-mail para confirmar"
@@ -1976,7 +1975,7 @@ pt_BR:
         remove: "Remover Temporizador"
         publish_to: "Publicar Em:"
         when: "Quando:"
-        time_frame_required: Por favor selecione um período de tempo
+        time_frame_required: "Por favor selecione um período de tempo"
       auto_update_input:
         none: "Selecione um período de tempo"
         later_today: "Mais tarde hoje"
@@ -2173,13 +2172,11 @@ pt_BR:
         username_placeholder: "nome de usuário"
         action: "Enviar Convite"
         help: "Convidar outros para este tópico por e-mail ou notificação"
-        sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
         to_topic_blank: "Entrar o nome de usuário ou endereço de e-mail da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de e-mail. Nós enviaremos um convite por e-mail que permite seu amigo responder imediatamente a este tópico."
         to_topic_username: "Você inseriu um nome de usuário. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
         to_username: "Insira o nome de usuário da pessoa que você gostaria de convidar. Nós vamos enviar uma notificação com um link convidando-o para este tópico."
         email_placeholder: "nome@exemplo.com"
-        success_email: "Enviamos um convite para <b>%{emailOrUsername}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
         success_username: "Nós convidamos o usuário para participar neste tópico."
         error: "Desculpe, nós não pudemos convidar esta pessoa. Talvez já seja usuário? (convites têm taxa limitada)"
         success_existing_email: "Um usuário com e-mail <b>%{emailOrUsername}</b> já existe. Convidamos este usuário a participar deste tópico."
@@ -3127,10 +3124,6 @@ pt_BR:
             available: "O nome do grupo está disponível"
             not_available: "O nome do grupo não está disponível"
             blank: "O nome do grupo não pode ficar em branco"
-        bulk_add:
-          title: "Adicionar em massa ao grupo"
-          complete_users_not_added: "Esses usuários não foram adicionados (verifique se eles têm uma conta):"
-          paste: "Cole uma lista de nomes de usuários ou e-mails, um por linha:"
         add_members:
           as_owner: "Definir usuário (s) como proprietário (s) deste grupo"
         manage:
@@ -4112,13 +4105,6 @@ pt_BR:
           on_grace_period: "Atualmente em período de aprovação da promoção, não será demovido."
           locked_will_not_be_promoted: "Nível de confiança travado. Nunca será promovido."
           locked_will_not_be_demoted: "Nível de confiança travado. Nunca será demovido."
-        sso:
-          title: "Único Login"
-          external_id: "ID Externo"
-          external_username: "Usuário"
-          external_name: "Nome"
-          external_email: "Email"
-          external_avatar_url: "URL da Imagem de Perfil"
       user_fields:
         title: "Campos de Usuários"
         help: "Adicionar campos que seus usuários podem preencher."

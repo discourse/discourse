@@ -171,7 +171,6 @@ gl:
         one: ten unha lonxitude incorrecta (debería ser de %{count} caracter)
         other: ten unha lonxitude incorrecta (debería ser de %{count} caracteres)
       other_than: "debe ser distinto de %{count}"
-      sso_overrides_username: "O nome de usuario precisa actualizarse do lado do provedor SSO, dado que o axuste `sso_overrides_username` está activado."
     template:
       body: ! "Producíronse problemas cos seguintes campos:"
       header:
@@ -195,7 +194,6 @@ gl:
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
       second_factor_cannot_enforce_with_socials: "Non pode forzar 2FA tendo o activo o inicio de sesión con redes sociais. Primeiro debe desactivar o inicio de sesión con: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non pode aplicar 2FA se os inicios de sesión locais están desactivados."
-      second_factor_cannot_be_enforced_with_sso_enabled: "Non pode forzar 2FA se SSO está activado."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Non pode desactivar o inicio de sesión local se se aplica 2FA. Deshabilite 2FA antes de deshabilitar os inicios de sesión locais."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Non pode activar as cargas S3 porque xa están habilitadas globalmente e habilitar este nivel de sitio podería provocar problemas moi graves coas cargas"
       cors_origins_should_not_have_trailing_slash: "Non debe engadir a barra final (/) ás orixes de CORS."
@@ -223,7 +221,6 @@ gl:
     confirm_email: "<p>Xa case está! Enviámoslle un correo de activación ao seu enderezo electrónico. Siga as instrucións para activar a súa conta.</p><p>Se non lle chegan, comprobe o cartafol de correo lixo.</p>"
     cant_invite_to_group: "Non ten permisos para convidar a usuarios a grupo(s) específico(s). Asegúrese de ser o propietario do(s) grupo(s) a que está tentando convidar."
     disabled_errors:
-      sso_enabled: "Os convites están desactivados porque está activado SSO."
       local_logins_disabled: "Os convites están desactivados porque está desactivado o axuste «activar inicio de sesión local»."
       invalid_access: "Non ten permiso para ver o recurso solicitado."
   bulk_invite:
@@ -408,6 +405,9 @@ gl:
       email_already_used_in_category: "A categoría '%{category_name}' xa está usando '%{email}'."
       cant_allow_membership_requests: "Non pode admitir solicitudes de ser membros para grupos que carecen de propietario."
       already_requested_membership: "Xa solicitou ser membro deste grupo."
+      adding_too_many_users:
+        one: "Pódese engadir un máximo de %{count} usuario á vez"
+        other: "Pódese engadir un máximo de %{count} usuarios á vez"
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -1344,8 +1344,6 @@ gl:
       other: "A recollida de correo electrónico xerou %{count} erros nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
     missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionou unha chave API que se utiliza para verificar as mensaxes de webhook."
     bad_favicon_url: "Erro ao cargar a favicona. Comprobe a configuración de icona de páxina en <a href='%{base_path}/admin/site_settings'>Configuración do sitio</a>."
-    deprecated_api_usage: "Detéctase unha consulta de API utilizando un método de autenticación obsoleto. Actualíceo para utilizar unha <a href='https://meta.discourse.org/t/-/22706'>autenticación baseada nunha cabeceira</a>. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
-    update_mail_receiver: "Detéctase unha versión desactualizada do receptor de correo. Prema <a href='https://meta.discourse.org/t/-/133491'>aquí</a> para actualizar as instrucións. Despois da actualización, esta mensaxe pode tardar 24 horas en desaparecer."
     poll_pop3_timeout: "A conexión ao servidor POP3 está a superar o tempo de espera. Non se puido recuperar o correo electrónico entrante. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a> e o provedor do servizo."
     poll_pop3_auth_error: "A conexión ao servidor POP3 está a fallar por un erro na autenticación. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a>."
     force_https_warning: "O seu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda activado nos seus axustes de sitio."
@@ -1442,7 +1440,6 @@ gl:
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     enforce_second_factor: "Obriga aos usuarios a activar a autenticación de dobre paso. Seleccione «todo» para aplicalo a todos os usuarios. Seleccione «grupo» para forzalo en usuarios do grupo."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
-    same_site_cookies: "Utilizar os mesmos rastros do sitio; elas eliminan todos os vectores CSRF (falsificación de petición en sitios cruzados) dos navegadores compatibles (Lax ou Strict). AVISO: Strict só funcionará en sitios que forcen o inicio de sesión e utilicen SSO."
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
     summary_posts_required: "Número mínimo de publicacións antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
     summary_likes_required: "Número mínimo de gústame nun tema antes de que «Resumir este tema» estea activado. Os cambios neste axuste aplicaranse retroactivamente despois dunha semana."
@@ -1550,26 +1547,6 @@ gl:
     min_admin_password_length: "Lonxitude mínima do contrasinal para un administrador."
     password_unique_characters: "Número mínimo de caracteres únicos que debe ter un contrasinal."
     block_common_passwords: "Non permitir contrasinais que estean entre os 10.000 contrasinais máis comúns."
-    external_auth_skip_create_confirm: Ao rexistrarse cun método de autenticación externo, saltar a xanela emerxente de creación de conta. Utilízase mellor xunto con sso_overrides_email, sso_overrides_username e sso_overrides_name.
-    external_auth_immediately: "Redirecciona automaticamente ao sistema de inicio de sesión externo sen a interacción do usuario. Isto só ten efecto cando login_required é verdadeiro e só hai un método de autenticación externo"
-    enable_sso: "Activar o inicio de sesión único a través dun sitio externo (AVISO: OS ENDEREZOS DE CORREO ELECTRÓNICO DOS USUARIOS *TEÑEN* QUE SER VALIDADOS NO SITIO EXTERNO!)"
-    verbose_sso_logging: "Rexistrar diagnósticos detallados relacionados con SSO en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_sso_provider: "Implementar o protocolo do fornecedor de SSO de Discourse no punto de destino /session/sso_provider, require que se defina sso_provider_secrets"
-    sso_url: "URL do destino para o inicio de sesión único (debe incluír http:// ou https://)"
-    sso_secret: "Cadea secreta utilizada para autenticar criptograficamente a información do SSO, asegúrese de que teña 10 caracteres ou máis"
-    sso_provider_secrets: "Unha listaxe de pares de dominios secretos que utiliza Discourse como provedor de SSO. Asegúrese de que a clave secreta SSO teña 10 caracteres ou máis. O símbolo do comodín * pódese utilizar para facer coincidir calquera dominio ou só unha parte del (por exemplo, *.exemplo.com)."
-    sso_overrides_bio: "Sobrescribe a biografía do usuario no seu perfil e deshabilita a posibilidade de cambiala"
-    sso_overrides_groups: "Sincronice todas as incorporacións manuais a grupos con grupos especificados no atributo sso dos grupos (AVISO: se non especifica grupos, o usuario terá en branco toda pertenza a grupos de incorporación manual)"
-    sso_overrides_email: "Anula o correo electrónico local co correo electrónico externo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación. (AVISO: poden producirse discrepancias debido á normalización dos correos electrónicos locais)"
-    sso_overrides_username: "Anula o nome de usuario local co nome de usuario externo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación. (AVISO: poden producirse discrepancias debido á normalización dos correos electrónicos locais)"
-    sso_overrides_name: "Anula o nome completo co nome completo do sitio da carga útil de SSO en cada inicio de sesión e evita os cambios locais. Aplícase a todos os provedores de autenticación."
-    sso_overrides_avatar: "Anula o avatar do usuario co avatar do sitio externo da carga útil de SSO. Se está activado, os usuarios non poderán cargar avatares en Discourse."
-    sso_overrides_location: "Anula a localización do usuario coa localización externa da carga útil de SSO e evita os cambios locais."
-    sso_overrides_website: "Anula o sitio web do usuario coa localización externa da carga útil de SSO e evita os cambios locais."
-    sso_overrides_profile_background: "Anula o fondo do perfil de usuario cun avatar de sitio externo da carga útil de SSO."
-    sso_overrides_card_background: "Anula o fondo da tarxeta de usuario cun avatar de sitio externo da carga útil de SSO."
-    sso_not_approved_url: "Redireccionar contas SSO sen aprobar a este URL"
-    sso_allows_all_return_paths: "Habilitar as contas baseadas no inicio de sesión con nome de usuario e contrasinal locais. Isto debe estar habilitado para que as invitacións funcionen. ADVERTENCIA: se está deshabilitado, é posible que non poida iniciar sesión se non configurou previamente polo menos un método de inicio de sesión alternativo."
     enable_local_logins: "Activa as contas baseadas no nome de usuario e contrasinal locais. Isto debe estar habilitado para convites a traballar. AVISO: se está desactivado, é posible que non poida iniciar sesión se non configurou previamente polo menos un método de inicio de sesión alternativo."
     enable_local_logins_via_email: "Permitir que os usuarios soliciten unha ligazón de inicio de sesión que se lles enviará por correo electrónico."
     allow_new_registrations: "Permitir o rexistro de novos usuarios. Desactive esta opción para evitar que alguén cree unha nova conta."
@@ -2067,8 +2044,6 @@ gl:
       email_editable_enabled: "Debe desactivar «correo electrónico editable» antes de activar esta opción."
       staged_users_disabled: "Primeiro debe activar «usuarios transitorios» antes de activar esta opción."
       reply_by_email_disabled: "Primeiro debe activar «responder vía correo electrónico» antes de activar esta opción."
-      sso_url_is_empty: "Debe estabelecer un «URL de sso» antes de activar esta opción."
-      sso_invite_only: "Non pode activar o sso e «convidar só» ao mesmo tempo."
       enable_local_logins_disabled: "Debe activar primeiro «activar inicios de sesión locais» antes de activar esta opción."
       min_username_length_exists: "Non pode estabelecer que a largura mínima do nome de usuario sexa maior có nome de usuario máis curto (%{username})."
       min_username_length_range: "O mínimo non pode ser maior que o máximo."
@@ -2086,10 +2061,6 @@ gl:
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
       list_value_count: "A listaxe debe conter exactamente %{count} valores."
-    placeholder:
-      sso_provider_secrets:
-        key: "www.exemplo.com"
-        value: "Inicio de sesión secreto"
   search:
     extreme_load_error: "O sitio está a soportar unha carga extrema polo que se desactivaron as buscas. Ténteo máis tarde"
     within_post: "#%{post_number} de %{username}"
@@ -2100,20 +2071,11 @@ gl:
     results_page: "Buscar resultados para '%{term}'"
     audio: "[audio]"
     video: "[vídeo]"
-  sso:
-    login_error: "Erro ao iniciar sesión"
-    not_found: "Non se puido atopar a súa conta. Contacte co administrador do sitio."
-    account_not_approved: "A súa conta está pendente de aprobación. Recibirá unha notificación por correo electrónico cando se aprobe."
-    unknown_error: "Hai un problema coa súa conta. Contacte co administrador do sitio."
-    timeout_expired: "Superouse o tempo para iniciar sesión; ténteo de novo."
-    no_email: "Non se forneceu un enderezo de correo electrónico. Contacte co administrador do sitio."
-    blank_id_error: "A `external_id` é obrigatoria pero está en branco"
-    email_error: "Non se puido rexistrar unha conta con este enderezo electrónico <b>%{email}</b>. Contacte co administrador do sitio."
-    missing_secret: "Erro na autenticación SSO porque falta o segredo. Contacte co administrador do sitio para amañar este problema."
   original_poster: "Publicador orixinal"
   most_posts: "Con máis publicacións"
   most_recent_poster: "Publicador máis recente"
   frequent_poster: "Publicador frecuente"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Dámoslle a benvida á nosa comunidade. Estes son os temas recentes máis populares."
     not_seen_in_a_month: "Dámoslle a benvida outra vez! Canto tempo sen velo/la. Estes son os temas máis populares na súa ausencia."

@@ -1774,13 +1774,11 @@ nb_NO:
         username_placeholder: "brukernavn"
         action: "Send Invitasjon"
         help: "Inviter andre til dette emnet via e-post eller varsler"
-        sso_enabled: "Oppgi brukernavnet til personen du ønsker å invitere til dette emnet."
         to_topic_blank: "Oppgi brukernavnet eller e-postadressen til personen du ønsker å invitere til dette emnet."
         to_topic_email: "Du har oppgitt en e-postadresse. Vi vil sende en invitasjon som lar vennen din svare på dette emnet umiddelbart."
         to_topic_username: "Du har oppgitt et brukernavn. Vi sender et varsel med en lenke som inviterer dem til dette emnet."
         to_username: "Oppgi brukernavnet til personen du ønsker å invitere. Vi sender et varsel med en lenke som inviterer vedkommende til dette emnet."
         email_placeholder: "navn@example.com"
-        success_email: "Vi har sendt ut en invitasjon til <b>%{emailOrUsername}</b>. Vi varsler deg når invitasjonen er godtatt. Sjekk invitiasjonsfanen på brukersiden din for å beholde oversikten over invitasjonene dine."
         success_username: "Vi har invitert den valgte brukeren til å delta i dette emnet."
         error: "Beklager, vi kunne ikke invitere den brukeren. Vedkommende har muligens allerede blitt invitert? (Antall invitasjoner er begrenset)"
         success_existing_email: "En bruker med e-postadressen <b>%{emailOrUsername}</b> finnes allerede. Vi har invitert brukeren til å delta i dette emnet."
@@ -2523,10 +2521,6 @@ nb_NO:
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
-        bulk_add:
-          title: "Legg til flere til gruppe"
-          complete_users_not_added: "Disse brukerne ble ikke lagt til (sjekk om kontoen finnes):"
-          paste: "Lim inn en liste over brukernavn eller e-poster, en per linje:"
         add_members:
           as_owner: "Sett bruker(e) som eier(e) av denne gruppen"
         manage:
@@ -3309,13 +3303,6 @@ nb_NO:
           on_grace_period: "For tiden i prøvetid for forfremmelse, vil ikke degraderes"
           locked_will_not_be_promoted: "Tillitsnivå låst. Vil aldri bli forfremmet."
           locked_will_not_be_demoted: "Tillitsnivå låst. Vil aldri bli degradert."
-        sso:
-          title: "Single Sign On"
-          external_id: "Ekstern-ID"
-          external_username: "Brukernavn"
-          external_name: "Navn"
-          external_email: "E-post"
-          external_avatar_url: "Profilbilde URL"
       user_fields:
         title: "Brukerfelter"
         help: "Legg til felter som dine brukere kan fylle ut."

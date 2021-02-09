@@ -804,7 +804,22 @@ pl_PL:
         make_owner_description: "Uczyń <b>%{username}</b> właścicielem tej grupy"
         remove_owner: "Usuń z funkcji właściciela"
         remove_owner_description: "Usuń <b>%{username}</b> z funkcji właściciela tej grupy"
+        make_primary: "Ustaw jako podstawowe"
+        make_primary_description: "Ustaw tę grupę jako podstawową dla <b>%{username}</b>"
+        remove_primary: "Usuń jako podstawowy"
+        remove_primary_description: "Usuń tę grupę jako grupę podstawową dla <b>%{username}</b>"
+        remove_members: "Usuń członków"
+        remove_members_description: "Usuń wybranych użytkowników z tej grupy"
+        make_owners: "Uczyń właścicielami"
+        make_owners_description: "Uczyń wybranych użytkowników właścicielami tej grupy"
+        remove_owners: "Usuń właścicieli"
+        remove_owners_description: "Usuń wybranych użytkowników jako właścicieli tej grupy"
+        make_all_primary: "Uczyń wszystkie jako podstawowe"
+        make_all_primary_description: "Ustaw tę grupę jako podstawową dla wszystkich wybranych użytkowników"
+        remove_all_primary: "Usuń jako podstawowy"
+        remove_all_primary_description: "Usuń tę grupę jako podstawową"
         owner: "Właściciel"
+        primary: "Podstawowy"
         forbidden: "Nie możesz oglądać profili użytkowników."
       topics: "Tematy"
       posts: "Postów"
@@ -1259,7 +1274,7 @@ pl_PL:
         set_primary: "Ustaw podstawowy adres e-mail"
         destroy: "Usuń e-mail"
         add_email: "Dodaj alternatywny adres email"
-        sso_override_instructions: "E-mail można zaktualizować od dostawcy SSO."
+        auth_override_instructions: "Adres e-mail można zaktualizować od dostawcy uwierzytelniania."
         no_secondary: "Brak drugorzędnych adresów email"
         instructions: "Nie będzie publicznie widoczny."
         admin_note: "Uwaga: Użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
@@ -1731,7 +1746,7 @@ pl_PL:
         title: "przez Twitter"
       instagram:
         name: "Instagram"
-        title: "z Instagram"
+        title: "z Instagramem"
       facebook:
         name: "Facebook"
         title: "przez Facebook"
@@ -1752,7 +1767,7 @@ pl_PL:
       social_login_available: "Będziesz mógł zalogować się za pomocą dowolnej platformy społecznościowej używając tego adresu e-mail."
       your_email: "Adres e-mail przypisany do twojego konta to <b>%{email}</b>."
       accept_invite: "Akceptuj zaproszenie"
-      success: "Twje konto zostało utworzone i zostałeś zalogowany."
+      success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
       optional_description: "(opcjonalne)"
@@ -1797,6 +1812,8 @@ pl_PL:
         many: "+ %{count} podkategorii"
         other: "+ %{count} podkategorii"
     select_kit:
+      filter_by: "Filtruj według: %{name}"
+      select_to_filter: "Wybierz wartość do filtrowania"
       default_header_text: Wybierz...
       no_content: Nie znaleziono dopasowań
       filter_placeholder: Wyszukiwanie...
@@ -2236,6 +2253,7 @@ pl_PL:
         close_topics: "Zamknij tematy"
         archive_topics: "Zarchiwizuj tematy"
         notification_level: "Powiadomienia"
+        change_notification_level: "Zmień poziom powiadomień"
         choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
           one: "Zaznaczono <b>%{count}</b> temat."
@@ -2247,7 +2265,12 @@ pl_PL:
         choose_new_tags: "Wybierz nowe tagi dla tych tematów:"
         choose_append_tags: "Wybierz nowe tagi dla tych tematów:"
         changed_tags: "Tagi tych tematów były zmieniane."
-        remove_tags: "Usuń tagi"
+        remove_tags: "Usuń wszystkie tagi"
+        confirm_remove_tags:
+          one: "Wszystkie tagi zostaną usunięte z tego tematu. Jesteś pewny?"
+          few: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+          many: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
+          other: "Wszystkie tagi zostaną usunięte z <b>%{count}</b> tematów. Jesteś pewny?"
         progress:
           one: "Postęp: <strong>%{count}</strong> temat"
           few: "Postęp: <strong>%{count}</strong> tematy"
@@ -2392,7 +2415,8 @@ pl_PL:
         remove: "Usuń czas"
         publish_to: "Opublikuj do:"
         when: "Kiedy:"
-        time_frame_required: Wybierz przedział czasowy
+        time_frame_required: "Wybierz przedział czasowy"
+        min_duration: "Czas trwania musi być większy niż 0"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -2447,6 +2471,11 @@ pl_PL:
         few: "Ostatni wpis w tym temacie został zamieszczony %{count} godziny temu, więc zostanie on natychmiastowo zamknięty."
         many: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
         other: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
+      auto_close_momentarily:
+        one: "Ostatni post w temacie ma już %{count} godzinę, więc temat zostanie chwilowo zamknięty."
+        few: "Ostatni post w temacie ma już %{count} godziny, więc temat zostanie chwilowo zamknięty."
+        many: "Ostatni post w temacie ma już %{count} godzin, więc temat zostanie chwilowo zamknięty."
+        other: "Ostatni post w temacie ma już %{count} godzin, więc temat zostanie chwilowo zamknięty."
       timeline:
         back: "Wstecz"
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
@@ -2609,13 +2638,13 @@ pl_PL:
         action: "Wyślij zaproszenie"
         help: "zaproś innych do tego tematu e-mailem lub powiadomieniem"
         to_forum: "Wyślemy krótką wiadomość e-mail umożliwiającą znajomemu natychmiastowe dołączenie poprzez kliknięcie linku."
-        sso_enabled: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
+        discourse_connect_enabled: "Wpisz nazwę użytkownika osoby, którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_email: "Wprowadzony został adres e-mail. Wyślemy tam zaproszenie umożliwiające wskazanej osobie odpowiedź w tym temacie."
         to_topic_username: "Konto o wprowadzonej nazwie użytkownika otrzyma powiadomienie z linkiem do tego tematu."
         to_username: "Podaj nazwę użytkownika osoby którą chcesz zaprosić. Otrzyma powiadomienie z linkiem do tego tematu."
         email_placeholder: "nazwa@example.com"
-        success_email: "Wysłaliśmy zaproszenie do <b>%{emailOrUsername}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
+        success_email: "Wysłaliśmy zaproszenie do <b>%{invitee}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
         success_username: "Wskazany użytkownik został zaproszony do udziału w tym temacie."
         error: "Przepraszamy, nie udało się zaprosić wskazanej osoby. Być może została już zaproszona? (Lub wysyłasz zbyt wiele zaproszeń)"
         success_existing_email: "Użytkownik o e-mailu <b>%{emailOrUsername}</b> już istnieje. Zaprosiliśmu tego użytkownika do udziału w tym temacie."
@@ -3026,7 +3055,7 @@ pl_PL:
       background_image: "Grafika z tłem kategorii"
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
-      foreground_color: "Kolor Pierwszego Planu"
+      foreground_color: "Kolor pierwszego planu"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
@@ -3361,7 +3390,7 @@ pl_PL:
       content_load_error: '<a href="%url%">Zawartość</a> nie może zostać wczytana.'
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
     keyboard_shortcuts_help:
-      shortcut_key_delimiter_comma: ","
+      shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
       shortcut_delimiter_or: "%{shortcut1} lub %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
@@ -3453,7 +3482,7 @@ pl_PL:
       granted_on: "Przyznano %{date}"
       others_count: "Inni użytkownicy z tą odznaką (%{count})"
       title: Odznaki
-      allow_title: "Możesz użyc tej odznaki jako tytułu"
+      allow_title: "Możesz użyć tej odznaki jako tytułu"
       multiple_grant: "Możesz zdobyć tą odznakę wiele razy"
       badge_count:
         one: "%{count} odznaka"
@@ -3649,7 +3678,7 @@ pl_PL:
         critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_upgrade: "Koniecznie zaktualizuj!"
-        no_check_performed: "Sprawdzanie dostępności aktualizacji nie zostało wykonane. Sprawdź czy działa sidekiq."
+        no_check_performed: "Sprawdzanie aktualizacji nie zostało przeprowadzone. Upewnij się, że sidekiq jest uruchomiony."
         stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź czy działa sidekiq."
         version_check_pending: "Wygląda na to, że ostatnio była wykonana aktualizacja. Fantastycznie!"
         installed_version: "Zainstalowana"
@@ -3663,7 +3692,7 @@ pl_PL:
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
         moderators: "Moderatorzy:"
-        admins: "Adminstratorzy:"
+        admins: "Administratorzy:"
         silenced: "Wyciszeni:"
         suspended: "Zawieszeni:"
         private_messages_short: "Wiad."
@@ -3749,10 +3778,6 @@ pl_PL:
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
-        bulk_add:
-          title: "Dodaj więcej do grupy"
-          complete_users_not_added: "Podani użytkownicy nie mogą zostać dodani (Sprawdź, czy stworzyli konto):"
-          paste: "Podaj listę nazw użytkowników lub adresów e-mail, każdy w oddzielnej linii:"
         add_members:
           as_owner: "Ustaw użytkownika/ów jako właściciel/i tej grupy"
         manage:
@@ -3779,6 +3804,11 @@ pl_PL:
             effects: Efekty
             trust_levels_none: "Brak"
             automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
+            automatic_membership_user_count:
+              one: "%{count} użytkownik ma nowe domeny e-mail i zostanie dodany do grupy."
+              few: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
+              many: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
+              other: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."
             primary_group: "Automatycznie ustawiaj jako główną grupę"
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
@@ -3805,9 +3835,9 @@ pl_PL:
         group_owners: Właściciele
         add_owners: Dodaj właścicieli
         none_selected: "Wybierz grupę, aby rozpocząć"
-        no_custom_groups: "Utwórz nową grupę"
+        no_custom_groups: "Utwórz nową niestandardową grupę"
       api:
-        generate_master: "Generuj Master API Key"
+        generate_master: "Generuj główny klucz API"
         none: "Nie ma teraz aktywnych kluczy API."
         user: "Użytkownik"
         title: "API"
@@ -3822,12 +3852,12 @@ pl_PL:
         all_users: "Wszyscy użytkownicy"
         active_keys: "Aktywne klucze API"
         manage_keys: Zarządzaj kluczami
-        show_details: Detale
+        show_details: Szczegóły
         description: Opis
         no_description: (brak opisu)
         all_api_keys: Wszystkie klucze API
         user_mode: Poziom użytkownika
-        impersonate_all_users: Podszyj się pod dowolnego użytkownika
+        impersonate_all_users: Podszywanie się pod dowolnego użytkownika
         single_user: "Pojedynczy użytkownik"
         user_placeholder: Wprowadź nazwę użytkownika
         description_placeholder: Do czego będzie używany ten klucz?
@@ -3857,7 +3887,7 @@ pl_PL:
               wordpress: Niezbędne do działania wtyczki wp-discourse na WordPress.
             users:
               bookmarks: Lista zakładek użytkownika. Zwraca przypomnienia o zakładkach podczas korzystania z formatu ICS.
-              sync_sso: Synchronizuj użytkownika za pomocą logowania SSO.
+              sync_sso: Zsynchronizuj użytkownika za pomocą DiscourseConnect.
               show: Uzyskaj informacje o użytkowniku.
               check_emails: Lista adresów e-mail użytkowników.
               update: Zaktualizuj informacje o profilu użytkownika.
@@ -3867,8 +3897,8 @@ pl_PL:
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
       web_hooks:
-        title: "Webhooks"
-        none: "Brak webhooks"
+        title: "Webhooki"
+        none: "Brak webhooków"
         instruction: "Webhooks pozwala Discourse powiadomić zewnętrzne usługi, kiedy pewne zdarzenie pojawi się na twojej stronie. Gdy webhook jest uruchamiany, żądanie POST wyśle ​​do URL świadczonych."
         detailed_instruction: "Zapytanie POST zostanie wysłane na podany adres URL gdy zostanie spełnione wybrane wydarzenie"
         new: "Nowy webhook"
@@ -3885,7 +3915,7 @@ pl_PL:
         secret_too_short: "Sekret musi zawierać przynajmniej 12 znaków."
         secret_placeholder: "Opcjonalna fraza użyta do generowania podpisu"
         event_type_missing: "Musisz ustawić co najmniej jeden typ wydarzenia."
-        content_type: "Typ zawartości "
+        content_type: "Typ zawartości"
         secret: "Tajemnica"
         event_chooser: "Jakie zdarzenia powinny wywołać uruchomienie tego webhooka?"
         wildcard_event: "Wysyłaj mi wszystko."
@@ -4119,7 +4149,9 @@ pl_PL:
           convert: "Konwertuj"
           convert_component_alert: "Czy na pewno chcesz konwertować ten składnik na motyw? Zostanie usunięty jako składnik z %{relatives}."
           convert_component_tooltip: "Konwertuj ten składnik na motyw"
+          convert_component_alert_generic: "Czy na pewno chcesz przekonwertować ten komponent na motyw?"
           convert_theme_alert: "Czy na pewno chcesz konwertować ten motyw na składnik. Zostanie usunięty jako rodzic z %{relatives}."
+          convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
           convert_theme_tooltip: "Konwertuj ten motyw na składnik"
           inactive_themes: "Nieaktywne motywy:"
           inactive_components: "Nieużywane komponenty:"
@@ -4294,8 +4326,8 @@ pl_PL:
           warning: "To ustawienie permanentnie nadpisze wszystkie powiązane ustawienia witryny."
           overridden: Domyślny plik robots.txt twojej witryny został nadpisany
         email_style:
-          title: "Styl e-maili"
-          heading: "Zmień styl e-maili"
+          title: "Styl wiadomości e-mail"
+          heading: "Dostosuj styl wiadomości e-mail"
           html: "Szablon HTML"
           css: "CSS"
           reset: "Przywróć ustawienia domyślne"
@@ -4347,12 +4379,12 @@ pl_PL:
         incoming_emails:
           from_address: "Od"
           to_addresses: "Do"
-          cc_addresses: "Cc"
+          cc_addresses: "DW"
           subject: "Temat"
           error: "Błąd"
-          none: "Brak przychodzących emaili."
+          none: "Nie znaleziono przychodzących wiadomości e-mail."
           modal:
-            title: "Szczegóły przychodzącego emaila"
+            title: "Szczegóły przychodzącej wiadomości e-mail"
             error: "Błąd"
             headers: "Nagłówki"
             subject: "Temat"
@@ -4396,11 +4428,11 @@ pl_PL:
         edit: "Edytuj"
         save: "Zapisz"
         screened_actions:
-          block: "blok"
+          block: "zablokuj"
           do_nothing: "nic nie rób"
         staff_actions:
           all: "wszystkie"
-          filter: "Filtruj:"
+          filter: "Filtr:"
           title: "Działania zespołu zarządzającego"
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik"
@@ -4458,8 +4490,8 @@ pl_PL:
             activate_user: "aktywuj użytkownika "
             deactivate_user: "deaktywuj użytkownika"
             change_readonly_mode: "Zmień tryb tylko do otczytu"
-            backup_download: "Pobierz kopię zapasową"
-            backup_destroy: "Zniszcz kopię zapasową "
+            backup_download: "pobierz kopię zapasową"
+            backup_destroy: "zniszcz kopię zapasową"
             reviewed_post: "przejrzane posty"
             custom_staff: "spersonalizowana akcja wtyczki"
             post_locked: "wpis zablokowany"
@@ -4592,18 +4624,18 @@ pl_PL:
           found_matches: "Znalezione wyniki:"
           no_matches: "Nie znaleziono dopasowań"
       impersonate:
-        title: "Zaloguj się na to konto"
-        help: "Użyj tego narzędzia, aby logować się jako dowolny użytkownik w celach diagnozy problemów."
+        title: "Podszywaj się"
+        help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."
         not_found: "Wskazany użytkownik nie został znaleziony."
         invalid: "Przepraszamy, nie możesz zalogować się jako ten użytkownik."
       users:
         title: "Użytkownicy"
         create: "Dodaj Administratora"
-        last_emailed: "Ostatnio wysłano email"
-        not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
+        last_emailed: "Ostatni e-mail"
+        not_found: "Przepraszamy, taka nazwa użytkownika nie istnieje w naszym systemie."
         id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
         active: "Aktywowane"
-        show_emails: "Pokaż emaile"
+        show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
         nav:
           new: "Nowi"
@@ -4612,7 +4644,7 @@ pl_PL:
           suspended: "Zawieszeni"
           silenced: "Wyciszony"
           staged: "Etapowi"
-        approved: "Zatwierdzam?"
+        approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"
           new: "Nowi użytkownicy"
@@ -4624,9 +4656,9 @@ pl_PL:
           leader: "Użytkownicy na 4 poziomie zaufania (Weterani)"
           staff: "Zespół"
           admins: "Administratorzy"
-          moderators: "Moderatoratorzy"
+          moderators: "Moderatorzy"
           silenced: "Wyciszeni użytkownicy"
-          suspended: "Zawieszone konta"
+          suspended: "Zawieszeni użytkownicy"
           staged: "Użytkownicy etapowi"
         not_verified: "Niezweryfikowany"
         check_email:
@@ -4677,18 +4709,18 @@ pl_PL:
         unsilence: "Cofnij wyciszenie"
         silenced: "Wyciszony?"
         moderator: "Moderator?"
-        admin: "Admin?"
+        admin: "Administrator?"
         suspended: "Zawieszony?"
         staged: "Etapowy?"
-        show_admin_profile: "Admin"
+        show_admin_profile: "Administrator"
         show_public_profile: "Pokaż profil publiczny"
-        impersonate: "Zaloguj się na to konto"
+        impersonate: "Podszywaj się"
         action_logs: "Logi akcji"
         ip_lookup: "Wyszukiwanie IP"
         log_out: "Wyloguj"
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
-        revoke_admin: "Odbierz status admina"
-        grant_admin: "Przyznaj status admina"
+        revoke_admin: "Odbierz status administratora"
+        grant_admin: "Przyznaj status administratora"
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
@@ -4716,10 +4748,10 @@ pl_PL:
         approve_success: "Użytkownik zatwierdzony i został wysłany email z instrukcjami aktywacji."
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
-        anonymize: "Anonimizacja użytkownika"
-        anonymize_confirm: "Czy na pewno chcesz anonimizować to konto? Zmianie ulegnie nazwa użytkownika, e-mail oraz zawartość profilu."
-        anonymize_yes: "Tak, anonimizuj to konto."
-        anonymize_failed: "Wystąpił problem podczas anonimizacji konta."
+        anonymize: "Anonimizuj użytkownika"
+        anonymize_confirm: "Jesteś pewien, że chcesz anonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowanie wszystkich informacji o profilu."
+        anonymize_yes: "Tak, anonimizuj to konto"
+        anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
         delete_posts:
           progress:
@@ -4731,7 +4763,7 @@ pl_PL:
             description: |
               <p>Wybierz nowego właściciela treści <b>@%{username}</b> .</p>
 
-              <p>Wszystkie tematy, posty, wiadomości i inne treści utworzone przez <b>@%{username}</b> zostaną przeniesione.</p>
+              <p>Wszystkie tematy, wpisy, wiadomości i inne treści utworzone przez <b>@%{username}</b> zostaną przeniesione.</p>
             target_username_placeholder: "Nazwa nowego właściciela"
             transfer_and_delete: "Przenieś i usuń @%{username}"
             cancel: "Anuluj"
@@ -4797,7 +4829,7 @@ pl_PL:
           none: "Z tego adresu email nie otrzymano ostatnio żadnych wiadomości zwrotnych."
           some: "Z tego adresu email zostały ostatnio otrzymane wiadomości zwrotne."
           threshold_reached: "Otrzymano zbyt wiele wiadomości zwrotnych z tego adresu email."
-        trust_level_change_failed: "Wystąpił problem przy zmianie poziomu zaufania użytkowanika."
+        trust_level_change_failed: "Wystąpił problem podczas zmiany poziomu zaufania użytkownika."
         suspend_modal_title: "Zawieś użytkownika"
         confirm_cancel_penalty: "Na pewno chcesz odrzucić listę przewinień?"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
@@ -4837,16 +4869,16 @@ pl_PL:
           on_grace_period: "Podlega pod okres ochronny, nie zostanie zdegradowany."
           locked_will_not_be_promoted: "Zablokowany poziom zaufania. Nie będzie awansować."
           locked_will_not_be_demoted: "Zablokowany poziom zaufania. Nie będzie degradowany."
-        sso:
-          title: "Single Sign On"
+        discourse_connect:
+          title: "Logowanie jednokrotne DiscourseConnect"
           external_id: "Zewnętrzny ID"
           external_username: "Nazwa użytkownika"
           external_name: "Nazwa"
           external_email: "Email"
-          external_avatar_url: "URL awatara"
+          external_avatar_url: "Adres URL zdjęcia profilowego"
           last_payload: "Ostatni ładunek"
           delete_sso_record: "Usuń rekord SSO"
-          confirm_delete: "Czy na pewno chcesz usunąć ten rekord jednokrotnego logowania (SSO)?"
+          confirm_delete: "Czy na pewno chcesz usunąć ten rekord DiscourseConnect?"
       user_fields:
         title: "Pola użytkownika"
         help: "Dodaj pola które użytkownicy mogą wypełnić."
@@ -4859,7 +4891,7 @@ pl_PL:
         edit: "Edycja"
         delete: "Usuń"
         cancel: "Anuluj"
-        delete_confirm: "Czy na pewno chcesz usunąć to pole?"
+        delete_confirm: "Czy na pewno chcesz usunąć to pole użytkownika?"
         options: "Opcje"
         required:
           title: "Wymagane przy rejestracji?"
@@ -4909,10 +4941,10 @@ pl_PL:
         add_group: "dodaj grupę"
         uploaded_image_list:
           label: "Edytuj listę"
-          empty: "Brak zdjęć. Prześlij jedno."
+          empty: "Nie ma jeszcze zdjęć. Proszę jakieś przesłać."
           upload:
             label: "Prześlij"
-            title: "Prześlij obrazek"
+            title: "Prześlij obraz(y)"
         selectable_avatars:
           title: "Lista awatarów, z których użytkownicy mogą wybierać"
         categories:

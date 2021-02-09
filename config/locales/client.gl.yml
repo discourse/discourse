@@ -222,6 +222,9 @@ gl:
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
+    x_more:
+      one: "%{count} Máis"
+      other: "%{count} Máis"
     less: "Menos"
     never: "nunca"
     every_30_minutes: "cada 30 minutos"
@@ -519,6 +522,19 @@ gl:
       reject_reason:
         title: "Por que rexeita a este usuario?"
         send_email: "Enviar correo de rexeitamento"
+    time_shortcut:
+      later_today: "Hoxe, máis tarde"
+      next_business_day: "O vindeiro día laborábel"
+      tomorrow: "Mañá"
+      next_week: "A vindeira semana"
+      post_local_date: "Data na publicación"
+      later_this_week: "Máis tarde, esta semana"
+      start_of_next_business_week: "Luns"
+      start_of_next_business_week_alt: "O vindeiro luns"
+      next_month: "O vindeiro mes"
+      custom: "Personalizar data e hora"
+      none: "Non se necesita"
+      last_custom: "Último"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tema</a>"
       you_posted_topic: "<a href='%{userUrl}'>Vostede</a> publicou <a href='%{topicUrl}'>o tema</a>"
@@ -788,6 +804,15 @@ gl:
       topic_sentence:
         one: "%{count} tema"
         other: "%{count} temas"
+      topic_stat:
+        one: "%{number} / %{unit}"
+        other: "%{number} / %{unit}"
+      topic_stat_unit:
+        week: "semana"
+        month: "mes"
+      topic_stat_all_time:
+        one: "%{number} total"
+        other: "%{number} total"
       topic_stat_sentence_week:
         one: "%{count} tema novo na última semana."
         other: "%{count} temas novos na última semana."
@@ -1143,7 +1168,6 @@ gl:
         set_primary: "Estabelecer correo electrónico principal"
         destroy: "Eliminar correo electrónico"
         add_email: "Engadir correo electrónico alternativo"
-        sso_override_instructions: "O correo electrónico pódese actualizar desde un fornecedor de SSO."
         no_secondary: "Sen correos electrónicos secundarios"
         instructions: "Non se verá nunca en público"
         admin_note: "Nota: un usuario administrador que cambia o correo electrónico doutro usuario que non é administrador indica que o usuario perdeu o acceso á súa conta de correo orixinal, polo que se enviará un correo electrónico de restabelecemento do contrasinal ao seu novo enderezo. O correo electrónico do usuario non cambiará ata completar o proceso de restabelecemento do contrasinal."
@@ -1401,6 +1425,7 @@ gl:
       avatar:
         title: "Imaxe do perfil"
         header_title: "perfil, mensaxes, marcadores e preferencias"
+        name_and_description: "%{name} %{description}"
       title:
         title: "Título"
         none: "(ningún)"
@@ -1480,6 +1505,10 @@ gl:
       value_prop: "Cando crea unha conta, lembramos exactamente o que ten lido, polo que sempre volve onde o deixou. Tamén recibe notificacións, desde aquí e por correo electrónico cando alguén lle responde. E pode amosarlle aprecio ás publicacións para compartir o amor. :heartpulse:"
     summary:
       enabled_description: "Estás vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade"
+      description:
+        one: "Hai <b>%{count}</b> resposta."
+        other: "Hai <b>%{count}</b> respostas."
+      description_time_MF: "Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
       enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
@@ -1687,6 +1716,7 @@ gl:
       default: Emojis personalizados
     shared_drafts:
       title: "Borradores compartidos"
+      notice: "Este tema só é visíbel para aqueles que poden publicar borradores compartidos ."
       destination_category: "Categoría de destino"
       publish: "Publicar borrador compartido"
       confirm_publish: "Confirmas a publicación deste borrador?"
@@ -1718,7 +1748,16 @@ gl:
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "O título é obrigatorio"
+        title_too_short:
+          one: "O título debe ter cando menos %{count} carácter"
+          other: "O título debe ter cando menos %{count} caracteres"
+        title_too_long:
+          one: "O título non debe ter máis de %{count} carácter"
+          other: "O título non debe ter máis de %{count} caracteres"
         post_missing: "A publicación non pode estar baleira"
+        post_length:
+          one: "A publicación debe ter cando menos %{count} carácter"
+          other: "A publicación debe ter cando menos %{count} caracteres"
         try_like: "Probaches o botón %{heart}?"
         category_missing: "Debes seleccionar unha categoría"
         tags_missing:
@@ -2050,7 +2089,6 @@ gl:
         choose_new_tags: "Selecciona novas etiquetas para estes temas:"
         choose_append_tags: "Selecciona novas etiquetas para anexar a estes temas:"
         changed_tags: "As etiquetas deses temas cambiaron."
-        remove_tags: "Retirar etiquetas"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
@@ -2179,7 +2217,7 @@ gl:
         remove: "Eliminar temporizador"
         publish_to: "Publicar en:"
         when: "Cando:"
-        time_frame_required: Escribe un marco temporal
+        time_frame_required: "Escribe un marco temporal"
       auto_update_input:
         none: "Selecciona un intervalo de tempo"
         now: "Agora"
@@ -2243,6 +2281,9 @@ gl:
         go: "ir"
         jump_bottom: "ir á última publicación"
         jump_prompt: "ir a..."
+        jump_prompt_of:
+          one: "de %{count} publicación"
+          other: "de %{count} publicacións"
         jump_prompt_long: "Ir a..."
         jump_bottom_with_number: "ir á publicación %{post_number}"
         jump_prompt_to_date: "ata a data"
@@ -2383,13 +2424,11 @@ gl:
         action: "Enviar convite"
         help: "convidar a outros a este tema por correo electrónico ou notificacións"
         to_forum: "Enviarémoslle un breve correo electrónico ao seu amigo para que poida participar inmediatamente facendo clic nunha ligazón."
-        sso_enabled: "Introduce o nome do usuario da persoa que desexas convidar a este tema."
         to_topic_blank: "Introduce o nome do usuario ou o correo electrónico da persoa que desexas convidar a este tema."
         to_topic_email: "Introduciches un enderezo de correo-e. Enviarémosche un convite que permitirá os teus amigos responder inmediatamente a este tema."
         to_topic_username: "Introduciches un nome de usuario. Enviarémoslle unha notificación cunha ligazón convidándoo a este tema."
         to_username: "Introduce o nome do usuario da persoa que desexas convidar. Enviarémoslle unha notificación cunha ligazón convidándoa a este tema."
         email_placeholder: "name@example.com"
-        success_email: "Enviamos un convite a <b>%{emailOrUsername}</b>. Notificarémosche cando utilice a invitación. Mira a lapela de convites na túa páxina de usuario para facer un seguimento das túas invitacións."
         success_username: "Convidamos este usuario a participar neste tema."
         error: "Sentímolo, non foi posíbel convidar esta persoa. Quizais xa foi convidada? (os convites teñen un límite)"
         success_existing_email: "Xa existe un usuario co correo electrónico <b>%{emailOrUsername}</b>. Convidamos este usuario a participar neste tema."
@@ -2503,6 +2542,8 @@ gl:
       edit_reason: "Razón:"
       post_number: "publicación %{number}"
       ignored: "Contido ignorado"
+      wiki_last_edited_on: "a última edición do wiki foi o %{dateTime}"
+      last_edited_on: "a última publicación editada foi o %{dateTime}"
       reply_as_new_topic: "Responder como tema ligado"
       reply_as_new_private_message: "Responder como nova mensaxe aos mesmos destinatarios"
       continue_discussion: "Continuar a discusión de %{postLink}:"
@@ -2541,6 +2582,7 @@ gl:
         one: "Vendo %{count} resposta a"
         other: "Vendo %{count} respostas a"
       in_reply_to: "Cargar a publicación pai"
+      view_all_posts: "Ver todas as publicacións"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Téntao de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
@@ -2612,6 +2654,9 @@ gl:
         unlock_post_description: "permitir que o autor edite esta publicación"
         delete_topic_disallowed_modal: "Non tes permiso para eliminar este tema. Se desexas eliminalo, denúnciao para que o revise o moderador e xustifica a causa da denuncia."
         delete_topic_disallowed: "non tes permiso para eliminar este tema"
+        delete_topic_confirm_modal:
+          one: "Este tema ten agora máis de %{count} visualización e pode ser un destino de busca popular. Confirma que quere eliminar este tema por completo, en vez de editalo para melloralo?"
+          other: "Este tema ten agora máis de %{count} visualizacións e pode ser un destino de busca popular. Confirma que quere eliminar este tema por completo, en vez de editalo para melloralo?"
         delete_topic_confirm_modal_yes: "Si, eliminar este tema"
         delete_topic_confirm_modal_no: "Non, manter este tema"
         delete_topic_error: "Produciuse un erro ao eliminar este tema"
@@ -3216,6 +3261,7 @@ gl:
         one: "%{tags} e %{count} máis"
         other: "%{tags} e %{count} máis"
       delete_no_unused_tags: "Non hai etiquetas sen usar."
+      tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sen usar"
       delete_unused_description: "Eliminar todas as etiquetas que non estean asociadas a ningún tema ou mensaxe privada"
       cancel_delete_unused: "Cancelar"
@@ -3410,10 +3456,6 @@ gl:
             available: "O nome do grupo está dispoñíbel"
             not_available: "O nome do grupo non está dispoñíbel"
             blank: "O nome do grupo non pode quedar baleiro"
-        bulk_add:
-          title: "Engadir ao grupo en bloque"
-          complete_users_not_added: "Non se engadiron estes usuarios (comproba que teñan unha conta):"
-          paste: "Pegar unha lista de nomes de usuario ou correos-e, un por liña:"
         add_members:
           as_owner: "Estabelecer usuario(s) como propietario(s) deste grupo"
         manage:
@@ -3440,6 +3482,9 @@ gl:
             effects: Efectos
             trust_levels_none: "Ningún"
             automatic_membership_email_domains: "Os usuarios que se rexistraron cun dominio de correo electrónico que coincida exactamente con algún da lista engadiranse automaticamente a este grupo:"
+            automatic_membership_user_count:
+              one: "%{count} usuario ten novos dominios de correo electrónico e engadiranse ao grupo."
+              other: "%{count} usuarios teñen novos dominios de correo electrónico e engadiranse grupo."
             primary_group: "Estabelecer automaticamente como grupo primario"
         name_placeholder: "Nome do grupo sen espazos, como na regra do nome do usuario"
         primary: "Grupo primario"
@@ -3516,7 +3561,6 @@ gl:
               wordpress: Necesario para que funcione o complemento wp-discourse de WordPress.
             users:
               bookmarks: Listar os marcadores do usuario. Devolve recordatorios de marcadores ao usaren o formato ICS.
-              sync_sso: Sincronizar un usuario usando SSO.
               show: Obter información sobre un usuario.
               check_emails: Listar os correos electrónicos dos usuarios.
               update: Actualizar a información do perfil de usuario.
@@ -4480,16 +4524,6 @@ gl:
           on_grace_period: "Actualmente ne periodo de graza da promoción, non será rebaixado"
           locked_will_not_be_promoted: "Nivel de confianza bloqueado. Non se promocionará nunca."
           locked_will_not_be_demoted: "Nivel de confianza bloqueado. Non será rebaixado nunca."
-        sso:
-          title: "Inicio de sesión simple"
-          external_id: "ID externo"
-          external_username: "Nome do usuario"
-          external_name: "Nome"
-          external_email: "Correo electrónico"
-          external_avatar_url: "URL da imaxe do perfil"
-          last_payload: "Última carga de datos"
-          delete_sso_record: "Eliminar o rexistro de SSO"
-          confirm_delete: "Está seguro de querer eliminar este rexistro de inicio de sesión único (SSO)?"
       user_fields:
         title: "Campos do usuario"
         help: "Engade campos que os usuarios poidan encher."

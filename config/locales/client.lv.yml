@@ -1533,13 +1533,11 @@ lv:
         username_placeholder: "lietotājvārds"
         action: "Nosūtīt ielūgumu"
         help: "Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus"
-        sso_enabled: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu."
         to_topic_blank: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu vai e-pastu."
         to_topic_email: "Jūs esat ievadījis e-pasta adresi. Mēs nosūtīsim e-pastā ielūgumu, kas ļaus jūsu draugam nekavējoties atbildēt šai tēmā."
         to_topic_username: "Jūs esat ievadījis lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         to_username: "Ievadiet personas, ko vēlētos ielūgt, lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         email_placeholder: "vards@piemers.com"
-        success_email: "Mēs nosūtījām ielūguma e-pastu uz <b>%{emailOrUsername}</b>. Mēs paziņosim jums, kad ielūgums būs izmantots. Pārbaudiet ielūgumu cilni jūsu lietotāja lapā, lai sekotu līdzi savu ielūgumu statusiem."
         success_username: "Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
         error: "Atvainojiet, mēs nevarējām ielūgt šo cilvēku. Varbūt jau ir nosūtīts ielūgums?"
         success_existing_email: "Jau pastāv lietotājs ar e-pastu <b>%{emailOrUsername}</b>. Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
@@ -2203,10 +2201,6 @@ lv:
         new:
           title: "Jauna grupa"
           create: "Izveidot"
-        bulk_add:
-          title: "Pievienot grupai vairākus"
-          complete_users_not_added: "Šie lietotāji nav pievienoti (pārliecinieties, ka viņiem ir profili):"
-          paste: "Kopēt lietotājvārdu vai e-pastu sarakstu, vienu katrā rindiņā:"
         manage:
           interaction:
             email: E-pasts
@@ -2798,13 +2792,6 @@ lv:
           on_grace_period: "Currently in promotion grace period, will not be demoted."
           locked_will_not_be_promoted: "Uzticības līmenis noslēgts. Nevar tikt paaugstināts."
           locked_will_not_be_demoted: "Uzticības līmenis noslēgts. Nevar tikt pazemināts."
-        sso:
-          title: "Vienreizēja pierakstīšanās (Single Sign On)"
-          external_id: "Ārējs ID"
-          external_username: "Lietotājvārds"
-          external_name: "Vārds"
-          external_email: "E-pasts"
-          external_avatar_url: "Profila attēla URL"
       user_fields:
         title: "Lietotāja lauki"
         help: "Pievienot lauku, kuru lietotāji var aizpildīt."

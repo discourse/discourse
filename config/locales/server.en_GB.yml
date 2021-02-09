@@ -56,7 +56,6 @@ en_GB:
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognised."
   site_settings:
     email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
-    sso_overrides_groups: "Synchronise all manual group membership with groups specified in the groups sso attribute (WARNING: if you do not specify groups all manual group membership will be cleared for user)"
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal colour values to be used for letter avatar background."
     category_colors: "A list of hexadecimal colour values allowed for categories."
     default_dark_mode_color_scheme_id: "The colour scheme used when in dark mode."

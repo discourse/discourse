@@ -1115,7 +1115,6 @@ nl:
         set_primary: "Primair e-mailadres instellen"
         destroy: "E-mailadres verwijderen"
         add_email: "Alternatief e-mailadres toevoegen"
-        sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
         no_secondary: "Geen extra e-mailadressen"
         instructions: "Nooit openbaar zichtbaar."
         admin_note: "Opmerking: een beheerder die het e-mailadres van een andere niet-beheerder wijzigt, geeft aan dat de gebruiker geen toegang meer heeft tot zijn of haar e-mailaccount, dus er wordt een e-mail voor opnieuw instellen van het wachtwoord naar zijn of haar nieuwe adres gestuurd. Het e-mailadres van de gebruiker wordt pas gewijzigd nadat hij of zij het proces voor opnieuw instellen van het wachtwoord heeft voltooid."
@@ -2020,7 +2019,6 @@ nl:
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
         choose_append_tags: "Kies nieuwe tags om voor deze topics toe te voegen:"
         changed_tags: "De tags van deze topics zijn gewijzigd."
-        remove_tags: "Tags verwijderen"
         progress:
           one: "Voortgang: <strong>%{count}</strong> topic"
           other: "Voortgang: <strong>%{count}</strong> topics"
@@ -2147,7 +2145,7 @@ nl:
         remove: "Timer verwijderen"
         publish_to: "Publiceren naar:"
         when: "Wanneer:"
-        time_frame_required: Selecteer een tijdsbestek
+        time_frame_required: "Selecteer een tijdsbestek"
       auto_update_input:
         none: "Selecteer een tijdsbestek"
         now: "Nu"
@@ -2350,13 +2348,11 @@ nl:
         username_placeholder: "gebruikersnaam"
         action: "Uitnodiging sturen"
         help: "anderen uitnodigen voor dit topic via e-mail of meldingen"
-        sso_enabled: "Voer de gebruikersnaam in van de persoon die u voor dit topic wilt uitnodigen."
         to_topic_blank: "Voer de gebruikersnaam of het e-mailadres in van de persoon die u voor dit topic wilt uitnodigen."
         to_topic_email: "U hebt een e-mailadres ingevoerd. We sturen een uitnodiging per e-mail waarmee uw vriend(in) direct op dit topic kan antwoorden."
         to_topic_username: "U hebt een gebruikersnaam ingevoerd. We sturen een melding met een uitnodigingskoppeling om aan dit topic deel te nemen."
         to_username: "Voer de gebruikersnaam in van de persoon die u wilt uitnodigen. We sturen een melding met een uitnodigingskoppeling om aan dit topic deel te nemen."
         email_placeholder: "name@example.com"
-        success_email: "Er is een uitnodiging naar <b>%{emailOrUsername}</b> gemaild. We stellen u op de hoogte als op de uitnodiging is ingegaan. Controleer het uitnodigingentabblad op uw gebruikerspagina om uw uitnodigingen bij te houden."
         success_username: "We hebben die gebruiker uitgenodigd om aan dit topic deel te nemen."
         error: "Sorry, we konden deze persoon niet uitnodigen. Misschien is deze al uitgenodigd? (Uitnodigingen zijn in aantal beperkt)"
         success_existing_email: "Er bestaat al een gebruiker met het e-mailadres <b>%{emailOrUsername}</b>. We hebben deze gebruiker uitgenodigd om aan dit topic deel te nemen."
@@ -3339,10 +3335,6 @@ nl:
             available: "Groepsnaam is beschikbaar"
             not_available: "Groepsnaam is niet beschikbaar"
             blank: "Groepsnaam mag niet leeg zijn"
-        bulk_add:
-          title: "Bulk toevoegen aan groep"
-          complete_users_not_added: "Deze gebruikers zijn niet toegevoegd (controleer of ze een account hebben):"
-          paste: "Plak een lijst van gebruikersnamen of e-mailadressen, één per regel:"
         add_members:
           as_owner: "Gebruiker(s) als eigenaar(s) van deze groep instellen"
         manage:
@@ -3442,7 +3434,6 @@ nl:
               wordpress: Noodzakelijk om de WordPress wp-discourse-plug-in te laten werken.
             users:
               bookmarks: Bladwijzers van gebruiker weergeven. Geeft bladwijzerherinneringen terug bij gebruik van de ICS-indeling.
-              sync_sso: Een gebruiker synchroniseren via SSO.
               show: Informatie over een gebruiker verkrijgen.
               check_emails: E-mailadressen van gebruiker weergeven.
               update: Gebruikersprofielgegevens bijwerken.
@@ -4389,16 +4380,6 @@ nl:
           on_grace_period: "Op dit moment in promotiewachtperiode, zal niet worden gedegradeerd."
           locked_will_not_be_promoted: "Vertrouwensniveau vergrendeld. Zal nooit worden gepromoveerd."
           locked_will_not_be_demoted: "Vertrouwensniveau vergrendeld. Zal nooit worden gedegradeerd."
-        sso:
-          title: "Single Sign On"
-          external_id: "Externe ID"
-          external_username: "Gebruikersnaam"
-          external_name: "Naam"
-          external_email: "E-mailadres"
-          external_avatar_url: "URL van profielafbeelding"
-          last_payload: "Laatste payload"
-          delete_sso_record: "SSO-record verwijderen"
-          confirm_delete: "Weet u zeker dat u deze record voor eenmalige aanmelding (SSO) wilt verwijderen?"
       user_fields:
         title: "Gebruikersvelden"
         help: "Voeg velden toe die uw gebruikers kunnen invullen."

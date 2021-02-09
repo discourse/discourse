@@ -1714,10 +1714,6 @@ id:
           posts_read: "Tulisan dilihat"
           likes_given: "Likes Diberikan"
           likes_received: "Likes Diterima"
-        sso:
-          external_username: "Nama Pengguna"
-          external_name: "Nama"
-          external_email: "Email"
       user_fields:
         save: "Simpan"
         edit: "Ubah"

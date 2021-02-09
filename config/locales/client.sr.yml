@@ -2048,13 +2048,6 @@ sr:
           on_grace_period: "Trenutno u periodu milosti zbog promocije, neće biti skinut."
           locked_will_not_be_promoted: "Nivo poverenja zaključan. Neće biti unapređivan."
           locked_will_not_be_demoted: "Nivo poverenja zaključan. Neće biti skinut."
-        sso:
-          title: "SSO"
-          external_id: "Spoljašni ID"
-          external_username: "Korisničko ime"
-          external_name: "Ime"
-          external_email: "Email"
-          external_avatar_url: "URL Profilne Slike"
       user_fields:
         title: "Korisnička polja"
         help: "Dodaj polja koja korisnici mogu popuniti."

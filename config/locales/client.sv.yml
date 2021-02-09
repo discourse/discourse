@@ -726,7 +726,22 @@ sv:
         make_owner_description: "Gör <b>%{username}</b> till ägare av denna grupp"
         remove_owner: "Ta bort som ägare"
         remove_owner_description: "Ta bort <b>%{username}</b> som ägare av denna grupp"
+        make_primary: "Gör till primär"
+        make_primary_description: "Gör denna till primär grupp för <b>%{username}</b>"
+        remove_primary: "Ta bort som primär"
+        remove_primary_description: "Ta bort denna som primär grupp för <b>%{username}</b>"
+        remove_members: "Ta bort medlemmar"
+        remove_members_description: "Ta bort markerade användare från denna grupp"
+        make_owners: "Gör till ägare"
+        make_owners_description: "Gör markerade användare till ägare av denna grupp"
+        remove_owners: "Ta bort ägare"
+        remove_owners_description: "Ta bort markerade användare som ägare till denna grupp"
+        make_all_primary: "Gör alla till primära"
+        make_all_primary_description: "Gör denna till primär grupp för alla markerade användare"
+        remove_all_primary: "Ta bort som primär"
+        remove_all_primary_description: "Ta bort denna grupp som primär"
         owner: "Ägare"
+        primary: "Primär"
         forbidden: "Du är inte tillåten att se medlemmarna."
       topics: "Ämnen"
       posts: "Inlägg"
@@ -1168,7 +1183,7 @@ sv:
         set_primary: "Ange primär e-postadress"
         destroy: "Ta bort e-postadress"
         add_email: "Lägg till alternativ e-postadress"
-        sso_override_instructions: "E-postadressen kan uppdateras från SSO-leverantören."
+        auth_override_instructions: "E-postadressen kan uppdateras från autentiseringsleverantören."
         no_secondary: "Inga sekundära e-postadresser"
         instructions: "Visas aldrig offentligt."
         admin_note: "Obs! En administratörsanvändare som ändrar annan icke-administratörsanvändares e-postadress anger att användaren har förlorat tillgången till sin ursprungliga adress, så ett återställnings-e-postmeddelande kommer att skickas till den nya adressen. Inget ändras förrän användaren har slutfört lösenordsåterställningsprocessen."
@@ -1676,6 +1691,8 @@ sv:
         one: "+ %{count} underkategori"
         other: "+ %{count} underkategorier"
     select_kit:
+      filter_by: "Filtrera efter: %{name}"
+      select_to_filter: "Välj ett värde att filtrera"
       default_header_text: Välj...
       no_content: Inga matchningar hittades
       filter_placeholder: Sök...
@@ -1717,6 +1734,7 @@ sv:
       default: Anpassa emojis
     shared_drafts:
       title: "Delade utkast"
+      notice: "Detta ämne är endast synligt för de som kan publicera delade utkast."
       destination_category: "Målkategori"
       publish: "Publicera delat utkast"
       confirm_publish: "Är du säker på att du vill publicera detta utkast?"
@@ -2080,6 +2098,7 @@ sv:
         close_topics: "Stäng ämnen"
         archive_topics: "Arkivera ämnen"
         notification_level: "Aviseringar"
+        change_notification_level: "Ändra aviseringsnivå"
         choose_new_category: "Välj den nya kategorin för ämnena:"
         selected:
           one: "Du har markerat <b>%{count}</b> ämne."
@@ -2089,7 +2108,10 @@ sv:
         choose_new_tags: "Välj nya taggar för de här ämnena:"
         choose_append_tags: "Välj nya taggar att lägga till för dessa ämnen:"
         changed_tags: "Taggarna för de här ämnena ändrades."
-        remove_tags: "Ta bort taggar"
+        remove_tags: "Ta bort alla taggar"
+        confirm_remove_tags:
+          one: "Alla taggar tas bort från det här ämnet. Är du säker?"
+          other: "Alla taggar tas bort från <b>%{count}</b> ämnen. Är du säker?"
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
@@ -2218,7 +2240,8 @@ sv:
         remove: "Ta bort timer:"
         publish_to: "Publicera till:"
         when: "När:"
-        time_frame_required: Välj en tidsram
+        time_frame_required: "Välj en tidsram"
+        min_duration: "Varaktigheten måste vara större än 0"
       auto_update_input:
         none: "Välj en tidsram"
         now: "Nu"
@@ -2271,6 +2294,9 @@ sv:
       auto_close_immediate:
         one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas omedelbart. "
         other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammal, så ämnet kommer att stängas omedelbart. "
+      auto_close_momentarily:
+        one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas för tillfället."
+        other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammalt, så ämnet kommer att stängas för tillfället."
       timeline:
         back: "Tillbaka"
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
@@ -2425,13 +2451,13 @@ sv:
         action: "Skicka inbjudan"
         help: "bjud in andra till detta ämne via e-post eller aviseringar"
         to_forum: "Vi skickar ett kort e-postmeddelande så att din vän omedelbart kan delta genom att klicka på en länk."
-        sso_enabled: "Ange användarnamnet för personen som du vill bjuda in till detta ämne."
+        discourse_connect_enabled: "Ange användarnamnet för personen som du vill bjuda in till detta ämne."
         to_topic_blank: "Ange användarnamnet eller e-postadressen för personen som du vill bjuda in till detta ämne."
         to_topic_email: "Du har angett en e-postadress. Vi skickar en inbjudan som ger din vän möjlighet att svara på detta ämne direkt."
         to_topic_username: "Du har angett ett användarnamn. Vi skickar en avisering med en länk som bjuder in din vän till detta ämne."
         to_username: "Ange användarnamnet för personen du vill bjuda in. Vi skickar en avisering med en länk som bjuder in din vän till detta ämne."
         email_placeholder: "namn@exampel.se"
-        success_email: "Vi skickade ut en inbjudan till <b>%{emailOrUsername}</b>. Vi meddelar dig när inbjudan har lösts in. Kolla inbjudningsfliken på din användarsida för att hålla koll på dina inbjudningar."
+        success_email: "Vi skickade en inbjudan till <b>%{invitee}</b>. Vi meddelar dig när inbjudan har lösts in. Kolla inbjudningsfliken på din användarsida för att hålla reda på dina inbjudningar."
         success_username: "Vi har bjudit in användaren till att delta i detta ämne."
         error: "Tyvärr kunde vi inte bjuda in den personen. Kanske har personen redan blivit inbjuden? (inbjudningar är begränsade)"
         success_existing_email: "Det finns redan en användare med e-postadressen <b>%{emailOrUsername}</b>. Vi kommer att bjuda in denna person till att delta i detta ämne."
@@ -2545,6 +2571,8 @@ sv:
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
       ignored: "Ignorerat innehåll"
+      wiki_last_edited_on: "wiki redigerades senast den %{dateTime}"
+      last_edited_on: "inlägget redigerades senast den %{dateTime}"
       reply_as_new_topic: "Svara som länkat ämne"
       reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från %{postLink}:"
@@ -3457,10 +3485,6 @@ sv:
             available: "Gruppnamn är tillgängligt"
             not_available: "Gruppnamn är inte tillgängligt"
             blank: "Gruppnamn kan inte vara tomt"
-        bulk_add:
-          title: "Masstilläggning till grupp"
-          complete_users_not_added: "Dessa användare lades inte till (kontrollera att de har ett konto):"
-          paste: "Klistra in en lista med användarnamn eller e-postadresser, en per rad:"
         add_members:
           as_owner: "Ställ in användare som ägare av denna grupp"
         manage:
@@ -3566,7 +3590,7 @@ sv:
               wordpress: Nödvändigt för att WordPress-tillägget wp-discourse ska fungera.
             users:
               bookmarks: Lista användarbokmärken. Det returnerar bokmärkespåminnelser när ICS-formatet används.
-              sync_sso: Synkronisera en användare genom SSO.
+              sync_sso: Synkronisera en användare med DiscourseConnect.
               show: Erhåll information om en användare.
               check_emails: Lista användares e-post.
               update: Uppdatera information om användarprofil.
@@ -3824,7 +3848,9 @@ sv:
           convert: "Konvertera"
           convert_component_alert: "Är du säker på att du vill konvertera den här komponenten till temat? Den kommer att tas bort som en komponent från %{relatives}."
           convert_component_tooltip: "Konvertera den här komponenten till tema"
+          convert_component_alert_generic: "Är du säker på att du vill konvertera denna komponent till tema?"
           convert_theme_alert: "Är du säker på att du vill konvertera detta tema till komponent? Det kommer att tas bort som överordnat från %{relatives}."
+          convert_theme_alert_generic: "Är du säker på att du vill konvertera detta tema till komponent?"
           convert_theme_tooltip: "Konvertera detta tema till komponent"
           inactive_themes: "Inaktiva teman:"
           inactive_components: "Oanvända komponenter:"
@@ -4530,16 +4556,16 @@ sv:
           on_grace_period: "För närvarande i nådefrist för befordran, kommer inte degraderas."
           locked_will_not_be_promoted: "Förtroendenivå låst. Kommer aldrig bli befordrad."
           locked_will_not_be_demoted: "Förtroendenivå låst. Kommer aldrig att degraderas."
-        sso:
-          title: "Single sign on"
+        discourse_connect:
+          title: "DiscourseConnect Single Sign On"
           external_id: "Externt ID"
           external_username: "Användarnamn"
           external_name: "Namn"
-          external_email: "E-post"
-          external_avatar_url: "URL till profilbild"
+          external_email: "E-postadress"
+          external_avatar_url: "Profilbildens URL"
           last_payload: "Senaste nyttolast"
           delete_sso_record: "Ta bort SSO-post"
-          confirm_delete: "Är du säker på att du vill ta bort denna enstaka SSO-post (Single Sign-On)?"
+          confirm_delete: "Är du säker på att du vill radera denna DiscourseConnect-post?"
       user_fields:
         title: "Användarfält"
         help: "Lägg till fält som dina användare kan fylla i."

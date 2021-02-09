@@ -9,7 +9,7 @@ de:
     poll_enabled: "Umfragen erlauben?"
     poll_maximum_options: "Maximale Anzahl der in einer Umfrage erlaubten Optionen."
     poll_edit_window_mins: "Anzahl Minuten nach der Erstellung eines Beitrags, in denen Umfragen bearbeitet werden können."
-    poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen. "
+    poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen."
     poll_groupable_user_fields: "Eine Reihe von Benutzerfeldern, die verwendet werden können, um Ergebnisse zu gruppieren und zu filtern."
     poll_export_data_explorer_query_id: "ID der Datenexplorer-Abfrage, die zum Exportieren von Umfrageergebnissen verwendet werden soll (0 zum Deaktivieren)."
   poll:
