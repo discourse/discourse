@@ -19,7 +19,11 @@ describe BackupRestore::BackupFileHandler do
 
     Dir.mktmpdir do |root_directory|
       current_db = RailsMultisite::ConnectionManagement.current_db
-      file_handler = BackupRestore::BackupFileHandler.new(logger, backup_filename, current_db, root_directory, location)
+      file_handler = BackupRestore::BackupFileHandler.new(
+        logger, backup_filename, current_db,
+        root_tmp_directory: root_directory,
+        location: location
+      )
       tmp_directory, db_dump_path = file_handler.decompress
 
       expected_tmp_path = File.join(root_directory, "tmp/restores", current_db, "2019-12-24-143148")
