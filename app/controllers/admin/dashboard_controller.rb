@@ -24,8 +24,11 @@ class Admin::DashboardController < Admin::AdminController
   end
 
   def new_features
-    data = { new_features: DiscourseUpdates.unseen_new_features(current_user.id) }
-    data.merge!(release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"])
+    data = {
+      new_features: DiscourseUpdates.new_features,
+      has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
+      release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"]
+    }
     render json: data
   end
 

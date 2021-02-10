@@ -118,6 +118,18 @@ describe Admin::DashboardController do
         expect(json['new_features'].length).to eq(2)
         expect(json['new_features'][0]["emoji"]).to eq("🙈")
         expect(json['new_features'][0]["title"]).to eq("Fancy Legumes")
+        expect(json['has_unseen_features']).to eq(true)
+      end
+
+      it 'passes unseen feature state' do
+        populate_new_features
+        DiscourseUpdates.mark_new_features_as_seen(admin.id)
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json['has_unseen_features']).to eq(false)
       end
     end
 
@@ -128,6 +140,7 @@ describe Admin::DashboardController do
 
         expect(response.status).to eq(200)
         expect(DiscourseUpdates.new_features_last_seen(admin.id)).not_to eq(nil)
+        expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
       end
     end
   end
