@@ -207,7 +207,7 @@ module ApplicationHelper
   end
 
   def html_lang
-    SiteSetting.default_locale.sub("_", "-")
+    (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
   # Creates open graph and twitter card meta data
