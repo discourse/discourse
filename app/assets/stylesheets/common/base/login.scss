@@ -12,6 +12,21 @@
   display: none;
 }
 
+.login-modal:not(.hidden).has-alt-auth.no-local-login {
+  min-width: fit-content;
+  background: var(--secondary);
+  #login-buttons:not(.hidden) {
+    .btn.btn-social,
+    .btn,
+    .login-with-email-button {
+      border: 1px solid var(--primary-low-mid);
+      &:hover {
+        background: var(--primary-very-low);
+      }
+    }
+  }
+}
+
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal {
@@ -30,7 +45,7 @@
     z-index: z("max");
   }
   .login-welcome-header {
-    z-index: z("modal","content");
+    z-index: z("modal", "content");
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
@@ -59,6 +74,9 @@
     .inline-spinner {
       display: inline-flex;
     }
+  }
+  .modal-body.no-local-login + .modal-footer {
+    display: none;
   }
   &.awaiting-approval {
     display: none;

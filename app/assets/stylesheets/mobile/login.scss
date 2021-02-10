@@ -150,6 +150,12 @@
   }
 }
 
+.login-modal:not(.hidden).has-alt-auth.no-local-login {
+  #login-buttons:not(.hidden) {
+    width: 100%;
+  }
+}
+
 // styles for the
 // create account
 // modal only

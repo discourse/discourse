@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { alias, or, readOnly } from "@ember/object/computed";
+import { alias, not, or, readOnly } from "@ember/object/computed";
 import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { next, schedule } from "@ember/runloop";
@@ -46,6 +46,8 @@ export default Controller.extend(ModalFunctionality, {
   loginRequired: alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
+  noLoginLocal: not("canLoginLocal"),
+
   resetForm() {
     this.setProperties({
       loggingIn: false,
@@ -80,12 +82,14 @@ export default Controller.extend(ModalFunctionality, {
   @discourseComputed(
     "awaitingApproval",
     "hasAtLeastOneLoginButton",
-    "showSecondFactor"
+    "showSecondFactor",
+    "canLoginLocal"
   )
   modalBodyClasses(
     awaitingApproval,
     hasAtLeastOneLoginButton,
-    showSecondFactor
+    showSecondFactor,
+    canLoginLocal
   ) {
     const classes = ["login-modal"];
     if (awaitingApproval) {
@@ -93,6 +97,9 @@ export default Controller.extend(ModalFunctionality, {
     }
     if (hasAtLeastOneLoginButton && !showSecondFactor) {
       classes.push("has-alt-auth");
+    }
+    if (!canLoginLocal) {
+      classes.push("no-local-login");
     }
     return classes.join(" ");
   },

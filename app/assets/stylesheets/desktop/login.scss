@@ -77,6 +77,30 @@
   }
 }
 
+.login-modal:not(.hidden).has-alt-auth.no-local-login {
+  padding: 0 2em !important;
+  min-width: 350px !important;
+  .login-right-side {
+    width: 100%;
+    padding: 2em 0;
+    #login-buttons:not(.hidden) {
+      width: 80%;
+      .btn.btn-social:first-of-type {
+        margin-top: 2em;
+      }
+      .btn.btn-social,
+      .btn,
+      .login-with-email-button {
+        border: 1px solid var(--primary-low-mid);
+        margin-bottom: 0.5em;
+        &:hover {
+          background: var(--primary-very-low) !important;
+        }
+      }
+    }
+  }
+}
+
 // styles used on
 // login modal only
 .login-modal:not(.hidden) {
