@@ -9,7 +9,7 @@ import hbs from "htmlbars-inline-precompile";
 discourseModule("Integration | Component | topic-list", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("checkbox is rendered checked if topic is in selected array", {
+  componentTest("bulk select", {
     template: hbs`{{topic-list
         canBulkSelect=true
         toggleBulkSelect=toggleBulkSelect
@@ -41,15 +41,29 @@ discourseModule("Integration | Component | topic-list", function (hooks) {
 
     async test(assert) {
       await click("button.bulk-select");
-      assert.ok(this.bulkSelectEnabled);
+      assert.ok(this.bulkSelectEnabled, "bulk select is enabled");
 
       await click("button.bulk-select-all");
-      assert.equal(this.selected.length, 2);
-      assert.ok(this.autoAddTopicsToBulkSelect);
+      assert.equal(
+        this.selected.length,
+        2,
+        "clicking Select All selects all loaded topics"
+      );
+      assert.ok(
+        this.autoAddTopicsToBulkSelect,
+        "clicking Select All turns on the autoAddTopicsToBulkSelect flag"
+      );
 
       await click("button.bulk-clear-all");
-      assert.equal(this.selected.length, 0);
-      assert.ok(!this.autoAddTopicsToBulkSelect);
+      assert.equal(
+        this.selected.length,
+        0,
+        "clicking Clear All deselects all topics"
+      );
+      assert.ok(
+        !this.autoAddTopicsToBulkSelect,
+        "clicking Clear All turns off the autoAddTopicsToBulkSelect flag"
+      );
     },
   });
 });
