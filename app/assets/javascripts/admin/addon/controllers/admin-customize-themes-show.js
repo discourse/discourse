@@ -231,6 +231,11 @@ export default Controller.extend({
       : remoteThemeUrl;
   },
 
+  @discourseComputed("model.user.id", "model.default")
+  showConvert(userId, defaultTheme) {
+    return userId > 0 && !defaultTheme;
+  },
+
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
