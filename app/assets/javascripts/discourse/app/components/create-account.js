@@ -28,13 +28,19 @@ export default Component.extend({
       this.set("email", cookie("email"));
     }
 
-    let userTextFields = document
-      .getElementsByClassName("user-fields")[0]
-      .getElementsByClassName("ember-text-field");
+    let userTextFields = document.getElementsByClassName("user-fields")[0];
 
-    for (let element of userTextFields) {
-      element.addEventListener("focus", this.userInputFocus);
-      element.addEventListener("focusout", this.userInputFocusOut);
+    if (userTextFields) {
+      userTextFields = userTextFields.getElementsByClassName(
+        "ember-text-field"
+      );
+    }
+
+    if (userTextFields) {
+      for (let element of userTextFields) {
+        element.addEventListener("focus", this.userInputFocus);
+        element.addEventListener("focusout", this.userInputFocusOut);
+      }
     }
 
     $(this.element).on("keydown.discourse-create-account", (e) => {
@@ -63,13 +69,19 @@ export default Component.extend({
     $(this.element).off("keydown.discourse-create-account");
     $(this.element).off("click.dropdown-user-field-label");
 
-    let userTextFields = document
-      .getElementsByClassName("user-fields")[0]
-      .getElementsByClassName("ember-text-field");
+    let userTextFields = document.getElementsByClassName("user-fields")[0];
 
-    for (let element of userTextFields) {
-      element.removeEventListener("focus", this.userInputFocus);
-      element.removeEventListener("focusout", this.userInputFocusOut);
+    if (userTextFields) {
+      userTextFields = userTextFields.getElementsByClassName(
+        "ember-text-field"
+      );
+    }
+
+    if (userTextFields) {
+      for (let element of userTextFields) {
+        element.removeEventListener("focus", this.userInputFocus);
+        element.removeEventListener("focusout", this.userInputFocusOut);
+      }
     }
   },
 });
