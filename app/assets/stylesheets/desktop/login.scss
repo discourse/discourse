@@ -124,7 +124,6 @@
   }
   &.has-alt-auth .login-right-side {
     width: 40%;
-    padding: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -255,7 +254,7 @@
       );
     }
     &:before {
-      top: calc(8em + 5px);
+      top: calc(8em + 4px);
       background-image: linear-gradient(
         to top,
         rgba(var(--secondary-rgb), 0),

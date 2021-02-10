@@ -30,22 +30,22 @@
     padding: 1em;
     margin: 0;
 
-    button {
+    .btn {
       padding: 0.53em 0.53em 0.53em 0.43em;
       border: 1px solid var(--primary-low);
-      max-width: 49%;
       flex: 1 1 47%;
       margin: 0 0.5em 0.5em 0;
-      font-size: $font-down-1;
       white-space: nowrap;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 
   @media screen and (max-width: 750px) {
     #login-buttons:not(.hidden) {
       justify-content: center;
-      button {
-        font-size: $font-down-2;
+      .btn {
         &:nth-child(even) {
           margin: 0 0 0.5em 0;
         }
