@@ -187,7 +187,7 @@ export default Component.extend({
     );
     this.appEvents.trigger("topic-progress:docked-status-changed", {
       docked: isDocked,
-      element: $wrapper,
+      element: this.element,
     });
   },
 
