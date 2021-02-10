@@ -109,6 +109,7 @@ task "qunit:test", [:timeout, :qunit_path] do |_, args|
   ensure
     # was having issues with HUP
     Process.kill "KILL", pid
+    FileUtils.rm("#{Rails.root}/tmp/pids/unicorn_test_#{port}.pid")
   end
 
   if success
