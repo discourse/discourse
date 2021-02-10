@@ -15,7 +15,9 @@ module Jobs
     private
 
     def excluded_users(args)
-      return User.where(id: args[:notified_user_ids]) if !args[:diff_tags] || !all_tags_in_hidden_groups?(args)
+      if !args[:diff_tags] || !all_tags_in_hidden_groups?(args)
+        return User.where(id: args[:notified_user_ids])
+      end
       group_users_join = DB.sql_fragment("LEFT JOIN group_users ON group_users.user_id = users.id AND group_users.group_id IN (:group_ids)", group_ids: tag_group_ids(args))
       condition = DB.sql_fragment("group_users.id IS NULL OR users.id IN (:notified_user_ids)", notified_user_ids: args[:notified_user_ids])
       User.joins(group_users_join).where(condition)
