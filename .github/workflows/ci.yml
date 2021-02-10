@@ -119,7 +119,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install --dev
+        run: yarn install
 
       - name: "Checkout official plugins"
         if: env.TARGET == 'PLUGINS'
