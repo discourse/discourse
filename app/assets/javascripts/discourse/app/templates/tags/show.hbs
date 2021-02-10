@@ -47,13 +47,20 @@
         <div id="list-area">
           {{#unless loading}}
             {{#if list.topics}}
-              {{#discovery-topics-list model=list refresh=(action "refresh")  as |discoveryTopicList|}}
+              {{#discovery-topics-list
+                model=list
+                refresh=(action "refresh")
+                autoAddTopicsToBulkSelect=autoAddTopicsToBulkSelect
+                bulkSelectEnabled=bulkSelectEnabled
+                addTopicsToBulkSelect=(action "addTopicsToBulkSelect")
+                as |discoveryTopicList|}}
                 {{bulk-select-button selected=selected action=(action "refresh") category=category}}
                 {{topic-list
                   topics=list.topics
                   canBulkSelect=canBulkSelect
                   toggleBulkSelect=(action "toggleBulkSelect")
                   bulkSelectEnabled=bulkSelectEnabled
+                  updateAutoAddTopicsToBulkSelect=(action "updateAutoAddTopicsToBulkSelect")
                   selected=selected
                   showPosters=true
                   order=order
