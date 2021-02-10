@@ -1183,9 +1183,9 @@ tr_TR:
       password:
         title: "Parola"
         too_short: "Parolanız çok kısa"
-        common: "Bu parola çokça kullanılan bir şifre"
-        same_as_username: "Parolanız kullanıcı adınla aynı."
-        same_as_email: "Parolanız e-posta adresinle aynı."
+        common: "Bu parola çokça kullanılan bir parola"
+        same_as_username: "Parolanız kullanıcı adınızla aynı."
+        same_as_email: "Parolanız e-posta adresinizle aynı."
         ok: "Parolanız iyi gözüküyor."
         instructions: "en az %{count} karakter"
       summary:
