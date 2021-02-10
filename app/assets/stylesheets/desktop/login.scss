@@ -3,21 +3,41 @@
 // create account modals
 .login-modal,
 .create-account {
+  .modal-body {
+    &.has-alt-auth {
+      background: var(--tertiary);
+    }
+    @media (prefers-color-scheme: dark) {
+      &.has-alt-auth {
+        background: rgba(var(--tertiary-rgb), 0.5);
+      }
+    }
+  }
+  #modal-alert {
+    padding: 15px 16px;
+  }
+  .btn-flat.btn.modal-close svg {
+    color: rgba(var(--primary-rgb), 0.5);
+    &:hover {
+      color: rgba(var(--primary-rgb), 0.85);
+    }
+  }
   #login-buttons:not(.hidden) {
     display: flex;
     flex: 0 1 auto;
     flex-direction: column;
     align-items: stretch;
     min-height: 75px;
-    padding: 0 24px;
     order: 2;
 
     button {
-      display: flex;
-      text-align: left;
+      &:first-of-type {
+        margin-top: 2.8em;
+      }
+      &:last-of-type {
+        margin-bottom: 3em;
+      }
       margin: 0.35em;
-      white-space: nowrap;
-      align-items: center;
       &:lang(zh_CN) {
         min-width: 200px;
       }
@@ -32,57 +52,14 @@
     }
   }
 
-  form {
-    min-width: 300px;
-    max-width: 100%;
-  }
-
   #modal-alert {
     max-width: 100%;
     margin-bottom: 0;
-    padding: 8px 16px;
+    padding: 8px 40px 8px 16px;
+    min-height: 35px;
   }
 
-  .login-modal {
-    #login-buttons:not(.hidden) {
-      button {
-        &:first-of-type {
-          margin-top: 2.8em;
-        }
-        &:last-of-type {
-          margin-bottom: 3em;
-        }
-      }
-    }
-  }
-
-  .create-account {
-    #login-buttons:not(.hidden) {
-      justify-content: flex-start;
-      padding-top: 2.7em;
-      + .login-form {
-        border-right: 1px solid var(--primary-low); // Only show border when login-form is present
-      }
-    }
-  }
-
-  #login-form {
-    box-sizing: border-box;
-    flex: 1 0 auto;
-    padding: 0 24px;
-    + #login-buttons {
-      border-left: 1px solid var(--primary-low); // Only show border when login-form is present
-    }
-  }
-
-  tr:not(.instructions) {
-    td {
-      display: flex;
-      padding: 5px 0 0 0;
-    }
-  }
-  .tip,
-  td label {
+  .tip {
     display: block;
     overflow: hidden;
     word-wrap: break-word;
@@ -95,25 +72,107 @@
 }
 
 .has-alt-auth {
-  .tip,
-  td label {
+  .tip {
     max-width: 100%;
+  }
+}
+
+.login-modal:not(.hidden).has-alt-auth.no-local-login {
+  padding: 0 2em !important;
+  min-width: 350px !important;
+  .login-right-side {
+    width: 100%;
+    padding: 2em 0;
+    #login-buttons:not(.hidden) {
+      width: 80%;
+      .btn.btn-social:first-of-type {
+        margin-top: 2em;
+      }
+      .btn.btn-social,
+      .btn,
+      .login-with-email-button {
+        border: 1px solid var(--primary-low-mid);
+        margin-bottom: 0.5em;
+        &:hover {
+          background: var(--primary-very-low) !important;
+        }
+      }
+    }
   }
 }
 
 // styles used on
 // login modal only
-.d-modal.login-modal {
+.login-modal:not(.hidden) {
+  padding: 0 !important;
+  &.has-alt-auth {
+    min-width: 700px;
+    .login-left-side {
+      width: calc(60% - 4em);
+      padding: 1em 2em;
+    }
+  }
+  .login-left-side {
+    background: var(--secondary);
+    width: calc(100% - 4em);
+    display: flex;
+    flex-direction: column;
+    padding: 1em 4em 1em 2em;
+    .login-welcome-header {
+      .login-title {
+        font-size: 2.75em;
+      }
+      .login-subheader {
+        font-size: 1.125em !important;
+      }
+    }
+    #credentials {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
+    #login-form {
+      margin: 1.5em 0 0 0;
+    }
+    .modal-footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0;
+      border: 0;
+    }
+  }
+  .login-right-side {
+    display: none;
+  }
+  &.has-alt-auth .login-right-side {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    #login-buttons {
+      button {
+        &.login-with-email-button {
+          border-radius: 4px;
+          .d-icon {
+            color: #000 !important;
+          }
+          &:hover {
+            box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
+            .d-icon {
+              color: #000 !important;
+            }
+          }
+        }
+      }
+    }
+  }
   .modal-body,
   #credentials {
     display: flex;
     align-items: center;
-    padding: 15px 0;
-
-    tr {
-      display: flex;
-      flex-direction: column;
-    }
 
     &.hidden {
       display: none;
@@ -125,110 +184,150 @@
 // create account
 // modal only
 .d-modal.create-account {
-  .modal-body {
-    display: flex;
-    padding: 15px 0;
+  .create-account {
+    position: relative;
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+      max-height: 65vh !important;
+      overflow: hidden;
+    }
   }
-
-  .create-account-form tr {
+  .has-alt-auth .create-account-form {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    grid-template-rows: 20% 80%;
+    grid-template-areas:
+      "header login-buttons"
+      "form login-buttons";
+  }
+  .create-account-form {
     display: flex;
     flex-direction: column;
+    width: 100%;
+  }
+  .create-account-login-buttons {
+    display: none;
+  }
+  .has-alt-auth .create-account-login-buttons {
+    grid-area: login-buttons;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    h3 {
+      color: var(--secondary);
+      text-align: center;
+    }
+    #login-buttons {
+      button:first-of-type {
+        margin-top: 0;
+      }
+      button {
+        margin-bottom: 1em;
+      }
+    }
+  }
+  .modal-body {
+    display: flex;
+    padding: 0;
+  }
+  .login-welcome-header {
+    grid-area: header;
+    padding: 1em 1em 1em 1em;
+    .login-title {
+      font-size: 2.75em;
+    }
+    .login-subheader {
+      font-size: 1.125em !important;
+      align-self: start;
+    }
   }
 
-  .login-form {
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    flex: 1 1 auto;
+  .modal-body:not(.has-alt-auth) .login-form {
+    &:after,
+    &:before {
+      width: 100%;
+    }
+    &:before {
+      top: calc(8em - 10px) !important;
+    }
+  }
 
+  .has-alt-auth .login-form,
+  .login-form {
+    background: var(--secondary);
+    padding: 1em;
+    grid-area: form;
+    overflow-y: scroll;
     &:after,
     &:before {
       content: "";
       display: block;
       position: absolute;
-      width: 100%;
+      width: 65%;
       pointer-events: none;
+      z-index: 100;
+      margin-left: -1em;
+      height: 1em;
     }
     &:after {
-      bottom: 0;
-      height: 35px;
-      @media screen and (max-height: 650px) {
-        height: 45px;
-      }
+      bottom: 93px;
       background-image: linear-gradient(
         to bottom,
         rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 0.9)
+        rgba(var(--secondary-rgb), 1)
       );
     }
     &:before {
-      top: 0;
-      height: 25px;
+      top: calc(8em + 4px);
       background-image: linear-gradient(
         to top,
         rgba(var(--secondary-rgb), 0),
         rgba(var(--secondary-rgb), 1)
       );
     }
-    form {
-      box-sizing: border-box;
-      padding: 16px 24px;
-      margin-bottom: 0;
-      max-height: 475px;
-      @media screen and (max-height: 650px) {
-        max-height: calc(65vh - 100px);
-        > *:last-child {
-          margin-bottom: 40px;
-        }
+    .input-group {
+      margin-bottom: 1em;
+      input {
+        width: 100%;
       }
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    form,
-    table {
-      width: 100%;
-    }
-
-    tr {
-      display: flex;
-      flex-direction: column;
-      margin-top: 0.15em;
-      &.password-confirmation {
-        display: none;
+      input:not(.value-entered):not(:focus) + label.alt-placeholder {
+        top: 12px;
       }
     }
-  }
-
-  tr.input {
-    input,
-    label {
-      margin-bottom: 0;
-      width: 100%;
+    .password-confirmation {
+      display: none;
     }
-    .tip {
-      max-width: 340px;
+    scrollbar-color: rgba(var(--primary-rgb), 0.5) transparent;
+    &::-webkit-scrollbar {
+      width: 15px;
+    }
+
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 14px 14px transparent;
+      border: 4px solid transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 14px 14px rgba(var(--primary-rgb), 0.5);
+      border: 4px solid transparent;
+      border-radius: 14px;
+    }
+
+    /* set button(top and bottom of the scrollbar) */
+    &::-webkit-scrollbar-button {
+      display: none;
     }
   }
 
   .user-fields {
-    margin-bottom: 20px;
+    margin-bottom: 1em;
   }
 
   .user-field {
     display: flex;
     flex-direction: column;
-
     &.confirm {
       margin-top: 5px;
-    }
-
-    > label {
-      width: auto;
-    }
-
-    .controls {
-      margin-left: 0;
     }
   }
 
@@ -266,11 +365,7 @@
 
 .login-form {
   .tip {
-    &:not(:empty) + td {
-      display: none;
-    }
-    &:not(:empty),
-    &:empty + td {
+    &:not(:empty) {
       min-height: 1.75em;
       &.bad .svg-icon {
         vertical-align: middle;

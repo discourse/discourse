@@ -161,14 +161,16 @@
 // Social buttons
 // --------------------------------------------------
 
-.btn-social {
-  .d-icon {
-    color: #fff;
-  }
-  color: #fff;
-  background: #666;
+.btn-social,
+.login-with-email-button {
+  border-radius: 0.25em;
+  color: #000;
+  background: #ffffff;
+  border: 1px solid transparent;
   &:hover {
-    color: #fff;
+    color: #000 !important;
+    background: #ececec !important;
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.25);
   }
   &[href] {
     color: var(--secondary);
@@ -180,7 +182,6 @@
   &.google_oauth2 {
     background: var(--google);
     color: #333;
-    border: 1px solid var(--primary-low);
     // non-FA SVG icon for Google in login-buttons.hbs
     .d-icon {
       opacity: 0.9;
@@ -188,38 +189,57 @@
     &:hover,
     &:focus {
       color: currentColor;
-      background: var(--google-hover);
     }
   }
+
   &.facebook {
-    background: $facebook;
-    &:hover,
-    &:focus {
-      background: var(--facebook-hover);
+    .d-icon {
+      color: $facebook;
+    }
+    &:hover {
+      .d-icon {
+        color: $facebook;
+      }
     }
   }
   &.cas {
-    background: var(--cas);
+    .d-icon {
+      color: var(--cas);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--cas);
+      }
+    }
   }
   &.twitter {
-    background: var(--twitter);
-    &:hover,
-    &:focus {
-      background: var(--twitter-hover);
+    .d-icon {
+      color: var(--twitter);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--twitter);
+      }
     }
   }
   &.github {
-    background: var(--github);
-    &:hover,
-    &:focus {
-      background: var(--github-hover);
+    .d-icon {
+      color: var(--github);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--github);
+      }
     }
   }
   &.discord {
-    background: var(--discord);
-    &:hover,
-    &:focus {
-      background: var(--discord-hover);
+    .d-icon {
+      color: var(--discord);
+    }
+    &:hover {
+      .d-icon {
+        color: var(--discord);
+      }
     }
   }
 }
