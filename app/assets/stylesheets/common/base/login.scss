@@ -27,22 +27,22 @@
     position: absolute;
     top: 1em;
     right: 1em;
-    z-index: 999;
+    z-index: z("max");
   }
   .login-welcome-header {
-    z-index: 100;
+    z-index: z("modal","content");
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
     background: var(--secondary);
-    h1 {
+    .login-title {
       margin-bottom: 0;
     }
-    p {
+    .login-subheader {
       align-self: start;
       margin: 0;
     }
-    img.waving-hand {
+    .waving-hand {
       width: 35px;
       height: 35px;
       margin-left: 1em;
@@ -50,7 +50,7 @@
     }
   }
   #login-buttons {
-    button {
+    .btn {
       justify-content: flex-start;
       min-width: fit-content;
     }

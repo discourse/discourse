@@ -95,10 +95,10 @@
     flex-direction: column;
     padding: 1em 4em 1em 2em;
     .login-welcome-header {
-      h1 {
+      .login-title {
         font-size: 2.75em;
       }
-      p {
+      .login-subheader {
         font-size: 1.125em !important;
       }
     }
@@ -210,19 +210,22 @@
   .login-welcome-header {
     grid-area: header;
     padding: 1em 1em 1em 1em;
-    h1 {
+    .login-title {
       font-size: 2.75em;
     }
-    p {
+    .login-subheader {
       font-size: 1.125em !important;
       align-self: start;
     }
   }
 
-  :not(.has-alt-auth) .login-form {
+  .modal-body:not(.has-alt-auth) .login-form {
     &:after,
     &:before {
       width: 100%;
+    }
+    &:before {
+      top: calc(8em - 10px) !important;
     }
   }
 
@@ -241,10 +244,10 @@
       pointer-events: none;
       z-index: 100;
       margin-left: -1em;
+      height: 1em;
     }
     &:after {
       bottom: 93px;
-      height: 1em;
       background-image: linear-gradient(
         to bottom,
         rgba(var(--secondary-rgb), 0),
@@ -252,8 +255,7 @@
       );
     }
     &:before {
-      top: calc(8em - 10px);
-      height: 1em;
+      top: calc(8em + 5px);
       background-image: linear-gradient(
         to top,
         rgba(var(--secondary-rgb), 0),

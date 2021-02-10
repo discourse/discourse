@@ -7,7 +7,7 @@ pre-commit:
     prettier:
       glob: "*.{js,es6}"
       include: "app/assets/javascripts|test/javascripts"
-      run: yarn prettier --list-different {staged_files}
+      run: yarn pprettier --list-different {staged_files}
     eslint-es6:
       glob: "*.es6"
       include: "app/assets/javascripts|test/javascripts"
