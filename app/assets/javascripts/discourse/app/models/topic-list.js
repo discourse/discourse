@@ -92,10 +92,11 @@ const TopicList = RestModel.extend({
 
       return ajax({ url: moreUrl }).then((result) => {
         let topicsAdded = 0;
+        let newTopics = [];
 
         if (result) {
           // the new topics loaded from the server
-          const newTopics = TopicList.topicsFrom(this.store, result);
+          newTopics = TopicList.topicsFrom(this.store, result);
 
           this.forEachNew(newTopics, (t) => {
             t.set("highlight", topicsAdded++ === 0);
@@ -108,7 +109,7 @@ const TopicList = RestModel.extend({
           });
 
           Session.currentProp("topicList", this);
-          return this.more_topics_url;
+          return { moreTopicsUrl: this.more_topics_url, newTopics };
         }
       });
     } else {
