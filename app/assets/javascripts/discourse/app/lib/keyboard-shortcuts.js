@@ -1,3 +1,4 @@
+import { isAppWebview } from "discourse/lib/utilities";
 import { later, run, schedule, throttle } from "@ember/runloop";
 import {
   nextTopicUrl,
@@ -22,6 +23,10 @@ const DEFAULT_BINDINGS = {
   C: { handler: "focusComposer" },
   "ctrl+f": { handler: "showPageSearch", anonymous: true },
   "command+f": { handler: "showPageSearch", anonymous: true },
+  "command+left": { handler: "webviewKeyboardBack" },
+  "command+[": { handler: "webviewKeyboardBack" },
+  "command+right": { handler: "webviewKeyboardForward" },
+  "command+]": { handler: "webviewKeyboardForward" },
   "mod+p": { handler: "printTopic", anonymous: true },
   d: { postAction: "deletePost" },
   e: { postAction: "editPost" },
@@ -787,5 +792,17 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
+  },
+
+  webviewKeyboardBack() {
+    if (isAppWebview()) {
+      window.history.back();
+    }
+  },
+
+  webviewKeyboardForward() {
+    if (isAppWebview()) {
+      window.history.forward();
+    }
   },
 };
