@@ -6,4 +6,7 @@
   .navigation a.navigation-link {
     padding: 0.5em;
   }
+  .dashboard-new-features .section-body {
+    grid-template-columns: none;
+  }
 }
