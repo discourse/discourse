@@ -108,6 +108,7 @@
   &.has-alt-auth {
     min-width: 700px;
     .login-left-side {
+      align-self: stretch;
       width: calc(60% - 4em);
       padding: 1em 2em;
     }
@@ -278,7 +279,7 @@
       );
     }
     &:before {
-      top: calc(8em + 4px);
+      top: 7.85em;
       background-image: linear-gradient(
         to top,
         rgba(var(--secondary-rgb), 0),
