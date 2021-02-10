@@ -185,6 +185,10 @@ export default Component.extend({
       "margin-bottom",
       !isDocked && composerHeight > draftComposerHeight ? "0px" : ""
     );
+    this.appEvents.trigger("topic-progress:docked-status-changed", {
+      docked: isDocked,
+      element: this.element,
+    });
   },
 
   click(e) {
