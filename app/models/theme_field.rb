@@ -64,9 +64,6 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  validates :value, format: { without: /#ember\d+|[.]ember-view/ },
-                    if: Proc.new { |field| ThemeField.css_theme_type_ids.include?(field.type_id) }
-
   belongs_to :theme
 
   def process_html(html)
@@ -379,6 +376,8 @@ class ThemeField < ActiveRecord::Base
       result = compile_scss
       if contains_optimized_link?(self.value)
         self.error = I18n.t("themes.errors.optimized_link")
+      elsif contains_ember_css_selector?(self.value)
+        self.error = I18n.t("themes.ember_selector_error")
       else
         self.error = nil unless error.nil?
       end
@@ -395,6 +394,10 @@ class ThemeField < ActiveRecord::Base
 
   def contains_optimized_link?(text)
     OptimizedImage::URL_REGEX.match?(text)
+  end
+
+  def contains_ember_css_selector?(text)
+    text.match(/#ember\d+|[.]ember-view/)
   end
 
   class ThemeFileMatcher

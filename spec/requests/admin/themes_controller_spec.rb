@@ -384,7 +384,12 @@ describe Admin::ThemesController do
         }
       }
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+
+      fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
+      expect(fields[0]["error"]).to eq(I18n.t("themes.ember_selector_error"))
 
       put "/admin/themes/#{theme.id}.json", params: {
         theme: {
@@ -397,7 +402,11 @@ describe Admin::ThemesController do
         }
       }
 
-      expect(response.status).to eq(422)
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
+      expect(fields[0]["error"]).to eq(I18n.t("themes.ember_selector_error"))
     end
 
     it 'blocks remote theme fields from being locally edited' do
