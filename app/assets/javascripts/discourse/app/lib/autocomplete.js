@@ -318,6 +318,14 @@ export default function (options) {
       return createPopper(me[0], div[0], {
         placement: "bottom-start",
         strategy: "fixed",
+        modifiers: [
+          {
+            name: "offset",
+            options: {
+              offset: [0, 2],
+            },
+          },
+        ],
       });
     }
 
