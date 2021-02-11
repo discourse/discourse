@@ -134,6 +134,9 @@ RSpec.describe UploadCreator do
       let(:small_filename) { "logo.png" }
       let(:small_file) { file_from_fixtures(small_filename) }
 
+      let(:large_filename) { "large_and_unoptimized.png" }
+      let(:large_file) { file_from_fixtures(large_filename) }
+
       let(:animated_filename) { "animated.gif" }
       let(:animated_file) { file_from_fixtures(animated_filename) }
 
@@ -210,6 +213,23 @@ RSpec.describe UploadCreator do
           expect(upload.extension).to eq('gif')
           expect(File.extname(upload.url)).to eq('.gif')
           expect(upload.original_filename).to eq('animated.gif')
+        end
+
+        context "png image quality settings" do
+          before do
+            SiteSetting.png_to_jpg_quality = 100
+            SiteSetting.recompress_original_jpg_quality = 90
+            SiteSetting.image_preview_jpg_quality = 10
+          end
+
+          it "should not convert to jpeg when png_to_jpg_quality is 100" do
+            upload = UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(user.id)
+
+            expect(upload.extension).to eq('png')
+            expect(File.extname(upload.url)).to eq('.png')
+            expect(upload.original_filename).to eq('large_and_unoptimized.png')
+          end
+
         end
 
         it 'should not convert animated WEBP images' do
