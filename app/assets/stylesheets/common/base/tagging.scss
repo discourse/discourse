@@ -129,7 +129,7 @@
 .discourse-tags,
 .list-tags,
 .search-category {
-  .discourse-tag.simple:not(:last-of-type):after {
+  .discourse-tag.simple:not(:last-child):after {
     content: ", ";
     margin-left: 1px;
   }
