@@ -3,6 +3,7 @@ import UserChooserComponent from "select-kit/components/user-chooser";
 export default UserChooserComponent.extend({
   pluginApiIdentifiers: ["email-group-user-chooser"],
   classNames: ["email-group-user-chooser"],
+  classNameBindings: ["selectKit.options.fullWidthWrap:full-width-wrap"],
   valueProperty: "id",
   nameProperty: "name",
 
@@ -13,6 +14,7 @@ export default UserChooserComponent.extend({
   selectKitOptions: {
     headerComponent: "email-group-user-chooser-header",
     filterComponent: "email-group-user-chooser-filter",
+    fullWidthWrap: false,
     autoWrap: false,
   },
 
