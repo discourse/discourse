@@ -50,6 +50,10 @@ class ThemeField < ActiveRecord::Base
     @theme_var_type_ids ||= [2]
   end
 
+  def self.css_theme_type_ids
+    @css_theme_type_ids ||= [0, 1]
+  end
+
   def self.force_recompilation!
     find_each do |field|
       field.compiler_version = 0
@@ -372,6 +376,8 @@ class ThemeField < ActiveRecord::Base
       result = compile_scss
       if contains_optimized_link?(self.value)
         self.error = I18n.t("themes.errors.optimized_link")
+      elsif contains_ember_css_selector?(self.value)
+        self.error = I18n.t("themes.ember_selector_error")
       else
         self.error = nil unless error.nil?
       end
@@ -388,6 +394,10 @@ class ThemeField < ActiveRecord::Base
 
   def contains_optimized_link?(text)
     OptimizedImage::URL_REGEX.match?(text)
+  end
+
+  def contains_ember_css_selector?(text)
+    text.match(/#ember\d+|[.]ember-view/)
   end
 
   class ThemeFileMatcher
