@@ -102,6 +102,11 @@ export default Controller.extend(CanCheckEmails, {
     return viewingSelf;
   },
 
+  @discourseComputed("viewingSelf")
+  showRead(viewingSelf) {
+    return viewingSelf;
+  },
+
   @discourseComputed("viewingSelf", "currentUser.admin")
   showPrivateMessages(viewingSelf, isAdmin) {
     return (
