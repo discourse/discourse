@@ -772,6 +772,19 @@ describe CookedPostProcessor do
         end
       end
 
+      it "prioritizes data-thumbnail images" do
+        upload1 = Fabricate(:image_upload, width: 1750, height: 2000)
+        upload2 = Fabricate(:image_upload, width: 1750, height: 2000)
+        post = Fabricate(:post, raw: <<~MD)
+          ![alttext|1750x2000](#{upload1.url})
+          ![alttext|1750x2000|thumbnail](#{upload2.url})
+        MD
+
+        CookedPostProcessor.new(post, disable_loading_image: true).post_process
+
+        expect(post.reload.image_upload_id).to eq(upload2.id)
+      end
+
       context "post image" do
         let(:reply) { Fabricate(:post_with_uploaded_image, post_number: 2) }
         let(:cpp) { CookedPostProcessor.new(reply) }

@@ -190,6 +190,7 @@ export const DEFAULT_LIST = [
   "img[height]",
   "img[title]",
   "img[width]",
+  "img[data-thumbnail]",
   "ins",
   "kbd",
   "li",
