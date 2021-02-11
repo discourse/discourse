@@ -317,6 +317,7 @@ describe Jobs::ExportUserArchive do
           .where(category_id: category_id)
           .first_or_initialize
           .update!(last_seen_at: reset_at)
+        #TopicTrackingState.publish_dismiss_new(user.id, category_id)
       end
 
       # Set Watching First Post on announcements, Tracking on subcategory, Muted on deleted, nothing on subsubcategory

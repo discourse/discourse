@@ -215,12 +215,13 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
-  def self.publish_dismiss_new(user_id, topic_ids: [])
+  def self.publish_dismiss_new(user_id, category_id: nil, tag_id: nil)
+    payload = {}
+    payload[:category_id] = category_id if category_id
+    payload[:tag_id] = tag_id if tag_id
     message = {
       message_type: "dismiss_new",
-      payload: {
-        topic_ids: topic_ids
-      }
+      payload: payload
     }
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
@@ -230,7 +231,7 @@ class TopicTrackingState
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
                   WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :last_visit THEN COALESCE(u.previous_visit_at,u.created_at)
                   ELSE (:now::timestamp - INTERVAL '1 MINUTE' * COALESCE(uo.new_topic_duration_minutes, :default_duration))
-               END, u.created_at, :min_date)",
+               END, us.new_since, :min_date)",
                 now: DateTime.now,
                 last_visit: User::NewTopicDuration::LAST_VISIT,
                 always: User::NewTopicDuration::ALWAYS,
