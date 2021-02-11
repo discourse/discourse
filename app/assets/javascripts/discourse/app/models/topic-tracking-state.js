@@ -182,11 +182,17 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   dismissNewTopic(data) {
-    data.payload.topic_ids.forEach((k) => {
-      const topic = this.states[`t${k}`];
-      this.states[`t${k}`] = Object.assign({}, topic, {
-        is_seen: true,
-      });
+    Object.keys(this.states).forEach((k) => {
+      const topic = this.states[k];
+      if (
+        (!data.payload.category_id ||
+          topic.category_id === parseInt(data.payload.category_id, 10)) &&
+        (!data.payload.tag_id || topic.tags.includes(data.payload.tag_id))
+      ) {
+        this.states[k] = Object.assign({}, topic, {
+          is_seen: true,
+        });
+      }
     });
     this.notifyPropertyChange("states");
     this.incrementMessageCount();

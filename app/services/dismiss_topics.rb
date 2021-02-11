@@ -8,7 +8,6 @@ class DismissTopics
 
   def perform!
     DismissedTopicUser.insert_all(rows) if rows.present?
-    @rows.map { |row| row[:topic_id] }
   end
 
   private
@@ -18,7 +17,6 @@ class DismissTopics
       .joins("LEFT JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{@user.id}")
       .where("topics.created_at >= ?", since_date)
       .where("topic_users.id IS NULL")
-      .where("topics.archetype <> ?", Archetype.private_message)
       .order("topics.created_at DESC")
       .limit(SiteSetting.max_new_topics).map do |topic|
       {
@@ -40,6 +38,6 @@ class DismissTopics
       else
         new_topic_duration_minutes.minutes.ago
       end
-    [setting_date, @user.created_at, Time.at(SiteSetting.min_new_topics_time).to_datetime].max
+    [setting_date, @user.user_stat.new_since, Time.at(SiteSetting.min_new_topics_time).to_datetime].max
   end
 end

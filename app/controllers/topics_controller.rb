@@ -910,30 +910,36 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
-    topic_scope =
-      if params[:category_id].present?
-        category_ids = [params[:category_id]]
-        if params[:include_subcategories] == 'true'
-          category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
-        end
-
-        scope = Topic.where(category_id: category_ids)
-        scope = scope.joins(:tags).where(tags: { name: params[:tag_id] }) if params[:tag_id]
-        scope
-      elsif params[:tag_id].present?
-        Topic.joins(:tags).where(tags: { name: params[:tag_id] })
-      else
-        if params[:tracked].to_s == "true"
-          TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
-        else
-          current_user.user_stat.update_column(:new_since, Time.zone.now)
-          Topic
-        end
+    if params[:category_id].present?
+      category_ids = [params[:category_id]]
+      if params[:include_subcategories] == 'true'
+        category_ids = category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
       end
 
-    dismissed_topic_ids = DismissTopics.new(current_user, topic_scope).perform!
-    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+      topic_scope =
+        if params[:tag_id]
+          Topic.where(category_id: category_ids).joins(:tags).where(tags: { name: params[:tag_id] })
+        else
+          Topic.where(category_id: category_ids)
+        end
 
+      DismissTopics.new(current_user, topic_scope).perform!
+      category_ids.each do |category_id|
+        TopicTrackingState.publish_dismiss_new(current_user.id, category_id: category_id, tag_id: params[:tag_id])
+      end
+    elsif params[:tag_id].present?
+      DismissTopics.new(current_user, Topic.joins(:tags).where(tags: { name: params[:tag_id] })).perform!
+      TopicTrackingState.publish_dismiss_new(current_user.id, tag_id: params[:tag_id])
+    else
+      if params[:tracked].to_s == "true"
+        topics = TopicQuery.tracked_filter(TopicQuery.new(current_user).new_results, current_user.id)
+        topic_users = topics.map { |topic| { topic_id: topic.id, user_id: current_user.id, last_read_post_number: 0 } }
+        TopicUser.insert_all(topic_users) if !topic_users.empty?
+      else
+        current_user.user_stat.update_column(:new_since, Time.zone.now)
+        TopicTrackingState.publish_dismiss_new(current_user.id)
+      end
+    end
     render body: nil
   end
 
