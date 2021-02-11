@@ -115,10 +115,14 @@ module DiscourseUpdates
       keys.present? ? keys.map { |k| Discourse.redis.hgetall(k) } : []
     end
 
-    def perform_new_feature_check
+    def new_features_payload
       response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
-      json = JSON.parse(response.body)
-      Discourse.redis.set(new_features_key, response.body)
+      JSON.parse(response.body)
+    end
+
+    def update_new_features(json = nil)
+      json ||= new_features_payload
+      Discourse.redis.set(new_features_key, json)
     end
 
     def new_features

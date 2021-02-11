@@ -6,7 +6,8 @@ module Jobs
     every 1.day
 
     def execute(args)
-      DiscourseUpdates.perform_new_feature_check
+      @new_features_json ||= DiscourseUpdates.new_features_payload
+      DiscourseUpdates.update_new_features(@new_features_json)
     end
   end
 
