@@ -370,6 +370,36 @@ describe Admin::ThemesController do
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
 
+    it 'prevents theme update when using ember css selectors' do
+      child_theme = Fabricate(:theme, component: true)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          child_theme_ids: [child_theme.id],
+          name: 'my test name',
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'scss', target: 'desktop', value: '.ember-view{color: blue;}' },
+          ]
+        }
+      }
+
+      expect(response.status).to eq(422)
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          child_theme_ids: [child_theme.id],
+          name: 'my test name',
+          theme_fields: [
+            { name: 'scss', target: 'common', value: '' },
+            { name: 'scss', target: 'desktop', value: '#ember392{color: blue;}' },
+          ]
+        }
+      }
+
+      expect(response.status).to eq(422)
+    end
+
     it 'blocks remote theme fields from being locally edited' do
       r = RemoteTheme.create!(remote_url: "https://magic.com/repo.git")
       theme.update!(remote_theme_id: r.id)

@@ -222,6 +222,7 @@ class Admin::ThemesController < Admin::AdminController
         format.json do
           error = @theme.errors.full_messages.join(", ").presence
           error = I18n.t("themes.bad_color_scheme") if @theme.errors[:color_scheme].present?
+          error = I18n.t("themes.ember_selector_error") if @theme.theme_fields.each { |tf| tf.errors.messages[:value].present? }
           error ||= I18n.t("themes.other_error")
 
           render json: { errors: [ error ] }, status: :unprocessable_entity

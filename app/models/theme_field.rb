@@ -50,6 +50,10 @@ class ThemeField < ActiveRecord::Base
     @theme_var_type_ids ||= [2]
   end
 
+  def self.css_theme_type_ids
+    @css_theme_type_ids ||= [0, 1]
+  end
+
   def self.force_recompilation!
     find_each do |field|
       field.compiler_version = 0
@@ -59,6 +63,9 @@ class ThemeField < ActiveRecord::Base
 
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
+
+  validates :value, format: { without: /#ember\d+|[.]ember-view/ },
+                    if: Proc.new { |field| ThemeField.css_theme_type_ids.include?(field.type_id) }
 
   belongs_to :theme
 
