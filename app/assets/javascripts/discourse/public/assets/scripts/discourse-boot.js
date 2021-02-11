@@ -233,6 +233,13 @@
         head.append(script);
       });
 
+      if (data.bootstrap.theme_ids) {
+        let theme_ids = document.createElement("meta");
+        theme_ids.setAttribute("name", "discourse_theme_ids");
+        theme_ids.setAttribute("content", data.bootstrap.theme_ids);
+        head.append(theme_ids);
+      }
+
       loadScript(locale).then(() => {
         define("I18n", ["exports"], function (exports) {
           return I18n;
