@@ -23,6 +23,20 @@ RSpec.describe TopicTimer, type: :model do
         topic_timer.update!(execute_at: 1.minute.ago, created_at: 10.minutes.ago)
         expect(TopicTimer.pending_timers.pluck(:id)).to include(topic_timer.id)
       end
+
+      describe "duration values" do
+        it "does not allow durations <= 0" do
+          topic_timer.duration_minutes = -1
+          topic_timer.save
+          expect(topic_timer.errors.full_messages.first).to include("Duration minutes must be greater than 0.")
+        end
+
+        it "does not allow crazy big durations (2 years in minutes)" do
+          topic_timer.duration_minutes = 3.years.to_i / 60
+          topic_timer.save
+          expect(topic_timer.errors.full_messages.first).to include("Duration minutes cannot be more than 2 years.")
+        end
+      end
     end
     describe '#status_type' do
       it 'should ensure that only one active public topic status update exists' do

@@ -475,19 +475,23 @@ class TopicsController < ApplicationController
     options.merge!(duration_minutes: params[:duration_minutes].to_i) if params[:duration_minutes].present?
     options.merge!(duration: params[:duration].to_i) if params[:duration].present?
 
-    topic_status_update = topic.set_or_create_timer(
-      status_type,
-      params[:time],
-      **options
-    )
+    begin
+      topic_timer = topic.set_or_create_timer(
+        status_type,
+        params[:time],
+        **options
+      )
+    rescue ActiveRecord::RecordInvalid => e
+      return render_json_error(e.message)
+    end
 
     if topic.save
       render json: success_json.merge!(
-        execute_at: topic_status_update&.execute_at,
-        duration_minutes: topic_status_update&.duration_minutes,
-        based_on_last_post: topic_status_update&.based_on_last_post,
+        execute_at: topic_timer&.execute_at,
+        duration_minutes: topic_timer&.duration_minutes,
+        based_on_last_post: topic_timer&.based_on_last_post,
         closed: topic.closed,
-        category_id: topic_status_update&.category_id
+        category_id: topic_timer&.category_id
       )
     else
       render_json_error(topic)
