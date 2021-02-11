@@ -22,7 +22,7 @@ class TopicTimer < ActiveRecord::Base
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :executed_at_in_future?
-  validate :duration_ok?
+  validate :duration_in_range?
 
   scope :scheduled_bump_topics, -> { where(status_type: TopicTimer.types[:bump], deleted_at: nil).pluck(:topic_id) }
   scope :pending_timers, ->(before_time = Time.now.utc) do
@@ -137,7 +137,7 @@ class TopicTimer < ActiveRecord::Base
 
   private
 
-  def duration_ok?
+  def duration_in_range?
     return if duration_minutes.blank?
 
     if duration_minutes.to_i <= 0
