@@ -234,6 +234,7 @@
   .login-welcome-header {
     grid-area: header;
     padding: 1em 1em 1em 1em;
+    height: calc(110px - 2em);
     .login-title {
       font-size: 2.75em;
     }
@@ -279,7 +280,7 @@
       );
     }
     &:before {
-      top: 7.85em;
+      top: 110px;
       background-image: linear-gradient(
         to top,
         rgba(var(--secondary-rgb), 0),
