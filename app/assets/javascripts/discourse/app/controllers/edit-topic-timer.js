@@ -121,6 +121,9 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     onChangeStatusType(value) {
+      if (value !== CLOSE_STATUS_TYPE) {
+        this.set("topicTimer.based_on_last_post", false);
+      }
       this.set("topicTimer.status_type", value);
     },
 
@@ -145,14 +148,24 @@ export default Controller.extend(ModalFunctionality, {
 
       if (
         this.get("topicTimer.duration_minutes") &&
-        !this.get("topicTimer.updateTime") &&
-        this.get("topicTimer.duration_minutes") <= 0
+        !this.get("topicTimer.updateTime")
       ) {
-        this.flash(
-          I18n.t("topic.topic_status_update.min_duration"),
-          "alert-error"
-        );
-        return;
+        if (this.get("topicTimer.duration_minutes") <= 0) {
+          this.flash(
+            I18n.t("topic.topic_status_update.min_duration"),
+            "alert-error"
+          );
+          return;
+        }
+
+        // cannot be more than 2 years
+        if (this.get("topicTimer.duration_minutes") > 2 * 365 * 1440) {
+          this.flash(
+            I18n.t("topic.topic_status_update.max_duration"),
+            "alert-error"
+          );
+          return;
+        }
       }
 
       this._setTimer(
