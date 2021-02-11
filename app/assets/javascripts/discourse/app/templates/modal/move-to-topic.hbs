@@ -36,7 +36,11 @@
         {{choose-message currentTopicId=model.id selectedTopicId=selectedTopicId}}
 
         <label>{{i18n "topic.move_to_new_message.participants"}}</label>
-        {{user-selector usernames=participants class="participant-selector"}}
+        {{email-group-user-chooser
+          class="participant-selector"
+          value=participants
+          onChange=(action (mut participants))
+        }}
       </form>
     {{/if}}
 
