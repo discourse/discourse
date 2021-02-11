@@ -967,6 +967,8 @@ en:
         sunday: "Sunday"
         to: "to"
       activity_stream: "Activity"
+      read: "Read"
+      read_help: "Recently read topics"
       preferences: "Preferences"
       feature_topic_on_profile:
         open_search: "Select a New Topic"
