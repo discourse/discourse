@@ -87,13 +87,17 @@ export default Controller.extend(
       return getURL(`/images/emoji/${emojiSet}/wave/${random}.png`);
     },
 
-    @discourseComputed("userFields", "hasAtLeastOneLoginButton")
-    modalBodyClasses(userFields, hasAtLeastOneLoginButton) {
+    @discourseComputed(
+      "userFields",
+      "hasAtLeastOneLoginButton",
+      "hasAuthOptions"
+    )
+    modalBodyClasses(userFields, hasAtLeastOneLoginButton, hasAuthOptions) {
       const classes = [];
       if (userFields) {
         classes.push("has-user-fields");
       }
-      if (hasAtLeastOneLoginButton) {
+      if (hasAtLeastOneLoginButton && !hasAuthOptions) {
         classes.push("has-alt-auth");
       }
       return classes.join(" ");
