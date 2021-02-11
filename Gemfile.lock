@@ -266,7 +266,9 @@ GEM
       mustache
       nokogiri (~> 1.7)
       sanitize
-    openssl-signature_algorithm (1.0.0)
+    openssl (2.2.0)
+    openssl-signature_algorithm (1.1.1)
+      openssl (~> 2.0)
     optimist (3.0.1)
     parallel (1.20.1)
     parallel_tests (3.4.0)
