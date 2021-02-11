@@ -149,7 +149,7 @@ class UserOption < ActiveRecord::Base
       else
         duration.minutes.ago
       end,
-      user.user_stat.new_since,
+      user.created_at,
       Time.at(SiteSetting.min_new_topics_time).to_datetime
     ]
 
