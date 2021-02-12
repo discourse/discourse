@@ -6,6 +6,7 @@ class FakeLogger
   def initialize
     @warnings = []
     @errors = []
+    @debug = []
     @infos = []
     @fatals = []
   end
@@ -24,6 +25,10 @@ class FakeLogger
 
   def fatal(message)
     @fatals << message
+  end
+
+  def debug(message)
+    @debug << message
   end
 
   def formatter
