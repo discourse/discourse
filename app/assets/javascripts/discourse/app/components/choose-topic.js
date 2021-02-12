@@ -95,6 +95,9 @@ export default Component.extend({
                 .mapBy("topic")
                 .filter((t) => t.id !== currentTopicId)
             );
+            if (this.topics.length === 1) {
+              this.send("chooseTopic", this.topics[0]);
+            }
           } else {
             this.setProperties({ topics: null, loading: false });
           }
