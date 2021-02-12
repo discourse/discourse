@@ -117,12 +117,12 @@ module DiscourseUpdates
 
     def new_features_payload
       response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
-      JSON.parse(response.body)
+      response.body
     end
 
-    def update_new_features(json = nil)
-      json ||= new_features_payload
-      Discourse.redis.set(new_features_key, json)
+    def update_new_features(payload = nil)
+      payload ||= new_features_payload
+      Discourse.redis.set(new_features_key, payload)
     end
 
     def new_features
