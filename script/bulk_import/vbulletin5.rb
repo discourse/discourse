@@ -4,12 +4,13 @@ require_relative "base"
 require "set"
 require "mysql2"
 require "htmlentities"
+require 'ruby-bbcode-to-md'
 
-class BulkImport::VBulletin < BulkImport::Base
+class BulkImport::VBulletin5 < BulkImport::Base
 
   DB_PREFIX = ""
   SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/shared/import/data/attachments'
+  ATTACH_DIR ||= ENV['ATTACH_DIR'] || '/shared/import/data/attachments'
   AVATAR_DIR ||= ENV['AVATAR_DIR'] || '/shared/import/data/customavatars'
   ROOT_NODE = 2
 
@@ -24,6 +25,7 @@ class BulkImport::VBulletin < BulkImport::Base
 
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
+    @bbcode_to_md = true
 
     @client = Mysql2::Client.new(
       host: host,
@@ -51,31 +53,33 @@ class BulkImport::VBulletin < BulkImport::Base
     # SiteSetting.clean_up_uploads = false
     # SiteSetting.clean_orphan_uploads_grace_period_hours = 43200
 
-    import_groups
-    import_users
-    import_group_users
+    #import_groups
+    #import_users
+    #import_group_users
 
-    import_user_emails
-    import_user_stats
+    #import_user_emails
+    #import_user_stats
+    #import_user_profiles
+    #import_user_account_id
 
-    import_user_profiles
-    import_categories
-    import_topics
-    import_topic_first_posts
-    import_replies
+    #import_categories
+    #import_topics
+    #import_topic_first_posts
+    #import_replies
 
-    import_likes
+    #import_likes
 
-    import_private_topics
-    import_topic_allowed_users
-    import_private_first_posts
-    import_private_replies
+    #import_private_topics
+    #import_topic_allowed_users
+    #import_private_first_posts
+    #import_private_replies
+    
+    #create_oauth_records
 
     # --- need writing below
     #create_permalink_file
-    #import_attachments
+    import_attachments
     #import_avatars
-    #import_signatures
   end
 
   def import_groups
@@ -131,6 +135,25 @@ class BulkImport::VBulletin < BulkImport::Base
     end
   end
 
+  def import_user_account_id
+    puts "Importing user account ids..."
+
+    users = mysql_stream <<-SQL
+      SELECT u.userid, u.account_id
+        FROM #{DB_PREFIX}user u
+       ORDER BY u.userid
+    SQL
+
+    create_custom_fields("user", "account_id", users) do |row|
+      user_id = user_id_from_imported_id(row[0])
+      next if user_id.nil?
+      { 
+        record_id: user_id,
+        value: row[1]
+      }
+    end
+  end
+
   def import_user_emails
     puts "Importing user emails..."
 
@@ -145,7 +168,7 @@ class BulkImport::VBulletin < BulkImport::Base
       {
         imported_id: row[0],
         imported_user_id: row[0],
-        email: row[1],
+        email: random_email,
         created_at: Time.zone.at(row[2])
       }
     end
@@ -330,14 +353,13 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_posts(topics) do |row|
-      
       post = {
         imported_id: row[0],
         user_id: user_id_from_imported_id(row[2]),
         topic_id: topic_id_from_imported_id(row[0]),
         created_at: Time.zone.at(row[3]),
         hidden: row[4] != 1,
-        raw: normalize_text(row[5]),
+        raw: preprocess_raw(row[5]),
       }
 
       post
@@ -368,7 +390,7 @@ class BulkImport::VBulletin < BulkImport::Base
         topic_id: topic_id_from_imported_id(row[2]) || row[0],
         created_at: Time.zone.at(row[4]),
         hidden: row[5] == 0,
-        raw: normalize_text(row[3]),
+        raw: preprocess_raw(row[3]),
       }
 
       post
@@ -418,7 +440,7 @@ class BulkImport::VBulletin < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
-      title = row[0] || "No title given"
+      title = row[1] || "No title given"
       {
         archetype: Archetype.private_message,
         imported_id: row[0] + PRIVATE_OFFSET,
@@ -477,7 +499,7 @@ class BulkImport::VBulletin < BulkImport::Base
         topic_id: topic_id_from_imported_id(row[0] + PRIVATE_OFFSET),
         user_id: user_id_from_imported_id(row[1]),
         created_at: Time.zone.at(row[3]),
-        raw: normalize_text(row[2]),
+        raw: preprocess_raw(row[2]),
       }
     end
   end
@@ -503,7 +525,7 @@ class BulkImport::VBulletin < BulkImport::Base
         topic_id: topic_id_from_imported_id(row[2] + PRIVATE_OFFSET),
         user_id: user_id_from_imported_id(row[1]),
         created_at: Time.zone.at(row[4]),
-        raw: normalize_text(row[3]),
+        raw: preprocess_raw(row[3]),
       }
     end
   end
@@ -576,55 +598,118 @@ class BulkImport::VBulletin < BulkImport::Base
     puts e.message
     puts sql
   end
-
+  
   def import_attachments
     puts '', 'importing attachments...'
 
-    RateLimiter.disable
-    current_count = 0
+    ext = mysql_query("SELECT GROUP_CONCAT(DISTINCT(extension)) exts FROM #{DB_PREFIX}filedata").first[0].split(',')
+    SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + ext).uniq.join("|")
 
-    total_count = mysql_query(<<-SQL
-      SELECT COUNT(p.postid) count
-        FROM #{DB_PREFIX}post p
-        JOIN #{DB_PREFIX}thread t ON t.threadid = p.threadid
-       WHERE t.firstpostid <> p.postid
+    uploads = mysql_query <<-SQL
+    SELECT n.parentid nodeid, a.filename, fd.userid, LENGTH(fd.filedata) AS dbsize, filedata, fd.filedataid
+      FROM #{DB_PREFIX}attach a
+      LEFT JOIN #{DB_PREFIX}filedata fd ON fd.filedataid = a.filedataid
+      LEFT JOIN #{DB_PREFIX}node n on n.nodeid = a.nodeid
     SQL
-    ).first[0].to_i
 
-    success_count = 0
-    fail_count = 0
+    current_count = 0
+    total_count = uploads.count
 
-    attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
+    RateLimiter.disable
 
-    Post.find_each do |post|
-      current_count += 1
-      print_status current_count, total_count
+    uploads.each do |upload|
+      post_id = PostCustomField.where(name: 'import_id').where(value: upload[0]).first&.post_id
+      if post_id.nil?
+        puts "Post for #{upload['nodeid']} not found"
+        next
+      end
+      post = Post.find(post_id)
 
-      new_raw = post.raw.dup
-      new_raw.gsub!(attachment_regex) do |s|
-        matches = attachment_regex.match(s)
-        attachment_id = matches[1]
+      filename = File.join(ATTACH_DIR, upload[2].to_s.split('').join('/'), "#{upload[5]}.attach")
+      real_filename = upload[1]
+      real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
 
-        upload, filename = find_upload(post, attachment_id)
-        unless upload
-          fail_count += 1
+      unless File.exists?(filename)
+        # attachments can be on filesystem or in database
+        # try to retrieve from database if the file did not exist on filesystem
+        if upload[3].to_i == 0
+          puts "Attachment file #{upload[5]} doesn't exist"
           next
-          # should we strip invalid attach tags?
         end
 
-        html_for_upload(upload, filename)
+        tmpfile = 'attach_' + upload[5].to_s
+        filename = File.join('/tmp/', tmpfile)
+        File.open(filename, 'wb') { |f|
+          #f.write(PG::Connection.unescape_bytea(row['filedata']))
+          f.write(upload[4])
+        }
       end
 
-      if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
+      upl_obj = create_upload(post.user.id, filename, real_filename)
+      if upl_obj&.persisted?
+        html = html_for_upload(upl_obj, real_filename)
+        if !post.raw[html]
+          post.raw += "\n\n#{html}\n\n"
+          post.save!
+          PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
+        end
+      else
+        puts "Fail"
+        exit
       end
-
-      success_count += 1
+      current_count += 1
+      print_status(current_count, total_count)
     end
-
-    puts "", "imported #{success_count} attachments... failed: #{fail_count}."
-    RateLimiter.enable
   end
+
+  #def import_attachments
+  #  puts '', 'importing attachments...'
+
+  #  RateLimiter.disable
+  #  current_count = 0
+
+  #  total_count = mysql_query(<<-SQL
+  #    SELECT COUNT(p.postid) count
+  #      FROM #{DB_PREFIX}post p
+  #      JOIN #{DB_PREFIX}thread t ON t.threadid = p.threadid
+  #     WHERE t.firstpostid <> p.postid
+  #  SQL
+  #  ).first[0].to_i
+
+  #  success_count = 0
+  #  fail_count = 0
+
+  #  attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
+
+  #  Post.find_each do |post|
+  #    current_count += 1
+  #    print_status current_count, total_count
+
+  #    new_raw = post.raw.dup
+  #    new_raw.gsub!(attachment_regex) do |s|
+  #      matches = attachment_regex.match(s)
+  #      attachment_id = matches[1]
+
+  #      upload, filename = find_upload(post, attachment_id)
+  #      unless upload
+  #        fail_count += 1
+  #        next
+  #        # should we strip invalid attach tags?
+  #      end
+
+  #      html_for_upload(upload, filename)
+  #    end
+
+  #    if new_raw != post.raw
+  #      PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from vBulletin')
+  #    end
+
+  #    success_count += 1
+  #  end
+
+  #  puts "", "imported #{success_count} attachments... failed: #{fail_count}."
+  #  RateLimiter.enable
+  #end
 
   def import_avatars
     if AVATAR_DIR && File.exists?(AVATAR_DIR)
@@ -666,41 +751,17 @@ class BulkImport::VBulletin < BulkImport::Base
     end
   end
 
-  def import_signatures
-    puts "Importing user signatures..."
+  def create_oauth_records
+    puts "", "Creating OAuth records..."
 
-    total_count = mysql_query(<<-SQL
-      SELECT COUNT(userid) count
-        FROM #{DB_PREFIX}sigparsed
+    DB.exec <<~SQL
+      INSERT INTO oauth2_user_infos (user_id, uid, provider, created_at, updated_at)
+      SELECT u.id, ucf.value, ucf.name, ucf.created_at, ucf.created_at
+        FROM user_custom_fields ucf
+        JOIN users u ON u.id = ucf.user_id
+       WHERE ucf.name = 'import_account_id' AND ucf.value IS NOT NULL
+      ON CONFLICT DO NOTHING
     SQL
-    ).first[0].to_i
-    current_count = 0
-
-    user_signatures = mysql_stream <<-SQL
-        SELECT userid, signatureparsed
-          FROM #{DB_PREFIX}sigparsed
-      ORDER BY userid
-    SQL
-
-    user_signatures.each do |sig|
-      current_count += 1
-      print_status current_count, total_count
-      user_id = sig[0]
-      user_sig = sig[1]
-      next unless user_id.present? && user_sig.present?
-
-      u = UserCustomField.find_by(name: "import_id", value: user_id).try(:user)
-      next unless u.present?
-
-      # can not hold dupes
-      UserCustomField.where(user_id: u.id, name: ["see_signatures", "signature_raw", "signature_cooked"]).destroy_all
-
-      user_sig.gsub!(/\[\/?sigpic\]/i, "")
-
-      UserCustomField.create!(user_id: u.id, name: "see_signatures", value: true)
-      UserCustomField.create!(user_id: u.id, name: "signature_raw", value: user_sig)
-      UserCustomField.create!(user_id: u.id, name: "signature_cooked", value: PrettyText.cook(user_sig, omit_nofollow: false))
-    end
   end
 
   def extract_pm_title(title)
@@ -712,6 +773,43 @@ class BulkImport::VBulletin < BulkImport::Base
     date_of_birth = Date.strptime(birthday.gsub(/[^\d-]+/, ""), "%m-%d-%Y") rescue nil
     return if date_of_birth.nil?
     date_of_birth.year < 1904 ? Date.new(1904, date_of_birth.month, date_of_birth.day) : date_of_birth
+  end
+
+  def preprocess_raw(raw)
+    return "" if raw.nil?
+    raw = normalize_text(raw)
+    raw = raw.dup
+
+    # [PLAINTEXT]...[/PLAINTEXT]
+    raw.gsub!(/\[\/?PLAINTEXT\]/i, "\n\n```\n\n")
+
+    # [FONT=font]...[/FONT]
+    raw.gsub!(/\[FONT=\w*\]/im, "")
+    raw.gsub!(/\[\/FONT\]/im, "")
+
+    # @[URL=<user_profile>]<username>[/URL]
+    # [USER=id]username[/USER]
+    # [MENTION=id]username[/MENTION]
+    raw.gsub!(/@\[URL=\"\S+\"\]([\w\s]+)\[\/URL\]/i) { "@#{$1.gsub(" ", "_")}" }
+    raw.gsub!(/\[USER=\"\d+\"\]([\S]+)\[\/USER\]/i) { "@#{$1.gsub(" ", "_")}" }
+    raw.gsub!(/\[MENTION=\d+\]([\S]+)\[\/MENTION\]/i) { "@#{$1.gsub(" ", "_")}" }
+
+    # [TABLE]...[/TABLE]
+    raw.gsub!(/\[TABLE=\\"[\w:\-\s,]+\\"\]/i, "")
+    raw.gsub!(/\[\/TABLE\]/i, "")
+
+    # [HR]...[/HR]
+    raw.gsub(/\[HR\]\s*\[\/HR\]/im, "---")
+
+    # [VIDEO=youtube_share;<id>]...[/VIDEO]
+    # [VIDEO=vimeo;<id>]...[/VIDEO]
+    raw.gsub!(/\[VIDEO=YOUTUBE_SHARE;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
+    raw.gsub!(/\[VIDEO=VIMEO;([^\]]+)\].*?\[\/VIDEO\]/i) { "\nhttps://vimeo.com/#{$1}\n" }
+
+    # remove attachments
+    raw.gsub!(/\[attach[^\]]*\].*\[\/attach\]/i, "")
+
+    raw
   end
 
   def print_status(current, max, start_time = nil)
@@ -735,5 +833,5 @@ class BulkImport::VBulletin < BulkImport::Base
 
 end
 
-BulkImport::VBulletin.new.run
+BulkImport::VBulletin5.new.run
 
