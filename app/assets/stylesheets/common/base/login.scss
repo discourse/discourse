@@ -27,6 +27,18 @@
   }
 }
 
+.d-modal.login-modal {
+  #modal-alert:empty {
+    display: none !important;
+  }
+  
+  #modal-alert:not(:empty) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal {

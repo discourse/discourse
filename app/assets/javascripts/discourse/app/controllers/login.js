@@ -83,23 +83,28 @@ export default Controller.extend(ModalFunctionality, {
     "awaitingApproval",
     "hasAtLeastOneLoginButton",
     "showSecondFactor",
-    "canLoginLocal"
+    "canLoginLocal",
+    "showSecurityKey"
   )
   modalBodyClasses(
     awaitingApproval,
     hasAtLeastOneLoginButton,
     showSecondFactor,
-    canLoginLocal
+    canLoginLocal,
+    showSecurityKey
   ) {
     const classes = ["login-modal"];
     if (awaitingApproval) {
       classes.push("awaiting-approval");
     }
-    if (hasAtLeastOneLoginButton && !showSecondFactor) {
+    if (hasAtLeastOneLoginButton && !showSecondFactor && !showSecurityKey) {
       classes.push("has-alt-auth");
     }
     if (!canLoginLocal) {
       classes.push("no-local-login");
+    }
+    if (showSecondFactor || showSecurityKey) {
+      classes.push("second-factor");
     }
     return classes.join(" ");
   },
@@ -166,8 +171,6 @@ export default Controller.extend(ModalFunctionality, {
               (result.security_key_enabled || result.totp_enabled) &&
               !this.secondFactorRequired
             ) {
-              document.getElementById("modal-alert").style.display = "none";
-
               this.setProperties({
                 otherMethodAllowed: result.multiple_second_factor_methods,
                 secondFactorRequired: true,
