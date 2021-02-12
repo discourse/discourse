@@ -29,5 +29,9 @@ export default Controller.extend(ModalFunctionality, {
           .finally(() => this.set("loading", false));
       });
     },
+
+    updateIgnoredUsername(selected) {
+      this.set("ignoredUsername", selected.firstObject);
+    },
   },
 });

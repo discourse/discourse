@@ -80,7 +80,7 @@ export default Controller.extend(ModalFunctionality, {
       categoryId: null,
       topicName: "",
       tags: null,
-      participants: null,
+      participants: [],
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
@@ -133,7 +133,7 @@ export default Controller.extend(ModalFunctionality, {
       } else if (type === "existingMessage") {
         mergeOptions = {
           destination_topic_id: this.selectedTopicId,
-          participants: this.participants,
+          participants: this.participants.join(","),
           archetype: "private_message",
         };
         moveOptions = Object.assign(

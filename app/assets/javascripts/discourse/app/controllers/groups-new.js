@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import bootbox from "bootbox";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
@@ -37,6 +38,16 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 export default Controller.extend({
   saving: null,
 
+  @discourseComputed("model.ownerUsernames")
+  splitOwnerUsernames(owners) {
+    return owners && owners.length ? owners.split(",") : [];
+  },
+
+  @discourseComputed("model.usernames")
+  splitUsernames(usernames) {
+    return usernames && usernames.length ? usernames.split(",") : [];
+  },
+
   @action
   save() {
     this.set("saving", true);
@@ -54,5 +65,15 @@ export default Controller.extend({
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));
+  },
+
+  @action
+  updateOwnerUsernames(selected) {
+    this.set("model.ownerUsernames", selected.join(","));
+  },
+
+  @action
+  updateUsernames(selected) {
+    this.set("model.usernames", selected.join(","));
   },
 });

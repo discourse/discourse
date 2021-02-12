@@ -170,5 +170,13 @@ export default Controller.extend({
     toggleFilters() {
       this.toggleProperty("filtersExpanded");
     },
+
+    updateFilterReviewedBy(selected) {
+      this.set("filterReviewedBy", selected.firstObject);
+    },
+
+    updateFilterUsername(selected) {
+      this.set("filterUsername", selected.firstObject);
+    },
   },
 });

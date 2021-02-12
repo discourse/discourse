@@ -60,24 +60,29 @@
 
       <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_reviewed_by"}}
-        {{user-selector
-          excludeCurrentUser=false
-          usernames=filterReviewedBy
-          fullWidthWrap=true
-          single=true
-          class="user-selector"
-          canReceiveUpdates=true}}
+        {{email-group-user-chooser
+          value=filterReviewedBy
+          onChange=(action "updateFilterReviewedBy")
+          options=(hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          )
+        }}
       </div>
 
       <div class="reviewable-filter topic-filter">
         {{i18n "review.filtered_user"}}
-        {{user-selector
-          excludeCurrentUser=false
-          usernames=filterUsername
-          fullWidthWrap=true
-          single=true
+        {{email-group-user-chooser
+          value=filterUsername
+          onChange=(action "updateFilterUsername")
           class="user-selector"
-          canReceiveUpdates=true}}
+          options=(hash
+            maximum=1
+            excludeCurrentUser=false
+            fullWidthWrap=true
+          )
+        }}
       </div>
 
       {{#if filterTopic}}
