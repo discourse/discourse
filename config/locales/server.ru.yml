@@ -57,6 +57,7 @@ ru:
   themes:
     bad_color_scheme: "Не удаётся обновить тему, недопустимая цветовая палитра"
     other_error: "При обновлении темы оформления что-то пошло не так."
+    ember_selector_error: "К сожалению, использование CSS-селекторов #ember или .ember-view запрещено, поскольку эти имена создаются динамически во время выполнения кода и со временем будут меняться. Попробуйте другой селектор."
     compile_error:
       unrecognized_extension: "Нераспознанное расширение файла: %{extension}"
     import_error:
@@ -610,6 +611,9 @@ ru:
           attributes:
             execute_at:
               in_the_past: "должно быть в будущем."
+            duration_minutes:
+              cannot_be_zero: "Значение должно быть больше 0."
+              exceeds_maximum: "Период времени не должен быть более 2 лет."
         translation_overrides:
           attributes:
             value:

@@ -57,6 +57,7 @@ de:
   themes:
     bad_color_scheme: "Kann Theme nicht aktualisieren, weil die Farbpalette ungültig ist"
     other_error: "Etwas ist schief gelaufen beim Aktualisieren des Theme"
+    ember_selector_error: "Tut uns leid, die Verwendung von #ember- oder .ember-view-CSS-Selektoren ist nicht zulässig, da diese zur Laufzeit dynamisch generiert werden und sich im Laufe der Zeit ändern werden, was schließlich zu defektem CSS führt. Probiere einen anderen Selektor."
     compile_error:
       unrecognized_extension: "Unbekannte Dateiendung: %{extension}"
     import_error:
@@ -566,6 +567,9 @@ de:
           attributes:
             execute_at:
               in_the_past: "muss in der Zukunft liegen."
+            duration_minutes:
+              cannot_be_zero: "muss größer als 0 sein."
+              exceeds_maximum: "darf nicht mehr als 2 Jahre betragen."
         translation_overrides:
           attributes:
             value:

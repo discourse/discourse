@@ -1409,7 +1409,6 @@ ja:
     search_hint: "ユーザ名、メールアドレスまたはIPアドレス"
     create_account:
       disclaimer: "登録すると<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
-      title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
     forgot_password:
       title: "パスワードをリセット"
@@ -1454,7 +1453,6 @@ ja:
       security_key_not_allowed_error: "セキュリティキー認証プロセスがタイムアウトしたか、キャンセルされました。"
       security_key_no_matching_credential_error: "提供されたセキュリティキーに一致する資格情報が見つかりませんでした。"
       security_key_support_missing_error: "現在のデバイスまたはブラウザは、セキュリティキーの使用をサポートしていません。別の方法を使用してください。"
-      email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
       error: "不明なエラー"
       cookies_error: "お使いのブラウザでCookieが無効になっているようです。最初に有効にしないとログインできない場合があります。"
@@ -2324,7 +2322,6 @@ ja:
       notifications:
         watching:
           title: "ウォッチ中"
-          description: "このカテゴリの、すべてのトピックの新しい投稿が通知されます。また、新しい返信の数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチする"
         tracking:

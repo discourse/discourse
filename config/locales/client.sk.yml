@@ -1091,7 +1091,6 @@ sk:
     trust_level: "Stupeň dôvery"
     search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
-      title: "Vytvoriť nový účet"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     forgot_password:
       title: "Obnovenie hesla"
@@ -1115,7 +1114,6 @@ sk:
       username: "Používateľ"
       password: "Heslo"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
-      email_placeholder: "e-mail alebo používateľské meno"
       caps_lock_warning: "Caps Lock je zapnutý"
       error: "Neznáma chyba"
       rate_limit: "Pred opätovným prihlásením chvíľku počkajte."
@@ -1851,18 +1849,15 @@ sk:
       notifications:
         watching:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky témy v týchto kategóriách. Budete upozornený na každý nový príspevok v každej téme. Zároveň bude zobrazený počet nových odpovedí."
         watching_first_post:
           title: "Sledovať prvý príspevok"
         tracking:
           title: "Pozorovať"
-          description: "Budete automaticky pozorovať všetky témy v týchto kategóriách. Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
         regular:
           title: "Bežné"
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Stíšené"
-          description: "Nikdy nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
       search_priority:
         options:
           normal: "Normálne"

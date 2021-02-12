@@ -1080,8 +1080,6 @@ id:
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
     search_hint: "username, email, atau alamat IP"
-    create_account:
-      title: "Buat Akun Baru"
     forgot_password:
       title: "Atur Ulang Kata Sandi"
       action: "Saya lupa password"
@@ -1098,7 +1096,6 @@ id:
       title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
-      email_placeholder: "email atau username"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
       blank_username: "Silakan masukkan email atau nama pengguna Anda."

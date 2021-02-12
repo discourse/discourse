@@ -968,7 +968,6 @@ lv:
     trust_level: "Uzticības līmenis"
     search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
-      title: "Izveidot jaunu profilu"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
     forgot_password:
       title: "Paroles atjaunošana"
@@ -990,7 +989,6 @@ lv:
       title: "Ieiet sistēmā"
       username: "Lietotājs"
       password: "Parole"
-      email_placeholder: "e-pasts vai lietotājvārds"
       caps_lock_warning: "Ir ieslēgts Caps Lock"
       error: "Nezināma kļūda"
       rate_limit: "Lūdzu uzgaidiet pirms nākamā mēģinājuma ieiet sistēmā"
@@ -1776,18 +1774,15 @@ lv:
       notifications:
         watching:
           title: "Novērošana"
-          description: "Jūs automātiski novērosiet visas tēmas šajās sadaļās. Jums paziņos par katru jaunu ierakstu katrā tēmā, kā arī parādīs jauno atbilžu skaitu."
         watching_first_post:
           title: "Novērot pirmo ierakstu"
         tracking:
           title: "Sekošana"
-          description: "Jūs automātiski sekosiet visām tēmām šajās sadaļās. Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs jums, kā arī parādīs jauno atbilžu skaitu."
         regular:
           title: "Normāls"
           description: "Jums paziņos, ja kāds pieminēs jūsu @lietotājvārdu vai atbildēs jums."
         muted:
           title: "Noklusināts"
-          description: "Jums neko neziņos par jaunajām tēmām šajās sadaļās, kā arī tās neparādīsies starp pēdējām izmaiņām."
       search_priority:
         options:
           normal: "Normāls"

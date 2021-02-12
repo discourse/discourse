@@ -863,7 +863,6 @@ sq:
     trust_level: "Niveli i besimit"
     search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
-      title: "Regjistrohuni"
       failed: "Diçka nuk funksionoi siç duhet, mbase kjo adresë emaili është e regjistruar në faqe. Provoni butonin e fjalëkalimit të humbur. "
     forgot_password:
       title: "Rivendos fjalëkalimin"
@@ -883,7 +882,6 @@ sq:
       title: "Identifikohu"
       username: "Anëtari"
       password: "Fjalëkalimi"
-      email_placeholder: "email ose emri i përdoruesit"
       caps_lock_warning: "Caps Lock është aktive"
       error: "Gabim i panjohur"
       rate_limit: "Ju lutemi të prisni para se të provoni të identifikoheni përsëri. "
@@ -1549,7 +1547,6 @@ sq:
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
         muted:
           title: "Pa njoftime"
-          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të këtyre kategorive, dhe këto tema nuk do të afishohen në faqen \"Më të fundit\" për ju. "
       search_priority:
         options:
           normal: "Normal"

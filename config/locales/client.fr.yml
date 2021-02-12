@@ -1528,7 +1528,6 @@ fr:
     search_hint: "nom d'utilisateur, courriel ou adresse IP"
     create_account:
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
-      title: "Créer un nouveau compte"
       failed: "Un problème est survenu. Peut-être que cette adresse courriel est déjà enregistrée. Essayez le lien d'oubli du mot de passe."
     forgot_password:
       title: "Réinitialisation du mot de passe"
@@ -1573,7 +1572,6 @@ fr:
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."
       security_key_no_matching_credential_error: "Aucun identifiant correspondant n'a pu être trouvé dans la clé de sécurité donnée."
       security_key_support_missing_error: "Votre appareil ou navigateur actuel ne supporte pas l'utilisation de clés de sécurité. Veuillez utiliser une autre méthode."
-      email_placeholder: "courriel ou nom d'utilisateur"
       caps_lock_warning: "Majuscules verrouillées"
       error: "Erreur inconnue"
       cookies_error: "Les cookies de votre navigateur semblent désactiver. Vous ne pourrez pas vous connecter sans les activer."
@@ -2835,19 +2833,16 @@ fr:
       notifications:
         watching:
           title: "Surveiller"
-          description: "Vous surveillerez automatiquement tous les sujets dans ces catégories. Vous serez notifié des nouveaux messages dans tous les sujets, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
           description: "Vous serez averti de nouveaux sujets dans cette catégorie mais pas de réponses aux sujets."
         tracking:
           title: "Suivre"
-          description: "Vous suivrez automatiquement tous les sujets dans ces catégories. Vous serez notifié lorsque quelqu'un vous mentionne ou vous répond, et le nombre de nouvelles réponses sera affiché."
         regular:
           title: "Normal"
           description: "Vous serez notifié si quelqu'un vous mentionne ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Vous ne recevrez aucune notification concernant les nouveaux sujets dans ces catégories et ces sujets n'apparaîtront pas sur la page des sujets récents."
       search_priority:
         label: "Priorité dans les résultats de recherche"
         options:

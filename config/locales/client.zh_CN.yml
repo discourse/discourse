@@ -859,6 +859,8 @@ zh_CN:
         sunday: "星期日"
         to: "到"
       activity_stream: "活动"
+      read: "阅读"
+      read_help: "最近阅读的主题"
       preferences: "设置"
       feature_topic_on_profile:
         open_search: "选择一个新主题"
@@ -1491,8 +1493,10 @@ zh_CN:
     trust_level: "信任等级"
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
+      header_title: "欢迎!"
+      subheader_title: "创建你的帐户"
       disclaimer: "注册即表示你同意<a href='%{privacy_link}' target='blank'>隐私策略</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
-      title: "创建新账户"
+      title: "创建你的帐户"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "重置密码"
@@ -1522,6 +1526,8 @@ zh_CN:
       logging_in_as: 用%{email}登录
       confirm_button: 登录完成
     login:
+      header_title: "欢迎回来"
+      subheader_title: "登录到你的帐户"
       title: "登录"
       username: "用户"
       password: "密码"
@@ -1537,7 +1543,6 @@ zh_CN:
       security_key_not_allowed_error: "安全密钥验证超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
-      email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
       cookies_error: "你的浏览器似乎禁用了Cookie。如果不先启用它们，你可能无法登录。"
@@ -2755,19 +2760,16 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动关注这些分类中的所有主题。你会收到所有新主题中的每一个新帖的通知，还会显示新回复的数量。"
         watching_first_post:
           title: "监看新主题"
           description: "你将收到此分类中的新主题通知，不包括回复。"
         tracking:
           title: "追踪"
-          description: "你将自动跟踪这些分类中的所有主题。如果有人@你或回复你，将通知你，还将显示新回复的数量。"
         regular:
           title: "普通"
           description: "如果有人@你或回复你，将通知你。"
         muted:
           title: "静音"
-          description: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。"
       search_priority:
         label: "搜索优先级"
         options:

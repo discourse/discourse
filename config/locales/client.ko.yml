@@ -855,7 +855,10 @@ ko:
         friday: "금요일"
         saturday: "토요일"
         sunday: "일요일"
+        to: "받는사람"
       activity_stream: "활동"
+      read: "읽음"
+      read_help: "최근 읽은 주제"
       preferences: "환경 설정"
       feature_topic_on_profile:
         open_search: "새 글 선택"
@@ -1487,7 +1490,6 @@ ko:
     search_hint: "사용자명, 이메일 또는 IP 주소"
     create_account:
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인 정보 보호 정책</a> 및 <a href='%{tos_link}' target='blank'>서비스 약관에</a> 동의하게됩니다."
-      title: "새 계정 만들기"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어있을 수 있습니다. 비밀번호 찾기 링크를 시도해보세요."
     forgot_password:
       title: "비밀번호 재설정"
@@ -1532,7 +1534,6 @@ ko:
       security_key_not_allowed_error: "보안 키 인증 프로세스가 시간 초과되었거나 취소되었습니다."
       security_key_no_matching_credential_error: "제공된 보안 키에서 일치하는 자격 증명을 찾을 수 없습니다."
       security_key_support_missing_error: "현재 장치 또는 브라우저가 보안 키 사용을 지원하지 않습니다. 다른 방법을 사용하십시오."
-      email_placeholder: "이메일 또는 사용자명"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       cookies_error: "브라우저의 쿠키가 비활성화 된 것 같습니다. 먼저 활성화하지 않으면 로그인하지 못할 수 있습니다."
@@ -2746,19 +2747,16 @@ ko:
       notifications:
         watching:
           title: "주시 중"
-          description: "이 카테고리의 모든 토픽을 주시하도록 자동 설정됩니다. 모든 토픽과 게시글에 대하여 알림을 받게 되며, 새로운 게시글의 수가 표시됩니다."
         watching_first_post:
           title: "새글 알림"
           description: "이 카테고리의 새 주제에 대한 알림을 받지만 주제에 대한 답장은 없습니다."
         tracking:
           title: "추적 중"
-          description: "이 카테고리의 모든 토픽을 추적하도록 자동 설정됩니다. 다른 사용자가 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 달 때 알림을 받게 되며 새로운 게시글의 수가 표시됩니다."
         regular:
           title: "알림 : 일반"
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
-          description: "이 카테고리 내의 새 토픽에 대해 어떠한 알림도 받지 않으며, 최신 토픽 항목에도 나타나지 않습니다."
       search_priority:
         label: "검색 우선 순위"
         options:

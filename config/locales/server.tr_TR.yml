@@ -39,6 +39,7 @@ tr_TR:
   title: "Discourse"
   topics: "Konular"
   posts: "gönderiler"
+  views: "görüntüleme"
   loading: "Yükleniyor"
   powered_by_html: ' <a href="https://www.discourse.org">Discourse</a>tarafından destekleniyor, en iyi şekilde JavaScript etkinleştirildiğinde görüntülenebilir'
   sign_up: "Kayıt Ol"
@@ -208,7 +209,7 @@ tr_TR:
   not_found: "İstenilen URL ya da kaynak bulunamadı."
   invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
   authenticator_not_found: "Kimlik doğrulama yöntemi mevcut değil veya devre dışı bırakıldı."
-  invalid_api_credentials: "İstenilen kaynağı görüntülemenize izin verilmiyor. API kullanıcı adı veya şifresi geçersiz."
+  invalid_api_credentials: "İstenilen kaynağı görüntülemenize izin verilmiyor. API kullanıcı adı veya parolası geçersiz."
   provider_not_enabled: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama kontrolü etkin değil."
   provider_not_found: "İstenilen kaynağı görüntülemenize izin verilmiyor. Kimlik doğrulama sağlayıcısı mevcut değil."
   read_only_mode_enabled: "Bu site sadece okuma modunda. Eylemler devre dışı."
@@ -414,11 +415,11 @@ tr_TR:
               same_as_email: "e-posta adresinizle aynı. Lütfen daha güvenli bir parola seçiniz."
               same_as_current: "şimdiki parolanızla aynı."
               same_as_name: "adınızla aynı."
-              unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
+              unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir parola kullanın."
             username:
-              same_as_password: "şifrenizle aynı."
+              same_as_password: "parolanızla aynı."
             name:
-              same_as_password: "şifrenizle aynı."
+              same_as_password: "parolanızla aynı."
             ip_address:
               signup_not_allowed: "Bu hesaptan yeni kayıt oluşturulmasına izin verilmiyor."
         user_email:
@@ -641,15 +642,15 @@ tr_TR:
         other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: "Üzgünüz, bu parola değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
-    choose_new: "Yeni bir şifre seç"
-    choose: "Şifre seç"
+    choose_new: "Yeni bir parola seç"
+    choose: "Parola seç"
     update: "Parolayı Güncelle"
     save: "Parola Belirle"
     title: "Parola Sıfırla"
     success: "Parolanızı başarıyla değiştirdiniz ve giriş yaptınız."
     success_unapproved: "Parolanızı başarıyla değiştirdiniz."
   email_login:
-    invalid_token: "Maalesef, bu e-posta bağlantısı çok eski. Oturum Aç butonuna tıklayın ve yeni bir bağlantı almak için &#39;Şifremi unuttum&#39; seçeneğini kullanın."
+    invalid_token: "Maalesef, bu e-posta bağlantısı çok eski. Oturum Aç butonuna tıklayın ve yeni bir bağlantı almak için 'Parolamı unuttum' seçeneğini kullanın."
     title: "Eposta girişi"
   user_auth_tokens:
     browser:
@@ -1363,7 +1364,7 @@ tr_TR:
     enable_badges: "Rozet sistemini etkinleştir"
     enable_whispers: "Konular dahilinde yetkililerin özel iletişimine izin ver."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt dosyasını geçersiz kılabilirsiniz </a>."
-    hide_email_address_taken: "Kullanıcıları, kayıt sırasında ve şifremi unuttum formunda o e-posta adresiyle bir hesap bulunduğunu bildirmeyin."
+    hide_email_address_taken: "Kullanıcıları, kayıt sırasında ve parolamı unuttum formunda o e-posta adresiyle bir hesap bulunduğunu bildirmeyin."
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'a ping atın ve <a href='%{base_path}/admin' target='_blank'>/ admin</a> kontrol panelinde yeni sürüm mesajlarını gösterin"
     new_version_emails: "Discourse'un yeni sürümü çıktığında contact_email adresine e-posta gönder."
@@ -1378,7 +1379,7 @@ tr_TR:
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
     password_unique_characters: "Bir parolanın olması gereken minimum benzersiz karakter sayısı."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
-    enable_local_logins: "Yerel kullanıcı adı ve şifre giriş tabanlı hesapları etkinleştirin. Davetiyelerin çalışması için bu etkinleştirilmiş olmalıdır. UYARI: devre dışı bırakılmışsa, daha önce en az bir alternatif oturum açma yöntemi yapılandırmadıysanız oturum açamayabilirsiniz."
+    enable_local_logins: "Yerel kullanıcı adı ve parola giriş tabanlı hesapları etkinleştirin. Davetiyelerin çalışması için bu etkinleştirilmiş olmalıdır. UYARI: devre dışı bırakılmışsa, daha önce en az bir alternatif oturum açma yöntemi yapılandırmadıysanız oturum açamayabilirsiniz."
     enable_local_logins_via_email: "Kullanıcıların e-posta yoluyla kendilerine tek tıklamayla giriş bağlantısı gönderilmesini istemesine izin ver."
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
     enable_signup_cta: "Geri dönen anonim kullanıcılara hesap oluşturmaları için bir uyarı göster."
@@ -2054,7 +2055,7 @@ tr_TR:
 
       %{invite_link}
   invite_password_instructions:
-    title: "Şifre Talimatlarını davet et"
+    title: "Parola Talimatlarını davet et"
     subject_template: "%{site_name} hesabınız için parola oluşturun"
     text_body_template: |
       %{site_name} topluluğuna olan davetiyeni kabul ettiğin için teşekkür ederiz -- hoş geldin!
@@ -2835,7 +2836,7 @@ tr_TR:
       text_body_template: |
         %{site_name}'da bir hesap oluşturmaya çalıştınız veya bir hesabın e-posta adresini %{email} şeklinde değiştirmeye çalıştınız. Ancak, %{email} için bir hesap mevcut.
 
-        Eğer şifrenizi unuttuysanız, [şimdi parolanızı sıfırlayın](%{base_url}/password-reset).
+        Eğer parolanızı unuttuysanız, [şimdi parolanızı sıfırlayın](%{base_url}/password-reset).
 
         Eğer %{email} için bir hesap oluşturmaya çalışmadıysanız veya e-posta adresini değiştirmeye çalışmadıysanız endişe etmeyin. Güvenli bir şekilde bu mesajı görmezden gelebilirsiniz.
 
@@ -2860,7 +2861,7 @@ tr_TR:
       preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"
     forgot_password:
       title: "Parolamı Unuttum"
-      subject_template: "[%{email_prefix}] Şifre sıfırlama"
+      subject_template: "[%{email_prefix}] Parola sıfırlama"
       text_body_template: |
         [%{site_name}](%{base_url}) için birisi parolanızı sıfırlamanızı istedi.
 
@@ -2879,9 +2880,9 @@ tr_TR:
         Giriş yapmak için aşağıdaki bağlantıya tıklayın:
         %{base_url}/session/email-login/%{email_token}
     set_password:
-      title: "Şifre Belirle"
-      subject_template: "[%{email_prefix}] Şifre Belirle"
-      text_body_template: "Birisi [%{site_name}] (%{base_url}) hesabınıza bir şifre eklemenizi istedi. Alternatif olarak, bu onaylanmış e-posta adresiyle ilişkili desteklenen herhangi bir çevrimiçi hizmeti (Google, Facebook vb.) Kullanarak giriş yapabilirsiniz. \nBu isteği siz yapmadıysanız, bu e-postayı güvenle yok sayabilirsiniz. \nBir şifre seçmek için aşağıdaki bağlantıyı tıklayın: %{base_url}/u/password-reset/%{email_token}\n"
+      title: "Parola Belirle"
+      subject_template: "[%{email_prefix}] Parola Belirle"
+      text_body_template: "Birisi [%{site_name}] (%{base_url}) hesabınıza bir parola eklemenizi istedi. Alternatif olarak, bu onaylanmış e-posta adresiyle ilişkili desteklenen herhangi bir çevrimiçi hizmeti (Google, Facebook vb.) Kullanarak giriş yapabilirsiniz. \nBu isteği siz yapmadıysanız, bu e-postayı güvenle yok sayabilirsiniz. \nBir parola seçmek için aşağıdaki bağlantıyı tıklayın: %{base_url}/u/password-reset/%{email_token}\n"
     admin_login:
       title: "Yönetici Girişi"
       subject_template: "[%{email_prefix}] Giriş"
@@ -2891,7 +2892,7 @@ tr_TR:
       text_body_template: |
         %{site_name} 'de sizin için yeni bir hesap oluşturuldu.
 
-        Yeni hesabınıza şifre belirlemek için aşağıdaki bağlantıya tıklayın:
+        Yeni hesabınıza parola belirlemek için aşağıdaki bağlantıya tıklayın:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
       title: "Yeni E-postayı Onayla"
@@ -2934,7 +2935,7 @@ tr_TR:
     suspicious_login:
       title: "Yeni Giriş Uyarısı"
       subject_template: "[%{site_name}] %{location}'dan Yeni Giriş"
-      text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir cihazdan veya konumdan bir giriş fark ettik. Bu sen miydin? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nBu olsaydınız, harika! Yapmanız gereken başka bir şey yok.\n\n Bu siz değilseniz, lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve şifrenizi değiştirin.\n"
+      text_body_template: "Merhaba, \n\nGenellikle kullanmadığınız bir cihazdan veya konumdan bir giriş fark ettik. Bu sen miydin? \n\n- Konum: %{location} (%{client_ip}) \n- Tarayıcı: %{browser} \n- Cihaz: %{device} - %{os} \n\nBu olsaydınız, harika! Yapmanız gereken başka bir şey yok.\n\n Bu siz değilseniz, lütfen [mevcut oturumlarınızı gözden geçirin] (%{base_url}/profilim/tercihlerim/hesap) ve parolanızı değiştirin.\n"
   page_not_found:
     title: "Hay aksi! Bu sayfa yok ya da gizli."
     popular_topics: "Gözde"

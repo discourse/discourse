@@ -1086,7 +1086,6 @@ lt:
     trust_level: "Patikimumo lygis"
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
-      title: "Sukurti naują paskyrą"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
@@ -1107,7 +1106,6 @@ lt:
       title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
-      email_placeholder: "el. paštas arba slaptažodis"
       caps_lock_warning: "Įjungtas didžiųjų raidžių rašymas"
       error: "Nežinoma klaida"
       rate_limit: "Prašome palaukti prieš prisijungiant dar kartą."
@@ -1951,7 +1949,6 @@ lt:
           description: "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
         muted:
           title: "Nutildytos"
-          description: "Tau nebus siunčiami pranešimai susiję su šia kategorijos tema."
       search_priority:
         options:
           normal: "Įprastas"

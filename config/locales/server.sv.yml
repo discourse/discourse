@@ -57,6 +57,7 @@ sv:
   themes:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
+    ember_selector_error: "Tyvärr — det är inte tillåtet att använda CSS-väljarna #ember eller .ember-view, eftersom dessa namn genereras dynamiskt under körning och kommer att ändras över tid, vilket resulterar i trasig CSS. Prova en annan väljare."
     compile_error:
       unrecognized_extension: "Okänt filnamnstillägg: %{extension}"
     import_error:
@@ -566,6 +567,9 @@ sv:
           attributes:
             execute_at:
               in_the_past: "måste vara i framtiden."
+            duration_minutes:
+              cannot_be_zero: "måste vara mer än 0."
+              exceeds_maximum: "får inte vara mer än 2 år."
         translation_overrides:
           attributes:
             value:

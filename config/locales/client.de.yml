@@ -903,6 +903,8 @@ de:
         sunday: "Sonntag"
         to: "bis"
       activity_stream: "Aktivität"
+      read: "Gelesen"
+      read_help: "Kürzlich gelesene Themen"
       preferences: "Einstellungen"
       feature_topic_on_profile:
         open_search: "Wähle ein neues Thema"
@@ -1549,8 +1551,10 @@ de:
     trust_level: "Vertrauensstufe"
     search_hint: "Benutzername, E-Mail- oder IP-Adresse"
     create_account:
+      header_title: "Willkommen!"
+      subheader_title: "Lass uns dein Konto erstellen"
       disclaimer: "Mit der Registrierung stimmst du <a href='%{privacy_link}' target='blank'>privacy policy</a> und <a href='%{tos_link}' target='blank'>terms of service</a> zu."
-      title: "Neues Benutzerkonto erstellen"
+      title: "Erstelle dein Konto"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
     forgot_password:
       title: "Passwort zurücksetzen"
@@ -1580,6 +1584,8 @@ de:
       logging_in_as: Anmeldung als %{email}
       confirm_button: Anmeldung fertigstellen
     login:
+      header_title: "Willkommen zurück"
+      subheader_title: "Bei deinem Konto anmelden"
       title: "Anmelden"
       username: "Benutzername"
       password: "Passwort"
@@ -1595,7 +1601,7 @@ de:
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldeinformationen gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
-      email_placeholder: "E-Mail oder Benutzername"
+      email_placeholder: "E-Mail / Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
       cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zuerst zu aktivieren"
@@ -2242,6 +2248,7 @@ de:
         when: "Wann:"
         time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         min_duration: "Die Dauer muss größer als 0 sein"
+        max_duration: "Dauer muss weniger als 2 Jahre betragen"
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         now: "Jetzt"
@@ -2875,19 +2882,16 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
           description: "Du wirst über neue Themen in dieser Kategorie benachrichtigt, aber nicht über Antworten auf diese Themen."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch alle neuen Themen in diesen Kategorien verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
         regular:
           title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
-          description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
       search_priority:
         label: "Suchpriorität"
         options:

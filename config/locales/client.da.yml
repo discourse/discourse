@@ -1253,7 +1253,6 @@ da:
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
-      title: "Opret konto"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
     forgot_password:
       title: "Nulstil kodeord"
@@ -1285,7 +1284,6 @@ da:
       password: "Adgangskode"
       second_factor_description: "Indtast godkendelseskoden fra din app:"
       second_factor_backup_description: "Indtast en af dine backup koder:"
-      email_placeholder: "e-mail eller brugernavn"
       caps_lock_warning: "Caps Lock er sat til"
       error: "Ukendt fejl"
       cookies_error: "Din browser ser ud til at have deaktiveret cookies. Du kan muligvis ikke lave et log ind, uden at aktivere dem først."
@@ -2316,19 +2314,16 @@ da:
       notifications:
         watching:
           title: "Overvåger"
-          description: "Du overvåger automatisk alle emner i disse kategorier. Du får besked om hvert nyt indlæg i hvert emne og antallet af nye svar bliver vist."
         watching_first_post:
           title: "Overvåger Første Indlæg"
           description: "Du vil blive underrettet om nye emner i denne kategori, men ikke svar på emnerne."
         tracking:
           title: "Følger"
-          description: "Du tracker automatisk alle emner i disse kategorier. Du får besked hvis nogen nævner dit @navn eller svarer dig, og antallet af nye svar bliver vist."
         regular:
           title: "Normal"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
         muted:
           title: "Ignoreret"
-          description: "Du vil aldrig få besked om noget om nye emner i kategorierne og de vises heller ikke i seneste."
       search_priority:
         label: "Søgeprioritet"
         options:
