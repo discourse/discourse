@@ -276,7 +276,8 @@ class UploadCreator
   def should_alter_quality?
     return false if animated?
 
-    @upload.target_image_quality(@file.path, SiteSetting.recompress_original_jpg_quality).present?
+    desired_quality = @image_info.type == :png ? SiteSetting.png_to_jpg_quality : SiteSetting.recompress_original_jpg_quality
+    @upload.target_image_quality(@file.path, desired_quality).present?
   end
 
   def should_downsize?
