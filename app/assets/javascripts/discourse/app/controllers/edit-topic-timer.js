@@ -141,7 +141,7 @@ export default Controller.extend(ModalFunctionality, {
         this.set("topicTimer.based_on_last_post", false);
       }
 
-      if (CLOSE_AFTER_LAST_POST_STATUS_TYPE === value) {
+      if (value === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
         this.set("topicTimer.based_on_last_post", true);
       }
 
