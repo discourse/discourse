@@ -3119,19 +3119,19 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+          description: "You will automatically watch all topics in this category. You will be notified of every new post in every topic, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
           description: "You will be notified of new topics in this category but not replies to the topics."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+          description: "You will automatically track all topics in this category. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+          description: "You will never be notified of anything about new topics in this category, and they will not appear in latest."
       search_priority:
         label: "Search Priority"
         options:
