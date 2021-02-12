@@ -1101,7 +1101,6 @@ nb_NO:
     trust_level: "Tillitsnivå"
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
-      title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
@@ -1131,7 +1130,6 @@ nb_NO:
       password: "Passord"
       second_factor_description: "Skriv inn verifiseringskoden fra din app:"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
-      email_placeholder: "e-postadresse eller brukernavn"
       caps_lock_warning: "Caps Lock er på"
       error: "Ukjent feil"
       rate_limit: "Vent litt før du logger inn igjen."
@@ -2056,18 +2054,15 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
-          description: "Du vil automatisk følge alle emnene i disse kategoriene. Du vil bli varslet om alle nye innlegg i hvert emne, og antall nye svar vil bli vist."
         watching_first_post:
           title: "Følger første innlegg"
         tracking:
           title: "Overvåkning"
-          description: "Du vil automatisk overvåke alle emner i disse kategoriene. Du vil bli varslet dersom noen nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
           description: "Du vil bli varslet om noen nevner @navnet ditt eller svarer deg."
         muted:
           title: "Ignorert"
-          description: "Du vil aldri bli varslet om noe vedrørende nye emner i disse kategoriene, og de vil ikke vises i listen over siste."
       search_priority:
         options:
           normal: "Normal"

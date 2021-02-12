@@ -1476,7 +1476,6 @@ nl:
     search_hint: "gebruikersnaam, e-mailadres of IP-adres"
     create_account:
       disclaimer: "Door te registreren gaat u akkoord met het <a href='%{privacy_link}' target='blank'>privacybeleid</a> en de <a href='%{tos_link}' target='blank'>servicevoorwaarden</a>."
-      title: "Nieuw account maken"
       failed: "Er is iets misgegaan; mogelijk is het e-mailadres al geregistreerd. Probeer de koppeling 'Wachtwoord vergeten'."
     forgot_password:
       title: "Wachtwoord herinitialiseren"
@@ -1521,7 +1520,6 @@ nl:
       security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
       security_key_no_matching_credential_error: "Geen referenties gevonden in de opgegeven beveiligingssleutel."
       security_key_support_missing_error: "Uw huidige apparaat of browser ondersteunt geen gebruik van beveiligingssleutels. Gebruik een andere methode."
-      email_placeholder: "e-mailadres of gebruikersnaam"
       caps_lock_warning: "Caps Lock staat aan"
       error: "Onbekende fout"
       cookies_error: "Het lijkt erop dat uw browser geen cookies toestaat. Als u ze niet eerst toestaat, kunt u zich misschien niet aanmelden."
@@ -2750,19 +2748,16 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "U houdt automatisch alle topics in deze categorieën in de gaten. U ontvangt meldingen voor elk nieuw bericht in elk topic, en het aantal nieuwe antwoorden verschijnt naast het topic."
         watching_first_post:
           title: "Eerste bericht in de gaten houden"
           description: "U ontvangt meldingen over nieuwe topics in deze categorie, maar niet over antwoorden op de topics."
         tracking:
           title: "Volgen"
-          description: "U volgt automatisch alle topics in deze categorieën. U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt, en het aantal nieuwe antwoorden wordt weergegeven."
         regular:
           title: "Normaal"
           description: "U ontvangt een melding als iemand uw @naam noemt of een bericht van u beantwoordt."
         muted:
           title: "Genegeerd"
-          description: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën, en ze verschijnen niet in Nieuwste."
       search_priority:
         label: "Zoekprioriteit"
         options:

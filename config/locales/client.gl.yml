@@ -1534,7 +1534,6 @@ gl:
     search_hint: "nome do usuario, correo-e ou enderezo IP"
     create_account:
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
-      title: "Crear unha conta nova"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, tenta coa ligazón de «Esquecín o contrasinal»."
     forgot_password:
       title: "Contrasinal restabelecido"
@@ -1579,7 +1578,6 @@ gl:
       security_key_not_allowed_error: "O proceso de autenticación da clave de seguranza esgotou o tempo ou foi anulado."
       security_key_no_matching_credential_error: "As credenciais non coinciden coa chave de seguranza introducida."
       security_key_support_missing_error: "O teu dispositivo ou navegador actual non admite o uso de chaves de seguranza. Utiliza outro método."
-      email_placeholder: "correo electrónico ou nome de usuario"
       caps_lock_warning: " Bloqueo de maiúsculas activado"
       error: "Erro descoñecido"
       cookies_error: "Parece que o teu navegador ten os rastros desactivados. É posible que non poida iniciar sesión sen activalos primeiro."
@@ -2846,19 +2844,16 @@ gl:
       notifications:
         watching:
           title: "Ver"
-          description: "Verás automaticamente todos os temas destas categorías. Recibirás notificacións de cada nova publicación en cada tema e aparecerá o número de novas respostas."
         watching_first_post:
           title: "Vendo publicación inicial"
           description: "Recibirás notificacións dos novos temas nesta categoría pero non das respostas."
         tracking:
           title: "Seguimento"
-          description: "Seguirás automaticamente todos os temas destas categorías. Recibirás notificacións das mencións do teu @nome e das respostas que recibas e aparecerá o número de novas respostas."
         regular:
           title: "Normal"
           description: "Notificarémosche se alguén menciona o teu @nome ou che responde."
         muted:
           title: "Silenciado"
-          description: "Non se che notificarán novos temas nestas categorías e non aparecerán nos Últimos."
       search_priority:
         label: "Prioridade da busca"
         options:

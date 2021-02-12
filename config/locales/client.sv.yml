@@ -903,6 +903,8 @@ sv:
         sunday: "Söndag"
         to: "till"
       activity_stream: "Aktivitet"
+      read: "Läst"
+      read_help: "Nyligen lästa ämnen"
       preferences: "Inställningar"
       feature_topic_on_profile:
         open_search: "Välj ett nytt ämne"
@@ -1549,8 +1551,10 @@ sv:
     trust_level: "Förtroendenivå"
     search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
+      header_title: "Välkommen!"
+      subheader_title: "Låt oss skapa ditt konto"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
-      title: "Registrera nytt konto"
+      title: "Skapa ditt konto"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
     forgot_password:
       title: "Beställ nytt lösenord"
@@ -1580,6 +1584,8 @@ sv:
       logging_in_as: Loggar in som %{email}
       confirm_button: Avsluta inloggning
     login:
+      header_title: "Välkommen tillbaka"
+      subheader_title: "Logga in till ditt konto"
       title: "Logga in"
       username: "Användare"
       password: "Lösenord"
@@ -1595,7 +1601,7 @@ sv:
       security_key_not_allowed_error: "Processen för autentiseringssäkerhetsnyckel dröjde antingen för länge eller avbröts."
       security_key_no_matching_credential_error: "Inga matchande referenser kunde hittas i den medföljande säkerhetsnyckeln."
       security_key_support_missing_error: "Din nuvarande enhet eller webbläsare stöder inte användning av säkerhetsnycklar. Använd en annan metod."
-      email_placeholder: "e-post eller användarnamn"
+      email_placeholder: "E-postadress/användarnamn"
       caps_lock_warning: "Skiftlås är aktiverat"
       error: "Okänt fel"
       cookies_error: "Din webbläsare verkar ha cookies inaktiverade. Du kanske inte kan logga in utan att aktivera dem först."
@@ -2242,6 +2248,7 @@ sv:
         when: "När:"
         time_frame_required: "Välj en tidsram"
         min_duration: "Varaktigheten måste vara större än 0"
+        max_duration: "Varaktigheten måste vara mindre än 2 år"
       auto_update_input:
         none: "Välj en tidsram"
         now: "Nu"
@@ -2875,19 +2882,16 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du aviseras om varje nytt inlägg i alla ämnen, och det visas en räknare över antalet nya inlägg."
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer att aviseras vid nya ämnen för denna kategori, men inte svar på ämnen."
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla ämnen i de här kategorierna. Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg, och det visas en räknare över antalet nya inlägg."
         regular:
           title: "Normal"
           description: "Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
-          description: "Du kommer aldrig att aviseras om något som rör nya ämnen i de här kategorierna och de kommer inte att dyka upp i senaste."
       search_priority:
         label: "Sökprioritering"
         options:

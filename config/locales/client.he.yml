@@ -991,6 +991,8 @@ he:
         sunday: "יום ראשון"
         to: "עד"
       activity_stream: "פעילות"
+      read: "נקרא"
+      read_help: "נושאים שנקראו לאחרונה"
       preferences: "העדפות"
       feature_topic_on_profile:
         open_search: "נא לבחור נושא חדש"
@@ -1665,8 +1667,10 @@ he:
     trust_level: "דרגת אמון"
     search_hint: "שם משתמש, דוא״ל או כתובת IP"
     create_account:
+      header_title: "ברוך בואך!"
+      subheader_title: "הבה ניצור לך חשבון"
       disclaimer: "עצם הרשמתך מביעה את הסכמתך ל<a href='%{privacy_link}' target='blank'>מדיניות הפרטיות</a> ול<a href='%{tos_link}' target='blank'>תנאי השירות</a>."
-      title: "יצירת חשבון חדש"
+      title: "יצירת חשבון משלך"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
     forgot_password:
       title: "אתחול סיסמה"
@@ -1696,6 +1700,8 @@ he:
       logging_in_as: מתבצעת כניסה בתור %{email}
       confirm_button: סיום הכניסה
     login:
+      header_title: "ברוך שובך"
+      subheader_title: "כניסה לחשבון שלך"
       title: "כניסה"
       username: "משתמש"
       password: "סיסמה"
@@ -1711,7 +1717,7 @@ he:
       security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
       security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
       security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
-      email_placeholder: "דואר אלקטרוני או שם משתמש/ת"
+      email_placeholder: "דוא״ל / שם משתמש"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
       cookies_error: "כנראה שהעוגיות בדפדפן שלך מושבתות. אין אפשרות להיכנס מבלי להפעיל אותן."
@@ -3114,19 +3120,16 @@ he:
       notifications:
         watching:
           title: "עוקב"
-          description: "תצפו באופן אוטומטי בכל הנושאים שבקטגוריות אלו. תקבלו התראה על כל פוסט חדש בכל אחד מהנושאים בקטגוריה ואת מספר התגובות לכל אחד מהם."
         watching_first_post:
           title: "צפייה בפוסט הראשון"
           description: "תופענה אצלך התראות על נושאים חדשים בקטגוריה הזו אך לא על תגובות על הנושאים."
         tracking:
           title: "עוקב"
-          description: "אתם תעקבו אוטומטית אחרי כל הנושאים בקטגוריות אלו. אתם תיודעו אם מישהו מזכיר את @שמכם או עונה לכם, וספירה של תגובות חדשות תופיע לכם."
         regular:
           title: "נורמלי"
           description: "תישלח אליך התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב לך."
         muted:
           title: "מושתק"
-          description: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא-נקראו שלך."
       search_priority:
         label: "עדיפות חיפוש"
         options:

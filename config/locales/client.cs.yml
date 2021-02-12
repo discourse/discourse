@@ -1126,7 +1126,6 @@ cs:
     trust_level: "Důvěryhodnost"
     search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
-      title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
     forgot_password:
       title: "Obnovení hesla"
@@ -1156,7 +1155,6 @@ cs:
       password: "Heslo"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
       second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
-      email_placeholder: "emailová adresa nebo uživatelské jméno"
       caps_lock_warning: "zapnutý Caps Lock"
       error: "Neznámá chyba"
       rate_limit: "Počkejte před dalším pokusem se přihlásit."
@@ -2155,18 +2153,15 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
-          description: "Budete automaticky sledovat všechna témata v těchto kategoriích. Budete upozorněni na každý nový příspěvek v každém tématu a zobrazí se počet nových odpovědí."
         watching_first_post:
           title: "Hlídání prvního příspěvku"
         tracking:
           title: "Sledování"
-          description: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Budete upozorněni, pokud někdo zmíní vaše @jméno nebo vám odpoví, a zobrazí se počet nových odpovědí."
         regular:
           title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
-          description: "Nikdy nebudete dostávat upozornění na nová témata v těchto kategoriích a neobjeví se v aktuálních."
       search_priority:
         options:
           normal: "Normální"

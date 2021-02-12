@@ -1461,7 +1461,6 @@ bs_BA:
     search_hint: "ime"
     create_account:
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
-      title: "Stvori novi račun"
       failed: "Nešto je krenulo pogrešno, možda je ovaj email već iskorišten za registraciju, pokušajte sa Zaboravio šifru linkom"
     forgot_password:
       title: "Resetovanje lozinke"
@@ -1504,7 +1503,6 @@ bs_BA:
       security_key_not_allowed_error: "Ovaj proces prijave pomoću sigurnosnog ključa je ili vremenski istekao ili je odkazan."
       security_key_no_matching_credential_error: "Nisu pronađeni korisnički podatci koristeći navedeni sigurnosni ključ."
       security_key_support_missing_error: "Vaš trenutni uređaj ili preglednik ne podržava korištenje sigurnosnih ključeva. Molimo koristite drugačiju metodu."
-      email_placeholder: "email ili korisnik"
       caps_lock_warning: "Uključena su vam velika slova"
       error: "Nepoznata greška"
       cookies_error: "Čini se da je vaš preglednik onemogućio cookies. Možda se nećete moći prijaviti bez da ih prvo omogućite."
@@ -2591,13 +2589,11 @@ bs_BA:
       notifications:
         watching:
           title: "Motrenje"
-          description: "Automatski ćete gledati sve teme u ovim kategorijama. Bićete obaviješteni o svakom novom postu u svakoj temi, a broj novih odgovora će biti prikazan."
         watching_first_post:
           title: "Pratiti prve objave"
           description: "Bićete obaviješteni o novim temama u ovoj kategoriji, ali ne i odgovorima na teme."
         tracking:
           title: "Praćenje"
-          description: "Automatski ćete pratiti sve teme u ovim kategorijama. Bit ćete obaviješteni ako netko spominje vaše @korisničko-ime ili vam nešto odgovori, a prikazat će se i broj novih odgovora."
         regular:
           title: "Normalno"
           description: "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."

@@ -889,6 +889,7 @@ es:
         sunday: "Domingo"
         to: "a"
       activity_stream: "Actividad"
+      read: "Leer"
       preferences: "Preferencias"
       feature_topic_on_profile:
         open_search: "Selecciona un nuevo tema"
@@ -1531,8 +1532,10 @@ es:
     trust_level: "Nivel de confianza"
     search_hint: "usuario, correo electrónico o dirección IP"
     create_account:
+      header_title: "¡Bienvenido/a!"
+      subheader_title: "Vamos a crear tu cuenta"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
-      title: "Crear cuenta nueva"
+      title: "Crea tu cuenta"
       failed: "Algo salió mal. Quizás este correo electrónico ya se encuentra registrado. Intenta con el enlace «olvidé la contraseña»"
     forgot_password:
       title: "Restablecer contraseña"
@@ -1562,6 +1565,7 @@ es:
       logging_in_as: Iniciando sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
+      subheader_title: "Inicie sesión en su cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
@@ -1577,7 +1581,7 @@ es:
       security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
       security_key_no_matching_credential_error: "No se encontraron credenciales que coincidan en la clave de seguridad provista."
       security_key_support_missing_error: "Tu dispositivo o navegador actual no soporta el uso de claves de seguridad. Por favor, utiliza un método diferente."
-      email_placeholder: "correo electrónico o nombre de usuario"
+      email_placeholder: "Correo electrónico / Nombre de Usuario"
       caps_lock_warning: "El bloqueo de mayúsculas está activado"
       error: "Error desconocido"
       cookies_error: "Parece que tu navegador tiene deshabilitados los cookies. Es posible que no puedas iniciar sesión sin habilitarlos primero."
@@ -1749,6 +1753,9 @@ es:
       error:
         title_missing: "Es necesario un título"
         post_missing: "La publicación no puede estar vacía"
+        post_length:
+          one: "La publicación debe tener por lo menos %{count} caracteres"
+          other: "La publicación debe tener por lo menos %{count} caracteres"
         try_like: "¿Has probado el botón %{heart}?"
         category_missing: "Debes escoger una categoría."
         tags_missing:
@@ -2415,6 +2422,7 @@ es:
         username_placeholder: "nombre de usuario"
         action: "Enviar invitación"
         help: "invitar a otros a este tema mediante correo electrónico o notificaciones"
+        discourse_connect_enabled: "Ingresa el nombre de usuario o correo electrónico de la persona que deseas invitar a este tema."
         to_topic_blank: "Ingresa el nombre de usuario o correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ingresaste una dirección de correo electrónico. Nosotros enviaremos una invitación a tu amigo que le permitirá responder inmediatamente a este tema."
         to_topic_username: "Ingresaste un nombre de usuario. Le enviaremos una notificación con un enlace de invitación a este tema."
@@ -2831,19 +2839,16 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás automáticamente todos los temas en estas categorías. Se te notificará de cada publicación nueva en cada tema y se mostrará un contador de respuestas nuevas."
         watching_first_post:
           title: "Vigilar la primera publicación"
           description: "Se te notificará acerca de los temas nuevos en esta categoría, pero no cuando haya respuestas nuevas a los temas."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los temas en estas categorías. Se te notificará si alguien menciona tu @nombre o te responde y se mostrará un contador de respuestas nuevas."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde."
         muted:
           title: "Silenciar"
-          description: "No se te notificará de ningún tema en estas categorías y no aparecerán en la página de mensajes recientes."
       search_priority:
         label: "Prioridad de búsqueda"
         options:
@@ -3415,7 +3420,7 @@ es:
           total: "Total en todo el tiempo"
           no_data: "No hay datos que mostrar."
           trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Buscar registros</a>'
+            more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El reporte de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recolectar datos.'
           filters:
             file_extension:
@@ -3536,6 +3541,7 @@ es:
               wordpress: Necesario para que el plugin para WordPress wp-discourse funcione.
             users:
               bookmarks: Listar marcadores de usuario. Devuelve recordatorios de marcadores cuando se utiliza el formato ICS.
+              sync_sso: Sincronice un usuario mediante DiscourseConnect.
               show: Obtener información sobre un usuario.
               check_emails: Obtener una lista de los correos electrónicos del usuario.
               update: Actualizar información del perfil de usuario.
@@ -4198,7 +4204,7 @@ es:
             text: "Agrupar"
             title: "Crea un nuevo rango de entradas para bloquear si hay al menos «min_ban_entries_for_roll_up» entradas."
         search_logs:
-          title: "Buscar registros"
+          title: "Registros de búsqueda"
           term: "Término"
           searches: "Búsquedas"
           click_through_rate: "CTR"
@@ -4488,6 +4494,11 @@ es:
           on_grace_period: "Actualmente en periodo de gracia de promoción, no será degradado."
           locked_will_not_be_promoted: "Nivel de confianza bloqueado. Nunca será promovido."
           locked_will_not_be_demoted: "Nivel de confianza bloqueado. Nunca será degradado."
+        discourse_connect:
+          external_username: "Nombre de usuario"
+          external_name: "Nombre"
+          external_email: "Correo electrónico"
+          external_avatar_url: "URL de la Imagen de Perfil"
       user_fields:
         title: "Campos de usuario"
         help: "Añadir campos que tus usuarios pueden llenar."

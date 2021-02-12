@@ -1367,7 +1367,6 @@ ro:
     trust_level: "Nivel de încredere"
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
-      title: "Creează cont"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
       title: "Resetare parolă"
@@ -1389,7 +1388,6 @@ ro:
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
-      email_placeholder: "email sau nume de utilizator"
       caps_lock_warning: "Tasta Caps Lock este activă"
       error: "Eroare necunoscută"
       rate_limit: "Te rog așteaptă înainte de a te reconecta."
@@ -2276,18 +2274,15 @@ ro:
       notifications:
         watching:
           title: "Urmărind activ"
-          description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat cu privire la fiecare nouă postare din fiecare subiect, și va fi afișat un contor al noilor răspunsuri."
         watching_first_post:
           title: "Urmărind activ prima postare"
         tracking:
           title: "Urmărire"
-          description: "Vei urmări automat toate subiectele din aceste categorii. Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde, și va fi afișat un contor al noilor răspunsuri."
         regular:
           title: "Normal"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau îți răspunde."
         muted:
           title: "Setat pe silențios"
-          description: "Nu vei fi niciodată notificat cu privire la nimic legat de noile subiecte din aceste categorii și ele nu vor apărea în listă."
       search_priority:
         options:
           normal: "Normal"
