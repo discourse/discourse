@@ -962,6 +962,8 @@ export default createWidget("discourse-poll", {
     })
       .then(({ poll }) => {
         attrs.poll.setProperties(poll);
+        this.appEvents.trigger("poll:voted", poll, attrs.post, attrs.vote);
+
         if (attrs.poll.get("results") !== "on_close") {
           state.showResults = true;
         }
