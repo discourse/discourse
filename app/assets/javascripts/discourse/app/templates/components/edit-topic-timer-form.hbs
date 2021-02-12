@@ -24,7 +24,7 @@
   {{#if useDuration}}
     <div class="controls">
       <label class="control-label">Duration</label>
-      {{relative-time onChange=(action "durationChangedNew") durationMinutes=(readonly topicTimer.duration_minutes)}}
+      {{relative-time onChange=(action "durationChanged") durationMinutes=(readonly topicTimer.duration_minutes)}}
     </div>
   {{/if}}
   {{#if willCloseImmediately}}

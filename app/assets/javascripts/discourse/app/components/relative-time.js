@@ -43,7 +43,7 @@ export default Component.extend({
 
   @discourseComputed("selectedInterval", "_duration")
   calculatedMinutes(interval, _duration) {
-    _duration = parseInt(_duration, 10);
+    _duration = parseFloat(_duration);
 
     let mins = 0;
 

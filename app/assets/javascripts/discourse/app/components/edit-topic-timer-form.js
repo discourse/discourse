@@ -188,7 +188,7 @@ export default Component.extend({
   },
 
   @action
-  durationChangedNew(newDurationMins) {
+  durationChanged(newDurationMins) {
     this.set("topicTimer.duration_minutes", newDurationMins);
   },
 });
