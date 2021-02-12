@@ -51,6 +51,7 @@ export default MultiSelectComponent.extend({
 
   search(filter = "") {
     filter = filter || "";
+    filter = filter.replace(/^@/, "");
     const options = this.selectKit.options;
 
     // prevents doing ajax request for nothing
