@@ -29,7 +29,7 @@
 
 .d-modal.login-modal {
   #modal-alert:empty {
-    display: none !important;
+    display: none;
   }
 
   #modal-alert:not(:empty) {
