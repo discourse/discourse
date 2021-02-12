@@ -405,7 +405,7 @@ export default Component.extend({
     // if the type is custom, we need to wait for the user to click save, as
     // they could still be adjusting the date and time
     if (
-      ![TIME_SHORTCUT_TYPES.CUSTOM, TIME_SHORTCUT_TYPES.RELATIVE].contains(type)
+      ![TIME_SHORTCUT_TYPES.CUSTOM, TIME_SHORTCUT_TYPES.RELATIVE].includes(type)
     ) {
       return this.saveAndClose();
     }
