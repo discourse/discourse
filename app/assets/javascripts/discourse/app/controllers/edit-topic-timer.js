@@ -9,6 +9,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export const CLOSE_STATUS_TYPE = "close";
+export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";
 export const OPEN_STATUS_TYPE = "open";
 export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
@@ -26,6 +27,14 @@ export default Controller.extend(ModalFunctionality, {
         id: CLOSE_STATUS_TYPE,
         name: I18n.t(
           closed ? "topic.temp_open.title" : "topic.auto_close.title"
+        ),
+      },
+      {
+        id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
+        name: I18n.t(
+          closed
+            ? "topic.temp_open.title"
+            : "topic.auto_close_after_last_post.title"
         ),
       },
       {
@@ -112,6 +121,13 @@ export default Controller.extend(ModalFunctionality, {
     if (!this.get("topicTimer.status_type")) {
       this.send("onChangeStatusType", this.defaultStatusType);
     }
+
+    if (
+      this.get("topicTimer.status_type") === CLOSE_STATUS_TYPE &&
+      this.get("topicTimer.based_on_last_post")
+    ) {
+      this.send("onChangeStatusType", CLOSE_AFTER_LAST_POST_STATUS_TYPE);
+    }
   },
 
   @discourseComputed("publicTimerTypes")
@@ -121,9 +137,14 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     onChangeStatusType(value) {
-      if (value !== CLOSE_STATUS_TYPE) {
+      if (![CLOSE_AFTER_LAST_POST_STATUS_TYPE].includes(value)) {
         this.set("topicTimer.based_on_last_post", false);
       }
+
+      if (CLOSE_AFTER_LAST_POST_STATUS_TYPE === value) {
+        this.set("topicTimer.based_on_last_post", true);
+      }
+
       this.set("topicTimer.status_type", value);
     },
 
@@ -168,10 +189,15 @@ export default Controller.extend(ModalFunctionality, {
         }
       }
 
+      let statusType = this.get("topicTimer.status_type");
+      if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
+        statusType = CLOSE_STATUS_TYPE;
+      }
+
       this._setTimer(
         this.get("topicTimer.updateTime"),
         this.get("topicTimer.duration_minutes"),
-        this.get("topicTimer.status_type"),
+        statusType,
         this.get("topicTimer.based_on_last_post"),
         this.get("topicTimer.category_id")
       );

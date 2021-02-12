@@ -1,5 +1,6 @@
 import {
   BUMP_TYPE,
+  CLOSE_AFTER_LAST_POST_STATUS_TYPE,
   CLOSE_STATUS_TYPE,
   DELETE_REPLIES_TYPE,
   DELETE_STATUS_TYPE,
@@ -19,13 +20,21 @@ export default Component.extend({
   statusType: readOnly("topicTimer.status_type"),
   autoOpen: equal("statusType", OPEN_STATUS_TYPE),
   autoClose: equal("statusType", CLOSE_STATUS_TYPE),
+  autoCloseAfterLastPost: equal(
+    "statusType",
+    CLOSE_AFTER_LAST_POST_STATUS_TYPE
+  ),
   autoDelete: equal("statusType", DELETE_STATUS_TYPE),
   autoBump: equal("statusType", BUMP_TYPE),
   publishToCategory: equal("statusType", PUBLISH_TO_CATEGORY_STATUS_TYPE),
   autoDeleteReplies: equal("statusType", DELETE_REPLIES_TYPE),
   showTimeOnly: or("autoOpen", "autoDelete", "autoBump"),
   showFutureDateInput: or("showTimeOnly", "publishToCategory", "autoClose"),
-  useDuration: or("isBasedOnLastPost", "autoDeleteReplies"),
+  useDuration: or(
+    "isBasedOnLastPost",
+    "autoDeleteReplies",
+    "autoCloseAfterLastPost"
+  ),
   duration: null,
 
   @on("init")
@@ -52,8 +61,8 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("includeBasedOnLastPost")
-  customTimeShortcutOptions(includeBasedOnLastPost) {
+  @discourseComputed()
+  customTimeShortcutOptions() {
     return [
       {
         icon: "bed",
@@ -83,14 +92,6 @@ export default Component.extend({
         time: startOfDay(now().add(6, "months")),
         timeFormatKey: "dates.long_no_year",
       },
-      {
-        icon: "far-clock",
-        id: "set_based_on_last_post",
-        label: "topic.auto_update_input.set_based_on_last_post",
-        time: null,
-        timeFormatted: "",
-        hidden: !includeBasedOnLastPost,
-      },
     ];
   },
 
@@ -100,8 +101,7 @@ export default Component.extend({
   },
 
   isCustom: equal("timerType", "custom"),
-  isBasedOnLastPost: equal("timerType", "set_based_on_last_post"),
-  includeBasedOnLastPost: equal("statusType", CLOSE_STATUS_TYPE),
+  isBasedOnLastPost: equal("statusType", "close_after_last_post"),
 
   @discourseComputed(
     "topicTimer.updateTime",
@@ -183,19 +183,12 @@ export default Component.extend({
 
   @action
   onTimeSelected(type, time) {
-    this.setProperties({
-      "topicTimer.based_on_last_post": type === "set_based_on_last_post",
-      timerType: type,
-    });
+    this.set("timerType", type);
     this.onChangeInput(type, time);
   },
 
   @action
-  durationChanged(newDuration) {
-    if (this.durationType === "days") {
-      this.set("topicTimer.duration_minutes", newDuration * 60 * 24);
-    } else {
-      this.set("topicTimer.duration_minutes", newDuration * 60);
-    }
+  durationChangedNew(newDurationMins) {
+    this.set("topicTimer.duration_minutes", newDurationMins);
   },
 });
