@@ -31,7 +31,7 @@
   #modal-alert:empty {
     display: none !important;
   }
-  
+
   #modal-alert:not(:empty) {
     display: flex;
     flex-direction: column;
