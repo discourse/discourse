@@ -1,5 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { next, run } from "@ember/runloop";
+import I18n from "I18n";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
@@ -413,6 +414,15 @@ export default createWidget("post-menu", {
     collapseButtons: true,
     buttonType: "flat-button",
     showReplyTitleOnMobile: false,
+  },
+
+  buildAttributes() {
+    const attributes = {};
+
+    attributes["role"] = "toolbar";
+    attributes["aria-label"] = I18n.t("topic.post_controls");
+
+    return attributes;
   },
 
   defaultState() {

@@ -1894,6 +1894,8 @@ en:
       whisper: "whisper"
       unlist: "unlisted"
 
+      toolbar: "formatting and options"
+
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
@@ -2490,6 +2492,7 @@ en:
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
 
       timeline:
+        title: "Topic timeline"
         back: "Back"
         back_description: "Go back to your last unread post"
         replies_short: "%{current} / %{total}"
@@ -2499,6 +2502,7 @@ en:
         go_top: "top"
         go_bottom: "bottom"
         go: "go"
+        jump_top: "jump to first post"
         jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
         jump_prompt_of:
@@ -2650,6 +2654,8 @@ en:
         group_name: "group name"
 
       controls: "Topic Controls"
+      post_controls: "Post controls"
+      topic_footer_controls: "Topic footer controls"
 
       invite_reply:
         title: "Invite"

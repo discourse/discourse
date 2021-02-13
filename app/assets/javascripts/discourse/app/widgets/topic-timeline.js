@@ -82,8 +82,18 @@ createWidget("timeline-scroller", {
     return { dragging: false };
   },
 
-  buildAttributes() {
-    return { style: `height: ${SCROLLER_HEIGHT}px` };
+  buildAttributes(attrs) {
+    const attributes = {};
+
+    attributes["style"] = `height: ${SCROLLER_HEIGHT}px`;
+    attributes["role"] = "scrollbar";
+    attributes["aria-orientation"] = "vertical";
+    attributes["aria-valuemin"] = "1";
+    attributes["aria-valuemax"] = attrs.total;
+    attributes["aria-valuenow"] = attrs.current;
+    attributes["aria-label"] = I18n.t("topic.progress.jump_prompt_long");
+
+    return attributes;
   },
 
   html(attrs, state) {
@@ -413,6 +423,15 @@ export default createWidget("topic-timeline", {
 
   buildKey: () => "topic-timeline-area",
 
+  buildAttributes() {
+    const attributes = {};
+
+    attributes["role"] = "toolbar";
+    attributes["aria-label"] = I18n.t("topic.timeline.title");
+
+    return attributes;
+  },
+
   defaultState() {
     return { position: null, excerpt: null };
   },
@@ -550,6 +569,10 @@ export default createWidget("topic-timeline", {
             className: "start-date",
             rawLabel: timelineDate(createdAt),
             action: "jumpTop",
+            attributes: {
+              "aria-description": I18n.t("topic.progress.jump_top"),
+              role: "button",
+            },
           })
         ),
         this.attach("timeline-scrollarea", attrs),
@@ -559,6 +582,10 @@ export default createWidget("topic-timeline", {
             className: "now-date",
             rawLabel: bottomAge,
             action: "jumpBottom",
+            attributes: {
+              "aria-description": I18n.t("topic.progress.jump_bottom"),
+              role: "button",
+            },
           })
         ),
       ];
