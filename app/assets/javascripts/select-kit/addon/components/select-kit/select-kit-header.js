@@ -71,7 +71,7 @@ export default Component.extend(UtilsMixin, {
     return this.selectKit.isExpanded ? "true" : "false";
   }),
 
-  ariaHasPopup: true,
+  ariaHasPopup: "menu",
 
   ariaOwns: computed("selectKit.uniqueID", function () {
     return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
