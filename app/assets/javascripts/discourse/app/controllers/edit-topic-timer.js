@@ -137,15 +137,11 @@ export default Controller.extend(ModalFunctionality, {
 
   actions: {
     onChangeStatusType(value) {
-      if (![CLOSE_AFTER_LAST_POST_STATUS_TYPE].includes(value)) {
-        this.set("topicTimer.based_on_last_post", false);
-      }
-
-      if (value === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
-        this.set("topicTimer.based_on_last_post", true);
-      }
-
-      this.set("topicTimer.status_type", value);
+      this.setProperties({
+        "topicTimer.based_on_last_post":
+          CLOSE_AFTER_LAST_POST_STATUS_TYPE === value,
+        "topicTimer.status_type": value,
+      });
     },
 
     onChangeInput(_type, time) {

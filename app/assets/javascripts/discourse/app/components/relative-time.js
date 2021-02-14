@@ -8,6 +8,7 @@ export default Component.extend({
   tagName: "",
   selectedInterval: "mins",
   durationMinutes: null,
+  duration: null,
 
   @on("init")
   cloneDuration() {
@@ -15,17 +16,17 @@ export default Component.extend({
 
     if (mins >= 1440) {
       this.setProperties({
-        _duration: Math.floor(mins / 60 / 24),
+        duration: Math.floor(mins / 60 / 24),
         selectedInterval: "days",
       });
     } else if (mins >= 60) {
       this.setProperties({
-        _duration: Math.floor(mins / 60),
+        duration: Math.floor(mins / 60),
         selectedInterval: "hours",
       });
     } else {
       this.setProperties({
-        _duration: mins,
+        duration: mins,
         selectedInterval: "mins",
       });
     }
@@ -41,24 +42,24 @@ export default Component.extend({
     ];
   },
 
-  @discourseComputed("selectedInterval", "_duration")
-  calculatedMinutes(interval, _duration) {
-    _duration = parseFloat(_duration);
+  @discourseComputed("selectedInterval", "duration")
+  calculatedMinutes(interval, duration) {
+    duration = parseFloat(duration);
 
     let mins = 0;
 
     switch (interval) {
       case "mins":
-        mins = _duration;
+        mins = duration;
         break;
       case "hours":
-        mins = _duration * 60;
+        mins = duration * 60;
         break;
       case "days":
-        mins = _duration * 60 * 24;
+        mins = duration * 60 * 24;
         break;
       case "months":
-        mins = _duration * 60 * 24 * 30; // least accurate because of varying days in months
+        mins = duration * 60 * 24 * 30; // least accurate because of varying days in months
         break;
     }
 
