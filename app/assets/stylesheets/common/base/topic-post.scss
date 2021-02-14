@@ -247,6 +247,12 @@ blockquote {
   color: var(--primary-low-mid-or-secondary-high);
 }
 
+.quote-controls {
+  .quote-toggle {
+    padding: 0;
+  }
+}
+
 .cooked .highlight {
   background-color: var(--tertiary-low);
   padding: 2px;
