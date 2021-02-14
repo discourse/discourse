@@ -29,7 +29,7 @@ export default Component.extend(UtilsMixin, {
     "ariaHasPopup:aria-haspopup",
     "ariaIsExpanded:aria-expanded",
     "selectKitId:data-select-kit-id",
-    "roleButton:role",
+    "headerRole:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
     "buttonTitle:title",
@@ -77,7 +77,7 @@ export default Component.extend(UtilsMixin, {
     return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
   }),
 
-  roleButton: "button",
+  headerRole: "listbox",
 
   tabindex: 0,
 
