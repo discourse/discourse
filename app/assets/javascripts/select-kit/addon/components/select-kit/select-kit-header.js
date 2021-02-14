@@ -28,7 +28,6 @@ export default Component.extend(UtilsMixin, {
     "ariaOwns:aria-owns",
     "ariaHasPopup:aria-haspopup",
     "ariaIsExpanded:aria-expanded",
-    "selectKitId:data-select-kit-id",
     "roleButton:role",
     "selectedValue:data-value",
     "selectedNames:data-name",
@@ -63,10 +62,6 @@ export default Component.extend(UtilsMixin, {
     return icon.concat(icons).filter(Boolean);
   }),
 
-  selectKitId: computed("selectKit.uniqueID", function () {
-    return `${this.selectKit.uniqueID}-header`;
-  }),
-
   ariaIsExpanded: computed("selectKit.isExpanded", function () {
     return this.selectKit.isExpanded ? "true" : "false";
   }),
@@ -74,7 +69,7 @@ export default Component.extend(UtilsMixin, {
   ariaHasPopup: true,
 
   ariaOwns: computed("selectKit.uniqueID", function () {
-    return `[data-select-kit-id=${this.selectKit.uniqueID}-body]`;
+    return `${this.selectKit.uniqueID}-body`;
   }),
 
   roleButton: "button",
@@ -178,7 +173,7 @@ export default Component.extend(UtilsMixin, {
 
   _focusFilterInput() {
     const filterContainer = document.querySelector(
-      `[data-select-kit-id=${this.selectKit.uniqueID}-filter]`
+      `#${this.selectKit.uniqueID}-filter`
     );
 
     if (filterContainer) {

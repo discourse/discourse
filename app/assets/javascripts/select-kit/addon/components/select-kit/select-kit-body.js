@@ -6,11 +6,8 @@ import layout from "select-kit/templates/components/select-kit/select-kit-body";
 export default Component.extend({
   layout,
   classNames: ["select-kit-body"],
-  attributeBindings: ["role", "selectKitId:data-select-kit-id"],
+  attributeBindings: ["role"],
   classNameBindings: ["emptyBody:empty-body"],
-  selectKitId: computed("selectKit.uniqueID", function () {
-    return `${this.selectKit.uniqueID}-body`;
-  }),
   emptyBody: computed("selectKit.{filter,hasNoContent}", function () {
     return !this.selectKit.filter && this.selectKit.hasNoContent;
   }),
@@ -50,7 +47,7 @@ export default Component.extend({
     }
 
     const headerElement = document.querySelector(
-      `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
+      `#${this.selectKit.uniqueID}-header`
     );
 
     if (headerElement && headerElement.contains(event.target)) {

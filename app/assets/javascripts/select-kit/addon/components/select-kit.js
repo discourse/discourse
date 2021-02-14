@@ -776,10 +776,10 @@ export default Component.extend(
 
       if (!this.popper) {
         const anchor = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
+          `#${this.selectKit.uniqueID}-header`
         );
         const popper = document.querySelector(
-          `[data-select-kit-id=${this.selectKit.uniqueID}-body]`
+          `#${this.selectKit.uniqueID}-body`
         );
 
         const inModal = $(this.element).parents("#discourse-modal").length;
@@ -954,15 +954,11 @@ export default Component.extend(
     },
 
     getFilterInput() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-filter] input`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-filter input`);
     },
 
     getHeader() {
-      return document.querySelector(
-        `[data-select-kit-id=${this.selectKit.uniqueID}-header]`
-      );
+      return document.querySelector(`#${this.selectKit.uniqueID}-header`);
     },
 
     handleDeprecations() {
