@@ -346,36 +346,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     state.dismissNewTopic({
       message_type: "dismiss_new",
-      topic_id: 112,
-      payload: { category_id: 2 },
-    });
-    assert.equal(state.states["t112"].is_seen, false);
-    state.dismissNewTopic({
-      message_type: "dismiss_new",
-      topic_id: 112,
-      payload: { category_id: 1 },
-    });
-    assert.equal(state.states["t112"].is_seen, true);
-
-    state.states["t112"].is_seen = false;
-    state.dismissNewTopic({
-      message_type: "dismiss_new",
-      topic_id: 112,
-      payload: { tag_id: "bar" },
-    });
-    assert.equal(state.states["t112"].is_seen, false);
-    state.dismissNewTopic({
-      message_type: "dismiss_new",
-      topic_id: 112,
-      payload: { tag_id: "foo" },
-    });
-    assert.equal(state.states["t112"].is_seen, true);
-
-    state.states["t112"].is_seen = false;
-    state.dismissNewTopic({
-      message_type: "dismiss_new",
-      topic_id: 112,
-      payload: {},
+      payload: { topic_ids: [112] },
     });
     assert.equal(state.states["t112"].is_seen, true);
   });

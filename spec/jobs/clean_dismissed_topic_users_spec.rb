@@ -7,10 +7,6 @@ describe Jobs::CleanDismissedTopicUsers do
   fab!(:topic) { Fabricate(:topic, created_at: 5.hours.ago) }
   fab!(:dismissed_topic_user) { Fabricate(:dismissed_topic_user, user: user, topic: topic) }
 
-  before do
-    user.user_stat.update!(new_since: 1.days.ago)
-  end
-
   context '#delete_overdue_dismissals!' do
     it 'does not delete when new_topic_duration_minutes is set to always' do
       user.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
@@ -45,8 +41,6 @@ describe Jobs::CleanDismissedTopicUsers do
     before do
       user.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
       user2.user_option.update(new_topic_duration_minutes: User::NewTopicDuration::ALWAYS)
-      user.user_stat.update!(new_since: 1.days.ago)
-      user2.user_stat.update!(new_since: 1.days.ago)
     end
 
     it 'deletes over the limit dismissals' do
