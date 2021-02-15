@@ -70,6 +70,90 @@ describe TopicStatusUpdater do
     expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_lastpost_hours", count: 10))
   end
 
+  describe "opening the topic" do
+    it "opens the topic and deletes the timer" do
+      topic = create_topic
+
+      topic.set_or_create_timer(
+        TopicTimer.types[:open], 10.hours.from_now
+      )
+
+      TopicStatusUpdater.new(topic, admin).update!("closed", false)
+      timer = TopicTimer.find_by(topic: topic)
+      expect(timer).to eq(nil)
+    end
+
+    context "when the category has auto close settings" do
+      let(:topic) { create_topic }
+      let(:based_on_last_post) { false }
+
+      before do
+        # auto close after 3 days, topic was created a day ago
+        topic.update(
+          category: Fabricate(:category, auto_close_hours: 72, auto_close_based_on_last_post: based_on_last_post),
+          created_at: 1.day.ago
+        )
+      end
+
+      it "inherits auto close from the topic category, based on the created_at date of the topic" do
+
+        # close the topic manually, and set a timer to automatically open
+        TopicStatusUpdater.new(topic, admin).update!("closed", true)
+        topic.set_or_create_timer(
+          TopicTimer.types[:open], 10.hours.from_now
+        )
+
+        # manually open the topic. it has been 1 days since creation so the
+        # topic should auto-close 2 days from now, the original auto close time
+        TopicStatusUpdater.new(topic, admin).update!("closed", false)
+
+        timer = TopicTimer.find_by(topic: topic)
+        expect(timer).not_to eq(nil)
+        expect(timer.execute_at.to_i).to eq((topic.created_at + 72.hours).to_i)
+      end
+
+      it "does not inherit auto close from the topic category if it has already been X hours since topic creation" do
+
+        topic.category.update(auto_close_hours: 1)
+
+        # close the topic manually, and set a timer to automatically open
+        TopicStatusUpdater.new(topic, admin).update!("closed", true)
+        topic.set_or_create_timer(
+          TopicTimer.types[:open], 10.hours.from_now
+        )
+
+        # manually open the topic. it has been over a day since creation and
+        # the auto close hours was 1 so a new timer should not be made
+        TopicStatusUpdater.new(topic, admin).update!("closed", false)
+
+        timer = TopicTimer.find_by(topic: topic)
+        expect(timer).to eq(nil)
+      end
+
+      context "when category setting is based_on_last_post" do
+        let(:based_on_last_post) { true }
+
+        it "inherits auto close from the topic category, using the duration because the close is based_on_last_post" do
+
+          # close the topic manually, and set a timer to automatically open
+          TopicStatusUpdater.new(topic, admin).update!("closed", true)
+          topic.set_or_create_timer(
+            TopicTimer.types[:open], 10.hours.from_now
+          )
+
+          # manually open the topic. it should re open 3 days from now, NOT
+          # 3 days from creation
+          TopicStatusUpdater.new(topic, admin).update!("closed", false)
+
+          timer = TopicTimer.find_by(topic: topic)
+          expect(timer).not_to eq(nil)
+          expect(timer.duration_minutes).to eq(72 * 60)
+          expect(timer.execute_at.to_i).to eq((Time.zone.now + 72.hours).to_i)
+        end
+      end
+    end
+  end
+
   describe "repeat actions" do
 
     shared_examples "an action that doesn't repeat" do

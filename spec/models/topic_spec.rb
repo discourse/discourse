@@ -1611,7 +1611,7 @@ describe Topic do
 
             expect(topic_timer.user).to eq(Discourse.system_user)
             expect(topic_timer.topic).to eq(topic)
-            expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
+            expect(topic_timer.execute_at.to_i).to eq(5.hours.from_now.to_i)
           end
 
           describe 'when topic is already closed' do
@@ -1868,7 +1868,7 @@ describe Topic do
         freeze_time
         Jobs.run_immediately!
 
-        expect(topic.topic_timers.first.execute_at).to eq_time(topic.created_at + 4.hours)
+        expect(topic.topic_timers.first.execute_at.to_i).to eq((topic.created_at + 4.hours).to_i)
 
         topic.set_or_create_timer(TopicTimer.types[:close], 2, by_user: admin)
 
