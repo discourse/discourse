@@ -27,6 +27,13 @@ class WatchedWord < ActiveRecord::Base
     end
   end
 
+  validate do |word|
+    if word.action == self.class.actions[:link]
+      is_url_valid = URI(word.replacement).is_a?(URI::HTTP) rescue false
+      word.errors.add(:replacement, :invalid_url) if !is_url_valid
+    end
+  end
+
   after_save    :clear_cache
   after_destroy :clear_cache
 

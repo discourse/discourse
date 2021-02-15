@@ -31,6 +31,9 @@ class WordWatcher
   def self.word_matcher_regexp(action, raise_errors: false)
     words = get_cached_words(action)
     if words
+      if action.to_sym == :link
+        words = words.keys
+      end
       words = words.map do |w|
         word = word_to_regexp(w)
         word = "(#{word})" if SiteSetting.watched_words_regular_expressions?

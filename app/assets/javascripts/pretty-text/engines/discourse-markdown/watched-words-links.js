@@ -9,11 +9,13 @@ function isLinkClose(str) {
 export function setup(helper) {
   helper.registerPlugin((md) => {
     const watchedWordsLinks = md.options.discourse.watchedWordsLinks;
+    if (!watchedWordsLinks) {
+      return;
+    }
+
     const regexp = new RegExp(Object.keys(watchedWordsLinks).join("|"), "gi");
 
     md.core.ruler.push("watched-words-links", (state) => {
-      let token, currentToken, nodes, text, pos, level;
-
       for (let j = 0, l = state.tokens.length; j < l; j++) {
         if (state.tokens[j].type !== "inline") {
           continue;
@@ -26,7 +28,7 @@ export function setup(helper) {
         // We scan from the end, to keep position when new tags added.
         // Use reversed logic in links start/end match
         for (let i = tokens.length - 1; i >= 0; i--) {
-          currentToken = tokens[i];
+          const currentToken = tokens[i];
 
           // Skip content of markdown links
           if (currentToken.type === "link_close") {
@@ -56,14 +58,14 @@ export function setup(helper) {
           }
 
           if (currentToken.type === "text") {
-            text = currentToken.content;
+            const text = currentToken.content;
 
             // Now split string to nodes
-            nodes = [];
-            level = currentToken.level;
+            const nodes = [];
+            let level = currentToken.level;
             let lastPos = 0;
 
-            let match;
+            let match, token;
             while ((match = regexp.exec(text)) !== null) {
               let url = watchedWordsLinks[match[0]];
               let fullUrl = state.md.normalizeLink(url);
@@ -71,11 +73,9 @@ export function setup(helper) {
                 continue;
               }
 
-              pos = match.index;
-
-              if (pos > lastPos) {
+              if (match.index > lastPos) {
                 token = new state.Token("text", "", 0);
-                token.content = text.slice(lastPos, pos);
+                token.content = text.slice(lastPos, match.index);
                 token.level = level;
                 nodes.push(token);
               }
