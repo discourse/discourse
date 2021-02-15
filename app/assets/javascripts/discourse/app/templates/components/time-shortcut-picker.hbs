@@ -25,5 +25,13 @@
         </div>
       {{/if}}
     {{/if}}
+
+    {{#if option.isRelativeTimeShortcut}}
+      {{#if relativeTimeSelected}}
+        <div class="control-group custom-date-time-wrap">
+          {{relative-time onChange=(action "relativeTimeChanged")}}
+        </div>
+      {{/if}}
+    {{/if}}
   {{/each}}
 {{/tap-tile-grid}}

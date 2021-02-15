@@ -16,6 +16,7 @@ export const TIME_SHORTCUT_TYPES = {
   NEXT_WEEK: "next_week",
   NEXT_MONTH: "next_month",
   CUSTOM: "custom",
+  RELATIVE: "relative",
   LAST_CUSTOM: "last_custom",
   NONE: "none",
   START_OF_NEXT_BUSINESS_WEEK: "start_of_next_business_week",
@@ -75,6 +76,14 @@ export function defaultShortcutOptions(timezone) {
       label: "time_shortcut.next_month",
       time: nextMonth(timezone),
       timeFormatted: nextMonth(timezone).format(I18n.t("dates.long_no_year")),
+    },
+    {
+      icon: "far-clock",
+      id: TIME_SHORTCUT_TYPES.RELATIVE,
+      label: "time_shortcut.relative",
+      time: null,
+      timeFormatted: null,
+      isRelativeTimeShortcut: true,
     },
     {
       icon: "calendar-alt",

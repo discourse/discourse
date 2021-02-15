@@ -67,7 +67,9 @@ export default Component.extend({
 
       let options = {
         timeLeft: duration.humanize(true),
-        duration: moment.duration(durationMinutes, "minutes").humanize(),
+        duration: moment
+          .duration(durationMinutes, "minutes")
+          .humanize({ s: 60, m: 60, h: 24 }),
       };
 
       const categoryId = this.categoryId;
@@ -130,11 +132,10 @@ export default Component.extend({
     if (statusType === "silent_close") {
       statusType = "close";
     }
-
-    if (this.basedOnLastPost) {
-      return `topic.status_update_notice.auto_${statusType}_based_on_last_post`;
-    } else {
-      return `topic.status_update_notice.auto_${statusType}`;
+    if (this.basedOnLastPost && statusType === "close") {
+      statusType = "close_after_last_post";
     }
+
+    return `topic.status_update_notice.auto_${statusType}`;
   },
 });

@@ -23,8 +23,8 @@
   {{/if}}
   {{#if useDuration}}
     <div class="controls">
-      <label class="control-label">{{durationLabel}}</label>
-      {{text-field id="topic_timer_duration" class="topic-timer-duration" type="number" value=duration min="0.1" step="0.1" onChange=durationChanged}}
+      <label class="control-label">Duration</label>
+      {{relative-time onChange=(action "durationChanged") durationMinutes=(readonly topicTimer.duration_minutes)}}
     </div>
   {{/if}}
   {{#if willCloseImmediately}}
@@ -34,7 +34,7 @@
     </div>
   {{/if}}
   {{#if showTopicStatusInfo}}
-    <div class="alert alert-info">
+    <div class="alert alert-info modal-topic-timer-info">
       {{topic-timer-info
         statusType=statusType
         executeAt=executeAt

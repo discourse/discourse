@@ -575,6 +575,12 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
+    relative_time:
+      minutes: "minute(s)"
+      hours: "hour(s)"
+      days: "day(s)"
+      months: "month(s)"
+
     time_shortcut:
       later_today: "Later today"
       next_business_day: "Next business day"
@@ -586,6 +592,7 @@ en:
       start_of_next_business_week_alt: "Next Monday"
       next_month: "Next month"
       custom: "Custom date and time"
+      relative: "Relative time"
       none: "None needed"
       last_custom: "Last"
 
@@ -2463,6 +2470,8 @@ en:
         label: "Auto-close topic hours:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
+      auto_close_after_last_post:
+        title: "Auto-Close Topic After Last Post"
       auto_delete:
         title: "Auto-Delete Topic"
       auto_bump:
@@ -2476,7 +2485,7 @@ en:
         auto_open: "This topic will automatically open %{timeLeft}."
         auto_close: "This topic will automatically close %{timeLeft}."
         auto_publish_to_category: "This topic will be published to <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "This topic will close %{duration} after the last reply."
+        auto_close_after_last_post: "This topic will close %{duration} after the last reply."
         auto_delete: "This topic will be automatically deleted %{timeLeft}."
         auto_bump: "This topic will be automatically bumped %{timeLeft}."
         auto_reminder: "You will be reminded about this topic %{timeLeft}."
