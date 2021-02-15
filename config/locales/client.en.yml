@@ -2467,7 +2467,7 @@ en:
         title: "Close Temporarily"
       auto_close:
         title: "Auto-Close Topic"
-        label: "Auto-close topic hours:"
+        label: "Auto-close topic after:"
         error: "Please enter a valid value."
         based_on_last_post: "Don't close until the last post in the topic is at least this old."
       auto_close_after_last_post:

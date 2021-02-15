@@ -8,11 +8,53 @@ export default Component.extend({
   tagName: "",
   selectedInterval: "mins",
   durationMinutes: null,
+  durationHours: null,
   duration: null,
+  hiddenIntervals: null,
 
   @on("init")
   cloneDuration() {
     let mins = this.durationMinutes;
+    let hours = this.durationHours;
+
+    if (hours && mins) {
+      throw new Error(
+        "relative-time needs initial duration in hours OR minutes, both are not supported"
+      );
+    }
+
+    if (hours) {
+      this._setInitialDurationFromHours(hours);
+    } else {
+      this._setInitialDurationFromMinutes(mins);
+    }
+  },
+
+  @on("init")
+  setHiddenIntervals() {
+    this.hiddenIntervals = this.hiddenIntervals || [];
+  },
+
+  _setInitialDurationFromHours(hours) {
+    if (hours >= 730) {
+      this.setProperties({
+        duration: Math.floor(hours / 30 / 24),
+        selectedInterval: "months",
+      });
+    } else if (hours >= 24) {
+      this.setProperties({
+        duration: Math.floor(hours / 24),
+        selectedInterval: "days",
+      });
+    } else {
+      this.setProperties({
+        duration: hours,
+        selectedInterval: "hours",
+      });
+    }
+  },
+
+  _setInitialDurationFromMinutes(mins) {
     if (mins >= 43800) {
       this.setProperties({
         duration: Math.floor(mins / 30 / 60 / 24),
@@ -43,7 +85,7 @@ export default Component.extend({
       { id: "hours", name: I18n.t("relative_time.hours") },
       { id: "days", name: I18n.t("relative_time.days") },
       { id: "months", name: I18n.t("relative_time.months") },
-    ];
+    ].filter((interval) => !this.hiddenIntervals.includes(interval.id));
   },
 
   @discourseComputed("selectedInterval", "duration")

@@ -114,7 +114,13 @@
       <label for="topic-auto-close">
         {{i18n "topic.auto_close.label"}}
       </label>
-      {{text-field value=category.auto_close_hours id="topic-auto-close" type="number"}}
+      <div class="category-topic-auto-close-hours">
+        {{relative-time
+            id="topic-auto-close"
+            durationHours=category.auto_close_hours
+            hiddenIntervals=["mins"]
+            onChange=(action "onAutoCloseDurationChange")}}
+      </div>
       <label>
         {{input type="checkbox" checked=category.auto_close_based_on_last_post}}
         {{i18n "topic.auto_close.based_on_last_post"}}
