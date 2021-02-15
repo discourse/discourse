@@ -180,7 +180,7 @@ acceptance("Topic - Edit timer", function (needs) {
     assert.equal(removeTimerButton.attr("title"), "remove timer");
 
     await click(".topic-timer-info .topic-timer-remove");
-    const topicStatusInfo = queryAll(".topic-timer-info .topic-timer-remove");
-    assert.equal(topicStatusInfo.length, 0);
+    const topicTimerInfo = queryAll(".topic-timer-info .topic-timer-remove");
+    assert.equal(topicTimerInfo.length, 0);
   });
 });

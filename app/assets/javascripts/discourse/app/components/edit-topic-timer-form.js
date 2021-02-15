@@ -153,7 +153,7 @@ export default Component.extend({
     "useDuration",
     "topicTimer.duration_minutes"
   )
-  showTopicStatusInfo(
+  showTopicTimerInfo(
     statusType,
     isCustom,
     updateTime,
