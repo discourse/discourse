@@ -575,7 +575,7 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
 
-    relative_time:
+    relative_time_picker:
       minutes: "minute(s)"
       hours: "hour(s)"
       days: "day(s)"

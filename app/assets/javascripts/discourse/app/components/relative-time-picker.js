@@ -39,10 +39,10 @@ export default Component.extend({
   @discourseComputed
   intervals() {
     return [
-      { id: "mins", name: I18n.t("relative_time.minutes") },
-      { id: "hours", name: I18n.t("relative_time.hours") },
-      { id: "days", name: I18n.t("relative_time.days") },
-      { id: "months", name: I18n.t("relative_time.months") },
+      { id: "mins", name: I18n.t("relative_time_picker.minutes") },
+      { id: "hours", name: I18n.t("relative_time_picker.hours") },
+      { id: "days", name: I18n.t("relative_time_picker.days") },
+      { id: "months", name: I18n.t("relative_time_picker.months") },
     ];
   },
 
