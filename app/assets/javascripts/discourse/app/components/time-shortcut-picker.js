@@ -169,6 +169,7 @@ export default Component.extend({
   },
 
   customDatetimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.CUSTOM),
+  relativeTimeSelected: equal("selectedShortcut", TIME_SHORTCUT_TYPES.RELATIVE),
   customDatetimeFilled: and("customDate", "customTime"),
 
   @observes("customDate", "customTime")
@@ -219,13 +220,24 @@ export default Component.extend({
       }
     });
 
-    let customOptionIndex = options.findIndex(
-      (opt) => opt.id === TIME_SHORTCUT_TYPES.CUSTOM
+    let relativeOptionIndex = options.findIndex(
+      (opt) => opt.id === TIME_SHORTCUT_TYPES.RELATIVE
     );
 
-    options.splice(customOptionIndex, 0, ...customOptions);
+    options.splice(relativeOptionIndex, 0, ...customOptions);
 
     return options;
+  },
+
+  @action
+  relativeTimeChanged(relativeTimeMins) {
+    let dateTime = now(this.userTimezone).add(relativeTimeMins, "minutes");
+
+    this.set("selectedDatetime", dateTime);
+
+    if (this.onTimeSelected) {
+      this.onTimeSelected(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);
+    }
   },
 
   @action

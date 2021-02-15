@@ -58,6 +58,12 @@
   .pika-single {
     position: absolute !important; /* inline JS styles */
   }
+
+  .modal-topic-timer-info {
+    .topic-status-info {
+      border-top: 0;
+    }
+  }
 }
 
 // mobile styles

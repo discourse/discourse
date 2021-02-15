@@ -63,8 +63,14 @@ acceptance("Topic - Edit timer", function (needs) {
       .trim();
     assert.ok(regex2.test(html2));
 
-    await click("#tap_tile_set_based_on_last_post");
-    await fillIn("#topic_timer_duration", "2");
+    const timerType = selectKit(".select-kit.timer-type");
+    await timerType.expand();
+    await timerType.selectRowByValue("close_after_last_post");
+
+    const interval = selectKit(".select-kit.relative-time-intervals");
+    await interval.expand();
+    await interval.selectRowByValue("hours");
+    await fillIn(".relative-time-duration", "2");
 
     const regex3 = /last post in the topic is already/g;
     const html3 = queryAll(".edit-topic-timer-modal .warning").html().trim();

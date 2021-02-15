@@ -3,18 +3,18 @@
 require 'rails_helper'
 
 describe DismissTopics do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, created_at: 1.days.ago) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic1) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
   fab!(:topic2) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
 
-  before do
-    user.user_stat.update!(new_since: 1.days.ago)
-  end
-
   describe '#perform!' do
     it 'dismisses two topics' do
       expect { described_class.new(user, Topic.all).perform! }.to change { DismissedTopicUser.count }.by(2)
+    end
+
+    it 'returns dismissed topic ids' do
+      expect(described_class.new(user, Topic.all).perform!.sort).to eq([topic1.id, topic2.id])
     end
 
     it 'respects max_new_topics limit' do
