@@ -3,28 +3,46 @@ import Category from "discourse/models/category";
 import Component from "@ember/component";
 import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isTesting } from "discourse-common/config/environment";
 
 export default Component.extend({
-  classNames: ["topic-status-info"],
+  classNames: ["topic-timer-info"],
   _delayedRerender: null,
   clockIcon: `${iconHTML("far-clock")}`.htmlSafe(),
-  trashCanIcon: `${iconHTML("trash-alt")}`.htmlSafe(),
-  trashCanTitle: I18n.t("post.controls.remove_timer"),
+  trashLabel: I18n.t("post.controls.remove_timer"),
   title: null,
   notice: null,
   showTopicTimer: null,
+  showTopicTimerModal: null,
+  removeTopicTimer: null,
+
+  @on("didReceiveAttrs")
+  setupRenderer() {
+    this.renderTopicTimer();
+  },
+
+  @on("willDestroyElement")
+  cancelDelayedRenderer() {
+    if (this._delayedRerender) {
+      cancel(this._delayedRerender);
+    }
+  },
 
   @discourseComputed
-  canRemoveTimer() {
+  canModifyTimer() {
     return this.currentUser && this.currentUser.get("canManageTopic");
   },
 
-  @discourseComputed("canRemoveTimer", "removeTopicTimer")
-  showTrashCan(canRemoveTimer, removeTopicTimer) {
-    return canRemoveTimer && removeTopicTimer;
+  @discourseComputed("canModifyTimer", "removeTopicTimer")
+  showTrashCan(canModifyTimer, removeTopicTimer) {
+    return canModifyTimer && removeTopicTimer;
+  },
+
+  @discourseComputed("canModifyTimer", "showTopicTimerModal")
+  showEdit(canModifyTimer, showTopicTimerModal) {
+    return canModifyTimer && showTopicTimerModal;
   },
 
   renderTopicTimer() {
@@ -99,31 +117,6 @@ export default Component.extend({
       }
     } else {
       this.set("showTopicTimer", null);
-    }
-  },
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-    this.renderTopicTimer();
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    if (this.removeTopicTimer) {
-      $(this.element).on(
-        "click.topic-timer-remove",
-        "button",
-        this.removeTopicTimer
-      );
-    }
-  },
-
-  willDestroyElement() {
-    $(this.element).off("click.topic-timer-remove", this.removeTopicTimer);
-
-    if (this._delayedRerender) {
-      cancel(this._delayedRerender);
     }
   },
 

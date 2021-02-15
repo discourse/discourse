@@ -2939,6 +2939,7 @@ en:
         change_post_notice: "Change Staff Notice"
         delete_post_notice: "Delete Staff Notice"
         remove_timer: "remove timer"
+        edit_timer: "edit timer"
 
       actions:
         people:

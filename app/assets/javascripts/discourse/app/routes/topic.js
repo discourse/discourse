@@ -105,7 +105,7 @@ const TopicRoute = DiscourseRoute.extend({
       });
     },
 
-    showTopicStatusUpdate() {
+    showTopicTimerModal() {
       const model = this.modelFor("topic");
 
       const topicTimer = model.get("topic_timer");
