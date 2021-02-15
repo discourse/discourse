@@ -36,13 +36,27 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed
-  intervals() {
+  @discourseComputed("duration")
+  intervals(duration) {
+    const count = duration ? parseFloat(duration) : 0;
+
     return [
-      { id: "mins", name: I18n.t("relative_time.minutes") },
-      { id: "hours", name: I18n.t("relative_time.hours") },
-      { id: "days", name: I18n.t("relative_time.days") },
-      { id: "months", name: I18n.t("relative_time.months") },
+      {
+        id: "mins",
+        name: I18n.t("relative_time_picker.minutes", { count }),
+      },
+      {
+        id: "hours",
+        name: I18n.t("relative_time_picker.hours", { count }),
+      },
+      {
+        id: "days",
+        name: I18n.t("relative_time_picker.days", { count }),
+      },
+      {
+        id: "months",
+        name: I18n.t("relative_time_picker.months", { count }),
+      },
     ];
   },
 

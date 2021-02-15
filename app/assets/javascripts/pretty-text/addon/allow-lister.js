@@ -194,6 +194,7 @@ export const DEFAULT_LIST = [
   "ins",
   "kbd",
   "li",
+  "mark",
   "ol",
   "ol[start]",
   "p",

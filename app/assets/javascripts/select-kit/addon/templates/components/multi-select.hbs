@@ -4,9 +4,10 @@
     value=value
     selectedContent=selectedContent
     selectKit=selectKit
+    id=(concat selectKit.uniqueID "-header")
   }}
 
-  {{#select-kit/select-kit-body selectKit=selectKit}}
+  {{#select-kit/select-kit-body selectKit=selectKit id=(concat selectKit.uniqueID "-body")}}
     {{#if selectKit.isLoading}}
       <span class="is-loading">
         {{loading-spinner size="small"}}
