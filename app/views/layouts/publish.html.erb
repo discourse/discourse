@@ -5,6 +5,8 @@
     <title><%= @topic.title %> - <%= SiteSetting.title %></title>
     <%= render partial: "layouts/head" %>
     <%= render partial: "common/discourse_publish_stylesheet" %>
+    <%= render_google_tag_manager_head_code %>
+    <%= render_google_universal_analytics_code %>
   </head>
   <body class="<%= @body_classes.to_a.join(' ') %>">
     <%= theme_lookup("header") %>
