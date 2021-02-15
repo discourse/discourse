@@ -113,6 +113,7 @@ export default Component.extend({
       this.set("selectedTopicId", topic.id);
       next(() => {
         document.getElementById(`choose-topic-${topic.id}`).checked = true;
+        document.getElementById(`choose-topic-${topic.id}`).focus();
       });
       if (this.topicChangedCallback) {
         this.topicChangedCallback(topic);
