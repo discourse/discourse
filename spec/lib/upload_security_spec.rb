@@ -25,6 +25,12 @@ RSpec.describe UploadSecurity do
       end
 
       context "when uploading in public context" do
+        describe "for a public type group_flair" do
+          let(:type) { 'group_flair' }
+          it "returns false" do
+            expect(subject.should_be_secure?).to eq(false)
+          end
+        end
         describe "for a public type avatar" do
           let(:type) { 'avatar' }
           it "returns false" do
