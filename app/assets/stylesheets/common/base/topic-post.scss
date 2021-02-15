@@ -125,7 +125,8 @@ $quote-share-maxwidth: 150px;
   }
 
   del,
-  ins {
+  ins,
+  mark {
     text-decoration: none;
   }
 
@@ -134,6 +135,9 @@ $quote-share-maxwidth: 150px;
   }
   del {
     background-color: var(--danger-low);
+  }
+  mark {
+    background-color: var(--highlight);
   }
   // Prevents users from breaking posts with tag nesting
   big {
