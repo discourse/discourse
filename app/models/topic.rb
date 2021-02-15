@@ -1284,14 +1284,16 @@ class Topic < ActiveRecord::Base
 
       if !based_on_last_post
         # set auto close to the original time it should have been
-        # when the topic was first created. the timestamp must be
-        # a string
+        # when the topic was first created.
         start_time = self.created_at || Time.zone.now
-        auto_close_time = (start_time + auto_close_hours.hours).to_s
+        auto_close_time = start_time + auto_close_hours.hours
 
         # if we have already passed the original close time then
         # we should not recreate the auto-close timer for the topic
         return if auto_close_time < Time.zone.now
+
+        # timestamp must be a string for set_or_create_timer
+        auto_close_time = auto_close_time.to_s
       end
 
       self.set_or_create_timer(
