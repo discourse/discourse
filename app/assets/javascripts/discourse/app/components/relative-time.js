@@ -13,8 +13,12 @@ export default Component.extend({
   @on("init")
   cloneDuration() {
     let mins = this.durationMinutes;
-
-    if (mins >= 1440) {
+    if (mins >= 43800) {
+      this.setProperties({
+        duration: Math.floor(mins / 30 / 60 / 24),
+        selectedInterval: "months",
+      });
+    } else if (mins >= 1440) {
       this.setProperties({
         duration: Math.floor(mins / 60 / 24),
         selectedInterval: "days",
