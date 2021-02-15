@@ -128,6 +128,11 @@ export default buildCategoryPanel("settings", {
     ];
   },
 
+  @discourseComputed
+  hiddenRelativeIntervals() {
+    return ["mins"];
+  },
+
   @action
   onAutoCloseDurationChange(minutes) {
     let hours = minutes / 60;
