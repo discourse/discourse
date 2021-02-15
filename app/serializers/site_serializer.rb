@@ -177,12 +177,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_links
-    cache_fragment("watched_word_links") do
-      WatchedWord
-        .where(action: WatchedWord.actions[:link])
-        .pluck(:word, :replacement)
-        .to_h
-    end
+    WordWatcher.get_cached_words(:link)
   end
 
   private
