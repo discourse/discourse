@@ -29,7 +29,7 @@
     {{#if option.isRelativeTimeShortcut}}
       {{#if relativeTimeSelected}}
         <div class="control-group custom-date-time-wrap">
-          {{relative-time onChange=(action "relativeTimeChanged")}}
+          {{relative-time-picker onChange=(action "relativeTimeChanged")}}
         </div>
       {{/if}}
     {{/if}}
