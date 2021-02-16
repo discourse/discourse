@@ -4,7 +4,7 @@ importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/wo
 
 workbox.setConfig({
   modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox" %>",
-  debug: <%= Rails.env.development? %>
+  debug: false
 });
 
 var authUrl = "<%= Discourse.base_path %>/auth/";
