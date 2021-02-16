@@ -3,7 +3,6 @@
     <p>{{html-safe (i18n "admin.user.merge.prompt.description" username=username)}}</p>
     {{email-group-user-chooser
       value=targetUsername
-      autocomplete="discourse"
       onChange=(action "updateUsername")
       options=(hash
         maximum=1
