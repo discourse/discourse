@@ -61,7 +61,7 @@ export default Component.extend({
 
         const watchedWord = WatchedWord.create({
           word: this.word,
-          replacement: this.canReplace ? this.replacement : undefined,
+          replacement: this.canReplace ? this.replacement : null,
           action: this.actionKey,
         });
 
@@ -70,6 +70,7 @@ export default Component.extend({
           .then((result) => {
             this.setProperties({
               word: "",
+              replacement: "",
               formSubmitted: false,
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success"),

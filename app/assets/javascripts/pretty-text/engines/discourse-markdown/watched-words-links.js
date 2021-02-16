@@ -6,6 +6,23 @@ function isLinkClose(str) {
   return /^<\/a\s*>/i.test(str);
 }
 
+function match(text, matchers) {
+  const matches = [];
+
+  matchers.forEach((matcher) => {
+    let m;
+    while ((m = matcher.regexp.exec(text)) !== null) {
+      matches.push({
+        url: matcher.url,
+        index: m.index,
+        text: m[0],
+      });
+    }
+  });
+
+  return matches.sort((a, b) => a.index - b.index);
+}
+
 export function setup(helper) {
   helper.registerPlugin((md) => {
     const watchedWordsLinks = md.options.discourse.watchedWordsLinks;
@@ -13,7 +30,12 @@ export function setup(helper) {
       return;
     }
 
-    const regexp = new RegExp(Object.keys(watchedWordsLinks).join("|"), "gi");
+    const matchers = Object.keys(watchedWordsLinks).map((word) => ({
+      regexp: new RegExp(word, "gi"),
+      url: watchedWordsLinks[word],
+    }));
+
+    const cache = {};
 
     md.core.ruler.push("watched-words-links", (state) => {
       for (let j = 0, l = state.tokens.length; j < l; j++) {
@@ -59,23 +81,27 @@ export function setup(helper) {
 
           if (currentToken.type === "text") {
             const text = currentToken.content;
+            const links = (cache[text] = cache[text] || match(text, matchers));
 
             // Now split string to nodes
             const nodes = [];
             let level = currentToken.level;
             let lastPos = 0;
 
-            let match, token;
-            while ((match = regexp.exec(text)) !== null) {
-              let url = watchedWordsLinks[match[0]];
-              let fullUrl = state.md.normalizeLink(url);
+            let token;
+            for (let ln = 0; ln < links.length; ln++) {
+              let fullUrl = state.md.normalizeLink(links[ln].url);
               if (!state.md.validateLink(fullUrl)) {
                 continue;
               }
 
-              if (match.index > lastPos) {
+              if (links[ln].index < lastPos) {
+                continue;
+              }
+
+              if (links[ln].index > lastPos) {
                 token = new state.Token("text", "", 0);
-                token.content = text.slice(lastPos, match.index);
+                token.content = text.slice(lastPos, links[ln].index);
                 token.level = level;
                 nodes.push(token);
               }
@@ -88,7 +114,7 @@ export function setup(helper) {
               nodes.push(token);
 
               token = new state.Token("text", "", 0);
-              token.content = match[0];
+              token.content = links[ln].text;
               token.level = level;
               nodes.push(token);
 
@@ -98,7 +124,7 @@ export function setup(helper) {
               token.info = "auto";
               nodes.push(token);
 
-              lastPos = match.index + match[0].length;
+              lastPos = links[ln].index + links[ln].text.length;
             }
 
             if (lastPos < text.length) {
