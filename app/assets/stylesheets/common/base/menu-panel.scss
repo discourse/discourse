@@ -360,10 +360,12 @@
         color: var(--primary);
         display: flex;
       }
-    }
+      ul button {
+        line-height: 1.4; // match 'ul a' link height
+      }
+      @media screen and (max-height: 360px) {
+        // two column grid to avoid scroll
 
-    @media screen and (max-height: 450px) {
-      &.quick-access-profile {
         ul {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -372,7 +374,9 @@
             @include ellipsis;
           }
           button {
-            line-height: 1.4; // match link style
+            span:not(.relative-date) {
+              @include ellipsis;
+            }
           }
         }
         li:not(.show-all) a {
