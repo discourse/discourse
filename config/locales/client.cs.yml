@@ -1673,7 +1673,6 @@ cs:
         title: "Zavřít dočasně"
       auto_close:
         title: "Automaticky zavřít téma"
-        label: "Automaticky zavřít téma za:"
         error: "Prosím zadejte platnou hodnotu."
         based_on_last_post: "Neuzavírejte téma dokud poslední příspěvek v tomto tématu není alespoň takto starý."
       auto_delete:
@@ -1684,7 +1683,6 @@ cs:
         auto_open: "Toto téma se automaticky otevře %{timeLeft}."
         auto_close: "Toto téma se automaticky zavře %{timeLeft}."
         auto_publish_to_category: "Toto téma bude zveřejněno v <a href=%{categoryUrl}>%{categoryName}</a>%{timeLeft}# ."
-        auto_close_based_on_last_post: "Toto téma se zavře %{duration} po poslední odpovědi."
         auto_delete: "Toto téma bude automaticky smazáno %{timeLeft}."
         auto_reminder: "Toto téma ti připomeneme %{timeLeft}."
       auto_close_title: "Nastavení automatického zavření"

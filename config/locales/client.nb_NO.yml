@@ -1611,7 +1611,6 @@ nb_NO:
         title: "Lukk midlertidig"
       auto_close:
         title: "Automatisk lukking av emne"
-        label: "Tidsrom for automatisk lukking av emne:"
         error: "Skriv inn en gyldig verdi."
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
       auto_delete:
@@ -1624,7 +1623,6 @@ nb_NO:
         auto_open: "Dette emnet vil åpnes automatisk %{timeLeft}."
         auto_close: "Dette emnet vil lukkes automatisk %{timeLeft}."
         auto_publish_to_category: "Dette emnet vil bli opprettet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Dette emnet vil bli lukket %{duration} etter det siste innlegget."
         auto_delete: "Dette emnet vil bli automatisk slettet %{timeLeft}."
         auto_bump: "Dette emnet vil automatisk bli flyttet øverst om %{timeLeft}."
         auto_reminder: "Du vil bli påminnet om dette emnet %{timeLeft}."

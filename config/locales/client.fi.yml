@@ -2126,7 +2126,6 @@ fi:
         title: "Sulje väliaikaisesti"
       auto_close:
         title: "Sulje ketju automaattisesti"
-        label: "Tunteja automaattiseen sulkeutumiseen:"
         error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on ainakin näin vanha."
       auto_delete:
@@ -2141,7 +2140,6 @@ fi:
         auto_open: "Ketju avautuu automaattisesti %{timeLeft}."
         auto_close: "Ketju suljetaan ajastetusti %{timeLeft}."
         auto_publish_to_category: "Ketju julkaistaan alueella <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ketju sulkeutuu %{duration} kuluttua viimeisimmästä viestistä."
         auto_delete: "Ketju poistetaan ajastetusti %{timeLeft}."
         auto_bump: "Ketjua nostetaan ajastetusti %{timeLeft}."
         auto_reminder: "Sinua muistutetaan tästä ketjusta %{timeLeft}."

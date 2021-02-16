@@ -2416,7 +2416,6 @@ ar:
         title: "اغلق الموضوع مؤقتا"
       auto_close:
         title: "اغلق الموضوع بشكل تلقائي"
-        label: "اغلق الموضوع بشكل تلقائي بعد:"
         error: "من فضلك ادخل قيمة صالحة."
         based_on_last_post: "لا تُغلقه إلى أن تمضي هذه الفترة على آخر مشاركة في الموضوع."
       auto_delete:
@@ -2431,7 +2430,6 @@ ar:
         auto_open: "سيُفتح هذا الموضوع آليًّا %{timeLeft}."
         auto_close: "سيُغلق هذا الموضوع آليًّا %{timeLeft}."
         auto_publish_to_category: "سيُنشر هذا الموضوع في<a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "سيُغلق هذا الموضوع %{duration} بعد آخر ردّ فيه."
         auto_delete: "هذا الموضوع سوف يحذف تلقائيا %{timeLeft}."
         auto_bump: "هذا الموضوع سوف يقطّع تلقائيا %{timeLeft}."
         auto_reminder: "سوف يتم تذكيرك بهذا الموضوع %{timeLeft}."

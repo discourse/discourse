@@ -527,6 +527,7 @@ tr_TR:
       start_of_next_business_week_alt: "Gelecek pazartesi"
       next_month: "Gelecek ay"
       custom: "Özel tarih ve saat"
+      relative: "Göreli zaman"
       none: "Hiçbiri"
       last_custom: "Son"
     user_action:
@@ -1239,6 +1240,7 @@ tr_TR:
         latest_post: "En son gönderdiğiniz ..."
         device_location: '<span class="auth-token-device">%{device}</span> &ndash; <span title="IP: %{ip}">%{location}</span>'
         browser_active: '%{browser} | <span class="active">şu anda aktif</span>'
+        browser_last_seen: "%{browser} | %{date}"
       last_posted: "Son Gönderi"
       last_emailed: "Gönderilen Son E-posta"
       last_seen: "Görüldü"
@@ -1251,6 +1253,7 @@ tr_TR:
       enable_physical_keyboard: "iPad'de fiziksel klavye desteğini etkinleştir"
       text_size:
         title: "Yazı Boyutu"
+        smallest: "En küçük"
         smaller: "Daha küçük"
         normal: "Normal"
         larger: "Daha büyük"
@@ -1329,6 +1332,7 @@ tr_TR:
         expired: "Bu davetin süresi doldu."
         rescind: "Kaldır"
         rescinded: "Davet kaldırıldı"
+        rescind_all: "Süresi Dolan Davetleri Kaldır"
         rescinded_all: "Tüm Süresi Dolmuş Davetiyeler kaldırıldı!"
         rescind_all_confirm: "Süresi dolmuş tüm davetiyeleri kaldırmak istediğinizden emin misiniz?"
         reinvite: "Daveti Tekrar Gönder"
@@ -1339,13 +1343,29 @@ tr_TR:
         time_read: "Okunma Zamanı"
         days_visited: "Ziyaret Edilen Gün"
         account_age_days: "Günlük hesap yaşı"
+        source: "Tarafından Davet Edildi"
         links_tab: "Bağlantılar"
+        links_tab_with_count: "Bağlantılar (%{count})"
+        link_url: "Bağlantı"
         link_created_at: "Oluşturuldu"
         link_groups: Gruplar
+        link_expires_at: Bitiş tarihi
+        create: "Davet et"
+        copy_link: "Bağlantıyı Göster"
+        generate_link: "Davet Bağlantısı Oluşturun"
+        link_generated: "İşte davet bağlantınız!"
         valid_for: "Davet bağlantısı sadece bu adres için geçerli: %{email}"
+        single_user: "E-posta ile davet et"
+        multiple_user: "Bağlantıyla davet et"
         invite_link:
+          title: "Bağlantıyla davet et"
           success: "Davet bağlantısı başarılı bir şekilde oluşturuldu! "
+          error: "Davet bağlantısı oluşturulurken bir hata meydana geldi"
+          max_redemptions_allowed_label: "Bu bağlantıyı kullanarak kaç kişinin kaydolmasına izin verilsin?"
+          expires_at: "Bu davet bağlantısının süresi ne zaman dolacak?"
         bulk_invite:
+          none: "Bu sayfada görüntülenecek davetiye yok."
+          text: "Toplu Davet"
           success: "Dosya başarıyla yüklendi. İşlem tamamlandığında mesaj yoluyla bilgilendirileceksin."
           error: "Üzgünüz, dosya CSV formatında olmalı. "
           confirmation_message: "Yüklenen dosyadaki herkese davetleri e-posta ile göndermek üzeresiniz."
@@ -1357,6 +1377,7 @@ tr_TR:
         same_as_email: "Parolanız e-posta adresinizle aynı."
         ok: "Parolanız iyi görünüyor."
         instructions: "en az %{count} karakter"
+        required: "lütfen bir şifre girin"
       summary:
         title: "Özet"
         stats: "İstatistik"
@@ -1447,6 +1468,7 @@ tr_TR:
         fixed: "Sayfayı Yükle"
     modal:
       close: "kapat"
+      dismiss_error: "Hatayı kapat"
     close: "Kapat"
     assets_changed_confirm: "Bu site henüz güncellendi. Son hali için sayfayı yenilemek ister misin?"
     logout: "Çıkış yaptın."
@@ -1466,6 +1488,7 @@ tr_TR:
     mute: Sessiz
     unmute: Sessiz iptali
     last_post: Gönderilen
+    local_time: "Yerel zaman"
     time_read: Okunan
     time_read_recently: "%{time_read} son günlerde"
     time_read_tooltip: "%{time_read} toplam okuma zamanı"
@@ -1492,6 +1515,10 @@ tr_TR:
       disable: "Silinen Gönderileri Göster"
     private_message_info:
       title: "Mesaj"
+      invite: "Başkalarını Davet Et ..."
+      edit: "Ekle veya sil..."
+      remove: "Kaldır..."
+      add: "Ekle..."
       leave_message: "Gerçekten bu mesajdan çıkmak mı istiyorsun?"
       remove_allowed_user: "Bu mesajdan %{name} isimli kullanıcıyı çıkarmak istediğine emin misin?"
       remove_allowed_group: "Gerçekten %{name} isimli kullanıcıyı bu mesajdan kaldırmak istiyor musun?"
@@ -1503,7 +1530,10 @@ tr_TR:
     trust_level: "Güven Seviyesi"
     search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
+      header_title: "Hoşgeldiniz!"
+      subheader_title: "Haydi, hesabınızı oluşturalım"
       disclaimer: "Kayıt olarak <a href='%{privacy_link}' target='blank'>Gizlilik İlkeleri'ni</a> ve <a href='%{tos_link}' target='blank'>Hizmet Şartları'nı</a> kabul etmiş olursunuz."
+      title: "Yeni Hesap Oluştur"
       failed: "Bir şeyler ters gitti. Bu e-posta ile daha önce bir kayıt oluşturulmuş olabilir. \"Parolamı unuttum\" bağlantısına tıklayarak ilerlemeni öneririz."
     forgot_password:
       title: "Parola Sıfırlama"
@@ -1520,6 +1550,7 @@ tr_TR:
     email_login:
       link_label: "Bana \"Giriş Bağlantısı\"nı e-posta ile gönder"
       button_label: "e-posta ile"
+      emoji: "emojiyi kilitle"
       complete_username: "<b>%{username}</b> kullanıcı adı bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_email: "<b>%{email}</b> e-posta adresi bir hesap ile eşleşirse, kısa bir süre içinde giriş bağlantısına sahip bir e-posta alacaksınız."
       complete_username_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap bulduk, kısa bir süre içerisinde giriş bağlantısına sahip bir e-posta alacaksınız."
@@ -1530,11 +1561,15 @@ tr_TR:
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
     login:
+      header_title: "Tekrar hoşgeldiniz"
+      subheader_title: "Hesabınıza giriş yapın"
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Parola"
+      second_factor_title: "İki Faktörlü Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamadan \"Kimlik Doğrulama Kodu\"nu gir:"
       second_factor_backup: "Bir yedekleme kodu kullanarak giriş yapın"
+      second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
       second_factor: "Authenticator uygulamasını kullanarak giriş yapın"
       security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
@@ -1543,6 +1578,7 @@ tr_TR:
       security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
       security_key_no_matching_credential_error: "Sağlanan güvenlik anahtarında eşleşen kimlik bilgisi bulunamadı."
       security_key_support_missing_error: "Geçerli cihazınız veya tarayıcınız güvenlik tuşlarının kullanımını desteklemiyor. Lütfen farklı bir yöntem kullanın."
+      email_placeholder: "Email / Kullanıcı Adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
       cookies_error: "Tarayıcınızda çerezler devre dışı bırakılmış görünüyor. Giriş yapabilmek için önce çerezleri etkinleştirmeniz gerekmektedir."
@@ -1557,8 +1593,10 @@ tr_TR:
       awaiting_approval: "Hesabın henüz bir görevli tarafından onaylanmadı. Onaylandığında e-posta ile bilgilendirileceksin."
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
       not_activated: "Henüz oturum açamazsın. Hesabını etkinleştirmek için daha önceden <b>%{sentTo}</b> adresine yollanan aktivasyon e-postasındaki açıklamaları okumalısın. "
+      not_allowed_from_ip_address: "Bu IP adresinden giriş yapamazsınız."
       admin_not_allowed_from_ip_address: "Bu IP adresinden yönetici olarak giriş yapamazsın. "
       resend_activation_email: "Aktivasyon e-postasını tekrar göndermek için buraya tıkla. "
+      omniauth_disallow_totp: "Hesabınızda iki faktörlü kimlik doğrulama etkinleştirilmiştir. Lütfen şifreniz ile giriş yapınız."
       resend_title: "Aktivasyon e-postasını tekrar gönder"
       change_email: "E-posta adresini değiştir"
       provide_new_email: "Yeni bir adres gir. Onay e-postanı tekrar gönderelim."
@@ -1591,6 +1629,7 @@ tr_TR:
         backup_code: "Bunun yerine bir yedekleme kodu kullanın"
     invites:
       accept_title: "Davet"
+      emoji: "emojiyi etkinleştir"
       welcome_to: "%{site_name} hoş geldin!"
       invited_by: "Davet gönderen:"
       social_login_available: "Ayrıca bu e-posta adresini kullanan tüm sosyal ağ girişleriyle oturum açabileceksin."
@@ -2194,9 +2233,10 @@ tr_TR:
         title: "Geçici Olarak Kapat"
       auto_close:
         title: "Konuyu Otomatik Kapat"
-        label: "Konunun otomatik kapatılacağı saatler:"
         error: "Lütfen geçerli bir değer gir."
         based_on_last_post: "Konudaki son gönderi en az bu kadar eski olmadıkça kapatma."
+      auto_close_after_last_post:
+        title: "Son Gönderiden Sonra Konuyu Otomatik Kapat"
       auto_delete:
         title: "Konuyu Otomatik Sil"
       auto_bump:
@@ -2209,7 +2249,7 @@ tr_TR:
         auto_open: "Bu konu %{timeLeft} otomatik olarak açılacak."
         auto_close: "Bu konu %{timeLeft} otomatik olarak kapanacak."
         auto_publish_to_category: "Bu konu %{timeLeft} <a href=%{categoryUrl}>#%{categoryName}</a> kategorisinde yayınlanacak."
-        auto_close_based_on_last_post: "Bu konu son cevaptan %{duration} sonra kapanacak."
+        auto_close_after_last_post: "Bu konu son cevaptan %{duration} sonra kapanacak."
         auto_delete: "Bu konu otomatik olarak silinecek %{timeLeft}."
         auto_bump: "Bu konu otomatik olarak patlayacak%{timeLeft}."
         auto_reminder: "%{timeLeft} Bu konu hakkında hatırlatılacaksınız"
@@ -2576,6 +2616,7 @@ tr_TR:
         change_post_notice: "Personel Bildirimini Değiştir"
         delete_post_notice: "Personel Bildirimini Sil"
         remove_timer: "zamanlayıcıyı kaldır"
+        edit_timer: "zamanlayıcıyı düzenle"
       actions:
         people:
           like:
@@ -3266,6 +3307,7 @@ tr_TR:
           view_table: "tablo"
           view_graph: "grafik"
           refresh_report: "Raporu Yenile"
+          weekly: Haftalık
           groups: "Tüm gruplar"
           disabled: "Bu rapor devre dışı"
           totals_for_sample: "Örnek toplamlar"

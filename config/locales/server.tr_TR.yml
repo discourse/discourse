@@ -445,6 +445,9 @@ tr_TR:
           attributes:
             execute_at:
               in_the_past: "gelecekte olmalı."
+            duration_minutes:
+              cannot_be_zero: "Sıfırdan büyük olmalıdır."
+              exceeds_maximum: "2 yıldan fazla olamaz."
         translation_overrides:
           attributes:
             value:

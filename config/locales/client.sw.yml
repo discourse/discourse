@@ -1519,7 +1519,6 @@ sw:
         title: "Funga kwa Sasa"
       auto_close:
         title: "Funga Mada otomatikali"
-        label: "Mda wa kufunga mada otomatikali:"
         error: "Tafadhali andika thamani sahihi."
         based_on_last_post: "Usifunge mpaka chapisho la mwisho kwenye mada liwe lina umri huu."
       auto_delete:
@@ -1530,7 +1529,6 @@ sw:
         auto_open: "Mada hii itafunguliwa otomatikali baada ya %{timeLeft}."
         auto_close: "Mada hii itafungwa otomatikali baada ya %{timeLeft}."
         auto_publish_to_category: "Mada hii itachapishwa kwenye <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}."
-        auto_close_based_on_last_post: "Mada hii itafungwa baada ya jibu la mwisho %{duration}."
         auto_delete: "Mada hii itafutwa otomatikali %{timeLeft}."
         auto_reminder: "Utakumbushwa kuhusu mada hii %{timeLeft}."
       auto_close_title: "Funga Mada Otomatikali"

@@ -2276,7 +2276,6 @@ sl:
         title: "Začasno zapri"
       auto_close:
         title: "Samodejno zapri temo"
-        label: "Samodejno zapri temo ob:"
         error: "Vnesite veljavno vsebino"
         based_on_last_post: "Ne zapri dokler zadnji prispevek v temi ni vsaj star."
       auto_delete:
@@ -2291,7 +2290,6 @@ sl:
         auto_open: "Ta tema se bo samodejno odprla %{timeLeft}."
         auto_close: "Ta tema se bo samodejno zaprla %{timeLeft}."
         auto_publish_to_category: "Ta tema bo objavljena v <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ta tema se bo zaklenila %{duration} po zadnjem odgovoru."
         auto_delete: "Ta tema se bo sama izbrisala čez %{timeLeft}."
         auto_bump: "Ta tema se bo sama izpostavila %{timeLeft}."
         auto_reminder: "Opomnili vas bomo o tej temi %{timeLeft}."

@@ -2237,7 +2237,6 @@ fr:
         title: "Fermer temporairement"
       auto_close:
         title: "Fermer automatiquement le sujet"
-        label: "Heures de fermeture automatique du sujet :"
         error: "Veuillez entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
       auto_delete:
@@ -2252,7 +2251,6 @@ fr:
         auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
         auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
         auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
         auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous serez rappelé sur ce sujet %{timeLeft}."

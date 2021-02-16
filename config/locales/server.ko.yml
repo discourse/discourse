@@ -168,6 +168,7 @@ ko:
       wrong_length:
         other: 잘못된 길이 (%{count} 글자여야 함)
       other_than: " %{count} 글자가 아니어야 합니다."
+      auth_overrides_username: "`auth_overrides_username` 설정이 활성화되어 있으므로 인증 제공자 측에서 사용자 이름을 업데이트해야합니다."
     template:
       body: ! "다음 필드에 문제가 있음:"
       header:
@@ -189,6 +190,7 @@ ko:
       share_quote_facebook_requirements: "페이스북으로의 공유를 활성화 하려면 페이스북 앱 ID를 설정해야 합니다."
       second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야합니다: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화 된 경우 2FA를 시행 할 수 없습니다."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect가 활성화 된 경우 2FA를 적용할 수 없습니다."
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA가 적용되는 경우 로컬 로그인을 비활성화 할 수 없습니다. 로컬 로그인을 비활성화하기 전에 강제 2FA를 비활성화하십시오."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 업로드가 이미 전체적으로 활성화되어 있으므로이 사이트 수준을 활성화하면 S3 업로드를 활성화 할 수 없습니다."
       cors_origins_should_not_have_trailing_slash: "CORS 원점에 후행 슬래시 (/) 를 추가해서는 안됩니다."
@@ -215,6 +217,7 @@ ko:
     confirm_email: "<p> 거의 다 끝났습니다! 귀하의 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하십시오. </p><p> 도착하지 않으면 스팸 폴더를 확인하십시오. </p>"
     cant_invite_to_group: "사용자를 지정된 그룹에 초대 할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하십시오."
     disabled_errors:
+      discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       local_logins_disabled: "'로컬 로그인 사용' 설정이 비활성화되어 있으므로 초대를 사용할 수 없습니다."
       invalid_access: "요청한 리소스를 볼 수 없습니다."
   bulk_invite:
@@ -388,6 +391,7 @@ ko:
       adding_too_many_users:
         other: "한 번에 최대 %{count}명의 사용자를 추가 할 수 있습니다."
       usernames_or_emails_required: "아이디 또는 이메일이 있어야합니다."
+      no_invites_with_discourse_connect: "DiscourseConnect가 활성화 된 경우 등록된 사용자만 초대 할 수 있습니다."
       no_invites_without_local_logins: "로컬 로그인이 비활성화된 경우 등록된 사용자만 초대할 수 있습니다."
     default_names:
       everyone: "모든 사람"
@@ -543,6 +547,9 @@ ko:
           attributes:
             execute_at:
               in_the_past: "미래값으로 설정되어야 합니다."
+            duration_minutes:
+              cannot_be_zero: "0보다 커야합니다."
+              exceeds_maximum: "2년을 초과 할 수 없습니다."
         translation_overrides:
           attributes:
             value:
@@ -1506,6 +1513,8 @@ ko:
     min_admin_password_length: "관리자 계정 비밀번호 최소길이"
     password_unique_characters: "패스워드에 포함되어야 하는 최소 유일글자 수"
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
+    discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능을 무시하고 사용자가 변경할 수 없도록 합니다."
+    discourse_connect_not_approved_url: "승인되지 않은 DiscourseConnect 계정을 이 URL로 리디렉션"
     enable_local_logins: "로컬 사용자 이름 및 비밀번호 로그인 기반 계정을 활성화하십시오. 초대가 작동하려면 활성화해야합니다. 경고 : 비활성화 된 경우 이전에 하나 이상의 대체 로그인 방법을 구성하지 않은 경우 로그인하지 못할 수 있습니다."
     enable_local_logins_via_email: "사용자가 원 클릭 로그인 링크를 이메일을 통해 보내도록 요청할 수 있습니다."
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
@@ -2003,6 +2012,8 @@ ko:
       email_editable_enabled: "이 설정을 활성화하기 전에 &#39;이메일 편집 가능&#39;을 비활성화해야합니다."
       staged_users_disabled: "이 설정을 활성화하기 전에 먼저 &#39;단계별 사용자&#39;를 활성화해야합니다."
       reply_by_email_disabled: "이 설정을 활성화하기 전에 먼저 &#39;이메일로 회신&#39;을 활성화해야합니다."
+      discourse_connect_url_is_empty: "이 설정을 활성화하기 전에 'discourse connect url'을 설정해야 합니다."
+      discourse_connect_invite_only: "DiscourseConnect와 초대를 동시에 활성화할 수는 없습니다."
       enable_local_logins_disabled: "이 설정을 활성화하기 전에 먼저 &#39;로컬 로그인 활성화&#39;를 활성화해야합니다."
       min_username_length_exists: "최소 사용자 이름 길이를 가장 짧은 사용자 이름 (%{username}) 이상으로 설정할 수 없습니다."
       min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
@@ -2020,6 +2031,9 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니 코드 사용자 이름을 지원하지 않습니다."
       list_value_count: "목록에는 정확히 %{count} 값이 포함되어야합니다."
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
   search:
     extreme_load_error: "사이트의로드가 심하고 검색이 사용 중지되었습니다. 나중에 다시 시도하십시오."
     within_post: "#%{post_number} by %{username}"
@@ -2030,6 +2044,15 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  discourse_connect:
+    login_error: "로그인 에러"
+    not_found: "사용자님의 계정을 찾을 수 없습니다. 사이트 관리자에게 문의하십시오."
+    account_not_approved: "사용자님의 계정은 승인 대기 중입니다. 승인되면 이메일 알림을 받게됩니다."
+    unknown_error: "계정에 문제가 있습니다. 사이트 관리자에게 문의하십시오."
+    timeout_expired: "계정 로그인 시간이 초과되었습니다. 다시 로그인하십시오."
+    no_email: "이메일 주소가 제공되지 않았습니다. 사이트 관리자에게 문의하십시오."
+    blank_id_error: "'external_id'는 필수이지만 비어 있습니다."
+    email_error: "이메일 주소 <b>%{email}</b>으로는 계정을 등록 할 수 없습니다. 사이트 관리자에게 문의하십시오."
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"

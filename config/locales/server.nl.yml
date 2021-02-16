@@ -51,6 +51,9 @@ nl:
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   redirect_warning: "We konden niet verifiëren of de koppeling die u hebt geselecteerd echt in het forum is geplaatst. Als u toch wilt doorgaan, selecteer dan de onderstaande koppeling."
   on_another_topic: "In een ander topic"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} door %{username}"
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
@@ -225,6 +228,7 @@ nl:
   topic_invite:
     failed_to_invite: "De gebruiker kan niet voor dit topic worden uitgenodigd zonder een groepslidmaatschap in een van de volgende groepen: %{group_names}."
     user_exists: "Sorry, die gebruiker is al uitgenodigd. U kunt een gebruiker maar één keer voor een topic uitnodigen."
+    muted_invitee: "Sorry, die gebruiker heeft je gedempt."
   backup:
     operation_already_running: "Er wordt al een bewerking uitgevoerd. Er kan nu geen nieuwe taak worden gestart."
     backup_file_should_be_tar_gz: "Het back-upbestand dient een .tar.gz-archief te zijn."
@@ -388,6 +392,9 @@ nl:
       email_already_used_in_category: "'%{email}' wordt al gebruikt door de categorie '%{category_name}'."
       cant_allow_membership_requests: "U kunt geen lidmaatschapsaanvragen toestaan voor een groep zonder eigenaren."
       already_requested_membership: "U hebt al om lidmaatschap voor deze groep gevraagd."
+      adding_too_many_users:
+        one: "Maximaal %{count} gebruiker kan in één keer worden toegevoegd"
+        other: "Maximaal %{count} gebruikers kunnen in één keer worden toegevoegd"
     default_names:
       everyone: "iedereen"
       admins: "beheerders"
@@ -511,6 +518,9 @@ nl:
           attributes:
             execute_at:
               in_the_past: "moet in de toekomst zijn."
+            duration_minutes:
+              cannot_be_zero: "moet groter zijn dan 0."
+              exceeds_maximum: "kan niet langer zijn dan 2 jaar."
         translation_overrides:
           attributes:
             value:
@@ -1970,6 +1980,7 @@ nl:
   most_posts: "Meer berichten"
   most_recent_poster: "Meest recente schrijver"
   frequent_poster: "Frequente schrijver"
+  poster_description_joiner: ", "
   redirected_to_top_reasons:
     new_user: "Welkom bij onze gemeenschap! Dit zijn de meest populaire recente topics."
     not_seen_in_a_month: "Welkom terug! We hebben u een tijdje niet gezien. Dit zijn de meest populaire topics sinds uw afwezigheid."
@@ -2086,6 +2097,7 @@ nl:
     missing_user_field: "U hebt niet alle gebruikersvelden ingevuld"
     auth_complete: "Authenticatie is voltooid."
     click_to_continue: "Klik hier om door te gaan."
+    second_factor_title: "Tweefactorauthenticatie"
     second_factor_description: "Voer de vereiste authenticatiecode van uw app in:"
     second_factor_backup_description: "Voer een van uw back-upcodes in:"
     invalid_second_factor_code: "Ongeldige authenticatiecode. Elke code kan maar eenmaal worden gebruikt."
@@ -2098,6 +2110,13 @@ nl:
   admin:
     email:
       sent_test: "verzonden!"
+    user:
+      merge_user:
+        updating_username: "Gebruikersnaam bijwerken..."
+        updating_site_settings: "Site-instellingen bijwerken..."
+        updating_user_stats: "Gebruikersstatistieken bijwerken ..."
+        merging_user_attributes: "Gebruikerskenmerken samenvoegen..."
+        deleting_source_user: "Brongebruiker verwijderen..."
   user:
     deactivated: "Gedeactiveerd vanwege te veel gebouncete e-mails naar '%{email}'."
     deactivated_by_staff: "Gedeactiveerd door staf"
@@ -2310,6 +2329,7 @@ nl:
       title: "CSV-export mislukt"
       subject_template: "Export mislukt"
     email_reject_inactive_user:
+      title: "E-mail weigeren inactieve gebruiker"
       text_body_template: |
         Het spijt ons, maar het plaatsen van uw e-mailbericht op %{destination} (met de titel %{former_title}) is niet gelukt.
 
@@ -2359,6 +2379,14 @@ nl:
         Het spijt ons, maar uw e-mailbericht naar %{destination} (met de titel %{former_title}) werkte niet.
 
         Hebt u meer dan één e-mailadres gebruikt? Hebt u vanaf een andere e-mailadres geantwoord? E-mailantwoorden vereisen dat u bij het beantwoorden hetzelfde e-mailadres gebruikt. Het is ook mogelijk dat de header van het bericht-ID in het e-mailbericht is aangepast.
+    email_error_notification:
+      title: "E-mailfoutmelding"
+    email_revoked:
+      subject_template: "Is uw e-mailadres correct?"
+    too_many_spam_flags:
+      title: "Te veel spammarkeringen"
+    too_many_tl3_flags:
+      subject_template: "Nieuwe account in wachtstand"
     silenced_by_staff:
       title: "Gedempt door staflid"
       subject_template: "Account tijdelijk geblokkeerd"
@@ -2397,6 +2425,7 @@ nl:
       subject_template: "U bent een nieuwe gebruiker van de maand!"
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Vorige reacties"
     in_reply_to: "in reactie op"
@@ -2410,6 +2439,13 @@ nl:
     visit_link_to_respond: "[Bezoek het topic](%{base_url}%{url}) om te reageren."
     visit_link_to_respond_pm: "[Bezoek het bericht](%{base_url}%{url}) om op %{participants} te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
+    pm_participants: "Deelnemers: %{participants}"
+    user_replied:
+      title: "Gebruiker antwoordde"
+    user_linked:
+      title: "Gebruiker gekoppeld"
+    user_group_mentioned:
+      title: "Gebruikersgroep genoemd"
     user_posted:
       title: "Een gebruiker heeft iets geplaatst"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -2635,6 +2671,7 @@ nl:
       name: Bewerker
       description: Eerste berichtbewerking
     wiki_editor:
+      name: Wiki-editor
       description: Eerste wiki bewerking
       long_description: |
         Deze badge wordt toegekend als u voor het eerst een wiki-bericht bewerkt.
@@ -2750,6 +2787,8 @@ nl:
         Deze badge wordt toegekend wanneer u 20 dagen lang alle %{max_likes_per_day} van uw dagelijkse likes gebruikt. Wow! U bent een rolmodel voor het aanmoedigen van uw medegemeenschapsleden!
     thank_you:
       name: Bedankt
+    gives_back:
+      name: Geeft terug
     empathetic:
       name: Empathisch
       description: Heeft 500 geliket en 1000 likes gegeven
@@ -2791,6 +2830,7 @@ nl:
     initial_topic_title: Performancerapportages van de website
   tags:
     title: "Tags"
+    restricted_tag_disallowed: 'U kunt de tag "%{tag}” niet toepassen.'
     minimum_required_tags:
       one: "U moet minstens %{count} tag selecteren."
       other: "U moet minstens %{count} tags selecteren."
@@ -2821,6 +2861,7 @@ nl:
     no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
   wizard:
+    title: "Discourse instellen"
     step:
       locale:
         title: "Welkom bij uw Discourse!"
@@ -2829,6 +2870,10 @@ nl:
             description: "Wat is de standaardtaal voor uw gemeenschap?"
       forum_title:
         title: "Naam"
+        fields:
+          title:
+            label: "Naam van uw community"
+            placeholder: "Jane's Hangout"
       introduction:
         fields:
           welcome:
@@ -2846,6 +2891,8 @@ nl:
                 description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
           privacy_options:
             choices:
+              open:
+                label: "Gebruikers kunnen zichzelf aanmelden."
               invite_only:
                 label: "Gebruikers moeten door vertrouwde gebruikers of een staflid worden uitgenodigd voordat ze kunnen registreren."
               must_approve:

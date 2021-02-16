@@ -2098,7 +2098,6 @@ vi:
         title: "Tạm đóng"
       auto_close:
         title: "Tự động đóng chủ đề"
-        label: "Giờ chủ đề tự động đóng:"
         error: "Hãy nhập giá trị hợp lệ."
         based_on_last_post: "Không đóng cho đến khi bài viết cuối cùng trong chủ đề này trở thành bài cũ"
       auto_delete:
@@ -2113,7 +2112,6 @@ vi:
         auto_open: "Chủ đề này sẽ tự động mở trong %{timeLeft}."
         auto_close: "Chủ đề này sẽ tự đóng trong %{timeLeft}."
         auto_publish_to_category: "Chủ đề này sẽ được xuất bản lên <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Chủ đề này sẽ đóng %{duration} sau trả lời cuối cùng."
         auto_delete: "Chủ đề này sẽ tự động bị xóa %{timeLeft}."
         auto_bump: "Chủ đề này sẽ tự động được đưa vào %{timeLeft}."
         auto_reminder: "Bạn sẽ được nhắc nhở về chủ đề này %{timeLeft}."

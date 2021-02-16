@@ -57,6 +57,7 @@ pl_PL:
   themes:
     bad_color_scheme: "Nie można zaktualizować szablonu, nieprawidłowa paleta kolorów"
     other_error: "Coś poszło nie tak podczas aktualizacji szablonu"
+    ember_selector_error: "Przepraszamy - używanie selektorów #ember lub .ember-view w CSS jest zabronione, ponieważ nazwy te są generowane dynamicznie w czasie pracy i z czasem się zmienią, co ostatecznie skończy się uszkodzenonym CSS. Wypróbuj inny selektor."
     compile_error:
       unrecognized_extension: "Nie rozpoznano rozszerzenia pliku: %{extension}"
     import_error:
@@ -611,6 +612,9 @@ pl_PL:
           attributes:
             execute_at:
               in_the_past: "musi być w przyszłości"
+            duration_minutes:
+              cannot_be_zero: "musi być większa niż 0."
+              exceeds_maximum: "nie może być dłuższy niż 2 lata."
         translation_overrides:
           attributes:
             value:

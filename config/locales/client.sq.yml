@@ -1189,7 +1189,6 @@ sq:
         based_on_last_post: "Mos e mbyll derisa postimi i fundit brenda temës të jetë të paktën kaq i vjetër. "
       status_update_notice:
         auto_close: "Kjo temë do të mbyllet automatikisht %{timeLeft}."
-        auto_close_based_on_last_post: "Kjo temë do të mbyllet %{duration} pas përgjigjes së fundit. "
       auto_close_title: "Rregullimet e Mbylljes Automatike"
       timeline:
         back: "Kthehu mbrapa"

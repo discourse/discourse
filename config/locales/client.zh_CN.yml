@@ -485,6 +485,15 @@ zh_CN:
       reject_reason:
         title: "你为什么拒绝这个用户？"
         send_email: "发送拒绝邮件"
+    relative_time_picker:
+      minutes:
+        other: "分钟"
+      hours:
+        other: "小时"
+      days:
+        other: "天"
+      months:
+        other: "月"
     time_shortcut:
       later_today: "今天晚些时候"
       next_business_day: "下一个工作日"
@@ -496,6 +505,7 @@ zh_CN:
       start_of_next_business_week_alt: "下周一"
       next_month: "下个月"
       custom: "自定义日期和时间"
+      relative: "相对时间"
       none: "不需要"
       last_custom: "最近"
     user_action:
@@ -1543,6 +1553,7 @@ zh_CN:
       security_key_not_allowed_error: "安全密钥验证超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
+      email_placeholder: "电子邮件 / 用户名"
       caps_lock_warning: "大写锁定开启"
       error: "未知错误"
       cookies_error: "你的浏览器似乎禁用了Cookie。如果不先启用它们，你可能无法登录。"
@@ -2159,6 +2170,7 @@ zh_CN:
         when: "时间："
         time_frame_required: "请选择一个时间范围"
         min_duration: "持续时间必须大于0"
+        max_duration: "持续时间必须少于 2 年"
       auto_update_input:
         none: "选择时间范围"
         now: "当前"
@@ -2187,9 +2199,11 @@ zh_CN:
         title: "临时关闭"
       auto_close:
         title: "自动关闭主题"
-        label: "自动关闭于几小时后："
+        label: "自动关闭前等待："
         error: "请输入一个有效值。"
         based_on_last_post: "最后回复发布之后的多少时间内不自动关闭主题。"
+      auto_close_after_last_post:
+        title: "最后发布后自动关闭主题"
       auto_delete:
         title: "自动删除主题"
       auto_bump:
@@ -2202,7 +2216,7 @@ zh_CN:
         auto_open: "本主题将在%{timeLeft}自动开启。"
         auto_close: "本主题将在%{timeLeft}自动关闭。"
         auto_publish_to_category: "主题将在%{timeLeft}后被发布到<a href=%{categoryUrl}>#%{categoryName}</a> 。"
-        auto_close_based_on_last_post: "如在 %{duration}内没有新回复后主题将被关闭。"
+        auto_close_after_last_post: "如在 %{duration}内没有新回复后主题将被关闭。"
         auto_delete: "主题在%{timeLeft}后将被自动删除。"
         auto_bump: "这个主题将在%{timeLeft}后自动顶帖。"
         auto_reminder: "你将在%{timeLeft}后收到该主题的提醒。"
@@ -2585,6 +2599,7 @@ zh_CN:
         change_post_notice: "变更管理人员通知"
         delete_post_notice: "移除管理人员通知"
         remove_timer: "移除计时器"
+        edit_timer: "编辑计时器"
       actions:
         people:
           like:
@@ -2760,16 +2775,19 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
+          description: "你将自动关注这个分类中的所有主题。你会收到所有新主题中的每一个新帖的通知，还会显示新回复的数量。"
         watching_first_post:
           title: "监看新主题"
           description: "你将收到此分类中的新主题通知，不包括回复。"
         tracking:
           title: "追踪"
+          description: "你将自动跟踪这个分类中的所有主题。如果有人 @ 你或回复你，将通知你，还将显示新回复的数量。"
         regular:
           title: "普通"
           description: "如果有人@你或回复你，将通知你。"
         muted:
           title: "静音"
+          description: "你将不会收到有这些个分类新主题的任何通知，它们也不会出现在“最新”主题列表。"
       search_priority:
         label: "搜索优先级"
         options:

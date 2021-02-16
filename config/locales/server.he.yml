@@ -611,6 +611,9 @@ he:
           attributes:
             execute_at:
               in_the_past: "חייב להיות בעתיד."
+            duration_minutes:
+              cannot_be_zero: "חייב להיות גדול מ־0."
+              exceeds_maximum: "לא יכול להיות יותר משנתיים."
         translation_overrides:
           attributes:
             value:
@@ -1636,9 +1639,12 @@ he:
     auth_immediately: "להפנות למערכת הכניסה החיצונית ללא מעורבות המשתמש. מתרחש רק כאשר login_required (נדרשת כניסה) הוא true (אמת) ויש לפחות שיטת אימות חיצונית אחת."
     enable_discourse_connect: "הפעלת כניסה דרך DiscourseConnect (לשעבר ‚הכניסה האחודה של Discourse’) (אזהרה: *חובה* לאמת את כתובות הדוא״ל של המשתמשים על ידי האתר החיצוני!)"
     verbose_discourse_connect_logging: "תיעוד ניתוח נרחב בכל מה שקשור ב־DiscourseConnect אל <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    enable_discourse_connect_provider: "הטמעת פרוטוקול ספק DiscourseConnect ‏(‚Discourse SSO’ לשעבר) בנקודת הגישה ‎/session/sso_provider, דורשת את ההגדרה discourse_connect_provider_secrets (סודות ספק השירות)"
     discourse_connect_url: "כתובת נקודת הגישה אל DiscourseConnect (חייבת לכלול http://‎ או https://‎)"
     discourse_connect_secret: "מחרוזת סודית המשמשת לאמת מידע של DiscourseConnect באופן מוצפן, נא לוודא שאורכה 10 תווים לפחות"
+    discourse_connect_provider_secrets: "רשימת צמדי סודות שמות תחום שמשתמשים ב־DiscourseConnect. עליך לוודא שאורך הסוד של DiscourseConnect הוא 10 תווים ומעלה. ניתן להשתמש בתו המכליל * כדי להרחיב את ההתאמה לכל שם תחום שהוא או לחלק מסוים משם תחום (למשל: ‎*.example.com)"
     discourse_connect_overrides_groups: "סנכרון כל החברויות הידניות בקבוצות מול הקבוצות שהוגדרו במאפיין הקבוצות (אזהרה: אם לא תצויינה קבוצות כל החברויות הידניות בקבוצות יוסרו עבור המשתמש)"
+    auth_overrides_username: "דריסת שם המשתמש המקומי בשם המשתמש מהאתר המרוחק עם כל כניסה למערכת ומניעת שינויים מקומיים. חל על כל ספקי האימות. (אזהרה: עשויות להופיע אי התאמות עקב שינויים באורך/דרישות שם המשתמש)"
     auth_overrides_name: "דריסת השם המלא המקומי בשם מלא חיצוני עם כל כניסה ולמנוע שינויים מקומיים. חל על כל ספקי האימות."
     discourse_connect_overrides_avatar: "דריסת התמונה הייצוגית בתמונה ייצוגית חיצונית ממטען ה־DiscourseConnect. אם אפשרות זו פעילה, למשתמשים לא תהיה אפשרות להעלות תמונות ייצוגיות ל־Discourse."
     discourse_connect_overrides_location: "דריסת מיקום המשתמש במיקום חיצוני ממטען ה־DiscourseConnect ולמנוע שינויים מקומיים."

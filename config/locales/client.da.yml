@@ -1819,7 +1819,6 @@ da:
         title: "Luk Midlertidigt"
       auto_close:
         title: "Luk Automatisk Emnet"
-        label: "Auto-luk emne, timer:"
         error: "Indtast venligst en gyldig værdi."
         based_on_last_post: "Luk ikke før det seneste indlæg i emnet er mindst så gammel."
       auto_delete:
@@ -1832,7 +1831,6 @@ da:
         auto_open: "Emnet åbner automatisk %{timeLeft}."
         auto_close: "Emnet lukker automatisk %{timeLeft}."
         auto_publish_to_category: "Emnet vil blive udgivet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Emnet vil lukke %{duration} efter det sidste svar."
         auto_delete: "Dette emne slettes automatisk %{timeLeft}."
         auto_bump: "Dette emne bliver automatisk 'bumped' %{timeLeft}."
         auto_reminder: "Du vil blive mindet om dette emne %{timeLeft}."

@@ -1048,7 +1048,6 @@ sr:
         based_on_last_post: "Nemoj zatvoriti dok poslednja poruka nije odprilike ovoliko stara."
       status_update_notice:
         auto_close: "Ova tema će se autmatski zatvoriti %{timeLeft}."
-        auto_close_based_on_last_post: "Ova tema će se zatvoriti %{duration} nakon zadnjeg odgovora."
       auto_close_title: "Postavke Automatskog Zatvaranja"
       timeline:
         back: "Nazad"

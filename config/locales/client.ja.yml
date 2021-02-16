@@ -1934,7 +1934,6 @@ ja:
         title: "一時的にクローズ"
       auto_close:
         title: "自動的にクローズ"
-        label: "自動的にトピッククローズするまでの時間:"
         error: "正しい値を入力してください。"
         based_on_last_post: "最終投稿時間より前でクローズしない"
       auto_delete:
@@ -1945,7 +1944,6 @@ ja:
         auto_open: "このトピックはあと%{timeLeft}で自動的にオープンします。"
         auto_close: "このトピックはあと%{timeLeft}で自動的にクローズします。"
         auto_publish_to_category: "このトピックはあと %{timeLeft} で、<a href=%{categoryUrl}>#%{categoryName}</a> にて公開されます。"
-        auto_close_based_on_last_post: "このトピックは最後の返信から%{duration} 後にクローズされます"
         auto_delete: "このトピックはあと%{timeLeft}で自動的に削除されます。"
         auto_reminder: "このトピックについて、%{timeLeft} 後にリマインドします。"
       auto_close_title: "オートクローズの設定"

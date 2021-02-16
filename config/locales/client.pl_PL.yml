@@ -596,6 +596,27 @@ pl_PL:
       reject_reason:
         title: "Dlaczego odrzucasz tego użytkownika?"
         send_email: "Wyślij wiadomość e-mail z powodem odrzucenia"
+    relative_time_picker:
+      minutes:
+        one: "minuta"
+        few: "minuty"
+        many: "minut"
+        other: "minut"
+      hours:
+        one: "godzina"
+        few: "godziny"
+        many: "godzin"
+        other: "godzin"
+      days:
+        one: "dzień"
+        few: "dni"
+        many: "dni"
+        other: "dni"
+      months:
+        one: "miesiąc"
+        few: "miesiące"
+        many: "miesięcy"
+        other: "miesięcy"
     time_shortcut:
       later_today: "Później dzisiaj"
       next_business_day: "Następny dzień roboczy"
@@ -607,6 +628,7 @@ pl_PL:
       start_of_next_business_week_alt: "Następny poniedziałek"
       next_month: "Następny miesiąc"
       custom: "Niestandardowa data i godzina"
+      relative: "Względny czas"
       none: "Żadne nie są potrzebne"
       last_custom: "Ostatnia"
     user_action:
@@ -991,6 +1013,8 @@ pl_PL:
         sunday: "Niedziela"
         to: "do"
       activity_stream: "Aktywność"
+      read: "Przeczytane"
+      read_help: "Ostatnio przeczytane tematy"
       preferences: "Ustawienia"
       feature_topic_on_profile:
         open_search: "Wybierz nowy temat"
@@ -1664,7 +1688,10 @@ pl_PL:
     trust_level: "Poziom zaufania"
     search_hint: "nazwa użytkownika, email lub IP"
     create_account:
+      header_title: "Witamy!"
+      subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
+      title: "Utwórz swoje konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
     forgot_password:
       title: "Reset hasła"
@@ -1694,6 +1721,8 @@ pl_PL:
       logging_in_as: Logowanie jako %{email}
       confirm_button: Dokończ logowanie
     login:
+      header_title: "Witamy ponownie"
+      subheader_title: "Zaloguj się na swoje konto"
       title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
@@ -1709,6 +1738,7 @@ pl_PL:
       security_key_not_allowed_error: "Upłynął limit czasu procesu uwierzytelniania klucza bezpieczeństwa lub został on anulowany."
       security_key_no_matching_credential_error: "W podanym kluczu zabezpieczeń nie znaleziono zgodnych poświadczeń."
       security_key_support_missing_error: "Twoje obecne urządzenie lub przeglądarka nie obsługuje używania kluczy bezpieczeństwa. Proszę użyć innej metody."
+      email_placeholder: "E-mail / Nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
       cookies_error: "Wygląda na to, że masz wyłączoną obsługę plików cookie. Możesz nie być w stanie zalogować się bez uprzedniego włączenia ich."
@@ -2415,6 +2445,7 @@ pl_PL:
         when: "Kiedy:"
         time_frame_required: "Wybierz przedział czasowy"
         min_duration: "Czas trwania musi być większy niż 0"
+        max_duration: "Czas trwania musi być krótszy niż 2 lata"
       auto_update_input:
         none: "Wybierz przedział czasowy"
         now: "Teraz"
@@ -2443,9 +2474,11 @@ pl_PL:
         title: "Zamknij tymczasowo"
       auto_close:
         title: "Automatycznie zamknij temat"
-        label: "Godziny automatycznego zamknięcia:"
+        label: "Automatycznie zamknij temat po:"
         error: "Wprowadź poprawną wartość."
         based_on_last_post: "Nie zamykaj tematu dopóki od ostatniego wpisu nie upłynie przynajmniej tyle czasu."
+      auto_close_after_last_post:
+        title: "Automatycznie zamknij temat po ostatnim poście"
       auto_delete:
         title: "Automatycznie usuń temat"
       auto_bump:
@@ -2458,7 +2491,7 @@ pl_PL:
         auto_open: "Ten wątek zostanie automatycznie otwarty po %{timeLeft}."
         auto_close: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_publish_to_category: "Wątek zostanie opublikowany w <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Ten watek zostanie automatycznie zamknięty po %{duration} od ostatniego wpisu."
+        auto_close_after_last_post: "Ten watek zostanie automatycznie zamknięty po %{duration} od ostatniej odpowiedzi."
         auto_delete: "Ten wątek zostanie automatycznie zamknięty po %{timeLeft}."
         auto_bump: "Ten temat zostanie automatycznie podbity %{timeLeft}."
         auto_reminder: "Otrzymasz przypomnienie o tym temacie %{timeLeft}."
@@ -3112,16 +3145,19 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwuj wszystko"
+          description: "Będziesz automatycznie obserwować wszystkie tematy w tej kategorii. Zostaniesz powiadomiony o każdym nowym poście w każdym wątku, a liczba nowych odpowiedzi zostanie wyświetlona."
         watching_first_post:
           title: "Oglądasz pierwszy wpis"
           description: "Zostaniesz poinformowany o nowych wiadomościach w tej kategorii, ale nie odpowiedziach do tematów."
         tracking:
           title: "Śledzona"
+          description: "Będziesz automatycznie śledzić wszystkie tematy w tej kategorii. Zostaniesz powiadomiony, jeśli ktoś wspomni o Twoim @pseudonimie lub odpowie w temacie, a liczba nowych odpowiedzi zostanie wyświetlona."
         regular:
           title: "Normalny"
           description: "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
         muted:
           title: "Wyciszone"
+          description: "Nigdy nie będziesz otrzymywać powiadomień o nowych tematach w tej kategorii i nie pojawią się one w zakładce najnowszych tematów."
       search_priority:
         label: "Priorytet wyszukiwania"
         options:

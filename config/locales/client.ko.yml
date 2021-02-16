@@ -1137,6 +1137,7 @@ ko:
         set_primary: "기본 이메일 설정"
         destroy: "이메일 제거"
         add_email: "보조 이메일 추가"
+        auth_override_instructions: "인증 제공 업체에서 이메일을 업데이트 할 수 있습니다."
         no_secondary: "보조 이메일이 없습니다"
         instructions: "다른 사용자에게 공개되지 않습니다."
         admin_note: "참고 : 관리자가 아닌 다른 사용자의 이메일을 변경하는 관리자는 사용자가 원래 이메일 계정에 액세스할 수 없음을 나타내므로 비밀번호 재설정 이메일이 새 주소로 전송됩니다. 사용자의 이메일은 비밀번호 재설정 프로세스를 완료할 때까지 변경되지 않습니다."
@@ -1489,7 +1490,10 @@ ko:
     trust_level: "회원 레벨"
     search_hint: "사용자명, 이메일 또는 IP 주소"
     create_account:
+      header_title: "어서 오세요!"
+      subheader_title: "계정을 만드세요"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인 정보 보호 정책</a> 및 <a href='%{tos_link}' target='blank'>서비스 약관에</a> 동의하게됩니다."
+      title: "계정 만들기"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어있을 수 있습니다. 비밀번호 찾기 링크를 시도해보세요."
     forgot_password:
       title: "비밀번호 재설정"
@@ -1519,6 +1523,8 @@ ko:
       logging_in_as: '%{email}으로 로그인'
       confirm_button: 로그인 완료
     login:
+      header_title: "환영합니다"
+      subheader_title: "계정에 로그인하십시오."
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
@@ -1534,6 +1540,7 @@ ko:
       security_key_not_allowed_error: "보안 키 인증 프로세스가 시간 초과되었거나 취소되었습니다."
       security_key_no_matching_credential_error: "제공된 보안 키에서 일치하는 자격 증명을 찾을 수 없습니다."
       security_key_support_missing_error: "현재 장치 또는 브라우저가 보안 키 사용을 지원하지 않습니다. 다른 방법을 사용하십시오."
+      email_placeholder: "이메일 / 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       cookies_error: "브라우저의 쿠키가 비활성화 된 것 같습니다. 먼저 활성화하지 않으면 로그인하지 못할 수 있습니다."
@@ -1626,6 +1633,8 @@ ko:
       plus_subcategories:
         other: "+ %{count}개의 하위 카테고리"
     select_kit:
+      filter_by: "필터링 기준: %{name}"
+      select_to_filter: "필터링 기준 선택"
       default_header_text: 선택...
       no_content: 일치하는 항목을 찾을 수 없음
       filter_placeholder: 검색...
@@ -2147,6 +2156,7 @@ ko:
         when: "게시일:"
         time_frame_required: "기간을 선택하세요."
         min_duration: "기간은 0보다 커야 합니다."
+        max_duration: "기간은 2년 미만이어야 합니다."
       auto_update_input:
         none: "시간대 선택"
         now: "지금"
@@ -2175,7 +2185,6 @@ ko:
         title: "임시로 닫기"
       auto_close:
         title: "글 자동 잠금"
-        label: "자동으로 글 닫기 시간:"
         error: "유효한 값을 입력하십시오."
         based_on_last_post: "글의 마지막 게시물이 이보다 오래 될 때까지 닫지 마십시오."
       auto_delete:
@@ -2190,7 +2199,6 @@ ko:
         auto_open: "이 글은 %{timeLeft}에 자동으로 열립니다."
         auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
-        auto_close_based_on_last_post: "이 글은 마지막 댓글이 달린 %{duration} 후 닫힙니다."
         auto_delete: "이 글은 %{timeLeft}에 자동으로 삭제됩니다."
         auto_bump: "이 글은 %{timeLeft}에 자동으로 끌어올려 집니다."
         auto_reminder: "%{timeLeft}에 현재 글 알림"
@@ -2350,6 +2358,7 @@ ko:
         action: "초대장 보내기"
         help: "이메일을 통해 다른 사람을 이 주제에 초대합니다."
         to_forum: "링크를 클릭하여 친구가 즉시 참여할 수 있도록 간단한 이메일을 보내드립니다."
+        discourse_connect_enabled: "이 글에 초대하려는 사람의 아이디를 입력합니다."
         to_topic_blank: "이 글에 초대 할 사람의 사용자명 또는 이메일 주소를 입력하십시오."
         to_topic_email: "이메일 주소를 입력했습니다. 친구가 이 글에 즉시 댓글을 작성 할 수있는 초대장을 이메일로 보내드립니다."
         to_topic_username: "아이디를 입력하셨습니다. 이 주제에 초대하는 링크와 함께 알림을 보내겠습니다."
@@ -2747,6 +2756,7 @@ ko:
       notifications:
         watching:
           title: "주시 중"
+          description: "이 카테고리의 모든 글이 자동으로 관심글로 설정됩니다. 모든 글의 모든 새 댓글에 대한 알림을 받게되며 새 댓글 개수가 표시됩니다."
         watching_first_post:
           title: "새글 알림"
           description: "이 카테고리의 새 주제에 대한 알림을 받지만 주제에 대한 답장은 없습니다."
@@ -2757,6 +2767,7 @@ ko:
           description: "누군가 내 @아아디 으로 멘션했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
+          description: "이 카테고리의 새 글에 대한 알림을받지 않으며 최신 글 목록에 표시되지 않습니다."
       search_priority:
         label: "검색 우선 순위"
         options:
@@ -3423,6 +3434,7 @@ ko:
               wordpress: 워드프레스 wp-discourse 플러그인이 작동하는데 필요합니다.
             users:
               bookmarks: 사용자 북마크를 나열합니다. ICS 형식을 사용하면 북마크 알림을 반환합니다.
+              sync_sso: DiscourseConnect를 사용하여 사용자를 동기화합니다.
               show: 사용자에 대한 정보를 얻습니다.
               check_emails: 사용자 이메일을 나열합니다.
               update: 사용자 프로필 정보를 업데이트합니다.
@@ -4380,6 +4392,15 @@ ko:
           on_grace_period: "현재 승급 유예 기간이므로 강등되지 않습니다."
           locked_will_not_be_promoted: "회원등급이 고정되었습니다. 승급되지 않을 것입니다."
           locked_will_not_be_demoted: "회원등급이 고정되었습니다. 강등되지 않을 것입니다."
+        discourse_connect:
+          external_id: "외부 ID"
+          external_username: "아이디"
+          external_name: "이름"
+          external_email: "이메일"
+          external_avatar_url: "프로필 사진 URL"
+          last_payload: "마지막 페이로드"
+          delete_sso_record: "SSO 레코드 삭제"
+          confirm_delete: "이 DiscourseConnect 레코드를 삭제 하시겠습니까?"
       user_fields:
         title: "사용자 필드"
         help: "사용자가 입력할 수 있는 필드를 추가"

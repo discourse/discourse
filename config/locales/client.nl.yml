@@ -1493,7 +1493,7 @@ nl:
       button_help: "Help"
     email_login:
       link_label: "Een koppeling voor aanmelding e-mailen"
-      button_label: "via e-mail"
+      button_label: "met e-mail"
       emoji: "slot-emoji"
       complete_username: "Als een account overeenkomt met de gebruikersnaam <b>%{username}</b>, zou u spoedig een e-mail met een koppeling voor aanmelding moeten ontvangen."
       complete_email: "Als een account overeenkomt met <b>%{email}</b>, zou u spoedig een e-mail met een koppeling voor aanmelding moeten ontvangen."
@@ -2172,7 +2172,6 @@ nl:
         title: "Tijdelijk sluiten"
       auto_close:
         title: "Topic automatisch sluiten"
-        label: "Tijden voor automatisch sluiten van topic:"
         error: "Voer een geldige waarde in."
         based_on_last_post: "Pas sluiten als het laatste bericht in het topic minstens zo oud is"
       auto_delete:
@@ -2187,7 +2186,6 @@ nl:
         auto_open: "Dit topic wordt %{timeLeft} automatisch geopend."
         auto_close: "Dit topic wordt %{timeLeft} automatisch gesloten."
         auto_publish_to_category: "Dit topic wordt %{timeLeft} naar <a href=%{categoryUrl}>#%{categoryName}</a> gepubliceerd."
-        auto_close_based_on_last_post: "Dit topic wordt %{duration} na het laatste antwoord gesloten."
         auto_delete: "Dit topic wordt %{timeLeft} automatisch verwijderd."
         auto_bump: "Dit topic wordt %{timeLeft} automatisch gebumpt."
         auto_reminder: "U wordt %{timeLeft} aan dit topic herinnerd."

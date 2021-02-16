@@ -522,6 +522,19 @@ sv:
       reject_reason:
         title: "Varför avvisar du den här användaren?"
         send_email: "Skicka avvisningsmeddelande"
+    relative_time_picker:
+      minutes:
+        one: "minut"
+        other: "minuter"
+      hours:
+        one: "timme"
+        other: "timmar"
+      days:
+        one: "dag"
+        other: "dagar"
+      months:
+        one: "månad"
+        other: "månader"
     time_shortcut:
       later_today: "Senare idag"
       next_business_day: "Nästa vardag"
@@ -533,6 +546,7 @@ sv:
       start_of_next_business_week_alt: "Nästa måndag"
       next_month: "Nästa månad"
       custom: "Anpassa datum och tid"
+      relative: "Relativ tid"
       none: "Ingen behövs"
       last_custom: "Senaste"
     user_action:
@@ -903,7 +917,7 @@ sv:
         sunday: "Söndag"
         to: "till"
       activity_stream: "Aktivitet"
-      read: "Läst"
+      read: "Läs"
       read_help: "Nyligen lästa ämnen"
       preferences: "Inställningar"
       feature_topic_on_profile:
@@ -2277,9 +2291,11 @@ sv:
         title: "Stäng tillfälligt"
       auto_close:
         title: "Stäng ämne automatiskt"
-        label: "Tid för att automatiskt stänga ämne:"
+        label: "Stäng automatiskt ämne efter:"
         error: "Ange ett giltigt värde."
         based_on_last_post: "Stäng inte förrän det sista inlägget i ämnet är åtminstone så här gammalt."
+      auto_close_after_last_post:
+        title: "Stäng ämnet automatiskt efter sista inlägget"
       auto_delete:
         title: "Radera ämne automatiskt:"
       auto_bump:
@@ -2292,7 +2308,7 @@ sv:
         auto_open: "Detta ämne kommer att öppnas automatiskt om %{timeLeft}."
         auto_close: "Det här ämnet kommer att stängas automatiskt om %{timeLeft}."
         auto_publish_to_category: "Detta ämne kommer att publiceras till <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
-        auto_close_based_on_last_post: "Detta ämne stängs %{duration} efter sista svaret."
+        auto_close_after_last_post: "Detta ämne stängs %{duration} efter sista svaret."
         auto_delete: "Det här ämnet kommer att raderas automatiskt om %{timeLeft}."
         auto_bump: "Det här ämnet kommer att knuffas automatiskt %{timeLeft}."
         auto_reminder: "Du kommer att påminnas om detta ämne om %{timeLeft}."
@@ -2701,6 +2717,7 @@ sv:
         change_post_notice: "Ändra personalnotering"
         delete_post_notice: "Radera personalnotering"
         remove_timer: "Ta bort tidtagning"
+        edit_timer: "redigera timer"
       actions:
         people:
           like:
@@ -2882,16 +2899,19 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
+          description: "Du kommer automatiskt att bevaka alla ämnen i den här kategorin. Du aviseras om varje nytt inlägg i alla ämnen, och det visas en räknare över antalet nya svar."
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer att aviseras vid nya ämnen för denna kategori, men inte svar på ämnen."
         tracking:
           title: "Följer"
+          description: "Du kommer automatiskt att följa alla ämnen i den här kategorin. Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg, och det visas en räknare över antalet nya svar."
         regular:
           title: "Normal"
           description: "Du aviseras om någon nämner ditt @namn eller svarar på ditt inlägg."
         muted:
           title: "Tystad"
+          description: "Du kommer aldrig att aviseras om något som rör nya ämnen i den här kategorin och de kommer inte att dyka upp i senaste."
       search_priority:
         label: "Sökprioritering"
         options:

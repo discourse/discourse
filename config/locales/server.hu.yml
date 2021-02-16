@@ -880,8 +880,13 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     discourse_connect_overrides_profile_background: "Felülírja a felhasználói profil hátterét a külső webhely-avatarral a DiscourseConnect payloadból."
+    suggested_topics: "A javasolt témák száma a téma alján láthatók."
+    limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
+    suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
+    suggested_topics_unread_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
     recompress_original_jpg_quality: "A feltöltött képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
     image_preview_jpg_quality: "Az átméretezett képfájlok minősége (1 – legalacsonyabb, 99 – legjobb, 100 – letiltás)."
+    cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
@@ -1645,6 +1650,8 @@ hu:
     editor:
       name: Szerkesztő
       description: Első bejegyzés szerkesztése
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először szerkeszted az egyik bejegyzést. Noha örökké nem tudod szerkeszteni a bejegyzéseidet, a szerkesztés javasolt - javíthatod a formázást, kijavíthatod az apróbb hibákat, vagy hozzáadhatsz bármit, amit az eredetileg közzétett üzenetnél kihagytál. Szerkeszd, hogy a bejegyzéseid még jobbak legyenek!
     wiki_editor:
       name: Wikiszerkesztő
       description: Első wikiszerkesztés
@@ -1652,18 +1659,30 @@ hu:
         Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre e-mailben.
     basic_user:
       name: Alapvető
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred az 1. bizalmi szintet. Köszönjük, hogy kitartottál és elolvastál néhány témát, hogy megtudd, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkaptad az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
     member:
       name: Tag
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 2. bizalmi szintet. Köszönjük, hogy heteken át részt vettél a közösségünk építésében. Mostantól küldhetsz meghívókat a felhasználói oldalról vagy az egyes témákról, csoportos személyes üzeneteket hozhatsz létre, és naponta több lájkot szerezhetsz.
     regular:
       name: Rendes tag
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt veszel a közösségünk építésében. Az egyik legaktívabb olvasó vagy és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatod és átnevezheted a témákat, használhatod az erősebb spamzászlókat, hozzáférhetsz egy privát társalgóhoz és naponta sokkal több kedvelést is szerezhetsz.
     leader:
       name: Vezető
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor eléred a 4. bizalmi szintet. A közösség egyik vezetője vagy, akit a többi tag választott ki, és itt bemutatott aktivitásoddal és szavaiddal pozitív példát mutatsz a közösség többi tagjának. Már képes vagy szerkeszteni az összes bejegyzést, elvégezheted a témakör moderátorának olyan műveleteit, mint a rögzítés, bezárás, kilistázás, archiválás, felosztás és egyesítés.
     welcome:
       name: Üdvözöljük
       description: Kedvelést kapott
+      long_description: |
+        Ez a jelvény akkor jár, ha megkapod az első lájkolást egy bejegyzésed után. Gratulálunk, közzétettél valamit, amit a közösség tagjai érdekesnek, jónak vagy hasznosnak találtak!
     autobiographer:
       name: Életrajzíró
       description: Kitöltötte a <a href="%{base_uri}/my/preferences/profile">profilinformációit</a>
+      long_description: |
+        Ezt a jelvényt <a href="%{base_uri}/my/preferences/profile">a felhasználói profil</a> kitöltése és a profilkped kiválasztása után kapod. Ha a közösségnek egy kicsit többet szeretnél megtudni arról, hogy ki vagy és mi érdekel, egy jobb, összetartóbb közösséggé válhatunk. Csatlakozz hozzánk!
     anniversary:
       name: Évforduló
       description: Egy éve aktív tag, legalább egyszer bejegyzést tett közzé
@@ -1672,18 +1691,28 @@ hu:
     nice_post:
       name: Szép válasz
       description: 10 kedvelést kapott egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 10 kedvelést kaptál. Válaszod hatással volt a közösségre és elősegítette a beszélgetés előrehaladását.
     good_post:
       name: Jó válasz
       description: 25 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 25 kedvelést kaptál. Válaszod kivételes volt, és sokkal érdekesebbé tette a beszélgetést.
     great_post:
       name: Nagyszerű válasz
       description: 50 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a válaszodra 25 kedvelést kaptál. Azta! Válaszod inspiráló, lenyűgöző, vidám vagy éleslátó volt, és ezt a közösség szerette!
     nice_topic:
       name: Szép téma
       description: 10 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a témád 10 lájkot kap. Érdekes beszélgetést indítottál, amelyet a közösség élvezett.
     good_topic:
       name: Jó téma
       description: 25 kedvelést kaptál egy válaszra
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha a témád 25 lájkot kap. Érdekes beszélgetést indítottál, amelyet a közösség élvezett.
     great_topic:
       name: Nagyszerű téma
       description: 50 kedvelést kaptál egy válaszra
@@ -1707,6 +1736,11 @@ hu:
     first_like:
       name: Első kedvelés
       description: Tetszett egy bejegyzés
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először kedvelsz egy bejegyzést a :heart: gombbal. A bejegyzések kedvelése nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak számodra. Oszd meg a szeretetet!
+    first_flag:
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először jelölsz meg egy bejegyzést. A megjelöléssel segíthetsz, hogy mindenki számára kellemes hely maradjon a fórum. Ha bármi olyan bejegyzést észlelsz, amely valamilyen okból moderátori figyelmet igényel, ne habozz megjelölni. Ha problémát látsz, :flag_black: jelöld meg!
     promoter:
       name: Népszerűsítő
       long_description: |
@@ -1725,8 +1759,12 @@ hu:
         Ezt a jelvényt akkor kapod meg, amikor először megosztasz egy válaszra vagy témára mutató linket a megosztás gomb használatával. A linkek megosztása nagyszerű módja annak, hogy érdekes beszélgetéseket mutass be és gyarapítsd a közösséget.
     first_link:
       name: Első hivatkozás
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor először adsz linket egy másik témához. A témák összekapcsolása segít az olvasótársaknak érdekes kapcsolódó beszélgetéseket találni, megmutatva a témák közötti összefüggéseket mindkét irányba. Linkelj szabadon!
     first_quote:
       name: Első idézet
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, amikor első alkalommal idézel egy bejegyzést a válaszodban. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolódásában. Az idézés legegyszerűbb módja, ha kiemeled a bejegyzés egy részét, majd megnyomod bármelyik válasz gombot. Idézz nagylelkűen!
     read_guidelines:
       name: Irányelvek elolvasva
       long_description: |
@@ -1738,12 +1776,18 @@ hu:
     popular_link:
       name: Népszerű hivatkozás
       description: Külső linket tett közzé 50 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 50 kattintást kap. Köszönjük, hogy közzétettél egy hasznos linket, amely érdekes kontextust adott a beszélgetéshez!
     hot_link:
       name: Forró hivatkozás
       description: Külső linket tett közzé 300 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 300 kattintást kap. Köszönjük, hogy egy szuper linket tettél közzé, amely elősegítette a beszélgetést és megvilágítottad a vitát!
     famous_link:
       name: Híres hivatkozás
       description: Külső linket tett közzé 1000 kattintással
+      long_description: |
+        Ezt a jelvényt akkor kapod meg, ha egy megosztott linked 1000 kattintást kap. Azta! Olyan linket tettél közzé, amely jelentős részleteket, kontextust és információkat adott hozzá, ami javítva a beszélgetést. Nagyszerű munkát végeztél!
     appreciated:
       name: Kedvelt
       description: 1 kedvelést kaptál egy válaszra

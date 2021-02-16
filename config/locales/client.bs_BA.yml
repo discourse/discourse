@@ -2060,7 +2060,6 @@ bs_BA:
         title: "Privremeno zatvori"
       auto_close:
         title: "Automatski zatvori temu"
-        label: "Automatsko zatvaranje teme nakon sati:"
         error: "Molim unesite ispravnu vrijednost."
         based_on_last_post: "Ne zatvaraj temu sve dok zadnja objava u temi nije barem ovoliko stara."
       auto_delete:
@@ -2073,7 +2072,6 @@ bs_BA:
         auto_open: "Ova tema će biti automatski otvorena za %{timeLeft}"
         auto_close: "Ova tema će biti automatski zatvorena za %{timeLeft}"
         auto_publish_to_category: "Ova tema će biti objavljena u <a href=%{categoryUrl}>#%{categoryName}</a> za %{timeLeft}."
-        auto_close_based_on_last_post: "Ova tema će se biti zatvorena %{duration} nakon zadnjeg odgovora."
         auto_delete: "Ova tema će biti automatski izbrisana za %{timeLeft}"
         auto_bump: "Ova tema će biti automatski bumped %{timeLeft}."
         auto_reminder: "Bit će te obaviješteni o ovoj temi za %{timeLeft}"
