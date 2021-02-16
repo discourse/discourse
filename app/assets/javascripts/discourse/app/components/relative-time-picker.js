@@ -78,6 +78,16 @@ export default Component.extend({
     }
   },
 
+  @discourseComputed("selectedInterval")
+  durationMin(selectedInterval) {
+    return selectedInterval === "mins" ? 1 : 0.1;
+  },
+
+  @discourseComputed("selectedInterval")
+  durationStep(selectedInterval) {
+    return selectedInterval === "mins" ? 1 : 0.05;
+  },
+
   @discourseComputed("duration")
   intervals(duration) {
     const count = duration ? parseFloat(duration) : 0;
@@ -110,7 +120,8 @@ export default Component.extend({
 
     switch (interval) {
       case "mins":
-        mins = duration;
+        // we round up here in case the user manually inputted a step < 1
+        mins = Math.ceil(duration);
         break;
       case "hours":
         mins = duration * 60;
