@@ -109,7 +109,7 @@ describe TopicStatusUpdater do
 
         timer = TopicTimer.find_by(topic: topic)
         expect(timer).not_to eq(nil)
-        expect(timer.execute_at.to_i).to eq((topic.created_at + 72.hours).to_i)
+        expect(timer.execute_at).to be_within_one_second_of(topic.created_at + 72.hours)
       end
 
       it "does not inherit auto close from the topic category if it has already been X hours since topic creation" do
@@ -148,7 +148,7 @@ describe TopicStatusUpdater do
           timer = TopicTimer.find_by(topic: topic)
           expect(timer).not_to eq(nil)
           expect(timer.duration_minutes).to eq(72 * 60)
-          expect(timer.execute_at.to_i).to eq((Time.zone.now + 72.hours).to_i)
+          expect(timer.execute_at).to be_within_one_second_of(Time.zone.now + 72.hours)
         end
       end
     end
