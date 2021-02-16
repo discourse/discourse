@@ -39,7 +39,10 @@
     .select-kit .select-kit-header .selected-name {
       text-align: left;
       color: inherit;
-      min-height: 25px;
+      min-height: 20px;
+    }
+    .select-kit .select-kit-filter .filter-input {
+      margin-top: 0.25em;
     }
   }
 
