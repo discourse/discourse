@@ -598,7 +598,7 @@ export default createWidget("post-menu", {
 
     const contents = [
       h(
-        "nav.post-controls.clearfix" +
+        "nav.post-controls" +
           (this.state.collapsed ? ".collapsed" : ".expanded") +
           (siteSettings.enable_filtered_replies_view
             ? ".replies-button-visible"

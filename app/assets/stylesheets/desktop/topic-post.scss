@@ -49,11 +49,16 @@ section.post-menu-area {
 
 nav.post-controls {
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   .actions {
     text-align: right;
     float: right;
     display: inline-block;
+    margin-left: auto;
+
     .more-actions {
       display: none;
       overflow: hidden;
