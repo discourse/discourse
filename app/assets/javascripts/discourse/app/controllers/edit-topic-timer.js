@@ -29,14 +29,20 @@ export default Controller.extend(ModalFunctionality, {
           closed ? "topic.temp_open.title" : "topic.auto_close.title"
         ),
       },
-      {
+    ];
+
+    if (!closed) {
+      types.push({
         id: CLOSE_AFTER_LAST_POST_STATUS_TYPE,
         name: I18n.t(
           closed
             ? "topic.temp_open.title"
             : "topic.auto_close_after_last_post.title"
         ),
-      },
+      });
+    }
+
+    types.push(
       {
         id: OPEN_STATUS_TYPE,
         name: I18n.t(
@@ -50,8 +56,9 @@ export default Controller.extend(ModalFunctionality, {
       {
         id: BUMP_TYPE,
         name: I18n.t("topic.auto_bump.title"),
-      },
-    ];
+      }
+    );
+
     if (this.currentUser.get("staff")) {
       types.push(
         {
