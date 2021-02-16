@@ -25,6 +25,7 @@ class UploadSecurity
     card_background
     category_logo
     category_background
+    group_flair
   ]
 
   def self.register_custom_public_type(type)
