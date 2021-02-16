@@ -200,9 +200,9 @@ export default createWidget("topic-admin-menu", {
 
     if (this.get("currentUser.canManageTopic")) {
       this.addActionButton({
-        className: "topic-admin-status-update",
+        className: "admin-topic-timer-update",
         buttonClass: "popup-menu-btn",
-        action: "showTopicStatusUpdate",
+        action: "showTopicTimerModal",
         icon: "far-clock",
         label: "actions.timed_update",
       });
